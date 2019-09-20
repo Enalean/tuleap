@@ -206,8 +206,8 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $html     .= '<ul class="tracker-hierarchy">';
         $parents = array_reverse($hierarchy->getArtifacts());
 
-        foreach($parents as $parent) {
-            foreach($parent as $father) {
+        foreach ($parents as $parent) {
+            foreach ($parent as $father) {
                 $html .= '<li>';
                 $html .= $this->displayANumberOfBlankTab($tab_level);
                 $html .= '<div class="tree-last">&nbsp;</div>';
@@ -292,7 +292,6 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
                     $padding_prefix . '<span class="tree-blank">&nbsp;</span>'
                 );
                 $html .= $div_suffix;
-
             } else {
                 $html .= $parent->fetchActionButtons();
             }

@@ -31,7 +31,8 @@ namespace Tuleap\OpenIDConnectClient\AccountLinker;
  * If no, check if the user has control of a Tuleap account ->
  * Create a link between the account and the OpenID Connect provider for this user
  */
-class UnlinkedAccount {
+class UnlinkedAccount
+{
 
     private $id;
     private $provider_id;
@@ -58,5 +59,4 @@ class UnlinkedAccount {
     {
         return $this->user_identifier;
     }
-
 }

@@ -33,9 +33,10 @@ Mock::generatePartial(
     )
 );
 
-Mock::generatePartial('UserManager',
-                      'UserManager4AccountValidity',
-                      array('_getEventManager',
+Mock::generatePartial(
+    'UserManager',
+    'UserManager4AccountValidity',
+    array('_getEventManager',
                             'getDao',
                       )
 );
@@ -127,18 +128,18 @@ class UserAccountValidityTest extends TuleapTestCase
         $dao = new UserDaoTestValidity($this);
 
         $dao->expectOnce('returnNotProjectMembers');
-        $dao->setReturnReference('returnNotProjectMembers',$darUser);
+        $dao->setReturnReference('returnNotProjectMembers', $darUser);
         $dao->setReturnValue('getLogger', mock('BackendLogger'));
 
         $darRemovedDate = new MockDataAccessResult($this);
         $darRemovedDate->setReturnValueAt(0, 'valid', true);
         $darRemovedDate->setReturnValueAt(1, 'valid', false);
         $darRemovedDate->setReturnValue('isError', false);
-        $darRemovedDate->setReturnValue('rowCount',1);
+        $darRemovedDate->setReturnValue('rowCount', 1);
         $darRemovedDate->setReturnValue('current', array('date' => 1258107747));
 
-        $dao->expectOnce('delayForBeingNotProjectMembers',array(112));
-        $dao->setReturnReference('delayForBeingNotProjectMembers',$darRemovedDate,array(112));
+        $dao->expectOnce('delayForBeingNotProjectMembers', array(112));
+        $dao->setReturnReference('delayForBeingNotProjectMembers', $darRemovedDate, array(112));
 
         $da = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         $da->setReturnValue('escapeInt', 112, array(112));
@@ -157,18 +158,18 @@ class UserAccountValidityTest extends TuleapTestCase
 
         $dao = new UserDaoTestValidity($this);
         $dao->expectOnce('returnNotProjectMembers');
-        $dao->setReturnReference('returnNotProjectMembers',$darUser);
+        $dao->setReturnReference('returnNotProjectMembers', $darUser);
         $dao->setReturnValue('getLogger', mock('BackendLogger'));
 
         $darRemovedDate = new MockDataAccessResult($this);
         $darRemovedDate->setReturnValueAt(0, 'valid', true);
         $darRemovedDate->setReturnValueAt(1, 'valid', false);
         $darRemovedDate->setReturnValue('isError', false);
-        $darRemovedDate->setReturnValue('rowCount',1);
+        $darRemovedDate->setReturnValue('rowCount', 1);
         $darRemovedDate->setReturnValue('current', array('date' => 1258407747));
 
-        $dao->expectOnce('delayForBeingNotProjectMembers',array(112));
-        $dao->setReturnReference('delayForBeingNotProjectMembers',$darRemovedDate,array(112));
+        $dao->expectOnce('delayForBeingNotProjectMembers', array(112));
+        $dao->setReturnReference('delayForBeingNotProjectMembers', $darRemovedDate, array(112));
 
         $dao->expectNever('suspendAccount');
         $dao->suspendUserNotProjectMembers(1258307747);
@@ -183,26 +184,26 @@ class UserAccountValidityTest extends TuleapTestCase
 
         $dao = new UserDaoTestValidity($this);
         $dao->expectOnce('returnNotProjectMembers');
-        $dao->setReturnReference('returnNotProjectMembers',$darUser);
+        $dao->setReturnReference('returnNotProjectMembers', $darUser);
         $dao->setReturnValue('getLogger', mock('BackendLogger'));
 
         $darNewMember = new MockDataAccessResult($this);
         $darNewMember->setReturnValueAt(0, 'valid', true);
         $darNewMember->setReturnValueAt(1, 'valid', false);
         $darNewMember->setReturnValue('isError', false);
-        $darNewMember->setReturnValue('rowCount',0);
+        $darNewMember->setReturnValue('rowCount', 0);
 
-        $dao->expectOnce('delayForBeingNotProjectMembers',array(112));
-        $dao->setReturnReference('delayForBeingNotProjectMembers',$darNewMember,array(112));
+        $dao->expectOnce('delayForBeingNotProjectMembers', array(112));
+        $dao->setReturnReference('delayForBeingNotProjectMembers', $darNewMember, array(112));
 
         $darAddDate = new MockDataAccessResult($this);
         $darAddDate->setReturnValueAt(0, 'valid', true);
         $darAddDate->setReturnValueAt(1, 'valid', false);
         $darAddDate->setReturnValue('isError', false);
-        $darAddDate->setReturnValue('rowCount',1);
+        $darAddDate->setReturnValue('rowCount', 1);
 
-        $dao->expectOnce('delayForBeingSubscribed',array(112,1258307747));
-        $dao->setReturnReference('delayForBeingSubscribed',$darAddDate,array(112,1258307747));
+        $dao->expectOnce('delayForBeingSubscribed', array(112,1258307747));
+        $dao->setReturnReference('delayForBeingSubscribed', $darAddDate, array(112,1258307747));
 
         $da = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         $da->setReturnValue('escapeInt', 112, array(112));
@@ -221,26 +222,26 @@ class UserAccountValidityTest extends TuleapTestCase
 
         $dao = new UserDaoTestValidity($this);
         $dao->expectOnce('returnNotProjectMembers');
-        $dao->setReturnReference('returnNotProjectMembers',$darUser);
+        $dao->setReturnReference('returnNotProjectMembers', $darUser);
         $dao->setReturnValue('getLogger', mock('BackendLogger'));
 
         $darNewMember = new MockDataAccessResult($this);
         $darNewMember->setReturnValueAt(0, 'valid', true);
         $darNewMember->setReturnValueAt(1, 'valid', false);
         $darNewMember->setReturnValue('isError', false);
-        $darNewMember->setReturnValue('rowCount',0);
+        $darNewMember->setReturnValue('rowCount', 0);
 
-        $dao->expectOnce('delayForBeingNotProjectMembers',array(112));
-        $dao->setReturnReference('delayForBeingNotProjectMembers',$darNewMember,array(112));
+        $dao->expectOnce('delayForBeingNotProjectMembers', array(112));
+        $dao->setReturnReference('delayForBeingNotProjectMembers', $darNewMember, array(112));
 
         $darAddDate = new MockDataAccessResult($this);
         $darAddDate->setReturnValueAt(0, 'valid', true);
         $darAddDate->setReturnValueAt(1, 'valid', false);
         $darAddDate->setReturnValue('isError', false);
-        $darAddDate->setReturnValue('rowCount',0);
+        $darAddDate->setReturnValue('rowCount', 0);
 
-        $dao->expectOnce('delayForBeingSubscribed',array(112,1258307747));
-        $dao->setReturnReference('delayForBeingSubscribed',$darAddDate,array(112,1258307747));
+        $dao->expectOnce('delayForBeingSubscribed', array(112,1258307747));
+        $dao->setReturnReference('delayForBeingSubscribed', $darAddDate, array(112,1258307747));
 
         $dao->expectNever('suspendAccount');
         $dao->suspendUserNotProjectMembers(1258307747);

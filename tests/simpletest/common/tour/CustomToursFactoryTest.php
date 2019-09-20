@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class CustomToursFactoryTest extends TuleapTestCase {
+class CustomToursFactoryTest extends TuleapTestCase
+{
 
     /** @var Tuleap_CustomToursFactory */
     protected $factory;
@@ -49,7 +50,8 @@ class CustomToursFactoryTest extends TuleapTestCase {
     }
 }
 
-class CustomTourFactoryTest_getToursForPage extends CustomToursFactoryTest {
+class CustomTourFactoryTest_getToursForPage extends CustomToursFactoryTest
+{
 
     public function setUp()
     {
@@ -337,7 +339,8 @@ class CustomTourFactoryTest_getToursForPage extends CustomToursFactoryTest {
     }
 }
 
-class CustomTourFactoryTest_getTour extends CustomToursFactoryTest {
+class CustomTourFactoryTest_getTour extends CustomToursFactoryTest
+{
 
     public function itThrowsAnExceptionIfFileNotFound()
     {
@@ -366,7 +369,7 @@ class CustomTourFactoryTest_getTour extends CustomToursFactoryTest {
         );
         stub($this->factory)->getTourListJson()->returns(json_encode($enabled_tours));
 
-        $this->factory->getTour($this->user,'my_second_invalid_tour');
+        $this->factory->getTour($this->user, 'my_second_invalid_tour');
     }
 
     public function itThrowsAnExceptionIfTourDoesNotHaveSteps()
@@ -381,7 +384,7 @@ class CustomTourFactoryTest_getTour extends CustomToursFactoryTest {
         );
         stub($this->factory)->getTourListJson()->returns(json_encode($enabled_tours));
 
-        $this->factory->getTour($this->user,'my_invalid_tour');
+        $this->factory->getTour($this->user, 'my_invalid_tour');
     }
 
     public function itValidatesAGoodTour()
@@ -394,7 +397,7 @@ class CustomTourFactoryTest_getTour extends CustomToursFactoryTest {
         );
         stub($this->factory)->getTourListJson()->returns(json_encode($enabled_tours));
 
-        $tour = $this->factory->getTour($this->user,'my_valid_tour');
+        $tour = $this->factory->getTour($this->user, 'my_valid_tour');
 
         $this->assertIsA($tour, 'Tuleap_Tour');
     }

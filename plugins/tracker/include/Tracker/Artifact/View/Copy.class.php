@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_View_Copy extends Tracker_Artifact_View_Edit {
+class Tracker_Artifact_View_Copy extends Tracker_Artifact_View_Edit
+{
 
     /** @see Tracker_Artifact_View_Edit::getURL() */
     public function getURL()

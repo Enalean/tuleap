@@ -23,7 +23,8 @@ namespace Tuleap\ProFTPd\Admin;
 /**
  * Files should not have x (executable bit set)
  */
-class ACLBuilderForFile extends ACLBuilder {
+class ACLBuilderForFile extends ACLBuilder
+{
 
     public function getACL($http_user, $writers, $readers)
     {
@@ -39,5 +40,4 @@ class ACLBuilderForFile extends ACLBuilder {
     {
         return "$label:rw";
     }
-
 }

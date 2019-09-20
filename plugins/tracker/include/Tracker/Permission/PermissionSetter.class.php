@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Permission_PermissionSetter {
+class Tracker_Permission_PermissionSetter
+{
     private $group_id;
     private $atid;
     private $stored_ugroups_permissions;

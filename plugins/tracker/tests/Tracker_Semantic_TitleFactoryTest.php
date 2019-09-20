@@ -20,7 +20,8 @@
  */
 require_once('bootstrap.php');
 
-class Tracker_Semantic_TitleFactoryTest extends TuleapTestCase {
+class Tracker_Semantic_TitleFactoryTest extends TuleapTestCase
+{
 
     /** @var XML_Security */
     private $xml_security;
@@ -59,5 +60,4 @@ class Tracker_Semantic_TitleFactoryTest extends TuleapTestCase {
         $this->assertEqual($semantic_title->getShortName(), 'title');
         $this->assertEqual($semantic_title->getFieldId(), 112);
     }
-
 }

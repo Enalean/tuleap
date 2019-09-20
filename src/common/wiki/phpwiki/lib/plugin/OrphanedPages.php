@@ -28,8 +28,7 @@ rcs_id('$Id: OrphanedPages.php,v 1.10 2004/07/09 13:05:34 rurban Exp $');
  **/
 require_once('lib/PageList.php');
 
-class WikiPlugin_OrphanedPages
-extends WikiPlugin
+class WikiPlugin_OrphanedPages extends WikiPlugin
 {
     function getName()
     {
@@ -43,8 +42,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.10 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.10 $"
+        );
     }
 
     function getDefaultArguments()
@@ -79,23 +81,27 @@ extends WikiPlugin
             $parent = $links_iter->next();
             if (!$parent               // page has no parents
                 or (($parent->getName() == $page->getName())
-                    and !$links_iter->next())) // or page has only itself as a parent
-            {
+                    and !$links_iter->next())) { // or page has only itself as a parent
                 $pages[] = $page;
             }
         }
         $args['count'] = count($pages);
         $pagelist = new PageList($info, $exclude, $args);
-        if (!$noheader)
+        if (!$noheader) {
             $pagelist->setCaption(_("Orphaned Pages in this wiki (%d total):"));
+        }
         // deleted pages show up as version 0.
-        if ($include_empty)
+        if ($include_empty) {
             $pagelist->_addColumn('version');
+        }
         list($offset,$pagesize) = $pagelist->limit($args['limit']);
-        if (!$pagesize) $pagelist->addPageList($pages);
-        else {
+        if (!$pagesize) {
+            $pagelist->addPageList($pages);
+        } else {
             for ($i=$offset; $i < $offset + $pagesize - 1; $i++) {
-                if ($i >= $args['count']) break;
+                if ($i >= $args['count']) {
+                    break;
+                }
                 $pagelist->addPage($pages[$i]);
             }
         }
@@ -133,4 +139,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

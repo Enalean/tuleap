@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class XMLImportHelper implements User\XML\Import\IFindUserFromXMLReference {
+class XMLImportHelper implements User\XML\Import\IFindUserFromXMLReference
+{
 
     /** @var UserManager */
     private $user_manager;
@@ -32,7 +33,7 @@ class XMLImportHelper implements User\XML\Import\IFindUserFromXMLReference {
     {
         $format       = (string) $xml_element['format'];
         $submitted_by = (string) $xml_element;
-        switch($format) {
+        switch ($format) {
             case 'id':
             case 'email':
                 return "$format:$submitted_by";
@@ -40,7 +41,7 @@ class XMLImportHelper implements User\XML\Import\IFindUserFromXMLReference {
             case 'ldap':
                 return "ldapId:$submitted_by";
 
-            default :
+            default:
                 return (string) $xml_element;
         }
     }

@@ -406,7 +406,7 @@ class KanbanResource extends AuthenticatedResource
                 $this->getProjectIdForKanban($kanban)
             );
 
-            if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+            if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
                 $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
                 $rights = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
                 $message = new MessageDataPresenter(
@@ -1177,7 +1177,7 @@ class KanbanResource extends AuthenticatedResource
 
         Header::allowOptionsGetPatchDelete();
 
-        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+        if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
             $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
             $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
             $message = new MessageDataPresenter(
@@ -1242,7 +1242,7 @@ class KanbanResource extends AuthenticatedResource
             $new_column_id = $this->kanban_column_manager->createColumn($current_user, $kanban, $column_label);
         } catch (AgileDashboard_UserNotAdminException $exception) {
             throw new RestException(401, $exception->getMessage());
-        } catch(Kanban_SemanticStatusNotDefinedException $exception) {
+        } catch (Kanban_SemanticStatusNotDefinedException $exception) {
             throw new RestException(404, $exception->getMessage());
         } catch (Kanban_SemanticStatusNotBoundToStaticValuesException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -1278,7 +1278,7 @@ class KanbanResource extends AuthenticatedResource
         $column_representation = new KanbanColumnRepresentation();
         $column_representation->build($new_column, $add_in_place, $user_can_remove_column, $user_can_edit_label);
 
-        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+        if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
             $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
             $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
             $message = new MessageDataPresenter(
@@ -1325,7 +1325,7 @@ class KanbanResource extends AuthenticatedResource
             $this->kanban_column_manager->reorderColumns($user, $kanban, $column_ids);
         } catch (AgileDashboard_UserNotAdminException $exception) {
             throw new RestException(401, $exception->getMessage());
-        } catch(Kanban_SemanticStatusNotDefinedException $exception) {
+        } catch (Kanban_SemanticStatusNotDefinedException $exception) {
             throw new RestException(404, $exception->getMessage());
         } catch (Kanban_SemanticStatusNotBoundToStaticValuesException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -1337,7 +1337,7 @@ class KanbanResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         }
 
-        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+        if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
             $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
             $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
             $message = new MessageDataPresenter(

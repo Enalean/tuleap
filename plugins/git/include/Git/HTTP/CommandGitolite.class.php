@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_HTTP_CommandGitolite extends Git_HTTP_Command {
+class Git_HTTP_CommandGitolite extends Git_HTTP_Command
+{
 
     protected $gitolite_home = '/usr/com/gitolite';
 

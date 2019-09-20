@@ -20,8 +20,8 @@
 
 namespace Tuleap\OpenIDConnectClient\Provider;
 
-
-class Provider {
+class Provider
+{
 
     private $id;
     private $name;
@@ -108,5 +108,4 @@ class Provider {
     {
         return $this->color;
     }
-
 }

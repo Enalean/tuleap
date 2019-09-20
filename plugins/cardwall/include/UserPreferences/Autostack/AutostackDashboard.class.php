@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_UserPreferences_Autostack_AutostackDashboard extends Cardwall_UserPreferences_UserPreferencesAutostack {
+class Cardwall_UserPreferences_Autostack_AutostackDashboard extends Cardwall_UserPreferences_UserPreferencesAutostack
+{
     /**
      * @param Tracker $tracker
      */
@@ -39,4 +40,3 @@ class Cardwall_UserPreferences_Autostack_AutostackDashboard extends Cardwall_Use
         return 'cardwall_dashboard_'.$this->tracker->getId().'_column_'.$column->getId();
     }
 }
-?>

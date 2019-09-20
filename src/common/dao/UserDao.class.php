@@ -22,7 +22,8 @@
 /**
  *  Data Access Object for User
  */
-class UserDao extends DataAccessObject {
+class UserDao extends DataAccessObject
+{
     /** @var PasswordHandler */
     private $password_handler;
 
@@ -49,8 +50,10 @@ class UserDao extends DataAccessObject {
     function searchByStatus($status)
     {
         if (is_array($status)) {
-            $where_status=$this->da->quoteSmartImplode(" OR status = ",$status);
-        } else { $where_status = $this->da->quoteSmart($status); }
+            $where_status=$this->da->quoteSmartImplode(" OR status = ", $status);
+        } else {
+            $where_status = $this->da->quoteSmart($status);
+        }
         $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM user WHERE status = $where_status";
         return $this->retrieve($sql);
     }
@@ -61,8 +64,10 @@ class UserDao extends DataAccessObject {
     */
     function searchByUserId($userId)
     {
-        $sql = sprintf("SELECT * FROM user WHERE user_id = %s",
-            $this->da->quoteSmart($userId));
+        $sql = sprintf(
+            "SELECT * FROM user WHERE user_id = %s",
+            $this->da->quoteSmart($userId)
+        );
         return $this->retrieve($sql);
     }
 
@@ -72,8 +77,10 @@ class UserDao extends DataAccessObject {
     */
     function searchByUserName($userName)
     {
-        $sql = sprintf("SELECT * FROM user WHERE user_name = %s",
-            $this->da->quoteSmart($userName));
+        $sql = sprintf(
+            "SELECT * FROM user WHERE user_name = %s",
+            $this->da->quoteSmart($userName)
+        );
         return $this->retrieve($sql);
     }
 
@@ -83,8 +90,10 @@ class UserDao extends DataAccessObject {
     */
     function searchByEmail($email)
     {
-        $sql = sprintf("SELECT * FROM user WHERE email = %s",
-            $this->da->quoteSmart($email));
+        $sql = sprintf(
+            "SELECT * FROM user WHERE email = %s",
+            $this->da->quoteSmart($email)
+        );
         return $this->retrieve($sql);
     }
 
@@ -114,8 +123,10 @@ class UserDao extends DataAccessObject {
      */
     function searchByLdapId($ldap_id)
     {
-        $sql = sprintf("SELECT * FROM user WHERE ldap_id = %s",
-            $this->da->quoteSmart($ldap_id));
+        $sql = sprintf(
+            "SELECT * FROM user WHERE ldap_id = %s",
+            $this->da->quoteSmart($ldap_id)
+        );
         return $this->retrieve($sql);
     }
 
@@ -315,7 +326,7 @@ class UserDao extends DataAccessObject {
             unset($user['clear_password']);
         }
         $dar = $this->searchByUserId($user['user_id']);
-        if($dar && !$dar->isError()) {
+        if ($dar && !$dar->isError()) {
             $current = $dar->current();
             foreach ($user as $field => $value) {
                 if ($field != 'user_id' && $value != $current[$field] && $value !== null) {
@@ -360,9 +371,11 @@ class UserDao extends DataAccessObject {
     function searchStatusByEmail($email)
     {
         //ST: with LDAP user_name can be an email
-        $sql = sprintf("SELECT realname, email, status FROM user WHERE (user_name=%s OR email = %s)",
-                $this->da->quoteSmart($email),
-                $this->da->quoteSmart($email));
+        $sql = sprintf(
+            "SELECT realname, email, status FROM user WHERE (user_name=%s OR email = %s)",
+            $this->da->quoteSmart($email),
+            $this->da->quoteSmart($email)
+        );
         return $this->retrieve($sql);
     }
 
@@ -430,7 +443,7 @@ class UserDao extends DataAccessObject {
      * You can limit the number of results.
      * This is used by "search users as you type"
      */
-    public function searchUserNameLike($name, $limit=0)
+    public function searchUserNameLike($name, $limit = 0)
     {
         $name = $this->getDa()->quoteLikeValueSurround($name);
 
@@ -440,7 +453,7 @@ class UserDao extends DataAccessObject {
             " OR user_name LIKE $name)".
             " AND status IN ('A', 'R')";
         $sql .= "ORDER BY realname";
-        if($limit > 0) {
+        if ($limit > 0) {
             $sql .= " LIMIT ".db_ei($limit);
         }
 
@@ -502,7 +515,7 @@ class UserDao extends DataAccessObject {
     {
         $sql = 'SELECT user_id FROM user LEFT JOIN user_group USING(user_id) WHERE group_id IS NULL and status in ("A","R")';
         $dar = $this->retrieve($sql);
-        if($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             // user who is no more member of any project.
             return $dar;
         } else {
@@ -539,38 +552,37 @@ class UserDao extends DataAccessObject {
     {
         $logger = $this->getLogger();
         $dar    = $this->returnNotProjectMembers();
-        if ($dar){
+        if ($dar) {
             //we should verify the delay for it user has been no more belonging to any project
-            foreach ($dar as $row){
+            foreach ($dar as $row) {
                 $user_id = $row['user_id'];
                 $logger->debug("Checking user #$user_id");
                 //we split the treatment in two methods to distinguish between 0 row returned
                 //by the fact that there is no "removed user" entry for this user_id and the case
                 //where it is the result of comparing the date
                 $res = $this->delayForBeingNotProjectMembers($user_id);
-                if($res && !$res->isError()){
+                if ($res && !$res->isError()) {
                     //user is not member of any project yet
                     if ($res->rowCount() == 0) {
                         $logger->debug("User #$user_id never project member");
                         //Verify add_date
                         $resultat = $this->delayForBeingSubscribed($user_id, $time);
-                        if ($resultat && ! $resultat->isError() && $resultat->rowCount() == 1){
+                        if ($resultat && ! $resultat->isError() && $resultat->rowCount() == 1) {
                             $this->suspendUser($user_id);
-                        }else{
+                        } else {
                             $logger->debug("User #$user_id not in delay, continue");
                             continue;
                         }
                     } else {
                         //verify if delay has not expired yet
                         $rowLastRemove = $res->current();
-                        if ($rowLastRemove['date'] > $time ){
+                        if ($rowLastRemove['date'] > $time) {
                             $logger->debug("User #$user_id not in delay, continue");
                             continue;
                         } else {
                             $this->suspendUser($user_id);
                         }
                     }
-
                 }
             }
         }
@@ -602,7 +614,7 @@ class UserDao extends DataAccessObject {
     {
         $sql = "SELECT FOUND_ROWS() as nb;";
         $dar = $this->retrieve($sql);
-        if($dar && !$dar->isError()) {
+        if ($dar && !$dar->isError()) {
             $row = $dar->getRow();
             return $row['nb'];
         } else {
@@ -629,7 +641,7 @@ class UserDao extends DataAccessObject {
     public function replaceStringInList($subject, $search, $replace)
     {
         $tokens = explode(',', $subject);
-        foreach($tokens as $k => $str) {
+        foreach ($tokens as $k => $str) {
             $tokens[$k] = preg_replace('%^(\s*)' . preg_quote($search, '%') . '(\s*)$%', '$1'.$replace.'$2', $str);
         }
         return implode(',', $tokens);
@@ -663,11 +675,12 @@ class UserDao extends DataAccessObject {
                     $res = $res & $this->update($sqlArtgn);
                 }
                 return $res;
-
-            } else return true;
-
-        } else return false;
-
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -712,7 +725,7 @@ class UserDao extends DataAccessObject {
             if ($status != "") {
                 $where .= ' AND (status IN ('.$status.'))';
             }
-        } else if ($status != "") {
+        } elseif ($status != "") {
             $where .= ' WHERE status IN ('.$status.')';
         }
 
@@ -758,7 +771,7 @@ class UserDao extends DataAccessObject {
     {
         $sql = 'SELECT * FROM user_access WHERE user_id = '.$this->da->escapeInt($userId);
         $dar  = $this->retrieve($sql);
-        if($dar && !$dar->isError()) {
+        if ($dar && !$dar->isError()) {
             $row = $dar->getRow();
             return $row;
         } else {

@@ -22,7 +22,8 @@
  * ColorHelper
  * All the color manupilation related functions
  */
-class ColorHelper {
+class ColorHelper
+{
 
     /** @return string like '#efdabc' */
     public static function RGBToHexa($r, $g, $b)
@@ -48,4 +49,3 @@ class ColorHelper {
         );
     }
 }
-?>

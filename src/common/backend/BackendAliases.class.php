@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class BackendAliases extends Backend {
+class BackendAliases extends Backend
+{
 
     public const ALIAS_ENTRY_FORMAT = "%-50s%-10s";
 
@@ -146,15 +147,15 @@ class BackendAliases extends Backend {
                 $list_name = str_replace(' ', '', $list_name);
                 // Mailman 2.1 aliases
                 $list_name_as_argument = escapeshellarg($list_name);
-                $this->writeAlias($fp, new System_Alias("$list_name",             "\"|$mm_wrapper post $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-admin",       "\"|$mm_wrapper admin $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-bounces",     "\"|$mm_wrapper bounces $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-confirm",     "\"|$mm_wrapper confirm $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-join",        "\"|$mm_wrapper join $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-leave",       "\"|$mm_wrapper leave $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-owner",       "\"|$mm_wrapper owner $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-request",     "\"|$mm_wrapper request $list_name_as_argument\""));
-                $this->writeAlias($fp, new System_Alias("$list_name-subscribe",   "\"|$mm_wrapper subscribe $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name", "\"|$mm_wrapper post $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-admin", "\"|$mm_wrapper admin $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-bounces", "\"|$mm_wrapper bounces $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-confirm", "\"|$mm_wrapper confirm $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-join", "\"|$mm_wrapper join $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-leave", "\"|$mm_wrapper leave $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-owner", "\"|$mm_wrapper owner $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-request", "\"|$mm_wrapper request $list_name_as_argument\""));
+                $this->writeAlias($fp, new System_Alias("$list_name-subscribe", "\"|$mm_wrapper subscribe $list_name_as_argument\""));
                 $this->writeAlias($fp, new System_Alias("$list_name-unsubscribe", "\"|$mm_wrapper unsubscribe $list_name_as_argument\""));
             }
         }

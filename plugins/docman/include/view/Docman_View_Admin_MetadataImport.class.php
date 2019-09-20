@@ -25,8 +25,8 @@
 require_once('Docman_View_Extra.class.php');
 require_once(dirname(__FILE__).'/../Docman_MetadataComparator.class.php');
 
-class Docman_View_Admin_MetadataImport
-extends Docman_View_Extra {
+class Docman_View_Admin_MetadataImport extends Docman_View_Extra
+{
     var $srcGo;
     var $dstGo;
 
@@ -43,7 +43,7 @@ extends Docman_View_Extra {
     function getImportForm($sthToImport)
     {
         $html = '';
-        if($sthToImport) {
+        if ($sthToImport) {
             $html .= '<form name="" method="post" action="?">';
             $html .= '<input type="hidden" name="action" value="admin_import_metadata">';
             $html .= '<input type="hidden" name="group_id" value="'.$this->dstGo->getGroupId().'">';
@@ -70,16 +70,15 @@ extends Docman_View_Extra {
         // True if there is sth to import in dst project.
         $sthToImport = false;
 
-        $mdCmp = new Docman_MetadataComparator($this->srcGo->getGroupId(),
-                                               $this->dstGo->getGroupId(),
-                                               $params['theme_path']);
+        $mdCmp = new Docman_MetadataComparator(
+            $this->srcGo->getGroupId(),
+            $this->dstGo->getGroupId(),
+            $params['theme_path']
+        );
         $html .= $mdCmp->getMetadataCompareTable($sthToImport);
 
         $html .= $this->getImportForm($sthToImport);
 
         echo $html;
     }
-
 }
-
-?>

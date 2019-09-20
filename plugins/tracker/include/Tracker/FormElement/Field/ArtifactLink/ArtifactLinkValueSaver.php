@@ -32,7 +32,8 @@ use Feedback;
 use PFUser;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 
-class ArtifactLinkValueSaver {
+class ArtifactLinkValueSaver
+{
 
     /**
      * @var Tracker_ReferenceManager
@@ -158,7 +159,6 @@ class ArtifactLinkValueSaver {
         $existing_nature
     ) {
         if (in_array($to_tracker, $from_tracker->getChildren())) {
-
             if ($this->artifact_links_usage_dao->isTypeDisabledInProject(
                 $from_tracker->getProject()->getID(),
                 Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
@@ -236,7 +236,8 @@ class ArtifactLinkValueSaver {
                 $artifactlinkinfo,
                 $from_artifact->getTracker(),
                 $existing_nature,
-                $nature_by_plugin);
+                $nature_by_plugin
+            );
         }
         return $nature_by_plugin;
     }

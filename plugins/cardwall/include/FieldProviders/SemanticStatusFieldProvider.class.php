@@ -21,7 +21,8 @@
 /**
  * Retrieves the semantic status field of the given artifact
  */
-class Cardwall_FieldProviders_SemanticStatusFieldRetriever implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {
+class Cardwall_FieldProviders_SemanticStatusFieldRetriever implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
+{
 
     /**
      * Retrieves the semantic status field of the given artifact
@@ -33,5 +34,3 @@ class Cardwall_FieldProviders_SemanticStatusFieldRetriever implements Cardwall_F
         return Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
     }
 }
-
-?>

@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElement_Field_ValueDao {
+class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElement_Field_ValueDao
+{
     public function __construct()
     {
         parent::__construct();
@@ -111,7 +112,7 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
     public function createNoneValue($tracker_id, $field_id)
     {
         $changeset_value_ids = $this->createNoneChangesetValue($tracker_id, $field_id);
-        if ( $changeset_value_ids === false ) {
+        if ($changeset_value_ids === false) {
             return false;
         }
 

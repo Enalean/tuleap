@@ -20,7 +20,8 @@
 
 require_once('include/DataAccessObject.class.php');
 
-class GenericUserDao extends DataAccessObject {
+class GenericUserDao extends DataAccessObject
+{
     public function __construct($da = null)
     {
         parent::__construct($da);
@@ -44,6 +45,4 @@ class GenericUserDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
-
 }
-?>

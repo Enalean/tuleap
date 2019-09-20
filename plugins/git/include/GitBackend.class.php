@@ -21,7 +21,8 @@
 /**
  * Description of GitBackend
  */
-class GitBackend extends Backend implements Git_Backend_Interface, GitRepositoryCreator {
+class GitBackend extends Backend implements Git_Backend_Interface, GitRepositoryCreator
+{
 
     private $driver;
     private $packagesFile;
@@ -97,8 +98,8 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         $path          = Git_Backend_Interface::GIT_ROOT_PATH .'/'.$repository->getPath();
         $fsDescription = $this->getDriver()->getDescription($path);
         $description   = $repository->getDescription();
-        if ( $description != $fsDescription ) {
-            $this->getDriver()->setDescription( $path, $description );
+        if ($description != $fsDescription) {
+            $this->getDriver()->setDescription($path, $description);
         }
         $this->getDao()->save($repository);
     }
@@ -113,9 +114,9 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
 
     public function isInitialized(GitRepository $repository)
     {
-        $masterExists = $this->getDriver()->masterExists( $this->getGitRootPath().'/'.$repository->getPath() );
-        if ( $masterExists ) {
-            $this->getDao()->initialize( $repository->getId() );
+        $masterExists = $this->getDriver()->masterExists($this->getGitRootPath().'/'.$repository->getPath());
+        if ($masterExists) {
+            $this->getDao()->initialize($repository->getId());
             return true;
         } else {
             return false;
@@ -206,7 +207,8 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     {
         $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();
         $no_filter_file_extension = array();
-        $this->recurseChownChgrp($path,
+        $this->recurseChownChgrp(
+            $path,
             'codendiadm',
             $repository->getProject()->getUnixName(),
             $no_filter_file_extension
@@ -218,9 +220,9 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     {
         $gitRootPath    = $this->getGitRootPath();
         //create the gitroot directory
-        if ( !is_dir($gitRootPath) ) {
-            if ( !mkdir($gitRootPath, 0755) ) {
-                throw new GitBackendException( dgettext('tuleap-git', 'Error while creating root for Git repositories (Contact the site admin)').' -> '.$gitRootPath );
+        if (!is_dir($gitRootPath)) {
+            if (!mkdir($gitRootPath, 0755)) {
+                throw new GitBackendException(dgettext('tuleap-git', 'Error while creating root for Git repositories (Contact the site admin)').' -> '.$gitRootPath);
             }
         }
         return true;
@@ -231,13 +233,12 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     {
         $gitProjectPath = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getRootPath();
         $groupName      = $repository->getProject()->getUnixName();
-        if ( !is_dir($gitProjectPath) ) {
-
-            if ( !mkdir($gitProjectPath, 0775, true) ) {
+        if (!is_dir($gitProjectPath)) {
+            if (!mkdir($gitProjectPath, 0775, true)) {
                 throw new GitBackendException(dgettext('tuleap-git', 'Error while creating project root for Git repository (Contact the site admin)').' -> '.$gitProjectPath);
             }
 
-            if ( !$this->chgrp($gitProjectPath, $groupName ) ) {
+            if (!$this->chgrp($gitProjectPath, $groupName)) {
                 throw new GitBackendException(dgettext('tuleap-git', 'Error while setting project root permissions (Contact the site admin)').$gitProjectPath.' group='.$groupName);
             }
         }
@@ -251,17 +252,17 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
      */
     public function archive(GitRepository $repository)
     {
-        chdir( $this->getGitRootPath() );
+        chdir($this->getGitRootPath());
         $path = $repository->getPath();
         $archiveName = $repository->getBackupPath().'.tar.bz2';
         $cmd    = ' tar cjf '.$archiveName.' '.$path.' 2>&1';
         $rcode  = 0 ;
-        $output = $this->system( $cmd, $rcode );
-        if ( $rcode != 0 ) {
+        $output = $this->system($cmd, $rcode);
+        if ($rcode != 0) {
             throw new GitBackendException($cmd.' -> '.$output);
         }
-        if ( !empty($this->gitBackupDir) && is_dir($this->gitBackupDir) ) {
-            $this->system( 'mv '.$this->getGitRootPath().'/'.$archiveName.' '.$this->gitBackupDir.'/'.$archiveName );
+        if (!empty($this->gitBackupDir) && is_dir($this->gitBackupDir)) {
+            $this->system('mv '.$this->getGitRootPath().'/'.$archiveName.' '.$this->gitBackupDir.'/'.$archiveName);
         }
         return true;
     }
@@ -285,7 +286,6 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         $serverName  = $_SERVER['SERVER_NAME'];
         $user = UserManager::instance()->getCurrentUser();
         return array('ssh' => $user->getUserName() .'@'. $serverName .':/gitroot/'. $repository->getProject()->getUnixName().'/'.$repository->getName().'.git');
-
     }
 
     /**
@@ -332,9 +332,9 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         $gitolite[]            = "Gitolite created repositories";
         $gitoliteActiveIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
         $gitoliteActive[]      = "Gitolite created repositories (still active)";
-        $this->fillBackendStatisticsByType($formatter, 'gitshell', $gitShellIndex,       $gitShell,       false);
+        $this->fillBackendStatisticsByType($formatter, 'gitshell', $gitShellIndex, $gitShell, false);
         $this->fillBackendStatisticsByType($formatter, 'gitshell', $gitShellActiveIndex, $gitShellActive, true);
-        $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteIndex,       $gitolite,       false);
+        $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteIndex, $gitolite, false);
         $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteActiveIndex, $gitoliteActive, true);
         $this->retrieveLoggedPushesStatistics($formatter);
         $this->retrieveReadAccessStatistics($formatter);
@@ -433,7 +433,6 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
 
     public function deleteArchivedRepository(GitRepository $repository)
     {
-
     }
 
     /**

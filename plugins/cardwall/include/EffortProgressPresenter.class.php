@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface Cardwall_EffortProgressPresenter {
+interface Cardwall_EffortProgressPresenter
+{
     public function milestone_capacity();
 
     public function milestone_initial_effort_value();

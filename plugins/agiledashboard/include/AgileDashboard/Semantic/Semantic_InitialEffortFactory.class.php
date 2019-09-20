@@ -25,7 +25,8 @@
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 
-class AgileDashboard_Semantic_InitialEffortFactory implements IBuildSemanticFromXML, IDuplicateSemantic {
+class AgileDashboard_Semantic_InitialEffortFactory implements IBuildSemanticFromXML, IDuplicateSemantic
+{
 
     /**
      * Hold an instance of the class

@@ -21,7 +21,8 @@
 
 use Tuleap\Docman\Item\ItemVisitor;
 
-class Docman_MetadataHtmlWiki extends Docman_MetadataHtml {
+class Docman_MetadataHtmlWiki extends Docman_MetadataHtml
+{
     var $pagename;
 
     function __construct($pagename)
@@ -46,10 +47,10 @@ class Docman_MetadataHtmlWiki extends Docman_MetadataHtml {
         $validator = new Docman_ValidateValueNotEmpty($this->pagename, $msg);
         return $validator;
     }
-
 }
 
-class Docman_MetadataHtmlLink extends Docman_MetadataHtml {
+class Docman_MetadataHtmlLink extends Docman_MetadataHtml
+{
     var $link_url;
 
     function __construct($link_url)
@@ -74,14 +75,13 @@ class Docman_MetadataHtmlLink extends Docman_MetadataHtml {
         $validator = new Docman_ValidateValueNotEmpty($this->link_url, $msg);
         return $validator;
     }
-
 }
 
-class Docman_MetadataHtmlFile extends Docman_MetadataHtml {
+class Docman_MetadataHtmlFile extends Docman_MetadataHtml
+{
 
     function __construct()
     {
-
     }
 
     public function getLabel($show_mandatory_information = true)
@@ -96,7 +96,7 @@ class Docman_MetadataHtmlFile extends Docman_MetadataHtml {
             'plugin_docman',
             'max_size_msg',
             [formatByteToMb((int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING))]
-            ) .'</em>';
+        ) .'</em>';
 
         return $html;
     }
@@ -109,10 +109,10 @@ class Docman_MetadataHtmlFile extends Docman_MetadataHtml {
         $validator = new Docman_ValidateUpload($request);
         return $validator;
     }
-
 }
 
-class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml {
+class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml
+{
     var $content;
     function __construct($content)
     {
@@ -137,10 +137,10 @@ class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml {
         $validator = null;
         return $validator;
     }
-
 }
 
-class Docman_MetadataHtmlEmpty extends Docman_MetadataHtml {
+class Docman_MetadataHtmlEmpty extends Docman_MetadataHtml
+{
 
     function __construct()
     {
@@ -173,12 +173,11 @@ class Docman_View_GetSpecificFieldsVisitor implements ItemVisitor
     function visitWiki(Docman_Wiki $item, $params = array())
     {
         $pagename = '';
-        if(isset($params['force_item'])) {
-            if(Docman_ItemFactory::getItemTypeForItem($params['force_item']) == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
+        if (isset($params['force_item'])) {
+            if (Docman_ItemFactory::getItemTypeForItem($params['force_item']) == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
                 $pagename = $params['force_item']->getPagename();
             }
-        }
-        else {
+        } else {
             $pagename = $item->getPagename();
         }
         return array(new Docman_MetadataHtmlWiki($pagename));
@@ -187,12 +186,11 @@ class Docman_View_GetSpecificFieldsVisitor implements ItemVisitor
     function visitLink(Docman_Link $item, $params = array())
     {
         $link_url = '';
-        if(isset($params['force_item'])) {
-            if($params['force_item']->getType() == PLUGIN_DOCMAN_ITEM_TYPE_LINK) {
+        if (isset($params['force_item'])) {
+            if ($params['force_item']->getType() == PLUGIN_DOCMAN_ITEM_TYPE_LINK) {
                 $link_url = $params['force_item']->getUrl();
             }
-        }
-        else {
+        } else {
             $link_url = $item->getUrl();
         }
         return array(new Docman_MetadataHtmlLink($link_url));

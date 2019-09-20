@@ -23,7 +23,8 @@ require_once 'TreeNode.class.php';
 /**
  * Extend this and you'll be able to duplicate all properties of TreeNode into a TreeNode of another type
  */
-abstract class NodeDuplicator extends TreeNode {
+abstract class NodeDuplicator extends TreeNode
+{
 
     public function __construct(TreeNode $node)
     {
@@ -32,5 +33,3 @@ abstract class NodeDuplicator extends TreeNode {
         $this->setObject($node->getObject());
     }
 }
-
-?>

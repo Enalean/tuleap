@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest  extends TuleapTestCase {
+class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest extends TuleapTestCase
+{
 
     public function itStripsVerticalSpaces()
     {
@@ -99,4 +100,3 @@ class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest  extends Tule
         }
     }
 }
-?>

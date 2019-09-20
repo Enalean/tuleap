@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201505131103_project_admin_can_choose_visibility extends ForgeUpgrade_Bucket {
+class b201505131103_project_admin_can_choose_visibility extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return "By default, project admin can choose their project visibility";

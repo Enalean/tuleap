@@ -2330,5 +2330,3 @@ $locale["yesterday"] =
    "hier";
 $locale["|<<"] =
    "|<<";
-
-?>

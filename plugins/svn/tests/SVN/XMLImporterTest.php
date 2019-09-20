@@ -53,7 +53,8 @@ use UGroupDao;
 use UGroupManager;
 use UGroupUserDao;
 
-class TestBackendSVN extends BackendSVN {
+class TestBackendSVN extends BackendSVN
+{
     private $tc; ///< @var XMLImporterTest
 
     public function setUp($test_case)
@@ -169,12 +170,12 @@ class XMLImporterTest extends TuleapTestCase
     /**
      * @var UGroupDao
      */
-    public  $ugdao;
+    public $ugdao;
 
     /**
      * @var UGroupUserDao
      */
-    public  $ugudao;
+    public $ugudao;
 
     /**
      * @var AccessFileHistoryDao
@@ -360,7 +361,8 @@ class XMLImporterTest extends TuleapTestCase
             $xml,
             $this->arpath,
             $this->repository_creator,
-            $this->backend_svn, $this->backend_system,
+            $this->backend_svn,
+            $this->backend_system,
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,
@@ -393,13 +395,13 @@ class XMLImporterTest extends TuleapTestCase
             $xml,
             $this->arpath,
             $this->repository_creator,
-            $this->backend_svn, $this->backend_system,
+            $this->backend_svn,
+            $this->backend_system,
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,
             $this->notification_emails_builder,
             $this->repository_copier
-
         );
         $this->callImport($svn, $this->project);
     }
@@ -415,7 +417,8 @@ class XMLImporterTest extends TuleapTestCase
             $xml,
             $this->arpath,
             $this->repository_creator,
-            $this->backend_svn, $this->backend_system,
+            $this->backend_svn,
+            $this->backend_system,
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,
@@ -436,7 +439,8 @@ class XMLImporterTest extends TuleapTestCase
             $xml,
             $this->arpath,
             $this->repository_creator,
-            $this->backend_svn, $this->backend_system,
+            $this->backend_svn,
+            $this->backend_system,
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,
@@ -462,7 +466,8 @@ class XMLImporterTest extends TuleapTestCase
             $xml,
             $this->arpath,
             $this->repository_creator,
-            $this->backend_svn, $this->backend_system,
+            $this->backend_svn,
+            $this->backend_system,
             $this->access_file_history_creator,
             $this->repository_manager,
             $this->user_manager,

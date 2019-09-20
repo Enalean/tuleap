@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_Presenter_BaseHomePresenter {
+class Planning_Presenter_BaseHomePresenter
+{
 
     /** @var int */
     public $group_id;

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class PermissionDaoException extends DataAccessQueryException {
+class PermissionDaoException extends DataAccessQueryException
+{
 
 }

@@ -110,12 +110,10 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
                 } catch (Exception $e) {
                     $this->test_result = null;
                 }
-
             } else {
                 $this->job = null;
                 $this->test_result = null;
             }
-
         }
     }
 

@@ -20,7 +20,8 @@
  */
 require_once('bootstrap.php');
 
-class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
+class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase
+{
 
     private $field;
     private $user;
@@ -63,7 +64,8 @@ class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Artifact_ChangesetValue_DateDiffTest extends TuleapTestCase {
+class Tracker_Artifact_ChangesetValue_DateDiffTest extends TuleapTestCase
+{
 
 
     private $field;
@@ -76,10 +78,10 @@ class Tracker_Artifact_ChangesetValue_DateDiffTest extends TuleapTestCase {
         parent::setUp();
 
         $this->base_language = mock('BaseLanguage');
-        stub($this->base_language)->getText('plugin_tracker_artifact','changed_from')->returns('changed from');
-        stub($this->base_language)->getText('plugin_tracker_artifact','to')->returns('to');
-        stub($this->base_language)->getText('plugin_tracker_artifact','cleared')->returns('cleared');
-        stub($this->base_language)->getText('plugin_tracker_artifact','set_to')->returns('set_to');
+        stub($this->base_language)->getText('plugin_tracker_artifact', 'changed_from')->returns('changed from');
+        stub($this->base_language)->getText('plugin_tracker_artifact', 'to')->returns('to');
+        stub($this->base_language)->getText('plugin_tracker_artifact', 'cleared')->returns('cleared');
+        stub($this->base_language)->getText('plugin_tracker_artifact', 'set_to')->returns('set_to');
 
         stub($this->base_language)->getText('system', 'datefmt_short')->returns(Tracker_FormElement_DateFormatter::DATE_FORMAT);
 

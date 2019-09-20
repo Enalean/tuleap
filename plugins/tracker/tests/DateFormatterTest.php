@@ -21,7 +21,8 @@
 require_once('bootstrap.php');
 require_once __DIR__ . '/../../../src/www/include/utils.php';
 
-class Tracker_FormElement_DateFormatterTest extends TuleapTestCase {
+class Tracker_FormElement_DateFormatterTest extends TuleapTestCase
+{
 
     /** @var Tracker_FormElement_DateFormatter */
     private $date_formatter;
@@ -55,5 +56,4 @@ class Tracker_FormElement_DateFormatterTest extends TuleapTestCase {
 
         $this->assertFalse($this->date_formatter->validate($value));
     }
-
 }

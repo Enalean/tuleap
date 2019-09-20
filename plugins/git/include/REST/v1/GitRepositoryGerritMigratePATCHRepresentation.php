@@ -21,7 +21,8 @@
 
 namespace Tuleap\Git\REST\v1;
 
-class GitRepositoryGerritMigratePATCHRepresentation {
+class GitRepositoryGerritMigratePATCHRepresentation
+{
 
     /**
      * @var int {@type int}

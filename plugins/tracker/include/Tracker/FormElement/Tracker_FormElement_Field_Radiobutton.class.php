@@ -20,7 +20,8 @@
  */
 
 
-class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Selectbox {
+class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Selectbox
+{
 
 
 
@@ -40,7 +41,7 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
         }
         $label    = $this->getBind()->formatChangesetValueWithoutLink($value);
 
-        if(!$name) {
+        if (!$name) {
             $name= 'name="admin"';
         }
 
@@ -94,7 +95,7 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
      */
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','radiobtn_desc');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'radiobtn_desc');
     }
 
     /**

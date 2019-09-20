@@ -20,7 +20,8 @@
 
 require_once('bootstrap.php');
 
-class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
+class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase
+{
 
     private $user_manager;
 
@@ -48,7 +49,15 @@ class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
         $body = '<b> My comment 01</b>';
 
         $comment = new Tracker_Artifact_Changeset_Comment(
-            1, $this->changeset, 0, 0, 101, $this->timestamp, $body, 'html', 0
+            1,
+            $this->changeset,
+            0,
+            0,
+            101,
+            $this->timestamp,
+            $body,
+            'html',
+            0
         );
 
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
@@ -80,7 +89,15 @@ class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
         $escaped_body = 'See art # 290';
 
         $comment = new Tracker_Artifact_Changeset_Comment(
-            1, $this->changeset, 0, 0, 101, $this->timestamp, $body, 'html', 0
+            1,
+            $this->changeset,
+            0,
+            0,
+            101,
+            $this->timestamp,
+            $body,
+            'html',
+            0
         );
 
         $xml = '<?xml version="1.0" encoding="UTF-8"?>

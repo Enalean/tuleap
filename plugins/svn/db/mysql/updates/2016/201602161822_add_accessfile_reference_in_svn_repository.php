@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201602161822_add_accessfile_reference_in_svn_repository extends ForgeUpgrade_Bucket {
+class b201602161822_add_accessfile_reference_in_svn_repository extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_SystemCheckProjectRetriever {
+class Docman_SystemCheckProjectRetriever
+{
 
     /** @var Docman_SystemCheckDao */
     private $dao;

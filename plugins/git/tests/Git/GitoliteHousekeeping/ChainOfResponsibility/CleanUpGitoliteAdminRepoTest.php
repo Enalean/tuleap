@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../../../bootstrap.php';
 
-class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTest extends TuleapTestCase {
+class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTest extends TuleapTestCase
+{
 
     private $fixtures;
 

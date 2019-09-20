@@ -21,7 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Statistics_DiskUsageOutput {
+class Statistics_DiskUsageOutput
+{
     protected $_dum;
 
     public function __construct(Statistics_DiskUsageManager $dum)
@@ -65,14 +66,18 @@ class Statistics_DiskUsageOutput {
         if ($retstring == 'auto') {
             $nbDigit = (int)(log(abs($size))/log(10)) + 1;
             switch ($nbDigit) {
-                case 1:  $retstring = '%.2f %s'; break;
-                case 2:  $retstring = '%.1f %s'; break;
-                default: $retstring = '%d %s'; break;
+                case 1:
+                    $retstring = '%.2f %s';
+                    break;
+                case 2:
+                    $retstring = '%.1f %s';
+                    break;
+                default:
+                    $retstring = '%d %s';
+                    break;
             }
         }
 
         return sprintf($retstring, $size, $sys['prefix'][$i]);
     }
 }
-
-?>

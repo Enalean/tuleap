@@ -18,5 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class LDAP_Exception_BindException extends RuntimeException {
+class LDAP_Exception_BindException extends RuntimeException
+{
 }

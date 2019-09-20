@@ -47,6 +47,6 @@ try {
     $hook->assertCommitDoesNotContainSHA1Collision($repository, $txn);
     exit(0);
 } catch (Exception $exeption) {
-    fwrite (STDERR, $exeption->getMessage());
+    fwrite(STDERR, $exeption->getMessage());
     exit(1);
 }

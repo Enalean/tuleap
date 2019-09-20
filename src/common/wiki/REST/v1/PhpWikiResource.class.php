@@ -34,7 +34,8 @@ use PFUser;
 use WikiVersionDao;
 use WikiPageVersionFactory;
 
-class PhpWikiResource extends AuthenticatedResource {
+class PhpWikiResource extends AuthenticatedResource
+{
 
     /** @var WikiDao */
     private $wiki_dao;

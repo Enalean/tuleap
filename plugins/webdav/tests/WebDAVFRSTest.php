@@ -47,7 +47,8 @@ Mock::generatePartial(
 /**
  * This is the unit test of WebDAVProject
  */
-class WebDAVFRSTest extends TuleapTestCase {
+class WebDAVFRSTest extends TuleapTestCase
+{
 
     public function setUp()
     {

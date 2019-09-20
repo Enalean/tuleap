@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class LDAP_Exception_DeleteException extends RuntimeException {
+class LDAP_Exception_DeleteException extends RuntimeException
+{
 
     public function __construct($message, $dn)
     {

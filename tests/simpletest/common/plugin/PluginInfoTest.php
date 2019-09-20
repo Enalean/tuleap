@@ -20,7 +20,8 @@
 
 Mock::generate('Plugin');
 Mock::generate('PropertyDescriptor');
-class TestPluginInfo extends PluginInfo {
+class TestPluginInfo extends PluginInfo
+{
     function addPropertyDescriptor(&$desc)
     {
         $this->_addPropertyDescriptor($desc);
@@ -37,7 +38,8 @@ class TestPluginInfo extends PluginInfo {
  *
  * Tests the class PluginInfo
  */
-class PluginInfoTest extends TuleapTestCase {
+class PluginInfoTest extends TuleapTestCase
+{
 
     function testPluginDescriptor()
     {
@@ -54,7 +56,6 @@ class PluginInfoTest extends TuleapTestCase {
         $this->assertEqual($pd->getFullName(), 'TestPlugin');
         $this->assertEqual($pd->getVersion(), 'v1.0');
         $this->assertEqual($pd->getDescription(), 'A simple plugin, just for unit testing');
-
     }
 
     function testPropertyDescriptor()
@@ -84,4 +85,3 @@ class PluginInfoTest extends TuleapTestCase {
         $this->assertEqual($descriptors->size(), 1);
     }
 }
-?>

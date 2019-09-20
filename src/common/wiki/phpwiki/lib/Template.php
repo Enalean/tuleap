@@ -44,12 +44,13 @@ class Template
         $this->_tmpl = fread($fp, filesize($file));
         fclose($fp);
         //$userid = $request->_user->_userid;
-        if (is_array($args))
+        if (is_array($args)) {
             $this->_locals = $args;
-        elseif ($args)
+        } elseif ($args) {
             $this->_locals = array('CONTENT' => $args);
-        else
+        } else {
             $this->_locals = array();
+        }
     }
 
     function _munge_input($template)
@@ -63,7 +64,8 @@ class Template
                     "'" . str_replace("'", "\'", $matches[0]) . "'"
                 );
             },
-            $template);
+            $template
+        );
 
         // Convert < ?= expr ? > to < ?php $this->_print(expr); ? >
         return preg_replace('/<\?=(.*?)\?>/s', '<?php $this->_print(\1);?>', $template);
@@ -74,8 +76,9 @@ class Template
         include_once("lib/WikiPlugin.php");
         static $loader;
 
-        if (empty($loader))
+        if (empty($loader)) {
             $loader = new WikiPluginLoader;
+        }
 
         $this->_print($loader->expandPI($pi, $this->_request, $this, $this->_basepage));
     }
@@ -123,16 +126,19 @@ class Template
 
     function printExpansion($defaults = false)
     {
-        if (!is_array($defaults)) // HTML object or template object
+        if (!is_array($defaults)) { // HTML object or template object
             $defaults = array('CONTENT' => $defaults);
+        }
         $this->_vars = array_merge($defaults, $this->_locals);
         extract($this->_vars);
 
         global $request;
-        if (!isset($user))
+        if (!isset($user)) {
             $user = $request->getUser();
-        if (!isset($page))
+        }
+        if (!isset($page)) {
             $page = $request->getPage();
+        }
 
         global $WikiTheme, $RCS_IDS, $charset;
         //$this->_dump_template();
@@ -176,8 +182,9 @@ class Template
         $lines = explode("\n", $this->_munge_input($this->_tmpl));
         $pre = HTML::pre();
         $n = 1;
-        foreach ($lines as $line)
+        foreach ($lines as $line) {
             $pre->pushContent(fmt("%4d  %s\n", $n++, $line));
+        }
         $pre->printXML();
     }
 
@@ -190,25 +197,25 @@ class Template
             $error->errfile = "In template '$this->_name'";
             // Hack alert: Ignore 'undefined variable' messages for variables
             //  whose names are ALL_CAPS.
-            if (preg_match('/Undefined variable:\s*[_A-Z]+\s*$/', $error->errstr))
+            if (preg_match('/Undefined variable:\s*[_A-Z]+\s*$/', $error->errstr)) {
                 return true;
+            }
         }
         // ignore recursively nested htmldump loop: browse -> body -> htmldump -> browse -> body ...
         // FIXME for other possible loops also
         elseif (strstr($error->errfile, "In template 'htmldump'")) {
             ; //return $error;
-        }
-        elseif (strstr($error->errfile, "In template '")) { // merge
+        } elseif (strstr($error->errfile, "In template '")) { // merge
             $error->errfile = preg_replace("/'(\w+)'\)$/", "'\\1' < '$this->_name')", $error->errfile);
-        }
-        else {
+        } else {
             $error->errfile .= " (In template '$this->_name')";
         }
 
         if (!empty($this->_tmpl)) {
             $lines = explode("\n", $this->_tmpl);
-            if (isset($lines[$error->errline - 1]))
+            if (isset($lines[$error->errline - 1])) {
                 $error->errstr .= ":\n\t" . $lines[$error->errline - 1];
+            }
         }
         return $error;
     }
@@ -248,15 +255,17 @@ function GeneratePage($content, $title, $page_revision = false, $args = false)
 {
     global $request;
 
-    if (!is_array($args))
+    if (!is_array($args)) {
         $args = array();
+    }
 
     $args['CONTENT'] = $content;
     $args['TITLE'] = $title;
     $args['revision'] = $page_revision;
 
-    if (!isset($args['HEADER']))
+    if (!isset($args['HEADER'])) {
         $args['HEADER'] = $title;
+    }
 
     printXML(new Template('html', $request, $args));
 }
@@ -269,16 +278,18 @@ function GeneratePageasXML($content, $title, $page_revision = false, $args = fal
 {
     global $request;
 
-    if (!is_array($args))
+    if (!is_array($args)) {
         $args = array();
+    }
 
     $content->_basepage = $title;
     $args['CONTENT'] = $content;
     $args['TITLE'] = SplitPagename($title);
     $args['revision'] = $page_revision;
 
-    if (!isset($args['HEADER']))
+    if (!isset($args['HEADER'])) {
         $args['HEADER'] = SplitPagename($title);
+    }
 
     global $HIDE_TOOLBARS, $NO_BASEHREF, $HTML_DUMP;
     $HIDE_TOOLBARS = true;
@@ -403,4 +414,3 @@ function GeneratePageasXML($content, $title, $page_revision = false, $args = fal
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

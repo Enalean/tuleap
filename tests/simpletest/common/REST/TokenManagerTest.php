@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Rest_TokenManagerTest extends TuleapTestCase {
+class Rest_TokenManagerTest extends TuleapTestCase
+{
 
     /** @var  Rest_TokenManager */
     private $token_manager;
@@ -57,7 +58,6 @@ class Rest_TokenManagerTest extends TuleapTestCase {
         $this->expectException("Rest_Exception_InvalidTokenException");
 
         $this->token_manager->checkToken($this->token);
-
     }
 
     public function itExpiresATokenIfItBelongsToUser()
@@ -104,6 +104,4 @@ class Rest_TokenManagerTest extends TuleapTestCase {
         $result = $this->token_manager->generateTokenForUser($this->user);
         var_dump($result);
     }
-
 }
-?>

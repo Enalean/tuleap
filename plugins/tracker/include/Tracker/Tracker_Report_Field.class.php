@@ -19,7 +19,8 @@
  */
 
 
-interface Tracker_Report_Field extends Tracker_FormElement_IHaveAnId, Tracker_FormElement_Usable {
+interface Tracker_Report_Field extends Tracker_FormElement_IHaveAnId, Tracker_FormElement_Usable
+{
 
     /**
      * Return a label (e.g. usable both in a form or as a column header)
@@ -49,7 +50,5 @@ interface Tracker_Report_Field extends Tracker_FormElement_IHaveAnId, Tracker_Fo
      * @param int $report_id the id of the calling report
      * @return string
      */
-    function fetchChangesetValue($artifact_id, $changeset_id, $value, $report_id=null, $from_aid = null);
-
+    function fetchChangesetValue($artifact_id, $changeset_id, $value, $report_id = null, $from_aid = null);
 }
-?>

@@ -23,7 +23,8 @@
 * Widget_ProjectLatestFileReleases
 *
 */
-class Widget_ProjectLatestFileReleases extends Widget {
+class Widget_ProjectLatestFileReleases extends Widget
+{
     var $content;
 
     public function __construct()
@@ -65,6 +66,6 @@ class Widget_ProjectLatestFileReleases extends Widget {
     }
     function getDescription()
     {
-        return $GLOBALS['Language']->getText('widget_description_project_latest_file_releases','description');
+        return $GLOBALS['Language']->getText('widget_description_project_latest_file_releases', 'description');
     }
 }

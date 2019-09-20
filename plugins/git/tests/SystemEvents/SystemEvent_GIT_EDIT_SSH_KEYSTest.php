@@ -24,7 +24,8 @@
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
+class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase
+{
 
     private $event;
     private $user_account_manager;
@@ -97,10 +98,10 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
 
         expect($this->logger)->error()->never();
         expect($this->user_account_manager)->synchroniseSSHKeys(
-                $original_keys,
-                $new_keys,
-                $this->user
-            )->once();
+            $original_keys,
+            $new_keys,
+            $this->user
+        )->once();
 
         $event->process();
     }
@@ -126,10 +127,10 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
 
         expect($this->logger)->error()->never();
         expect($this->user_account_manager)->synchroniseSSHKeys(
-                $original_keys,
-                $new_keys,
-                $this->user
-            )->once();
+            $original_keys,
+            $new_keys,
+            $this->user
+        )->once();
 
          $event->process();
     }

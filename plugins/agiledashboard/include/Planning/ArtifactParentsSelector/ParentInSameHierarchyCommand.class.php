@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_ArtifactParentsSelector_ParentInSameHierarchyCommand extends Planning_ArtifactParentsSelector_Command {
+class Planning_ArtifactParentsSelector_ParentInSameHierarchyCommand extends Planning_ArtifactParentsSelector_Command
+{
 
     /**
      * @see Planning_ArtifactParentsSelector_Command
@@ -45,4 +46,3 @@ class Planning_ArtifactParentsSelector_ParentInSameHierarchyCommand extends Plan
         }
     }
 }
-?>

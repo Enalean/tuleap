@@ -25,7 +25,8 @@
  * then target field will be constrained to another value.
  *
  */
-class Tracker_Rule_Date extends Tracker_Rule {
+class Tracker_Rule_Date extends Tracker_Rule
+{
 
     public const COMPARATOR_EQUALS                 = '=';
     public const COMPARATOR_NOT_EQUALS             = '≠';
@@ -56,7 +57,7 @@ class Tracker_Rule_Date extends Tracker_Rule {
      */
     public function setComparator($comparator)
     {
-        if(! in_array($comparator, self::$allowed_comparators)) {
+        if (! in_array($comparator, self::$allowed_comparators)) {
             throw new Tracker_Rule_Date_InvalidComparatorException();
         }
 
@@ -94,19 +95,19 @@ class Tracker_Rule_Date extends Tracker_Rule {
         $target_date = $this->getTimestamp($target_value, $date_only);
 
         switch ($this->getComparator()) {
-            case self::COMPARATOR_EQUALS :
+            case self::COMPARATOR_EQUALS:
                 return $source_date == $target_date;
-            case self::COMPARATOR_NOT_EQUALS :
+            case self::COMPARATOR_NOT_EQUALS:
                 return $source_date != $target_date;
-            case self::COMPARATOR_GREATER_THAN :
+            case self::COMPARATOR_GREATER_THAN:
                 return $source_date > $target_date;
-            case self::COMPARATOR_GREATER_THAN_OR_EQUALS :
+            case self::COMPARATOR_GREATER_THAN_OR_EQUALS:
                 return $source_date >= $target_date;
-            case self::COMPARATOR_LESS_THAN :
+            case self::COMPARATOR_LESS_THAN:
                 return $source_date < $target_date;
-            case self::COMPARATOR_LESS_THAN_OR_EQUALS :
+            case self::COMPARATOR_LESS_THAN_OR_EQUALS:
                 return $source_date <= $target_date;
-            default :
+            default:
                 throw new Tracker_Rule_Date_MissingComparatorException();
         }
     }
@@ -135,4 +136,3 @@ class Tracker_Rule_Date extends Tracker_Rule {
         }
     }
 }
-?>

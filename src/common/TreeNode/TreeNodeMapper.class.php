@@ -23,7 +23,8 @@ require_once 'TreeNodeCallback.class.php';
 /**
  * Like array_map this produces a new node tree by calling $callback on every node in the current tree
  */
-class TreeNodeMapper {
+class TreeNodeMapper
+{
 
     /** @var TreeNodeCallback */
     private $function;
@@ -48,5 +49,3 @@ class TreeNodeMapper {
         return $new_node;
     }
 }
-
-?>

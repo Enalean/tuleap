@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* abstract */ class Docman_View_Header extends Docman_View_View {
+/* abstract */ class Docman_View_Header extends Docman_View_View
+{
 
     function _header($params)
     {
@@ -72,7 +73,7 @@
         if ($project) {
             $title .= $project->getPublicName().' - ';
         }
-        $title .= $GLOBALS['Language']->getText('plugin_docman','title');
+        $title .= $GLOBALS['Language']->getText('plugin_docman', 'title');
 
         return $title;
     }
@@ -91,10 +92,9 @@
 
     /* protected */ function _footer($params)
     {
-        if(isset($params['pv']) && $params['pv'] > 0) {
+        if (isset($params['pv']) && $params['pv'] > 0) {
             $GLOBALS['HTML']->pv_footer(array());
-        }
-        else {
+        } else {
             $GLOBALS['HTML']->footer(array());
         }
     }
@@ -114,7 +114,7 @@
         $project_id = null;
         if (isset($params['group_id'])) {
             $project_id = $params['group_id'];
-        } else if (isset($params['item']) && $params['item'] != null) {
+        } elseif (isset($params['item']) && $params['item'] != null) {
             $project_id = $params['item']->getGroupId();
         }
 

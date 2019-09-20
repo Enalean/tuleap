@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tuleap_TourUsageStatsDao extends DataAccessObject {
+class Tuleap_TourUsageStatsDao extends DataAccessObject
+{
 
     public function save($user_id, $tour_name, $nb_steps, $current_step, $the_end)
     {

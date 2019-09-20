@@ -110,7 +110,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
             } else {
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_error'));
             }
-        break;
+            break;
 
         case 'member_req_notif_message':
             $updatedMessage = true;
@@ -132,7 +132,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
             } else {
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_msg_error'));
             }
-        break;
+            break;
     }
 }
 
@@ -209,7 +209,7 @@ $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_
 $dar = $pm->getMessageToRequesterForAccessProject($group_id);
 if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
     $row = $dar->current();
-    if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester" ) {
+    if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester") {
         $message = $row['msg_to_requester'];
     }
 }

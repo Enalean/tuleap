@@ -29,10 +29,11 @@
  * proposed with an approval table. However, an approval owner can decide to
  * delete one table (attached to a version).
  */
-class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFactory {
+class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFactory
+{
     var $itemVersion;
 
-    function __construct($item, $versionNumber=null)
+    function __construct($item, $versionNumber = null)
     {
         parent::__construct($item);
 
@@ -40,19 +41,19 @@ class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFact
         $vFactory = new Docman_VersionFactory();
 
         $dar = $dao->getLatestTableByItemId($item->getId(), 'ver.number');
-        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
             $lastVersionNumber = $row['number'];
             $lastItemVersion = $vFactory->getSpecificVersion($item, $lastVersionNumber);
 
-            if($versionNumber !== null
+            if ($versionNumber !== null
                && $lastItemVersion->getNumber() != $versionNumber) {
                 $this->itemVersion = $vFactory->getSpecificVersion($item, $versionNumber);
                 $this->customizable = false;
             } else {
                 $this->itemVersion = $lastItemVersion;
             }
-        } else if ($item instanceof Docman_File || $item instanceof Docman_Link) {
+        } elseif ($item instanceof Docman_File || $item instanceof Docman_Link) {
             $this->itemVersion = $item->getCurrentVersion();
         }
     }
@@ -98,10 +99,10 @@ class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFact
     function getTableFromVersion($version)
     {
         $table = null;
-        if($version !== null) {
+        if ($version !== null) {
             $dao = $this->_getDao();
             $dar = $dao->getTableById($version->getId());
-            if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
                 $table = $this->createTableFromRow($row);
                 $table->setVersionNumber($version->getNumber());

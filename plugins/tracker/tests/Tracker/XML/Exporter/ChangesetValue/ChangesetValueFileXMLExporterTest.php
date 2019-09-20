@@ -19,7 +19,8 @@
  */
 require_once __DIR__.'/../../../../bootstrap.php';
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTestCase extends TuleapTestCase {
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTestCase extends TuleapTestCase
+{
 
     /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter */
     protected $exporter;
@@ -67,7 +68,8 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTestCase 
     }
 }
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTestCase {
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTestCase
+{
 
     public function setUp()
     {
@@ -181,7 +183,8 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTest exte
     }
 }
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter_EscapedCharsTest extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTestCase {
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter_EscapedCharsTest extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporterTestCase
+{
 
     public function setUp()
     {
@@ -194,10 +197,10 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter_EscapedC
     public function itCreatesFileNodeWithRightName()
     {
         $this->exporter->export(
-          $this->artifact_xml,
-          $this->changeset_xml,
-          $this->artifact,
-          $this->changeset_value
+            $this->artifact_xml,
+            $this->changeset_xml,
+            $this->artifact,
+            $this->changeset_value
         );
 
         $this->assertEqual(count($this->artifact_xml->file), 1);

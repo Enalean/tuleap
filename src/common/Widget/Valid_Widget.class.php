@@ -23,13 +23,11 @@
 /**
  * Valid that widget is a valid string and a valid widget owner.
  */
-class Valid_Widget_Owner
-extends Valid_String {
+class Valid_Widget_Owner extends Valid_String
+{
     function validate($value)
     {
         $this->addRule(new Rule_Widget_Owner());
         return parent::validate($value);
     }
 }
-
-?>

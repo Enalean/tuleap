@@ -21,7 +21,8 @@
 
 require_once __DIR__ . '/LinkedListTestCase.class.php';
 
-class LinkedListTest extends LinkedListTestCase {
+class LinkedListTest extends LinkedListTestCase
+{
     /**
      * Constructor of the test. Can be ommitted.
      * Usefull to set the name of the test
@@ -30,6 +31,4 @@ class LinkedListTest extends LinkedListTestCase {
     {
         parent::__construct($name, 'LinkedList');
     }
-
 }
-?>

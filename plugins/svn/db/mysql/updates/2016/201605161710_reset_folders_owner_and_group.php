@@ -26,7 +26,7 @@ class b201605161710_reset_folders_owner_and_group extends ForgeUpgrade_Bucket
 
     public function up()
     {
-        include ('/etc/tuleap/conf/local.inc');
+        include('/etc/tuleap/conf/local.inc');
         $svn_plugin_folder = $sys_data_dir .'/svn_plugin/';
 
         echo 'Checking ' . $svn_plugin_folder . PHP_EOL;

@@ -21,7 +21,8 @@
 /**
  * Collection of Cardwall_Mapping
  */
-class Cardwall_MappingCollection implements IteratorAggregate {
+class Cardwall_MappingCollection implements IteratorAggregate
+{
 
     /**
      * @var array of Cardwall_Mapping
@@ -74,4 +75,3 @@ class Cardwall_MappingCollection implements IteratorAggregate {
         return array();
     }
 }
-?>

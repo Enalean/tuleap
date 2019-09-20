@@ -33,7 +33,8 @@ Mock::generatePartial(
 
 Mock::generate('Tracker_FormElement_Field_ArtifactLink');
 
-class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
+class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase
+{
 
     private $field_class;
     private $artlink_info_123;
@@ -186,7 +187,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Artifact_ChangesetValue_ArtifactLink_HasChangesTest extends TuleapTestCase {
+class Tracker_Artifact_ChangesetValue_ArtifactLink_HasChangesTest extends TuleapTestCase
+{
 
     public function itHasNoChangesWhenNoNewValues()
     {

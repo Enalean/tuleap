@@ -24,7 +24,8 @@ require_once('Docman_ReportColumn.class.php');
 
 require_once('Docman_MetadataFactory.class.php');
 
-class Docman_ReportColumnFactory {
+class Docman_ReportColumnFactory
+{
     var $groupId;
 
     function __construct($groupId)
@@ -36,22 +37,22 @@ class Docman_ReportColumnFactory {
     {
         $col = null;
         $mdFactory = $this->_getMetadataFactory();
-        switch($colLabel) {
+        switch ($colLabel) {
             case 'location':
                 $col = new Docman_ReportColumnLocation();
-            break;
+                break;
 
             case 'title':
                 $md  = $mdFactory->getFromLabel($colLabel);
                 $col = new Docman_ReportColumnTitle($md);
-            break;
+                break;
 
             default:
                 $md  = $mdFactory->getFromLabel($colLabel);
-                switch($md->getType()) {
+                switch ($md->getType()) {
                     case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
                         $col = new Docman_ReportColumnList($md);
-                    break;
+                        break;
                     default:
                         $col = new Docman_ReportColumn($md);
                 }
@@ -65,5 +66,3 @@ class Docman_ReportColumnFactory {
         return $mdf;
     }
 }
-
-?>

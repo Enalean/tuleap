@@ -19,7 +19,8 @@
 
 use Tuleap\SOAP\SOAPRequestValidator;
 
-class SVN_SOAPServerBaseTest extends TuleapTestCase {
+class SVN_SOAPServerBaseTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -36,7 +37,8 @@ class SVN_SOAPServerBaseTest extends TuleapTestCase {
     }
 }
 
-class SVN_SOAPServer_GetSvnPath_Test extends SVN_SOAPServerBaseTest {
+class SVN_SOAPServer_GetSvnPath_Test extends SVN_SOAPServerBaseTest
+{
     public function itCheckUserSessionAndGroupValidity()
     {
         $svn_repository_listing = mock('SVN_RepositoryListing');
@@ -48,7 +50,8 @@ class SVN_SOAPServer_GetSvnPath_Test extends SVN_SOAPServerBaseTest {
     }
 }
 
-class SVN_SOAPServer_GetSvnPathWithLogDetails_Test extends SVN_SOAPServerBaseTest {
+class SVN_SOAPServer_GetSvnPathWithLogDetails_Test extends SVN_SOAPServerBaseTest
+{
     public function setUp()
     {
         parent::setUp();

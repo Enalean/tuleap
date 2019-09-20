@@ -23,7 +23,8 @@
  * Foreach artifact in a TreeNode tree, make a collection of the semantic status fields and
  * index them by their id
  */
-class Cardwall_FieldsExtractor {
+class Cardwall_FieldsExtractor
+{
 
     /**
      * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
@@ -51,7 +52,6 @@ class Cardwall_FieldsExtractor {
             $this->appendIfArtifactNode($artifacts, $node);
         }
         return $artifacts;
-
     }
 
     private function appendIfArtifactNode(array &$artifacts, TreeNode $node)
@@ -80,6 +80,4 @@ class Cardwall_FieldsExtractor {
         }
         return $indexed_array;
     }
-
 }
-?>

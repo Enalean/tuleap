@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201201251529_update_push_date extends ForgeUpgrade_Bucket {
+class b201201251529_update_push_date extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -70,7 +71,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Type of the column push_date in table plugin_git_log still not updated');
         }
     }
-
 }
-
-?>

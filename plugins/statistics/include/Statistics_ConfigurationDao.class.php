@@ -22,7 +22,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Statistics_ConfigurationDao extends DataAccessObject {
+class Statistics_ConfigurationDao extends DataAccessObject
+{
 
     public function isDailyPurgeActivated()
     {
@@ -48,5 +49,4 @@ class Statistics_ConfigurationDao extends DataAccessObject {
 
         return $this->update($sql);
     }
-
 }

@@ -21,7 +21,8 @@
 /**
  *  Data Access Object for Tracker_Rule
  */
-class Tracker_Rule_Date_Dao extends DataAccessObject {
+class Tracker_Rule_Date_Dao extends DataAccessObject
+{
 
     public function __construct()
     {
@@ -79,7 +80,7 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
         $rule_type       = $this->da->escapeInt(Tracker_Rule::RULETYPE_DATE);
 
         $this->startTransaction();
-        try{
+        try {
             $sql = "INSERT INTO tracker_rule (tracker_id, rule_type)
                     VALUES ($tracker_id, $rule_type)";
             $id  = $this->updateAndGetLastId($sql);
@@ -129,4 +130,3 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-?>

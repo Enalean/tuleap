@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends TuleapTestCase {
+class Tracker_Artifact_XMLImport_XMLImportZipArchiveTest extends TuleapTestCase
+{
 
     /** @var Tracker */
     private $tracker;

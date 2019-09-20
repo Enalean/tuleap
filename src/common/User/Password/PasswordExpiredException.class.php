@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class User_PasswordExpiredException extends User_LoginException {
+class User_PasswordExpiredException extends User_LoginException
+{
     /** @var PFUser */
     private $user;
 

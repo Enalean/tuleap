@@ -53,7 +53,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
         $this->addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
         $this->addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline', false);
-        $this->addHook('statistics_collector',          'statistics_collector',       false);
+        $this->addHook('statistics_collector', 'statistics_collector', false);
 
         $this->listenToCollectRouteEventWithDefaultController();
     }
@@ -136,7 +136,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
         $hf          = $this->getMinimalHudsonJobFactory();
         $job_builder = new HudsonJobBuilder(HTTPFactoryBuilder::requestFactory(), HttpClientFactory::createAsyncClient());
 
-        switch($get_widget_event->getName()) {
+        switch ($get_widget_event->getName()) {
             // MY
             case 'plugin_hudson_my_jobs':
                 require_once('hudson_Widget_MyMonitoredJobs.class.php');
@@ -270,7 +270,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
                         '<strong>' . $GLOBALS['Language']->getText('plugin_hudson', 'status') . '</strong> ' . $html_purifier->purify($build->getResult())
                     );
                 } else {
-                    $event->setOutput('<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>');
+                    $event->setOutput('<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson', 'error_object_not_found').'</span>');
                 }
                 break;
             case 'hudson_job':
@@ -316,7 +316,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
                     } catch (Exception $e) {
                     }
                 } else {
-                    $event->setOutput('<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson','error_object_not_found').'</span>');
+                    $event->setOutput('<span class="error">'.$GLOBALS['Language']->getText('plugin_hudson', 'error_object_not_found').'</span>');
                 }
                 break;
         }

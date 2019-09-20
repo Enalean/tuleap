@@ -19,7 +19,8 @@
  */
 require_once __DIR__.'/../../../../bootstrap.php';
 
-class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTestCase {
+class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTestCase
+{
 
     private $field_id = 3;
 

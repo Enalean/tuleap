@@ -25,7 +25,8 @@
  *   - Merge into MilestoneController ?
  *   - Use MilestoneController ?
  */
-class Planning_ArtifactCreationController extends MVC2_PluginController {
+class Planning_ArtifactCreationController extends MVC2_PluginController
+{
 
     /**
      * @var PlanningFactory
@@ -47,6 +48,4 @@ class Planning_ArtifactCreationController extends MVC2_PluginController {
 
         $GLOBALS['Response']->redirect(TRACKER_BASE_URL."/?tracker=$tracker_id&func=new-artifact&planning[$planning_id]=-1");
     }
-
 }
-?>

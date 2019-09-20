@@ -38,7 +38,8 @@ Mock::generate('PFUser');
 
 Mock::generate('PermissionsManager');
 
-class WorkflowTest extends TuleapTestCase {
+class WorkflowTest extends TuleapTestCase
+{
 
     /** @var XML_Security */
     private $xml_security;
@@ -79,7 +80,7 @@ class WorkflowTest extends TuleapTestCase {
         $workflow = new WorkflowTestVersion(1, 2, 3, 1);
         $workflow->setReturnValue('getTransitions', array());
         $this->assertNotNull($workflow->getTransitions());
-        $this->assertEqual(count($workflow->getTransitions()),0);
+        $this->assertEqual(count($workflow->getTransitions()), 0);
 
         $field_value_new = new MockTracker_FormElement_Field_List_Value();
         $field_value_new->setReturnValue('getId', 2066);
@@ -160,12 +161,12 @@ class WorkflowTest extends TuleapTestCase {
         //'description' => 'The bug is deployed',
         //'rank' => '70');
 
-        $t_new_analyzed      = new Transition (1, 2, $field_value_new, $field_value_analyzed);
-        $t_analyzed_accepted = new Transition (1, 2, $field_value_analyzed, $field_value_accepted);
-        $t_analyzed_rejected = new Transition (1, 2, $field_value_analyzed, $field_value_rejected);
-        $t_accepted_fixed    = new Transition (1, 2, $field_value_accepted, $field_value_fixed);
-        $t_fixed_tested      = new Transition (1, 2, $field_value_fixed, $field_value_tested);
-        $t_tested_deployed   = new Transition (1, 2, $field_value_tested, $field_value_deployed);
+        $t_new_analyzed      = new Transition(1, 2, $field_value_new, $field_value_analyzed);
+        $t_analyzed_accepted = new Transition(1, 2, $field_value_analyzed, $field_value_accepted);
+        $t_analyzed_rejected = new Transition(1, 2, $field_value_analyzed, $field_value_rejected);
+        $t_accepted_fixed    = new Transition(1, 2, $field_value_accepted, $field_value_fixed);
+        $t_fixed_tested      = new Transition(1, 2, $field_value_fixed, $field_value_tested);
+        $t_tested_deployed   = new Transition(1, 2, $field_value_tested, $field_value_deployed);
 
         $transitions = array($t_new_analyzed,
             $t_analyzed_accepted,
@@ -190,7 +191,6 @@ class WorkflowTest extends TuleapTestCase {
         $this->assertFalse($workflow->isTransitionExist($field_value_new, $field_value_rejected));
         $this->assertFalse($workflow->isTransitionExist($field_value_analyzed, $field_value_new));
         $this->assertFalse($workflow->isTransitionExist($field_value_accepted, $field_value_rejected));
-
     }
 
     public function testExport()
@@ -213,17 +213,17 @@ class WorkflowTest extends TuleapTestCase {
         $t2 = new MockTransition();
         $t3 = new MockTransition();
 
-        $t1->setReturnValue('getFieldValueFrom',  null);
-        $t1->setReturnReference('getFieldValueTo',  $ft1);
-        $t1->setReturnValue('getTransitionId',  1);
+        $t1->setReturnValue('getFieldValueFrom', null);
+        $t1->setReturnReference('getFieldValueTo', $ft1);
+        $t1->setReturnValue('getTransitionId', 1);
 
-        $t2->setReturnReference('getFieldValueFrom',  $ff2);
-        $t2->setReturnReference('getFieldValueTo',  $ft2);
-        $t2->setReturnValue('getTransitionId',  2);
+        $t2->setReturnReference('getFieldValueFrom', $ff2);
+        $t2->setReturnReference('getFieldValueTo', $ft2);
+        $t2->setReturnValue('getTransitionId', 2);
 
-        $t3->setReturnReference('getFieldValueFrom',  $ff3);
-        $t3->setReturnReference('getFieldValueTo',  $ft3);
-        $t3->setReturnValue('getTransitionId',  3);
+        $t3->setReturnReference('getFieldValueFrom', $ff3);
+        $t3->setReturnReference('getFieldValueTo', $ft3);
+        $t3->setReturnValue('getTransitionId', 3);
 
         $transitions = array($t1, $t2, $t3);
         $ugroups_transition = array('ugroup' => 'UGROUP_PROJECT_MEMBERS');
@@ -264,7 +264,8 @@ class WorkflowTest extends TuleapTestCase {
     }
 }
 
-class Workflow_BeforeAfterTest extends TuleapTestCase {
+class Workflow_BeforeAfterTest extends TuleapTestCase
+{
 
     private $transition_null_to_open;
     private $transition_open_to_close;
@@ -513,7 +514,8 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
     }
 }
 
-class Workflow_validateTest extends TuleapTestCase {
+class Workflow_validateTest extends TuleapTestCase
+{
 
     public function itRaisesNoExceptionIfWorkflowIsNotEnabled()
     {
@@ -549,14 +551,15 @@ class Workflow_validateTest extends TuleapTestCase {
     }
 }
 
-class Workflow_checkGlobalRulesTest extends TuleapTestCase {
+class Workflow_checkGlobalRulesTest extends TuleapTestCase
+{
 
     private $tracker_id  = 123;
 
     public function setUp()
     {
         parent::setUp();
-        $this->rules_manager = mock ('Tracker_RulesManager');
+        $this->rules_manager = mock('Tracker_RulesManager');
     }
 
     public function itDelegatesValidationToRulesManager()
@@ -577,7 +580,8 @@ class Workflow_checkGlobalRulesTest extends TuleapTestCase {
     }
 }
 
-class Workflow_DisableTest extends TuleapTestCase {
+class Workflow_DisableTest extends TuleapTestCase
+{
 
     private $transition;
     private $field_id = 42;
@@ -598,7 +602,7 @@ class Workflow_DisableTest extends TuleapTestCase {
         stub($this->transition)->validate()->returns(false);
         $this->workflow    = aWorkflow()->withFieldId($this->field_id)->withTransitions(array($this->transition))->build();
         $this->artifact    = mock('Tracker_Artifact');
-        $this->rules_manager = mock ('Tracker_RulesManager');
+        $this->rules_manager = mock('Tracker_RulesManager');
     }
 
     public function itIsNotValidWhenTheWOrkflowIsEnabled()

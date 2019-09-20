@@ -29,7 +29,8 @@ use PFUser;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 
-class ResourcesPatcher {
+class ResourcesPatcher
+{
 
     /**
      * @var Tracker_Artifact_PriorityManager

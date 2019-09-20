@@ -22,7 +22,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201412031051_remove_project_id_in_kanban_configuration extends ForgeUpgrade_Bucket {
+class b201412031051_remove_project_id_in_kanban_configuration extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

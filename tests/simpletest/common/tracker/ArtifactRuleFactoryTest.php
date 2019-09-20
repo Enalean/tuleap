@@ -21,7 +21,8 @@
 
 Mock::generate('ArtifactRuleDao');
 Mock::generate('DataAccessResult');
-class ArtifactRuleFactoryTest extends TuleapTestCase {
+class ArtifactRuleFactoryTest extends TuleapTestCase
+{
 
     function testGetRuleById()
     {
@@ -56,4 +57,3 @@ class ArtifactRuleFactoryTest extends TuleapTestCase {
         $this->assertReference($arf->getRuleById(123), $r, 'We do not create two different instances for the same id');
     }
 }
-?>

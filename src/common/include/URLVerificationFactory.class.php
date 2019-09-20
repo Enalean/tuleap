@@ -22,7 +22,8 @@
 /**
  * Manage the use of URLVerification
  */
-class URLVerificationFactory {
+class URLVerificationFactory
+{
 
     /**
      * @var EventManager

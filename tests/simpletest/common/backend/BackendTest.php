@@ -23,13 +23,16 @@
  */
 
 //Create a fake backend class
-class BackendTest_FakeBackend {
+class BackendTest_FakeBackend
+{
 }
 
 //Create a fake backend class which simulate an override of BackendSVN by a plugin
-class BackendTest_BackendSVN_overriden_by_plugin extends BackendSVN {
+class BackendTest_BackendSVN_overriden_by_plugin extends BackendSVN
+{
 }
-class BackendTest_BackendSVN_overriden_by_plugin_and_has_setUp extends BackendSVN {
+class BackendTest_BackendSVN_overriden_by_plugin_and_has_setUp extends BackendSVN
+{
     public $a_variable_for_tests = -25;
     public function setUp($a, $b, $c)
     {
@@ -38,21 +41,24 @@ class BackendTest_BackendSVN_overriden_by_plugin_and_has_setUp extends BackendSV
 }
 
 //Simulate a plugin
-class BackendTest_Plugin {
+class BackendTest_Plugin
+{
     public function get_backend($params)
     {
         $params['base'] = 'BackendTest_BackendSVN_overriden_by_plugin';
     }
 }
 //Simulate a plugin
-class BackendTest_Plugin_With_SetUp {
+class BackendTest_Plugin_With_SetUp
+{
     public function get_backend($params)
     {
         $params['base'] = 'BackendTest_BackendSVN_overriden_by_plugin_and_has_setUp';
     }
 }
 //Simulate a plugin
-class BackendTest_Plugin_With_SetUp_And_Params {
+class BackendTest_Plugin_With_SetUp_And_Params
+{
     public function get_backend($params)
     {
         $params['base']  = 'BackendTest_BackendSVN_overriden_by_plugin_and_has_setUp';
@@ -60,7 +66,8 @@ class BackendTest_Plugin_With_SetUp_And_Params {
     }
 }
 
-class BackendTest extends TuleapTestCase {
+class BackendTest extends TuleapTestCase
+{
 
     function __construct($name = 'BackendSystem test')
     {
@@ -104,10 +111,12 @@ class BackendTest extends TuleapTestCase {
     {
         //Plugins can override default backends.
         // For example, plugin_ldap can override the backend define in plugin_svn
-        EventManager::instance()->addListener(Event::BACKEND_FACTORY_GET_SVN,
-                                              new BackendTest_Plugin(),
-                                              'get_backend',
-                                              false);
+        EventManager::instance()->addListener(
+            Event::BACKEND_FACTORY_GET_SVN,
+            new BackendTest_Plugin(),
+            'get_backend',
+            false
+        );
         $this->assertIsA(Backend::instance(Backend::SVN), 'BackendTest_BackendSVN_overriden_by_plugin');
     }
 
@@ -115,10 +124,12 @@ class BackendTest extends TuleapTestCase {
     {
         //Plugins can override default backends.
         // For example, plugin_ldap can override the backend define in plugin_svn
-        EventManager::instance()->addListener(Event::BACKEND_FACTORY_GET_SVN,
-                                              new BackendTest_Plugin_With_SetUp(),
-                                              'get_backend',
-                                              false);
+        EventManager::instance()->addListener(
+            Event::BACKEND_FACTORY_GET_SVN,
+            new BackendTest_Plugin_With_SetUp(),
+            'get_backend',
+            false
+        );
         $b = Backend::instance(Backend::SVN);
         $this->assertEqual($b->a_variable_for_tests, -25);
     }
@@ -127,10 +138,12 @@ class BackendTest extends TuleapTestCase {
     {
         //Plugins can override default backends.
         // For example, plugin_ldap can override the backend define in plugin_svn
-        EventManager::instance()->addListener(Event::BACKEND_FACTORY_GET_SVN,
-                                              new BackendTest_Plugin_With_SetUp(),
-                                              'get_backend',
-                                              false);
+        EventManager::instance()->addListener(
+            Event::BACKEND_FACTORY_GET_SVN,
+            new BackendTest_Plugin_With_SetUp(),
+            'get_backend',
+            false
+        );
         $b = Backend::instance(Backend::SVN, null, array(1, 2, 3));
         $this->assertEqual($b->a_variable_for_tests, 9);
     }
@@ -139,10 +152,12 @@ class BackendTest extends TuleapTestCase {
     {
         //Plugins can override default backends.
         // For example, plugin_ldap can override the backend define in plugin_svn
-        EventManager::instance()->addListener(Event::BACKEND_FACTORY_GET_SVN,
-                                              new BackendTest_Plugin_With_SetUp_And_Params(),
-                                              'get_backend',
-                                              false);
+        EventManager::instance()->addListener(
+            Event::BACKEND_FACTORY_GET_SVN,
+            new BackendTest_Plugin_With_SetUp_And_Params(),
+            'get_backend',
+            false
+        );
         $b = Backend::instance(Backend::SVN);
         $this->assertEqual($b->a_variable_for_tests, 9);
     }
@@ -151,10 +166,12 @@ class BackendTest extends TuleapTestCase {
     {
         //Plugins can override default backends.
         // For example, plugin_ldap can override the backend define in plugin_svn
-        EventManager::instance()->addListener(Event::BACKEND_FACTORY_GET_SVN,
-                                              new BackendTest_Plugin(),         //no setup !!!
-                                              'get_backend',
-                                              false);
+        EventManager::instance()->addListener(
+            Event::BACKEND_FACTORY_GET_SVN,
+            new BackendTest_Plugin(),         //no setup !!!
+            'get_backend',
+            false
+        );
         $this->expectException();
         $b = Backend::instance(Backend::SVN, null, array(1, 2, 3));
     }
@@ -177,7 +194,7 @@ class BackendTest extends TuleapTestCase {
         // Check result
 
         // Direcory should not be removed
-        $this->assertTrue(is_dir($test_dir),"Directory $test_dir should still exist");
+        $this->assertTrue(is_dir($test_dir), "Directory $test_dir should still exist");
         // And should be empty
         $d = opendir($test_dir);
         while (($file = readdir($d)) !== false) {

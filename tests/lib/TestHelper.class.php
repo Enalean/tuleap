@@ -23,7 +23,8 @@
 /**
  * Various tools to assist test in her duty
  */
-class TestHelper {
+class TestHelper
+{
     /**
      * Generate a partial mock.
      *
@@ -63,7 +64,8 @@ class TestHelper {
     }
 }
 
-class FakeDataAccessResult extends DataAccessResult {
+class FakeDataAccessResult extends DataAccessResult
+{
     private $data;
 
     public function __construct(array $data)

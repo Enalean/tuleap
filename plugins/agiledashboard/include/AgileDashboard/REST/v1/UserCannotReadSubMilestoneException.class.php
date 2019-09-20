@@ -21,7 +21,8 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use Exception;
 
-class UserCannotReadSubMilestoneException extends Exception {
+class UserCannotReadSubMilestoneException extends Exception
+{
 
     public function __construct($milestone_id)
     {

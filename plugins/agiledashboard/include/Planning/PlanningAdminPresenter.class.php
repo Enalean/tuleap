@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class Planning_PlanningAdminPresenter {
+class Planning_PlanningAdminPresenter
+{
     private $planning;
 
     public function __construct(Planning $planning)
@@ -73,5 +74,3 @@ class Planning_PlanningAdminPresenter {
         return '';
     }
 }
-
-?>

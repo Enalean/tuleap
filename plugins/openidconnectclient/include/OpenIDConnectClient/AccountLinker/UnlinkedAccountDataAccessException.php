@@ -20,5 +20,7 @@
 
 namespace Tuleap\OpenIDConnectClient\AccountLinker;
 
+class UnlinkedAccountDataAccessException extends \Exception
+{
 
-class UnlinkedAccountDataAccessException extends \Exception { }
+}

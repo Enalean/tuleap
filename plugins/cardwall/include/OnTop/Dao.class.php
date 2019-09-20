@@ -19,7 +19,8 @@
  */
 
 
-class Cardwall_OnTop_Dao extends DataAccessObject {
+class Cardwall_OnTop_Dao extends DataAccessObject
+{
 
     /**
      * @return bool
@@ -100,4 +101,3 @@ class Cardwall_OnTop_Dao extends DataAccessObject {
         return false;
     }
 }
-?>

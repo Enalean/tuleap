@@ -9,13 +9,14 @@
 
 require_once('Docman_View_View.class.php');
 
-class Docman_View_Redirect extends Docman_View_View /* implements Visitor */ {
+class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
+{
 
     /* protected */ function _content($params)
     {
         if (isset($params['redirect_to'])) {
             $url = $params['redirect_to'];
-        } else if(isset($params['item'])) {
+        } elseif (isset($params['item'])) {
             $event_manager = EventManager::instance();
             $event_manager->processEvent('plugin_docman_event_access', array(
                 'group_id' => $params['group_id'],
@@ -68,4 +69,3 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */ {
         trigger_error('Redirect view cannot be applied to Empty documents');
     }
 }
-?>

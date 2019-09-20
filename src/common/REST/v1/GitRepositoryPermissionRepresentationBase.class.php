@@ -21,7 +21,8 @@
 
 namespace Tuleap\REST\v1;
 
-class GitRepositoryPermissionRepresentationBase {
+class GitRepositoryPermissionRepresentationBase
+{
 
     /**
      * @var Tuleap\Project\REST\UserGroupRepresentation

@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao extends DataAccessObject {
+class Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao extends DataAccessObject
+{
 
     function __construct()
     {

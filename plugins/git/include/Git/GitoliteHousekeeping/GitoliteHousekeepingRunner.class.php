@@ -21,7 +21,8 @@
 /**
  * I process the clean up of the gitolite admin working copy
  */
-class Git_GitoliteHousekeeping_GitoliteHousekeepingRunner {
+class Git_GitoliteHousekeeping_GitoliteHousekeepingRunner
+{
 
     /** @var Git_GitoliteHousekeeping_GitoliteHousekeepingDao */
     private $housekeeping_dao;

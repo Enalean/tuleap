@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class AgileDashboard_ConfigurationManager {
+class AgileDashboard_ConfigurationManager
+{
 
     public const DEFAULT_SCRUM_TITLE  = 'Scrum';
     public const DEFAULT_KANBAN_TITLE = 'Kanban';

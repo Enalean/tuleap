@@ -29,13 +29,14 @@ Mock::generate('Docman_Item');
 Mock::generatePartial(
     'WebDAVDocmanFile',
     'WebDAVDocmanFileTestVersion',
-array('getSize', 'getMaxFileSize', 'getItem', 'getUser', 'logDownload', 'download', 'getUtils', 'getProject')
+    array('getSize', 'getMaxFileSize', 'getItem', 'getUser', 'logDownload', 'download', 'getUtils', 'getProject')
 );
 
 /**
  * This is the unit test of WebDAVDocmanFile
  */
-class WebDAVDocmanFileTest extends TuleapTestCase {
+class WebDAVDocmanFileTest extends TuleapTestCase
+{
 
     /**
      * Test when the file doesn't exist on the filesystem

@@ -20,8 +20,8 @@
 
 namespace Tuleap\OpenIDConnectClient\UserMapping;
 
-
-class UserMappingUsage {
+class UserMappingUsage
+{
 
     private $user_mapping_id;
     private $provider_icon;

@@ -19,7 +19,8 @@
  */
 
 
-class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_StaticField {
+class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_StaticField
+{
 
     protected function fetchReadOnly()
     {
@@ -71,7 +72,7 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
     {
         global $Language;
         $label = parent::getLabel();
-        if ( ! $label) {
+        if (! $label) {
             return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_label');
         } else {
             return $label;
@@ -116,5 +117,3 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
         return $GLOBALS['HTML']->getImagePath('ic/arrow-curve-180-gray--plus.png');
     }
 }
-
-?>

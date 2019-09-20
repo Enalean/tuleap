@@ -30,8 +30,7 @@ rcs_id('$Id: RichTable.php,v 1.7 2005/05/06 17:44:24 rurban Exp $');
 
 // error_reporting (E_ALL & ~E_NOTICE);
 
-class WikiPlugin_RichTable
-extends WikiPlugin
+class WikiPlugin_RichTable extends WikiPlugin
 {
     function getName()
     {
@@ -50,8 +49,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.7 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.7 $"
+        );
     }
 
     function run($dbi, $argstr, &$request, $basepage)
@@ -65,10 +67,10 @@ extends WikiPlugin
         $table = HTML::table();
 
         if ($lines[0][0] == '*') {
-            $line = substr(array_shift($lines),1);
+            $line = substr(array_shift($lines), 1);
             $attrs = $this->_parse_attr($line);
             foreach ($attrs as $key => $value) {
-                if (in_array ($key, array("id", "class", "title", "style",
+                if (in_array($key, array("id", "class", "title", "style",
                                           "bgcolor", "frame", "rules", "border",
                                           "cellspacing", "cellpadding",
                                           "summary", "align", "width"))) {
@@ -77,8 +79,8 @@ extends WikiPlugin
             }
         }
 
-        foreach ($lines as $line){
-            if (substr($line,0,1) == "-") {
+        foreach ($lines as $line) {
+            if (substr($line, 0, 1) == "-") {
                 if (isset($row)) {
                     if (isset($cell)) {
                         if (isset($content)) {
@@ -91,18 +93,18 @@ extends WikiPlugin
                     $table->pushContent($row);
                 }
                 $row = HTML::tr();
-                $attrs = $this->_parse_attr(substr($line,1));
+                $attrs = $this->_parse_attr(substr($line, 1));
                 foreach ($attrs as $key => $value) {
-                    if (in_array ($key, array("id", "class", "title", "style",
+                    if (in_array($key, array("id", "class", "title", "style",
                                               "bgcolor", "align", "valign"))) {
                         $row->setAttr($key, $value);
                     }
                 }
                 continue;
             }
-            if (substr($line,0,1) == "|" and isset($row)) {
+            if (substr($line, 0, 1) == "|" and isset($row)) {
                 if (isset($cell)) {
-                    if (isset ($content)) {
+                    if (isset($content)) {
                         $cell->pushContent(TransformText($content, $markup, $basepage));
                         unset($content);
                     }
@@ -110,10 +112,10 @@ extends WikiPlugin
                 }
                 $cell = HTML::td();
                 $line = substr($line, 1);
-                if ($line[0] == "*" ) {
-                    $attrs = $this->_parse_attr(substr($line,1));
+                if ($line[0] == "*") {
+                    $attrs = $this->_parse_attr(substr($line, 1));
                     foreach ($attrs as $key => $value) {
-                        if (in_array ($key, array("id", "class", "title", "style",
+                        if (in_array($key, array("id", "class", "title", "style",
                                                   "colspan", "rowspan", "width", "height",
                                                   "bgcolor", "align", "valign"))) {
                             $cell->setAttr($key, $value);
@@ -125,14 +127,17 @@ extends WikiPlugin
             if (isset($row) and isset($cell)) {
                 $line = str_replace("?\>", "?>", $line);
                 $line = str_replace("\~", "~", $line);
-                if (empty($content)) $content = '';
+                if (empty($content)) {
+                    $content = '';
+                }
                 $content .= $line . "\n";
             }
         }
         if (isset($row)) {
             if (isset($cell)) {
-                if (isset($content))
+                if (isset($content)) {
                     $cell->pushContent(TransformText($content));
+                }
                 $row->pushContent($cell);
             }
             $table->pushContent($row);
@@ -145,10 +150,13 @@ extends WikiPlugin
         $attr_chunks = preg_split("/\s*,\s*/", strtolower($line));
         $options = array();
         foreach ($attr_chunks as $attr_pair) {
-            if (empty($attr_pair)) continue;
+            if (empty($attr_pair)) {
+                continue;
+            }
             $key_val = preg_split("/\s*=\s*/", $attr_pair);
-            if (!empty($key_val[1]))
+            if (!empty($key_val[1])) {
                 $options[trim($key_val[0])] = trim($key_val[1]);
+            }
         }
         return $options;
     }
@@ -180,4 +188,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

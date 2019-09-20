@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class Planning_MilestoneSelectorControllerTest extends TuleapTestCase {
+class Planning_MilestoneSelectorControllerTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -72,5 +73,4 @@ class Planning_MilestoneSelectorControllerTest extends TuleapTestCase {
         $controller = new Planning_MilestoneSelectorController($this->request, $milestone_factory);
         $controller->show();
     }
-
 }

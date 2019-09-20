@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__) . '/../../../tracker/include/Tracker/Tracker.class.php';
 
-class Planning_TrackerPresenter {
+class Planning_TrackerPresenter
+{
 
     /**
      * @var Planning

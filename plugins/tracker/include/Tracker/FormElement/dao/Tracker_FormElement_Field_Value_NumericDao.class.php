@@ -19,7 +19,8 @@
  */
 
 
-abstract class Tracker_FormElement_Field_Value_NumericDao extends Tracker_FormElement_Field_ValueDao {
+abstract class Tracker_FormElement_Field_Value_NumericDao extends Tracker_FormElement_Field_ValueDao
+{
 
     /**
      * Retrieves the value of the given field at the most recent time BEFORE the given timestamp
@@ -67,5 +68,3 @@ abstract class Tracker_FormElement_Field_Value_NumericDao extends Tracker_FormEl
         return $this->retrieveFirstRow($sql);
     }
 }
-
-?>

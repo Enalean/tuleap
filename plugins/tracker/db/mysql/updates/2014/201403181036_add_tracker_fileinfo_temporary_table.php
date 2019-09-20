@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201403181036_add_tracker_fileinfo_temporary_table extends ForgeUpgrade_Bucket {
+class b201403181036_add_tracker_fileinfo_temporary_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -50,4 +51,3 @@ class b201403181036_add_tracker_fileinfo_temporary_table extends ForgeUpgrade_Bu
         }
     }
 }
-?>

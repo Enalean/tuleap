@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class ArtifactFieldXMLExporter {
+abstract class ArtifactFieldXMLExporter
+{
 
     /** @var ArtifactXMLNodeHelper */
     protected $node_helper;

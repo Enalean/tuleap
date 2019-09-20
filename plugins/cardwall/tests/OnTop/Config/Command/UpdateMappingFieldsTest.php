@@ -21,7 +21,8 @@
 require_once dirname(__FILE__) .'/../../../bootstrap.php';
 require_once dirname(__FILE__) .'/../../../../../../tests/simpletest/common/include/builders/aRequest.php';
 
-abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest extends TuleapTestCase {
+abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -68,11 +69,13 @@ abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest extends Tul
     }
 }
 
-class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest {
+class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest
+{
 
     public function itUpdatesMappingFields()
     {
-        $request = aRequest()->with('mapping_field',
+        $request = aRequest()->with(
+            'mapping_field',
             array(
                 '42' => array(
                     'field' => '123',
@@ -104,7 +107,8 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest extends 
 
     public function itDoesntUpdatesMappingFieldsIfItIsNotNeeded()
     {
-        $request = aRequest()->with('mapping_field',
+        $request = aRequest()->with(
+            'mapping_field',
             array(
                 '42' => array(
                     'field' => '123',
@@ -133,11 +137,13 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest extends 
     }
 }
 
-class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest {
+class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest
+{
 
     public function itUpdatesMappingFieldValues()
     {
-        $request = aRequest()->with('mapping_field',
+        $request = aRequest()->with(
+            'mapping_field',
             array(
                 '69' => array(
                     'field' => '321',
@@ -168,7 +174,8 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest extends
 
     public function itDoesntUpdateMappingValuesIfTheFieldChange()
     {
-        $request = aRequest()->with('mapping_field',
+        $request = aRequest()->with(
+            'mapping_field',
             array(
                 '69' => array(
                     'field' => '321',
@@ -198,7 +205,8 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest extends
     }
 }
 
-class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpdateTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest {
+class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpdateTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest
+{
     public function setUp()
     {
         parent::setUp();
@@ -223,7 +231,8 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpdateTest
                     9002 => new Cardwall_OnTop_Config_ValueMapping(aFieldListStaticValue()->withId(9002)->build(), 11),
                     9007 => new Cardwall_OnTop_Config_ValueMapping(aFieldListStaticValue()->withId(9002)->build(), 12),
                 ),
-                $this->stage_field),
+                $this->stage_field
+            ),
         );
 
         $this->command = new Cardwall_OnTop_Config_Command_UpdateMappingFields(
@@ -238,7 +247,8 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpdateTest
 
     public function itDoesntUpdatesMappingFieldValuesWhenMappingDoesntChange()
     {
-        $request = aRequest()->with('mapping_field',
+        $request = aRequest()->with(
+            'mapping_field',
             array(
                 '69' => array(
                     'field' => '321',
@@ -258,7 +268,8 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpdateTest
 
     public function itUpdatesMappingFieldValuesWhenThereIsANewValue()
     {
-        $request = aRequest()->with('mapping_field',
+        $request = aRequest()->with(
+            'mapping_field',
             array(
                 '69' => array(
                     'field' => '321',
@@ -279,7 +290,8 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpdateTest
 
     public function itUpdatesMappingFieldValuesWhenAValueIsRemoved()
     {
-        $request = aRequest()->with('mapping_field',
+        $request = aRequest()->with(
+            'mapping_field',
             array(
                 '69' => array(
                     'field' => '321',
@@ -296,5 +308,3 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpdateTest
         $this->command->execute($request);
     }
 }
-
-?>

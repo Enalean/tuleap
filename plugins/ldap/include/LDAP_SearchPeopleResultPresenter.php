@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class LDAP_SearchPeopleResultPresenter {
+class LDAP_SearchPeopleResultPresenter
+{
 
     /** @var  string */
     private $user_name;
@@ -74,5 +75,4 @@ class LDAP_SearchPeopleResultPresenter {
     {
         return $this->avatar;
     }
-
 }

@@ -45,18 +45,18 @@ class XMLNode
     var $_parent_id;
     var $_parent_node;
 
-    function __construct($id = NULL)
+    function __construct($id = null)
     {
-        $this->_id = isset($id) ? $id : md5(uniqid(rand(),1));
+        $this->_id = isset($id) ? $id : md5(uniqid(rand(), 1));
         $this->_name = '';
         $this->_content = '';
-        $this->_mt_elem_flg = FALSE;
+        $this->_mt_elem_flg = false;
         $this->_attr_arr = array();
         $this->_child_arr = array();
         $this->_nmspc = '';
         $this->_nmspc_alias = '';
-        $this->_parent_id = FALSE;
-        $this->_parent_node = NULL;
+        $this->_parent_id = false;
+        $this->_parent_node = null;
     }
 
     function addChild(&$node)
@@ -77,13 +77,13 @@ class XMLNode
         }
     }
 
-    function insertChildBefore($idx,&$node)
+    function insertChildBefore($idx, &$node)
     {
         $key_arr = array_keys($this->_child_arr);
         $num_key = count($key_arr);
         $tmp_arr = arry();
 
-        for ($i = 0;$i < $num_key;$i++) {
+        for ($i = 0; $i < $num_key; $i++) {
             if ($i == $idx) {
                 $tmp_arr[$node->getId()] = $node;
             }
@@ -92,13 +92,13 @@ class XMLNode
         $this->_child_arr = $tmp_arr;
     }
 
-    function insertChildAfter($idx,&$node)
+    function insertChildAfter($idx, &$node)
     {
         $key_arr = array_keys($this->_child_arr);
         $num_key = count($key_arr);
         $tmp_arr = arry();
 
-        for ($i = 0;$i < $num_key;$i++) {
+        for ($i = 0; $i < $num_key; $i++) {
             $tmp_arr[$key_arr[$i]] = $this->_child_arr[$key_arr[$i]];
             if ($i == $idx) {
                 $tmp_arr[$node->getId()] = $node;
@@ -137,7 +137,7 @@ class XMLNode
         $this->_mt_elem_flg = $mt_elem_flg;
     }
 
-    function setAttr($attr_nm,$attr_val)
+    function setAttr($attr_nm, $attr_val)
     {
         $this->_attr_arr[$attr_nm] = $attr_val;
     }
@@ -187,7 +187,7 @@ class XMLNode
         if (isset($this->_attr_arr[$attr_nm])) {
             return($this->_attr_arr[$attr_nm]);
         } else {
-            return(NULL);
+            return(null);
         }
     }
 
@@ -211,7 +211,7 @@ class XMLNode
         if (isset($this->_child_arr[$id])) {
             return($this->_child_arr[$id]);
         } else {
-            return(FALSE);
+            return(false);
         }
     }
 
@@ -223,7 +223,7 @@ class XMLNode
         if ($num_child > 0) {
             return($this->_child_arr[$id_arr[0]]);
         } else {
-            return(FALSE);
+            return(false);
         }
     }
 
@@ -235,7 +235,7 @@ class XMLNode
         if ($num_child > 0) {
             return($this->_child_arr[$id_arr[$num_child - 1]]);
         } else {
-            return(FALSE);
+            return(false);
         }
     }
 
@@ -246,7 +246,7 @@ class XMLNode
         if (isset($this->_child_arr[$id_arr[$idx]])) {
             return($this->_child_arr[$id_arr[$idx]]);
         } else {
-            return(FALSE);
+            return(false);
         }
     }
 
@@ -284,7 +284,7 @@ class XMLNode
         $name = $this->_dumpName();
         $xmlns = $this->_dumpXmlns();
         $lvl = $this->_getCurrentLevel();
-        $indent = str_pad('',$lvl,$indent_str);
+        $indent = str_pad('', $lvl, $indent_str);
 
         if ($this->_mt_elem_flg) {
             $tag = "$indent<$name$xmlns$attr_txt />";
@@ -295,7 +295,7 @@ class XMLNode
 
             $tag = "$indent<$name$xmlns$attr_txt>$this->_content";
 
-            for ($i = 0;$i < $num_child;$i++) {
+            for ($i = 0; $i < $num_child; $i++) {
                 $node = $this->_child_arr[$key_arr[$i]];
 
                 $child_txt = $node->dumpXML($indent_str);
@@ -313,7 +313,7 @@ class XMLNode
         $id_arr_cnt = count($id_arr);
         $attr_txt = '';
 
-        for($i = 0;$i < $id_arr_cnt;$i++) {
+        for ($i = 0; $i < $id_arr_cnt; $i++) {
             $key = $id_arr[$i];
             $attr_txt .= " $key=\"{$this->_attr_arr[$key]}\"";
         }
@@ -349,7 +349,7 @@ class XMLNode
 
     function _getCurrentLevel()
     {
-        if ($this->_parent_id === FALSE) {
+        if ($this->_parent_id === false) {
             return(0);
         } else {
             $node = $this->getParentNode();
@@ -362,7 +362,7 @@ class XMLNode
 
 class MathMLNode extends XMLNode
 {
-    function __construct($id = NULL)
+    function __construct($id = null)
     {
         parent::__construct($id);
     }
@@ -386,10 +386,10 @@ class MathMLNode extends XMLNode
             case '{':
             case '[':
             case '(':
-          return(TRUE);
+                return(true);
             break;
         }
-        return(FALSE);
+        return(false);
     }
 
     function isRightBracket()
@@ -398,10 +398,10 @@ class MathMLNode extends XMLNode
             case '}':
             case ']':
             case ')':
-          return(TRUE);
+                return(true);
             break;
         }
-        return(FALSE);
+        return(false);
     }
 }
 
@@ -414,7 +414,7 @@ class ASCIIMathPHP
     var $_node_arr;
     var $_node_cntr;
 
-    function __construct($symbol_arr,$expr = NULL)
+    function __construct($symbol_arr, $expr = null)
     {
         $this->_symbol_arr = $symbol_arr;
         if (isset($expr)) {
@@ -432,7 +432,7 @@ class ASCIIMathPHP
         $this->_node_cntr = 0;
     }
 
-    function genMathML($attr_arr = NULL)
+    function genMathML($attr_arr = null)
     {
      // <math> node
         $node_0 = $this->createNode();
@@ -454,7 +454,7 @@ class ASCIIMathPHP
             $node_0->addChildArr($node_arr);
         }
 
-        return(TRUE);
+        return(true);
     }
 
     function parseExpr()
@@ -473,7 +473,7 @@ class ASCIIMathPHP
                 $this->chopExpr($sym['symlen']);
                 $node_1 = $this->parseSmplExpr();
 
-                if ($node_1 === FALSE) {
+                if ($node_1 === false) {
                     continue;
                 }
 
@@ -521,11 +521,10 @@ class ASCIIMathPHP
 
                     $node_arr[$node_2->getId()] = $node_2;
                 }
-
-            } elseif ($node_0 !== FALSE) {
+            } elseif ($node_0 !== false) {
                 $node_arr[$node_0->getId()] = $node_0;
             }
-        } while (!isset($sym['right_bracket']) && $sym !== FALSE && $sym['output'] != '');
+        } while (!isset($sym['right_bracket']) && $sym !== false && $sym['output'] != '');
 
      //var_dump($sym);
      // Possibly to deal with matrices
@@ -537,40 +536,37 @@ class ASCIIMathPHP
                 $node_5 = $node_arr[$key_node_arr[$node_cnt-1]];
                 $node_6 = $node_arr[$key_node_arr[$node_cnt-2]];
             } else {
-                $node_5 = FALSE;
-                $node_6 = FALSE;
+                $node_5 = false;
+                $node_6 = false;
             }
 
          // Dealing with matrices
-            if ($node_5 !== FALSE && $node_6 !== FALSE &&
+            if ($node_5 !== false && $node_6 !== false &&
             $node_cnt > 1 &&
             $node_5->getName() == 'mrow' &&
             $node_6->getName() == 'mo' &&
             $node_6->getContent() == ',') {
-
                 // Checking if Node 5 has a LastChild
                 if ($node_7 = $node_5->getLastChild()) {
                     $node_7_cntnt = $node_7->getContent();
                 } else {
-                    $node_7_cntnt = FALSE;
+                    $node_7_cntnt = false;
                 }
 
                 // If there is a right bracket
-                if ($node_7 !== FALSE && ($node_7_cntnt == ']' || $node_7_cntnt == ')')) {
-
+                if ($node_7 !== false && ($node_7_cntnt == ']' || $node_7_cntnt == ')')) {
              // Checking if Node 5 has a firstChild
                     if ($node_8 = $node_5->getFirstChild()) {
                          $node_8_cntnt = $node_8->getContent();
                     } else {
-                         $node_8_cntnt = FALSE;
+                         $node_8_cntnt = false;
                     }
 
              // If there is a matching left bracket
-                    if ($node_8 !== FALSE &&
+                    if ($node_8 !== false &&
                     (($node_8_cntnt == '(' && $node_7_cntnt == ')' && $sym['output'] != '}') ||
                     ($node_8_cntnt == '[' && $node_7_cntnt == ']'))) {
-
-                                $is_mtrx_flg = TRUE;
+                                $is_mtrx_flg = true;
                                 $comma_pos_arr = array();
 
                                 $i = 0;
@@ -578,16 +574,16 @@ class ASCIIMathPHP
                         while ($i < $node_cnt && $is_mtrx_flg) {
                             $tmp_node = $node_arr[$key_node_arr[$i]];
 
-                            if($tmp_node_first = $tmp_node->getFirstChild()) {
+                            if ($tmp_node_first = $tmp_node->getFirstChild()) {
                                    $tnfc = $tmp_node_first->getContent();
                             } else {
-                                      $tnfc = FALSE;
+                                      $tnfc = false;
                             }
 
-                            if($tmp_node_last = $tmp_node->getLastChild()) {
+                            if ($tmp_node_last = $tmp_node->getLastChild()) {
                                   $tnlc = $tmp_node_last->getContent();
                             } else {
-                                        $tnlc = FALSE;
+                                        $tnlc = false;
                             }
 
                             if (isset($key_node_arr[$i+1])) {
@@ -595,8 +591,8 @@ class ASCIIMathPHP
                                     $ntnn = $next_tmp_node->getName();
                                     $ntnc = $next_tmp_node->getContent();
                             } else {
-                                        $ntnn = FALSE;
-                                        $ntnc = FALSE;
+                                        $ntnn = false;
+                                        $ntnc = false;
                             }
 
                               // Checking each node in node array for matrix criteria
@@ -607,7 +603,7 @@ class ASCIIMathPHP
                             }
 
                             if ($is_mtrx_flg) {
-                                for ($j = 0;$j < $tmp_node->getNumChild();$j++) {
+                                for ($j = 0; $j < $tmp_node->getNumChild(); $j++) {
                                     $tmp_c_node = $tmp_node->getChildByIdx($j);
 
                                     if ($tmp_c_node->getContent() == ',') {
@@ -617,9 +613,8 @@ class ASCIIMathPHP
                             }
 
                             if ($is_mtrx_flg && $i > 1) {
-
-                                                     $cnt_cpan = isset($comma_pos_arr[$i]) ? count($comma_pos_arr[$i]) : NULL;
-                                                     $cnt_cpap = isset($comma_pos_arr[$i-2]) ? count($comma_pos_arr[$i-2]) : NULL;
+                                                     $cnt_cpan = isset($comma_pos_arr[$i]) ? count($comma_pos_arr[$i]) : null;
+                                                     $cnt_cpap = isset($comma_pos_arr[$i-2]) ? count($comma_pos_arr[$i-2]) : null;
                                                      $is_mtrx_flg = $cnt_cpan == $cnt_cpap;
                             }
 
@@ -630,7 +625,7 @@ class ASCIIMathPHP
                         if ($is_mtrx_flg) {
                             $tab_node_arr = array();
 
-                            for ($i = 0;$i < $node_cnt;$i += 2) {
+                            for ($i = 0; $i < $node_cnt; $i += 2) {
                                     $tmp_key_node_arr = array_keys($node_arr);
                                 if (!($tmp_node = $node_arr[$tmp_key_node_arr[0]])) {
                                     break;
@@ -643,10 +638,9 @@ class ASCIIMathPHP
                                 $row_node_arr = array();
                                 $row_frag_node_arr = array();
 
-                                for ($j = 1;$j < ($num_child-1);$j++) {
+                                for ($j = 1; $j < ($num_child-1); $j++) {
                                     if (isset($comma_pos_arr[$i][$k]) &&
                                     $j == $comma_pos_arr[$i][$k]) {
-
                                         $tmp_node->removeFirstChild();
 
                                         $tmp_c_node = $this->createNode();
@@ -658,7 +652,6 @@ class ASCIIMathPHP
 
                                         $k++;
                                     } else {
-
                                         if ($tmp_c_node = $tmp_node->getFirstChild()) {
                                             $row_frag_node_arr[$tmp_c_node->getId()] = $tmp_c_node;
                                             $tmp_node->removeFirstChild();
@@ -690,7 +683,7 @@ class ASCIIMathPHP
                             $tmp_c_node->addChildArr($tab_node_arr);
 
                             if (isset($sym['invisible'])) {
-                                    $tmp_c_node->setAttr('columnalign','left');
+                                    $tmp_c_node->setAttr('columnalign', 'left');
                             }
 
                             $key_node_arr = array_keys($node_arr);
@@ -719,7 +712,7 @@ class ASCIIMathPHP
         $sym = $this->getSymbol();
 
         if (!$sym || isset($sym['right_bracket'])) {
-            return(FALSE);
+            return(false);
         }
 
         $this->chopExpr($sym['symlen']);
@@ -746,7 +739,6 @@ class ASCIIMathPHP
                 return($node_1);
             }
         } elseif (isset($sym['unary'])) {
-
             if ($sym['input'] == 'sqrt') {
                 $node_0 = $this->parseSmplExpr();
                 $node_0->removeBrackets();
@@ -759,22 +751,22 @@ class ASCIIMathPHP
             } elseif ($sym['input'] == 'text' || $sym['input'] == 'mbox') {
                 $expr = ltrim($this->getCurrExpr());
 
-                switch($expr{0}) {
+                switch ($expr{0}) {
                     case '(':
                         $end_brckt = ')';
-                  break;
+                        break;
                     case '[':
                         $end_brckt = ']';
-                  break;
+                        break;
                     case '{':
                         $end_brckt = '}';
-                  break;
+                        break;
                     default:
                         $end_brckt = chr(11); // A chracter that will never be matched.
-                  break;
+                        break;
                 }
 
-                $txt = substr($expr,1,strpos($expr,$end_brckt)-1);
+                $txt = substr($expr, 1, strpos($expr, $end_brckt)-1);
                 $len = strlen($txt);
 
                 $node_0 = $this->createNode();
@@ -784,7 +776,7 @@ class ASCIIMathPHP
                     if ($txt{0} == " ") {
                          $node_1 = $this->createNode();
                          $node_1->setName('mspace');
-                         $node_1->setAttr('width','1ex');
+                         $node_1->setAttr('width', '1ex');
 
                          $node_0->addChild($node_1);
                     }
@@ -798,7 +790,7 @@ class ASCIIMathPHP
                     if ($len > 1 && $txt{$len-1} == " ") {
                          $node_2 = $this->createNode();
                          $node_2->setName('mspace');
-                         $node_2->setAttr('width','1ex');
+                         $node_2->setAttr('width', '1ex');
 
                          $node_0->addChild($node_2);
                     }
@@ -806,7 +798,6 @@ class ASCIIMathPHP
                     $this->chopExpr($len+2);
                 }
                 return($node_0);
-
             } elseif (isset($sym['acc'])) {
                 $node_0 = $this->parseSmplExpr();
                 $node_0->removeBrackets();
@@ -858,7 +849,7 @@ class ASCIIMathPHP
 
             $node_1 = $this->createNode();
             $node_1->setName('mspace');
-            $node_1->setAttr('width',$sym['space']);
+            $node_1->setAttr('width', $sym['space']);
 
             $node_2 = $this->createNode();
             $node_2->setName($sym['tag']);
@@ -866,7 +857,7 @@ class ASCIIMathPHP
 
             $node_3 = $this->createNode();
             $node_3->setName('mspace');
-            $node_3->setAttr('width',$sym['space']);
+            $node_3->setAttr('width', $sym['space']);
 
             $node_0->addChild($node_1);
             $node_0->addChild($node_2);
@@ -874,7 +865,6 @@ class ASCIIMathPHP
 
             return($node_0);
         } else {
-
          // A constant
             $node_0 = $this->createNode();
             $node_0->setName($sym['tag']);
@@ -882,7 +872,7 @@ class ASCIIMathPHP
             return($node_0);
         }
 
-        return(FALSE);
+        return(false);
     }
 
     function getMathML()
@@ -915,21 +905,20 @@ class ASCIIMathPHP
         return($node);
     }
 
-    function getSymbol($chop_flg = FALSE)
+    function getSymbol($chop_flg = false)
     {
         $chr_cnt = strlen($this->_curr_expr);
 
         if ($chr_cnt == 0) {
-            return(FALSE);
+            return(false);
         }
 
         for ($i = 1; $i < $chr_cnt; $i++) {
-            $sym_0 = substr($this->_curr_expr,0,$i);
-            $sym_1 = substr($this->_curr_expr,0,$i+1);
+            $sym_0 = substr($this->_curr_expr, 0, $i);
+            $sym_1 = substr($this->_curr_expr, 0, $i+1);
 
          // Reading string for numeric values
             if (is_numeric($sym_0)) {
-
                 if (!is_numeric($sym_1)) {
                     $chop_flg ? $this->chopExpr($i) : 0;
                     return(array('input'=>$sym_0, 'tag'=>'mn', 'output'=>$sym_0, 'symlen'=>$i));
@@ -937,16 +926,12 @@ class ASCIIMathPHP
                     $chop_flg ? $this->chopExpr($i+1) : 0;
                     return(array('input'=>$sym_1, 'tag'=>'mn', 'output'=>$sym_1, 'symlen'=>($i+1)));
                 }
-
             } elseif (isset($this->_symbol_arr[$sym_0]) && !isset($this->_symbol_arr[$sym_1])) {
-
                 $chop_flg ? $this->chopExpr($i) : 0;
                 $sym_arr = $this->_symbol_arr[$sym_0];
                 $sym_arr['symlen'] = $i;
                 return($sym_arr);
-
             } elseif (isset($this->_symbol_arr[$sym_1]) && $i == ($chr_cnt - 1)) {
-
                 $chop_flg ? $this->chopExpr($i+1) : 0;
                 $sym_arr = $this->_symbol_arr[$sym_1];
                 $sym_arr['symlen'] = $i+1;
@@ -964,7 +949,7 @@ class ASCIIMathPHP
             $sym_arr['symlen'] = 1;
             return($sym_arr);
         } else {
-            $tag = preg_match('/[a-z]/i',$char) ? 'mi' : 'mo';
+            $tag = preg_match('/[a-z]/i', $char) ? 'mi' : 'mo';
             return(array('input'=>$char, 'tag'=>$tag, 'output'=>$char, 'symlen'=>1));
         }
     }
@@ -977,9 +962,8 @@ class ASCIIMathPHP
             $this->_curr_expr = '';
             return(0);
         } else {
-            $this->_curr_expr = ltrim(substr($this->_curr_expr,$strlen));
+            $this->_curr_expr = ltrim(substr($this->_curr_expr, $strlen));
             return(strlen($this->_curr_expr));
         }
     }
 }
-?>

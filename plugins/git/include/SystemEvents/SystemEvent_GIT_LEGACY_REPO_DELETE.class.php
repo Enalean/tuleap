@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class SystemEvent_GIT_LEGACY_REPO_DELETE extends SystemEvent_GIT_REPO_DELETE {
+class SystemEvent_GIT_LEGACY_REPO_DELETE extends SystemEvent_GIT_REPO_DELETE
+{
     public const NAME = 'GIT_LEGACY_REPO_DELETE';
 }

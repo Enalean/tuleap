@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_Action_Triggers_GetTriggersRulesBuilderData {
+class Tracker_Workflow_Action_Triggers_GetTriggersRulesBuilderData
+{
 
     /**
      * @var Tracker
@@ -43,5 +44,3 @@ class Tracker_Workflow_Action_Triggers_GetTriggersRulesBuilderData {
         $GLOBALS['Response']->sendJSON($rules_builder_data->fetchFormattedForJson());
     }
 }
-
-?>

@@ -29,7 +29,8 @@ require_once 'MembershipCommand/RemoveBinding.class.php';
  * -> create groups
  * -> adding and removing user and groups
  */
-class Git_Driver_Gerrit_MembershipManager {
+class Git_Driver_Gerrit_MembershipManager
+{
     private $dao;
     private $driver_factory;
     private $gerrit_server_factory;
@@ -241,11 +242,9 @@ class Git_Driver_Gerrit_MembershipManager {
             } else {
                 return false;
             }
-        }
-        catch (Git_Driver_Gerrit_Exception $e) {
+        } catch (Git_Driver_Gerrit_Exception $e) {
             $this->logger->error($e->getMessage());
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->logger->error('Unknown error: ' . $e->getMessage());
         }
         return false;
@@ -253,7 +252,7 @@ class Git_Driver_Gerrit_MembershipManager {
 
     private function createProjectAdminsGroup(Git_RemoteServer_GerritServer $server, ProjectUGroup $admin_ugroup)
     {
-        if ( ! $this->doesGroupExistOnServer($server, $admin_ugroup)) {
+        if (! $this->doesGroupExistOnServer($server, $admin_ugroup)) {
             $this->createGroupOnServerWithoutCheckingUGroupValidity($server, $admin_ugroup, $admin_ugroup);
         }
     }
@@ -344,7 +343,7 @@ class Git_Driver_Gerrit_MembershipManager {
 
     private function cacheGroupDefinitionForServer(Git_RemoteServer_GerritServer $server)
     {
-        if ( ! isset($this->cache_groups[$server->getId()])) {
+        if (! isset($this->cache_groups[$server->getId()])) {
             $this->cache_groups[$server->getId()] = $this->driver_factory->getDriver($server)->getAllGroups($server);
         }
     }
@@ -371,5 +370,4 @@ class Git_Driver_Gerrit_MembershipManager {
             }
         }
     }
-
 }

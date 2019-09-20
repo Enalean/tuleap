@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_Renderer_CreateInPlaceRenderer{
+class Tracker_Artifact_Renderer_CreateInPlaceRenderer
+{
 
     /** @var Tracker */
     private $tracker;

@@ -23,7 +23,8 @@ namespace User\XML\Import;
 use UserManager;
 use PFUser;
 
-class MappingFileOptimusPrimeTransformer {
+class MappingFileOptimusPrimeTransformer
+{
 
     private static $ALLOWED_ACTIONS = array(
         ToBeActivatedUser::ACTION,
@@ -66,7 +67,7 @@ class MappingFileOptimusPrimeTransformer {
                     $to_be_imported_user->getUserName(),
                     $to_be_imported_user->getOriginalLdapId()
                 );
-            } else if ($to_be_imported_user instanceof ToBeCreatedUser || $to_be_imported_user instanceof ToBeActivatedUser) {
+            } elseif ($to_be_imported_user instanceof ToBeCreatedUser || $to_be_imported_user instanceof ToBeActivatedUser) {
                 $collection_for_import->add(
                     $this->transformUserWithoutMap($collection_from_archive, $username, $default_action, $to_be_imported_user),
                     $to_be_imported_user->getOriginalUserId(),
@@ -105,7 +106,7 @@ class MappingFileOptimusPrimeTransformer {
                     $to_be_imported_user->getUserName(),
                     $to_be_imported_user->getOriginalLdapId()
                 );
-            } else if ($to_be_imported_user instanceof AlreadyExistingUser) {
+            } elseif ($to_be_imported_user instanceof AlreadyExistingUser) {
                 $collection_for_import->add(
                     $to_be_imported_user,
                     $to_be_imported_user->getOriginalUserId(),
@@ -213,7 +214,7 @@ class MappingFileOptimusPrimeTransformer {
         $header = fgetcsv($csv);
         $lines  = array();
 
-        while (($data = fgetcsv($csv)) !== FALSE) {
+        while (($data = fgetcsv($csv)) !== false) {
             $username = $data[0];
             $action   = $data[1];
 

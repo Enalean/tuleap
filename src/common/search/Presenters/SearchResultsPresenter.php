@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchResultsPresenter {
+class Search_SearchResultsPresenter
+{
     public const TEMPLATE_PREFIX = 'results-';
 
     private $template;

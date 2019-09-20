@@ -21,7 +21,8 @@
 /**
  * A TreeNode holding a CardInCellPresenter
  */
-class Cardwall_CardInCellPresenterNode extends TreeNode {
+class Cardwall_CardInCellPresenterNode extends TreeNode
+{
 
     /** @var Cardwall_CardInCellPresenter */
     private $presenter;
@@ -42,5 +43,3 @@ class Cardwall_CardInCellPresenterNode extends TreeNode {
         return $this->presenter->getArtifact();
     }
 }
-
-?>

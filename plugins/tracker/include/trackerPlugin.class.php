@@ -155,7 +155,8 @@ require_once __DIR__ . '/../include/manual_autoload.php';
 /**
  * trackerPlugin
  */
-class trackerPlugin extends Plugin {
+class trackerPlugin extends Plugin
+{
 
     public const EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE      = 'forge__artifacts';
     public const EMAILGATEWAY_INSECURE_ARTIFACT_CREATION = 'forge__tracker';
@@ -170,26 +171,26 @@ class trackerPlugin extends Plugin {
         bindtextdomain('tuleap-tracker', __DIR__.'/../site-content');
 
         $this->addHook('javascript_file');
-        $this->addHook('cssfile',                             'cssFile',                           false);
-        $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
-        $this->addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID,'get_artifact_reference_group_id',   false);
+        $this->addHook('cssfile', 'cssFile', false);
+        $this->addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures', false);
+        $this->addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, 'get_artifact_reference_group_id', false);
         $this->addHook(Event::SET_ARTIFACT_REFERENCE_GROUP_ID);
-        $this->addHook(Event::BUILD_REFERENCE,                'build_reference',                   false);
+        $this->addHook(Event::BUILD_REFERENCE, 'build_reference', false);
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
         $this->addHook(Event::SERVICE_CLASSNAMES);
-        $this->addHook(Event::JAVASCRIPT,                     'javascript',                        false);
-        $this->addHook(Event::TOGGLE,                         'toggle',                            false);
+        $this->addHook(Event::JAVASCRIPT, 'javascript', false);
+        $this->addHook(Event::TOGGLE, 'toggle', false);
         $this->addHook(GetPublicAreas::NAME);
-        $this->addHook('permission_get_name',                 'permission_get_name',               false);
-        $this->addHook('permission_get_object_type',          'permission_get_object_type',        false);
-        $this->addHook('permission_get_object_name',          'permission_get_object_name',        false);
-        $this->addHook('permission_get_object_fullname',      'permission_get_object_fullname',    false);
-        $this->addHook('permission_user_allowed_to_change',   'permission_user_allowed_to_change', false);
+        $this->addHook('permission_get_name', 'permission_get_name', false);
+        $this->addHook('permission_get_object_type', 'permission_get_object_type', false);
+        $this->addHook('permission_get_object_name', 'permission_get_object_name', false);
+        $this->addHook('permission_get_object_fullname', 'permission_get_object_fullname', false);
+        $this->addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->addHook(Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE);
-        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS,         'getSystemEventClass',               false);
+        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass', false);
 
-        $this->addHook('url_verification_instance',           'url_verification_instance',         false);
+        $this->addHook('url_verification_instance', 'url_verification_instance', false);
 
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
@@ -199,10 +200,10 @@ class trackerPlugin extends Plugin {
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
         $this->addHook(AtUserCreationDefaultWidgetsCreator::DEFAULT_WIDGETS_FOR_NEW_USER);
 
-        $this->addHook('project_is_deleted',                  'project_is_deleted',                false);
+        $this->addHook('project_is_deleted', 'project_is_deleted', false);
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
-        $this->addHook('codendi_daily_start',                 'codendi_daily_start',               false);
-        $this->addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
+        $this->addHook('codendi_daily_start', 'codendi_daily_start', false);
+        $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
         $this->addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook(Event::IMPORT_XML_IS_PROJECT_VALID);
         $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
@@ -431,7 +432,7 @@ class trackerPlugin extends Plugin {
      */
     public function getSystemEventClass($params)
     {
-        switch($params['type']) {
+        switch ($params['type']) {
             case SystemEvent_TRACKER_V3_MIGRATION::NAME:
                 $params['class']        = 'SystemEvent_TRACKER_V3_MIGRATION';
                 $params['dependencies'] = array(
@@ -489,7 +490,7 @@ class trackerPlugin extends Plugin {
         if ($params['id'] === 'tracker_report_query_0') {
             Toggler::togglePreference($params['user'], $params['id']);
             $params['done'] = true;
-        } else if (strpos($params['id'], 'tracker_report_query_') === 0) {
+        } elseif (strpos($params['id'], 'tracker_report_query_') === 0) {
             $report_id = (int)substr($params['id'], strlen('tracker_report_query_'));
             $report_factory = Tracker_ReportFactory::instance();
             if (($report = $report_factory->getReportById($report_id, $params['user']->getid())) && $report->userCanUpdate($params['user'])) {
@@ -521,8 +522,7 @@ class trackerPlugin extends Plugin {
             $project         = $project_manager->getProject($params['group_id']);
             $legacy_services = $params['legacy_service_usage'];
 
-            if (
-                ! $this->isRestricted() &&
+            if (! $this->isRestricted() &&
                 ! $this->isLegacyTrackerV3StillUsed($legacy_services)
                 && TrackerV3::instance()->available()
             ) {
@@ -542,39 +542,39 @@ class trackerPlugin extends Plugin {
     function permission_get_name($params)
     {
         if (!$params['name']) {
-            switch($params['permission_type']) {
+            switch ($params['permission_type']) {
                 case 'PLUGIN_TRACKER_FIELD_SUBMIT':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_field_submit');
-                break;
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_field_submit');
+                    break;
                 case 'PLUGIN_TRACKER_FIELD_READ':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_field_read');
-                break;
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_field_read');
+                    break;
                 case 'PLUGIN_TRACKER_FIELD_UPDATE':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_field_update');
-                break;
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_field_update');
+                    break;
                 case Tracker::PERMISSION_SUBMITTER_ONLY:
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_submitter_only_access');
-                break;
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_submitter_only_access');
+                    break;
                 case Tracker::PERMISSION_SUBMITTER:
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_submitter_access');
-                break;
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_submitter_access');
+                    break;
                 case Tracker::PERMISSION_ASSIGNEE:
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_assignee_access');
-                break;
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_assignee_access');
+                    break;
                 case Tracker::PERMISSION_FULL:
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_full_access');
-                break;
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_full_access');
+                    break;
                 case Tracker::PERMISSION_ADMIN:
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_admin');
-                break;
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_admin');
+                    break;
                 case 'PLUGIN_TRACKER_ARTIFACT_ACCESS':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_artifact_access');
-                break;
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_artifact_access');
+                    break;
                 case 'PLUGIN_TRACKER_WORKFLOW_TRANSITION':
-                    $params['name'] = $GLOBALS['Language']->getText('workflow_admin','permissions_transition');
-                break;
+                    $params['name'] = $GLOBALS['Language']->getText('workflow_admin', 'permissions_transition');
+                    break;
                 default:
-                break;
+                    break;
             }
         }
     }
@@ -589,7 +589,7 @@ class trackerPlugin extends Plugin {
 
     function getObjectTypeFromPermissions($params)
     {
-        switch($params['permission_type']) {
+        switch ($params['permission_type']) {
             case 'PLUGIN_TRACKER_FIELD_SUBMIT':
             case 'PLUGIN_TRACKER_FIELD_READ':
             case 'PLUGIN_TRACKER_FIELD_UPDATE':
@@ -619,7 +619,7 @@ class trackerPlugin extends Plugin {
                     if ($tracker = TrackerFactory::instance()->getTrackerById($object_id)) {
                         $params['object_name'] = $tracker->getName();
                     }
-                } else if ($type == 'field') {
+                } elseif ($type == 'field') {
                     $ret = (string)$object_id;
                     if ($field = Tracker_FormElementFactory::instance()->getFormElementById($object_id)) {
                         $ret     = $field->getLabel();
@@ -629,7 +629,7 @@ class trackerPlugin extends Plugin {
                         }
                     }
                     $params['object_name'] =  $ret;
-                } else if ($type == 'artifact') {
+                } elseif ($type == 'artifact') {
                     $ret = (string)$object_id;
                     if ($a  = Tracker_ArtifactFactory::instance()->getArtifactById($object_id)) {
                         $ret = 'art #'. $a->getId();
@@ -853,7 +853,7 @@ class trackerPlugin extends Plugin {
             if ($trackers) {
                 $entries  = array();
                 $purifier = Codendi_HTMLPurifier::instance();
-                foreach($trackers as $t) {
+                foreach ($trackers as $t) {
                     if ($t->userCanView()) {
                         $name      = $purifier->purify($t->name, CODENDI_PURIFIER_CONVERT_HTML);
                         $entries[] = '<a href="'. TRACKER_BASE_URL .'/?tracker='. $t->id .'">'. $name .'</a>';
@@ -893,7 +893,9 @@ class trackerPlugin extends Plugin {
     private function getReferenceCreator()
     {
         return new ReferenceCreator(
-            ServiceManager::instance(), TrackerV3::instance(), new ReferenceDao()
+            ServiceManager::instance(),
+            TrackerV3::instance(),
+            new ReferenceDao()
         );
     }
 
@@ -1041,14 +1043,14 @@ class trackerPlugin extends Plugin {
 
     public function import_xml_is_project_valid($params)
     {
-        if(! $this->checkNaturesExistsOnPlateform($params['xml_content'])) {
+        if (! $this->checkNaturesExistsOnPlateform($params['xml_content'])) {
             $params['error'] = true;
         }
     }
 
     private function checkNaturesExistsOnPlateform(SimpleXMLElement $xml)
     {
-        if(! $xml->trackers['use-natures'][0]) {
+        if (! $xml->trackers['use-natures'][0]) {
             return true;
         }
 
@@ -1057,7 +1059,7 @@ class trackerPlugin extends Plugin {
         }
 
         $plateform_natures["nature"] = array(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
-        foreach($this->getNatureDao()->searchAll() as $nature) {
+        foreach ($this->getNatureDao()->searchAll() as $nature) {
             $plateform_natures["nature"][] = $nature['shortname'];
         }
 
@@ -1271,12 +1273,11 @@ class trackerPlugin extends Plugin {
             $params['aliases'][] = new System_Alias(self::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION, "\"|$command\"");
             $params['aliases'][] = new System_Alias(self::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE, "\"|$command\"");
         }
-
     }
     public function get_projectid_from_url($params)
     {
         $url = $params['url'];
-        if (strpos($url,'/plugins/tracker/') === 0) {
+        if (strpos($url, '/plugins/tracker/') === 0) {
             if (! $params['request']->get('tracker')) {
                 return;
             }
@@ -1300,7 +1301,6 @@ class trackerPlugin extends Plugin {
         if ($params['queue'] === Tracker_SystemEvent_Tv3Tv5Queue::NAME) {
             $params['types'][] = SystemEvent_TRACKER_V3_MIGRATION::NAME;
         }
-
     }
 
     public function system_event_get_types_for_default_queue($params)
@@ -1333,8 +1333,7 @@ class trackerPlugin extends Plugin {
         if ($params['options']['all'] === true) {
             $this->getTrackerXmlExport($user_xml_exporter, $can_bypass_threshold)
             ->exportToXmlFull($project, $params['into_xml'], $user, $params['archive']);
-
-        } else if (isset($params['options']['tracker_id'])) {
+        } elseif (isset($params['options']['tracker_id'])) {
             $this->exportSingleTracker($params, $project, $user_xml_exporter, $user, $can_bypass_threshold);
         }
     }
@@ -1350,11 +1349,11 @@ class trackerPlugin extends Plugin {
         $tracker    = $this->getTrackerFactory()->getTrackerById($tracker_id);
 
         if (! $tracker) {
-            throw new Exception ('Tracker ID does not exist');
+            throw new Exception('Tracker ID does not exist');
         }
 
         if ($tracker->getGroupId() != $project->getID()) {
-            throw new Exception ('Tracker ID does not belong to project ID');
+            throw new Exception('Tracker ID does not belong to project ID');
         }
 
         $this->getTrackerXmlExport($user_xml_exporter, $can_bypass_threshold)
@@ -1700,7 +1699,6 @@ class trackerPlugin extends Plugin {
             $this->getTrackerFactory(),
             new TrackerManager,
             $this->getUserManager()
-
         );
     }
 
@@ -1872,7 +1870,7 @@ class trackerPlugin extends Plugin {
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup(TRACKER_BASE_URL, function (FastRoute\RouteCollector $r) {
-            $r->addRoute(['GET', 'POST'],'[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
+            $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
 
             $r->get('/resources/templates/[index.php]', $this->getRouteHandler('routeGetTemplates'));
 

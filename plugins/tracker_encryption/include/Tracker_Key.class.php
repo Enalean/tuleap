@@ -48,7 +48,7 @@ class Tracker_Key
     {
         $result = '';
         $array = ($this->dao_pub_key->retrieveKey($this->id_tracker));
-        foreach($array as $key=>$value){
+        foreach ($array as $key => $value) {
             $result = $value['key_content'];
         }
         return $result;
@@ -67,7 +67,7 @@ class Tracker_Key
     public function historizeKey($group_id)
     {
         $dao = new ProjectHistoryDao();
-        $dao->groupAddHistory($GLOBALS['Language']->getText('project_admin_utils', 'Tracker_key'),$this->getKey() ,$group_id, false);
+        $dao->groupAddHistory($GLOBALS['Language']->getText('project_admin_utils', 'Tracker_key'), $this->getKey(), $group_id, false);
     }
 
     /**
@@ -108,5 +108,4 @@ class Tracker_Key
         $rsa->loadKey($key);
         return (($rsa->getSize()/8) - (2 * Encryption_Manager::HLEN) - 2);
     }
-
 }

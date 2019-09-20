@@ -21,9 +21,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableLinkDao extends Docman_ApprovalTableItemDao {
+class Docman_ApprovalTableLinkDao extends Docman_ApprovalTableItemDao
+{
 
-    public function getTableById($versionId, $fields='*')
+    public function getTableById($versionId, $fields = '*')
     {
         $sql = 'SELECT '.$fields.
             ' FROM plugin_docman_approval'.
@@ -31,17 +32,17 @@ class Docman_ApprovalTableLinkDao extends Docman_ApprovalTableItemDao {
         return $this->retrieve($sql);
     }
 
-    public function getTableByItemId($itemId, $fields='*')
+    public function getTableByItemId($itemId, $fields = '*')
     {
         return $this->getLatestTableByItemId($itemId, $fields);
     }
 
-    public function getLatestTableByItemId($itemId, $fields='app.*')
+    public function getLatestTableByItemId($itemId, $fields = 'app.*')
     {
         return $this->getApprovalTableItemId($itemId, $fields, ' LIMIT 1', true);
     }
 
-    public function getApprovalTableItemId($itemId, $fields='app.*', $limit='', $tableStatus=false)
+    public function getApprovalTableItemId($itemId, $fields = 'app.*', $limit = '', $tableStatus = false)
     {
         $fields .= ', ver.number as version_number';
         $where = ' ver.item_id = '.$this->da->escapeInt($itemId).

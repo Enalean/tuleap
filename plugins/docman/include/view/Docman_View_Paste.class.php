@@ -24,7 +24,8 @@
 require_once('Docman_View_Details.class.php');
 require_once('Docman_View_ItemDetailsSectionPaste.class.php');
 
-class Docman_View_Paste extends Docman_View_Details {
+class Docman_View_Paste extends Docman_View_Details
+{
 
     function _getTitle($params)
     {

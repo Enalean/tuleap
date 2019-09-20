@@ -24,7 +24,8 @@ use Tuleap\ProFTPd\Admin\ACLUpdater;
 use RuntimeException;
 use Backend;
 
-class PROFTPD_DIRECTORY_CREATE extends \SystemEvent {
+class PROFTPD_DIRECTORY_CREATE extends \SystemEvent
+{
     public const NAME = 'Tuleap\ProFTPd\SystemEvent\PROFTPD_DIRECTORY_CREATE';
 
     /** @var Backend */
@@ -46,7 +47,7 @@ class PROFTPD_DIRECTORY_CREATE extends \SystemEvent {
     public function process()
     {
         $project_name    = $this->getProjectName();
-        $repository_path = $this->makeRepository($this->ftp_directory,  $project_name);
+        $repository_path = $this->makeRepository($this->ftp_directory, $project_name);
         $this->setPermissions($repository_path, $project_name);
         $this->setfacl($repository_path);
 
@@ -65,8 +66,8 @@ class PROFTPD_DIRECTORY_CREATE extends \SystemEvent {
     private function makeRepository($ftp_directory, $group_name)
     {
         $new_repository_path = $ftp_directory . DIRECTORY_SEPARATOR . $group_name;
-        if(! file_exists($new_repository_path)) {
-            if(! mkdir($new_repository_path)) {
+        if (! file_exists($new_repository_path)) {
+            if (! mkdir($new_repository_path)) {
                 throw new RuntimeException("Cannot create directory $new_repository_path");
             }
         }

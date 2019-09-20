@@ -26,7 +26,8 @@
  * Manage launch of continuous integration jobs on jenkins for git repositories
  * on push
  */
-class Git_Ci_Launcher {
+class Git_Ci_Launcher
+{
 
     /** @var Jenkins_Client */
     private $jenkins_client;
@@ -63,12 +64,10 @@ class Git_Ci_Launcher {
             foreach ($res as $row) {
                 try {
                     $this->jenkins_client->setToken($row['token'])->launchJobBuild($row['job_url']);
-                } catch(Exception $exception) {
+                } catch (Exception $exception) {
                     $this->logger->error(self::class.'['.$repository->getId().'] '.$exception->getMessage());
                 }
             }
         }
     }
 }
-
-?>

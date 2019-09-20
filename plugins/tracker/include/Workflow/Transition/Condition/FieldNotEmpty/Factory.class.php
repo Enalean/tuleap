@@ -19,7 +19,8 @@
  */
 
 
-class Workflow_Transition_Condition_FieldNotEmpty_Factory {
+class Workflow_Transition_Condition_FieldNotEmpty_Factory
+{
 
     private $dao;
     private $element_factory;

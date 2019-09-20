@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201012240808_add_table_frs_log extends ForgeUpgrade_Bucket {
+class b201012240808_add_table_frs_log extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -53,7 +54,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('frs_log table is missing');
         }
     }
-
 }
-
-?>

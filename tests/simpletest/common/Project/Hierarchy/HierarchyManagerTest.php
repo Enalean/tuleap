@@ -104,10 +104,10 @@ class Project_HierarchyManagerTest extends TuleapTestCase
 
         $this->hierarchy_manager->setParentProject(135, 135);
     }
-
 }
 
-class Project_HierarchyManagerAllParentsTest extends TuleapTestCase {
+class Project_HierarchyManagerAllParentsTest extends TuleapTestCase
+{
 
     private $dao;
 
@@ -170,5 +170,4 @@ class Project_HierarchyManagerAllParentsTest extends TuleapTestCase {
         $this->assertArrayNotEmpty($result);
         $this->assertEqual($expected, $result);
     }
-
 }

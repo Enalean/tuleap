@@ -16,7 +16,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-class User_SSHKeyValidatorTest extends TuleapTestCase {
+class User_SSHKeyValidatorTest extends TuleapTestCase
+{
 
     /** @var PFUser*/
     protected $user;
@@ -45,7 +46,8 @@ class User_SSHKeyValidatorTest extends TuleapTestCase {
     }
 }
 
-class User_SSHKeyValidator_KeyValidationTest extends User_SSHKeyValidatorTest {
+class User_SSHKeyValidator_KeyValidationTest extends User_SSHKeyValidatorTest
+{
 
     public function itDoesntRaiseAnErrorWhenTheKeyIsValid()
     {
@@ -127,7 +129,8 @@ class User_SSHKeyValidator_KeyValidationTest extends User_SSHKeyValidatorTest {
     }
 }
 
-class User_SSHKeyValidator_InputManagementTest extends User_SSHKeyValidatorTest {
+class User_SSHKeyValidator_InputManagementTest extends User_SSHKeyValidatorTest
+{
 
     public function itUpdatesWithOneKey()
     {

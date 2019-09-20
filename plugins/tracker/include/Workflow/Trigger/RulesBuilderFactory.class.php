@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_Trigger_RulesBuilderFactory {
+class Tracker_Workflow_Trigger_RulesBuilderFactory
+{
 
     /**
      * @var Tracker_FormElementFactory
@@ -57,7 +58,4 @@ class Tracker_Workflow_Trigger_RulesBuilderFactory {
             $this->formelement_factory->getUsedStaticSbFields($tracker)
         );
     }
-
 }
-
-?>

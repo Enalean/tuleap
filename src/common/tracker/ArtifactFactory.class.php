@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactFactory {
+class ArtifactFactory
+{
 
     /**
      * The ArtifactType object.
@@ -47,7 +48,7 @@ class ArtifactFactory {
         global $Language;
 
         if (!$ArtifactType || !is_object($ArtifactType)) {
-            $this->setError('ArtifactFactory:: '.$Language->getText('tracker_common_canned','not_valid'));
+            $this->setError('ArtifactFactory:: '.$Language->getText('tracker_common_canned', 'not_valid'));
             return false;
         }
         if ($ArtifactType->isError()) {
@@ -83,13 +84,13 @@ class ArtifactFactory {
         $rows = db_numrows($result);
         $this->fetched_rows=$rows;
         if (db_error()) {
-            $this->setError($Language->getText('tracker_common_factory','db_err').': '.db_error());
+            $this->setError($Language->getText('tracker_common_factory', 'db_err').': '.db_error());
             return false;
         } else {
             while ($arr = db_fetch_array($result)) {
                 $artifacts[$arr['artifact_id']] = new Artifact($this->ArtifactType, $arr['artifact_id']);
             }
-            if ( count($artifacts) ) {
+            if (count($artifacts)) {
                 return $artifacts;
             }
         }
@@ -104,7 +105,7 @@ class ArtifactFactory {
         $rows = db_numrows($result);
         $this->fetched_rows=$rows;
         if (db_error()) {
-            $this->setError($Language->getText('tracker_common_factory','db_err').': '.db_error());
+            $this->setError($Language->getText('tracker_common_factory', 'db_err').': '.db_error());
             return false;
         } else {
             while ($arr = db_fetch_array($result)) {
@@ -186,7 +187,6 @@ class ArtifactFactory {
             }
 
             $sql = $sql_select . $sql_from . $sql_where;
-
         } else {
             $sql = "SELECT a.artifact_id 
                     FROM artifact_group_list agl, artifact a 
@@ -212,7 +212,7 @@ class ArtifactFactory {
         $rows = db_numrows($result);
         $this->fetched_rows=$rows;
         if (db_error()) {
-            $this->setError($Language->getText('tracker_common_factory','db_err').': '.db_error());
+            $this->setError($Language->getText('tracker_common_factory', 'db_err').': '.db_error());
             return false;
         } else {
             while ($arr = db_fetch_array($result)) {
@@ -251,8 +251,7 @@ class ArtifactFactory {
 
         // Filter part
         if (is_array($criteria)) {
-
-            foreach($criteria as $cr) {
+            foreach ($criteria as $cr) {
                 $af = $art_field_fact->getFieldFromName($cr->field_name);
                 if (!$af || !is_object($af)) {
                     $this->setError('Cannot Get ArtifactField From Name : '.$cr->field_name);
@@ -268,16 +267,13 @@ class ArtifactFactory {
                 }
 
                 if ($af->isSelectBox() || $af->isMultiSelectBox()) {
-                    $prefs[$cr->field_name] = explode("," , $cr->field_value);
-
+                    $prefs[$cr->field_name] = explode(",", $cr->field_value);
                 } else {
                     $prefs[$cr->field_name] = array($cr->field_value);
                     if (isset($cr->operator)) {
                         $prefs[$cr->field_name] []= $cr->operator;
                     }
-
                 }
-
             }
         }
 
@@ -285,7 +281,7 @@ class ArtifactFactory {
         $morder = '';
         $array_morder = array();
         if (is_array($sort_criteria)) {
-            foreach($sort_criteria as $sort_cr) {
+            foreach ($sort_criteria as $sort_cr) {
                 $field_name = $sort_cr->field_name;
                 // check if fieldname is ok
                 $af = $art_field_fact->getFieldFromName($sort_cr->field_name);
@@ -311,7 +307,7 @@ class ArtifactFactory {
                 $array_morder[] = $field_name.$sort_direction;
             }
         }
-        $morder = implode(',' , $array_morder);
+        $morder = implode(',', $array_morder);
 
         $pm = ProjectManager::instance();
         $group = $pm->getProject($group_id);
@@ -331,7 +327,7 @@ class ArtifactFactory {
         //we get from result only fields that we need to display in the report (we add at the begining id and severity only to identify the artifact and for the severity color)
         $artifacts = array();
         $i = 0;
-        foreach($result as $art) {
+        foreach ($result as $art) {
             $artifact_id = $art['artifact_id'];
             $severity_id = $art['severity_id'];
             $artifact = new Artifact($this->ArtifactType, $art['artifact_id'], true);
@@ -380,6 +376,4 @@ class ArtifactFactory {
     {
         return $this->error_state;
     }
-
 }
-?>

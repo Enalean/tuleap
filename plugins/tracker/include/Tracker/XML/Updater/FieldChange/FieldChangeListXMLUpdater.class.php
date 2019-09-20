@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater implements Tracker_XML_Updater_FieldChange_FieldChangeXMLUpdater {
+class Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater implements Tracker_XML_Updater_FieldChange_FieldChangeXMLUpdater
+{
 
     /**
      * @param SimpleXMLElement $field_change_xml

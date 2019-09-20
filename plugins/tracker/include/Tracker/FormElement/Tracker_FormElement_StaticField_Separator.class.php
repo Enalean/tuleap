@@ -19,7 +19,8 @@
  */
 
 
-class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_StaticField {
+class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_StaticField
+{
 
     protected function fetchReadOnly()
     {
@@ -70,7 +71,7 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
     {
         global $Language;
         $label = parent::getLabel();
-        if ( ! $label) {
+        if (! $label) {
             return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'separator_label');
         } else {
             return $label;
@@ -115,5 +116,3 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
         return $GLOBALS['HTML']->getImagePath('ic/ui-splitter-horizontal--plus.png');
     }
 }
-
-?>

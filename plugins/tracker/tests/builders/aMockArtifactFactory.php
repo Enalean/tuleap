@@ -21,7 +21,8 @@ require_once __DIR__.'/../bootstrap.php';
 
 Mock::generate('Tracker_ArtifactFactory');
 
-class MockArtifactFactoryBuilder {
+class MockArtifactFactoryBuilder
+{
     public function __construct()
     {
         $this->factory = new MockTracker_ArtifactFactory();
@@ -41,5 +42,5 @@ class MockArtifactFactoryBuilder {
 
 function aMockArtifactFactory()
 {
-    return new MockArtifactFactoryBuilder(); }
-?>
+    return new MockArtifactFactoryBuilder();
+}

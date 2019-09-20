@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Git_HTTP_Command {
+abstract class Git_HTTP_Command
+{
     protected $env;
 
     public function __construct()

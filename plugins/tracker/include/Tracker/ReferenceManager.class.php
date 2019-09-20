@@ -25,7 +25,8 @@
 /**
  * I'm responsible of managing Tracker related cross references
  */
-class Tracker_ReferenceManager {
+class Tracker_ReferenceManager
+{
 
     /** @var ReferenceManager */
     private $reference_manager;

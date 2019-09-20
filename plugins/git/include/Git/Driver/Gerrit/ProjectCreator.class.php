@@ -19,7 +19,8 @@
  */
 
 
-class Git_Driver_Gerrit_ProjectCreator {
+class Git_Driver_Gerrit_ProjectCreator
+{
 
     public const GROUP_REPLICATION = 'replication';
     public const GROUP_REGISTERED_USERS = 'Registered Users';
@@ -169,11 +170,11 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->exportGitBranches($gerrit_server, $gerrit_project_name, $repository);
         // This method behaviour & all should be transfered into "finalizeGerritProjectCreation"
         $this->pushFullTuleapAccessRightsToGerrit(
-                $repository,
-                $gerrit_server,
-                $migrated_ugroups,
-                ForgeConfig::get('sys_default_domain') .'-'. self::GROUP_REPLICATION,
-                $template_id
+            $repository,
+            $gerrit_server,
+            $migrated_ugroups,
+            ForgeConfig::get('sys_default_domain') .'-'. self::GROUP_REPLICATION,
+            $template_id
         );
 
         return $gerrit_project_name;
@@ -337,7 +338,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $ugroups_rewind = array();
 
         foreach ($ugroups as $ugroup) {
-            if(in_array($ugroup->getId(), $ugroup_ids_read)) {
+            if (in_array($ugroup->getId(), $ugroup_ids_read)) {
                 $ugroups_read[] = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
             }
             if (in_array($ugroup->getId(), $ugroup_ids_write)) {
@@ -362,7 +363,7 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         foreach ($ugroups_read as $ugroup_read) {
             $this->addToSection('refs/heads', 'read', "group $ugroup_read");
-            if(!in_array($ugroup_read, $ugroups_write)) {
+            if (!in_array($ugroup_read, $ugroups_write)) {
                 $this->addToSection('refs/heads', 'label-Code-Review', "-1..+1 group $ugroup_read");
             }
         }

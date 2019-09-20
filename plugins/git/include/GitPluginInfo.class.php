@@ -21,14 +21,12 @@
 /**
  * GitPluginInfo
  */
-class GitPluginInfo extends PluginFileInfo {
+class GitPluginInfo extends PluginFileInfo
+{
 
-    public function __construct( $plugin )
+    public function __construct($plugin)
     {
         parent::__construct($plugin, 'config');
-        $this->setPluginDescriptor( new GitPluginDescriptor() );
-
+        $this->setPluginDescriptor(new GitPluginDescriptor());
     }
-
 }
-?>

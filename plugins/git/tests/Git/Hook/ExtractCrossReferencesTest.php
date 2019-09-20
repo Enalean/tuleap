@@ -24,7 +24,8 @@
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
+class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase
+{
     private $git_exec_repo;
     private $user;
     private $repository;
@@ -120,5 +121,3 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase {
         $this->post_receive->execute($push_details, '469eaa9');
     }
 }
-
-?>

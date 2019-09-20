@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AdminKanbanPresenter {
+class AdminKanbanPresenter
+{
 
     /** @var int */
     public $group_id;

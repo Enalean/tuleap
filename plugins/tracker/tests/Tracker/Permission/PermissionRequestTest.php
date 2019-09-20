@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Permission_PermissionRequestTest extends TuleapTestCase {
+class Tracker_Permission_PermissionRequestTest extends TuleapTestCase
+{
     protected $minimal_ugroup_list;
 
     public function setUp()

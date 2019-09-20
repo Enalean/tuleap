@@ -29,7 +29,8 @@ Mock::generate('BackendSVN');
 
 Mock::generate('BackendCVS');
 
-class SystemEvent_USER_RENAME_Test extends TuleapTestCase {
+class SystemEvent_USER_RENAME_Test extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -62,7 +63,7 @@ class SystemEvent_USER_RENAME_Test extends TuleapTestCase {
         $backendSystem->setReturnValue('userHomeExists', true);
         $backendSystem->setReturnValue('isUserNameAvailable', true);
         $backendSystem->setReturnValue('renameUserHomeDirectory', true);
-        $backendSystem->expectOnce('renameUserHomeDirectory',array($user, 'tazmani'));
+        $backendSystem->expectOnce('renameUserHomeDirectory', array($user, 'tazmani'));
         $evt->setReturnValue('getBackend', $backendSystem, array('System'));
 
         // DB
@@ -100,7 +101,7 @@ class SystemEvent_USER_RENAME_Test extends TuleapTestCase {
         $backendSystem->setReturnValue('userHomeExists', true);
         $backendSystem->setReturnValue('isUserNameAvailable', true);
         $backendSystem->setReturnValue('renameUserHomeDirectory', false);
-        $backendSystem->expectOnce('renameUserHomeDirectory',array($user, 'tazmani'));
+        $backendSystem->expectOnce('renameUserHomeDirectory', array($user, 'tazmani'));
         $evt->setReturnValue('getBackend', $backendSystem, array('System'));
 
         // DB
@@ -124,7 +125,6 @@ class SystemEvent_USER_RENAME_Test extends TuleapTestCase {
         // Check errors
         $this->assertEqual($evt->getStatus(), SystemEvent::STATUS_ERROR);
         $this->assertPattern('/Could not rename user home/i', $evt->getLog());
-
     }
 
 
@@ -143,7 +143,7 @@ class SystemEvent_USER_RENAME_Test extends TuleapTestCase {
         $backendSystem->setReturnValue('userHomeExists', true);
         $backendSystem->setReturnValue('isUserNameAvailable', true);
         $backendSystem->setReturnValue('renameUserHomeDirectory', true);
-        $backendSystem->expectOnce('renameUserHomeDirectory',array($user, 'tazmani'));
+        $backendSystem->expectOnce('renameUserHomeDirectory', array($user, 'tazmani'));
         $evt->setReturnValue('getBackend', $backendSystem, array('System'));
 
         // DB
@@ -167,7 +167,6 @@ class SystemEvent_USER_RENAME_Test extends TuleapTestCase {
         // Check errors
         $this->assertEqual($evt->getStatus(), SystemEvent::STATUS_ERROR);
         $this->assertPattern('/Could not update CVS writers for the user/i', $evt->getLog());
-
     }
 
     public function testUpdateSVNAccessFailure()
@@ -185,7 +184,7 @@ class SystemEvent_USER_RENAME_Test extends TuleapTestCase {
         $backendSystem->setReturnValue('userHomeExists', true);
         $backendSystem->setReturnValue('isUserNameAvailable', true);
         $backendSystem->setReturnValue('renameUserHomeDirectory', true);
-        $backendSystem->expectOnce('renameUserHomeDirectory',array($user, 'tazmani'));
+        $backendSystem->expectOnce('renameUserHomeDirectory', array($user, 'tazmani'));
         $evt->setReturnValue('getBackend', $backendSystem, array('System'));
 
         // DB
@@ -209,9 +208,5 @@ class SystemEvent_USER_RENAME_Test extends TuleapTestCase {
         // Check errors
         $this->assertEqual($evt->getStatus(), SystemEvent::STATUS_ERROR);
         $this->assertPattern('/Could not update SVN access files for the user/i', $evt->getLog());
-
     }
-
-
 }
-?>

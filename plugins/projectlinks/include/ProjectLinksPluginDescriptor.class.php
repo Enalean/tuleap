@@ -21,15 +21,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class ProjectLinksPluginDescriptor extends PluginDescriptor {
+class ProjectLinksPluginDescriptor extends PluginDescriptor
+{
 
     function __construct()
     {
-        parent::__construct($GLOBALS['Language']->getText('plugin_plinks', 'descriptor_name'),
-                            false,
-                            $GLOBALS['Language']->getText('plugin_plinks', 'descriptor_description'));
+        parent::__construct(
+            $GLOBALS['Language']->getText('plugin_plinks', 'descriptor_name'),
+            false,
+            $GLOBALS['Language']->getText('plugin_plinks', 'descriptor_description')
+        );
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
-
-?>

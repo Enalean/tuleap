@@ -59,7 +59,7 @@ class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
     public function registerInSession()
     {
         parent::registerInSession();
-        $this->report_session->set("$this->id.field_base",  $this->field_base);
+        $this->report_session->set("$this->id.field_base", $this->field_base);
         $this->report_session->set("$this->id.field_group", $this->field_group);
     }
 
@@ -72,7 +72,7 @@ class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
     {
         $session = self::getSession($graphic_report->report->id, $graphic_report->id);
 
-        $session->set("$id.field_base",  0);
+        $session->set("$id.field_base", 0);
         $session->set("$id.field_group", 0);
         $c = new GraphOnTrackersV5_Chart_Bar($graphic_report, $id, $rank, $title, $description, $width, $height);
         $c->registerInSession();
@@ -81,16 +81,20 @@ class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
 
     public function getField_base()
     {
-        return $this->field_base; }
+        return $this->field_base;
+    }
     public function setField_base($field_base)
     {
-        return $this->field_base = $field_base; }
+        return $this->field_base = $field_base;
+    }
     public function getField_group()
     {
-        return $this->field_group; }
+        return $this->field_group;
+    }
     public function setField_group($field_group)
     {
-        return $this->field_group = $field_group; }
+        return $this->field_group = $field_group;
+    }
 
     protected function getEngine()
     {
@@ -98,16 +102,18 @@ class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
     }
     protected function getChartDataBuilder($artifacts)
     {
-        return new GraphOnTrackersV5_Chart_BarDataBuilder($this,$artifacts);
+        return new GraphOnTrackersV5_Chart_BarDataBuilder($this, $artifacts);
     }
     public function getProperties()
     {
-        return array_merge(parent::getProperties(),
+        return array_merge(
+            parent::getProperties(),
             array(
-                new HTML_Element_Selectbox_TrackerFields_SelectboxesV5($this->getTracker(),$GLOBALS['Language']->getText('plugin_graphontrackersv5_bar_property','bar_field_base'), 'chart[field_base]', $this->getField_base(),false),
+                new HTML_Element_Selectbox_TrackerFields_SelectboxesV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_bar_property', 'bar_field_base'), 'chart[field_base]', $this->getField_base(), false),
 
-                new HTML_Element_Selectbox_TrackerFields_SelectboxesV5($this->getTracker(),$GLOBALS['Language']->getText('plugin_graphontrackersv5_bar_property','bar_field_group'), 'chart[field_group]', $this->getField_group(), true)
-        ));
+                new HTML_Element_Selectbox_TrackerFields_SelectboxesV5($this->getTracker(), $GLOBALS['Language']->getText('plugin_graphontrackersv5_bar_property', 'bar_field_group'), 'chart[field_group]', $this->getField_group(), true)
+            )
+        );
     }
 
     public function createDb($id)

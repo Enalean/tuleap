@@ -284,7 +284,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
         switch ($request->get('func')) {
             case self::FUNC_SHOW_BURNDOWN:
-                try  {
+                try {
                     $artifact_id = $request->getValidated('src_aid', 'uint', 0);
                     $artifact    = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
                     if (! $artifact) {
@@ -486,7 +486,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     {
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
     }
 
@@ -659,12 +659,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     ) {
 
         try {
-            if (
-                $previous_changeset !== null &&
+            if ($previous_changeset !== null &&
                 $this->getBurndownCacheChecker()->isCacheBurndownAlreadyAsked($artifact) === false &&
                 $this->getBurdownConfigurationFieldRetriever()->getBurndownRemainingEffortField($artifact, $submitter)
             ) {
-                if ($this->getBurndownConfigurationValueChecker()->hasConfigurationChange($artifact, $submitter, $new_changeset) === true ) {
+                if ($this->getBurndownConfigurationValueChecker()->hasConfigurationChange($artifact, $submitter, $new_changeset) === true) {
                     $this->getBurndownCacheGenerator()->forceBurndownCacheGeneration($artifact->getId());
                 }
             }
@@ -843,7 +842,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $form_element_factory = $this->getFormElementFactory();
 
         return new TimeframeBuilder(
-            $form_element_factory, $this->getSemanticTimeframeBuilder(), $this->getLogger()
+            $form_element_factory,
+            $this->getSemanticTimeframeBuilder(),
+            $this->getLogger()
         );
     }
 

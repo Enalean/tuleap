@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
+class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
+{
 
     public const NAME = "GIT_GERRIT_MIGRATION";
 

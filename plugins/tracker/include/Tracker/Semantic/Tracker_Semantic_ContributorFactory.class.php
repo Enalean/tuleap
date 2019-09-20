@@ -21,7 +21,8 @@
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 
-class Tracker_Semantic_ContributorFactory implements IBuildSemanticFromXML, IDuplicateSemantic {
+class Tracker_Semantic_ContributorFactory implements IBuildSemanticFromXML, IDuplicateSemantic
+{
 
     /**
      * Hold an instance of the class
@@ -90,6 +91,4 @@ class Tracker_Semantic_ContributorFactory implements IBuildSemanticFromXML, IDup
             }
         }
     }
-
 }
-?>

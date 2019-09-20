@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201011230835_add_column_format_to_artifact_history extends ForgeUpgrade_Bucket {
+class b201011230835_add_column_format_to_artifact_history extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -49,6 +50,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column format in table artifact_history is missing');
         }
     }
-
 }
-?>

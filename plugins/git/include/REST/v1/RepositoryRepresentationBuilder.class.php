@@ -200,6 +200,5 @@ class RepositoryRepresentationBuilder
             return $row['push_date'];
         }
         return (new DateTime($repository->getCreationDate()))->getTimestamp();
-
     }
 }

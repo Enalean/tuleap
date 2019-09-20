@@ -22,5 +22,6 @@ namespace Tuleap\Git\Exceptions;
 
 use Exception;
 
-class RemoteServerDoesNotExistException extends Exception {
+class RemoteServerDoesNotExistException extends Exception
+{
 }

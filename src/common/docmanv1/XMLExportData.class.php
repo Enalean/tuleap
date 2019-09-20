@@ -19,7 +19,8 @@
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
-class DocmanV1_XMLExportData {
+class DocmanV1_XMLExportData
+{
 
     public const ROOT_FOLDER_NAME = 'Legacy documentation';
 
@@ -163,7 +164,7 @@ class DocmanV1_XMLExportData {
     private function getDocumentPermissions(LegacyDataAccessResultInterface $results)
     {
         $perms = $this->minimal_permissions;
-        foreach($results as $row) {
+        foreach ($results as $row) {
             if ($row['id'] < ProjectUGroup::PROJECT_ADMIN || $row['id'] > ProjectUGroup::NONE) {
                 $ugroup_name = util_translate_name_ugroup($row['name']);
                 $ugroup_id   = $row['id'];

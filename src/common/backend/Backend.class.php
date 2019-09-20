@@ -25,7 +25,8 @@ use Tuleap\Backend\FileExtensionFilterIterator;
  * Base class to work on Codendi backend
  * Change file perms, write Codendi blocks, ...
  */
-class Backend {
+class Backend
+{
 
     public const LOG_INFO    = "info";
     public const LOG_WARNING = "warn";
@@ -267,7 +268,7 @@ class Backend {
      * @param String $entry    Entry to search
      * @return String|Array|bool Result
      */
-    protected function getent($database, $entry=false)
+    protected function getent($database, $entry = false)
     {
         $cmd = 'getent '.escapeshellarg($database);
         if ($entry !== false) {
@@ -322,7 +323,7 @@ class Backend {
      * @return mixed Returns the last line of the command output on success, and false
      * on failure.
      */
-    protected function system($cmd, &$rval=0)
+    protected function system($cmd, &$rval = 0)
     {
         return system($cmd, $rval);
     }
@@ -398,7 +399,7 @@ class Backend {
                 $this->chown($file_information->getPathname(), $uid);
                 $this->chgrp($file_information->getPathname(), $gid);
             }
-        }  catch (Exception $ex) {
+        } catch (Exception $ex) {
             $this->log($ex->getMessage() . 'in ' . $ex->getFile() . ':' . $ex->getLine(), self::LOG_DEBUG);
         }
     }
@@ -417,7 +418,7 @@ class Backend {
             foreach ($iterator as $filename => $file_information) {
                 $this->chgrp($file_information->getPathname(), $gid);
             }
-        }  catch (Exception $ex) {
+        } catch (Exception $ex) {
             $this->log($ex->getMessage() . 'in ' . $ex->getFile() . ':' . $ex->getLine(), self::LOG_DEBUG);
         }
     }
@@ -439,7 +440,7 @@ class Backend {
                     unlink($file_information->getPathname());
                 }
             }
-        }  catch (Exception $ex) {
+        } catch (Exception $ex) {
             $this->log($ex->getMessage() . 'in ' . $ex->getFile() . ':' . $ex->getLine(), self::LOG_DEBUG);
         }
     }
@@ -526,7 +527,7 @@ class Backend {
             return false;
         }
 
-        foreach ($file_array as $line ) {
+        foreach ($file_array as $line) {
             if (fwrite($handle, $line) === false) {
                 $this->log("Can't write to file: $filename", self::LOG_ERROR);
                 return false;
@@ -550,7 +551,7 @@ class Backend {
      *
      * @return bool true on success or false on failure.
      */
-    public function installNewFileVersion($file_new, $file, $file_old, $force=false)
+    public function installNewFileVersion($file_new, $file, $file_old, $force = false)
     {
         // Backup existing file and install new one if they are different
         if (is_file($file)) {
@@ -641,5 +642,4 @@ class Backend {
     {
         return (is_dir($path)  || is_file($path) || is_link($path));
     }
-
 }

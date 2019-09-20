@@ -33,8 +33,7 @@ rcs_id('$Id: FileInfo.php,v 1.4 2005/10/29 14:18:47 rurban Exp $');
  * @author: ReiniUrban
  */
 
-class WikiPlugin_FileInfo
-extends WikiPlugin
+class WikiPlugin_FileInfo extends WikiPlugin
 {
     function getName()
     {
@@ -48,8 +47,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.4 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.4 $"
+        );
     }
 
     function getDefaultArguments()
@@ -65,10 +67,12 @@ extends WikiPlugin
     function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
-        if (!$file)
+        if (!$file) {
             return $this->error(sprintf(_("A required argument '%s' is missing."), 'file'));
-        if (!$display)
+        }
+        if (!$display) {
             return $this->error(sprintf(_("A required argument '%s' is missing."), 'display'));
+        }
 
         $dir = getcwd();
         chdir(PHPWIKI_DIR);
@@ -77,40 +81,63 @@ extends WikiPlugin
             trigger_error("file \"$file\" not found", E_USER_WARNING);
         }
         $realfile = realpath($file);
-        if (!string_starts_with($realfile, realpath(getUploadDataPath())))
-        return $this->error("invalid path \"$file\"");
-        else
-        $isuploaded = 1;
+        if (!string_starts_with($realfile, realpath(getUploadDataPath()))) {
+            return $this->error("invalid path \"$file\"");
+        } else {
+            $isuploaded = 1;
+        }
         $s = array();
         $modes = explode(",", $display);
         foreach ($modes as $mode) {
             switch ($mode) {
-                case 'version':  $s[] = $this->exeversion($file); break;
-                case 'size':     $s[] = filesize($file); break;
-                case 'phonysize':$s[] = $this->phonysize(filesize($file)); break;
-                case 'date':     $s[] = strftime("%x %X", filemtime($file)); break;
-                case 'mtime':    $s[] = filemtime($file); break;
-                case 'name':     $s[] = basename($file); break;
-                case 'path':     $s[] = $file; break;
-                case 'dirname':  $s[] = dirname($file); break;
-                case 'magic':    $s[] = $this->magic($file); break;
-                case 'mime-typ': $s[] = $this->mime_type($file); break;
+                case 'version':
+                    $s[] = $this->exeversion($file);
+                    break;
+                case 'size':
+                    $s[] = filesize($file);
+                    break;
+                case 'phonysize':
+                    $s[] = $this->phonysize(filesize($file));
+                    break;
+                case 'date':
+                    $s[] = strftime("%x %X", filemtime($file));
+                    break;
+                case 'mtime':
+                    $s[] = filemtime($file);
+                    break;
+                case 'name':
+                    $s[] = basename($file);
+                    break;
+                case 'path':
+                    $s[] = $file;
+                    break;
+                case 'dirname':
+                    $s[] = dirname($file);
+                    break;
+                case 'magic':
+                    $s[] = $this->magic($file);
+                    break;
+                case 'mime-typ':
+                    $s[] = $this->mime_type($file);
+                    break;
                 case 'link':
                     if ($isuploaded) {
                               $s[] = "[Upload:".basename($file)."]";
                     } else {
                                 $s[] = "[".basename($file)."]";
                     }
-         break;
+                    break;
                 default:
-         return $this->error(sprintf(_("Unsupported argument: %s=%s"), 'display', $mode));
+                    return $this->error(sprintf(_("Unsupported argument: %s=%s"), 'display', $mode));
                 break;
             }
         }
         chdir($dir);
         if (!$format) {
             $format = '';
-            foreach ($s as $x) { $format .= " %s"; }
+            foreach ($s as $x) {
+                $format .= " %s";
+            }
         }
         array_unshift($s, $format);
     // $x, array($i,$j) => sprintf($x, $i, $j)
@@ -153,27 +180,35 @@ extends WikiPlugin
     function phonysize($a)
     {
         $factor = 1024 * 1024 * 1000;
-        if ($a > $factor)
+        if ($a > $factor) {
             return $this->_formatsize($a, $factor, ' GB');
+        }
         $factor = 1024 * 1000;
-        if ($a > $factor)
+        if ($a > $factor) {
             return $this->_formatsize($a, $factor, ' MB');
+        }
         $factor = 1024;
-        if ($a > $factor)
+        if ($a > $factor) {
             return $this->_formatsize($a, $factor, ' KB');
-        if ($a > 1)
+        }
+        if ($a > 1) {
             return $this->_formatsize($a, 1, ' byte');
-        else
+        } else {
             return $a;
+        }
     }
 
     function exeversion($file)
     {
-        if (!isWindows()) return "?";
-        if (class_exists('ffi') or loadPhpExtension('ffi'))
-        return $this->exeversion_ffi($file);
-        if (function_exists('res_list_type') or loadPhpExtension('win32std'))
-        return $this->exeversion_resopen($file);
+        if (!isWindows()) {
+            return "?";
+        }
+        if (class_exists('ffi') or loadPhpExtension('ffi')) {
+            return $this->exeversion_ffi($file);
+        }
+        if (function_exists('res_list_type') or loadPhpExtension('win32std')) {
+            return $this->exeversion_resopen($file);
+        }
         return exeversion_showver($file);
         return '';
     }
@@ -188,8 +223,9 @@ extends WikiPlugin
 
     function exeversion_ffi($file)
     {
-        if (!DEBUG)
-        return "?"; // not yet stable
+        if (!DEBUG) {
+            return "?"; // not yet stable
+        }
 
         if (function_exists('ffi') or loadPhpExtension('ffi')) {
             $win32_idl = "
@@ -231,11 +267,13 @@ struct VS_VERSIONINFO { struct VS_VERSIONINFO
          // analyze the VS_FIXEDFILEINFO(Value);
          // $pValue = new ffi_struct($ffi, "VS_FIXEDFILEINFO");
                 $pValue = $pVer->Value;
-                return sprintf("%d.%d.%d.%d",
-                 $pValue->dwFileVersionMS >> 16,
-                 $pValue->dwFileVersionMS & 0xFFFF,
-                 $pValue->dwFileVersionLS >> 16,
-                 $pValue->dwFileVersionLS & 0xFFFF);
+                return sprintf(
+                    "%d.%d.%d.%d",
+                    $pValue->dwFileVersionMS >> 16,
+                    $pValue->dwFileVersionMS & 0xFFFF,
+                    $pValue->dwFileVersionLS >> 16,
+                    $pValue->dwFileVersionLS & 0xFFFF
+                );
             }
         }
     }
@@ -251,17 +289,20 @@ struct VS_VERSIONINFO { struct VS_VERSIONINFO
              // This is really a binary VERSIONINFO block, with lots of
              // nul bytes (widechar) which cannot be transported as string.
                 return "$v";
-            }
-            else {
+            } else {
                 $h = res_open(realpath($file));
                 $v = res_get($h, 'RT_VERSION', 'FileVersion');
                 res_close($h);
-                if ($v) return $v;
+                if ($v) {
+                    return $v;
+                }
 
                 $h = res_open(realpath($file));
                 $v = res_get($h, '#1', 'RT_VERSION', 1);
                 res_close($h);
-                if ($v) return $v;
+                if ($v) {
+                    return $v;
+                }
             }
 
             /* The version consists of two 32-bit integers, defined by four 16-bit integers.
@@ -284,14 +325,14 @@ struct VS_VERSIONINFO { struct VS_VERSIONINFO
         echo "Res get: ".res_get( $h, 'A_TYPE', 'A_RC_NAME' )."\n\n";
         res_close( $h );
        */
-            if ($v)
+            if ($v) {
                 return "$v";
-            else
+            } else {
                 return "";
+            }
         } else {
             return "";
         }
-
     }
 };
 
@@ -314,4 +355,3 @@ struct VS_VERSIONINFO { struct VS_VERSIONINFO
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

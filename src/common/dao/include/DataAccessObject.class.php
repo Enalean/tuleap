@@ -25,7 +25,8 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 /**
  * @deprecated See \Tuleap\DB\DataAccessObject
  */
-class DataAccessObject {
+class DataAccessObject
+{
     /**
      * Private
      * $da stores data access object
@@ -265,41 +266,46 @@ class DataAccessObject {
         $newRank = null;
 
         // First, check if there is already some items
-        $sql = sprintf('SELECT NULL'.
+        $sql = sprintf(
+            'SELECT NULL'.
                        ' FROM '. $this->table_name .
                        ' WHERE '. $parent_key .' = %d',
-                       $parent_id);
+            $parent_id
+        );
         $dar = $this->retrieve($sql);
-        if($dar && !$dar->isError() && $dar->rowCount() == 0) {
+        if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
             // No items: nice, just set the first one to 0.
             $newRank = 0;
-        }
-        else {
-            switch((string)$rank) {
+        } else {
+            switch ((string)$rank) {
                 case '--':
-                    $sql = sprintf('SELECT '. $rank_key .
+                    $sql = sprintf(
+                        'SELECT '. $rank_key .
                                ' FROM '. $this->table_name .
                                ' WHERE '. $primary_key .' = %d',
-                               (int)$id);
+                        (int)$id
+                    );
                     $dar = $this->retrieve($sql);
-                    if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                    if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
                         $row = $dar->current();
                         $newRank = $row[$rank_key];
                     }
-                break;
+                    break;
                 case 'end':
                     // Simple case: just pickup the most high rank in the table
                     // and add 1 to be laster than the first.
-                    $sql = sprintf('SELECT MAX('. $rank_key .')+1 as '. $rank_key .
+                    $sql = sprintf(
+                        'SELECT MAX('. $rank_key .')+1 as '. $rank_key .
                                ' FROM '. $this->table_name .
                                ' WHERE '. $parent_key .' = %d',
-                               $parent_id);
+                        $parent_id
+                    );
                     $dar = $this->retrieve($sql);
-                    if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                    if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
                         $row = $dar->current();
                         $newRank = $row[$rank_key];
                     }
-                break;
+                    break;
 
                 case 'up':
                 case 'down':
@@ -330,7 +336,8 @@ class DataAccessObject {
                     // Just behind us (for 'up' case).
                     // In your implementation, USING(parent_id) should refer to the field
                     // that group all the items in one list.
-                    $sql = sprintf('SELECT i1.'. $primary_key .' as id, i1.'. $rank_key .' as '. $rank_key .
+                    $sql = sprintf(
+                        'SELECT i1.'. $primary_key .' as id, i1.'. $rank_key .' as '. $rank_key .
                                    ' FROM '. $this->table_name .' i1'.
                                    '  INNER JOIN '. $this->table_name .' i2 USING('. $parent_key .')'.
                                    ' WHERE i2.'. $primary_key .' = %d'.
@@ -338,37 +345,42 @@ class DataAccessObject {
                                    '   AND i1.'. $rank_key .' %s i2.'. $rank_key .
                                    ' ORDER BY i1.'. $rank_key .' %s'.
                                    ' LIMIT 1',
-                                   $id,
-                                   $parent_id,
-                                   $op,
-                                   $order);
+                        $id,
+                        $parent_id,
+                        $op,
+                        $order
+                    );
                     $dar = $this->retrieve($sql);
                     if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
                         $row = $dar->current();
                         // This query exchange the two values.
                         // Warning: the order is very important, please check that
                         // your final query work as expected.
-                        $sql = sprintf('UPDATE '. $this->table_name .' i1, '. $this->table_name .' i2'.
+                        $sql = sprintf(
+                            'UPDATE '. $this->table_name .' i1, '. $this->table_name .' i2'.
                                    ' SET i1.'. $rank_key .' = i2.'. $rank_key .', i2.'. $rank_key .' = %d'.
                                    ' WHERE i1.'. $primary_key .' = %d '.
                                    '  AND i2.'. $primary_key .' = %d',
-                                   $row[$rank_key],
-                                   $row['id'],
-                                   $id);
+                            $row[$rank_key],
+                            $row['id'],
+                            $id
+                        );
                         $this->update($sql);
                         $newRank = false;
                     }
-                break;
+                    break;
 
                 case 'beginning':
                     // This first part is quite simple: just pickup the lower rank
                     // in the table
-                    $sql = sprintf('SELECT MIN('. $rank_key .') as '. $rank_key .
+                    $sql = sprintf(
+                        'SELECT MIN('. $rank_key .') as '. $rank_key .
                                ' FROM '. $this->table_name .
                                ' WHERE '. $parent_key .' = %d',
-                               $parent_id);
+                        $parent_id
+                    );
                     $dar = $this->retrieve($sql);
-                    if($dar && !$dar->isError()) {
+                    if ($dar && !$dar->isError()) {
                         $row = $dar->current();
                         $rank = $row[$rank_key];
                     }
@@ -381,13 +393,16 @@ class DataAccessObject {
                     // one item (user selected 'After XXX' in select box).
                     // The idea is to move up all the ranks upper to this value and to
                     // return the current value as the new rank.
-                    $sql = sprintf('UPDATE '. $this->table_name .
+                    $sql = sprintf(
+                        'UPDATE '. $this->table_name .
                                ' SET '. $rank_key .' = '. $rank_key .' + 1'.
                                ' WHERE '. $parent_key .' = %d'.
                                '  AND '. $rank_key .' >= %d',
-                               $parent_id, $rank);
+                        $parent_id,
+                        $rank
+                    );
                     $updated = $this->update($sql);
-                    if($updated) {
+                    if ($updated) {
                         $newRank = $rank;
                     }
             }
@@ -403,7 +418,7 @@ class DataAccessObject {
     {
         $sql = "SELECT FOUND_ROWS() as nb";
         $dar = $this->retrieve($sql);
-        if($dar && !$dar->isError()) {
+        if ($dar && !$dar->isError()) {
             $row = $dar->getRow();
             return $row['nb'];
         } else {

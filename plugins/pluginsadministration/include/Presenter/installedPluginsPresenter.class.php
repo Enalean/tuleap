@@ -18,7 +18,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-class PluginsAdministration_Presenter_InstalledPluginsPresenter {
+class PluginsAdministration_Presenter_InstalledPluginsPresenter
+{
 
     /** @var array */
     public $plugins;

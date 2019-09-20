@@ -35,7 +35,8 @@ class Widget_ProjectImageViewer extends Widget_ImageViewer
     {
         $request = HTTPRequest::instance();
         parent::__construct(
-            'projectimageviewer', $request->get('group_id'),
+            'projectimageviewer',
+            $request->get('group_id'),
             ProjectDashboardController::LEGACY_DASHBOARD_TYPE
         );
     }

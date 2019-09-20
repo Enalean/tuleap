@@ -25,7 +25,8 @@
 * System Event classes
 *
 */
-class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent {
+class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent
+{
 
     /**
      * Verbalize the parameters so they are readable and much user friendly in
@@ -88,5 +89,3 @@ class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent {
         return false;
     }
 }
-
-?>

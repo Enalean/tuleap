@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Report_Renderer_Table_FunctionsAggregatesDao extends DataAccessObject {
+class Tracker_Report_Renderer_Table_FunctionsAggregatesDao extends DataAccessObject
+{
     function __construct()
     {
         parent::__construct();
@@ -83,7 +84,7 @@ class Tracker_Report_Renderer_Table_FunctionsAggregatesDao extends DataAccessObj
                 WHERE renderer_id = $from_renderer_id";
         $this->update($sql);
 
-        foreach($field_mapping as $mapping) {
+        foreach ($field_mapping as $mapping) {
             $from  = $this->da->escapeInt($mapping['from']);
             $to    = $this->da->escapeInt($mapping['to']);
             $sql = "UPDATE $this->table_name 
@@ -94,4 +95,3 @@ class Tracker_Report_Renderer_Table_FunctionsAggregatesDao extends DataAccessObj
         }
     }
 }
-?>

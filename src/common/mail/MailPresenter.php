@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailPresenter {
+class MailPresenter
+{
 
     /** @var string */
     public $platform_name;
@@ -39,7 +40,5 @@ class MailPresenter {
         }
 
         $this->platform_name = $platform_name;
-
     }
-
 }

@@ -20,4 +20,6 @@
 
 namespace Tuleap\Tracker\Artifact\Attachment;
 
-class QuotaExceededException extends \Exception {}
+class QuotaExceededException extends \Exception
+{
+}

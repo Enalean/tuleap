@@ -21,7 +21,8 @@
 /**
  * Handle requests to update config of cardwalls on top of trackers
  */
-class Cardwall_OnTop_Config_Updater {
+class Cardwall_OnTop_Config_Updater
+{
 
     /**
      * @var array of Cardwall_OnTop_Config_Command
@@ -40,4 +41,3 @@ class Cardwall_OnTop_Config_Updater {
         }
     }
 }
-?>

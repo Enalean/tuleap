@@ -28,7 +28,8 @@ use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException;
 use UserManager;
 
-class Controller {
+class Controller
+{
 
     /**
      * @var UserManager
@@ -95,7 +96,6 @@ class Controller {
                 sprintf(dgettext('tuleap-openidconnectclient', 'An error occurred while removing the link with %1$s.'), $provider->getName()),
                 Feedback::ERROR
             );
-
         }
     }
 
@@ -107,5 +107,4 @@ class Controller {
         );
         $GLOBALS['Response']->redirect('/account/');
     }
-
 }

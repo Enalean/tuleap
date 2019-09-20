@@ -19,7 +19,8 @@
  */
 
 
-class Docman_Path {
+class Docman_Path
+{
     var $path;
     function __construct()
     {
@@ -49,5 +50,3 @@ class Docman_Path {
         return $this->item_factory;
     }
 }
-
-?>

@@ -22,7 +22,8 @@
 /**
  * PluginInfo
  */
-class PluginInfo {
+class PluginInfo
+{
 
     var $plugin;
     var $pluginDescriptor;

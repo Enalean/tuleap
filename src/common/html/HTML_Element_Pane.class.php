@@ -23,7 +23,8 @@ require_once('HTML_Element.class.php');
  *
  * @todo Try to remove duplication between ProjectUGroup PaneManaget and git pane magement
  */
-class HTML_Element_Pane extends HTML_Element {
+class HTML_Element_Pane extends HTML_Element
+{
 
     /**
      * Constructor of the class
@@ -63,6 +64,4 @@ class HTML_Element_Pane extends HTML_Element {
         $html .= '</div>';
         return $html;
     }
-
 }
-?>

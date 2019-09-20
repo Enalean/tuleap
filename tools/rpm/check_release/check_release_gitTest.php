@@ -23,7 +23,8 @@ require_once 'GitExec.class.php';
 
 Mock::generate('GitExec');
 Mock::generate('ChangeDetector');
-class GitTagFinderTest extends TuleapTestCase {
+class GitTagFinderTest extends TuleapTestCase
+{
 
     public function itFindsTheGreatestVersionNumberFromTheTags()
     {
@@ -75,7 +76,8 @@ class GitTagFinderTest extends TuleapTestCase {
     }
 }
 
-class GitChangeDetectorTest extends TuleapTestCase {
+class GitChangeDetectorTest extends TuleapTestCase
+{
 
     public function itFindsOnlyChangedPaths()
     {
@@ -91,7 +93,8 @@ class GitChangeDetectorTest extends TuleapTestCase {
     }
 }
 
-class NonIncrementedPathFinderTest extends TuleapTestCase {
+class NonIncrementedPathFinderTest extends TuleapTestCase
+{
 
     public function itFiltersPathsThatHaveBeenIncremented()
     {
@@ -113,6 +116,4 @@ class NonIncrementedPathFinderTest extends TuleapTestCase {
         $actual_non_incremented_paths = $version_increment_filter->pathsThatWereNotProperlyIncremented($current_version);
         $this->assertEqual($expected_paths, $actual_non_incremented_paths);
     }
-
 }
-?>

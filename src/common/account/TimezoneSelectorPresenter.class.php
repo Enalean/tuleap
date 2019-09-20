@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Account_TimezoneSelectorPresenter {
+class Account_TimezoneSelectorPresenter
+{
 
     /**
      * @param string $current_timezone falsy if no current timezone

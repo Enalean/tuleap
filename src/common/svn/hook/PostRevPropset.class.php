@@ -25,7 +25,8 @@
 /**
  * I'm responsible of handling what happens in post-revprop-change subversion hook
  */
-class SVN_Hook_PostRevPropset {
+class SVN_Hook_PostRevPropset
+{
 
     /** @var SVN_Hooks */
     private $svn_hooks;
@@ -95,5 +96,3 @@ class SVN_Hook_PostRevPropset {
         }
     }
 }
-
-?>

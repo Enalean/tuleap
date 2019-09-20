@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter {
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter
+{
 
     protected function getFieldChangeType()
     {
@@ -50,7 +51,7 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXML
     {
         $ugroup_ids = $changeset_value->getPerms();
 
-        if (count($ugroup_ids) === 1 && (int) $ugroup_ids[0] === ProjectUGroup::ANONYMOUS ) {
+        if (count($ugroup_ids) === 1 && (int) $ugroup_ids[0] === ProjectUGroup::ANONYMOUS) {
             return false;
         }
 

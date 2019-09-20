@@ -18,5 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_XMLImport_Exception_StrategyDoesNotExistException extends Exception {
+class Tracker_Artifact_XMLImport_Exception_StrategyDoesNotExistException extends Exception
+{
 }

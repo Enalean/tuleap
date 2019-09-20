@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_OnTop_ColumnDao extends DataAccessObject {
+class Cardwall_OnTop_ColumnDao extends DataAccessObject
+{
 
     public function searchColumnsByTrackerId($tracker_id)
     {

@@ -24,7 +24,8 @@ Mock::generate('Tracker');
 Mock::generate('Tracker_FormElement_Field_Selectbox');
 Mock::generate('Tracker_FormElementFactory');
 
-class Tracker_FormElementTest extends TuleapTestCase {
+class Tracker_FormElementTest extends TuleapTestCase
+{
 
     function testGetOriginalProjectAndOriginalTracker()
     {
@@ -91,7 +92,8 @@ class Tracker_FormElementTest extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElementJsonTest extends TuleapTestCase {
+class Tracker_FormElementJsonTest extends TuleapTestCase
+{
 
     private $user;
     private $form_element;
@@ -117,7 +119,8 @@ class Tracker_FormElementJsonTest extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElement_UserPermissionsTest extends TuleapTestCase {
+class Tracker_FormElement_UserPermissionsTest extends TuleapTestCase
+{
 
     private $user;
     private $form_element;
@@ -148,7 +151,8 @@ class Tracker_FormElement_UserPermissionsTest extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElement__ExportPermissionsToXmlTest extends TuleapTestCase {
+class Tracker_FormElement__ExportPermissionsToXmlTest extends TuleapTestCase
+{
 
     public function testPermissionsExport()
     {

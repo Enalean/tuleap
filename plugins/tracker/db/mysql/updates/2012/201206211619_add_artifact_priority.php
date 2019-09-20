@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201206211619_add_artifact_priority extends ForgeUpgrade_Bucket {
+class b201206211619_add_artifact_priority extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -50,6 +51,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_artifact_priority table is missing');
         }
     }
-
 }
-?>

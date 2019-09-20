@@ -253,10 +253,11 @@ class WikiDB_backend
             return;
         }
         foreach ($newdata as $key => $val) {
-            if (empty($val))
+            if (empty($val)) {
                 unset($data[$key]);
-            else
+            } else {
                 $data[$key] = $val;
+            }
         }
         $this->set_versiondata($pagename, $version, $data);
     }
@@ -285,10 +286,10 @@ class WikiDB_backend
     function get_links(
         $pagename,
         $reversed,
-        $include_empty=false,
-        $sortby=false,
-        $limit=false,
-        $exclude=false
+        $include_empty = false,
+        $sortby = false,
+        $limit = false,
+        $exclude = false
     ) {
         //FIXME: implement simple (but slow) link finder.
         die("FIXME get_links");
@@ -325,7 +326,7 @@ class WikiDB_backend
      *
      * @return object A WikiDB_backend_iterator.
      */
-    function get_all_pages($include_defaulted, $orderby=false, $limit=false, $exclude=false)
+    function get_all_pages($include_defaulted, $orderby = false, $limit = false, $exclude = false)
     {
         trigger_error("virtual", E_USER_ERROR);
     }
@@ -348,7 +349,7 @@ class WikiDB_backend
      *
      * @see WikiDB::titleSearch
      */
-    function text_search($search, $fulltext=false, $sortby=false, $limit=false, $exclude=false)
+    function text_search($search, $fulltext = false, $sortby = false, $limit = false, $exclude = false)
     {
         // This is method implements a simple linear search
         // through all the pages in the database.
@@ -358,9 +359,14 @@ class WikiDB_backend
         include_once('lib/WikiDB/backend/dumb/TextSearchIter.php');
         // ignore $limit
         $pages = $this->get_all_pages(false, $sortby, false, $exclude);
-        return new WikiDB_backend_dumb_TextSearchIter($this, $pages, $search, $fulltext,
-                                                      array('limit' => $limit,
-                                                            'exclude' => $exclude));
+        return new WikiDB_backend_dumb_TextSearchIter(
+            $this,
+            $pages,
+            $search,
+            $fulltext,
+            array('limit' => $limit,
+            'exclude' => $exclude)
+        );
     }
 
     /**
@@ -373,7 +379,7 @@ class WikiDB_backend
      * @param $limit integer  No more than this many pages
      * @return object A WikiDB_backend_iterator.
      */
-    function most_popular($limit, $sortby='-hits')
+    function most_popular($limit, $sortby = '-hits')
     {
         // This is method fetches all pages, then
         // sorts them by hit count.
@@ -407,10 +413,10 @@ class WikiDB_backend
         return new WikiDB_backend_dumb_MostRecentIter($this, $pages, $params);
     }
 
-    function wanted_pages($exclude_from='', $exclude='', $sortby=false, $limit=false)
+    function wanted_pages($exclude_from = '', $exclude = '', $sortby = false, $limit = false)
     {
         include_once('lib/WikiDB/backend/dumb/WantedPagesIter.php');
-        $allpages = $this->get_all_pages(true,false,false,$exclude_from);
+        $allpages = $this->get_all_pages(true, false, false, $exclude_from);
         return new WikiDB_backend_dumb_WantedPagesIter($this, $allpages, $exclude, $sortby, $limit);
     }
 
@@ -488,8 +494,9 @@ class WikiDB_backend
     function _parse_searchwords($search)
     {
         $search = strtolower(trim($search));
-        if (!$search)
+        if (!$search) {
             return array(array(),array());
+        }
 
         $words = preg_split('/\s+/', $search);
         $exclude = array();
@@ -511,10 +518,11 @@ class WikiDB_backend
      */
     function limit($limit)
     {
-        if (strstr($limit, ','))
+        if (strstr($limit, ',')) {
             return preg_split('/,/D', $limit);
-        else
+        } else {
             return array(0, $limit);
+        }
     }
 
     /**
@@ -528,31 +536,38 @@ class WikiDB_backend
      * Duplicate the PageList function here to avoid loading the whole
      * PageList.php, and it forces the backend specific sortable_columns()
      */
-    function sortby($column, $action, $sortable_columns=false)
+    function sortby($column, $action, $sortable_columns = false)
     {
-        if (empty($column)) return '';
+        if (empty($column)) {
+            return '';
+        }
         //support multiple comma-delimited sortby args: "+hits,+pagename"
         if (strstr($column, ',')) {
             $result = array();
             foreach (explode(',', $column) as $col) {
-                if (empty($this))
+                if (empty($this)) {
                     $result[] = WikiDB_backend::sortby($col, $action);
-                else
+                } else {
                     $result[] = $this->sortby($col, $action);
+                }
             }
-            return join(",",$result);
+            return join(",", $result);
         }
-        if (substr($column,0,1) == '+') {
-            $order = '+'; $column = substr($column,1);
-        } elseif (substr($column,0,1) == '-') {
-            $order = '-'; $column = substr($column,1);
+        if (substr($column, 0, 1) == '+') {
+            $order = '+';
+            $column = substr($column, 1);
+        } elseif (substr($column, 0, 1) == '-') {
+            $order = '-';
+            $column = substr($column, 1);
         }
         // default order: +pagename, -mtime, -hits
-        if (empty($order))
-            if (in_array($column,array('mtime','hits')))
+        if (empty($order)) {
+            if (in_array($column, array('mtime','hits'))) {
                 $order = '-';
-        else
+            } else {
                 $order = '+';
+            }
+        }
         if ($action == 'flip_order') {
             return ($order == '+' ? '-' : '+') . $column;
         } elseif ($action == 'init') {
@@ -561,16 +576,18 @@ class WikiDB_backend
         } elseif ($action == 'check') {
             return (!empty($this->_sortby[$column]) or
                     ($GLOBALS['request']->getArg('sortby') and
-                     strstr($GLOBALS['request']->getArg('sortby'),$column)));
+                     strstr($GLOBALS['request']->getArg('sortby'), $column)));
         } elseif ($action == 'db') {
             // native sort possible?
-            if (!empty($this) and !$sortable_columns)
+            if (!empty($this) and !$sortable_columns) {
                 $sortable_columns = $this->sortable_columns();
-            if (in_array($column, $sortable_columns))
+            }
+            if (in_array($column, $sortable_columns)) {
                 // asc or desc: +pagename, -pagename
                 return $column . ($order == '+' ? ' ASC' : ' DESC');
-            else
+            } else {
                 return '';
+            }
         }
         return '';
     }
@@ -583,11 +600,13 @@ class WikiDB_backend
     // adds surrounding quotes
     function quote($s)
     {
-        return "'".$s."'"; }
+        return "'".$s."'";
+    }
     // no surrounding quotes because we know it's a string
     function qstr($s)
     {
-        return $s; }
+        return $s;
+    }
 
     function isSQL()
     {
@@ -657,19 +676,24 @@ class WikiDB_backend_search
     //TODO: use word anchors
     function EXACT($word)
     {
-        return "^".$this->_quote($word)."$"; }
+        return "^".$this->_quote($word)."$";
+    }
     function STARTS_WITH($word)
     {
-        return "^".$this->_quote($word); }
+        return "^".$this->_quote($word);
+    }
     function ENDS_WITH($word)
     {
-        return $this->_quote($word)."$"; }
+        return $this->_quote($word)."$";
+    }
     function WORD($word)
     {
-        return $this->_quote($word); }
+        return $this->_quote($word);
+    }
     function REGEX($word)
     {
-        return $word; }
+        return $word;
+    }
     //TESTME
     function _pagename_match_clause($node)
     {
@@ -682,8 +706,9 @@ class WikiDB_backend_search
     function isStoplisted($node)
     {
         // check only on WORD or EXACT fulltext search
-        if ($node->op != 'WORD' and $node->op != 'EXACT')
+        if ($node->op != 'WORD' and $node->op != 'EXACT') {
             return false;
+        }
         if (preg_match("/^".$this->_stoplist."$/i", $node->word)) {
             array_push($this->_stoplisted, $node->word);
             return true;
@@ -705,25 +730,27 @@ class WikiDB_backend_search_sql extends WikiDB_backend_search
     {
         // word already quoted by TextSearchQuery_node_word::_sql_quote()
         $word = $node->sql();
-        if ($word == '%') // ALL shortcut
+        if ($word == '%') { // ALL shortcut
             return "1=1";
-        else
+        } else {
             return ($this->_case_exact
                     ? "pagename LIKE '$word'"
                     : "LOWER(pagename) LIKE '$word'");
+        }
     }
     function _fulltext_match_clause($node)
     {
         // force word-style %word% for fulltext search
         $word = '%' . $node->_sql_quote($node->word) . '%';
         // eliminate stoplist words
-        if ($this->isStoplisted($node))
+        if ($this->isStoplisted($node)) {
             return "1=1";  // and (pagename or 1) => and 1
-        else
+        } else {
             return $this->_pagename_match_clause($node)
                 // probably convert this MATCH AGAINST or SUBSTR/POSITION without wildcards
                 . ($this->_case_exact ? " OR content LIKE '$word'"
                                       : " OR LOWER(content) LIKE '$word'");
+        }
     }
 }
 
@@ -735,4 +762,3 @@ class WikiDB_backend_search_sql extends WikiDB_backend_search
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

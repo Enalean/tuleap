@@ -94,7 +94,7 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
     /**
      * @var Planning
      */
-    private  $sprint_planning;
+    private $sprint_planning;
 
     /**
      * @var Planning
@@ -159,7 +159,6 @@ class AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinderTest extends Tule
         );
 
         $this->project = aMockProject()->withId(101)->build();
-
     }
 
     /**

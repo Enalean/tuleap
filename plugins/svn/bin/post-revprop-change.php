@@ -34,6 +34,6 @@ try {
 
     exit(0);
 } catch (Exception $exception) {
-    fwrite (STDERR, $exception->getMessage());
+    fwrite(STDERR, $exception->getMessage());
     exit(1);
 }

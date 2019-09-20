@@ -24,7 +24,8 @@ use Tracker_FormElement_Field_List_Value;
 use Tuleap\REST\JsonCast;
 use Project;
 
-class FieldListStaticValueRepresentation {
+class FieldListStaticValueRepresentation
+{
     /**
      * @var int
      */

@@ -24,7 +24,8 @@ function aDateFieldPostAction()
     return new Test_Transition_PostAction_Field_Date_Builder();
 }
 
-class Test_Transition_PostAction_Field_Date_Builder {
+class Test_Transition_PostAction_Field_Date_Builder
+{
 
     private $id         = 0;
     private $value_type = 0;
@@ -57,5 +58,3 @@ class Test_Transition_PostAction_Field_Date_Builder {
         return new Transition_PostAction_Field_Date($this->transition, $this->id, $this->field, $this->value_type);
     }
 }
-
-?>

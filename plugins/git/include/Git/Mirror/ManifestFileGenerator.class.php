@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Git_Mirror_ManifestFileGenerator {
+class Git_Mirror_ManifestFileGenerator
+{
 
     /** @var Logger */
     private $logger;
@@ -50,7 +51,6 @@ class Git_Mirror_ManifestFileGenerator {
         $this->setCurrentTimeForRepository($mirror, $list_of_repositories, $repository);
 
         $this->writeManifest($filename, $list_of_repositories);
-
     }
 
     public function addRepositoryToManifestFile(Git_Mirror_Mirror $mirror, GitRepository $repository)

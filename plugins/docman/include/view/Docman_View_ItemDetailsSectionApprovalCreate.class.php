@@ -27,8 +27,8 @@ use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
-class Docman_View_ItemDetailsSectionApprovalCreate
-extends Docman_View_ItemDetailsSectionApproval {
+class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetailsSectionApproval
+{
 
     function __construct($item, $url, $themePath)
     {
@@ -43,7 +43,7 @@ extends Docman_View_ItemDetailsSectionApproval {
         $html .= '<div class="docman_confirm_delete_buttons">';
         $html .= '<input type="hidden" name="action" value="approval_delete" />';
         $html .= '<input type="hidden" name="id" value="'.$this->item->getId().'" />';
-        if($this->version !== null) {
+        if ($this->version !== null) {
             $html .= '<input type="hidden" name="version" value="'.$this->version.'" />';
         }
         $html .= '<input type="submit" name="cancel" value="'.$GLOBALS['Language']->getText('plugin_docman', 'details_delete_cancel').'" />';
@@ -102,9 +102,9 @@ extends Docman_View_ItemDetailsSectionApproval {
     function _getNewTable()
     {
         $html = '';
-        if(is_a($this->table, 'Docman_ApprovalTableVersionned')) {
+        if (is_a($this->table, 'Docman_ApprovalTableVersionned')) {
             $lastDocumentVersion = $this->atf->getLastDocumentVersionNumber();
-            if($this->table->getVersionNumber() < $lastDocumentVersion) {
+            if ($this->table->getVersionNumber() < $lastDocumentVersion) {
                 $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_new_title').'</h3>';
                 $html .= '<p>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_new_desc', array($this->table->getVersionNumber(), $lastDocumentVersion)).'</p>';
                 $html .= $this->displayImportLastTable(true);
@@ -122,7 +122,7 @@ extends Docman_View_ItemDetailsSectionApproval {
         $html .= '<table>';
 
         // Version
-        if(is_a($this->table, 'Docman_ApprovalTableVersionned')) {
+        if (is_a($this->table, 'Docman_ApprovalTableVersionned')) {
             $html .= '<tr>';
             $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_version').'</td>';
             $html .= '<td>';
@@ -146,7 +146,7 @@ extends Docman_View_ItemDetailsSectionApproval {
                       1 => PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED);
         $txts = array(0 => $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_'.PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED),
                       1 => $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_'.PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED));
-        if($this->table->isCustomizable()) {
+        if ($this->table->isCustomizable()) {
             $vals[2] = PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED;
             $vals[3] = PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED;
             $txts[2] = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_'.PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);
@@ -177,7 +177,7 @@ extends Docman_View_ItemDetailsSectionApproval {
 
         $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_title').'</h3>';
         $html .= '<div id="docman_approval_table_create_notification">';
-        if(!$this->table->isClosed()) {
+        if (!$this->table->isClosed()) {
             $html .= '<div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_help', $GLOBALS['sys_name']).'</div>';
         }
         $html .= '<table>';
@@ -190,7 +190,7 @@ extends Docman_View_ItemDetailsSectionApproval {
                       $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_'.PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED),
                       $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_'.PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED));
         $html .= '<td>';
-        if(!$this->table->isClosed()) {
+        if (!$this->table->isClosed()) {
             $html .= html_build_select_box_from_arrays($vals, $txts, 'notification', $this->table->getNotification(), false);
         } else {
             $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_'.$this->table->getNotification());
@@ -198,9 +198,9 @@ extends Docman_View_ItemDetailsSectionApproval {
         $html .= '</td>';
         $html .= '</tr>';
 
-        if(!$this->table->isClosed()) {
-            if($this->table->getNotification() != PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED) {
-                if($this->table->isEnabled()) {
+        if (!$this->table->isClosed()) {
+            if ($this->table->getNotification() != PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED) {
+                if ($this->table->isEnabled()) {
                     $html .= '<tr>';
                     $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_relaunch').'</td>';
                     $vals = array('no',
@@ -262,24 +262,28 @@ extends Docman_View_ItemDetailsSectionApproval {
         $uh    = UserHelper::instance();
         $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_title').'</h3>';
         $html .= '<div id="docman_approval_table_create_table">';
-        if(!$this->table->isClosed()) {
+        if (!$this->table->isClosed()) {
             $html .= '<div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_help').'</div>';
         }
         $rIter = $this->table->getReviewerIterator();
-        if($rIter !== null) {
+        if ($rIter !== null) {
             $docmanIcons = $this->_getDocmanIcons();
 
-            $html .= html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_docman', 'details_approval_select'),
+            $html .= html_build_list_table_top(
+                array($GLOBALS['Language']->getText('plugin_docman', 'details_approval_select'),
                                                      $GLOBALS['Language']->getText('plugin_docman', 'details_approval_reviewer'),
                                                      $GLOBALS['Language']->getText('plugin_docman', 'details_approval_review'),
                                                      $GLOBALS['Language']->getText('plugin_docman', 'details_approval_rank')),
-                                               false, false, false);
+                false,
+                false,
+                false
+            );
             $isFirst = true;
             $isLast  = false;
             $nbReviewers = $rIter->count();
             $i = 0;
             $rIter->rewind();
-            while($rIter->valid()) {
+            while ($rIter->valid()) {
                 $isLast = ($i == ($nbReviewers - 1));
 
                 $reviewer = $rIter->current();
@@ -287,7 +291,7 @@ extends Docman_View_ItemDetailsSectionApproval {
                 $html .= '<tr class="'.html_get_alt_row_color($i+1).'">';
 
                 // Select
-                if(!$this->table->isClosed()) {
+                if (!$this->table->isClosed()) {
                     $checkbox = '<input type="checkbox" name="sel_user[]" value="'.$reviewer->getId().'" />';
                 } else {
                     $checkbox = '&nbsp;';
@@ -301,13 +305,13 @@ extends Docman_View_ItemDetailsSectionApproval {
                 $html .= '<td>'.$this->atf->getReviewStateName($reviewer->getState()).'</td>';
 
                 // Rank
-                if(!$this->table->isClosed()) {
+                if (!$this->table->isClosed()) {
                     $rank = $reviewer->getRank();
                     $baseUrl  = '?group_id='.$this->item->getGroupId().'&action=approval_upd_user&id='.$this->item->getId().'&user_id='.$reviewer->getId().'&rank=';
 
                     $begLink = '';
                     $upLink  = '';
-                    if(!$isFirst) {
+                    if (!$isFirst) {
                         $begIcon = '<img src="'.$docmanIcons->getIcon('move-beginning.png').'" alt="Beginning" />';
                         $begLink = '<a href="'.$baseUrl.'beginning">'.$begIcon.'</a>';
                         $upIcon  = '<img src="'.$docmanIcons->getIcon('move-up.png').'" alt="Up" />';
@@ -315,7 +319,7 @@ extends Docman_View_ItemDetailsSectionApproval {
                     }
                     $endLink  = '';
                     $downLink = '';
-                    if(!$isLast) {
+                    if (!$isLast) {
                         $endIcon  = '<img src="'.$docmanIcons->getIcon('move-end.png').'" alt="End" />';
                         $endLink  = '<a href="'.$baseUrl.'end">'.$endIcon.'</a>';
                         $downIcon = '<img src="'.$docmanIcons->getIcon('move-down.png').'" alt="Down" />';
@@ -336,7 +340,7 @@ extends Docman_View_ItemDetailsSectionApproval {
             $html .= '</table>';
 
             // Action with selected reviewers
-            if(!$this->table->isClosed()) {
+            if (!$this->table->isClosed()) {
                 $html .= '<p>';
                 $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_create_table_act');
                 $vals = array('del',
@@ -355,7 +359,7 @@ extends Docman_View_ItemDetailsSectionApproval {
     {
         $html = '';
 
-        if(($this->table !== null && !$this->table->isClosed())
+        if (($this->table !== null && !$this->table->isClosed())
            || $this->table === null) {
             $atrf = new Docman_ApprovalTableReviewerFactory($this->table, $this->item);
             $ugroups = $atrf->getUgroupsAllowedForTable($this->item->getGroupId());
@@ -380,17 +384,17 @@ extends Docman_View_ItemDetailsSectionApproval {
         return $html;
     }
 
-    /*static*/function displayImportLastTable($onTableUpdate=false)
+    /*static*/function displayImportLastTable($onTableUpdate = false)
     {
         $html = '';
 
-        if($onTableUpdate) {
+        if ($onTableUpdate) {
             $onChange = 'onClick="docman.approvalTableCreate(this.form);"';
         } else {
             $onChange = '';
         }
 
-        if($onTableUpdate) {
+        if ($onTableUpdate) {
             $html .= '<input type="radio" name="app_table_import" checked="checked" '.$onChange.'/> '.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_update_apptable_keep').'<br />';
         }
         $html .= '<input type="radio" name="app_table_import" value="copy"  '.$onChange.'/> '.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_update_apptable_copy').'<br />';
@@ -408,7 +412,7 @@ extends Docman_View_ItemDetailsSectionApproval {
         $html .= '<input type="hidden" name="id" value="'.$this->item->getId().'" />';
         $html .= '<input type="hidden" name="action" value="approval_update" />';
 
-        if($this->version !== null) {
+        if ($this->version !== null) {
             $html .= '<input type="hidden" name="version" value="'.$this->version.'" />';
         }
 
@@ -440,9 +444,9 @@ extends Docman_View_ItemDetailsSectionApproval {
         // Well all this should be managed by a factory of
         // Docman_View_ItemDetailsSectionApprovalCreate but it's just too
         // complicated with the current implementation of the views to acheive.
-        if(is_a($this->atf, 'Docman_ApprovalTableVersionnedFactory')) {
+        if (is_a($this->atf, 'Docman_ApprovalTableVersionnedFactory')) {
             $lastTable = $this->atf->getLastTableForItem();
-            if($lastTable !== null) {
+            if ($lastTable !== null) {
                 $noImport = false;
                 $html .= '<input type="hidden" name="action" value="approval_update" />';
                 $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_create_import_title').'</h3>';
@@ -451,7 +455,7 @@ extends Docman_View_ItemDetailsSectionApproval {
             }
         }
 
-        if($noImport) {
+        if ($noImport) {
             $html .= '<input type="hidden" name="action" value="approval_update" />';
             $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_create_reviewers_title').'</h3>';
             $html .= $this->_getAddReviewers();
@@ -472,11 +476,11 @@ extends Docman_View_ItemDetailsSectionApproval {
 
         $user = $this->_getCurrentUser();
         $dpm  = $this->_getPermissionsManager();
-        if(!$dpm->userCanWrite($user, $this->item->getId())) {
+        if (!$dpm->userCanWrite($user, $this->item->getId())) {
             return $html;
         }
 
-        if(is_a($this->item, 'Docman_Empty')) {
+        if (is_a($this->item, 'Docman_Empty')) {
             $html = $GLOBALS['Language']->getText('plugin_docman', 'details_approval_no_table_for_empty');
             return $html;
         }
@@ -488,21 +492,21 @@ extends Docman_View_ItemDetailsSectionApproval {
         // Toolbar
         $html .= $this->getToolbar();
 
-        if($this->table !== null) {
+        if ($this->table !== null) {
             // Confirm table deletion
-            if($request->exist('delete')) {
-                if($request->get('delete') == 'confirm') {
+            if ($request->exist('delete')) {
+                if ($request->get('delete') == 'confirm') {
                     $html .= $this->displayConfirmDelete();
                     return $html;
                 }
             }
 
             // See notification email
-            if($request->exist('section')) {
-                switch($request->get('section')){
+            if ($request->exist('section')) {
+                switch ($request->get('section')) {
                     case 'view_notification_email':
                         $html .= $this->displayNotificationEmail();
-                    break;
+                        break;
                 }
                 return $html;
             }
@@ -515,7 +519,4 @@ extends Docman_View_ItemDetailsSectionApproval {
 
         return $html;
     }
-
 }
-
-?>

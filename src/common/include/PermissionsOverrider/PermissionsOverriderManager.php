@@ -22,7 +22,8 @@
  * I'm responsible of dealing with the eventual PermissionsOverrider class
  * used as a glue to override Tuleap permissions
  */
-class PermissionsOverrider_PermissionsOverriderManager {
+class PermissionsOverrider_PermissionsOverriderManager
+{
 
     public const PERMISSIONS_OVERRIDER_DIRECTORY = "local_glue";
     public const PERMISSIONS_OVERRIDER_FILE      = "PermissionsOverrider.php";
@@ -121,7 +122,7 @@ class PermissionsOverrider_PermissionsOverriderManager {
 
         $permissions_overrider = new PermissionsOverrider();
 
-        if (! $permissions_overrider instanceof PermissionsOverrider_IOverridePermissions ) {
+        if (! $permissions_overrider instanceof PermissionsOverrider_IOverridePermissions) {
             return;
         }
 

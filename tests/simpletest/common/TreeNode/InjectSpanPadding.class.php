@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-abstract class InjectSpanPadding extends TuleapTestCase {
+abstract class InjectSpanPadding extends TuleapTestCase
+{
 
     /**
     * Return the Tree
@@ -42,7 +43,7 @@ abstract class InjectSpanPadding extends TuleapTestCase {
     /**
      * When visit a given tree node with an InjectSpanPadding visitor
      */
-    protected function when_VisitTreeNodeWith_InjectSpanPadding( TreeNode &$givenTreeNode)
+    protected function when_VisitTreeNodeWith_InjectSpanPadding(TreeNode &$givenTreeNode)
     {
         $visitor = new TreeNode_InjectSpanPaddingInTreeNodeVisitor(true);
         $givenTreeNode->accept($visitor);
@@ -93,7 +94,7 @@ abstract class InjectSpanPadding extends TuleapTestCase {
         return $node;
     }
 
-    protected function setArtifactLinks( TreeNode $node, $artifactLinks)
+    protected function setArtifactLinks(TreeNode $node, $artifactLinks)
     {
         if (is_array($artifactLinks)) {
             $artifactLinks = implode(', ', $artifactLinks);
@@ -104,4 +105,3 @@ abstract class InjectSpanPadding extends TuleapTestCase {
         return $node;
     }
 }
-?>

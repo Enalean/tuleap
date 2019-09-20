@@ -20,7 +20,8 @@
 
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 
-class Cardwall_OnTop_Config_View_ColumnDefinition {
+class Cardwall_OnTop_Config_View_ColumnDefinition
+{
 
     /**
      * @var array of Cardwall_OnTop_Config
@@ -167,7 +168,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         return $html;
     }
 
-    private function fetchCustomizationSwitch(Tracker $mapping_tracker, $customized=false)
+    private function fetchCustomizationSwitch(Tracker $mapping_tracker, $customized = false)
     {
         $html     = '';
         $selected = '';
@@ -205,7 +206,6 @@ class Cardwall_OnTop_Config_View_ColumnDefinition {
         }
 
         return $html;
-
     }
 
     protected function fetchSpeech()

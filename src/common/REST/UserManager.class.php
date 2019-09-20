@@ -39,7 +39,8 @@ use Rest_TokenFactory;
 use Rest_Token;
 use PasswordHandlerFactory;
 
-class UserManager {
+class UserManager
+{
 
     /** @var \UserManager */
     private $user_manager;

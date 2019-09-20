@@ -21,7 +21,8 @@
 /**
  *  Data Access Object for Tracker_FormElement_Field
  */
-class Tracker_FormElement_FieldSetDao extends DataAccessObject {
+class Tracker_FormElement_FieldSetDao extends DataAccessObject
+{
     function __construct()
     {
         parent::__construct();
@@ -92,6 +93,3 @@ class Tracker_FormElement_FieldSetDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-
-
-?>

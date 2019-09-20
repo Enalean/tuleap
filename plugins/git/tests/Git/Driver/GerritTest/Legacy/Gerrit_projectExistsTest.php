@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/GerritTestBase.php';
 
-class Git_Driver_GerritLegacy_projectExistsTest extends TuleapTestCase implements Git_Driver_Gerrit_projectExistsTest {
+class Git_Driver_GerritLegacy_projectExistsTest extends TuleapTestCase implements Git_Driver_Gerrit_projectExistsTest
+{
     public function setUp()
     {
         parent::setUp();
@@ -46,7 +47,8 @@ class Git_Driver_GerritLegacy_projectExistsTest extends TuleapTestCase implement
     }
 }
 
-class Git_Driver_Gerrit_Legacy_LsParentProjectsTest extends TuleapTestCase {
+class Git_Driver_Gerrit_Legacy_LsParentProjectsTest extends TuleapTestCase
+{
 
     public function setUp()
     {

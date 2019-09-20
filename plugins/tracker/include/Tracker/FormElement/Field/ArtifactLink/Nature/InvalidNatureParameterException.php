@@ -21,4 +21,6 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-class InvalidNatureParameterException extends NatureManagementException {}
+class InvalidNatureParameterException extends NatureManagementException
+{
+}

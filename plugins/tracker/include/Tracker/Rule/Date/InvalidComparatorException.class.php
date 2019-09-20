@@ -18,7 +18,7 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class Tracker_Rule_Date_InvalidComparatorException extends Exception {
+class Tracker_Rule_Date_InvalidComparatorException extends Exception
+{
 
 }
-?>

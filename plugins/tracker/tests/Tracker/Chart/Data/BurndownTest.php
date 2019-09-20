@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
+class Tracker_Chart_Data_BurndownTest extends TuleapTestCase
+{
     private $start_date;
     private $time_period;
 
@@ -150,7 +151,8 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Chart_Data_EmptyBurndownTest extends TuleapTestCase {
+class Tracker_Chart_Data_EmptyBurndownTest extends TuleapTestCase
+{
     private $start_date;
     private $time_period;
 
@@ -182,5 +184,3 @@ class Tracker_Chart_Data_EmptyBurndownTest extends TuleapTestCase {
         $this->assertIdentical($burndown_data->getIdealEffort(), array(0, 0, 0));
     }
 }
-
-?>

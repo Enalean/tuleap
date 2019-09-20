@@ -22,7 +22,8 @@ require_once __DIR__ . '/../bootstrap.php';
 require_once __DIR__ . '/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
-class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
+class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase
+{
 
     protected $sprint_id   = 9001;
     protected $epic_id     = 2;
@@ -46,9 +47,9 @@ class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
 
         $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
 
-        $this->sprint   = $this->getArtifact($this->sprint_id,  $this->sprint_tracker);
-        $this->epic     = $this->getArtifact($this->epic_id,    $this->epic_tracker);
-        $this->epic2    = $this->getArtifact($this->epic2_id,    $this->epic_tracker);
+        $this->sprint   = $this->getArtifact($this->sprint_id, $this->sprint_tracker);
+        $this->epic     = $this->getArtifact($this->epic_id, $this->epic_tracker);
+        $this->epic2    = $this->getArtifact($this->epic2_id, $this->epic_tracker);
 
         stub($GLOBALS['Language'])->getText('plugin_agiledashboard', 'available', 'epic_tracker')->returns('Available epic_tracker');
 
@@ -154,4 +155,3 @@ class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
         $this->assertEqual($display_selector, false);
     }
 }
-?>

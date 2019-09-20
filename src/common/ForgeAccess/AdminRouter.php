@@ -18,7 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class ForgeAccess_AdminRouter {
+class ForgeAccess_AdminRouter
+{
 
     /**
      * @var Codendi_Request

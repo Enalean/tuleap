@@ -11,7 +11,8 @@ require_once('Docman_View_Extra.class.php');
 require_once('Docman_View_Browse.class.php');
 
 require_once(dirname(__FILE__).'/../Docman_SettingsDao.class.php');
-class Docman_View_Admin_View extends Docman_View_Extra {
+class Docman_View_Admin_View extends Docman_View_Extra
+{
 
     function _title($params)
     {
@@ -28,7 +29,7 @@ class Docman_View_Admin_View extends Docman_View_Extra {
         $actual = $sBo->getView();
 
         $views  = Docman_View_Browse::getDefaultViews();
-        foreach($views as $view) {
+        foreach ($views as $view) {
             $html .= '<option value="'. $view .'" '. ($actual == $view ? 'selected="selected"' : '') .'>'. $GLOBALS['Language']->getText('plugin_docman', 'view_'.$view) .'</option>';
         }
         $html .= '</select>';
@@ -43,5 +44,3 @@ class Docman_View_Admin_View extends Docman_View_Extra {
         return $dao;
     }
 }
-
-?>

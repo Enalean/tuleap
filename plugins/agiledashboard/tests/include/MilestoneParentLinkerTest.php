@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class MilestoneParentLinkerTest extends TuleapTestCase {
+class MilestoneParentLinkerTest extends TuleapTestCase
+{
 
     /**
      * @var Planning_MilestoneFactory

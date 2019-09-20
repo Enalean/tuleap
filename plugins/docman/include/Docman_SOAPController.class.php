@@ -21,7 +21,8 @@
 
 require_once('Docman_Controller.class.php');
 require_once('Docman_SOAPActions.class.php');
-class Docman_SOAPController extends Docman_Controller {
+class Docman_SOAPController extends Docman_Controller
+{
 
     function __construct(&$plugin, $pluginPath, $themePath, &$request)
     {
@@ -46,10 +47,10 @@ class Docman_SOAPController extends Docman_Controller {
 
     /* protected */ function _setView($view)
     {
-        switch($view) {
+        switch ($view) {
             default:
                 $this->view = 'SOAP';
-               break;
+                break;
         }
     }
     /* protected */ function _set_moveView_errorPerms()
@@ -108,9 +109,8 @@ class Docman_SOAPController extends Docman_Controller {
             case 'search':
                 $this->view = 'Search';
                 break;
-            default: parent::_dispatch($view, $item, $root, $get_show_view);
+            default:
+                parent::_dispatch($view, $item, $root, $get_show_view);
         }
     }
 }
-
-?>

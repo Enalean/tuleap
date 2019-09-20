@@ -30,7 +30,8 @@ use Tuleap\Layout\IncludeAssets;
 /**
  * Display links from and to a project on the summary page.
  */
-class ProjectLinks_Widget_HomePageLinks extends Widget {
+class ProjectLinks_Widget_HomePageLinks extends Widget
+{
     protected $pluginPath;
     protected $themePath;
 
@@ -59,7 +60,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_plinks','descriptor_description');
+        return $GLOBALS['Language']->getText('plugin_plinks', 'descriptor_description');
     }
 
     /**
@@ -122,7 +123,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
 
             $html .= "<li>".$titleSpan;
             $links = $this->getLinks($way, $dar);
-            if($links != '') {
+            if ($links != '') {
                 $html .= "\n";
                 $html .= "  <ul>\n";
                 $html .= $links;
@@ -148,9 +149,9 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
         $html = '';
         $previousLinkName = '';
         $ulClosed = true;
-        foreach($dar as $row) {
-            if($row['link_name'] != $previousLinkName) {
-                if(!$ulClosed) {
+        foreach ($dar as $row) {
+            if ($row['link_name'] != $previousLinkName) {
+                if (!$ulClosed) {
                     // Do not close the list when the list is not started
                     $html .= "    </ul>\n";
                     $html .= "  </li>\n";
@@ -172,7 +173,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
             $previousLinkName = $row['link_name'];
         }
 
-        if(!$ulClosed) {
+        if (!$ulClosed) {
             $html .= "    </ul>\n";
             $html .= "  </li>\n";
         }

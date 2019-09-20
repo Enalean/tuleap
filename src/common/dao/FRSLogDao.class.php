@@ -44,5 +44,4 @@ class FRSLogDao extends DataAccessObject
                $this->da->escapeInt($actionID).')';
         return $this->update($sql);
     }
-
 }

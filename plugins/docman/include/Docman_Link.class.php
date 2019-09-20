@@ -23,7 +23,8 @@
  * URL is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_Link extends Docman_Document {
+class Docman_Link extends Docman_Document
+{
 
     private $current_version;
 

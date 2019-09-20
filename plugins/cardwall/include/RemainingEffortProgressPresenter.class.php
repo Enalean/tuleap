@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgressPresenter {
+class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgressPresenter
+{
     public const COUNT_STYLE = 'effort';
 
     private $initial_effort;
@@ -59,7 +60,7 @@ class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgre
 
     public function milestone_points_to_go()
     {
-        if ($this->milestone_remaining_effort() <= 1 ) {
+        if ($this->milestone_remaining_effort() <= 1) {
             return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_point_to_go');
         }
 

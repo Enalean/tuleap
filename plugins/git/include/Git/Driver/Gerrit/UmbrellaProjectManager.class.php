@@ -26,7 +26,8 @@
  * a project and its parents.
  */
 
-class Git_Driver_Gerrit_UmbrellaProjectManager {
+class Git_Driver_Gerrit_UmbrellaProjectManager
+{
 
     /** @var UGroupManager */
     private $ugroup_manager;
@@ -143,5 +144,4 @@ class Git_Driver_Gerrit_UmbrellaProjectManager {
 
         return null;
     }
-
 }

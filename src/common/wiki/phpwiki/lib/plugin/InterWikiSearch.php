@@ -25,8 +25,7 @@ rcs_id('$Id: InterWikiSearch.php,v 1.8 2004/06/28 12:51:41 rurban Exp $');
  */
 require_once('lib/PageType.php');
 
-class WikiPlugin_InterWikiSearch
-extends WikiPlugin
+class WikiPlugin_InterWikiSearch extends WikiPlugin
 {
     function getName()
     {
@@ -40,8 +39,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.8 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.8 $"
+        );
     }
 
     function getDefaultArguments()
@@ -54,12 +56,17 @@ extends WikiPlugin
         $args = $this->getArgs($argstr, $request);
         extract($args);
 
-        if (defined('DEBUG') && !DEBUG)
+        if (defined('DEBUG') && !DEBUG) {
             return $this->disabled("Sorry, this plugin is currently out of order.");
+        }
 
         $page = $dbi->getPage($request->getArg('pagename'));
-        return new TransformedText($page,_('InterWikiMap'),array('markup' => 2),
-                                   'searchableInterWikiMap');
+        return new TransformedText(
+            $page,
+            _('InterWikiMap'),
+            array('markup' => 2),
+            'searchableInterWikiMap'
+        );
         /*
         return new PageType($pagerevisionhandle,
                             $pagename = _('InterWikiMap'),
@@ -74,23 +81,25 @@ extends WikiPlugin
  * @desc
  */
 if (defined('DEBUG') && DEBUG) {
-    class PageFormatter_searchableInterWikiMap
-    extends PageFormatter_interwikimap {}
+    class PageFormatter_searchableInterWikiMap extends PageFormatter_interwikimap
+    {
+    }
 
-    class PageType_searchableInterWikiMap
-    extends PageType_interwikimap
+    class PageType_searchableInterWikiMap extends PageType_interwikimap
     {
         function format($text)
         {
-            return HTML::div(array('class' => 'wikitext'),
-            $this->_transform($this->_getHeader($text)),
-            $this->_formatMap(),
-            $this->_transform($this->_getFooter($text)));
+            return HTML::div(
+                array('class' => 'wikitext'),
+                $this->_transform($this->_getHeader($text)),
+                $this->_formatMap(),
+                $this->_transform($this->_getFooter($text))
+            );
         }
 
         function _formatMap()
         {
-            return $this->_arrayToTable ($this->_getMap(), $GLOBALS['request']);
+            return $this->_arrayToTable($this->_getMap(), $GLOBALS['request']);
         }
 
         function _arrayToTable($array, &$request)
@@ -98,17 +107,21 @@ if (defined('DEBUG') && DEBUG) {
             $thead = HTML::thead();
             $label[0] = _("Wiki Name");
             $label[1] = _("Search");
-            $thead->pushContent(HTML::tr(HTML::th($label[0]),
-                                     HTML::th($label[1])));
+            $thead->pushContent(HTML::tr(
+                HTML::th($label[0]),
+                HTML::th($label[1])
+            ));
 
             $tbody = HTML::tbody();
             $dbi = $request->getDbh();
             if ($array) {
                 foreach ($array as $moniker => $interurl) {
-                    $monikertd = HTML::td(array('class' => 'interwiki-moniker'),
-                                      $dbi->isWikiPage($moniker)
+                    $monikertd = HTML::td(
+                        array('class' => 'interwiki-moniker'),
+                        $dbi->isWikiPage($moniker)
                                       ? WikiLink($moniker)
-                                      : $moniker);
+                        : $moniker
+                    );
 
                     $w = new WikiPluginLoader;
                     $p = $w->getPlugin('ExternalSearch');
@@ -162,4 +175,3 @@ if (defined('DEBUG') && DEBUG) {
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

@@ -21,7 +21,8 @@
 
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 
-class Tracker_Report_RendererFactory {
+class Tracker_Report_RendererFactory
+{
 
 
     /**
@@ -29,7 +30,6 @@ class Tracker_Report_RendererFactory {
      */
     protected function __construct()
     {
-
     }
 
     /**
@@ -96,7 +96,7 @@ class Tracker_Report_RendererFactory {
         $renderers = array();
         //Check that renderers are already in the session
         $renderers_data = $report->report_session->get('renderers');
-        if ( ! $renderers_data ) {
+        if (! $renderers_data) {
             //if not, load the renderers from the db
             $renderers_data = $this->getDao()->searchByReportId($report->id);
         }
@@ -207,11 +207,12 @@ class Tracker_Report_RendererFactory {
                         break;
                     default:
                         $this->getEventManager()
-                                    ->processEvent('tracker_report_create_renderer',
-                                                   array('renderer_id' => $renderer_id,
+                                    ->processEvent(
+                                        'tracker_report_create_renderer',
+                                        array('renderer_id' => $renderer_id,
                                                          'type'        => $type,
                                                          'report'      => $report)
-                        );
+                                    );
                         break;
                 }
             }
@@ -236,8 +237,10 @@ class Tracker_Report_RendererFactory {
                         break;
                 }
                 $this->getReportRendererById($id, $to_report)
-                     ->duplicate($this->getReportRendererById($row['id'], $from_report),
-                                                              $field_mapping);
+                     ->duplicate(
+                         $this->getReportRendererById($row['id'], $from_report),
+                         $field_mapping
+                     );
             }
         }
     }
@@ -282,11 +285,12 @@ class Tracker_Report_RendererFactory {
                     break;
                 default:
                     $this->getEventManager()
-                                ->processEvent('tracker_report_create_renderer_in_session',
-                                               array('renderer_id' => $renderer_id,
+                                ->processEvent(
+                                    'tracker_report_create_renderer_in_session',
+                                    array('renderer_id' => $renderer_id,
                                                      'type'        => $type,
                                                      'report'      => $report)
-                    );
+                                );
                     break;
             }
         }
@@ -302,7 +306,6 @@ class Tracker_Report_RendererFactory {
             $renderer_id = $this->getDao()->create($report->id, $type, $name, $description, 'end');
         }
         return $renderer_id;
-
     }
 
     /**
@@ -325,10 +328,12 @@ class Tracker_Report_RendererFactory {
 
     public function getTypes()
     {
-        $types = array(Tracker_Report_Renderer::TABLE => $GLOBALS['Language']->getText('plugin_tracker_report','table'));
+        $types = array(Tracker_Report_Renderer::TABLE => $GLOBALS['Language']->getText('plugin_tracker_report', 'table'));
         $this->getEventManager()
-                    ->processEvent('tracker_report_renderer_types',
-                                   array('types' => &$types));
+                    ->processEvent(
+                        'tracker_report_renderer_types',
+                        array('types' => &$types)
+                    );
         return $types;
     }
     /**
@@ -388,12 +393,12 @@ class Tracker_Report_RendererFactory {
             $this->report_session->changeSessionNamespace('renderers');
         }
 
-        if ( !isset($this->renderers[$row['id']]) || $row['id']== 0 ) {
+        if (!isset($this->renderers[$row['id']]) || $row['id']== 0) {
             $instance = null;
             switch ($row['renderer_type']) {
                 case Tracker_Report_Renderer::TABLE:
                     //First retrieve specific properties of the renderer that are not saved in the generic table
-                    if ( !isset($row['chunksz']) || !isset($row['multisort']) ) {
+                    if (!isset($row['chunksz']) || !isset($row['multisort'])) {
                         $row['chunksz']   = 15;
                         $row['multisort'] = 0;
                         $table_row = $this->getTableDao()
@@ -463,10 +468,10 @@ class Tracker_Report_RendererFactory {
                     //do not traverse the row with a foreach since some info should not be put in the session
                     // (like SimpleXMLElement during an xml import)
                     //Furthermore, let the plugins set their own properties in the session
-                    $this->report_session->set("{$row['id']}.id",            $row['id']);
-                    $this->report_session->set("{$row['id']}.name",          $row['name']);
-                    $this->report_session->set("{$row['id']}.description",   $row['description']);
-                    $this->report_session->set("{$row['id']}.rank",          $row['rank']);
+                    $this->report_session->set("{$row['id']}.id", $row['id']);
+                    $this->report_session->set("{$row['id']}.name", $row['name']);
+                    $this->report_session->set("{$row['id']}.description", $row['description']);
+                    $this->report_session->set("{$row['id']}.rank", $row['rank']);
                     $this->report_session->set("{$row['id']}.renderer_type", $row['renderer_type']);
                 }
             }

@@ -21,7 +21,8 @@
 /**
  * validates a PHP representation of a Rule out of json
  */
-class Tracker_Workflow_Trigger_TriggerValidator {
+class Tracker_Workflow_Trigger_TriggerValidator
+{
     private $triggering_fields = array();
     private $rules_manager;
 
@@ -108,5 +109,3 @@ class Tracker_Workflow_Trigger_TriggerValidator {
         $this->triggering_fields[] = $hash;
     }
 }
-
-?>

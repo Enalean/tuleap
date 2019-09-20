@@ -23,6 +23,6 @@ require_once __DIR__ . '/../../www/include/pre.php';
 
 $project_manager = ProjectManager::instance();
 $backend_svn     = Backend::instance(Backend::SVN);
-foreach($project_manager->getAllPrivateProjects() as $project) {
+foreach ($project_manager->getAllPrivateProjects() as $project) {
     $backend_svn->updateProjectSVNAccessFile($project);
 }

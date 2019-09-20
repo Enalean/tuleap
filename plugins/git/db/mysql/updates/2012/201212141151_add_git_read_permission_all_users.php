@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201212141151_add_git_read_permission_all_users extends ForgeUpgrade_Bucket {
+class b201212141151_add_git_read_permission_all_users extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -59,5 +60,3 @@ EOT;
         return $res && $row['nb'] == 0;
     }
 }
-
-?>

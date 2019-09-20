@@ -28,7 +28,8 @@ use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
-class Tracker_ArtifactFactory {
+class Tracker_ArtifactFactory
+{
 
     protected $artifacts;
     /**
@@ -404,7 +405,7 @@ class Tracker_ArtifactFactory {
      */
     public function getChildren(Tracker_Artifact $artifact)
     {
-        if($artifact->getTracker()->isProjectAllowedToUseNature()) {
+        if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
             return $this->getDao()->getChildrenNatureMode($artifact->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
         } else {
             return $this->getDao()->getChildren($artifact->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
@@ -473,7 +474,7 @@ class Tracker_ArtifactFactory {
         $sorted_artifacts = array();
         $ids              = array_map(array($this, 'getArtifactId'), $artifacts);
 
-        if($ids) {
+        if ($ids) {
             $artifacts        = array_combine($ids, $artifacts);
             $sorted_ids       = $this->getDao()->getIdsSortedByPriority($ids);
             $sorted_artifacts = array_flip($sorted_ids);

@@ -23,7 +23,8 @@
  *
  * It ensures that sections are xml compatible by enforcing/converting the encoding
  */
-class XML_SimpleXMLCDATAFactory {
+class XML_SimpleXMLCDATAFactory
+{
 
     /**
      *

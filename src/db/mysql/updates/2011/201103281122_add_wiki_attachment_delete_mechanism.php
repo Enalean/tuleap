@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201103281122_add_wiki_attachment_delete_mechanism extends ForgeUpgrade_Bucket {
+class b201103281122_add_wiki_attachment_delete_mechanism extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -77,9 +78,5 @@ EOT;
         if (!$this->db->tableNameExists('wiki_attachment_deleted')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('wiki_attachment_deleted table is missing');
         }
-
     }
-
 }
-
-?>

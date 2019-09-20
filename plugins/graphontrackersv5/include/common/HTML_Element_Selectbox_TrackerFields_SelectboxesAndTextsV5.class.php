@@ -23,9 +23,10 @@
 /**
  * Define an html selectbox field for selectbox fields and text fields provided by the tracker
  */
-class HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5 extends HTML_Element_Selectbox {
+class HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5 extends HTML_Element_Selectbox
+{
 
-    public function __construct($tracker, $label, $name, $value, $with_none = false, $onchange = "", $with_user = true, $desc="")
+    public function __construct($tracker, $label, $name, $value, $with_none = false, $onchange = "", $with_user = true, $desc = "")
     {
         parent::__construct($label, $name, $value, $with_none, $onchange, $desc);
 
@@ -33,19 +34,18 @@ class HTML_Element_Selectbox_TrackerFields_SelectboxesAndTextsV5 extends HTML_El
         $aff = Tracker_FormElementFactory::instance();
 
         foreach ($aff->getUsedListFields($tracker) as $field) {
-            if($field->userCanRead()){
+            if ($field->userCanRead()) {
                 if ($field->getName() != 'comment_type_id') {
                     $selected = $this->value == $field->id;
                     $this->addOption(new HTML_Element_Option($field->getLabel(), $field->id, $selected));
                 }
             }
         }
-        foreach ( $aff->getUsedStringFields($tracker) as $field) {
-            if($field->userCanRead()){
+        foreach ($aff->getUsedStringFields($tracker) as $field) {
+            if ($field->userCanRead()) {
                 $selected = $this->value == $field->id;
                 $this->addOption(new HTML_Element_Option($field->getLabel(), $field->id, $selected));
             }
         }
-
     }
 }

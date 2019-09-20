@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201211281116_remove_unused_keys_from_tracker_rule_tables extends ForgeUpgrade_Bucket {
+class b201211281116_remove_unused_keys_from_tracker_rule_tables extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -53,4 +54,3 @@ class b201211281116_remove_unused_keys_from_tracker_rule_tables extends ForgeUpg
         }
     }
 }
-?>

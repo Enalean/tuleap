@@ -50,7 +50,7 @@ class ReleasePermissionManager
             && $this->release_factory->userCanRead($project->getID(), $release->getPackageID(), $release->getReleaseID())
         ) {
             return true;
-        } else if ($release->isHidden() && $this->release_factory->userCanAdmin($user, $project->getID())) {
+        } elseif ($release->isHidden() && $this->release_factory->userCanAdmin($user, $project->getID())) {
             return true;
         }
 

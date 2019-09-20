@@ -21,7 +21,8 @@
 /**
  * Continuous integration DAO for Git
  */
-class Git_Ci_Dao extends DataAccessObject {
+class Git_Ci_Dao extends DataAccessObject
+{
 
     /**
      * Retrieve git trigger of a ci job
@@ -124,7 +125,4 @@ class Git_Ci_Dao extends DataAccessObject {
                 WHERE job_id = '.$this->da->escapeInt($jobId);
         return $this->update($sql);
     }
-
 }
-
-?>

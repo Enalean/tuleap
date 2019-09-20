@@ -37,7 +37,8 @@ Mock::generate('Backend');
 
 Mock::generate('SystemEventManager');
 
-class Rule_UserNameIntegrationTest extends TuleapTestCase {
+class Rule_UserNameIntegrationTest extends TuleapTestCase
+{
 
     function __construct($name = 'Rule_UserName Integration test')
     {

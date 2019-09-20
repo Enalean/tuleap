@@ -20,7 +20,8 @@
  */
 
 
-class Docman_View_SOAP_List {
+class Docman_View_SOAP_List
+{
 
     function display($params)
     {
@@ -33,7 +34,7 @@ class Docman_View_SOAP_List {
         $nb = $items->size();
         if ($nb) {
             $it = $items->iterator();
-            while($it->valid()) {
+            while ($it->valid()) {
                 $o = $it->current();
                 $result[] = $o->toRow();
                 $it->next();
@@ -42,5 +43,3 @@ class Docman_View_SOAP_List {
         return $result;
     }
 }
-
-?>

@@ -70,5 +70,4 @@ class Git_PostReceiveMailDao extends \Tuleap\DB\DataAccessObject
         }
         return true;
     }
-
 }

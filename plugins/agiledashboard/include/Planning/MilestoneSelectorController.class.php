@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class Planning_MilestoneSelectorController extends MVC2_PluginController {
+class Planning_MilestoneSelectorController extends MVC2_PluginController
+{
     private $milestone_factory;
 
     public function __construct(Codendi_Request $request, Planning_MilestoneFactory $milestone_factory)
@@ -41,8 +42,8 @@ class Planning_MilestoneSelectorController extends MVC2_PluginController {
                 'aid'         => $milestone->getArtifact()->getId(),
             );
             EventManager::instance()->processEvent(
-                    AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT,
-                    array(
+                AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT,
+                array(
                         'milestone' => $milestone,
                         'redirect_parameters' => &$redirect_parameters
                     )
@@ -51,5 +52,3 @@ class Planning_MilestoneSelectorController extends MVC2_PluginController {
         }
     }
 }
-
-?>

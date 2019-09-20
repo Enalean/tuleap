@@ -20,7 +20,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableItemFactory extends Docman_ApprovalTableFactory {
+class Docman_ApprovalTableItemFactory extends Docman_ApprovalTableFactory
+{
 
 
     function newTable()
@@ -65,7 +66,7 @@ class Docman_ApprovalTableItemFactory extends Docman_ApprovalTableFactory {
         $table = null;
         $dao = $this->_getDao();
         $dar = $dao->getTableByItemId($this->item->getId());
-        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             $table = $this->createTableFromRow($row);
         }

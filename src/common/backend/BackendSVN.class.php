@@ -30,7 +30,8 @@ require_once __DIR__ . '/../../www/svn/svn_utils.php';
 /**
  * Backend class to work on subversion repositories
  */
-class BackendSVN extends Backend {
+class BackendSVN extends Backend
+{
 
     protected $SVNApacheConfNeedUpdate;
 
@@ -104,7 +105,7 @@ class BackendSVN extends Backend {
         $project=$this->getProjectManager()->getProject($group_id);
         if ($this->createRepository($group_id, $project->getSVNRootPath())) {
             if ($this->updateHooksForProjectRepository($project)) {
-                if ($this->createSVNAccessFile ($group_id, $project->getSVNRootPath())) {
+                if ($this->createSVNAccessFile($group_id, $project->getSVNRootPath())) {
                     $this->forceUpdateApacheConf();
                     return true;
                 }
@@ -156,18 +157,18 @@ class BackendSVN extends Backend {
         $project=$this->getProjectManager()->getProject($project_id);
 
         if (! $this->updateHooks(
-                $project,
-                $svn_dir,
-                true,
-                $hook_commit_path,
-                'svn_post_commit.php',
-                ForgeConfig::get('tuleap_dir').'/src/utils/php-launcher.sh',
-                'svn_pre_commit.php'
-            )) {
+            $project,
+            $svn_dir,
+            true,
+            $hook_commit_path,
+            'svn_post_commit.php',
+            ForgeConfig::get('tuleap_dir').'/src/utils/php-launcher.sh',
+            'svn_pre_commit.php'
+        )) {
             throw new SVNRepositoryCreationException(_('Could not update hooks of the SVN repository'));
         }
 
-        if (! $this->createSVNAccessFile ($project_id, $svn_dir)) {
+        if (! $this->createSVNAccessFile($project_id, $svn_dir)) {
             throw new SVNRepositoryCreationException(_('Could not the access file of the SVN repository'));
         }
 
@@ -846,7 +847,7 @@ class BackendSVN extends Backend {
             // Get file stat
             if (file_exists("$svnroot/$file")) {
                 $stat = stat("$svnroot/$file");
-                if ( ($stat['uid'] != $this->getHTTPUserUID())
+                if (($stat['uid'] != $this->getHTTPUserUID())
                      || ($stat['gid'] != $this->getSvnFilesUnixGroupId($project)) ) {
                     $need_owner_update = true;
                 }
@@ -915,7 +916,7 @@ class BackendSVN extends Backend {
         $hook_error = array();
 
         foreach ($hook_names as $hook_name) {
-            if(! $this->enableHook($project_svnroot, $hook_name, "$hooks_path/$hook_name.php")) {
+            if (! $this->enableHook($project_svnroot, $hook_name, "$hooks_path/$hook_name.php")) {
                 $hook_error[] = $this->getHookPath($project_svnroot, $hook_name);
             }
         }

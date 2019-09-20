@@ -21,7 +21,8 @@
  *
  * I instantiate Rest_Token
  */
-class Rest_TokenFactory {
+class Rest_TokenFactory
+{
 
     private $token_dao;
 
@@ -52,6 +53,4 @@ class Rest_TokenFactory {
             $row['token']
         );
     }
-
 }
-?>

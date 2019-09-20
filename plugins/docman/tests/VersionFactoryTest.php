@@ -31,7 +31,8 @@ Mock::generate('Docman_Version');
 Mock::generate('Docman_ItemFactory');
 Mock::generate('Docman_File');
 
-class Docman_VersionFactoryTest extends TuleapTestCase {
+class Docman_VersionFactoryTest extends TuleapTestCase
+{
 
     function testPurgeDeletedVersionsWithNoVersions()
     {

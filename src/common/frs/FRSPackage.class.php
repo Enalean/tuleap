@@ -24,7 +24,8 @@
  * FRSPackage.class.php - File Release System Package class
  *
  */
-class FRSPackage {
+class FRSPackage
+{
     public const PERM_READ      = 'PACKAGE_READ';
 
     public const STATUS_ACTIVE  = 1;
@@ -155,12 +156,24 @@ class FRSPackage {
 
     function initFromArray($array)
     {
-        if (isset($array['package_id']))      $this->setPackageID($array['package_id']);
-        if (isset($array['group_id']))        $this->setGroupID($array['group_id']);
-        if (isset($array['name']))            $this->setName($array['name']);
-        if (isset($array['status_id']))       $this->setStatusID($array['status_id']);
-        if (isset($array['rank']))            $this->setRank($array['rank']);
-        if (isset($array['approve_license'])) $this->setApproveLicense($array['approve_license']);
+        if (isset($array['package_id'])) {
+            $this->setPackageID($array['package_id']);
+        }
+        if (isset($array['group_id'])) {
+            $this->setGroupID($array['group_id']);
+        }
+        if (isset($array['name'])) {
+            $this->setName($array['name']);
+        }
+        if (isset($array['status_id'])) {
+            $this->setStatusID($array['status_id']);
+        }
+        if (isset($array['rank'])) {
+            $this->setRank($array['rank']);
+        }
+        if (isset($array['approve_license'])) {
+            $this->setApproveLicense($array['approve_license']);
+        }
     }
 
     function toArray()
@@ -205,5 +218,4 @@ class FRSPackage {
 
         return $factory->userCanRead($this->getGroupID(), $this->getPackageID(), $user_id);
     }
-
 }

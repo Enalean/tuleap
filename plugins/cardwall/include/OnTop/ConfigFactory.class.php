@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_OnTop_ConfigFactory {
+class Cardwall_OnTop_ConfigFactory
+{
 
     /**
      * @var TrackerFactory
@@ -156,6 +157,4 @@ class Cardwall_OnTop_ConfigFactory {
     {
         return new Cardwall_OnTop_ColumnMappingFieldValueDao();
     }
-
 }
-?>

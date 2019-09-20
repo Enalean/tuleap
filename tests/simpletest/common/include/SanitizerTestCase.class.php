@@ -6,7 +6,8 @@
  *
  * abstract
  */
-class SanitizerTestCase extends TuleapTestCase {
+class SanitizerTestCase extends TuleapTestCase
+{
     function testSanitize()
     {
         trigger_error("testSanitize() not yet implemented");
@@ -15,5 +16,3 @@ class SanitizerTestCase extends TuleapTestCase {
 
 //We just tells SimpleTest to always ignore this testcase
 SimpleTest::ignore('SanitizerTestCase');
-
-?>

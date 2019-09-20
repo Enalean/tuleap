@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201308271726_set_default_semantic extends ForgeUpgrade_Bucket {
+class b201308271726_set_default_semantic extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -58,4 +59,3 @@ EOT;
         }
     }
 }
-?>

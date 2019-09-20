@@ -28,7 +28,8 @@ use Tuleap\CVS\DiskUsage\FullHistoryDao;
 /**
  * Statisitics_Widget_ProjectStatistics
  */
-class Statistics_Widget_ProjectStatistics extends Widget {
+class Statistics_Widget_ProjectStatistics extends Widget
+{
 
     /**
      * Constructor

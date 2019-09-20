@@ -8,7 +8,8 @@
 */
 
 
-class Docman_View_ToolbarNewDocumentVisitor /* implements Visitor*/ {
+class Docman_View_ToolbarNewDocumentVisitor /* implements Visitor*/
+{
 
     function visitFolder(&$item, $params = array())
     {
@@ -40,4 +41,3 @@ class Docman_View_ToolbarNewDocumentVisitor /* implements Visitor*/ {
         return $this->visitDocument($item, $params);
     }
 }
-?>

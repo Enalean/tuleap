@@ -22,7 +22,8 @@ use Tuleap\Tracker\TrackerColor;
 
 require_once __DIR__.'/../bootstrap.php';
 
-class MockArtifactBuilder {
+class MockArtifactBuilder
+{
     public function __construct()
     {
         $this->id       = 123;
@@ -151,5 +152,5 @@ class MockArtifactBuilder {
 
 function aMockArtifact()
 {
-    return new MockArtifactBuilder(); }
-?>
+    return new MockArtifactBuilder();
+}

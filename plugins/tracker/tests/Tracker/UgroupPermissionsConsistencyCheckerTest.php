@@ -24,7 +24,8 @@
 
 require_once __DIR__ .'/../bootstrap.php';
 
-class Tracker_UgroupPermissionsConsistencyCheckerTest extends TuleapTestCase {
+class Tracker_UgroupPermissionsConsistencyCheckerTest extends TuleapTestCase
+{
 
     protected $template_tracker;
     protected $target_project;
@@ -68,7 +69,8 @@ class Tracker_UgroupPermissionsConsistencyCheckerTest extends TuleapTestCase {
     }
 }
 
-class Tracker_UgroupPermissionsConsistencyChecker_SameProjectTest extends Tracker_UgroupPermissionsConsistencyCheckerTest {
+class Tracker_UgroupPermissionsConsistencyChecker_SameProjectTest extends Tracker_UgroupPermissionsConsistencyCheckerTest
+{
 
     public function itReturnsNoMessage()
     {
@@ -80,7 +82,8 @@ class Tracker_UgroupPermissionsConsistencyChecker_SameProjectTest extends Tracke
     }
 }
 
-class Tracker_UgroupPermissionsConsistencyChecker_NoPermOnStaticGroupsTest extends Tracker_UgroupPermissionsConsistencyCheckerTest {
+class Tracker_UgroupPermissionsConsistencyChecker_NoPermOnStaticGroupsTest extends Tracker_UgroupPermissionsConsistencyCheckerTest
+{
 
     public function itReturnsNoMessage()
     {
@@ -92,10 +95,10 @@ class Tracker_UgroupPermissionsConsistencyChecker_NoPermOnStaticGroupsTest exten
 
         $this->checker->checkConsistency($this->template_tracker, $this->target_project);
     }
-
 }
 
-class Tracker_UgroupPermissionsConsistencyChecker_PermOnOneStaticGroupTest extends Tracker_UgroupPermissionsConsistencyCheckerTest {
+class Tracker_UgroupPermissionsConsistencyChecker_PermOnOneStaticGroupTest extends Tracker_UgroupPermissionsConsistencyCheckerTest
+{
 
     public function setUp()
     {
@@ -127,7 +130,8 @@ class Tracker_UgroupPermissionsConsistencyChecker_PermOnOneStaticGroupTest exten
     }
 }
 
-class Tracker_UgroupPermissionsConsistencyChecker_PermOnManyStaticGroupTest extends Tracker_UgroupPermissionsConsistencyCheckerTest {
+class Tracker_UgroupPermissionsConsistencyChecker_PermOnManyStaticGroupTest extends Tracker_UgroupPermissionsConsistencyCheckerTest
+{
 
     public function setUp()
     {

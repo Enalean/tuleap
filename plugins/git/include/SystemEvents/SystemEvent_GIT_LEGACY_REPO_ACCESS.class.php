@@ -19,7 +19,8 @@
  * along with Tulea. If not, see <http://www.gnu.org/licenses/
  */
 
-class SystemEvent_GIT_LEGACY_REPO_ACCESS  extends SystemEvent {
+class SystemEvent_GIT_LEGACY_REPO_ACCESS extends SystemEvent
+{
     public const NAME = 'GIT_LEGACY_REPO_ACCESS';
 
     public function process()
@@ -27,19 +28,17 @@ class SystemEvent_GIT_LEGACY_REPO_ACCESS  extends SystemEvent {
         $parameters  = $this->getParametersAsArray();
         //repo id
         $repositoryId = '';
-        if ( !empty($parameters[0]) ) {
+        if (!empty($parameters[0])) {
             $repositoryId = $parameters[0];
-        }
-        else {
+        } else {
             $this->error('Missing argument repository id');
             return false;
         }
         //repo access
         $repositoryAccess = '';
-        if ( !empty($parameters[1]) ) {
+        if (!empty($parameters[1])) {
             $repositoryAccess = $parameters[1];
-        }
-        else {
+        } else {
             $this->error('Missing argument repository access');
             return false;
         }
@@ -52,7 +51,7 @@ class SystemEvent_GIT_LEGACY_REPO_ACCESS  extends SystemEvent {
             $repository->setAccess($repositoryAccess);
             $repository->changeAccess();
         } catch (GitDaoException $e) {
-            $this->error( $e->getMessage() );
+            $this->error($e->getMessage());
             return false;
         }
         $this->done();
@@ -62,8 +61,4 @@ class SystemEvent_GIT_LEGACY_REPO_ACCESS  extends SystemEvent {
     {
         return  $this->parameters;
     }
-
-
 }
-
-?>

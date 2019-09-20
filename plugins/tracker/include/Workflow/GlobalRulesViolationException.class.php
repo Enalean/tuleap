@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_GlobalRulesViolationException extends Tracker_Exception {
+class Tracker_Workflow_GlobalRulesViolationException extends Tracker_Exception
+{
 
     public function __construct()
     {

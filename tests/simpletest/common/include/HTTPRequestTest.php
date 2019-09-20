@@ -23,7 +23,8 @@ Mock::generatePartial('Valid', 'MockValid', array('isValid', 'getKey', 'validate
 Mock::generate('Rule');
 Mock::generatePartial('Valid_File', 'Valid_FileTest', array('getKey', 'validate'));
 
-class HTTPRequestTest extends TuleapTestCase {
+class HTTPRequestTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -111,8 +112,9 @@ class HTTPRequestTest extends TuleapTestCase {
     function testSingleton()
     {
         $this->assertEqual(
-                HTTPRequest::instance(),
-                HTTPRequest::instance());
+            HTTPRequest::instance(),
+            HTTPRequest::instance()
+        );
         $this->assertIsA(HTTPRequest::instance(), 'HTTPRequest');
     }
 
@@ -217,9 +219,9 @@ class HTTPRequestTest extends TuleapTestCase {
         $v = new MockValid($this);
         $v->setReturnValue('getKey', 'testkey_array');
         $v->expectAtLeastOnce('getKey');
-        $v->expectAt(0,'validate', array('testvalue1'));
-        $v->expectAt(1,'validate', array('testvalue2'));
-        $v->expectAt(2,'validate', array('testvalue3'));
+        $v->expectAt(0, 'validate', array('testvalue1'));
+        $v->expectAt(1, 'validate', array('testvalue2'));
+        $v->expectAt(2, 'validate', array('testvalue3'));
         $v->expectCallCount('validate', 3);
         $r = new HTTPRequest();
         $r->validArray($v);
@@ -374,7 +376,8 @@ class HTTPRequestTest extends TuleapTestCase {
     }
 }
 
-class HTTPRequest_BrowserTests extends TuleapTestCase {
+class HTTPRequest_BrowserTests extends TuleapTestCase
+{
 
     /** @var HTTPRequest */
     private $request;
@@ -506,7 +509,8 @@ class HTTPRequest_BrowserTests extends TuleapTestCase {
     }
 }
 
-abstract class HTTPRequest_getServerURLTests extends TuleapTestCase {
+abstract class HTTPRequest_getServerURLTests extends TuleapTestCase
+{
     protected $request;
 
     public function setUp()
@@ -532,7 +536,8 @@ abstract class HTTPRequest_getServerURLTests extends TuleapTestCase {
 }
 
 // Tests inspired from From Symfony\Component\HttpFoundation\Tests\IpUtilsTest @ 3.2-dev
-class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerURLTests {
+class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerURLTests
+{
 
     public function setUp()
     {
@@ -541,7 +546,7 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
         $_SERVER['HTTPS']       = 'on';
 
         ForgeConfig::set('sys_default_domain', 'meow.bzh');
-        ForgeConfig::set('sys_https_host',     'meow.bzh');
+        ForgeConfig::set('sys_https_host', 'meow.bzh');
     }
 
     public function tearDown()
@@ -663,7 +668,8 @@ class HTTPRequest_getServerURL_TrustedProxyTests extends HTTPRequest_getServerUR
 }
 
 
-class HTTPRequest_getServerURLSSLTests extends HTTPRequest_getServerURLTests {
+class HTTPRequest_getServerURLSSLTests extends HTTPRequest_getServerURLTests
+{
 
     public function setUp()
     {
@@ -734,7 +740,8 @@ class HTTPRequest_getServerURLSSLTests extends HTTPRequest_getServerURLTests {
     }
 }
 
-class HTTPRequest_getServerURL_ConfigFallbackTests extends HTTPRequest_getServerURLTests {
+class HTTPRequest_getServerURL_ConfigFallbackTests extends HTTPRequest_getServerURLTests
+{
 
     public function setUp()
     {

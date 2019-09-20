@@ -28,8 +28,7 @@ rcs_id('$Id: WikiForm.php,v 1.16 2004/07/01 13:14:01 rurban Exp $');
  *
  * See WikiFormMore for the more generic version.
  */
-class WikiPlugin_WikiForm
-extends WikiPlugin
+class WikiPlugin_WikiForm extends WikiPlugin
 {
     function getName()
     {
@@ -38,8 +37,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.16 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.16 $"
+        );
     }
 
     function getDefaultArguments()
@@ -56,12 +58,14 @@ extends WikiPlugin
     function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
-        $form = HTML::form(array('action' => $request->getPostURL(),
+        $form = HTML::form(
+            array('action' => $request->getPostURL(),
                                  'method' => 'post',
                                  'class'  => 'wikiadmin',
                                  'accept-charset' => $GLOBALS['charset']),
-                           HiddenInputs(array('action' => $action,
-                                              'pagename' => $basepage)));
+            HiddenInputs(array('action' => $action,
+            'pagename' => $basepage))
+        );
         $input = array('type' => 'text',
                        'value' => $default,
                        'size' => $size);
@@ -69,18 +73,21 @@ extends WikiPlugin
         switch ($action) {
             case 'loadfile':
                 $input['name'] = 'source';
-                if (!$default)
-                $input['value'] = DEFAULT_DUMP_DIR;
-                if (!$buttontext)
-                $buttontext = _("Load File");
+                if (!$default) {
+                    $input['value'] = DEFAULT_DUMP_DIR;
+                }
+                if (!$buttontext) {
+                    $buttontext = _("Load File");
+                }
                 $class = false;
-            break;
+                break;
             case 'login':
                 $input['name'] = 'source';
-                if (!$buttontext)
-                $buttontext = _("Login");
+                if (!$buttontext) {
+                    $buttontext = _("Login");
+                }
                 $class = 'wikiadmin';
-            break;
+                break;
             case 'upload':
                 $form->setAttr('enctype', 'multipart/form-data');
                 $form->pushContent(HTML::input(array('name' => 'MAX_FILE_SIZE',
@@ -88,23 +95,28 @@ extends WikiPlugin
                                                  'type'  => 'hidden')));
                 $input['name'] = 'file';
                 $input['type'] = 'file';
-                if (!$buttontext)
+                if (!$buttontext) {
                     $buttontext = _("Upload");
+                }
                 $class = false; // local OS function, so use native OS button
-            break;
+                break;
             default:
-            return HTML::p(fmt("WikiForm: %s: unknown action", $action));
+                return HTML::p(fmt("WikiForm: %s: unknown action", $action));
         }
 
         $input = HTML::input($input);
         $input->addTooltip($buttontext);
         $button = Button('submit:', $buttontext, $class);
-        if ($request->getArg('start_debug'))
+        if ($request->getArg('start_debug')) {
             $form->pushContent(HTML::input(array('name' => 'start_debug',
                                                  'value' =>  $request->getArg('start_debug'),
                                                  'type'  => 'hidden')));
-        $form->pushContent(HTML::span(array('class' => $class),
-                                      $input, $button));
+        }
+        $form->pushContent(HTML::span(
+            array('class' => $class),
+            $input,
+            $button
+        ));
 
         return $form;
     }
@@ -160,4 +172,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

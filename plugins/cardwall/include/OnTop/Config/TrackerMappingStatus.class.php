@@ -19,7 +19,8 @@
  */
 
 
-class Cardwall_OnTop_Config_TrackerMappingStatus extends Cardwall_OnTop_Config_TrackerMappingField {
+class Cardwall_OnTop_Config_TrackerMappingStatus extends Cardwall_OnTop_Config_TrackerMappingField
+{
 
     /**
      * @pattern Visitor
@@ -29,4 +30,3 @@ class Cardwall_OnTop_Config_TrackerMappingStatus extends Cardwall_OnTop_Config_T
         return $visitor->visitTrackerMappingStatus($this);
     }
 }
-?>

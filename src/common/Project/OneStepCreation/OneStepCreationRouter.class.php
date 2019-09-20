@@ -23,7 +23,8 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 /**
  * Routes the one step creation requests
  */
-class Project_OneStepCreation_OneStepCreationRouter {
+class Project_OneStepCreation_OneStepCreationRouter
+{
 
     /**
      * @var TroveCatFactory

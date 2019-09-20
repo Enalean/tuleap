@@ -23,7 +23,8 @@
  *
  */
 
-class Rule_IntTest extends TuleapTestCase {
+class Rule_IntTest extends TuleapTestCase
+{
 
     function UnitTestCase($name = 'Rule_Int test')
     {
@@ -51,7 +52,6 @@ class Rule_IntTest extends TuleapTestCase {
 
         $input = '0';
         $this->assertTrue($r->isValid($input));
-
     }
 
     function testFloatingPoint()
@@ -113,5 +113,4 @@ class Rule_IntTest extends TuleapTestCase {
             $this->assertTrue($r->isValid('-2147483649'));
         }
     }
-
 }

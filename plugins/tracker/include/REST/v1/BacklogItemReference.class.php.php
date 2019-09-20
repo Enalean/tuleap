@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class BacklogItemReference {
+class BacklogItemReference
+{
 
     /**
      * @var object Identification of the backlog item {@required true} {@type array}

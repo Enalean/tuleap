@@ -21,7 +21,8 @@
 /**
  *  Data Access Object for Plugin
  */
-class PluginDao extends DataAccessObject {
+class PluginDao extends DataAccessObject
+{
     /**
     * Gets all tables of the db
     * @return DataAccessResult
@@ -38,8 +39,10 @@ class PluginDao extends DataAccessObject {
     */
     function searchById($id)
     {
-        $sql = sprintf("SELECT * FROM plugin WHERE id = %s",
-                $this->da->quoteSmart($id));
+        $sql = sprintf(
+            "SELECT * FROM plugin WHERE id = %s",
+            $this->da->quoteSmart($id)
+        );
         return $this->retrieve($sql);
     }
 
@@ -49,8 +52,10 @@ class PluginDao extends DataAccessObject {
     */
     function searchByName($name)
     {
-        $sql = sprintf("SELECT * FROM plugin WHERE name = %s",
-                $this->da->quoteSmart($name));
+        $sql = sprintf(
+            "SELECT * FROM plugin WHERE name = %s",
+            $this->da->quoteSmart($name)
+        );
         return $this->retrieve($sql);
     }
 
@@ -60,8 +65,10 @@ class PluginDao extends DataAccessObject {
     */
     function searchByAvailable($available)
     {
-        $sql = sprintf("SELECT * FROM plugin WHERE available = %s ORDER BY id",
-                $this->da->quoteSmart($available));
+        $sql = sprintf(
+            "SELECT * FROM plugin WHERE available = %s ORDER BY id",
+            $this->da->quoteSmart($available)
+        );
         return $this->retrieve($sql);
     }
 
@@ -72,43 +79,54 @@ class PluginDao extends DataAccessObject {
     */
     function create($name, $available)
     {
-        $sql = sprintf("INSERT INTO plugin (name, available) VALUES (%s, %s);",
-                $this->da->quoteSmart($name),
-                $this->da->quoteSmart($available));
+        $sql = sprintf(
+            "INSERT INTO plugin (name, available) VALUES (%s, %s);",
+            $this->da->quoteSmart($name),
+            $this->da->quoteSmart($available)
+        );
         return $this->updateAndGetLastId($sql);
     }
 
     function updateAvailableByPluginId($available, $id)
     {
-        $sql = sprintf("UPDATE plugin SET available = %s WHERE id = %s",
-                $this->da->quoteSmart($available),
-                $this->da->quoteSmart($id));
+        $sql = sprintf(
+            "UPDATE plugin SET available = %s WHERE id = %s",
+            $this->da->quoteSmart($available),
+            $this->da->quoteSmart($id)
+        );
         return $this->update($sql);
     }
 
     function removeById($id)
     {
-        $sql = sprintf("DELETE FROM plugin WHERE id = %s",
-                $this->da->quoteSmart($id));
+        $sql = sprintf(
+            "DELETE FROM plugin WHERE id = %s",
+            $this->da->quoteSmart($id)
+        );
         return $this->update($sql);
     }
 
     function restrictProjectPluginUse($pluginId, $restrict)
     {
         $_usage = ($restrict === true ? 1 : 0);
-        $sql = sprintf('UPDATE plugin'.
+        $sql = sprintf(
+            'UPDATE plugin'.
                        ' SET prj_restricted = %d'.
                        ' WHERE id = %d',
-                       $_usage, $pluginId);
+            $_usage,
+            $pluginId
+        );
         return $this->update($sql);
     }
 
     function searchProjectPluginRestrictionStatus($pluginId)
     {
-        $sql = sprintf('SELECT prj_restricted'.
+        $sql = sprintf(
+            'SELECT prj_restricted'.
                        ' FROM plugin'.
                        ' WHERE id = %d',
-                       $pluginId);
+            $pluginId
+        );
         return $this->retrieve($sql);
     }
 

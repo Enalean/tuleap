@@ -21,7 +21,8 @@
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
-class MediawikiGroups {
+class MediawikiGroups
+{
     private $added_removed = array(
         'added'   => array(),
         'removed' => array(),

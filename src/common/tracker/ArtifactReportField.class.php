@@ -19,7 +19,8 @@
  */
 
 // This class inherits from ArtifactField
-class ArtifactReportField extends ArtifactField {
+class ArtifactReportField extends ArtifactField
+{
 
     // Show this field for the query
     var $show_on_query;
@@ -62,7 +63,6 @@ class ArtifactReportField extends ArtifactField {
         $this->place_query = $field_array['place_query'];
         $this->place_result = $field_array['place_result'];
         $this->col_width = $field_array['col_width'];
-
     }
 
     /**
@@ -155,5 +155,3 @@ class ArtifactReportField extends ArtifactField {
          " - col_width=".$this->col_width;
     }
 }
-
-?>

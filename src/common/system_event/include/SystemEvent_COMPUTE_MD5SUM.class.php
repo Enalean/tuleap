@@ -24,7 +24,8 @@
  * Compute md5sum for frs file
  *
  */
-class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
+class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
+{
 
     /**
      * Set multiple logs
@@ -171,5 +172,3 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
         return $fileFactory->compareMd5Checksums($file->getComputedMd5(), $file->getReferenceMd5());
     }
 }
-
-?>

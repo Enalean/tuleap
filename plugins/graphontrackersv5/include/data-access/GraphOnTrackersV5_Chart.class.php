@@ -77,17 +77,17 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
     public function registerInSession()
     {
         $this->report_session = self::getSession($this->renderer->report->id, $this->renderer->id);
-        $this->report_session->set("$this->id.id",                $this->id);
-        $this->report_session->set("$this->id.rank",              $this->rank);
-        $this->report_session->set("$this->id.title",             $this->title);
-        $this->report_session->set("$this->id.description",       $this->description);
-        $this->report_session->set("$this->id.width",             $this->width);
-        $this->report_session->set("$this->id.height",            $this->height);
+        $this->report_session->set("$this->id.id", $this->id);
+        $this->report_session->set("$this->id.rank", $this->rank);
+        $this->report_session->set("$this->id.title", $this->title);
+        $this->report_session->set("$this->id.description", $this->description);
+        $this->report_session->set("$this->id.width", $this->width);
+        $this->report_session->set("$this->id.height", $this->height);
         $this->report_session->set("$this->id.report_graphic_id", $this->renderer->id);
     }
 
-    public abstract function loadFromSession();
-    public abstract function loadFromDb();
+    abstract public function loadFromSession();
+    abstract public function loadFromDb();
 
     /**
      *
@@ -107,49 +107,64 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
     /* Getters and setters */
     public function getId()
     {
-        return $this->id; }
+        return $this->id;
+    }
     public function getRank()
     {
-        return $this->rank; }
+        return $this->rank;
+    }
     public function setRank($rank)
     {
-        $this->rank = $rank; }
+        $this->rank = $rank;
+    }
     public function getTitle()
     {
-        return $this->title; }
+        return $this->title;
+    }
     public function setTitle($title)
     {
-        $this->title = $title; }
+        $this->title = $title;
+    }
     public function getDescription()
     {
-        return $this->description; }
+        return $this->description;
+    }
     public function setDescription($description)
     {
-        $this->description = $description; }
+        $this->description = $description;
+    }
     public function getRenderer()
     {
-        return $this->renderer; }
+        return $this->renderer;
+    }
     public function setRenderer($renderer)
     {
-        $this->renderer = $renderer; }
+        $this->renderer = $renderer;
+    }
     public function getHeight()
     {
-        return $this->height; }
+        return $this->height;
+    }
     public function setHeight($height)
     {
-        return $this->height = $height; }
+        return $this->height = $height;
+    }
     public function getWidth()
     {
-        return $this->width; }
+        return $this->width;
+    }
     public function setWidth($width)
     {
-        return $this->width = $width; }
+        return $this->width = $width;
+    }
     public static function getDefaultHeight()
     {
-        return 400; }
+        return 400;
+    }
     public static function getDefaultWidth()
     {
-        return 600; }
+        return 600;
+    }
     /**
      * Display the html <img /> tag to embed the chart in a html page.
      */
@@ -192,10 +207,9 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
     public function fetch($store_in_session = true)
     {
         $html = '';
-        if($this->userCanVisualize()){
-
+        if ($this->userCanVisualize()) {
             $e = $this->buildGraph();
-            if($e){
+            if ($e) {
                 $html  = $this->getHTMLImageMapWithoutInterruptingExecutionFlow($e, 'map' . $this->getId());
                 $html .= $this->fetchImgTag($store_in_session);
             }
@@ -449,14 +463,14 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         $siblings = $this->getSiblingsForRankSelectbox();
 
         return array(
-            'id'          => new HTML_Element_Input_Hidden($GLOBALS['Language']->getText('plugin_graphontrackersv5_property','id'), 'chart[id]', $this->getId()),
-            'title'       => new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackersv5_property','title'), 'chart[title]', $this->getTitle()),
-            'description' => new HTML_Element_Textarea($GLOBALS['Language']->getText('plugin_graphontrackersv5_property','description'), 'chart[description]', $this->getDescription()),
-            'rank'        => new HTML_Element_Selectbox_Rank($GLOBALS['Language']->getText('plugin_graphontrackersv5_property','rank'), 'chart[rank]', $this->getRank(), $this->getId(), $siblings),
+            'id'          => new HTML_Element_Input_Hidden($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'id'), 'chart[id]', $this->getId()),
+            'title'       => new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'title'), 'chart[title]', $this->getTitle()),
+            'description' => new HTML_Element_Textarea($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'description'), 'chart[description]', $this->getDescription()),
+            'rank'        => new HTML_Element_Selectbox_Rank($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'rank'), 'chart[rank]', $this->getRank(), $this->getId(), $siblings),
             'dimensions'  => new HTML_Element_Columns(
-                                new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackersv5_property','width'), 'chart[width]', $this->getWidth(), 4),
-                                new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackersv5_property','height'), 'chart[height]', $this->getHeight(), 4)
-                             ),
+                new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'width'), 'chart[width]', $this->getWidth(), 4),
+                new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackersv5_property', 'height'), 'chart[height]', $this->getHeight(), 4)
+            ),
         );
     }
 
@@ -593,7 +607,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
     /**
      * Get the dao of the chart
      */
-    protected abstract function getDao();
+    abstract protected function getDao();
 
     public function getContent()
     {

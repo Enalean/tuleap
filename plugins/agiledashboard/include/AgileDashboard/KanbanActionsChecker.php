@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_KanbanActionsChecker {
+class AgileDashboard_KanbanActionsChecker
+{
 
     /**
      * @var Tracker_FormElementFactory
@@ -169,7 +170,7 @@ class AgileDashboard_KanbanActionsChecker {
     {
         $used_fields = $this->form_element_factory->getUsedFields($tracker);
 
-        foreach($used_fields as $used_field) {
+        foreach ($used_fields as $used_field) {
             if ($used_field->isRequired() && $used_field->getId() != $semantic_title->getFieldId()) {
                 return false;
             }

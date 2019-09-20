@@ -19,7 +19,8 @@
 /**
  * Modify svn accessfile history table
  */
-class b201405061202_modify_svn_accessfile_history_table extends ForgeUpgrade_Bucket {
+class b201405061202_modify_svn_accessfile_history_table extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return "svn accessfile history table";

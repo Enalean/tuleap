@@ -55,15 +55,15 @@ abstract class Tracker_Artifact_View_View
     /**
      * @return string
      */
-    public abstract function getTitle();
+    abstract public function getTitle();
 
     /**
      * @return string unique identifier
      */
-    public abstract function getIdentifier();
+    abstract public function getIdentifier();
 
     /**
      * @return string html
      */
-    public abstract function fetch();
+    abstract public function fetch();
 }

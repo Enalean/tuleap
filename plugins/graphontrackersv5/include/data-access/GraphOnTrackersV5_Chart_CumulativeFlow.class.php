@@ -43,10 +43,12 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     protected $start_date;
     public function getStartDate()
     {
-        return $this->start_date; }
+        return $this->start_date;
+    }
     public function setStartDate($start_date)
     {
-        return $this->start_date = $start_date; }
+        return $this->start_date = $start_date;
+    }
 
     /**
      * The unit of the duration
@@ -54,10 +56,12 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     protected $scale;
     public function getScale()
     {
-        return $this->scale; }
+        return $this->scale;
+    }
     public function setScale($scale)
     {
-        return $this->scale = $scale; }
+        return $this->scale = $scale;
+    }
 
     /**
      * The date (timestamp) the sprint stop
@@ -65,10 +69,12 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     protected $stop_date;
     public function getStopDate()
     {
-        return $this->stop_date; }
+        return $this->stop_date;
+    }
     public function setStopDate($stop_date)
     {
-        return $this->stop_date = $stop_date; }
+        return $this->stop_date = $stop_date;
+    }
 
     /**
      * The observed field id
@@ -76,10 +82,12 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     protected $field_id;
     public function getFieldId()
     {
-        return $this->field_id; }
+        return $this->field_id;
+    }
     public function setFieldId($field_id)
     {
-        return $this->field_id = $field_id; }
+        return $this->field_id = $field_id;
+    }
 
     /**
      * class constructor: use parent one
@@ -179,7 +187,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
      */
     protected function getChartDataBuilder($artifacts)
     {
-        return new GraphOnTrackersV5_CumulativeFlow_DataBuilder($this,$artifacts);
+        return new GraphOnTrackersV5_CumulativeFlow_DataBuilder($this, $artifacts);
     }
 
     /**
@@ -203,7 +211,6 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
         $this->setStopDate(strtotime($row['stop_date']));
 
         return true;
-
     }
 
     /**
@@ -225,33 +232,38 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
     public function getProperties()
     {
         $scaleSelect = new HTML_Element_Selectbox(
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_scale'),
-                    'chart[scale]',
-                    'value');
+            $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_scale'),
+            'chart[scale]',
+            'value'
+        );
         $scaleSelect->addMultipleOptions(array(
-                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_day'),
-                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_week'),
-                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_month'),
+                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_day'),
+                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_WEEK => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_week'),
+                                              GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_MONTH => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_month'),
                                               ), $this->getScale());
-        return array_merge(parent::getProperties(),
+        return array_merge(
+            parent::getProperties(),
             array(
                 'field_id'   => new HTML_Element_Selectbox_TrackerFields_SelectboxesV5(
                     $this->getTracker(),
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_field'),
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_field'),
                     'chart[field_id]',
-                    $this->getFieldId()),
+                    $this->getFieldId()
+                ),
                 'start_date' => new HTML_Element_Input_Date(
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_start_date'),
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_start_date'),
                     'chart[start_date]',
-                    $this->getStartDate()),
+                    $this->getStartDate()
+                ),
                     'scale'   => ( $scaleSelect),
                 'stop_date'   => new HTML_Element_Input_Date(
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_stop_date'),
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow', 'cumulative_flow_property_stop_date'),
                     'chart[stop_date]',
                     $this->getStopDate()
-                    ),
+                ),
 
-        ));
+            )
+        );
     }
 
     public function createDb($id)

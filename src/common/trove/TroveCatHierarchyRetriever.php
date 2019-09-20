@@ -126,7 +126,7 @@ class TroveCatHierarchyRetriever
             if (! is_array($last_parent) && $retrieve_only_direct_child === false) {
                 $last_parent     = array();
                 $last_parent_ids = array();
-            } else if (! is_array($last_parent) && $retrieve_only_direct_child === true) {
+            } elseif (! is_array($last_parent) && $retrieve_only_direct_child === true) {
                 return;
             }
         }

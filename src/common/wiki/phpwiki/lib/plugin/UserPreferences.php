@@ -30,8 +30,7 @@ rcs_id('$Id: UserPreferences.php,v 1.35 2004/10/13 14:13:55 rurban Exp $');
  * Theme extension: Themes are able to extend the predefined list
  * of preferences.
  */
-class WikiPlugin_UserPreferences
-extends WikiPlugin
+class WikiPlugin_UserPreferences extends WikiPlugin
 {
     var $bool_args;
 
@@ -42,8 +41,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.35 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.35 $"
+        );
     }
 
     function getDefaultArguments()
@@ -51,7 +53,7 @@ extends WikiPlugin
         global $request;
         $pagename = $request->getArg('pagename');
         $user = $request->getUser();
-        if ( isset($user->_prefs) and
+        if (isset($user->_prefs) and
              isset($user->_prefs->_prefs) and
              isset($user->_prefs->_method) ) {
             $pref = $user->_prefs;
@@ -70,27 +72,26 @@ extends WikiPlugin
     {
         $args = $this->getArgs($argstr, $request);
         $user = $request->_user;
-        if (isa($request,'MockRequest'))
+        if (isa($request, 'MockRequest')) {
             return '';
+        }
         if ((!$request->isActionPage($request->getArg('pagename'))
              and (!isset($user->_prefs->_method)
-                  or !in_array($user->_prefs->_method,array('ADODB','SQL'))))
-            or (in_array($request->getArg('action'),array('zip','ziphtml')))
-            or (isa($user,'_ForbiddenUser')))
-        {
+                  or !in_array($user->_prefs->_method, array('ADODB','SQL'))))
+            or (in_array($request->getArg('action'), array('zip','ziphtml')))
+            or (isa($user, '_ForbiddenUser'))) {
             $no_args = $this->getDefaultArguments();
 // ?
 //            foreach ($no_args as $key => $value) {
 //                $no_args[$value] = false;
 //            }
-            $no_args['errmsg'] = HTML(HTML::h2(_("Error: The user HomePage must be a valid WikiWord. Sorry, UserPreferences cannot be saved."),HTML::hr()));
+            $no_args['errmsg'] = HTML(HTML::h2(_("Error: The user HomePage must be a valid WikiWord. Sorry, UserPreferences cannot be saved."), HTML::hr()));
             $no_args['isForm'] = false;
             return Template('userprefs', $no_args);
         }
         $userid = $user->UserName();
         if (// ((defined('ALLOW_BOGO_LOGIN') && ALLOW_BOGO_LOGIN && $user->isSignedIn()) ||
-             $user->isAuthenticated() and !empty($userid))
-        {
+             $user->isAuthenticated() and !empty($userid)) {
             $pref = &$request->_prefs;
             $args['isForm'] = true;
             //trigger_error("DEBUG: reading prefs from getPreferences".print_r($pref));
@@ -104,22 +105,27 @@ extends WikiPlugin
                     $default_prefs['userid'] = $user->UserName();
                     $user->setPreferences($default_prefs);
                     $request->_setUser($user);
-                    $request->setArg("verify",false);
-                    $request->setArg("delete",false);
-                    $alert = new Alert(_("Message"),
-                                       _("Your UserPreferences have been successfully deleted."));
+                    $request->setArg("verify", false);
+                    $request->setArg("delete", false);
+                    $alert = new Alert(
+                        _("Message"),
+                        _("Your UserPreferences have been successfully deleted.")
+                    );
                     $alert->show();
                     return;
                 } elseif ($delete and !$request->getArg('verify')) {
-                    return HTML::form(array('action' => $request->getPostURL(),
+                    return HTML::form(
+                        array('action' => $request->getPostURL(),
                                             'method' => 'post'),
-                                       HiddenInputs(array('verify' => 1)),
-                                       HiddenInputs($request->getArgs()),
-                                       HTML::p(_("Do you really want to delete all your UserPreferences?")),
-                                       HTML::p(Button('submit:delete', _("Yes"), 'delete'),
-                                               HTML::Raw('&nbsp;'),
-                                               Button('cancel', _("Cancel")))
-                                       );
+                        HiddenInputs(array('verify' => 1)),
+                        HiddenInputs($request->getArgs()),
+                        HTML::p(_("Do you really want to delete all your UserPreferences?")),
+                        HTML::p(
+                            Button('submit:delete', _("Yes"), 'delete'),
+                            HTML::Raw('&nbsp;'),
+                            Button('cancel', _("Cancel"))
+                        )
+                    );
                 } elseif ($rp = $request->getArg('pref')) {
                     // replace only changed prefs in $pref with those from request
                     if (!empty($rp['passwd']) and ($rp['passwd2'] != $rp['passwd'])) {
@@ -127,10 +133,16 @@ extends WikiPlugin
                     } else {
                         //trigger_error("DEBUG: reading prefs from request".print_r($rp));
                         //trigger_error("DEBUG: writing prefs with setPreferences".print_r($pref));
-                        if (empty($rp['passwd'])) unset($rp['passwd']);
+                        if (empty($rp['passwd'])) {
+                            unset($rp['passwd']);
+                        }
                         // fix to set system pulldown's. empty values don't get posted
-                        if (empty($rp['theme'])) $rp['theme'] = '';
-                        if (empty($rp['lang']))  $rp['lang']  = '';
+                        if (empty($rp['theme'])) {
+                            $rp['theme'] = '';
+                        }
+                        if (empty($rp['lang'])) {
+                            $rp['lang']  = '';
+                        }
                         $num = $user->setPreferences($rp);
                         if (!empty($rp['passwd'])) {
                             $passchanged = false;
@@ -319,4 +331,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

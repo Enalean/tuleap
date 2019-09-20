@@ -21,7 +21,8 @@ namespace User\XML\Import;
 
 use TuleapTestCase;
 
-class WillBeCreatedUser_processTest extends TuleapTestCase {
+class WillBeCreatedUser_processTest extends TuleapTestCase
+{
 
     /** @var ToBeCreatedUser */
     private $user;

@@ -22,7 +22,8 @@
 /**
  * @group TokenTests
  */
-class AuthenticationTest extends RestBase {
+class AuthenticationTest extends RestBase
+{
 
     public function testOPTIONSIsReadableByAnonymous()
     {

@@ -25,7 +25,8 @@ function aBindStaticValue()
     return new Test_Tracker_FormElement_List_Bind_StaticValue_Builder('Tracker_FormElement_Field_List_Bind_Static');
 }
 
-class Test_Tracker_FormElement_List_Bind_StaticValue_Builder {
+class Test_Tracker_FormElement_List_Bind_StaticValue_Builder
+{
     private $is_hidden = false;
     private $rank = 0;
     private $description = '';
@@ -52,5 +53,3 @@ class Test_Tracker_FormElement_List_Bind_StaticValue_Builder {
         return new Tracker_FormElement_Field_List_Bind_StaticValue($this->id, $this->label, $this->description, $this->rank, $this->is_hidden);
     }
 }
-
-?>

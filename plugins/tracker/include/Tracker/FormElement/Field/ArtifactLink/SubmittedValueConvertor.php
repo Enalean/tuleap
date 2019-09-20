@@ -48,7 +48,8 @@ use Tracker_ArtifactFactory;
  * and there is a hierarchy "Story tracker is parent of Task tracker", then the link will be removed so that it is
  * the story that will reference the task instead of the inverse.
  */
-class SubmittedValueConvertor {
+class SubmittedValueConvertor
+{
 
     /**
      * @var SourceOfAssociationDetector

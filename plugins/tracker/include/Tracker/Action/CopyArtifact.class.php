@@ -20,7 +20,8 @@
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-class Tracker_Action_CopyArtifact {
+class Tracker_Action_CopyArtifact
+{
 
     /**
      * @var Tracker_XML_Importer_ArtifactImportedMapping
@@ -144,7 +145,7 @@ class Tracker_Action_CopyArtifact {
 
         $this->children_xml_exporter->exportChildren($xml_artifacts);
 
-        if(count($xml_artifacts->artifact) < 1) {
+        if (count($xml_artifacts->artifact) < 1) {
             $this->logsErrorAndRedirectToTracker(
                 'plugin_tracker',
                 'error_create_copy',
@@ -156,13 +157,13 @@ class Tracker_Action_CopyArtifact {
         $xml_field_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
 
         $no_child = count($xml_artifacts->artifact) == 1;
-        if($no_child) {
+        if ($no_child) {
             $this->removeArtLinksValueNodeFromXML($xml_artifacts);
         }
 
         $new_artifacts = $this->importBareArtifacts($xml_artifacts);
 
-        if($new_artifacts == null) {
+        if ($new_artifacts == null) {
             $this->logsErrorAndRedirectToTracker(
                 'plugin_tracker',
                 'error_create_copy',
@@ -186,7 +187,7 @@ class Tracker_Action_CopyArtifact {
             $tracker = $this->tracker_factory->getTrackerById((int) $xml_artifact['tracker_id']);
             $config = new \Tuleap\Project\XML\Import\ImportConfig();
             $artifact = $this->xml_importer->importBareArtifact($tracker, $xml_artifact, $config);
-            if(!$artifact) {
+            if (!$artifact) {
                 return null;
             } else {
                 $new_artifacts[] = $artifact;
@@ -207,7 +208,8 @@ class Tracker_Action_CopyArtifact {
                 $xml_artifact,
                 $extraction_path,
                 $xml_field_mapping,
-                $this->artifacts_imported_mapping);
+                $this->artifacts_imported_mapping
+            );
             $config = new \Tuleap\Project\XML\Import\ImportConfig();
             $this->xml_importer->importChangesets(
                 $new_artifacts[$i],
@@ -236,7 +238,7 @@ class Tracker_Action_CopyArtifact {
         );
         $artifact->createNewChangesetWhitoutRequiredValidation(
             array(),
-            implode("\n",$comment),
+            implode("\n", $comment),
             $user,
             true,
             Tracker_Artifact_Changeset_Comment::TEXT_COMMENT
@@ -248,7 +250,7 @@ class Tracker_Action_CopyArtifact {
         $xml_artifact = $xml_artifacts->artifact[0];
         foreach ($xml_artifact->changeset as $xml_changeset) {
             foreach ($xml_changeset->field_change as $xml_field_change) {
-                if($xml_field_change['type'] == 'art_link') {
+                if ($xml_field_change['type'] == 'art_link') {
                     $dom = dom_import_simplexml($xml_field_change);
                     foreach ($dom->childNodes as $child_node) {
                         $dom->removeChild($child_node);

@@ -19,7 +19,8 @@
  */
 require_once __DIR__.'/../../bootstrap.php';
 
-class Workflow_Transition_ConditionFactory_BaseTest extends TuleapTestCase {
+class Workflow_Transition_ConditionFactory_BaseTest extends TuleapTestCase
+{
 
     /** @var Workflow_Transition_ConditionFactory */
     protected $condition_factory;
@@ -50,7 +51,8 @@ class Workflow_Transition_ConditionFactory_BaseTest extends TuleapTestCase {
     }
 }
 
-class Workflow_Transition_ConditionFactory_isFieldUsedInConditionsTest extends Workflow_Transition_ConditionFactory_BaseTest {
+class Workflow_Transition_ConditionFactory_isFieldUsedInConditionsTest extends Workflow_Transition_ConditionFactory_BaseTest
+{
 
     public function itDelegatesToFieldNotEmptyFactory()
     {
@@ -60,7 +62,8 @@ class Workflow_Transition_ConditionFactory_isFieldUsedInConditionsTest extends W
     }
 }
 
-class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends Workflow_Transition_ConditionFactory_BaseTest {
+class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends Workflow_Transition_ConditionFactory_BaseTest
+{
 
     private $xml_mapping = array();
 

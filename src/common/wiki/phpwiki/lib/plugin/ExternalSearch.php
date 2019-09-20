@@ -32,8 +32,7 @@ rcs_id('$Id: ExternalSearch.php,v 1.12 2004/11/28 20:42:33 rurban Exp $');
      name="Go Godzilla All Over It"
  */
 
-class WikiPlugin_ExternalSearch
-extends WikiPlugin
+class WikiPlugin_ExternalSearch extends WikiPlugin
 {
     function getName()
     {
@@ -48,8 +47,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.12 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.12 $"
+        );
     }
 
     function _getInterWikiUrl(&$request)
@@ -58,12 +60,14 @@ extends WikiPlugin
         $map = $intermap->_map;
 
         if (in_array($this->_url, array_keys($map))) {
-            if (empty($this->_name))
+            if (empty($this->_name)) {
                 $this->_name = $this->_url;
+            }
             $this->_url = sprintf($map[$this->_url], '%s');
         }
-        if (empty($this->_name))
+        if (empty($this->_name)) {
             $this->_name = $this->getName();
+        }
     }
 
     function getDefaultArguments()
@@ -82,8 +86,9 @@ extends WikiPlugin
     function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
-        if (empty($args['url']))
+        if (empty($args['url'])) {
             return '';
+        }
 
         extract($args);
 
@@ -94,8 +99,9 @@ extends WikiPlugin
             $this->_getInterWikiUrl($request);
             if (strstr($this->_url, '%s')) {
                 $this->_url = sprintf($this->_url, $s);
-            } else
+            } else {
                 $this->_url .= $s;
+            }
             if ($debug) {
                 trigger_error("redirect url: " . $this->_url);
             } else {
@@ -104,15 +110,18 @@ extends WikiPlugin
         }
         $this->_name = $name;
         $this->_s = $s;
-        if ($formsize < 1)
+        if ($formsize < 1) {
             $formsize = 30;
+        }
         $this->_url = $url;
         $this->_getInterWikiUrl($request);
-        $form = HTML::form(array('action' => $request->getPostURL(),
+        $form = HTML::form(
+            array('action' => $request->getPostURL(),
                                  'method' => 'post',
                                  //'class'  => 'class', //fixme
                                  'accept-charset' => $GLOBALS['charset']),
-                           HiddenInputs(array('pagename' => $basepage)));
+            HiddenInputs(array('pagename' => $basepage))
+        );
 
         $form->pushContent(HTML::input(array('type' => 'hidden',
                                              'name'  => 'url',
@@ -120,15 +129,19 @@ extends WikiPlugin
         if (!empty($args["useimage"])) {
             //FIXME: This does not work with Gecko
             $button = HTML::img(array('src' => $useimage, 'alt' => 'imagebutton'));
-            if (!empty($width))
-                $button->setAttr('width',$width);
-            if (!empty($height))
-                $button->setAttr('height',$height);
-            $form->pushContent(HTML::button(array('type' => 'button',
+            if (!empty($width)) {
+                $button->setAttr('width', $width);
+            }
+            if (!empty($height)) {
+                $button->setAttr('height', $height);
+            }
+            $form->pushContent(HTML::button(
+                array('type' => 'button',
                                                   'class' => 'button',
                                                   'value' => $this->_name,
                                                   ),
-                                            $button));
+                $button
+            ));
         } else {
             $form->pushContent(HTML::input(array('type' => 'submit',
                                                  'class' => 'button',
@@ -192,4 +205,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

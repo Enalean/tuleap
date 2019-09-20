@@ -20,7 +20,8 @@
 /**
  *  Data Access Object for Project history
  */
-class ProjectHistoryDao extends DataAccessObject {
+class ProjectHistoryDao extends DataAccessObject
+{
 
     /**
      * Constructor of the class
@@ -78,7 +79,7 @@ class ProjectHistoryDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function groupAddHistory($fieldName,$oldValue,$groupId, $args = false)
+    public function groupAddHistory($fieldName, $oldValue, $groupId, $args = false)
     {
         if ($args) {
             $fieldName .= " %% ".implode("||", $args);
@@ -93,5 +94,4 @@ class ProjectHistoryDao extends DataAccessObject {
 
         $this->retrieve($sql);
     }
-
 }

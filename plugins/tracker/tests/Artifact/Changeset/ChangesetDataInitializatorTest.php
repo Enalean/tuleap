@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_Artifact_Changeset_ChangesetDataInitializator_LoadFromOldChangesetTest extends TuleapTestCase {
+class Tracker_Artifact_Changeset_ChangesetDataInitializator_LoadFromOldChangesetTest extends TuleapTestCase
+{
 
     private $initializator;
     private $formelement_factory;
@@ -126,7 +127,8 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator_LoadFromOldChangeset
     }
 }
 
-class Tracker_Artifact_Changeset_ChangesetDataInitializator_LoadAutomaticValuesTest extends TuleapTestCase {
+class Tracker_Artifact_Changeset_ChangesetDataInitializator_LoadAutomaticValuesTest extends TuleapTestCase
+{
 
     private $initializator;
     private $formelement_factory;

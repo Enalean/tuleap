@@ -20,7 +20,8 @@
 
 require_once 'GerritREST_Base.php';
 
-class Git_DriverREST_Gerrit_groupExistsTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_groupExistsTest {
+class Git_DriverREST_Gerrit_groupExistsTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_groupExistsTest
+{
 
     public function setUp()
     {
@@ -28,7 +29,6 @@ class Git_DriverREST_Gerrit_groupExistsTest extends Git_Driver_GerritREST_base i
 
         $this->group         = 'contributors';
         $this->groupname     = $this->project_name.'/'.$this->namespace.'/'.$this->repository_name.'-'.$this->group;
-
     }
 
     public function itReturnsTrueIfGroupExists()

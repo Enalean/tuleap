@@ -25,7 +25,8 @@
 /**
  * Wrapper for ldap user
  */
-class LDAP_User {
+class LDAP_User
+{
     /** @var PFUser */
     private $user;
 

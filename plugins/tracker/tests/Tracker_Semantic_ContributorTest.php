@@ -21,7 +21,8 @@
 
 require_once('bootstrap.php');
 
-class Tracker_Semantic_ContributorTest extends TuleapTestCase {
+class Tracker_Semantic_ContributorTest extends TuleapTestCase
+{
     private $xml_security;
 
     public function setUp()
@@ -37,8 +38,8 @@ class Tracker_Semantic_ContributorTest extends TuleapTestCase {
         $this->semantic = new Tracker_Semantic_Contributor($this->tracker, $this->field);
 
         $GLOBALS['Language'] = mock('BaseLanguage');
-        $GLOBALS['Language']->setReturnValue('getText','Assigned to',array('plugin_tracker_admin_semantic','contributor_label'));
-        $GLOBALS['Language']->setReturnValue('getText','Define the contributor of the artifact',array('plugin_tracker_admin_semantic','contributor_description'));
+        $GLOBALS['Language']->setReturnValue('getText', 'Assigned to', array('plugin_tracker_admin_semantic','contributor_label'));
+        $GLOBALS['Language']->setReturnValue('getText', 'Define the contributor of the artifact', array('plugin_tracker_admin_semantic','contributor_description'));
     }
 
     public function tearDown()

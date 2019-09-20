@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchForumResultPresenter {
+class Search_SearchForumResultPresenter
+{
     /** @var  string */
     private $project_name;
 

@@ -26,7 +26,7 @@ use Tuleap\JSONHeader;
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../../project/admin/permissions.php';
 
-$vAction = new Valid_WhiteList('action',array('permissions_frs_package','permissions_frs_release','validator_frs_create','validator_frs_update','refresh_file_list'));
+$vAction = new Valid_WhiteList('action', array('permissions_frs_package','permissions_frs_release','validator_frs_create','validator_frs_update','refresh_file_list'));
 if ($request->valid($vAction)) {
     $action = $request->get('action');
 } else {
@@ -53,7 +53,6 @@ if ($action == 'permissions_frs_package') {
     }
 } else {
     if ($action == 'permissions_frs_release') {
-
            $vReleaseId = new Valid_UInt('release_id');
         $vReleaseId->required();
         $vGroupId = new Valid_GroupId();

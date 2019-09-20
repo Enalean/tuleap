@@ -182,5 +182,3 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
         return -1;
     }
 }
-
-?>

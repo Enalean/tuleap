@@ -23,7 +23,8 @@ require_once('HTML_Element.class.php');
 /**
  * Define an html textarea
  */
-class HTML_Element_Textarea extends HTML_Element {
+class HTML_Element_Textarea extends HTML_Element
+{
     protected function renderValue()
     {
         $hp = Codendi_HTMLPurifier::instance();
@@ -33,5 +34,3 @@ class HTML_Element_Textarea extends HTML_Element {
         return $html;
     }
 }
-
-?>

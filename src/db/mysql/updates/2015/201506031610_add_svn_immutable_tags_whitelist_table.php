@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201506031610_add_svn_immutable_tags_whitelist_table extends ForgeUpgrade_Bucket {
+class b201506031610_add_svn_immutable_tags_whitelist_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

@@ -19,7 +19,8 @@
 
 use Tuleap\REST\GateKeeper;
 
-abstract class GateKeeperTest  extends TuleapTestCase {
+abstract class GateKeeperTest extends TuleapTestCase
+{
     protected $user;
     protected $anonymous;
     protected $request;
@@ -42,7 +43,8 @@ abstract class GateKeeperTest  extends TuleapTestCase {
     }
 }
 
-class GateKeeper_TokenAndHTTPS_Test  extends GateKeeperTest {
+class GateKeeper_TokenAndHTTPS_Test extends GateKeeperTest
+{
 
     public function setUp()
     {
@@ -85,7 +87,8 @@ class GateKeeper_TokenAndHTTPS_Test  extends GateKeeperTest {
     }
 }
 
-class GateKeeper_CSRF_Test extends GateKeeperTest {
+class GateKeeper_CSRF_Test extends GateKeeperTest
+{
 
     public function itLetPassWhenReferMatchesHost()
     {

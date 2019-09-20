@@ -22,7 +22,8 @@ use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Tracker_Artifact_MailGateway_MailGateway_BaseTest extends TuleapTestCase {
+class Tracker_Artifact_MailGateway_MailGateway_BaseTest extends TuleapTestCase
+{
 
     protected $user;
     protected $mailgateway;
@@ -70,7 +71,8 @@ class Tracker_Artifact_MailGateway_MailGateway_BaseTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifact_MailGateway_MailGateway_BaseTest {
+class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifact_MailGateway_MailGateway_BaseTest
+{
 
     public function setUp()
     {
@@ -191,7 +193,8 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
     }
 }
 
-class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Artifact_MailGateway_MailGateway_BaseTest {
+class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Artifact_MailGateway_MailGateway_BaseTest
+{
 
     public function setUp()
     {

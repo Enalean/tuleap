@@ -21,14 +21,12 @@
 /**
  * Description of GitDaoException
  */
-class GitDaoException extends Exception {
+class GitDaoException extends Exception
+{
     //put your code here
 
     public function __construct($msg)
     {
         parent::__construct(self::class.' : '.$msg);
     }
-
 }
-
-?>

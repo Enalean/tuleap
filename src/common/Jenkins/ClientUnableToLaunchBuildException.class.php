@@ -18,5 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Jenkins_ClientUnableToLaunchBuildException extends Exception{}
-?>
+class Jenkins_ClientUnableToLaunchBuildException extends Exception
+{
+}

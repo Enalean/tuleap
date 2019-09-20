@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface Logger {
+interface Logger
+{
     public const DEBUG = 'debug';
     public const INFO  = 'info';
     public const WARN  = 'warn';
@@ -49,4 +50,3 @@ interface Logger {
      */
     function log($message, $level = null);
 }
-?>

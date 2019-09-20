@@ -25,7 +25,8 @@ function aLDAPResultIterator()
     return new LDAPResultIterator_BuilderForTest();
 }
 
-class LDAPResultIterator_BuilderForTest {
+class LDAPResultIterator_BuilderForTest
+{
 
     private $info = array('count' => 0);
     private $params;
@@ -71,7 +72,8 @@ class LDAPResultIterator_BuilderForTest {
     }
 }
 
-class LDAPResultExpectation extends SimpleExpectation {
+class LDAPResultExpectation extends SimpleExpectation
+{
 
     private $expected;
 

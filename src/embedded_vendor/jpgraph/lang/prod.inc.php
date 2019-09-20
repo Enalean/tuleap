@@ -11,7 +11,7 @@
 */
 
 // The single error message for all errors
-DEFINE('DEFAULT_ERROR_MESSAGE','We are sorry but the system could not generate the requested image. Please contact site support to resolve this problem. Problem no: #');
+DEFINE('DEFAULT_ERROR_MESSAGE', 'We are sorry but the system could not generate the requested image. Please contact site support to resolve this problem. Problem no: #');
 
 // Note: Format of each error message is array(<error message>,<number of arguments>)
 $_jpg_messages = array(
@@ -382,5 +382,3 @@ HTTP headers have already been sent.<br>Caused by output from file <b>%s</b> at 
 29210 => array(DEFAULT_ERROR_MESSAGE.'28010',0),
 
 );
-
-?>

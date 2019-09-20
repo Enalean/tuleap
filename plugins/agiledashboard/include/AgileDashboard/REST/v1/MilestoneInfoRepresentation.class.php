@@ -23,7 +23,8 @@ use Tuleap\REST\JsonCast;
 /**
  * Minimal representation of a milestone
  */
-class MilestoneInfoRepresentation {
+class MilestoneInfoRepresentation
+{
 
     public const ROUTE = 'milestones';
 

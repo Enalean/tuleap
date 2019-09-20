@@ -20,7 +20,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class DocmanPluginDescriptor extends PluginDescriptor {
+class DocmanPluginDescriptor extends PluginDescriptor
+{
 
     function __construct()
     {
@@ -28,4 +29,3 @@ class DocmanPluginDescriptor extends PluginDescriptor {
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
-?>

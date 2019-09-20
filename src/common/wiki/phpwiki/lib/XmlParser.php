@@ -48,24 +48,30 @@ rcs_id('$Id: XmlParser.php,v 1.6 2004/11/03 16:34:11 rurban Exp $');
  *   have to copy the root to a global.
  *
  */
-class XmlParser {
+class XmlParser
+{
 
     var $_parser, $root, $current;
 
     function __construct($encoding = '')
     {
  //  "ISO-8859-1"
-        if ($encoding)
+        if ($encoding) {
             $this->_parser = xml_parser_create($encoding);
-        else
+        } else {
             $this->_parser = xml_parser_create();
+        }
         xml_parser_set_option($this->_parser, XML_OPTION_TARGET_ENCODING, $GLOBALS['charset']);
         //xml_set_object($this->_parser, &$this);
-        xml_set_element_handler($this->_parser,
-                                array(&$this, 'tag_open'),
-                                array(&$this, 'tag_close' ));
-        xml_set_character_data_handler($this->_parser,
-                                       array(&$this, 'cdata'));
+        xml_set_element_handler(
+            $this->_parser,
+            array(&$this, 'tag_open'),
+            array(&$this, 'tag_close' )
+        );
+        xml_set_character_data_handler(
+            $this->_parser,
+            array(&$this, 'cdata')
+        );
         //xml_set_element_handler($this->_parser, "tag_open", "tag_close");
         //xml_set_character_data_handler($this->_parser, "cdata");
 
@@ -77,7 +83,9 @@ class XmlParser {
     {
         global $xml_parser_root, $xml_parser_current;
 
-        if (!empty($this->_parser)) xml_parser_free($this->_parser);
+        if (!empty($this->_parser)) {
+            xml_parser_free($this->_parser);
+        }
         unset($this->_parser);
 
         if (isset($xml_parser_root)) {
@@ -87,27 +95,27 @@ class XmlParser {
         unset($xml_parser_current);
     }
 
-    function tag_open($parser, $name, $attrs='')
+    function tag_open($parser, $name, $attrs = '')
     {
         $this->_tag = strtolower($name);
         $node = new XmlElement($this->_tag);
         if (is_string($attrs) and !empty($attrs)) {
             // lowercase attr names
-            foreach(preg_split('/ /D',$attrs) as $pair) {
-                if (strstr($pair,"=")) {
-                    list($key,$val) = preg_split('/=/D',$pair);
+            foreach (preg_split('/ /D', $attrs) as $pair) {
+                if (strstr($pair, "=")) {
+                    list($key,$val) = preg_split('/=/D', $pair);
                     $key = strtolower(trim($key));
-                    $val = str_replace(array('"',"'"),'',trim($val));
+                    $val = str_replace(array('"',"'"), '', trim($val));
                     $node->_attr[$key] = $val;
                 } else {
-                    $key = str_replace(array('"',"'"),'',strtolower(trim($pair)));
+                    $key = str_replace(array('"',"'"), '', strtolower(trim($pair)));
                     $node->_attr[$key] = $key;
                 }
             }
         } elseif (!empty($attrs) and is_array($attrs)) {
             foreach ($attrs as $key => $val) {
                 $key = strtolower(trim($key));
-                $val = str_replace(array('"',"'"),'',trim($val));
+                $val = str_replace(array('"',"'"), '', trim($val));
                 $node->_attr[$key] = $val;
             }
         }
@@ -122,7 +130,7 @@ class XmlParser {
         }
     }
 
-    function tag_close($parser, $name, $attrs='')
+    function tag_close($parser, $name, $attrs = '')
     {
         //$this->parent = $this->current;   // copy!
         //unset($this->current);
@@ -133,7 +141,7 @@ class XmlParser {
         if (isset($this->current)) {
             $this->current->_content[] = $data;
         } else {
-            trigger_error(sprintf("unparsed content outside tags: %s",$data), E_USER_WARNING);
+            trigger_error(sprintf("unparsed content outside tags: %s", $data), E_USER_WARNING);
         }
         if ($this->current === $this->root) {   // workaround php OO bug: ref => copy
             $GLOBALS['xml_parser_root'] = $this->root; // copy!
@@ -144,20 +152,24 @@ class XmlParser {
     function parse($content, $is_final = true)
     {
         xml_parse($this->_parser, $content, $is_final) or
-            trigger_error(sprintf("XML error: %s at line %d",
-                                  xml_error_string(xml_get_error_code($this->_parser)),
-                                  xml_get_current_line_number($this->_parser)),
-                          E_USER_WARNING);
+            trigger_error(
+                sprintf(
+                    "XML error: %s at line %d",
+                    xml_error_string(xml_get_error_code($this->_parser)),
+                    xml_get_current_line_number($this->_parser)
+                ),
+                E_USER_WARNING
+            );
     }
 
-    function parse_url($file, $debug=false)
+    function parse_url($file, $debug = false)
     {
         if (get_cfg_var('allow_url_fopen')) {
-            if (!($fp = fopen("$file","r"))) {
+            if (!($fp = fopen("$file", "r"))) {
                 trigger_error("Error parse url $file");
                 return;
             }
-            while ($data = fread($fp, 4096))  {
+            while ($data = fread($fp, 4096)) {
                 $this->parse($data, feof($fp));
             }
             fclose($fp);
@@ -208,4 +220,3 @@ class XmlParser {
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

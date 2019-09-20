@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201202101244_shared_field_default_is_0 extends ForgeUpgrade_Bucket {
+class b201202101244_shared_field_default_is_0 extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -67,4 +68,3 @@ EOT;
         }
     }
 }
-?>

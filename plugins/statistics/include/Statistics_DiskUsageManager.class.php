@@ -24,7 +24,8 @@ use Tuleap\Statistics\Events\StatisticsRefreshDiskUsage;
 use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 
-class Statistics_DiskUsageManager {
+class Statistics_DiskUsageManager
+{
 
     private $_services = array();
 
@@ -112,7 +113,7 @@ class Statistics_DiskUsageManager {
      */
     public function getServiceColor($service)
     {
-        switch($service) {
+        switch ($service) {
             case self::SVN:
                 return 'darkolivegreen';
             case self::CVS:
@@ -227,7 +228,6 @@ class Statistics_DiskUsageManager {
             return $res;
         }
          return false;
-
     }
 
     public function getUsagePerProject($startDate, $endDate, $service, $order, $offset, $limit)
@@ -247,7 +247,7 @@ class Statistics_DiskUsageManager {
      *
      * @return Array
      */
-    public function returnServiceEvolutionForPeriod($startDate, $endDate, $groupId=null)
+    public function returnServiceEvolutionForPeriod($startDate, $endDate, $groupId = null)
     {
         // Build final array based on services (ensure always same order)
         $values = array();
@@ -257,7 +257,6 @@ class Statistics_DiskUsageManager {
                                 'end_size'       => 0,
                                 'evolution'      => 0,
                                 'evolution_rate' => 0);
-
         }
 
         // Start values
@@ -297,7 +296,7 @@ class Statistics_DiskUsageManager {
         return $values;
     }
 
-    public function returnUserEvolutionForPeriod($userId, $startDate, $endDate )
+    public function returnUserEvolutionForPeriod($userId, $startDate, $endDate)
     {
         $dao = $this->_getDao();
         $res = array();
@@ -425,7 +424,7 @@ class Statistics_DiskUsageManager {
         return $dao->searchTopUsers($endDate, $order);
     }
 
-    public function getWeeklyEvolutionProjectTotalSize($groupId,$groupBy, $startDate, $endDate)
+    public function getWeeklyEvolutionProjectTotalSize($groupId, $groupBy, $startDate, $endDate)
     {
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
@@ -437,10 +436,9 @@ class Statistics_DiskUsageManager {
             return $res;
         }
         return false;
-
     }
 
-    public function getWeeklyEvolutionUserData($userId,$groupBy, $startDate, $endDate)
+    public function getWeeklyEvolutionUserData($userId, $groupBy, $startDate, $endDate)
     {
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
@@ -452,10 +450,9 @@ class Statistics_DiskUsageManager {
             return $res;
         }
         return false;
-
     }
 
-    public function getWeeklyEvolutionProjectData($services, $groupId,$groupBy, $startDate, $endDate)
+    public function getWeeklyEvolutionProjectData($services, $groupId, $groupBy, $startDate, $endDate)
     {
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
@@ -471,7 +468,6 @@ class Statistics_DiskUsageManager {
             return $res;
         }
         return false;
-
     }
 
     public function getDirSize($dir)
@@ -552,7 +548,7 @@ class Statistics_DiskUsageManager {
         );
 
         $dar = $this->dao->searchAllOpenProjects();
-        foreach($dar as $row) {
+        foreach ($dar as $row) {
             $this->dao->getDa()->startTransaction();
 
             $project = new Project($row);
@@ -642,7 +638,7 @@ class Statistics_DiskUsageManager {
         $previous       = -1;
         $sMailman       = 0;
 
-        foreach($dar as $row) {
+        foreach ($dar as $row) {
             if ($row['group_id'] != $previous) {
                 if ($previous != -1) {
                     $dao->addGroup($previous, 'mailman', $sMailman, $_SERVER['REQUEST_TIME']);
@@ -675,7 +671,8 @@ class Statistics_DiskUsageManager {
             $dar = $dao->searchAllUsers();
             foreach ($dar as $row) {
                 $this->storeForUser(
-                    $row['user_id'], self::USR_HOME,
+                    $row['user_id'],
+                    self::USR_HOME,
                     ForgeConfig::get('homedir_prefix') . "/" . $row['user_name']
                 );
             }
@@ -693,7 +690,6 @@ class Statistics_DiskUsageManager {
         $this->storeForSite('backup_old', '/var/lib/codendi/backup/old');
         $this->storeDf();
         $this->_getDao()->commit();
-
     }
 
     public function storeDf()

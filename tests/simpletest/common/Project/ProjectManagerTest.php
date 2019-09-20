@@ -32,7 +32,8 @@ Mock::generate('UserManager');
 Mock::generate('PFUser');
 Mock::generate('BaseLanguage');
 
-class ProjectManagerTest extends TuleapTestCase {
+class ProjectManagerTest extends TuleapTestCase
+{
 
     /** @var UserManager */
     private $user_manager;
@@ -117,7 +118,6 @@ class ProjectManagerTest extends TuleapTestCase {
 
         $this->assertTrue($pm->renameProject($p1, 'TestProj'));
         $this->assertFalse($pm->isCached($p1->getId()));
-
     }
 
     function testGetGroupByIdForSoapNoProject()
@@ -279,7 +279,8 @@ class ProjectManagerTest extends TuleapTestCase {
     }
 }
 
-class ProjectManager_GetValidProjectTest extends TuleapTestCase {
+class ProjectManager_GetValidProjectTest extends TuleapTestCase
+{
     private $dao;
     /** @var ProjectManager */
     private $project_manager;

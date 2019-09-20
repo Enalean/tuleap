@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../GerritTestInterfaces.php';
 
-abstract class Git_Driver_GerritLegacy_baseTest extends TuleapTestCase {
+abstract class Git_Driver_GerritLegacy_baseTest extends TuleapTestCase
+{
 
     /**
      * @var GitRepository
@@ -63,5 +64,4 @@ abstract class Git_Driver_GerritLegacy_baseTest extends TuleapTestCase {
         $this->logger = mock('BackendLogger');
         $this->driver = new Git_Driver_GerritLegacy($this->ssh, $this->logger);
     }
-
 }

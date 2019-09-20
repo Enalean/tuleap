@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SvnNotification {
+class SvnNotification
+{
 
     /**
      * Obtain an instance of SvnNotificationDao
@@ -113,7 +114,4 @@ class SvnNotification {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('svn_admin_notification', 'retrieve_paths_fail'));
         }
     }
-
 }
-
-?>

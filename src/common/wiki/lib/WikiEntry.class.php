@@ -25,7 +25,8 @@ use Tuleap\PHPWiki\WikiPage;
 
 require_once('WikiPage.class.php');
 
-class WikiEntry {
+class WikiEntry
+{
   /* private int(11) */     var $id;
   /* private int(11) */     var $gid;
   /* private int(11) */     var $rank;
@@ -38,9 +39,9 @@ class WikiEntry {
   /**
    * Constructor
    */
-    function __construct($id=null)
+    function __construct($id = null)
     {
-        if(empty($id)) {
+        if (empty($id)) {
             $this->id   = 0;
             $this->gid  = 0;
             $this->rank = 0;
@@ -49,8 +50,7 @@ class WikiEntry {
             $this->page = '';
             $this->desc = '';
             $this->wikiPage = null;
-        }
-        else {
+        } else {
             $this->setId($id);
             $this->_setFromDb();
         }
@@ -161,12 +161,11 @@ class WikiEntry {
     /**
      * Return an iterator on WikiEntries
      */
-    function getEntryIterator($gid=null)
+    function getEntryIterator($gid = null)
     {
-        if($gid !== null) {
+        if ($gid !== null) {
             $gid = (int) $gid;
-        }
-        else {
+        } else {
             $gid = $this->gid;
         }
 
@@ -178,7 +177,7 @@ class WikiEntry {
         $res = db_query($qry);
 
         $weArray = array();
-        while($row = db_fetch_array($res)) {
+        while ($row = db_fetch_array($res)) {
             $we = new WikiEntry();
             $we->setFromRow($row);
             $weArray[] = $we;
@@ -201,14 +200,17 @@ class WikiEntry {
         ' wiki_link="'.db_es($this->page).'",'.
         ' description="'.db_es($this->desc).'"');
 
-        if($res === false) {
-            trigger_error($GLOBALS['Language']->getText('wiki_lib_wikientry',
-               'insert_err',
-               db_error()),
-            E_USER_ERROR);
+        if ($res === false) {
+            trigger_error(
+                $GLOBALS['Language']->getText(
+                    'wiki_lib_wikientry',
+                    'insert_err',
+                    db_error()
+                ),
+                E_USER_ERROR
+            );
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -219,14 +221,17 @@ class WikiEntry {
         ' WHERE id='.db_ei($this->id).
         ' AND group_id='.db_ei($this->gid));
 
-        if($res === false) {
-            trigger_error($GLOBALS['Language']->getText('wiki_lib_wikientry',
-               'delete_err',
-               db_error()),
-            E_USER_ERROR);
+        if ($res === false) {
+            trigger_error(
+                $GLOBALS['Language']->getText(
+                    'wiki_lib_wikientry',
+                    'delete_err',
+                    db_error()
+                ),
+                E_USER_ERROR
+            );
               return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -246,18 +251,23 @@ class WikiEntry {
         $res = db_query($sql);
         $err = db_error();
 
-        if($res === false) {
-            trigger_error($GLOBALS['Language']->getText('wiki_lib_wikientry',
-            'update_err',
-            db_error()),
-            E_USER_ERROR);
+        if ($res === false) {
+            trigger_error(
+                $GLOBALS['Language']->getText(
+                    'wiki_lib_wikientry',
+                    'update_err',
+                    db_error()
+                ),
+                E_USER_ERROR
+            );
             return false;
-        }
-        else {
-            if(db_affected_rows() === 0) {
-                   $feedback .= $GLOBALS['Language']->getText('wiki_lib_wikientry',
-                'no_update',
-                $this->name);
+        } else {
+            if (db_affected_rows() === 0) {
+                   $feedback .= $GLOBALS['Language']->getText(
+                       'wiki_lib_wikientry',
+                       'no_update',
+                       $this->name
+                   );
             }
             return true;
         }

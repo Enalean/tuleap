@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201310301030_add_body_format_on_field_text_changeset extends ForgeUpgrade_Bucket {
+class b201310301030_add_body_format_on_field_text_changeset extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -42,4 +43,3 @@ class b201310301030_add_body_format_on_field_text_changeset extends ForgeUpgrade
         }
     }
 }
-?>

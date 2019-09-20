@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class DocmanV1_XMLExport {
+class DocmanV1_XMLExport
+{
     private $archive_name;
     private $project;
     private $data_path;

@@ -23,7 +23,8 @@
 /**
  *  Docman_Token
  */
-class Docman_Token {
+class Docman_Token
+{
     var $tok;
     /**
      * Generate a random token for the current user.
@@ -104,6 +105,3 @@ class Docman_Token {
         return HTTPRequest::instance();
     }
 }
-
-
-?>

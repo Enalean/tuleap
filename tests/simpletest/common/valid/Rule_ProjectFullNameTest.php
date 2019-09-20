@@ -20,7 +20,8 @@
 
 Mock::generate('BaseLanguage');
 
-class Rule_ProjectFullNameTest extends TuleapTestCase {
+class Rule_ProjectFullNameTest extends TuleapTestCase
+{
 
     function __construct($name = 'Rule_ProjectFullNameFormat test')
     {

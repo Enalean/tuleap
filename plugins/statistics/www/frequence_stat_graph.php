@@ -46,78 +46,90 @@ $sampleFactory->setSample($request->get('data'));
 
 //advanced search
 if ($request->get('start') && $request->get('end') && $request->get('filter')) {
-
     //if user make a mistake in the advanced search
-    if (strtotime($request->get('start')) >= strtotime($request->get('end')) || $request->get('start') == '' || $request->get('end') == '' ) {
+    if (strtotime($request->get('start')) >= strtotime($request->get('end')) || $request->get('start') == '' || $request->get('end') == '') {
         $sampleFactory->setSample('session');
         $statGraph   = $sampleFactory->getSimple(date('Y'), 0, 0);
-        $sampleGraph = new SampleGraph($statGraph->fetchData(),
-                                       'session',
-                                       'month',
-                                       $statGraph->getTitlePeriod(),
-                                       0,
-                                       null,
-                                       null,
-                                       null,
-                                       null);
+        $sampleGraph = new SampleGraph(
+            $statGraph->fetchData(),
+            'session',
+            'month',
+            $statGraph->getTitlePeriod(),
+            0,
+            null,
+            null,
+            null,
+            null
+        );
     } else {
-        $statGraph = $sampleFactory->getAdvanced($request->get('start'),
-                                                 $request->get('end'),
-                                                 $request->get('filter'));
+        $statGraph = $sampleFactory->getAdvanced(
+            $request->get('start'),
+            $request->get('end'),
+            $request->get('filter')
+        );
 
         switch ($request->get('filter')) {
-
             case 'month1':
-                $sampleGraph = new SampleGraph($statGraph->fetchMonthData(),
-                                           $request->get('data'),
-                                           $statGraph->getFilter(),
-                                           $statGraph->getTitlePeriod(),
-                                           2,
-                                           null,
-                                           null,
-                                           $request->get('start'),
-                                           $request->get('end'));
-            break;
+                $sampleGraph = new SampleGraph(
+                    $statGraph->fetchMonthData(),
+                    $request->get('data'),
+                    $statGraph->getFilter(),
+                    $statGraph->getTitlePeriod(),
+                    2,
+                    null,
+                    null,
+                    $request->get('start'),
+                    $request->get('end')
+                );
+                break;
 
             case 'day1':
-                $sampleGraph = new SampleGraph($statGraph->fetchDayData(),
-                                           $request->get('data'),
-                                           $statGraph->getFilter(),
-                                           $statGraph->getTitlePeriod(),
-                                           3,
-                                           null,
-                                           null,
-                                           $request->get('start'),
-                                           $request->get('end'));
-            break;
+                $sampleGraph = new SampleGraph(
+                    $statGraph->fetchDayData(),
+                    $request->get('data'),
+                    $statGraph->getFilter(),
+                    $statGraph->getTitlePeriod(),
+                    3,
+                    null,
+                    null,
+                    $request->get('start'),
+                    $request->get('end')
+                );
+                break;
 
             default:
-                $sampleGraph = new SampleGraph($statGraph->fetchData(),
-                                           $request->get('data'),
-                                           $statGraph->getFilter(),
-                                           $statGraph->getTitlePeriod(),
-                                           $request->get('advsrch'),
-                                           null,
-                                           null,
-                                           null,
-                                           null);
-            break;
+                $sampleGraph = new SampleGraph(
+                    $statGraph->fetchData(),
+                    $request->get('data'),
+                    $statGraph->getFilter(),
+                    $statGraph->getTitlePeriod(),
+                    $request->get('advsrch'),
+                    null,
+                    null,
+                    null,
+                    null
+                );
+                break;
         }
     }
 } else { //simple search
-    $statGraph = $sampleFactory->getSimple($request->get('year'),
-                                           $request->get('month'),
-                                           $request->get('day'));
+    $statGraph = $sampleFactory->getSimple(
+        $request->get('year'),
+        $request->get('month'),
+        $request->get('day')
+    );
 
-    $sampleGraph = new SampleGraph($statGraph->fetchData(),
-                                   $request->get('data'),
-                                   $statGraph->getFilter(),
-                                   $statGraph->getTitlePeriod(),
-                                   $request->get('advsrch'),
-                                   $request->get('year'),
-                                   $request->get('month'),
-                                   null,
-                                   null);
+    $sampleGraph = new SampleGraph(
+        $statGraph->fetchData(),
+        $request->get('data'),
+        $statGraph->getFilter(),
+        $statGraph->getTitlePeriod(),
+        $request->get('advsrch'),
+        $request->get('year'),
+        $request->get('month'),
+        null,
+        null
+    );
 }
 
 $sampleg = $sampleGraph->display();

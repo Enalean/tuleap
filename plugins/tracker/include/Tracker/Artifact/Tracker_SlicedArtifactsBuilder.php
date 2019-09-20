@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_SlicedArtifactsBuilder {
+class Tracker_SlicedArtifactsBuilder
+{
 
     /** @var Tracker_ArtifactDao */
     private $artifact_dao;

@@ -26,7 +26,8 @@ Mock::generate('Planning');
 Mock::generate('PlanningDao');
 Mock::generate('Tracker');
 
-abstract class PlanningFactoryTest extends TuleapTestCase {
+abstract class PlanningFactoryTest extends TuleapTestCase
+{
 
     /**
      * @var PFUser
@@ -41,7 +42,8 @@ abstract class PlanningFactoryTest extends TuleapTestCase {
     }
 }
 
-class PlanningFactoryTest_getPlanningTest extends PlanningFactoryTest {
+class PlanningFactoryTest_getPlanningTest extends PlanningFactoryTest
+{
 
     public function itCanRetrieveBothAPlanningAndItsTrackers()
     {
@@ -84,7 +86,8 @@ class PlanningFactoryTest_getPlanningTest extends PlanningFactoryTest {
     }
 }
 
-class PlanningFactory_duplicationTest extends PlanningFactoryTest {
+class PlanningFactory_duplicationTest extends PlanningFactoryTest
+{
 
     public function itDuplicatesPlannings()
     {
@@ -236,7 +239,7 @@ class PlanningFactory_duplicationTest extends PlanningFactoryTest {
         ));
 
         $expected_ugroups = array(4, 113, 114);
-        expect($planning_permissions_manager)->savePlanningPermissionForUgroups('*','*', PlanningPermissionsManager::PERM_PRIORITY_CHANGE, $expected_ugroups)->once();
+        expect($planning_permissions_manager)->savePlanningPermissionForUgroups('*', '*', PlanningPermissionsManager::PERM_PRIORITY_CHANGE, $expected_ugroups)->once();
 
         $ugroups_mapping = array(
             103 => 113,
@@ -245,10 +248,10 @@ class PlanningFactory_duplicationTest extends PlanningFactoryTest {
 
         $factory->duplicatePlannings($group_id, $tracker_mapping, $ugroups_mapping);
     }
-
 }
 
-class PlanningFactoryTest_getPlanningByPlanningTrackerTest extends PlanningFactoryTest {
+class PlanningFactoryTest_getPlanningByPlanningTrackerTest extends PlanningFactoryTest
+{
 
     public function setUp()
     {
@@ -304,10 +307,10 @@ class PlanningFactoryTest_getPlanningByPlanningTrackerTest extends PlanningFacto
         $this->assertEqual($this->planning_tracker, $actual_planning->getPlanningTracker());
         $this->assertEqual(array($this->backlog_tracker), $actual_planning->getBacklogTrackers());
     }
-
 }
 
-class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
+class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest
+{
 
     private $project_id                  = 123;
     private $project_id_without_planning = 124;
@@ -427,7 +430,8 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
     }
 }
 
-class PlanningFactoryTest_getPlanningTrackerIdsByGroupIdTest extends PlanningFactoryTest {
+class PlanningFactoryTest_getPlanningTrackerIdsByGroupIdTest extends PlanningFactoryTest
+{
 
     public function itDelegatesRetrievalOfPlanningTrackerIdsByGroupIdToDao()
     {
@@ -443,7 +447,8 @@ class PlanningFactoryTest_getPlanningTrackerIdsByGroupIdTest extends PlanningFac
     }
 }
 
-class PlanningFactoryTest_getAvailablePlanningTrackersTest extends PlanningFactoryTest {
+class PlanningFactoryTest_getAvailablePlanningTrackersTest extends PlanningFactoryTest
+{
 
     public function itRetrievesAvailablePlanningTrackersIncludingTheCurrentPlanningTracker()
     {
@@ -476,7 +481,8 @@ class PlanningFactoryTest_getAvailablePlanningTrackersTest extends PlanningFacto
     }
 }
 
-class PlanningFactoryTest_getVirtualTopPlanningTest extends TuleapTestCase {
+class PlanningFactoryTest_getVirtualTopPlanningTest extends TuleapTestCase
+{
 
     /** @var TrackerFactory */
     private $tracker_factory;
@@ -531,7 +537,8 @@ class PlanningFactoryTest_getVirtualTopPlanningTest extends TuleapTestCase {
     }
 }
 
-class PlanningFactory_getNonLastLevelPlanningsTest extends PlanningFactoryTest {
+class PlanningFactory_getNonLastLevelPlanningsTest extends PlanningFactoryTest
+{
 
     /**
      * @var PlanningDao

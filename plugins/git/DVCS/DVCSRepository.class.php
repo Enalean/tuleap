@@ -24,11 +24,10 @@
 /**
  * Description of DVCSRepository
  */
-interface DVCSRepository {
+interface DVCSRepository
+{
 
 
 
 
 }
-
-?>

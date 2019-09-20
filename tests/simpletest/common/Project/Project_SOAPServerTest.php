@@ -25,7 +25,8 @@ Mock::generate('ProjectManager');
 Mock::generate('ProjectCreator');
 Mock::generate('SOAP_RequestLimitator');
 
-class Project_SOAPServerTest extends TuleapTestCase {
+class Project_SOAPServerTest extends TuleapTestCase
+{
 
     function testAddProjectShouldFailWhenRequesterIsNotProjectAdmin()
     {
@@ -193,24 +194,25 @@ class Project_SOAPServerTest extends TuleapTestCase {
         $this->forge_ugroup_perm_manager = mock('User_ForgeUserGroupPermissionsManager');
 
         $server = new Project_SOAPServer(
-                $this->pm,
-                $this->pc,
-                $this->um,
-                $this->guf,
-                $this->limitator,
-                $this->description_factory,
-                $this->description_manager,
-                $this->description_value_factory,
-                $this->service_usage_factory,
-                $this->service_usage_manager,
-                $this->forge_ugroup_perm_manager
+            $this->pm,
+            $this->pc,
+            $this->um,
+            $this->guf,
+            $this->limitator,
+            $this->description_factory,
+            $this->description_manager,
+            $this->description_value_factory,
+            $this->service_usage_factory,
+            $this->service_usage_manager,
+            $this->forge_ugroup_perm_manager
         );
 
         return $server;
     }
 }
 
-class Project_SOAPServer_6737_RequesterShouldBeProjectAdmin extends TuleapTestCase {
+class Project_SOAPServer_6737_RequesterShouldBeProjectAdmin extends TuleapTestCase
+{
 
     private $requester;
     private $requester_hash = '123';
@@ -252,17 +254,17 @@ class Project_SOAPServer_6737_RequesterShouldBeProjectAdmin extends TuleapTestCa
         stub($this->project_creator)->create()->returns(mock('Project'));
 
         $this->server = new Project_SOAPServer(
-                $this->project_manager,
-                $this->project_creator,
-                $this->user_manager,
-                $this->guf,
-                $this->limitator,
-                $this->description_factory,
-                $this->description_manager,
-                $this->description_value_factory,
-                $this->service_usage_factory,
-                $this->service_usage_manager,
-                $this->forge_ugroup_perm_manager
+            $this->project_manager,
+            $this->project_creator,
+            $this->user_manager,
+            $this->guf,
+            $this->limitator,
+            $this->description_factory,
+            $this->description_manager,
+            $this->description_value_factory,
+            $this->service_usage_factory,
+            $this->service_usage_manager,
+            $this->forge_ugroup_perm_manager
         );
     }
 
@@ -287,14 +289,16 @@ class Project_SOAPServer_6737_RequesterShouldBeProjectAdmin extends TuleapTestCa
     }
 }
 
-class Project_SOAPServerObjectTest extends Project_SOAPServer {
+class Project_SOAPServerObjectTest extends Project_SOAPServer
+{
     public function isRequesterAdmin($sessionKey, $project_id)
     {
         parent::isRequesterAdmin($sessionKey, $project_id);
     }
 }
 
-class Project_SOAPServerGenericUserTest extends TuleapTestCase {
+class Project_SOAPServerGenericUserTest extends TuleapTestCase
+{
 
     /** @var Project_SOAPServerObjectTest */
     private $server;
@@ -330,9 +334,9 @@ class Project_SOAPServerGenericUserTest extends TuleapTestCase {
         $forge_ugroup_perm_manager  = mock('User_ForgeUserGroupPermissionsManager');
 
         $this->server = partial_mock(
-                'Project_SOAPServerObjectTest',
-                array('isRequesterAdmin', 'addProjectMember', 'removeProjectMember'),
-                array(
+            'Project_SOAPServerObjectTest',
+            array('isRequesterAdmin', 'addProjectMember', 'removeProjectMember'),
+            array(
                     $project_manager,
                     $project_creator,
                     $user_manager,
@@ -392,7 +396,8 @@ class Project_SOAPServerGenericUserTest extends TuleapTestCase {
     }
 }
 
-class Project_SOAPServerProjectDescriptionFieldsTest extends TuleapTestCase {
+class Project_SOAPServerProjectDescriptionFieldsTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -527,7 +532,8 @@ class Project_SOAPServerProjectDescriptionFieldsTest extends TuleapTestCase {
     }
 }
 
-class Project_SOAPServerProjectServicesUsageTest extends TuleapTestCase {
+class Project_SOAPServerProjectServicesUsageTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -674,4 +680,3 @@ class Project_SOAPServerProjectServicesUsageTest extends TuleapTestCase {
         $this->assertTrue($this->server->deactivateService($this->session_key, $this->group_id, 179));
     }
 }
-?>

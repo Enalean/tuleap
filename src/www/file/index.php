@@ -26,7 +26,7 @@ require_once __DIR__ . '/../include/pre.php';
 $request  = HTTPRequest::instance();
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
-if($request->valid($vGroupId)) {
+if ($request->valid($vGroupId)) {
     $group_id = $request->get('group_id');
     $GLOBALS['Response']->redirect('/file/showfiles.php?group_id='.$group_id);
 } else {

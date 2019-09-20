@@ -8,7 +8,8 @@
 // Copyright (c) Asial Corporation. All rights reserved.
 //========================================================================
 
-class ImgData_Diamonds extends ImgData {
+class ImgData_Diamonds extends ImgData
+{
     protected $name = 'Diamonds';
     protected $an = array(MARK_IMG_DIAMOND =>'imgdata');
     protected $colors = array('lightblue','darkblue','gray',
@@ -174,5 +175,3 @@ class ImgData_Diamonds extends ImgData {
         '==' ;
     }
 }
-
-?>

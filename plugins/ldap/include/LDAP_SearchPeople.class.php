@@ -19,7 +19,8 @@
  */
 
 
-class LDAP_SearchPeople extends Search_SearchPeople {
+class LDAP_SearchPeople extends Search_SearchPeople
+{
     /** @var UserManager */
     private $manager;
 
@@ -97,7 +98,6 @@ class LDAP_SearchPeople extends Search_SearchPeople {
             }
 
             return $a_tag->getAttribute("href");
-
         }
         return '';
     }

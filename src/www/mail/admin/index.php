@@ -16,7 +16,6 @@ if ($sys_lists_domain == 'lists.%sys_default_domain%') {
 
 $pm = ProjectManager::instance();
 if ($group_id && user_ismember($group_id, 'A')) {
-
     $list_server = get_list_server_url();
 
     if ($request->existAndNonEmpty('post_changes')) {
@@ -41,11 +40,9 @@ if ($group_id && user_ismember($group_id, 'A')) {
 
             //see if that's a valid email address
             if (validate_email($new_list_name . '@' . $sys_lists_domain)) {
-
                 $result = db_query("SELECT * FROM mail_group_list WHERE lower(list_name)='" . db_es($new_list_name) . "'");
 
                 if (db_numrows($result) > 0) {
-
                     $feedback .= ' ' . $Language->getText('mail_admin_index', 'list_exists_err') . ' ';
                 } else {
                     $group_id = db_ei($group_id);
@@ -96,7 +93,6 @@ if ($group_id && user_ismember($group_id, 'A')) {
                     $feedback .= " " . $Language->getText('mail_admin_index', 'mail_sent_to', $row_email['email']) . " ";
                 }
             } else {
-
                 $feedback .= ' ' . $Language->getText('mail_admin_index', 'invalid_list_name') . ' ';
             }
         } elseif ($request->existAndNonEmpty('change_status')) {

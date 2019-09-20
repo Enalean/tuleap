@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201603080951_create_tracker_artifactlink_natures_table extends ForgeUpgrade_Bucket {
+class b201603080951_create_tracker_artifactlink_natures_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

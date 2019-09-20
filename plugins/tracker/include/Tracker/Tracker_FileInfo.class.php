@@ -20,7 +20,8 @@
  */
 
 
-class Tracker_FileInfo {
+class Tracker_FileInfo
+{
     public const THUMBNAILS_MAX_WIDTH  = 150;
     public const THUMBNAILS_MAX_HEIGHT = 112;
 
@@ -105,7 +106,7 @@ class Tracker_FileInfo {
     public function getContent($offset, $size)
     {
         if (file_exists($this->getPath())) {
-            return base64_encode(file_get_contents($this->getPath(), false, NULL, $offset, $size));
+            return base64_encode(file_get_contents($this->getPath(), false, null, $offset, $size));
         }
         return null;
     }
@@ -280,20 +281,20 @@ class Tracker_FileInfo {
                 $destination = imagecreate((int)$thumbnail_width, (int)$thumbnail_height);
                 imagepalettecopy($destination, $source);
                 $store       = 'imagegif';
-            break;
+                break;
             case IMAGETYPE_JPEG:
                 $source      = imagecreatefromjpeg($this->getPath());
                 $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
                 $store       = 'imagejpeg';
-            break;
+                break;
             case IMAGETYPE_PNG:
                 $source      = imagecreatefrompng($this->getPath());
                 $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
                 $store       = 'imagepng';
-            break;
+                break;
             default:
                 // Not an image, exit;
-            return false;
+                return false;
         }
         imagecopyresized($destination, $source, 0, 0, 0, 0, (int)$thumbnail_width, (int)$thumbnail_height, $size[0], $size[1]);
         $store($destination, $this->getThumbnailPath());

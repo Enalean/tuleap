@@ -63,17 +63,17 @@ function news_header($params)
     } else {
         $HTML->header($params);
         echo '
-			<H2>'.$GLOBALS['sys_name'].' <A HREF="/news/">'.$Language->getText('news_index','news').'</A></H2>';
+			<H2>'.$GLOBALS['sys_name'].' <A HREF="/news/">'.$Language->getText('news_index', 'news').'</A></H2>';
     }
-    if (!isset($params['pv']) || !$params['pv']){
+    if (!isset($params['pv']) || !$params['pv']) {
         echo '<P><B>';
         // 'Admin' tab is only displayed if the user is News admin or project admin
         if ($group_id) {
             if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2')) {
-                echo '<A HREF="/news/submit.php?group_id='.$group_id.'">'.$Language->getText('news_utils','submit_news').'</A> | <A HREF="/news/admin/?group_id='.$group_id.'">'.$Language->getText('news_utils','admin').'</A>';
-            } else if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N1')) {
+                echo '<A HREF="/news/submit.php?group_id='.$group_id.'">'.$Language->getText('news_utils', 'submit_news').'</A> | <A HREF="/news/admin/?group_id='.$group_id.'">'.$Language->getText('news_utils', 'admin').'</A>';
+            } elseif (user_ismember($group_id, 'A') || user_ismember($group_id, 'N1')) {
               // 'Submit News' tab is only displayed if the user is News writer, or project admin
-                echo '<A HREF="/news/submit.php?group_id='.$group_id.'">'.$Language->getText('news_utils','submit_news').'</A>';
+                echo '<A HREF="/news/submit.php?group_id='.$group_id.'">'.$Language->getText('news_utils', 'submit_news').'</A>';
             }
             if (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2') || user_ismember($group_id, 'N1')) {
                 if (isset($params['help'])) {
@@ -82,7 +82,7 @@ function news_header($params)
             }
         }
         if (isset($params['help'])) {
-            echo help_button($params['help'],false,$Language->getText('global','help'));
+            echo help_button($params['help'], false, $Language->getText('global', 'help'));
         }
         echo '</b><P>';
     }
@@ -132,7 +132,7 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
     $rows   = db_numrows($result);
 
     if (!$result || $rows < 1) {
-        $return .= '<b>'.$Language->getText('news_utils','no_news_item_found').'</b>';
+        $return .= '<b>'.$Language->getText('news_utils', 'no_news_item_found').'</b>';
     } else {
         $news_item_displayed = false;
         while ($data = db_fetch_array($result)) {
@@ -151,7 +151,7 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
             }
         }
         if (! $news_item_displayed) {
-            $return .= '<b>'.$Language->getText('news_utils','no_news_item_found').'</b>';
+            $return .= '<b>'.$Language->getText('news_utils', 'no_news_item_found').'</b>';
         }
     }
     if ($group_id != $sys_news_group) {
@@ -165,14 +165,14 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
     }
 
     $return .= '<div align="center">
-                    <a href="'.$archive_url.'">['.$Language->getText('news_utils','news_archive').']</a></div>';
+                    <a href="'.$archive_url.'">['.$Language->getText('news_utils', 'news_archive').']</a></div>';
 
     if ($allow_submit && $group_id != $sys_news_group) {
         //you can only submit news from a project now
         //you used to be able to submit general news
         $return .= '<div align="center">
             <A HREF="/news/submit.php?group_id='.$group_id.'">
-                <FONT SIZE="-1">['.$Language->getText('news_utils','submit_news').']</FONT>
+                <FONT SIZE="-1">['.$Language->getText('news_utils', 'submit_news').']</FONT>
             </A>
         </div>';
     }
@@ -270,25 +270,25 @@ function news_submit($group_id, $summary, $details, $private_news, $send_news_to
     */
 
     $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
-    $new_id=forum_create_forum($GLOBALS['sys_news_group'],$summary,1,0, '', $need_feedback = false);
+    $new_id=forum_create_forum($GLOBALS['sys_news_group'], $summary, 1, 0, '', $need_feedback = false);
     $sql="INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details) 
           VALUES (". db_ei($group_id) .", '". $db_escaped_user_id ."', ". db_ei($promote_news) .", '".time()."',
                  '$new_id', '". db_es($summary) ."', '". db_es($details) ."')";
     $result=db_query($sql);
 
     if (!$result) {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_submit','insert_err'));
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_submit', 'insert_err'));
     } else {
         // retrieve the id of the news
         $news_bytes_id = db_insertid($result);
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('news_submit','news_added'));
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('news_submit', 'news_added'));
          // set permissions on this piece of news
         if ($private_news) {
-            news_insert_permissions($new_id,$group_id);
+            news_insert_permissions($new_id, $group_id);
         }
         if ($promote_news == 3) {
             // if the news is requested to be promoted, we notify the site admin about it
-            news_notify_promotion_request($group_id,$news_bytes_id,$summary,$details);
+            news_notify_promotion_request($group_id, $news_bytes_id, $summary, $details);
         }
 
         if ($send_news_to) {
@@ -301,7 +301,7 @@ function news_submit($group_id, $summary, $details, $private_news, $send_news_to
     }
 }
 
-function news_check_permission($forum_id,$group_id)
+function news_check_permission($forum_id, $group_id)
 {
     /*
         Takes a forum_id and checks if user is authorized to read the piece of news associated to this forum_id
@@ -322,7 +322,7 @@ function news_check_permission($forum_id,$group_id)
         }
     }
     $user_id = UserManager::instance()->getCurrentUser()->getId();
-    if (((permission_exist('NEWS_READ', $forum_id)) && (permission_is_authorized('NEWS_READ',$forum_id,$user_id,$group_id))) || (!permission_exist('NEWS_READ', $forum_id))) {
+    if (((permission_exist('NEWS_READ', $forum_id)) && (permission_is_authorized('NEWS_READ', $forum_id, $user_id, $group_id))) || (!permission_exist('NEWS_READ', $forum_id))) {
         return true;
     } else {
         return false;
@@ -332,7 +332,7 @@ function news_check_permission($forum_id,$group_id)
 /**
  * insert for this forum_id a news_read permission for project members only
  */
-function news_insert_permissions($forum_id,$group_id)
+function news_insert_permissions($forum_id, $group_id)
 {
 
     global $Language,$UGROUP_PROJECT_MEMBERS;
@@ -340,14 +340,14 @@ function news_insert_permissions($forum_id,$group_id)
     //We force permission if user is project admin... beurk
     $force = user_ismember($group_id, 'A');
 
-    if (permission_add_ugroup($group_id,'NEWS_READ',$forum_id,$UGROUP_PROJECT_MEMBERS, $force)) {
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('news_submit','news_perm_create_success'));
+    if (permission_add_ugroup($group_id, 'NEWS_READ', $forum_id, $UGROUP_PROJECT_MEMBERS, $force)) {
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('news_submit', 'news_perm_create_success'));
     } else {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('news_submit','insert_err'));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('news_submit', 'insert_err'));
     }
 }
 
-function news_update_permissions($forum_id,$is_private,$group_id)
+function news_update_permissions($forum_id, $is_private, $group_id)
 {
 
     global $Language,$UGROUP_PROJECT_MEMBERS;
@@ -358,19 +358,18 @@ function news_update_permissions($forum_id,$is_private,$group_id)
 
     if ($is_private == 3) {
         permission_clear_all($group_id, 'NEWS_READ', $forum_id, false);
-        if (permission_add_ugroup($group_id,'NEWS_READ',$forum_id,$UGROUP_PROJECT_MEMBERS)) {
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('news_submit','news_perm_update_success'));
+        if (permission_add_ugroup($group_id, 'NEWS_READ', $forum_id, $UGROUP_PROJECT_MEMBERS)) {
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('news_submit', 'news_perm_update_success'));
         } else {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','update_err'));
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index', 'update_err'));
         }
     } else {
         if (permission_clear_all($group_id, 'NEWS_READ', $forum_id, false)) {
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('news_submit','news_perm_update_success'));
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('news_submit', 'news_perm_update_success'));
         } else {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index','update_err'));
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index', 'update_err'));
         }
     }
-
 }
 
 function news_read_permissions($forum_id)
@@ -380,10 +379,10 @@ function news_read_permissions($forum_id)
         Takes forum_id and reads the permission of the corresponding news. Returns a result set.
     */
 
-    return permission_db_authorized_ugroups('NEWS_READ',$forum_id);
+    return permission_db_authorized_ugroups('NEWS_READ', $forum_id);
 }
 
-function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$details)
+function news_notify_promotion_request($group_id, $news_bytes_id, $summary, $details)
 {
     global $Language;
 
@@ -394,23 +393,23 @@ function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$detail
 
     $mail = new Codendi_Mail();
     $mail->setFrom($GLOBALS['sys_noreply']);
-    $mail->setTo($GLOBALS['sys_email_admin'],true); // Don't invalidate admin email!
-    $mail->setSubject($Language->getText('news_utils','news_request', array($GLOBALS['sys_name'])));
+    $mail->setTo($GLOBALS['sys_email_admin'], true); // Don't invalidate admin email!
+    $mail->setSubject($Language->getText('news_utils', 'news_request', array($GLOBALS['sys_name'])));
     $body = '';
-    $body .= $Language->getText('news_utils','news_request_mail_intro', array($GLOBALS['sys_name'])).$GLOBALS['sys_lf'].$GLOBALS['sys_lf'];
-    $body .= $Language->getText('news_utils','news_request_mail_project', array($group->getPublicName(), $group->getUnixName())).$GLOBALS['sys_lf'];
-    $body .= $Language->getText('news_utils','news_request_mail_submitted_by', array($user->getName())).$GLOBALS['sys_lf'].$GLOBALS['sys_lf'];
-    $body .= $Language->getText('news_utils','news_request_mail_summary', array($summary)).$GLOBALS['sys_lf'];
-    $body .= $Language->getText('news_utils','news_request_mail_details', array($details)).$GLOBALS['sys_lf'].$GLOBALS['sys_lf'];
-    $body .= $Language->getText('news_utils','news_request_mail_approve_link').$GLOBALS['sys_lf'];
+    $body .= $Language->getText('news_utils', 'news_request_mail_intro', array($GLOBALS['sys_name'])).$GLOBALS['sys_lf'].$GLOBALS['sys_lf'];
+    $body .= $Language->getText('news_utils', 'news_request_mail_project', array($group->getPublicName(), $group->getUnixName())).$GLOBALS['sys_lf'];
+    $body .= $Language->getText('news_utils', 'news_request_mail_submitted_by', array($user->getName())).$GLOBALS['sys_lf'].$GLOBALS['sys_lf'];
+    $body .= $Language->getText('news_utils', 'news_request_mail_summary', array($summary)).$GLOBALS['sys_lf'];
+    $body .= $Language->getText('news_utils', 'news_request_mail_details', array($details)).$GLOBALS['sys_lf'].$GLOBALS['sys_lf'];
+    $body .= $Language->getText('news_utils', 'news_request_mail_approve_link').$GLOBALS['sys_lf'];
     $body .= HTTPRequest::instance()->getServerUrl()."/news/admin/?approve=1&id=".$news_bytes_id.$GLOBALS['sys_lf'];
     $mail->setBodyText($body);
 
     $is_sent = $mail->send();
     if ($is_sent) {
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('news_utils','news_request_sent'));
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('news_utils', 'news_request_sent'));
     } else {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('news_utils','news_request_not_sent'));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('news_utils', 'news_request_not_sent'));
     }
 }
 
@@ -437,9 +436,9 @@ function news_send_to_ugroups($ugroups, $summary, $details, $group_id)
     $is_sent = $massmail_sender->sendMassmail($project, $user, $summary, $html_body, $users);
 
     if ($is_sent) {
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('news_utils','news_sent'));
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('news_utils', 'news_sent'));
     } else {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_utils','news_not_sent'));
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_utils', 'news_not_sent'));
     }
 }
 
@@ -467,4 +466,3 @@ function news_fetch_ugroups($project)
 
     return $html;
 }
-?>

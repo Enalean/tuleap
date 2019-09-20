@@ -22,14 +22,12 @@
 /**
  * Description of GitDriverDestinationNotEmpty
  */
-class GitDriverDestinationNotEmptyException extends  GitDriverException {
+class GitDriverDestinationNotEmptyException extends GitDriverException
+{
     //put your code here
 
     public function __construct($msg)
     {
         parent::__construct(self::class.' : '.$msg);
     }
-
 }
-
-?>

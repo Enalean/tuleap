@@ -31,9 +31,10 @@ Mock::generate('TrackerFactory');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_ReportFactory');
-Mock::generatePartial('TrackerManager',
-                      'TrackerManagerTestVersion',
-                      array(
+Mock::generatePartial(
+    'TrackerManager',
+    'TrackerManagerTestVersion',
+    array(
                           'getUrl',
                           'getTrackerFactory',
                           'getTracker_FormElementFactory',
@@ -50,7 +51,8 @@ Mock::generate('Project');
 Mock::generate('ReferenceManager');
 
 
-class TrackerManagerTest extends TuleapTestCase {
+class TrackerManagerTest extends TuleapTestCase
+{
 
     private $tracker;
 
@@ -272,9 +274,9 @@ class TrackerManagerTest extends TuleapTestCase {
         $tf->shouldReceive('duplicate')->once();
         $tm->shouldReceive('getTrackerFactory')->andReturns($tf);
 
-        $r1 = new Reference(101 , 'bug',   'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1 , 100);
-        $r2 = new Reference(102 , 'issue', 'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1 , 100);
-        $r3 = new Reference(103 , 'task',  'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1 , 100);
+        $r1 = new Reference(101, 'bug', 'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1, 100);
+        $r2 = new Reference(102, 'issue', 'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1, 100);
+        $r3 = new Reference(103, 'task', 'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1, 100);
 
         $rm = Mockery::mock(ReferenceManager::class);
         $rm->shouldReceive('getReferencesByGroupId')->with($source_project_id)->andReturns([$r1, $r2, $r3])->once();

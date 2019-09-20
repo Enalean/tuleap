@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TroveCatFactory {
+class TroveCatFactory
+{
 
     /**
      * @var TroveCatDao
@@ -72,7 +73,7 @@ class TroveCatFactory {
         $trove_cat_id = $row['trove_cat_id'];
         $trove_cat    = $this->getInstanceFromRow($row);
 
-        foreach($this->dao->getCategoryChildrenToDisplayDuringProjectCreation($trove_cat_id) as $row_child) {
+        foreach ($this->dao->getCategoryChildrenToDisplayDuringProjectCreation($trove_cat_id) as $row_child) {
             $child = $this->getInstanceFromRow($row_child);
             $trove_cat->addChildren($child);
         }
@@ -85,9 +86,9 @@ class TroveCatFactory {
     private function getInstanceFromRow(array $row)
     {
         return new TroveCat(
-           $row['trove_cat_id'],
-           $row['shortname'],
-           $row['fullname']
+            $row['trove_cat_id'],
+            $row['shortname'],
+            $row['fullname']
         );
     }
 }

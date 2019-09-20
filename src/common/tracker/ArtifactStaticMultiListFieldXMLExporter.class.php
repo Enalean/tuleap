@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter {
+class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter
+{
     public const LABEL_VALUES_INDEX  = 'valueLabelList';
     public const TV3_VALUE_INDEX     = 'valueInt';
     public const TV3_TYPE            = 'MB_2';
@@ -165,5 +166,4 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter {
 
         return $labels;
     }
-
 }

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresenter {
+class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresenter
+{
 
     /** @var array */
     public $kanban_summary_presenters;
@@ -121,17 +122,17 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
 
     public function past()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','past');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'past');
     }
 
     public function now()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','now');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'now');
     }
 
     public function future()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','future');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'future');
     }
 
     public function past_active()
@@ -178,15 +179,15 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
     public function user_helper()
     {
         if ($this->past_active() !== '') {
-            return $GLOBALS['Language']->getText('plugin_agiledashboard','home_user_helper_done');
+            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'home_user_helper_done');
         }
 
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','home_user_helper_others');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'home_user_helper_others');
     }
 
     public function add_kanban()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','add_kanban');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'add_kanban');
     }
 
     public function user_can_see_kanban()
@@ -196,27 +197,27 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
 
     public function add_kanban_modal_title()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','add_kanban_modal_title');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'add_kanban_modal_title');
     }
 
     public function btn_close_label()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','btn_close_label');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'btn_close_label');
     }
 
     public function btn_add_modal_label()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','btn_add_modal_label');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'btn_add_modal_label');
     }
 
     public function kanban_name_label()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','kanban_name_label');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_name_label');
     }
 
     public function tracker_kanban_label()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','tracker_kanban_label');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'tracker_kanban_label');
     }
 
     public function are_trackers_available()
@@ -232,16 +233,16 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
 
     public function no_tracker_available()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','no_tracker_available');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'no_tracker_available');
     }
 
     public function top_backlog_planning()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','top_planning_link');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'top_planning_link');
     }
 
     public function content()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','details_pane_title');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'details_pane_title');
     }
 }

@@ -9,8 +9,7 @@ rcs_id('$Id: Forbidden.php,v 1.2 2004/12/26 17:11:16 rurban Exp $');
  * The PassUser name gets created automatically.
  * That's why this class is empty, but must exist.
  */
-class _ForbiddenPassUser
-extends _ForbiddenUser
+class _ForbiddenPassUser extends _ForbiddenUser
 {
     function dummy()
     {
@@ -31,4 +30,3 @@ extends _ForbiddenUser
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

@@ -113,27 +113,27 @@ class SVN_ImmutableTagsPresenter
 
     public function my_tag()
     {
-        return $GLOBALS['Language']->getText('svn_admin_immutable_tags','my-tag');
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'my-tag');
     }
 
     public function some_path()
     {
-        return $GLOBALS['Language']->getText('svn_admin_immutable_tags','some/path');
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'some/path');
     }
 
     public function select_tag()
     {
-        return $GLOBALS['Language']->getText('svn_admin_immutable_tags','select_tag');
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'select_tag');
     }
 
     public function loading()
     {
-        return $GLOBALS['Language']->getText('svn_admin_immutable_tags','loading');
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'loading');
     }
 
     public function svn_status_style()
     {
-        return $GLOBALS['Language']->getText('svn_admin_immutable_tags','svn_status_style');
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'svn_status_style');
     }
 
     public function impacted_svn()
@@ -163,7 +163,7 @@ class SVN_ImmutableTagsPresenter
 
     public function save()
     {
-        return $GLOBALS['Language']->getText('svn_admin_immutable_tags','save');
+        return $GLOBALS['Language']->getText('svn_admin_immutable_tags', 'save');
     }
 
     public function project_id()

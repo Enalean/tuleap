@@ -9,8 +9,7 @@
 
 require_once('Docman_View_ProjectHeader.class.php');
 
-class Docman_View_ProjectError extends Docman_View_ProjectHeader {
+class Docman_View_ProjectError extends Docman_View_ProjectHeader
+{
 
 }
-
-?>

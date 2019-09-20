@@ -25,7 +25,8 @@ Mock::generate('ReferenceDao');
 Mock::generate('CrossReferenceDao');
 Mock::generate('DataAccessResult');
 
-class ReferenceManagerTest extends TuleapTestCase {
+class ReferenceManagerTest extends TuleapTestCase
+{
     private $rm;
     private $user_manager;
 
@@ -197,7 +198,7 @@ class ReferenceManagerTest extends TuleapTestCase {
     {
         $html = 'g&=+}éàùœ';
         $encoded = htmlentities($html, ENT_IGNORE, "UTF-8");
-        $decoded = html_entity_decode($encoded, ENT_IGNORE, "ISO-8859-15" );
+        $decoded = html_entity_decode($encoded, ENT_IGNORE, "ISO-8859-15");
 
         $pre_encoding = mb_detect_encoding($decoded, 'UTF-8,ISO-8859-15');
         $this->assertEqual($pre_encoding, 'ISO-8859-15');

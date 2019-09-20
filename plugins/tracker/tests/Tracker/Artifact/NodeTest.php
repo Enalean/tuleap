@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once __DIR__.'/../../bootstrap.php';
-class Tracker_ArtifactNodeTest extends TuleapTestCase {
+class Tracker_ArtifactNodeTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -49,5 +50,3 @@ class Tracker_ArtifactNodeTest extends TuleapTestCase {
         $this->assertTrue(is_array($this->node->getChildren()), "getChildren should have been initialized to array()");
     }
 }
-
-?>

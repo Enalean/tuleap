@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface ConfigValueProvider {
+interface ConfigValueProvider
+{
 
     /**
      * @return array of values indexed by variable name

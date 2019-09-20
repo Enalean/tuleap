@@ -19,7 +19,8 @@
 /**
  * Add svn accessfile history table with first version for each project
  */
-class b201405051118_add_svn_accessfile_history_table_with_first_version extends ForgeUpgrade_Bucket {
+class b201405051118_add_svn_accessfile_history_table_with_first_version extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return "Add svn accessfile history table with first version for each project";

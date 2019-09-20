@@ -28,7 +28,8 @@ use Tuleap\Svn\SHA1CollisionException;
 /**
  * I'm responsible of handling what happens in pre-commit subversion hook
  */
-class SVN_Hook_PreCommit extends SVN_Hook {
+class SVN_Hook_PreCommit extends SVN_Hook
+{
 
     /**
      * @var SVN_Immutable_Tags_Handler

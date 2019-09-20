@@ -22,7 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
+class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
+{
 
     /**
      *
@@ -32,9 +33,9 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param unknown_type $endDate
      * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayServiceGraph($services, $groupBy, $startDate, $endDate, $accumulative, $absolute=true)
+    function displayServiceGraph($services, $groupBy, $startDate, $endDate, $accumulative, $absolute = true)
     {
-        $graph = new Chart(750,450,"auto");
+        $graph = new Chart(750, 450, "auto");
         $graph->SetScale("textint");
         $graph->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_title'));
 
@@ -100,9 +101,9 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param unknown_type $endDate
      * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayUserGraph($userId, $groupBy, $startDate, $endDate, $absolute=true)
+    function displayUserGraph($userId, $groupBy, $startDate, $endDate, $absolute = true)
     {
-        $graph = new Chart(750,450,"auto");
+        $graph = new Chart(750, 450, "auto");
         $graph->SetScale("textlin");
         $graph->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_user_title'));
 
@@ -148,9 +149,9 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param Date    $endDate
      * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute=true, $accumulative = true, $siteAdminView = true)
+    function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute = true, $accumulative = true, $siteAdminView = true)
     {
-        $graph = new Chart(750,450,"auto");
+        $graph = new Chart(750, 450, "auto");
         $graph->SetScale("textint");
         $graph->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_project_title'));
 
@@ -228,9 +229,9 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param Date    $endDate
      * @param bool $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
-    function displayProjectTotalSizeGraph($groupId, $groupBy, $startDate, $endDate, $absolute=true)
+    function displayProjectTotalSizeGraph($groupId, $groupBy, $startDate, $endDate, $absolute = true)
     {
-        $graph = new Chart(420 ,340 , "auto");
+        $graph = new Chart(420, 340, "auto");
         $graph->img->SetMargin(70, 50, 30, 70);
         $graph->SetScale("textlin");
         $graph->title->Set("Total project size growth over the time");
@@ -284,8 +285,8 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         //some of these additional letters should go below it
         $test3="Hjgqp";
         //get the dimension for these two:
-        $box2 = imageTTFBbox(10,0,$ttf->File(FF_USERFONT),$test2);
-        $box3 = imageTTFBbox(10,0,$ttf->File(FF_USERFONT),$test3);
+        $box2 = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test2);
+        $box3 = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test3);
         $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));
         $bbox = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $msg);
         if ($im = @imagecreate($bbox[2] - $bbox[6], $bbox[3] - $bbox[5])) {
@@ -319,5 +320,4 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         $col = implode(',', array_map('floor', $newColor));
         return 'rgba('.$col.',0.5)';
     }
-
 }

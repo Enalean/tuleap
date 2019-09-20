@@ -21,7 +21,8 @@
 /**
  * I am checking that the events are not currently processed
  */
-class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents extends Git_GitoliteHousekeeping_ChainOfResponsibility_Command {
+class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents extends Git_GitoliteHousekeeping_ChainOfResponsibility_Command
+{
 
     /**
      * @var SystemEventProcessManager

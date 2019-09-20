@@ -21,7 +21,8 @@
 
 Mock::generate('DataAccessResult');
 
-class DaoTest extends TuleapTestCase {
+class DaoTest extends TuleapTestCase
+{
 
     function testDao()
     {

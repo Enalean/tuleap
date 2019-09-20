@@ -82,12 +82,12 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
     /**
      * @return string
      */
-    public abstract function getIcon();
+    abstract public function getIcon();
 
     /**
      * Delete the renderer
      */
-    public abstract function delete();
+    abstract public function delete();
 
     /**
      * Fetch content of the renderer
@@ -99,38 +99,38 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      *
      * @return string
      */
-    public abstract function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user);
+    abstract public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user);
 
     /**
      * Process the request
      * @param Request $request
      */
-    public abstract function processRequest(TrackerManager $tracker_manager, $request, $current_user);
+    abstract public function processRequest(TrackerManager $tracker_manager, $request, $current_user);
 
     /**
      * Fetch content to be displayed in widget
      */
-    public abstract function fetchWidget(PFUser $user);
+    abstract public function fetchWidget(PFUser $user);
 
     /**
      * Returns the type of this renderer
      */
-    public abstract function getType();
+    abstract public function getType();
 
-    public abstract function initiateSession();
+    abstract public function initiateSession();
     /**
      * Update the renderer
      *
      * @return bool true if success, false if failure
      */
-    public abstract function update();
+    abstract public function update();
 
     /**
      * Finishes import by saving specific properties
      *
      * @param Tracker_Report_Renderer $renderer containig the parameters to save
      */
-    public abstract function afterSaveObject(Tracker_Report_Renderer $renderer);
+    abstract public function afterSaveObject(Tracker_Report_Renderer $renderer);
 
     public function process(TrackerManager $tracker_manager, $request, $current_user)
     {
@@ -222,12 +222,12 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      *
      * @return bool true if success, false if failure
      */
-    public abstract function create();
+    abstract public function create();
 
     /**
      * Duplicate the renderer
      */
-    public abstract function duplicate($from_report_id, $field_mapping);
+    abstract public function duplicate($from_report_id, $field_mapping);
 
     /**
      * Display a link to let the user go back to report
@@ -239,7 +239,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      */
     public function fetchWidgetGoToReport()
     {
-        return $this->fetchLinkGoTo('['. $GLOBALS['Language']->getText('plugin_tracker_report_widget','go_to_report') .']');
+        return $this->fetchLinkGoTo('['. $GLOBALS['Language']->getText('plugin_tracker_report_widget', 'go_to_report') .']');
     }
 
     /**

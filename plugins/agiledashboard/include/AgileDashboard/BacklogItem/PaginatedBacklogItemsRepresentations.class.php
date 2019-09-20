@@ -19,7 +19,8 @@
  */
 
 
-class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations {
+class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations
+{
 
     /** @var array */
     public $backlog_items_representations;
@@ -43,5 +44,4 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations {
     {
         return $this->total_size;
     }
-
 }

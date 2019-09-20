@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201603211122_add_is_child_into_existing_data extends ForgeUpgrade_Bucket {
+class b201603211122_add_is_child_into_existing_data extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

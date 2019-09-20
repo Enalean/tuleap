@@ -98,14 +98,14 @@ class User_LoginManager
             $user = $this->user_manager->getUserById($auth_user_id);
         } else {
             $user = $this->user_manager->getUserByUserName($name);
-            if(!is_null($user)) {
+            if (!is_null($user)) {
                 $auth_success = $this->authenticateFromDatabase($user, $password);
             }
         }
 
-        if(!$user) {
+        if (!$user) {
             throw new User_InvalidPasswordException();
-        } else if(!$auth_success) {
+        } elseif (!$auth_success) {
             throw new User_InvalidPasswordWithUserException($user);
         }
 
@@ -119,7 +119,6 @@ class User_LoginManager
         $is_auth_valid          = false;
 
         if ($this->password_verifier->verifyPassword($user, $password)) {
-
             $user->setPassword($password);
             $this->checkPasswordStorageConformity($user);
 

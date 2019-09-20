@@ -20,7 +20,8 @@
 
 use Tuleap\Plugin\PluginLoader;
 
-class SiteCache {
+class SiteCache
+{
 
     private $logger;
 

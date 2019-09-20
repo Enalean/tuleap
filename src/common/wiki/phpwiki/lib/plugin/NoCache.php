@@ -33,8 +33,7 @@ rcs_id('$Id: NoCache.php,v 1.3 2004/06/18 14:42:17 rurban Exp $');
  * Author:  Reini Urban <rurban@x-ray.at>
  *
  */
-class WikiPlugin_NoCache
-extends WikiPlugin
+class WikiPlugin_NoCache extends WikiPlugin
 {
     function getName()
     {
@@ -48,8 +47,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.3 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.3 $"
+        );
     }
 
     function getDefaultArguments()
@@ -86,4 +88,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

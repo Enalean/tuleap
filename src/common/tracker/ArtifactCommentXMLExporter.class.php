@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactCommentXMLExporter {
+class ArtifactCommentXMLExporter
+{
     public const TEXT = 'text';
     public const HTML = 'html';
 

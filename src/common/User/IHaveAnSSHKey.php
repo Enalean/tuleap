@@ -25,7 +25,8 @@
 /**
  * Is implemented by elements that can produce an ssh key
  */
-interface IHaveAnSSHKey {
+interface IHaveAnSSHKey
+{
 
     /**
      * Identifier associated to the key
@@ -37,5 +38,3 @@ interface IHaveAnSSHKey {
      */
     public function getAuthorizedKeysArray();
 }
-
-?>

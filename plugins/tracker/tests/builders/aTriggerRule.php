@@ -26,7 +26,8 @@ function aTriggerRule()
     return new Test_Tracker_Workflow_Trigger_TriggerRuleBuilder();
 }
 
-class Test_Tracker_Workflow_Trigger_TriggerRuleBuilder {
+class Test_Tracker_Workflow_Trigger_TriggerRuleBuilder
+{
 
     private $id;
     private $target;
@@ -95,5 +96,3 @@ class Test_Tracker_Workflow_Trigger_TriggerRuleBuilder {
         );
     }
 }
-
-?>

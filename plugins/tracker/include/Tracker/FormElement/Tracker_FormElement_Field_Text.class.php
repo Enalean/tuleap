@@ -22,7 +22,8 @@
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum {
+class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
+{
 
     public $default_properties = array(
         'rows'      => array(
@@ -57,7 +58,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
     public function getCriteriaFrom($criteria)
     {
         //Only filter query if field is used
-        if($this->isUsed()) {
+        if ($this->isUsed()) {
             //Only filter query if criteria is valuated
             if ($criteria_value = $this->getCriteriaValue($criteria)) {
                 $a = 'A_'. $this->id;
@@ -100,7 +101,6 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         $matches = array();
         $expr = parent::buildMatchExpression($field_name, $criteria_value);
         if (!$expr) {
-
             // else transform into a series of LIKE %word%
             if (is_array($criteria_value)) {
                 $split = preg_split('/\s+/', $criteria_value['value']);
@@ -108,7 +108,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
                 $split = preg_split('/\s+/', $criteria_value);
             }
             $words = array();
-            foreach($split as $w) {
+            foreach ($split as $w) {
                 $words[] = $field_name." LIKE ". $this->getCriteriaDao()->getDa()->quoteLikeValueSurround($w);
             }
             $expr = join(' AND ', $words);
@@ -126,7 +126,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         return true;
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
         $tracker = $this->getTracker();
         if ($tracker === null) {
@@ -227,7 +227,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
     protected function fetchSubmitValueMasschange()
     {
         $html = '';
-        $value = $GLOBALS['Language']->getText('global','unchanged');
+        $value = $GLOBALS['Language']->getText('global', 'unchanged');
 
         //check if this field is the title we do not allow to change it
         if ($this->isSemanticTitle()) {
@@ -405,8 +405,10 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         $to_value = isset($to_value['value']) ? $to_value['value'] : '';
 
         $callback = array($this, '_filter_html_callback');
-        $d = new Codendi_Diff(array_map($callback, explode("\n", $from_value)),
-                              array_map($callback, explode("\n", $to_value)));
+        $d = new Codendi_Diff(
+            array_map($callback, explode("\n", $from_value)),
+            array_map($callback, explode("\n", $to_value))
+        );
         $f = new Codendi_HtmlUnifiedDiffFormatter();
         $diff = $f->format($d);
         return $diff ? $diff : '<em>No changes</em>';
@@ -441,7 +443,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      */
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','text');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'text');
     }
 
     /**
@@ -449,7 +451,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      */
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','text_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'text_description');
     }
 
     /**
@@ -503,7 +505,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      */
     public function testImport()
     {
-        if(parent::testImport()){
+        if (parent::testImport()) {
             if (static::class == 'Tracker_FormElement_Field_Text') {
                 if (!(isset($this->default_properties['rows']) && isset($this->default_properties['cols']))) {
                     var_dump($this, 'Properties must be "rows" and "cols"');

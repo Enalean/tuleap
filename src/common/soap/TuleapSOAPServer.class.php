@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TuleapSOAPServer extends SoapServer {
+class TuleapSOAPServer extends SoapServer
+{
 
     public function __construct($wsdl, ?array $options = null)
     {

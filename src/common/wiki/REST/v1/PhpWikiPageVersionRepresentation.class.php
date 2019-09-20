@@ -24,7 +24,8 @@ namespace Tuleap\PhpWiki\REST\v1;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use WikiPageVersion;
 
-class PhpWikiPageVersionRepresentation {
+class PhpWikiPageVersionRepresentation
+{
 
     public const ROUTE = 'versions';
 

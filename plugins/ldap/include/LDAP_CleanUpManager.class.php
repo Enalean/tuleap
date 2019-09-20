@@ -22,7 +22,8 @@
 
 use Tuleap\Project\UserRemover;
 
-class LDAP_CleanUpManager {
+class LDAP_CleanUpManager
+{
 
     /*
      * @var retentionPeriod int
@@ -51,7 +52,7 @@ class LDAP_CleanUpManager {
     {
         $directoryCleanUpDao = $this->getLDAPDirectoryCleanUpDao();
         $suspendedUsersList  = $directoryCleanUpDao->getAllSuspendedUsers($_SERVER['REQUEST_TIME']);
-        if(!$suspendedUsersList) {
+        if (!$suspendedUsersList) {
             $this->getBackendLogger()->error("[LDAP Clean Up] Error when getting all suspended users");
         } else {
             foreach ($suspendedUsersList as $currentUserData) {
@@ -87,10 +88,10 @@ class LDAP_CleanUpManager {
      */
     private function deleteSuspendedUser(PFUser $user)
     {
-        if($user->getStatus() == 'S'){
+        if ($user->getStatus() == 'S') {
             $user->setStatus('D');
             $deletionResult = $this->getUserManager()->updateDb($user);
-            if(!$deletionResult) {
+            if (!$deletionResult) {
                 $this->getBackendLogger()->error("[LDAP Clean Up] Error when deleting user ".$user->getUserName());
             } else {
                 $directoryCleanUpDao = $this->getLDAPDirectoryCleanUpDao();

@@ -21,7 +21,8 @@ namespace User\XML\Import;
 
 use PFUser;
 
-class ToBeCreatedUser extends ActionToBeTakenForUser {
+class ToBeCreatedUser extends ActionToBeTakenForUser
+{
 
     private static $ALLOWED_ACTIONS = array('create', 'map');
 

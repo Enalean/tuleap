@@ -19,7 +19,8 @@
 
 namespace Tuleap\User\REST\v1;
 
-class UserMembershipRepresentation {
+class UserMembershipRepresentation
+{
 
     public const ROUTE = "users_memberships";
 
@@ -38,5 +39,4 @@ class UserMembershipRepresentation {
         $this->username    = $username;
         $this->user_groups = $groups;
     }
-
 }

@@ -22,12 +22,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class _CodendiPassUser
-extends _PassUser
+class _CodendiPassUser extends _PassUser
 {
-    function __construct($UserName='',$prefs=false)
+    function __construct($UserName = '', $prefs = false)
     {
-        if ($prefs) $this->_prefs = $prefs;
+        if ($prefs) {
+            $this->_prefs = $prefs;
+        }
 
         /* Actually, we cannot set preferences here because PhpWiki instanciate
          * _PassUser class before. So we had to modify _PassUser constructor to
@@ -40,23 +41,25 @@ extends _PassUser
         }*/
 
         $this->_userid = $UserName;
-        if (!isset($this->_prefs->_method))
-           parent::__construct($this->_userid);
+        if (!isset($this->_prefs->_method)) {
+            parent::__construct($this->_userid);
+        }
 
-        switch($this->_userid) {
+        switch ($this->_userid) {
             case '':
             case 'NA':
                 $this->_level = WIKIAUTH_ANON;
-            break;
+                break;
             case 'admin':
                 $this->_level = WIKIAUTH_ADMIN; // admin Codendi
-            break;
+                break;
             default:
                 $this->_level = WIKIAUTH_USER;
         }
 
-        if(user_ismember(GROUP_ID, 'W2'))
+        if (user_ismember(GROUP_ID, 'W2')) {
             $this->_level = WIKIAUTH_ADMIN; //admin wiki
+        }
 
         $this->_authmethod = 'Codendi';
     }
@@ -75,8 +78,8 @@ extends _PassUser
     }
 }
 
-class CodendiUserPreferences
-extends UserPreferences {
+class CodendiUserPreferences extends UserPreferences
+{
 
     function __construct($saved_prefs = false)
     {
@@ -95,8 +98,6 @@ extends UserPreferences {
         }
         return parent::get($name);
     }
-
-
 }
 
 // Local Variables:
@@ -106,4 +107,3 @@ extends UserPreferences {
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

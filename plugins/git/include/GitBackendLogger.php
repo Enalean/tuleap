@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GitBackendLogger extends TruncateLevelLogger {
+class GitBackendLogger extends TruncateLevelLogger
+{
 
     public function __construct()
     {

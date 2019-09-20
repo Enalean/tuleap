@@ -19,7 +19,8 @@
  */
 
 
-class Tracker_Workflow_Action_Transitions_CreateMatrix extends Tracker_Workflow_Action_Transitions {
+class Tracker_Workflow_Action_Transitions_CreateMatrix extends Tracker_Workflow_Action_Transitions
+{
     /** @var WorkflowFactory */
     private $workflow_factory;
 
@@ -59,7 +60,7 @@ class Tracker_Workflow_Action_Transitions_CreateMatrix extends Tracker_Workflow_
         $currMatrix=array();
         $field_value_from=null;
         //Add an initial state transition
-        foreach($field_values as $field_value_id_to=>$field_value_to) {
+        foreach ($field_values as $field_value_id_to => $field_value_to) {
            //$field_value_from=;
             $transition = '_'.$field_value_id_to;
 
@@ -70,8 +71,8 @@ class Tracker_Workflow_Action_Transitions_CreateMatrix extends Tracker_Workflow_
         }
 
         //Add a transition
-        foreach($field_values as $field_value_id_from=>$field_value_from) {
-            foreach($field_values as $field_value_id_to=>$field_value_to) {
+        foreach ($field_values as $field_value_id_from => $field_value_from) {
+            foreach ($field_values as $field_value_id_to => $field_value_to) {
                 $transition = $field_value_id_from.'_'.$field_value_id_to;
                 if ($request->existAndNonEmpty($transition)) {
                     $currMatrix[]=array($field_value_id_from, $field_value_id_to);
@@ -83,26 +84,25 @@ class Tracker_Workflow_Action_Transitions_CreateMatrix extends Tracker_Workflow_
         //Delete a transition
         $transitions_in_db = $workflow->getTransitions();
         $nb_transitions_in_db = count($transitions_in_db);
-        for($i=0;$i<$nb_transitions_in_db ;$i++) {
-
+        for ($i=0; $i<$nb_transitions_in_db; $i++) {
             $field_value_from = $transitions_in_db[$i]->getFieldValueFrom();
             $field_value_to   = $transitions_in_db[$i]->getFieldValueTo();
              //Treatment of the initial state
-            if($field_value_from==null) {
+            if ($field_value_from==null) {
                 $value_to_search=array('',$field_value_to->getId());
                 //$field_value_from->getId()='';
-            }else {
+            } else {
                 $value_to_search=array($field_value_from->getId() , $field_value_to->getId());
             }
 
-            if(!in_array($value_to_search, $currMatrix)){
-                $this->workflow_factory->deleteTransition($workflow->workflow_id,  $field_value_from, $field_value_to);
+            if (!in_array($value_to_search, $currMatrix)) {
+                $this->workflow_factory->deleteTransition($workflow->workflow_id, $field_value_from, $field_value_to);
                 $k++;
             }
         }
 
         if ($k>0) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','updated'));
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin', 'updated'));
         }
         $GLOBALS['Response']->redirect(
             TRACKER_BASE_URL.'/?'. http_build_query(
@@ -117,14 +117,11 @@ class Tracker_Workflow_Action_Transitions_CreateMatrix extends Tracker_Workflow_
     private function addTransition(Workflow $workflow, $transition, $field_value_from, $field_value_to)
     {
         $i=0;
-        if ( ! $workflow->isTransitionExist($field_value_from, $field_value_to)) {
+        if (! $workflow->isTransitionExist($field_value_from, $field_value_to)) {
             if ($this->workflow_factory->addTransition((int)$workflow->workflow_id, $transition)) {
                 $i++;
             }
         }
          return $i;
     }
-
 }
-
-?>

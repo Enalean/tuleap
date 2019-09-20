@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_TRACKER_V3_MIGRATION extends SystemEvent {
+class SystemEvent_TRACKER_V3_MIGRATION extends SystemEvent
+{
 
     public const NAME = 'TRACKER_V3_MIGRATION';
 

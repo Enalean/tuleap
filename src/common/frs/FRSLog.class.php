@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FRSLog {
+class FRSLog
+{
 
     var $dao;
 
@@ -87,13 +88,13 @@ class FRSLog {
         $projectID = $params['group_id'];
         $itemID    = $params['item_id'];
         switch ($event) {
-            case 'frs_create_package' :
+            case 'frs_create_package':
                 $actionID = FRSPackage::EVT_CREATE;
                 break;
-            case 'frs_update_package' :
+            case 'frs_update_package':
                 $actionID = FRSPackage::EVT_UPDATE;
                 break;
-            case 'frs_delete_package' :
+            case 'frs_delete_package':
                 $actionID = FRSPackage::EVT_DELETE;
                 break;
         }
@@ -114,13 +115,13 @@ class FRSLog {
         $projectID = $params['group_id'];
         $itemID    = $params['item_id'];
         switch ($event) {
-            case 'frs_create_release' :
+            case 'frs_create_release':
                 $actionID = FRSRelease::EVT_CREATE;
                 break;
-            case 'frs_update_release' :
+            case 'frs_update_release':
                 $actionID = FRSRelease::EVT_UPDATE;
                 break;
-            case 'frs_delete_release' :
+            case 'frs_delete_release':
                 $actionID = FRSRelease::EVT_DELETE;
                 break;
         }
@@ -141,16 +142,16 @@ class FRSLog {
         $projectID = $params['group_id'];
         $itemID    = $params['item_id'];
         switch ($event) {
-            case 'frs_create_file' :
+            case 'frs_create_file':
                 $actionID = FRSFile::EVT_CREATE;
                 break;
-            case 'frs_update_file' :
+            case 'frs_update_file':
                 $actionID = FRSFile::EVT_UPDATE;
                 break;
-            case 'frs_delete_file' :
+            case 'frs_delete_file':
                 $actionID = FRSFile::EVT_DELETE;
                 break;
-            case 'frs_restore_file' :
+            case 'frs_restore_file':
                 $actionID = FRSFile::EVT_RESTORE;
                 break;
         }
@@ -196,7 +197,4 @@ class FRSLog {
         $um = UserManager::instance();
         return $um->getCurrentUser();
     }
-
 }
-
-?>

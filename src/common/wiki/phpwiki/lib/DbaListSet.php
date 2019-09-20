@@ -37,8 +37,9 @@ class DbaListSet
 
         $key = "s" . urlencode($seq);
         assert(intval($key) == 0 && !strstr($key, ':'));
-        if (!$dbh->exists($key))
+        if (!$dbh->exists($key)) {
             $dbh->insert($key, "$key:$key:");
+        }
     }
 
     function delete_sequence($seq)
@@ -182,4 +183,3 @@ class DbaListSet
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

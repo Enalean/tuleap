@@ -21,7 +21,8 @@
 /**
  * This class allows a human to read a wsdl
  */
-class SOAP_WSDLRenderer {
+class SOAP_WSDLRenderer
+{
 
     /**
      * Output a html view of the given wsdl

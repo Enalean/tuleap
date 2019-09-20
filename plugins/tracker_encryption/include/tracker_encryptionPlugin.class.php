@@ -84,7 +84,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
 
     public function fill_project_history_sub_events($params)
     {
-        array_push($params['subEvents']['event_others'] , 'Tracker_key');
+        array_push($params['subEvents']['event_others'], 'Tracker_key');
     }
 
     public function tracker_encryption_add_key($params)
@@ -127,9 +127,9 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
                     'url'         => '/plugins/tracker_encryption/?'. http_build_query(array(
                                                                                      'tracker' => $params['tracker_id'],
                                                                                      'func' => 'admin-encryption')),
-                    'short_title' => $GLOBALS['Language']->getText('plugin_tracker_encryption','descriptor_name'),
-                    'title'       => $GLOBALS['Language']->getText('plugin_tracker_encryption','descriptor_name'),
-                    'description' => $GLOBALS['Language']->getText('plugin_tracker_encryption','descriptor_description'),
+                    'short_title' => $GLOBALS['Language']->getText('plugin_tracker_encryption', 'descriptor_name'),
+                    'title'       => $GLOBALS['Language']->getText('plugin_tracker_encryption', 'descriptor_name'),
+                    'description' => $GLOBALS['Language']->getText('plugin_tracker_encryption', 'descriptor_description'),
                     'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-perms.png'),
                     );
     }
@@ -148,7 +148,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='.$tracker_id);
                 }
-            break;
+                break;
             case 'admin-editencryptionkey':
                 if ($tracker->userIsAdmin()) {
                     $key = trim($request->getValidated('key', 'text', ''));
@@ -159,7 +159,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='.$tracker_id);
                 }
-            break;
+                break;
         }
     }
 
@@ -173,8 +173,9 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         $csrf_token = new CSRFSynchronizerToken('/plugins/tracker_encryption/?tracker='.$tracker_id.'&func=admin-editencryptionkey');
         $renderer   = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/');
         $renderer->renderToPage(
-           'tracker-key-settings',
-            new Tracker_EncryptionKeySettings_Presenter($tracker_id, '/plugins/tracker_encryption/?tracker='. (int)$tracker_id.'&func=admin-editencryptionkey', $csrf_token));
+            'tracker-key-settings',
+            new Tracker_EncryptionKeySettings_Presenter($tracker_id, '/plugins/tracker_encryption/?tracker='. (int)$tracker_id.'&func=admin-editencryptionkey', $csrf_token)
+        );
         $GLOBALS['HTML']->footer(array());
     }
 

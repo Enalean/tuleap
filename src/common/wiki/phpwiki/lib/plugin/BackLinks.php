@@ -23,8 +23,7 @@ rcs_id('$Id: BackLinks.php,v 1.32 2004/12/06 19:50:05 rurban Exp $');
 
 require_once('lib/PageList.php');
 
-class WikiPlugin_BackLinks
-extends WikiPlugin
+class WikiPlugin_BackLinks extends WikiPlugin
 {
     function getName()
     {
@@ -38,19 +37,22 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.32 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.32 $"
+        );
     }
 
     function getDefaultArguments()
     {
-        return array_merge
-            (
-             PageList::supportedArgs(),
-             array('include_self' => false,
+        return array_merge(
+            PageList::supportedArgs(),
+            array('include_self' => false,
                    'noheader'     => false,
                    'page'         => '[pagename]',
-                   ));
+            )
+        );
     }
 
     // info arg allows multiple columns
@@ -61,17 +63,22 @@ extends WikiPlugin
     {
         $args = $this->getArgs($argstr, $request);
         extract($args);
-        if (empty($page) and $page != '0')
+        if (empty($page) and $page != '0') {
             return '';
+        }
         // exclude is now already expanded in WikiPlugin::getArgs()
-        if (empty($exclude)) $exclude = array();
-        if (!$include_self)
+        if (empty($exclude)) {
+            $exclude = array();
+        }
+        if (!$include_self) {
             $exclude[] = $page;
+        }
         if ($info) {
             $info = explode(",", $info);
-            if (in_array('count',$info))
+            if (in_array('count', $info)) {
                 $args['types']['count'] =
                     new _PageList_Column_BackLinks_count('count', _("#"), 'center');
+            }
         }
         $args['dosort'] = !empty($args['sortby']); // override DB sort (??)
         $pagelist = new PageList($info, $exclude, $args);
@@ -96,52 +103,67 @@ extends WikiPlugin
                     // page currently being viewed.
                     $pagelink = $page;
 
-                    if ($pagelist->isEmpty())
-                        return HTML::p(fmt("No other page links to %s yet.", $pagelink));
+                if ($pagelist->isEmpty()) {
+                    return HTML::p(fmt("No other page links to %s yet.", $pagelink));
+                }
 
-                    if ($pagelist->getTotal() == 1)
-                        $pagelist->setCaption(fmt("One page would link to %s:",
-                                                  $pagelink));
+                if ($pagelist->getTotal() == 1) {
+                    $pagelist->setCaption(fmt(
+                        "One page would link to %s:",
+                        $pagelink
+                    ));
+                }
                     // Some future localizations will actually require
                     // this... (BelieveItOrNot, English-only-speakers!(:)
                     //
                     // else if ($pagelist->getTotal() == 2)
                     //     $pagelist->setCaption(fmt("Two pages would link to %s:",
                     //                               $pagelink));
-                else
-                        $pagelist->setCaption(fmt("%s pages would link to %s:",
-                                                  $pagelist->getTotal(), $pagelink));
-            }
-            else {
+                else {
+                    $pagelist->setCaption(fmt(
+                        "%s pages would link to %s:",
+                        $pagelist->getTotal(),
+                        $pagelink
+                    ));
+                }
+            } else {
                 // BackLinks plugin is being displayed on a normal page.
                 $pagelink = WikiLink($page, 'auto');
 
-                if ($pagelist->isEmpty())
+                if ($pagelist->isEmpty()) {
                     return HTML::p(fmt("No page links to %s.", $pagelink));
+                }
 
                 //trigger_error("DEBUG: " . $pagelist->getTotal());
 
-                if ($pagelist->getTotal() == 1)
-                    $pagelist->setCaption(fmt("One page links to %s:",
-                                              $pagelink));
+                if ($pagelist->getTotal() == 1) {
+                    $pagelist->setCaption(fmt(
+                        "One page links to %s:",
+                        $pagelink
+                    ));
+                }
                 // Some future localizations will actually require
                 // this... (BelieveItOrNot, English-only-speakers!(:)
                 //
                 // else if ($pagelist->getTotal() == 2)
                 //     $pagelist->setCaption(fmt("Two pages link to %s:",
                 //                               $pagelink));
-                else
-                    $pagelist->setCaption(fmt("%s pages link to %s:",
-                                              $pagelist->getTotal(), $pagelink));
+                else {
+                    $pagelist->setCaption(fmt(
+                        "%s pages link to %s:",
+                        $pagelist->getTotal(),
+                        $pagelink
+                    ));
+                }
             }
         }
         return $pagelist;
     }
-
 };
 
 // how many links from this backLink to other pages
-class _PageList_Column_BackLinks_count extends _PageList_Column {
+class _PageList_Column_BackLinks_count extends _PageList_Column
+{
     function _getValue($page, &$revision_handle)
     {
         $iter = $page->getPageLinks();
@@ -220,4 +242,3 @@ class _PageList_Column_BackLinks_count extends _PageList_Column {
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

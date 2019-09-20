@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG extends SystemEvent {
+class SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG extends SystemEvent
+{
 
     public const NAME = 'GIT_REGENERATE_GITOLITE_CONFIG';
 

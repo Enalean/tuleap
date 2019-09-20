@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Tracker_Workflow_Trigger_RulesProcessor_AtLeastOneStrategyTest extends TuleapTestCase {
+class Tracker_Workflow_Trigger_RulesProcessor_AtLeastOneStrategyTest extends TuleapTestCase
+{
 
     public function itAlwaysApplyRuleWhenAtLeastOneValueIsSet()
     {
@@ -28,5 +29,3 @@ class Tracker_Workflow_Trigger_RulesProcessor_AtLeastOneStrategyTest extends Tul
         $this->assertTrue($strategy->allPrecondtionsAreMet());
     }
 }
-
-?>

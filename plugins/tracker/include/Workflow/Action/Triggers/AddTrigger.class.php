@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_Action_Triggers_AddTrigger {
+class Tracker_Workflow_Action_Triggers_AddTrigger
+{
 
     /**
      * @var Tracker
@@ -57,5 +58,3 @@ class Tracker_Workflow_Action_Triggers_AddTrigger {
         }
     }
 }
-
-?>

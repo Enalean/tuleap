@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerrit_MembershipCommand {
+abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerrit_MembershipCommand
+{
     private $autoflush = true;
     private $gerrit_user_manager;
     protected $user;
@@ -58,5 +59,3 @@ abstract class Git_Driver_Gerrit_MembershipCommand_User extends Git_Driver_Gerri
 
     abstract protected function executeForGerritUser(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $gerrit_user);
 }
-
-?>

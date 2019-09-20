@@ -25,12 +25,12 @@ use Tuleap\REST\v1\GitRepositoryReferenceBase;
 use Tuleap\REST\JsonCast;
 use GitRepository;
 
-class GitRepositoryReference extends GitRepositoryReferenceBase {
+class GitRepositoryReference extends GitRepositoryReferenceBase
+{
 
     public function build(GitRepository $repository)
     {
         $this->id  = JsonCast::toInt($repository->getId());
         $this->uri = self::ROUTE . '/' . $this->id;
     }
-
 }

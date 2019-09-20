@@ -28,7 +28,8 @@ function anArtifactNode()
     return new Test_ArtifactNode_Builder();
 }
 
-class Test_ArtifactNode_Builder extends Test_TreeNode_Builder {
+class Test_ArtifactNode_Builder extends Test_TreeNode_Builder
+{
 
     private $data = null;
     private $artifact;
@@ -52,5 +53,3 @@ class Test_ArtifactNode_Builder extends Test_TreeNode_Builder {
         return $node;
     }
 }
-
-?>

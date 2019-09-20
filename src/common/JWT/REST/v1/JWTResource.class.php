@@ -27,7 +27,8 @@ use UserManager;
 use UGroupLiteralizer;
 use ForgeConfig;
 
-class JWTResource {
+class JWTResource
+{
     /**
      * To have a json web token
      *

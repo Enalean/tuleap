@@ -19,7 +19,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class WikiAttachmentDao extends DataAccessObject {
+class WikiAttachmentDao extends DataAccessObject
+{
     /**
      * Create a new attachement.
      *
@@ -29,11 +30,13 @@ class WikiAttachmentDao extends DataAccessObject {
      */
     function create($gid, $filename, $filesystemName)
     {
-        $qry = sprintf(' INSERT INTO wiki_attachment (group_id, name, filesystem_name)'
+        $qry = sprintf(
+            ' INSERT INTO wiki_attachment (group_id, name, filesystem_name)'
                        .' VALUES (%d, %s, %s)',
-                       $gid,
-                       $this->da->quoteSmart($filename),
-                       $this->da->quoteSmart($filesystemName));
+            $gid,
+            $this->da->quoteSmart($filename),
+            $this->da->quoteSmart($filesystemName)
+        );
 
         $res = $this->update($qry);
         return $res;
@@ -47,9 +50,11 @@ class WikiAttachmentDao extends DataAccessObject {
      */
     function read($id)
     {
-        $qry = sprintf('SELECT * FROM wiki_attachment'
+        $qry = sprintf(
+            'SELECT * FROM wiki_attachment'
                        .' WHERE id=%d',
-                       $id);
+            $id
+        );
 
         return $this->retrieve($qry);
     }
@@ -84,9 +89,11 @@ class WikiAttachmentDao extends DataAccessObject {
      */
     function getList($gid)
     {
-        $qry = sprintf('SELECT * FROM wiki_attachment'
+        $qry = sprintf(
+            'SELECT * FROM wiki_attachment'
                        .' WHERE group_id=%d',
-                       $gid);
+            $gid
+        );
 
         return $this->retrieve($qry);
     }
@@ -103,14 +110,16 @@ class WikiAttachmentDao extends DataAccessObject {
      */
     function getListWithCounterOrderedByRevDate($gid)
     {
-        $qry = sprintf('SELECT wa.id, wa.group_id, wa.name, count(*) as nb, MAX(war.date) as max_date'
+        $qry = sprintf(
+            'SELECT wa.id, wa.group_id, wa.name, count(*) as nb, MAX(war.date) as max_date'
                        .' FROM wiki_attachment_revision AS war, wiki_attachment AS wa'
                        .' WHERE wa.group_id=%d'
                        .' AND war.attachment_id=wa.id'
                        .' AND wa.delete_date IS NULL'
                        .' GROUP BY attachment_id'
                        .' ORDER BY max_date DESC',
-                       $gid);
+            $gid
+        );
 
         return $this->retrieve($qry);
     }
@@ -125,12 +134,14 @@ class WikiAttachmentDao extends DataAccessObject {
      */
     function getIdFromFilename($gid, $filename)
     {
-        $qry = sprintf('SELECT id FROM wiki_attachment'
+        $qry = sprintf(
+            'SELECT id FROM wiki_attachment'
                        .' WHERE name COLLATE utf8_bin =%s'
                        .' AND group_id=%d'
                        .' AND delete_date IS NULL',
-                       $this->da->quoteSmart($filename),
-                       $gid);
+            $this->da->quoteSmart($filename),
+            $gid
+        );
 
         return $this->retrieve($qry);
     }
@@ -145,7 +156,7 @@ class WikiAttachmentDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function searchAttachmentToPurge($time, $groupId=0, $offset=0, $limit=0)
+    function searchAttachmentToPurge($time, $groupId = 0, $offset = 0, $limit = 0)
     {
         $where  = '';
         if ($groupId != 0) {
@@ -193,4 +204,3 @@ class WikiAttachmentDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-?>

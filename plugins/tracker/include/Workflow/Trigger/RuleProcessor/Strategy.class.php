@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface Tracker_Workflow_Trigger_RulesProcessor_Strategy {
+interface Tracker_Workflow_Trigger_RulesProcessor_Strategy
+{
 
     /**
      * Return true when all the trigger conditions are satisfied
@@ -27,5 +28,3 @@ interface Tracker_Workflow_Trigger_RulesProcessor_Strategy {
      */
     public function allPrecondtionsAreMet();
 }
-
-?>

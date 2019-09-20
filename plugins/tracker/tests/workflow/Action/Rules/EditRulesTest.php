@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase{
+class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
+{
 
     public const PARAMETER_ADD_RULE     = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE;
     public const PARAMETER_UPDATE_RULES = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_UPDATE_RULES;
@@ -119,7 +120,8 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
     }
 }
 
-class Tracker_Workflow_Action_Rules_EditRules_noActionsTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
+class Tracker_Workflow_Action_Rules_EditRules_noActionsTest extends Tracker_Workflow_Action_Rules_EditRules_processTest
+{
 
     public function itDoesNotDisplayErrorsIfNoActions()
     {
@@ -129,7 +131,8 @@ class Tracker_Workflow_Action_Rules_EditRules_noActionsTest extends Tracker_Work
     }
 }
 
-class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
+class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflow_Action_Rules_EditRules_processTest
+{
 
     public function setUp()
     {
@@ -191,7 +194,8 @@ class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflo
     }
 }
 
-class Tracker_Workflow_Action_Rules_EditRules_failedDeleteTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
+class Tracker_Workflow_Action_Rules_EditRules_failedDeleteTest extends Tracker_Workflow_Action_Rules_EditRules_processTest
+{
 
     public function itDoesNotPrintSuccessfullFeebackIfTheDeleteFailed()
     {
@@ -211,7 +215,8 @@ class Tracker_Workflow_Action_Rules_EditRules_failedDeleteTest extends Tracker_W
     }
 }
 
-class Tracker_Workflow_Action_Rules_EditRules_getRulesTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
+class Tracker_Workflow_Action_Rules_EditRules_getRulesTest extends Tracker_Workflow_Action_Rules_EditRules_processTest
+{
 
     public function setUp()
     {
@@ -241,7 +246,8 @@ class Tracker_Workflow_Action_Rules_EditRules_getRulesTest extends Tracker_Workf
     }
 }
 
-class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
+class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workflow_Action_Rules_EditRules_processTest
+{
 
     public function itAddsARule()
     {
@@ -392,7 +398,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
             self::PARAMETER_TARGET_FIELD => '22',
             self::PARAMETER_COMPARATOR   => '>'
         ))->build();
-        expect($GLOBALS['Response'])->addFeedback('info','*')->once();
+        expect($GLOBALS['Response'])->addFeedback('info', '*')->once();
         $this->processRequestAndExpectRedirection($request);
     }
 
@@ -421,7 +427,8 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 }
 
-class Tracker_Workflow_Action_Rules_EditRules_updateRuleTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
+class Tracker_Workflow_Action_Rules_EditRules_updateRuleTest extends Tracker_Workflow_Action_Rules_EditRules_processTest
+{
 
     private $rule_42_id = 42;
     private $rule_42;
@@ -617,8 +624,7 @@ class Tracker_Workflow_Action_Rules_EditRules_updateRuleTest extends Tracker_Wor
         ))->build();
 
         stub($this->date_factory)->save()->returns(true);
-        expect($GLOBALS['Response'])->addFeedback('info','*')->once();
+        expect($GLOBALS['Response'])->addFeedback('info', '*')->once();
         $this->processRequestAndExpectRedirection($request);
     }
 }
-?>

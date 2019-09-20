@@ -19,7 +19,8 @@
 /**
  * Replace version date column values by timestamp
  */
-class b201406041516_add_email_gateway_salt extends ForgeUpgrade_Bucket {
+class b201406041516_add_email_gateway_salt extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return "Adding salt in database";
@@ -54,7 +55,7 @@ class b201406041516_add_email_gateway_salt extends ForgeUpgrade_Bucket {
 
     private function initSalt()
     {
-        $salt = hash("sha256",  uniqid(rand(), true));
+        $salt = hash("sha256", uniqid(rand(), true));
 
         $sql = "
             INSERT INTO email_gateway_salt (salt)
@@ -67,5 +68,4 @@ class b201406041516_add_email_gateway_salt extends ForgeUpgrade_Bucket {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while saving email_gateway_salt.');
         }
     }
-
 }

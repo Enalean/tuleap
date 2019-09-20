@@ -41,7 +41,8 @@ require_once 'bootstrap.php';
  *       - same type
  *     - for list of values, the same value exist in both projects.
  */
-class CopyItemsTest extends TuleapTestCase {
+class CopyItemsTest extends TuleapTestCase
+{
 
     function testDocumentCopyWithinTheSameProject()
     {
@@ -95,7 +96,6 @@ class CopyItemsTest extends TuleapTestCase {
             'user'            => mock('PFUser'),
             'metadataMapping' => array(),
             'ugroupsMapping'  => array(),
-            'data_root'       => '/tmp')
-        );
+            'data_root'       => '/tmp'));
     }
 }

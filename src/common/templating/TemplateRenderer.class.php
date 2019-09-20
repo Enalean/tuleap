@@ -36,7 +36,8 @@
  *
  * - The expected Presenter object may differ with some future engines.
  */
-abstract class TemplateRenderer {
+abstract class TemplateRenderer
+{
 
     /**
      * Renders a template, given its name and a presenter (providing the
@@ -53,7 +54,7 @@ abstract class TemplateRenderer {
      *
      * @return String The generated output.
      */
-    public abstract function renderToString($template_name, $presenter);
+    abstract public function renderToString($template_name, $presenter);
 
     /**
      * Same as renderToString, but outputs to the page instead of returning a
@@ -64,4 +65,3 @@ abstract class TemplateRenderer {
         echo $this->renderToString($template_name, $presenter);
     }
 }
-?>

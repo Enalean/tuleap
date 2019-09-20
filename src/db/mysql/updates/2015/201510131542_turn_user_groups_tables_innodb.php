@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201510131542_turn_user_groups_tables_innodb extends ForgeUpgrade_Bucket {
+class b201510131542_turn_user_groups_tables_innodb extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -40,7 +41,6 @@ class b201510131542_turn_user_groups_tables_innodb extends ForgeUpgrade_Bucket {
 
         foreach ($tables as $table) {
             if (! $this->isTableInnoDB($table)) {
-
                 $this->log->info("Convert $table");
 
                 $sql    = "ALTER TABLE $table ENGINE = InnoDB";

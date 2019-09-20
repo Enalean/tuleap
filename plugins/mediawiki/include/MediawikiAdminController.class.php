@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class MediawikiAdminController {
+class MediawikiAdminController
+{
 
     /** @var MediawikiUserGroupsMapper */
     private $mapper;
@@ -83,12 +84,12 @@ class MediawikiAdminController {
                     $GLOBALS['Language']->getText('global', 'Administration'),
                     'permissions-pane-admin',
                     new MediawikiAdminPermissionsPanePresenter(
-                       $project,
-                       $this->getMappedGroupPresenter($project),
-                       $this->mapper->isDefaultMapping($project),
-                       $this->manager->isCompatibilityViewEnabled($project),
-                       $read_ugroups,
-                       $write_ugroups
+                        $project,
+                        $this->getMappedGroupPresenter($project),
+                        $this->mapper->isDefaultMapping($project),
+                        $this->manager->isCompatibilityViewEnabled($project),
+                        $read_ugroups,
+                        $write_ugroups
                     )
                 );
                 break;
@@ -136,7 +137,7 @@ class MediawikiAdminController {
         $group_mapper_presenters = array();
         $current_mapping = $this->mapper->getCurrentUserGroupMapping($project);
         $all_ugroups     = $this->getIndexedUgroups($project);
-        foreach(MediawikiUserGroupsMapper::$MEDIAWIKI_MODIFIABLE_GROUP_NAMES as $mw_group_name) {
+        foreach (MediawikiUserGroupsMapper::$MEDIAWIKI_MODIFIABLE_GROUP_NAMES as $mw_group_name) {
             $group_mapper_presenters[] = $this->getGroupPresenters($mw_group_name, $current_mapping, $all_ugroups);
         }
         return $group_mapper_presenters;
@@ -185,7 +186,7 @@ class MediawikiAdminController {
 
             try {
                 $this->language_manager->saveLanguageOption($project, $language);
-            } catch(Mediawiki_UnsupportedLanguageException $exception) {
+            } catch (Mediawiki_UnsupportedLanguageException $exception) {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_mediawiki', 'unsupported_language', array($exception->getLanguage())));
             }
         }
@@ -201,7 +202,7 @@ class MediawikiAdminController {
     public function save_permissions(ServiceMediawiki $service, HTTPRequest $request)
     {
         $this->assertUserIsProjectAdmin($service, $request);
-        if($request->isPost()) {
+        if ($request->isPost()) {
             $project          = $request->getProject();
             $new_mapping_list = $this->getSelectedMappingsFromRequest($request, $project);
             $this->mapper->saveMapping($new_mapping_list, $project);
@@ -209,7 +210,6 @@ class MediawikiAdminController {
             $this->manager->saveCompatibilityViewOption($project, $request->get('enable_compatibility_view'));
 
             if (! $this->requestIsRestore($request)) {
-
                 $selected_read_ugroup = $request->get('read_ugroups');
                 if ($selected_read_ugroup) {
                     $override_collection = new PermissionsNormalizerOverrideCollection();
@@ -252,7 +252,7 @@ class MediawikiAdminController {
         }
 
         $list = array();
-        foreach(MediawikiUserGroupsMapper::$MEDIAWIKI_GROUPS_NAME as $mw_group_name) {
+        foreach (MediawikiUserGroupsMapper::$MEDIAWIKI_GROUPS_NAME as $mw_group_name) {
             $list[$mw_group_name] = array_filter(explode(',', $request->get('hidden_selected_'.$mw_group_name)));
         }
         return $list;

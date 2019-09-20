@@ -21,7 +21,8 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-class ArtifactValuesRepresentation {
+class ArtifactValuesRepresentation
+{
 
     /**
      * @var int {@type int} {@required true}
@@ -84,5 +85,4 @@ class ArtifactValuesRepresentation {
 
         return $array_representation;
     }
-
 }

@@ -25,7 +25,8 @@ require_once __DIR__ . '/../../../www/project/admin/project_admin_utils.php';
  * Change project short name (unix_group_name)
  *
  */
-class SystemEvent_PROJECT_RENAME extends SystemEvent {
+class SystemEvent_PROJECT_RENAME extends SystemEvent
+{
 
     /**
      * Set multiple logs

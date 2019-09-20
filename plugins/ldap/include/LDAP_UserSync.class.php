@@ -25,7 +25,8 @@
 /**
  * Handle synchro between LDAP and Codendi user.
  */
-class LDAP_UserSync {
+class LDAP_UserSync
+{
 
     private static $instance;
     protected $attributes;
@@ -107,8 +108,7 @@ class LDAP_UserSync {
 
     public function getCommonName(LDAPResult $lr)
     {
-        return $lr->getCommonName();;
+        return $lr->getCommonName();
+        ;
     }
 }
-
-?>

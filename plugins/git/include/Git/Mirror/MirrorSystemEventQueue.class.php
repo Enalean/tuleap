@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_Mirror_MirrorSystemEventQueue extends SystemEventQueue {
+class Git_Mirror_MirrorSystemEventQueue extends SystemEventQueue
+{
 
     /**
      * @var Logger

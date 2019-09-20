@@ -119,5 +119,3 @@ class ProjectLinksDao extends DataAccessObject
         return false;
     }
 }
-
-?>

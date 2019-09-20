@@ -20,7 +20,8 @@
  */
 
 
-class Docman_Validator {
+class Docman_Validator
+{
     var $_errors = [];
     function addError($error)
     {
@@ -35,7 +36,8 @@ class Docman_Validator {
         return count($this->_errors) ? false : true;
     }
 }
-class Docman_ValidatePresenceOf extends Docman_Validator {
+class Docman_ValidatePresenceOf extends Docman_Validator
+{
     function __construct($data, $field, $msg)
     {
         if (!$data || !isset($data[$field]) || trim($data[$field]) == '') {
@@ -44,13 +46,12 @@ class Docman_ValidatePresenceOf extends Docman_Validator {
     }
 }
 
-class Docman_ValidateValueNotEmpty extends Docman_Validator {
+class Docman_ValidateValueNotEmpty extends Docman_Validator
+{
     function __construct($value, $msg)
     {
-        if(!$value || $value === null || $value == '') {
+        if (!$value || $value === null || $value == '') {
             $this->addError($msg);
         }
     }
 }
-
-?>

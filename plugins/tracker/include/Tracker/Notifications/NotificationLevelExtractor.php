@@ -29,7 +29,7 @@ class NotificationLevelExtractor
     {
         if ($request->exist('disable_notifications')) {
             return Tracker::NOTIFICATIONS_LEVEL_DISABLED;
-        } else if ($request->exist('enable_notifications')) {
+        } elseif ($request->exist('enable_notifications')) {
             return Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
         }
 

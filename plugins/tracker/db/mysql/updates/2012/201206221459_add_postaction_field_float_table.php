@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201206221459_add_postaction_field_float_table extends ForgeUpgrade_Bucket {
+class b201206221459_add_postaction_field_float_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -50,4 +51,3 @@ class b201206221459_add_postaction_field_float_table extends ForgeUpgrade_Bucket
         }
     }
 }
-?>

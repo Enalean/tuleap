@@ -56,8 +56,8 @@ $row_trove_cat = db_fetch_array($res_trove_cat);
 
 $current_category_name = $row_trove_cat['fullpath'];
 
-$folders = explode(" :: ",$row_trove_cat['fullpath']);
-$folders_ids = explode(" :: ",$row_trove_cat['fullpath_ids']);
+$folders = explode(" :: ", $row_trove_cat['fullpath']);
+$folders_ids = explode(" :: ", $row_trove_cat['fullpath_ids']);
 $folders_len = count($folders);
 
 $parent_id = null;
@@ -94,7 +94,7 @@ while ($row_sub = db_fetch_array($res_sub)) {
 }
 
 // MV: Add a None case
-if($folders_len == 1) {
+if ($folders_len == 1) {
     $sql = "SELECT count(DISTINCT g.group_id) AS count
 FROM groups AS g
 LEFT JOIN trove_group_link AS t
@@ -137,12 +137,12 @@ if ($special_cat === 'none') {
     $res_root_trov = db_query($qry_root_trov);
 
     $prj_list_categorized = array();
-    while($row_root_trov = db_fetch_array($res_root_trov)) {
+    while ($row_root_trov = db_fetch_array($res_root_trov)) {
         $prj_list_categorized[] = $row_root_trov['group_id'];
     }
 
     $sql_list_categorized='';
-    if(count($prj_list_categorized) > 0) {
+    if (count($prj_list_categorized) > 0) {
         $sql_list_categorized=' AND groups.group_id NOT IN ('.implode(',', $prj_list_categorized).') ';
     }
     $query_projlist = "SELECT SQL_CALC_FOUND_ROWS groups.group_id, "
@@ -161,8 +161,7 @@ if ($special_cat === 'none') {
         . "(groups.status='A') "
         . $sql_list_categorized
         . "GROUP BY groups.group_id ORDER BY groups.group_name ";
-}
-else {
+} else {
 // now do limiting query
 
     $query_projlist = "SELECT SQL_CALC_FOUND_ROWS groups.group_id, "
@@ -216,7 +215,7 @@ if ($special_cat) {
 
 $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/softwaremap');
 
-$GLOBALS['HTML']->header(array('title' => $Language->getText('softwaremap_trove_list','map'), 'main_classes' => array('tlp-framed')));
+$GLOBALS['HTML']->header(array('title' => $Language->getText('softwaremap_trove_list', 'map'), 'main_classes' => array('tlp-framed')));
 
 $renderer->renderToPage(
     'software_map',

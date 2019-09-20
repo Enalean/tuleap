@@ -21,7 +21,8 @@
 
 namespace Tuleap\Tracker\Artifact\MailGateway;
 
-class MailGatewayConfigDao extends \DataAccessObject {
+class MailGatewayConfigDao extends \DataAccessObject
+{
 
     public function searchEmailgatewayConfiguration()
     {

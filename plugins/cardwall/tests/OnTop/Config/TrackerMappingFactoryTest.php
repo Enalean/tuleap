@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__) .'/../../bootstrap.php';
 
-class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -89,11 +90,11 @@ class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase {
         $mappings = $this->factory->getMappings($this->tracker, $this->columns);
         $this->assertEqual(2, count($mappings));
         $this->assertEqual($this->tracker_10, $mappings[10]->getTracker());
-        $this->assertEqual($this->field_123,  $mappings[10]->getField());
+        $this->assertEqual($this->field_123, $mappings[10]->getField());
         $this->assertIsA($mappings[10], 'Cardwall_OnTop_Config_TrackerMappingFreestyle');
         $this->assertEqual(array($this->field_122, $this->field_123), $mappings[10]->getAvailableFields());
         $this->assertEqual($this->tracker_20, $mappings[20]->getTracker());
-        $this->assertEqual($this->field_124,  $mappings[20]->getField());
+        $this->assertEqual($this->field_124, $mappings[20]->getField());
     }
 
     public function itUsesStatusFieldIfNoField()
@@ -104,7 +105,7 @@ class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase {
 
         $mappings = $this->factory->getMappings($this->tracker, $this->columns);
         $this->assertEqual(1, count($mappings));
-        $this->assertEqual($this->status_field,  $mappings[10]->getField());
+        $this->assertEqual($this->status_field, $mappings[10]->getField());
         $this->assertIsA($mappings[10], 'Cardwall_OnTop_Config_TrackerMappingStatus');
     }
 
@@ -154,4 +155,3 @@ class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase {
         $this->factory->getMappings($this->tracker, $this->columns);
     }
 }
-?>

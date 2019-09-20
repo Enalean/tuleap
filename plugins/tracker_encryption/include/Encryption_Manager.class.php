@@ -46,14 +46,14 @@ class Encryption_Manager
             $data      = base64_encode($encrypted);
             return $data;
         } else {
-            throw new Tracker_EncryptionException($GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('plugin_tracker_encryption', 'encryption_error')));
+            throw new Tracker_EncryptionException($GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_encryption', 'encryption_error')));
         }
     }
 
     private function loadRSAKey(Tracker_Key $tracker_key)
     {
         if (!$this->rsa->loadKey($tracker_key->getKey())) {
-            throw new Tracker_EncryptionException($GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('plugin_tracker_encryption', 'encryption_error')));
+            throw new Tracker_EncryptionException($GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_encryption', 'encryption_error')));
         }
     }
 }

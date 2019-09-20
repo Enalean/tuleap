@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent {
+class SystemEvent_MEDIAWIKI_SWITCH_TO_123 extends SystemEvent
+{
     public const NAME = 'MEDIAWIKI_SWITCH_TO_123';
 
     public const ALL = 'all';

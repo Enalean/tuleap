@@ -21,7 +21,8 @@
 /**
  * Validates the request
  */
-class Project_OneStepCreation_OneStepCreationValidator {
+class Project_OneStepCreation_OneStepCreationValidator
+{
 
     /** @var Project_OneStepCreation_OneStepCreationRequest */
     private $creation_request;
@@ -75,7 +76,7 @@ class Project_OneStepCreation_OneStepCreationValidator {
 
         $rule = new Rule_ProjectFullName();
         if (!$rule->isValid($this->creation_request->getFullName())) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_full_name'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license', 'invalid_full_name'));
             $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
             $this->setIsNotValid();
         }
@@ -112,7 +113,7 @@ class Project_OneStepCreation_OneStepCreationValidator {
         //check for valid group name
         $rule = new Rule_ProjectName();
         if (!$rule->isValid($this->creation_request->getUnixName())) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_short_name'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license', 'invalid_short_name'));
             $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
             $this->setIsNotValid();
         }

@@ -21,7 +21,8 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use Exception;
 
-class ArtifactIsNotInBacklogTrackerException extends Exception {
+class ArtifactIsNotInBacklogTrackerException extends Exception
+{
 
     public function __construct($potential_backlog_item_id)
     {

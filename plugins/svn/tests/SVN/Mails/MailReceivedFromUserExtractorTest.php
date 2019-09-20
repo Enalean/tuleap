@@ -25,7 +25,8 @@ use TuleapTestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class MailReceivedFromUserExtractorTest extends TuleapTestCase {
+class MailReceivedFromUserExtractorTest extends TuleapTestCase
+{
 
     public function itVerifyThatMailListIsValid()
     {
@@ -44,5 +45,4 @@ class MailReceivedFromUserExtractorTest extends TuleapTestCase {
         $this->assertEqual($mail->getValidAdresses(), array());
         $this->assertEqual($mail->getInvalidAdresses(), array('aninvalidmailexample.com', 'invalid¤mail@example.com', 'notvalid'));
     }
-
 }

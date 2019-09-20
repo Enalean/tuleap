@@ -69,8 +69,8 @@ try {
         new ImmutableTagFactory(new ImmutableTagDao()),
         $svnlook,
         new SHA1CollisionDetector(),
-        new SvnLogger()
-        , new HookConfigRetriever(new HookDao(), new HookConfigSanitizer())
+        new SvnLogger(),
+        new HookConfigRetriever(new HookDao(), new HookConfigSanitizer())
     );
 
     $hook->assertCommitMessageIsValid(ReferenceManager::instance());

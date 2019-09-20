@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Report_Session extends Codendi_Session {
+class Tracker_Report_Session extends Codendi_Session
+{
 
     protected $report_id;
     protected $report_namespace;
@@ -29,7 +30,7 @@ class Tracker_Report_Session extends Codendi_Session {
         parent::__construct();
         $this->report_id         = $report_id;
         $this->report_namespace  = $report_id;
-        if ( !isset($this->session['trackers']['reports'][$this->report_namespace]['has_changed']) ) {
+        if (!isset($this->session['trackers']['reports'][$this->report_namespace]['has_changed'])) {
             $this->session['trackers']['reports'][$this->report_namespace] = array(
                 'has_changed'   => false,
                 'checkout_date' => $_SERVER['REQUEST_TIME'],
@@ -73,7 +74,7 @@ class Tracker_Report_Session extends Codendi_Session {
             $report_copy['renderers'][$i] = $report_copy['renderers'][$renderer_id];
             $report_copy['renderers'][$i]['id'] = $i;
             //removing old id
-            if ( $renderer_id >= 0 ) {
+            if ($renderer_id >= 0) {
                 unset($report_copy['renderers'][$renderer_id]);
             }
             if (isset($report_copy['renderers'][$i]['charts'])) {
@@ -116,13 +117,13 @@ class Tracker_Report_Session extends Codendi_Session {
      * @param array $opts
      * @todo empty value may allow to set options only?
      */
-    public function storeCriterion($field_id, $value, $opts=array())
+    public function storeCriterion($field_id, $value, $opts = array())
     {
         $this->set("criteria.{$field_id}.value", $value);
-        if ( isset($opts['is_advanced']) ) {
+        if (isset($opts['is_advanced'])) {
             $this->set("criteria.{$field_id}.is_advanced", $opts['is_advanced']);
         }
-        if ( !$this->get("criteria.$field_id.is_removed") ) {
+        if (!$this->get("criteria.$field_id.is_removed")) {
             $this->set("criteria.$field_id.is_removed", 0);
         }
     }
@@ -138,15 +139,15 @@ class Tracker_Report_Session extends Codendi_Session {
      * NOTICE: Do not set value if empty
      *
      */
-    public function updateCriterion($field_id, $value, $opts=array())
+    public function updateCriterion($field_id, $value, $opts = array())
     {
-        if ( !empty($value) || is_array($value) ) {
+        if (!empty($value) || is_array($value)) {
             $this->set("criteria.{$field_id}.value", $value);
         }
-        if ( isset($opts['is_advanced']) ) {
+        if (isset($opts['is_advanced'])) {
             $this->set("criteria.{$field_id}.is_advanced", $opts['is_advanced']);
         }
-        if ( isset($opts['is_removed']) ) {
+        if (isset($opts['is_removed'])) {
             $this->set("criteria.{$field_id}.is_removed", $opts['is_removed']);
         }
     }
@@ -204,15 +205,14 @@ class Tracker_Report_Session extends Codendi_Session {
     */
     public function moveRenderer($renderers_rank)
     {
-        foreach($renderers_rank as $rank => $renderer_id) {
+        foreach ($renderers_rank as $rank => $renderer_id) {
             $this->set("renderers.{$renderer_id}.rank", $rank);
         }
     }
 
-    public function storeRenderer($renderer_id, $data, $opts=array() )
+    public function storeRenderer($renderer_id, $data, $opts = array())
     {
         $this->set("renderers.{$renderer_id}", $data);
-
     }
 
     public function storeExpertMode()
@@ -230,5 +230,3 @@ class Tracker_Report_Session extends Codendi_Session {
         $this->set('expert_query', $expert_query);
     }
 }
-
-?>

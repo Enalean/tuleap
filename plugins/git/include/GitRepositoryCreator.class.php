@@ -19,7 +19,8 @@
  */
 
 
-interface GitRepositoryCreator {
+interface GitRepositoryCreator
+{
     /**
      * Get the regexp pattern to use for name repository validation
      * @return string eg: 'a-zA-Z0-9_-'
@@ -34,7 +35,4 @@ interface GitRepositoryCreator {
      * @return bool true if valid, false otherwise
      */
     public function isNameValid($name);
-
 }
-
-?>

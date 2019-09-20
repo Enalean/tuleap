@@ -27,7 +27,8 @@ use TuleapTestCase;
 
 require_once __DIR__ .'/../bootstrap.php';
 
-class ExtractorTest extends TuleapTestCase {
+class ExtractorTest extends TuleapTestCase
+{
 
     /**
      * @var Extractor

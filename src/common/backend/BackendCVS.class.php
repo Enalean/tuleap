@@ -18,7 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class BackendCVS extends Backend {
+class BackendCVS extends Backend
+{
 
     protected $CVSRootListNeedUpdate;
     protected $UseCVSNT;
@@ -217,7 +218,7 @@ class BackendCVS extends Backend {
         if (!$this->useCVSNT()) {
             $lockdir=$GLOBALS['cvslock_prefix']."/".$project->getUnixName(false);
             if (! is_dir($lockdir)) {
-                if (!mkdir("$lockdir",02777)) {
+                if (!mkdir("$lockdir", 02777)) {
                     $this->log("Can't create project CVS lock dir: $lockdir", Backend::LOG_ERROR);
                     return false;
                 }
@@ -440,7 +441,7 @@ class BackendCVS extends Backend {
      *
      * @return void
      */
-    function _RcsCheckout($file, &$output='')
+    function _RcsCheckout($file, &$output = '')
     {
         $rcode = 0;
         $output = $this->system("co -q -l $file", $rcode);
@@ -454,7 +455,7 @@ class BackendCVS extends Backend {
      *
      * @return void
      */
-    function _RcsCommit($file, &$output='')
+    function _RcsCommit($file, &$output = '')
     {
         $rcode  = 0;
         $output = $this->system("/usr/bin/rcs -q -l $file; ci -q -m\"Codendi modification\" $file; co -q $file", $rcode);
@@ -616,7 +617,7 @@ class BackendCVS extends Backend {
                 // Get file stat
                 $stat = stat("$cvsroot/$file");
                 if ($stat) {
-                    if ( ($stat['uid'] != $this->getHTTPUserUID()) || ($stat['gid'] != $project->getUnixGID()) ) {
+                    if (($stat['uid'] != $this->getHTTPUserUID()) || ($stat['gid'] != $project->getUnixGID())) {
                         $need_owner_update = true;
                     }
                 }

@@ -35,7 +35,8 @@ Mock::generate('Backend');
 
 Mock::generate('BaseLanguage');
 
-class Rule_UserNameTest extends TuleapTestCase {
+class Rule_UserNameTest extends TuleapTestCase
+{
 
     function testReservedNames()
     {

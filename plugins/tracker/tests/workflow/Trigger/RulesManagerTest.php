@@ -23,7 +23,8 @@ use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
 require_once __DIR__.'/../../bootstrap.php';
 
-abstract class Tracker_Workflow_Trigger_RulesManagerTest extends TuleapTestCase {
+abstract class Tracker_Workflow_Trigger_RulesManagerTest extends TuleapTestCase
+{
     protected $manager;
     protected $dao;
     protected $target_value_id;
@@ -50,7 +51,8 @@ abstract class Tracker_Workflow_Trigger_RulesManagerTest extends TuleapTestCase 
     }
 }
 
-class Tracker_Workflow_Trigger_RulesManager_duplicateTest extends Tracker_Workflow_Trigger_RulesManagerTest {
+class Tracker_Workflow_Trigger_RulesManager_duplicateTest extends Tracker_Workflow_Trigger_RulesManagerTest
+{
 
     public function setUp()
     {
@@ -176,10 +178,10 @@ class Tracker_Workflow_Trigger_RulesManager_duplicateTest extends Tracker_Workfl
 
         $this->manager->duplicate($template_trackers, $field_mapping);
     }
-
 }
 
-class Tracker_Workflow_Trigger_RulesManager_addTest extends Tracker_Workflow_Trigger_RulesManagerTest {
+class Tracker_Workflow_Trigger_RulesManager_addTest extends Tracker_Workflow_Trigger_RulesManagerTest
+{
 
     public function setUp()
     {
@@ -246,7 +248,8 @@ class Tracker_Workflow_Trigger_RulesManager_addTest extends Tracker_Workflow_Tri
     }
 }
 
-class Tracker_Workflow_Trigger_RulesManager_getFromTrackerTest extends Tracker_Workflow_Trigger_RulesManagerTest {
+class Tracker_Workflow_Trigger_RulesManager_getFromTrackerTest extends Tracker_Workflow_Trigger_RulesManagerTest
+{
 
     public function setUp()
     {
@@ -280,7 +283,6 @@ class Tracker_Workflow_Trigger_RulesManager_getFromTrackerTest extends Tracker_W
             )
         );
         stub($this->formelement_factory)->getUsedFormElementFieldById($this->trigger_field_id_1)->returns($this->trigger_field_1);
-
     }
 
     public function itFetchesDataFromDb()
@@ -377,7 +379,8 @@ class Tracker_Workflow_Trigger_RulesManager_getFromTrackerTest extends Tracker_W
     }
 }
 
-class Tracker_Workflow_Trigger_RulesManager_deleteByRuleIdTest extends Tracker_Workflow_Trigger_RulesManagerTest {
+class Tracker_Workflow_Trigger_RulesManager_deleteByRuleIdTest extends Tracker_Workflow_Trigger_RulesManagerTest
+{
 
     private $tracker;
     private $rule;
@@ -426,7 +429,8 @@ class Tracker_Workflow_Trigger_RulesManager_deleteByRuleIdTest extends Tracker_W
 }
 
 
-class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_Workflow_Trigger_RulesManagerTest {
+class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_Workflow_Trigger_RulesManagerTest
+{
 
     public function itProcessTheInvolvedTriggerRules()
     {
@@ -465,7 +469,8 @@ class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_
 }
 
 
-class TriggerRuleComparatorExpectaction extends SimpleExpectation {
+class TriggerRuleComparatorExpectaction extends SimpleExpectation
+{
 
     /** @var Tracker_Workflow_Trigger_TriggerRule */
     private $trigger_rule;
@@ -547,7 +552,8 @@ class TriggerRuleComparatorExpectaction extends SimpleExpectation {
     }
 }
 
-class Tracker_Workflow_Trigger_RulesManager_XMLImportTest extends Tracker_Workflow_Trigger_RulesManagerTest {
+class Tracker_Workflow_Trigger_RulesManager_XMLImportTest extends Tracker_Workflow_Trigger_RulesManagerTest
+{
 
     private $xml;
     private $xmlFieldMapping;
@@ -590,8 +596,7 @@ class Tracker_Workflow_Trigger_RulesManager_XMLImportTest extends Tracker_Workfl
                     <field_value_id REF="V2118"/>
                   </target>
                 </trigger_rule>
-            </triggers>'
-        );
+            </triggers>');
 
         $this->field_1685 = mockery_stub(\Tracker_FormElement_Field_Selectbox::class)->getId()->returns(1685);
         $this->field_1741 = mockery_stub(\Tracker_FormElement_Field_Selectbox::class)->getId()->returns(1741);

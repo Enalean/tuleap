@@ -22,7 +22,8 @@ namespace Tuleap\ProFTPd;
 
 use HTTPRequest;
 
-class ProftpdRouter {
+class ProftpdRouter
+{
 
     public const DEFAULT_CONTROLLER = 'explorer';
     public const DEFAULT_ACTION     = 'index';
@@ -92,4 +93,3 @@ class ProftpdRouter {
         return $request->getProject()->getService('plugin_proftpd');
     }
 }
-?>

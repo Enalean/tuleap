@@ -30,9 +30,9 @@ class WikiCallback
      */
     function callback($pearCb)
     {
-        if (is_string($pearCb))
+        if (is_string($pearCb)) {
             return new WikiFunctionCb($pearCb);
-        else if (is_array($pearCb)) {
+        } elseif (is_array($pearCb)) {
             list($object, $method) = $handler;
             return new WikiMethodCb($object, $method);
         }
@@ -82,8 +82,7 @@ class WikiCallback
 /**
  * Global function callback.
  */
-class WikiFunctionCb
-    extends WikiCallback
+class WikiFunctionCb extends WikiCallback
 {
     /**
      * Constructor
@@ -110,8 +109,7 @@ class WikiFunctionCb
 /**
  * Object Method Callback.
  */
-class WikiMethodCb
-    extends WikiCallback
+class WikiMethodCb extends WikiCallback
 {
     /**
      * Constructor
@@ -147,4 +145,3 @@ class WikiMethodCb
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

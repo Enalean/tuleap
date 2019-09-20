@@ -27,7 +27,8 @@ use Jenkins_Client;
 use Jenkins_ClientUnableToLaunchBuildException;
 use Logger;
 
-class Launcher {
+class Launcher
+{
 
     public const ROOT_DIRECTORY = '/';
 
@@ -86,7 +87,7 @@ class Launcher {
                     );
 
                     $this->launched_jobs[] = $job->getUrl();
-                } catch(Jenkins_ClientUnableToLaunchBuildException $exception) {
+                } catch (Jenkins_ClientUnableToLaunchBuildException $exception) {
                     $this->logger->error("Launching job #$job_id triggered by repository ".$repository->getFullName()." with the url " .$job->getUrl()." returns an error " .$exception->getMessage());
                 }
 
@@ -148,5 +149,4 @@ class Launcher {
     {
         return $this->factory->getJobsByRepository($repository);
     }
-
 }

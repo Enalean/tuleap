@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Field_Value_OpenListDao extends Tracker_FormElement_Field_Value_ListDao {
+class Tracker_FormElement_Field_Value_OpenListDao extends Tracker_FormElement_Field_Value_ListDao
+{
 
     public function __construct()
     {
@@ -40,7 +41,7 @@ class Tracker_FormElement_Field_Value_OpenListDao extends Tracker_FormElement_Fi
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $values = array();
-        foreach($value_ids as $v) {
+        foreach ($value_ids as $v) {
             $b = $v['bindvalue_id'] ? (int)$v['bindvalue_id'] : 'NULL';
             $o = $v['openvalue_id'] ? (int)$v['openvalue_id'] : 'NULL';
             $values[] = "($changeset_value_id, $b, $o)";
@@ -71,4 +72,3 @@ class Tracker_FormElement_Field_Value_OpenListDao extends Tracker_FormElement_Fi
         return $this->update($sql);
     }
 }
-?>

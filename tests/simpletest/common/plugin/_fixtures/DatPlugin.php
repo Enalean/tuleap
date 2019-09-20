@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class DatPlugin {
+class DatPlugin
+{
 
     private $id;
 
@@ -46,11 +47,9 @@ class DatPlugin {
 
     public function setName($name)
     {
-
     }
 
     public function setIsRestricted($restricted)
     {
-
     }
 }

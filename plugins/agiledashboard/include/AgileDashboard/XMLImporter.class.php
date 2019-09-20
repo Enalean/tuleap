@@ -21,7 +21,8 @@
 /**
  * Transforms imported xml into php values
  */
-class AgileDashboard_XMLImporter {
+class AgileDashboard_XMLImporter
+{
 
     /**
      *
@@ -64,7 +65,7 @@ class AgileDashboard_XMLImporter {
                 PlanningParameters::BACKLOG_TRACKER_IDS => $this->toArrayBacklogIds($planning, $tracker_mappings)
             );
 
-            foreach($this->toArrayPermissions($planning) as $permission_name => $ugroups) {
+            foreach ($this->toArrayPermissions($planning) as $permission_name => $ugroups) {
                 $planning_parameters[$permission_name] = $ugroups;
             }
 
@@ -94,7 +95,7 @@ class AgileDashboard_XMLImporter {
             return $permissions;
         }
 
-        foreach($planning_node->permissions->children() as $permission) {
+        foreach ($planning_node->permissions->children() as $permission) {
             $ugroup = (string) $permission['ugroup'];
             $type   = (string) $permission['type'];
 
@@ -125,4 +126,3 @@ class AgileDashboard_XMLImporter {
         return (int) $tracker_mappings[$tracker_id];
     }
 }
-?>

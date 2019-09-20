@@ -26,11 +26,11 @@ class Tracker_ArtifactLinkInfo
     protected $group_id;
     protected $tracker_id;
     protected $last_changeset_id;
-    private   $nature;
+    private $nature;
     /**
      * @var Tracker_Artifact
      */
-    private   $artifact;
+    private $artifact;
 
     /**
      * @param int $artifact_id

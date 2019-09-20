@@ -89,7 +89,8 @@ function aFileField()
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_File');
 }
 
-class Test_Tracker_FormElement_Builder {
+class Test_Tracker_FormElement_Builder
+{
     protected $klass;
     protected $id;
     protected $name;
@@ -187,7 +188,8 @@ class Test_Tracker_FormElement_Builder {
         return $object;
     }
 }
-class Test_Tracker_FormElementDate_Builder extends Test_Tracker_FormElement_Builder {
+class Test_Tracker_FormElementDate_Builder extends Test_Tracker_FormElement_Builder
+{
     protected $with_time;
 
     public function __construct($klass, $with_time)

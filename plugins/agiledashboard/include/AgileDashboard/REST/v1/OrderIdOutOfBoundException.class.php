@@ -21,7 +21,8 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use Exception;
 
-class OrderIdOutOfBoundException extends Exception {
+class OrderIdOutOfBoundException extends Exception
+{
 
     public function __construct($wrong_id)
     {

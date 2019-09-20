@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class AgileDashboard_KanbanColumn {
+class AgileDashboard_KanbanColumn
+{
 
     /**
      * @var int
@@ -101,5 +102,4 @@ class AgileDashboard_KanbanColumn {
     {
         return $this->is_removable;
     }
-
 }

@@ -26,7 +26,8 @@
  * I'm able to understand cross reference grammar related to git commits and to
  * create Reference objects that correspond to a literal reference.
  */
-class Git_ReferenceManager {
+class Git_ReferenceManager
+{
     /**
      * @var GitRepositoryFactory
      */
@@ -73,5 +74,3 @@ class Git_ReferenceManager {
         return array($repository_name, $sha1);
     }
 }
-
-?>

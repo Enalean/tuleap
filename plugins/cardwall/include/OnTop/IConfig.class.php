@@ -21,7 +21,8 @@
 /**
  * Provide a link between a Tracker_Artifact and a Tracker_FormElement_Field
  */
-interface Cardwall_OnTop_IConfig {
+interface Cardwall_OnTop_IConfig
+{
 
     public function getTracker();
 

@@ -16,8 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_DateReminderException extends Exception {
+class Tracker_DateReminderException extends Exception
+{
 
 }
-
-?>

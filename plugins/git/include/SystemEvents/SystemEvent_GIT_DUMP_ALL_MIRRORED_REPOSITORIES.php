@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES extends SystemEvent {
+class SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES extends SystemEvent
+{
     public const NAME = 'GIT_DUMP_ALL_MIRRORED_REPOSITORIES';
 
     /** @var Git_GitoliteDriver */

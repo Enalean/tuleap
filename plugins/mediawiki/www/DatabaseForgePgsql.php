@@ -21,20 +21,27 @@
  */
 
 require_once("$IP/includes/db/DatabasePostgres.php");
-class DatabaseForge extends DatabasePostgres {
+class DatabaseForge extends DatabasePostgres
+{
     function __construct(
-        $server=false,
-        $user=false,
-        $password=false,
-        $dbName=false,
-        $failFunction=false,
-        $flags=0
+        $server = false,
+        $user = false,
+        $password = false,
+        $dbName = false,
+        $failFunction = false,
+        $flags = 0
     ) {
         global $wgDBtype;
 
         $wgDBtype = "postgres";
-        return parent::__construct($server, $user,
-         $password, $dbName, $failFunction, $flags);
+        return parent::__construct(
+            $server,
+            $user,
+            $password,
+            $dbName,
+            $failFunction,
+            $flags
+        );
     }
 
     function fieldInfo($table, $field)
@@ -42,9 +49,9 @@ class DatabaseForge extends DatabasePostgres {
         switch ($table) {
             case 'interwiki':
                   $table = 'plugin_mediawiki_interwiki';
-         break;
+                break;
             default:
-         return DatabasePostgres::fieldInfo($table, $field);
+                return DatabasePostgres::fieldInfo($table, $field);
         }
 
         global $wgDBmwschema;
@@ -62,7 +69,7 @@ class DatabaseForge extends DatabasePostgres {
 
         global $wgDBmwschema;
         if ($this->schemaExists($wgDBmwschema)) {
-            if (method_exists ($this,"addIdentifierQuotes")) {
+            if (method_exists($this, "addIdentifierQuotes")) {
                 $safeschema = $this->addIdentifierQuotes($wgDBmwschema);
             } else {
                 $safeschema = $wgDBmwschema;
@@ -73,7 +80,7 @@ class DatabaseForge extends DatabasePostgres {
         return $v;
     }
 
-    function query($sql, $fname='', $tempIgnore=false)
+    function query($sql, $fname = '', $tempIgnore = false)
     {
      /* ugh! */
         $chk = "ALTER TABLE interwiki ";
@@ -82,19 +89,19 @@ class DatabaseForge extends DatabasePostgres {
             $sql = "ALTER TABLE public.plugin_mediawiki_interwiki " .
              substr($sql, $csz);
         }
-        return DatabasePostgres::query($sql, $fname,$tempIgnore);
+        return DatabasePostgres::query($sql, $fname, $tempIgnore);
     }
 
-    function tableName($name, $format='quoted')
+    function tableName($name, $format = 'quoted')
     {
         global $wgDBmwschema;
 
         switch ($name) {
             case 'interwiki':
                   $v = 'plugin_mediawiki_interwiki';
-         break;
+                break;
             default:
-         return DatabasePostgres::tableName($name, $format);
+                return DatabasePostgres::tableName($name, $format);
         }
 
         if ($wgDBmwschema != 'public') {

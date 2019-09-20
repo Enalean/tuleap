@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TrackerXmlFieldsMapping_ValueNotFoundException extends Exception {
+class TrackerXmlFieldsMapping_ValueNotFoundException extends Exception
+{
 
     public function __construct($old_value_id, $old_reference)
     {

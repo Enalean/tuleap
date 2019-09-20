@@ -19,7 +19,8 @@
  */
 
 
-class Tracker_FileInfoFactory {
+class Tracker_FileInfoFactory
+{
     /**
      * @var Tracker_FileInfoDao
      */

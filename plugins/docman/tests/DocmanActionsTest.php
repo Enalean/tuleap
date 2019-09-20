@@ -23,7 +23,7 @@ use Mockery as M;
 
 require_once 'bootstrap.php';
 
-Mock::generatePartial('Docman_Actions','Docman_ActionsTest', array('_getItemFactory',
+Mock::generatePartial('Docman_Actions', 'Docman_ActionsTest', array('_getItemFactory',
                                                                    '_getFileStorage',
                                                                    '_getActionsDeleteVisitor',
                                                                    '_getEventManager',
@@ -53,7 +53,8 @@ Mock::generate('BaseLanguage');
 Mock::generate('UserManager');
 Mock::generate('PFUser');
 
-class DocmanActionsTest extends TuleapTestCase {
+class DocmanActionsTest extends TuleapTestCase
+{
 
     function testCannotDeleteVersionOnNonFile()
     {
@@ -410,8 +411,8 @@ class DocmanActionsTest extends TuleapTestCase {
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
         $docmanPermissionsManager = new MockDocman_PermissionsManager();
-        $docmanPermissionsManager->setReturnValueAt(0,'userCanRead', true);
-        $docmanPermissionsManager->setReturnValueAt(1,'userCanRead', false);
+        $docmanPermissionsManager->setReturnValueAt(0, 'userCanRead', true);
+        $docmanPermissionsManager->setReturnValueAt(1, 'userCanRead', false);
         $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);
         $actions->event_manager = \Mockery::spy(EventManager::class);
         $user1 = mock('PFUser');

@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class User_SSHKeyDumperTest extends TuleapTestCase {
+class User_SSHKeyDumperTest extends TuleapTestCase
+{
     private $toto_name;
     private $toto_home;
     private $foobar_home;
@@ -52,7 +53,8 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
             array(
                 'changeProcessUidGidToUser',
                 'restoreRootUidGid'
-            ));
+            )
+        );
         $this->sshkey_dumper->__construct($this->backend);
     }
 
@@ -88,7 +90,6 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
         $this->assertEqual($this->key, file_get_contents($this->toto_home.'/.ssh/authorized_keys'));
         $this->assertEqual('0700', $this->getFileModeAsString($this->toto_home.'/.ssh'));
         $this->assertEqual('0600', $this->getFileModeAsString($this->toto_home.'/.ssh/authorized_keys'));
-
     }
 
     public function itDoesntModifyFilesWhenUserMadeASymlink()

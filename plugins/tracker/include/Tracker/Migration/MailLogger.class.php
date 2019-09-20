@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Migration_MailLogger implements Logger {
+class Tracker_Migration_MailLogger implements Logger
+{
 
     /**
      * @var BackendLogger
@@ -60,7 +61,6 @@ class Tracker_Migration_MailLogger implements Logger {
     public function warn($message, ?Exception $e = null)
     {
         $this->log($this->generateLogWithException($message, $e), Logger::WARN);
-
     }
 
     public function sendMail(PFUser $user, Project $project, $tv3_id, $tracker_name)

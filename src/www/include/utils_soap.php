@@ -127,5 +127,3 @@ function user_to_soap($identifier, ?PFUser $user = null, PFUser $current_user)
         }
     }
 }
-
-?>

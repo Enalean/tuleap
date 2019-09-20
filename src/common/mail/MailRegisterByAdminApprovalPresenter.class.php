@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailRegisterByAdminApprovalPresenter extends MailRegisterPresenter {
+class MailRegisterByAdminApprovalPresenter extends MailRegisterPresenter
+{
 
     public $section_three;
 
@@ -39,4 +40,3 @@ class MailRegisterByAdminApprovalPresenter extends MailRegisterPresenter {
         $this->section_three         = $section_three;
     }
 }
-?>

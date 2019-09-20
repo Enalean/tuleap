@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Codendi_Request {
+class Codendi_Request
+{
     /**
      * @var array
      */
@@ -89,7 +90,7 @@ class Codendi_Request {
      */
     public function getInArray($idx, $variable)
     {
-        if(is_array($this->params[$idx])) {
+        if (is_array($this->params[$idx])) {
             return $this->_get($variable, $this->params[$idx]);
         } else {
             return false;

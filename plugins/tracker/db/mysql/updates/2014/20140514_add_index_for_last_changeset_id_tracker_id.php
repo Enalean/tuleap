@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b20140514_add_index_for_last_changeset_id_tracker_id extends ForgeUpgrade_Bucket {
+class b20140514_add_index_for_last_changeset_id_tracker_id extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

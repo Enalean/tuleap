@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FlamingParrot_NavBarItemPresentersCollectionBuilder {
+class FlamingParrot_NavBarItemPresentersCollectionBuilder
+{
 
     private static $NO_ID      = false;
     private static $NOT_ACTIVE = false;

@@ -114,9 +114,11 @@ class RdfWriter extends RssWriter // in fact it should be rewritten to be other 
 {
     function __construct()
     {
-        $this->XmlElement('rdf:RDF',
-                          array('xmlns' => "http://purl.org/rss/1.0/",
-                                'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'));
+        $this->XmlElement(
+            'rdf:RDF',
+            array('xmlns' => "http://purl.org/rss/1.0/",
+            'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+        );
 
         $this->_modules = array(
             //Standards
@@ -137,7 +139,8 @@ class RdfWriter extends RssWriter // in fact it should be rewritten to be other 
  *  - RdfWriter
  *  - Reasoner
 */
-class OwlWriter extends RdfWriter {
+class OwlWriter extends RdfWriter
+{
 };
 
 /**
@@ -148,7 +151,8 @@ class OwlWriter extends RdfWriter {
  *  - OwlWriter
  *  - ReasonerBackend
 */
-class ModelWriter extends OwlWriter {
+class ModelWriter extends OwlWriter
+{
 };
 
 
@@ -157,7 +161,8 @@ class ModelWriter extends OwlWriter {
  * via http as with DIG,
  * or internally
  */
-class ReasonerBackend {
+class ReasonerBackend
+{
     function __construct()
     {
         ;
@@ -185,10 +190,12 @@ class ReasonerBackend {
     }
 };
 
-class ReasonerBackend_LISA extends ReasonerBackend {
+class ReasonerBackend_LISA extends ReasonerBackend
+{
 };
 
-class ReasonerBackend_KM extends ReasonerBackend {
+class ReasonerBackend_KM extends ReasonerBackend
+{
 };
 
 
@@ -200,4 +207,3 @@ class ReasonerBackend_KM extends ReasonerBackend {
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

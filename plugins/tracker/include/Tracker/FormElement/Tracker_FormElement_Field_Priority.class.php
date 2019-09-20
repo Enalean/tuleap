@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly {
+class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly
+{
 
     public function getLabel($report = null)
     {
@@ -55,7 +56,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return '';
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
         $value = $this->getArtifactRank($artifact_id);
 

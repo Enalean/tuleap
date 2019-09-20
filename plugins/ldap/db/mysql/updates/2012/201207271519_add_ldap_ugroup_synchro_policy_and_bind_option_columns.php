@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201207271519_add_ldap_ugroup_synchro_policy_and_bind_option_columns extends ForgeUpgrade_Bucket {
+class b201207271519_add_ldap_ugroup_synchro_policy_and_bind_option_columns extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -76,7 +77,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The column bind_option in table plugin_ldap_ugroup still not created');
         }
     }
-
 }
-
-?>

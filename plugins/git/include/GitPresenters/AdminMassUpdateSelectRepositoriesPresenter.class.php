@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class GitPresenters_AdminMassUpdateSelectRepositoriesPresenter extends GitPresenters_AdminPresenter {
+class GitPresenters_AdminMassUpdateSelectRepositoriesPresenter extends GitPresenters_AdminPresenter
+{
 
     /**
      * @var CSRFSynchronizerToken

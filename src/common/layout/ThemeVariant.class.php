@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ThemeVariant {
+class ThemeVariant
+{
 
     public const PREFERENCE_NAME = 'theme_variant';
 

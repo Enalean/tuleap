@@ -21,7 +21,8 @@
 /**
  * Execute something during a postSaveNewChangeset
  */
-interface Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand {
+interface Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetCommand
+{
 
     /**
      * Do the real stuff

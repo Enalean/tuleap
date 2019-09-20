@@ -21,7 +21,8 @@
 /**
  * This is the WebDAV server tree it implements Sabre_DAV_ObjectTree to rewrite some methods
  */
-class WebDAVTree extends Sabre_DAV_ObjectTree {
+class WebDAVTree extends Sabre_DAV_ObjectTree
+{
 
     /**
      * Tests if the release destination is a package
@@ -192,7 +193,4 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
     {
         return WebDAVUtils::getInstance();
     }
-
 }
-
-?>

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Git_Mirror_MirrorDataMapper {
+class Git_Mirror_MirrorDataMapper
+{
 
     public const MIRROR_OWNER_PREFIX = 'forge__gitmirror_';
     public const PROJECTS_HOSTNAME   = 'projects';

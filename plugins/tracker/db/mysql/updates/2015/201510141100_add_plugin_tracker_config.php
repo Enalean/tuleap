@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201510141100_add_plugin_tracker_config extends ForgeUpgrade_Bucket {
+class b201510141100_add_plugin_tracker_config extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return "Add table to store plugin tracker configuration";
@@ -71,7 +72,7 @@ class b201510141100_add_plugin_tracker_config extends ForgeUpgrade_Bucket {
         $centos5_path = '/etc/codendi/conf/local.inc';
         $local_inc    = getenv('TULEAP_LOCAL_INC') ? getenv('TULEAP_LOCAL_INC') : getenv('CODENDI_LOCAL_INC');
 
-        if (! $local_inc ) {
+        if (! $local_inc) {
             if (is_file($default_path)) {
                 $local_inc = $default_path;
             } else {

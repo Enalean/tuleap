@@ -25,7 +25,8 @@
 require_once dirname(__FILE__).'/../bootstrap.php';
 require_once __DIR__ .'/../../../statistics/tests/bootstrap.php';
 
-class Git_SystemEventManagerTest extends TuleapTestCase {
+class Git_SystemEventManagerTest extends TuleapTestCase
+{
     /** @var SystemEventManager */
     private $system_event_manager;
     /** @var Git_SystemEventManager */

@@ -20,7 +20,8 @@
  * DAO class for Project Quota
  */
 
-class Statistics_ProjectQuotaDao extends DataAccessObject {
+class Statistics_ProjectQuotaDao extends DataAccessObject
+{
 
     protected $tableName       = 'plugin_statistics_disk_quota_exception';
     public const GROUP_ID             = 'group_id'; //PK
@@ -135,7 +136,4 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
                 WHERE ".self::GROUP_ID." = $project_id";
         return $this->update($sql);
     }
-
 }
-
-?>

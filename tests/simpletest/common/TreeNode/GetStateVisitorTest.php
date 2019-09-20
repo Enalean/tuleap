@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TreeNode_GetStateVisitorVisitorTest extends TuleapTestCase {
+class TreeNode_GetStateVisitorVisitorTest extends TuleapTestCase
+{
 
     public const STATE_NODE  = TreeNode_GetStateVisitor::STATE_NODE;
     public const STATE_LAST  = TreeNode_GetStateVisitor::STATE_LAST;
@@ -103,4 +104,3 @@ class TreeNode_GetStateVisitorVisitorTest extends TuleapTestCase {
         $this->assertEqual($expected_state, $state);
     }
 }
-?>

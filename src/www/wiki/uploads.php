@@ -26,17 +26,17 @@ require_once __DIR__ . '/../../common/wiki/lib/WikiAttachment.class.php';
 $attch = new WikiAttachment();
 $attch->setUri($_SERVER['REQUEST_URI']);
 
-if($attch->exist() && $attch->isActive()) {
-    if($attch->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
+if ($attch->exist() && $attch->isActive()) {
+    if ($attch->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
         $attch->htmlDump();
     }
-}
-else {
-    exit_error($Language->getText('global','error'),
-               $Language->getText('wiki_attachment_upload', 'err_not_exist'));
+} else {
+    exit_error(
+        $Language->getText('global', 'error'),
+        $Language->getText('wiki_attachment_upload', 'err_not_exist')
+    );
 }
 
 // Local Variables:
 // mode: php
 // End:
-?>

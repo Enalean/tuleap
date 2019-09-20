@@ -23,7 +23,8 @@ namespace Tuleap\OpenIDConnectClient\UserMapping;
 use CSRFSynchronizerToken;
 use DateTime;
 
-class UserPreferencesPresenter {
+class UserPreferencesPresenter
+{
 
     /**
      * @var UserMappingUsage[]
@@ -84,5 +85,4 @@ class UserPreferencesPresenter {
     {
         return $this->csrf_token->fetchHTMLInput();
     }
-
 }

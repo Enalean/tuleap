@@ -67,7 +67,8 @@
  * - Separate classes for collection and single ressources ?
  * - Renderer implementation coupling
  */
-abstract class MVC2_Controller {
+abstract class MVC2_Controller
+{
 
     /**
      * @var Codendi_Request

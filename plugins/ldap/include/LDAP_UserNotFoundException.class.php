@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class LDAP_UserNotFoundException extends Exception {
+class LDAP_UserNotFoundException extends Exception
+{
     public function __construct()
     {
-        parent::__construct($GLOBALS['Language']->getText('include_session','invalid_ldap_name'));
+        parent::__construct($GLOBALS['Language']->getText('include_session', 'invalid_ldap_name'));
     }
 }

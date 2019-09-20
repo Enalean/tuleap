@@ -45,13 +45,13 @@ class NatureDeletor
     {
         $this->validator->checkIsNotOrHasNotBeenUsed($shortname);
 
-        try{
+        try {
             $this->dao->delete($shortname);
         } catch (Exception $exception) {
             throw new UnableToDeleteNatureException($GLOBALS['Language']->getText(
                 'plugin_tracker_artifact_links_natures',
-                'db_error')
-            );
+                'db_error'
+            ));
         }
     }
 }

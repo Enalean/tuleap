@@ -18,11 +18,10 @@ if (!$request->valid($vGroupId)) {
     exit_no_group();
 } else {
     $group_id = $request->get('group_id');
-
 }
 
 // Must be at least Project Admin to configure this
-if (!user_ismember($group_id,'A') && !user_ismember($group_id,'SVN_ADMIN')) {
+if (!user_ismember($group_id, 'A') && !user_ismember($group_id, 'SVN_ADMIN')) {
     exit_permission_denied();
 }
 
@@ -34,20 +33,20 @@ $vFunc = new Valid_WhiteList('func', array(
     'access_control_version'
 ));
 $vFunc->required();
-if($request->valid($vFunc)) {
+if ($request->valid($vFunc)) {
     $func = $request->get('func');
 
     switch ($func) {
-        case 'immutable_tags' :
+        case 'immutable_tags':
             require('./immutable_tags.php');
-        break;
-        case 'general_settings' :
+            break;
+        case 'general_settings':
             require('./general_settings.php');
-        break;
-        case 'access_control' :
+            break;
+        case 'access_control':
             require('./access_control.php');
-        break;
-        case 'access_control_version' :
+            break;
+        case 'access_control_version':
             if (! $request->exist('accessfile_history_id')) {
                 break;
             }
@@ -57,10 +56,10 @@ if($request->valid($vFunc)) {
 
             $GLOBALS['Response']->sendJSON(array('content' => $result));
 
-        break;
-        case 'notification' :
+            break;
+        case 'notification':
             require('./notification.php');
-        break;
+            break;
     }
 } else {
    // get project object
@@ -71,24 +70,21 @@ if($request->valid($vFunc)) {
     }
 
     svn_header_admin(array(
-        'title'=> $Language->getText('svn_admin_index','admin'),
+        'title'=> $Language->getText('svn_admin_index', 'admin'),
         'help' => 'svn.html#subversion-administration-interface'
-       )
-    );
+       ));
 
-    echo '<H2>'.$Language->getText('svn_admin_index','admin').'</H2>';
-    echo '<H3><a href="/svn/admin/?func=general_settings&group_id='.$group_id.'">'.$Language->getText('svn_admin_index','gen_sett').'</a></H3>';
-    echo '<p>'.$Language->getText('svn_admin_index','welcome').'</p>';
+    echo '<H2>'.$Language->getText('svn_admin_index', 'admin').'</H2>';
+    echo '<H3><a href="/svn/admin/?func=general_settings&group_id='.$group_id.'">'.$Language->getText('svn_admin_index', 'gen_sett').'</a></H3>';
+    echo '<p>'.$Language->getText('svn_admin_index', 'welcome').'</p>';
 
-    echo '<H3><a href="/svn/admin/?func=immutable_tags&group_id='.$group_id.'">'.$Language->getText('svn_admin_index','immutable_tags').'</a></H3>';
-    echo '<p>'.$Language->getText('svn_admin_index','immutable_tags_description').'</p>';
+    echo '<H3><a href="/svn/admin/?func=immutable_tags&group_id='.$group_id.'">'.$Language->getText('svn_admin_index', 'immutable_tags').'</a></H3>';
+    echo '<p>'.$Language->getText('svn_admin_index', 'immutable_tags_description').'</p>';
 
-    echo '<H3><a href="/svn/admin/?func=access_control&group_id='.$group_id.'">'.$Language->getText('svn_admin_index','access').'</a></H3>';
-    echo '<P>'.$Language->getText('svn_admin_index','access_comment').'</P>';
-    echo '<H3><a href="/svn/admin/?func=notification&group_id='.$group_id.'">'.$Language->getText('svn_admin_index','email_sett').'</a></H3>';
-    echo '<p>'.$Language->getText('svn_admin_index','email_comment').'</P>';
+    echo '<H3><a href="/svn/admin/?func=access_control&group_id='.$group_id.'">'.$Language->getText('svn_admin_index', 'access').'</a></H3>';
+    echo '<P>'.$Language->getText('svn_admin_index', 'access_comment').'</P>';
+    echo '<H3><a href="/svn/admin/?func=notification&group_id='.$group_id.'">'.$Language->getText('svn_admin_index', 'email_sett').'</a></H3>';
+    echo '<p>'.$Language->getText('svn_admin_index', 'email_comment').'</P>';
 
     svn_footer(array());
 }
-
-?>

@@ -23,7 +23,8 @@
 
 require_once 'bootstrap.php';
 
-class BuildItemMappingVisitorTest extends TuleapTestCase {
+class BuildItemMappingVisitorTest extends TuleapTestCase
+{
 
     function testCompareFolderChildrenOk()
     {

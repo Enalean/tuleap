@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201509020939_drop_priority_plugin_hook extends ForgeUpgrade_Bucket {
+class b201509020939_drop_priority_plugin_hook extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

@@ -24,7 +24,8 @@
 /**
  * Base class to read forge configuration
  */
-class ForgeConfig {
+class ForgeConfig
+{
 
     public const AUTH_TYPE_LDAP = 'ldap';
 

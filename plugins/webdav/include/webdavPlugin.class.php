@@ -23,7 +23,8 @@
 require_once __DIR__ . '/../../docman/include/docmanPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class WebDAVPlugin extends Plugin {
+class WebDAVPlugin extends Plugin
+{
 
     /**
      * Constructor of the class
@@ -53,7 +54,6 @@ class WebDAVPlugin extends Plugin {
             $this->pluginInfo = new WebDAVPluginInfo($this);
         }
         return $this->pluginInfo;
-
     }
 
     public function getDependencies()
@@ -128,6 +128,5 @@ class WebDAVPlugin extends Plugin {
 
         // The server is now ready to run
         return $server;
-
     }
 }

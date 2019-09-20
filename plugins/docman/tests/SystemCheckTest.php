@@ -20,7 +20,8 @@
 
 require_once 'bootstrap.php';
 
-class Docman_SystemCheckTest extends TuleapTestCase {
+class Docman_SystemCheckTest extends TuleapTestCase
+{
 
     /** @var Docman_SystemCheck */
     private $system_check;

@@ -21,7 +21,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-interface Tracker_Semantic_IRetrieveSemanticDARByTracker {
+interface Tracker_Semantic_IRetrieveSemanticDARByTracker
+{
 
     /**
      * Return the dar of semantics for a given tracker
@@ -31,5 +32,4 @@ interface Tracker_Semantic_IRetrieveSemanticDARByTracker {
      * @return DataAccessResult — collection of array('field_id' => …)
      */
     public function searchByTrackerId($tracker_id);
-
 }

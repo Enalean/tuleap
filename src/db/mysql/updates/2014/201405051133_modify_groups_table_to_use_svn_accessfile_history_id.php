@@ -19,7 +19,8 @@
 /**
  * Modify groups table to use svn accessfile history id
  */
-class b201405051133_modify_groups_table_to_use_svn_accessfile_history_id extends ForgeUpgrade_Bucket {
+class b201405051133_modify_groups_table_to_use_svn_accessfile_history_id extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return "Modify groups table to use svn accessfile history id";

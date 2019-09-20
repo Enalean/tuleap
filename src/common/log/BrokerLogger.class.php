@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class BrokerLogger implements Logger {
+class BrokerLogger implements Logger
+{
 
     private $loggers = array();
 
@@ -60,16 +61,16 @@ class BrokerLogger implements Logger {
         switch ($level) {
             case Logger::DEBUG:
                 $this->debug($message);
-               break;
+                break;
             case Logger::INFO:
                 $this->info($message);
-               break;
+                break;
             case Logger::WARN:
                 $this->warn($message);
-               break;
+                break;
             case Logger::ERROR:
                 $this->error($message);
-               break;
+                break;
         }
     }
 }

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Permission_PermissionRequest {
+class Tracker_Permission_PermissionRequest
+{
     private $permissions = array();
 
     public function __construct(array $permissions)

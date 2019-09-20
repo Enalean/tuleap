@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class User_PasswordExpirationCheckerTest extends TuleapTestCase {
+class User_PasswordExpirationCheckerTest extends TuleapTestCase
+{
     private $password_expiration_checker;
 
     public function setUp()
@@ -41,8 +42,6 @@ class User_PasswordExpirationCheckerTest extends TuleapTestCase {
                 ->withPassword('password')
                 ->withStatus(PFUser::STATUS_ACTIVE)
                 ->withLastPasswordUpdate(strtotime('15 days ago'))
-                ->build()
-        );
+                ->build());
     }
-
 }

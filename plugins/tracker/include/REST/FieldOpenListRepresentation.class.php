@@ -20,7 +20,7 @@
 
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 
-class Tracker_REST_FormElement_FieldOpenListRepresentation extends  Tracker_REST_FormElementRepresentation
+class Tracker_REST_FormElement_FieldOpenListRepresentation extends Tracker_REST_FormElementRepresentation
 {
 
     /**

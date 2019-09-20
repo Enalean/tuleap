@@ -36,7 +36,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     public function getCriteriaFrom($criteria)
     {
         //Only filter query if field  is used
-        if($this->isUsed()) {
+        if ($this->isUsed()) {
             //Only filter query if criteria is valuated
             if ($criteria_value = $this->getCriteriaValue($criteria)) {
                 $a = 'A_'. $this->id;
@@ -81,7 +81,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         return new Tracker_Report_Criteria_File_ValueDao();
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
         $html = '';
         $submitter_needed = true;
@@ -218,7 +218,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
-        if ( empty($value) || ! $value->getFiles()) {
+        if (empty($value) || ! $value->getFiles()) {
             return '-';
         }
 
@@ -257,11 +257,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     {
         $html = '';
         $html .= '<div class="add-attachement">';
-        $html .= '<p>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file') .'</p>';
+        $html .= '<p>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_new_file') .'</p>';
         $html .= '<div class="tracker_artifact_add_attachment">';
         $html .= '<p>';
         $html .= '<input type="file" id="tracker_field_'. $this->id .'" name="artifact['. $this->id .'][][file]" data-upload-is-enabled/>';
-        $html .= '<label>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_description');
+        $html .= '<label>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_new_file_description');
         $html .= '</label>';
         $html .= ' <input type="text" id="tracker_field_'. $this->id .'" name="artifact['. $this->id .'][][description]" />';
         $html .= '</p>';
@@ -462,14 +462,14 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     protected function fetchAllAttachmentTitleAndDescription($values)
     {
         $html = '';
-        if($values) {
+        if ($values) {
             $purifier = Codendi_HTMLPurifier::instance();
             $html    .= '<div class="tracker-artifact-attachement-title-list tracker_artifact_field"
                               data-field-id="'. $this->id .'"
                               data-is-required="false">';
             $html    .= '<div class="disabled_field">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_attachment_copy') . '</div>';
             $html    .= '<ul>';
-            foreach($values as $value) {
+            foreach ($values as $value) {
                 $description = $value->getDescription();
 
                 $html .= '<li>';
@@ -477,7 +477,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
                 $html .= $purifier->purify($value->getFileName());
                 $html .= '</span>';
 
-                if($description) {
+                if ($description) {
                     $html .= '<span class="file-description">';
                     $html .= ' - ' . $purifier->purify($description);
                     $html .= '</span>';
@@ -502,7 +502,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     protected function fetchMailAllAttachment($artifact_id, $values, $format)
     {
         $output = '';
-        if (!count($values) ) {
+        if (!count($values)) {
             return '';
         }
 
@@ -522,7 +522,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
                 $output .= ' | ';
                 $output .= $fileinfo->getHumanReadableFilesize();
                 $output .= ' | ';
-                $output .= $uh->getDisplayNameFromUserId( $fileinfo->getSubmittedBy() );
+                $output .= $uh->getDisplayNameFromUserId($fileinfo->getSubmittedBy());
                 $output .= PHP_EOL;
                 $output .= $link;
                 $output .= PHP_EOL;
@@ -629,9 +629,9 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     {
         $html = '';
         $html .= '<div>';
-        $html .= '<p>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file').'</p>';
+        $html .= '<p>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_new_file').'</p>';
         $html .= '<table class="tracker_artifact_add_attachment">';
-        $html .= '<tr><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_description').'</label></td><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_file').'</label></td></tr>';
+        $html .= '<tr><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_new_file_description').'</label></td><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_new_file_file').'</label></td></tr>';
         $html .= '<tr><td><input type="text" id="tracker_field_'. $this->id .'" /></td>';
         $html .= '<td><input type="file" id="tracker_field_'. $this->id .'" /></td></tr>';
         $html .= '</table>';
@@ -644,7 +644,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      */
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','file');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'file');
     }
 
     /**
@@ -652,7 +652,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      */
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','file_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'file_description');
     }
 
     /**
@@ -696,7 +696,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
                         $add .= '<img src="'.$query .'"
                                       alt="'.  $hp->purify($file_info->getDescription(), CODENDI_PURIFIER_CONVERT_HTML)  .'"
                                       style="vertical-align:middle;" />';
-                    } else if ($file_info->getDescription()) {
+                    } elseif ($file_info->getDescription()) {
                         $add .= $hp->purify($file_info->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
                     } else {
                         $add .= $hp->purify($file_info->getFilename(), CODENDI_PURIFIER_CONVERT_HTML);
@@ -744,7 +744,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     private function checkAllFilesHaveBeenSuccessfullyUploaded($value)
     {
         $rule = new Rule_File();
-        foreach($value as $i => $attachment) {
+        foreach ($value as $i => $attachment) {
             if ($this->isAttachmentNeedsToBeValidated($i, $attachment)) {
                 if (! $rule->isValid($attachment)) {
                     $this->has_errors = true;
@@ -837,7 +837,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         if (isset($files_infos['name'][$this->getId()])) {
             $info_keys = array_keys($files_infos); //name, type, error, ...
             $nb = count($files_infos['name'][$this->getId()]);
-            for ($i = 0 ; $i < $nb ; ++$i) {
+            for ($i = 0; $i < $nb; ++$i) {
                 $tab = array();
                 foreach ($info_keys as $key) {
                     $tab[$key] = $files_infos[$key][$this->getId()][$i]['file'];
@@ -1003,7 +1003,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     public function getFieldDataFromRESTValue(array $rest_value, ?Tracker_Artifact $artifact = null)
     {
         //Transform array to object
-        $value = json_decode(json_encode($rest_value), FALSE);
+        $value = json_decode(json_encode($rest_value), false);
 
         $this->validateDataFromREST($value);
 
@@ -1024,7 +1024,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
 
     private function validateDataFromREST($data)
     {
-        if (! property_exists($data, 'value') || ! is_array($data->value)){
+        if (! property_exists($data, 'value') || ! is_array($data->value)) {
             throw new Tracker_FormElement_InvalidFieldException('Invalid format for file field "'.$data->field_id.'". '
                 . ' Correct format is {"field_id" : 425, "value" : [457, 258]}');
         }
@@ -1065,7 +1065,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     public function deleteChangesetValue(Tracker_Artifact_Changeset $changeset, $changeset_value_id)
     {
         $values = $this->getChangesetValue($changeset, $changeset_value_id, false);
-        foreach($values as $fileinfo) {
+        foreach ($values as $fileinfo) {
             $fileinfo->delete();
         }
         parent::deleteChangesetValue($changeset, $changeset_value_id);

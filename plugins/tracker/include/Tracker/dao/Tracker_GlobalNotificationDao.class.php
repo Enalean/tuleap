@@ -23,7 +23,8 @@
 /**
  *  Data Access Object for Tracker_GlobalNotification
  */
-class Tracker_GlobalNotificationDao extends DataAccessObject {
+class Tracker_GlobalNotificationDao extends DataAccessObject
+{
     function __construct()
     {
         parent::__construct();
@@ -46,8 +47,10 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
     */
     function searchById($id)
     {
-        $sql = sprintf("SELECT tracker_id, addresses, all_updates, check_permissions FROM $this->table_name WHERE id = %s",
-            $this->da->quoteSmart($id));
+        $sql = sprintf(
+            "SELECT tracker_id, addresses, all_updates, check_permissions FROM $this->table_name WHERE id = %s",
+            $this->da->quoteSmart($id)
+        );
         return $this->retrieve($sql);
     }
 
@@ -57,8 +60,10 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
     */
     function searchByTrackerId($trackerId)
     {
-        $sql = sprintf("SELECT id, addresses, all_updates, check_permissions FROM $this->table_name WHERE tracker_id = %s ORDER BY id",
-            $this->da->quoteSmart($trackerId));
+        $sql = sprintf(
+            "SELECT id, addresses, all_updates, check_permissions FROM $this->table_name WHERE tracker_id = %s ORDER BY id",
+            $this->da->quoteSmart($trackerId)
+        );
         return $this->retrieve($sql);
     }
 
@@ -68,8 +73,10 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
     */
     function searchByAddresses($addresses)
     {
-        $sql = sprintf("SELECT id, tracker_id, all_updates, check_permissions FROM $this->table_name WHERE addresses = %s",
-        $this->da->quoteSmart($addresses));
+        $sql = sprintf(
+            "SELECT id, tracker_id, all_updates, check_permissions FROM $this->table_name WHERE addresses = %s",
+            $this->da->quoteSmart($addresses)
+        );
         return $this->retrieve($sql);
     }
 
@@ -79,8 +86,10 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
     */
     function searchByAllUpdates($allUpdates)
     {
-        $sql = sprintf("SELECT id, tracker_id, addresses, check_permissions FROM $this->table_name WHERE all_updates = %s",
-        $this->da->quoteSmart($allUpdates));
+        $sql = sprintf(
+            "SELECT id, tracker_id, addresses, check_permissions FROM $this->table_name WHERE all_updates = %s",
+            $this->da->quoteSmart($allUpdates)
+        );
         return $this->retrieve($sql);
     }
 
@@ -90,8 +99,10 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
     */
     function searchByCheckPermissions($checkPermissions)
     {
-        $sql = sprintf("SELECT id, tracker_id, addresses, all_updates FROM $this->table_name WHERE check_permissions = %s",
-        $this->da->quoteSmart($checkPermissions));
+        $sql = sprintf(
+            "SELECT id, tracker_id, addresses, all_updates FROM $this->table_name WHERE check_permissions = %s",
+            $this->da->quoteSmart($checkPermissions)
+        );
         return $this->retrieve($sql);
     }
 
@@ -119,18 +130,20 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
     */
     function create($tracker_id, $addresses, $all_updates, $check_permissions)
     {
-        $sql = sprintf("INSERT INTO $this->table_name (tracker_id, addresses, all_updates, check_permissions) VALUES (%s, %s, %s, %s)",
-        $this->da->quoteSmart($tracker_id),
-        $this->da->quoteSmart($addresses),
-        $this->da->quoteSmart($all_updates),
-        $this->da->quoteSmart($check_permissions));
+        $sql = sprintf(
+            "INSERT INTO $this->table_name (tracker_id, addresses, all_updates, check_permissions) VALUES (%s, %s, %s, %s)",
+            $this->da->quoteSmart($tracker_id),
+            $this->da->quoteSmart($addresses),
+            $this->da->quoteSmart($all_updates),
+            $this->da->quoteSmart($check_permissions)
+        );
         return $this->updateAndGetLastId($sql);
     }
 
     function modify($id, $values)
     {
         $updates = array();
-        foreach($values as $field => $value) {
+        foreach ($values as $field => $value) {
             $updates[] = $field .' = '. $this->da->quoteSmart($value);
         }
         $sql = "UPDATE $this->table_name SET ". implode(', ', $updates) ." WHERE id = ". $this->da->quoteSmart($id);
@@ -139,9 +152,11 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
 
     function delete($id, $tracker_id)
     {
-        $sql = sprintf("DELETE FROM $this->table_name WHERE id = %s AND tracker_id = %s",
-        $this->da->quoteSmart($id),
-        $this->da->quoteSmart($tracker_id));
+        $sql = sprintf(
+            "DELETE FROM $this->table_name WHERE id = %s AND tracker_id = %s",
+            $this->da->quoteSmart($id),
+            $this->da->quoteSmart($tracker_id)
+        );
         return $this->update($sql);
     }
 
@@ -168,6 +183,3 @@ class Tracker_GlobalNotificationDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-
-
-?>

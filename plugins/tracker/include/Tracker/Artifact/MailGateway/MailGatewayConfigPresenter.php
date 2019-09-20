@@ -26,7 +26,8 @@ use Tuleap\Tracker\Config\EmailGateWayPresenter;
 use Tuleap\Tracker\Config\SectionsPresenter;
 use CSRFSynchronizerToken;
 
-class MailGatewayConfigPresenter {
+class MailGatewayConfigPresenter
+{
 
     /** @var string */
     public $csrf_token;

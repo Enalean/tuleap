@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201508171048_add_svn_immutable_tags_table extends ForgeUpgrade_Bucket {
+class b201508171048_add_svn_immutable_tags_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

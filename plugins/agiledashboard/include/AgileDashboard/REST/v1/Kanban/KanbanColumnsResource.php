@@ -52,7 +52,8 @@ use Tracker_Permission_PermissionRetrieveAssignee;
 use Tuleap\RealTime\MessageDataPresenter;
 use Tuleap\AgileDashboard\KanbanRightsPresenter;
 
-class KanbanColumnsResource {
+class KanbanColumnsResource
+{
 
     public const MAX_LIMIT = 100;
     public const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
@@ -160,7 +161,6 @@ class KanbanColumnsResource {
             if (isset($updated_column_properties->label) && ! $this->kanban_column_manager->updateLabel($current_user, $kanban, $column, $updated_column_properties->label)) {
                 throw new RestException(500);
             }
-
         } catch (AgileDashboard_KanbanColumnNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         } catch (AgileDashboard_UserNotAdminException $exception) {
@@ -172,7 +172,7 @@ class KanbanColumnsResource {
             $this->getProjectIdForKanban($kanban)
         );
 
-        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+        if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
             $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
             $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
             $data    = array(
@@ -244,7 +244,7 @@ class KanbanColumnsResource {
             throw new RestException(400, $exception->getMessage());
         }
 
-        if(isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
+        if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
             $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
             $rights  = new KanbanRightsPresenter($tracker, $this->permissions_serializer);
             $message = new MessageDataPresenter(

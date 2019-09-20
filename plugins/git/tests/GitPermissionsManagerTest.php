@@ -22,7 +22,8 @@ use Tuleap\Git\Permissions\FineGrainedDao;
 
 require_once 'bootstrap.php';
 
-abstract class GitPermissionsManagerTest extends TuleapTestCase {
+abstract class GitPermissionsManagerTest extends TuleapTestCase
+{
     protected $permissions_manager;
     protected $git_permissions_manager;
     protected $git_permissions_dao;
@@ -50,7 +51,8 @@ abstract class GitPermissionsManagerTest extends TuleapTestCase {
     }
 }
 
-class GitPermissionsManager_SiteAccessUpdateTest extends GitPermissionsManagerTest {
+class GitPermissionsManager_SiteAccessUpdateTest extends GitPermissionsManagerTest
+{
 
     public function testWhenSwitchingFromAnonymousToRegularItUpdatesAllProjectsThatWereUsingAnonymous()
     {
@@ -136,7 +138,8 @@ class GitPermissionsManager_SiteAccessUpdateTest extends GitPermissionsManagerTe
     }
 }
 
-class GitPermissionsManager_ProjectAccessUpdateTest extends GitPermissionsManagerTest {
+class GitPermissionsManager_ProjectAccessUpdateTest extends GitPermissionsManagerTest
+{
 
     private $project;
 

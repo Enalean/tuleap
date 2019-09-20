@@ -22,7 +22,8 @@
 /**
  * This interface describe all methods needed to replace the old permissions.php
  */
-interface IPermissionsManagerNG {
+interface IPermissionsManagerNG
+{
     /**
      * @return int[]
      */

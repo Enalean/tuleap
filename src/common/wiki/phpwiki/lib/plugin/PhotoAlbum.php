@@ -72,25 +72,28 @@ class ImageTile extends HtmlElement
 {
     function image_tile(/*...*/)
     {
-        $el = new HTML ('img');
+        $el = new HTML('img');
         $tag = func_get_args();
         $params = "<img src='../ImageTile.php?url=". $tag[0]['src'];
-        if (!@empty($tag[0]['width']))
+        if (!@empty($tag[0]['width'])) {
             $params .= "&width=" . $tag[0]['width'];
-        if (!@empty($tag[0]['height']))
+        }
+        if (!@empty($tag[0]['height'])) {
             $params .= "&height=" . $tag[0]['height'];
-        if (!@empty($tag[0]['width']))
+        }
+        if (!@empty($tag[0]['width'])) {
             $params .= "' width='" . $tag[0]['width'];
-        if (!@empty($tag[0]['height']))
+        }
+        if (!@empty($tag[0]['height'])) {
             $params .= "' height='" . $tag[0]['height'];
+        }
 
         $params .= "' alt='" . $tag[0]['alt'] . "' />";
-        return $el->raw ($params);
+        return $el->raw($params);
     }
 }
 
-class WikiPlugin_PhotoAlbum
-extends WikiPlugin
+class WikiPlugin_PhotoAlbum extends WikiPlugin
 {
     function getName()
     {
@@ -104,8 +107,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.14 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.14 $"
+        );
     }
 
 // Avoid nameclash, so it's disabled. We allow any url.
@@ -183,14 +189,19 @@ extends WikiPlugin
             return $this->error($error);
         }
 
-        if ($numcols < 1) $numcols = 1;
+        if ($numcols < 1) {
+            $numcols = 1;
+        }
         if ($align != 'left' && $align != 'center' && $align != 'right') {
             $align = 'center';
         }
-        if (count($photos) == 0) return;
+        if (count($photos) == 0) {
+            return;
+        }
 
-        if (in_array("sort", $attributes))
+        if (in_array("sort", $attributes)) {
             sort($photos);
+        }
 
         if ($p) {
             $mode = "normal";
@@ -211,26 +222,34 @@ extends WikiPlugin
             $numcols    = 1;
             $cellwidth  = "auto";
             $width = 50;
-        } elseif ($mode == 'slide' ) {
+        } elseif ($mode == 'slide') {
             $tableheight = 0;
             $cell_width = 0;
             $numcols = count($photos);
             $keep = $photos;
             foreach ($photos as $value) {
                 list($x,$y,$s,$t) = @getimagesize($value['src']);
-                if ($height != 'auto') $y = $this->newSize($y, $height);
-                if ($width != 'auto') $y = round($y * $this->newSize($x, $width) / $x);
-                if ($x > $cell_width) $cell_width = $x;
-                if ($y > $tableheight) $tableheight = $y;
+                if ($height != 'auto') {
+                    $y = $this->newSize($y, $height);
+                }
+                if ($width != 'auto') {
+                    $y = round($y * $this->newSize($x, $width) / $x);
+                }
+                if ($x > $cell_width) {
+                    $cell_width = $x;
+                }
+                if ($y > $tableheight) {
+                    $tableheight = $y;
+                }
             }
             $tableheight += 50;
             $photos = $keep;
-            unset ($x,$y,$s,$t,$key,$value,$keep);
+            unset($x, $y, $s, $t, $key, $value, $keep);
         }
 
         $row = HTML();
         $duration = 1000 * $duration;
-        if ($mode == 'slide')
+        if ($mode == 'slide') {
             $row->pushContent(JavaScript("
 i = 0;
 function display_slides() {
@@ -246,6 +265,7 @@ function display_slides() {
   setTimeout('display_slides()',$duration);
 }
 display_slides();"));
+        }
 
         foreach ($photos as $key => $value) {
             if ($p && basename($value["name"]) != "$p") {
@@ -263,21 +283,24 @@ display_slides();"));
                             'alt'    => ($value["desc"] != "" and in_array("alt", $attributes))
                                     ? $value["desc"]
                                     : basename($value["name"]));
-            if (!@empty($value['location']))
+            if (!@empty($value['location'])) {
                 $params = array_merge($params, array("location" => $value['location']));
+            }
             // check description
             switch ($showdesc) {
                 case 'none':
                     $value["desc"] = '';
-                break;
+                    break;
                 case 'name':
                     $value["desc"] = basename($value["name"]);
-                break;
+                    break;
                 case 'desc':
-                break;
+                    break;
                 default: // 'both'
-                    if (!$value["desc"]) $value["desc"] = basename($value["name"]);
-                break;
+                    if (!$value["desc"]) {
+                        $value["desc"] = basename($value["name"]);
+                    }
+                    break;
             }
 
             // FIXME: get getimagesize to work with names with spaces in it.
@@ -286,20 +309,26 @@ display_slides();"));
             if (!$size and !empty($value["src"])) {
                 $size = @getimagesize($value["src"]);
                 if (!$size) {
-                    trigger_error("Unable to getimagesize(".$value["name"].")",
-                                  E_USER_NOTICE);
+                    trigger_error(
+                        "Unable to getimagesize(".$value["name"].")",
+                        E_USER_NOTICE
+                    );
                 }
             }
 
             $newwidth = $this->newSize($size[0], $width);
             if (($mode == 'thumbs' || $mode == 'tiles' || $mode == 'list')) {
-                if (!empty($size[0]))
-                    $newheight = round (50 * $size[1] / $size[0]);
-                else  $newheight = '';
-                if ($height == 'auto') $height=150;
-            }
-            else
+                if (!empty($size[0])) {
+                    $newheight = round(50 * $size[1] / $size[0]);
+                } else {
+                    $newheight = '';
+                }
+                if ($height == 'auto') {
+                    $height=150;
+                }
+            } else {
                 $newheight = $this->newSize($size[1], $height);
+            }
 
             if ($width != 'auto' && $newwidth > 0) {
                 $params = array_merge($params, array("width" => $newwidth));
@@ -315,7 +344,7 @@ display_slides();"));
             if ($cellwidth != 'auto') {
                 if ($cellwidth == 'equal') {
                     $newcellwidth = round(100/$numcols)."%";
-                } else if ($cellwidth == 'image') {
+                } elseif ($cellwidth == 'image') {
                     $newcellwidth = $newwidth;
                 } else {
                     $newcellwidth = $cellwidth;
@@ -326,13 +355,17 @@ display_slides();"));
                 $cell = array_merge($cell, array("nowrap" => "nowrap"));
             }
             //create url to display single larger version of image on page
-            $url     = WikiURL($request->getPage(),
-                               array("p" => basename($value["name"])))
+            $url     = WikiURL(
+                $request->getPage(),
+                array("p" => basename($value["name"]))
+            )
                 . "#"
                 . basename($value["name"]);
 
-            $b_url    = WikiURL($request->getPage(),
-                                array("h" => basename($value["name"])))
+            $b_url    = WikiURL(
+                $request->getPage(),
+                array("h" => basename($value["name"]))
+            )
                 . "#"
                 . basename($value["name"]);
             $url_text   = $link
@@ -340,100 +373,150 @@ display_slides();"));
                 : basename($value["name"]);
             if (! $p) {
                 if ($mode == 'normal' || $mode == 'slide') {
-                    if(!@empty($params['location'])) $params['src'] = $params['location'];
-                    unset ($params['location'],$params['src_tile']);
-                    $url_image = $link ? HTML::a(array("id" => basename($value["name"])),
-                                         HTML::a(array("href" => "$url"), HTML::img($params))) :  HTML::img($params);
+                    if (!@empty($params['location'])) {
+                        $params['src'] = $params['location'];
+                    }
+                    unset($params['location'], $params['src_tile']);
+                    $url_image = $link ? HTML::a(
+                        array("id" => basename($value["name"])),
+                        HTML::a(array("href" => "$url"), HTML::img($params))
+                    ) :  HTML::img($params);
                 } else {
                     $keep = $params;
-                    if (!@empty ($params['src_tile']))
+                    if (!@empty($params['src_tile'])) {
                         $params['src'] = $params['src_tile'] ;
-                    unset ($params['location'],$params['src_tile']);
-                    $url_image = $link ? HTML::a(array("id" => basename($value["name"])),
-                                         HTML::a(array("href" => "$url"),
-                                                 ImageTile::image_tile($params))) : HTML::img($params);
+                    }
+                    unset($params['location'], $params['src_tile']);
+                    $url_image = $link ? HTML::a(
+                        array("id" => basename($value["name"])),
+                        HTML::a(
+                            array("href" => "$url"),
+                            ImageTile::image_tile($params)
+                        )
+                    ) : HTML::img($params);
                     $params = $keep;
-                    unset ($keep);
+                    unset($keep);
                 }
             } else {
-                if(!@empty($params['location'])) $params['src'] = $params['location'];
-                unset ($params['location'],$params['src_tile']);
-                $url_image = $link ? HTML::a(array("id" =>  basename($value["name"])),
-                                     HTML::a(array("href" => "$b_url"), HTML::img($params))) : HTML::img($params);
+                if (!@empty($params['location'])) {
+                    $params['src'] = $params['location'];
+                }
+                unset($params['location'], $params['src_tile']);
+                $url_image = $link ? HTML::a(
+                    array("id" =>  basename($value["name"])),
+                    HTML::a(array("href" => "$b_url"), HTML::img($params))
+                ) : HTML::img($params);
             }
-            if ($mode == 'list')
-            $url_text = HTML::a(array("id" => basename($value["name"])),
-                                      $url_text);
+            if ($mode == 'list') {
+                $url_text = HTML::a(
+                    array("id" => basename($value["name"])),
+                    $url_text
+                );
+            }
             // here we use different modes
             if ($mode == 'tiles') {
                 $row->pushContent(
-                    HTML::td($cell,
-                    HTML::table(array("cellpadding" => 1, "border" => 0),
-                    HTML::tr(
-                             HTML::td(array("valign" => "top", "rowspan" => 2),
-                                            $url_image),
-                             HTML::td(array("valign" => "top", "nowrap" => 0),
-                                            HTML::span(array('class'=>'boldsmall'),
-                                                      ($url_text)),
-                                            HTML::br(),
-                                            HTML::span(array('class'=>'gensmall'),
-                                                       ($size[0].
+                    HTML::td(
+                        $cell,
+                        HTML::table(
+                            array("cellpadding" => 1, "border" => 0),
+                            HTML::tr(
+                                HTML::td(
+                                    array("valign" => "top", "rowspan" => 2),
+                                    $url_image
+                                ),
+                                HTML::td(
+                                    array("valign" => "top", "nowrap" => 0),
+                                    HTML::span(
+                                        array('class'=>'boldsmall'),
+                                        ($url_text)
+                                    ),
+                                    HTML::br(),
+                                    HTML::span(
+                                        array('class'=>'gensmall'),
+                                        ($size[0].
                                                        " x ".
                                                        $size[1].
-                                                       " pixels")))
-                    ))));
+                                        " pixels")
+                                    )
+                                )
+                            )
+                        )
+                    )
+                );
             } elseif ($mode == 'list') {
                 $desc = ($showdesc != 'none') ? $value["desc"] : '';
                 $row->pushContent(
-                    HTML::td(array("valign"  => "top",
+                    HTML::td(
+                        array("valign"  => "top",
                                    "nowrap"  => 0,
                                    "bgcolor" => $color),
-                                   HTML::span(array('class'=>'boldsmall'),($url_text))));
+                        HTML::span(array('class'=>'boldsmall'), ($url_text))
+                    )
+                );
                 $row->pushContent(
-                    HTML::td(array("valign"  => "top",
+                    HTML::td(
+                        array("valign"  => "top",
                                    "nowrap"  => 0,
                                    "bgcolor" => $color),
-                                   HTML::span(array('class'=>'gensmall'),
-                                              ($size[0].
+                        HTML::span(
+                            array('class'=>'gensmall'),
+                            ($size[0].
                                                " x ".
                                                $size[1].
-                                               " pixels"))));
+                            " pixels")
+                        )
+                    )
+                );
 
-                if ($desc != '')
+                if ($desc != '') {
                     $row->pushContent(
-                        HTML::td(array("valign"  => "top",
+                        HTML::td(
+                            array("valign"  => "top",
                                        "nowrap"  => 0,
                                        "bgcolor" => $color),
-                                       HTML::span(array('class'=>'gensmall'),$desc)));
-
+                            HTML::span(array('class'=>'gensmall'), $desc)
+                        )
+                    );
+                }
             } elseif ($mode == 'thumbs') {
                 $desc = ($showdesc != 'none') ?
-                            HTML::p(HTML::a(array("href" => "$url"),
-                                    $url_text)) : '';
+                            HTML::p(HTML::a(
+                                array("href" => "$url"),
+                                $url_text
+                            )) : '';
                 $row->pushContent(
-                        (HTML::td($cell,
-                                  $url_image,
-                                  // FIXME: no HtmlElement for fontsizes?
+                    (HTML::td(
+                        $cell,
+                        $url_image,
+                        // FIXME: no HtmlElement for fontsizes?
                                   // rurban: use ->setAttr("style","font-size:small;")
                                   //         but better use a css class
-                                  HTML::span(array('class'=>'gensmall'),$desc)
-                                  )));
+                                  HTML::span(array('class'=>'gensmall'), $desc)
+                    ))
+                );
             } elseif ($mode == 'normal') {
                 $desc = ($showdesc != 'none') ? HTML::p($value["desc"]) : '';
                 $row->pushContent(
-                        (HTML::td($cell,
-                                  $url_image,
-                                  // FIXME: no HtmlElement for fontsizes?
-                                  HTML::span(array('class'=>'gensmall'),$desc)
-                                  )));
+                    (HTML::td(
+                        $cell,
+                        $url_image,
+                        // FIXME: no HtmlElement for fontsizes?
+                                  HTML::span(array('class'=>'gensmall'), $desc)
+                    ))
+                );
             } elseif ($mode == 'slide') {
-                if ($newwidth == 'auto' || !$newwidth)
-                    $newwidth = $this->newSize($size[0],$width);
-                if ($newwidth == 'auto' || !$newwidth)
+                if ($newwidth == 'auto' || !$newwidth) {
+                    $newwidth = $this->newSize($size[0], $width);
+                }
+                if ($newwidth == 'auto' || !$newwidth) {
                     $newwidth = $size[0];
-                if ($newheight != 'auto') $newwidth = round($size[0] *  $newheight / $size[1]);
+                }
+                if ($newheight != 'auto') {
+                    $newwidth = round($size[0] *  $newheight / $size[1]);
+                }
                 $desc = ($showdesc != 'none') ? HTML::p($value["desc"]) : '';
-                if ($count == 0)
+                if ($count == 0) {
                     $cell=array('style' => 'display: block; '
                                 . 'position: absolute; '
                                 . 'left: 50% ; '
@@ -441,7 +524,7 @@ display_slides();"));
                                 . 'text-align: center; '
                                 . 'vertical-align: top',
                                 'name' => "wikislide".$count);
-                else
+                } else {
                     $cell=array('style' => 'display: none; '
                                 . 'position: absolute ;'
                                 . 'left: 50% ;'
@@ -449,48 +532,57 @@ display_slides();"));
                                 . 'text-align: center; '
                                 . 'vertical-align: top',
                                 'name' => "wikislide".$count);
+                }
                 if ($align == 'left' || $align == 'right') {
-                    if ($count == 0)
+                    if ($count == 0) {
                         $cell=array('style' => 'display: block; '
                                               .'position: absolute; '
                                               . $align.': 50px; '
                                               .'vertical-align: top',
                                     'name' => "wikislide".$count);
-                    else
+                    } else {
                         $cell=array('style' => 'display: none; '
                                               .'position: absolute; '
                                               . $align.': 50px; '
                                               .'vertical-align: top',
                                     'name' => "wikislide".$count);
+                    }
                 }
                 $row->pushContent(
-                                  (HTML::td($cell,
-                                            $url_image,
-                                            HTML::span(array('class'=>'gensmall'), $desc)
-                                            )));
+                    (HTML::td(
+                        $cell,
+                        $url_image,
+                        HTML::span(array('class'=>'gensmall'), $desc)
+                    ))
+                );
                 $count ++;
             } elseif ($mode == 'row') {
                 $desc = ($showdesc != 'none') ? HTML::p($value["desc"]) : '';
                 $row->pushContent(
-                        HTML::table(array("style" => "display: inline"),
-                              HTML::tr(HTML::td($url_image)),
-                              HTML::tr(HTML::td(array("class" => "gensmall",
+                    HTML::table(
+                        array("style" => "display: inline"),
+                        HTML::tr(HTML::td($url_image)),
+                        HTML::tr(HTML::td(
+                            array("class" => "gensmall",
                                                       "style" => "text-align: center; "
                                                                 ."background-color: $color"),
-                                                $desc))
-                                    ));
+                            $desc
+                        ))
+                    )
+                );
             } else {
                 return $this->error(fmt("Invalid argument: %s=%s", 'mode', $mode));
             }
 
             // no more images in one row as defined by $numcols
-            if ( ($key + 1) % $numcols == 0 ||
+            if (($key + 1) % $numcols == 0 ||
                  ($key + 1) == count($photos) ||
                  $p) {
-                    if ($mode == 'row')
-                        $html->pushcontent(HTML::span($row));
-                else
-                        $html->pushcontent(HTML::tr($row));
+                if ($mode == 'row') {
+                    $html->pushcontent(HTML::span($row));
+                } else {
+                    $html->pushcontent(HTML::tr($row));
+                }
                     unset($row);
                     $row = HTML();
             }
@@ -502,11 +594,15 @@ display_slides();"));
                                   "cellspacing" => 2,
                                   "width"       => $tablewidth);
 
-        if (!@empty($tableheight))
-            $table_attributes = array_merge($table_attributes,
-                                            array("height"  => $tableheight));
-        if ($mode != 'row')
+        if (!@empty($tableheight)) {
+            $table_attributes = array_merge(
+                $table_attributes,
+                array("height"  => $tableheight)
+            );
+        }
+        if ($mode != 'row') {
             $html = HTML::table($table_attributes, $html);
+        }
         // align all
         return HTML::div(array("align" => $align), $html);
     }
@@ -521,7 +617,7 @@ display_slides();"));
      */
     function newSize($oldSize, $value)
     {
-        if (trim(substr($value,strlen($value)-1)) != "%") {
+        if (trim(substr($value, strlen($value)-1)) != "%") {
             return $value;
         }
         $value = str_replace("%", "", $value);
@@ -557,11 +653,11 @@ display_slides();"));
      * @param array $photos
      * @return string Error when bad url or file couldn't be opened
      */
-    function fromFile($src, &$photos, $webpath='')
+    function fromFile($src, &$photos, $webpath = '')
     {
         $src_bak = $src;
         //there has a big security hole... as loading config/config.ini !
-        if (!preg_match('/(\.csv|\.jpg|\.jpeg|\.png|\.gif|\/)$/',$src)) {
+        if (!preg_match('/(\.csv|\.jpg|\.jpeg|\.png|\.gif|\/)$/', $src)) {
             return $this->error(_("File extension for csv file has to be '.csv'"));
         }
         if (! IsSafeURL($src)) {
@@ -570,8 +666,9 @@ display_slides();"));
         if (preg_match('/^(http|ftp|https):\/\//i', $src)) {
             $contents = url_get_contents($src);
             $web_location = 1;
-        } else
+        } else {
             $web_location = 0;
+        }
         if (!file_exists($src) and @file_exists(PHPWIKI_DIR . "/$src")) {
             $src = PHPWIKI_DIR . "/$src";
         }
@@ -585,7 +682,7 @@ display_slides();"));
             }
             // convert dirname($src) (local fs path) to web path
             natcasesort($list);
-            if (! $webpath ) {
+            if (! $webpath) {
                 // assume relative src. default: "themes/Hawaiian/images/pictures"
                 $webpath = DATA_PATH . '/' . $src_bak;
             }
@@ -602,8 +699,9 @@ display_slides();"));
         // check if $src is an image
         foreach (array('jpeg','jpg','png','gif') as $ext) {
             if (preg_match("/\.$ext$/", $src)) {
-                if (!file_exists($src) and @file_exists(PHPWIKI_DIR . "/$src"))
+                if (!file_exists($src) and @file_exists(PHPWIKI_DIR . "/$src")) {
                     $src = PHPWIKI_DIR . "/$src";
+                }
                 if ($web_location == 1 and !empty($contents)) {
                     $photos[] = array ("src" => $src,
                                        "name" => $src,
@@ -612,8 +710,9 @@ display_slides();"));
                                        "desc" => "");
                     return;
                 }
-                if (!file_exists($src))
+                if (!file_exists($src)) {
                     return $this->error(fmt("Unable to find src='%s'", $src));
+                }
                 $photos[] = array ("src" => $src,
                                    "name" => "../".$src,
                                    "name_tile" =>  $src,
@@ -629,27 +728,32 @@ display_slides();"));
             }
             while ($data = fgetcsv($fp, 1024, ';')) {
                 if (count($data) == 0 || empty($data[0])
-                                      || preg_match('/^#/',$data[0])
-                                      || preg_match('/^[[:space:]]*$/',$data[0]))
+                                      || preg_match('/^#/', $data[0])
+                                      || preg_match('/^[[:space:]]*$/', $data[0])) {
                     continue;
-                if (empty($data[1])) $data[1] = '';
+                }
+                if (empty($data[1])) {
+                    $data[1] = '';
+                }
                 $photos[] = array ("name" => dirname($src)."/".trim($data[0]),
                                    "location" => "../".dirname($src)."/".trim($data[0]),
                                    "desc" => trim($data[1]),
                                    "name_tile" => dirname($src)."/".trim($data[0]));
             }
-            fclose ($fp);
-
+            fclose($fp);
         } elseif ($web_location == 1) {
             //TODO: checks if the file is an image
-            $contents = preg_split('/\n/',$contents);
+            $contents = preg_split('/\n/', $contents);
             foreach ($contents as $value) {
-                $data = preg_split('/\;/',$value);
+                $data = preg_split('/\;/', $value);
                 if (count($data) == 0 || empty($data[0])
-                                      || preg_match('/^#/',$data[0])
-                                      || preg_match('/^[[:space:]]*$/',$data[0]))
+                                      || preg_match('/^#/', $data[0])
+                                      || preg_match('/^[[:space:]]*$/', $data[0])) {
                     continue;
-                if (empty($data[1])) $data[1] = '';
+                }
+                if (empty($data[1])) {
+                    $data[1] = '';
+                }
                 $photos[] = array ("name" => dirname($src)."/".trim($data[0]),
                                    "src" => dirname($src)."/".trim($data[0]),
                                    "desc" => trim($data[1]),
@@ -740,4 +844,3 @@ display_slides();"));
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

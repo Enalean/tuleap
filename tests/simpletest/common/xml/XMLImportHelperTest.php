@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class XMLImportHelperTest extends TuleapTestCase {
+class XMLImportHelperTest extends TuleapTestCase
+{
 
     public function testItImportsAnonymousUser()
     {

@@ -29,8 +29,7 @@ rcs_id('$Id: IncludePages.php,v 1.2 2005/09/30 18:41:39 uckelman Exp $');
 
 include_once("lib/plugin/IncludePage.php");
 
-class WikiPlugin_IncludePages
-extends WikiPlugin_IncludePage
+class WikiPlugin_IncludePages extends WikiPlugin_IncludePage
 {
     function getName()
     {
@@ -44,25 +43,29 @@ extends WikiPlugin_IncludePage
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.2 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.2 $"
+        );
     }
 
     function getDefaultArguments()
     {
         return array_merge(
-                           array( 'pages'   => false,  // the pages to include
+            array( 'pages'   => false,  // the pages to include
                                   'exclude' => false), // the pages to exclude
-                           WikiPlugin_IncludePage::getDefaultArguments()
-                           );
+            WikiPlugin_IncludePage::getDefaultArguments()
+        );
     }
 
     function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         $html = HTML();
-        if (empty($args['pages']))
+        if (empty($args['pages'])) {
             return $html;
+        }
         $include = new WikiPlugin_IncludePage();
 
         if (is_string($args['exclude']) and !empty($args['exclude'])) {
@@ -101,4 +104,3 @@ extends WikiPlugin_IncludePage
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

@@ -34,7 +34,8 @@ use URLVerification;
  * Wrapper for project related REST methods
  */
 
-class ProjectResource extends AuthenticatedResource {
+class ProjectResource extends AuthenticatedResource
+{
 
     public const MAX_LIMIT = 50;
 

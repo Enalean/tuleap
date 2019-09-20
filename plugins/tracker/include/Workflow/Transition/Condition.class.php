@@ -23,7 +23,8 @@ use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
 /**
  * Condition on a transition
  */
-abstract class Workflow_Transition_Condition {
+abstract class Workflow_Transition_Condition
+{
 
     /** @var string */
     public $identifier = 'generic_condition';
@@ -39,7 +40,7 @@ abstract class Workflow_Transition_Condition {
     /**
      * Save the condition object in database
      */
-    public abstract function saveObject();
+    abstract public function saveObject();
 
     /**
      * Export condition to XML
@@ -49,28 +50,26 @@ abstract class Workflow_Transition_Condition {
      *
      * @return void
      */
-    public abstract function exportToXml(SimpleXMLElement $root, $xmlMapping);
+    abstract public function exportToXml(SimpleXMLElement $root, $xmlMapping);
 
     /**
      * Get the html code needed to display the condition in workflow admin
      *
      * @return string html
      */
-    public abstract function fetch();
+    abstract public function fetch();
 
     /**
      * Validate the condition
      *
      * @return bool
      */
-    public abstract function validate($fields_data, Tracker_Artifact $artifact, $comment_body);
+    abstract public function validate($fields_data, Tracker_Artifact $artifact, $comment_body);
 
     public function getTransition()
     {
         return $this->transition;
     }
 
-    public abstract function accept(Visitor $visitor);
+    abstract public function accept(Visitor $visitor);
 }
-
-?>

@@ -38,7 +38,7 @@ $argv = $_SERVER['argv'];
 foreach ($argv as $index => $value) {
     if ($value === '-n') {
         $console_output->writeln("<fg=yellow;options=bold>Warning : Option '-n' isn't longer supported. Replace by '-s' or '--name'</>");
-        unset ($argv[$index]);
+        unset($argv[$index]);
         $argv[] = '-s';
     }
 }

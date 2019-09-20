@@ -12,7 +12,7 @@ $request = HTTPRequest::instance();
 $vId = new Valid_UInt('bookmark_id');
 $vId->setErrorMessage('bookmark_id is required');
 $vId->required();
-if(!$request->valid($vId)) {
+if (!$request->valid($vId)) {
     $GLOBALS['Response']->redirect('/my');
 } else {
     $bookmark_id = (int) $request->get('bookmark_id');
@@ -51,8 +51,8 @@ print "<H3>".$Language->getText('bookmark_edit', 'title')."</H3>\n";
 $result = db_query("SELECT * from user_bookmarks where "
                    . "bookmark_id=".db_ei($bookmark_id)." and user_id=".db_ei(UserManager::instance()->getCurrentUser()->getId()));
 if ($result) {
-    $bookmark_url = db_result($result,0,'bookmark_url');
-    $bookmark_title = db_result($result,0,'bookmark_title');
+    $bookmark_url = db_result($result, 0, 'bookmark_url');
+    $bookmark_title = db_result($result, 0, 'bookmark_title');
 }
 ?>
 <FORM METHOD="POST">

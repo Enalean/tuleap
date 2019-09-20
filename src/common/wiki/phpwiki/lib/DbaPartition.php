@@ -42,8 +42,9 @@ class DbaPartition
         $prefix = &$this->_p;
         $n = strlen($prefix);
         for ($key = $dbh->firstkey(); $key !== false; $key = $dbh->nextkey()) {
-            if (substr($key, 0, $n) == $prefix)
+            if (substr($key, 0, $n) == $prefix) {
                 return (string) substr($key, $n);
+            }
         }
         return false;
     }
@@ -54,8 +55,9 @@ class DbaPartition
         $prefix = &$this->_p;
         $n = strlen($prefix);
         for ($key = $dbh->nextkey(); $key !== false; $key = $dbh->nextkey()) {
-            if (substr($key, 0, $n) == $prefix)
+            if (substr($key, 0, $n) == $prefix) {
                 return (string) substr($key, $n);
+            }
         }
         return false;
     }
@@ -114,4 +116,3 @@ class DbaPartition
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

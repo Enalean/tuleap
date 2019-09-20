@@ -173,7 +173,7 @@ abstract class Widget_Rss extends Widget
         $vUrl = new Valid_String('url');
         $vUrl->setErrorMessage("Can't add empty rss url");
         $vUrl->required();
-        if($request->validInArray('rss', $vUrl)) {
+        if ($request->validInArray('rss', $vUrl)) {
             $rss = $request->get('rss');
             $vTitle = new Valid_String('title');
             $vTitle->required();
@@ -198,14 +198,14 @@ abstract class Widget_Rss extends Widget
         $vContentId->required();
         if (($rss = $request->get('rss')) && $request->valid($vContentId)) {
             $vUrl = new Valid_String('url');
-            if($request->validInArray('rss', $vUrl)) {
+            if ($request->validInArray('rss', $vUrl)) {
                 $url = " url   = '". db_escape_string($rss['url']) ."' ";
             } else {
                 $url = '';
             }
 
             $vTitle = new Valid_String('title');
-            if($request->validInArray('rss', $vTitle)) {
+            if ($request->validInArray('rss', $vTitle)) {
                 $title = " title = '". db_escape_string($rss['title']) ."' ";
             } else {
                 $title = '';

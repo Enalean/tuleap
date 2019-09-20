@@ -20,7 +20,8 @@
 
 require_once('include/DataAccessObject.class.php');
 
-class SystemEventsFollowersDao extends DataAccessObject {
+class SystemEventsFollowersDao extends DataAccessObject
+{
     public function __construct($da)
     {
         parent::__construct($da);
@@ -75,4 +76,3 @@ class SystemEventsFollowersDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-?>

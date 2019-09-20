@@ -29,7 +29,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
-class Tracker_Artifact_XMLImportBuilder {
+class Tracker_Artifact_XMLImportBuilder
+{
 
     /**
      * @return Tracker_Artifact_XMLImport

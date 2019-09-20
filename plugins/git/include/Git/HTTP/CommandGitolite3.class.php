@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_HTTP_CommandGitolite3 extends Git_HTTP_CommandGitolite {
+class Git_HTTP_CommandGitolite3 extends Git_HTTP_CommandGitolite
+{
 
     public function __construct(PFO_User $user, Git_HTTP_Command $command)
     {

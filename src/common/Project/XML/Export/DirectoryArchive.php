@@ -22,7 +22,8 @@ namespace Tuleap\Project\XML\Export;
 
 use Tuleap\Project\XML\ArchiveException;
 
-class DirectoryArchive implements ArchiveInterface {
+class DirectoryArchive implements ArchiveInterface
+{
     private $archive_path;
 
     public function __construct($archive_path)

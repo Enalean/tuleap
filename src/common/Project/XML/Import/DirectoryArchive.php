@@ -20,7 +20,8 @@
 
 namespace Tuleap\Project\XML\Import;
 
-class DirectoryArchive implements ArchiveInterface {
+class DirectoryArchive implements ArchiveInterface
+{
 
     private $archive_path;
 

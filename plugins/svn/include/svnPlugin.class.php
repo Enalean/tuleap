@@ -397,7 +397,7 @@ class SvnPlugin extends Plugin
     /** @return Tuleap\SVN\AccessControl\AccessFileHistoryDao */
     private function getAccessFileHistoryDao()
     {
-        if(empty($this->accessfile_dao)){
+        if (empty($this->accessfile_dao)) {
             $this->accessfile_dao = new AccessFileHistoryDao();
         }
         return $this->accessfile_dao;
@@ -406,7 +406,7 @@ class SvnPlugin extends Plugin
     /** @return Tuleap\SVN\AccessControl\AccessFileHistoryFactory */
     private function getAccessFileHistoryFactory()
     {
-        if(empty($this->accessfile_factory)){
+        if (empty($this->accessfile_factory)) {
             $this->accessfile_factory = new AccessFileHistoryFactory($this->getAccessFileHistoryDao());
         }
         return $this->accessfile_factory;
@@ -670,7 +670,6 @@ class SvnPlugin extends Plugin
                 $params['reference'] = $reference;
             }
         }
-
     }
 
     private function getReferenceExtractor()
@@ -749,8 +748,7 @@ class SvnPlugin extends Plugin
 
     public function statistics_collector(array $params)
     {
-        if (! empty($params['formatter']))
-        {
+        if (! empty($params['formatter'])) {
             $statistic_dao       = new \Tuleap\SVN\Statistic\SCMUsageDao();
             $statistic_collector = new \Tuleap\SVN\Statistic\SCMUsageCollector($statistic_dao);
 

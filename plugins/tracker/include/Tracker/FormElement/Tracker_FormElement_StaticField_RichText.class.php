@@ -19,7 +19,8 @@
  */
 
 
-class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_StaticField {
+class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_StaticField
+{
 
     public $default_properties = array(
         'static_value' => array(
@@ -42,7 +43,6 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
         } else {
             return '';
         }
-
     }
 
     protected function getDao()
@@ -86,7 +86,8 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
     {
         $html = '';
         $html .= '<div class="tracker-admin-staticrichtext" id="tracker-admin-formElements_'. $this->id .'" />';
-        $html .= $this->getRichText();;
+        $html .= $this->getRichText();
+        ;
         $html .= '</div>';
         return $html;
     }
@@ -127,7 +128,4 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
     {
         return $this->getRichText();
     }
-
 }
-
-?>

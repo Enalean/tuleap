@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ImmutableInfoPresenter {
+class User_ImmutableInfoPresenter
+{
     private $label;
     private $value;
 

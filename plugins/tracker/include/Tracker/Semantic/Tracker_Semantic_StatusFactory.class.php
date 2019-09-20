@@ -90,7 +90,7 @@ class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicat
         // to retrieve semantics values of tracker FROM
         while ($row = $dar->getRow()) {
             // if we already have the status field, just jump to open values
-            if ( ! $from_status_field_id) {
+            if (! $from_status_field_id) {
                 $from_status_field_id = $row['field_id'];
             }
             $from_open_value_ids[] = $row['open_value_id'];
@@ -119,8 +119,5 @@ class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicat
         if ($to_status_field_id) {
             $this->getDao()->save($to_tracker_id, $to_status_field_id, $to_open_value_ids);
         }
-
     }
-
 }
-?>

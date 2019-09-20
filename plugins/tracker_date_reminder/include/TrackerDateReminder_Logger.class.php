@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TrackerDateReminder_Logger {
+class TrackerDateReminder_Logger
+{
     public const LOG_INFO    = "info";
     public const LOG_WARNING = "warn";
     public const LOG_ERROR   = "error";
@@ -52,5 +53,3 @@ class TrackerDateReminder_Logger {
         }
     }
 }
-
-?>

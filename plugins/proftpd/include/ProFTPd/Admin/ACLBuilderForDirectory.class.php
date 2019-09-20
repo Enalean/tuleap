@@ -24,7 +24,8 @@ namespace Tuleap\ProFTPd\Admin;
  * For directories we need to set both default ACL (d:...) and effective ones.
  * Default acl are here to be inherited by newly created files and directories
  */
-class ACLBuilderForDirectory extends ACLBuilder {
+class ACLBuilderForDirectory extends ACLBuilder
+{
 
     public function getACL($http_user, $writers, $readers)
     {

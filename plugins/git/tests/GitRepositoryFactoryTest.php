@@ -20,7 +20,8 @@
 
 require_once 'bootstrap.php';
 
-class GitRepositoryFactoryTest extends TuleapTestCase {
+class GitRepositoryFactoryTest extends TuleapTestCase
+{
     private $dao;
     private $project_manager;
     private $project;
@@ -86,7 +87,8 @@ class GitRepositoryFactoryTest extends TuleapTestCase {
     }
 }
 
-class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest extends TuleapTestCase {
+class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -249,7 +251,8 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
     }
 }
 
-class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends TuleapTestCase {
+class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends TuleapTestCase
+{
 
     public function setUp()
     {

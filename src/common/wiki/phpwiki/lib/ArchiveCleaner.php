@@ -27,8 +27,9 @@ class ArchiveCleaner
 
     function isMergeable($revision)
     {
-        if ( ! $revision->get('is_minor_edit') )
+        if (! $revision->get('is_minor_edit')) {
             return false;
+        }
 
         $page = $revision->getPage();
         $author_id = $revision->get('author_id');
@@ -42,40 +43,40 @@ class ArchiveCleaner
     function cleanDatabase($dbi)
     {
         $iter = $dbi->getAllPages();
-        while ($page = $iter->next())
+        while ($page = $iter->next()) {
             $this->cleanPageRevisions($page);
+        }
     }
 
     function cleanPageRevisions($page)
     {
 
         $expire = &$this->expire_params;
-        foreach (array('major', 'minor', 'author') as $class)
+        foreach (array('major', 'minor', 'author') as $class) {
             $counter[$class] = new ArchiveCleaner_Counter($expire[$class]);
+        }
 
         $authors_seen = array();
 
         $current = $page->getCurrentRevision(false);
 
-        for ( $revision = $page->getRevisionBefore($current,false);
-              $revision->getVersion() > 0;
-              $revision = $page->getRevisionBefore($revision,false) ) {
-
-            if ($revision->get('is_minor_edit'))
+        for ($revision = $page->getRevisionBefore($current, false); $revision->getVersion() > 0; $revision = $page->getRevisionBefore($revision, false)) {
+            if ($revision->get('is_minor_edit')) {
                 $keep = $counter['minor']->keep($revision);
-            else
+            } else {
                 $keep = $counter['major']->keep($revision);
+            }
 
             if ($this->isMergeable($revision)) {
                 if (!$keep) {
                     $page->mergeRevision($revision);
                 }
-            }
-            else {
+            } else {
                 $author_id = $revision->get('author_id');
                 if (empty($authors_seen[$author_id])) {
-                    if ($counter['author']->keep($revision))
+                    if ($counter['author']->keep($revision)) {
                         $keep = true;
+                    }
                     $authors_seen[$author_id] = true;
                 }
                 if (!$keep) {
@@ -94,8 +95,9 @@ class ArchiveCleaner_Counter
     function __construct($params)
     {
 
-        if (!empty($params))
+        if (!empty($params)) {
             extract($params);
+        }
         $INFINITY = 0x7fffffff;
 
         $this->max_keep = isset($max_keep) ? $max_keep : $INFINITY;
@@ -106,18 +108,20 @@ class ArchiveCleaner_Counter
         $this->max_age  = isset($max_age)  ? $max_age  : $INFINITY;
         $this->keep     = isset($keep)     ? $keep     : $INFINITY;
 
-        if ($this->keep > $this->max_keep)
+        if ($this->keep > $this->max_keep) {
             $this->keep = $this->max_keep;
-        if ($this->min_keep > $this->keep)
+        }
+        if ($this->min_keep > $this->keep) {
             $this->min_keep = $this->keep;
+        }
 
-        if ($this->min_age > $this->max_age)
+        if ($this->min_age > $this->max_age) {
             $this->min_age = $this->max_age;
+        }
 
         $this->now = time();
         $this->count = 0;
         $this->previous_supplanted = false;
-
     }
 
     function computeAge($revision)
@@ -127,15 +131,19 @@ class ArchiveCleaner_Counter
         if (!$supplanted) {
             // Every revision but the most recent should have a supplanted time.
             // However, if it doesn't...
-            trigger_error(sprintf("Warning: Page '%s', version '%d' has no '_supplanted' timestamp",
-                                  $revision->getPageName(),
-                                  $revision->getVersion()),
-                          E_USER_NOTICE);
+            trigger_error(
+                sprintf(
+                    "Warning: Page '%s', version '%d' has no '_supplanted' timestamp",
+                    $revision->getPageName(),
+                    $revision->getVersion()
+                ),
+                E_USER_NOTICE
+            );
             // Assuming revisions are chronologically ordered, the previous
             // supplanted time is a good value to use...
-            if ($this->previous_supplanted > 0)
+            if ($this->previous_supplanted > 0) {
                 $supplanted = $this->previous_supplanted;
-            else {
+            } else {
                 // no supplanted timestamp.
                 // don't delete this revision based on age.
                 return 0;
@@ -151,10 +159,12 @@ class ArchiveCleaner_Counter
         $count = ++$this->count;
         $age = $this->computeAge($revision);
 
-        if ($count > $this->max_keep)
+        if ($count > $this->max_keep) {
             return false;
-        if ($age <= $this->min_age || $count <= $this->min_keep)
+        }
+        if ($age <= $this->min_age || $count <= $this->min_keep) {
             return true;
+        }
         return $age <= $this->max_age && $count <= $this->keep;
     }
 }
@@ -167,4 +177,3 @@ class ArchiveCleaner_Counter
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

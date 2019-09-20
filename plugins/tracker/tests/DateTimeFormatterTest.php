@@ -21,7 +21,8 @@
 require_once('bootstrap.php');
 require_once __DIR__ . '/../../../src/www/include/utils.php';
 
-class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase {
+class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase
+{
 
     /** @var Tracker_FormElement_DateTimeFormatter */
     private $date_formatter;
@@ -127,5 +128,4 @@ class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase {
 
         $this->assertEqual($expected, $this->date_formatter->getFieldDataForCSVPreview($date_exploded));
     }
-
 }

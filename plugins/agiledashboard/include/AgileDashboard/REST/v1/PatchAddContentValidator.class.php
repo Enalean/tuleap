@@ -24,7 +24,8 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use Planning_Milestone;
 use PFUser;
 
-class PatchAddContentValidator implements IValidateElementsToAdd {
+class PatchAddContentValidator implements IValidateElementsToAdd
+{
 
     /**
      * @var PFUser

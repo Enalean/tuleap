@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201501221126_rename_show_priority_changes_column_in_tracker_table extends ForgeUpgrade_Bucket {
+class b201501221126_rename_show_priority_changes_column_in_tracker_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -43,5 +44,4 @@ class b201501221126_rename_show_priority_changes_column_in_tracker_table extends
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while renaming show_priority_changes column in tracker table');
         }
     }
-
 }

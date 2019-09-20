@@ -23,7 +23,8 @@ use TuleapTestCase;
 use PFUser;
 use UserManager;
 
-class MappingFileOptimusPrimeTransformer_BaseTest extends TuleapTestCase {
+class MappingFileOptimusPrimeTransformer_BaseTest extends TuleapTestCase
+{
 
     /** @var MappingFileOptimusPrimeTransformer */
     protected $transformer;
@@ -74,7 +75,7 @@ class MappingFileOptimusPrimeTransformer_BaseTest extends TuleapTestCase {
         );
     }
 
-    protected function addToBeCreatedUserToCollection($id=104)
+    protected function addToBeCreatedUserToCollection($id = 104)
     {
         $this->collection->add(
             new ToBeCreatedUser(
@@ -142,7 +143,8 @@ EOS;
     }
 }
 
-class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimusPrimeTransformer_BaseTest {
+class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimusPrimeTransformer_BaseTest
+{
 
     public function itTransformsAToBeMappedToAWillBeMappedUser()
     {
@@ -349,7 +351,8 @@ class MappingFileOptimusPrimeTransformer_transformTest extends MappingFileOptimu
     }
 }
 
-class MappingFileOptimusPrimeTransformer_userUnknownInCollectionTest extends MappingFileOptimusPrimeTransformer_BaseTest {
+class MappingFileOptimusPrimeTransformer_userUnknownInCollectionTest extends MappingFileOptimusPrimeTransformer_BaseTest
+{
 
     public function itTDoesNotThrowAnExceptionIfUserInMappingIsUnknownInCollectionSoThatWeCanReuseTheMappingFileInAnotherImport()
     {
@@ -357,10 +360,10 @@ class MappingFileOptimusPrimeTransformer_userUnknownInCollectionTest extends Map
 
         $this->transformer->transform($this->collection, $this->filename);
     }
-
 }
 
-class MappingFileOptimusPrimeTransformer_mapTest extends MappingFileOptimusPrimeTransformer_BaseTest {
+class MappingFileOptimusPrimeTransformer_mapTest extends MappingFileOptimusPrimeTransformer_BaseTest
+{
 
     public function itDoesNotThrowAnExceptionWhenMapIsFilledWithAKnownUser()
     {
@@ -441,7 +444,8 @@ class MappingFileOptimusPrimeTransformer_mapTest extends MappingFileOptimusPrime
     }
 }
 
-class MappingFileOptimusPrimeTransformer_createTest extends MappingFileOptimusPrimeTransformer_BaseTest {
+class MappingFileOptimusPrimeTransformer_createTest extends MappingFileOptimusPrimeTransformer_BaseTest
+{
 
     public function itDoesNotThrowExceptionWhenEntryInTheCollectionIsToBeCreatedUser()
     {
@@ -453,7 +457,8 @@ class MappingFileOptimusPrimeTransformer_createTest extends MappingFileOptimusPr
     }
 }
 
-class MappingFileOptimusPrimeTransformer_activateTest extends MappingFileOptimusPrimeTransformer_BaseTest {
+class MappingFileOptimusPrimeTransformer_activateTest extends MappingFileOptimusPrimeTransformer_BaseTest
+{
 
     public function itDoesNotThrowExceptionWhenEntryInTheCollectionIsToBeActivatedUser()
     {
@@ -476,7 +481,8 @@ class MappingFileOptimusPrimeTransformer_activateTest extends MappingFileOptimus
     }
 }
 
-class MappingFileOptimusPrimeTransformer_transformWithoutMapTest extends MappingFileOptimusPrimeTransformer_BaseTest {
+class MappingFileOptimusPrimeTransformer_transformWithoutMapTest extends MappingFileOptimusPrimeTransformer_BaseTest
+{
 
     public function itThrowsAnExceptionWhenUserIsNotSupported()
     {
@@ -540,6 +546,5 @@ class MappingFileOptimusPrimeTransformer_transformWithoutMapTest extends Mapping
 
         $this->assertIsA($collection_for_import->getUserById(104), 'User\XML\Import\WillBeActivatedUser');
         $this->assertIsA($collection_for_import->getUserById(105), 'User\XML\Import\WillBeCreatedUser');
-
     }
 }

@@ -23,7 +23,8 @@ namespace Tuleap\HudsonSvn\Plugin;
 use PluginInfo;
 use Plugin;
 
-class HudsonSvnPluginInfo extends PluginInfo {
+class HudsonSvnPluginInfo extends PluginInfo
+{
 
     public function __construct(Plugin $plugin)
     {

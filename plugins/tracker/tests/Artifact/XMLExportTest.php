@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../bootstrap.php';
 
-class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
+class Tracker_Artifact_XMLExportTest extends TuleapTestCase
+{
 
     private $user_manager;
     private $formelement_factory;
@@ -159,19 +160,51 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
         stub($changeset_04)->getArtifact()->returns($artifact_02);
 
         $comment_01 = new Tracker_Artifact_Changeset_Comment(
-            1, $changeset_01, 0, 0, 101, $timestamp_01, '<b> My comment 01</b>', 'html', 0
+            1,
+            $changeset_01,
+            0,
+            0,
+            101,
+            $timestamp_01,
+            '<b> My comment 01</b>',
+            'html',
+            0
         );
 
         $comment_02 = new Tracker_Artifact_Changeset_Comment(
-            2, $changeset_02, 0, 0, 101, $timestamp_02, '<b> My comment 02</b>', 'html', 0
+            2,
+            $changeset_02,
+            0,
+            0,
+            101,
+            $timestamp_02,
+            '<b> My comment 02</b>',
+            'html',
+            0
         );
 
         $comment_03 = new Tracker_Artifact_Changeset_Comment(
-            3, $changeset_03, 0, 0, 102, $timestamp_03, '<b> My comment 03</b>', 'html', 0
+            3,
+            $changeset_03,
+            0,
+            0,
+            102,
+            $timestamp_03,
+            '<b> My comment 03</b>',
+            'html',
+            0
         );
 
         $comment_04 = new Tracker_Artifact_Changeset_Comment(
-            4, $changeset_04, 0, 0, 102, $timestamp_04, '<b> My comment 04</b>', 'html', 0
+            4,
+            $changeset_04,
+            0,
+            0,
+            102,
+            $timestamp_04,
+            '<b> My comment 04</b>',
+            'html',
+            0
         );
 
         stub($changeset_01)->getComment()->returns($comment_01);
@@ -218,7 +251,8 @@ class Tracker_Artifact_XMLExportTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Artifact_XMLExport_forceTest extends TuleapTestCase {
+class Tracker_Artifact_XMLExport_forceTest extends TuleapTestCase
+{
 
     public function itRaisesAnExceptionWhenThresholdIsReached()
     {

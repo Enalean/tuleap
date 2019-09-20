@@ -23,7 +23,8 @@
  *
  * For now, only select boxes and multi-select boxes can be shared.
  */
-interface Tracker_FormElement_Field_Shareable {
+interface Tracker_FormElement_Field_Shareable
+{
 
     /**
      * Fixes original value ids after field duplication.
@@ -32,4 +33,3 @@ interface Tracker_FormElement_Field_Shareable {
      */
     public function fixOriginalValueIds(array $value_mapping);
 }
-?>

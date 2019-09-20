@@ -23,7 +23,8 @@ require_once 'CustomDescriptionValueDao.class.php';
 /**
  * Manager for Project_CustomDescription_CustomDescription
  */
-class Project_CustomDescription_CustomDescriptionValueManager {
+class Project_CustomDescription_CustomDescriptionValueManager
+{
 
     /** @var Project_CustomDescription_CustomDescriptionValueDao */
     private $dao;
@@ -39,4 +40,3 @@ class Project_CustomDescription_CustomDescriptionValueManager {
         $this->dao->setDescriptionFieldValue($group_id, $field_id_to_update, $field_value);
     }
 }
-?>

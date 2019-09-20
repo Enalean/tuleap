@@ -28,7 +28,8 @@ use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 /**
  * Manage values in changeset for 'artifact link' fields
  */
-class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_ChangesetValue {
+class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_ChangesetValue
+{
 
     /**
      * @var array of artifact_id => Tracker_ArtifactLinkInfo
@@ -149,11 +150,11 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         if (!empty($next)) {
             $result = '';
             $added_arr = array();
-            foreach($next as $art_id => $added_element) {
+            foreach ($next as $art_id => $added_element) {
                 $added_arr[] = $added_element->getLink();
             }
             $added   = implode(', ', $added_arr);
-            $result = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$added;
+            $result = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to').' '.$added;
             return $result;
         }
     }

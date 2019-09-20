@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_SVN_UPDATE_HOOKS extends SystemEvent {
+class SystemEvent_SVN_UPDATE_HOOKS extends SystemEvent
+{
     /** @var BackendSVN */
     private $backend_svn;
 
@@ -44,7 +45,8 @@ class SystemEvent_SVN_UPDATE_HOOKS extends SystemEvent {
                     ForgeConfig::get('codendi_bin_prefix'),
                     'commit-email.pl',
                     "",
-                    "codendi_svn_pre_commit.php");
+                    "codendi_svn_pre_commit.php"
+                );
                 $this->done();
             } catch (BackendSVNFileForSimlinkAlreadyExistsException $exception) {
                 $this->warning($exception->getMessage());
@@ -69,5 +71,3 @@ class SystemEvent_SVN_UPDATE_HOOKS extends SystemEvent {
         return 'project: '. $this->verbalizeProjectId($group_id, $with_link);
     }
 }
-
-?>

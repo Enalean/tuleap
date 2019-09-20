@@ -29,7 +29,8 @@ use Tuleap\Git\SystemEvents\ProjectIsSuspended;
 /**
  * I'm responsible to create system events with the right parameters
  */
-class Git_SystemEventManager {
+class Git_SystemEventManager
+{
 
     /** @var SystemEventManager */
     private $system_event_manager;

@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201510281350_add_incomingmail_table extends ForgeUpgrade_Bucket {
+class b201510281350_add_incomingmail_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

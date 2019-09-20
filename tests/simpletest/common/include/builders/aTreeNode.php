@@ -26,7 +26,8 @@ function aNode()
     return new Test_TreeNode_Builder();
 }
 
-class Test_TreeNode_Builder {
+class Test_TreeNode_Builder
+{
 
     protected $children;
     private $data;
@@ -95,9 +96,4 @@ class Test_TreeNode_Builder {
         $node->setObject($this->object);
         return $node;
     }
-
-
-
 }
-
-?>

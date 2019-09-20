@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_GIT_UPDATE_MIRROR extends SystemEvent {
+class SystemEvent_GIT_UPDATE_MIRROR extends SystemEvent
+{
     public const NAME = 'GIT_UPDATE_MIRROR';
 
     /** @var Git_GitoliteDriver */

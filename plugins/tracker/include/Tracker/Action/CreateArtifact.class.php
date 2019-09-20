@@ -20,7 +20,8 @@
 
 use Tuleap\JSONHeader;
 
-class Tracker_Action_CreateArtifact {
+class Tracker_Action_CreateArtifact
+{
     private $tracker;
     private $artifact_factory;
     private $tracker_factory;
@@ -115,7 +116,7 @@ class Tracker_Action_CreateArtifact {
         if ($request->isAjax()) {
             header(JSONHeader::getHeaderForPrototypeJS(['aid' => $artifact->getId()]));
             exit;
-        } else if ($this->isFromOverlay($request)) {
+        } elseif ($this->isFromOverlay($request)) {
             echo '<script>window.parent.codendi.tracker.artifact.artifactLink.newArtifact(' . (int) $artifact->getId() . ');</script>';
             exit;
         } else {
@@ -198,7 +199,4 @@ class Tracker_Action_CreateArtifact {
         }
         return array_filter($redirect_params);
     }
-
 }
-
-?>

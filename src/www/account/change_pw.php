@@ -55,9 +55,9 @@ function register_valid($user_id, CSRFSynchronizerToken $csrf, $old_password_req
     }
     if (! $old_password_required && ! $user->isLoggedIn()) {
         $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                $GLOBALS['Language']->getText('account_change_pw', 'error_no_rights_to_change_password')
-           );
+            Feedback::ERROR,
+            $GLOBALS['Language']->getText('account_change_pw', 'error_no_rights_to_change_password')
+        );
            return 0;
     }
 
@@ -84,7 +84,7 @@ function register_valid($user_id, CSRFSynchronizerToken $csrf, $old_password_req
 
     $password_sanity_checker = \Tuleap\Password\PasswordSanityChecker::build();
     if (! $password_sanity_checker->check($request->get('form_pw'))) {
-        foreach($password_sanity_checker->getErrors() as $error) {
+        foreach ($password_sanity_checker->getErrors() as $error) {
             $GLOBALS['Response']->addFeedback('error', $error);
         }
         return 0;
@@ -92,9 +92,9 @@ function register_valid($user_id, CSRFSynchronizerToken $csrf, $old_password_req
 
     // if we got this far, it must be good
     $password_changer = new PasswordChanger(
-            $user_manager,
-            new SessionManager($user_manager, new SessionDao(), new RandomNumberGenerator()),
-            new \Tuleap\User\Password\Reset\Revoker(new \Tuleap\User\Password\Reset\DataAccessObject())
+        $user_manager,
+        new SessionManager($user_manager, new SessionDao(), new RandomNumberGenerator()),
+        new \Tuleap\User\Password\Reset\Revoker(new \Tuleap\User\Password\Reset\DataAccessObject())
     );
     try {
         $password_changer->changePassword($user, $request->get('form_pw'));
@@ -141,7 +141,7 @@ if ($old_password_required) {
     <input type="password" value="" name="form_oldpw" autocomplete="current-password">
     <?php
 }
-user_display_choose_password('',is_numeric($request->get('user_id')) ? $request->get('user_id') : 0); ?>
+user_display_choose_password('', is_numeric($request->get('user_id')) ? $request->get('user_id') : 0); ?>
 <p><input type="submit" class="btn btn-primary" name="Update" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 

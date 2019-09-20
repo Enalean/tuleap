@@ -27,8 +27,8 @@ require __DIR__ . '/../export/access_logs_export.php';
 // Only for project administrators
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
-if ( !$group_id ) {
-    exit_error($Language->getText('project_admin_userperms','invalid_g'),$Language->getText('project_admin_userperms','group_not_exist'));
+if (!$group_id) {
+    exit_error($Language->getText('project_admin_userperms', 'invalid_g'), $Language->getText('project_admin_userperms', 'group_not_exist'));
 }
 $project = ProjectManager::instance()->getProject($group_id);
 
@@ -45,7 +45,6 @@ $view_whitelist->required();
 $view = $request->getValidated('view', $view_whitelist, 'daily');
 
 if (isset($_REQUEST['SUBMIT'])) {
-
     switch ($view) {
         case "monthly":
             $period = $span * 30.5;
@@ -60,8 +59,8 @@ if (isset($_REQUEST['SUBMIT'])) {
     }
 
     // Send the result in CSV format
-    header ('Content-Type: text/csv');
-    header ('Content-Disposition: filename=access_logs.csv');
+    header('Content-Type: text/csv');
+    header('Content-Disposition: filename=access_logs.csv');
 
     if ($project->usesFile()) {
         export_file_logs($project, $period, $who);
@@ -73,18 +72,17 @@ if (isset($_REQUEST['SUBMIT'])) {
         export_svn_logs($project, $period, $who);
     }
     if ($project->usesWiki()) {
-        export_wiki_pg_logs($project, $period, $who,0);
+        export_wiki_pg_logs($project, $period, $who, 0);
         export_wiki_att_logs($project, $period, $who);
     }
     export_all_plugins_logs($project, $period, $who);
     exit;
-
 }
 
 $pm = ProjectManager::instance();
 project_admin_header(
     array(
-        'title'=>$Language->getText('project_admin_index','p_admin',$pm->getProject($group_id)->getPublicName()),
+        'title'=>$Language->getText('project_admin_index', 'p_admin', $pm->getProject($group_id)->getPublicName()),
         'group'=>$group_id,
         'help' => 'project-admin.html#access-logs'
     ),
@@ -94,17 +92,17 @@ project_admin_header(
 // BEGIN PAGE CONTENT CODE
 echo "\n\n";
 
-echo '<h2>'.$Language->getText('project_admin_utils','access_logs').'</h2>';
+echo '<h2>'.$Language->getText('project_admin_utils', 'access_logs').'</h2>';
 
 print '
 <FORM action="?" method="get">
 <TABLE BORDER="0" WIDTH="80%">
-<tr><td><b>'.$Language->getText('project_stats_source_code_access','access_log_from').'</b></td><td><b>'.$Language->getText('project_stats_source_code_access','for_last').'</b></td><td> </td></tr>
+<tr><td><b>'.$Language->getText('project_stats_source_code_access', 'access_log_from').'</b></td><td><b>'.$Language->getText('project_stats_source_code_access', 'for_last').'</b></td><td> </td></tr>
 <tr><td>
 <SELECT NAME="who">
-<OPTION VALUE="nonmembers" '. (($who == "nonmembers") ? "SELECTED" : "") .'>'.$Language->getText('project_stats_source_code_access','non_proj_members').'</OPTION>
-<OPTION VALUE="members" '. (($who == "members") ? "SELECTED" : "") .'>'.$Language->getText('project_admin_editugroup','proj_members').'</OPTION>
-<OPTION VALUE="allusers" '. (($who == "allusers") ? "SELECTED" : "") .'>'.$Language->getText('project_stats_source_code_access','all_users').'</OPTION>
+<OPTION VALUE="nonmembers" '. (($who == "nonmembers") ? "SELECTED" : "") .'>'.$Language->getText('project_stats_source_code_access', 'non_proj_members').'</OPTION>
+<OPTION VALUE="members" '. (($who == "members") ? "SELECTED" : "") .'>'.$Language->getText('project_admin_editugroup', 'proj_members').'</OPTION>
+<OPTION VALUE="allusers" '. (($who == "allusers") ? "SELECTED" : "") .'>'.$Language->getText('project_stats_source_code_access', 'all_users').'</OPTION>
 </SELECT></td>
 <td> 
 <SELECT NAME="span">
@@ -117,46 +115,46 @@ print '
 </SELECT>
 
 <SELECT NAME="view">
-<OPTION VALUE="monthly" '. (($view == "monthly") ? "SELECTED" : "") .'>'. $Language->getText('project_stats_index','months') .'</OPTION>
-<OPTION VALUE="weekly" '. (($view == "weekly") ? "SELECTED" : "") .'>'. $Language->getText('project_stats_index','weeks') .'</OPTION>
-<OPTION VALUE="daily" '. (($view == "daily" || !isset($view)) ? "SELECTED" : "") .'>'. $Language->getText('project_stats_index','days') .'</OPTION>
+<OPTION VALUE="monthly" '. (($view == "monthly") ? "SELECTED" : "") .'>'. $Language->getText('project_stats_index', 'months') .'</OPTION>
+<OPTION VALUE="weekly" '. (($view == "weekly") ? "SELECTED" : "") .'>'. $Language->getText('project_stats_index', 'weeks') .'</OPTION>
+<OPTION VALUE="daily" '. (($view == "daily" || !isset($view)) ? "SELECTED" : "") .'>'. $Language->getText('project_stats_index', 'days') .'</OPTION>
 </SELECT>
 </td>
 <td>
  
-<INPUT type="submit" value="'.$Language->getText('global','btn_browse').'">
+<INPUT type="submit" value="'.$Language->getText('global', 'btn_browse').'">
 <INPUT type="hidden" name="group_id" value="'.$group_id.'">
 </td></tr></table></FORM>';
 
-switch($view) {
+switch ($view) {
     case "monthly":
         print '<P>';
-        filedownload_logs_daily( $project, $span*30.5, $who);
-        cvsaccess_logs_daily( $project, $span*30.5, $who);
-        svnaccess_logs_daily( $project, $span*30.5, $who);
-        wiki_logs_daily( $project, $span*30.5, $who);
-        wiki_attachments_logs_daily( $project, $span*30.5, $who);
-        plugins_logs_daily( $project, $span*30.5, $who);
-    break;
+        filedownload_logs_daily($project, $span*30.5, $who);
+        cvsaccess_logs_daily($project, $span*30.5, $who);
+        svnaccess_logs_daily($project, $span*30.5, $who);
+        wiki_logs_daily($project, $span*30.5, $who);
+        wiki_attachments_logs_daily($project, $span*30.5, $who);
+        plugins_logs_daily($project, $span*30.5, $who);
+        break;
 
     case "weekly":
         print '<P>';
-        filedownload_logs_daily( $project, $span*7, $who);
-        cvsaccess_logs_daily( $project, $span*7, $who);
-        svnaccess_logs_daily( $project, $span*7, $who);
-        wiki_logs_daily( $project, $span*7, $who);
-        wiki_attachments_logs_daily( $project, $span*7, $who);
-        plugins_logs_daily( $project, $span*7, $who);
-    break;
+        filedownload_logs_daily($project, $span*7, $who);
+        cvsaccess_logs_daily($project, $span*7, $who);
+        svnaccess_logs_daily($project, $span*7, $who);
+        wiki_logs_daily($project, $span*7, $who);
+        wiki_attachments_logs_daily($project, $span*7, $who);
+        plugins_logs_daily($project, $span*7, $who);
+        break;
 
     case 'daily':
     default:
-        filedownload_logs_daily( $project, $span, $who);
-        cvsaccess_logs_daily( $project, $span, $who);
-        svnaccess_logs_daily( $project, $span, $who);
-        wiki_logs_daily( $project, $span, $who);
-        wiki_attachments_logs_daily( $project, $span, $who);
-        plugins_logs_daily( $project, $span, $who);
+        filedownload_logs_daily($project, $span, $who);
+        cvsaccess_logs_daily($project, $span, $who);
+        svnaccess_logs_daily($project, $span, $who);
+        wiki_logs_daily($project, $span, $who);
+        wiki_attachments_logs_daily($project, $span, $who);
+        plugins_logs_daily($project, $span, $who);
 }
 
 $purifier = Codendi_HTMLPurifier::instance();
@@ -166,10 +164,10 @@ echo '<BR><FORM METHOD="POST" NAME="access_logs_export_form">
 	<INPUT TYPE="HIDDEN" NAME="span" VALUE="'.$purifier->purify($span).'">
 	<INPUT TYPE="HIDDEN" NAME="view" VALUE="'.$purifier->purify($view).'">
 	<TABLE align="left"><TR><TD>
-	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$GLOBALS['Language']->getText('project_stats_source_code_access','logs_export').'">
+	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$GLOBALS['Language']->getText('project_stats_source_code_access', 'logs_export').'">
 	</TD></TR></TABLE></FORM>';
 
 print '<BR><P>';
 
 // END PAGE CONTENT CODE
-site_project_footer( array() );
+site_project_footer(array());

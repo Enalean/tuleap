@@ -20,7 +20,8 @@
 
 require_once __DIR__ .'/bootstrap.php';
 
-class Cardwall_Column_isInColumnTest extends TuleapTestCase {
+class Cardwall_Column_isInColumnTest extends TuleapTestCase
+{
 
 
     //TODO move this to the configTest file
@@ -97,10 +98,10 @@ class Cardwall_Column_isInColumnTest extends TuleapTestCase {
         $header_color = 0;
         return new Cardwall_Column($id, $label, $header_color);
     }
-
 }
 
-class Cardwall_Column_canContainStatusTest extends TuleapTestCase {
+class Cardwall_Column_canContainStatusTest extends TuleapTestCase
+{
 
     private $column;
 

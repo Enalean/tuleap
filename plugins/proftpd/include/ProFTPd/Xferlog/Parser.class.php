@@ -20,7 +20,8 @@
 
 namespace Tuleap\ProFTPd\Xferlog;
 
-class Parser {
+class Parser
+{
 
     /**
      *

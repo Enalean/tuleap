@@ -24,7 +24,8 @@ use Tracker_Artifact;
 use Cardwall_SingleCard;
 use PFUser;
 
-class CardUpdater {
+class CardUpdater
+{
 
     public function updateCard(PFUser $user, Cardwall_SingleCard $card, $label, array $values, $column_id = null)
     {

@@ -29,13 +29,14 @@ use Tuleap\Project\REST\ProjectResourceReference;
 /**
  * Inject resource into restler
  */
-class AgileDashboard_REST_ResourcesInjector {
+class AgileDashboard_REST_ResourcesInjector
+{
 
     public function populate(Luracast\Restler\Restler $restler)
     {
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\MilestoneResource', MilestoneRepresentation::ROUTE);
-        $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\PlanningResource',  PlanningRepresentation::ROUTE);
-        $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\BacklogItemResource',  BacklogItemRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\PlanningResource', PlanningRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\BacklogItemResource', BacklogItemRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\Kanban\\KanbanResource', KanbanRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\Kanban\\KanbanColumnsResource', KanbanColumnRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\AgileDashboard\\REST\\v1\\Kanban\\KanbanItemsResource', KanbanItemPOSTRepresentation::ROUTE);

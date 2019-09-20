@@ -25,7 +25,8 @@ use TuleapTestCase;
 
 require_once dirname(__FILE__).'/../../../../bootstrap.php';
 
-class OrderValidatorTest extends TuleapTestCase {
+class OrderValidatorTest extends TuleapTestCase
+{
 
     /** @var OrderValidator */
     private $order_validator;

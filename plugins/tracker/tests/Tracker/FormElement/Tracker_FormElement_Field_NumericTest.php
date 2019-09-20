@@ -19,7 +19,8 @@
  */
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends TuleapTestCase {
+class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends TuleapTestCase
+{
 
     public function itDelegatesRetrievalOfTheOldValueToTheDaoWhenNoTimestampGiven()
     {
@@ -66,5 +67,3 @@ class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends TuleapTestC
         $this->assertEqual(0, $actual_value);
     }
 }
-
-?>

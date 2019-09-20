@@ -25,7 +25,8 @@
 *
 * Base class to create, retrieve, update or delete rules
 */
-class ArtifactRuleFactory {
+class ArtifactRuleFactory
+{
 
     var $rules_dao;
     var $rules;
@@ -77,7 +78,7 @@ class ArtifactRuleFactory {
     {
         $dar = $this->rules_dao->searchByGroupArtifactIdWithOrder($artifact_type);
         $rules = array();
-        while($rule_row = $dar->getRow()) {
+        while ($rule_row = $dar->getRow()) {
             if (!isset($this->rules[$rule_row['id']])) {
                 $rule_row['group_artifact_id'] = $artifact_type;
                 $this->rules[$rule_row['id']] = $this->_buildRuleInstance($rule_row);
@@ -185,4 +186,3 @@ class ArtifactRuleFactory {
         return $copied;
     }
 }
-?>

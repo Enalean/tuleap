@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201304080905_add_disconnect_date extends ForgeUpgrade_Bucket {
+class b201304080905_add_disconnect_date extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -60,5 +61,3 @@ EOT;
         }
     }
 }
-
-?>

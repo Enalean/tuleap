@@ -21,7 +21,8 @@ namespace User\XML\Import;
 
 use Exception;
 
-class UsersXMLNotFoundException extends Exception {
+class UsersXMLNotFoundException extends Exception
+{
 
     public function __construct()
     {

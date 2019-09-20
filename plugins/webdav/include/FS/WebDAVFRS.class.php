@@ -26,7 +26,8 @@ use Tuleap\FRS\FRSPermissionManager;
  * It is an implementation of the abstract class Sabre_DAV_Directory methods
  *
  */
-class WebDAVFRS extends Sabre_DAV_Directory {
+class WebDAVFRS extends Sabre_DAV_Directory
+{
 
     private $user;
     private $project;
@@ -47,7 +48,6 @@ class WebDAVFRS extends Sabre_DAV_Directory {
         $this->user = $user;
         $this->project = $project;
         $this->maxFileSize = $maxFileSize;
-
     }
 
     /**
@@ -70,7 +70,6 @@ class WebDAVFRS extends Sabre_DAV_Directory {
             }
         }
         return $children;
-
     }
 
     /**
@@ -96,13 +95,10 @@ class WebDAVFRS extends Sabre_DAV_Directory {
         }
 
         if (!$package->userCanRead($this->getUser())) {
-
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_access_not_authorized'));
-
         }
 
         return $package;
-
     }
 
     /**
@@ -129,7 +125,6 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     {
 
         return;
-
     }
 
     /**
@@ -141,7 +136,6 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     {
 
         return $this->project;
-
     }
 
     /**
@@ -153,7 +147,6 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     {
 
         return $this->getProject()->getGroupId();
-
     }
 
     /**
@@ -165,7 +158,6 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     {
 
         return $this->user;
-
     }
 
     /**
@@ -177,7 +169,6 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     {
 
         return WebDAVUtils::getInstance();
-
     }
 
     /**
@@ -202,7 +193,6 @@ class WebDAVFRS extends Sabre_DAV_Directory {
 
         $utils = $this->getUtils();
         return $utils->getPackageFactory()->getFRSPackageFromDb($utils->getPackageFactory()->getPackageIdByName($packageName, $this->getGroupId()), $this->getGroupId());
-
     }
 
     /**
@@ -216,7 +206,6 @@ class WebDAVFRS extends Sabre_DAV_Directory {
     {
 
         return new WebDAVFRSPackage($this->getUser(), $this->getProject(), $package, $this->getMaxFileSize());
-
     }
 
     /**
@@ -231,7 +220,6 @@ class WebDAVFRS extends Sabre_DAV_Directory {
 
         $utils = $this->getUtils();
         return $utils->getPackageFactory()->getFRSPackagesFromDb($project->getGroupId());
-
     }
 
     /** @protected for testing purpose */
@@ -293,9 +281,5 @@ class WebDAVFRS extends Sabre_DAV_Directory {
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_denied_create'));
         }
-
     }
-
 }
-
-?>

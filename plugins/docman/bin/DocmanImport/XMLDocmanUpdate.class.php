@@ -22,7 +22,8 @@
 require_once 'XMLDocmanImport.class.php';
 require_once 'Trees.class.php';
 
-class XMLDocmanUpdate extends XMLDocmanImport {
+class XMLDocmanUpdate extends XMLDocmanImport
+{
 
     private $remoteItems = array();
     private $continue = false;
@@ -141,7 +142,9 @@ class XMLDocmanUpdate extends XMLDocmanImport {
         if (isset($tree['tag'])) {
             switch ($tree['tag']) {
                 case 'IN_FIRST':
-                    if ($this->continue) break;
+                    if ($this->continue) {
+                        break;
+                    }
                     // Only in server => delete item
                     $this->deleteItem($itemId, $title);
                     break;
@@ -156,7 +159,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
                     $node = $tree['xmlElement'];
 
                     if (!$this->continue) {
-                        if ($node['type'] == 'file' || $node['type'] == 'embeddedfile' ) {
+                        if ($node['type'] == 'file' || $node['type'] == 'embeddedfile') {
                             if ($this->checkVersionChecksums($itemId, $node)) {
                                 $this->updateItem($itemId, $node);
                             } else {
@@ -286,7 +289,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             try {
                 $this->soap->deleteDocmanItem($this->hash, $this->groupId, $itemId);
                 $this->logger->info(" #$itemId");
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
@@ -326,7 +329,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
 
             try {
                 $remoteMd5sums = $this->soap->getDocmanFileAllVersionsMD5sum($this->hash, $this->groupId, $itemId);
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
@@ -352,7 +355,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
 
         $itemInfo = $this->getItemInformation($node);
 
-        switch($node['type']) {
+        switch ($node['type']) {
             case 'file':
                 $this->updateFile($itemId, $itemInfo);
 
@@ -367,7 +370,6 @@ class XMLDocmanUpdate extends XMLDocmanImport {
                     $newVersions = array_slice($versions, $remoteVersionCount, $newVersionCount);
 
                     foreach ($newVersions as $version) {
-
                         list(
                             $file,
                             $label,
@@ -397,7 +399,6 @@ class XMLDocmanUpdate extends XMLDocmanImport {
 
                     // Send the new versions
                     foreach ($newVersions as $version) {
-
                         list(
                             $file,
                             $label,
@@ -458,7 +459,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             try {
                 $this->soap->updateDocmanFile($this->hash, $this->groupId, $itemId, $title, $description, $status, $obsolescenceDate, $permissions, $metadata, $owner, $createDate, $updateDate);
                 $this->logger->info(" #$itemId");
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 $retry = self::askWhatToDo($e);
             }
         } while ($retry);
@@ -491,7 +492,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             try {
                 $this->soap->updateDocmanEmbeddedFile($this->hash, $this->groupId, $itemId, $title, $description, $status, $obsolescenceDate, $permissions, $metadata, $owner, $createDate, $updateDate);
                 $this->logger->info(" #$itemId");
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 $retry = self::askWhatToDo($e);
             }
         } while ($retry);
@@ -524,7 +525,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             try {
                 $this->soap->updateDocmanEmptyDocument($this->hash, $this->groupId, $itemId, $title, $description, $status, $obsolescenceDate, $permissions, $metadata, $owner, $createDate, $updateDate);
                 $this->logger->info(" #$itemId");
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 $retry = self::askWhatToDo($e);
             }
         } while ($retry);
@@ -557,7 +558,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             try {
                 $this->soap->updateDocmanWikiPage($this->hash, $this->groupId, $itemId, $title, $description, $status, $obsolescenceDate, $pageName, $permissions, $metadata, $owner, $createDate, $updateDate);
                 $this->logger->info(" #$itemId");
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 $retry = self::askWhatToDo($e);
             }
         } while ($retry);
@@ -590,7 +591,7 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             try {
                 $this->soap->updateDocmanLink($this->hash, $this->groupId, $itemId, $title, $description, $status, $obsolescenceDate, $url, $permissions, $metadata, $owner, $createDate, $updateDate);
                 $this->logger->info(" #$itemId");
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 $retry = self::askWhatToDo($e);
             }
         } while ($retry);
@@ -623,11 +624,9 @@ class XMLDocmanUpdate extends XMLDocmanImport {
             try {
                 $this->soap->updateDocmanFolder($this->hash, $this->groupId, $itemId, $title, $description, $status, $permissions, $metadata, $owner, $createDate, $updateDate);
                 $this->logger->info(" #$itemId");
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 $retry = self::askWhatToDo($e);
             }
         } while ($retry);
     }
 }
-
-?>

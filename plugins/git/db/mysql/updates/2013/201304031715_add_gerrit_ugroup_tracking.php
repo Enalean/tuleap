@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201304031715_add_gerrit_ugroup_tracking extends ForgeUpgrade_Bucket {
+class b201304031715_add_gerrit_ugroup_tracking extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -65,5 +66,3 @@ EOT;
         }
     }
 }
-
-?>

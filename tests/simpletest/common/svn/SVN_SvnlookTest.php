@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class SVN_Svnlook_getDirectoryListingTest extends TuleapTestCase {
+class SVN_Svnlook_getDirectoryListingTest extends TuleapTestCase
+{
 
     private $svn_prefix;
     private $svnrepo;
@@ -101,4 +102,3 @@ class SVN_Svnlook_getDirectoryListingTest extends TuleapTestCase {
         $this->assertEqual(date('Y-m-d'), date('Y-m-d', $log_timestamp));
     }
 }
-?>

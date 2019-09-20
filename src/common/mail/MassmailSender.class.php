@@ -20,7 +20,8 @@
 /**
  * Sends mails to a group of users in a project.
  */
-class MassmailSender {
+class MassmailSender
+{
 
     /**
      *
@@ -35,7 +36,7 @@ class MassmailSender {
 
         $sys_max_number_of_emailed_people = ForgeConfig::get('sys_max_number_of_emailed_people');
         if (count($receivers) > $sys_max_number_of_emailed_people && !$user->isSuperUser()) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('my_index','massmail_not_sent_max_users', $sys_max_number_of_emailed_people));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('my_index', 'massmail_not_sent_max_users', $sys_max_number_of_emailed_people));
             return;
         }
 
@@ -53,5 +54,3 @@ class MassmailSender {
         return $is_sent;
     }
 }
-
-?>

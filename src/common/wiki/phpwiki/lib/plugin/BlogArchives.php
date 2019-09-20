@@ -18,8 +18,7 @@ require_once('lib/plugin/WikiBlog.php');
  *       leave off time subpage? Blogs just per day with one summary title only?
  * @author: Reini Urban
  */
-class WikiPlugin_BlogArchives
-extends WikiPlugin_WikiBlog
+class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
 {
     function getName()
     {
@@ -33,8 +32,11 @@ extends WikiPlugin_WikiBlog
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.5 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.5 $"
+        );
     }
 
     function getDefaultArguments()
@@ -54,7 +56,9 @@ extends WikiPlugin_WikiBlog
     {
         if (is_array($argstr)) { // can do with array also.
             $args = $argstr;
-            if (!isset($args['order'])) $args['order'] = 'reverse';
+            if (!isset($args['order'])) {
+                $args['order'] = 'reverse';
+            }
         } else {
             $args = $this->getArgs($argstr, $request);
         }
@@ -67,10 +71,11 @@ extends WikiPlugin_WikiBlog
             }
         }
         if (!$args['user'] or $args['user'] == ADMIN_USER) {
-            if (BLOG_EMPTY_DEFAULT_PREFIX)
+            if (BLOG_EMPTY_DEFAULT_PREFIX) {
                 $args['user'] = '';         // "Blogs/day" pages
-            else
+            } else {
                 $args['user'] = ADMIN_USER; // "Admin/Blogs/day" pages
+            }
         }
         $parent = (empty($args['user']) ? '' : $args['user'] . SUBPAGE_SEPARATOR);
 
@@ -86,57 +91,76 @@ extends WikiPlugin_WikiBlog
             $html = HTML::ul();
             while ($page = $pages->next()) {
                 $rev = $page->getCurrentRevision(false);
-                if ($rev->get('pagetype') != 'wikiblog') continue;
+                if ($rev->get('pagetype') != 'wikiblog') {
+                    continue;
+                }
                 $blog = $this->_blog($rev);
                 $html->pushContent(HTML::li(WikiLink($page, 'known', $rev->get('summary'))));
             }
-            if (!$args['noheader'])
-                return HTML(HTML::h3(sprintf(_("Blog Entries for %s:"), $this->_monthTitle($args['month']))),
-                           $html);
-            else
+            if (!$args['noheader']) {
+                return HTML(
+                    HTML::h3(sprintf(_("Blog Entries for %s:"), $this->_monthTitle($args['month']))),
+                    $html
+                );
+            } else {
                 return $html;
+            }
         }
 
-        $blogs = $this->findBlogs ($dbi, $args['user'], 'wikiblog');
+        $blogs = $this->findBlogs($dbi, $args['user'], 'wikiblog');
         if ($blogs) {
-            if (!$basepage) $basepage = _("BlogArchives");
+            if (!$basepage) {
+                $basepage = _("BlogArchives");
+            }
             $html = HTML::ul();
             usort($blogs, array("WikiPlugin_WikiBlog", "cmp"));
-            if ($args['order'] == 'reverse')
+            if ($args['order'] == 'reverse') {
                 $blogs = array_reverse($blogs);
+            }
             // collapse pagenames by month
             $months = array();
             foreach ($blogs as $rev) {
                 $blog = $this->_blog($rev);
                 $mon = $blog['month'];
-                if (empty($months[$mon]))
+                if (empty($months[$mon])) {
                     $months[$mon] =
                         array('title' => $this->_monthTitle($mon),
                               'num'   => 1,
                               'month' => $mon,
-                              'link'  => WikiURL($basepage,
-                                         $this->_nonDefaultArgs(array('month' => $mon))));
-                else
+                              'link'  => WikiURL(
+                                  $basepage,
+                                  $this->_nonDefaultArgs(array('month' => $mon))
+                              ));
+                } else {
                     $months[$mon]['num']++;
+                }
             }
             foreach ($months as $m) {
-                $html->pushContent(HTML::li(HTML::a(array('href'=>$m['link'],
+                $html->pushContent(HTML::li(HTML::a(
+                    array('href'=>$m['link'],
                                                           'class' => 'named-wiki'),
-                                                    $m['title'] . " (".$m['num'].")")));
+                    $m['title'] . " (".$m['num'].")"
+                )));
             }
-            if (!$args['noheader'])
+            if (!$args['noheader']) {
                 return HTML(HTML::h3(_("Blog Archives:")), $html);
-            else
+            } else {
                 return $html;
-        } else
+            }
+        } else {
             return '';
+        }
     }
 
     // box is used to display a fixed-width, narrow version with common header
-    function box($args=false, $request=false, $basepage=false)
+    function box($args = false, $request = false, $basepage = false)
     {
-        if (!$request) $request = $GLOBALS['request'];
-        if (!$args or empty($args['limit'])) $args['limit'] = 10;
+        if (!$request) {
+            $request = $GLOBALS['request'];
+        }
+        if (!$args or empty($args['limit'])) {
+            $args['limit'] = 10;
+        }
         $args['noheader'] = 1;
         return $this->makeBox(_("Archives"), $this->run($request->_dbi, $args, $request, $basepage));
     }
@@ -165,4 +189,3 @@ extends WikiPlugin_WikiBlog
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

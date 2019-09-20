@@ -21,7 +21,8 @@
 /**
  * Represents the fields of a cardwall.
  */
-class Cardwall_CardFields {
+class Cardwall_CardFields
+{
 
     /**
      * @var UserManager
@@ -58,4 +59,3 @@ class Cardwall_CardFields {
         return $semantic->getFields();
     }
 }
-?>

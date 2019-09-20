@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GraphOnTrackersV5_ChartFactory {
+class GraphOnTrackersV5_ChartFactory
+{
     private const CHART_REMOVED = 'removed';
 
     protected $charts;
@@ -73,7 +74,7 @@ class GraphOnTrackersV5_ChartFactory {
                 }
             }
             if ($charts_data) {
-                foreach($charts_data as $row) {
+                foreach ($charts_data as $row) {
                     if ($row !== self::CHART_REMOVED) {
                         if ($c = $this->instanciateChart($row, $renderer, $store_in_session)) {
                             $this->charts[$renderer->id][$row['id']] = $c;
@@ -142,7 +143,6 @@ class GraphOnTrackersV5_ChartFactory {
     {
         $chart = null;
         if ($chart_classname = $this->getChartClassname($chart_type)) {
-
             $dao = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
             $default_title       = 'Untitled '.$chart_type;
             $default_description = '';
@@ -169,12 +169,12 @@ class GraphOnTrackersV5_ChartFactory {
         if (isset($session->charts[$id])) {
             $session->set("charts.$id", self::CHART_REMOVED);
             $session->setHasChanged();
-        } else if ($user_can_update_report) {
-            $this->deleteDb($renderer,  $id);
+        } elseif ($user_can_update_report) {
+            $this->deleteDb($renderer, $id);
         }
     }
 
-    public function deleteDb($renderer,  $id)
+    public function deleteDb($renderer, $id)
     {
         //not in session, but in db cause removed in session
         if ($c = $this->getChartFromDb($renderer, $id)) {
@@ -234,7 +234,7 @@ class GraphOnTrackersV5_ChartFactory {
             $chart_data = $session->get("charts.$id");
         }
 
-        if ( ! $chart_data ){
+        if (! $chart_data) {
             // not found. look in the db
             $dao = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
             $chart_data = $dao->searchById($id)->getRow();
@@ -313,7 +313,7 @@ class GraphOnTrackersV5_ChartFactory {
     public function duplicate($from_renderer, $to_renderer, $field_mapping)
     {
         $dao = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
-        foreach($this->getCharts($from_renderer) as $chart) {
+        foreach ($this->getCharts($from_renderer) as $chart) {
             if ($id = $dao->duplicate($chart->getId(), $to_renderer->id)) {
                 $this->getChart($to_renderer, $id)->duplicate($chart, $field_mapping);
             }
@@ -338,4 +338,3 @@ class GraphOnTrackersV5_ChartFactory {
         return $chart;
     }
 }
-?>

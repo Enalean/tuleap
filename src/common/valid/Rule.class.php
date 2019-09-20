@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Rule {
+abstract class Rule
+{
     /**
      * @access private
      */
@@ -48,7 +49,7 @@ abstract class Rule {
      * @param String $val Value to check.
      * @return bool
      */
-    function getErrorMessage($key='')
+    function getErrorMessage($key = '')
     {
         return $this->error;
     }
@@ -60,7 +61,8 @@ abstract class Rule {
  * Note: this date format is more restrictive than php check date because in
  * this case, 2007-01-01 format (with zero in month or day) is not allowed.
  */
-class Rule_Date extends Rule {
+class Rule_Date extends Rule
+{
     public const DAY_REGEX     = '/^(\d{1,4})-(\d{1,2})-(\d{1,2}?)$/';
 
     function isValid($val)
@@ -73,7 +75,8 @@ class Rule_Date extends Rule {
     }
 }
 
-class Rule_Date_Time extends Rule {
+class Rule_Date_Time extends Rule
+{
     public const DAYTIME_REGEX = '/^(\d{1,4})-(\d{1,2})-(\d{1,2}?) (\d{2}):(\d{2})(?::\d{2})?$/';
 
     function isValid($val)
@@ -85,7 +88,8 @@ class Rule_Date_Time extends Rule {
     }
 }
 
-class Rule_Timestamp extends Rule {
+class Rule_Timestamp extends Rule
+{
     public const TIMESTAMP_REGEX = '/^[0-9]+$/';
 
     function isValid($val)
@@ -97,8 +101,8 @@ class Rule_Timestamp extends Rule {
 /**
  * Abstract class that define left-hand operand for a comparison.
  */
-abstract class Rule_Comparator
-extends Rule {
+abstract class Rule_Comparator extends Rule
+{
     /**
      * @access private
      */
@@ -109,44 +113,44 @@ extends Rule {
     }
 }
 
-class Rule_GreaterThan
-extends Rule_Comparator {
+class Rule_GreaterThan extends Rule_Comparator
+{
     function isValid($val)
     {
-        if(is_numeric($val) && $val > $this->ref) {
+        if (is_numeric($val) && $val > $this->ref) {
             return true;
         }
         return false;
     }
 }
 
-class Rule_LessThan
-extends Rule_Comparator {
+class Rule_LessThan extends Rule_Comparator
+{
     function isValid($val)
     {
-        if(is_numeric($val) && $val < $this->ref) {
+        if (is_numeric($val) && $val < $this->ref) {
             return true;
         }
         return false;
     }
 }
 
-class Rule_GreaterOrEqual
-extends Rule_Comparator {
+class Rule_GreaterOrEqual extends Rule_Comparator
+{
     function isValid($val)
     {
-        if(is_numeric($val) && $val >= $this->ref) {
+        if (is_numeric($val) && $val >= $this->ref) {
             return true;
         }
         return false;
     }
 }
 
-class Rule_lessOrEqual
-extends Rule_Comparator {
+class Rule_lessOrEqual extends Rule_Comparator
+{
     function isValid($val)
     {
-        if(is_numeric($val) && $val <= $this->ref) {
+        if (is_numeric($val) && $val <= $this->ref) {
             return true;
         }
         return false;
@@ -158,11 +162,11 @@ extends Rule_Comparator {
  *
  * There is no type check.
  */
-class Rule_WhiteList
-extends Rule_Comparator {
+class Rule_WhiteList extends Rule_Comparator
+{
     function isValid($val)
     {
-        if(is_array($this->ref)
+        if (is_array($this->ref)
            && count($this->ref) > 0
            && in_array($val, $this->ref)) {
             return true;
@@ -174,8 +178,8 @@ extends Rule_Comparator {
 /**
  * Check that given value is a valid signed 32 bits decimal integer.
  */
-class Rule_Int
-extends Rule {
+class Rule_Int extends Rule
+{
     /**
      * Check the format according to PHP definition of a decimal integer.
      * @see http://php.net/int
@@ -183,7 +187,7 @@ extends Rule {
      */
     function checkFormat($val)
     {
-        if(preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $val)) {
+        if (preg_match('/^([+-]?[1-9][0-9]*|[+-]?0)$/', $val)) {
             return true;
         } else {
             return false;
@@ -194,9 +198,9 @@ extends Rule {
     {
         // Need to check with the regexp because of octal form '0123' that is
         // equal to '123' with string '==' comparison.
-        if($this->checkFormat($val)) {
+        if ($this->checkFormat($val)) {
             // Check (-2^31;2^31-1) range
-            if(strval(intval($val)) == $val) {
+            if (strval(intval($val)) == $val) {
                 return true;
             } else {
                 return false;
@@ -210,8 +214,8 @@ extends Rule {
 /**
  * Check that given value is a string.
  */
-class Rule_String
-extends Rule {
+class Rule_String extends Rule
+{
     function isValid($val)
     {
         return is_string($val);
@@ -221,8 +225,8 @@ extends Rule {
 /**
  * Check that given value is an array.
  */
-class Rule_Array
-extends Rule {
+class Rule_Array extends Rule
+{
     function isValid($val)
     {
         return is_array($val);
@@ -232,11 +236,11 @@ extends Rule {
 /**
  * Check if given string contains neither a carrige return nor a null char.
  */
-class Rule_NoCr
-extends Rule {
+class Rule_NoCr extends Rule
+{
     function isValid($val)
     {
-        if(is_string($val) && strpos($val, 0x0A) === false && strpos($val, 0x0D) === false
+        if (is_string($val) && strpos($val, 0x0A) === false && strpos($val, 0x0D) === false
            && strpos($val, 0x00) === false) {
             return true;
         }
@@ -247,7 +251,8 @@ extends Rule {
 /**
  * Check if given string match a pattern
  */
-class Rule_Regexp extends Rule {
+class Rule_Regexp extends Rule
+{
     protected $pattern;
 
     public function __construct($pattern)
@@ -271,8 +276,8 @@ class Rule_Regexp extends Rule {
  *
  * The faulty email address is available with $this->getErrorMessage();
  */
-class Rule_Email
-extends Rule {
+class Rule_Email extends Rule
+{
     var $separator;
 
     function __construct($separator = null)
@@ -282,7 +287,7 @@ extends Rule {
 
     function isValid($val)
     {
-        if($this->separator !== null) {
+        if ($this->separator !== null) {
             // If separator is defined, split the string and check each email.
             $emails = preg_split('/' . $this->separator . '/D', $val);
             foreach ($emails as $email) {
@@ -325,8 +330,8 @@ extends Rule {
  *
  * This rule doesn't check that user actually exists.
  */
-class Rule_UserName
-extends Rule {
+class Rule_UserName extends Rule
+{
 
     public const RESERVED_PREFIX = 'forge__';
 
@@ -390,7 +395,7 @@ extends Rule {
      */
     public function noSpaces($val)
     {
-        if (strrpos($val,' ') !== false) {
+        if (strrpos($val, ' ') !== false) {
             $this->error = $this->_getErrorNoSpaces();
             return false;
         }
@@ -406,8 +411,8 @@ extends Rule {
      */
     public function atLeastOneChar($val)
     {
-        if (strspn($val,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == 0) {
-            $this->error = $GLOBALS['Language']->getText('include_account','char_err');
+        if (strspn($val, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == 0) {
+            $this->error = $GLOBALS['Language']->getText('include_account', 'char_err');
             return false;
         }
         return true;
@@ -422,8 +427,8 @@ extends Rule {
      */
     public function containsIllegalChars($val)
     {
-        if (strspn($val,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.") != strlen($val)) {
-            $this->error = $GLOBALS['Language']->getText('include_account','illegal_char');
+        if (strspn($val, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.") != strlen($val)) {
+            $this->error = $GLOBALS['Language']->getText('include_account', 'illegal_char');
             return true;
         }
         return false;
@@ -450,7 +455,7 @@ extends Rule {
         $is_reserved_prefix = $this->isReservedPrefix($val);
 
         if ($is_reserved_name || $is_reserved_prefix) {
-            $this->error = $GLOBALS['Language']->getText('include_account','reserved');
+            $this->error = $GLOBALS['Language']->getText('include_account', 'reserved');
             return true;
         }
         return false;
@@ -481,7 +486,7 @@ extends Rule {
     public function isCvsAccount($val)
     {
         if (preg_match('/^anoncvs_/i', $val)) {
-            $this->error = $GLOBALS['Language']->getText('include_account','reserved_cvs');
+            $this->error = $GLOBALS['Language']->getText('include_account', 'reserved_cvs');
             return true;
         }
         return false;
@@ -497,7 +502,7 @@ extends Rule {
     public function lessThanMin($val)
     {
         if (strlen($val) < 3) {
-            $this->error = $GLOBALS['Language']->getText('include_account','name_too_short');
+            $this->error = $GLOBALS['Language']->getText('include_account', 'name_too_short');
             return true;
         }
         return false;
@@ -514,7 +519,7 @@ extends Rule {
     public function greaterThanMax($val, $max = 30)
     {
         if (strlen($val) > $max) {
-            $this->error = $GLOBALS['Language']->getText('include_account','name_too_long', $max);
+            $this->error = $GLOBALS['Language']->getText('include_account', 'name_too_long', $max);
             return true;
         }
         return false;
@@ -627,7 +632,7 @@ extends Rule {
      *
      * @return Backend
      */
-    protected function _getBackend($type='')
+    protected function _getBackend($type = '')
     {
         return Backend::instance($type);
     }
@@ -648,8 +653,8 @@ extends Rule {
  *
  * This extends the user name validation
  */
-class Rule_ProjectName
-extends Rule_UserName {
+class Rule_ProjectName extends Rule_UserName
+{
 
     public const PATTERN_PROJECT_NAME    = '[a-zA-Z][A-Za-z0-9-_.]{2,254}';
 
@@ -665,7 +670,7 @@ extends Rule_UserName {
         if (strpos($val, '_') === false && strpos($val, '.') === false) {
             return true;
         }
-        $this->error = $GLOBALS['Language']->getText('include_account','dns_error');
+        $this->error = $GLOBALS['Language']->getText('include_account', 'dns_error');
         return false;
     }
 
@@ -680,29 +685,29 @@ extends Rule_UserName {
     {
 
         $backendSVN = $this->_getBackend('SVN');
-        if (!$backendSVN->isNameAvailable($val)){
-            $this->error = $GLOBALS['Language']->getText('include_account','used_by_svn');
+        if (!$backendSVN->isNameAvailable($val)) {
+            $this->error = $GLOBALS['Language']->getText('include_account', 'used_by_svn');
             return false;
         } else {
             $backendCVS = $this->_getBackend('CVS');
             if (!$backendCVS->isNameAvailable($val)) {
-                $this->error = $GLOBALS['Language']->getText('include_account','used_by_cvs');
+                $this->error = $GLOBALS['Language']->getText('include_account', 'used_by_cvs');
                 return false;
             } else {
                 $backendSystem = $this->_getBackend('System');
-                if (!$backendSystem->isProjectNameAvailable($val)){
-                    $this->error = $GLOBALS['Language']->getText('include_account','used_by_sys');
+                if (!$backendSystem->isProjectNameAvailable($val)) {
+                    $this->error = $GLOBALS['Language']->getText('include_account', 'used_by_sys');
                     return false;
                 } else {
                     $result = true;
                     // Add Hook for plugins to check the name validity under plugins directories
-                    $this->getEventManager()->processEvent('file_exists_in_data_dir',
+                    $this->getEventManager()->processEvent(
+                        'file_exists_in_data_dir',
                         array('new_name'  => $val,
                               'result'     => &$result,
                               'error' => &$error)
-
-                            );
-                    if ($result == false){
+                    );
+                    if ($result == false) {
                         $this->error = $error;
                         return false;
                     }
@@ -767,7 +772,8 @@ extends Rule_UserName {
  *
  * This extends the user name validation
  */
-class Rule_ProjectFullName extends Rule_UserName {
+class Rule_ProjectFullName extends Rule_UserName
+{
 
     /**
      * Check validity
@@ -791,7 +797,6 @@ class Rule_ProjectFullName extends Rule_UserName {
     {
         return $this->error;
     }
-
 }
 
 /**
@@ -805,8 +810,8 @@ class Rule_ProjectFullName extends Rule_UserName {
  * variable but may be customized with setMaxSize.
  */
 require_once __DIR__ . '/../../www/file/file_utils.php'; // Needed for 2 GB workaround
-class Rule_File
-extends Rule {
+class Rule_File extends Rule
+{
     var $maxSize;
     var $i18nPageName;
 
@@ -821,7 +826,7 @@ extends Rule {
         $this->maxSize = $max;
     }
 
-    function geti18nError($key, $params="")
+    function geti18nError($key, $params = "")
     {
         return $GLOBALS['Language']->getText($this->i18nPageName, $key, $params);
     }
@@ -835,35 +840,35 @@ extends Rule {
     function isValid($file)
     {
         $ok = false;
-        if(is_array($file)) {
-            switch($file['error']) {
+        if (is_array($file)) {
+            switch ($file['error']) {
                 case UPLOAD_ERR_OK:
                     // all is OK
                     $ok = true;
-                break;
+                    break;
                 case UPLOAD_ERR_INI_SIZE:
                 case UPLOAD_ERR_FORM_SIZE:
                     $this->error = $this->geti18nError('error_upload_size', $file['error']);
-                break;
+                    break;
                 case UPLOAD_ERR_PARTIAL:
                     $this->error = $this->geti18nError('error_upload_partial', $file['error']);
-                break;
+                    break;
                 case UPLOAD_ERR_NO_FILE:
                     $this->error = $this->geti18nError('error_upload_nofile', $file['error']);
-                break;
+                    break;
                 //case UPLOAD_ERR_NO_TMP_DIR: PHP 5.0.3
                 //case UPLOAD_ERR_CANT_WRITE: PHP 5.1.0
                 //case UPLOAD_ERR_EXTENSION: PHP 5.2.0
                 default:
                     $this->error = $this->geti18nError('error_upload_unknown', $file['error']);
             }
-            if($ok && $file['name'] == '') {
+            if ($ok && $file['name'] == '') {
                 $ok = false;
                 $this->error = $this->geti18nError('error_upload');
             }
-            if($ok) {
+            if ($ok) {
                 // Re-check filesize (do not trust uploaded MAX_FILE_SIZE)
-                if(file_utils_get_size($file['tmp_name']) > $this->maxSize) {
+                if (file_utils_get_size($file['tmp_name']) > $this->maxSize) {
                     $ok = false;
                     $this->error = $this->geti18nError('error_upload_size', 1);
                 }
@@ -873,8 +878,8 @@ extends Rule {
     }
 }
 
-class Rule_FRSFileName
-extends Rule {
+class Rule_FRSFileName extends Rule
+{
     function isValid($val)
     {
         if (preg_match("/[`!\"$%^,&*();=|{}<>?\/]/", $val)) {
@@ -886,7 +891,7 @@ extends Rule {
         if (strpos($val, '~') === 0) { // Starts with at sign
             return false;
         }
-        if (strstr($val,'..')) {
+        if (strstr($val, '..')) {
             return false;
         } else {
             return true;
@@ -894,7 +899,8 @@ extends Rule {
     }
 }
 
-class Rule_RealName extends Rule {
+class Rule_RealName extends Rule
+{
 
     public function isValid($string)
     {
@@ -924,5 +930,3 @@ class Rule_RealName extends Rule {
         return hexdec(bin2hex($char)) < 32;
     }
 }
-
-?>

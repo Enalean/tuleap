@@ -21,7 +21,8 @@
 /**
  * AgileDashboardPluginDescriptor
  */
-class AgileDashboardPluginDescriptor extends PluginDescriptor {
+class AgileDashboardPluginDescriptor extends PluginDescriptor
+{
 
     function __construct()
     {
@@ -29,4 +30,3 @@ class AgileDashboardPluginDescriptor extends PluginDescriptor {
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
-?>

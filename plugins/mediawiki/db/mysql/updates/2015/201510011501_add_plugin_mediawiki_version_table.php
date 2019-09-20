@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201510011501_add_plugin_mediawiki_version_table extends ForgeUpgrade_Bucket {
+class b201510011501_add_plugin_mediawiki_version_table extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket

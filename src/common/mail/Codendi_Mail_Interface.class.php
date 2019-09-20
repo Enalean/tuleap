@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface Codendi_Mail_Interface {
+interface Codendi_Mail_Interface
+{
     /**
      * User preference that stores the mail format
      */
@@ -51,4 +52,3 @@ interface Codendi_Mail_Interface {
 
     public function addAdditionalHeader($name, $value);
 }
-?>

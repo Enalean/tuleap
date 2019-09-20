@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Tracker_Artifact_SubmitAbstractRenderer extends Tracker_Artifact_ArtifactRenderer {
+abstract class Tracker_Artifact_SubmitAbstractRenderer extends Tracker_Artifact_ArtifactRenderer
+{
 
     public function __construct(Tracker $tracker, EventManager $event_manager)
     {
@@ -58,5 +59,3 @@ abstract class Tracker_Artifact_SubmitAbstractRenderer extends Tracker_Artifact_
         return $html;
     }
 }
-
-?>

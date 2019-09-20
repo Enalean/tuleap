@@ -110,8 +110,10 @@ class Docman_Actions extends Actions
                                'new_value' => $new,
                                'field'     => $field);
 
-        $this->event_manager->processEvent('plugin_docman_event_metadata_update',
-                                           $logEventParam);
+        $this->event_manager->processEvent(
+            'plugin_docman_event_metadata_update',
+            $logEventParam
+        );
     }
 
     /**
@@ -135,7 +137,7 @@ class Docman_Actions extends Actions
         $_changelog = '';
 
         $nextNb = $vFactory->getNextVersionNumber($item);
-        if($nextNb === false) {
+        if ($nextNb === false) {
             $number       = 1;
             $_action_type = 'initversion';
             $_changelog   = 'Initial version';
@@ -158,7 +160,6 @@ class Docman_Actions extends Actions
         switch ($iFactory->getItemTypeForItem($item)) {
             case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
                 if ($request->exist('upload_content')) {
-
                     if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
                         $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $number, $request->get('chunk_offset'), $request->get('chunk_size'));
                     } else {
@@ -197,7 +198,7 @@ class Docman_Actions extends Actions
                     $_filetype = $mime_type_detector->getRightOfficeType($_filename);
                 }
 
-            break;
+                break;
             case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
                 if ($path = $fs->store($request->get('content'), $item->getGroupId(), $item->getId(), $number)) {
                     $uploadSucceded = true;
@@ -207,12 +208,12 @@ class Docman_Actions extends Actions
                     $_filesize = filesize($path);
                     $_filetype = 'text/html';
                 }
-            break;
+                break;
             default:
-            break;
+                break;
         }
 
-        if($uploadSucceded) {
+        if ($uploadSucceded) {
             $userId = $user->getId();
             if ($request->exist('author') && ($request->get('author') != $userId)) {
                 $versionAuthor = $request->get('author');
@@ -265,7 +266,7 @@ class Docman_Actions extends Actions
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_'.$_action_type));
 
             // Approval table
-            if($number > 0) {
+            if ($number > 0) {
                 // Approval table creation needs the item currentVersion to be set.
                 $vArray['id']   = $vId;
                 $vArray['date'] = $_SERVER['REQUEST_TIME'];
@@ -274,8 +275,7 @@ class Docman_Actions extends Actions
 
                 $this->newVersionApprovalTable($request, $item, $user);
             }
-        }
-        else {
+        } else {
             //TODO What should we do if upload failed ?
             //Maybe cancel item ?
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_'.$_action_type));
@@ -315,22 +315,19 @@ class Docman_Actions extends Actions
                 $item['title'] = trim($item['title']);
             }
 
-            if (
-                    $item['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+            if ($item['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
                     ||
                     (
                         $this->_controler->getProperty('embedded_are_allowed')
                         &&
                         $request->exist('content')
                     )
-                )
-            {
-
+                ) {
                 // Special handling of obsolescence date
-                if(isset($item['obsolescence_date']) && $item['obsolescence_date'] != 0) {
+                if (isset($item['obsolescence_date']) && $item['obsolescence_date'] != 0) {
                     if (preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $item['obsolescence_date'], $d)) {
                         $item['obsolescence_date'] = mktime(0, 0, 0, $d[2], $d[3], $d[1]);
-                    } else if (!preg_match('/^[0-9]*$/', $item['obsolescence_date'])) {
+                    } elseif (!preg_match('/^[0-9]*$/', $item['obsolescence_date'])) {
                         $item['obsolescence_date'] = 0;
                     }
                 } else {
@@ -402,13 +399,13 @@ class Docman_Actions extends Actions
                     }
 
                     $info_item_created = 'info_document_created';
-                    if($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
+                    if ($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
                         $info_item_created = 'info_folder_created';
                     }
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_document_created'));
 
                     $new_version = null;
-                    if($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE ||
+                    if ($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE ||
                        $item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                         $new_version = $this->_storeFile($new_item);
                     }
@@ -424,11 +421,11 @@ class Docman_Actions extends Actions
                     }
 
                     // Create metatata
-                    if($request->exist('metadata')) {
+                    if ($request->exist('metadata')) {
                         $metadata_array = $request->get('metadata');
                         $mdvFactory = new Docman_MetadataValueFactory($request->get('group_id'));
                         $mdvFactory->createFromRow($id, $metadata_array);
-                        if($mdvFactory->isError()) {
+                        if ($mdvFactory->isError()) {
                             $this->_controler->feedback->log('error', $mdvFactory->getErrorMessage());
                         }
                     }
@@ -474,7 +471,8 @@ class Docman_Actions extends Actions
                                     'item'      => $new_item,
                                     'group_id'  => $new_item->getGroupId(),
                                     'wiki_page' => $new_item->getPagename()
-                                ));
+                                )
+                            );
 
                             break;
 
@@ -534,9 +532,9 @@ class Docman_Actions extends Actions
 
             // Update Owner
             $ownerChanged = false;
-            if(isset($data['owner'])) {
+            if (isset($data['owner'])) {
                 $_owner_id = $this->_checkOwnerChange($data['owner'], $user);
-                if($_owner_id != $item->getOwnerId()) {
+                if ($_owner_id != $item->getOwnerId()) {
                     $ownerChanged = true;
                     $um = $this->_getUserManagerInstance();
                     $_oldowner = $um->getUserById($item->getOwnerId())->getName();
@@ -571,19 +569,19 @@ class Docman_Actions extends Actions
             }
 
             // Special handling of obsolescence date
-            if(isset($data['obsolescence_date']) && $data['obsolescence_date'] != 0) {
-                if(preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $data['obsolescence_date'], $d)) {
+            if (isset($data['obsolescence_date']) && $data['obsolescence_date'] != 0) {
+                if (preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $data['obsolescence_date'], $d)) {
                     $data['obsolescence_date'] = gmmktime(0, 0, 0, $d[2], $d[3], $d[1]);
-                } else if (!preg_match('/^[0-9]*$/', $data['obsolescence_date'])) {
+                } elseif (!preg_match('/^[0-9]*$/', $data['obsolescence_date'])) {
                     $data['obsolescence_date'] = 0;
                 }
             }
 
             // Check is status change
             $statusChanged = false;
-            if(array_key_exists('status', $data)) {
+            if (array_key_exists('status', $data)) {
                 $old_st = $item->getStatus();
-                if($old_st != $data['status']) {
+                if ($old_st != $data['status']) {
                     $statusChanged = true;
                 }
             }
@@ -592,15 +590,13 @@ class Docman_Actions extends Actions
             $createFile = false;
             $itemType = $item_factory->getItemTypeForItem($item);
 
-            if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY && isset($data['item_type']) && $itemType != $data['item_type'] &&
+            if ($itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY && isset($data['item_type']) && $itemType != $data['item_type'] &&
                 ($data['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE || $this->_controler->getProperty('embedded_are_allowed'))) {
-
-                if($data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+                if ($data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
                    || $data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
                     $createFile = true;
                 }
-            }
-            else {
+            } else {
                 $data['item_type'] =  $itemType;
             }
 
@@ -610,8 +606,7 @@ class Docman_Actions extends Actions
                     'group_id' => $request->get('group_id'),
                     'item'     => $item,
                     'new'      => $data,
-                    'user'     => $user)
-                );
+                    'user'     => $user));
             }
 
             // Log the 'edit' event if link_url or wiki_page are set
@@ -619,44 +614,43 @@ class Docman_Actions extends Actions
                 $this->event_manager->processEvent('plugin_docman_event_edit', array(
                     'group_id' => $request->get('group_id'),
                     'item'     => &$item,
-                    'user'     => &$user)
-                );
+                    'user'     => &$user));
             }
 
-            if($ownerChanged) {
+            if ($ownerChanged) {
                 $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $_oldowner, $_newowner, 'owner');
             }
 
-            if($statusChanged) {
+            if ($statusChanged) {
                 $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_st, $data['status'], 'status');
             }
 
-            if($create_date_changed) {
+            if ($create_date_changed) {
                 $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_create_date, $data['create_date'], 'create_date');
             }
 
-            if($update_date_changed) {
+            if ($update_date_changed) {
                 $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_update_date, $data['update_date'], 'update_date');
             }
 
-            if($createFile) {
+            if ($createFile) {
                 // Re-create from DB (because of type changed)
                 $item = $item_factory->getItemFromDb($data['id']);
                 $this->_storeFile($item);
             }
 
             // Update real metatata
-            if($request->exist('metadata')) {
+            if ($request->exist('metadata')) {
                 $groupId = (int) $request->get('group_id');
                 $metadata_array = $request->get('metadata');
                 $mdvFactory = new Docman_MetadataValueFactory($groupId);
                 $mdvFactory->updateFromRow($data['id'], $metadata_array);
 
-                if($mdvFactory->isError()) {
+                if ($mdvFactory->isError()) {
                     $this->_controler->feedback->log('error', $mdvFactory->getErrorMessage());
                 } else {
                     // Recursive update of properties
-                    if($request->exist('recurse')) {
+                    if ($request->exist('recurse')) {
                         $recurse_updator = new MetadataRecursiveUpdator(
                             new Docman_MetadataFactory($groupId),
                             Docman_PermissionsManager::instance($groupId),
@@ -726,7 +720,7 @@ class Docman_Actions extends Actions
         // Approval table
         $link_version_factory = new Docman_LinkVersionFactory();
         $last_version = $link_version_factory->getLatestVersion($item);
-        if($last_version) {
+        if ($last_version) {
             // Approval table creation needs the item currentVersion to be set.
             $item->setCurrentVersion($last_version);
             $this->newVersionApprovalTable($request, $item, $user);
@@ -762,12 +756,12 @@ class Docman_Actions extends Actions
         return $this->filestorage;
     }
 
-    function _getItemFactory($groupId=null)
+    function _getItemFactory($groupId = null)
     {
         return new Docman_ItemFactory($groupId);
     }
 
-    function _getFolderFactory($groupId=null)
+    function _getFolderFactory($groupId = null)
     {
         return new Docman_FolderFactory($groupId);
     }
@@ -783,7 +777,7 @@ class Docman_Actions extends Actions
     protected $permissions_manager;
     function &_getPermissionsManagerInstance()
     {
-        if(!$this->permissions_manager){
+        if (!$this->permissions_manager) {
             $this->permissions_manager = PermissionsManager::instance();
         }
         return $this->permissions_manager;
@@ -797,7 +791,7 @@ class Docman_Actions extends Actions
     protected $userManager;
     function _getUserManagerInstance()
     {
-        if(!$this->userManager){
+        if (!$this->userManager) {
             $this->userManager = UserManager::instance();
         }
         return $this->userManager;
@@ -820,15 +814,17 @@ class Docman_Actions extends Actions
             $old_parent   = $item_factory->getItemFromDb($itemToMove->getParentId());
             if ($item_factory->move($itemToMove, $newParentItem, $user, $ordering)) {
                 $hp = Codendi_HTMLPurifier::instance();
-                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved', array(
+                $this->_controler->feedback->log(
+                    'info',
+                    $GLOBALS['Language']->getText('plugin_docman', 'info_item_moved', array(
                             $itemToMove->getGroupId(),
                             $old_parent->getId(),
                             $hp->purify($old_parent->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ,
                             $newParentItem->getId(),
                             $hp->purify($newParentItem->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)
-                            )
-                        ),
-                    CODENDI_PURIFIER_DISABLED);
+                            )),
+                    CODENDI_PURIFIER_DISABLED
+                );
                     $item_factory->delCopyPreference();
                     $item_factory->delCutPreference();
             } else {
@@ -854,7 +850,7 @@ class Docman_Actions extends Actions
         $srcMdFactory = new Docman_MetadataFactory($itemToPaste->getGroupId());
 
         // Import metadata if asked
-        if($importMd) {
+        if ($importMd) {
             $srcMdFactory->exportMetadata($newParentItem->getGroupId());
         }
 
@@ -863,7 +859,7 @@ class Docman_Actions extends Actions
         $srcMdFactory->getMetadataMapping($newParentItem->getGroupId(), $mdMapping);
 
         // Permissions
-        if($itemToPaste->getGroupId() != $newParentItem->getGroupId()) {
+        if ($itemToPaste->getGroupId() != $newParentItem->getGroupId()) {
             $ugroupsMapping = false;
         } else {
             $ugroupsMapping = true;
@@ -900,7 +896,7 @@ class Docman_Actions extends Actions
                 if ($request->exist('quick_move')) {
                     $item          = $item_factory->getItemFromDb($request->get('id'));
                     $new_parent_id = $item->getParentId();
-                    switch($request->get('quick_move')) {
+                    switch ($request->get('quick_move')) {
                         case 'move-up':
                         case 'move-down':
                         case 'move-beginning':
@@ -987,11 +983,13 @@ class Docman_Actions extends Actions
 
     function paste($params)
     {
-        $this->doPaste($this->_controler->_actionParams['itemToPaste'],
-                       $this->_controler->_actionParams['item'],
-                       $this->_controler->_actionParams['rank'],
-                       $this->_controler->_actionParams['importMd'],
-                       $this->_controler->_actionParams['srcMode']);
+        $this->doPaste(
+            $this->_controler->_actionParams['itemToPaste'],
+            $this->_controler->_actionParams['item'],
+            $this->_controler->_actionParams['rank'],
+            $this->_controler->_actionParams['importMd'],
+            $this->_controler->_actionParams['srcMode']
+        );
     }
 
     /**
@@ -1046,10 +1044,10 @@ class Docman_Actions extends Actions
     {
         $request  = HTTPRequest::instance();
         if ($request->exist('selected_view')) {
-            if(is_numeric($request->get('selected_view'))) {
+            if (is_numeric($request->get('selected_view'))) {
                 $this->_controler->setReportId($request->get('selected_view'));
                 $this->_controler->forceView('Table');
-            } else if (is_array($request->get('selected_view')) && count($request->get('selected_view'))) {
+            } elseif (is_array($request->get('selected_view')) && count($request->get('selected_view'))) {
                 $selected_view_request = $request->get('selected_view');
                 foreach ($selected_view_request as $selected_view => $id) {
                     if (Docman_View_Browse::isViewAllowed($selected_view)) {
@@ -1076,7 +1074,7 @@ class Docman_Actions extends Actions
         $_sGroupId = (int) $request->get('group_id');
         $_sId      = (int) $request->get('id');
 
-        if($request->exist('cascadeWikiPageDeletion') && $request->get('cascadeWikiPageDeletion') == 'on'){
+        if ($request->exist('cascadeWikiPageDeletion') && $request->get('cascadeWikiPageDeletion') == 'on') {
             $cascade = true;
         } else {
             $cascade = false;
@@ -1200,69 +1198,62 @@ class Docman_Actions extends Actions
         $mdFactory = new Docman_MetadataFactory($_gid);
         $md = $mdFactory->getFromLabel($_label);
 
-        if($md !== null) {
-            if($md->getGroupId() == $_gid) {
-
+        if ($md !== null) {
+            if ($md->getGroupId() == $_gid) {
                 // Name
-                if($md->canChangeName()) {
+                if ($md->canChangeName()) {
                     $_name = trim($request->get('name'));
                     $md->setName($_name);
                 }
 
                 // Description
-                if($md->canChangeDescription()) {
+                if ($md->canChangeDescription()) {
                     $_descr = $request->get('descr');
                     $md->setDescription($_descr);
                 }
 
                 // Is empty allowed
-                if($md->canChangeIsEmptyAllowed()) {
+                if ($md->canChangeIsEmptyAllowed()) {
                     $_isEmptyAllowed = (int) $request->get('empty_allowed');
 
-                    if($_isEmptyAllowed === 1) {
+                    if ($_isEmptyAllowed === 1) {
                         $md->setIsEmptyAllowed(PLUGIN_DOCMAN_DB_TRUE);
-                    }
-                    else {
+                    } else {
                         $md->setIsEmptyAllowed(PLUGIN_DOCMAN_DB_FALSE);
                     }
                 }
 
-                if($md->canChangeIsMultipleValuesAllowed()) {
+                if ($md->canChangeIsMultipleValuesAllowed()) {
                     $_isMultipleValuesAllowed = (int) $request->get('multiplevalues_allowed');
 
-                    if($_isMultipleValuesAllowed === 1) {
+                    if ($_isMultipleValuesAllowed === 1) {
                         $md->setIsMultipleValuesAllowed(PLUGIN_DOCMAN_DB_TRUE);
-                    }
-                    else {
+                    } else {
                         $md->setIsMultipleValuesAllowed(PLUGIN_DOCMAN_DB_FALSE);
                     }
                 }
 
                 // Usage
-                if(!$md->isRequired()) {
+                if (!$md->isRequired()) {
                     $_useIt = (int) $request->get('use_it');
-                    if($_useIt === 1) {
+                    if ($_useIt === 1) {
                         $md->setUseIt(PLUGIN_DOCMAN_METADATA_USED);
-                    }
-                    else {
+                    } else {
                         $md->setUseIt(PLUGIN_DOCMAN_METADATA_UNUSED);
                     }
                 }
 
                 $updated = $mdFactory->update($md);
-                if($updated) {
+                if ($updated) {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_update'));
-                }
-                else {
+                } else {
                     $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_not_update'));
                 }
-            }
-            else {
+            } else {
                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_id_mismatched'));
                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_not_update'));
             }
-        }
-        else {
+        } else {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_bad_label'));
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_not_update'));
         }
@@ -1304,11 +1295,10 @@ class Docman_Actions extends Actions
         $md = $mdFactory->_createFromRow($mdrow);
 
         $mdId = $mdFactory->create($md);
-        if($mdId !== false) {
+        if ($mdId !== false) {
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_create'));
-        }
-        else {
-            $this->_controler->feedback->log('error',$GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_error_creation'));
+        } else {
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_error_creation'));
         }
     }
 
@@ -1322,15 +1312,18 @@ class Docman_Actions extends Actions
         $mdFactory = new Docman_MetadataFactory($md->getGroupId());
 
         $deleted = $mdFactory->delete($md);
-        if($deleted) {
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman',
-                                                                                   'md_del_success',
-                                                                                   array($name)));
-        }
-        else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman',
-                                                                                    'md_del_failure',
-                                                                                    array($name)));
+        if ($deleted) {
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText(
+                'plugin_docman',
+                'md_del_success',
+                array($name)
+            ));
+        } else {
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText(
+                'plugin_docman',
+                'md_del_failure',
+                array($name)
+            ));
         }
         $this->_controler->view = 'RedirectAfterCrud';
         $this->_controler->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
@@ -1350,10 +1343,9 @@ class Docman_Actions extends Actions
         $mdFactory = new Docman_MetadataFactory($_gid);
         $md = $mdFactory->getFromLabel($_mdLabel);
 
-        if($md !== null
+        if ($md !== null
            && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST
            && $md->getLabel() != 'status') {
-
             $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
 
             $love = new Docman_MetadataListOfValuesElement();
@@ -1375,24 +1367,22 @@ class Docman_Actions extends Actions
         $mdFactory = new Docman_MetadataFactory($_gid);
         $md        = $mdFactory->getFromLabel($_mdLabel);
 
-        if($md !== null
+        if ($md !== null
            && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST
            && $md->getLabel() != 'status') {
-
             $love = new Docman_MetadataListOfValuesElement($md->getId());
             $love->setId($_loveId);
 
             // Delete value
             $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
             $deleted = $loveFactory->delete($love);
-            if($deleted) {
+            if ($deleted) {
                 $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_delete_element'));
                 $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_reset_delete_element'));
             } else {
                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_error_delete_element'));
             }
-        }
-        else {
+        } else {
             // Sth really strange is happening... user try to delete a value
             // that do not belong to a metadata with a List type !?
             // If this happen, shutdown the server, format the hard drive and
@@ -1408,14 +1398,13 @@ class Docman_Actions extends Actions
         $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
         $updated = $loveFactory->update($love);
 
-        if($updated) {
-            $this->_controler->feedback->log('info',  $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_element_update'));
+        if ($updated) {
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_element_update'));
 
             $this->_controler->view = 'RedirectAfterCrud';
             $this->_controler->_viewParams['default_url_params']  = array('action' => 'admin_md_details',
                                                                           'md'     => $md->getLabel());
-        }
-        else {
+        } else {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'admin_metadata_element_not_update'));
 
             $this->_controler->view = 'RedirectAfterCrud';
@@ -1432,7 +1421,7 @@ class Docman_Actions extends Actions
 
         $pm = ProjectManager::instance();
         $srcGo = $pm->getProject($srcGroupId);
-        if($srcGo != false &&
+        if ($srcGo != false &&
            ($srcGo->isPublic()
             || (!$srcGo->isPublic() && $srcGo->userIsMember()))) {
             $mdFactory = new Docman_MetadataFactory($srcGo->getGroupId());
@@ -1457,7 +1446,7 @@ class Docman_Actions extends Actions
                     $this->_controler->feedback->log('error', "Unable to add monitoring on '". $params['item']->getTitle() ."'.");
                 }
                 $something_happen = true;
-            } else if(!$params['monitor'] && $already_monitored) {
+            } elseif (!$params['monitor'] && $already_monitored) {
                 //unmonitor
                 if (!$this->_controler->notificationsManager->removeUser($user->getId(), $params['item']->getId())) {
                     $this->_controler->feedback->log('error', "Unable to remove monitoring on '". $params['item']->getTitle() ."'.");
@@ -1470,7 +1459,7 @@ class Docman_Actions extends Actions
                     $this->_controler->feedback->log('error', "Unable to add cascade on '". $params['item']->getTitle() ."'.");
                 }
                 $something_happen = true;
-            } else if(!(isset($params['cascade']) && $params['cascade'] && $params['monitor']) && $already_cascaded) {
+            } elseif (!(isset($params['cascade']) && $params['cascade'] && $params['monitor']) && $already_cascaded) {
                 //uncascade
                 if (!$this->_controler->notificationsManager->removeUser($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
                     $this->_controler->feedback->log('error', "Unable to remove cascade on '". $params['item']->getTitle() ."'.");
@@ -1547,7 +1536,7 @@ class Docman_Actions extends Actions
     {
         $table = $atf->getTable();
         $newOwner = false;
-        if(!$table->isCustomizable()) {
+        if (!$table->isCustomizable()) {
             // Cannot set status of an old table to something else than 'close'
             // or 'deleted'
             if ($sStatus != PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED &&
@@ -1561,12 +1550,12 @@ class Docman_Actions extends Actions
         }
 
         // Change owner
-        if($newOwner === false) {
+        if ($newOwner === false) {
             $_owner = UserManager::instance()->findUser($owner);
-            if(!$_owner) {
+            if (!$_owner) {
                 $newOwner = $table->getOwner();
             } else {
-                if(!$_owner->isAnonymous() && ($_owner->isActive() || $_owner->isRestricted())) {
+                if (!$_owner->isAnonymous() && ($_owner->isActive() || $_owner->isRestricted())) {
                     $newOwner = $_owner->getId();
                 } else {
                     $newOwner = $table->getOwner();
@@ -1576,7 +1565,7 @@ class Docman_Actions extends Actions
 
         // Update settings
         $updated = $atf->updateTable($sStatus, $notification, $notificationOccurence, $description, $newOwner);
-        if($updated) {
+        if ($updated) {
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_tableupd_success'));
         }
     }
@@ -1590,12 +1579,12 @@ class Docman_Actions extends Actions
         $userAdded = false;
 
         // Update users
-        if(trim($usUserList) != '') {
+        if (trim($usUserList) != '') {
             $usUserArray = explode(',', $usUserList);
             // First add individual users
-            if(count($usUserArray) > 0) {
+            if (count($usUserArray) > 0) {
                 $nbUserAdded = $atrf->addUsers($usUserArray);
-                if($nbUserAdded < count($usUserArray)) {
+                if ($nbUserAdded < count($usUserArray)) {
                     $noError = false;
                 } else {
                     $userAdded = true;
@@ -1604,11 +1593,11 @@ class Docman_Actions extends Actions
         }
 
      // Then add ugroups.
-        if($sUgroups !== null && count($sUgroups) > 0) {
-            foreach($sUgroups as $ugroup) {
+        if ($sUgroups !== null && count($sUgroups) > 0) {
+            foreach ($sUgroups as $ugroup) {
                 $ugroupAdded = false;
-                if($ugroup > 0 && $ugroup != 100) {
-                    if($atrf->addUgroup($ugroup)) {
+                if ($ugroup > 0 && $ugroup != 100) {
+                    if ($atrf->addUgroup($ugroup)) {
                         $ugroupAdded = true;
                     } else {
                         $noError = false;
@@ -1619,32 +1608,32 @@ class Docman_Actions extends Actions
 
         $purifier = Codendi_HTMLPurifier::instance();
 
-        if(count($atrf->err['db']) > 0) {
+        if (count($atrf->err['db']) > 0) {
             $ua  = array_unique($atrf->err['db']);
             $ua  = $purifier->purifyMap($ua);
             $uas = implode(', ', $ua);
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_useradd_err_db', $uas));
         }
-        if(count($atrf->err['perm']) > 0) {
+        if (count($atrf->err['perm']) > 0) {
             $ua  = array_unique($atrf->err['perm']);
             $ua  = $purifier->purifyMap($ua);
             $uas = implode(', ', $ua);
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_useradd_err_perm', $uas));
         }
-        if(count($atrf->err['notreg']) > 0) {
+        if (count($atrf->err['notreg']) > 0) {
             $ua  = array_unique($atrf->err['notreg']);
             $ua  = $purifier->purifyMap($ua);
             $uas = implode(', ', $ua);
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_useradd_err_notreg', $uas));
         }
-        if(count($atrf->warn['double']) > 0) {
+        if (count($atrf->warn['double']) > 0) {
             $ua  = array_unique($atrf->warn['double']);
             $ua  = $purifier->purifyMap($ua);
             $uas = implode(', ', $ua);
             $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'approval_useradd_warn_double', $uas));
         }
 
-        if($userAdded && $noError) {
+        if ($userAdded && $noError) {
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_useradd_success'));
         }
     }
@@ -1655,13 +1644,13 @@ class Docman_Actions extends Actions
     function _approval_update_del_users($atrf, $selectedUsers)
     {
         $deletedUsers = 0;
-        foreach($selectedUsers as $userId) {
-            if($atrf->delUser($userId)) {
+        foreach ($selectedUsers as $userId) {
+            if ($atrf->delUser($userId)) {
                 $deletedUsers++;
             }
         }
 
-        if(count($selectedUsers) == $deletedUsers) {
+        if (count($selectedUsers) == $deletedUsers) {
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_userdel_success'));
         } else {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_userdel_failure'));
@@ -1680,16 +1669,16 @@ class Docman_Actions extends Actions
         // member of the table!
         $table = $atnc->getTable();
         $ri = $table->getReviewerIterator();
-        while($ri->valid()) {
+        while ($ri->valid()) {
             $reviewer = $ri->current();
-            if(in_array($reviewer->getId(), $selectedUsers)) {
-                if($atnc->notifyIndividual($reviewer->getId())) {
+            if (in_array($reviewer->getId(), $selectedUsers)) {
+                if ($atnc->notifyIndividual($reviewer->getId())) {
                     $notifiedUsers++;
                 }
             }
             $ri->next();
         }
-        if(count($selectedUsers) == $notifiedUsers) {
+        if (count($selectedUsers) == $notifiedUsers) {
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_force_notify_success'));
         }
     }
@@ -1700,7 +1689,7 @@ class Docman_Actions extends Actions
     function _approval_update_notif_resend($atrf)
     {
         $res = $atrf->notifyReviewers();
-        if($res) {
+        if ($res) {
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_notification_success'));
         } else {
             $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'approval_notification_failure'));
@@ -1735,42 +1724,42 @@ class Docman_Actions extends Actions
         $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($item, $version);
         $table = $atf->getTable();
         $oldTable = null;
-        if($table !== null) {
+        if ($table !== null) {
             $oldTable = clone $atf->getTable();
         }
 
         $tableEditable = false;
-        if($oldTable === null || ($import !== false && $import !== 'keep')) {
+        if ($oldTable === null || ($import !== false && $import !== 'keep')) {
             $created = $atf->createTable($user->getId(), $import);
-            if(!$created) {
+            if (!$created) {
                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_tableins_failure'));
             }
         }
 
-        if($import === false || $import == 'keep') {
+        if ($import === false || $import == 'keep') {
             // New table created "from scratch" (ie. without the import
             // selector) are directly editable.
             $tableEditable = true;
         }
 
-        if($tableEditable) {
+        if ($tableEditable) {
             $this->_approval_update_settings($atf, $sStatus, $notification, $notificationOccurence, $description, $owner);
             $table = $atf->getTable();
-            if(!$table->isClosed()) {
+            if (!$table->isClosed()) {
                 $atrf = new Docman_ApprovalTableReviewerFactory($table, $item, $this->_controler->notificationsManager);
                 $this->_approval_update_add_users($atrf, $usUserList, $sUgroup);
-                if(is_array($sSelUser) && count($sSelUser) > 0) {
-                    switch($sSelUserAct){
+                if (is_array($sSelUser) && count($sSelUser) > 0) {
+                    switch ($sSelUserAct) {
                         case 'del':
                             $this->_approval_update_del_users($atrf, $sSelUser);
-                        break;
+                            break;
                         case 'mail':
                             $this->_approval_update_notify_users($atrf, $sSelUser);
-                        break;
+                            break;
                     }
                 }
                 // If needed, notify next reviewer
-                if(($oldTable !== null
+                if (($oldTable !== null
                     && $oldTable->getStatus() != PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED
                     && $table->getStatus() == PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED)
                    || $resendNotif) {
@@ -1787,7 +1776,7 @@ class Docman_Actions extends Actions
         $version = $this->_controler->_actionParams['version'];
         $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($item, $version);
         $deleted = $atf->deleteTable();
-        if($deleted) {
+        if ($deleted) {
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_tabledel_success'));
         } else {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'approval_tabledel_failure'));
@@ -1819,11 +1808,10 @@ class Docman_Actions extends Actions
         $review->setId($user->getId());
         $review->setState($svState);
         $review->setComment($usComment);
-        if($svState != PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET) {
+        if ($svState != PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET) {
             $review->setVersion($sVersion);
             $review->setReviewDate(time());
-        }
-        else {
+        } else {
             $review->setVersion(null);
             $review->setReviewDate(null);
         }
@@ -1831,7 +1819,7 @@ class Docman_Actions extends Actions
         $atrf = Docman_ApprovalTableFactory::getReviewerFactoryFromItem($item);
         $atrf->setNotificationManager($this->_controler->notificationsManager);
         $updated = $atrf->updateReview($review);
-        if($updated) {
+        if ($updated) {
             $this->event_manager->processEvent(
                 PLUGIN_DOCMAN_EVENT_APPROVAL_TABLE_COMMENT,
                 array(
@@ -1857,16 +1845,16 @@ class Docman_Actions extends Actions
 
         $reportFactory = new Docman_ReportFactory($groupId);
         $r = $reportFactory->getReportById($reportId);
-        if($r == null) {
+        if ($r == null) {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_del_notfound'));
         } else {
-            if($r->getScope() == 'I' && $r->getUserId() != $user->getId()) {
+            if ($r->getScope() == 'I' && $r->getUserId() != $user->getId()) {
                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_del_notowner'));
             } else {
-                if($r->getScope() == 'P' && !$this->_controler->userCanAdmin()) {
+                if ($r->getScope() == 'P' && !$this->_controler->userCanAdmin()) {
                     $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_del_notadmin'));
                 } else {
-                    if($reportFactory->deleteReport($r)) {
+                    if ($reportFactory->deleteReport($r)) {
                         $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'report_del_success'));
                     } else {
                         $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'report_del_failure'));
@@ -1887,13 +1875,13 @@ class Docman_Actions extends Actions
 
         $reportFactory = new Docman_ReportFactory($groupId);
         $r = $reportFactory->getReportById($reportId);
-        if($r == null) {
+        if ($r == null) {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_upd_notfound'));
         } else {
-            if($r->getGroupId() != $groupId) {
+            if ($r->getGroupId() != $groupId) {
                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'report_upd_groupmismatch'));
             } else {
-                if($this->_controler->userCanAdmin()) {
+                if ($this->_controler->userCanAdmin()) {
                     $r->setScope($scope);
                 }
                 $r->setTitle($title);
@@ -1915,7 +1903,7 @@ class Docman_Actions extends Actions
         // Private projects he is member of.
         $pm = ProjectManager::instance();
         $go = $pm->getProject($importGroupId);
-        if($go != false &&
+        if ($go != false &&
            ($go->isPublic()
             || (!$go->isPublic() && $go->userIsMember()))) {
             $srcReportFactory = new Docman_ReportFactory($importGroupId);
@@ -1930,11 +1918,11 @@ class Docman_Actions extends Actions
             $itemMapping = array();
             // Get involved items
             $srcReportItems = $srcReportFactory->getReportsItems($importReportId);
-            if(count($srcReportItems) > 0) {
+            if (count($srcReportItems) > 0) {
                 // Get the subtree from the original docman on which reports applies
                 $srcItemFactory = new Docman_ItemFactory($importGroupId);
                 $srcItemTree = $srcItemFactory->getItemTreeFromLeaves($srcReportItems, $user);
-                if($srcItemTree !== null) {
+                if ($srcItemTree !== null) {
                     // Final step: find in the current ($groupId) docman
                     $dstItemFactory = new Docman_ItemFactory($groupId);
                     $itemMapping = $dstItemFactory->getItemMapping($srcItemTree);
@@ -1943,19 +1931,18 @@ class Docman_Actions extends Actions
 
             // If user is admin he can create 'P' report otherwise everything is 'I'
             $forceScope = true;
-            if($this->_controler->userCanAdmin()) {
+            if ($this->_controler->userCanAdmin()) {
                 $forceScope = false;
             }
 
-            if($importReportId !== null) {
+            if ($importReportId !== null) {
                 // Import only one report
                 $report = $srcReportFactory->getReportById($importReportId);
 
-                if($report !== null) {
+                if ($report !== null) {
                     // User can import Project wide reports or his own Individual reports.
-                    if($report->getScope() == 'P' ||
+                    if ($report->getScope() == 'P' ||
                        ($report->getScope() == 'I' && $report->getUserId() == $user->getId())) {
-
                         $srcReportFactory->cloneReport($report, $groupId, $mdMap, $user, $forceScope, $itemMapping);
 
                         $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'report_clone_success'));
@@ -1985,12 +1972,12 @@ class Docman_Actions extends Actions
             $canLock = true;
 
             // Cannot lock a wiki with a page already locked
-            if($dIF->getItemTypeForItem($item) == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
+            if ($dIF->getItemTypeForItem($item) == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
                 $pagename = $item->getPagename();
                 $group_id = $item->getGroupId();
                 $referencers = $dIF->getWikiPageReferencers($pagename, $group_id);
-                foreach($referencers as $referencer) {
-                    if($lockFactory->itemIsLockedByItemId($referencer->getId())) {
+                foreach ($referencers as $referencer) {
+                    if ($lockFactory->itemIsLockedByItemId($referencer->getId())) {
                         $canLock = false;
                         break;
                         // wiki page is locked by another item.
@@ -1999,11 +1986,11 @@ class Docman_Actions extends Actions
             }
 
             // Cannot lock a folder
-            if($dIF->getItemTypeForItem($item) == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
+            if ($dIF->getItemTypeForItem($item) == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
                 $canLock = false;
             }
 
-            if($canLock) {
+            if ($canLock) {
                 $lockFactory->lock($item, $user);
             }
         }
@@ -2078,38 +2065,66 @@ class Docman_Actions extends Actions
         $dpm   = $this->_getDocmanPermissionsManagerInstance($item->getGroupId());
         foreach ($users_to_add as $user) {
             if ($this->_controler->notificationsManager->userExists($user->getId(), $item->getId())) {
-                $this->_controler->feedback->log('warning',
-                    $GLOBALS['Language']->getText('plugin_docman', 'notifications_already_exists_user',
-                        array($user->getName())));
+                $this->_controler->feedback->log(
+                    'warning',
+                    $GLOBALS['Language']->getText(
+                        'plugin_docman',
+                        'notifications_already_exists_user',
+                        array($user->getName())
+                    )
+                );
                 continue;
             }
             if (! $dpm->userCanRead($user, $item->getId())) {
-                $this->_controler->feedback->log('warning',
-                    $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_access_rights_user',
-                        array($user->getName())));
+                $this->_controler->feedback->log(
+                    'warning',
+                    $GLOBALS['Language']->getText(
+                        'plugin_docman',
+                        'notifications_no_access_rights_user',
+                        array($user->getName())
+                    )
+                );
                 continue;
             }
             if (! $this->_controler->notificationsManager->addUser($user->getId(), $item->getId())) {
-                $this->_controler->feedback->log('error',
-                    $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_added_user',
-                        array($user->getName())));
+                $this->_controler->feedback->log(
+                    'error',
+                    $GLOBALS['Language']->getText(
+                        'plugin_docman',
+                        'notifications_not_added_user',
+                        array($user->getName())
+                    )
+                );
                 continue;
             }
-            if ($cascade && ! $this->_controler->notificationsManager->addUser($user->getId(),
-                    $item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)
+            if ($cascade && ! $this->_controler->notificationsManager->addUser(
+                $user->getId(),
+                $item->getId(),
+                PLUGIN_DOCMAN_NOTIFICATION_CASCADE
+            )
             ) {
-                $this->_controler->feedback->log('error',
-                    $GLOBALS['Language']->getText('plugin_docman', 'notifications_cascade_not_added_user',
-                        array($user->getName())));
+                $this->_controler->feedback->log(
+                    'error',
+                    $GLOBALS['Language']->getText(
+                        'plugin_docman',
+                        'notifications_cascade_not_added_user',
+                        array($user->getName())
+                    )
+                );
             }
             $users[] = $user->getName();
         }
 
         if (! empty($users)) {
-            $this->_controler->feedback->log('info',
-                $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_user', array(implode(',', $users))));
-            $this->_raiseMonitoringListEvent($item, $users_to_add,
-                'plugin_docman_add_monitoring');
+            $this->_controler->feedback->log(
+                'info',
+                $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_user', array(implode(',', $users)))
+            );
+            $this->_raiseMonitoringListEvent(
+                $item,
+                $users_to_add,
+                'plugin_docman_add_monitoring'
+            );
         }
     }
 
@@ -2123,31 +2138,51 @@ class Docman_Actions extends Actions
         $ugroups_name = array();
         foreach ($ugroups_to_add as $ugroup) {
             if ($controller->notificationsManager->ugroupExists($ugroup->getId(), $item->getId())) {
-                $controller->feedback->log(Feedback::WARN,
-                    $GLOBALS['Language']->getText('plugin_docman', 'notifications_already_exists_ugroup',
-                        array($ugroup->getTranslatedName())));
+                $controller->feedback->log(
+                    Feedback::WARN,
+                    $GLOBALS['Language']->getText(
+                        'plugin_docman',
+                        'notifications_already_exists_ugroup',
+                        array($ugroup->getTranslatedName())
+                    )
+                );
                 continue;
             }
             if (! $controller->notificationsManager->addUgroup($ugroup->getId(), $item->getId())) {
-                $controller->feedback->log(Feedback::ERROR,
-                    $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_added_ugroup',
-                        array($ugroup->getTranslatedName())));
+                $controller->feedback->log(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText(
+                        'plugin_docman',
+                        'notifications_not_added_ugroup',
+                        array($ugroup->getTranslatedName())
+                    )
+                );
                 continue;
             }
-            if ($cascade && ! $controller->notificationsManager->addUgroup($ugroup->getId(),
-                    $item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)
+            if ($cascade && ! $controller->notificationsManager->addUgroup(
+                $ugroup->getId(),
+                $item->getId(),
+                PLUGIN_DOCMAN_NOTIFICATION_CASCADE
+            )
             ) {
-                $controller->feedback->log(Feedback::ERROR,
-                    $GLOBALS['Language']->getText('plugin_docman', 'notifications_cascade_not_added_ugroup',
-                        array($ugroup->getTranslatedName())));
+                $controller->feedback->log(
+                    Feedback::ERROR,
+                    $GLOBALS['Language']->getText(
+                        'plugin_docman',
+                        'notifications_cascade_not_added_ugroup',
+                        array($ugroup->getTranslatedName())
+                    )
+                );
             }
             $ugroups[]      = $ugroup;
             $ugroups_name[] = $ugroup->getTranslatedName();
         }
 
         if (! empty($ugroups)) {
-            $controller->feedback->log(Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_ugroup', array(implode(',', $ugroups_name))));
+            $controller->feedback->log(
+                Feedback::INFO,
+                $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_ugroup', array(implode(',', $ugroups_name)))
+            );
             $this->raiseMonitoringUgroups($item, $ugroups, 'plugin_docman_add_monitoring');
         }
     }

@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class XMLImportFieldStrategyArtifactLinkTest extends TuleapTestCase {
+class XMLImportFieldStrategyArtifactLinkTest extends TuleapTestCase
+{
     /** @var  Tracker_FormElement_Field_ArtifactLink */
     private $field;
 

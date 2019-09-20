@@ -26,7 +26,8 @@
 *
 * Provide user interface to manage rules.
 */
-class ArtifactRulesManagerHtml extends ArtifactRulesManager {
+class ArtifactRulesManagerHtml extends ArtifactRulesManager
+{
 
     var $artifact_type;
     var $href;
@@ -54,7 +55,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo "\n//------------------------------------------------------\n";
         $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
-        foreach($used_fields as $field) {
+        foreach ($used_fields as $field) {
             if ($field->getName() != 'submitted_by') {
                 if ($field->isMultiSelectBox() || $field->isSelectBox()) {
                     $values = $field->getFieldPredefinedValues($this->artifact_type->getID());
@@ -92,7 +93,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         $sources = array();
         $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
-        foreach($used_fields as $field) {
+        foreach ($used_fields as $field) {
             if ($field->getName() != 'submitted_by') {
                 if ($field->isMultiSelectBox() || $field->isSelectBox()) {
                     if (!$target_id || !$this->fieldIsAForbiddenSource($this->artifact_type->getId(), $field->getId(), $target_id)) {
@@ -109,7 +110,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         $targets = array();
         $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
-        foreach($used_fields as $field) {
+        foreach ($used_fields as $field) {
             if ($field->getName() != 'submitted_by') {
                 if ($field->isMultiSelectBox() || $field->isSelectBox()) {
                     if (!$source_id || !$this->fieldIsAForbiddenTarget($this->artifact_type->getId(), $field->getId(), $source_id)) {
@@ -126,10 +127,10 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     function displayEditForm($source_field = false, $target_field = false, $source_value = false, $target_value = false)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        echo '<noscript class="error">'. $GLOBALS['Language']->getText('tracker_field_dependencies','noscript') .'</noscript>';
+        echo '<noscript class="error">'. $GLOBALS['Language']->getText('tracker_field_dependencies', 'noscript') .'</noscript>';
         echo '<form action="'. $this->href .'" method="post" id="edit_rule_form"><div id="edit_rule">';
         echo '<table border=0><thead><tr><td>';
-        echo $GLOBALS['Language']->getText('tracker_field_dependencies','source');
+        echo $GLOBALS['Language']->getText('tracker_field_dependencies', 'source');
 
         $onchange = '$(\'source_field_hidden\').value = $(\'source_field\').value;'.
                     '$(\'target_field_hidden\').value = $(\'target_field\').value;'.
@@ -141,9 +142,9 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                     'this.form.submit();';
 
         echo PHP_EOL.'<select id="source_field" name="source_field" onchange="'. $onchange .'">'.PHP_EOL;
-        echo '<option value="-1">'. $GLOBALS['Language']->getText('tracker_field_dependencies','choose_field') .'</option>';
+        echo '<option value="-1">'. $GLOBALS['Language']->getText('tracker_field_dependencies', 'choose_field') .'</option>';
         $sources = $this->getAllSourceFields($target_field);
-        foreach($sources as $id => $field) {
+        foreach ($sources as $id => $field) {
             $highlight = $this->fieldHasTarget($this->artifact_type->getId(), $field->getId()) ? ' class="boxhighlight" ' : ' ';
             $selected  = $field->getId() == $source_field ? ' selected="selected" ' : ' ';
             echo '<option value="'. $id .'" '. $highlight . $selected .'>';
@@ -152,11 +153,11 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         }
         echo '</select>';
         echo '</td><td>';
-        echo $GLOBALS['Language']->getText('tracker_field_dependencies','target');
+        echo $GLOBALS['Language']->getText('tracker_field_dependencies', 'target');
         echo '<select id="target_field" name="target_field" onchange="'. $onchange .'">';
-        echo '<option value="-1">'. $GLOBALS['Language']->getText('tracker_field_dependencies','choose_field') .'</option>';
+        echo '<option value="-1">'. $GLOBALS['Language']->getText('tracker_field_dependencies', 'choose_field') .'</option>';
         $targets = $this->getAllTargetFields($source_field);
-        foreach($targets as $id => $field) {
+        foreach ($targets as $id => $field) {
             $highlight = $this->fieldHasSource($this->artifact_type->getId(), $field->getId()) ? ' class="boxhighlight" ' : ' ';
             $selected  = $field->getId() == $target_field ? ' selected="selected" ' : ' ';
             echo '<option value="'. $id .'" '. $highlight . $selected .'>';
@@ -226,8 +227,8 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         echo '</td></tr>';
         echo '<tr id="save_panel">';
         echo '<td colspan="2">';
-        echo '<input type="submit" class="btn btn-primary" value="'. $GLOBALS['Language']->getText('global','btn_submit') .'" id="save_btn"/> ';
-        echo '<button class="btn" id="reset_btn">'. $GLOBALS['Language']->getText('global','btn_reset') .'</button>';
+        echo '<input type="submit" class="btn btn-primary" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" id="save_btn"/> ';
+        echo '<button class="btn" id="reset_btn">'. $GLOBALS['Language']->getText('global', 'btn_reset') .'</button>';
         echo '</td>';
         echo '</tr>';
         echo '</tbody>';
@@ -248,19 +249,18 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         $this->displayRulesAsJavascript();
 
         echo "var messages = {\n";
-            echo "btn_save_rule:      '". addslashes($GLOBALS['Language']->getText('global','btn_submit')) ."',\n";
-            echo "btn_reset:          '". addslashes($GLOBALS['Language']->getText('global','btn_reset')) ."'\n";
+            echo "btn_save_rule:      '". addslashes($GLOBALS['Language']->getText('global', 'btn_submit')) ."',\n";
+            echo "btn_reset:          '". addslashes($GLOBALS['Language']->getText('global', 'btn_reset')) ."'\n";
         echo "};\n";
         echo "document.observe('dom:loaded', buildAdminUI);";
         echo "\n//------------------------------------------------------\n";
         echo "\n".'//]]></script>';
-
     }
 
     function displayRules($source_field = false, $target_field = false, $source_value = false, $target_value = false)
     {
         $this->_header();
-        echo '<div>'. $GLOBALS['Language']->getText('tracker_field_dependencies','inline_help') .'</div>';
+        echo '<div>'. $GLOBALS['Language']->getText('tracker_field_dependencies', 'inline_help') .'</div>';
         echo '<br />';
         $this->displayEditForm($source_field, $target_field, $source_value, $target_value);
         echo '<br />';
@@ -282,7 +282,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $request->get('value'), $request->get('target_field'), $row[0]);
                     }
                 }
-                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>', CODENDI_PURIFIER_DISABLED);
+                $GLOBALS['Response']->addFeedback('info', '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies', 'saved') .'</span>', CODENDI_PURIFIER_DISABLED);
                 $this->displayRules($request->get('source_field'), $request->get('target_field'), $request->get('value'), false);
                 break;
             case 'target': // n sources -> 1 target
@@ -296,7 +296,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
                         $this->saveRuleValue($this->artifact_type->getId(), $request->get('source_field'), $row[0], $request->get('target_field'), $request->get('value'));
                     }
                 }
-                $GLOBALS['Response']->addFeedback('info',  '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies','saved') .'</span>', CODENDI_PURIFIER_DISABLED);
+                $GLOBALS['Response']->addFeedback('info', '<span class="feedback_field_dependencies">'. $GLOBALS['Language']->getText('tracker_field_dependencies', 'saved') .'</span>', CODENDI_PURIFIER_DISABLED);
                 $this->displayRules($request->get('source_field'), $request->get('target_field'), false, $request->get('value'));
                 break;
             default:
@@ -317,10 +317,10 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     function _header()
     {
         $params = array();
-        $params['title']   = $this->artifact_type->getName() .' '. $GLOBALS['Language']->getText('tracker_include_type','mng_field_dependencies');
+        $params['title']   = $this->artifact_type->getName() .' '. $GLOBALS['Language']->getText('tracker_include_type', 'mng_field_dependencies');
         $params['help']    = 'tracker-v3.html#field-dependencies';
         $this->artifact_type->adminHeader($params);
-        $this->artifact_type->displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type','mng_field_dependencies_title'));
+        $this->artifact_type->displayAdminTitle($GLOBALS['Language']->getText('tracker_include_type', 'mng_field_dependencies_title'));
     }
 
     function _footer()
@@ -328,5 +328,3 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         $this->artifact_type->footer(array());
     }
 }
-
-?>

@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_PaneRedirectionExtractor {
+class AgileDashboard_PaneRedirectionExtractor
+{
     public const ARTIFACT_ID = 'aid';
     public const PANE        = 'pane';
     public const PLANNING_ID = 'planning_id';

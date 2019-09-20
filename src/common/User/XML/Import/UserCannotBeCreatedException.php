@@ -21,4 +21,6 @@ namespace User\XML\Import;
 
 use Exception;
 
-class UserCannotBeCreatedException extends Exception {}
+class UserCannotBeCreatedException extends Exception
+{
+}

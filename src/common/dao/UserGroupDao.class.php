@@ -20,7 +20,8 @@
 
 require_once('include/DataAccessObject.class.php');
 
-class UserGroupDao extends DataAccessObject {
+class UserGroupDao extends DataAccessObject
+{
     /**
     * Searches User-Group by UserId
     * @return DataAccessResult
@@ -265,7 +266,7 @@ class UserGroupDao extends DataAccessObject {
         $sql = "DELETE FROM ugroup_user
                 WHERE ugroup_id = $user_group_id";
 
-        if(! $this->update($sql)) {
+        if (! $this->update($sql)) {
             $this->rollback();
             return false;
         }
@@ -273,7 +274,7 @@ class UserGroupDao extends DataAccessObject {
         $sql = "DELETE FROM ugroup_forge_permission
                 WHERE ugroup_id = $user_group_id";
 
-        if(! $this->update($sql)) {
+        if (! $this->update($sql)) {
             $this->rollback();
             return false;
         }
@@ -282,7 +283,7 @@ class UserGroupDao extends DataAccessObject {
                 WHERE ugroup_id = $user_group_id
                 AND ugroup.group_id IS NULL";
 
-        if(! $this->update($sql)) {
+        if (! $this->update($sql)) {
             $this->rollback();
             return false;
         }
@@ -296,6 +297,7 @@ class UserGroupDao extends DataAccessObject {
         $name = $this->da->quoteSmart($name);
 
         $sql = "SELECT * FROM ugroup WHERE name = $name";
-        return $this->retrieveFirstRow($sql);;
+        return $this->retrieveFirstRow($sql);
+        ;
     }
 }

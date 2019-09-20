@@ -21,7 +21,8 @@
 /**
  * I build url parameter to redirect to the right milestone
  */
-class Planning_MilestoneRedirectParameter {
+class Planning_MilestoneRedirectParameter
+{
 
     /** @return string */
     public function getPlanningRedirectToSelf(Planning_Milestone $milestone, $pane_identifier)
@@ -41,4 +42,3 @@ class Planning_MilestoneRedirectParameter {
         return "planning[$pane_identifier][$planning_id]=-1";
     }
 }
-?>

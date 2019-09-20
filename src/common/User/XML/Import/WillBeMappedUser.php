@@ -23,7 +23,8 @@ use PFUser;
 use UserManager;
 use Logger;
 
-class WillBeMappedUser implements ReadyToBeImportedUser {
+class WillBeMappedUser implements ReadyToBeImportedUser
+{
 
     /** @var string */
     private $username;

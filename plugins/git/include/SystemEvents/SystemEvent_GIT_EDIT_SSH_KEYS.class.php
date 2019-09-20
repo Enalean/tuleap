@@ -21,7 +21,8 @@
 use Tuleap\Git\Gitolite\SSHKey\Dumper;
 use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
-class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent {
+class SystemEvent_GIT_EDIT_SSH_KEYS extends SystemEvent
+{
     public const NAME = 'GIT_EDIT_SSH_KEYS';
 
     /** @var UserManager */

@@ -28,13 +28,14 @@
 
 require_once(__DIR__.'/../DVCS/DVCSDriver.class.php');
 
-class GitDriver implements DVCSDriver {
+class GitDriver implements DVCSDriver
+{
 
     protected function execGitAction($cmd, $action_name)
     {
         $out = array();
         $ret = -1;
-        exec($cmd,$out,$ret);
+        exec($cmd, $out, $ret);
         if ($ret !== 0) {
             throw new GitDriverErrorException('Git '.$action_name.' failed on '.$ret.' '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
         }
@@ -44,7 +45,7 @@ class GitDriver implements DVCSDriver {
 
     private function checkFileExist($file)
     {
-        if ( !file_exists($file) ) {
+        if (!file_exists($file)) {
             throw new GitDriverSourceNotFoundException($file);
         }
     }
@@ -136,9 +137,9 @@ class GitDriver implements DVCSDriver {
      * @param bool $bare is a bare a repository
      * @return bool
      */
-    public function init($bare=false)
+    public function init($bare = false)
     {
-        if ( $bare === false ) {
+        if ($bare === false) {
             $cmd = 'git init';
             $out = array();
             $ret = -1;
@@ -153,7 +154,7 @@ class GitDriver implements DVCSDriver {
         $out = array();
         $ret = -1;
         exec($cmd, $out, $ret);
-        if ( $ret !== 0 ) {
+        if ($ret !== 0) {
             throw new GitDriverErrorException('Git init failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
         }
 
@@ -177,7 +178,7 @@ class GitDriver implements DVCSDriver {
         $ret = -1;
         exec($cmd, $out, $ret);
         chdir($cwd);
-        if ( $ret !== 0 ) {
+        if ($ret !== 0) {
             throw new GitDriverErrorException('Git setup failed on '.$cmd.PHP_EOL.implode(PHP_EOL, $out));
         }
 
@@ -190,22 +191,22 @@ class GitDriver implements DVCSDriver {
 
     public function delete($path)
     {
-        if ( empty($path) || !is_writable($path) ) {
+        if (empty($path) || !is_writable($path)) {
             throw new GitDriverErrorException('Empty path or permission denied '.$path);
         }
         $rcode = 0;
         $output = system('rm -fr '.escapeshellarg($path), $rcode);
-        if ( $rcode != 0 ) {
+        if ($rcode != 0) {
             throw new GitDriverErrorException('Unable to delete path '.$path);
         }
         return true;
     }
 
-    public function activateHook($hookName, $repoPath, $uid=false, $gid=false)
+    public function activateHook($hookName, $repoPath, $uid = false, $gid = false)
     {
         //newer version of git
         $hook = $repoPath.'/hooks/'.$hookName;
-        if ( file_exists($hook.'.sample') ) {
+        if (file_exists($hook.'.sample')) {
             //old git versions do not need this move
             rename($hook.'.sample', $hook);
         }
@@ -230,7 +231,7 @@ class GitDriver implements DVCSDriver {
 
     public function masterExists($repoPath)
     {
-        if ( file_exists($repoPath.'/refs/heads/master') ) {
+        if (file_exists($repoPath.'/refs/heads/master')) {
             return true;
         }
         return false;
@@ -248,7 +249,7 @@ class GitDriver implements DVCSDriver {
 
     public function setDescription($repoPath, $description)
     {
-        if( ! file_put_contents($repoPath.'/description', $description) ) {
+        if (! file_put_contents($repoPath.'/description', $description)) {
             throw new GitDriverErrorException('Unable to set description');
         }
         return true;
@@ -315,7 +316,7 @@ class GitDriver implements DVCSDriver {
         $rcode  = 0;
         $cmd    = 'find '.$path.' -type d | xargs chmod u+rwx,g+rwxs '.$path;
         $output = system($cmd, $rcode);
-        if ( $rcode != 0 ) {
+        if ($rcode != 0) {
             throw new GitDriverErrorException($cmd.' -> '.$output);
         }
 

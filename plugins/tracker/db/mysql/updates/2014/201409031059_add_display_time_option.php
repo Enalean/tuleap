@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201409031059_add_display_time_option extends ForgeUpgrade_Bucket {
+class b201409031059_add_display_time_option extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

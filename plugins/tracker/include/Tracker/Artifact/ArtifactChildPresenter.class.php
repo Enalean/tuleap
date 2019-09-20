@@ -23,7 +23,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetrie
 /**
  * Presenter of the child of an artifact
  */
-class Tracker_ArtifactChildPresenter {
+class Tracker_ArtifactChildPresenter
+{
 
     /** @var string */
     public $xref;

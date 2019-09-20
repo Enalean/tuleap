@@ -24,7 +24,8 @@
 *
 * UGROUP_MODIFY = one static ugroup of the project has been modified
 */
-class SystemEvent_UGROUP_MODIFY extends SystemEvent {
+class SystemEvent_UGROUP_MODIFY extends SystemEvent
+{
     /**
      * Verbalize the parameters so they are readable and much user friendly in
      * notifications
@@ -165,5 +166,4 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
         $uGroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
         return $uGroupBinding;
     }
-
 }

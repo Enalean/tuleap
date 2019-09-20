@@ -21,7 +21,8 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use Exception;
 
-class SubMilestoneAlreadyHasAParentException extends Exception {
+class SubMilestoneAlreadyHasAParentException extends Exception
+{
 
     public function __construct($milestone_id)
     {

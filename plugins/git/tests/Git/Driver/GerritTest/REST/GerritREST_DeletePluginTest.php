@@ -20,7 +20,8 @@
 
 require_once 'GerritREST_Base.php';
 
-class Git_DriverREST_Gerrit_DeletePluginTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_DeletePluginTest {
+class Git_DriverREST_Gerrit_DeletePluginTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_DeletePluginTest
+{
 
     private $response_with_plugin;
     private $response_without_plugin;
@@ -116,5 +117,4 @@ EOS;
 
         $this->driver->deleteProject($this->gerrit_server, 'project');
     }
-
 }

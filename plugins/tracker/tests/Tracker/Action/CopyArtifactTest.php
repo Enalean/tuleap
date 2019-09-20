@@ -19,7 +19,8 @@
  */
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
+class Tracker_Action_CopyArtifactTest extends TuleapTestCase
+{
 
     /** @var Tracker */
     private $tracker;
@@ -120,9 +121,9 @@ class Tracker_Action_CopyArtifactTest extends TuleapTestCase {
             ->returns($this->from_artifact);
 
         $this->request = aRequest()
-            ->with('from_artifact_id',  $this->artifact_id)
+            ->with('from_artifact_id', $this->artifact_id)
             ->with('from_changeset_id', $this->changeset_id)
-            ->with('artifact',          $this->submitted_values)
+            ->with('artifact', $this->submitted_values)
             ->build();
 
         $this->tracker_factory = \Mockery::spy(\TrackerFactory::class);
@@ -236,7 +237,7 @@ XML;
 
         $this->request = aRequest()
             ->with('from_changeset_id', $this->changeset_id)
-            ->with('artifact',          $this->submitted_values)
+            ->with('artifact', $this->submitted_values)
             ->build();
 
         expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
@@ -254,7 +255,7 @@ XML;
 
         $this->request = aRequest()
             ->with('from_artifact_id', $this->artifact_id)
-            ->with('artifact',         $this->submitted_values)
+            ->with('artifact', $this->submitted_values)
             ->build();
 
         expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
@@ -271,7 +272,7 @@ XML;
         stub($this->tracker)->userCanSubmitArtifact($this->user)->returns(true);
 
         $this->request = aRequest()
-            ->with('from_artifact_id',  $this->artifact_id)
+            ->with('from_artifact_id', $this->artifact_id)
             ->with('from_changeset_id', $this->changeset_id)
             ->build();
 
@@ -376,27 +377,33 @@ XML;
             ->with(
                 $tracker1,
                 \Mockery::on(function (SimpleXMLElement $val) {
-                    return (int)$val['id'] === 123;}),
+                    return (int)$val['id'] === 123;
+                }),
                 Mockery::on(function ($element) {
-                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
+                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class);
+                })
             )
             ->andReturn($artifact123)->once();
         $this->xml_importer->shouldReceive('importBareArtifact')
             ->with(
                 $tracker1,
                 \Mockery::on(function (SimpleXMLElement $val) {
-                    return (int)$val['id'] === 456;}),
+                    return (int)$val['id'] === 456;
+                }),
                 Mockery::on(function ($element) {
-                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
+                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class);
+                })
             )
             ->andReturn($artifact456)->once();
         $this->xml_importer->shouldReceive('importBareArtifact')
             ->with(
                 $tracker2,
                 \Mockery::on(function (SimpleXMLElement $val) {
-                    return (int)$val['id'] === 789;}),
+                    return (int)$val['id'] === 789;
+                }),
                 Mockery::on(function ($element) {
-                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
+                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class);
+                })
             )
             ->andReturn($artifact789)->once();
 
@@ -404,30 +411,36 @@ XML;
             ->with(
                 $artifact123,
                 \Mockery::on(function (SimpleXMLElement $val) {
-                    return (int)$val['id'] === 123;}),
+                    return (int)$val['id'] === 123;
+                }),
                 \Mockery::any(),
                 Mockery::on(function ($element) {
-                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); }),
+                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class);
+                }),
                 Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
             )->once();
         $this->xml_importer->shouldReceive('importChangesets')
             ->with(
                 $artifact456,
                 \Mockery::on(function (SimpleXMLElement $val) {
-                    return (int)$val['id'] === 456;}),
+                    return (int)$val['id'] === 456;
+                }),
                 \Mockery::any(),
                 Mockery::on(function ($element) {
-                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); }),
+                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class);
+                }),
                 Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
             )->once();
         $this->xml_importer->shouldReceive('importChangesets')
             ->with(
                 $artifact789,
                 \Mockery::on(function (SimpleXMLElement $val) {
-                    return (int)$val['id'] === 789;}),
+                    return (int)$val['id'] === 789;
+                }),
                 \Mockery::any(),
                 Mockery::on(function ($element) {
-                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); }),
+                    return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class);
+                }),
                 Mockery::type(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class)
             )->once();
 

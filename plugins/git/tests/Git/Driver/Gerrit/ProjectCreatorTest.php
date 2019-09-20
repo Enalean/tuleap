@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../../../bootstrap.php';
 
-class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
+class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase
+{
 
     protected $contributors      = 'tuleap-localhost-mozilla/firefox-contributors';
     protected $integrators       = 'tuleap-localhost-mozilla/firefox-integrators';
@@ -172,15 +173,15 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         $this->gerrit_tmpdir = $this->tmpdir.'/gerrit_tbd';
 
         $this->project_creator = new Git_Driver_Gerrit_ProjectCreator(
-                    $this->gerrit_tmpdir,
-                    $this->gerrit_driver_factory,
-                    $this->userfinder,
-                    $this->ugroup_manager,
-                    $this->membership_manager,
-                    $this->umbrella_manager,
-                    $this->template_factory,
-                    $this->template_processor,
-                    $this->getGitExec($this->gerrit_tmpdir)
+            $this->gerrit_tmpdir,
+            $this->gerrit_driver_factory,
+            $this->userfinder,
+            $this->ugroup_manager,
+            $this->membership_manager,
+            $this->umbrella_manager,
+            $this->template_factory,
+            $this->template_processor,
+            $this->getGitExec($this->gerrit_tmpdir)
         );
 
         stub($this->repository)->getProject()->returns($this->project);
@@ -212,7 +213,8 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
     }
 }
 
-class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {
+class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest
+{
 
     public function setUp()
     {
@@ -267,15 +269,15 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $gerrit_driver_factory = stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns($driver);
 
         $project_creator = new Git_Driver_Gerrit_ProjectCreator(
-                    $this->gerrit_tmpdir,
-                    $gerrit_driver_factory,
-                    $this->userfinder,
-                    $this->ugroup_manager,
-                    $this->membership_manager,
-                    $this->umbrella_manager,
-                    $this->template_factory,
-                    $this->template_processor,
-                    $this->getGitExec($this->gerrit_tmpdir)
+            $this->gerrit_tmpdir,
+            $gerrit_driver_factory,
+            $this->userfinder,
+            $this->ugroup_manager,
+            $this->membership_manager,
+            $this->umbrella_manager,
+            $this->template_factory,
+            $this->template_processor,
+            $this->getGitExec($this->gerrit_tmpdir)
         );
         $this->expectException('Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyExistsException');
 
@@ -501,8 +503,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
 //            "gerrit\text:ssh -p $port -i $identity_file $host_login %S  (push)",
             "origin\t$this->gerrit_git_url (fetch)",
             "origin\t$this->gerrit_git_url (push)",
-            )
-        );
+            ));
         $this->assertEqual($ret_val, 0);
     }
 
@@ -515,8 +516,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $this->assertEqual($output, array(
             "To $this->gerrit_git_url",
             "=\tHEAD:refs/meta/config\t[up to date]",
-            "Done")
-        );
+            "Done"));
         $this->assertEqual($ret_val, 0);
     }
 
@@ -544,14 +544,14 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $group_file_contents = file_get_contents($groups_file);
 
         $this->assertPattern("%$this->project_members_uuid\t$this->project_members_gerrit_name\n%", $group_file_contents);
-        $this->assertPattern("%$this->another_ugroup_uuid\t$this->another_ugroup_gerrit_name\n%",   $group_file_contents);
-        $this->assertPattern("%$this->replication_uuid\t$this->replication\n%",             $group_file_contents);
-        $this->assertPattern("%global:Registered-Users\tRegistered Users\n%",     $group_file_contents);
+        $this->assertPattern("%$this->another_ugroup_uuid\t$this->another_ugroup_gerrit_name\n%", $group_file_contents);
+        $this->assertPattern("%$this->replication_uuid\t$this->replication\n%", $group_file_contents);
+        $this->assertPattern("%global:Registered-Users\tRegistered Users\n%", $group_file_contents);
     }
-
 }
 
-class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {
+class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest
+{
 
     public function setUp()
     {

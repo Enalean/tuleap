@@ -19,7 +19,8 @@
  *
  */
 
-class Project_CustomDescription_CustomDescriptionValueDao extends DataAccessObject {
+class Project_CustomDescription_CustomDescriptionValueDao extends DataAccessObject
+{
 
     public function setDescriptionFieldValue($group_id, $field_id_to_update, $value)
     {
@@ -99,4 +100,3 @@ class Project_CustomDescription_CustomDescriptionValueDao extends DataAccessObje
         return $this->retrieve($sql);
     }
 }
-?>

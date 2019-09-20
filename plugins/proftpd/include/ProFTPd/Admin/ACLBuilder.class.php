@@ -20,7 +20,8 @@
 
 namespace Tuleap\ProFTPd\Admin;
 
-abstract class ACLBuilder {
+abstract class ACLBuilder
+{
 
     abstract public function getACL($http_user, $writers, $readers);
 

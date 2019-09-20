@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201209251711_add_table_bind_ugroups extends ForgeUpgrade_Bucket {
+class b201209251711_add_table_bind_ugroups extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -52,4 +53,3 @@ class b201209251711_add_table_bind_ugroups extends ForgeUpgrade_Bucket {
         }
     }
 }
-?>

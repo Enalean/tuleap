@@ -24,7 +24,8 @@ use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\TrackerReference;
 
-class BacklogItemRepresentation {
+class BacklogItemRepresentation
+{
 
     /**
      * @var Int

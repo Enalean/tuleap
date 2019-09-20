@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Report_CriteriaDao extends DataAccessObject {
+class Tracker_Report_CriteriaDao extends DataAccessObject
+{
     function __construct()
     {
         parent::__construct();
@@ -59,7 +60,7 @@ class Tracker_Report_CriteriaDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    function create($report_id, $field_id, $is_advanced=0)
+    function create($report_id, $field_id, $is_advanced = 0)
     {
         $report_id    = $this->da->escapeInt($report_id);
         $field_id     = $this->da->escapeInt($field_id);
@@ -91,7 +92,7 @@ class Tracker_Report_CriteriaDao extends DataAccessObject {
                 WHERE report_id = $from_report_id";
         $this->update($sql);
 
-        foreach($field_mapping as $mapping) {
+        foreach ($field_mapping as $mapping) {
             $from  = $this->da->escapeInt($mapping['from']);
             $to    = $this->da->escapeInt($mapping['to']);
             $sql = "UPDATE $this->table_name 
@@ -102,4 +103,3 @@ class Tracker_Report_CriteriaDao extends DataAccessObject {
         }
     }
 }
-?>

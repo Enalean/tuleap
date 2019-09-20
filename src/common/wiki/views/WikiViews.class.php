@@ -25,7 +25,7 @@ use Tuleap\PHPWiki\WikiPage;
 
 function exit_wiki_empty()
 {
-    GLOBAL $HTML;
+    global $HTML;
     global $group_id;
 
     $pm = ProjectManager::instance();
@@ -44,11 +44,11 @@ function exit_wiki_empty()
  * Generate url to Expend/Collapse a part of a page
  * @see my_hide_url
  */
-function hide_url($svc, $db_item_id, $defaultHide=false, $hide=null)
+function hide_url($svc, $db_item_id, $defaultHide = false, $hide = null)
 {
     $pref_name = 'hide_'.$svc.$db_item_id;
 
-    if(empty($hide)) {
+    if (empty($hide)) {
         $hide=$_REQUEST['hide_'.$svc];
     }
 
@@ -98,7 +98,8 @@ function wiki_display_footer()
  * Common functions for WikiServiceViews and WikiServiceAdminViews
  *
  */
-class WikiViews extends Views {
+class WikiViews extends Views
+{
   /* protected int    */ var $gid;
   /* protected string */ var $wikiname;
   /* protected string */ var $wikiLink;
@@ -107,7 +108,7 @@ class WikiViews extends Views {
   /**
    * WikiView - Constructor
    */
-    function WikiView(&$controler, $id=0, $view=null)
+    function WikiView(&$controler, $id = 0, $view = null)
     {
         parent::view($controler, $view);
 
@@ -132,7 +133,6 @@ class WikiViews extends Views {
    */
     function displayMenu()
     {
-
     }
 
   /**
@@ -152,7 +152,7 @@ class WikiViews extends Views {
     /**
     * pagePerms - public View
     */
-    function _pagePerms($postUrl='')
+    function _pagePerms($postUrl = '')
     {
         $wp = new WikiPage($_REQUEST['id']);
         $pagename = $wp->getPagename();
@@ -164,19 +164,17 @@ class WikiViews extends Views {
                           'wiki_page'  => $pagename,
                           'group_id' => $this->gid
                         ));
-        if($referenced){
+        if ($referenced) {
             $label = '';
             $eM->processEvent('getPermsLabelForWiki', array(
                               'label'  => &$label
                             ));
             print '<p align="center"><br><b>'.$label.'</b></p>';
-        }
-        else {
+        } else {
             print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'set_perm_title');
-            if(empty($pagename)) {
+            if (empty($pagename)) {
                 print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'empty_page');
-            }
-            else {
+            } else {
                 $purifier = Codendi_HTMLPurifier::instance();
                 print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'not_empty_page', array($purifier->purify($pagename)));
                 permission_display_selection_form("WIKIPAGE_READ", $wp->getId(), $this->gid, $postUrl);
@@ -184,5 +182,3 @@ class WikiViews extends Views {
         }
     }
 }
-
-?>

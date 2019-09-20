@@ -21,7 +21,8 @@
 require_once __DIR__ . '/../bootstrap.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aTracker.php';
 
-class Planning_TrackerPresenter_TestCase extends TuleapTestCase {
+class Planning_TrackerPresenter_TestCase extends TuleapTestCase
+{
     public function setUp()
     {
         $this->planning         = mock('Planning');
@@ -52,7 +53,8 @@ class Planning_TrackerPresenter_TestCase extends TuleapTestCase {
     }
 }
 
-class Planning_TrackerPresenter_BacklogTrackerTest extends Planning_TrackerPresenter_TestCase {
+class Planning_TrackerPresenter_BacklogTrackerTest extends Planning_TrackerPresenter_TestCase
+{
     public function setUp()
     {
         parent::setUp();
@@ -71,7 +73,8 @@ class Planning_TrackerPresenter_BacklogTrackerTest extends Planning_TrackerPrese
     }
 }
 
-class Planning_TrackerPresenter_PlanningTrackerTest extends Planning_TrackerPresenter_TestCase {
+class Planning_TrackerPresenter_PlanningTrackerTest extends Planning_TrackerPresenter_TestCase
+{
     public function setUp()
     {
         parent::setUp();
@@ -90,7 +93,8 @@ class Planning_TrackerPresenter_PlanningTrackerTest extends Planning_TrackerPres
     }
 }
 
-class Planning_TrackerPresenter_NonBacklogNorPlanningTrackerTest extends Planning_TrackerPresenter_TestCase {
+class Planning_TrackerPresenter_NonBacklogNorPlanningTrackerTest extends Planning_TrackerPresenter_TestCase
+{
     public function setUp()
     {
         parent::setUp();

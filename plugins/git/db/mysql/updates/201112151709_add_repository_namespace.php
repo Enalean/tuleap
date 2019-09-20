@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201112151709_add_repository_namespace extends ForgeUpgrade_Bucket {
+class b201112151709_add_repository_namespace extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -69,7 +70,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column repository_namespace in table plugin_git is missing');
         }
     }
-
 }
-
-?>

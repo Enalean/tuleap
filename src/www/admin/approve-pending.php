@@ -33,7 +33,8 @@ $forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
     new User_ForgeUserGroupPermissionsDao()
 );
 $special_access                   = $forge_ugroup_permissions_manager->doesUserHavePermission(
-    $user, new User_ForgeUserGroupPermission_ProjectApproval()
+    $user,
+    new User_ForgeUserGroupPermission_ProjectApproval()
 );
 
 $request = HTTPRequest::instance();
@@ -59,8 +60,7 @@ if ($action == 'activate') {
         $project_manager->activate($project);
     }
     $GLOBALS['Response']->redirect('/admin/approve-pending.php');
-
-} else if ($action == 'delete') {
+} elseif ($action == 'delete') {
     $csrf_token->check();
     $group_id = $request->get('group_id');
     $project  = $project_manager->getProject($group_id);
@@ -80,7 +80,7 @@ $siteadmin = new AdminPageRenderer();
 $presenter = new ProjectPendingPresenter($project_list, $csrf_token);
 
 $siteadmin->renderAPresenter(
-    $GLOBALS['Language']->getText('admin_approve_pending','title'),
+    $GLOBALS['Language']->getText('admin_approve_pending', 'title'),
     ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/',
     'project-pending',
     $presenter

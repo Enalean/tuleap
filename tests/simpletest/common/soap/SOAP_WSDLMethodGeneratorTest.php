@@ -20,7 +20,8 @@
 
 require_once '_fixtures/SOAP_WSDLGeneratorFixtures.php';
 
-class SOAP_WSDLMethodGeneratorTest extends TuleapTestCase {
+class SOAP_WSDLMethodGeneratorTest extends TuleapTestCase
+{
 
     function tearDown()
     {
@@ -146,7 +147,8 @@ class SOAP_WSDLMethodGeneratorTest extends TuleapTestCase {
     }
 }
 
-class SOAP_WSDLMethodGeneratorTest_FakePlugin {
+class SOAP_WSDLMethodGeneratorTest_FakePlugin
+{
     function wsdl_doc2soap_types($params)
     {
         $params['doc2soap_types'] = array_merge($params['doc2soap_types'], array(
@@ -154,5 +156,3 @@ class SOAP_WSDLMethodGeneratorTest_FakePlugin {
         ));
     }
 }
-
-?>

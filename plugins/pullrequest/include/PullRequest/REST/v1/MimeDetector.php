@@ -25,7 +25,7 @@ use Tuleap\Git\BinaryDetector;
 class MimeDetector
 {
 
-    static public $EXTENSION_TO_MIME_TYPES = array(
+    public static $EXTENSION_TO_MIME_TYPES = array(
         'c'             => 'text/x-c',
         'cpp'           => 'text/x-c++src',
         'mm'            => 'text/x-c++src',

@@ -34,8 +34,7 @@ rcs_id('$Id: WikiAdminSelect.php,v 1.23 2005/09/14 06:06:09 rurban Exp $');
  */
 require_once('lib/PageList.php');
 
-class WikiPlugin_WikiAdminSelect
-extends WikiPlugin
+class WikiPlugin_WikiAdminSelect extends WikiPlugin
 {
     function getName()
     {
@@ -49,8 +48,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.23 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.23 $"
+        );
     }
 
     function getDefaultArguments()
@@ -73,13 +75,14 @@ extends WikiPlugin
      * Default collector for all WikiAdmin* plugins.
      * preSelectS() is similar, but fills $this->_list
      */
-    function collectPages(&$list, &$dbi, $sortby, $limit=0, $exclude=false)
+    function collectPages(&$list, &$dbi, $sortby, $limit = 0, $exclude = false)
     {
         $allPages = $dbi->getAllPages(0, $sortby, $limit, $exclude);
         while ($pagehandle = $allPages->next()) {
             $pagename = $pagehandle->getName();
-            if (empty($list[$pagename]))
+            if (empty($list[$pagename])) {
                 $list[$pagename] = 0;
+            }
         }
         return $list;
     }
@@ -95,15 +98,16 @@ extends WikiPlugin
     {
         // override plugin argument by GET: probably not needed if s||="" is used
         // anyway, we force it for unique interface.
-        if (!empty($request->getArg['s']))
+        if (!empty($request->getArg['s'])) {
             $args['s'] = $request->getArg['s'];
-        if ( !empty($args['owner']) )
-            $sl = PageList::allPagesByOwner($args['owner'],false,$args['sortby'],$args['limit'],$args['exclude']);
-        elseif ( !empty($args['author']) )
-            $sl = PageList::allPagesByAuthor($args['author'],false,$args['sortby'],$args['limit'],$args['exclude']);
-        elseif ( !empty($args['creator']) )
-            $sl = PageList::allPagesByCreator($args['creator'],false,$args['sortby'],$args['limit'],$args['exclude']);
-        elseif ( !empty($args['s']) or !empty($args['only']) ) {
+        }
+        if (!empty($args['owner'])) {
+            $sl = PageList::allPagesByOwner($args['owner'], false, $args['sortby'], $args['limit'], $args['exclude']);
+        } elseif (!empty($args['author'])) {
+            $sl = PageList::allPagesByAuthor($args['author'], false, $args['sortby'], $args['limit'], $args['exclude']);
+        } elseif (!empty($args['creator'])) {
+            $sl = PageList::allPagesByCreator($args['creator'], false, $args['sortby'], $args['limit'], $args['exclude']);
+        } elseif (!empty($args['s']) or !empty($args['only'])) {
             // all pages by name
             $sl = explodePageList(empty($args['only']) ? $args['s'] : $args['only']);
         }
@@ -112,8 +116,9 @@ extends WikiPlugin
             $request->setArg('verify', 1);
             foreach ($sl as $name) {
                 if (!empty($args['exclude'])) {
-                    if (!in_array($name, $args['exclude']))
+                    if (!in_array($name, $args['exclude'])) {
                         $this->_list[$name] = 1;
+                    }
                 } else {
                     $this->_list[$name] = 1;
                 }
@@ -140,18 +145,22 @@ extends WikiPlugin
         //$uri = $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI']; // without s would be better.
         //$uri = $request->getURLtoSelf();//false, array('verify'));
         $form = HTML::form(array('action' => $request->getPostURL(), 'method' => 'POST'));
-        if ($request->getArg('WikiAdminSelect') == _("Go"))
+        if ($request->getArg('WikiAdminSelect') == _("Go")) {
             $p = false;
-        else
+        } else {
             $p = $request->getArg('p');
+        }
 
-        $form->pushContent(HTML::p(array('class' => 'wikitext'), _("Select: "),
-                                   HTML::input(array('type' => 'text',
+        $form->pushContent(HTML::p(
+            array('class' => 'wikitext'),
+            _("Select: "),
+            HTML::input(array('type' => 'text',
                                                      'name' => 's',
                                                      'value' => $args['s'])),
-                                   HTML::input(array('type' => 'submit',
+            HTML::input(array('type' => 'submit',
                                                      'name' => 'WikiAdminSelect',
-                                                     'value' => _("Go")))));
+            'value' => _("Go")))
+        ));
         if ($request->isPost()
             && ! $request->getArg('wikiadmin')
             && !empty($p)) {
@@ -160,15 +169,13 @@ extends WikiPlugin
             foreach ($p as $page => $name) {
                 $this->_list[$name] = 1;
             }
-        }
-        elseif ($request->isPost()
+        } elseif ($request->isPost()
             and $request->_user->isAdmin()
                 and !empty($p)
                 //and $request->getArg('verify')
                 and ($request->getArg('action') == 'WikiAdminSelect')
                 and $request->getArg('wikiadmin')
-               )
-        {
+               ) {
             // handle external plugin
             $loader = new WikiPluginLoader();
             $a = array_keys($request->getArg('wikiadmin'));
@@ -184,20 +191,23 @@ extends WikiPlugin
                     // if the plugin requires more args than the pagename,
                     // then this plugin will not return. (Rename, SearchReplace, ...)
                     $action_result = $plugin->run($dbi, $plugin_args, $request, $basepage);
-                    $ul->pushContent(HTML::li(fmt("Selected page '%s' passed to '%s'.",
-                                                  $name, $select)));
+                    $ul->pushContent(HTML::li(fmt(
+                        "Selected page '%s' passed to '%s'.",
+                        $name,
+                        $select
+                    )));
                     $ul->pushContent(HTML::ul(HTML::li($action_result)));
                 }
             } else {
                 // redirect to the plugin page.
                 // in which page is this plugin?
-                $plugin_action = preg_replace("/^WikiAdmin/","",$plugin_action);
+                $plugin_action = preg_replace("/^WikiAdmin/", "", $plugin_action);
                 $args = array();
                 foreach ($p as $page => $x) {
                     $args["p[$page]"] = 1;
                 }
                 header("Location: ".
-                  WikiURL(_("PhpWikiAdministration")."/"._($plugin_action),$args,1));
+                  WikiURL(_("PhpWikiAdministration")."/"._($plugin_action), $args, 1));
                 exit();
             }
         } elseif (empty($args['s'])) {
@@ -208,8 +218,9 @@ extends WikiPlugin
         $pagelist->addPageList($this->_list);
         $form->pushContent($pagelist->getContent());
         foreach ($args as $k => $v) {
-            if (!in_array($k,array('s','WikiAdminSelect','action','verify')))
+            if (!in_array($k, array('s','WikiAdminSelect','action','verify'))) {
                 $form->pushContent(HiddenInputs(array($k => $v))); // plugin params
+            }
         }
         /*
         foreach ($_GET as $k => $v) {
@@ -221,25 +232,30 @@ extends WikiPlugin
             $form->pushContent(HTML::input(array('type' => 'hidden',
                                                  'name' => 'action',
                                                  'value' => 'verify')));
-            $form->pushContent(Button('submit:verify', _("Select pages"),
-                                      'wikiadmin'),
-                               Button('submit:cancel', _("Cancel"), 'button'));
+            $form->pushContent(
+                Button(
+                    'submit:verify',
+                    _("Select pages"),
+                    'wikiadmin'
+                ),
+                Button('submit:cancel', _("Cancel"), 'button')
+            );
         } else {
             global $WikiTheme;
             $form->pushContent(HTML::input(array('type' => 'hidden',
                                                  'name' => 'action',
-                                                 'value' => 'WikiAdminSelect'))
-                               );
+                                                 'value' => 'WikiAdminSelect')));
             // Add the Buttons for all registered WikiAdmin plugins
             $plugin_dir = 'lib/plugin';
-            if (defined('PHPWIKI_DIR'))
+            if (defined('PHPWIKI_DIR')) {
                 $plugin_dir = PHPWIKI_DIR . "/$plugin_dir";
+            }
             $fs = new fileSet($plugin_dir, 'WikiAdmin*.php');
             $actions = $fs->getFiles();
             foreach ($actions as $f) {
-                $f = preg_replace('/.php$/','', $f);
-                $s = preg_replace('/^WikiAdmin/','', $f);
-                if (!in_array($s,array("Select","Utils"))) { // disable Select and Utils
+                $f = preg_replace('/.php$/', '', $f);
+                $s = preg_replace('/^WikiAdmin/', '', $f);
+                if (!in_array($s, array("Select","Utils"))) { // disable Select and Utils
                     $form->pushContent(Button("submit:wikiadmin[$f]", _($s), "wikiadmin"));
                     $form->pushContent($WikiTheme->getButtonSeparator());
                 }
@@ -376,4 +392,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

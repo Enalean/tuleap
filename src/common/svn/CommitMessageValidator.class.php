@@ -25,7 +25,8 @@
 /**
  * I'm responsible of checking that commit message is valid
  */
-class SVN_CommitMessageValidator {
+class SVN_CommitMessageValidator
+{
 
     /** @var ReferenceManager */
     private $reference_manager;

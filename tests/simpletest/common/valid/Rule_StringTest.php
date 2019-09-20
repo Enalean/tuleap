@@ -23,7 +23,8 @@
  */
 
 
-class Rule_StringTest extends TuleapTestCase {
+class Rule_StringTest extends TuleapTestCase
+{
 
     function UnitTestCase($name = 'Rule_String test')
     {
@@ -64,7 +65,4 @@ class Rule_StringTest extends TuleapTestCase {
         $this->assertFalse($r->isValid("\0abcdfg"));
         $this->assertFalse($r->isValid("abcdfg\0"));
     }
-
 }
-
-?>

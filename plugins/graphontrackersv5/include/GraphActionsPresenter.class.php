@@ -70,7 +70,7 @@ class GraphOnTrackersV5_GraphActionsPresenter
 
     public function confirm_label()
     {
-        return $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','confirm_del');
+        return $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'confirm_del');
     }
 
     public function delete_title()

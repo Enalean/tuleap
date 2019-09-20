@@ -21,7 +21,8 @@
 
 require_once dirname(__FILE__).'/../../../bootstrap.php';
 
-class GerritDriverFactoryTest extends TuleapTestCase {
+class GerritDriverFactoryTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -54,19 +55,19 @@ class GerritDriverFactoryTest extends TuleapTestCase {
     public function itReturnsAGerritDriverLegacyObjectIfServerAsNoVersionSet()
     {
          $server = new Git_RemoteServer_GerritServer(
-            0,
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            false,
-            '',
-            '',
-            '',
-            ''
-        );
+             0,
+             '',
+             '',
+             '',
+             '',
+             '',
+             '',
+             false,
+             '',
+             '',
+             '',
+             ''
+         );
 
         $this->assertIsA($this->gerrit_driver_factory->getDriver($server), 'Git_Driver_GerritLegacy');
     }

@@ -21,7 +21,8 @@ namespace User\XML\Import;
 
 use TuleapTestCase;
 
-class AlreadyExistingUser_isActionAllowedTest extends TuleapTestCase {
+class AlreadyExistingUser_isActionAllowedTest extends TuleapTestCase
+{
 
     /** @var AlreadyExistingUser */
     protected $user;

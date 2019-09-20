@@ -52,14 +52,16 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase
                 'bg_green'       => '12',
                 'bg_blue'        => '10',
                 'tlp_color_name' => null
-            ], [
+            ],
+            [
                 'id'             => 2,
                 'label'          => 'On Going',
                 'bg_red'         => null,
                 'bg_green'       => null,
                 'bg_blue'        => null,
                 'tlp_color_name' => null
-            ], [
+            ],
+            [
                 'id'             => 2,
                 'label'          => 'Review',
                 'bg_red'         => null,

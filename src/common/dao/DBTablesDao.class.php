@@ -21,7 +21,8 @@
 /**
  *  Data Access Object for DB Tables
  */
-class DBTablesDao extends DataAccessObject {
+class DBTablesDao extends DataAccessObject
+{
     /**
     * Gets a log files
     * @return object a result object
@@ -48,7 +49,7 @@ class DBTablesDao extends DataAccessObject {
     {
         $field_changes = array();
         $sql = "SHOW FULL COLUMNS FROM ".$name;
-        foreach($this->retrieve($sql) as $field) {
+        foreach ($this->retrieve($sql) as $field) {
             if ($field['Collation']) {
                 if (preg_match('/_bin$/', $field['Collation'])) {
                     $collate = 'bin';
@@ -84,10 +85,10 @@ class DBTablesDao extends DataAccessObject {
     {
         $file_content = file($filename);
         $query = "";
-        foreach($file_content as $sql_line){
-            if(trim($sql_line) != "" && strpos($sql_line, "--") === false){
+        foreach ($file_content as $sql_line) {
+            if (trim($sql_line) != "" && strpos($sql_line, "--") === false) {
                 $query .= $sql_line;
-                if(preg_match("/;\s*(\r\n|\n|$)/", $sql_line)){
+                if (preg_match("/;\s*(\r\n|\n|$)/", $sql_line)) {
                     if (!$this->update($query)) {
                         return false;
                     }
@@ -98,4 +99,3 @@ class DBTablesDao extends DataAccessObject {
         return true;
     }
 }
-?>

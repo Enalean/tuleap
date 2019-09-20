@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface Tracker_FormElement_IAcceptFieldVisitor {
+interface Tracker_FormElement_IAcceptFieldVisitor
+{
 
     public function accept(Tracker_FormElement_FieldVisitor $visitor);
 }

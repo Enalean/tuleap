@@ -66,10 +66,12 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
 
     public function getField_base()
     {
-        return $this->field_base; }
+        return $this->field_base;
+    }
     public function setField_base($field_base)
     {
-        return $this->field_base = $field_base; }
+        return $this->field_base = $field_base;
+    }
 
     protected function getEngine()
     {
@@ -77,19 +79,22 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
     }
     protected function getChartDataBuilder($artifacts)
     {
-        return new GraphOnTrackersV5_Chart_PieDataBuilder($this,$artifacts);
+        return new GraphOnTrackersV5_Chart_PieDataBuilder($this, $artifacts);
     }
 
     public function getProperties()
     {
-        return array_merge(parent::getProperties(),
+        return array_merge(
+            parent::getProperties(),
             array(
                 'field_base' => new HTML_Element_Selectbox_TrackerFields_SelectboxesV5(
-                                        $this->getTracker(),
-                                        $GLOBALS['Language']->getText('plugin_graphontrackersv5_pie_property','pie_field_base'),
-                                        'chart[field_base]',
-                                        $this->getField_base()),
-        ));
+                    $this->getTracker(),
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_pie_property', 'pie_field_base'),
+                    'chart[field_base]',
+                    $this->getField_base()
+                ),
+            )
+        );
     }
 
     public function createDb($id)

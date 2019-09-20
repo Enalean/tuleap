@@ -18,14 +18,15 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 
-class PluginActions {
+class PluginActions
+{
 
     protected $controller;
 
     /** @var Codendi_Request*/
     protected $request;
 
-    public function __construct( $controller )
+    public function __construct($controller)
     {
         $this->controller = $controller;
         $this->user       = $controller->getUser();
@@ -59,9 +60,8 @@ class PluginActions {
 
     public function process($actionName, $actionParams)
     {
-        if( $this->check() ) {
+        if ($this->check()) {
             return call_user_func_array(array($this,$actionName), $actionParams);
         }
     }
 }
-?>

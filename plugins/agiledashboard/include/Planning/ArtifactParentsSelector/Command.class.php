@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Planning_ArtifactParentsSelector_Command {
+abstract class Planning_ArtifactParentsSelector_Command
+{
 
     /**
      * @var Tracker_ArtifactFactory
@@ -48,7 +49,7 @@ abstract class Planning_ArtifactParentsSelector_Command {
         $this->hierarchy_factory = $hierarchy_factory;
     }
 
-    public abstract function getPossibleParents(Tracker $parent_tracker, Tracker_Artifact $source_artifact, PFUser $user);
+    abstract public function getPossibleParents(Tracker $parent_tracker, Tracker_Artifact $source_artifact, PFUser $user);
 
     /**
      * @return array of Tracker_Artifact
@@ -60,4 +61,3 @@ abstract class Planning_ArtifactParentsSelector_Command {
         }
     }
 }
-?>

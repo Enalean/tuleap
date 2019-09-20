@@ -23,7 +23,8 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 use Tracker_Artifact;
 use Tracker_HierarchyFactory;
 
-class SourceOfAssociationDetector {
+class SourceOfAssociationDetector
+{
 
     /**
      * @var Tracker_HierarchyFactory

@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201203071642_change_service_shortname extends ForgeUpgrade_Bucket {
+class b201203071642_change_service_shortname extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -49,5 +50,3 @@ EOT;
         }
     }
 }
-
-?>

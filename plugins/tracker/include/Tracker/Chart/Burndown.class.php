@@ -108,7 +108,7 @@ class Tracker_Chart_Burndown
         $data                  = array();
         $last_remaining_effort = null;
 
-        foreach($remaining_effort as $day => $effort) {
+        foreach ($remaining_effort as $day => $effort) {
             if ($day < $date->format("Ymd")) {
                 if ($last_remaining_effort !== null) {
                     $last_remaining_effort = array_merge($effort, $last_remaining_effort);
@@ -148,9 +148,9 @@ class Tracker_Chart_Burndown
         return $data;
     }
 
-    protected function getFirstEffortNotNull( array $remaining_effort)
+    protected function getFirstEffortNotNull(array $remaining_effort)
     {
-        foreach($remaining_effort as $effort) {
+        foreach ($remaining_effort as $effort) {
             if (is_array($effort) && ($sum_of_effort = floatval(array_sum($effort))) > 0) {
                 return $sum_of_effort;
             }

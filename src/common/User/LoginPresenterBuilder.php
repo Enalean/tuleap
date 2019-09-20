@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class User_LoginPresenterBuilder {
+class User_LoginPresenterBuilder
+{
 
     /** @return User_LoginPresenter */
     public function build($return_to, $printer_version, $form_loginname, $is_secure, CSRFSynchronizerToken $login_csrf)

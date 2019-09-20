@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_GIT_DELETE_MIRROR extends SystemEvent {
+class SystemEvent_GIT_DELETE_MIRROR extends SystemEvent
+{
     public const NAME = 'GIT_DELETE_MIRROR';
 
     /** @var Git_GitoliteDriver */

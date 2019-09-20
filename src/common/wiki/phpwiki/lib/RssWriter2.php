@@ -19,8 +19,10 @@ class RssWriter2 extends RssWriter
 {
     function __construct()
     {
-        $this->XmlElement('rss',
-                          array('version' => "2.0"));
+        $this->XmlElement(
+            'rss',
+            array('version' => "2.0")
+        );
 
         // not used. no namespaces should be used.
         $this->_modules = array(
@@ -50,11 +52,14 @@ class RssWriter2 extends RssWriter
     function cloud($properties)
     {
         // soap or http-post
-        if (!isset($properties['port']))
+        if (!isset($properties['port'])) {
             $properties['port'] = !SERVER_PORT
                 ? '80'
                 : (SERVER_PROTOCOL == 'https' ? '443' : '80');
-        if (!isset($properties['domain'])) $properties['domain'] = SERVER_NAME;
+        }
+        if (!isset($properties['domain'])) {
+            $properties['domain'] = SERVER_NAME;
+        }
         $this->_cloud = $this->node('cloud', $properties);
     }
 
@@ -72,7 +77,6 @@ class RssWriter2 extends RssWriter
         echo "              %HTMLlat1;]>\n";
         $this->printXML();
     }
-
 };
 
 // (c-file-style: "gnu")
@@ -83,4 +87,3 @@ class RssWriter2 extends RssWriter
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

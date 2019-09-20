@@ -146,12 +146,12 @@ class ProjectEditController
                     'project_is_suspended',
                     $event_params
                 );
-            } else if ($form_status === Project::STATUS_ACTIVE) {
+            } elseif ($form_status === Project::STATUS_ACTIVE) {
                 $this->event_manager->processEvent(
                     'project_is_active',
                     $event_params
                 );
-            } else if ($form_status === Project::STATUS_DELETED) {
+            } elseif ($form_status === Project::STATUS_DELETED) {
                 $this->event_manager->processEvent(
                     'project_is_deleted',
                     $event_params

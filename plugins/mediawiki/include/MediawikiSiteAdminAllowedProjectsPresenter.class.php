@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MediawikiSiteAdminAllowedProjectsPresenter {
+class MediawikiSiteAdminAllowedProjectsPresenter
+{
 
     public const TEMPLATE = 'grant-only-allowed-projects';
 

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_Trigger_RulesBuilderTriggeringFields {
+class Tracker_Workflow_Trigger_RulesBuilderTriggeringFields
+{
 
     /**
      * @var Tracker
@@ -46,5 +47,3 @@ class Tracker_Workflow_Trigger_RulesBuilderTriggeringFields {
         return $this->fields;
     }
 }
-
-?>

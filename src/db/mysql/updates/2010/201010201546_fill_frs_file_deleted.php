@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201010201546_fill_frs_file_deleted extends ForgeUpgrade_Bucket {
+class b201010201546_fill_frs_file_deleted extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -55,5 +56,3 @@ EOT;
         }
     }
 }
-
-?>

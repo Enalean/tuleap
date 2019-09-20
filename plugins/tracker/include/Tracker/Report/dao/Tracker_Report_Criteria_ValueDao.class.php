@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-abstract class Tracker_Report_Criteria_ValueDao extends DataAccessObject {
+abstract class Tracker_Report_Criteria_ValueDao extends DataAccessObject
+{
 
     public function searchByCriteriaId($criteria_id)
     {
@@ -37,4 +38,3 @@ abstract class Tracker_Report_Criteria_ValueDao extends DataAccessObject {
 
     abstract public function save($id, $value);
 }
-?>

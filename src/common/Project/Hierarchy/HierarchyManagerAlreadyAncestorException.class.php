@@ -19,7 +19,6 @@
  */
 
 
-class Project_HierarchyManagerAlreadyAncestorException extends Exception {
+class Project_HierarchyManagerAlreadyAncestorException extends Exception
+{
 }
-
-?>

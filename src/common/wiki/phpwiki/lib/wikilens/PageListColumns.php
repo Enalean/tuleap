@@ -74,11 +74,11 @@ class _PageList_Column_coagreement extends _PageList_Column_custom
         $active_userId = $active_user->getId();
         $dbi = $request->getDbh();
         $p = CoAgreement($dbi, $pagename, $this->_selectedBuddies, $active_userId);
-        if($p == 1){
+        if ($p == 1) {
             $p = "yes";
-        } elseif($p == 0){
+        } elseif ($p == 0) {
             $p = "unsure";
-        } elseif($p == -1){
+        } elseif ($p == -1) {
             $p = "no";
         } else {
             $p = "error";
@@ -115,16 +115,15 @@ class _PageList_Column_minmisery extends _PageList_Column_custom
 
 // register custom PageList type
 global $WikiTheme;
-$WikiTheme->addPageListColumn
-  (array
-   (
+$WikiTheme->addPageListColumn(array
+    (
     'numbacklinks'
     => array('_PageList_Column_numbacklinks','custom:numbacklinks', _("# things"), false),
     'coagreement'
     => array('_PageList_Column_coagreement','custom:coagreement', _("Go?"), 'center'),
     'minmisery'
     => array('_PageList_Column_minmisery','custom:minmisery', _("MinMisery"), 'center'),
-    ));
+));
 
 // $Log: PageListColumns.php,v $
 // Revision 1.10  2005/09/30 18:41:39  uckelman
@@ -179,4 +178,3 @@ $WikiTheme->addPageListColumn
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

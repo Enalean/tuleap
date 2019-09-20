@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Migration_MigrationLogger extends BrokerLogger {
+class Tracker_Migration_MigrationLogger extends BrokerLogger
+{
 
     public function __construct(BackendLogger $backend_logger, Tracker_Migration_MailLogger $mail_logger)
     {

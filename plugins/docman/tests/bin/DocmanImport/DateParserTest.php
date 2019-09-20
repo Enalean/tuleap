@@ -20,7 +20,8 @@
 
 require_once(__DIR__.'/../../../bin/DocmanImport/DateParser.class.php');
 
-class DateParserTest extends TuleapTestCase {
+class DateParserTest extends TuleapTestCase
+{
 
     public function testParseIso8601()
     {
@@ -33,7 +34,7 @@ class DateParserTest extends TuleapTestCase {
         $date3 = "2000-12-01T00:54:00Z";
         $date4 = "20001201T02:54+0200";
         //$ts = 975632040;
-        $ts = gmmktime(0,54,0,12,1,2000);
+        $ts = gmmktime(0, 54, 0, 12, 1, 2000);
 
         $this->assertEqual(DateParser::parseIso8601($date1), $ts);
         $this->assertEqual(DateParser::parseIso8601($date2), $ts);

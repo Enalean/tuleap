@@ -29,7 +29,8 @@
  * $mail->send();
  * </pre>
  */
-class Tuleap_Template_Mail extends Tuleap_Template {
+class Tuleap_Template_Mail extends Tuleap_Template
+{
     public function __construct()
     {
         parent::__construct($GLOBALS['Language']->getContent('mail/html_template', 'en_US', null, '.php'));
@@ -41,4 +42,3 @@ class Tuleap_Template_Mail extends Tuleap_Template {
         $this->set('title', '');
     }
 }
-?>

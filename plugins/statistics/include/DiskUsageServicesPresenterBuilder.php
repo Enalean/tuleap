@@ -84,7 +84,7 @@ class DiskUsageServicesPresenterBuilder
             if (! $project->isError()) {
                 $selected_project = $project->getUnconvertedPublicName().' ('.$project->getUnixName().')';
             }
-        } else if ($selected_project) {
+        } elseif ($selected_project) {
             $project = $this->project_manager->getProjectFromAutocompleter($selected_project);
             if ($project) {
                 $project_id = $project->getID();

@@ -19,7 +19,8 @@
 
 use Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnPATCHRepresentation;
 
-class AgileDashboard_KanbanColumnManager {
+class AgileDashboard_KanbanColumnManager
+{
 
     /** @var AgileDashboard_KanbanColumnDao */
     private $column_dao;

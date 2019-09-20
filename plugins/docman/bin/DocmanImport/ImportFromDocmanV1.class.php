@@ -19,7 +19,8 @@
 
 require_once 'XMLDocmanImport.class.php';
 
-class Docman_ImportFromDocmanV1 {
+class Docman_ImportFromDocmanV1
+{
 
     private $temporary_directory;
     private $wsdl_url;
@@ -130,6 +131,4 @@ class Docman_ImportFromDocmanV1 {
         $system->recurseDeleteInDir($this->temporary_directory);
         rmdir($this->temporary_directory);
     }
-
-
 }

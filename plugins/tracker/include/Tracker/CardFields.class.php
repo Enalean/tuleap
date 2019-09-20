@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_CardFields {
+class Tracker_CardFields
+{
 
     /**
      * @var Array
@@ -53,9 +54,10 @@ class Tracker_CardFields {
 
         foreach ($this->displayed_fields as $diplayed_field_name) {
             $field = $this->form_element_factory->getUsedFieldByNameForUser(
-                        $tracker_id,
-                        $diplayed_field_name,
-                        $this->user_manager->getCurrentUser());
+                $tracker_id,
+                $diplayed_field_name,
+                $this->user_manager->getCurrentUser()
+            );
             if ($field) {
                 $diplayed_fields[] = $field;
             }
@@ -64,4 +66,3 @@ class Tracker_CardFields {
         return $diplayed_fields;
     }
 }
-?>

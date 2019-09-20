@@ -83,7 +83,6 @@ class ProjectTrackersResource
                 $offset,
                 $filter_on_tracker_administration_permission
             );
-
         }
 
         return $this->getTrackersWithCriteria($project, $representation, $limit, $offset, $json_query);

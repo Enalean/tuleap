@@ -252,10 +252,10 @@ class openidconnectclientPlugin extends Plugin
 
     public function login_additional_connector(array $params)
     {
-        if(! $this->canPluginAuthenticateUser()) {
+        if (! $this->canPluginAuthenticateUser()) {
             return;
         }
-        if(! $params['is_secure']) {
+        if (! $params['is_secure']) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
                 dgettext('tuleap-openidconnectclient', 'The OpenID Connect plugin can only be used if the platform is accessible with HTTPS')
@@ -374,7 +374,7 @@ class openidconnectclientPlugin extends Plugin
 
     public function routeIndex() : DispatchableWithRequest
     {
-        if(! $this->canPluginAuthenticateUser()) {
+        if (! $this->canPluginAuthenticateUser()) {
             return new DispatchTemporaryRedirect('/');
         }
 

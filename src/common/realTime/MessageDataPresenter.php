@@ -19,7 +19,6 @@
 
 namespace Tuleap\RealTime;
 
-
 class MessageDataPresenter
 {
     public $sender_user_id;

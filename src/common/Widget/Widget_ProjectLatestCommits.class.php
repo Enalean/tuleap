@@ -39,11 +39,13 @@ abstract class Widget_ProjectLatestCommits extends Widget
     }
 
     /* protected */ function _getLinkToCommit($data)
-    { }
+    {
+    }
     /* protected */ function _getLinkToMore()
-    { }
+    {
+    }
 
-    protected abstract function canBeUsedByProject(Project $project);
+    abstract protected function canBeUsedByProject(Project $project);
 
     public function getLatestRevisions()
     {
@@ -101,7 +103,7 @@ abstract class Widget_ProjectLatestCommits extends Widget
         }
 
         if ($number_of_commit === 0) {
-            $html .= $GLOBALS['Language']->getText('my_index','my_latest_commit_empty');
+            $html .= $GLOBALS['Language']->getText('my_index', 'my_latest_commit_empty');
 
             return $html;
         }

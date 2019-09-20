@@ -18,4 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MilestonePermissionDeniedException extends Exception {}
+class MilestonePermissionDeniedException extends Exception
+{
+}

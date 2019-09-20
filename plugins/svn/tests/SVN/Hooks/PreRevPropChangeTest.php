@@ -32,7 +32,8 @@ use TuleapTestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class PreRevPropChangeTest extends TuleapTestCase {
+class PreRevPropChangeTest extends TuleapTestCase
+{
     /**
      * @var HookConfigRetriever
      */

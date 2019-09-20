@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_ChangesetDao extends DataAccessObject {
+class Tracker_Artifact_ChangesetDao extends DataAccessObject
+{
 
     public function __construct()
     {

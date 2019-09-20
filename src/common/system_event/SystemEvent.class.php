@@ -23,7 +23,8 @@
  * System Event class
  *
  */
-abstract class SystemEvent {
+abstract class SystemEvent
+{
 
     protected $id;
     protected $type;
@@ -147,7 +148,7 @@ abstract class SystemEvent {
      *
      * @return string
      */
-    public abstract function verbalizeParameters($with_link);
+    abstract public function verbalizeParameters($with_link);
 
     /**
      * verbalize a user id.
@@ -246,13 +247,13 @@ abstract class SystemEvent {
 
         if ($duration->y) {
             $format = $GLOBALS['Language']->getText('admin_system_events', 'duration_years');
-        } else if ($duration->m) {
+        } elseif ($duration->m) {
             $format = $GLOBALS['Language']->getText('admin_system_events', 'duration_months');
-        } else if ($duration->d) {
+        } elseif ($duration->d) {
             $format = $GLOBALS['Language']->getText('admin_system_events', 'duration_days');
-        } else if ($duration->h) {
+        } elseif ($duration->h) {
             $format = $GLOBALS['Language']->getText('admin_system_events', 'duration_hours');
-        } else if ($duration->i) {
+        } elseif ($duration->i) {
             $format = $GLOBALS['Language']->getText('admin_system_events', 'duration_minutes');
         } else {
             $format = $GLOBALS['Language']->getText('admin_system_events', 'duration_seconds');
@@ -287,7 +288,9 @@ abstract class SystemEvent {
     {
         if ($this->int_ok($this->parameters)) {
             return $this->parameters;
-        } else return 0;
+        } else {
+            return 0;
+        }
     }
 
     public function getParameter($index)
@@ -328,9 +331,9 @@ abstract class SystemEvent {
      * This function allows one to call all listeners (e.g. plugins) of an event related to the current processed system event
      * @param string $eventName
      */
-    protected function callSystemEventListeners( $eventName )
+    protected function callSystemEventListeners($eventName)
     {
-        EventManager::instance()->processEvent( $eventName , $this->getParametersAsArray() );
+        EventManager::instance()->processEvent($eventName, $this->getParametersAsArray());
     }
 
     public function logException(Exception $exception)
@@ -433,11 +436,11 @@ abstract class SystemEvent {
      */
     public function notify(?SystemEventsFollowersDao $dao = null)
     {
-        if(is_null($dao)) {
+        if (is_null($dao)) {
             $dao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
         }
         $listeners = array();
-        foreach($dao->searchByType($this->getStatus()) as $row) {
+        foreach ($dao->searchByType($this->getStatus()) as $row) {
             $listeners = array_merge($listeners, explode(',', $row['emails']));
         }
         if (count($listeners)) {

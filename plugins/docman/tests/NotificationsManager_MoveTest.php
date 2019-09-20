@@ -30,7 +30,9 @@ use Tuleap\Docman\Notifications\UsersRetriever;
 
 require_once 'bootstrap.php';
 
-Mock::generatePartial('Docman_NotificationsManager_Move', 'Docman_NotificationsManager_MoveTestVersion',
+Mock::generatePartial(
+    'Docman_NotificationsManager_Move',
+    'Docman_NotificationsManager_MoveTestVersion',
     array(
         '_groupGetObject',
         '_getItemFactory',
@@ -92,11 +94,11 @@ class NotificationsManager_MoveTest extends TuleapTestCase
         // {{{ Listener cannot read moved item
         // We expect no notification
         $dr = 0;
-        for($br = 0 ; $br <= 1 ; ++$br) {
-            for($cr = 0 ; $cr <= 1 ; ++$cr) {
-                for ($lb = 0 ; $lb <= 1 ; ++$lb) {
-                    for ($lc = 0 ; $lc <= 1 ; ++$lc) {
-                        for ($ld = 0 ; $ld <= 1 ; ++$ld) {
+        for ($br = 0; $br <= 1; ++$br) {
+            for ($cr = 0; $cr <= 1; ++$cr) {
+                for ($lb = 0; $lb <= 1; ++$lb) {
+                    for ($lc = 0; $lc <= 1; ++$lc) {
+                        for ($ld = 0; $ld <= 1; ++$ld) {
                             $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'none');
                         }
                     }
@@ -111,9 +113,9 @@ class NotificationsManager_MoveTest extends TuleapTestCase
                 // {{{ Listener cannot read new parent
                 // We expect no notification
                 $cr = 0;
-        for ($lb = 0 ; $lb <= 1 ; ++$lb) {
-            for ($lc = 0 ; $lc <= 1 ; ++$lc) {
-                for ($ld = 0 ; $ld <= 1 ; ++$ld) {
+        for ($lb = 0; $lb <= 1; ++$lb) {
+            for ($lc = 0; $lc <= 1; ++$lc) {
+                for ($ld = 0; $ld <= 1; ++$ld) {
                     $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'none');
                 }
             }
@@ -129,7 +131,7 @@ class NotificationsManager_MoveTest extends TuleapTestCase
                     // Only old parent is listened (but still unreadable), no notification
                     $this->_runTest($dr, $br, $cr, 1, 0, $ld, 'none');
                         // {{{ new parent is listened, we receive a notification without b because it is still unreadable
-        for ($lb = 0 ; $lb <= 1 ; ++$lb) {
+        for ($lb = 0; $lb <= 1; ++$lb) {
             $this->_runTest($dr, $br, $cr, $lb, 1, $ld, 'to_wo_b');
         }
                         //}}}
@@ -137,8 +139,8 @@ class NotificationsManager_MoveTest extends TuleapTestCase
 
                     //{{{ If we listen item, we receive a notification about item ("has been moved to c")
                     $ld = 1;
-        for ($lb = 0 ; $lb <= 1 ; ++$lb) {
-            for ($lc = 0 ; $lc <= 1 ; ++$lc) {
+        for ($lb = 0; $lb <= 1; ++$lb) {
+            for ($lc = 0; $lc <= 1; ++$lc) {
                 $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'item');
             }
         }
@@ -150,9 +152,9 @@ class NotificationsManager_MoveTest extends TuleapTestCase
                 // {{{ Listener cannot read new parent
                 // We have to send notifications only when old parent or item is listened
                 $cr = 0;
-        for ($lb = 0 ; $lb <= 1 ; ++$lb) {
-            for ($lc = 0 ; $lc <= 1 ; ++$lc) {
-                for ($ld = 0 ; $ld <= 1 ; ++$ld) {
+        for ($lb = 0; $lb <= 1; ++$lb) {
+            for ($lc = 0; $lc <= 1; ++$lc) {
+                for ($ld = 0; $ld <= 1; ++$ld) {
                     $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, $lb || $ld ? 'from_wo_c' : 'none');
                 }
             }
@@ -162,8 +164,8 @@ class NotificationsManager_MoveTest extends TuleapTestCase
                 $cr = 1;
                     // {{{ Moved item is listened, notification on item
                     $ld = 1;
-        for ($lb = 0 ; $lb <= 1 ; ++$lb) {
-            for ($lc = 0 ; $lc <= 1 ; ++$lc) {
+        for ($lb = 0; $lb <= 1; ++$lb) {
+            for ($lc = 0; $lc <= 1; ++$lc) {
                 $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'item');
             }
         }
@@ -172,7 +174,7 @@ class NotificationsManager_MoveTest extends TuleapTestCase
                     $ld = 0;
                         // {{{ new parent is listened, notification 'to'
                         $lc = 1;
-        for ($lb = 0 ; $lb <= 1 ; ++$lb) {
+        for ($lb = 0; $lb <= 1; ++$lb) {
             $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'to');
         }
                         //}}}
@@ -246,13 +248,13 @@ class NotificationsManager_MoveTest extends TuleapTestCase
         $user_manager->setReturnReference('getUserById', $listener, array($listener->getId()));
 
         $permissions_manager = new MockDocman_PermissionsManager();
-        $permissions_manager->setReturnValue('userCanRead',   true, array($listener, $a->getId()));
+        $permissions_manager->setReturnValue('userCanRead', true, array($listener, $a->getId()));
         $permissions_manager->setReturnValue('userCanAccess', true, array($listener, $a->getId()));
-        $permissions_manager->setReturnValue('userCanRead',   $cr, array($listener, $c->getId()));
+        $permissions_manager->setReturnValue('userCanRead', $cr, array($listener, $c->getId()));
         $permissions_manager->setReturnValue('userCanAccess', $cr, array($listener, $c->getId()));
-        $permissions_manager->setReturnValue('userCanRead',   $br, array($listener, $b->getId()));
+        $permissions_manager->setReturnValue('userCanRead', $br, array($listener, $b->getId()));
         $permissions_manager->setReturnValue('userCanAccess', $br, array($listener, $b->getId()));
-        $permissions_manager->setReturnValue('userCanRead',   $dr, array($listener, $d->getId()));
+        $permissions_manager->setReturnValue('userCanRead', $dr, array($listener, $d->getId()));
         $permissions_manager->setReturnValue('userCanAccess', $dr && $br, array($listener, $d->getId()));
 
         $dao = mock('Tuleap\Docman\Notifications\UsersToNotifyDao');
@@ -332,8 +334,6 @@ class NotificationsManager_MoveTest extends TuleapTestCase
             'group_id' => $group_id,
             'item'    => &$d,
             'parent'  => &$c,
-            'user'    => &$user)
-        );
-
+            'user'    => &$user));
     }
 }

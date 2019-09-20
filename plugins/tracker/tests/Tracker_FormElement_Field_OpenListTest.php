@@ -57,7 +57,8 @@ Mock::generatePartial(
         'getFactoryIconCreate',
     )
 );
-class Tracker_FormElement_Field_OpenListTestVersion_for_saveValue extends Tracker_FormElement_Field_OpenListTestVersion {
+class Tracker_FormElement_Field_OpenListTestVersion_for_saveValue extends Tracker_FormElement_Field_OpenListTestVersion
+{
     public function saveValue($artifact, $changeset_value_id, $value, ?Tracker_Artifact_ChangesetValue $previous_changesetvalue, CreatedFileURLMapping $url_mapping)
     {
         parent::saveValue($artifact, $changeset_value_id, $value, $previous_changesetvalue, $url_mapping);
@@ -69,7 +70,8 @@ Mock::generate('Tracker_Artifact_ChangesetValue_OpenList');
 
 Mock::generate('Tracker_FormElement_Field_List_OpenValueDao');
 
-class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
+class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase
+{
 
     function __construct($name = 'Open List test')
     {
@@ -198,7 +200,8 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase {
+class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
+{
 
     private $dao;
     private $bind;
@@ -305,7 +308,8 @@ class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
     }
 }
 
-class Tracker_FormElement_Field_OpenList_RESTTests extends TuleapTestCase {
+class Tracker_FormElement_Field_OpenList_RESTTests extends TuleapTestCase
+{
 
     public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName()
     {
@@ -331,7 +335,8 @@ class Tracker_FormElement_Field_OpenList_RESTTests extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElement_Field_OpenList_Validate_Values extends TuleapTestCase {
+class Tracker_FormElement_Field_OpenList_Validate_Values extends TuleapTestCase
+{
     private $artifact;
     private $bind;
     private $field;
@@ -348,8 +353,7 @@ class Tracker_FormElement_Field_OpenList_Validate_Values extends TuleapTestCase 
                 101 => null,
                 102 => null,
                 103 => null
-            )
-        );
+            ));
     }
 
     public function itAcceptsValidValues()

@@ -20,8 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_WikiRequest extends Codendi_Request {
+class Docman_WikiRequest extends Codendi_Request
+{
 
 }
-
-?>

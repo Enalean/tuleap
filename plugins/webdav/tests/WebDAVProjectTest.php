@@ -24,7 +24,8 @@ require_once __DIR__.'/bootstrap.php';
 /**
  * This is the unit test of WebDAVProject
  */
-class WebDAVProjectTest extends TuleapTestCase {
+class WebDAVProjectTest extends TuleapTestCase
+{
 
     /**
      * Testing when The project have no active services
@@ -40,7 +41,6 @@ class WebDAVProjectTest extends TuleapTestCase {
 
         $webDAVProject->shouldReceive('usesFile')->andReturns(false);
         $this->assertEqual($webDAVProject->getChildren(), array());
-
     }
 
     /**
@@ -68,7 +68,6 @@ class WebDAVProjectTest extends TuleapTestCase {
         $webDAVProject->shouldReceive('usesFile')->andReturns(false);
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
         $webDAVProject->getChild('Files');
-
     }
 
     function testUserCanReadWithAccessCheckerSuccessfull()

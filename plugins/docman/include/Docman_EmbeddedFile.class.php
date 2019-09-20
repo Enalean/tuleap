@@ -25,7 +25,8 @@ require_once('Docman_File.class.php');
  * URL is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_EmbeddedFile extends Docman_File {
+class Docman_EmbeddedFile extends Docman_File
+{
 
     function __construct($data = null)
     {
@@ -49,5 +50,3 @@ class Docman_EmbeddedFile extends Docman_File {
         return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_embedded');
     }
 }
-
-?>

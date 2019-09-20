@@ -21,7 +21,8 @@
 
 require_once('bootstrap.php');
 
-abstract class Tracker_FormElementFactoryAbstract extends TuleapTestCase {
+abstract class Tracker_FormElementFactoryAbstract extends TuleapTestCase
+{
 
     protected function GivenAFormElementFactory()
     {
@@ -32,7 +33,8 @@ abstract class Tracker_FormElementFactoryAbstract extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract {
+class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract
+{
 
     public function setUp()
     {
@@ -66,8 +68,7 @@ class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract 
                 <name>field_name</name>
                 <label>field_label</label>
                 <description>field_description</description>
-            </formElement>'
-        );
+            </formElement>');
 
         $mapping = array();
 
@@ -160,7 +161,6 @@ class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract 
         $this->assertIsA($fe_fact->getFieldById(123), 'Tracker_FormElement_Field');
         $this->assertNull($fe_fact->getFieldById(456), 'A fieldset is not a Field');
         $this->assertNull($fe_fact->getFieldById(789), 'Field does not exist');
-
     }
 
     public function testDeductNameFromLabel()
@@ -196,9 +196,9 @@ class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract 
 
         return $content;
     }
-
 }
-class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracker_FormElementFactoryAbstract {
+class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracker_FormElementFactoryAbstract
+{
 
     public function itReturnsEmptyArrayWhenNoSharedFields()
     {
@@ -218,8 +218,8 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
         $sharedRow2 = $this->createRow(666, 'date');
 
         $dar = TestHelper::arrayToDar(
-                $sharedRow1,
-                $sharedRow2
+            $sharedRow1,
+            $sharedRow2
         );
 
         $factory = $this->GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id);
@@ -337,7 +337,7 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
     public function testGetFieldFromTrackerAndSharedField()
     {
         $original_field_dar = TestHelper::arrayToDar(
-                $this->createRow(999, 'text')
+            $this->createRow(999, 'text')
         );
         $dao = \Mockery::spy(\Tracker_FormElement_FieldDao::class);
         $dao->shouldReceive('searchFieldFromTrackerIdAndSharedFieldId')->with(66, 123)->andReturns($original_field_dar);
@@ -355,7 +355,8 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
 
 
 
-class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
+class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase
+{
 
     private $project_id;
     private $template_id;
@@ -401,7 +402,7 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
 
         $this->dao->shouldReceive('updateOriginalFieldId')->never();
 
-        $this->factory->fixOriginalFieldIdsAfterDuplication($this->project_id, $this->template_id,   $field_mapping);
+        $this->factory->fixOriginalFieldIdsAfterDuplication($this->project_id, $this->template_id, $field_mapping);
     }
 
     public function itUpdatesTheOrginalFieldIdForEverySharedField()
@@ -460,7 +461,8 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElementFactory_GetArtifactLinks extends TuleapTestCase {
+class Tracker_FormElementFactory_GetArtifactLinks extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -492,5 +494,4 @@ class Tracker_FormElementFactory_GetArtifactLinks extends TuleapTestCase {
         stub($this->field)->userCanRead($this->user)->returns(true);
         $this->assertEqual($this->factory->getAnArtifactLinkField($this->user, $this->tracker), $this->field);
     }
-
 }

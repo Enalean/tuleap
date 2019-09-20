@@ -23,7 +23,8 @@ require_once('PropertyDescriptor.class.php');
 /**
  * PropertyDescriptor
  */
-class PropertyDescriptor {
+class PropertyDescriptor
+{
 
     var $name;
     var $value;
@@ -47,4 +48,3 @@ class PropertyDescriptor {
         $this->value = $value;
     }
 }
-?>

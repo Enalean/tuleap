@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b20150701_insert_default_values_for_default_site_template extends ForgeUpgrade_Bucket {
+class b20150701_insert_default_values_for_default_site_template extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket

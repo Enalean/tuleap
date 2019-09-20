@@ -42,7 +42,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
     /* protected */ function _footer($params)
     {
         $builder   = new DocumentFooterPresenterBuilder(ProjectManager::instance(), EventManager::instance());
-        $presenter = $builder->build($params, $params['group_id'],  $params['item']->toRow(), $params['user']);
+        $presenter = $builder->build($params, $params['group_id'], $params['item']->toRow(), $params['user']);
         $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
         $renderer->renderToPage(
             'docman-footer',
@@ -69,14 +69,16 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
             );
         }
         $urlAction = 'show';
-        if(isset($params['action'])) {
-            if($params['action'] == 'search') {
+        if (isset($params['action'])) {
+            if ($params['action'] == 'search') {
                 $urlAction = $params['action'];
             }
         }
         $this->_initSearchAndSortParams($params);
-        $urlParams = array_merge($this->dfltSortParams,
-                                 $this->dfltSearchParams);
+        $urlParams = array_merge(
+            $this->dfltSortParams,
+            $this->dfltSearchParams
+        );
         $urlParams['action'] = $urlAction;
         $html = '';
         $html .= '<table border="0" width="100%">';
@@ -84,7 +86,7 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         $html .= '<td align="left">';
         $html .= '<div id="docman_item_title_link_'. $id .'">'. $GLOBALS['Language']->getText('plugin_docman', 'breadcrumbs_location') .' ';
         $parents = array_reverse($parents);
-        foreach($parents as $parent) {
+        foreach ($parents as $parent) {
             $urlParams['id'] = $parent['id'];
             $url             = DocmanViewURLBuilder::buildActionUrl($parent['item'], $params, $urlParams);
             $html           .= '&nbsp;<a href="'.$url.'">'.  $hp->purify($parent['title'], CODENDI_PURIFIER_CONVERT_HTML)  .'</a>&nbsp;/';

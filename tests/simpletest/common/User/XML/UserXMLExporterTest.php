@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class UserXMLExporterTest extends TuleapTestCase {
+class UserXMLExporterTest extends TuleapTestCase
+{
 
     private $collection;
     private $user_xml_exporter;

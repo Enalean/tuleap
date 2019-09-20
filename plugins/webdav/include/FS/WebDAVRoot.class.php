@@ -29,7 +29,8 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
  *
  * or all public projects in case the user is anonymous
  */
-class WebDAVRoot extends Sabre_DAV_Directory {
+class WebDAVRoot extends Sabre_DAV_Directory
+{
 
     private $user;
     private $plugin;
@@ -50,7 +51,6 @@ class WebDAVRoot extends Sabre_DAV_Directory {
         $this->user = $user;
         $this->plugin = $plugin;
         $this->maxFileSize = $maxFileSize;
-
     }
 
     /**
@@ -72,7 +72,6 @@ class WebDAVRoot extends Sabre_DAV_Directory {
             // Generate project list for the given user
             return $this->getUserProjectList($this->getUser());
         }
-
     }
 
     /**
@@ -123,7 +122,6 @@ class WebDAVRoot extends Sabre_DAV_Directory {
         }*/
 
         return $project;
-
     }
 
     /**
@@ -137,7 +135,6 @@ class WebDAVRoot extends Sabre_DAV_Directory {
     {
 
         return ' WebDAV Root';
-
     }
 
     /**
@@ -151,7 +148,6 @@ class WebDAVRoot extends Sabre_DAV_Directory {
     {
 
         return;
-
     }
 
     /**
@@ -163,7 +159,6 @@ class WebDAVRoot extends Sabre_DAV_Directory {
     {
 
         return $this->user;
-
     }
 
     /**
@@ -190,7 +185,6 @@ class WebDAVRoot extends Sabre_DAV_Directory {
         $res=$dao->searchByUnixGroupName($projectName);
         $groupId=$res->getRow();
         return $groupId['group_id'];
-
     }
 
     /**
@@ -235,7 +229,6 @@ class WebDAVRoot extends Sabre_DAV_Directory {
             }
         }
         return $projects;
-
     }
 
     /**
@@ -258,7 +251,6 @@ class WebDAVRoot extends Sabre_DAV_Directory {
             }
         }
         return $projects;
-
     }
 
     /**
@@ -272,9 +264,5 @@ class WebDAVRoot extends Sabre_DAV_Directory {
     {
 
         return PluginManager::instance()->isPluginAllowedForProject($this->plugin, $groupId);
-
     }
-
 }
-
-?>

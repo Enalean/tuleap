@@ -26,7 +26,7 @@ require_once __DIR__ . '/../include/pre.php';
 $request = HTTPRequest::instance();
 
 $confirm_hash = new \Tuleap\Cryptography\ConcealedString(
-        $request->get('confirm_hash') === false ? '' : $request->get('confirm_hash')
+    $request->get('confirm_hash') === false ? '' : $request->get('confirm_hash')
 );
 
 $reset_token_dao          = new Tuleap\User\Password\Reset\DataAccessObject();
@@ -40,7 +40,7 @@ try {
     $user  = $reset_token_verifier->getUser($token);
 } catch (ExpiredTokenException $ex) {
     $GLOBALS['Response']->addFeedback(
-            Feedback::ERROR,
+        Feedback::ERROR,
         $GLOBALS['Language']->getText('account_lostlogin', 'expired_token')
     );
     $GLOBALS['Response']->redirect('/account/lostpw.php');
@@ -55,7 +55,6 @@ if ($request->isPost()
     && $request->exist('Update')
     && $request->existAndNonEmpty('form_pw')
     && !strcmp($request->get('form_pw'), $request->get('form_pw2'))) {
-
     $user->setPassword($request->get('form_pw'));
 
     $reset_token_revoker = new \Tuleap\User\Password\Reset\Revoker($reset_token_dao);

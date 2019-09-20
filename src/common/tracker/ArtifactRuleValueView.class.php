@@ -23,7 +23,8 @@
 * Basic view for a rule
 *
 */
-class ArtifactRuleValueView {
+class ArtifactRuleValueView
+{
 
     var $rule;
 

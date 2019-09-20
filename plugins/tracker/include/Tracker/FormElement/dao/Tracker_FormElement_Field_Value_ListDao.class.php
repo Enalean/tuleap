@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Field_Value_ListDao extends Tracker_FormElement_Field_ValueDao {
+class Tracker_FormElement_Field_Value_ListDao extends Tracker_FormElement_Field_ValueDao
+{
 
     public function __construct()
     {
@@ -34,7 +35,7 @@ class Tracker_FormElement_Field_Value_ListDao extends Tracker_FormElement_Field_
             $value_ids = array($value_ids);
         }
         $nb_values = count($value_ids);
-        foreach($value_ids as $v) {
+        foreach ($value_ids as $v) {
             $v = $this->da->escapeInt($v);
             if (!$v) {
                 $v = 100; //None value
@@ -57,11 +58,11 @@ class Tracker_FormElement_Field_Value_ListDao extends Tracker_FormElement_Field_
     public function createNoneValue($tracker_id, $field_id)
     {
         $changeset_value_ids = $this->createNoneChangesetValue($tracker_id, $field_id);
-        if ( $changeset_value_ids === false ) {
+        if ($changeset_value_ids === false) {
             return false;
         }
          $sql = "INSERT INTO $this->table_name(changeset_value_id, bindvalue_id)
-                    VALUES ( ".implode(', 100 ),( ', $changeset_value_ids ).", 100 )";
+                    VALUES ( ".implode(', 100 ),( ', $changeset_value_ids).", 100 )";
          return $this->update($sql);
     }
 
@@ -76,4 +77,3 @@ class Tracker_FormElement_Field_Value_ListDao extends Tracker_FormElement_Field_
         return $this->update($sql);
     }
 }
-?>

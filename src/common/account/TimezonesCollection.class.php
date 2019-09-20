@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Account_TimezonesCollection {
+class Account_TimezonesCollection
+{
 
     private $timezones = array(
         'US/Alaska',
@@ -503,5 +504,4 @@ class Account_TimezonesCollection {
 
         return $list_of_presenters;
     }
-
 }

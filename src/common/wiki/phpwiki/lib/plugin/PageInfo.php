@@ -26,8 +26,7 @@ rcs_id('$Id: PageInfo.php,v 1.5 2004/02/17 12:11:36 rurban Exp $');
  * This plugin just passes a page revision handle to the Template
  * 'info.tmpl', which does all the real work.
  */
-class WikiPlugin_PageInfo
-extends WikiPlugin
+class WikiPlugin_PageInfo extends WikiPlugin
 {
     function getName()
     {
@@ -36,14 +35,19 @@ extends WikiPlugin
 
     function getDescription()
     {
-        return sprintf(_("Show extra page Info and statistics for %s."),
-                       '[pagename]');
+        return sprintf(
+            _("Show extra page Info and statistics for %s."),
+            '[pagename]'
+        );
     }
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.5 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.5 $"
+        );
     }
 
     function getDefaultArguments()
@@ -61,20 +65,26 @@ extends WikiPlugin
         $page = $request->getPage();
         $current = $page->getCurrentRevision();
 
-        if ($current->getVersion() < 1)
-            return fmt("I'm sorry, there is no such page as %s.",
-                       WikiLink($pagename, 'unknown'));
+        if ($current->getVersion() < 1) {
+            return fmt(
+                "I'm sorry, there is no such page as %s.",
+                WikiLink($pagename, 'unknown')
+            );
+        }
 
         if (!empty($version)) {
-            if (!($revision = $page->getRevision($version)))
+            if (!($revision = $page->getRevision($version))) {
                 NoSuchRevision($request, $page, $version);
-        }
-        else {
+            }
+        } else {
             $revision = $current;
         }
 
-        $template = new Template('info', $request,
-                                 array('revision' => $revision));
+        $template = new Template(
+            'info',
+            $request,
+            array('revision' => $revision)
+        );
         return $template;
     }
 };
@@ -105,4 +115,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

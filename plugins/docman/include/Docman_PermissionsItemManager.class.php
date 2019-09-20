@@ -24,7 +24,8 @@ require_once 'Docman_ItemFactory.class.php';
  * This class is responsible to return authorized Ugroups for an item depending on its parents
  *
  */
-class Docman_PermissionsItemManager {
+class Docman_PermissionsItemManager
+{
     public const PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
 
     private function mergeUgroupIds(array $parent_ugroups_ids, array $child_ugroups_ids)
@@ -35,7 +36,7 @@ class Docman_PermissionsItemManager {
 
         $contains_anonymous = $this->oneContainsAnonymous($child_ugroups_ids, $parent_ugroups_ids);
 
-        foreach($remaining_ids as $item_ugroup_id) {
+        foreach ($remaining_ids as $item_ugroup_id) {
             if ($item_ugroup_id < ProjectUGroup::NONE || $contains_anonymous) {
                 $item_ugroups_ids[] = $item_ugroup_id;
             }
@@ -101,7 +102,9 @@ class Docman_PermissionsItemManager {
 
     private function getParentItem(Docman_Item $item, Project $project)
     {
-        if (! $item->getParentId()) return;
+        if (! $item->getParentId()) {
+            return;
+        }
         return Docman_ItemFactory::instance($project->getID())->getItemFromDb($item->getParentId());
     }
 

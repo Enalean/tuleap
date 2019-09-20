@@ -20,27 +20,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Docman_View_SOAP_Search {
+class Docman_View_SOAP_Search
+{
 
     function display($params)
     {
         $itemFactory = new Docman_ItemFactory($params['group_id']);
         $nbItemsFound = 0;
-        $itemIterator = $itemFactory->getItemList($params['item']->getId(),
-                                                  $nbItemsFound,
-                                                  array('user' => $params['user'],
+        $itemIterator = $itemFactory->getItemList(
+            $params['item']->getId(),
+            $nbItemsFound,
+            array('user' => $params['user'],
                                                         'ignore_collapse' => true,
                                                         'ignore_obsolete' => true,
                                                         'filter' => $params['filter'],
-                                                        'getall' => true));
+            'getall' => true)
+        );
 
         $result = array();
-        foreach($itemIterator as $item) {
+        foreach ($itemIterator as $item) {
             $result[] = $item->toRow();
         }
         return $result;
     }
-
 }
-
-?>

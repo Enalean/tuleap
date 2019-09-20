@@ -22,7 +22,8 @@
 
 require_once('include/DataAccessObject.class.php');
 
-class SvnCommitsDao extends DataAccessObject {
+class SvnCommitsDao extends DataAccessObject
+{
 
     public function __construct()
     {
@@ -57,6 +58,3 @@ class SvnCommitsDao extends DataAccessObject {
         $this->update($sql);
     }
 }
-
-
-?>

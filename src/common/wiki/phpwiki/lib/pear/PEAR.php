@@ -18,10 +18,10 @@
 // +----------------------------------------------------------------------+
 rcs_id('$Id: PEAR.php,v 1.5 2005/02/28 21:24:33 rurban Exp $');
 rcs_id('From Pear CVS: Id: PEAR.php,v 1.59 2003/04/03 23:10:10 ssb Exp');
-define('PEAR_ERROR_RETURN',   1);
-define('PEAR_ERROR_PRINT',    2);
-define('PEAR_ERROR_TRIGGER',  4);
-define('PEAR_ERROR_DIE',      8);
+define('PEAR_ERROR_RETURN', 1);
+define('PEAR_ERROR_PRINT', 2);
+define('PEAR_ERROR_TRIGGER', 4);
+define('PEAR_ERROR_DIE', 8);
 define('PEAR_ERROR_CALLBACK', 16);
 define('PEAR_ERROR_EXCEPTION', 32);
 define('PEAR_ZE2', (function_exists('version_compare') &&
@@ -29,12 +29,12 @@ define('PEAR_ZE2', (function_exists('version_compare') &&
 
 if (substr(PHP_OS, 0, 3) == 'WIN') {
     define('OS_WINDOWS', true);
-    define('OS_UNIX',    false);
-    define('PEAR_OS',    'Windows');
+    define('OS_UNIX', false);
+    define('PEAR_OS', 'Windows');
 } else {
     define('OS_WINDOWS', false);
-    define('OS_UNIX',    true);
-    define('PEAR_OS',    'Unix'); // blatant assumption
+    define('OS_UNIX', true);
+    define('PEAR_OS', 'Unix'); // blatant assumption
 }
 
 $GLOBALS['_PEAR_default_error_mode']     = PEAR_ERROR_RETURN;
@@ -301,8 +301,7 @@ class PEAR
             case PEAR_ERROR_CALLBACK:
                 $setmode = $mode;
                 if ((is_string($options) && function_exists($options)) ||
-                    (is_array($options) && method_exists(@$options[0], @$options[1])))
-                {
+                    (is_array($options) && method_exists(@$options[0], @$options[1]))) {
                     $setoptions = $options;
                 } else {
                     trigger_error("invalid error callback", E_USER_WARNING);
@@ -371,7 +370,7 @@ class PEAR
     {
         $deleted = false;
 
-        foreach ($this->_expected_errors AS $key => $error_array) {
+        foreach ($this->_expected_errors as $key => $error_array) {
             if (in_array($error_code, $error_array)) {
                 unset($this->_expected_errors[$key][array_search($error_code, $error_array)]);
                 $deleted = true;
@@ -404,7 +403,7 @@ class PEAR
             // $error_code is a non-empty array here;
             // we walk through it trying to unset all
             // values
-            foreach($error_code AS $key => $error) {
+            foreach ($error_code as $key => $error) {
                 if ($this->_checkDelExpect($error)) {
                     $deleted =  true;
                 } else {
@@ -621,8 +620,7 @@ function _PEAR_call_destructors()
 {
     global $_PEAR_destructor_object_list;
     if (is_array($_PEAR_destructor_object_list) &&
-        sizeof($_PEAR_destructor_object_list))
-    {
+        sizeof($_PEAR_destructor_object_list)) {
         foreach ($_PEAR_destructor_object_list as $objref) {
             $classname = get_class($objref);
             while ($classname) {
@@ -641,7 +639,7 @@ function _PEAR_call_destructors()
     }
 
     // Now call the shutdown functions
-    if (is_array($GLOBALS['_PEAR_shutdown_funcs']) AND !empty($GLOBALS['_PEAR_shutdown_funcs'])) {
+    if (is_array($GLOBALS['_PEAR_shutdown_funcs']) and !empty($GLOBALS['_PEAR_shutdown_funcs'])) {
         foreach ($GLOBALS['_PEAR_shutdown_funcs'] as $value) {
             call_user_func_array($value[0], $value[1]);
         }
@@ -904,11 +902,16 @@ class PEAR_Error
             } else {
                 $callback = $this->callback;
             }
-            return sprintf('[%s: message="%s" code=%d mode=callback '.
+            return sprintf(
+                '[%s: message="%s" code=%d mode=callback '.
                            'callback=%s prefix="%s" info="%s"]',
-                           static::class, $this->message, $this->code,
-                           $callback, $this->error_message_prefix,
-                           $this->userinfo);
+                static::class,
+                $this->message,
+                $this->code,
+                $callback,
+                $this->error_message_prefix,
+                $this->userinfo
+            );
         }
         if ($this->mode & PEAR_ERROR_PRINT) {
             $modes[] = 'print';
@@ -922,12 +925,17 @@ class PEAR_Error
         if ($this->mode & PEAR_ERROR_RETURN) {
             $modes[] = 'return';
         }
-        return sprintf('[%s: message="%s" code=%d mode=%s level=%s '.
+        return sprintf(
+            '[%s: message="%s" code=%d mode=%s level=%s '.
                        'prefix="%s" info="%s"]',
-                       static::class, $this->message, $this->code,
-                       implode("|", $modes), $levels[$this->level],
-                       $this->error_message_prefix,
-                       $this->userinfo);
+            static::class,
+            $this->message,
+            $this->code,
+            implode("|", $modes),
+            $levels[$this->level],
+            $this->error_message_prefix,
+            $this->userinfo
+        );
     }
 
     // }}}
@@ -942,4 +950,3 @@ register_shutdown_function("_PEAR_call_destructors");
  * c-basic-offset: 4
  * End:
  */
-?>

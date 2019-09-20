@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201302091402_add_frs_file_comment extends ForgeUpgrade_Bucket {
+class b201302091402_add_frs_file_comment extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return <<<EOT
@@ -47,5 +48,3 @@ EOT;
         }
     }
 }
-
-?>

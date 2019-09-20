@@ -9,7 +9,9 @@ require_once __DIR__ . '/Template.php';
  */
 function GleanKeywords($page)
 {
-    if (!defined('KEYWORDS')) return '';
+    if (!defined('KEYWORDS')) {
+        return '';
+    }
     include_once("lib/TextSearchQuery.php");
     $search = new TextSearchQuery(KEYWORDS, true);
     $KeywordLinkRegexp = $search->asRegexp();
@@ -18,8 +20,9 @@ function GleanKeywords($page)
     $links = $page->getPageLinks();
     $keywords[] = SplitPagename($page->getName());
     while ($link = $links->next()) {
-        if (preg_match($KeywordLinkRegexp, $link->getName(), $m))
+        if (preg_match($KeywordLinkRegexp, $link->getName(), $m)) {
             $keywords[] = SplitPagename($m[0]);
+        }
     }
     $keywords[] = WIKI_NAME;
     return join(', ', $keywords);
@@ -33,9 +36,11 @@ function GleanKeywords($page)
 function RedirectorLink($pagename)
 {
     $url = WikiURL($pagename, array('redirectfrom' => ''));
-    return HTML::a(array('class' => 'redirectfrom wiki',
+    return HTML::a(
+        array('class' => 'redirectfrom wiki',
                          'href' => $url),
-                   $pagename);
+        $pagename
+    );
 }
 
 
@@ -53,9 +58,11 @@ function actionPage(&$request, $action)
     $actionpage = $dbi->getPage($action);
     $actionrev = $actionpage->getCurrentRevision();
 
-    $pagetitle = HTML(fmt("%s: %s",
-                          $actionpage->getName(),
-                          $WikiTheme->linkExistingWikiWord($pagename, false, $version)));
+    $pagetitle = HTML(fmt(
+        "%s: %s",
+        $actionpage->getName(),
+        $WikiTheme->linkExistingWikiWord($pagename, false, $version)
+    ));
 
     $validators = new HTTP_ValidatorSet(array('pageversion' => $revision->getVersion(),
                                               '%mtime' => $revision->get('mtime')));
@@ -84,7 +91,7 @@ function actionPage(&$request, $action)
     flush();
 }
 
-function displayPage(&$request, $template=false)
+function displayPage(&$request, $template = false)
 {
     global $WikiTheme, $pv;
     $pagename = $request->getArg('pagename');
@@ -92,55 +99,67 @@ function displayPage(&$request, $template=false)
     $page = $request->getPage();
     if ($version) {
         $revision = $page->getRevision($version);
-        if (!$revision)
+        if (!$revision) {
             NoSuchRevision($request, $page, $version);
-    }
-    else {
+        }
+    } else {
         $revision = $page->getCurrentRevision();
     }
 
     if (isSubPage($pagename)) {
         $pages = explode(SUBPAGE_SEPARATOR, $pagename);
         $last_page = array_pop($pages); // deletes last element from array as side-effect
-        $pageheader = HTML::span(HTML::a(array('href' => WikiURL($pages[0]),
+        $pageheader = HTML::span(HTML::a(
+            array('href' => WikiURL($pages[0]),
                                               'class' => 'pagetitle'
                                               ),
-                                        $WikiTheme->maybeSplitWikiWord($pages[0] . SUBPAGE_SEPARATOR)));
+            $WikiTheme->maybeSplitWikiWord($pages[0] . SUBPAGE_SEPARATOR)
+        ));
         $first_pages = $pages[0] . SUBPAGE_SEPARATOR;
         array_shift($pages);
-        foreach ($pages as $p)  {
-            if ($pv != 2){    //Add the Backlink in page title
-                   $pageheader->pushContent(HTML::a(array('href' => WikiURL($first_pages . $p),
+        foreach ($pages as $p) {
+            if ($pv != 2) {    //Add the Backlink in page title
+                   $pageheader->pushContent(HTML::a(
+                       array('href' => WikiURL($first_pages . $p),
                                                   'class' => 'backlinks'),
-                                            $WikiTheme->maybeSplitWikiWord($p . SUBPAGE_SEPARATOR)));
-            }else{    // Remove Backlinks
+                       $WikiTheme->maybeSplitWikiWord($p . SUBPAGE_SEPARATOR)
+                   ));
+            } else {    // Remove Backlinks
                 $pageheader->pushContent(HTML::h1($pagename));
             }
             $first_pages .= $p . SUBPAGE_SEPARATOR;
         }
-        if ($pv != 2){
-            $backlink = HTML::a(array('href' => WikiURL($pagename,
-                  array('action' => _("BackLinks"))),
+        if ($pv != 2) {
+            $backlink = HTML::a(
+                array('href' => WikiURL(
+                    $pagename,
+                    array('action' => _("BackLinks"))
+                ),
                       'class' => 'backlinks'),
-                    $WikiTheme->maybeSplitWikiWord($last_page));
+                $WikiTheme->maybeSplitWikiWord($last_page)
+            );
             $backlink->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
-        }else{
+        } else {
             $backlink = HTML::h1($pagename);
         }
         $pageheader->pushContent($backlink);
-
     } else {
-        if ($pv != 2){
-            $pageheader = HTML::a(array('href' => WikiURL($pagename,
-                                 array('action' => _("BackLinks"))),
+        if ($pv != 2) {
+            $pageheader = HTML::a(
+                array('href' => WikiURL(
+                    $pagename,
+                    array('action' => _("BackLinks"))
+                ),
                        'class' => 'backlinks'),
-                     $WikiTheme->maybeSplitWikiWord($pagename));
+                $WikiTheme->maybeSplitWikiWord($pagename)
+            );
             $pageheader->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
-        }else{
+        } else {
             $pageheader = HTML::h1($pagename); //Remove Backlinks
         }
-        if ($request->getArg('frame'))
+        if ($request->getArg('frame')) {
             $pageheader->setAttr('target', '_top');
+        }
     }
 
     // {{{ Codendi hook to insert stuff between navbar and header
@@ -150,7 +169,7 @@ function displayPage(&$request, $template=false)
     $crossref_fact= new CrossReferenceFactory($pagename, ReferenceManager::REFERENCE_NATURE_WIKIPAGE, GROUP_ID);
     $crossref_fact->fetchDatas();
     if ($crossref_fact->getNbReferences() > 0) {
-        $ref_html .= '<h3>'.$GLOBALS['Language']->getText('cross_ref_fact_include','references').'</h3>';
+        $ref_html .= '<h3>'.$GLOBALS['Language']->getText('cross_ref_fact_include', 'references').'</h3>';
         $ref_html .= $crossref_fact->getHTMLDisplayCrossRefs();
     }
 
@@ -174,9 +193,13 @@ function displayPage(&$request, $template=false)
 
     $pagetitle = SplitPagename($pagename);
     if (($redirect_from = $request->getArg('redirectfrom'))) {
-        $redirect_message = HTML::span(array('class' => 'redirectfrom'),
-                                       fmt("(Redirected from %s)",
-                                           RedirectorLink($redirect_from)));
+        $redirect_message = HTML::span(
+            array('class' => 'redirectfrom'),
+            fmt(
+                "(Redirected from %s)",
+                RedirectorLink($redirect_from)
+            )
+        );
     // abuse the $redirected template var for some status update notice
     } elseif ($request->getArg('errormsg')) {
         $redirect_message = $request->getArg('errormsg');
@@ -203,8 +226,10 @@ function displayPage(&$request, $template=false)
                 foreach (array_reverse($xml) as $line) {
                     array_unshift($page_content->_content, $line);
                 }
-                array_unshift($page_content->_content,
-                            HTML::div(_("You searched for: "), HTML::strong($result['query'])));
+                array_unshift(
+                    $page_content->_content,
+                    HTML::div(_("You searched for: "), HTML::strong($result['query']))
+                );
             }
 
             if (0) {
@@ -229,8 +254,10 @@ function displayPage(&$request, $template=false)
                     }
                     if ($found) {
                         $html[] = $line;  // postmatch
-                        $page_content->_content[$i] = HTML::span(array('class' => 'search-context'),
-                                                             $html);
+                        $page_content->_content[$i] = HTML::span(
+                            array('class' => 'search-context'),
+                            $html
+                        );
                     }
                 }
             }
@@ -242,13 +269,15 @@ function displayPage(&$request, $template=false)
     $toks['TITLE'] = $pagetitle;   // <title> tag
     $toks['HEADER'] = $pageheader; // h1 with backlink
     $toks['revision'] = $revision;
-    if (!empty($redirect_message))
+    if (!empty($redirect_message)) {
         $toks['redirected'] = $redirect_message;
+    }
     $toks['ROBOTS_META'] = 'index,follow';
     $toks['PAGE_DESCRIPTION'] = $page_content->getDescription();
     $toks['PAGE_KEYWORDS'] = GleanKeywords($page);
-    if (!$template)
+    if (!$template) {
         $template = new Template('html', $request);
+    }
 
     $template->printExpansion($toks);
     $page->increaseHitCount();
@@ -338,4 +367,3 @@ function displayPage(&$request, $template=false)
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

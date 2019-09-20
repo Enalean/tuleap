@@ -24,7 +24,8 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_Admin_MetadataDetailsUpdateLove extends Docman_View_Extra {
+class Docman_View_Admin_MetadataDetailsUpdateLove extends Docman_View_Extra
+{
 
     function _title($params)
     {
@@ -56,12 +57,13 @@ class Docman_View_Admin_MetadataDetailsUpdateLove extends Docman_View_Extra {
 
         $html .= '</form>';
 
-        $backUrl  = DocmanViewURLBuilder::buildUrl($params['default_url'],
-                                    array('action' => 'admin_md_details',
-                                          'md' => $md->getLabel()));
+        $backUrl  = DocmanViewURLBuilder::buildUrl(
+            $params['default_url'],
+            array('action' => 'admin_md_details',
+            'md' => $md->getLabel())
+        );
         $html .= '<p><a href="'.$backUrl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detupdlove_backtomenu').'</a></p>';
 
         echo $html;
     }
-
 }

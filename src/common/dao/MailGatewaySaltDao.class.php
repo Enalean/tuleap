@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailGatewaySaltDao extends DataAccessObject {
+class MailGatewaySaltDao extends DataAccessObject
+{
 
     public function searchMailSalt()
     {

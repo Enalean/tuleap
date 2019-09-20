@@ -36,7 +36,8 @@ use Tuleap\Tracker\REST\TrackerReference;
 /**
  * Representation of a milestone
  */
-class MilestoneRepresentation extends MilestoneRepresentationBase {
+class MilestoneRepresentation extends MilestoneRepresentationBase
+{
 
     public function build(
         Planning_Milestone $milestone,

@@ -21,7 +21,8 @@
 /**
  * Build the artifact tree to be presented on the cardwall
  */
-class Cardwall_PaneBoardBuilder {
+class Cardwall_PaneBoardBuilder
+{
 
     private $artifact_factory;
     private $presenter_builder;
@@ -130,5 +131,3 @@ class Cardwall_PaneBoardBuilder {
         );
     }
 }
-
-?>

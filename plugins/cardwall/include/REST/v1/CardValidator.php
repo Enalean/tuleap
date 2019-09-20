@@ -27,7 +27,8 @@ use Cardwall_FieldNotOnCardException;
 use Cardwall_SingleCard;
 use PFUser;
 
-class CardValidator {
+class CardValidator
+{
 
     public function getFieldsDataFromREST(PFUser $user, Cardwall_SingleCard $single_card, $label, array $values, $column_id = null)
     {
@@ -53,7 +54,7 @@ class CardValidator {
     private function getColumnIdFieldData(Cardwall_SingleCard $single_card, $column_id)
     {
         $mapping = $single_card->getMapping();
-        foreach($mapping->getValueMappings() as $value_mapping) {
+        foreach ($mapping->getValueMappings() as $value_mapping) {
             if ($value_mapping->getColumnId() == $column_id) {
                 return array(
                     $mapping->getField()->getId() => $value_mapping->getValueId()
@@ -66,7 +67,7 @@ class CardValidator {
     private function getValuesFieldData(PFUser $user, $values, Cardwall_SingleCard $single_card)
     {
         $new_values = array();
-        foreach($values as $value) {
+        foreach ($values as $value) {
             try {
                 $field                       = $this->getField($user, $single_card, $value);
                 $new_values[$field->getId()] = $this->getFieldValue($single_card, $field, $value);
@@ -87,7 +88,7 @@ class CardValidator {
 
     private function getField(PFUser $user, Cardwall_SingleCard $single_card, $value)
     {
-        if(! array_key_exists('field_id', $value)) {
+        if (! array_key_exists('field_id', $value)) {
             throw new CardResourceBadValueFormatException('field_id');
         }
 

@@ -39,8 +39,7 @@ rcs_id('$Id: RecentChangesCached.php,v 1.4 2004/03/08 18:17:10 rurban Exp $');
 require_once "lib/WikiPluginCached.php";
 require_once "lib/plugin/RecentChanges.php";
 
-class WikiPlugin_RecentChangesCached
-extends WikiPluginCached
+class WikiPlugin_RecentChangesCached extends WikiPluginCached
 {
     /* --------- overwrite virtual or abstract methods ---------------- */
     function getPluginType()
@@ -60,8 +59,11 @@ extends WikiPluginCached
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.4 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.4 $"
+        );
     }
 
     function getDefaultArguments()
@@ -81,7 +83,6 @@ extends WikiPluginCached
             . WikiPluginCached::glueArgs($argarray)
                                  . ' ?>', $request, $this, $basepage);
     }
-
 } // WikiPlugin_TexToPng
 
 // $Log: RecentChangesCached.php,v $
@@ -105,4 +106,3 @@ extends WikiPluginCached
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

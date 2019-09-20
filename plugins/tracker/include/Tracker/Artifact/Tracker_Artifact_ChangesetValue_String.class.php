@@ -24,7 +24,8 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 /**
  * Manage values in changeset for string fields
  */
-class Tracker_Artifact_ChangesetValue_String extends Tracker_Artifact_ChangesetValue_Text {
+class Tracker_Artifact_ChangesetValue_String extends Tracker_Artifact_ChangesetValue_Text
+{
 
     /**
      * @return mixed

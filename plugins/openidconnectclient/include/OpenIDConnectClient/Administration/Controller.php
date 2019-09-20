@@ -32,7 +32,8 @@ use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException;
 use Tuleap\Admin\AdminPageRenderer;
 
-class Controller {
+class Controller
+{
 
     /**
      * @var ProviderManager
@@ -237,5 +238,4 @@ class Controller {
         );
         $GLOBALS['Response']->redirect(OPENIDCONNECTCLIENT_BASE_URL . '/admin/');
     }
-
 }

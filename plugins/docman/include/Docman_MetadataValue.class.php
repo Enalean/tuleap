@@ -24,7 +24,8 @@
 /**
  * Docman_MetadataValue is a container for User defined values of RealMedatada.
  */
-class Docman_MetadataValue {
+class Docman_MetadataValue
+{
     var $fieldId;
     var $itemId;
 
@@ -58,14 +59,18 @@ class Docman_MetadataValue {
 
     function setValue($v)
     {
-        trigger_error('Docman_MetadataValue::setValue is virtual but is not implemented.',
-                      E_USER_ERROR);
+        trigger_error(
+            'Docman_MetadataValue::setValue is virtual but is not implemented.',
+            E_USER_ERROR
+        );
     }
 
     function getValue()
     {
-         trigger_error('Docman_MetadataValue::getValue is virtual but is not implemented.',
-                      E_USER_ERROR);
+         trigger_error(
+             'Docman_MetadataValue::getValue is virtual but is not implemented.',
+             E_USER_ERROR
+         );
     }
 
     function setType($v)
@@ -79,8 +84,12 @@ class Docman_MetadataValue {
 
     function initFromRow($row)
     {
-        if(isset($row['field_id'])) $this->fieldId = $row['field_id'];
-        if(isset($row['item_id'])) $this->itemId = $row['item_id'];
+        if (isset($row['field_id'])) {
+            $this->fieldId = $row['field_id'];
+        }
+        if (isset($row['item_id'])) {
+            $this->itemId = $row['item_id'];
+        }
     }
 }
 
@@ -90,7 +99,8 @@ class Docman_MetadataValue {
  *
  * Docman_MetadataValueList may have serveral values.
  */
-class Docman_MetadataValueList extends Docman_MetadataValue {
+class Docman_MetadataValueList extends Docman_MetadataValue
+{
     var $listOfValues;
 
     function __construct()
@@ -116,7 +126,6 @@ class Docman_MetadataValueList extends Docman_MetadataValue {
     {
         return new ArrayIterator($this->listOfValues);
     }
-
 }
 
 /**
@@ -125,7 +134,8 @@ class Docman_MetadataValueList extends Docman_MetadataValue {
  * Scalar metadata are: Text, Date and String.
  * A scalar metadata can only have one value per metadata.
  */
-class Docman_MetadataValueScalar extends Docman_MetadataValue {
+class Docman_MetadataValueScalar extends Docman_MetadataValue
+{
     var $valueText;
     var $valueDate;
     var $valueString;
@@ -168,34 +178,34 @@ class Docman_MetadataValueScalar extends Docman_MetadataValue {
 
     function getValue()
     {
-        switch($this->type) {
+        switch ($this->type) {
             case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
-            return $this->valueText;
+                return $this->valueText;
             break;
             case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
-            return $this->valueString;
+                return $this->valueString;
             break;
             case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-            return $this->valueDate;
+                return $this->valueDate;
             break;
             default:
-            return null;
+                return null;
         }
     }
     function setValue($v)
     {
-        switch($this->type) {
+        switch ($this->type) {
             case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
                 $this->valueText = $v;
-            break;
+                break;
             case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
                 $this->valueString = $v;
-            break;
+                break;
             case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
                 $this->valueDate = $v;
-            break;
+                break;
             default:
-            return null;
+                return null;
         }
     }
 
@@ -203,19 +213,17 @@ class Docman_MetadataValueScalar extends Docman_MetadataValue {
     {
         parent::initFromRow($row);
 
-        if(isset($row['valueText'])) {
+        if (isset($row['valueText'])) {
             $this->valueText = $row['valueText'];
             $this->type = PLUGIN_DOCMAN_METADATA_TYPE_TEXT;
         }
-        if(isset($row['valueDate'])) {
+        if (isset($row['valueDate'])) {
             $this->valueDate = $row['valueDate'];
             $this->type = PLUGIN_DOCMAN_METADATA_TYPE_DATE;
         }
-        if(isset($row['valueString'])) {
+        if (isset($row['valueString'])) {
             $this->valueString = $row['valueString'];
             $this->type = PLUGIN_DOCMAN_METADATA_TYPE_STRING;
         }
     }
 }
-
-?>

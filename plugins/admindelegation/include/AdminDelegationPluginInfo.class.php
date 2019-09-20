@@ -24,13 +24,12 @@
 /**
  * AdminDelegationPluginInfo
  */
-class AdminDelegationPluginInfo extends PluginInfo {
+class AdminDelegationPluginInfo extends PluginInfo
+{
 
     public function __construct(Plugin $plugin)
     {
         parent::__construct($plugin);
         $this->setPluginDescriptor(new AdminDelegationPluginDescriptor());
     }
-
 }
-?>

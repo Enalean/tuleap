@@ -26,7 +26,8 @@
 Mock::generate('Rule');
 Mock::generatePartial('Valid', 'ValidTestVersion', array('addFeedback'));
 
-class ValidTest extends TuleapTestCase {
+class ValidTest extends TuleapTestCase
+{
 
     function testArgPropagate()
     {
@@ -293,7 +294,4 @@ class ValidTest extends TuleapTestCase {
 
         $v->validate('value');
     }
-
 }
-
-?>

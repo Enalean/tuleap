@@ -22,7 +22,8 @@ require_once dirname(__FILE__) .'/bootstrap.php';
 require_once dirname(__FILE__).'/../../../tests/simpletest/common/TreeNode/NodeDuplicatorContractTest.class.php';
 
 
-class Cardwall_CardInCellPresenterNodeTest extends TuleapTestCase {
+class Cardwall_CardInCellPresenterNodeTest extends TuleapTestCase
+{
 
     public function itHoldsTheGivenPresenter()
     {
@@ -39,4 +40,3 @@ class Cardwall_CardInCellPresenterNodeTest extends TuleapTestCase {
         $this->assertEqual($artifact, $presenter_node->getArtifact());
     }
 }
-?>

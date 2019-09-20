@@ -20,7 +20,8 @@
 
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\ISearchOnStatus;
 
-class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject {
+class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
+{
 
     public function searchPaginatedSubMilestones(
         $milestone_artifact_id,

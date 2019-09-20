@@ -450,10 +450,10 @@ class cardwallPlugin extends Plugin
                 switch ($redirect_to) {
                     case 'agile':
                         $this->redirectToAgileDashboard($redirect, $redirect_params);
-                    break;
+                        break;
                     case 'renderer':
                         $this->redirectToRenderer($redirect, $redirect_params);
-                    break;
+                        break;
                 }
             } else {
                 $this->appendCardwallParameter($redirect, $cardwall);
@@ -563,7 +563,6 @@ class cardwallPlugin extends Plugin
         $milestones_cardwall = $this->buildRightVersionOfMilestonesCardwallResource($params['version']);
 
         $params['cardwall'] = $milestones_cardwall->get($params['milestone']);
-
     }
 
     /**

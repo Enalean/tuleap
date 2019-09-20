@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201505051630_add_new_password_field extends ForgeUpgrade_Bucket {
+class b201505051630_add_new_password_field extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return "Add new password field";

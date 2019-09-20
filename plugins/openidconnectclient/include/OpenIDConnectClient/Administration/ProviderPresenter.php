@@ -22,7 +22,8 @@ namespace Tuleap\OpenIDConnectClient\Administration;
 
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
-class ProviderPresenter {
+class ProviderPresenter
+{
 
     /**
      * @var Provider
@@ -37,7 +38,7 @@ class ProviderPresenter {
     /**
      * @var ColorPresenter[]
      */
-    public  $colors_presenters;
+    public $colors_presenters;
 
     /**
      * @var bool

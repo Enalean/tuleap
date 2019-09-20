@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_View_Embedded extends Docman_View_Display {
+class Docman_View_Embedded extends Docman_View_Display
+{
 
 
     function _content($params)

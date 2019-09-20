@@ -121,7 +121,6 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase
             $visit_recorder,
             $this->hidden_fieldsets_detector
         );
-
     }
 
     protected function setUpAjaxRequestHeaders()
@@ -136,7 +135,8 @@ class Tracker_Artifact_Update_BaseTest extends TuleapTestCase
     }
 }
 
-class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends Tracker_Artifact_Update_BaseTest {
+class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends Tracker_Artifact_Update_BaseTest
+{
 
     public function setUp()
     {
@@ -188,10 +188,10 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends T
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
-
 }
 
-class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Tracker_Artifact_Update_BaseTest {
+class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Tracker_Artifact_Update_BaseTest
+{
 
     public function setUp()
     {
@@ -202,7 +202,6 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
             Tracker::REMAINING_EFFORT_FIELD_NAME,
             $this->user
         )->returns($this->computed_field);
-
     }
 
     public function tearDown()
@@ -290,7 +289,8 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
     }
 }
 
-class Tracker_Artifact_UpdateActionFromOverlay extends Tracker_Artifact_Update_BaseTest {
+class Tracker_Artifact_UpdateActionFromOverlay extends Tracker_Artifact_Update_BaseTest
+{
 
     public function itCreatesAChangeset()
     {
@@ -331,14 +331,16 @@ class Tracker_Artifact_UpdateActionFromOverlay extends Tracker_Artifact_Update_B
     }
 }
 
-class Tracker_Artifact_RedirectUrlTestVersion extends Tracker_Action_UpdateArtifact {
+class Tracker_Artifact_RedirectUrlTestVersion extends Tracker_Action_UpdateArtifact
+{
     public function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request)
     {
         return parent::getRedirectUrlAfterArtifactUpdate($request);
     }
 }
 
-class Tracker_Artifact_RedirectUrlTest extends Tracker_Artifact_Update_BaseTest {
+class Tracker_Artifact_RedirectUrlTest extends Tracker_Artifact_Update_BaseTest
+{
     public function itRedirectsToTheTrackerHomePageByDefault()
     {
         $request_data = array();
@@ -392,6 +394,5 @@ class Tracker_Artifact_RedirectUrlTest extends Tracker_Artifact_Update_BaseTest 
             $this->hidden_fieldsets_detector
         );
         return $action->getRedirectUrlAfterArtifactUpdate($request);
-
     }
 }

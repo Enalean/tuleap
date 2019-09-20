@@ -21,7 +21,8 @@
 require_once('bootstrap.php');
 Mock::generate('Tracker');
 
-class Tracker_TooltipFactoryTest extends TuleapTestCase {
+class Tracker_TooltipFactoryTest extends TuleapTestCase
+{
 
     /** @var XML_Security */
     protected $xml_security;
@@ -63,7 +64,4 @@ class Tracker_TooltipFactoryTest extends TuleapTestCase {
         $this->assertTrue(in_array(116, $fields));
         $this->assertFalse(in_array(114, $fields));
     }
-
 }
-
-?>

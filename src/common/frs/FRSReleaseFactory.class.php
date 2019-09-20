@@ -28,7 +28,8 @@ use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
-class FRSReleaseFactory {
+class FRSReleaseFactory
+{
     // Kept for legacy
     var $STATUS_ACTIVE  = FRSRelease::STATUS_ACTIVE;
     var $STATUS_DELETED = FRSRelease::STATUS_DELETED;
@@ -41,7 +42,7 @@ class FRSReleaseFactory {
 
     public static function instance()
     {
-        if(empty(self::$instance)) {
+        if (empty(self::$instance)) {
             self::$instance = new FRSReleaseFactory();
         }
         return self::$instance;
@@ -76,18 +77,18 @@ class FRSReleaseFactory {
          *
          * @return FRSRelease|null
      */
-    function getFRSReleaseFromDb($release_id, $group_id=null, $package_id=null, $extraFlags = 0)
+    function getFRSReleaseFromDb($release_id, $group_id = null, $package_id = null, $extraFlags = 0)
     {
         $_id = (int) $release_id;
         $dao = $this->_getFRSReleaseDao();
-        if($group_id && $package_id){
+        if ($group_id && $package_id) {
             $_group_id = (int) $group_id;
             $_package_id = (int) $package_id;
             $dar = $dao->searchByGroupPackageReleaseID($_id, $_group_id, $package_id, $extraFlags);
-        }else if($group_id) {
+        } elseif ($group_id) {
             $_group_id = (int) $group_id;
             $dar = $dao->searchInGroupById($_id, $_group_id, $extraFlags);
-        }else{
+        } else {
             $dar = $dao->searchById($_id, $extraFlags);
         }
 
@@ -169,7 +170,7 @@ class FRSReleaseFactory {
      *
      * @return Array
      */
-    function getFRSReleasesInfoListFromDb($group_id, $package_id=null)
+    function getFRSReleasesInfoListFromDb($group_id, $package_id = null)
     {
         $_id = (int) $group_id;
         $dao = $this->_getFRSReleaseDao();
@@ -201,7 +202,6 @@ class FRSReleaseFactory {
         }
 
         return $dar->valid();
-
     }
 
 
@@ -214,13 +214,13 @@ class FRSReleaseFactory {
         $dao = $this->_getFRSReleaseDao();
         $dar = $dao->searchReleaseByName($release_name, $_id);
 
-        if($dar->isError()){
+        if ($dar->isError()) {
             return;
         }
 
-        if(!$dar->valid()){
+        if (!$dar->valid()) {
             return;
-        }else{
+        } else {
             $res = $dar->current();
             return $res['release_id'];
         }
@@ -253,9 +253,11 @@ class FRSReleaseFactory {
         $dao =  $this->_getFRSReleaseDao();
         if ($dao->updateFromArray($data_array)) {
             $release = $this->getFRSReleaseFromDb($data_array['release_id']);
-            $this->getEventManager()->processEvent('frs_update_release',
-                                                   array('group_id' => $release->getGroupID(),
-                                                         'item_id'    => $data_array['release_id']));
+            $this->getEventManager()->processEvent(
+                'frs_update_release',
+                array('group_id' => $release->getGroupID(),
+                'item_id'    => $data_array['release_id'])
+            );
             return true;
         }
         return false;
@@ -266,9 +268,11 @@ class FRSReleaseFactory {
         $dao = $this->_getFRSReleaseDao();
         if ($id = $dao->createFromArray($data_array)) {
             $release = $this->getFRSReleaseFromDb($id);
-            $this->getEventManager()->processEvent('frs_create_release',
-                                                   array('group_id' => $release->getGroupID(),
-                                                         'item_id'    => $id));
+            $this->getEventManager()->processEvent(
+                'frs_create_release',
+                array('group_id' => $release->getGroupID(),
+                'item_id'    => $id)
+            );
             return $id;
         }
         return false;
@@ -279,10 +283,12 @@ class FRSReleaseFactory {
         $_id = (int) $release_id;
         $release = $this->getFRSReleaseFromDb($_id);
         $dao = $this->_getFRSReleaseDao();
-        if ($dao->delete($_id,$this->STATUS_DELETED)) {
-            $this->getEventManager()->processEvent('frs_delete_release',
-                                                   array('group_id' => $release->getGroupID(),
-                                                         'item_id' => $_id));
+        if ($dao->delete($_id, $this->STATUS_DELETED)) {
+            $this->getEventManager()->processEvent(
+                'frs_delete_release',
+                array('group_id' => $release->getGroupID(),
+                'item_id' => $_id)
+            );
             return true;
         }
         return false;
@@ -303,7 +309,7 @@ class FRSReleaseFactory {
      */
     function delete_release($group_id, $release_id)
     {
-        GLOBAL $ftp_incoming_dir;
+        global $ftp_incoming_dir;
 
         $release = $this->getFRSReleaseFromDb($release_id, $group_id);
 
@@ -420,7 +426,7 @@ class FRSReleaseFactory {
      *
      * @return bool true if user can update the release $release_id, false otherwise
      */
-    function userCanUpdate($group_id, $release_id, $user_id=false)
+    function userCanUpdate($group_id, $release_id, $user_id = false)
     {
         return $this->userCanCreate($group_id, $user_id);
     }
@@ -436,7 +442,7 @@ class FRSReleaseFactory {
      *
      * @return bool true if the user has permission to create releases, false otherwise
      */
-    function userCanCreate($group_id, $user_id=false)
+    function userCanCreate($group_id, $user_id = false)
     {
         $um = $this->getUserManager();
         if (! $user_id) {
@@ -464,7 +470,7 @@ class FRSReleaseFactory {
         if ($pm->clearPermission(FRSRelease::PERM_READ, $release->getReleaseID())) {
             $dar = $pm->getAuthorizedUgroups($release->getPackageID(), FRSPackage::PERM_READ, false);
             if ($dar && !$dar->isError() && $dar->rowCount()>0) {
-                foreach($dar as $row) {
+                foreach ($dar as $row) {
                     // Set new permissions
                     $pm->addPermission(FRSRelease::PERM_READ, $release->getReleaseID(), $row['ugroup_id']);
                 }
@@ -501,7 +507,7 @@ class FRSReleaseFactory {
                     $release->getReleaseID(),
                     $user->getID()
                 );
-                $user_can_admin = $this->userCanAdmin($user,$release->getGroupID());
+                $user_can_admin = $this->userCanAdmin($user, $release->getGroupID());
                 if ($user_can_admin || ($user_can_read && $release->isActive())) {
                     $array_emails[] = $res['email'];
                 }
@@ -526,9 +532,9 @@ class FRSReleaseFactory {
     private function getNotification(FRSRelease $release, FRSPackage $package, array $array_emails)
     {
         $subject = ' '.$GLOBALS['Language']->getText(
-                'file_admin_editreleases',
-                'file_rel_notice_subject',
-                array($GLOBALS['sys_name'], $release->getProject()->getPublicName(), $package->getName())
+            'file_admin_editreleases',
+            'file_rel_notice_subject',
+            array($GLOBALS['sys_name'], $release->getProject()->getPublicName(), $package->getName())
         );
 
         $body_text    = $this->getEmailBody($release, $package);
@@ -626,7 +632,7 @@ class FRSReleaseFactory {
      */
     function _getFRSPackageFactory()
     {
-        if(empty($this->package_factory)) {
+        if (empty($this->package_factory)) {
             $this->package_factory = new FRSPackageFactory();
         }
         return $this->package_factory;
@@ -639,7 +645,7 @@ class FRSReleaseFactory {
      */
     function _getFRSFileFactory()
     {
-        if(empty($this->file_factory)) {
+        if (empty($this->file_factory)) {
             $this->file_factory = new FRSFileFactory();
         }
         return $this->file_factory;

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchPanePresenter {
+class Search_SearchPanePresenter
+{
 
     /** @var string */
     public $title;

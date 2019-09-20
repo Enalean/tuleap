@@ -22,5 +22,6 @@ namespace Tuleap\Git\Exceptions;
 
 use Exception;
 
-class RepositoryNotMigratedException extends Exception {
+class RepositoryNotMigratedException extends Exception
+{
 }

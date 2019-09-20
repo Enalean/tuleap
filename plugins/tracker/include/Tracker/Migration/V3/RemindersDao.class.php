@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Migration_V3_RemindersDao extends DataAccessObject {
+class Tracker_Migration_V3_RemindersDao extends DataAccessObject
+{
 
     public function create($tv3_id, $tv5_id)
     {
@@ -68,7 +69,7 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject {
 
     private function createReminderList($nb_emails, $tv5_id, $field_id, $ugroups, $roles, $notification_type, $start, $frequency)
     {
-        for ($i = 0 ; $i < $nb_emails ; $i++) {
+        for ($i = 0; $i < $nb_emails; $i++) {
             $this->createReminder($i, $tv5_id, $field_id, $ugroups, $roles, $notification_type, $start, $frequency);
         }
     }
@@ -88,7 +89,7 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject {
         $reminderId = $this->updateAndGetLastId($sql);
         if ($reminderId && !empty($roles)) {
             $values = array();
-            foreach($roles as $role) {
+            foreach ($roles as $role) {
                 $role = (int)$this->da->escapeInt($role);
                 $values[] = " (
                         ".$reminderId.",
@@ -147,5 +148,3 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject {
         return $roles;
     }
 }
-
-?>

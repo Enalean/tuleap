@@ -24,7 +24,8 @@ require_once 'ServiceUsageDao.class.php';
 /**
  * Factory to instanciate Project_Service_ServiceUsage
  */
-class Project_Service_ServiceUsageFactory {
+class Project_Service_ServiceUsageFactory
+{
 
     /** @var Project_Service_ServiceUsageDao */
     private $dao;
@@ -82,4 +83,3 @@ class Project_Service_ServiceUsageFactory {
         );
     }
 }
-?>

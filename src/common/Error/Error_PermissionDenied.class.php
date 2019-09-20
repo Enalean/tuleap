@@ -23,7 +23,8 @@
  * It allows the management of permission denied error.
  * It offres to user the possibility to request the project membership directly.
  */
-abstract class Error_PermissionDenied {
+abstract class Error_PermissionDenied
+{
     /**
      * @var URL
      */
@@ -172,7 +173,7 @@ abstract class Error_PermissionDenied {
 
         $messageToAdmin = trim($messageToAdmin);
         $messageToAdmin ='>'.$messageToAdmin;
-        $messageToAdmin = str_replace(array("\r\n"),"\n>", $messageToAdmin);
+        $messageToAdmin = str_replace(array("\r\n"), "\n>", $messageToAdmin);
 
         $hrefApproval = $request->getServerUrl() . '/project/admin/?group_id='.$request->get('groupId');
         $urlData      = $request->getServerUrl() . $request->get('url_data');
@@ -189,7 +190,7 @@ abstract class Error_PermissionDenied {
      * @param String  $hrefApproval
      * @param String  $messageToAdmin
      */
-    function sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin)
+    function sendMail($project, $user, $urlData, $hrefApproval, $messageToAdmin)
     {
         $mail = new Codendi_Mail();
 

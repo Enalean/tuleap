@@ -102,12 +102,10 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget
                 } catch (Exception $e) {
                     $this->test_result = null;
                 }
-
             } else {
                 $this->job = null;
                 $this->test_result = null;
             }
-
         }
     }
 
@@ -118,7 +116,6 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
         if ($this->job != null && $this->test_result != null) {
-
             $job = $this->job;
 
             $html .= '<div style="padding: 20px;">';
@@ -126,7 +123,6 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget
             $html .= '<img src="'.$purifier->purify($job->getUrl()).'/test/trend?width=320&height=240" alt="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', array($this->job->getName()))).'" title="'.$purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', array($this->job->getName()))).'" />';
             $html .= '</a>';
             $html .= '</div>';
-
         } else {
             if ($this->job != null) {
                 $html .= $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'widget_tests_not_found'));

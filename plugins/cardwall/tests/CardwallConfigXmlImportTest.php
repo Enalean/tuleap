@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__) .'/bootstrap.php';
 
-class CardwallConfigXmlImportTest extends TuleapTestCase {
+class CardwallConfigXmlImportTest extends TuleapTestCase
+{
 
     private $default_xml_input;
     private $enhanced_xml_input;

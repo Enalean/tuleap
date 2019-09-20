@@ -23,7 +23,8 @@
  * I retrieve the current value(s) for a multi selectbox in
  * Tracker v3 migration purpose
  */
-class ArtifactMultiListCurrentValueExporter {
+class ArtifactMultiListCurrentValueExporter
+{
     public const LABEL_VALUES_INDEX         = 'valueLabelList';
     public const TV3_VALUE_INDEX            = 'valueInt';
     public const TV3_BIND_TO_USER_DATA_TYPE = '5';
@@ -165,5 +166,4 @@ class ArtifactMultiListCurrentValueExporter {
             $this->fetchListValueLabels($field_value_row, $tracker_id);
         }
     }
-
 }

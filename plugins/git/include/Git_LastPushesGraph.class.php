@@ -21,7 +21,8 @@
 
 use Tuleap\Chart\ColorsForCharts;
 
-class Git_LastPushesGraph {
+class Git_LastPushesGraph
+{
     public const MAX_WEEKSNUMBER  = 25;
     public const WEEKS_IN_SECONDS = 604800;
 
@@ -90,7 +91,7 @@ class Git_LastPushesGraph {
         $today              = $_SERVER['REQUEST_TIME'];
         $startPeriod        = strtotime("-$this->weeksNumber weeks");
         $weekInSeconds      = self::WEEKS_IN_SECONDS ;
-        for ($i = $startPeriod+$weekInSeconds ; $i < $today+$weekInSeconds ; $i += $weekInSeconds) {
+        for ($i = $startPeriod+$weekInSeconds; $i < $today+$weekInSeconds; $i += $weekInSeconds) {
             $this->dates[]   = date('M d', $i);
             $this->weekNum[] = intval(date('W', $i));
             $this->year[]    = intval(date('Y', $i));

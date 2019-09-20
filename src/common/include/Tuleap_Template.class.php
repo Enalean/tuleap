@@ -29,7 +29,8 @@
  * echo $t->fetch();
  * </pre>
  */
-class Tuleap_Template {
+class Tuleap_Template
+{
 
     /**
      * @var The variables to pass to the template

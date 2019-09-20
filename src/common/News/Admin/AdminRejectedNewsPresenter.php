@@ -29,7 +29,7 @@ class AdminRejectedNewsPresenter extends AdminNewsListPresenter
     {
         parent::__construct($csrf_token, $title, $news_list);
 
-        $this->pane_name = $GLOBALS['Language']->getText('news_admin_index','rejected_news_pane_name');
-        $this->no_news   = $GLOBALS['Language']->getText('news_admin_index','rejected_news_no_news');
+        $this->pane_name = $GLOBALS['Language']->getText('news_admin_index', 'rejected_news_pane_name');
+        $this->no_news   = $GLOBALS['Language']->getText('news_admin_index', 'rejected_news_no_news');
     }
 }

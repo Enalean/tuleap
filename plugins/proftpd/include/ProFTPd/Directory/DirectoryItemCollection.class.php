@@ -21,7 +21,8 @@
 
 namespace Tuleap\ProFTPd\Directory;
 
-class DirectoryItemCollection {
+class DirectoryItemCollection
+{
 
     /**
      * @var DirectoryItem[]

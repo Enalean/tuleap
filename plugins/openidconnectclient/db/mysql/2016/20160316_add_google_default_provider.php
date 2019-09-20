@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b20160316_add_google_default_provider extends ForgeUpgrade_Bucket  {
+class b20160316_add_google_default_provider extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return 'Add Google in the default OpenID Connect providers';

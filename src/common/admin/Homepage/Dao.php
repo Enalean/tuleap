@@ -18,7 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class Admin_Homepage_Dao extends DataAccessObject {
+class Admin_Homepage_Dao extends DataAccessObject
+{
 
     /** @return DataAccessResult */
     public function searchHeadlines()

@@ -25,7 +25,8 @@
 * System Event classes
 *
 */
-class SystemEvent_CVS_IS_PRIVATE extends SystemEvent {
+class SystemEvent_CVS_IS_PRIVATE extends SystemEvent
+{
 
     /**
      * Verbalize the parameters so they are readable and much user friendly in
@@ -64,7 +65,4 @@ class SystemEvent_CVS_IS_PRIVATE extends SystemEvent {
         }
         return false;
     }
-
 }
-
-?>

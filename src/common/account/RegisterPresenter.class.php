@@ -20,7 +20,8 @@
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 
-class Account_RegisterPresenter {
+class Account_RegisterPresenter
+{
 
     public $prefill_values;
     public $login;
@@ -67,7 +68,7 @@ class Account_RegisterPresenter {
         include($GLOBALS['Language']->getContent('account/password_strategy'));
         $this->json_password_strategy_keys = json_encode(array_keys($password_strategy->validators));
         $this->password_strategy_validators = array();
-        foreach($password_strategy->validators as $key => $v) {
+        foreach ($password_strategy->validators as $key => $v) {
             $this->password_strategy_validators[] = array(
                 'key'         => $key,
                 'description' => $v->description()

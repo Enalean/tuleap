@@ -25,7 +25,8 @@
 /**
  * I'm a refs/meta/config template for Gerrit
  */
-class Git_Driver_Gerrit_Template_Template {
+class Git_Driver_Gerrit_Template_Template
+{
 
     /** @var int */
     private $id;
@@ -39,7 +40,7 @@ class Git_Driver_Gerrit_Template_Template {
     /** @var String */
     private $content;
 
-    public function __construct($id ,$group_id, $name, $content=null)
+    public function __construct($id, $group_id, $name, $content = null)
     {
         $this->id       = $id;
         $this->group_id = $group_id;
@@ -87,4 +88,3 @@ class Git_Driver_Gerrit_Template_Template {
         return $this->group_id == $group_id;
     }
 }
-?>

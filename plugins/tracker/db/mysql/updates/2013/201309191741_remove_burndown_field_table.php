@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201309191741_remove_burndown_field_table extends ForgeUpgrade_Bucket {
+class b201309191741_remove_burndown_field_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -43,4 +44,3 @@ class b201309191741_remove_burndown_field_table extends ForgeUpgrade_Bucket {
         }
     }
 }
-?>

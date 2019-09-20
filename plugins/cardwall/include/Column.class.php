@@ -21,7 +21,8 @@
 /**
  * A column in a cardwall
  */
-class Cardwall_Column {
+class Cardwall_Column
+{
 
     /**
      * @var int

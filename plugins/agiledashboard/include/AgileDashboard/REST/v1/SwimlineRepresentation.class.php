@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_SwimlineRepresentation {
+class AgileDashboard_SwimlineRepresentation
+{
 
     /** @var AgileDashboard_CardRepresentation[]*/
     public $cards;
@@ -32,14 +33,13 @@ class AgileDashboard_SwimlineRepresentation {
             $card_representation->build($swimline_card_in_cell_presenter, null, $planning_id, $user);
             $this->cards[] = $card_representation;
         }
-        foreach($swimline->getCells() as $cell) {
+        foreach ($swimline->getCells() as $cell) {
             $column_id = $cell['column_id'];
-            foreach($cell['cardincell_presenters'] as $card) {
+            foreach ($cell['cardincell_presenters'] as $card) {
                 $card_representation = new AgileDashboard_CardRepresentation();
                 $card_representation->build($card, $column_id, $planning_id, $user);
                 $this->cards[] = $card_representation;
             }
         }
     }
-
 }

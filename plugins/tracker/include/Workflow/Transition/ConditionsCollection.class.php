@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Workflow_Transition_ConditionsCollection implements ArrayAccess {
+class Workflow_Transition_ConditionsCollection implements ArrayAccess
+{
 
     /** @var array of Workflow_Transition_Condition */
     private $conditions = array();
@@ -136,4 +137,3 @@ class Workflow_Transition_ConditionsCollection implements ArrayAccess {
         return true;
     }
 }
-?>

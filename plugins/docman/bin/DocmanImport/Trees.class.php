@@ -22,7 +22,8 @@
 /**
  * Utility class for creating and merging trees
  */
-class Trees {
+class Trees
+{
 
     /**
      * Returns a tree of nodes build using a list of nodes: (node_id => array of children_id) (recursive)

@@ -37,40 +37,46 @@ function RemovePage(&$request)
     $current = $page->getCurrentRevision();
 
     if (!$current or !($version = $current->getVersion())) {
-        $html = HTML(HTML::h2(_("Already deleted")),
-                     HTML::p(_("Sorry, this page is not in the database.")));
-    }
-    elseif (!$request->isPost() || !$request->getArg('verify')) {
-
+        $html = HTML(
+            HTML::h2(_("Already deleted")),
+            HTML::p(_("Sorry, this page is not in the database."))
+        );
+    } elseif (!$request->isPost() || !$request->getArg('verify')) {
         $removeB = Button('submit:verify', _("Remove Page"), 'wikiadmin');
         $cancelB = Button('submit:cancel', _("Cancel"), 'button'); // use generic wiki button look
 
-        $html = HTML(HTML::h2(fmt("You are about to remove '%s'!", $pagelink)),
-                     HTML::form(array('method' => 'post',
+        $html = HTML(
+            HTML::h2(fmt("You are about to remove '%s'!", $pagelink)),
+            HTML::form(
+                array('method' => 'post',
                                       'action' => $request->getPostURL()),
-                                HiddenInputs(array('currentversion' => $version,
+                HiddenInputs(array('currentversion' => $version,
                                                    'pagename' => $page->getName(),
                                                    'action' => 'remove')),
-
-                                HTML::div(array('class' => 'toolbar'),
-                                          $removeB,
-                                          $WikiTheme->getButtonSeparator(),
-                                          $cancelB)),
-                     HTML::hr()
-                     );
+                HTML::div(
+                    array('class' => 'toolbar'),
+                    $removeB,
+                    $WikiTheme->getButtonSeparator(),
+                    $cancelB
+                )
+            ),
+            HTML::hr()
+        );
         $sample = HTML::div(array('class' => 'transclusion'));
         // simple and fast preview expanding only newlines
         foreach (explode("\n", firstNWordsOfContent(100, $current->getPackedContent())) as $s) {
             $sample->pushContent($s, HTML::br());
         }
-        $html->pushContent(HTML::div(array('class' => 'wikitext'),
-                                     $sample));
-    }
-    elseif ($request->getArg('currentversion') != $version) {
-        $html = HTML(HTML::h2(_("Someone has edited the page!")),
-                     HTML::p(fmt("Since you started the deletion process, someone has saved a new version of %s.  Please check to make sure you still want to permanently remove the page from the database.", $pagelink)));
-    }
-    else {
+        $html->pushContent(HTML::div(
+            array('class' => 'wikitext'),
+            $sample
+        ));
+    } elseif ($request->getArg('currentversion') != $version) {
+        $html = HTML(
+            HTML::h2(_("Someone has edited the page!")),
+            HTML::p(fmt("Since you started the deletion process, someone has saved a new version of %s.  Please check to make sure you still want to permanently remove the page from the database.", $pagelink))
+        );
+    } else {
         // Codendi specific: remove the deleted wiki page from ProjectWantedPages
         $projectPageName='ProjectWantedPages';
         $pagename = $page->getName();
@@ -87,9 +93,11 @@ function RemovePage(&$request)
 
         $text = str_replace("* [$pagename]", "", $text);
 
-        $meta['summary'] =  $GLOBALS['Language']->getText('wiki_lib_wikipagewrap',
-                                                      'page_added',
-                                                      array($pagename));
+        $meta['summary'] =  $GLOBALS['Language']->getText(
+            'wiki_lib_wikipagewrap',
+            'page_added',
+            array($pagename)
+        );
         $meta['author'] = user_getname();
         $pagehandle->save($text, $version + 1, $meta);
 
@@ -116,10 +124,15 @@ function RemovePage(&$request)
             )
         );
 
-        $link = HTML::a(array('href' => 'javascript:history.go(-2)'),
-                        _("Back to the previous page."));
-        $html = HTML(HTML::h2(fmt("Removed page '%s' successfully.", $pagename)),
-                 HTML::div($link), HTML::hr());
+        $link = HTML::a(
+            array('href' => 'javascript:history.go(-2)'),
+            _("Back to the previous page.")
+        );
+        $html = HTML(
+            HTML::h2(fmt("Removed page '%s' successfully.", $pagename)),
+            HTML::div($link),
+            HTML::hr()
+        );
     }
 
     GeneratePage($html, _("Remove Page"));
@@ -134,4 +147,3 @@ function RemovePage(&$request)
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

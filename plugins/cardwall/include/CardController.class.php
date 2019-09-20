@@ -19,7 +19,8 @@
  */
 
 
-class Cardwall_CardController extends MVC2_PluginController {
+class Cardwall_CardController extends MVC2_PluginController
+{
 
     /** @var Cardwall_SingleCard */
     private $single_card;
@@ -68,5 +69,3 @@ class Cardwall_CardController extends MVC2_PluginController {
         $json_format['html_fields'][$field->getName()] = $this->single_card->getFieldHTMLValue($this->request->getCurrentUser(), $field);
     }
 }
-
-?>

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201007220743_add_table_notification_delegation extends ForgeUpgrade_Bucket {
+class b201007220743_add_table_notification_delegation extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -47,7 +48,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('groups_notif_delegation table is missing');
         }
     }
-
 }
-
-?>

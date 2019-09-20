@@ -21,7 +21,8 @@
 /**
  * Presenter factory for one step registration project
  */
-class Project_OneStepRegistration_OneStepRegistrationPresenterFactory {
+class Project_OneStepRegistration_OneStepRegistrationPresenterFactory
+{
 
     /**
      * @var Project

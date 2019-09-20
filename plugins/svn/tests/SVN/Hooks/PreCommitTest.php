@@ -36,7 +36,8 @@ use TuleapTestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class PreCommitBaseTest extends TuleapTestCase {
+class PreCommitBaseTest extends TuleapTestCase
+{
 
     private $commit_message;
     private $transaction;
@@ -391,7 +392,7 @@ class PreCommitReferenceTest extends TuleapTestCase
         stub($this->hook_config)->getHookConfig(HookConfig::MANDATORY_REFERENCE)->once()->returns(true);
         stub($this->repo)->getProject()->once()->returns($project);
         stub($project)->getId()->returns(123);
-        stub($this->reference_manager)->stringContainsReferences("Commit message witout reference", '*')->once( )->returns(false);
+        stub($this->reference_manager)->stringContainsReferences("Commit message witout reference", '*')->once()->returns(false);
 
         $this->preCommit();
 

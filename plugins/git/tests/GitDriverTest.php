@@ -22,7 +22,8 @@
 
 require_once 'bootstrap.php';
 
-class GitDriverTest extends TuleapTestCase {
+class GitDriverTest extends TuleapTestCase
+{
 
     private $curDir;
     private $fixturesPath;
@@ -106,7 +107,7 @@ class GitDriverTest extends TuleapTestCase {
 
         @exec('cd '.$this->destinationPath.' && touch toto');
         $driver->add($this->destinationPath, 'toto');
-        exec('cd '.$this->destinationPath.' && git status --porcelain',$out,$ret);
+        exec('cd '.$this->destinationPath.' && git status --porcelain', $out, $ret);
         $this->assertEqual(implode($out), 'A  toto');
     }
 
@@ -117,7 +118,7 @@ class GitDriverTest extends TuleapTestCase {
 
         @exec('cd '.$this->destinationPath.' && touch toto');
         $driver->add($this->destinationPath, 'toto');
-        exec('cd '.$this->destinationPath.' && git ls-files -s toto',$out,$ret);
+        exec('cd '.$this->destinationPath.' && git ls-files -s toto', $out, $ret);
         $sha1 = explode(" ", implode($out));
         $this->assertEqual(strlen($sha1[1]), 40);
     }
@@ -132,7 +133,7 @@ class GitDriverTest extends TuleapTestCase {
             $driver->add($this->destinationPath, 'toto');
             $driver->commit($this->destinationPath, "test commit");
 
-            exec('cd '.$this->destinationPath.' && git status --porcelain',$out,$ret);
+            exec('cd '.$this->destinationPath.' && git status --porcelain', $out, $ret);
             $this->assertEqual(implode($out), '');
     }
 

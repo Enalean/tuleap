@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class XML_RNGValidator {
+class XML_RNGValidator
+{
 
     public function validate(SimpleXMLElement $xml_element, $rng_path)
     {
@@ -75,7 +76,7 @@ class XML_RNGValidator {
             $system_command->exec('java -jar ' . escapeshellarg($jing) . ' ' .  escapeshellarg($rng_path) . ' ' . escapeshellarg($temp));
         } catch (System_Command_CommandException $ex) {
             $errors = [];
-            foreach($ex->getOutput() as $o) {
+            foreach ($ex->getOutput() as $o) {
                 $matches = array();
                 if (preg_match('/:(\d+):(\d+):([^:]+):(.*)/', $o, $matches)) {
                     //1 line

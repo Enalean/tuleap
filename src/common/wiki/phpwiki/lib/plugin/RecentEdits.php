@@ -4,8 +4,7 @@ rcs_id('$Id: RecentEdits.php,v 1.1 2004/04/21 04:29:10 rurban Exp $');
 
 require_once("lib/plugin/RecentChanges.php");
 
-class WikiPlugin_RecentEdits
-extends WikiPlugin_RecentChanges
+class WikiPlugin_RecentEdits extends WikiPlugin_RecentChanges
 {
     function getName()
     {
@@ -14,8 +13,11 @@ extends WikiPlugin_RecentChanges
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.1 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.1 $"
+        );
     }
 
     function getDefaultArguments()
@@ -30,16 +32,22 @@ extends WikiPlugin_RecentChanges
     // just a numbered list of limit pagenames, without date.
     function box($args = false, $request = false, $basepage = false)
     {
-        if (!$request) $request = $GLOBALS['request'];
-        if (!isset($args['limit'])) $args['limit'] = 15;
+        if (!$request) {
+            $request = $GLOBALS['request'];
+        }
+        if (!isset($args['limit'])) {
+            $args['limit'] = 15;
+        }
         $args['format'] = 'box';
         $args['show_minor'] = true;
         $args['show_major'] = true;
         $args['show_deleted'] = false;
         $args['show_all'] = true;
         $args['days'] = 90;
-        return $this->makeBox(WikiLink(_("RecentEdits"),'',_("Recent Edits")),
-                              $this->format($this->getChanges($request->_dbi, $args), $args));
+        return $this->makeBox(
+            WikiLink(_("RecentEdits"), '', _("Recent Edits")),
+            $this->format($this->getChanges($request->_dbi, $args), $args)
+        );
     }
 }
 
@@ -56,4 +64,3 @@ extends WikiPlugin_RecentChanges
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

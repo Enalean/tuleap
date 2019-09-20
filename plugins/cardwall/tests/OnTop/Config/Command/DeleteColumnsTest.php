@@ -21,7 +21,8 @@
 require_once dirname(__FILE__) .'/../../../bootstrap.php';
 require_once dirname(__FILE__) .'/../../../../../../tests/simpletest/common/include/builders/aRequest.php';
 
-class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -41,8 +42,7 @@ class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TuleapTestCase {
     {
         $request = aRequest()->with('column', array(
             12 => array('label' => 'Todo'),
-            14 => array('label' => ''))
-        )->build();
+            14 => array('label' => '')))->build();
         stub($this->field_dao)->deleteCardwall()->never();
         stub($this->value_dao)->deleteForColumn($this->tracker_id, 14)->once();
         stub($this->dao)->delete($this->tracker_id, 14)->once();
@@ -55,8 +55,7 @@ class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TuleapTestCase {
         $request = aRequest()->with('column', array(
             12 => array('label' => 'Todo'),
             13 => array('label' => ''),
-            14 => array('label' => ''))
-        )->build();
+            14 => array('label' => '')))->build();
         stub($this->field_dao)->deleteCardwall()->never();
         stub($this->value_dao)->deleteForColumn($this->tracker_id, 13)->at(0);
         stub($this->value_dao)->deleteForColumn($this->tracker_id, 14)->at(1);
@@ -70,8 +69,7 @@ class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TuleapTestCase {
     public function itDeleteFieldMappingWhenRemoveTheLastColumn()
     {
         $request = aRequest()->with('column', array(
-            14 => array('label' => ''))
-        )->build();
+            14 => array('label' => '')))->build();
         stub($this->field_dao)->deleteCardwall($this->tracker_id)->once();
         stub($this->value_dao)->deleteForColumn($this->tracker_id, 14)->once();
         stub($this->dao)->delete($this->tracker_id, 14)->once();
@@ -82,7 +80,7 @@ class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TuleapTestCase {
     {
         $request = aRequest()->with(
             'column',
-             array(
+            array(
                 12 => array('label' => ''),
                 13 => array('label' => ''),
             )
@@ -97,4 +95,3 @@ class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TuleapTestCase {
         $this->command->execute($request);
     }
 }
-?>

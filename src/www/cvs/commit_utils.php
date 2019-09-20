@@ -57,13 +57,15 @@ function commits_header($params)
 
     $service = $project->getService(Service::CVS);
     if ($service === null) {
-        exit_error($GLOBALS['Language']->getText('global', 'error'),
-                   $GLOBALS['Language']->getText('cvs_commit_utils', 'error_off'));
+        exit_error(
+            $GLOBALS['Language']->getText('global', 'error'),
+            $GLOBALS['Language']->getText('cvs_commit_utils', 'error_off')
+        );
         return;
     }
 
     $toolbar = array();
-    $toolbar[] = array('title' => $GLOBALS['Language']->getText('svn_utils','svn_info'),
+    $toolbar[] = array('title' => $GLOBALS['Language']->getText('svn_utils', 'svn_info'),
         'url'   => '/cvs/?func=info&group_id='.$group_id);
 
     if ($project->isPublic() || user_isloggedin()) {
@@ -84,7 +86,7 @@ function commits_header($params)
     if (!isset($params['help'])) {
         $params['help'] = "cvs.html";
     }
-    $toolbar[] = array('title' => $GLOBALS['Language']->getText('global','help'),
+    $toolbar[] = array('title' => $GLOBALS['Language']->getText('global', 'help'),
         'url'   => 'javascript:help_window(\'/doc/'.UserManager::instance()->getCurrentUser()->getShortLocale().'/user-guide/'.$params['help'].'\');');
 
     $service->displayHeader(
@@ -105,7 +107,7 @@ function commits_footer($params)
     site_project_footer($params);
 }
 
-function commits_branches_box($group_id,$name='branch',$checked='xzxz', $text_100='None')
+function commits_branches_box($group_id, $name = 'branch', $checked = 'xzxz', $text_100 = 'None')
 {
     if (!$group_id) {
         return $GLOBALS['Language']->getText('cvs_commit_utils', 'error_nogid');
@@ -123,7 +125,7 @@ function commits_branches_box($group_id,$name='branch',$checked='xzxz', $text_10
         "AND cvs_checkins.branchid=cvs_branches.id";
         $result=db_query($sql);
 
-        return html_build_select_box($result,$name,$checked,true,$text_100);
+        return html_build_select_box($result, $name, $checked, true, $text_100);
     }
 }
 
@@ -140,21 +142,21 @@ function commits_data_get_technicians($projectname)
     return db_query($sql);
 }
 
-function commits_technician_box($projectname,$name='_commiter',$checked='xzxz',$text_100='None')
+function commits_technician_box($projectname, $name = '_commiter', $checked = 'xzxz', $text_100 = 'None')
 {
     if (!$projectname) {
         return $GLOBALS['Language']->getText('cvs_commit_utils', 'error_nogid');
     } else {
         $result=commits_data_get_technicians($projectname);
-        if (!in_array($checked,util_result_column_to_array($result))) {
+        if (!in_array($checked, util_result_column_to_array($result))) {
             // Selected 'my commits' but never commited
             $checked='xzxz';
         }
-        return html_build_select_box($result,$name,$checked,true,$text_100);
+        return html_build_select_box($result, $name, $checked, true, $text_100);
     }
 }
 
-function commits_tags_box($group_id, $name='_tag',$checked='xzxz',$text_100='None' )
+function commits_tags_box($group_id, $name = '_tag', $checked = 'xzxz', $text_100 = 'None')
 {
     $sql = "SELECT unix_group_name from groups where group_id=" . db_ei($group_id);
 
@@ -164,7 +166,7 @@ function commits_tags_box($group_id, $name='_tag',$checked='xzxz',$text_100='Non
     $cvs_repository = db_es('/cvsroot/' . $projectname);
     $sql="select distinct stickytag, stickytag from cvs_checkins, cvs_repositories where cvs_checkins.repositoryid=cvs_repositories.id AND cvs_repositories.repository='$cvs_repository'";
     $result=db_query($sql);
-    return html_build_select_box($result,$name,$checked,true,$text_100);
+    return html_build_select_box($result, $name, $checked, true, $text_100);
 }
 
 function show_commitslist(
@@ -172,14 +174,14 @@ function show_commitslist(
     $result,
     $offset,
     $total_rows,
-    $set='any',
-    $commiter='100',
-    $tag='100',
-    $branch='100',
-    $srch='' ,
-    $chunksz=15,
-    $morder='',
-    $msort=0
+    $set = 'any',
+    $commiter = '100',
+    $tag = '100',
+    $branch = '100',
+    $srch = '',
+    $chunksz = 15,
+    $morder = '',
+    $msort = 0
 ) {
     /*
         Accepts a result set from the commits table. Should include all columns from
@@ -206,16 +208,16 @@ function show_commitslist(
     $nav_bar .= '<td width="20%" align ="left">';
 
     if ($msort) {
-        $url_alternate_sort = str_replace('msort=1','msort=0',$url).
+        $url_alternate_sort = str_replace('msort=1', 'msort=0', $url).
         '&order=#results';
         $text = $GLOBALS['Language']->getText('cvs_commit_utils', 'deactivate');
     } else {
-        $url_alternate_sort = str_replace('msort=0','msort=1',$url).
+        $url_alternate_sort = str_replace('msort=0', 'msort=1', $url).
         '&order=#results';
         $text = $GLOBALS['Language']->getText('cvs_commit_utils', 'activate');
     }
 
-    echo '<P>'.$GLOBALS['Language']->getText('cvs_commit_utils', 'sort_msg',array($url.'&order=#results',$url_alternate_sort,$text));
+    echo '<P>'.$GLOBALS['Language']->getText('cvs_commit_utils', 'sort_msg', array($url.'&order=#results',$url_alternate_sort,$text));
 
     // If all bugs on screen so no prev/begin pointer at all
     if ($total_rows > $chunksz) {
@@ -241,10 +243,11 @@ function show_commitslist(
 
     // If all bugs on screen, no next/end pointer at all
     if ($total_rows > $chunksz) {
-        if ( ($offset+$chunksz) < $total_rows ) {
-
+        if (($offset+$chunksz) < $total_rows) {
             $offset_end = ($total_rows - ($total_rows % $chunksz));
-            if ($offset_end == $total_rows) { $offset_end -= $chunksz; }
+            if ($offset_end == $total_rows) {
+                $offset_end -= $chunksz;
+            }
 
             $nav_bar .=
             '<A HREF="'.$url.'&offset='.($offset+$chunksz).
@@ -294,10 +297,9 @@ function show_commitslist(
     $url_nomorder = $url;
     $url .= "&morder=$morder";
 
-    echo html_build_list_table_top ($title_arr,$links_arr);
+    echo html_build_list_table_top($title_arr, $links_arr);
 
     for ($i=0; $i < $rows; $i++) {
-
         $filename = db_result($result, $i, 'filename');
         if (!$filename) {
             $filename = '';
@@ -318,12 +320,11 @@ function show_commitslist(
 			<TR class="'. util_get_alt_row_color($i) .'">'.
         '<TD class="small"><b><A HREF="?func=detailcommit&group_id='.$group_id.$id_link.$filter_str.'">'.$id_str.
         '</b></A></TD>'.
-        '<TD class="small">'.Codendi_HTMLPurifier::instance()->purify(implode('<br>', preg_split("/\n/D",db_result($result, $i, 'description'))), CODENDI_PURIFIER_BASIC_NOBR, $group_id).$id_sublink.'</TD>'.
+        '<TD class="small">'.Codendi_HTMLPurifier::instance()->purify(implode('<br>', preg_split("/\n/D", db_result($result, $i, 'description'))), CODENDI_PURIFIER_BASIC_NOBR, $group_id).$id_sublink.'</TD>'.
       // '<TD class="small">'.$commits_url.'</TD>'.
         '<TD class="small">'.uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, $i, 'c_when')).'</TD>'.
       // '<TD class="small">'.util_user_link(db_result($result,$i,'assigned_to_user')).'</TD>'.
-        '<TD class="small">'.util_user_link(db_result($result,$i,'who')).'</TD></TR>';
-
+        '<TD class="small">'.util_user_link(db_result($result, $i, 'who')).'</TD></TR>';
     }
 
     /*
@@ -333,7 +334,7 @@ function show_commitslist(
     echo $nav_bar;
 }
 
-function makeCvsLink($group_id, $filename='', $text, $rev='', $displayfunc='')
+function makeCvsLink($group_id, $filename = '', $text, $rev = '', $displayfunc = '')
 {
     $res_grp = db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id));
 
@@ -347,13 +348,12 @@ function makeCvsLink($group_id, $filename='', $text, $rev='', $displayfunc='')
     return '<A HREF="/cvs/viewvc.php/'.$filename.'?root='.$group_name.'&roottype=cvs'.$view_str.'"><B>'.$text."</B></A>";
 }
 
-function makeCvsDirLink($group_id, $filename='', $text, $dir='')
+function makeCvsDirLink($group_id, $filename = '', $text, $dir = '')
 {
     $res_grp = db_query("SELECT * FROM groups WHERE group_id=" . db_ei($group_id));
     $row_grp = db_fetch_array($res_grp);
     $group_name = $row_grp['unix_group_name'];
     return '<A HREF="/cvs/viewvc.php/'.$dir.'?root='.$group_name.'&roottype=cvs"><B>'.$text.'</B></A>';
-
 }
 
 // Check is a sort criteria is already in the list of comma
@@ -363,14 +363,14 @@ function commit_add_sort_criteria($criteria_list, $order, $msort)
 {
     $found = false;
     if ($criteria_list) {
-        $arr = explode(',',$criteria_list);
+        $arr = explode(',', $criteria_list);
         $i = 0;
         foreach ($arr as $attr) {
-            preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
+            preg_match("/\s*([^<>]*)([<>]*)/", $attr, $match);
             list(,$mattr,$mdir) = $match;
             //echo "<br><pre>DBG \$mattr=$mattr,\$mdir=$mdir</pre>";
             if ($mattr == $order) {
-                if ( ($mdir == '>') || (!isset($mdir)) ) {
+                if (($mdir == '>') || (!isset($mdir))) {
                     $arr[$i] = $order.'<';
                 } else {
                     $arr[$i] = $order.'>';
@@ -395,8 +395,8 @@ function commit_add_sort_criteria($criteria_list, $order, $msort)
 // - is descending)
 function commit_criteria_list_to_query($criteria_list)
 {
-    $criteria_list = str_replace('>',' ASC',$criteria_list);
-    $criteria_list = str_replace('<',' DESC',$criteria_list);
+    $criteria_list = str_replace('>', ' ASC', $criteria_list);
+    $criteria_list = str_replace('<', ' DESC', $criteria_list);
 
     return $criteria_list;
 }
@@ -410,10 +410,9 @@ function commit_criteria_list_to_text($criteria_list, $url)
         $morder = '';
 
         foreach ($arr as $crit) {
-
             $morder .= ($morder ? ",".$crit : $crit);
-            $attr = str_replace('>','',$crit);
-            $attr = str_replace('<','',$attr);
+            $attr = str_replace('>', '', $crit);
+            $attr = str_replace('<', '', $attr);
 
             $arr_text[] = '<a href="'.$url.'&morder='.$morder.'#results">'.
             commit_field_get_label($attr).'</a><img src="'.util_get_dir_image_theme().
@@ -422,7 +421,7 @@ function commit_criteria_list_to_text($criteria_list, $url)
         }
     }
 
-    return join(' > ',$arr_text);
+    return join(' > ', $arr_text);
 }
 
 function commit_field_get_label($sortField)
@@ -460,7 +459,7 @@ function show_commit_details($group_id, $commit_id, $result)
     $crossref_fact= new CrossReferenceFactory($commit_id, ReferenceManager::REFERENCE_NATURE_CVSCOMMIT, $group_id);
     $crossref_fact->fetchDatas();
     if ($crossref_fact->getNbReferences() > 0) {
-        echo '<h3> '.$GLOBALS['Language']->getText('cross_ref_fact_include','references').'</h3>';
+        echo '<h3> '.$GLOBALS['Language']->getText('cross_ref_fact_include', 'references').'</h3>';
         $crossref_fact->DisplayCrossRefs();
     }
 
@@ -481,15 +480,14 @@ function show_commit_details($group_id, $commit_id, $result)
     $links_arr[]=$url.'addedlines';
     $links_arr[]=$url.'removedlines';
 
-    echo html_build_list_table_top ($title_arr,$links_arr);
+    echo html_build_list_table_top($title_arr, $links_arr);
 
     for ($i=0; $i < $rows; $i++) {
-
         $commit_id = db_result($result, $i, 'id');
         $type = db_result($result, $i, 'type');
         $added = db_result($result, $i, 'addedlines');
-        $removed = db_result($result,$i,'removedlines');
-        $revision = db_result($result,$i,'revision');
+        $removed = db_result($result, $i, 'removedlines');
+        $revision = db_result($result, $i, 'revision');
         $filename = db_result($result, $i, 'dir').'/'.db_result($result, $i, 'file');
         $type_text = $GLOBALS['Language']->getText('cvs_commit_utils', strtolower($type));
 
@@ -497,7 +495,7 @@ function show_commit_details($group_id, $commit_id, $result)
         ($added == 999) &&
         ($removed == 999)) { // the default values
           // back to rcs to complete
-            $repo = db_result($result,$i,'repository');
+            $repo = db_result($result, $i, 'repository');
             $command = "rlog -r".escapeshellarg($revision)." ". escapeshellarg($repo."/".$filename);
             $output = array();
             exec($command, $output, $ret);
@@ -507,19 +505,17 @@ function show_commit_details($group_id, $commit_id, $result)
             while ($l < count($output)) { // parse the rlog result till getting "state: Exp;  lines:"
                 $line = $output[$l];
                 $l++;
-                if (preg_match ('/state: +Exp; +lines: +\+([0-9]*) +\-([0-9]*)$/', $line, $na)) {
+                if (preg_match('/state: +Exp; +lines: +\+([0-9]*) +\-([0-9]*)$/', $line, $na)) {
                        $added         = db_ei($na[1]);
                        $removed       = db_ei($na[2]);
-                       $repository_id = db_ei(db_result($result,$i,'repositoryid'));
-                       $dir_id        = db_ei(db_result($result,$i,'dirid'));
-                       $file_id       = db_ei(db_result($result,$i,'fileid'));
+                       $repository_id = db_ei(db_result($result, $i, 'repositoryid'));
+                       $dir_id        = db_ei(db_result($result, $i, 'dirid'));
+                       $file_id       = db_ei(db_result($result, $i, 'fileid'));
                        $sql_up        = "UPDATE cvs_checkins SET addedlines=".$added.", removedlines=".$removed." WHERE repositoryid=". $repository_id ." AND dirid=". $dir_id ." AND fileid=". $file_id ." AND revision='". db_es($revision) . "'";
                        $res=db_query($sql_up);
                        break;
                 }
-
             }
-
         }
 
         if (!$filename) {
@@ -529,10 +525,9 @@ function show_commit_details($group_id, $commit_id, $result)
                 $filename = makeCvsDirLink($group_id, db_result($result, $i, 'file'), $filename, db_result($result, $i, 'dir'));
                 $rev_text = '';
             } else {
-
         // Clean file path to remove duplicate separators
-                $filename = preg_replace('/\/\//','/',$filename);
-                $filename = preg_replace('/\.\//','',$filename);
+                $filename = preg_replace('/\/\//', '/', $filename);
+                $filename = preg_replace('/\.\//', '', $filename);
 
                 if ($type == 'Change') {
                           // horrible hack to 'guess previous revision' to diff with
@@ -556,7 +551,7 @@ function show_commit_details($group_id, $commit_id, $result)
                 }
 
                 $rev_text = makeCvsLink($group_id, $filename, $revision, $revision, '&view=markup');
-                $filename = makeCvsLink($group_id, $filename, $filename,'','&view=log');
+                $filename = makeCvsLink($group_id, $filename, $filename, '', '&view=log');
             }
         }
         // $commits_url = '<A HREF="/commits/download.php/Commits'.$commit_id.'.txt?commit_id='.$id.'">'.$filename.'</a>';
@@ -569,7 +564,6 @@ function show_commit_details($group_id, $commit_id, $result)
         '<TD class="small">'.$type.'</TD>'.
         '<TD class="small">'.$added.'</TD>'.
         '<TD class="small">'.$removed.'</TD></TR>';
-
     }
 
     /*
@@ -608,7 +602,7 @@ function format_cvs_history($group_id)
         }
 
       // Now over the last 7 days
-        $res_cvslasthist = get_cvs_history($group_id,7*24*3600);
+        $res_cvslasthist = get_cvs_history($group_id, 7*24*3600);
 
         while ($row_cvslasthist = db_fetch_array($res_cvslasthist)) {
             $cvshist[$row_cvslasthist['user_name']]['last'] = $row_cvslasthist['commits'];
@@ -629,7 +623,7 @@ function format_cvs_history($group_id)
 // history if the period argument is not given or if it is given then
 // over the last "period" of time.
 // period is expressed in seconds
-function get_cvs_history($group_id, $period=false)
+function get_cvs_history($group_id, $period = false)
 {
 
     $pm = ProjectManager::instance();
@@ -637,8 +631,10 @@ function get_cvs_history($group_id, $period=false)
 
     if ($period) {
       // All times in cvs tables are stored in UTC ???
-        $date_clause = "AND co.comm_when >= ".date("YmdHis",(gmdate('U')-$period))." ";
-    } else $date_clause = "";
+        $date_clause = "AND co.comm_when >= ".date("YmdHis", (gmdate('U')-$period))." ";
+    } else {
+        $date_clause = "";
+    }
     $cvs_repository = db_es('/cvsroot/' . $group->getUnixName(false));
     $query = "SELECT u.user_name, count(co.id) as commits ".
     "FROM cvs_commits co, user u, cvs_repositories repo, cvs_checkins ci ".
@@ -668,7 +664,7 @@ function check_cvs_access($username, $group_name, $cvspath)
 
   //accept old url containing a .diff at the end of the filename
     if (strpos($cvspath, '.diff') == (strlen($cvspath)-5)) {
-        $cvspath = substr($cvspath, 0 , (strlen($cvspath)-5));
+        $cvspath = substr($cvspath, 0, (strlen($cvspath)-5));
     }
 
   // if the file path exists as such then it's a directory

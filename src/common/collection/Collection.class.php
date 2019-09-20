@@ -20,7 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Collection {
+class Collection
+{
 
     /* protected */ var $elements;
 
@@ -52,7 +53,7 @@ class Collection {
             return in_array($wanted, $this->elements);
         } else {
             $it = $this->iterator();
-            while(!$found && $it->valid()) {
+            while (!$found && $it->valid()) {
                 $element = $it->current();
                 if ($wanted->equals($element)) {
                     $found = true;

@@ -18,7 +18,8 @@
  */
 
 
-class Tracker_FormElement_View_Admin_Field_LastUpdateDate extends Tracker_FormElement_View_Admin_Field {
+class Tracker_FormElement_View_Admin_Field_LastUpdateDate extends Tracker_FormElement_View_Admin_Field
+{
 
     public function fetchCustomHelp()
     {
@@ -39,5 +40,3 @@ class Tracker_FormElement_View_Admin_Field_LastUpdateDate extends Tracker_FormEl
         return '';
     }
 }
-
-?>

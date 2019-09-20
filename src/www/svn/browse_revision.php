@@ -28,7 +28,7 @@ if (!$request->valid($vGroupId)) {
 
     $hp = Codendi_HTMLPurifier::instance();
 
-    svn_header($request->getProject(), array ('title'=>$Language->getText('svn_browse_revision','browsing'),
+    svn_header($request->getProject(), array ('title'=>$Language->getText('svn_browse_revision', 'browsing'),
                       'help' => 'svn.html#the-subversion-browsing-interface'));
 
     $vOffset = new Valid_UInt('offset');
@@ -41,7 +41,7 @@ if (!$request->valid($vGroupId)) {
 
     $vChunksz = new Valid_UInt('chunksz');
     $vChunksz->required();
-    if($request->valid($vChunksz)) {
+    if ($request->valid($vChunksz)) {
         $chunksz = $request->get('chunksz');
     } else {
         $chunksz = 15;
@@ -49,7 +49,7 @@ if (!$request->valid($vGroupId)) {
 
     $vMsort = new Valid_WhiteList('msort', array(0, 1));
     $vMsort->required();
-    if($request->valid($vMsort)) {
+    if ($request->valid($vMsort)) {
         $msort = $request->get('msort');
     } else {
         $msort = 0;
@@ -58,12 +58,12 @@ if (!$request->valid($vGroupId)) {
     $vOrder = new Valid_WhiteList('order', array('revision', 'description', 'date', 'who'));
 
     // Morder
-    if(user_isloggedin() && !$request->existAndNonEmpty('morder')) {
+    if (user_isloggedin() && !$request->existAndNonEmpty('morder')) {
         $morder = user_get_preference('svn_commit_browse_order'.$group_id);
     }
     $vMorder = new Valid_String('morder');
     $vMorder->required();
-    if($request->valid($vMorder)) {
+    if ($request->valid($vMorder)) {
         $morder = $request->get('morder');
     } else {
         $morder = '';
@@ -83,10 +83,10 @@ if (!$request->valid($vGroupId)) {
 
     $order_by = '';
     if (isset($morder)) {
-
         if (user_isloggedin()) {
-            if ($morder != user_get_preference('svn_commit_browse_order'.$group_id))
+            if ($morder != user_get_preference('svn_commit_browse_order'.$group_id)) {
                 user_set_preference('svn_commit_browse_order'.$group_id, $morder);
+            }
         }
 
         if ($morder != '') {
@@ -96,7 +96,7 @@ if (!$request->valid($vGroupId)) {
 
     $vPath = new Valid_String('_path');
     $vPath->required();
-    if($request->valid($vPath)) {
+    if ($request->valid($vPath)) {
         $_path = $request->get('_path');
     } else {
         $_path = '';
@@ -106,12 +106,12 @@ if (!$request->valid($vGroupId)) {
     // specify a rev_id here
     $vRevId1 = new Valid_UInt('rev_id');
     $vRevId1->required();
-    if($request->valid($vRevId1)) {
+    if ($request->valid($vRevId1)) {
         $_rev_id = $request->get('rev_id');
     } else {
         $vRevId2 = new Valid_UInt('_rev_id');
         $vRevId2->required();
-        if($request->valid($vRevId2)) {
+        if ($request->valid($vRevId2)) {
             $_rev_id = $request->get('_rev_id');
         } else {
             $_rev_id = '';
@@ -120,7 +120,7 @@ if (!$request->valid($vGroupId)) {
 
     $vCommiter = new Valid_String('_commiter');
     $vCommiter->required();
-    if($request->valid($vCommiter)) {
+    if ($request->valid($vCommiter)) {
         $_commiter = $request->get('_commiter');
     } else {
         $_commiter = '';
@@ -128,7 +128,7 @@ if (!$request->valid($vGroupId)) {
 
     $vSrch = new Valid_String('_srch');
     $vSrch->required();
-    if($request->valid($vSrch)) {
+    if ($request->valid($vSrch)) {
         $_srch = $request->get('_srch');
     } else {
         $_srch = '';
@@ -136,7 +136,7 @@ if (!$request->valid($vGroupId)) {
 
     $vPv = new Valid_Pv();
     $vPv->required();
-    if($request->valid($vPv)) {
+    if ($request->valid($vPv)) {
         $pv = $request->get('pv');
     } else {
         $pv = 0;
@@ -155,8 +155,8 @@ if (!$request->valid($vGroupId)) {
         if (user_isloggedin()) {
             $custom_pref=user_get_preference('svn_commits_browcust'.$group_id);
             if ($custom_pref) {
-                $pref_arr=explode('|',$custom_pref);
-                if(!$_rev_id) {
+                $pref_arr=explode('|', $custom_pref);
+                if (!$_rev_id) {
                     $_rev_id=$pref_arr[0];
                 }
                 $_commiter=$pref_arr[1];
@@ -178,16 +178,16 @@ if (!$request->valid($vGroupId)) {
 
     if ($set=='my') {
         $_commiter=user_getname();
-    } else if ($set=='custom') {
+    } elseif ($set=='custom') {
         /*
          if this custom set is different than the stored one, reset preference
         */
         $pref_=$_rev_id.'|'.$_commiter.'|'.$_path.'|'.$_srch.'|'.$chunksz;
         if ($pref_ != user_get_preference('svn_commits_browcust'.$group_id)) {
             //echo 'setting pref';
-            user_set_preference('svn_commits_browcust'.$group_id,$pref_);
+            user_set_preference('svn_commits_browcust'.$group_id, $pref_);
         }
-    } else if ($set=='any') {
+    } elseif ($set=='any') {
         $_commiter=100;
     }
 
@@ -199,7 +199,7 @@ if (!$request->valid($vGroupId)) {
     $root = $project->getUnixName(false);
 
     list($result, $totalrows) = svn_get_revisions($project, $offset, $chunksz, $_rev_id, $_commiter, $_srch, $order_by, $pv);
-    $statement=$Language->getText('svn_browse_revision','view_commit');
+    $statement=$Language->getText('svn_browse_revision', 'view_commit');
 
     /*
      creating a custom technician box which includes "any"
@@ -212,13 +212,13 @@ if (!$request->valid($vGroupId)) {
     /*
      Show the new pop-up boxes to select assigned to and/or status
     */
-    echo '<H3>'.$hp->purify($Language->getText('svn_browse_revision','browse_commit')).'</H3>';
+    echo '<H3>'.$hp->purify($Language->getText('svn_browse_revision', 'browse_commit')).'</H3>';
     echo '<FORM class="form-inline" name="commit_form" ACTION="" METHOD="GET">
         <TABLE BORDER="0">
 	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$hp->purify($group_id).'">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
-        <TR align="center"><TD><b>'.$hp->purify($Language->getText('svn_browse_revision','rev')).'</b></TD><TD><b>'.$hp->purify($Language->getText('svn_browse_revision','commiter')).'</b></TD><TD><b>'.$hp->purify($Language->getText('svn_browse_revision','path')).'</b></TD><TD><b>'.$hp->purify($Language->getText('svn_browse_revision','search')).'</b></TD>'.
+        <TR align="center"><TD><b>'.$hp->purify($Language->getText('svn_browse_revision', 'rev')).'</b></TD><TD><b>'.$hp->purify($Language->getText('svn_browse_revision', 'commiter')).'</b></TD><TD><b>'.$hp->purify($Language->getText('svn_browse_revision', 'path')).'</b></TD><TD><b>'.$hp->purify($Language->getText('svn_browse_revision', 'search')).'</b></TD>'.
         '</TR>'.
         '<TR><TD><INPUT TYPE="TEXT" SIZE=5 CLASS="input-mini" NAME="_rev_id" VALUE="'.$hp->purify($_rev_id).'"></TD>'.
         '<TD>'. $tech_box .'</TD>'.
@@ -226,32 +226,29 @@ if (!$request->valid($vGroupId)) {
         '<TD>'. '<INPUT type="text" size="35" name="_srch" value="'.$hp->purify($_srch).'"></TD>'.
         '</TR></TABLE>'.
 
-        '<br><INPUT TYPE="SUBMIT" CLASS="btn" NAME="SUBMIT" VALUE="'.$hp->purify($Language->getText('global','btn_browse')).'">'.
+        '<br><INPUT TYPE="SUBMIT" CLASS="btn" NAME="SUBMIT" VALUE="'.$hp->purify($Language->getText('global', 'btn_browse')).'">'.
         ' <input TYPE="text" name="chunksz" CLASS="input-mini" size="3" MAXLENGTH="5" '.
-        'VALUE="'.$hp->purify($chunksz).'">'.$hp->purify($Language->getText('svn_browse_revision','commit_at_once')).
+        'VALUE="'.$hp->purify($chunksz).'">'.$hp->purify($Language->getText('svn_browse_revision', 'commit_at_once')).
         '</FORM>';
 
 
     if ($result && db_numrows($result) > 0) {
-
         //create a new $set string to be used for next/prev button
         if ($set=='custom') {
             $set .= '&_commiter='.urlencode($_commiter).'&_srch='.urlencode($_srch).'&_path='.urlencode($_path).'&chunksz='.urlencode($chunksz);
-        } else if ($set=='any') {
+        } elseif ($set=='any') {
             $set .= '&_commiter=0&chunksz='.urlencode($chunksz);
         }
 
-        svn_utils_show_revision_list($result,$offset,$totalrows,$set,$_commiter,$_path,$chunksz,$morder,$msort);
-
+        svn_utils_show_revision_list($result, $offset, $totalrows, $set, $_commiter, $_path, $chunksz, $morder, $msort);
     } else {
         echo '
 		<P>
 		<H3>'.$hp->purify($statement).'</H3>
 		<P>
 		<P>';
-        echo $hp->purify($Language->getText('svn_browse_revision','no_match'));
+        echo $hp->purify($Language->getText('svn_browse_revision', 'no_match'));
         echo $hp->purify(db_error());
     }
     svn_footer(array());
 }
-?>

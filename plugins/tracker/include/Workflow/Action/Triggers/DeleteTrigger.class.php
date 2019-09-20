@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Workflow_Action_Triggers_DeleteTrigger {
+class Tracker_Workflow_Action_Triggers_DeleteTrigger
+{
 
     /**
      * @var Tracker
@@ -52,5 +53,3 @@ class Tracker_Workflow_Action_Triggers_DeleteTrigger {
         }
     }
 }
-
-?>

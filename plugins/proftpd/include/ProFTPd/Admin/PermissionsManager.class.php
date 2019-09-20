@@ -25,7 +25,8 @@ use UGroupManager;
 use ProjectUGroup;
 use PFUser;
 
-class PermissionsManager {
+class PermissionsManager
+{
     public const PERM_READ  = 'PLUGIN_PROFTPD_READ';
     public const PERM_WRITE = 'PLUGIN_PROFTPD_WRITE';
 

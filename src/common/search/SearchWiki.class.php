@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchWiki {
+class Search_SearchWiki
+{
     public const NAME = 'wiki';
 
     public const SEARCH_PAGENAME_EN = 'FullTextSearch';
@@ -73,7 +74,4 @@ class Search_SearchWiki {
             $this->getRedirectUrl($project_id, $this->getSearchPageName($project_id), $words)
         );
     }
-
-
-
 }

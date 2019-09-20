@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_Artifact_ArtifactCreator {
+class Tracker_REST_Artifact_ArtifactCreator
+{
 
     /** @var Tracker_REST_Artifact_ArtifactValidator */
     private $artifact_validator;

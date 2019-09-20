@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey {
+class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey
+{
     public const KEYNAME_PREFIX  = 'gerrit_';
     public const KEYNAME_SUFFIX = '@0.pub';
 
@@ -96,4 +97,3 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey {
         return $this->getUserName().self::KEYNAME_SUFFIX;
     }
 }
-?>

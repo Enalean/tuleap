@@ -23,7 +23,8 @@
  *
  * Note in Tuleap/REST namespace because of php51
  */
-class RestlerCache {
+class RestlerCache
+{
 
     public const PREFIX = 'v';
 

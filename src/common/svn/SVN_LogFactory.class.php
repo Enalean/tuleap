@@ -23,7 +23,8 @@ require_once __DIR__ . '/../../www/svn/svn_utils.php';
 /**
  * The SVN log of a project.
  */
-class SVN_LogFactory {
+class SVN_LogFactory
+{
 
     /**
      * @var Project
@@ -54,7 +55,7 @@ class SVN_LogFactory {
         $raw_revisions = $this->getRawRevisions($limit, $author);
         $revisions     = array();
 
-        while($raw_revision = db_fetch_array($raw_revisions)) {
+        while ($raw_revision = db_fetch_array($raw_revisions)) {
             list($revision, $commit_id, $description, $date, $whoid) = $raw_revision;
 
             $revisions[] = array('revision' => $revision,
@@ -110,7 +111,7 @@ class SVN_LogFactory {
         $forbidden = svn_utils_get_forbidden_paths($user->getName(), $this->project->getSVNRootPath());
         $where_forbidden = "";
         foreach ($forbidden as $no_access => $v) {
-            $where_forbidden .= " AND svn_dirs.dir not like '".db_es(substr($no_access,1))."%'";
+            $where_forbidden .= " AND svn_dirs.dir not like '".db_es(substr($no_access, 1))."%'";
         }
         return $where_forbidden;
     }
@@ -132,15 +133,17 @@ class SVN_LogFactory {
      */
     public function getRawRevisionsAndCount($limit, PFUser $author)
     {
-        return svn_get_revisions($this->project,
-                                 0,
-                                 $limit,
-                                 '',
-                                 $author->getUserName(),
-                                 '',
-                                 '',
-                                 0,
-                                 false);
+        return svn_get_revisions(
+            $this->project,
+            0,
+            $limit,
+            '',
+            $author->getUserName(),
+            '',
+            '',
+            0,
+            false
+        );
     }
 
     protected function getDao()
@@ -148,4 +151,3 @@ class SVN_LogFactory {
         return new SVN_LogDao();
     }
 }
-?>

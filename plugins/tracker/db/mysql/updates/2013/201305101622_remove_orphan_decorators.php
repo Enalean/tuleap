@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201305101622_remove_orphan_decorators extends ForgeUpgrade_Bucket {
+class b201305101622_remove_orphan_decorators extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -47,4 +48,3 @@ class b201305101622_remove_orphan_decorators extends ForgeUpgrade_Bucket {
         }
     }
 }
-?>

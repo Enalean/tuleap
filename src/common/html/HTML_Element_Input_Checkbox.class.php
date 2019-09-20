@@ -23,7 +23,8 @@ require_once('HTML_Element_Input_Hidden.class.php');
 /**
  * Define a html input checkbox field
  */
-class HTML_Element_Input_Checkbox extends HTML_Element_Input {
+class HTML_Element_Input_Checkbox extends HTML_Element_Input
+{
     public function __construct($label, $name, $value)
     {
         parent::__construct($label, $name, $value);
@@ -49,7 +50,8 @@ class HTML_Element_Input_Checkbox extends HTML_Element_Input {
     }
     protected function getInputType()
     {
-        return 'checkbox'; }
+        return 'checkbox';
+    }
     /**
      * The value for a checkbox is always 1
      */
@@ -58,5 +60,3 @@ class HTML_Element_Input_Checkbox extends HTML_Element_Input {
         return 1;
     }
 }
-
-?>

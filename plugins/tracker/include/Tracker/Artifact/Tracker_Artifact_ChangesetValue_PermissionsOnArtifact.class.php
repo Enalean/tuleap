@@ -26,7 +26,8 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValuePermissionsOnArtifactRepresen
 /**
  * Manage values in changeset for date fields
  */
-class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Artifact_ChangesetValue {
+class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Artifact_ChangesetValue
+{
 
     /**
      * @var array
@@ -157,23 +158,22 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
             }
             $added   = $this->format(implode(', ', $added_arr), $format);
             if (empty($next)) {
-                $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','cleared');
-            } else if (empty($previous)) {
-                $changes = $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '. $added;
-            } else if (count($previous) == 1 && count($next) == 1) {
-                $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from'). ' '.$removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','to').' '.$added;
+                $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'cleared');
+            } elseif (empty($previous)) {
+                $changes = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to').' '. $added;
+            } elseif (count($previous) == 1 && count($next) == 1) {
+                $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from'). ' '.$removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'to').' '.$added;
             } else {
                 if ($removed) {
-                    $changes = $removed .' '. $GLOBALS['Language']->getText('plugin_tracker_artifact','removed');
+                    $changes = $removed .' '. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'removed');
                 }
                 if ($added) {
                     if ($changes) {
                         $changes .= PHP_EOL;
                     }
-                    $changes .= $added .' '. $GLOBALS['Language']->getText('plugin_tracker_artifact','added');
+                    $changes .= $added .' '. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'added');
                 }
             }
-
         }
         return $changes;
     }
@@ -186,7 +186,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
                 $added_arr[] = $this->getUgroupLabel($element);
         }
         $added = $this->format(implode(', ', $added_arr), $format);
-        return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$added;
+        return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to').' '.$added;
     }
 
     private function format($value, $format)

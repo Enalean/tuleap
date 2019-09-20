@@ -25,7 +25,8 @@
 * System Event classes
 *
 */
-class SystemEvent_PROJECT_CREATE extends SystemEvent {
+class SystemEvent_PROJECT_CREATE extends SystemEvent
+{
 
     /**
      * Verbalize the parameters so they are readable and much user friendly in
@@ -39,7 +40,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
     public function verbalizeParameters($with_link)
     {
         $txt = '';
-        if (strpos($this->parameters,',' === FALSE)) {
+        if (strpos($this->parameters, ',' === false)) {
             // Only one Group ID
             $txt .= 'project: '. $this->verbalizeProjectId($this->getIdFromParam($this->parameters), $with_link);
         } else {
@@ -54,7 +55,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
     function process()
     {
 
-        $groups=explode(',',$this->parameters);
+        $groups=explode(',', $this->parameters);
 
         $backendSystem = Backend::instance('System');
 
@@ -62,9 +63,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
         $backendSystem->flushNscdAndFsCache();
 
         foreach ($groups as $group_id) {
-
             if ($project = $this->getProject($group_id)) {
-
                 if (!$backendSystem->createProjectHome($group_id)) {
                     $this->error("Could not create project home");
                     return false;
@@ -97,5 +96,3 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
         return true;
     }
 }
-
-?>

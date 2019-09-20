@@ -21,7 +21,8 @@
 
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 
-class Tracker_GeneralSettings_Presenter {
+class Tracker_GeneralSettings_Presenter
+{
 
     /** @var Tracker */
     private $tracker;
@@ -78,7 +79,7 @@ class Tracker_GeneralSettings_Presenter {
 
     public function tracker_emailgateway()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type','emailgateway');
+        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'emailgateway');
     }
 
     public function is_emailgateway_used()
@@ -93,7 +94,7 @@ class Tracker_GeneralSettings_Presenter {
 
     public function html_tags()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type','html_tags');
+        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'html_tags');
     }
 
     public function tracker_name()
@@ -113,27 +114,27 @@ class Tracker_GeneralSettings_Presenter {
 
     public function tracker_name_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact','name');
+        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'name');
     }
 
     public function tracker_description_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact','desc');
+        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'desc');
     }
 
     public function tracker_shortname_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type','short_name');
+        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'short_name');
     }
 
     public function tracker_instantiate_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type','instantiate');
+        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'instantiate');
     }
 
     public function tracker_log_priority_changes()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type','priority_changes');
+        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'priority_changes');
     }
 
     public function is_instatiate_for_new_projects()
@@ -148,7 +149,7 @@ class Tracker_GeneralSettings_Presenter {
 
     public function tracker_color_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact','color');
+        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'color');
     }
 
     public function tracker_color()
@@ -158,12 +159,12 @@ class Tracker_GeneralSettings_Presenter {
 
     public function preview_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact','preview');
+        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'preview');
     }
 
     public function submit_instructions_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type','submit_instr');
+        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'submit_instr');
     }
 
     public function submit_instructions()
@@ -173,7 +174,7 @@ class Tracker_GeneralSettings_Presenter {
 
     public function browse_instructions_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type','browse_instr');
+        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'browse_instr');
     }
 
     public function browse_instructions()
@@ -183,36 +184,36 @@ class Tracker_GeneralSettings_Presenter {
 
     public function submit_button()
     {
-        return $GLOBALS['Language']->getText('global','save_change');
+        return $GLOBALS['Language']->getText('global', 'save_change');
     }
 
     public function reply_possible()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway','reply_possible');
+        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'reply_possible');
     }
 
     public function create_not_possible()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway','create_not_possible');
+        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'create_not_possible');
     }
 
     public function semantic_ok()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway','semantic_ok');
+        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'semantic_ok');
     }
 
     public function required_ok()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway','required_ok');
+        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'required_ok');
     }
 
     public function semantic_ko()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway','semantic_ko');
+        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'semantic_ko');
     }
 
     public function required_ko()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway','required_ko');
+        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'required_ko');
     }
 }

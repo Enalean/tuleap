@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableNotificationCycle {
+class Docman_ApprovalTableNotificationCycle
+{
     var $table;
     var $owner;
     var $item;
@@ -44,34 +45,32 @@ class Docman_ApprovalTableNotificationCycle {
     {
         // Parameters
         $withComments = false;
-        if(trim($review->getComment()) != "") {
+        if (trim($review->getComment()) != "") {
             $withComments = true;
         }
 
         $reviewer = $this->_getUserById($review->getId());
 
         // States
-        if($review->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED) {
+        if ($review->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED) {
             $this->reviewerReject($reviewer);
-        }
-        elseif($this->getTableState() == PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED) {
+        } elseif ($this->getTableState() == PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED) {
             $isLastReviewer = true;
             $this->reviewerApprove($reviewer, $isLastReviewer, $withComments);
-        }
-        else {
+        } else {
             $isLastReviewer = false;
-            switch($review->getState()) {
+            switch ($review->getState()) {
                 case PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED:
                     $this->reviewerApprove($reviewer, $isLastReviewer, $withComments);
 
-                break;
+                    break;
                 case PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED:
                     $this->reviewerDecline($reviewer, $isLastReviewer);
 
-                break;
+                    break;
                 case PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED:
                     $this->reviewerComment($reviewer);
-                break;
+                    break;
             }
         }
     }
@@ -82,14 +81,14 @@ class Docman_ApprovalTableNotificationCycle {
      */
     function reviewerApprove($reviewer, $isLastReviewer, $withComments)
     {
-        if($isLastReviewer) {
+        if ($isLastReviewer) {
             $this->sendNotifTableApproved($reviewer, $withComments);
             $this->changeItemStatus($reviewer, PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
         } else {
             $this->sendNotifReviewApproved($reviewer, $withComments);
         }
 
-        if(!$isLastReviewer &&
+        if (!$isLastReviewer &&
            $this->table->getNotification() == PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL) {
             $this->notifyNextReviewer();
         }
@@ -110,7 +109,7 @@ class Docman_ApprovalTableNotificationCycle {
     function reviewerDecline($reviewer, $isLastReviewer)
     {
         $this->sendNotifReviewDeclined($reviewer);
-        if(!$isLastReviewer &&
+        if (!$isLastReviewer &&
            $this->table->getNotification() == PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL) {
             $this->notifyNextReviewer();
         }
@@ -137,15 +136,15 @@ class Docman_ApprovalTableNotificationCycle {
         $nbNotif = 0;
 
         $rIter = $this->table->getReviewerIterator();
-        if($rIter !== null) {
+        if ($rIter !== null) {
             $rIter->rewind();
-            while($rIter->valid()) {
+            while ($rIter->valid()) {
                 $reviewer = $rIter->current();
-                switch($reviewer->getState()) {
+                switch ($reviewer->getState()) {
                     case PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET:
                     case PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED:
                         $sent = $this->notifyIndividual($reviewer->getId());
-                        if($sent) {
+                        if ($sent) {
                             $nbNotif++;
                         }
                 }
@@ -155,7 +154,7 @@ class Docman_ApprovalTableNotificationCycle {
             return false;
         }
 
-        if($nbNotif > 0) {
+        if ($nbNotif > 0) {
             return true;
         } else {
             return false;
@@ -174,12 +173,12 @@ class Docman_ApprovalTableNotificationCycle {
         $dao = $this->_getReviewerDao();
 
         $dar = $dao->getFirstReviewerByStatus($this->table->getId(), PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
-        if($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             return false;
         } else {
             $dar = $dao->getFirstReviewerByStatus($this->table->getId(), array(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET,
                                                                               PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED));
-            if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
                 return $this->notifyIndividual($row['reviewer_id']);
             }
@@ -296,7 +295,7 @@ class Docman_ApprovalTableNotificationCycle {
         );
 
         $comment = '';
-        if($withComments) {
+        if ($withComments) {
             $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_approve_user_mail_com');
         }
 
@@ -346,7 +345,7 @@ class Docman_ApprovalTableNotificationCycle {
         );
 
         $comment = '';
-        if($withComments) {
+        if ($withComments) {
             $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_approve_user_mail_com');
         }
 
@@ -423,7 +422,7 @@ class Docman_ApprovalTableNotificationCycle {
         $reviewUrl       = $this->getReviewUrl();
 
         $commentSeq = '';
-        if($this->table->getNotification() == PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL) {
+        if ($this->table->getNotification() == PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL) {
             $commentSeq = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_comment_mail_seq', $reviewer->getRealName());
             $commentSeq .= "\n";
         }
@@ -459,7 +458,6 @@ class Docman_ApprovalTableNotificationCycle {
             DocmanPlugin::TRUNCATED_SERVICE_NAME,
             new MailEnhancer()
         );
-
     }
 
     function sendNotifReviewer($reviewer)
@@ -495,25 +493,25 @@ class Docman_ApprovalTableNotificationCycle {
         $nbDeclined = 0;
         $rejected = false;
         $revIterator = $this->table->getReviewerIterator();
-        while(!$rejected && $revIterator->valid()) {
+        while (!$rejected && $revIterator->valid()) {
             $reviewer = $revIterator->current();
-            switch($reviewer->getState()) {
+            switch ($reviewer->getState()) {
                 case PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED:
                     $nbApproved++;
-                break;
+                    break;
                 case PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED:
                     $rejected = true;
-                break;
+                    break;
                 case PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED:
                     $nbDeclined++;
-                break;
+                    break;
             }
             $revIterator->next();
         }
-        if($rejected) {
+        if ($rejected) {
             return PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED;
         }
-        if(($nbApproved + $nbDeclined) == $revIterator->count()) {
+        if (($nbApproved + $nbDeclined) == $revIterator->count()) {
             return PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED;
         }
         return PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET;
@@ -595,7 +593,7 @@ class Docman_ApprovalTableNotificationCycle {
         $comment         = '';
         $userComment     = $this->table->getDescription();
 
-        if($userComment != '') {
+        if ($userComment != '') {
             $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_owner_comment', array($userComment));
             $comment .= "\n\n";
         }
@@ -604,7 +602,7 @@ class Docman_ApprovalTableNotificationCycle {
 
         // Notification style
         $notifStyle = '';
-        switch($this->table->getNotification()) {
+        switch ($this->table->getNotification()) {
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
                 $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_seq', array($GLOBALS['sys_name']));
                 break;

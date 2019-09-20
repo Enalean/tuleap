@@ -11,7 +11,8 @@
 
 require_once __DIR__ . '/../../www/include/utils.php';
 
-class CrossReference {
+class CrossReference
+{
     var $id;
     var $userId;
     var $createdAt;
@@ -52,52 +53,65 @@ class CrossReference {
         $this->insertTargetType = $refTargetType;
 
         $this->computeUrls();
-
     }
 
     /** Accessors */
     function getRefSourceId()
     {
-        return $this->refSourceId;}
+        return $this->refSourceId;
+    }
     function getRefSourceGid()
     {
-        return $this->refSourceGid;}
+        return $this->refSourceGid;
+    }
     function getRefSourceType()
     {
-        return $this->refSourceType;}
+        return $this->refSourceType;
+    }
     function getRefTargetId()
     {
-        return $this->refTargetId;}
+        return $this->refTargetId;
+    }
     function getRefTargetGid()
     {
-        return $this->refTargetGid;}
+        return $this->refTargetGid;
+    }
     function getRefTargetType()
     {
-        return $this->refTargetType;}
+        return $this->refTargetType;
+    }
     function getUserId()
     {
-        return $this->userId;}
+        return $this->userId;
+    }
     function getRefTargetUrl()
     {
-        return $this->targetUrl;}
+        return $this->targetUrl;
+    }
     function getRefSourceUrl()
     {
-        return $this->sourceUrl;}
+        return $this->sourceUrl;
+    }
     function getRefSourceKey()
     {
-        return $this->sourceKey;}
+        return $this->sourceKey;
+    }
     function getRefTargetKey()
     {
-        return $this->targetKey;}
+        return $this->targetKey;
+    }
     function getCreatedAt()
     {
-        return $this->createdAt;}
+        return $this->createdAt;
+    }
     function getInsertSourceType()
     {
-        return $this->insertSourceType;}
+        return $this->insertSourceType;
+    }
     function getInsertTargetType()
     {
-        return $this->insertTargetType;}
+        return $this->insertTargetType;
+    }
 
 
     /**
@@ -120,10 +134,14 @@ class CrossReference {
     {
         $server_url  = HTTPRequest::instance()->getServerUrl();
         $group_param = '';
-        if ($this->refTargetGid!=100) { $group_param="&group_id=".$this->refTargetGid;}
+        if ($this->refTargetGid!=100) {
+            $group_param="&group_id=".$this->refTargetGid;
+        }
         $this->targetUrl= $server_url."/goto?key=".urlencode($this->targetKey)."&val=".urlencode($this->refTargetId).$group_param;
         $group_param = '';
-        if ($this->refSourceGid!=100) { $group_param="&group_id=".$this->refSourceGid;}
+        if ($this->refSourceGid!=100) {
+            $group_param="&group_id=".$this->refSourceGid;
+        }
         $this->sourceUrl= $server_url."/goto?key=".urlencode($this->sourceKey)."&val=".urlencode($this->refSourceId).$group_param;
     }
 }

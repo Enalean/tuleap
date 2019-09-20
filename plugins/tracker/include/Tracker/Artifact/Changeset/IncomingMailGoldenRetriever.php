@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_Changeset_IncomingMailGoldenRetriever {
+class Tracker_Artifact_Changeset_IncomingMailGoldenRetriever
+{
 
     /** @var Tracker_Artifact_Changeset_IncomingMailDao */
     private $dao;

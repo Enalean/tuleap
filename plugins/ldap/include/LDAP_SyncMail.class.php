@@ -20,7 +20,8 @@
  */
 
 
-class LDAP_SyncMail {
+class LDAP_SyncMail
+{
 
     private $projectManager;
     private $logger;
@@ -58,7 +59,7 @@ class LDAP_SyncMail {
             $projectRecipient = array();
             $projectAdmins    = $project->getAdmins();
             $unixProjectName      = $project->getUnixName();
-            foreach($projectAdmins as $admin) {
+            foreach ($projectAdmins as $admin) {
                 $projectRecipient[$admin->getId()] = $admin->getEmail();
             }
             $recipient[$unixProjectName] = $projectRecipient;
@@ -103,7 +104,7 @@ class LDAP_SyncMail {
      *
      * @return Codendi_Mail
      */
-    protected function prepareMail($recipients, $unixProjectName, $subject,$body)
+    protected function prepareMail($recipients, $unixProjectName, $subject, $body)
     {
         $mail = new Codendi_Mail();
         $mail->setFrom($GLOBALS['sys_noreply']);
@@ -115,6 +116,4 @@ class LDAP_SyncMail {
         $mail->setBody($body);
         return $mail;
     }
-
 }
-?>

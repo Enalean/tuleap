@@ -5,7 +5,8 @@
 *
 */
 
-class LanguageFilesTest extends TuleapTestCase {
+class LanguageFilesTest extends TuleapTestCase
+{
 
     function testLanguagesFiles()
     {

@@ -24,5 +24,3 @@ $id = $request->getValidated('artifact_history_id', 'uint', 0);
 if ($id) {
     $ah->displayFollowupComment($id);
 }
-
-?>

@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201203140933_add_notif_svn_per_branch extends ForgeUpgrade_Bucket {
+class b201203140933_add_notif_svn_per_branch extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return <<<EOT
@@ -58,7 +59,6 @@ EOT;
                 throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting svn_events_mailing_list column from groups table');
             }
         }
-
     }
 
     public function postUp()
@@ -71,5 +71,3 @@ EOT;
         }
     }
 }
-
-?>

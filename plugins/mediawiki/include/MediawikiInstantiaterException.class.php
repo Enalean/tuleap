@@ -18,5 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class MediawikiInstantiaterException extends Exception {}
-?>
+class MediawikiInstantiaterException extends Exception
+{
+}

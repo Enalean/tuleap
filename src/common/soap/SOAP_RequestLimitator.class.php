@@ -25,7 +25,8 @@ require_once 'dao/SOAP_RequestLimitatorDao.class.php';
  * The quota is defined with a number of call per timeframe (for instance 10
  * call per hours).
  */
-class SOAP_RequestLimitator {
+class SOAP_RequestLimitator
+{
     private $nbMaxCall;
     private $timeframe;
     /**
@@ -96,5 +97,3 @@ class SOAP_RequestLimitator {
         }
     }
 }
-
-?>

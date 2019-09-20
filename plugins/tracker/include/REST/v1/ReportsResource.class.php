@@ -156,7 +156,7 @@ class ReportsResource extends AuthenticatedResource
     public function getArtifacts(
         $id,
         $values = self::DEFAULT_VALUES,
-        $limit  = self::DEFAULT_LIMIT,
+        $limit = self::DEFAULT_LIMIT,
         $offset = self::DEFAULT_OFFSET
     ) {
         $this->checkAccess();

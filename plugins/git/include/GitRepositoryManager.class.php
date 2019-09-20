@@ -30,7 +30,8 @@ use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
  *
  * It works in close cooperation with GitRepositoryFactory (to instanciate repo)
  */
-class GitRepositoryManager {
+class GitRepositoryManager
+{
 
     /**
      * @var HistoryValueFormatter
@@ -142,7 +143,8 @@ class GitRepositoryManager {
     {
         if (!$creator->isNameValid($repository->getName())) {
             throw new GitRepositoryNameIsInvalidException(
-                sprintf(dgettext('tuleap-git', 'Repository name is not well formatted. Allowed characters: %1$s and max length is %2$s, no slashes at the beginning or the end, it also must not finish with ".git".'), $creator->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH));
+                sprintf(dgettext('tuleap-git', 'Repository name is not well formatted. Allowed characters: %1$s and max length is %2$s, no slashes at the beginning or the end, it also must not finish with ".git".'), $creator->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)
+            );
         }
 
         $this->assertRepositoryNameNotAlreadyUsed($repository);
@@ -376,7 +378,6 @@ class GitRepositoryManager {
         foreach ($repos as $repo) {
             try {
                 if ($repo->userCanRead($user)) {
-
                     if (count($repos) === 1) {
                         $this->forkUniqueRepository($repo, $project, $user, $namespace, $scope, $forkPermissions);
                     } else {
@@ -452,7 +453,7 @@ class GitRepositoryManager {
      */
     public function purgeArchivedRepositories(Logger $logger)
     {
-        if(!isset($GLOBALS['sys_file_deletion_delay'])) {
+        if (!isset($GLOBALS['sys_file_deletion_delay'])) {
             $logger->warn("Purge of archived Gitolite repositories is disabled: sys_file_deletion_delay is missing in local.inc file");
             return;
         }

@@ -23,7 +23,8 @@
 /**
  * Widget displaying last git pushes for the user
  */
-class Git_Widget_UserPushes extends Widget {
+class Git_Widget_UserPushes extends Widget
+{
 
     public $offset     = 5;
     public $pastDays   = 30;

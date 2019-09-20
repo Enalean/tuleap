@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class b201503051029_add_restricted_mirrors extends ForgeUpgrade_Bucket {
+class b201503051029_add_restricted_mirrors extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

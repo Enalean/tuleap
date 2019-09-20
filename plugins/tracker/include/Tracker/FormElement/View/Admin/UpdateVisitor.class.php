@@ -21,7 +21,8 @@
 /**
  * Visit a FormElement and provides an update view
  */
-class Tracker_FormElement_View_Admin_UpdateVisitor extends Tracker_FormElement_View_Admin_Visitor {
+class Tracker_FormElement_View_Admin_UpdateVisitor extends Tracker_FormElement_View_Admin_Visitor
+{
 
     protected function fetchForm()
     {
@@ -58,5 +59,3 @@ class Tracker_FormElement_View_Admin_UpdateVisitor extends Tracker_FormElement_V
         echo $this->displayForm($tracker_manager, $request, $breadcrumbsLabel, $url, $title, $this->fetchForm());
     }
 }
-
-?>

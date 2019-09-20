@@ -26,7 +26,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureValidator;
 /**
  * I convert the xml changeset data into data structure in order to create changeset in one artifact
  */
-class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
+class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
+{
 
     public const FIELDTYPE_STRING            = 'string';
     public const FIELDTYPE_TEXT              = 'text';
@@ -161,7 +162,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
                 }
                 $this->logger->warn("Skipped invalid value $invalid_submitted_value for field ".$field->getName());
             }
-        } catch(Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException $exception) {
+        } catch (Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException $exception) {
             $this->logger->warn("Skipped invalid value for field ".$field->getName().': '.$exception->getMessage());
         }
     }

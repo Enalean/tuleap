@@ -25,7 +25,8 @@
 * System Event classes
 *
 */
-class SystemEvent_SERVICE_USAGE_SWITCH extends SystemEvent {
+class SystemEvent_SERVICE_USAGE_SWITCH extends SystemEvent
+{
 
     /**
      * Verbalize the parameters so they are readable and much user friendly in
@@ -78,7 +79,4 @@ class SystemEvent_SERVICE_USAGE_SWITCH extends SystemEvent {
         }
         return false;
     }
-
 }
-
-?>

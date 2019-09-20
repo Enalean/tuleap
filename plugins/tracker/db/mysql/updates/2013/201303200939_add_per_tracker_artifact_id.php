@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201303200939_add_per_tracker_artifact_id extends ForgeUpgrade_Bucket {
+class b201303200939_add_per_tracker_artifact_id extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -63,6 +64,4 @@ SET per_tracker_artifact_id = numbered_ids.RowNumber;";
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
         }
     }
-
 }
-?>

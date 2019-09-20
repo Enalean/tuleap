@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Rule_RegexpTest extends TuleapTestCase {
+class Rule_RegexpTest extends TuleapTestCase
+{
     function __construct($name = 'Rule_Int test')
     {
         parent::__construct($name);
@@ -35,5 +36,3 @@ class Rule_RegexpTest extends TuleapTestCase {
         $this->assertTrue($r->isValid($input));
     }
 }
-
-?>

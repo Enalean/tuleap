@@ -22,7 +22,8 @@
 /**
  *  Data Access Object for Tracker_FormElement_Field
  */
-class Tracker_FormElement_Field_MultiSelectboxDao extends Tracker_FormElement_SpecificPropertiesDao {
+class Tracker_FormElement_Field_MultiSelectboxDao extends Tracker_FormElement_SpecificPropertiesDao
+{
 
     function __construct()
     {
@@ -65,4 +66,3 @@ class Tracker_FormElement_Field_MultiSelectboxDao extends Tracker_FormElement_Sp
         return $this->update($sql);
     }
 }
-?>

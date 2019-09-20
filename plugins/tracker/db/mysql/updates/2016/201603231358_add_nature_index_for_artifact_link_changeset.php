@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201603231358_add_nature_index_for_artifact_link_changeset extends ForgeUpgrade_Bucket {
+class b201603231358_add_nature_index_for_artifact_link_changeset extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -48,6 +49,5 @@ class b201603231358_add_nature_index_for_artifact_link_changeset extends ForgeUp
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding index nature');
         }
-
     }
 }

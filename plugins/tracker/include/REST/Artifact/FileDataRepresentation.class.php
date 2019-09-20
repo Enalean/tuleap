@@ -20,7 +20,8 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-class FileDataRepresentation {
+class FileDataRepresentation
+{
 
     /**
      * @var string Chunk

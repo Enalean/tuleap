@@ -19,7 +19,8 @@
  */
 
 
-abstract class Cardwall_OnTop_Config_TrackerMapping {
+abstract class Cardwall_OnTop_Config_TrackerMapping
+{
 
     /**
      * @var Tracker
@@ -71,21 +72,20 @@ abstract class Cardwall_OnTop_Config_TrackerMapping {
     /**
      * @return Tracker_FormElement
      */
-    public abstract function getField();
+    abstract public function getField();
 
     /**
      * @return Cardwall_OnTop_Config_ValueMapping[]
      */
-    public abstract function getValueMappings();
+    abstract public function getValueMappings();
 
     /**
      * @pattern Visitor
      */
-    public abstract function accept($visitor);
+    abstract public function accept($visitor);
 
     public function isCustom()
     {
         return false;
     }
-
 }

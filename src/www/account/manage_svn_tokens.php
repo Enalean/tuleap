@@ -37,10 +37,8 @@ $svn_token_handler = new SVN_TokenHandler(
 if ($request->exist('delete-svn-tokens')
     && $request->exist('svn-tokens-selected')
     && is_array($request->get('svn-tokens-selected'))) {
-
     if ($svn_token_handler->deleteSVNTokensForUser($user, $request->get('svn-tokens-selected'))) {
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('account_options', 'delete_svn_tokens_success'));
-
     } else {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_options', 'delete_svn_tokens_error'));
     }
@@ -52,7 +50,6 @@ if ($request->exist('generate-svn-token')) {
     if ($token) {
         $_SESSION['last_svn_token'] = $token;
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('account_options', 'generate_svn_token_success'));
-
     } else {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_options', 'generate_svn_token_error'));
     }

@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_ReadOnlyRenderer extends Tracker_Artifact_EditRenderer {
+class Tracker_Artifact_ReadOnlyRenderer extends Tracker_Artifact_EditRenderer
+{
 
     /**
      * @return string The HTML code for artifact fields

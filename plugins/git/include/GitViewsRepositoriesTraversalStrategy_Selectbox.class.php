@@ -22,7 +22,8 @@
 /**
  * Traverse a list of repositories and furnish a ul/li tree representation
  */
-class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositoriesTraversalStrategy {
+class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositoriesTraversalStrategy
+{
 
     /**
      * @var GitViews
@@ -67,6 +68,4 @@ class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositori
         }
         return '';
     }
-
 }
-?>

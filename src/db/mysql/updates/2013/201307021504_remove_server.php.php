@@ -19,7 +19,8 @@
 /**
  * Add generic_user table
  */
-class b201307021504_remove_server extends ForgeUpgrade_Bucket {
+class b201307021504_remove_server extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return <<<EOT
@@ -50,5 +51,3 @@ EOT;
         }
     }
 }
-
-?>

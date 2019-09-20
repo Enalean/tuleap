@@ -20,7 +20,8 @@
 
 namespace Tuleap\Project\XML\Import;
 
-class ZipArchiveTest extends \TuleapTestCase {
+class ZipArchiveTest extends \TuleapTestCase
+{
 
     /** @var Project */
     private $project;

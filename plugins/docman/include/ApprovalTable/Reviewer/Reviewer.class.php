@@ -20,7 +20,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalReviewer {
+class Docman_ApprovalReviewer
+{
     var $reviewerId;
     var $rank;
     var $reviewDate;
@@ -94,11 +95,23 @@ class Docman_ApprovalReviewer {
 
     function initFromRow($row)
     {
-        if(isset($row['reviewer_id'])) $this->reviewerId = $row['reviewer_id'];
-        if(isset($row['rank'])) $this->rank = $row['rank'];
-        if(isset($row['date'])) $this->reviewDate = $row['date'];
-        if(isset($row['state'])) $this->state = $row['state'];
-        if(isset($row['comment'])) $this->comment = $row['comment'];
-        if(isset($row['version'])) $this->version = $row['version'];
+        if (isset($row['reviewer_id'])) {
+            $this->reviewerId = $row['reviewer_id'];
+        }
+        if (isset($row['rank'])) {
+            $this->rank = $row['rank'];
+        }
+        if (isset($row['date'])) {
+            $this->reviewDate = $row['date'];
+        }
+        if (isset($row['state'])) {
+            $this->state = $row['state'];
+        }
+        if (isset($row['comment'])) {
+            $this->comment = $row['comment'];
+        }
+        if (isset($row['version'])) {
+            $this->version = $row['version'];
+        }
     }
 }

@@ -21,7 +21,8 @@
  */
 
 
-class MediaWikiInstantiater {
+class MediaWikiInstantiater
+{
 
     public const MW_123_PATH = '/usr/share/mediawiki-tuleap-123';
 
@@ -172,7 +173,6 @@ class MediaWikiInstantiater {
 
         $this->ensureDatabaseIsCorrect($db_name);
         return true;
-
     }
 
     private function ensureDatabaseIsCorrect($db_name)
@@ -258,10 +258,10 @@ class MediaWikiInstantiater {
     private function createTablesFromFile(\ParagonIE\EasyDB\EasyDB $db, $file, $table_prefix)
     {
         // inspired from /usr/share/mediawiki115/includes/db/Database.php
-        $fp = fopen( $file, 'r' );
-        if ( false === $fp ) {
+        $fp = fopen($file, 'r');
+        if (false === $fp) {
             $this->logger->error("createTablesFromFile: Cannot read file $file!");
-            fclose( $fp );
+            fclose($fp);
             return false;
         }
 
@@ -269,43 +269,47 @@ class MediaWikiInstantiater {
         $done = false;
         $dollarquote = false;
 
-        while ( ! feof( $fp ) ) {
-            $line = trim( fgets( $fp, 1024 ) );
-            $sl = strlen( $line ) - 1;
+        while (! feof($fp)) {
+            $line = trim(fgets($fp, 1024));
+            $sl = strlen($line) - 1;
 
-            if ( $sl < 0 ) { continue; }
-            if ( '-' == $line{0} && '-' == $line{1} ) { continue; }
+            if ($sl < 0) {
+                continue;
+            }
+            if ('-' == $line{0} && '-' == $line{1}) {
+                continue;
+            }
 
             // Allow dollar quoting for function declarations
-            if (substr($line,0,4) == '$mw$') {
+            if (substr($line, 0, 4) == '$mw$') {
                 if ($dollarquote) {
                     $dollarquote = false;
                     $done = true;
-                }
-                else {
+                } else {
                     $dollarquote = true;
                 }
-            }
-            else if (!$dollarquote) {
-                if ( ';' == $line{$sl} && ($sl < 2 || ';' != $line{$sl - 1})) {
+            } elseif (!$dollarquote) {
+                if (';' == $line{$sl} && ($sl < 2 || ';' != $line{$sl - 1})) {
                     $done = true;
-                    $line = substr( $line, 0, $sl );
+                    $line = substr($line, 0, $sl);
                 }
             }
 
-            if ( '' != $cmd ) { $cmd .= ' '; }
+            if ('' != $cmd) {
+                $cmd .= ' ';
+            }
             $cmd .= "$line\n";
 
-            if ( $done ) {
+            if ($done) {
                 $cmd = str_replace(';;', ";", $cmd);
                 // next 2 lines are for mediawiki subst
-                $cmd = preg_replace(":/\*_\*/:",$table_prefix,$cmd );
+                $cmd = preg_replace(":/\*_\*/:", $table_prefix, $cmd);
                 // TOCHECK WITH CHRISTIAN: Do not change indexes for mediawiki (doesn't seems well supported)
                 //$cmd = preg_replace(":/\*i\*/:","mw",$cmd );
                 try {
                     $db->query($cmd);
                 } catch (PDOException $ex) {
-                    $this->logger->error('SQL: ' . preg_replace('/\n\t+/', ' ',$cmd));
+                    $this->logger->error('SQL: ' . preg_replace('/\n\t+/', ' ', $cmd));
                     throw $ex;
                 }
 
@@ -313,7 +317,7 @@ class MediaWikiInstantiater {
                 $done = false;
             }
         }
-        fclose( $fp );
+        fclose($fp);
         return true;
     }
 

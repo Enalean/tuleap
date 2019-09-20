@@ -22,7 +22,8 @@
  *  Data Access Object for Tracker_FileInfo
  */
 
-class Tracker_FileInfoDao extends DataAccessObject {
+class Tracker_FileInfoDao extends DataAccessObject
+{
 
     function __construct()
     {
@@ -101,4 +102,3 @@ class Tracker_FileInfoDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 }
-?>

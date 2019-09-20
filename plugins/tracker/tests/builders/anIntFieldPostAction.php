@@ -24,7 +24,8 @@ function anIntFieldPostAction()
     return new Test_Transition_PostAction_Field_Int_Builder();
 }
 
-class Test_Transition_PostAction_Field_Int_Builder {
+class Test_Transition_PostAction_Field_Int_Builder
+{
 
     private $id;
 
@@ -72,11 +73,11 @@ class Test_Transition_PostAction_Field_Int_Builder {
 
     public function build()
     {
-        return new Transition_PostAction_Field_Int($this->transition,
-                                                   $this->id,
-                                                   $this->field,
-                                                   $this->value);
+        return new Transition_PostAction_Field_Int(
+            $this->transition,
+            $this->id,
+            $this->field,
+            $this->value
+        );
     }
 }
-
-?>

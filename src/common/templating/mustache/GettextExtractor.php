@@ -73,7 +73,7 @@ class GettextExtractor
 
             if ($this->isAGettextSection($node)) {
                 $this->collectEntry($template, $node, $collection);
-            } else if ($this->isASectionOrInvertedSection($node)) {
+            } elseif ($this->isASectionOrInvertedSection($node)) {
                 $this->walk($template, $node[Mustache_Tokenizer::NODES], $collection);
             }
         }

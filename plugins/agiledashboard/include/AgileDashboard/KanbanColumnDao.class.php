@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class AgileDashboard_KanbanColumnDao extends DataAccessObject {
+class AgileDashboard_KanbanColumnDao extends DataAccessObject
+{
 
     public function getColumnWipLimit($kanban_id, $column_id)
     {
@@ -57,5 +58,4 @@ class AgileDashboard_KanbanColumnDao extends DataAccessObject {
 
         return $this->update($sql);
     }
-
 }

@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_SystemEventManager extends SystemEventManager {
+class Tracker_SystemEventManager extends SystemEventManager
+{
 
     /** @var  SystemEventManager */
     private $system_event_manager;

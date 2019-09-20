@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class LogoRetrieverTest extends TuleapTestCase {
+class LogoRetrieverTest extends TuleapTestCase
+{
 
     public function setUp()
     {

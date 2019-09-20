@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http:__www.gnu.org_licenses_>.
  */
 
-class Git_Driver_Gerrit_RemoteSSHCommand {
+class Git_Driver_Gerrit_RemoteSSHCommand
+{
 
     public const SUCCESS = 0;
     public const STD_OUT_GLUE = PHP_EOL;
@@ -86,4 +87,3 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
         return $this->filepath;
     }
 }
-?>

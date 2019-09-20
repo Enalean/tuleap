@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class PaginatedUserCollection implements Countable {
+class PaginatedUserCollection implements Countable
+{
 
     /** @var PFUser[] */
     private $users;

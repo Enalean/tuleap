@@ -18,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Permission_ChainOfResponsibility_PermissionsOfAllGroups extends Tracker_Permission_Command {
+class Tracker_Permission_ChainOfResponsibility_PermissionsOfAllGroups extends Tracker_Permission_Command
+{
 
     public function apply(Tracker_Permission_PermissionRequest $request, Tracker_Permission_PermissionSetter $permission_setter)
     {
-        foreach($permission_setter->getAllGroupIds() as $ugroup_id) {
+        foreach ($permission_setter->getAllGroupIds() as $ugroup_id) {
             if ($this->ugroupHasOwnCommand($ugroup_id)) {
                 continue;
             }
@@ -40,7 +41,7 @@ class Tracker_Permission_ChainOfResponsibility_PermissionsOfAllGroups extends Tr
 
     private function adjustPermissionsForGroup(Tracker_Permission_PermissionSetter $permission_setter, $ugroup_id, $permission_type)
     {
-        switch($permission_type) {
+        switch ($permission_type) {
             case Tracker_Permission_Command::PERMISSION_FULL:
                 $permission_setter->grant(Tracker::PERMISSION_FULL, $ugroup_id);
                 break;

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUserGroupUsersDao extends DataAccessObject {
+class User_ForgeUserGroupUsersDao extends DataAccessObject
+{
 
     public function getUsersByForgeUserGroupId($ugroup_id)
     {
@@ -71,5 +72,4 @@ class User_ForgeUserGroupUsersDao extends DataAccessObject {
 
         return count($this->retrieve($sql)) > 0;
     }
-
 }

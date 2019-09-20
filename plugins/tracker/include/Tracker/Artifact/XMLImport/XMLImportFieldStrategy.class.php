@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface Tracker_Artifact_XMLImport_XMLImportFieldStrategy {
+interface Tracker_Artifact_XMLImport_XMLImportFieldStrategy
+{
 
     /**
      * Extract Field data from XML input

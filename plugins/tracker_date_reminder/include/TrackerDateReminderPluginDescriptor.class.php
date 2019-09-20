@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TrackerDateReminderPluginDescriptor extends PluginDescriptor {
+class TrackerDateReminderPluginDescriptor extends PluginDescriptor
+{
 
     function __construct()
     {
@@ -26,4 +27,3 @@ class TrackerDateReminderPluginDescriptor extends PluginDescriptor {
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
-?>

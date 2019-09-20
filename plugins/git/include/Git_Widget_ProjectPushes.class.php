@@ -21,7 +21,8 @@
 /**
  * Widget displaying last git pushes for the project
  */
-class Git_Widget_ProjectPushes extends Widget {
+class Git_Widget_ProjectPushes extends Widget
+{
 
     public $pluginPath;
 

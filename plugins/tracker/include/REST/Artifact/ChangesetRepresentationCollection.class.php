@@ -20,7 +20,8 @@
 
 namespace Tuleap\Tracker\REST;
 
-class ChangesetRepresentationCollection {
+class ChangesetRepresentationCollection
+{
 
     private $collection;
     private $total_count;

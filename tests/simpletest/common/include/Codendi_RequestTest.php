@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Codendi_RequestTest extends TuleapTestCase {
+class Codendi_RequestTest extends TuleapTestCase
+{
 
     private $project_manager;
     private $project;
@@ -42,4 +43,3 @@ class Codendi_RequestTest extends TuleapTestCase {
         $this->assertNull($request->getProject());
     }
 }
-?>

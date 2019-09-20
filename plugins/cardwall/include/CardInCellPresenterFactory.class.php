@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_CardInCellPresenterFactory {
+class Cardwall_CardInCellPresenterFactory
+{
 
     /**
      * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
@@ -62,5 +63,3 @@ class Cardwall_CardInCellPresenterFactory {
         return $field ? $field->getId() : 0;
     }
 }
-
-?>

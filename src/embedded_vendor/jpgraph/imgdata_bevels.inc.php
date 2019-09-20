@@ -8,7 +8,8 @@
 // Copyright (c) Asial Corporation. All rights reserved.
 //========================================================================
 
-class ImgData_Bevels extends ImgData {
+class ImgData_Bevels extends ImgData
+{
     protected $name = 'Round Bevels';
     protected $an = array(MARK_IMG_BEVEL => 'imgdata');
 
@@ -97,9 +98,5 @@ class ImgData_Bevels extends ImgData {
         '5NyW0awhK8kYodnZxS6ECvPRp2sI+y7PBv1mN02KH7h77QCJ8D'.
         '4VvY5NUgEmCwj6ZMzHtJRgRSXwC1gfcqJJH0GBnSnK1kUQ72DY'.
         'CPBv+MCS/e0jib77eQAJxwiEWm7hFwAAAABJRU5ErkJggg==' ;
-
     }
 }
-
-
-?>

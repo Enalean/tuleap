@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201102090815_add_column_repository_events_mailing_prefix extends ForgeUpgrade_Bucket {
+class b201102090815_add_column_repository_events_mailing_prefix extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -48,6 +49,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column repository_events_mailing_prefix in table plugin_git is missing');
         }
     }
-
 }
-?>

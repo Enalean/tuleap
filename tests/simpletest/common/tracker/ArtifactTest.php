@@ -31,7 +31,8 @@ Mock::generate('Codendi_HTMLPurifier');
 
 require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
-class ArtifactTest extends TuleapTestCase {
+class ArtifactTest extends TuleapTestCase
+{
 
 
     public function testAddDependenciesSimple()
@@ -55,7 +56,6 @@ class ArtifactTest extends TuleapTestCase {
         $changes = null;
         $this->assertFalse($a->addDependencies("99999", $changes, false), "It should be possible to add a dependency like 99999 because it is not a valid artifact");
         $GLOBALS['Response']->expectCallCount('addFeedback', 2);
-
     }
 
     public function testAddDependenciesDouble()
@@ -78,15 +78,15 @@ class ArtifactTest extends TuleapTestCase {
         $txtContent = 'testing the feature';
         $htmlContent = '&lt;pre&gt;   function processEvent($event, $params) {&lt;br /&gt;       foreach(parent::processEvent($event, $params) as $key =&amp;gt; $value) {&lt;br /&gt;           $params[$key] = $value;&lt;br /&gt;       }&lt;br /&gt;   }&lt;br /&gt;&lt;/pre&gt; ';
         //the output will be delivered in a mail
-        $this->assertEqual('   function processEvent($event, $params) {       foreach(parent::processEvent($event, $params) as $key => $value) {           $params[$key] = $value;       }   } ' , $art->formatFollowUp(102, 1,$htmlContent, 2));
+        $this->assertEqual('   function processEvent($event, $params) {       foreach(parent::processEvent($event, $params) as $key => $value) {           $params[$key] = $value;       }   } ', $art->formatFollowUp(102, 1, $htmlContent, 2));
         $this->assertEqual($txtContent, $art->formatFollowUp(102, 0, $txtContent, 2));
 
         //the output is destinated to be exported
-        $this->assertEqual('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1,$htmlContent,1));
+        $this->assertEqual('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1, $htmlContent, 1));
         $this->assertEqual($txtContent, $art->formatFollowUp(102, 0, $txtContent, 1));
 
         //The output will be displayed on browser
-        $this->assertEqual('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1,$htmlContent, 0));
+        $this->assertEqual('<pre>   function processEvent($event, $params) {<br />       foreach(parent::processEvent($event, $params) as $key =&gt; $value) {<br />           $params[$key] = $value;<br />       }<br />   }<br /></pre> ', $art->formatFollowUp(102, 1, $htmlContent, 0));
         $this->assertEqual($txtContent, $art->formatFollowUp(102, 0, $txtContent, 0));
     }
 }

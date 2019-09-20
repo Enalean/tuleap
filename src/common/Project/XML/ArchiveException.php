@@ -20,5 +20,6 @@
 
 namespace Tuleap\Project\XML;
 
-class ArchiveException extends \Exception {
+class ArchiveException extends \Exception
+{
 }

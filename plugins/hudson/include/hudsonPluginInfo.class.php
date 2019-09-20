@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class hudsonPluginInfo extends PluginInfo {
+class hudsonPluginInfo extends PluginInfo
+{
 
     public function __construct($plugin)
     {

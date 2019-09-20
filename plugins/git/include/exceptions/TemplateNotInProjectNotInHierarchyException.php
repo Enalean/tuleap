@@ -18,6 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Git_TemplateNotInProjectHierarchyException extends Exception {
+class Git_TemplateNotInProjectHierarchyException extends Exception
+{
 }
-?>

@@ -21,7 +21,8 @@
 /**
  * A board that contains swimlines (with cards) and columns
  */
-class Cardwall_Board {
+class Cardwall_Board
+{
 
     /**
      * @var array of TreeNode
@@ -59,6 +60,4 @@ class Cardwall_Board {
     {
         return $this->swimlines;
     }
-
 }
-?>

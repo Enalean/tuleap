@@ -22,7 +22,8 @@
 /**
  * Data Acces object which deals with tracker_workflow_transition_postactions_field_int table
  */
-class Transition_PostAction_Field_IntDao extends Transition_PostAction_FieldDao {
+class Transition_PostAction_Field_IntDao extends Transition_PostAction_FieldDao
+{
 
     public function __construct()
     {
@@ -38,4 +39,3 @@ class Transition_PostAction_Field_IntDao extends Transition_PostAction_FieldDao 
         return $this->da->escapeInt($value);
     }
 }
-?>

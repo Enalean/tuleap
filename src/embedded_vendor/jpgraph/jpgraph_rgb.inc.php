@@ -16,11 +16,12 @@
 //===================================================
 */
 
-class RGB {
+class RGB
+{
     public $rgb_table;
     public $img;
 
-    function __construct($aImg=null)
+    function __construct($aImg = null)
     {
         $this->img = $aImg;
 
@@ -493,57 +494,56 @@ class RGB {
             // 8: adjust value prefixed with : if supplied
             // 9: adjust value with : stripped
             $regex = '/(#([0-9a-fA-F]{1,2})([0-9a-fA-F]{1,2})([0-9a-fA-F]{1,2}))?([\w]+)?(@([\d\.,]+))?(:([\d\.,]+))?/';
-            if(!preg_match($regex, $aColor, $matches)) {
-                JpGraphError::RaiseL(25078,$aColor);//(" Unknown color: $aColor");
+            if (!preg_match($regex, $aColor, $matches)) {
+                JpGraphError::RaiseL(25078, $aColor);//(" Unknown color: $aColor");
             }
-            if(empty($matches[5])) {
+            if (empty($matches[5])) {
                 $r = strlen($matches[2]) == 1 ? $matches[2].$matches[2] : $matches[2];
                 $g = strlen($matches[3]) == 1 ? $matches[3].$matches[3] : $matches[3];
                 $b = strlen($matches[4]) == 1 ? $matches[4].$matches[4] : $matches[4];
                 $r = hexdec($r);
                 $g = hexdec($g);
                 $b = hexdec($b);
-            }else {
-                if(!isset($this->rgb_table[$matches[5]]) ) {
-                    JpGraphError::RaiseL(25078,$aColor);//(" Unknown color: $aColor");
+            } else {
+                if (!isset($this->rgb_table[$matches[5]])) {
+                    JpGraphError::RaiseL(25078, $aColor);//(" Unknown color: $aColor");
                 }
                 $r = $this->rgb_table[$matches[5]][0];
                 $g = $this->rgb_table[$matches[5]][1];
                 $b = $this->rgb_table[$matches[5]][2];
             }
-            $alpha    = isset($matches[7]) ? str_replace(',','.',$matches[7]) : 0;
-            $adj    = isset($matches[9]) ? str_replace(',','.',$matches[9]) : 1.0;
+            $alpha    = isset($matches[7]) ? str_replace(',', '.', $matches[7]) : 0;
+            $adj    = isset($matches[9]) ? str_replace(',', '.', $matches[9]) : 1.0;
 
-            if( $adj < 0 ) {
+            if ($adj < 0) {
                 JpGraphError::RaiseL(25077);//('Adjustment factor for color must be > 0');
             }
 
             // Scale adj so that an adj=2 always
             // makes the color 100% white (i.e. 255,255,255.
             // and adj=1 neutral and adj=0 black.
-            if( $adj == 1) {
+            if ($adj == 1) {
                 return array($r,$g,$b,$alpha);
+            } elseif ($adj > 1) {
+                $m = ($adj-1.0)*(255-min(255, min($r, min($g, $b))));
+                return array(min(255, $r+$m), min(255, $g+$m), min(255, $b+$m),$alpha);
+            } elseif ($adj < 1) {
+                $m = ($adj-1.0)*max(255, max($r, max($g, $b)));
+                return array(max(0, $r+$m), max(0, $g+$m), max(0, $b+$m),$alpha);
             }
-            elseif( $adj > 1 ) {
-                $m = ($adj-1.0)*(255-min(255,min($r,min($g,$b))));
-                return array(min(255,$r+$m), min(255,$g+$m), min(255,$b+$m),$alpha);
+        } elseif (is_array($aColor)) {
+            if (!isset($aColor[3])) {
+                $aColor[3] = 0;
             }
-            elseif( $adj < 1 ) {
-                $m = ($adj-1.0)*max(255,max($r,max($g,$b)));
-                return array(max(0,$r+$m), max(0,$g+$m), max(0,$b+$m),$alpha);
-            }
-        } elseif( is_array($aColor) ) {
-            if(!isset($aColor[3])) $aColor[3] = 0;
             return $aColor;
-        }
-        else {
-            JpGraphError::RaiseL(25079,$aColor,count($aColor));//(" Unknown color specification: $aColor , size=".count($aColor));
+        } else {
+            JpGraphError::RaiseL(25079, $aColor, count($aColor));//(" Unknown color specification: $aColor , size=".count($aColor));
         }
     }
 
     // Compare two colors
     // return true if equal
-    function Equal($aCol1,$aCol2)
+    function Equal($aCol1, $aCol2)
     {
         $c1 = $this->Color($aCol1);
         $c2 = $this->Color($aCol2);
@@ -552,15 +552,15 @@ class RGB {
 
     // Allocate a new color in the current image
     // Return new color index, -1 if no more colors could be allocated
-    function Allocate($aColor,$aAlpha=0.0)
+    function Allocate($aColor, $aAlpha = 0.0)
     {
         list ($r, $g, $b, $a) = $this->color($aColor);
         // If alpha is specified in the color string then this
         // takes precedence over the second argument
-        if( $a > 0 ) {
+        if ($a > 0) {
             $aAlpha = $a;
         }
-        if( $aAlpha < 0 || $aAlpha > 1 ) {
+        if ($aAlpha < 0 || $aAlpha > 1) {
             JpGraphError::RaiseL(25080);//('Alpha parameter for color must be between 0.0 and 1.0');
         }
         return imagecolorresolvealpha($this->img, $r, $g, $b, round($aAlpha * 127));
@@ -573,13 +573,13 @@ class RGB {
     // a single color (specifeid as an RGB triple)
     static function tryHexConversion($aColor)
     {
-        if( is_array( $aColor ) ) {
-            if( count( $aColor ) == 3 ) {
-                if( is_numeric($aColor[0]) && is_numeric($aColor[1]) && is_numeric($aColor[2]) ) {
-                    if( ($aColor[0] >= 0 && $aColor[0] <= 255) &&
+        if (is_array($aColor)) {
+            if (count($aColor) == 3) {
+                if (is_numeric($aColor[0]) && is_numeric($aColor[1]) && is_numeric($aColor[2])) {
+                    if (($aColor[0] >= 0 && $aColor[0] <= 255) &&
                         ($aColor[1] >= 0 && $aColor[1] <= 255) &&
                         ($aColor[2] >= 0 && $aColor[2] <= 255) ) {
-                        return sprintf('#%02x%02x%02x',$aColor[0],$aColor[1],$aColor[2]);
+                        return sprintf('#%02x%02x%02x', $aColor[0], $aColor[1], $aColor[2]);
                     }
                 }
             }
@@ -594,28 +594,22 @@ class RGB {
     // The $aDynamicRange specified how much of the dynamic range we shold use
     // a value of 1.0 give the full dyanmic range and a lower value give more dark
     // colors. In the extreme of 0.0 then all colors will be black.
-    static function GetSpectrum($aVal,$aDynamicRange=1.0)
+    static function GetSpectrum($aVal, $aDynamicRange = 1.0)
     {
-        if( $aVal < 0 || $aVal > 1.0001 ) {
+        if ($aVal < 0 || $aVal > 1.0001) {
             return array(0,0,0); // Invalid case - just return black
         }
 
         $sat = round(255*$aDynamicRange);
         $a = 0.25;
-        if( $aVal <= 0.25 ) {
+        if ($aVal <= 0.25) {
             return array(0, round($sat*$aVal/$a), $sat);
-        }
-        elseif( $aVal <= 0.5 ) {
+        } elseif ($aVal <= 0.5) {
             return array(0, $sat, round($sat-$sat*($aVal-0.25)/$a));
-        }
-        elseif( $aVal <= 0.75 ) {
+        } elseif ($aVal <= 0.75) {
             return array(round($sat*($aVal-0.5)/$a), $sat, 0);
-        }
-        else {
+        } else {
             return array($sat, round($sat-$sat*($aVal-0.75)/$a), 0);
         }
     }
-
 } // Class
-
-?>

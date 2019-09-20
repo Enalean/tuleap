@@ -21,7 +21,8 @@
 require_once dirname(__FILE__) .'/../../../bootstrap.php';
 require_once dirname(__FILE__) .'/../../../../../../tests/simpletest/common/include/builders/aRequest.php';
 
-class Cardwall_OnTop_Config_Command_CreateMappingFieldTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_Command_CreateMappingFieldTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -48,4 +49,3 @@ class Cardwall_OnTop_Config_Command_CreateMappingFieldTest extends TuleapTestCas
         $this->command->execute($request);
     }
 }
-?>

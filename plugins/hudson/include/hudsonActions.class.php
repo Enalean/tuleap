@@ -26,7 +26,8 @@ use Tuleap\Hudson\HudsonJobBuilder;
 /**
  * hudsonActions
  */
-class hudsonActions extends Actions {
+class hudsonActions extends Actions
+{
 
     public function __construct($controler)
     {
@@ -64,12 +65,12 @@ class hudsonActions extends Actions {
             );
 
             if (! $jobId) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','add_job_error'));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson', 'add_job_error'));
             } else {
                 $em       = EventManager::instance();
                 $params   = array('job_id' => $jobId, 'request' => $request);
                 $em->processEvent('save_ci_triggers', $params);
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson','job_added'));
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson', 'job_added'));
                 $GLOBALS['Response']->redirect('/plugins/hudson/?group_id='.intval($group_id));
             }
         } catch (Exception $e) {
@@ -86,7 +87,7 @@ class hudsonActions extends Actions {
 
         if (strpos($new_job_name, " ") !== false) {
             $new_job_name = str_replace(" ", "_", $new_job_name);
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_hudson','edit_jobname_spacesreplaced'));
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_hudson', 'edit_jobname_spacesreplaced'));
         }
 
         $new_use_svn_trigger = ($request->get('hudson_use_svn_trigger') === 'on');
@@ -104,10 +105,9 @@ class hudsonActions extends Actions {
             $new_token,
             $svn_paths
         )) {
-
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','edit_job_error'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson', 'edit_job_error'));
         } else {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson','job_updated'));
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson', 'job_updated'));
             $em       = EventManager::instance();
             $params   = array('request' => $request);
             $em->processEvent('update_ci_triggers', $params);
@@ -119,10 +119,10 @@ class hudsonActions extends Actions {
         $request = HTTPRequest::instance();
         $job_id = $request->get('job_id');
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-        if ( ! $job_dao->deleteHudsonJob($job_id)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','delete_job_error'));
+        if (! $job_dao->deleteHudsonJob($job_id)) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson', 'delete_job_error'));
         } else {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson','job_deleted'));
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson', 'job_deleted'));
             $em       = EventManager::instance();
             $params   = array('job_id' => $job_id);
             $em->processEvent('delete_ci_triggers', $params);

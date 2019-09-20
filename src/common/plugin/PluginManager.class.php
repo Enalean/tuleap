@@ -264,16 +264,16 @@ class PluginManager
                 mkdir($GLOBALS['sys_custompluginsroot'] .'/'. $name . '/etc', 0700);
             }
             $etcs = glob($GLOBALS['sys_pluginsroot'] .'/'. $name .'/etc/*');
-            foreach($etcs as $etc) {
-                if(is_dir($etc)) {
+            foreach ($etcs as $etc) {
+                if (is_dir($etc)) {
                     $this->copyDirectory($etc, $GLOBALS['sys_custompluginsroot'] .'/'. $name . '/etc/' . basename($etc));
                 } else {
                     copy($etc, $GLOBALS['sys_custompluginsroot'] .'/'. $name . '/etc/' . basename($etc));
                 }
             }
             $incdists = glob($GLOBALS['sys_custompluginsroot'] .'/'. $name .'/etc/*.dist');
-            foreach($incdists as $incdist) {
-                rename($incdist,  $GLOBALS['sys_custompluginsroot'] .'/'. $name . '/etc/' . basename($incdist, '.dist'));
+            foreach ($incdists as $incdist) {
+                rename($incdist, $GLOBALS['sys_custompluginsroot'] .'/'. $name . '/etc/' . basename($incdist, '.dist'));
             }
         }
     }
@@ -349,34 +349,34 @@ class PluginManager
         $success     = true;
         $successOnce = false;
 
-        if(is_array($projectIds)) {
-            foreach($projectIds as $prjId) {
-                switch($action){
+        if (is_array($projectIds)) {
+            foreach ($projectIds as $prjId) {
+                switch ($action) {
                     case 'add':
                         $success = $success && $this->plugin_factory->addProjectForPlugin($plugin, $prjId);
-                    break;
+                        break;
                     case 'del':
                         $success = $success && $this->plugin_factory->delProjectForPlugin($plugin, $prjId);
-                    break;
+                        break;
                 }
 
-                if($success === true)
+                if ($success === true) {
                     $successOnce = true;
+                }
             }
-        }
-        elseif(is_numeric($projectIds)) {
-            switch($action){
+        } elseif (is_numeric($projectIds)) {
+            switch ($action) {
                 case 'add':
                     $success = $success && $this->plugin_factory->addProjectForPlugin($plugin, $prjId);
-                break;
+                    break;
                 case 'del':
                     $success = $success && $this->plugin_factory->delProjectForPlugin($plugin, $prjId);
-                break;
+                    break;
             }
             $successOnce = $success;
         }
 
-        if($successOnce && ($action == 'add')) {
+        if ($successOnce && ($action == 'add')) {
             $this->plugin_factory->restrictProjectPluginUse($plugin, true);
         }
     }
@@ -399,17 +399,16 @@ class PluginManager
     function updateProjectPluginRestriction($plugin, $restricted)
     {
         $this->plugin_factory->restrictProjectPluginUse($plugin, $restricted);
-        if($restricted == false) {
+        if ($restricted == false) {
             $this->plugin_factory->truncateProjectPlugin($plugin);
         }
     }
 
     function isPluginAllowedForProject($plugin, $projectId)
     {
-        if($this->isProjectPluginRestricted($plugin)) {
+        if ($this->isProjectPluginRestricted($plugin)) {
             return $this->plugin_factory->isPluginAllowedForProject($plugin, $projectId);
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -430,17 +429,17 @@ class PluginManager
     private function copyDirectory($source, $destination)
     {
 
-        if(!is_dir($destination)) {
-            if(!mkdir($destination)) {
+        if (!is_dir($destination)) {
+            if (!mkdir($destination)) {
                 return false;
             }
         }
 
         $iterator = new DirectoryIterator($source);
-        foreach($iterator as $file) {
-            if($file->isFile()) {
+        foreach ($iterator as $file) {
+            if ($file->isFile()) {
                 copy($file->getRealPath(), "$destination/" . $file->getFilename());
-            } else if(!$file->isDot() && $file->isDir()) {
+            } elseif (!$file->isDot() && $file->isDir()) {
                 $this->copyDirectory($file->getRealPath(), "$destination/$file");
             }
         }

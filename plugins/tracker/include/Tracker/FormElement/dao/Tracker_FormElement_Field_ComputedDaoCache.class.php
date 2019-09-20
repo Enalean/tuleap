@@ -21,7 +21,8 @@
 /**
  * Cache computation for better performances
  */
-class Tracker_FormElement_Field_ComputedDaoCache {
+class Tracker_FormElement_Field_ComputedDaoCache
+{
     private static $instance;
 
     private $dao;

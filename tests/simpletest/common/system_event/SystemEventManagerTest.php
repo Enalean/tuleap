@@ -27,7 +27,8 @@ Mock::generate('PFUser');
 
 Mock::generate('DataAccessResult');
 
-class SystemEventManagerTest extends TuleapTestCase {
+class SystemEventManagerTest extends TuleapTestCase
+{
 
     public function testConcatParameters()
     {
@@ -130,7 +131,8 @@ class SystemEventManagerTest extends TuleapTestCase {
     }
 }
 
-class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase {
+class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase
+{
 
     private $event_manager;
 

@@ -19,7 +19,8 @@
  */
 
 
-abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
+abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase
+{
     private static $defect_tracker_converted = false;
 
     protected $admin_user_id      = 1;
@@ -124,7 +125,8 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
     }
 }
 
-class MigrateTracker_DefectTrackerConfigTest extends MigrateDefaultTrackersTest {
+class MigrateTracker_DefectTrackerConfigTest extends MigrateDefaultTrackersTest
+{
 
     public function itCreatedTrackerV5WithDefaultParameters()
     {
@@ -219,7 +221,8 @@ class MigrateTracker_DefectTrackerConfigTest extends MigrateDefaultTrackersTest 
     }
 }
 
-class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest {
+class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest
+{
     public function itHasSubmittedBy()
     {
         $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'submitted_by');
@@ -299,7 +302,7 @@ class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest 
     {
         $this->assertCount($values, count($labels));
         $i = 0;
-        while($value = array_shift($values)) {
+        while ($value = array_shift($values)) {
             $this->assertIsA($value, 'Tracker_FormElement_Field_List_Bind_StaticValue');
             $this->assertEqual($value->getLabel(), $labels[$i++]);
             $this->assertFalse($value->isHidden());
@@ -307,7 +310,8 @@ class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest 
     }
 }
 
-class MigrateTracker_DefectTrackerReportsTest extends MigrateDefaultTrackersTest {
+class MigrateTracker_DefectTrackerReportsTest extends MigrateDefaultTrackersTest
+{
     /** @var Tracker_ReportFactory */
     private $report_factory;
     /** @var Tracker_Report */
@@ -393,10 +397,10 @@ class MigrateTracker_DefectTrackerReportsTest extends MigrateDefaultTrackersTest
         }
         return false;
     }
-
 }
 
-class MigrateTracker_TaskTrackerConfigTest extends MigrateDefaultTrackersTest {
+class MigrateTracker_TaskTrackerConfigTest extends MigrateDefaultTrackersTest
+{
 
     public function itCreatedTrackerV5WithDefaultParameters()
     {
@@ -487,7 +491,8 @@ class MigrateTracker_TaskTrackerConfigTest extends MigrateDefaultTrackersTest {
     }
 }
 
-class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
+class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest
+{
 
     public function itHasSubmittedBy()
     {
@@ -567,7 +572,7 @@ class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
     {
         $this->assertCount($values, count($labels));
         $i = 0;
-        while($value = array_shift($values)) {
+        while ($value = array_shift($values)) {
             $this->assertIsA($value, 'Tracker_FormElement_Field_List_Bind_StaticValue');
             $this->assertEqual($value->getLabel(), $labels[$i++]);
             $this->assertFalse($value->isHidden());
@@ -575,7 +580,8 @@ class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
     }
 }
 
-class MigrateTracker_TaskTrackerReportsTest extends MigrateDefaultTrackersTest {
+class MigrateTracker_TaskTrackerReportsTest extends MigrateDefaultTrackersTest
+{
     /** @var Tracker_ReportFactory */
     private $report_factory;
     /** @var Tracker_Report */
@@ -661,10 +667,10 @@ class MigrateTracker_TaskTrackerReportsTest extends MigrateDefaultTrackersTest {
         }
         return false;
     }
-
 }
 
-class MigrateTracker_TaskTrackerDateReminder_startDateTest extends MigrateDefaultTrackersTest {
+class MigrateTracker_TaskTrackerDateReminder_startDateTest extends MigrateDefaultTrackersTest
+{
 
     private $notified_ugroups = array(ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::TRACKER_ADMIN);
 
@@ -684,7 +690,7 @@ class MigrateTracker_TaskTrackerDateReminder_startDateTest extends MigrateDefaul
         $this->assertEqual($this->reminders[0]->getField(), $this->start_date_field);
         $this->assertEqual($this->reminders[0]->getStatus(), Tracker_DateReminder::ENABLED);
         $this->assertEqual($this->reminders[0]->getUgroups(true), $this->notified_ugroups);
-        $this->assertEqual($this->reminders[0]->getRoles(), NULL);
+        $this->assertEqual($this->reminders[0]->getRoles(), null);
     }
 
     public function itSendsASecondEmailOnStartDate()
@@ -694,7 +700,7 @@ class MigrateTracker_TaskTrackerDateReminder_startDateTest extends MigrateDefaul
         $this->assertEqual($this->reminders[1]->getField(), $this->start_date_field);
         $this->assertEqual($this->reminders[1]->getStatus(), Tracker_DateReminder::ENABLED);
         $this->assertEqual($this->reminders[1]->getUgroups(true), $this->notified_ugroups);
-        $this->assertEqual($this->reminders[1]->getRoles(), NULL);
+        $this->assertEqual($this->reminders[1]->getRoles(), null);
     }
 
     public function itSendsTheLastEmailTwoDaysAfterStartDate()
@@ -704,11 +710,12 @@ class MigrateTracker_TaskTrackerDateReminder_startDateTest extends MigrateDefaul
         $this->assertEqual($this->reminders[2]->getField(), $this->start_date_field);
         $this->assertEqual($this->reminders[2]->getStatus(), Tracker_DateReminder::ENABLED);
         $this->assertEqual($this->reminders[2]->getUgroups(true), $this->notified_ugroups);
-        $this->assertEqual($this->reminders[2]->getRoles(), NULL);
+        $this->assertEqual($this->reminders[2]->getRoles(), null);
     }
 }
 
-class MigrateTracker_TaskTrackerDateReminder_endDateTest extends MigrateDefaultTrackersTest {
+class MigrateTracker_TaskTrackerDateReminder_endDateTest extends MigrateDefaultTrackersTest
+{
 
     private $notified_ugroups = array(ProjectUGroup::PROJECT_MEMBERS);
     private $notified_roles   = array();
@@ -744,11 +751,10 @@ class MigrateTracker_TaskTrackerDateReminder_endDateTest extends MigrateDefaultT
         $this->assertEqual($this->reminders[4]->getUgroups(true), $this->notified_ugroups);
         $this->assertEqual($this->reminders[4]->getRoles(), $this->notified_roles);
     }
-
-
 }
 
-class MigrateTracker_TaskTrackerDateReminder_dueDateTest extends MigrateDefaultTrackersTest {
+class MigrateTracker_TaskTrackerDateReminder_dueDateTest extends MigrateDefaultTrackersTest
+{
 
     private $notified_roles = array();
 
@@ -787,6 +793,4 @@ class MigrateTracker_TaskTrackerDateReminder_dueDateTest extends MigrateDefaultT
     {
         $this->assertCount($this->reminders, 7);
     }
-
 }
-?>

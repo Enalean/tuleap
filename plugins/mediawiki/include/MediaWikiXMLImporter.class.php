@@ -149,22 +149,21 @@ class MediaWikiXMLImporter
 
         $this->sys_command->exec($command);
         return true;
-
     }
 
     private function importRights(Project $project, SimpleXMLElement $xml_mediawiki)
     {
-        if($xml_mediawiki->{'read-access'}) {
+        if ($xml_mediawiki->{'read-access'}) {
             $this->logger->info("Importing read access rights for {$project->getUnixName()}");
             $ugroups_ids = $this->getUgroupIdsForPermissions($project, $xml_mediawiki->{'read-access'});
-            if(count($ugroups_ids) > 0) {
+            if (count($ugroups_ids) > 0) {
                 $this->mediawiki_manager->saveReadAccessControl($project, $ugroups_ids);
             }
         }
-        if($xml_mediawiki->{'write-access'}) {
+        if ($xml_mediawiki->{'write-access'}) {
             $this->logger->info("Importing write access rights for {$project->getUnixName()}");
             $ugroups_ids = $this->getUgroupIdsForPermissions($project, $xml_mediawiki->{'write-access'});
-            if(count($ugroups_ids) > 0) {
+            if (count($ugroups_ids) > 0) {
                 $this->mediawiki_manager->saveWriteAccessControl($project, $ugroups_ids);
             }
         }
@@ -178,10 +177,10 @@ class MediaWikiXMLImporter
     private function getUgroupIdsForPermissions(Project $project, SimpleXMLElement $permission_xmlnode)
     {
         $ugroup_ids = array();
-        foreach($permission_xmlnode->ugroup as $ugroup) {
+        foreach ($permission_xmlnode->ugroup as $ugroup) {
             $ugroup_name = (string)$ugroup;
             $ugroup = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
-            if($ugroup === null) {
+            if ($ugroup === null) {
                 $this->logger->warn("Could not find any ugroup named $ugroup_name, skip it.");
                 continue;
             }
@@ -204,5 +203,4 @@ class MediaWikiXMLImporter
             )
         );
     }
-
 }

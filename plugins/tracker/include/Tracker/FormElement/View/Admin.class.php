@@ -24,7 +24,8 @@ use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
  *
  * This is the top most element of the hierarchy and correspond to Tracker_FormElement
  */
-class Tracker_FormElement_View_Admin {
+class Tracker_FormElement_View_Admin
+{
 
     /**
      * @var Tracker_FormElement
@@ -240,12 +241,12 @@ class Tracker_FormElement_View_Admin {
                              name="formElement_data[specific_properties]['. $purifier->purify($key) .']"
                              id="formElement_properties_'. $purifier->purify($key) .'"
                              value="'. $purifier->purify($property['value']) .'" />';
-            break;
+                break;
             case 'date':
                 $html .= '<label for="formElement_properties_'. $purifier->purify($key) .'">'. $purifier->purify($this->formElement->getPropertyLabel($key)) .'</label> ';
                 $value = $purifier->purify($property['value'] ? $this->formElement->formatDate($property['value']) : '');
                 $html .= $GLOBALS['HTML']->getDatePicker("formElement_properties_".$key, "formElement_data[specific_properties][$key]", $value);
-            break;
+                break;
             case 'text':
                 $html .= '<label for="formElement_properties_'. $purifier->purify($key) .'">'. $purifier->purify($this->formElement->getPropertyLabel($key)) .'</label> ';
                 $html .= '<textarea
@@ -253,7 +254,7 @@ class Tracker_FormElement_View_Admin {
                            name="formElement_data[specific_properties]['. $purifier->purify($key) .']"
                            id="formElement_properties_'. $key .'">' .
                            $purifier->purify($property['value']) . '</textarea>';
-            break;
+                break;
             case 'rich_text':
                 $html .= '<label for="formElement_properties_'. $purifier->purify($key) .'">'. $purifier->purify($this->formElement->getPropertyLabel($key)) .'</label> ';
                 $html .= '<textarea
@@ -262,7 +263,7 @@ class Tracker_FormElement_View_Admin {
                            name="formElement_data[specific_properties]['. $purifier->purify($key) .']"
                            id="formElement_properties_'. $purifier->purify($key) .'">' .
                            $purifier->purify($property['value'], CODENDI_PURIFIER_FULL) . '</textarea>';
-            break;
+                break;
             case 'radio':
                 $html .= '<label for="formElement_properties_'. $purifier->purify($key) .'">'. $purifier->purify($this->formElement->getPropertyLabel($key)) .'</label> ';
                 foreach ($property['choices'] as $key_choice => $choice) {
@@ -278,7 +279,7 @@ class Tracker_FormElement_View_Admin {
                     $html .= '&nbsp;'.$this->fetchAdminSpecificProperty($key_choice, $choice);
                     $html .= '</div>';
                 }
-            break;
+                break;
             case 'checkbox':
                 $checked = $property['value'] ? 'checked="checked"' : '';
                 $html .= '<label class="checkbox">
@@ -291,13 +292,13 @@ class Tracker_FormElement_View_Admin {
                                 value="1"/>
                         '.$purifier->purify($this->formElement->getPropertyLabel($key)).'
                     </label>';
-            break;
+                break;
             case 'label':
                 $html .= '<label for="formElement_properties_'. $purifier->purify($key) .'">'. $purifier->purify($this->formElement->getPropertyLabel($key)) .'</label> ';
-            break;
+                break;
             default:
                 //Unknown type. raise exception?
-            break;
+                break;
         }
         return $html;
     }
@@ -350,7 +351,7 @@ class Tracker_FormElement_View_Admin {
             'style' => 'vertical-align:middle;',
         ));
         $html .= ' ';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','edit_permissions') .'</a>';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'edit_permissions') .'</a>';
         $html .= '</p>';
         return $html;
     }
@@ -373,5 +374,3 @@ class Tracker_FormElement_View_Admin {
         return $html;
     }
 }
-
-?>

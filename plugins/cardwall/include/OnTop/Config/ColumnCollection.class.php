@@ -21,7 +21,8 @@
 /**
  * Wrapper of array of columns
  */
-class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAggregate, Countable {
+class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAggregate, Countable
+{
 
     /**
      * @var array
@@ -113,6 +114,4 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
         }
         return $column_representations;
     }
-
 }
-?>

@@ -26,7 +26,8 @@ use Tuleap\PHPWiki\WikiPage;
 /**
  *  Data Access Object for wiki db access from other codendi components
  */
-class WikiDao extends DataAccessObject {
+class WikiDao extends DataAccessObject
+{
     /**
     * This function retreives an id from wiki_page table using the pagename attribute
     *
@@ -36,24 +37,25 @@ class WikiDao extends DataAccessObject {
     */
     function retrieveWikiPageId($pagename, $group_id)
     {
-        $sql = sprintf('SELECT id'.
+        $sql = sprintf(
+            'SELECT id'.
             ' FROM wiki_page'.
             ' WHERE pagename = %s'.
-            ' AND group_id = %d'
-            , $this->da->quoteSmart($pagename), $this->da->escapeInt($group_id));
+            ' AND group_id = %d',
+            $this->da->quoteSmart($pagename),
+            $this->da->escapeInt($group_id)
+        );
         $res = $this->retrieve($sql);
-        if($res && !$res->isError() && $res->rowCount() == 1) {
+        if ($res && !$res->isError() && $res->rowCount() == 1) {
             $res->rewind();
-            if($res->valid()) {
+            if ($res->valid()) {
                 $row = $res->current();
                 $id = $row['id'];
                 return $id;
-            }
-            else {
+            } else {
                 return null;
             }
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -68,14 +70,17 @@ class WikiDao extends DataAccessObject {
     function searchCurrentWikiVersion($groupId, $pagename)
     {
         $version = null;
-        $sql = sprintf('SELECT MAX(version) AS version'.
+        $sql = sprintf(
+            'SELECT MAX(version) AS version'.
                        ' FROM wiki_page '.
                        '  INNER JOIN wiki_version USING(id)'.
                        ' WHERE group_id = %d'.
                        ' AND pagename = %s',
-                       $groupId, $this->da->quoteSmart($pagename));
+            $groupId,
+            $this->da->quoteSmart($pagename)
+        );
         $dar = $this->retrieve($sql);
-        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             $version = $row['version'];
         }

@@ -20,7 +20,8 @@
 
 require_once 'bootstrap.php';
 
-class TrackerXmlFieldsMapping_InSamePlatform_StaticTest extends TuleapTestCase {
+class TrackerXmlFieldsMapping_InSamePlatform_StaticTest extends TuleapTestCase
+{
 
     /** @var array */
     private $xml_mapping;
@@ -65,7 +66,8 @@ class TrackerXmlFieldsMapping_InSamePlatform_StaticTest extends TuleapTestCase {
     }
 }
 
-class TrackerXmlFieldsMapping_InSamePlatform_UgroupsTest extends TuleapTestCase {
+class TrackerXmlFieldsMapping_InSamePlatform_UgroupsTest extends TuleapTestCase
+{
 
     /** @var array */
     private $xml_mapping;

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_Driver_Gerrit_Template_TemplateProcessor {
+class Git_Driver_Gerrit_Template_TemplateProcessor
+{
 
     public const PROJECT_NAME_VARIABLE = '%projectname%';
 
@@ -27,4 +28,3 @@ class Git_Driver_Gerrit_Template_TemplateProcessor {
         return str_replace(self::PROJECT_NAME_VARIABLE, $project->getUnixName(), $template->getContent());
     }
 }
-?>

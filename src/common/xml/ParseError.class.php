@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class XML_ParseError {
+class XML_ParseError
+{
     private $line;
     private $column;
     private $type;

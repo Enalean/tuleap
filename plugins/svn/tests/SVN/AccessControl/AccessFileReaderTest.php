@@ -25,7 +25,8 @@ use Tuleap\SVN\Repository\Repository;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class AccessFileReaderTest extends TuleapTestCase {
+class AccessFileReaderTest extends TuleapTestCase
+{
 
     /** @var Repository */
     private $repository;

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_Importer_CopyArtifactInformationsAggregator implements Logger {
+class Tracker_XML_Importer_CopyArtifactInformationsAggregator implements Logger
+{
 
     /** @var Array */
     private $logs_stack = array();

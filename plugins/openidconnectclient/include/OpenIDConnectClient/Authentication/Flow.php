@@ -104,8 +104,11 @@ class Flow
             $this->getRedirectUri()
         );
         $token_response = $this->token_request_sender->sendTokenRequest($token_request);
-        $id_token       = $this->id_token_verifier->validate($provider, $state->getNonce(),
-            $token_response->getIDToken());
+        $id_token       = $this->id_token_verifier->validate(
+            $provider,
+            $state->getNonce(),
+            $token_response->getIDToken()
+        );
 
         $user_info_request  = $this->user_info_request_creator->createUserInfoRequest($provider, $token_response);
         $user_info_response = $this->user_info_request_sender->sendUserInfoRequest($user_info_request);

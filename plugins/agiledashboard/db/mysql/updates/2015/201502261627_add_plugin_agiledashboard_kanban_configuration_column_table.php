@@ -22,7 +22,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201502261627_add_plugin_agiledashboard_kanban_configuration_column_table extends ForgeUpgrade_Bucket {
+class b201502261627_add_plugin_agiledashboard_kanban_configuration_column_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

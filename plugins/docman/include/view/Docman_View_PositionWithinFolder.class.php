@@ -9,7 +9,8 @@
 
 require_once('Docman_View_View.class.php');
 
-class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements Visitor*/ {
+class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements Visitor*/
+{
 
     /* protected */ function _content($params)
     {
@@ -38,7 +39,7 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
         } else {
             $items = $item->getAllItems();
             $it = $items->iterator();
-            while($it->valid()) {
+            while ($it->valid()) {
                 $o = $it->current();
                 $r = $o->accept($this, $params);
                 $it->next();
@@ -74,5 +75,3 @@ class Docman_View_PositionWithinFolder extends Docman_View_View  /* implements V
         return $this->visitDocument($item, $params);
     }
 }
-
-?>

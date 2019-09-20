@@ -18,17 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SOAPRequestTest extends TuleapTestCase {
+class SOAPRequestTest extends TuleapTestCase
+{
 
     function testInit()
     {
         $request = new SOAPRequest(array(
            'param_1' => 'value_1',
-           'param_2' => 'value_2')
-        );
+           'param_2' => 'value_2'));
         $this->assertEqual($request->get('param_1'), 'value_1');
         $this->assertEqual($request->get('param_2'), 'value_2');
         $this->assertFalse($request->get('does_not_exist'));
     }
 }
-?>

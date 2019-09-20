@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Workflow_Transition_Condition_Permissions_Factory {
+class Workflow_Transition_Condition_Permissions_Factory
+{
 
     /**
      * @var UGroupManager
@@ -68,4 +69,3 @@ class Workflow_Transition_Condition_Permissions_Factory {
         );
     }
 }
-?>

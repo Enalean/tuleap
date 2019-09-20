@@ -94,7 +94,8 @@ Mock::generate('TransitionFactory');
 Mock::generate('PFUser');
 
 
-class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
+class Tracker_FormElement_Field_ListTest extends TuleapTestCase
+{
 
     private $transition_factory_test;
 
@@ -149,7 +150,7 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
         $this->assertIsA($changeset_value, $this->cv_class);
         $this->assertTrue(is_array($changeset_value->getListValues()));
         $this->assertEqual(count($changeset_value->getListValues()), 3);
-        foreach($changeset_value->getListValues() as $bv) {
+        foreach ($changeset_value->getListValues() as $bv) {
             $this->assertIsA($bv, 'Tracker_FormElement_Field_List_BindValue');
         }
     }
@@ -255,13 +256,13 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
 
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
-        $v1->setReturnValue('getLabel','label1');
+        $v1->setReturnValue('getLabel', 'label1');
         $v2 = new MockTracker_FormElement_Field_List_BindValue();
         $v2->setReturnValue('__toString', '# 456');
-        $v2->setReturnValue('getLabel','label2');
+        $v2->setReturnValue('getLabel', 'label2');
         $v3 = new MockTracker_FormElement_Field_List_BindValue();
         $v3->setReturnValue('__toString', '# 789');
-        $v3->setReturnValue('getLabel','label3');
+        $v3->setReturnValue('getLabel', 'label3');
         $submitted_value_1 = '123'; // $v1
         $submitted_value_2 = '456'; // $v2
         $submitted_value_3 = '789'; // $v3
@@ -320,7 +321,7 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
 
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
-        $v1->setReturnValue('getLabel','label1');
+        $v1->setReturnValue('getLabel', 'label1');
         $submitted_value_1 = '123'; // $v1
         stub($bind)->isExistingValue($submitted_value_1)->returns(true);
 
@@ -360,18 +361,17 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
 
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
-        $v1->setReturnValue('getLabel','label1');
+        $v1->setReturnValue('getLabel', 'label1');
         $submitted_value_1 = '123'; // $v1
         $v2 = new MockTracker_FormElement_Field_List_BindValue();
         $v2->setReturnValue('__toString', '# 456');
-        $v2->setReturnValue('getLabel','label2');
+        $v2->setReturnValue('getLabel', 'label2');
         $submitted_value_2 = '456'; // $v2
 
         stub($bind)->getAllValues()->returns(array(
                 $submitted_value_1 => null,
                 $submitted_value_2 => null
-            )
-        );
+            ));
 
         $artifact->setReturnReference('getLastChangeset', $changeset);
 
@@ -411,8 +411,7 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
                 <description>field_description</description>
                 <bind>
                 </bind>
-            </formElement>'
-        );
+            </formElement>');
 
         $mapping = array();
 
@@ -471,8 +470,7 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
                 $value3 => null,
                 $value4 => null
 
-            )
-        );
+            ));
 
         $field_list->setReturnValue('isNone', true, array($value1));
         $field_list->setReturnValue('isNone', true, array($value2));
@@ -486,7 +484,8 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElement_Field_List_processGetValuesTest extends TuleapTestCase {
+class Tracker_FormElement_Field_List_processGetValuesTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -514,7 +513,8 @@ class Tracker_FormElement_Field_List_processGetValuesTest extends TuleapTestCase
     }
 }
 
-class Tracker_FormElement_Field_ListJsonFormattedTest extends TuleapTestCase {
+class Tracker_FormElement_Field_ListJsonFormattedTest extends TuleapTestCase
+{
 
     private $bind;
     private $list;
@@ -539,7 +539,8 @@ class Tracker_FormElement_Field_ListJsonFormattedTest extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElement_Field_ListsetCriteriaValueFromRESTTest extends TuleapTestCase {
+class Tracker_FormElement_Field_ListsetCriteriaValueFromRESTTest extends TuleapTestCase
+{
 
     private $bind;
     private $list;
@@ -655,7 +656,8 @@ class Tracker_FormElement_Field_List_RESTTests extends TuleapTestCase
     }
 }
 
-class Tracker_FormElement_Field_List_Validate_Values extends TuleapTestCase {
+class Tracker_FormElement_Field_List_Validate_Values extends TuleapTestCase
+{
 
     private $artifact;
     private $bind;
@@ -687,6 +689,5 @@ class Tracker_FormElement_Field_List_Validate_Values extends TuleapTestCase {
         $this->assertFalse($this->list->isValid($this->artifact, 9999));
         $this->assertFalse($this->list->isValid($this->artifact, array(9998, 9999)));
         $this->assertFalse($this->list->isValid($this->artifact, array(101, 9999)));
-
     }
 }

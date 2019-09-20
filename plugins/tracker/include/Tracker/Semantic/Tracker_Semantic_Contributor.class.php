@@ -59,7 +59,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
      */
     public function getLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_label');
+        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'contributor_label');
     }
 
     /**
@@ -69,7 +69,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
      */
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'contributor_description');
     }
 
     /**
@@ -103,7 +103,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
      */
     public function display()
     {
-        echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_long_desc');
+        echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'contributor_long_desc');
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
             $purifier = Codendi_HTMLPurifier::instance();
             echo $GLOBALS['Language']->getText(
@@ -112,7 +112,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
                 array($purifier->purify($field->getLabel()))
             );
         } else {
-            echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_no_field');
+            echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'contributor_no_field');
         }
     }
 
@@ -133,12 +133,11 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
         $html = '';
 
         if ($list_fields = Tracker_FormElementFactory::instance()->getUsedUserSbFields($this->tracker)) {
-
             $html .= '<form method="POST" action="'. $this->getUrl() .'">';
             $html .= $this->getCSRFToken()->fetchHTMLInput();
             $select = '<select name="list_field_id">';
             if (! $this->getFieldId()) {
-                $select .= '<option value="" selected="selected">' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_a_field')) . '</option>';
+                $select .= '<option value="" selected="selected">' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'choose_a_field')) . '</option>';
             }
 
             foreach ($list_fields as $list_field) {
@@ -152,25 +151,25 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
             $select .= '</select>';
 
             $unset_btn  = '<button type="submit" class="btn btn-danger" name="delete">';
-            $unset_btn .= $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_admin_semantic','unset')) .'</button>';
+            $unset_btn .= $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'unset')) .'</button>';
 
             $submit_btn  = '<button type="submit" class="btn btn-primary" name="update">';
             $submit_btn .= $purifier->purify($GLOBALS['Language']->getText('global', 'save_change')) .'</button>';
 
             if (!$this->getFieldId()) {
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_no_field');
-                $html .= '<p>' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_one_advice'));
+                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'contributor_no_field');
+                $html .= '<p>' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'choose_one_advice'));
                 $html .= $select .' <br> '. $submit_btn;
                 $html .= '</p>';
             } else {
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_field', array($select));
+                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'contributor_field', array($select));
                 $html .= $submit_btn .' '. $purifier->purify($GLOBALS['Language']->getText('global', 'or')) .' '. $unset_btn;
             }
             $html .= '</form>';
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_impossible');
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'contributor_impossible');
         }
-        $html .= '<p><a href="'.TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','go_back_overview') . '</a></p>';
+        $html .= '<p><a href="'.TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'go_back_overview') . '</a></p>';
         echo $html;
         $sm->displaySemanticFooter($this, $tracker_manager);
     }
@@ -193,16 +192,18 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
                 $this->list_field = $field;
                 if ($this->save()) {
                     $this->sendContributorChangeEvent();
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','contributor_now', array($field->getLabel())));
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'contributor_now', array($field->getLabel())));
                     $GLOBALS['Response']->redirect($this->getUrl());
                 } else {
-                    $GLOBALS['Response']->addFeedback('error',
-                        $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'unable_save_contributor'));
+                    $GLOBALS['Response']->addFeedback(
+                        'error',
+                        $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'unable_save_contributor')
+                    );
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','bad_field_contributor'));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'bad_field_contributor'));
             }
-        } else if ($request->exist('delete')) {
+        } elseif ($request->exist('delete')) {
             $this->getCSRFToken()->check();
             if ($this->delete()) {
                 $this->sendContributorChangeEvent();
@@ -282,7 +283,6 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
             $child->addChild('label', $this->getLabel());
             $child->addChild('description', $this->getDescription());
             $child->addChild('field')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
-
         }
     }
 
@@ -297,5 +297,4 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
     {
         return $this->getFieldId() == $field->getId();
     }
-
 }

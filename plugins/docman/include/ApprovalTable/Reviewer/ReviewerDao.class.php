@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
+class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao
+{
 
     function __construct($da)
     {
@@ -32,7 +33,7 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
     function getUgroupMembers($ugroupId, $groupId)
     {
         require_once __DIR__ . '/../../../../../src/www/project/admin/ugroup_utils.php';
-        if($ugroupId > 100) {
+        if ($ugroupId > 100) {
             $sql = ugroup_db_get_members($ugroupId);
         } else {
             $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId);
@@ -45,39 +46,46 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
 
     function getReviewerList($tableId)
     {
-        $sql = sprintf('SELECT * FROM plugin_docman_approval_user au'.
+        $sql = sprintf(
+            'SELECT * FROM plugin_docman_approval_user au'.
                        ' WHERE table_id = %d'.
                        ' ORDER BY rank',
-                       $tableId);
+            $tableId
+        );
         return $this->retrieve($sql);
     }
 
     function getReviewerById($tableId, $userId)
     {
-        $sql = sprintf('SELECT * '.
+        $sql = sprintf(
+            'SELECT * '.
                        ' FROM plugin_docman_approval_user au'.
                        ' WHERE table_id = %d'.
                        '  AND reviewer_id = %d',
-                       $tableId, $userId);
+            $tableId,
+            $userId
+        );
         return $this->retrieve($sql);
     }
 
     function getFirstReviewerByStatus($tableId, $status)
     {
-        if(is_array($status)) {
+        if (is_array($status)) {
             $_status = array_map("intval", $status);
             $state = 'state IN ('.implode(',', $status).')';
         } else {
             $state = 'state = '.intval($status);
         }
 
-        $sql = sprintf('SELECT * '.
+        $sql = sprintf(
+            'SELECT * '.
                        ' FROM plugin_docman_approval_user au'.
                        ' WHERE table_id = %d'.
                        '  AND '.$state.
                        ' ORDER BY rank'.
                        ' LIMIT 1',
-                       $tableId);
+            $tableId
+        );
         return $this->retrieve($sql);
     }
 
@@ -89,67 +97,83 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
     function addUser($tableId, $userId)
     {
         $newRank = $this->prepareUserRanking($tableId, $userId, 'end');
-        $sql = sprintf('INSERT INTO plugin_docman_approval_user'.
+        $sql = sprintf(
+            'INSERT INTO plugin_docman_approval_user'.
                        '(table_id, reviewer_id, rank)'.
                        ' VALUES'.
                        '(%d, %d, %d)',
-                       $tableId, $userId, $newRank);
+            $tableId,
+            $userId,
+            $newRank
+        );
         return $this->update($sql);
     }
 
     function updateUser($tableId, $userId, $rank)
     {
         $newRank = $this->prepareUserRanking($tableId, $userId, $rank);
-        if($newRank !== false) {
-            $sql = sprintf('UPDATE plugin_docman_approval_user'.
+        if ($newRank !== false) {
+            $sql = sprintf(
+                'UPDATE plugin_docman_approval_user'.
                            ' SET rank = %d'.
                            ' WHERE table_id = %d'.
                            ' AND reviewer_id = %d',
-                           $newRank, $tableId, $userId);
+                $newRank,
+                $tableId,
+                $userId
+            );
             return $this->update($sql);
-        }
-        else {
+        } else {
             return true;
         }
     }
 
     function delUser($tableId, $userId)
     {
-        $sql = sprintf('DELETE FROM plugin_docman_approval_user'.
+        $sql = sprintf(
+            'DELETE FROM plugin_docman_approval_user'.
                        ' WHERE table_id = %d'.
                        ' AND reviewer_id = %d',
-                       $tableId, $userId);
+            $tableId,
+            $userId
+        );
         return $this->update($sql);
     }
 
     function truncateTable($tableId)
     {
-        $sql = sprintf('DELETE FROM plugin_docman_approval_user'.
+        $sql = sprintf(
+            'DELETE FROM plugin_docman_approval_user'.
                        ' WHERE table_id = %d',
-                       $tableId);
+            $tableId
+        );
         return $this->update($sql);
     }
 
     function updateReview($tableId, $userId, $date, $state, $comment, $version)
     {
         $_stmtDate = sprintf('date = %d,', $date);
-        if($date === null) {
+        if ($date === null) {
             $_stmtDate = 'date = NULL,';
         }
         $_stmtVersion = sprintf('version = %d', $version);
-        if($version === null) {
+        if ($version === null) {
             $_stmtVersion = 'version = NULL';
         }
 
-        $sql = sprintf('UPDATE plugin_docman_approval_user'.
+        $sql = sprintf(
+            'UPDATE plugin_docman_approval_user'.
                        ' SET state = %d,'.
                        '  comment = %s,'.
                        $_stmtDate.
                        $_stmtVersion.
                        ' WHERE table_id = %d'.
                        '  AND reviewer_id = %d',
-                       $state, $this->da->quoteSmart($comment),
-                       $tableId, $userId);
+            $state,
+            $this->da->quoteSmart($comment),
+            $tableId,
+            $userId
+        );
         return $this->update($sql);
     }
 
@@ -253,5 +277,4 @@ class Docman_ApprovalTableReviewerDao extends Docman_ApprovalTableItemDao {
         //echo $sql;
         return $this->retrieve($sql);
     }
-
 }

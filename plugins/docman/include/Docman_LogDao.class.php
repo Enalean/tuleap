@@ -31,8 +31,10 @@ class Docman_LogDao extends DataAccessObject
     */
     public function searchByItemId($itemId, $order = '')
     {
-        $sql = sprintf("SELECT time, group_id, user_id, type, old_value, new_value, field FROM plugin_docman_log WHERE item_id = %s ".$order,
-        $this->da->quoteSmart($itemId));
+        $sql = sprintf(
+            "SELECT time, group_id, user_id, type, old_value, new_value, field FROM plugin_docman_log WHERE item_id = %s ".$order,
+            $this->da->quoteSmart($itemId)
+        );
         return $this->retrieve($sql);
     }
     /**
@@ -95,14 +97,14 @@ class Docman_LogDao extends DataAccessObject
     public function getSqlStatementForLogsDaily($group_id, $logs_cond)
     {
         return 'SELECT log.time AS time, '
-               .'CASE WHEN log.type = 1 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_add')).
-               ' WHEN log.type = 2 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_edit')).
-               ' WHEN log.type = 3 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_move')).
-               ' WHEN log.type = 4 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_delete')).
-               ' WHEN log.type = 5 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_access')).
-               ' WHEN log.type = 11 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','action_delete_version')).
-               ' WHEN log.type = 12 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','event_restore')).
-               ' WHEN log.type = 13 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman','event_restore_version')).
+               .'CASE WHEN log.type = 1 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'action_add')).
+               ' WHEN log.type = 2 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'action_edit')).
+               ' WHEN log.type = 3 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'action_move')).
+               ' WHEN log.type = 4 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'action_delete')).
+               ' WHEN log.type = 5 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'action_access')).
+               ' WHEN log.type = 11 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'action_delete_version')).
+               ' WHEN log.type = 12 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'event_restore')).
+               ' WHEN log.type = 13 THEN '.$this->da->quoteSmart($GLOBALS['Language']->getText('plugin_docman', 'event_restore_version')).
                ' END as type, user.user_name AS user_name, user.realname AS realname, user.email AS email, CONCAT(item.item_id," - ",item.title) AS title '
                .' FROM plugin_docman_log AS log, user, plugin_docman_item AS item '
                .' WHERE '. $logs_cond

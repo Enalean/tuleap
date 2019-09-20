@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201312250950_add_reminder_roles_table extends ForgeUpgrade_Bucket {
+class b201312250950_add_reminder_roles_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -75,4 +76,3 @@ class b201312250950_add_reminder_roles_table extends ForgeUpgrade_Bucket {
         }
     }
 }
-?>

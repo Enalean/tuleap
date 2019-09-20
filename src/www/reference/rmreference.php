@@ -33,14 +33,14 @@ $source_type = $request->get('source_type');
 $user = UserManager::instance()->getCurrentUser();
 
 $project_admin = $user->isMember($target_gid, 'A') ;
-if(!$project_admin){
+if (!$project_admin) {
     $project_admin_source = $user->isMember($source_gid, 'A') ;
-    if ($project_admin_source){
+    if ($project_admin_source) {
            $project_admin = true;
     }
 }
 
-if($project_admin){
+if ($project_admin) {
     $cross_reference = new CrossReference(
         $source_id,
         $source_gid,
@@ -55,5 +55,3 @@ if($project_admin){
     $reference_manager = new ReferenceManager();
     $reference_manager->removeCrossReference($cross_reference);
 }
-
-?>

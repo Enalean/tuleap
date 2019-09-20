@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Notification {
+class Notification
+{
 
     /** @var array */
     private $emails;

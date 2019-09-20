@@ -19,7 +19,8 @@
  */
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_DateReminderManagerTest extends TuleapTestCase {
+class Tracker_DateReminderManagerTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -57,5 +58,3 @@ class Tracker_DateReminderManagerTest extends TuleapTestCase {
         $this->reminder_manager->getArtifactsByreminder($this->reminder);
     }
 }
-
-?>

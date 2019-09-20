@@ -23,7 +23,8 @@
  */
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase {
+class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase
+{
     private $repository_id = 115;
     private $system_event_manager;
 

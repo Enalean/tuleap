@@ -18,7 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class Admin_Homepage_LogoFinder {
+class Admin_Homepage_LogoFinder
+{
 
     public const PATH       = '/images/homepage-logo.png';
     public const THEME_PATH = '/themes/common';
@@ -44,5 +45,4 @@ class Admin_Homepage_LogoFinder {
     {
         return is_file(self::getCustomPath());
     }
-
 }

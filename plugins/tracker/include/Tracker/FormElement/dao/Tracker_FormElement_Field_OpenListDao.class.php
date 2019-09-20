@@ -19,7 +19,8 @@
  */
 
 
-class Tracker_FormElement_Field_OpenListDao extends Tracker_FormElement_SpecificPropertiesDao {
+class Tracker_FormElement_Field_OpenListDao extends Tracker_FormElement_SpecificPropertiesDao
+{
     function __construct()
     {
         parent::__construct();
@@ -71,7 +72,7 @@ class Tracker_FormElement_Field_OpenListDao extends Tracker_FormElement_Specific
         //          INNER JOIN tracker_changeset_value AS c ON ( l.changeset_value_id = c.id AND c.changeset_id = $changeset_id AND c.field_id = $field_id )
         //      UNION
         $openvalue_select = '';
-        for ($i = 0 ; $i < $bindtable_select_nb ; ++$i) {
+        for ($i = 0; $i < $bindtable_select_nb; ++$i) {
             $openvalue_select .= ' null,';
         }
         $sql = "SELECT $bindtable_join_on_id as id, $bindtable_select, null as openvalue_label, l.insertion_order
@@ -86,6 +87,4 @@ class Tracker_FormElement_Field_OpenListDao extends Tracker_FormElement_Specific
                 ORDER BY insertion_order";
         return $this->retrieve($sql);
     }
-
 }
-?>

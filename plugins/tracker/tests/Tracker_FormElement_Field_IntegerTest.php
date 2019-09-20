@@ -38,14 +38,17 @@ Mock::generatePartial(
     array('getValueDao', 'isRequired', 'getProperty', 'isUsed', 'getCriteriaValue')
 );
 
-class Tracker_FormElement_Field_IntegerTestVersion_Expose_ProtectedMethod extends Tracker_FormElement_Field_IntegerTestVersion {
+class Tracker_FormElement_Field_IntegerTestVersion_Expose_ProtectedMethod extends Tracker_FormElement_Field_IntegerTestVersion
+{
     public function buildMatchExpression($a, $b)
     {
-        return parent::buildMatchExpression($a, $b); }
+        return parent::buildMatchExpression($a, $b);
+    }
 }
 
 
-class Tracker_FormElement_Field_IntegerTest extends TuleapTestCase {
+class Tracker_FormElement_Field_IntegerTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -203,7 +206,8 @@ class Tracker_FormElement_Field_IntegerTest extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElement_Field_Integer_RESTTests extends TuleapTestCase {
+class Tracker_FormElement_Field_Integer_RESTTests extends TuleapTestCase
+{
 
     public function itReturnsTheValueIndexedByFieldName()
     {

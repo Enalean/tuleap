@@ -31,7 +31,8 @@ use Zend\Mime\Part as MimePart;
  * It allows to send mails in html format
  *
  */
-class Codendi_Mail implements Codendi_Mail_Interface {
+class Codendi_Mail implements Codendi_Mail_Interface
+{
     /**
      * @const Use the common look and feel
      *
@@ -130,7 +131,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     function _cleanupMailFormat($mail)
     {
         $pattern = '/(.*)<(.*)>/';
-        if (preg_match ($pattern, $mail, $matches)) {
+        if (preg_match($pattern, $mail, $matches)) {
             // Remove extra spaces and quotes
             $name = trim(trim($matches[1]), '"\'');
             return array($matches[2], $name);
@@ -202,10 +203,10 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @param String  $to
      * @param bool $raw
      */
-    public function setTo($to, $raw=false)
+    public function setTo($to, $raw = false)
     {
         list($to,) = $this->_cleanupMailFormat($to);
-        if(!$raw) {
+        if (!$raw) {
             $to = $this->validateCommaSeparatedListOfAddresses($to);
             if (!empty($to)) {
                 foreach ($to as $row) {
@@ -241,9 +242,9 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @param String  $bcc
      * @param bool $raw
      */
-    public function setBcc($bcc, $raw=false)
+    public function setBcc($bcc, $raw = false)
     {
-        if(!$raw) {
+        if (!$raw) {
             $bcc = $this->validateCommaSeparatedListOfAddresses($bcc);
             if (!empty($bcc)) {
                 foreach ($bcc as $row) {
@@ -251,7 +252,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
                 }
             }
         } else {
-            $this->addBcc($bcc , '');
+            $this->addBcc($bcc, '');
         }
     }
 
@@ -279,9 +280,9 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @param String  $cc
      * @param bool $raw
      */
-    public function setCc($cc, $raw=false)
+    public function setCc($cc, $raw = false)
     {
-        if(!$raw) {
+        if (!$raw) {
             $cc = $this->validateCommaSeparatedListOfAddresses($cc);
             if (!empty($cc)) {
                 foreach ($cc as $row) {
@@ -423,7 +424,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
 
         $html_message = new MimeMessage();
         $html_message->addPart($html_code_part);
-        foreach($this->inline_attachments as $attachment) {
+        foreach ($this->inline_attachments as $attachment) {
             $html_message->addPart($attachment);
         }
         $html_part           = new MimePart($html_message->generateMessage());
@@ -513,7 +514,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
 
         $mime_message = new MimeMessage();
         $mime_message->addPart($this->getBodyPart());
-        foreach($this->attachments as $attachment) {
+        foreach ($this->attachments as $attachment) {
             $mime_message->addPart($attachment);
         }
         $this->message->setBody($mime_message);
@@ -581,7 +582,6 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     {
         $header = new Mail\Header\GenericHeader($name, $value);
         $this->message->getHeaders()->addHeader($header);
-
     }
 
     public function addAttachment($data, $mime_type, $filename)

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201103081738_add_column_filepath_to_frs_file extends ForgeUpgrade_Bucket {
+class b201103081738_add_column_filepath_to_frs_file extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -61,7 +62,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('filepath not created in frs_file_deleted');
         }
     }
-
 }
-
-?>

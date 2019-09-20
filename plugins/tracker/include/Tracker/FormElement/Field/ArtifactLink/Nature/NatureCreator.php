@@ -21,7 +21,8 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-class NatureCreator {
+class NatureCreator
+{
 
     /** @var NatureDao */
     private $dao;

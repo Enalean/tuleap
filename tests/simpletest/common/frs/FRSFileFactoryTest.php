@@ -987,8 +987,7 @@ class FRSFileFactoryTest extends TuleapTestCase
 
         try {
             $ff->createFile($f);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->assertIsA($e, 'FRSFileIllegalNameException');
         }
     }
@@ -1013,7 +1012,7 @@ class FRSFileFactoryTest extends TuleapTestCase
         $ff = new FRSFileFactoryFakeCreation();
         $ff->setLogger(mock('Logger'));
         $ff->setReturnValue('create', 55);
-        $ff->setReturnValue('moveFileForge', True);
+        $ff->setReturnValue('moveFileForge', true);
         $ff->dao = $dao;
 
         $rf = new MockFRSReleaseFactory($this);
@@ -1050,7 +1049,7 @@ class FRSFileFactoryTest extends TuleapTestCase
         $ff = new FRSFileFactoryFakeCreation();
         $ff->setLogger(mock('Logger'));
         $ff->setReturnValue('create', 55);
-        $ff->setReturnValue('moveFileForge', True);
+        $ff->setReturnValue('moveFileForge', true);
         $ff->dao = $dao;
 
         $rf = new MockFRSReleaseFactory($this);
@@ -1182,8 +1181,7 @@ class FRSFileFactoryTest extends TuleapTestCase
 
         try {
             $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->assertIsA($e, 'FRSFileToBeRestoredException');
         }
 
@@ -1210,8 +1208,7 @@ class FRSFileFactoryTest extends TuleapTestCase
         $this->assertFalse(is_file($GLOBALS['ftp_incoming_dir'].'/toto.txt'));
         try {
             $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->assertIsA($e, 'FRSFileInvalidNameException');
         }
     }
@@ -1237,8 +1234,8 @@ class FRSFileFactoryTest extends TuleapTestCase
 
         $path = $GLOBALS['ftp_incoming_dir'].'/'.$f->getFileName();
         touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
-        $ff->setReturnValue('moveFileForge', True);
-        $ff->setReturnValue('create', True);
+        $ff->setReturnValue('moveFileForge', true);
+        $ff->setReturnValue('create', true);
 
         $ff->expectNever('compareMd5Checksums');
         $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
@@ -1270,8 +1267,7 @@ class FRSFileFactoryTest extends TuleapTestCase
 
         try {
             $ff->createFile($f, FRSFileFactory::COMPUTE_MD5);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->assertIsA($e, 'FRSFileMD5SumException');
         }
 
@@ -1298,11 +1294,10 @@ class FRSFileFactoryTest extends TuleapTestCase
         $f = new FRSFile();
         $f->setRelease($r);
 
-        $ff->setReturnValue('moveFileForge', False);
+        $ff->setReturnValue('moveFileForge', false);
         try {
             $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->assertIsA($e, 'FRSFileForgeException');
         }
     }
@@ -1427,6 +1422,4 @@ class FRSFileFactoryTest extends TuleapTestCase
         $backend = new MockBackendSystem();
         $this->assertTrue($fileFactory->deleteProjectFRS(1, $backend));
     }
-
 }
-

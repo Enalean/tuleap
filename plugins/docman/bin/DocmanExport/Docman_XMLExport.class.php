@@ -24,7 +24,8 @@
 require_once(__DIR__ . '/../../include/Docman_ItemFactory.class.php');
 require 'Docman_XMLExportVisitor.class.php';
 
-class Docman_XMLExport {
+class Docman_XMLExport
+{
     protected $groupId;
     protected $dataPath;
     protected $logger;
@@ -62,10 +63,10 @@ class Docman_XMLExport {
     {
         $propdefs = $doc->createElement('propdefs');
         $mdFactory = new Docman_MetadataFactory($this->groupId);
-        foreach($mdFactory->getRealMetadataList() as $metadata) {
+        foreach ($mdFactory->getRealMetadataList() as $metadata) {
             $propdef = $doc->createElement('propdef');
             $propdef->setAttribute('name', $metadata->getName());
-            switch($metadata->getType()) {
+            switch ($metadata->getType()) {
                 case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
                     $type = 'text';
                     break;
@@ -82,10 +83,10 @@ class Docman_XMLExport {
             $propdef->setAttribute('type', $type);
             $propdef->setAttribute('multivalue', $metadata->getIsMultipleValuesAllowed() ? 'true' : 'false');
             $propdef->setAttribute('empty', $metadata->getIsEmptyAllowed() ? 'true' : 'false');
-            if($metadata->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+            if ($metadata->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                 $loveFactory = new Docman_MetadataListOfValuesElementFactory($metadata->getId());
-                foreach($loveFactory->getListByFieldId($metadata->getId(), $metadata->getLabel(), true) as $love) {
-                    if($love->getId() != 100) {
+                foreach ($loveFactory->getListByFieldId($metadata->getId(), $metadata->getLabel(), true) as $love) {
+                    if ($love->getId() != 100) {
                         $value = $doc->createElement('value');
                         $value->appendChild($doc->createTextNode($love->getName()));
                         $propdef->appendChild($value);
@@ -112,4 +113,3 @@ class Docman_XMLExport {
         return $xmlExport->getXML($tree);
     }
 }
-?>

@@ -19,7 +19,8 @@
  * https://bitbucket.org/vaceletm/php_bigfile
  */
 
-class PHP_BigFile {
+class PHP_BigFile
+{
 
     /**
      * @var resource The current context, or NULL if no context was passed to the caller function
@@ -148,7 +149,7 @@ class PHP_BigFile {
                     $this->filesize = self::getSize($this->path);
                     return true;
                 }
-            return false;
+                return false;
             break;
 
             case 'w':
@@ -163,7 +164,7 @@ class PHP_BigFile {
                 } else {
                     return touch($this->path);
                 }
-            break;
+                break;
 
             case 'a':
             case 'ab':
@@ -175,8 +176,7 @@ class PHP_BigFile {
                 } else {
                     return touch($this->path);
                 }
-            break;
-
+                break;
         }
 
         return true;
@@ -351,9 +351,6 @@ class PHP_BigFile {
     {
         return stat($this->path);
     }
-
 }
 
 PHP_BigFile::register();
-
-?>

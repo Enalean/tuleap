@@ -21,7 +21,8 @@
 
 require_once('CollectionTestCase.class.php');
 
-class LinkedListTestCase extends CollectionTestCase {
+class LinkedListTestCase extends CollectionTestCase
+{
 
     function __construct($name = 'Collection test', $collection_class_name = 'you_must_define_classname')
     {
@@ -60,9 +61,6 @@ class LinkedListTestCase extends CollectionTestCase {
         $l2->add($a);
         $this->assertFalse($l1->equals($l2));
     }
-
 }
 //We just tells SimpleTest to always ignore this testcase
 SimpleTest::ignore('LinkedListTestCase');
-
-?>

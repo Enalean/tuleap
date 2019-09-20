@@ -65,7 +65,7 @@ class ConnectorPresenterBuilder
     {
         $providers                           = $this->provider_manager->getProvidersUsableToLogIn();
         $providers_authorization_request_uri = array();
-        foreach($providers as $provider) {
+        foreach ($providers as $provider) {
             $authorization_request = $this->authorization_request_creator->createAuthorizationRequest($provider, $return_to);
 
             $providers_authorization_request_uri[] = array(

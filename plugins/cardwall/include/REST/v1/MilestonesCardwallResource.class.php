@@ -27,7 +27,8 @@ use Tracker_ArtifactFactory;
 use Cardwall_RawBoardBuilder;
 use UserManager;
 
-class MilestonesCardwallResource {
+class MilestonesCardwallResource
+{
     /** @var Cardwall_OnTop_ConfigFactory */
     private $config_factory;
 
@@ -91,7 +92,7 @@ class MilestonesCardwallResource {
     {
         $config = $this->config_factory->getOnTopConfig($milestone->getArtifact()->getTracker());
 
-        if (! $config->isEnabled()){
+        if (! $config->isEnabled()) {
             throw new RestException(404);
         }
     }

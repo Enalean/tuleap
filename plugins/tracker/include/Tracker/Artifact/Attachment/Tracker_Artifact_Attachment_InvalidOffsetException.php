@@ -18,5 +18,6 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class Tracker_Artifact_Attachment_InvalidOffsetException extends Exception {}
-?>
+class Tracker_Artifact_Attachment_InvalidOffsetException extends Exception
+{
+}

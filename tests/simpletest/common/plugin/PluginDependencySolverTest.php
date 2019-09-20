@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class PluginDependencySolverTest extends TuleapTestCase {
+class PluginDependencySolverTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -75,4 +76,3 @@ class PluginDependencySolverTest extends TuleapTestCase {
         );
     }
 }
-?>

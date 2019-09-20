@@ -21,21 +21,22 @@
 use Tuleap\FRS\FRSPermission;
 use Tuleap\FRS\UploadedLinksUpdater;
 
-class FRSPackageFactoryMock extends FRSPackageFactory {
+class FRSPackageFactoryMock extends FRSPackageFactory
+{
     // bypass it for the tests as it calls global functions which access to the db
     function setDefaultPermissions(FRSPackage $package)
     {
     }
 }
 
-class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory {
+class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory
+{
 
     function __construct()
     {
         parent::__construct();
         $this->fileforge = '/bin/true';
     }
-
 }
 
 class FRSXMLImporterTest extends TuleapTestCase
@@ -97,14 +98,15 @@ class FRSXMLImporterTest extends TuleapTestCase
             $this->frs_permission_creator,
             $links_updater,
             $this->processor_dao,
-            $this->filetype_dao);
+            $this->filetype_dao
+        );
 
         EventManager::setInstance(Mockery::spy(EventManager::class));
         $GLOBALS['Language'] = mock('BaseLanguage');
-        if(isset($GLOBALS['ftp_incoming_dir'])) {
+        if (isset($GLOBALS['ftp_incoming_dir'])) {
             $this->old_ftp_incoming_dir = $GLOBALS['ftp_incoming_dir'];
         }
-        if(isset($GLOBALS['old_ftp_frs_dir_prefix'])) {
+        if (isset($GLOBALS['old_ftp_frs_dir_prefix'])) {
             $this->old_ftp_frs_dir_prefix = $GLOBALS['ftp_frs_dir_prefix'];
         }
         $GLOBALS['ftp_incoming_dir'] = parent::getTmpDir();
@@ -119,12 +121,12 @@ class FRSXMLImporterTest extends TuleapTestCase
         FRSReleaseFactory::clearInstance();
         PermissionsManager::clearInstance();
         UserManager::clearInstance();
-        if(isset($this->old_ftp_incoming_dir)) {
+        if (isset($this->old_ftp_incoming_dir)) {
             $GLOBALS['ftp_incoming_dir'] = $this->old_ftp_incoming_dir;
         } else {
             unset($GLOBALS['ftp_incoming_dir']);
         }
-        if(isset($this->old_ftp_frs_dir_prefix)) {
+        if (isset($this->old_ftp_frs_dir_prefix)) {
             $GLOBALS['ftp_frs_dir_prefix'] = $this->old_ftp_frs_dir_prefix;
         } else {
             unset($GLOBALS['ftp_frs_dir_prefix']);

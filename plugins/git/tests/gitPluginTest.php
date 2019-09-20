@@ -20,7 +20,8 @@
 
 require_once 'bootstrap.php';
 
-class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase {
+class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase
+{
 
     /**
      *
@@ -112,7 +113,8 @@ class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase {
     }
 }
 
-class GitPlugin_Post_System_Events extends TuleapTestCase {
+class GitPlugin_Post_System_Events extends TuleapTestCase
+{
 
     public function setUp()
     {

@@ -20,7 +20,8 @@
 
 require_once('bootstrap.php');
 
-class Tracker_FormElement_StaticField_SeparatorTest extends TuleapTestCase {
+class Tracker_FormElement_StaticField_SeparatorTest extends TuleapTestCase
+{
 
     public function testFetchDescription()
     {
@@ -44,5 +45,4 @@ class Tracker_FormElement_StaticField_SeparatorTest extends TuleapTestCase {
         $this->assertEqual('', $separator->getDescription());
         $this->assertEqual($expected_message, $separator->getCannotRemoveMessage());
     }
-
 }

@@ -22,7 +22,8 @@
 /**
  * CardwallPluginDescriptor
  */
-class CardwallPluginDescriptor extends PluginDescriptor {
+class CardwallPluginDescriptor extends PluginDescriptor
+{
 
     function __construct()
     {
@@ -30,4 +31,3 @@ class CardwallPluginDescriptor extends PluginDescriptor {
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
-?>

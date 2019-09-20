@@ -23,7 +23,8 @@ use PFUser;
 use Logger;
 use UserManager;
 
-class WillBeActivatedUser implements ReadyToBeImportedUser {
+class WillBeActivatedUser implements ReadyToBeImportedUser
+{
 
     /** @var PFUser */
     private $user;

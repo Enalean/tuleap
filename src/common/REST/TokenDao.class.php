@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Rest_TokenDao extends DataAccessObject {
+class Rest_TokenDao extends DataAccessObject
+{
 
     public function addTokenForUserId($user_id, $token, $current_timestamp)
     {
@@ -71,7 +72,6 @@ class Rest_TokenDao extends DataAccessObject {
                 WHERE user_id = $user_id";
 
         return $this->retrieve($sql);
-
     }
 
     public function checkTokenExistenceForUserId($user_id, $token)
@@ -88,4 +88,3 @@ class Rest_TokenDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 }
-?>

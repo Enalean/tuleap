@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/GerritTestBase.php';
 
-class Git_Driver_GerritLegacy_removeIncludedGroupTest extends TuleapTestCase implements Git_Driver_Gerrit_removeIncludedGroupTest {
+class Git_Driver_GerritLegacy_removeIncludedGroupTest extends TuleapTestCase implements Git_Driver_Gerrit_removeIncludedGroupTest
+{
     public function setUp()
     {
         parent::setUp();

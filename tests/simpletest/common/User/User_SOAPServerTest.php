@@ -21,7 +21,8 @@ use Tuleap\User\SessionNotCreatedException;
 
 Mock::generate('UserManager');
 
-class User_SOAPServerTest extends TuleapTestCase {
+class User_SOAPServerTest extends TuleapTestCase
+{
 
     public function testLoginAsReturnsSoapFaultsWhenUserManagerThrowsAnException()
     {
@@ -94,7 +95,8 @@ class User_SOAPServerTest extends TuleapTestCase {
     }
 }
 
-class UserManagerAsserter {
+class UserManagerAsserter
+{
 
     private $server;
     private $asserter;

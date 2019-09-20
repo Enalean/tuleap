@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObject {
+class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObject
+{
 
     public function create($user_id, $name, $description, $mimetype, $timestamp, $tempname)
     {

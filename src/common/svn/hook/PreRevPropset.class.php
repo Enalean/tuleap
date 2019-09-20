@@ -25,7 +25,8 @@
 /**
  * I'm responsible of handling what happens in pre-revprop-change subversion hook
  */
-class SVN_Hook_PreRevPropset extends SVN_Hook {
+class SVN_Hook_PreRevPropset extends SVN_Hook
+{
 
     /**
      * Check if the property can be modified

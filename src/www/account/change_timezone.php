@@ -37,7 +37,7 @@ if ($request->isPost()) {
     $csrf->check();
     if (! $request->existAndNonEmpty('timezone')) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_change_timezone', 'no_update'));
-    } else if (! is_valid_timezone($request->get('timezone'))) {
+    } elseif (! is_valid_timezone($request->get('timezone'))) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_change_timezone', 'choose_tz'));
     } else {
         // if we got this far, it must be good

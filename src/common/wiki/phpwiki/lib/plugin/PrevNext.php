@@ -26,8 +26,7 @@ rcs_id('$Id: PrevNext.php,v 1.4 2004/06/14 11:31:39 rurban Exp $');
  * See also PageGroup which automatically tries to extract the various links
  *
  */
-class WikiPlugin_PrevNext
-extends WikiPlugin
+class WikiPlugin_PrevNext extends WikiPlugin
 {
     function getName()
     {
@@ -36,13 +35,16 @@ extends WikiPlugin
 
     function getDescription()
     {
-        return sprintf(_("Easy navigation buttons for %s"),'[pagename]');
+        return sprintf(_("Easy navigation buttons for %s"), '[pagename]');
     }
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.4 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.4 $"
+        );
     }
 
     function getDefaultArguments()
@@ -81,15 +83,16 @@ extends WikiPlugin
                 $new_directions[$o] = $directions[$o];
             }
             $directions = $new_directions;
-            unset ($new_directions); // free memory
+            unset($new_directions); // free memory
         }
 
         global $WikiTheme;
         $sep = $WikiTheme->getButtonSeparator();
         $links = HTML();
         if ($style == 'text') {
-            if (!$sep)
+            if (!$sep) {
                 $sep = " | "; // force some kind of separator
+            }
             $links->pushcontent(" [ ");
         }
         $last_is_text = false;
@@ -101,35 +104,48 @@ extends WikiPlugin
                 if ($style == 'button') {
                     // localized version: _("Previous").gif
                     if ($imgurl = $WikiTheme->getButtonURL($label)) {
-                        if ($last_is_text)
+                        if ($last_is_text) {
                             $links->pushContent($sep);
-                        $links->pushcontent(new ImageButton($label, $url,
-                                                            false, $imgurl));
+                        }
+                        $links->pushcontent(new ImageButton(
+                            $label,
+                            $url,
+                            false,
+                            $imgurl
+                        ));
                         $last_is_text = false;
                         // generic version: prev.gif
                     } elseif ($imgurl = $WikiTheme->getButtonURL($dir)) {
-                        if ($last_is_text)
+                        if ($last_is_text) {
                             $links->pushContent($sep);
-                        $links->pushContent(new ImageButton($label, $url,
-                                                            false, $imgurl));
+                        }
+                        $links->pushContent(new ImageButton(
+                            $label,
+                            $url,
+                            false,
+                            $imgurl
+                        ));
                         $last_is_text = false;
                     } else { // text only
-                        if (! $this_is_first)
+                        if (! $this_is_first) {
                             $links->pushContent($sep);
+                        }
                         $links->pushContent(new Button($label, $url, $class));
                         $last_is_text = true;
                     }
                 } else {
-                    if (! $this_is_first)
+                    if (! $this_is_first) {
                         $links->pushContent($sep);
+                    }
                     $links->pushContent(new Button($label, $url, $class));
                     $last_is_text = true;
                 }
                 $this_is_first = false;
             }
         }
-        if ($style == 'text')
+        if ($style == 'text') {
             $links->pushcontent(" ] ");
+        }
         return $links;
     }
 }
@@ -157,4 +173,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

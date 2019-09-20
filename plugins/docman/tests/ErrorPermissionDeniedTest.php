@@ -24,7 +24,8 @@
 
 require_once 'bootstrap.php';
 
-class Docman_ErrorPermissionDeniedTest extends TuleapTestCase {
+class Docman_ErrorPermissionDeniedTest extends TuleapTestCase
+{
 
     function testUrlTransformMiddle()
     {
@@ -113,5 +114,4 @@ class Docman_ErrorPermissionDeniedTest extends TuleapTestCase {
         $res = $e-> urlQueryToArray('https://codendi.org/plugins/docman/?group_id=1564&action=show');
         $this->assertFalse(isset($res['id']));
     }
-
 }

@@ -51,7 +51,8 @@ Mock::generate('Tracker_FormElement_Field_Value_DateDao');
 
 Mock::generate('DataAccessResult');
 
-class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
+class Tracker_FormElement_Field_DateTest extends TuleapTestCase
+{
 
     /** @var XML_Security */
     protected $xml_security;
@@ -181,7 +182,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
     function testGetFieldDataAsTimestamp()
     {
         $f = new Tracker_FormElement_Field_DateTestVersion();
-        $this->assertEqual('2010-04-30', $f->getFieldData((string)mktime(5,3,2,4,30,2010)));
+        $this->assertEqual('2010-04-30', $f->getFieldData((string)mktime(5, 3, 2, 4, 30, 2010)));
         $this->assertNull($f->getFieldData('1.5'));
     }
 
@@ -445,8 +446,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
                 <label>field_label</label>
                 <description>field_description</description>
                 <properties default_value="1234567890" />
-            </formElement>'
-        );
+            </formElement>');
 
         $mapping = array();
 
@@ -467,8 +467,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
                 <label>field_label</label>
                 <description>field_description</description>
                 <properties default_value="today" />
-            </formElement>'
-        );
+            </formElement>');
 
         $mapping = array();
 
@@ -489,8 +488,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
                 <label>field_label</label>
                 <description>field_description</description>
                 <properties />
-            </formElement>'
-        );
+            </formElement>');
 
         $mapping = array();
 
@@ -511,8 +509,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
                 <label>field_label</label>
                 <description>field_description</description>
                 <properties default_value="" />
-            </formElement>'
-        );
+            </formElement>');
 
         $mapping = array();
 
@@ -539,7 +536,8 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $GLOBALS['sys_custom_incdir'] = TRACKER_BASE_DIR. '/../../../site-content';
 
         $GLOBALS['Language'] = new BaseLanguage('en_US', 'en_US');
-        $GLOBALS['Language']->lang = 'en_US';;
+        $GLOBALS['Language']->lang = 'en_US';
+        ;
 
         $user     = mock('PFUser');
         $artifact = new MockTracker_Artifact();
@@ -592,7 +590,8 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElement_Field_DateTest_setCriteriaValueFromREST extends TuleapTestCase {
+class Tracker_FormElement_Field_DateTest_setCriteriaValueFromREST extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -693,12 +692,13 @@ class Tracker_FormElement_Field_DateTest_setCriteriaValueFromREST extends Tuleap
         $res = $this->date->setCriteriaValueFromREST($criteria, $values);
         $this->assertFalse($res);
     }
-
 }
 
-class DayFieldTestVersion extends Tracker_FormElement_Field_Date {
+class DayFieldTestVersion extends Tracker_FormElement_Field_Date
+{
     public function __construct()
-    {}
+    {
+    }
 
     public function getSQLCompareDate($is_advanced, $op, $from, $to, $column)
     {
@@ -711,7 +711,8 @@ class DayFieldTestVersion extends Tracker_FormElement_Field_Date {
     }
 }
 
-class Tracker_FormElement_Field_DateTest_getSQLCompareDate_DAY extends TuleapTestCase {
+class Tracker_FormElement_Field_DateTest_getSQLCompareDate_DAY extends TuleapTestCase
+{
 
     /** @var DayFieldTestVersion */
     private $day_field;
@@ -799,15 +800,17 @@ class Tracker_FormElement_Field_DateTest_getSQLCompareDate_DAY extends TuleapTes
     {
         $string = str_replace(PHP_EOL, ' ', trim($string));
 
-        while(strstr($string, '  ')) {
+        while (strstr($string, '  ')) {
             $string = str_replace('  ', ' ', $string);
         }
     }
 }
 
-class DateTimeFieldTestVersion extends Tracker_FormElement_Field_Date {
+class DateTimeFieldTestVersion extends Tracker_FormElement_Field_Date
+{
     public function __construct()
-    {}
+    {
+    }
 
     public function getSQLCompareDate($is_advanced, $op, $from, $to, $column)
     {
@@ -820,7 +823,8 @@ class DateTimeFieldTestVersion extends Tracker_FormElement_Field_Date {
     }
 }
 
-class Tracker_FormElement_Field_Date_RESTTests extends TuleapTestCase {
+class Tracker_FormElement_Field_Date_RESTTests extends TuleapTestCase
+{
 
     public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName()
     {

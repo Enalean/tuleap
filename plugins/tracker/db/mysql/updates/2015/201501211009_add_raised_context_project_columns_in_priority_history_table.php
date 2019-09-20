@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201501211009_add_raised_context_project_columns_in_priority_history_table extends ForgeUpgrade_Bucket {
+class b201501211009_add_raised_context_project_columns_in_priority_history_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -75,5 +76,4 @@ class b201501211009_add_raised_context_project_columns_in_priority_history_table
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding project_id column to tracker_artifact_priority_history table');
         }
     }
-
 }

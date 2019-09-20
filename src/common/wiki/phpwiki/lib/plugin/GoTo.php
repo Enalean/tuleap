@@ -12,8 +12,7 @@ rcs_id('$Id: GoTo.php,v 1.4 2004/07/08 20:30:07 rurban Exp $');
  *  @author: Michael van Dam
  */
 
-class WikiPlugin_GoTo
-extends WikiPlugin
+class WikiPlugin_GoTo extends WikiPlugin
 {
     function getName()
     {
@@ -32,7 +31,7 @@ extends WikiPlugin
 
     function run($dbi, $argstr, &$request, $basepage)
     {
-        $request->setArg('action',false);
+        $request->setArg('action', false);
         $args = $this->getArgs($argstr, $request);
         extract($args);
 
@@ -40,10 +39,11 @@ extends WikiPlugin
             // The user has pressed 'Go'; process request
             $request->setArg('goto', false);
             $target = $goto['target'];
-            if ($dbi->isWikiPage($target))
-                $url = WikiURL($target,0,1);
-            else
-                $url = WikiURL($target, array('action'=>'edit'),1);
+            if ($dbi->isWikiPage($target)) {
+                $url = WikiURL($target, 0, 1);
+            } else {
+                $url = WikiURL($target, array('action'=>'edit'), 1);
+            }
 
             $request->redirect($url);
             // User should see nothing after redirect
@@ -66,7 +66,6 @@ extends WikiPlugin
         $form->pushContent($textfield, $button);
 
         return $form;
-
     }
 };
 
@@ -89,4 +88,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

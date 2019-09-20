@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Git_Command_Exception extends Exception {
+class Git_Command_Exception extends Exception
+{
     public $command;
     public $output;
     public $returnValue;
@@ -30,4 +31,3 @@ class Git_Command_Exception extends Exception {
         parent::__construct($message, $returnValue);
     }
 }
-?>

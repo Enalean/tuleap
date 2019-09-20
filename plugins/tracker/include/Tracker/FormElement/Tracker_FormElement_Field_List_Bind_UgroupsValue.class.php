@@ -18,7 +18,8 @@
  */
 
 
-class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormElement_Field_List_BindValue {
+class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormElement_Field_List_BindValue
+{
 
     /**
      * @var ProjectUGroup

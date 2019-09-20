@@ -22,7 +22,8 @@
 
 require_once 'bootstrap.php';
 
-class PermissionsManagerLockTest extends TuleapTestCase {
+class PermissionsManagerLockTest extends TuleapTestCase
+{
     private $user;
     private $docmanPm;
 

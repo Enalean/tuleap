@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_GIT_REPO_UPDATE extends SystemEvent {
+class SystemEvent_GIT_REPO_UPDATE extends SystemEvent
+{
     public const NAME = 'GIT_REPO_UPDATE';
 
     /** @var GitRepositoryFactory */

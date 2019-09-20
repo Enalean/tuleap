@@ -22,7 +22,8 @@
 /**
  * Manage values in changeset for integer fields
  */
-class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_ChangesetValue_Numeric {
+class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_ChangesetValue_Numeric
+{
 
     /**
      * @return mixed

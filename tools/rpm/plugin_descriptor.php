@@ -37,5 +37,3 @@ echo $desc->getVersion().PHP_EOL;
 if (isset($argv[2])) {
     echo $desc->getDescription().PHP_EOL;
 }
-
-?>

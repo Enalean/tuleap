@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201405060841_add_index_for_semantic_and_artifact extends ForgeUpgrade_Bucket {
+class b201405060841_add_index_for_semantic_and_artifact extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

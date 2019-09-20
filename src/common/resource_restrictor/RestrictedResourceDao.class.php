@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class RestrictedResourceDao extends DataAccessObject {
+abstract class RestrictedResourceDao extends DataAccessObject
+{
 
     abstract public function getResourceAllowedProjectsTableName();
 
@@ -65,5 +66,4 @@ abstract class RestrictedResourceDao extends DataAccessObject {
 
         return $this->update($sql);
     }
-
 }

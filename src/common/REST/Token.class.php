@@ -22,7 +22,8 @@
  * I'm a token for Rest authentication
  */
 
-class Rest_Token {
+class Rest_Token
+{
 
     /** @var int */
     private $user_id;

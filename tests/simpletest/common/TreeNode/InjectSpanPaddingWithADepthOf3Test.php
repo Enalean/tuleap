@@ -20,7 +20,8 @@
 
 require_once __DIR__ . '/InjectSpanPadding.class.php';
 
-class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding {
+class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding
+{
 
     /**
      * Return this Tree
@@ -228,4 +229,3 @@ class InjectSpanPaddingWithADepthOf3Test extends InjectSpanPadding {
         $this->then_GivenTreeNodeData_ContentTemplate_AssertPattern($givenChild, $this->getPatternSuite(" content"));
     }
 }
-?>

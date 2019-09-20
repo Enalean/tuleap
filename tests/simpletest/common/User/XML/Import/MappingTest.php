@@ -22,7 +22,8 @@ namespace User\XML\Import;
 use TuleapTestCase;
 use PFUser;
 
-class MappingTest extends TuleapTestCase {
+class MappingTest extends TuleapTestCase
+{
 
     /** @var Mapping */
     private $mapping;

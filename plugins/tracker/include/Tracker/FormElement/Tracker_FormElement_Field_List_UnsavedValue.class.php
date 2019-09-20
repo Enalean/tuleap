@@ -19,7 +19,8 @@
  */
 
 
-class Tracker_FormElement_Field_List_UnsavedValue extends Tracker_FormElement_Field_List_Value {
+class Tracker_FormElement_Field_List_UnsavedValue extends Tracker_FormElement_Field_List_Value
+{
 
     protected $label;
 
@@ -43,5 +44,3 @@ class Tracker_FormElement_Field_List_UnsavedValue extends Tracker_FormElement_Fi
         return '!'. $this->getId();
     }
 }
-
-?>

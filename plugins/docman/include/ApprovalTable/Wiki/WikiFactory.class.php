@@ -32,7 +32,8 @@
  * table is created (and bound to a version of the page), the table is the
  * default one until the admin decide to create a new one.
  */
-class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFactory {
+class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFactory
+{
     var $wikiVersionId;
 
     /**
@@ -46,32 +47,31 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
      * version id of the wiki page.
      * If there is no version for the given wiki page, default to 0.
      */
-    function __construct($item, $versionNumber=null)
+    function __construct($item, $versionNumber = null)
     {
         parent::__construct($item);
 
         $dao = $this->_getDao();
         $lastTableVersionId = $dao->getLastTableVersionIdByItemId($item->getId());
 
-        if($versionNumber !== null) {
+        if ($versionNumber !== null) {
             $this->wikiVersionId = $versionNumber;
 
-            if($versionNumber == $lastTableVersionId) {
+            if ($versionNumber == $lastTableVersionId) {
                 $this->customizable = true;
             } else {
                 $this->customizable = false;
             }
-
         } else {
             // Works on the last available version, so is customizable.
             $this->customizable = true;
 
-            if($lastTableVersionId !== false) {
+            if ($lastTableVersionId !== false) {
                 $this->wikiVersionId = $lastTableVersionId;
             } else {
                 // If there is no table attached to the item yet, just get the list version id.
                 $lastWikiVersion = $dao->getLastWikiVersionIdByItemId($item->getId());
-                if($lastWikiVersion !== false) {
+                if ($lastWikiVersion !== false) {
                     $this->wikiVersionId = $lastWikiVersion;
                 } else {
                     // If the page doesn't exists yet, default to zero.
@@ -114,10 +114,10 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
     function getTableFromVersion($itemId, $version)
     {
         $table = null;
-        if($version !== null) {
+        if ($version !== null) {
             $dao = $this->_getDao();
             $dar = $dao->getTableById($itemId, $version);
-            if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
                 $table = $this->createTableFromRow($row);
             }

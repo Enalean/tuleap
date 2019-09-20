@@ -22,7 +22,8 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
 use Tracker_FormElement_Field_ArtifactLink;
 
-class NatureTablePresenter {
+class NatureTablePresenter
+{
 
     public $table_id;
     public $nature;
@@ -66,7 +67,7 @@ class NatureTablePresenter {
         $art_factory = \Tracker_ArtifactFactory::instance();
         $this->artifact_links = array();
         $html_classes = '';
-        foreach($artifact_links as $artifact_link) {
+        foreach ($artifact_links as $artifact_link) {
             $artifact               = $art_factory->getArtifactById($artifact_link->getArtifactId());
             $this->artifact_links[] = new ArtifactInNatureTablePresenter($artifact, $html_classes, $field);
         }
@@ -87,7 +88,7 @@ class NatureTablePresenter {
     private function fetchTabLabel($nature, $is_reverse_artifact_links)
     {
         $nature_label = '';
-        if($is_reverse_artifact_links) {
+        if ($is_reverse_artifact_links) {
             $nature_label = $nature->reverse_label;
         } else {
             $nature_label = $nature->forward_label;

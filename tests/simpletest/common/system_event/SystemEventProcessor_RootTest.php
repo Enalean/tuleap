@@ -19,7 +19,8 @@
  */
 require_once 'builders/aSystemEvent.php';
 
-class SystemEventProcessor_RootTest extends TuleapTestCase {
+class SystemEventProcessor_RootTest extends TuleapTestCase
+{
     private $system_event_manager;
     private $system_event_dao;
     private $processor;
@@ -55,7 +56,6 @@ class SystemEventProcessor_RootTest extends TuleapTestCase {
         ForgeConfig::store();
         ForgeConfig::set('codendi_dir', '/usr/share/codendi');
         ForgeConfig::set('sys_http_user', $this->sys_http_user);
-
     }
 
     public function tearDown()

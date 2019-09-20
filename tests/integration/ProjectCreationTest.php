@@ -39,7 +39,8 @@ use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
-class ProjectCreationTest extends TuleapDbTestCase {
+class ProjectCreationTest extends TuleapDbTestCase
+{
 
     public function __construct()
     {

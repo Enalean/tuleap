@@ -51,7 +51,7 @@ class WikiServiceAdminActions extends WikiActions
       /**
        * Check if the given page name is not empty
        */
-        if(empty($page)) {
+        if (empty($page)) {
             $feedback = $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'page_name_empty_err');
             return false;
         }
@@ -60,7 +60,7 @@ class WikiServiceAdminActions extends WikiActions
        * Check if the page is a valid page.
        */
         $wp = new WikiPage($this->gid, $page);
-        if(! $wp->exist()) {
+        if (! $wp->exist()) {
             $wpw = new WikiPageWrapper($this->gid);
             $wpw->addNewProjectPage($page);
         }
@@ -72,12 +72,11 @@ class WikiServiceAdminActions extends WikiActions
     function create()
     {
         $page=$_POST['page'];
-        if(!empty($_POST['upage'])) {
+        if (!empty($_POST['upage'])) {
             $page=$_POST['upage'];
         }
 
-        if($this->checkPage($page)) {
-
+        if ($this->checkPage($page)) {
             $we = new WikiEntry();
             $we->setGid($this->gid);
             $we->setName($_POST['name']);
@@ -110,14 +109,14 @@ class WikiServiceAdminActions extends WikiActions
             $deleteStatus = true;
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
-            foreach($args as $id) {
+            foreach ($args as $id) {
                 $valid = new Valid_UInt('repo_id');
                 $valid->required();
-                if($valid->validate($id)) {
+                if ($valid->validate($id)) {
                     $wa = new WikiAttachment();
                     $wa->initWithId($id);
                     if ($wa->validate() && $wa->gid == $_REQUEST['group_id'] && $wa->isAutorized($user->getId())) {
-                        if(!$wa->deleteAttachment()) {
+                        if (!$wa->deleteAttachment()) {
                             $deleteStatus = false;
                         }
                     } else {
@@ -128,9 +127,9 @@ class WikiServiceAdminActions extends WikiActions
                 }
             }
             if ($deleteStatus) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin','delete_attachment_success'));
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'delete_attachment_success'));
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin','delete_attachment_failure'));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'delete_attachment_failure'));
             }
         }
     }
@@ -138,11 +137,11 @@ class WikiServiceAdminActions extends WikiActions
     function update()
     {
         $page=$_POST['page'];
-        if(!empty($_POST['upage'])) {
+        if (!empty($_POST['upage'])) {
             $page=$_POST['upage'];
         }
 
-        if($this->checkPage($page)) {
+        if ($this->checkPage($page)) {
             $we = new WikiEntry();
             $we->setId($_POST['id']);
             $we->setGid($this->gid);
@@ -167,17 +166,19 @@ class WikiServiceAdminActions extends WikiActions
             $ret = $w->setPermissions($_POST['ugroups']);
         }
 
-        if(!$ret) {
-            exit_error($GLOBALS['Language']->getText('global','error'),
-                   $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_perm_err', array($feedback)));
+        if (!$ret) {
+            exit_error(
+                $GLOBALS['Language']->getText('global', 'error'),
+                $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_perm_err', array($feedback))
+            );
         }
 
         $event_manager = EventManager::instance();
         $event_manager->processEvent(
-        "wiki_service_permissions_updated",
-        array(
+            "wiki_service_permissions_updated",
+            array(
             'group_id' => $this->gid
-        )
+            )
         );
     }
 
@@ -189,31 +190,29 @@ class WikiServiceAdminActions extends WikiActions
 
         if ($_POST['reset']) {
             $ret = $wp->resetPermissions();
-        }
-        else {
+        } else {
             $ret = $wp->setPermissions($_POST['ugroups']);
         }
 
-        if(!$ret) {
+        if (!$ret) {
             exit_error(
-            $GLOBALS['Language']->getText('global','error'),
-            $GLOBALS['Language']->getText(
-                'wiki_actions_wikiserviceadmin',
-                'update_page_perm_err',
-                array($feedback)
-            )
+                $GLOBALS['Language']->getText('global', 'error'),
+                $GLOBALS['Language']->getText(
+                    'wiki_actions_wikiserviceadmin',
+                    'update_page_perm_err',
+                    array($feedback)
+                )
             );
         }
 
         $event_manager = EventManager::instance();
         $event_manager->processEvent(
-        "wiki_page_permissions_updated",
-        array(
+            "wiki_page_permissions_updated",
+            array(
             'group_id'         => $wp->getGid(),
             'wiki_page'        => $wp->getPagename(),
-        )
+            )
         );
-
     }
 
 
@@ -228,13 +227,14 @@ class WikiServiceAdminActions extends WikiActions
         $wa->initWithId($_POST['object_id']);
         if ($_POST['reset']) {
             $ret = $wa->resetPermissions();
-        }
-        else {
+        } else {
             $ret = $wa->setPermissions($_POST['ugroups']);
         }
-        if(!$ret) {
-            exit_error($GLOBALS['Language']->getText('global','error'),
-                       $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_attachment_perm_err', array($feedback)));
+        if (!$ret) {
+            exit_error(
+                $GLOBALS['Language']->getText('global', 'error'),
+                $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_attachment_perm_err', array($feedback))
+            );
         }
     }
 }

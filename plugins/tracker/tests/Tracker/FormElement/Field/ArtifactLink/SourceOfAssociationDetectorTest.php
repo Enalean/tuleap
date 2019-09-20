@@ -24,7 +24,8 @@ use TuleapTestCase;
 
 require_once __DIR__.'/../../../../bootstrap.php';
 
-class SourceOfAssociationDetectorTest extends TuleapTestCase {
+class SourceOfAssociationDetectorTest extends TuleapTestCase
+{
 
     private $detector;
     private $release;

@@ -25,12 +25,12 @@ class AdminWaitingPublicationPresenter extends AdminNewsListPresenter
 {
     public $waiting_publication_active = true;
 
-    public function __construct(CSRFSynchronizerToken $csrf_token,$title, array $news_list)
+    public function __construct(CSRFSynchronizerToken $csrf_token, $title, array $news_list)
     {
         parent::__construct($csrf_token, $title, $news_list);
 
-        $this->pane_name         = $GLOBALS['Language']->getText('news_admin_index','waiting_publication_pane_name');
-        $this->no_news           = $GLOBALS['Language']->getText('news_admin_index','waiting_publication_no_news');
+        $this->pane_name         = $GLOBALS['Language']->getText('news_admin_index', 'waiting_publication_pane_name');
+        $this->no_news           = $GLOBALS['Language']->getText('news_admin_index', 'waiting_publication_no_news');
         $this->table_button_name = $GLOBALS['Language']->getText('news_admin_index', 'table_review_name');
 
         $this->is_table_button_review = true;

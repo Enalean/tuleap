@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<ruleset
+    name="Tuleap_Not_PSR"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../src/vendor/squizlabs/php_codesniffer/phpcs.xsd"
+>
+    <description>Tuleap rules not PSR related.</description>
+
+    <config name="installed_paths" value="../../slevomat/coding-standard,../../phpcompatibility/php-compatibility"/>
+
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/src/www/assets/*</exclude-pattern>
+    <exclude-pattern>*/tests/phpcs/tests/Sniffs/*/_fixtures/*</exclude-pattern>
+    <!-- Exclude generated files -->
+    <exclude-pattern>plugins/tracker/include/Tracker/Report/Query/Advanced/Grammar/Parser.php</exclude-pattern>
+
+    <!-- Comments -->
+    <!-- Forbid comments starting with # -->
+    <rule ref="PEAR.Commenting.InlineComment"/>
+    <!-- Forbid empty comments -->
+    <rule ref="SlevomatCodingStandard.Commenting.EmptyComment"/>
+    <!-- Forbid useless comments -->
+    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenComments">
+        <properties>
+            <property name="forbiddenCommentPatterns" type="array">
+                <element value="~^(?:(?!private|protected|static)\S+ )?(?:con|de)structor\.\z~i"/>
+                <element value="~^Created by .+\.\z~i"/>
+                <element value="~^(User|Date|Time): \S+\z~i"/>
+                <element value="~^\S+ [gs]etter\.\z~i"/>
+                <element value="~^Class \S+\z~i"/>
+            </property>
+        </properties>
+    </rule>
+    <!-- report invalid format of inline phpDocs with @var -->
+    <rule ref="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration"/>
+    <!-- Forbid useless annotations -->
+    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenAnnotations">
+        <properties>
+            <property name="forbiddenAnnotations" type="array">
+                <element value="@api"/>
+                <element value="@author"/>
+                <element value="@category"/>
+                <element value="@copyright"/>
+                <element value="@created"/>
+                <element value="@license"/>
+                <element value="@package"/>
+                <element value="@since"/>
+                <element value="@subpackage"/>
+                <element value="@version"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Require presence of class constant visibility -->
+    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility"/>
+    <!-- Require ? when default value is null -->
+    <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue"/>
+    <!-- Require use of short versions of scalar types (i.e. int instead of integer) -->
+    <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
+    <!-- Require usage of ::class instead of __CLASS__, get_class(), get_class($this), get_called_class() and get_parent_class() -->
+    <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference"/>
+    <rule ref="SlevomatCodingStandard.Classes.DisallowLateStaticBindingForConstants"/>
+    <!-- Check the presence of a comment/copyright block at the very beginning of the file -->
+    <rule ref="./TuleapCodingStandard/Sniffs/Commenting/FileCopyrightSniff.php"/>
+    <!-- Forbid fancy group uses -->
+    <rule ref="SlevomatCodingStandard.Namespaces.DisallowGroupUse"/>
+    <!-- Forbid multiple use statements on same line -->
+    <rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine"/>
+    <!-- Forbid useless uses of the same namespace -->
+    <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace"/>
+    <!-- Require empty newlines before and after uses -->
+    <rule ref="SlevomatCodingStandard.Namespaces.UseSpacing">
+        <properties>
+            <property name="linesCountAfterLastUse" value="1"/>
+            <property name="linesCountBeforeFirstUse" value="1"/>
+            <property name="linesCountBetweenUseTypes" value="0"/>
+        </properties>
+    </rule>
+    <!-- Forbid superfluous leading backslash in use statements -->
+    <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash"/>
+    <!-- Forbid useless alias for classes, constants and functions -->
+    <rule ref="SlevomatCodingStandard.Namespaces.UselessAlias"/>
+
+    <!-- Ensure code is compatible with the targeted version of PHP -->
+    <rule ref="PHPCompatibility"/>
+    <config name="testVersion" value="7.3-7.4"/>
+</ruleset>

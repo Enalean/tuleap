@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class UserXMLExportedCollectionTest extends TuleapTestCase {
+class UserXMLExportedCollectionTest extends TuleapTestCase
+{
 
     private $collection;
 
@@ -67,11 +68,11 @@ class UserXMLExportedCollectionTest extends TuleapTestCase {
         $xml_object  = simplexml_load_string($xml_content);
 
         $this->assertNotNull($xml_object->user);
-        $this->assertEqual((int)$xml_object->user[0]->id,          101);
+        $this->assertEqual((int)$xml_object->user[0]->id, 101);
         $this->assertEqual((string)$xml_object->user[0]->username, 'kshen');
         $this->assertEqual((string)$xml_object->user[0]->realname, 'Kool Shen');
-        $this->assertEqual((string)$xml_object->user[0]->email,    'kshen@hotmail.fr');
-        $this->assertEqual((string)$xml_object->user[0]->ldapid,   'cb9867');
+        $this->assertEqual((string)$xml_object->user[0]->email, 'kshen@hotmail.fr');
+        $this->assertEqual((string)$xml_object->user[0]->ldapid, 'cb9867');
     }
 
     public function itExportsMoreThanOneUser()

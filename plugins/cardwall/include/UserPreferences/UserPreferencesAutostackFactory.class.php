@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_UserPreferences_UserPreferencesAutostackFactory {
+class Cardwall_UserPreferences_UserPreferencesAutostackFactory
+{
 
     public function setAutostack(Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_UserPreferences_UserPreferencesAutostack $autostack_preferences)
     {
@@ -45,7 +46,4 @@ class Cardwall_UserPreferences_UserPreferencesAutostackFactory {
             }
         }
     }
-
 }
-
-?>

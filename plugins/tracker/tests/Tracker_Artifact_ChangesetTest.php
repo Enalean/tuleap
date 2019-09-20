@@ -56,7 +56,8 @@ Mock::generate('UserHelper');
 Mock::generate('PFUser');
 Mock::generate('BaseLanguageFactory');
 
-class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
+class Tracker_Artifact_ChangesetTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -178,11 +179,11 @@ class Tracker_Artifact_ChangesetTest extends TuleapTestCase {
         $result    = $changeset->displayDiff($diff, $format, $field);
         $this->assertPattern('%Quelle est la couleur <b> du <i> <s> cheval blanc%', $result);
         $this->assertPattern('%Summary%', $result);
-
     }
 }
 
-class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase {
+class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase
+{
     private $user;
     private $changeset_id;
     private $changeset;
@@ -236,7 +237,8 @@ class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Artifact_Changeset_classnamesTest extends TuleapTestCase {
+class Tracker_Artifact_Changeset_classnamesTest extends TuleapTestCase
+{
 
     public function setUp()
     {

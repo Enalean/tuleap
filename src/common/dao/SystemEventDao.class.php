@@ -21,20 +21,23 @@
 /**
  *  Data Access Object for SystemEvent
  */
-class SystemEventDao extends DataAccessObject {
+class SystemEventDao extends DataAccessObject
+{
     /**
      * Create new SystemEvent and store it in the DB
      * @return true if there is no error
      */
-    function store($type, $parameters, $priority,$status, $create_date, $owner)
+    function store($type, $parameters, $priority, $status, $create_date, $owner)
     {
-        $sql = sprintf("INSERT INTO system_event (type, parameters, priority, status, create_date, owner) VALUES (%s, %s, %d, %s, FROM_UNIXTIME(%d), %s)",
-                       $this->da->quoteSmart($type),
-                       $this->da->quoteSmart($parameters),
-                       $this->da->escapeInt($priority),
-                       $this->da->quoteSmart($status),
-                       $this->da->escapeInt($create_date),
-                       $this->da->quoteSmart($owner));
+        $sql = sprintf(
+            "INSERT INTO system_event (type, parameters, priority, status, create_date, owner) VALUES (%s, %s, %d, %s, FROM_UNIXTIME(%d), %s)",
+            $this->da->quoteSmart($type),
+            $this->da->quoteSmart($parameters),
+            $this->da->escapeInt($priority),
+            $this->da->quoteSmart($status),
+            $this->da->escapeInt($create_date),
+            $this->da->quoteSmart($owner)
+        );
 
         return $this->updateAndGetLastId($sql);
     }
@@ -47,11 +50,13 @@ class SystemEventDao extends DataAccessObject {
     function close($sysevent)
     {
         $now = time();
-        $sql = sprintf("UPDATE system_event SET status=%s, log=%s, end_date=FROM_UNIXTIME(%d) WHERE id=%d",
-                       $this->da->quoteSmart($sysevent->getStatus()),
-                       $this->da->quoteSmart($sysevent->getLog()),
-                       $this->da->escapeInt($now),
-                       $this->da->escapeInt($sysevent->getId()));
+        $sql = sprintf(
+            "UPDATE system_event SET status=%s, log=%s, end_date=FROM_UNIXTIME(%d) WHERE id=%d",
+            $this->da->quoteSmart($sysevent->getStatus()),
+            $this->da->quoteSmart($sysevent->getLog()),
+            $this->da->escapeInt($now),
+            $this->da->escapeInt($sysevent->getId())
+        );
         if ($updated = $this->update($sql)) {
             $sysevent->setEndDate($now);
         }
@@ -76,7 +81,7 @@ class SystemEventDao extends DataAccessObject {
                     AND type IN ($types)
                     ORDER BY priority, create_date LIMIT 1";
         $dar = $this->retrieve($sql);
-        if($dar && !$dar->isError()) {
+        if ($dar && !$dar->isError()) {
             // Mark event as 'RUNNING'
             if ($row = $dar->getRow()) {
                 $id = $row['id'];

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201609301657_add_bind_column extends ForgeUpgrade_Bucket {
+class b201609301657_add_bind_column extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return 'Add bind option for project members';

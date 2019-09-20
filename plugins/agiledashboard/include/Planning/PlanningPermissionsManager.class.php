@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class PlanningPermissionsManager {
+class PlanningPermissionsManager
+{
 
     public const PERM_PRIORITY_CHANGE = 'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE';
 
@@ -46,5 +47,4 @@ class PlanningPermissionsManager {
         /** @psalm-suppress DeprecatedFunction */
         return permission_process_selection_form($group_id, $permission, $planning_id, $ugroup_ids);
     }
-
 }

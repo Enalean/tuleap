@@ -9,42 +9,42 @@
 //========================================================================
 
 // TTF Font families
-define("FF_COURIER",10);
-define("FF_VERDANA",11);
-define("FF_TIMES",12);
-define("FF_COMIC",14);
-define("FF_ARIAL",15);
-define("FF_GEORGIA",16);
-define("FF_TREBUCHE",17);
+define("FF_COURIER", 10);
+define("FF_VERDANA", 11);
+define("FF_TIMES", 12);
+define("FF_COMIC", 14);
+define("FF_ARIAL", 15);
+define("FF_GEORGIA", 16);
+define("FF_TREBUCHE", 17);
 
 // Gnome Vera font
 // Available from http://www.gnome.org/fonts/
-define("FF_VERA",18);
-define("FF_VERAMONO",19);
-define("FF_VERASERIF",20);
+define("FF_VERA", 18);
+define("FF_VERAMONO", 19);
+define("FF_VERASERIF", 20);
 
 // Chinese font
-define("FF_SIMSUN",30);
-define("FF_CHINESE",31);
-define("FF_BIG5",32);
+define("FF_SIMSUN", 30);
+define("FF_CHINESE", 31);
+define("FF_BIG5", 32);
 
 // Japanese font
-define("FF_MINCHO",40);
-define("FF_PMINCHO",41);
-define("FF_GOTHIC",42);
-define("FF_PGOTHIC",43);
+define("FF_MINCHO", 40);
+define("FF_PMINCHO", 41);
+define("FF_GOTHIC", 42);
+define("FF_PGOTHIC", 43);
 
 // Hebrew fonts
-define("FF_DAVID",44);
-define("FF_MIRIAM",45);
-define("FF_AHRON",46);
+define("FF_DAVID", 44);
+define("FF_MIRIAM", 45);
+define("FF_AHRON", 46);
 
 // Dejavu-fonts http://sourceforge.net/projects/dejavu
-define("FF_DV_SANSSERIF",47);
-define("FF_DV_SERIF",48);
-define("FF_DV_SANSSERIFMONO",49);
-define("FF_DV_SERIFCOND",50);
-define("FF_DV_SANSSERIFCOND",51);
+define("FF_DV_SANSSERIF", 47);
+define("FF_DV_SERIF", 48);
+define("FF_DV_SANSSERIFMONO", 49);
+define("FF_DV_SERIFCOND", 50);
+define("FF_DV_SANSSERIFCOND", 51);
 
 // Extra fonts
 // Download fonts from
@@ -54,30 +54,30 @@ define("FF_DV_SANSSERIFCOND",51);
 // http://www.fontspace.com/category/famous
 
 // define("FF_SPEEDO",71);  // This font is also known as Bauer (Used for development gauge fascia)
-define("FF_DIGITAL",72); // Digital readout font
-define("FF_COMPUTER",73); // The classic computer font
-define("FF_CALCULATOR",74); // Triad font
+define("FF_DIGITAL", 72); // Digital readout font
+define("FF_COMPUTER", 73); // The classic computer font
+define("FF_CALCULATOR", 74); // Triad font
 
-define("FF_USERFONT",90);
-define("FF_USERFONT1",90);
-define("FF_USERFONT2",91);
-define("FF_USERFONT3",92);
+define("FF_USERFONT", 90);
+define("FF_USERFONT1", 90);
+define("FF_USERFONT2", 91);
+define("FF_USERFONT3", 92);
 
 // Limits for fonts
-define("_FIRST_FONT",10);
-define("_LAST_FONT",99);
+define("_FIRST_FONT", 10);
+define("_LAST_FONT", 99);
 
 // TTF Font styles
-define("FS_NORMAL",9001);
-define("FS_BOLD",9002);
-define("FS_ITALIC",9003);
-define("FS_BOLDIT",9004);
-define("FS_BOLDITALIC",9004);
+define("FS_NORMAL", 9001);
+define("FS_BOLD", 9002);
+define("FS_ITALIC", 9003);
+define("FS_BOLDIT", 9004);
+define("FS_BOLDITALIC", 9004);
 
 //Definitions for internal font
-define("FF_FONT0",1);
-define("FF_FONT1",2);
-define("FF_FONT2",4);
+define("FF_FONT0", 1);
+define("FF_FONT1", 2);
+define("FF_FONT2", 4);
 
 //------------------------------------------------------------------------
 // Defines for font setup
@@ -86,22 +86,22 @@ define("FF_FONT2",4);
 // Actual name of the TTF file used together with FF_CHINESE aka FF_BIG5
 // This is the TTF file being used when the font family is specified as
 // either FF_CHINESE or FF_BIG5
-define('CHINESE_TTF_FONT','bkai00mp.ttf');
+define('CHINESE_TTF_FONT', 'bkai00mp.ttf');
 
 // Special unicode greek language support
-define("LANGUAGE_GREEK",false);
+define("LANGUAGE_GREEK", false);
 
 // If you are setting this config to true the conversion of greek characters
 // will assume that the input text is windows 1251
-define("GREEK_FROM_WINDOWS",false);
+define("GREEK_FROM_WINDOWS", false);
 
 // Special unicode cyrillic language support
-define("LANGUAGE_CYRILLIC",false);
+define("LANGUAGE_CYRILLIC", false);
 
 // If you are setting this config to true the conversion
 // will assume that the input text is windows 1251, if
 // false it will assume koi8-r
-define("CYRILLIC_FROM_WINDOWS",false);
+define("CYRILLIC_FROM_WINDOWS", false);
 
 // The following constant is used to auto-detect
 // whether cyrillic conversion is really necessary
@@ -132,15 +132,15 @@ define('LANGUAGE_CHARSET', null);
 // Japanese TrueType font used with FF_MINCHO, FF_PMINCHO, FF_GOTHIC, FF_PGOTHIC
 // Standard fonts from Infomation-technology Promotion Agency (IPA)
 // See http://mix-mplus-ipa.sourceforge.jp/
-define('MINCHO_TTF_FONT','ipam.ttf');
-define('PMINCHO_TTF_FONT','ipamp.ttf');
-define('GOTHIC_TTF_FONT','ipag.ttf');
-define('PGOTHIC_TTF_FONT','ipagp.ttf');
+define('MINCHO_TTF_FONT', 'ipam.ttf');
+define('PMINCHO_TTF_FONT', 'ipamp.ttf');
+define('GOTHIC_TTF_FONT', 'ipag.ttf');
+define('PGOTHIC_TTF_FONT', 'ipagp.ttf');
 
 // Assume that Japanese text have been entered in EUC-JP encoding.
 // If this define is true then conversion from EUC-JP to UTF8 is done
 // automatically in the library using the mbstring module in PHP.
-define('ASSUME_EUCJP_ENCODING',false);
+define('ASSUME_EUCJP_ENCODING', false);
 
 
 // Default font family
@@ -155,59 +155,55 @@ define('FF_DEFAULT', FF_DV_SANSSERIF);
 // UTF-8 depending on how the library have been configured and
 // what font family is being used
 //=================================================================
-class LanguageConv {
+class LanguageConv
+{
     private $g2312 = null ;
 
-    function Convert($aTxt,$aFF)
+    function Convert($aTxt, $aFF)
     {
-        if( LANGUAGE_GREEK ) {
-            if( GREEK_FROM_WINDOWS ) {
+        if (LANGUAGE_GREEK) {
+            if (GREEK_FROM_WINDOWS) {
                 $unistring = LanguageConv::gr_win2uni($aTxt);
-            } else  {
+            } else {
                 $unistring = LanguageConv::gr_iso2uni($aTxt);
             }
             return $unistring;
-        } elseif( LANGUAGE_CYRILLIC ) {
-            if( CYRILLIC_FROM_WINDOWS && (!defined('LANGUAGE_CHARSET') || stristr(LANGUAGE_CHARSET, 'windows-1251')) ) {
+        } elseif (LANGUAGE_CYRILLIC) {
+            if (CYRILLIC_FROM_WINDOWS && (!defined('LANGUAGE_CHARSET') || stristr(LANGUAGE_CHARSET, 'windows-1251'))) {
                 $aTxt = convert_cyr_string($aTxt, "w", "k");
             }
-            if( !defined('LANGUAGE_CHARSET') || stristr(LANGUAGE_CHARSET, 'koi8-r') || stristr(LANGUAGE_CHARSET, 'windows-1251')) {
+            if (!defined('LANGUAGE_CHARSET') || stristr(LANGUAGE_CHARSET, 'koi8-r') || stristr(LANGUAGE_CHARSET, 'windows-1251')) {
                 $isostring = convert_cyr_string($aTxt, "k", "i");
                 $unistring = LanguageConv::iso2uni($isostring);
-            }
-            else {
+            } else {
                 $unistring = $aTxt;
             }
             return $unistring;
-        }
-        elseif( $aFF === FF_SIMSUN ) {
+        } elseif ($aFF === FF_SIMSUN) {
             // Do Chinese conversion
-            if( $this->g2312 == null ) {
+            if ($this->g2312 == null) {
                 include_once 'jpgraph_gb2312.php' ;
                 $this->g2312 = new GB2312toUTF8();
             }
             return $this->g2312->gb2utf8($aTxt);
-        }
-        elseif( $aFF === FF_BIG5 ) {
-            return iconv('BIG5','UTF-8',$aTxt);
-        }
-        elseif( ASSUME_EUCJP_ENCODING &&
+        } elseif ($aFF === FF_BIG5) {
+            return iconv('BIG5', 'UTF-8', $aTxt);
+        } elseif (ASSUME_EUCJP_ENCODING &&
         ($aFF == FF_MINCHO || $aFF == FF_GOTHIC || $aFF == FF_PMINCHO || $aFF == FF_PGOTHIC) ) {
-            return mb_convert_encoding($aTxt, 'UTF-8','EUC-JP');
-        }
-        elseif( $aFF == FF_DAVID || $aFF == FF_MIRIAM || $aFF == FF_AHRON ) {
+            return mb_convert_encoding($aTxt, 'UTF-8', 'EUC-JP');
+        } elseif ($aFF == FF_DAVID || $aFF == FF_MIRIAM || $aFF == FF_AHRON) {
             return LanguageConv::heb_iso2uni($aTxt);
+        } else {
+            return $aTxt;
         }
-        else
-        return $aTxt;
     }
 
     // Translate iso encoding to unicode
     public static function iso2uni($isoline)
     {
         $uniline='';
-        for ($i=0; $i < strlen($isoline); $i++){
-            $thischar=substr($isoline,$i,1);
+        for ($i=0; $i < strlen($isoline); $i++) {
+            $thischar=substr($isoline, $i, 1);
             $charcode=ord($thischar);
             $uniline.=($charcode>175) ? "&#" . (1040+($charcode-176)). ";" : $thischar;
         }
@@ -219,7 +215,7 @@ class LanguageConv {
     {
         $uniline='';
         for ($i=0; $i < strlen($isoline); $i++) {
-            $thischar=substr($isoline,$i,1);
+            $thischar=substr($isoline, $i, 1);
             $charcode=ord($thischar);
             $uniline.=($charcode>179 && $charcode!=183 && $charcode!=187 && $charcode!=189) ? "&#" . (900+($charcode-180)). ";" : $thischar;
         }
@@ -231,12 +227,11 @@ class LanguageConv {
     {
         $uniline='';
         for ($i=0; $i < strlen($winline); $i++) {
-            $thischar=substr($winline,$i,1);
+            $thischar=substr($winline, $i, 1);
             $charcode=ord($thischar);
             if ($charcode==161 || $charcode==162) {
                 $uniline.="&#" . (740+$charcode). ";";
-            }
-            else {
+            } else {
                 $uniline.=(($charcode>183 && $charcode!=187 && $charcode!=189) || $charcode==180) ? "&#" . (900+($charcode-180)). ";" : $thischar;
             }
         }
@@ -249,8 +244,8 @@ class LanguageConv {
         $o = '';
 
         $n = strlen($isoline);
-        for($i=0; $i < $n; $i++) {
-            $c=ord( substr($isoline,$i,1) );
+        for ($i=0; $i < $n; $i++) {
+            $c=ord(substr($isoline, $i, 1));
             $o .= ($c > 223) && ($c < 251) ? '&#'.(1264+$c).';' : chr($c);
         }
         return utf8_encode($o);
@@ -262,7 +257,8 @@ class LanguageConv {
 // Description: Handle TTF font names and mapping and loading of
 //              font files
 //=============================================================
-class TTF {
+class TTF
+{
     private $font_files,$style_names;
 
     function __construct()
@@ -462,17 +458,17 @@ class TTF {
     //---------------
     // PUBLIC METHODS
     // Create the TTF file from the font specification
-    function File($family,$style=FS_NORMAL)
+    function File($family, $style = FS_NORMAL)
     {
         $fam = @$this->font_files[$family];
-        if( !$fam ) {
-            JpGraphError::RaiseL(25046,$family);//("Specified TTF font family (id=$family) is unknown or does not exist. Please note that TTF fonts are not distributed with JpGraph for copyright reasons. You can find the MS TTF WEB-fonts (arial, courier etc) for download at http://corefonts.sourceforge.net/");
+        if (!$fam) {
+            JpGraphError::RaiseL(25046, $family);//("Specified TTF font family (id=$family) is unknown or does not exist. Please note that TTF fonts are not distributed with JpGraph for copyright reasons. You can find the MS TTF WEB-fonts (arial, courier etc) for download at http://corefonts.sourceforge.net/");
         }
         $ff = @$fam[$style];
 
         // There are several optional file names. They are tried in order
         // and the first one found is used
-        if( !is_array($ff) ) {
+        if (!is_array($ff)) {
             $ff = array($ff);
         }
 
@@ -481,10 +477,11 @@ class TTF {
         foreach ($ff as $font_file) {
             // All font families are guaranteed to have the normal style
 
-            if( $font_file==='' )
-                    JpGraphError::RaiseL(25047,$this->style_names[$style],$this->font_files[$family][FS_NORMAL]);//('Style "'.$this->style_names[$style].'" is not available for font family '.$this->font_files[$family][FS_NORMAL].'.');
-            if( !$font_file ) {
-                JpGraphError::RaiseL(25048,$fam);//("Unknown font style specification [$fam].");
+            if ($font_file==='') {
+                    JpGraphError::RaiseL(25047, $this->style_names[$style], $this->font_files[$family][FS_NORMAL]);//('Style "'.$this->style_names[$style].'" is not available for font family '.$this->font_files[$family][FS_NORMAL].'.');
+            }
+            if (!$font_file) {
+                JpGraphError::RaiseL(25048, $fam);//("Unknown font style specification [$fam].");
             }
 
             // check jpgraph/src/fonts dir
@@ -505,14 +502,14 @@ class TTF {
             }
         }
 
-        if( !file_exists($font_file) ) {
-            JpGraphError::RaiseL(25049,$font_file);//("Font file \"$font_file\" is not readable or does not exist.");
+        if (!file_exists($font_file)) {
+            JpGraphError::RaiseL(25049, $font_file);//("Font file \"$font_file\" is not readable or does not exist.");
         }
 
         return $font_file;
     }
 
-    function SetUserFont($aNormal,$aBold='',$aItalic='',$aBoldIt='')
+    function SetUserFont($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->font_files[FF_USERFONT] =
             array(FS_NORMAL     => $aNormal,
@@ -521,7 +518,7 @@ class TTF {
                   FS_BOLDITALIC => $aBoldIt ) ;
     }
 
-    function SetUserFont1($aNormal,$aBold='',$aItalic='',$aBoldIt='')
+    function SetUserFont1($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->font_files[FF_USERFONT1] =
             array(FS_NORMAL     => $aNormal,
@@ -530,7 +527,7 @@ class TTF {
                   FS_BOLDITALIC => $aBoldIt ) ;
     }
 
-    function SetUserFont2($aNormal,$aBold='',$aItalic='',$aBoldIt='')
+    function SetUserFont2($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->font_files[FF_USERFONT2] =
             array(FS_NORMAL     => $aNormal,
@@ -539,7 +536,7 @@ class TTF {
                   FS_BOLDITALIC => $aBoldIt ) ;
     }
 
-    function SetUserFont3($aNormal,$aBold='',$aItalic='',$aBoldIt='')
+    function SetUserFont3($aNormal, $aBold = '', $aItalic = '', $aBoldIt = '')
     {
         $this->font_files[FF_USERFONT3] =
             array(FS_NORMAL     => $aNormal,
@@ -547,7 +544,6 @@ class TTF {
                   FS_ITALIC => $aItalic,
                   FS_BOLDITALIC => $aBoldIt ) ;
     }
-
 } // Class
 
 
@@ -557,8 +553,9 @@ class TTF {
 //              normally isn't available directly on the keyboard, for example
 //              mathematical and greek symbols.
 //=============================================================================
-class  SymChar {
-    static function Get($aSymb,$aCapital=FALSE)
+class SymChar
+{
+    static function Get($aSymb, $aCapital = false)
     {
         $iSymbols = array(
         /* Greek */
@@ -614,21 +611,19 @@ class  SymChar {
         $i=0;
         $found = false;
         $aSymb = strtolower($aSymb);
-        while( $i < $n && !$found ) {
+        while ($i < $n && !$found) {
             $found = $aSymb === $iSymbols[$i++][0];
         }
-        if( $found ) {
+        if ($found) {
             $ca = $iSymbols[--$i];
-            if( $aCapital && count($ca)==3 )
+            if ($aCapital && count($ca)==3) {
                 $s = $ca[2];
-            else
+            } else {
                 $s = $ca[1];
-            return sprintf('&#%04d;',hexdec($s));
-        }
-        else
+            }
+            return sprintf('&#%04d;', hexdec($s));
+        } else {
             return '';
+        }
     }
 }
-
-
-?>

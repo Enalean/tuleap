@@ -23,7 +23,8 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 
 require_once __DIR__ . '/../../../../../src/www/include/utils.php';
 
-class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
+class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
+{
     public const FIELDS_ALL      = 'all';
     public const FIELDS_COMMENTS = 'comments';
 
@@ -541,15 +542,17 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         }
 
         if ($row = $this->getCommentDao()->searchLastVersion($this->id)->getRow()) {
-            $this->latest_comment = new Tracker_Artifact_Changeset_Comment($row['id'],
-                                                    $this,
-                                                    $row['comment_type_id'],
-                                                    $row['canned_response_id'],
-                                                    $row['submitted_by'],
-                                                    $row['submitted_on'],
-                                                    $row['body'],
-                                                    $row['body_format'],
-                                                    $row['parent_id']);
+            $this->latest_comment = new Tracker_Artifact_Changeset_Comment(
+                $row['id'],
+                $this,
+                $row['comment_type_id'],
+                $row['canned_response_id'],
+                $row['submitted_by'],
+                $row['submitted_on'],
+                $row['body'],
+                $row['body_format'],
+                $row['parent_id']
+            );
         }
         return $this->latest_comment;
     }
@@ -667,7 +670,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
                 continue;
             }
 
-            if ( (! $ignore_perms && ! $field->userCanRead($user) ) || ! $current_changeset_value) {
+            if ((! $ignore_perms && ! $field->userCanRead($user) ) || ! $current_changeset_value) {
                 continue;
             }
 
@@ -760,17 +763,17 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     public function displayDiff($diff, $format, $field)
     {
         $result = false;
-        switch($format) {
+        switch ($format) {
             case 'html':
                 $result .= '<li>';
                 $result .= '<span class="tracker_artifact_followup_changes_field"><b>'. Codendi_HTMLPurifier::instance()->purify($field->getLabel()) .'</b></span> ';
                 $result .= '<span class="tracker_artifact_followup_changes_changes">'. $diff .'</span>';
                 $result .= '</li>';
-            break;
+                break;
             default://text
                 $result .= ' * '.$field->getLabel().' : '.PHP_EOL;
                 $result .= $diff . PHP_EOL;
-            break;
+                break;
         }
         return $result;
     }

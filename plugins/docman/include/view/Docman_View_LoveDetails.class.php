@@ -23,7 +23,8 @@
  *
  */
 
-class Docman_View_LoveDetails {
+class Docman_View_LoveDetails
+{
     var $md;
     var $hp;
 
@@ -33,7 +34,7 @@ class Docman_View_LoveDetails {
         $this->hp = Codendi_HTMLPurifier::instance();
     }
 
-    function getNameField($value='')
+    function getNameField($value = '')
     {
         $html = '';
 
@@ -47,7 +48,7 @@ class Docman_View_LoveDetails {
         return $html;
     }
 
-    function getDescriptionField($value='')
+    function getDescriptionField($value = '')
     {
         $html = '';
 
@@ -61,7 +62,7 @@ class Docman_View_LoveDetails {
         return $html;
     }
 
-    function getRankField($value='end')
+    function getRankField($value = 'end')
     {
         $html = '';
 
@@ -76,12 +77,11 @@ class Docman_View_LoveDetails {
 
         $vIter = $this->md->getListOfValueIterator();
         $vIter->rewind();
-        while($vIter->valid()) {
+        while ($vIter->valid()) {
             $e = $vIter->current();
 
-            if($e->getStatus() == 'A'
+            if ($e->getStatus() == 'A'
                || $e->getStatus() == 'P') {
-
                 $vals[$i]  = $e->getRank()+1;
                 $texts[$i] = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_rank_after').' '.Docman_MetadataHtmlList::_getElementName($e);
                 $i++;
@@ -97,19 +97,16 @@ class Docman_View_LoveDetails {
         return $html;
     }
 
-    function getHiddenFields($loveId=null)
+    function getHiddenFields($loveId = null)
     {
         $html = '';
 
         $html .= '<input type="hidden" name="md" value="'.$this->md->getLabel().'" />';
 
-        if($loveId !== null) {
+        if ($loveId !== null) {
             $html .= '<input type="hidden" name="loveid" value="'.$loveId.'" />';
         }
 
         return $html;
     }
-
 }
-
-?>

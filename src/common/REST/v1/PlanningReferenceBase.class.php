@@ -21,7 +21,8 @@ namespace Tuleap\REST\v1;
 /**
  * Basic reference of a planning
  */
-class PlanningReferenceBase {
+class PlanningReferenceBase
+{
 
     /**
      * @var int

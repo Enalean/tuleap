@@ -28,7 +28,8 @@ require_once('ArtifactRuleFactory.class.php');
 * This is only a proxy to access the factory.
 * Maybe there is no need to have this intermediary?
 */
-class ArtifactRulesManager {
+class ArtifactRulesManager
+{
 
 
     function __construct()
@@ -119,7 +120,7 @@ class ArtifactRulesManager {
         // construction of $dependencies array : dependcies defined rules
         // $dependencies[$source_field_id][$target_field_id][] = artifactrulevalue Object
         $dependencies = array();
-        foreach($this->getAllRulesByArtifactTypeWithOrder($artifact_type_id) as $rule) {
+        foreach ($this->getAllRulesByArtifactTypeWithOrder($artifact_type_id) as $rule) {
             if (is_a($rule, 'ArtifactRuleValue')) {
                 if (!isset($dependencies[$rule->source_field])) {
                     $dependencies[$rule->source_field] = array();
@@ -162,15 +163,16 @@ class ArtifactRulesManager {
                                         $source,
                                         $source_value,
                                         $target,
-                                        $target_value))
-                                    {
+                                        $target_value
+                                    )) {
                                         $applied = true;
                                         $valid = $rule->applyTo(
                                             $artifact_type_id,
                                             $source,
                                             $source_value,
                                             $target,
-                                            $target_value);
+                                            $target_value
+                                        );
                                     }
                                 }
                             }
@@ -220,7 +222,7 @@ class ArtifactRulesManager {
                     if ($row['field_id'] == $field_id && in_array($row['value_id'], $field_values)) {
                         $selected_values[] = $row['value'];
                     }
-                } else if (in_array($row['user_id'], $field_values)) {
+                } elseif (in_array($row['user_id'], $field_values)) {
                     $selected_values[] = $row['user_name'];
                 }
             }
@@ -332,5 +334,3 @@ class ArtifactRulesManager {
         return $found;
     }
 }
-
-?>

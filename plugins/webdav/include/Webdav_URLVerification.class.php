@@ -22,7 +22,8 @@
 /**
  * Check the URL validity for WebDAV plugin
  */
-class Webdav_URLVerification extends URLVerification {
+class Webdav_URLVerification extends URLVerification
+{
 
     protected $webdavHost;
 
@@ -88,5 +89,4 @@ class Webdav_URLVerification extends URLVerification {
         header('HTTP/1.1 403 Forbidden: HTTPS required instead of HTTP');
         exit;
     }
-
 }

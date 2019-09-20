@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class DatabaseForge extends DatabaseMysqli {
+class DatabaseForge extends DatabaseMysqli
+{
     function __construct($params)
     {
             global $wgDBtype;

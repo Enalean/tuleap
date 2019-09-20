@@ -19,7 +19,8 @@
  */
 
 
-class Tracker_Workflow_Action_Transitions_Delete extends Tracker_Workflow_Action_Transitions {
+class Tracker_Workflow_Action_Transitions_Delete extends Tracker_Workflow_Action_Transitions
+{
      /** @var WorkflowFactory */
     private $workflow_factory;
 
@@ -32,12 +33,10 @@ class Tracker_Workflow_Action_Transitions_Delete extends Tracker_Workflow_Action
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user)
     {
         if ($this->workflow_factory->deleteWorkflow($request->get('delete'))) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','deleted'));
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin', 'deleted'));
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(
                                             'tracker' => (int)$this->tracker->id,
                                             'func'    => Workflow::FUNC_ADMIN_TRANSITIONS)));
         }
     }
 }
-
-?>

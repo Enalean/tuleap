@@ -234,12 +234,12 @@ class GitActions extends PluginActions
         return call_user_func_array(array($this,$action), $params);
     }
 
-    public function deleteRepository( $projectId, $repositoryId )
+    public function deleteRepository($projectId, $repositoryId)
     {
         $controller   = $this->getController();
         $projectId    = intval($projectId);
         $repositoryId = intval($repositoryId);
-        if ( empty($projectId) || empty($repositoryId) ) {
+        if (empty($projectId) || empty($repositoryId)) {
             $this->getController()->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
             return false;
         }
@@ -384,7 +384,8 @@ class GitActions extends PluginActions
                 $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-git', 'Template successfully deleted.'));
                 return;
             }
-        } catch (Exception $e) {}
+        } catch (Exception $e) {
+        }
 
         $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-git', 'An error occured while trying to delete the template.'));
     }
@@ -400,19 +401,19 @@ class GitActions extends PluginActions
      */
     private function checkRepoValidity($git_repo, $project)
     {
-        if($project->isError()) {
+        if ($project->isError()) {
             throw new Git_ProjectNotFoundException('unable to get config', 404);
         }
 
-        if(! $git_repo) {
+        if (! $git_repo) {
             throw new GitRepoNotFoundException('unable to get config', 404);
         }
 
-        if(! $git_repo->belongsToProject($project)) {
+        if (! $git_repo->belongsToProject($project)) {
             throw new GitRepoNotInProjectException('unable to get config', 403);
         }
 
-        if(! $git_repo->isMigratedToGerrit()) {
+        if (! $git_repo->isMigratedToGerrit()) {
             throw new GitRepoNotOnGerritException('unable to get config', 500);
         }
     }
@@ -447,7 +448,7 @@ class GitActions extends PluginActions
      */
     private function checkUserIsAdmin(Project $project, PFUser $user)
     {
-        if(! $this->git_permissions_manager->userIsGitAdmin($user, $project)) {
+        if (! $this->git_permissions_manager->userIsGitAdmin($user, $project)) {
              throw new GitUserNotAdminException('unable to get template', 401);
         }
 
@@ -549,7 +550,7 @@ class GitActions extends PluginActions
         $c = $this->getController();
         $projectId    = intval($projectId);
         $repositoryId = intval($repositoryId);
-        if ( empty($repositoryId) ) {
+        if (empty($repositoryId)) {
             $this->getController()->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
             return false;
         }
@@ -950,7 +951,7 @@ class GitActions extends PluginActions
         $enable_regexp
     ) {
         $controller = $this->getController();
-        if ( empty($repoId) ) {
+        if (empty($repoId)) {
             $this->getController()->addError(dgettext('tuleap-git', 'Empty required parameter(s)'));
             $controller->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return false;
@@ -977,9 +978,8 @@ class GitActions extends PluginActions
         }
 
         $are_there_changes = false;
-        if ( !empty($repoAccess) ) {
+        if (!empty($repoAccess)) {
             if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
-
                 $are_there_changes = $this->permission_changes_detector->areThereChangesInPermissionsForRepository(
                     $repository,
                     $repoAccess,
@@ -993,7 +993,7 @@ class GitActions extends PluginActions
             } else {
                 if ($repository->getAccess() != $repoAccess) {
                     $this->git_system_event_manager->queueGitShellAccess($repository, $repoAccess);
-                    $controller->addInfo( dgettext('tuleap-git', 'Repository access permissions are going to be modified in a few seconds') );
+                    $controller->addInfo(dgettext('tuleap-git', 'Repository access permissions are going to be modified in a few seconds'));
                 }
             }
         }
@@ -1010,7 +1010,7 @@ class GitActions extends PluginActions
 
             $save_regexp_usage = true;
             $action            = dgettext('tuleap-git', 'enabled');
-        } else if (! $enable_regexp && $this->regexp_retriever->areRegexpActivatedForRepository($repository) === true) {
+        } elseif (! $enable_regexp && $this->regexp_retriever->areRegexpActivatedForRepository($repository) === true) {
             $this->regexp_disabler->disableForRepository($repository);
             if ($this->permission_filter->filterNonRegexpPermissions($repository)) {
                 $are_there_changes = true;
@@ -1052,7 +1052,7 @@ class GitActions extends PluginActions
 
         $this->git_system_event_manager->queueRepositoryUpdate($repository);
 
-        $controller->addInfo( dgettext('tuleap-git', 'Repository informations have been saved') );
+        $controller->addInfo(dgettext('tuleap-git', 'Repository informations have been saved'));
         $this->redirectToRepoManagement($projectId, $repoId, $pane);
         return;
     }
@@ -1067,23 +1067,22 @@ class GitActions extends PluginActions
     {
         //if the project is private, then no changes may be applied to repositories,
         //in other words only if project is set to private, its repositories have to be set to private
-        if ( empty($isPrivate) ) {
+        if (empty($isPrivate)) {
             return;
         }
         $repositories = $dao->getProjectRepositoryList($projectId);
-        foreach ( $repositories as $repoId=>$repoData ) {
+        foreach ($repositories as $repoId => $repoData) {
             $r = $factory->getRepositoryById($repoId);
-            if ( !$r ) {
+            if (!$r) {
                 continue;
             }
-            if ( $r->getAccess() == GitRepository::PRIVATE_ACCESS) {
+            if ($r->getAccess() == GitRepository::PRIVATE_ACCESS) {
                 continue;
             }
-            $r->setAccess( GitRepository::PRIVATE_ACCESS );
+            $r->setAccess(GitRepository::PRIVATE_ACCESS);
             $r->changeAccess();
             unset($r);
         }
-
     }
 
     /**
@@ -1135,7 +1134,6 @@ class GitActions extends PluginActions
     {
         try {
             if ($this->manager->forkRepositories($repos, $to_project, $user, $namespace, $scope, $forkPermissions)) {
-
                 $this->history_dao->groupAddHistory(
                     "git_fork_repositories",
                     $to_project->getID(),
@@ -1145,7 +1143,7 @@ class GitActions extends PluginActions
                 $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-git', 'Successfully forked'));
                 $response->redirect($redirect_url);
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
         }
     }
@@ -1282,7 +1280,7 @@ class GitActions extends PluginActions
     public function updateMirroring(Project $project, array $repositories, $selected_mirror_ids)
     {
         $current_mirror_ids_per_repository = $this->mirror_data_mapper->getListOfMirrorIdsPerRepositoryForProject($project);
-        foreach($repositories as $repository) {
+        foreach ($repositories as $repository) {
             if (! isset($selected_mirror_ids[$repository->getId()]) || ! is_array($selected_mirror_ids[$repository->getId()])) {
                 continue;
             }
@@ -1305,13 +1303,10 @@ class GitActions extends PluginActions
 
         if ($more_than_one_repository && ! $selected_mirror_ids) {
             $GLOBALS['Response']->addFeedback('warning', dgettext('tuleap-git', 'The repositories will be completely removed from mirrors in a few minutes.'));
-
         } elseif ($more_than_one_repository && $selected_mirror_ids) {
             $GLOBALS['Response']->addFeedback('warning', dgettext('tuleap-git', 'The repositories will be replicated on the selected mirrors  in a few minutes.'));
-
         } elseif (! $more_than_one_repository && ! $selected_mirror_ids) {
             $GLOBALS['Response']->addFeedback('warning', dgettext('tuleap-git', 'The repository will be completely revoked from mirrors  in a few minutes.'));
-
         } else {
             $GLOBALS['Response']->addFeedback('warning', dgettext('tuleap-git', 'The repository will be replicated on the selected mirrors in a few minutes.'));
         }

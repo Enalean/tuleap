@@ -37,7 +37,8 @@ use Tuleap\REST\ProjectStatusVerificator;
 use UserManager;
 use PFUser;
 
-class GerritResource extends AuthenticatedResource {
+class GerritResource extends AuthenticatedResource
+{
 
     /**
      * @var Git_RemoteServer_GerritServerFactory
@@ -126,7 +127,7 @@ class GerritResource extends AuthenticatedResource {
         }
 
         $representations = array();
-        foreach($servers as $server) {
+        foreach ($servers as $server) {
             $representation = new GerritServerRepresentation();
             $representation->build($server);
             $representations[] = $representation;
@@ -155,7 +156,6 @@ class GerritResource extends AuthenticatedResource {
         if (! $user->isSuperUser() && ! $this->server_permission_manager->isUserAllowedToListServers($user)) {
             throw new RestException(403, 'User is not allowed to list Gerrit server');
         }
-
     }
 
     /**

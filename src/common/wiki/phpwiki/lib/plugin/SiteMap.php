@@ -43,8 +43,7 @@ rcs_id('$Id: SiteMap.php,v 1.13 2004/12/14 21:36:06 rurban Exp $');
  */
 require_once('lib/PageList.php');
 
-class WikiPlugin_SiteMap
-extends WikiPlugin
+class WikiPlugin_SiteMap extends WikiPlugin
 {
     var $_pagename;
 
@@ -60,8 +59,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.13 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.13 $"
+        );
     }
 
     function getDefaultArguments()
@@ -96,21 +98,25 @@ extends WikiPlugin
 
         $startpagename = $startpage->getName();
         //trigger_error("DEBUG: recursivelyGetBackLinks( $startpagename , $level )");
-        if ($level == $reclimit)
+        if ($level == $reclimit) {
             return $pagearr;
-        if (in_array($startpagename, $VisitedPages))
+        }
+        if (in_array($startpagename, $VisitedPages)) {
             return $pagearr;
+        }
         array_push($VisitedPages, $startpagename);
         $pagelinks = $startpage->getLinks();
         while ($link = $pagelinks->next()) {
             $linkpagename = $link->getName();
             if (($linkpagename != $startpagename)
-                and (!$this->ExcludedPages or !preg_match("/".$this->ExcludedPages."/", $linkpagename)))
-            {
+                and (!$this->ExcludedPages or !preg_match("/".$this->ExcludedPages."/", $linkpagename))) {
                 $pagearr[$level . " [$linkpagename]"] = $link;
-                $pagearr = $this->recursivelyGetBackLinks($link, $pagearr,
-                                                          $level . '*',
-                                                          $reclimit);
+                $pagearr = $this->recursivelyGetBackLinks(
+                    $link,
+                    $pagearr,
+                    $level . '*',
+                    $reclimit
+                );
             }
         }
         return $pagearr;
@@ -126,10 +132,12 @@ extends WikiPlugin
 
         $startpagename = $startpage->getName();
         //trigger_error("DEBUG: recursivelyGetLinks( $startpagename , $level )");
-        if ($level == $reclimit)
+        if ($level == $reclimit) {
             return $pagearr;
-        if (in_array($startpagename, $VisitedPages))
+        }
+        if (in_array($startpagename, $VisitedPages)) {
             return $pagearr;
+        }
         array_push($VisitedPages, $startpagename);
         $reversed = (($this->firstreversed)
                      && ($startpagename == $this->initialpage));
@@ -138,13 +146,15 @@ extends WikiPlugin
         while ($link = $pagelinks->next()) {
             $linkpagename = $link->getName();
             if (($linkpagename != $startpagename) and
-                (!$this->ExcludedPages or !preg_match("/$this->ExcludedPages/", $linkpagename)))
-            {
+                (!$this->ExcludedPages or !preg_match("/$this->ExcludedPages/", $linkpagename))) {
                 if (!$this->excludeunknown or $this->dbi->isWikiPage($linkpagename)) {
                     $pagearr[$level . " [$linkpagename]"] = $link;
-                    $pagearr = $this->recursivelyGetLinks($link, $pagearr,
-                                                          $level . '*',
-                                                          $reclimit);
+                    $pagearr = $this->recursivelyGetLinks(
+                        $link,
+                        $pagearr,
+                        $level . '*',
+                        $reclimit
+                    );
                 }
             }
         }
@@ -158,21 +168,27 @@ extends WikiPlugin
 
         $args = $this->getArgs($argstr, $request, false);
         extract($args);
-        if (!$page)
+        if (!$page) {
             return '';
+        }
         $this->_pagename = $page;
         $out = ''; // get rid of this
         $html = HTML();
-        if (empty($exclude)) $exclude = array();
-        if (!$include_self)
+        if (empty($exclude)) {
+            $exclude = array();
+        }
+        if (!$include_self) {
             $exclude[] = $page;
+        }
         $this->ExcludedPages = empty($exclude) ? "" : ("^(?:" . join("|", $exclude) . ")");
         $this->_default_limit = str_pad('', 3, '*');
         if (is_numeric($reclimit)) {
-            if ($reclimit < 0)
+            if ($reclimit < 0) {
                 $reclimit = 0;
-            if ($reclimit > 10)
+            }
+            if ($reclimit > 10) {
                 $reclimit = 10;
+            }
             $limit = str_pad('', $reclimit + 2, '*');
         } else {
             $limit = '***';
@@ -180,8 +196,10 @@ extends WikiPlugin
         //Fixme:  override given arg
         $description = $this->getDescription();
         if (! $noheader) {
-            $out = $this->getDescription() ." ". sprintf(_("(max. recursion level: %d)"),
-                                                         $reclimit) . ":\n\n";
+            $out = $this->getDescription() ." ". sprintf(
+                _("(max. recursion level: %d)"),
+                $reclimit
+            ) . ":\n\n";
             $html->pushContent(TransformText($out, 1.0, $page));
         }
         $pagelist = new PageList($info, $exclude);
@@ -189,10 +207,13 @@ extends WikiPlugin
 
         $pagearr = array();
         if ($direction == 'back') {
-            $pagearr = $this->recursivelyGetBackLinks($p, $pagearr, "*",
-                                                      $limit);
-        }
-        else {
+            $pagearr = $this->recursivelyGetBackLinks(
+                $p,
+                $pagearr,
+                "*",
+                $limit
+            );
+        } else {
             $this->dbi = $dbi;
             $this->initialpage = $page;
             $this->firstreversed = $firstreversed;
@@ -203,12 +224,14 @@ extends WikiPlugin
         reset($pagearr);
         if (!empty($includepages)) {
             // disallow direct usage, only via child class IncludeSiteMap
-            if (!isa($this,"WikiPlugin_IncludeSiteMap"))
+            if (!isa($this, "WikiPlugin_IncludeSiteMap")) {
                 $includepages = '';
-            if (!is_string($includepages))
+            }
+            if (!is_string($includepages)) {
                 $includepages = ' '; // avoid plugin loader problems
+            }
             $loader = new WikiPluginLoader();
-            $plugin = $loader->getPlugin('IncludePage',false);
+            $plugin = $loader->getPlugin('IncludePage', false);
             $nothing = '';
         }
 
@@ -223,8 +246,7 @@ extends WikiPlugin
                 $html->pushContent($pagehtml);
                 //$html->pushContent( HTML(TransformText($indenter, 1.0, $page), $pagehtml));
                 //$out .= $indenter . $pagehtml . "\n";
-            }
-            else {
+            } else {
                 $out .= $key . "\n";
             }
         }
@@ -286,4 +308,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

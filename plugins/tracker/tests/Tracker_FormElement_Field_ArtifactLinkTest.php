@@ -21,7 +21,8 @@
 
 require_once('bootstrap.php');
 
-class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
+class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -139,7 +140,6 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $a->shouldReceive('getLastChangeset')->andReturns(false);
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, array('new_values' => '')));
         $this->assertTrue($f->hasErrors());
-
     }
 
     function testIsValid_AddsErrorIfARequiredFieldValueIsAnEmptyString()
@@ -407,7 +407,6 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getValue')->with($field)->andReturns($changeset_value);
         return $changeset;
-
     }
 
     private function GivenAnArtifactFactory($artifacts)
@@ -417,11 +416,11 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
             $factory->shouldReceive('getArtifactById')->with($a->getId())->andReturns($a);
         }
         return $factory;
-
     }
 }
 
-class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends TuleapTestCase {
+class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends TuleapTestCase
+{
 
     /**
      * @var \Mockery\MockInterface|\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping
@@ -580,7 +579,8 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
     }
 }
 
-class Tracker_FormElement_Field_ArtifactLink_postSaveNewChangesetTest extends TuleapTestCase {
+class Tracker_FormElement_Field_ArtifactLink_postSaveNewChangesetTest extends TuleapTestCase
+{
 
     public function itExecutesProcessChildrenTriggersCommand()
     {
@@ -598,7 +598,8 @@ class Tracker_FormElement_Field_ArtifactLink_postSaveNewChangesetTest extends Tu
     }
 }
 
-class Tracker_FormElement_Field_ArtifactLink_AugmentDataFromRequestTest extends TuleapTestCase {
+class Tracker_FormElement_Field_ArtifactLink_AugmentDataFromRequestTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -928,7 +929,8 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
     }
 }
 
-class Tracker_FormElement_Field_ArtifactLink_RESTTests extends TuleapTestCase {
+class Tracker_FormElement_Field_ArtifactLink_RESTTests extends TuleapTestCase
+{
 
     public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName()
     {

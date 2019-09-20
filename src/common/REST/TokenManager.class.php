@@ -21,7 +21,8 @@
  *
  * I Deal with Rest_Token
  */
-class Rest_TokenManager {
+class Rest_TokenManager
+{
     /**
      * Expiration time for tokens in seconds (24 hours)
      */
@@ -51,7 +52,7 @@ class Rest_TokenManager {
     public function checkToken(Rest_Token $token)
     {
 
-        if ( $this->token_factory->doesTokenExist($token->getUserId(), $token->getTokenValue()) ) {
+        if ($this->token_factory->doesTokenExist($token->getUserId(), $token->getTokenValue())) {
             return $this->user_manager->getUserById($token->getUserId());
         }
 

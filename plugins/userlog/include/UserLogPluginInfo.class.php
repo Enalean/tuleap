@@ -23,12 +23,12 @@
  *
  */
 
-class UserLogPluginInfo extends PluginInfo {
+class UserLogPluginInfo extends PluginInfo
+{
 
     public function __construct($plugin)
     {
         parent::__construct($plugin);
         $this->setPluginDescriptor(new UserLogPluginDescriptor());
     }
-
 }

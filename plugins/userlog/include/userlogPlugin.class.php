@@ -99,18 +99,20 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
 
     public function logUser($params)
     {
-        if(! $params['is_script']) {
+        if (! $params['is_script']) {
             $request = $params['request'];
 
             $userLogManager = new UserLogManager(new AdminPageRenderer(), UserManager::instance());
-            $userLogManager->logAccess($_SERVER['REQUEST_TIME'],
-                                       $request->getProject()->getID(),
-                                       $request->getCurrentUser()->getId(),
-                                       $request->getFromServer('HTTP_USER_AGENT'),
-                                       $request->getFromServer('REQUEST_METHOD'),
-                                       $request->getFromServer('REQUEST_URI'),
-                                       HTTPRequest::instance()->getIPAddress(),
-                                       $request->getFromServer('HTTP_REFERER'));
+            $userLogManager->logAccess(
+                $_SERVER['REQUEST_TIME'],
+                $request->getProject()->getID(),
+                $request->getCurrentUser()->getId(),
+                $request->getFromServer('HTTP_USER_AGENT'),
+                $request->getFromServer('REQUEST_METHOD'),
+                $request->getFromServer('REQUEST_URI'),
+                HTTPRequest::instance()->getIPAddress(),
+                $request->getFromServer('HTTP_REFERER')
+            );
         }
     }
 

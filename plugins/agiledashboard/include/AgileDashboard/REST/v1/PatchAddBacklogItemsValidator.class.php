@@ -23,7 +23,8 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use Tracker_ArtifactFactory;
 
-class PatchAddBacklogItemsValidator implements IValidateElementsToAdd {
+class PatchAddBacklogItemsValidator implements IValidateElementsToAdd
+{
 
     private $backlog_item_artifact_id;
 
@@ -52,7 +53,7 @@ class PatchAddBacklogItemsValidator implements IValidateElementsToAdd {
      */
     public function validate(array $to_add)
     {
-        foreach($to_add as $id) {
+        foreach ($to_add as $id) {
             $artifact = $this->artifact_factory->getArtifactById($id);
             if (! isset($this->allowed_trackers[$artifact->getTrackerId()])) {
                 throw new ArtifactCannotBeChildrenOfException($this->backlog_item_artifact_id, $id);

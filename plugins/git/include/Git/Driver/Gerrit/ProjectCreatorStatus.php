@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_Driver_Gerrit_ProjectCreatorStatus {
+class Git_Driver_Gerrit_ProjectCreatorStatus
+{
 
     /** @var Git_Driver_Gerrit_ProjectCreatorStatusDao */
     private $dao;
@@ -47,7 +48,7 @@ class Git_Driver_Gerrit_ProjectCreatorStatus {
         if ($repository->getMigrationStatus() != null) {
             return $repository->getMigrationStatus();
         }
-        switch($event_status) {
+        switch ($event_status) {
             case SystemEvent::STATUS_RUNNING:
                 return self::QUEUE;
 

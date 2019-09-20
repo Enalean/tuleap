@@ -302,7 +302,9 @@ class Planning_MilestoneFactory
         PFUser             $user,
         Tracker_Artifact $milestone_artifact
     ) {
-        if ($milestone_artifact == null) return; //it is not possible!
+        if ($milestone_artifact == null) {
+            return; //it is not possible!
+        }
 
         $parents = array();
         $node    = $this->makeNodeWithChildren($user, $milestone_artifact, $parents);
@@ -322,8 +324,12 @@ class Planning_MilestoneFactory
         array            $parents
     ) {
         $linked_artifacts = $artifact->getUniqueLinkedArtifacts($user);
-        if (! $linked_artifacts) return;
-        if (in_array($artifact->getId(), $parents)) return;
+        if (! $linked_artifacts) {
+            return;
+        }
+        if (in_array($artifact->getId(), $parents)) {
+            return;
+        }
 
         $parents[] = $artifact->getId();
         foreach ($linked_artifacts as $linked_artifact) {
@@ -391,7 +397,7 @@ class Planning_MilestoneFactory
 
         if ($milestone_artifact) {
             $sub_milestone_artifacts = $this->milestone_dao->searchSubMilestones($milestone_artifact->getId());
-            foreach($sub_milestone_artifacts as $artifact_row) {
+            foreach ($sub_milestone_artifacts as $artifact_row) {
                 $sub_milestones_ids[] = $artifact_row['id'];
             }
         }
@@ -487,7 +493,6 @@ class Planning_MilestoneFactory
                     $offset,
                     $order
                 );
-
             } else {
                 $top_milestone_artifacts = $this->milestone_dao->searchPaginatedTopMilestones(
                     $milestone_planning_tracker_id,
@@ -518,7 +523,8 @@ class Planning_MilestoneFactory
             new StatusOpen(),
             $limit,
             $offset,
-            $order);
+            $order
+        );
 
         $milestones = [];
 
@@ -545,7 +551,8 @@ class Planning_MilestoneFactory
             new StatusAll(),
             $limit,
             $offset,
-            $order);
+            $order
+        );
 
         $milestones = [];
 
@@ -607,7 +614,7 @@ class Planning_MilestoneFactory
 
         $root_planning = $this->planning_factory->getRootPlanning($user, $top_milestone->getProject()->getID());
 
-        foreach($this->getTopSubMilestoneArtifacts($user, $top_milestone) as $artifact) {
+        foreach ($this->getTopSubMilestoneArtifacts($user, $top_milestone) as $artifact) {
             if ($artifact->getLastChangeset() && $artifact->userCanView($user)) {
                 $milestone = new Planning_ArtifactMilestone(
                     $top_milestone->getProject(),
@@ -628,7 +635,7 @@ class Planning_MilestoneFactory
     {
         $milestone_ids = array();
 
-        foreach($this->getTopSubMilestoneArtifacts($user, $top_milestone) as $artifact) {
+        foreach ($this->getTopSubMilestoneArtifacts($user, $top_milestone) as $artifact) {
             $milestone_ids[] = $artifact->getId();
         }
 
@@ -930,7 +937,7 @@ class Planning_MilestoneFactory
         $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
 
         foreach ($artifacts as $artifact) {
-            if ( ! $this->isMilestonePast($artifact)) {
+            if (! $this->isMilestonePast($artifact)) {
                 continue;
             }
 

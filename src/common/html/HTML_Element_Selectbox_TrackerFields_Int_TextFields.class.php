@@ -24,17 +24,17 @@
 /**
  * Define an html selectbox field for Numeric/Selectbox, not-standard, not-user, fields provided by the tracker
  */
-class HTML_Element_Selectbox_TrackerFields_Int_TextFields extends HTML_Element_Selectbox {
+class HTML_Element_Selectbox_TrackerFields_Int_TextFields extends HTML_Element_Selectbox
+{
 
-    public function __construct($label, $name, $value, $with_none = false, $onchange = "", $desc="")
+    public function __construct($label, $name, $value, $with_none = false, $onchange = "", $desc = "")
     {
         parent::__construct($label, $name, $value, $with_none, $onchange, $desc);
 
-        $at  = new ArtifactType($GLOBALS['ath']->Group,$GLOBALS['ath']->getID(),false);
+        $at  = new ArtifactType($GLOBALS['ath']->Group, $GLOBALS['ath']->getID(), false);
         $aff = new ArtifactFieldFactory($at);
         foreach ($aff->getAllUsedFields() as $field) {
-            if($field->userCanRead($GLOBALS['group_id'],$GLOBALS['ath']->getID(), UserManager::instance()->getCurrentUser()->getId())){
-
+            if ($field->userCanRead($GLOBALS['group_id'], $GLOBALS['ath']->getID(), UserManager::instance()->getCurrentUser()->getId())) {
                 if ($field->isInt()
                     && !$field->isUsername()
                     && !$field->isStandardField()
@@ -47,4 +47,3 @@ class HTML_Element_Selectbox_TrackerFields_Int_TextFields extends HTML_Element_S
         }
     }
 }
-?>

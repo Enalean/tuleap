@@ -114,8 +114,8 @@ class Tracker_Permission_PermissionChecker
     {
         $permissions = $artifact->getTracker()->getAuthorizedUgroupsByPermissionType();
 
-        foreach ($permissions  as $permission_type => $ugroups) {
-            switch($permission_type) {
+        foreach ($permissions as $permission_type => $ugroups) {
+            switch ($permission_type) {
                 case Tracker::PERMISSION_FULL:
                     foreach ($ugroups as $ugroup) {
                         if ($this->userBelongsToGroup($user, $artifact, $ugroup)) {
@@ -134,7 +134,7 @@ class Tracker_Permission_PermissionChecker
                             }
                         }
                     }
-                break;
+                    break;
 
                 case Tracker::PERMISSION_ASSIGNEE:
                     foreach ($ugroups as $ugroup) {
@@ -148,7 +148,7 @@ class Tracker_Permission_PermissionChecker
                             }
                         }
                     }
-                break;
+                    break;
 
                 case Tracker::PERMISSION_SUBMITTER_ONLY:
                     foreach ($ugroups as $ugroup) {

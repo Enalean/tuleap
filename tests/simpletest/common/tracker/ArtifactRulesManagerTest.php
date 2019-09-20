@@ -31,7 +31,8 @@ Mock::generate('Response');
 
 Mock::generate('ArtifactField');
 
-class ArtifactRulesManagerTest extends TuleapTestCase {
+class ArtifactRulesManagerTest extends TuleapTestCase
+{
 
     function testValidate()
     {
@@ -294,7 +295,6 @@ class ArtifactRulesManagerTest extends TuleapTestCase {
         $this->assertTrue($arm->fieldHasTarget(1, 'D'));
         $this->assertFalse($arm->fieldHasTarget(1, 'E'));
         $this->assertFalse($arm->fieldHasTarget(1, 'F'));
-
     }
     function testIsCyclic()
     {
@@ -381,7 +381,6 @@ class ArtifactRulesManagerTest extends TuleapTestCase {
         $this->assertFalse($arm->ruleExists(1, 'E', 'C'));
         $this->assertFalse($arm->ruleExists(1, 'E', 'D'));
         $this->assertFalse($arm->ruleExists(1, 'E', 'E'));
-
     }
     function testValueHasSourceTarget()
     {
@@ -402,7 +401,5 @@ class ArtifactRulesManagerTest extends TuleapTestCase {
         $this->assertTrue($arm->valueHasTarget(1, 'B', 3, 'C'));
         $this->assertFalse($arm->valueHasTarget(1, 'B', 3, 'A'));
         $this->assertFalse($arm->valueHasTarget(1, 'B', 2, 'A'));
-
     }
 }
-?>

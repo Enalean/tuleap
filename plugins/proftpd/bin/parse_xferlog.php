@@ -24,7 +24,6 @@ require_once __DIR__.'/../include/proftpdPlugin.class.php';
 $plugin_manager = PluginManager::instance();
 $plugin = $plugin_manager->getPluginByName('proftpd');
 if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
-
     $file_importer = new Tuleap\ProFTPd\Xferlog\FileImporter(
         new Tuleap\ProFTPd\Xferlog\Dao(),
         new Tuleap\ProFTPd\Xferlog\Parser(),

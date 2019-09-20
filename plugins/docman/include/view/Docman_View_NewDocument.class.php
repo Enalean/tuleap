@@ -20,7 +20,8 @@
  */
 
 
-class Docman_View_NewDocument extends Docman_View_New {
+class Docman_View_NewDocument extends Docman_View_New
+{
 
     function _getTitle($params)
     {
@@ -43,7 +44,7 @@ class Docman_View_NewDocument extends Docman_View_New {
     {
         $html = '';
         $currentItemType = null;
-        if(isset($params['force_item'])) {
+        if (isset($params['force_item'])) {
             $currentItemType = Docman_ItemFactory::getItemTypeForItem($params['force_item']);
         }
         $specifics = array(
@@ -60,13 +61,12 @@ class Docman_View_NewDocument extends Docman_View_New {
                 'checked' => ($currentItemType == PLUGIN_DOCMAN_ITEM_TYPE_LINK)
                 ));
         $wikiAvailable = true;
-        if(isset($params['group_id'])) {
+        if (isset($params['group_id'])) {
             $pm = ProjectManager::instance();
             $go = $pm->getProject($params['group_id']);
             $wikiAvailable = $go->usesWiki();
-
         }
-        if($wikiAvailable) {
+        if ($wikiAvailable) {
             $specifics[] = array(
                 'type'    =>  PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
                 'label'   => $GLOBALS['Language']->getText('plugin_docman', 'new_document_wiki'),
@@ -99,7 +99,7 @@ class Docman_View_NewDocument extends Docman_View_New {
             $html .= '<div style="padding-left:20px" id="item_item_type_'. $specific['type'] .'_specific_properties">';
             $fields = $specific['obj']->accept($get_specific_fields, array('request' => $this->_controller->request));
             $html .= '<table>';
-            foreach($fields as $field) {
+            foreach ($fields as $field) {
                 $html .= '<tr style="vertical-align:top;"><td><label>'. $field->getLabel() .'</label></td><td>'. $field->getField() .'</td></tr>';
             }
             $html .= '</table>';
@@ -114,5 +114,3 @@ class Docman_View_NewDocument extends Docman_View_New {
         return $i;
     }
 }
-
-?>

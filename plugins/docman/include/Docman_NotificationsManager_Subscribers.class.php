@@ -22,7 +22,8 @@
 
 require_once('Docman_NotificationsManager.class.php');
 
-class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManager {
+class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManager
+{
 
     public const MESSAGE_ADDED = 'added'; // X has been added to monitoring list
     public const MESSAGE_REMOVED = 'removed'; // X has been removed from monitoring list
@@ -64,7 +65,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     function _buildMessage($event, $params, $user)
     {
         $type = '';
-        switch($event) {
+        switch ($event) {
             case 'plugin_docman_add_monitoring':
                 $type = self::MESSAGE_ADDED;
                 $subject = sprintf(
@@ -74,7 +75,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
                     ),
                     $params['item']->getTitle()
                 );
-            break;
+                break;
             case 'plugin_docman_remove_monitoring':
                 $type = self::MESSAGE_REMOVED;
                 $subject = sprintf(
@@ -84,10 +85,10 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
                     ),
                     $params['item']->getTitle()
                 );
-            break;
+                break;
             default:
                 $subject = $params['item']->getTitle();
-            break;
+                break;
         }
         $this->_addMessage(
             $user,
@@ -111,7 +112,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
         $msg = '';
         $separator = "\n\n--------------------------------------------------------------------\n";
         $itemUrl = $this->getMessageLink($message_type, $params);
-        switch($message_type) {
+        switch ($message_type) {
             case self::MESSAGE_ADDED:
                 $msg .= dgettext(
                     'tuleap-docman',
@@ -120,19 +121,19 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
                 $msg .= $itemUrl;
                 $msg .= $separator;
                 $msg .= dgettext('plugin-docman', 'To stop monitoring, please visit:')."\n";
-            break;
+                break;
             case self::MESSAGE_REMOVED:
                 $msg .= dgettext(
                     'tuleap-docman',
                     "You are receiving this message because you were removed from the monitoring list of this item:"
-                    )."\n";
+                )."\n";
                 $msg .= $itemUrl;
                 $msg .= $separator;
-                $msg .= dgettext('tuleap-docman','To restore monitoring, please visit:')."\n";
-            break;
+                $msg .= dgettext('tuleap-docman', 'To restore monitoring, please visit:')."\n";
+                break;
             default:
-                $msg .= dgettext('tuleap-docman','Something happen!')."\n";
-            break;
+                $msg .= dgettext('tuleap-docman', 'Something happen!')."\n";
+                break;
         }
         $msg .= $this->getUrlProvider()->getNotificationLinkUrl($params['item']);
         return $msg;

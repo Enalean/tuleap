@@ -24,7 +24,8 @@
 require_once('ArtifactDateReminderFactory.class.php');
 
 // The artifact date reminder object
-class ArtifactDateReminder {
+class ArtifactDateReminder
+{
 
     private $logger;
 
@@ -51,7 +52,4 @@ class ArtifactDateReminder {
 
         $this->logger->info('End');
     }
-
 }
-
-?>

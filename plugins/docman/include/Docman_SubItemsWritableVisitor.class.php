@@ -52,13 +52,13 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
         $canWrite = true;
         $this->fldCounter++;
 
-        if($this->_itemIsWritable($item, $params)) {
+        if ($this->_itemIsWritable($item, $params)) {
             $this->fldIdList[] = $item->getId();
             $items = $item->getAllItems();
-            if($items && $items->size() > 0) {
+            if ($items && $items->size() > 0) {
                 $iter = $items->iterator();
                 $iter->rewind();
-                while($iter->valid()) {
+                while ($iter->valid()) {
                     $child = $iter->current();
                     $canWrite = ($canWrite && $child->accept($this, $params));
                     $iter->next();
@@ -73,7 +73,7 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
     public function visitDocument(Docman_Document $item, array $params = array())
     {
         $this->docCounter++;
-        if($this->_itemIsWritable($item, $params)) {
+        if ($this->_itemIsWritable($item, $params)) {
             $this->docIdList[] = $item->getId();
             return true;
         }

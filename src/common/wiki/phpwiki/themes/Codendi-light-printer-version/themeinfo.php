@@ -32,9 +32,11 @@ $WikiTheme = new Theme('Codendi-light-printer-version');
 
 // This should result in phpwiki-printer.css being used when
 // printing or print-previewing with style "PhpWiki" or "MacOSX" selected.
-$WikiTheme->setDefaultCSS('PhpWiki',
-                       array(''      => 'phpwiki.css',
-                             'print' => 'phpwiki-printer.css'));
+$WikiTheme->setDefaultCSS(
+    'PhpWiki',
+    array(''      => 'phpwiki.css',
+    'print' => 'phpwiki-printer.css')
+);
 
 // This allows one to manually select "Printer" style (when browsing page)
 // to see what the printer style looks like.
@@ -139,4 +141,3 @@ $WikiTheme->setAutosplitWikiWords(false);
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

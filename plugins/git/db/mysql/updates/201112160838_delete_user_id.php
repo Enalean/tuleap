@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201112160838_delete_user_id extends ForgeUpgrade_Bucket {
+class b201112160838_delete_user_id extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -76,6 +77,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column user_id in table plugin_git is still existing');
         }
     }
-
 }
-?>

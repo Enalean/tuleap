@@ -25,7 +25,8 @@ Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_FormElement_Field_Date');
 Mock::generate('PFUser');
 
-class Transition_PostAction_Field_DateTest extends TuleapTestCase {
+class Transition_PostAction_Field_DateTest extends TuleapTestCase
+{
 
     public function setUp()
     {

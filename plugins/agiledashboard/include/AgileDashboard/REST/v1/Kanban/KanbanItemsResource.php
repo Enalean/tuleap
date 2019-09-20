@@ -53,7 +53,8 @@ use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use UserManager;
 
-class KanbanItemsResource extends AuthenticatedResource {
+class KanbanItemsResource extends AuthenticatedResource
+{
 
     /** @var AgileDashboard_KanbanFactory */
     private $kanban_factory;
@@ -310,7 +311,6 @@ class KanbanItemsResource extends AuthenticatedResource {
         $representation->bind_value_ids = array((int) $value);
 
         $fields_data[] = $representation;
-
     }
 
     /** @return AgileDashboard_Kanban */

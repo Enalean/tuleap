@@ -21,7 +21,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class AgileDashboard_Semantic_Dao_InitialEffort extends DataAccessObject {
+class AgileDashboard_Semantic_Dao_InitialEffort extends DataAccessObject
+{
 
     public function __construct()
     {
@@ -58,4 +59,3 @@ class AgileDashboard_Semantic_Dao_InitialEffort extends DataAccessObject {
         return $this->update($sql);
     }
 }
-?>

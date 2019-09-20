@@ -32,7 +32,7 @@ function forge_get_config($key, $scope = 'core')
     );
     if (isset($conf_variables_mapping[$key])) {
         $key = $conf_variables_mapping[$key];
-    } else if ($scope !== 'core') {
+    } elseif ($scope !== 'core') {
         $plugin_manager = PluginManager::instance();
         $plugin = $plugin_manager->getPluginByName($scope);
         if (! $plugin || ! $plugin_manager->isPluginAvailable($plugin)) {

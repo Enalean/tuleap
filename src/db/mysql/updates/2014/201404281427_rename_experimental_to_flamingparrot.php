@@ -19,7 +19,8 @@
 /**
  * Rename Experimental to FlamingParrot
  */
-class b201404281427_rename_experimental_to_flamingparrot extends ForgeUpgrade_Bucket {
+class b201404281427_rename_experimental_to_flamingparrot extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return "Rename Experimental to FlamingParrot";

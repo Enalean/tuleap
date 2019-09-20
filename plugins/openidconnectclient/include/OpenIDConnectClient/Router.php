@@ -77,7 +77,7 @@ class Router implements DispatchableWithRequestNoAuthz
 
     private function checkTLSPresence(HTTPRequest $request, BaseLayout $layout)
     {
-        if(! $request->isSecure()) {
+        if (! $request->isSecure()) {
             $layout->addFeedback(
                 Feedback::ERROR,
                 dgettext('tuleap-openidconnectclient', 'The OpenID Connect plugin can only be used if the platform is accessible with HTTPS')

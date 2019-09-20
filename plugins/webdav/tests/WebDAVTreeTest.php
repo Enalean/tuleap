@@ -35,7 +35,8 @@ Mock::generate('PFUser');
 /**
  * This is the unit test of WebDAVTree
  */
-class TestTree extends WebDAVTree {
+class TestTree extends WebDAVTree
+{
 
     function getNodeForPath($path)
     {
@@ -44,7 +45,8 @@ class TestTree extends WebDAVTree {
 }
 Mock::generatePartial('TestTree', 'TestTreeTestVersion', array('canBeMoved', 'getNodeForPath', 'getUtils'));
 
-class TestFile extends WebDAVFRSFile {
+class TestFile extends WebDAVFRSFile
+{
 
     function getProject()
     {
@@ -54,7 +56,8 @@ class TestFile extends WebDAVFRSFile {
     }
 }
 
-class TestRelease extends WebDAVFRSRelease {
+class TestRelease extends WebDAVFRSRelease
+{
 
     function getProject()
     {
@@ -64,7 +67,8 @@ class TestRelease extends WebDAVFRSRelease {
     }
 }
 
-class TestRelease2 extends WebDAVFRSRelease {
+class TestRelease2 extends WebDAVFRSRelease
+{
 
     function getProject()
     {
@@ -74,7 +78,8 @@ class TestRelease2 extends WebDAVFRSRelease {
     }
 }
 
-class TestPackage extends WebDAVFRSPackage {
+class TestPackage extends WebDAVFRSPackage
+{
 
     function getProject()
     {
@@ -84,7 +89,8 @@ class TestPackage extends WebDAVFRSPackage {
     }
 }
 
-class TestFolder extends WebDAVDocmanFolder {
+class TestFolder extends WebDAVDocmanFolder
+{
 
     function setItem($item)
     {
@@ -97,7 +103,8 @@ class TestFolder extends WebDAVDocmanFolder {
     }
 }
 
-class TestDocmanFile extends WebDAVDocmanFile {
+class TestDocmanFile extends WebDAVDocmanFile
+{
 
     function setItem($item)
     {
@@ -110,7 +117,8 @@ class TestDocmanFile extends WebDAVDocmanFile {
     }
 }
 
-class WebDAVTreeTest extends TuleapTestCase {
+class WebDAVTreeTest extends TuleapTestCase
+{
 
     private $user;
     private $project;

@@ -17,4 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-abstract class Project_AccessException extends Exception {}
+abstract class Project_AccessException extends Exception
+{
+
+}

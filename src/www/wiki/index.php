@@ -27,5 +27,3 @@ require_once __DIR__ . '/../include/pre.php';
 $wiki = new WikiService($request->get('group_id'));
 
 $wiki->process();
-
-?>

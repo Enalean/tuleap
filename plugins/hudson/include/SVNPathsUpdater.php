@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SVNPathsUpdater {
+class SVNPathsUpdater
+{
 
     public function transformContent($submitted_content)
     {

@@ -22,8 +22,7 @@
 /**
  * @author: Charles Corrigan
  */
-class WikiPlugin__GroupInfo
-extends WikiPlugin
+class WikiPlugin__GroupInfo extends WikiPlugin
 {
     function getName()
     {
@@ -37,8 +36,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.1 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.1 $"
+        );
     }
 
     function getDefaultArguments()
@@ -59,9 +61,8 @@ extends WikiPlugin
         foreach ($allGroups as $g) {
             $members = $group->getMembersOf($g);
             $output->pushContent(HTML::h3($g . " - members: " .
-            sizeof($members) . " - isMember: " . ($group->isMember($g) ? "yes" : "no")
-            ));
-            foreach($members as $m) {
+            sizeof($members) . " - isMember: " . ($group->isMember($g) ? "yes" : "no")));
+            foreach ($members as $m) {
                 $output->pushContent($m);
                 $output->pushContent(HTML::br());
             }
@@ -71,4 +72,3 @@ extends WikiPlugin
         return $output;
     }
 };
-?>

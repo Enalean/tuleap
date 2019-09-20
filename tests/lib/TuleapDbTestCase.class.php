@@ -20,7 +20,8 @@
 
 
 // GRANT ALL PRIVILEGES on integration_test.* to 'integration_test'@'localhost' identified by 'welcome0';
-abstract class TuleapDbTestCase extends TuleapTestCase {
+abstract class TuleapDbTestCase extends TuleapTestCase
+{
 
     /**
      * @var mysqli

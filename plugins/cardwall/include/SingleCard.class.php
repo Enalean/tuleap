@@ -24,7 +24,8 @@
  *
  * In other words it's what you need when you only want to have one single card
  */
-class Cardwall_SingleCard {
+class Cardwall_SingleCard
+{
 
     /** @var Cardwall_CardInCellPresenter */
     private $card_in_cell_presenter;

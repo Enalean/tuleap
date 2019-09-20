@@ -22,7 +22,8 @@ require_once '/usr/share/php/Guzzle/autoload.php';
 
 require_once dirname(__FILE__).'/../GerritTestInterfaces.php';
 
-abstract class Git_Driver_GerritREST_base extends TuleapTestCase {
+abstract class Git_Driver_GerritREST_base extends TuleapTestCase
+{
 
     protected $temporary_file_for_body = "a php resource to a file";
 

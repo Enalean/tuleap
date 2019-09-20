@@ -19,7 +19,8 @@
  */
 
 require_once __DIR__.'/../bootstrap.php';
-class BurndownFieldBuilder {
+class BurndownFieldBuilder
+{
 
     private $tracker;
     private $hierarchy_factory;
@@ -82,5 +83,3 @@ function aBurndownField()
 {
     return new BurndownFieldBuilder();
 }
-
-?>

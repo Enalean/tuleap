@@ -22,7 +22,8 @@ namespace Tuleap\Tracker\REST;
 
 use Tuleap\REST\JsonCast;
 
-class WorkflowRuleDateRepresentation {
+class WorkflowRuleDateRepresentation
+{
 
     /**
      * @var int

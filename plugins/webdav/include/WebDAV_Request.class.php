@@ -23,6 +23,7 @@
  * Standard request object for WebDav requests
  *
  */
-class WebDAV_Request extends Codendi_Request {
+class WebDAV_Request extends Codendi_Request
+{
 
 }

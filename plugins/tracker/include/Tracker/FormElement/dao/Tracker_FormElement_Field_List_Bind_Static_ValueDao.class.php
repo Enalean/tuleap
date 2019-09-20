@@ -20,7 +20,8 @@
 
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 
-class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObject {
+class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObject
+{
     public const COPY_BY_REFERENCE = true;
     public const COPY_BY_VALUE = false;
 
@@ -58,7 +59,6 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         if ($by_reference) {
             $insert = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
                     SELECT $to_field_id, label, description, rank, is_hidden, $from_value_id";
-
         } else {
             $insert = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
                     SELECT $to_field_id, label, description, rank, is_hidden, original_value_id";

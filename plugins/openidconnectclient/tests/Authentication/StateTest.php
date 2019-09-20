@@ -22,7 +22,8 @@ use Tuleap\OpenIDConnectClient\Authentication\State;
 
 require_once(__DIR__ . '/../bootstrap.php');
 
-class StateTest extends TuleapTestCase {
+class StateTest extends TuleapTestCase
+{
 
     public function itCreatesStateFromSignedState()
     {
@@ -36,5 +37,4 @@ class StateTest extends TuleapTestCase {
 
         $this->assertEqual($state, State::createFromSignature($signed_state, $return_to, $secret_key, $nonce));
     }
-
 }

@@ -30,7 +30,7 @@ Mock::generate('WebDAVUtils');
 Mock::generatePartial(
     'WebDAVFRSFile',
     'WebDAVFRSFileTestVersion',
-array('getFileLocation', 'getFile', 'getFileId', 'getProject', 'getUtils', 'logDownload', 'userCanWrite', 'copyFile')
+    array('getFileLocation', 'getFile', 'getFileId', 'getProject', 'getUtils', 'logDownload', 'userCanWrite', 'copyFile')
 );
 
 /**
@@ -50,7 +50,6 @@ class WebDAVFRSFileTest extends TuleapTestCase
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFile->delete();
-
     }
 
     /**
@@ -72,7 +71,6 @@ class WebDAVFRSFileTest extends TuleapTestCase
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFile->delete();
-
     }
 
     /**
@@ -92,6 +90,5 @@ class WebDAVFRSFileTest extends TuleapTestCase
         $webDAVFile->setReturnValue('getUtils', $utils);
 
         $webDAVFile->delete();
-
     }
 }

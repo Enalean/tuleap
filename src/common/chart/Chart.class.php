@@ -59,7 +59,7 @@ class Chart
         $this->colors_for_charts = new ColorsForCharts();
 
         $classname = $this->getGraphClass();
-        $this->jpgraph_instance = new $classname($aWidth,$aHeight,$aCachedName,$aTimeOut,$aInline);
+        $this->jpgraph_instance = new $classname($aWidth, $aHeight, $aCachedName, $aTimeOut, $aInline);
         $this->jpgraph_instance->SetMarginColor($this->getChartBackgroundColor());
         $this->jpgraph_instance->SetFrame(true, $this->getMainColor(), 0);
 
@@ -72,7 +72,7 @@ class Chart
         //Fix margin
         try {
             $this->jpgraph_instance->img->SetMargin(70, 160, 30, 70);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             // do nothing, JPGraph displays the error by itself
         }
 
@@ -169,10 +169,9 @@ class Chart
      */
     public function __call($method, $args)
     {
-        try{
+        try {
             $result = call_user_func_array(array($this->jpgraph_instance, $method), $args);
-        }
-        catch (Exception $exc) {
+        } catch (Exception $exc) {
             $error_message = sprintf(
                 _('JpGraph error for graph "%s": %s'),
                 $this->title->t,

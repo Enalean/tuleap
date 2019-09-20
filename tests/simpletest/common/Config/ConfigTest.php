@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ConfigTestWhiteBoxVersion extends ForgeConfig {
+class ConfigTestWhiteBoxVersion extends ForgeConfig
+{
 
     public static function load(ConfigValueProvider $value_provider)
     {
@@ -26,7 +27,8 @@ class ConfigTestWhiteBoxVersion extends ForgeConfig {
     }
 }
 
-class ConfigTest extends TuleapTestCase {
+class ConfigTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -102,7 +104,8 @@ class ConfigTest extends TuleapTestCase {
     }
 }
 
-class ForgeConfig_areAnonymousAllowedTest extends TuleapTestCase {
+class ForgeConfig_areAnonymousAllowedTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -137,7 +140,8 @@ class ForgeConfig_areAnonymousAllowedTest extends TuleapTestCase {
     }
 }
 
-class ForgeConfig_getSuperPublicProjectsTest extends TuleapTestCase {
+class ForgeConfig_getSuperPublicProjectsTest extends TuleapTestCase
+{
 
     private $fixtures;
     private $default;

@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_DateReminder {
+class Tracker_DateReminder
+{
 
     public const BEFORE = 0;
     public const AFTER  = 1;
@@ -308,9 +309,9 @@ class Tracker_DateReminder {
     public function getReminderStatusLabel()
     {
         if ($this->getStatus() == self::ENABLED) {
-            $reminderStatusLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_enabled');
+            $reminderStatusLabel = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_enabled');
         } else {
-            $reminderStatusLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_disabled');
+            $reminderStatusLabel = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_disabled');
         }
         return $reminderStatusLabel;
     }
@@ -323,9 +324,9 @@ class Tracker_DateReminder {
     public function getNotificationTypeLabel()
     {
         if ($this->getNotificationType() == self::AFTER) {
-            $notificationTypeLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after');
+            $notificationTypeLabel = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_after');
         } else {
-            $notificationTypeLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before');
+            $notificationTypeLabel = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_before');
         }
         return $notificationTypeLabel;
     }
@@ -385,7 +386,4 @@ class Tracker_DateReminder {
     {
         return new UGroupManager();
     }
-
 }
-
-?>

@@ -20,7 +20,8 @@
 
 require_once __DIR__ .'/bootstrap.php';
 
-class CardwallConfigXmlExportTest extends TuleapTestCase {
+class CardwallConfigXmlExportTest extends TuleapTestCase
+{
 
     /** @var CardwallConfigXmlExport **/
     private $xml_exporter;
@@ -69,7 +70,7 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
         $this->xml_exporter->export($this->root);
         $attributes = $this->root->cardwall->trackers->tracker->attributes();
         $this->assertEqual(count($this->root->cardwall->trackers->children()), 1);
-        $this->assertEqual( (String) $attributes['id'], 'T614');
+        $this->assertEqual((String) $attributes['id'], 'T614');
     }
 
     public function itReturnsTheGoodRootXmlWithoutTrackers()
@@ -102,7 +103,8 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
     }
 }
 
-class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase {
+class CardwallConfigXmlExport_ColumnsTest extends TuleapTestCase
+{
 
     /** @var CardwallConfigXmlExport **/
     private $xml_exporter;

@@ -20,7 +20,8 @@
 
 require_once 'ForumML_AttachmentDao.class.php';
 
-class ForumML_Attachment {
+class ForumML_Attachment
+{
     private $_dao;
 
     function getById($id)
@@ -45,40 +46,40 @@ class ForumML_Attachment {
             $type = $matches[1];
         } else {
             // Retrieve the uploaded file type
-            switch(strtoupper(strrchr($row['file_name'], "."))) {
+            switch (strtoupper(strrchr($row['file_name'], "."))) {
                 case ".GZ":
                     $type = "application/x-gzip";
-                break;
+                    break;
                 case ".TGZ":
                     $type = "application/x-gzip";
-                break;
+                    break;
                 case ".ZIP":
                     $type = "application/zip";
-                break;
+                    break;
                 case ".PDF":
                     $type = "application/pdf";
-                break;
+                    break;
                 case ".PNG":
                     $type = "image/png";
-                break;
+                    break;
                 case ".GIF":
                     $type = "image/gif";
-                break;
+                    break;
                 case ".JPG":
                     $type = "image/jpeg";
-                break;
+                    break;
                 case ".TXT":
                     $type = "text/plain";
-                break;
+                    break;
                 case ".HTM":
                     $type = "text/html";
-                break;
+                    break;
                 case ".HTML":
                     $type = "text/html";
-                break;
+                    break;
                 default:
                     $type = "application/octet-stream";
-                break;
+                    break;
             }
         }
         return $type;
@@ -91,7 +92,4 @@ class ForumML_Attachment {
         }
         return $this->_dao;
     }
-
 }
-
-?>

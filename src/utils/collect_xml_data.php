@@ -65,18 +65,19 @@ function replaceReferencesByActualFiles($archive_path, TuleapArchiveContent $con
         exit(1);
     }
 
-    foreach($content->getFileReferences() as $archive_filename => $local_filename) {
+    foreach ($content->getFileReferences() as $archive_filename => $local_filename) {
         $src_archive->addFile($local_filename, $archive_filename);
     }
 
-    foreach($content->getFileContents() as $archive_filename => $contents) {
+    foreach ($content->getFileContents() as $archive_filename => $contents) {
         $src_archive->addFromString($archive_filename, $contents);
     }
 
     $src_archive->close();
 }
 
-class TuleapArchiveContent {
+class TuleapArchiveContent
+{
     private $reference_files = array();
 
     private $content_files   = array();

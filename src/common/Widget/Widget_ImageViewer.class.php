@@ -27,7 +27,8 @@ require_once('Widget.class.php');
 * Display an image
 *
 */
-class Widget_ImageViewer extends Widget {
+class Widget_ImageViewer extends Widget
+{
     var $image_title;
     var $image_url;
     function __construct($id, $owner_id, $owner_type)
@@ -159,7 +160,7 @@ class Widget_ImageViewer extends Widget {
         $vUrl = new Valid_HTTPURI('url');
         $vUrl->setErrorMessage($GLOBALS['Language']->getText('widget_imageviewer', 'invalid_url'));
         $vUrl->required();
-        if($request->validInArray('image', $vUrl)) {
+        if ($request->validInArray('image', $vUrl)) {
             $image = $request->get('image');
             $vTitle = new Valid_String('title');
             $vTitle->required();
@@ -179,14 +180,14 @@ class Widget_ImageViewer extends Widget {
         $vContentId->required();
         if (($image = $request->get('image')) && $request->valid($vContentId)) {
             $vUrl = new Valid_String('url');
-            if($request->validInArray('image', $vUrl)) {
+            if ($request->validInArray('image', $vUrl)) {
                 $url = " url   = '". db_escape_string($image['url']) ."' ";
             } else {
                 $url = '';
             }
 
             $vTitle = new Valid_String('title');
-            if($request->validInArray('image', $vTitle)) {
+            if ($request->validInArray('image', $vTitle)) {
                 $title = " title = '". db_escape_string($image['title']) ."' ";
             } else {
                 $title = '';

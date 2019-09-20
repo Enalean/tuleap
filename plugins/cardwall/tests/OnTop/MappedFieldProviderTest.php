@@ -19,7 +19,8 @@
  */
 require_once __DIR__ .'/../bootstrap.php';
 
-class Cardwall_OnTop_MappedFieldProviderTest extends TuleapTestCase {
+class Cardwall_OnTop_MappedFieldProviderTest extends TuleapTestCase
+{
 
     public function itProvidesTheStatusFieldIfNoMapping()
     {

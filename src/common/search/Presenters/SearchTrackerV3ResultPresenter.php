@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchTrackerV3ResultPresenter {
+class Search_SearchTrackerV3ResultPresenter
+{
     /** @var  string */
     private $result_display;
 

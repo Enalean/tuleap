@@ -19,7 +19,8 @@
 /**
  *Add anonymous column in filemodule_monitor table.
  */
-class b201208241130_add_anonymous_in_filemodule_monitor extends ForgeUpgrade_Bucket {
+class b201208241130_add_anonymous_in_filemodule_monitor extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -71,5 +72,3 @@ EOT;
         }
     }
 }
-
-?>

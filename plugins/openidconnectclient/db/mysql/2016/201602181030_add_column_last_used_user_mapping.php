@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201602181030_add_column_last_used_user_mapping extends ForgeUpgrade_Bucket {
+class b201602181030_add_column_last_used_user_mapping extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

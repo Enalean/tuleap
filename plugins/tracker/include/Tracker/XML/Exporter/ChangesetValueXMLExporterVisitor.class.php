@@ -21,7 +21,8 @@
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter;
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 
-class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_Artifact_ChangesetValueVisitor {
+class Tracker_XML_Exporter_ChangesetValueXMLExporterVisitor implements Tracker_Artifact_ChangesetValueVisitor
+{
 
     /**
      * @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueArtifactLinkXMLExporter

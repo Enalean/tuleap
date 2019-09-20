@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201312231005_remove_not_null_http_port_remote_gerrit_servers extends ForgeUpgrade_Bucket {
+class b201312231005_remove_not_null_http_port_remote_gerrit_servers extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -58,4 +59,3 @@ EOT;
         }
     }
 }
-?>

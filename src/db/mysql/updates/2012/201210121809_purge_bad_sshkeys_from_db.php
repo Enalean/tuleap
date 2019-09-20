@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201210121809_purge_bad_sshkeys_from_db extends ForgeUpgrade_Bucket {
+class b201210121809_purge_bad_sshkeys_from_db extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return <<<EOT
@@ -62,5 +63,3 @@ EOT;
         }
     }
 }
-
-?>

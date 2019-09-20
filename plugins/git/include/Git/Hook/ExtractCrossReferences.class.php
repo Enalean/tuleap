@@ -25,7 +25,8 @@
 /**
  * Extract references usage in commit messages
  */
-class Git_Hook_ExtractCrossReferences {
+class Git_Hook_ExtractCrossReferences
+{
 
     /**
      * @var Git_Exec

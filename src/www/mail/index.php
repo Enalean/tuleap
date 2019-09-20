@@ -35,28 +35,26 @@ function display_ml_details($group_id, $list_server, $result, $i)
     $em->processEvent('browse_archives', array('html' => &$html_a,
                                                'group_list_id' => db_result($result, $i, 'group_list_id')
                                             ));
-    if($html_a) {
+    if ($html_a) {
         echo $html_a;
-    }
-    else {
+    } else {
         if ($list_is_public) {
-            echo ' <A HREF="?group_id='. $group_id .'&amp;action=pipermail&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index','archive').'</A>';
+            echo ' <A HREF="?group_id='. $group_id .'&amp;action=pipermail&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index', 'archive').'</A>';
         } else {
-            echo ' '.$GLOBALS['Language']->getText('mail_index','archive').': <A HREF="?group_id='. $group_id .'&amp;action=pipermail&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index','public').'</A>/<A HREF="?group_id='. $group_id .'&amp;action=private&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index','private').'</A>';
+            echo ' '.$GLOBALS['Language']->getText('mail_index', 'archive').': <A HREF="?group_id='. $group_id .'&amp;action=pipermail&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index', 'public').'</A>/<A HREF="?group_id='. $group_id .'&amp;action=private&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index', 'private').'</A>';
         }
     }
 
-    echo ' | <A HREF="?group_id='. $group_id .'&amp;action=listinfo&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index','unsubscribe').'</A>)';
-    echo ' | <A HREF="?group_id='. $group_id .'&amp;action=admin&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index','ml_admin').'</A>';
+    echo ' | <A HREF="?group_id='. $group_id .'&amp;action=listinfo&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index', 'unsubscribe').'</A>)';
+    echo ' | <A HREF="?group_id='. $group_id .'&amp;action=admin&amp;id='. db_result($result, $i, 'group_list_id') .'">'.$GLOBALS['Language']->getText('mail_index', 'ml_admin').'</A>';
     echo ' ]<br>&nbsp;'.  db_result($result, $i, 'description') .'<p>';
 }
 
 if ($group_id) {
-
     $list_server = get_list_server_url();
 
     $pm = ProjectManager::instance();
-    $params=array('title'=>$Language->getText('mail_index','mail_list_for').$pm->getProject($group_id)->getPublicName(),
+    $params=array('title'=>$Language->getText('mail_index', 'mail_list_for').$pm->getProject($group_id)->getPublicName(),
               'help'=>'communication.html#mailing-lists',
                   'pv'   => isset($pv)?$pv:false);
     mail_header($params);
@@ -74,7 +72,7 @@ if ($group_id) {
             if (db_numrows($result)) {
                 display_ml_details($group_id, $list_server, $result, 0);
                 echo '<a href="?group_id='. $group_id .'">Go back to mailing lists</a>';
-                switch($request->get('action')) {
+                switch ($request->get('action')) {
                     case 'admin':
                     case 'listinfo':
                     case 'private':
@@ -94,7 +92,7 @@ if ($group_id) {
     } else {
         $sql="SELECT * FROM mail_group_list WHERE group_id='$group_id' AND is_public IN ($public_flag)";
 
-        $result = db_query ($sql);
+        $result = db_query($sql);
 
         $rows = db_numrows($result);
 
@@ -102,22 +100,22 @@ if ($group_id) {
         if (!$result || $rows < 1) {
             $pm = ProjectManager::instance();
             echo '
-                <H1>'.$Language->getText('mail_index','no_list_found_for').$pm->getProject($group_id)->getPublicName().'</H1>';
+                <H1>'.$Language->getText('mail_index', 'no_list_found_for').$pm->getProject($group_id)->getPublicName().'</H1>';
             echo '
-                <P>'.$Language->getText('mail_index','proj_admin_use_admin_link');
+                <P>'.$Language->getText('mail_index', 'proj_admin_use_admin_link');
                     mail_footer(array('pv'   => isset($pv)?$pv:false));
             exit;
         }
 
-        echo '<P>'.$Language->getText('mail_index','mail_list_via_gnu');
+        echo '<P>'.$Language->getText('mail_index', 'mail_list_via_gnu');
 
         if ($pv) {
-            echo "<P>".$Language->getText('mail_index','choose_and_browse')."<P>\n";
+            echo "<P>".$Language->getText('mail_index', 'choose_and_browse')."<P>\n";
         } else {
             echo "<TABLE width='100%'><TR><TD>";
-            echo "<P>".$Language->getText('mail_index','choose_and_browse')."<P>\n";
+            echo "<P>".$Language->getText('mail_index', 'choose_and_browse')."<P>\n";
             echo "</TD>";
-            echo "<TD align='left'> ( <A HREF='?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> ) </TD>";
+            echo "<TD align='left'> ( <A HREF='?group_id=$group_id&pv=1'><img src='".util_get_image_theme("msg.png")."' border='0'>&nbsp;".$Language->getText('global', 'printer_version')."</A> ) </TD>";
             echo "</TR></TABLE>";
         }
 
@@ -133,13 +131,12 @@ if ($group_id) {
         }
         echo '</TD></TR></TABLE>';
     }
-
 } else {
-    $params=array('title'=>$Language->getText('mail_index','choose_group_first'),
+    $params=array('title'=>$Language->getText('mail_index', 'choose_group_first'),
                   'help'=>'communication.html#mailing-lists',
                   'pv'   => $pv);
     mail_header($params);
     echo '
-		<H1>'.$Language->getText('mail_index','group_err').'</H1>';
+		<H1>'.$Language->getText('mail_index', 'group_err').'</H1>';
 }
 mail_footer(array('pv'   => $pv));

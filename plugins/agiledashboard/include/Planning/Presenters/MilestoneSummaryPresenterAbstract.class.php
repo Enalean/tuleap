@@ -82,7 +82,7 @@ abstract class Planning_Presenter_MilestoneSummaryPresenterAbstract
         return $this->milestone->getArtifactTitle();
     }
 
-    public abstract function has_burndown();
+    abstract public function has_burndown();
 
     public function planning_id()
     {

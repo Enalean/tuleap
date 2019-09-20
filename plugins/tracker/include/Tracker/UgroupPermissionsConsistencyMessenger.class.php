@@ -25,7 +25,8 @@
 /**
  * I provide feedback to user about ugroup permissions consistency
  */
-class Tracker_UgroupPermissionsConsistencyMessenger {
+class Tracker_UgroupPermissionsConsistencyMessenger
+{
 
     public function ugroupsAreTheSame($ugroup_names)
     {
@@ -52,4 +53,3 @@ class Tracker_UgroupPermissionsConsistencyMessenger {
         return '<ul><li>'. implode('</li><li>', $ugroup_names) .'</li></ul>';
     }
 }
-?>

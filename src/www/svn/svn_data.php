@@ -51,7 +51,7 @@ function svn_data_update_general_settings($group_id, $svn_tracked, $svn_preamble
 // history if the period argument is not given or if it is given then
 // over the last "period" of time.
 // period is expressed in seconds
-function svn_data_get_svn_history($group_id, $period=false)
+function svn_data_get_svn_history($group_id, $period = false)
 {
     $date_clause = '';
     if ($period) {
@@ -67,7 +67,7 @@ function svn_data_get_svn_history($group_id, $period=false)
     return($result);
 }
 
-function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='')
+function svn_data_get_revision_detail($group_id, $commit_id, $rev_id = 0, $order = '')
 {
     $order_str = "";
     if ($order) {
@@ -88,7 +88,7 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='
     $where_forbidden = "";
     if (!empty($forbidden)) {
         foreach ($forbidden as $no_access => $value) {
-            $where_forbidden .= " AND svn_dirs.dir not like '%".db_es(substr($no_access,1))."%' ";
+            $where_forbidden .= " AND svn_dirs.dir not like '%".db_es(substr($no_access, 1))."%' ";
         }
     }
 
@@ -106,7 +106,6 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='
         "AND svn_commits.group_id=".db_ei($group_id)." ".
         $where_forbidden.$order_str;
     } else {
-
         $sql="SELECT svn_commits.description, svn_commits.date, svn_commits.revision, svn_checkins.type,svn_checkins.commitid,svn_dirs.dir,svn_files.file ".
         "FROM svn_dirs, svn_files, svn_checkins, svn_commits ".
         "WHERE svn_checkins.fileid=svn_files.id ".
@@ -119,5 +118,3 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id=0, $order='
     $result=db_query($sql);
     return $result;
 }
-
-?>

@@ -24,10 +24,11 @@ require_once('HTML_Element_Option.class.php');
 /**
  * Define a html selectbox
  */
-class HTML_Element_Selectbox extends HTML_Element {
+class HTML_Element_Selectbox extends HTML_Element
+{
     protected $options;
     protected $onchange;
-    public function __construct($label, $name, $value, $with_none = false, $onchange = "", $desc="")
+    public function __construct($label, $name, $value, $with_none = false, $onchange = "", $desc = "")
     {
         parent::__construct($label, $name, $value, $desc);
         $this->options = array();
@@ -45,7 +46,7 @@ class HTML_Element_Selectbox extends HTML_Element {
             $html .= 'onchange="'. $this->onchange .'" ';
         }
         $html .= '>';
-        foreach($this->options as $o) {
+        foreach ($this->options as $o) {
             $html .= $o->render();
         }
         $html .= '</select>';
@@ -83,5 +84,3 @@ class HTML_Element_Selectbox extends HTML_Element {
         }
     }
 }
-
-?>

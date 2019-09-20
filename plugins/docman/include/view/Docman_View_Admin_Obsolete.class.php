@@ -24,7 +24,8 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_Admin_Obsolete extends Docman_View_Extra {
+class Docman_View_Admin_Obsolete extends Docman_View_Extra
+{
 
     function _title($params)
     {
@@ -59,10 +60,10 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra {
 
         $altRowClass = 0;
         $itemIterator->rewind();
-        while($itemIterator->valid()) {
+        while ($itemIterator->valid()) {
             $item = $itemIterator->current();
             $type = $itemFactory->getItemTypeForItem($item);
-            if($type != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
+            if ($type != PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
                 $trclass = html_get_alt_row_color($altRowClass++);
                 $table .= "<tr class=\"".$trclass."\">\n";
 
@@ -115,5 +116,4 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra {
 
         print $html;
     }
-
 }

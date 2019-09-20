@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUserGroupFactory_BaseTest extends TuleapTestCase {
+class User_ForgeUserGroupFactory_BaseTest extends TuleapTestCase
+{
 
     /**
      * @var UserGroupDao
@@ -37,7 +38,8 @@ class User_ForgeUserGroupFactory_BaseTest extends TuleapTestCase {
     }
 }
 
-class User_ForgeUserGroupFactory_GetAllTest extends User_ForgeUserGroupFactory_BaseTest {
+class User_ForgeUserGroupFactory_GetAllTest extends User_ForgeUserGroupFactory_BaseTest
+{
 
     public function itReturnsEmptyArrayIfNoResultsInDb()
     {
@@ -94,7 +96,8 @@ class User_ForgeUserGroupFactory_GetAllTest extends User_ForgeUserGroupFactory_B
     }
 }
 
-class User_ForgeUserGroupFactory_GetUGroupTest extends User_ForgeUserGroupFactory_BaseTest {
+class User_ForgeUserGroupFactory_GetUGroupTest extends User_ForgeUserGroupFactory_BaseTest
+{
 
     public function itGetsForgeUGroup()
     {
@@ -126,7 +129,8 @@ class User_ForgeUserGroupFactory_GetUGroupTest extends User_ForgeUserGroupFactor
     }
 }
 
-class User_ForgeUserGroupFactory_cCeateForgeUGroupTest extends User_ForgeUserGroupFactory_BaseTest {
+class User_ForgeUserGroupFactory_cCeateForgeUGroupTest extends User_ForgeUserGroupFactory_BaseTest
+{
 
     public function itCreatesForgeUGroup()
     {
@@ -155,4 +159,3 @@ class User_ForgeUserGroupFactory_cCeateForgeUGroupTest extends User_ForgeUserGro
         $this->factory->createForgeUGroup($name, $description);
     }
 }
-?>

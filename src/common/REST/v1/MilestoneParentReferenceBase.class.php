@@ -19,7 +19,8 @@
 
 namespace Tuleap\REST\v1;
 
-class MilestoneParentReferenceBase {
+class MilestoneParentReferenceBase
+{
 
     /**
      * @var int ID of the milestone

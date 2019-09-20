@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Git_Mirror_ManifestManager {
+class Git_Mirror_ManifestManager
+{
 
     /**
      * @var Git_Mirror_ManifestFileGenerator

@@ -26,7 +26,8 @@
  *
  * The code follow the exact same patterns (and data structure than File)
  */
-class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFactory {
+class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFactory
+{
 
     /** @var Docman_LinkVersion */
     private $itemVersion;
@@ -34,7 +35,7 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
     /** @var Docman_ApprovalTableLinkDao */
     private $dao;
 
-    public function __construct(Docman_Link $item, $versionNumber=null)
+    public function __construct(Docman_Link $item, $versionNumber = null)
     {
         parent::__construct($item);
 
@@ -42,12 +43,12 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
         $vFactory = new Docman_LinkVersionFactory();
 
         $dar = $this->dao->getLatestTableByItemId($item->getId(), 'ver.number');
-        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
             $lastVersionNumber = $row['number'];
             $lastItemVersion = $vFactory->getSpecificVersion($item, $lastVersionNumber);
 
-            if($versionNumber !== null
+            if ($versionNumber !== null
                && $lastItemVersion->getNumber() != $versionNumber) {
                 $this->itemVersion = $vFactory->getSpecificVersion($item, $versionNumber);
                 $this->customizable = false;
@@ -100,9 +101,9 @@ class Docman_ApprovalTableLinkFactory extends Docman_ApprovalTableVersionnedFact
     public function getTableFromVersion($version)
     {
         $table = null;
-        if($version !== null) {
+        if ($version !== null) {
             $dar = $this->dao->getTableById($version->getId());
-            if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
                 $table = $this->createTableFromRow($row);
                 $table->setVersionNumber($version->getNumber());

@@ -38,7 +38,8 @@ require_once __DIR__ . '/../../../www/project/admin/permissions.php';
  * This class is Tuleap representation of wiki_page table in database.
  *
  */
-class WikiPage {
+class WikiPage
+{
  /* private int */   var $id;       /* wiki_page.id */
  /* private string*/ var $pagename; /* wiki_page.pagename */
  /* private int */   static $gid;      /* wiki_page.group_id */
@@ -56,25 +57,23 @@ class WikiPage {
     /*
      * Constructor
      */
-    function __construct($id=0, $pagename='')
+    function __construct($id = 0, $pagename = '')
     {
         $this->empty = null;
 
-        if($id != 0) {
-            if(empty($pagename)) {
+        if ($id != 0) {
+            if (empty($pagename)) {
               //Given number is the WikiPage id from wiki_page table
                 $this->id = (int) $id;
                 $this->initFromDb();
-            }
-            else {
+            } else {
               //Given number is group_id from wiki_page table
                 self::$gid      = (int) $id;
                 $this->pagename = $pagename;
                 $this->findPageId();
                 $this->wrapper  = new WikiPageWrapper(self::$gid);
             }
-        }
-        else {
+        } else {
             $this->id       = 0;
             $this->pagename = '';
             self::$gid      = 0;
@@ -213,10 +212,14 @@ class WikiPage {
         $res = db_query(' SELECT id FROM wiki_page'.
                         ' WHERE group_id="'.db_ei(self::$gid).'"'.
                         ' AND pagename="'.db_es($this->pagename).'"');
-        if(db_numrows($res) > 1) {
-            exit_error($GLOBALS['Language']->getText('global','error'),
-                       $GLOBALS['Language']->getText('wiki_lib_wikipage',
-                                                     'notunique_err'));
+        if (db_numrows($res) > 1) {
+            exit_error(
+                $GLOBALS['Language']->getText('global', 'error'),
+                $GLOBALS['Language']->getText(
+                    'wiki_lib_wikipage',
+                    'notunique_err'
+                )
+            );
         }
         $row = db_fetch_array($res);
         $this->id =  $row['id'];
@@ -227,10 +230,14 @@ class WikiPage {
     {
         $res = db_query(' SELECT id, pagename, group_id FROM wiki_page'.
                         ' WHERE id="'.db_ei($this->id).'"');
-        if(db_numrows($res) > 1) {
-            exit_error($GLOBALS['Language']->getText('global','error'),
-                       $GLOBALS['Language']->getText('wiki_lib_wikipage',
-                                                     'notunique_err'));
+        if (db_numrows($res) > 1) {
+            exit_error(
+                $GLOBALS['Language']->getText('global', 'error'),
+                $GLOBALS['Language']->getText(
+                    'wiki_lib_wikipage',
+                    'notunique_err'
+                )
+            );
         }
         $row = db_fetch_array($res);
 
@@ -245,19 +252,19 @@ class WikiPage {
     function isEmpty()
     {
         // If this value is already computed, return now !
-        if($this->empty != null) {
+        if ($this->empty != null) {
             return $this->empty;
         }
 
         // Else compute
         $this->empty=true;
-        if($this->exist()) {
+        if ($this->exist()) {
             $res = db_query(' SELECT wiki_page.id'
                           .' FROM wiki_page, wiki_nonempty'
                           .' WHERE wiki_page.group_id="'.db_ei(self::$gid).'"'
                           .' AND wiki_page.id="'.db_ei($this->id).'"'
                           .' AND wiki_nonempty.id=wiki_page.id');
-            if(db_numrows($res) == 1) {
+            if (db_numrows($res) == 1) {
                 $this->empty = false;
             }
         }
@@ -267,10 +274,11 @@ class WikiPage {
 
     public function permissionExist()
     {
-        if (permission_exist(Wiki_PermissionsManager::WIKI_PERMISSION_READ, $this->id))
-        return true;
-        else
-        return false;
+        if (permission_exist(Wiki_PermissionsManager::WIKI_PERMISSION_READ, $this->id)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private function isWikiPageReferenced()
@@ -280,7 +288,8 @@ class WikiPage {
         //Check for Docman Perms
         $eM = EventManager::instance();
         $eM->processEvent(
-            'isWikiPageReferenced', array(
+            'isWikiPageReferenced',
+            array(
                 'referenced' => &$referenced,
                 'wiki_page'  => $this->pagename,
                 'group_id'   => self::$gid
@@ -292,7 +301,7 @@ class WikiPage {
 
     public function isAutorized($uid)
     {
-        if($this->referenced == true) {
+        if ($this->referenced == true) {
             $userCanAccess = false;
             $eM = EventManager::instance();
             $eM->processEvent('userCanAccessWikiDocument', array(
@@ -300,12 +309,12 @@ class WikiPage {
                             'wiki_page'  => $this->pagename,
                             'group_id' => self::$gid
                             ));
-            if(!$userCanAccess) {
+            if (!$userCanAccess) {
                 return false;
             }
         } else {
             // Check if user is authorized.
-            if($this->permissionExist()) {
+            if ($this->permissionExist()) {
                 if (!permission_is_authorized(Wiki_PermissionsManager::WIKI_PERMISSION_READ, $this->id, $uid, self::$gid)) {
                     return false;
                 }
@@ -352,7 +361,7 @@ class WikiPage {
         db_query($sql);
     }
 
-    public function render($lite=false, $full_screen=false)
+    public function render($lite = false, $full_screen = false)
     {
         $wpw = new WikiPageWrapper(self::$gid);
         $wpw->render($lite, $full_screen);
@@ -388,7 +397,7 @@ class WikiPage {
     public function delete()
     {
         if ($this->exist()) {
-            if($this->wiki_dao->deleteWikiPage($this->id)
+            if ($this->wiki_dao->deleteWikiPage($this->id)
                 && $this->wiki_dao->deleteWikiPageVersion($this->id)
                 && $this->wiki_dao->deleteLinksFromToWikiPage($this->id)
                 && $this->wiki_dao->deleteWikiPageFromNonEmptyList($this->id)
@@ -420,7 +429,7 @@ class WikiPage {
                         .' WHERE wiki_page.group_id="'.db_ei(self::$gid).'"'
                         .' AND wiki_nonempty.id=wiki_page.id'
                         .' AND wiki_page.pagename IN ('.implode(',', $admin_pages_db_escaped).')');
-        while($row = db_fetch_array($res)) {
+        while ($row = db_fetch_array($res)) {
             $allPages[]=$row[0];
         }
 
@@ -445,7 +454,7 @@ class WikiPage {
                         .' WHERE wiki_page.group_id="'.db_ei(self::$gid).'"'
                         .' AND wiki_nonempty.id=wiki_page.id'
                         .' AND wiki_page.pagename IN ('.implode(',', $default_pages_db_escaped).')');
-        while($row = db_fetch_array($res)) {
+        while ($row = db_fetch_array($res)) {
             $allPages[]=$row[0];
         }
 
@@ -470,7 +479,7 @@ class WikiPage {
                         .' WHERE wiki_page.group_id="'.db_ei(self::$gid).'"'
                         .' AND wiki_nonempty.id=wiki_page.id'
                         .' AND wiki_page.pagename NOT IN (' . implode(',', $excluded_pages_db_escaped) . ')');
-        while($row = db_fetch_array($res)) {
+        while ($row = db_fetch_array($res)) {
             $allPages[]=$row[0];
         }
 

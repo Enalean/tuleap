@@ -21,7 +21,8 @@ namespace User\XML\Import;
 
 use RuntimeException;
 
-class ToBeMappedUser extends ActionToBeTakenForUser {
+class ToBeMappedUser extends ActionToBeTakenForUser
+{
 
     public const ACTION = 'map';
 

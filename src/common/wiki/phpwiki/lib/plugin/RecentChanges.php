@@ -30,12 +30,14 @@ class _RecentChanges_Formatter
         $this->_args = $rc_args;
         $this->_diffargs = array('action' => 'diff');
 
-        if ($rc_args['show_minor'] || !$rc_args['show_major'])
+        if ($rc_args['show_minor'] || !$rc_args['show_major']) {
             $this->_diffargs['previous'] = 'minor';
+        }
 
         // PageHistoryPlugin doesn't have a 'daylist' arg.
-        if (!isset($this->_args['daylist']))
+        if (!isset($this->_args['daylist'])) {
             $this->_args['daylist'] = false;
+        }
     }
 
     function include_versions_in_URLs()
@@ -58,8 +60,9 @@ class _RecentChanges_Formatter
     function diffURL($rev)
     {
         $args = $this->_diffargs;
-        if ($this->include_versions_in_URLs())
+        if ($this->include_versions_in_URLs()) {
             $args['version'] = $rev->getVersion();
+        }
         $page = $rev->getPage();
         return WikiURL($page->getName(), $args, $this->_absurls);
     }
@@ -67,14 +70,20 @@ class _RecentChanges_Formatter
     function historyURL($rev)
     {
         $page = $rev->getPage();
-        return WikiURL($page, array('action' => _("PageHistory")),
-                       $this->_absurls);
+        return WikiURL(
+            $page,
+            array('action' => _("PageHistory")),
+            $this->_absurls
+        );
     }
 
     function pageURL($rev)
     {
-        return WikiURL($this->include_versions_in_URLs() ? $rev : $rev->getPage(),
-                       '', $this->_absurls);
+        return WikiURL(
+            $this->include_versions_in_URLs() ? $rev : $rev->getPage(),
+            '',
+            $this->_absurls
+        );
     }
 
     function authorHasPage($author)
@@ -92,12 +101,14 @@ class _RecentChanges_Formatter
 
     function status($rev)
     {
-        if ($rev->hasDefaultContents())
+        if ($rev->hasDefaultContents()) {
             return 'deleted';
+        }
         $page = $rev->getPage();
         $prev = $page->getRevisionBefore($rev->getVersion());
-        if ($prev->hasDefaultContents())
+        if ($prev->hasDefaultContents()) {
             return 'new';
+        }
         return 'updated';
     }
 
@@ -108,8 +119,9 @@ class _RecentChanges_Formatter
 
     function summary($rev)
     {
-        if ( ($summary = $rev->get('summary')) )
+        if (($summary = $rev->get('summary'))) {
             return $summary;
+        }
 
         switch ($this->status($rev)) {
             case 'deleted':
@@ -132,8 +144,7 @@ class _RecentChanges_Formatter
     }
 }
 
-class _RecentChanges_HtmlFormatter
-extends _RecentChanges_Formatter
+class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
 {
     function diffLink($rev)
     {
@@ -147,10 +158,10 @@ extends _RecentChanges_Formatter
         return $WikiTheme->makeButton(_("(hist)"), $this->historyURL($rev), 'wiki-rc-action');
     }
 
-    function pageLink($rev, $link_text=false)
+    function pageLink($rev, $link_text = false)
     {
 
-        return WikiLink($this->include_versions_in_URLs() ? $rev : $rev->getPage(),'auto',$link_text);
+        return WikiLink($this->include_versions_in_URLs() ? $rev : $rev->getPage(), 'auto', $link_text);
         /*
         $page = $rev->getPage();
         global $WikiTheme;
@@ -175,20 +186,24 @@ extends _RecentChanges_Formatter
     function authorLink($rev)
     {
         $author = UserHelper::instance()->getDisplayNameFromUserName($rev->get('author'));
-        if ( $this->authorHasPage($author) ) {
+        if ($this->authorHasPage($author)) {
             return WikiLink($author);
-        } else
+        } else {
             return $author;
+        }
     }
 
     function summaryAsHTML($rev)
     {
-        if ( !($summary = $this->summary($rev)) )
+        if (!($summary = $this->summary($rev))) {
             return '';
-        return  HTML::strong( array('class' => 'wiki-summary'),
-                              "[",
-                              TransformLinks($summary, $rev->get('markup'), $rev->getPageName()),
-                              "]");
+        }
+        return  HTML::strong(
+            array('class' => 'wiki-summary'),
+            "[",
+            TransformLinks($summary, $rev->get('markup'), $rev->getPageName()),
+            "]"
+        );
     }
 
     function rss_icon()
@@ -196,34 +211,41 @@ extends _RecentChanges_Formatter
         global $request, $WikiTheme;
 
         $rss_url = $request->getURLtoSelf(array('format' => 'rss'));
-        return HTML::small(array('style' => 'font-weight:normal;vertical-align:middle;'),
-                           $WikiTheme->makeButton("RSS", $rss_url, 'rssicon'));
+        return HTML::small(
+            array('style' => 'font-weight:normal;vertical-align:middle;'),
+            $WikiTheme->makeButton("RSS", $rss_url, 'rssicon')
+        );
     }
     function rss2_icon()
     {
         global $request, $WikiTheme;
 
         $rss_url = $request->getURLtoSelf(array('format' => 'rss2'));
-        return HTML::small(array('style' => 'font-weight:normal;vertical-align:middle;'),
-                           $WikiTheme->makeButton("RSS2", $rss_url, 'rssicon'));
+        return HTML::small(
+            array('style' => 'font-weight:normal;vertical-align:middle;'),
+            $WikiTheme->makeButton("RSS2", $rss_url, 'rssicon')
+        );
     }
 
     function pre_description()
     {
         extract($this->_args);
         // FIXME: say something about show_all.
-        if ($show_major && $show_minor)
+        if ($show_major && $show_minor) {
             $edits = _("edits");
-        elseif ($show_major)
+        } elseif ($show_major) {
             $edits = _("major edits");
-        else
+        } else {
             $edits = _("minor edits");
-        if (isset($caption) and $caption == _("Recent Comments"))
+        }
+        if (isset($caption) and $caption == _("Recent Comments")) {
             $edits = _("comments");
+        }
 
         if ($timespan = $days > 0) {
-            if (intval($days) != $days)
+            if (intval($days) != $days) {
                 $days = sprintf("%.1f", $days);
+            }
         }
         $lmt = abs($limit);
         /**
@@ -243,39 +265,67 @@ extends _RecentChanges_Formatter
          */
         if ($limit > 0) {
             if ($timespan) {
-                if (intval($days) == 1)
-                    $desc = fmt("The %d most recent %s during the past day are listed below.",
-                                $limit, $edits);
-                else
-                    $desc = fmt("The %d most recent %s during the past %s days are listed below.",
-                                $limit, $edits, $days);
-            } else
-                $desc = fmt("The %d most recent %s are listed below.",
-                            $limit, $edits);
-        }
-        elseif ($limit < 0) {  //$limit < 0 means we want oldest pages
+                if (intval($days) == 1) {
+                    $desc = fmt(
+                        "The %d most recent %s during the past day are listed below.",
+                        $limit,
+                        $edits
+                    );
+                } else {
+                    $desc = fmt(
+                        "The %d most recent %s during the past %s days are listed below.",
+                        $limit,
+                        $edits,
+                        $days
+                    );
+                }
+            } else {
+                $desc = fmt(
+                    "The %d most recent %s are listed below.",
+                    $limit,
+                    $edits
+                );
+            }
+        } elseif ($limit < 0) {  //$limit < 0 means we want oldest pages
             if ($timespan) {
-                if (intval($days) == 1)
-                    $desc = fmt("The %d oldest %s during the past day are listed below.",
-                                $lmt, $edits);
-                else
-                    $desc = fmt("The %d oldest %s during the past %s days are listed below.",
-                                $lmt, $edits, $days);
-            } else
-                $desc = fmt("The %d oldest %s are listed below.",
-                            $lmt, $edits);
-        }
-
-        else {
+                if (intval($days) == 1) {
+                    $desc = fmt(
+                        "The %d oldest %s during the past day are listed below.",
+                        $lmt,
+                        $edits
+                    );
+                } else {
+                    $desc = fmt(
+                        "The %d oldest %s during the past %s days are listed below.",
+                        $lmt,
+                        $edits,
+                        $days
+                    );
+                }
+            } else {
+                $desc = fmt(
+                    "The %d oldest %s are listed below.",
+                    $lmt,
+                    $edits
+                );
+            }
+        } else {
             if ($timespan) {
-                if (intval($days) == 1)
-                    $desc = fmt("The most recent %s during the past day are listed below.",
-                                $edits);
-                else
-                    $desc = fmt("The most recent %s during the past %s days are listed below.",
-                                $edits, $days);
-            } else
+                if (intval($days) == 1) {
+                    $desc = fmt(
+                        "The most recent %s during the past day are listed below.",
+                        $edits
+                    );
+                } else {
+                    $desc = fmt(
+                        "The most recent %s during the past %s days are listed below.",
+                        $edits,
+                        $days
+                    );
+                }
+            } else {
                 $desc = fmt("All %s are listed below.", $edits);
+            }
         }
         return $desc;
     }
@@ -297,10 +347,11 @@ extends _RecentChanges_Formatter
 
     function empty_message()
     {
-        if (isset($this->_args['caption']) and $this->_args['caption'] == _("Recent Comments"))
+        if (isset($this->_args['caption']) and $this->_args['caption'] == _("Recent Comments")) {
             return _("No comments found");
-        else
+        } else {
             return _("No changes found");
+        }
     }
 
     function sidebar_link()
@@ -325,8 +376,7 @@ extends _RecentChanges_Formatter
                                 ."    (typeof window.sidebar.addPanel == 'function'))\n"
                                 ."   {\n"
                                 ."       document.write('$addsidebarjsclick');\n"
-                                ."   }\n"
-                                );
+                                ."   }\n");
         return HTML(new RawXml("\n"), $jsf, new RawXml("\n"), $jsc);
     }
 
@@ -335,11 +385,13 @@ extends _RecentChanges_Formatter
         include_once('lib/InlineParser.php');
 
         $html = HTML(HTML::h2(false, $this->title()));
-        if (($desc = $this->description()))
+        if (($desc = $this->description())) {
             $html->pushContent($desc);
+        }
 
-        if ($this->_args['daylist'])
+        if ($this->_args['daylist']) {
             $html->pushContent(new DayButtonBar($this->_args));
+        }
 
         $last_date = '';
         $lines = false;
@@ -347,27 +399,32 @@ extends _RecentChanges_Formatter
 
         while ($rev = $changes->next()) {
             if (($date = $this->date($rev)) != $last_date) {
-                if ($lines)
+                if ($lines) {
                     $html->pushContent($lines);
+                }
                 $html->pushContent(HTML::h3($date));
                 $lines = HTML::ul();
                 $last_date = $date;
-
             }
             // enforce view permission
             if (mayAccessPage('view', $rev->_pagename)) {
                 $lines->pushContent($this->format_revision($rev));
 
-                if ($first)
+                if ($first) {
                     $this->setValidators($rev);
+                }
                 $first = false;
             }
         }
-        if ($lines)
+        if ($lines) {
             $html->pushContent($lines);
-        if ($first)
-            $html->pushContent(HTML::p(array('class' => 'rc-empty'),
-                                       $this->empty_message()));
+        }
+        if ($first) {
+            $html->pushContent(HTML::p(
+                array('class' => 'rc-empty'),
+                $this->empty_message()
+            ));
+        }
 
         return $html;
     }
@@ -379,36 +436,43 @@ extends _RecentChanges_Formatter
         $class = 'rc-' . $this->importance($rev);
 
         $time = $this->time($rev);
-        if (! $rev->get('is_minor_edit'))
+        if (! $rev->get('is_minor_edit')) {
             $time = HTML::strong(array('class' => 'pageinfo-majoredit'), $time);
+        }
 
         $line = HTML::li(array('class' => $class));
 
-        if ($args['difflinks'])
+        if ($args['difflinks']) {
             $line->pushContent($this->diffLink($rev), ' ');
+        }
 
-        if ($args['historylinks'])
+        if ($args['historylinks']) {
             $line->pushContent($this->historyLink($rev), ' ');
+        }
 
-        $line->pushContent($this->pageLink($rev), ' ',
-                           $time, ' ',
-                           $this->summaryAsHTML($rev),
-                           ' ... ',
-                           $this->authorLink($rev));
+        $line->pushContent(
+            $this->pageLink($rev),
+            ' ',
+            $time,
+            ' ',
+            $this->summaryAsHTML($rev),
+            ' ... ',
+            $this->authorLink($rev)
+        );
         return $line;
     }
 }
 
 
-class _RecentChanges_SideBarFormatter
-extends _RecentChanges_HtmlFormatter
+class _RecentChanges_SideBarFormatter extends _RecentChanges_HtmlFormatter
 {
     function rss_icon()
     {
         //omit rssicon
     }
     function rss2_icon()
-    { }
+    {
+    }
     function title()
     {
         //title click opens the normal RC or RE page in the main browser frame
@@ -434,12 +498,13 @@ extends _RecentChanges_HtmlFormatter
     function authorLink($rev)
     {
         $author = $rev->get('author');
-        if ( $this->authorHasPage($author) ) {
+        if ($this->authorHasPage($author)) {
             $linkurl = WikiLink($author);
             $linkurl->setAttr('target', '_content'); // way to do this using parent::authorLink ??
             return $linkurl;
-        } else
+        } else {
             return $author;
+        }
     }
 
     function diffLink($rev)
@@ -472,19 +537,22 @@ extends _RecentChanges_HtmlFormatter
     // main content window.
     function summaryAsHTML($rev)
     {
-        if ( !($summary = $this->summary($rev)) )
+        if (!($summary = $this->summary($rev))) {
             return '';
-        return HTML::strong(array('class' => 'wiki-summary'),
-                                "[",
-                                /*TransformLinks(*/$summary,/* $rev->get('markup')),*/
-                                "]");
+        }
+        return HTML::strong(
+            array('class' => 'wiki-summary'),
+            "[",
+            /*TransformLinks(*/$summary, /* $rev->get('markup')),*/
+            "]"
+        );
     }
 
 
     function format($changes)
     {
         $this->_args['daylist'] = false; //don't show day buttons in Mozilla sidebar
-        $html = _RecentChanges_HtmlFormatter::format ($changes);
+        $html = _RecentChanges_HtmlFormatter::format($changes);
         $html = HTML::div(array('class' => 'wikitext'), $html);
         global $request;
         $request->discardOutput();
@@ -513,8 +581,7 @@ extends _RecentChanges_HtmlFormatter
     }
 }
 
-class _RecentChanges_BoxFormatter
-extends _RecentChanges_HtmlFormatter
+class _RecentChanges_BoxFormatter extends _RecentChanges_HtmlFormatter
 {
     function rss_icon()
     {
@@ -550,24 +617,28 @@ extends _RecentChanges_HtmlFormatter
         $sp = HTML::Raw("\n&nbsp;&middot;&nbsp;");
         while ($rev = $changes->next()) {
             // enforce view permission
-            if (mayAccessPage('view',$rev->_pagename)) {
-                if ($link = $this->pageLink($rev)) // some entries may be empty
+            if (mayAccessPage('view', $rev->_pagename)) {
+                if ($link = $this->pageLink($rev)) { // some entries may be empty
                                        // (/Blog/.. interim pages)
                     $html->pushContent($sp, $link, HTML::br());
-                if ($first)
+                }
+                if ($first) {
                     $this->setValidators($rev);
+                }
                 $first = false;
             }
         }
-        if ($first)
-            $html->pushContent(HTML::p(array('class' => 'rc-empty'),
-                                       $this->empty_message()));
+        if ($first) {
+            $html->pushContent(HTML::p(
+                array('class' => 'rc-empty'),
+                $this->empty_message()
+            ));
+        }
         return $html;
     }
 }
 
-class _RecentChanges_RssFormatter
-extends _RecentChanges_Formatter
+class _RecentChanges_RssFormatter extends _RecentChanges_Formatter
 {
     var $_absurls = true;
 
@@ -589,19 +660,24 @@ extends _RecentChanges_Formatter
 
         $rss->channel($this->channel_properties());
 
-        if (($props = $this->image_properties()))
+        if (($props = $this->image_properties())) {
             $rss->image($props);
-        if (($props = $this->textinput_properties()))
+        }
+        if (($props = $this->textinput_properties())) {
             $rss->textinput($props);
+        }
 
         $first = true;
         while ($rev = $changes->next()) {
             // enforce view permission
             if (mayAccessPage('view', $rev->_pagename)) {
-                $rss->addItem($this->item_properties($rev),
-                              $this->pageURI($rev));
-                if ($first)
+                $rss->addItem(
+                    $this->item_properties($rev),
+                    $this->pageURI($rev)
+                );
+                if ($first) {
                     $this->setValidators($rev);
+                }
                 $first = false;
             }
         }
@@ -613,8 +689,9 @@ extends _RecentChanges_Formatter
 
         // Flush errors in comment, otherwise it's invalid XML.
         global $ErrorManager;
-        if (($errors = $ErrorManager->getPostponedErrorsAsHTML()))
+        if (($errors = $ErrorManager->getPostponedErrorsAsHTML())) {
             printf("\n<!-- PHP Warnings:\n%s-->\n", AsXML($errors));
+        }
 
         $request->finish();     // NORETURN!!!!
     }
@@ -624,8 +701,9 @@ extends _RecentChanges_Formatter
         global $WikiTheme;
 
         $img_url = AbsoluteURL($WikiTheme->getImageURL('logo'));
-        if (!$img_url)
+        if (!$img_url) {
             return false;
+        }
 
         return array('title' => WIKI_NAME,
                      'link' => WikiURL(HOME_PAGE, false, 'absurl'),
@@ -690,8 +768,8 @@ extends _RecentChanges_Formatter
  * simplified xml structure (no namespace),
  * support for xml-rpc cloud registerProcedure (not yet)
  */
-class _RecentChanges_Rss2Formatter
-extends _RecentChanges_RssFormatter {
+class _RecentChanges_Rss2Formatter extends _RecentChanges_RssFormatter
+{
 
     function format($changes)
     {
@@ -699,20 +777,26 @@ extends _RecentChanges_RssFormatter {
         $rss = new RssWriter2;
 
         $rss->channel($this->channel_properties());
-        if (($props = $this->cloud_properties()))
+        if (($props = $this->cloud_properties())) {
             $rss->cloud($props);
-        if (($props = $this->image_properties()))
+        }
+        if (($props = $this->image_properties())) {
             $rss->image($props);
-        if (($props = $this->textinput_properties()))
+        }
+        if (($props = $this->textinput_properties())) {
             $rss->textinput($props);
+        }
         $first = true;
         while ($rev = $changes->next()) {
             // enforce view permission
             if (mayAccessPage('view', $rev->_pagename)) {
-                $rss->addItem($this->item_properties($rev),
-                              $this->pageURI($rev));
-                if ($first)
+                $rss->addItem(
+                    $this->item_properties($rev),
+                    $this->pageURI($rev)
+                );
+                if ($first) {
                     $this->setValidators($rev);
+                }
                 $first = false;
             }
         }
@@ -723,8 +807,9 @@ extends _RecentChanges_RssFormatter {
         printf("\n<!-- Generated by PhpWiki-%s:\n%s-->\n", PHPWIKI_VERSION, $GLOBALS['RCS_IDS']);
         // Flush errors in comment, otherwise it's invalid XML.
         global $ErrorManager;
-        if (($errors = $ErrorManager->getPostponedErrorsAsHTML()))
+        if (($errors = $ErrorManager->getPostponedErrorsAsHTML())) {
             printf("\n<!-- PHP Warnings:\n%s-->\n", AsXML($errors));
+        }
 
         $request->finish();     // NORETURN!!!!
     }
@@ -732,18 +817,21 @@ extends _RecentChanges_RssFormatter {
     function channel_properties()
     {
         $chann_10 = parent::channel_properties();
-        return array_merge($chann_10,
-                           array('generator' => 'PhpWiki-'.PHPWIKI_VERSION,
+        return array_merge(
+            $chann_10,
+            array('generator' => 'PhpWiki-'.PHPWIKI_VERSION,
                                  //<pubDate>Tue, 10 Jun 2003 04:00:00 GMT</pubDate>
                                  //<lastBuildDate>Tue, 10 Jun 2003 09:41:01 GMT</lastBuildDate>
                                  //<docs>http://blogs.law.harvard.edu/tech/rss</docs>
                                  'copyright' => COPYRIGHTPAGE_URL
-                                 ));
+            )
+        );
     }
 
     function cloud_properties()
     {
-        return false; } // xml-rpc registerProcedure not yet implemented
+        return false;
+    } // xml-rpc registerProcedure not yet implemented
 }
 
 class NonDeletedRevisionIterator extends WikiDB_PageRevisionIterator
@@ -764,21 +852,19 @@ class NonDeletedRevisionIterator extends WikiDB_PageRevisionIterator
             if ($this->_check_current_revision) {
                 $page = $rev->getPage();
                 $check_rev = $page->getCurrentRevision();
-            }
-            else {
+            } else {
                 $check_rev = $rev;
             }
-            if (! $check_rev->hasDefaultContents())
+            if (! $check_rev->hasDefaultContents()) {
                 return $rev;
+            }
         }
         $this->free();
         return false;
     }
-
 }
 
-class WikiPlugin_RecentChanges
-extends WikiPlugin
+class WikiPlugin_RecentChanges extends WikiPlugin
 {
     function getName()
     {
@@ -787,8 +873,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.108 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.108 $"
+        );
     }
 
     function managesValidators()
@@ -828,20 +917,26 @@ extends WikiPlugin
 
     function getArgs($argstr, $request, $defaults = false)
     {
-        if (!$defaults) $defaults = $this->getDefaultArguments();
+        if (!$defaults) {
+            $defaults = $this->getDefaultArguments();
+        }
         $args = WikiPlugin::getArgs($argstr, $request, $defaults);
 
         $action = $request->getArg('action');
-        if ($action != 'browse' && ! $request->isActionPage($action))
+        if ($action != 'browse' && ! $request->isActionPage($action)) {
             $args['format'] = false; // default -> HTML
+        }
 
-        if ($args['format'] == 'rss' && empty($args['limit']))
+        if ($args['format'] == 'rss' && empty($args['limit'])) {
             $args['limit'] = 15; // Fix default value for RSS.
-        if ($args['format'] == 'rss2' && empty($args['limit']))
+        }
+        if ($args['format'] == 'rss2' && empty($args['limit'])) {
             $args['limit'] = 15; // Fix default value for RSS2.
+        }
 
-        if ($args['format'] == 'sidebar' && empty($args['limit']))
+        if ($args['format'] == 'sidebar' && empty($args['limit'])) {
             $args['limit'] = 10; // Fix default value for sidebar.
+        }
 
         return $args;
     }
@@ -853,13 +948,15 @@ extends WikiPlugin
         $params = array('include_minor_revisions' => $show_minor,
                         'exclude_major_revisions' => !$show_major,
                         'include_all_revisions' => !empty($show_all));
-        if ($limit != 0)
+        if ($limit != 0) {
             $params['limit'] = $limit;
+        }
 
-        if ($days > 0.0)
+        if ($days > 0.0) {
             $params['since'] = time() - 24 * 3600 * $days;
-        elseif ($days < 0.0)
+        } elseif ($days < 0.0) {
             $params['since'] = 24 * 3600 * $days - time();
+        }
 
         return $params;
     }
@@ -869,11 +966,13 @@ extends WikiPlugin
         $changes = $dbi->mostRecent($this->getMostRecentParams($args));
 
         $show_deleted = $args['show_deleted'];
-        if ($show_deleted == 'sometimes')
+        if ($show_deleted == 'sometimes') {
             $show_deleted = $args['show_minor'];
+        }
 
-        if (!$show_deleted)
+        if (!$show_deleted) {
             $changes = new NonDeletedRevisionIterator($changes, !$args['show_all']);
+        }
 
         return $changes;
     }
@@ -885,20 +984,20 @@ extends WikiPlugin
 
         $fmt_class = $WikiTheme->getFormatter('RecentChanges', $format);
         if (!$fmt_class) {
-            if ($format == 'rss')
+            if ($format == 'rss') {
                 $fmt_class = '_RecentChanges_RssFormatter';
-            elseif ($format == 'rss2')
+            } elseif ($format == 'rss2') {
                 $fmt_class = '_RecentChanges_Rss2Formatter';
-            elseif ($format == 'rss091') {
+            } elseif ($format == 'rss091') {
                 include_once "lib/RSSWriter091.php";
                 $fmt_class = '_RecentChanges_RssFormatter091';
-            }
-            elseif ($format == 'sidebar')
+            } elseif ($format == 'sidebar') {
                 $fmt_class = '_RecentChanges_SideBarFormatter';
-            elseif ($format == 'box')
+            } elseif ($format == 'box') {
                 $fmt_class = '_RecentChanges_BoxFormatter';
-            else
+            } else {
                 $fmt_class = '_RecentChanges_HtmlFormatter';
+            }
         }
 
         $fmt = new $fmt_class($args);
@@ -921,22 +1020,28 @@ extends WikiPlugin
     // just a numbered list of limit pagenames, without date.
     function box($args = false, $request = false, $basepage = false)
     {
-        if (!$request) $request = $GLOBALS['request'];
-        if (!isset($args['limit'])) $args['limit'] = 15;
+        if (!$request) {
+            $request = $GLOBALS['request'];
+        }
+        if (!isset($args['limit'])) {
+            $args['limit'] = 15;
+        }
         $args['format'] = 'box';
         $args['show_minor'] = false;
         $args['show_major'] = true;
         $args['show_deleted'] = 'sometimes';
         $args['show_all'] = false;
         $args['days'] = 90;
-        return $this->makeBox(WikiLink($this->getName(),'',SplitPagename($this->getName())),
-                              $this->format($this->getChanges($request->_dbi, $args), $args));
+        return $this->makeBox(
+            WikiLink($this->getName(), '', SplitPagename($this->getName())),
+            $this->format($this->getChanges($request->_dbi, $args), $args)
+        );
     }
-
 };
 
 
-class DayButtonBar extends HtmlElement {
+class DayButtonBar extends HtmlElement
+{
 
     function __construct($plugin_args)
     {
@@ -947,12 +1052,13 @@ class DayButtonBar extends HtmlElement {
 
         // Custom caption
         if (! $caption) {
-            if ($show_minor)
+            if ($show_minor) {
                 $caption = _("Show minor edits for:");
-            elseif ($show_all)
+            } elseif ($show_all) {
                 $caption = _("Show all changes for:");
-            else
+            } else {
                 $caption = _("Show changes for:");
+            }
         }
 
         $this->pushContent($caption, ' ');
@@ -962,8 +1068,9 @@ class DayButtonBar extends HtmlElement {
 
         $n = 0;
         foreach (explode(",", $daylist) as $days) {
-            if ($n++)
+            if ($n++) {
                 $this->pushContent($sep);
+            }
             $this->pushContent($this->_makeDayButton($days));
         }
     }
@@ -972,12 +1079,13 @@ class DayButtonBar extends HtmlElement {
     {
         global $WikiTheme, $request;
 
-        if ($days == 1)
+        if ($days == 1) {
             $label = _("1 day");
-        elseif ($days < 1)
+        } elseif ($days < 1) {
             $label = "..."; //alldays
-        else
+        } else {
             $label = sprintf(_("%s days"), abs($days));
+        }
 
         $url = $request->getURLtoSelf(array('action' => $request->getArg('action'), 'days' => $days));
 
@@ -1190,4 +1298,3 @@ class DayButtonBar extends HtmlElement {
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

@@ -19,7 +19,6 @@
  */
 
 
-class Project_HierarchyManagerAncestorIsSelfException extends Exception {
+class Project_HierarchyManagerAncestorIsSelfException extends Exception
+{
 }
-
-?>

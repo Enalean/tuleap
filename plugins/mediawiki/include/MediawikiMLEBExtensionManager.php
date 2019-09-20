@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class MediawikiMLEBExtensionManager {
+class MediawikiMLEBExtensionManager
+{
 
     /** @var Mediawiki_Migration_MediawikiMigrator */
     private $migrator;

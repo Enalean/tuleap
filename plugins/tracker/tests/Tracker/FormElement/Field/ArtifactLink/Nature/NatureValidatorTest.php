@@ -24,7 +24,8 @@ use TuleapTestCase;
 
 require_once __DIR__.'/../../../../../bootstrap.php';
 
-class NatureValidatorTest extends TuleapTestCase {
+class NatureValidatorTest extends TuleapTestCase
+{
 
     private $expected_exception = 'Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\InvalidNatureParameterException';
     private $validator;

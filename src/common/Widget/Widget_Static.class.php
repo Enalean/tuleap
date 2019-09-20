@@ -32,7 +32,8 @@ require_once "Widget.class.php";
  * $w->display();
  * </pre>
  */
-class Widget_Static extends Widget {
+class Widget_Static extends Widget
+{
     /**
      * Title
      * @var String
@@ -163,4 +164,3 @@ class Widget_Static extends Widget {
         return $this->additional_class;
     }
 }
-?>

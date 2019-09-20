@@ -22,7 +22,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201510131700_create_plugin_statistics_aggregation_table extends ForgeUpgrade_Bucket {
+class b201510131700_create_plugin_statistics_aggregation_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

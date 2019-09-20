@@ -124,50 +124,50 @@ class DocmanPlugin extends Plugin
         parent::__construct($id);
         bindtextdomain('tuleap-docman', __DIR__.'/../site-content');
 
-        $this->addHook('cssfile',                           'cssFile',                           false);
+        $this->addHook('cssfile', 'cssFile', false);
         $this->addHook('javascript_file');
-        $this->addHook('logs_daily',                        'logsDaily',                         false);
-        $this->addHook('permission_get_name',               'permission_get_name',               false);
-        $this->addHook('permission_get_object_type',        'permission_get_object_type',        false);
-        $this->addHook('permission_get_object_name',        'permission_get_object_name',        false);
-        $this->addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
+        $this->addHook('logs_daily', 'logsDaily', false);
+        $this->addHook('permission_get_name', 'permission_get_name', false);
+        $this->addHook('permission_get_object_type', 'permission_get_object_type', false);
+        $this->addHook('permission_get_object_name', 'permission_get_object_name', false);
+        $this->addHook('permission_get_object_fullname', 'permission_get_object_fullname', false);
         $this->addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->addHook(GetPublicAreas::NAME);
-        $this->addHook(Event::REGISTER_PROJECT_CREATION,    'installNewDocman',                  false);
+        $this->addHook(Event::REGISTER_PROJECT_CREATION, 'installNewDocman', false);
         $this->addHook(Event::SERVICE_IS_USED);
-        $this->addHook('soap',                              'soap',                              false);
+        $this->addHook('soap', 'soap', false);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
-        $this->addHook('codendi_daily_start',               'codendiDaily',                      false);
-        $this->addHook('wiki_page_updated',                 'wiki_page_updated',                 false);
-        $this->addHook('wiki_before_content',               'wiki_before_content',               false);
-        $this->addHook(Event::WIKI_DISPLAY_REMOVE_BUTTON,   'wiki_display_remove_button',        false);
-        $this->addHook('isWikiPageReferenced',              'isWikiPageReferenced',              false);
-        $this->addHook('isWikiPageEditable',                'isWikiPageEditable',                false);
-        $this->addHook('userCanAccessWikiDocument',         'userCanAccessWikiDocument',         false);
-        $this->addHook('getPermsLabelForWiki',              'getPermsLabelForWiki',              false);
+        $this->addHook('codendi_daily_start', 'codendiDaily', false);
+        $this->addHook('wiki_page_updated', 'wiki_page_updated', false);
+        $this->addHook('wiki_before_content', 'wiki_before_content', false);
+        $this->addHook(Event::WIKI_DISPLAY_REMOVE_BUTTON, 'wiki_display_remove_button', false);
+        $this->addHook('isWikiPageReferenced', 'isWikiPageReferenced', false);
+        $this->addHook('isWikiPageEditable', 'isWikiPageEditable', false);
+        $this->addHook('userCanAccessWikiDocument', 'userCanAccessWikiDocument', false);
+        $this->addHook('getPermsLabelForWiki', 'getPermsLabelForWiki', false);
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
-        $this->addHook('project_export_entry',              'project_export_entry',              false);
-        $this->addHook('project_export',                    'project_export',                    false);
-        $this->addHook('SystemEvent_PROJECT_RENAME',        'renameProject',                     false);
-        $this->addHook('file_exists_in_data_dir',           'file_exists_in_data_dir',           false);
-        $this->addHook('webdav_root_for_service',           'webdav_root_for_service',           false);
+        $this->addHook('project_export_entry', 'project_export_entry', false);
+        $this->addHook('project_export', 'project_export', false);
+        $this->addHook('SystemEvent_PROJECT_RENAME', 'renameProject', false);
+        $this->addHook('file_exists_in_data_dir', 'file_exists_in_data_dir', false);
+        $this->addHook('webdav_root_for_service', 'webdav_root_for_service', false);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         // Stats plugin
         $this->addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
-        $this->addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
-        $this->addHook('plugin_statistics_color',                      'plugin_statistics_color',                      false);
+        $this->addHook('plugin_statistics_disk_usage_service_label', 'plugin_statistics_disk_usage_service_label', false);
+        $this->addHook('plugin_statistics_color', 'plugin_statistics_color', false);
 
-        $this->addHook('show_pending_documents',             'show_pending_documents',             false);
+        $this->addHook('show_pending_documents', 'show_pending_documents', false);
 
-        $this->addHook('backend_system_purge_files',  'purgeFiles',  false);
+        $this->addHook('backend_system_purge_files', 'purgeFiles', false);
         $this->addHook('project_admin_remove_user', 'projectRemoveUser', false);
 
         $this->addHook('permission_request_information', 'permissionRequestInformation', false);
 
         $this->addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
-        $this->addHook('project_is_deleted',              'project_is_deleted',          false);
+        $this->addHook('project_is_deleted', 'project_is_deleted', false);
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
         $this->addHook(Event::SERVICES_TRUNCATED_EMAILS);
 
@@ -234,7 +234,7 @@ class DocmanPlugin extends Plugin
     function permission_get_name($params)
     {
         if (!$params['name']) {
-            switch($params['permission_type']) {
+            switch ($params['permission_type']) {
                 case 'PLUGIN_DOCMAN_READ':
                     $params['name'] = $GLOBALS['Language']->getText('plugin_docman', 'permission_read');
                     break;
@@ -301,7 +301,7 @@ class DocmanPlugin extends Plugin
             if (!$this->_cached_permission_user_allowed_to_change) {
                 if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                     $docman = $this->getHTTPController();
-                    switch($params['permission_type']) {
+                    switch ($params['permission_type']) {
                         case 'PLUGIN_DOCMAN_READ':
                         case 'PLUGIN_DOCMAN_WRITE':
                         case 'PLUGIN_DOCMAN_MANAGE':
@@ -552,7 +552,7 @@ class DocmanPlugin extends Plugin
     {
         // Docman perms
         $url  = '?group_id='.$params['group_id'].'&export=plugin_docman_perms';
-        $params['labels']['plugin_eac_docman']                           = $GLOBALS['Language']->getText('plugin_docman','Project_access_permission');
+        $params['labels']['plugin_eac_docman']                           = $GLOBALS['Language']->getText('plugin_docman', 'Project_access_permission');
         $params['data_export_links']['plugin_eac_docman']                = $url.'&show=csv';
         $params['data_export_format_links']['plugin_eac_docman']         = $url.'&show=format';
         $params['history_export_links']['plugin_eac_docman']             = null;
@@ -568,7 +568,7 @@ class DocmanPlugin extends Plugin
      */
     function project_export($params)
     {
-        if($params['export'] == 'plugin_docman_perms') {
+        if ($params['export'] == 'plugin_docman_perms') {
             include_once('Docman_PermissionsExport.class.php');
             $request = HTTPRequest::instance();
             $permExport = new Docman_PermissionsExport($params['project']);
@@ -590,7 +590,7 @@ class DocmanPlugin extends Plugin
     {
         $docmanPath = $this->getPluginInfo()->getPropertyValueForName('docman_root').'/';
         //Is this project using docman
-        if (is_dir($docmanPath.$params['project']->getUnixName())){
+        if (is_dir($docmanPath.$params['project']->getUnixName())) {
             $version      = new Docman_VersionFactory();
 
             return $version->renameProject($docmanPath, $params['project'], $params['new_name']);
@@ -610,7 +610,7 @@ class DocmanPlugin extends Plugin
 
         if (Backend::fileExists($path)) {
             $params['result']= false;
-            $params['error'] = $GLOBALS['Language']->getText('plugin_docman','name_validity');
+            $params['error'] = $GLOBALS['Language']->getText('plugin_docman', 'name_validity');
         }
     }
 
@@ -690,7 +690,7 @@ class DocmanPlugin extends Plugin
 
         //return all pending versions for given group id
         $offsetVers = $request->getValidated('offsetVers', 'uint', 0);
-        if ( !$offsetVers || $offsetVers < 0 ) {
+        if (!$offsetVers || $offsetVers < 0) {
             $offsetVers = 0;
         }
 
@@ -711,12 +711,12 @@ class DocmanPlugin extends Plugin
             $html .= '<table class="tlp-table">
                 <thead>
                     <tr>
-                        <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman','item_id') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman','doc_title') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman','label') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman','number') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman','delete_date') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman','purge_date') .'</th>
+                        <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman', 'item_id') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'doc_title') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'label') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'number') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'delete_date') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'purge_date') .'</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -734,28 +734,28 @@ class DocmanPlugin extends Plugin
 
         //return all pending items for given group id
         $offsetItem = $request->getValidated('offsetItem', 'uint', 0);
-        if ( !$offsetItem || $offsetItem < 0 ) {
+        if (!$offsetItem || $offsetItem < 0) {
             $offsetItem = 0;
         }
         require_once('Docman_ItemFactory.class.php');
         $item = new Docman_ItemFactory($params['group_id']);
-        $res = $item->listPendingItems($params['group_id'], $offsetItem , $limit);
+        $res = $item->listPendingItems($params['group_id'], $offsetItem, $limit);
         $html = '';
         $html .= '<section class="tlp-pane-section">
-                <h2 class="tlp-pane-subtitle">'. $GLOBALS['Language']->getText('plugin_docman','deleted_item') .'</h2>';
+                <h2 class="tlp-pane-subtitle">'. $GLOBALS['Language']->getText('plugin_docman', 'deleted_item') .'</h2>';
         if (isset($res) && $res) {
             $html .= $this->showPendingItems($params['csrf_token'], $res['items'], $params['group_id'], $res['nbItems'], $offsetItem, $limit);
         } else {
             $html .= '<table class="tlp-table">
                 <thead>
                     <tr>
-                        <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman','item_id') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman','filters_item_type') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman','doc_title') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman','location') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman','owner') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman','delete_date') .'</th>
-                        <th>'. $GLOBALS['Language']->getText('plugin_docman','purge_date') .'</th>
+                        <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman', 'item_id') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'filters_item_type') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'doc_title') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'location') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'owner') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'delete_date') .'</th>
+                        <th>'. $GLOBALS['Language']->getText('plugin_docman', 'purge_date') .'</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -782,12 +782,12 @@ class DocmanPlugin extends Plugin
         $html .= '<table class="tlp-table">
             <thead>
                 <tr>
-                    <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman','item_id') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman','doc_title') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman','label') .'</th>
-                    <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman','number') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman','delete_date') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman','purge_date') .'</th>
+                    <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman', 'item_id') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'doc_title') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'label') .'</th>
+                    <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman', 'number') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'delete_date') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'purge_date') .'</th>
                     <th></th>
                 </tr>
             </thead>
@@ -864,20 +864,20 @@ class DocmanPlugin extends Plugin
         $html .= '<table class="tlp-table">
             <thead>
                 <tr>
-                    <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman','item_id') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman','filters_item_type') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman','doc_title') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman','location') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman','owner') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman','delete_date') .'</th>
-                    <th>'. $GLOBALS['Language']->getText('plugin_docman','purge_date') .'</th>
+                    <th class="tlp-table-cell-numeric">'. $GLOBALS['Language']->getText('plugin_docman', 'item_id') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'filters_item_type') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'doc_title') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'location') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'owner') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'delete_date') .'</th>
+                    <th>'. $GLOBALS['Language']->getText('plugin_docman', 'purge_date') .'</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>';
 
         if ($nbItems > 0) {
-            foreach ($res as $row ) {
+            foreach ($res as $row) {
                 $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $row['date']);
                 $html .='<tr>'.
                 '<td class="tlp-table-cell-numeric">'.$row['id'].'</td>'.
@@ -1010,10 +1010,12 @@ class DocmanPlugin extends Plugin
      */
     function fillProjectHistorySubEvents($params)
     {
-        array_push($params['subEvents']['event_permission'], 'perm_reset_for_document',
-                                                             'perm_granted_for_document',
-                                                             'perm_reset_for_folder',
-                                                             'perm_granted_for_folder'
+        array_push(
+            $params['subEvents']['event_permission'],
+            'perm_reset_for_document',
+            'perm_granted_for_document',
+            'perm_reset_for_folder',
+            'perm_granted_for_folder'
         );
     }
 
@@ -1022,7 +1024,7 @@ class DocmanPlugin extends Plugin
         return $this->getController('Docman_WikiController', $request);
     }
 
-    protected function getHTTPController($request=null)
+    protected function getHTTPController($request = null)
     {
         if ($request == null) {
             $request = HTTPRequest::instance();
@@ -1159,7 +1161,6 @@ class DocmanPlugin extends Plugin
 
         $updater = $this->getUgroupsToNotifyUpdater();
         $updater->updateSiteAccess($old_access);
-
     }
 
     private function getUgroupsToNotifyUpdater()
@@ -1451,7 +1452,6 @@ class DocmanPlugin extends Plugin
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeLegacyController'));
             $r->get('/download/{file_id:\d+}[/{version_id:\d+}]', $this->getRouteHandler('routeFileDownload'));
         });
-
     }
 
     public function routeGetDocumentSettings(): DocmanFilesUploadLimitsAdminController

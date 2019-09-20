@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Hierarchy_NotInHierarchyException extends Exception {
+class Tracker_Hierarchy_NotInHierarchyException extends Exception
+{
 
     function __construct()
     {
         parent::__construct($GLOBALS['Language']->getText('plugin_tracker_hierarchy', 'tracker_not_in_hierarchy'));
     }
 }
-?>

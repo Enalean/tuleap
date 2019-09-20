@@ -22,11 +22,14 @@
 
 require_once __DIR__ . '/bootstrap.php';
 
-class LDAP_GroupManagerUmbrella extends LDAP_GroupManager {
+class LDAP_GroupManagerUmbrella extends LDAP_GroupManager
+{
     function addUserToGroup($id, $userId)
-    { }
+    {
+    }
     function removeUserfromGroup($id, $userId)
-    { }
+    {
+    }
     function getDbGroupMembersIds($id)
     {
         return array(101,102);
@@ -43,7 +46,8 @@ Mock::generatePartial('LDAP', 'LDAP4GroupManager', array('searchGroupMembers', '
 Mock::generate('LDAPResultIterator');
 Mock::generate('LDAPResult');
 
-class LDAP_GroupManagerTest extends TuleapTestCase {
+class LDAP_GroupManagerTest extends TuleapTestCase
+{
     protected function getLdapResult($method, $result)
     {
         $ldapRes = new MockLDAPResult($this);

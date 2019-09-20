@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TreeNode_InjectPaddingInTreeNodeVisitorTest extends TuleapTestCase {
+class TreeNode_InjectPaddingInTreeNodeVisitorTest extends TuleapTestCase
+{
 
     function ItInjectsPadding()
     {
@@ -35,4 +36,3 @@ class TreeNode_InjectPaddingInTreeNodeVisitorTest extends TuleapTestCase {
         $this->assertPattern('%div class="tree-blank" >[^<]*</div><div class="tree-last"%', $data['tree-padding']);
     }
 }
-?>

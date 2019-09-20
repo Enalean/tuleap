@@ -67,7 +67,6 @@ class ReferenceFactoryTest extends TuleapTestCase
 
         $this->assertNotNull($reference);
         $this->assertIsA($reference, 'Tuleap\PullRequest\Reference\Reference');
-
     }
 
     public function itDoesNotCreateAReferenceIfPullRequestIdNotExisting()

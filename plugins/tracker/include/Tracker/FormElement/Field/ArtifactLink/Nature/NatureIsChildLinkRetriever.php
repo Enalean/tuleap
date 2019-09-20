@@ -28,7 +28,8 @@ use Tracker_Artifact;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_Value_ArtifactLinkDao;
 
-class NatureIsChildLinkRetriever {
+class NatureIsChildLinkRetriever
+{
 
     /**
      * @var Tracker_FormElement_Field_Value_ArtifactLinkDao

@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 {
+class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5
+{
 
     /**
      * build Gantt chart properties
@@ -103,7 +104,7 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 {
 
             if ($data['progress'] < 0) {
                 $data['progress'] = 0;
-            } else if ($data['progress'] > 100) {
+            } elseif ($data['progress'] > 100) {
                 $data['progress'] = 1;
             } else {
                 $data['progress'] = $data['progress'] / 100;

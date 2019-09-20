@@ -25,8 +25,8 @@ $valid_groupid = new Valid_GroupId();
 $valid_groupid->required();
 if (! $request->valid($valid_groupid)) {
     exit_error(
-        $Language->getText('project_admin_index','invalid_p'),
-        $Language->getText('project_admin_index','p_not_found')
+        $Language->getText('project_admin_index', 'invalid_p'),
+        $Language->getText('project_admin_index', 'p_not_found')
     );
 }
 $group_id = $request->get('group_id');
@@ -53,9 +53,9 @@ if ($request->get('update_generic_user')) {
     $generic_user->setEmail($email);
 
     if ($user_manager->updateDb($generic_user)) {
-        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin','generic_member_updated'));
+        $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin', 'generic_member_updated'));
     } else {
-        $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin','generic_member_not_changed'));
+        $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin', 'generic_member_not_changed'));
     }
 
     $GLOBALS['HTML']->redirect($redirect_url);
@@ -98,5 +98,3 @@ echo '<input type="hidden" name="group_id" value="'. (int)$group_id .'" />
 </form>';
 
 project_admin_footer(array());
-
-?>

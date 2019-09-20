@@ -19,7 +19,8 @@
  */
 
 
-class Cardwall_OnTop_ColumnMappingFieldDao extends DataAccessObject {
+class Cardwall_OnTop_ColumnMappingFieldDao extends DataAccessObject
+{
 
     public function searchMappingFields($cardwall_tracker_id)
     {
@@ -114,4 +115,3 @@ class Cardwall_OnTop_ColumnMappingFieldDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-?>

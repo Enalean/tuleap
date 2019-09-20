@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class SystemEvent_MOVE_FRS_FILE extends SystemEvent {
+class SystemEvent_MOVE_FRS_FILE extends SystemEvent
+{
 
     public const NAME = 'MOVE_FRS_FILE';
 

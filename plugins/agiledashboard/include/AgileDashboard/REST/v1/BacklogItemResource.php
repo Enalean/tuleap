@@ -193,8 +193,8 @@ class BacklogItemResource extends AuthenticatedResource
         $semantic_status = $semantics[Tracker_Semantic_Status::NAME];
 
         if ($semantic_status && $semantic_status->getField() && $semantic_status->getField()->userCanRead(
-                $current_user
-            )) {
+            $current_user
+        )) {
             $label = $semantic_status->getNormalizedStatusLabel($artifact);
 
             if ($label) {
@@ -325,21 +325,21 @@ class BacklogItemResource extends AuthenticatedResource
                 $to_add = $this->resources_patcher->removeArtifactFromSource($user, $add);
                 if (count($to_add)) {
                     $validator = new PatchAddRemoveValidator(
-                       $indexed_children_ids,
-                       new PatchAddBacklogItemsValidator(
-                           $this->artifact_factory,
-                           $this->tracker_factory->getPossibleChildren($artifact->getTracker()),
-                           $id
-                       )
+                        $indexed_children_ids,
+                        new PatchAddBacklogItemsValidator(
+                            $this->artifact_factory,
+                            $this->tracker_factory->getPossibleChildren($artifact->getTracker()),
+                            $id
+                        )
                     );
                     $backlog_items_ids = $validator->validate($id, array(), $to_add);
 
                     $this->artifactlink_updater->updateArtifactLinks(
-                       $user,
-                       $artifact,
-                       $backlog_items_ids,
-                       array(),
-                       \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+                        $user,
+                        $artifact,
+                        $backlog_items_ids,
+                        array(),
+                        \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
                     );
                     $indexed_children_ids = array_flip($backlog_items_ids);
                 }
@@ -373,7 +373,7 @@ class BacklogItemResource extends AuthenticatedResource
 
         if (! $artifact) {
             throw new RestException(404, 'Backlog Item not found');
-        } else if (! $artifact->userCanView($current_user)) {
+        } elseif (! $artifact->userCanView($current_user)) {
             throw new RestException(403, 'You cannot access to this backlog item');
         }
 

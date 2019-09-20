@@ -19,7 +19,8 @@
  */
 
 
-class Tracker_FormElement_Field_Value_IntegerDao extends Tracker_FormElement_Field_Value_NumericDao {
+class Tracker_FormElement_Field_Value_IntegerDao extends Tracker_FormElement_Field_Value_NumericDao
+{
 
     public function __construct()
     {
@@ -43,7 +44,7 @@ class Tracker_FormElement_Field_Value_IntegerDao extends Tracker_FormElement_Fie
     public function createNoneValue($tracker_id, $field_id)
     {
         $changeset_value_ids  = $this->createNoneChangesetValue($tracker_id, $field_id);
-        if ( $changeset_value_ids === false)  {
+        if ($changeset_value_ids === false) {
             return false;
         }
         $sql = " INSERT INTO $this->table_name(changeset_value_id, value) 
@@ -63,4 +64,3 @@ class Tracker_FormElement_Field_Value_IntegerDao extends Tracker_FormElement_Fie
         return $this->update($sql);
     }
 }
-?>

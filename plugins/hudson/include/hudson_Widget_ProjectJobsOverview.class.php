@@ -91,7 +91,6 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
                     $html .= '</tr>';
 
                     $cpt++;
-
                 } catch (Exception $e) {
                     $nb_jobs_in_error++;
                 }

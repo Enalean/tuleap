@@ -18,7 +18,8 @@
  */
 
 
-class Tracker_FormElement_View_Admin_Field_SubmittedOn extends Tracker_FormElement_View_Admin_Field {
+class Tracker_FormElement_View_Admin_Field_SubmittedOn extends Tracker_FormElement_View_Admin_Field
+{
 
     protected function fetchCustomHelp()
     {
@@ -34,5 +35,3 @@ class Tracker_FormElement_View_Admin_Field_SubmittedOn extends Tracker_FormEleme
         return '';
     }
 }
-
-?>

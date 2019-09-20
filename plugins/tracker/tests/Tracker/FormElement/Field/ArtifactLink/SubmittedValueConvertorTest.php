@@ -26,7 +26,8 @@ use Tracker_ArtifactFactory;
 
 require_once __DIR__.'/../../../../bootstrap.php';
 
-class SubmittedValueConvertorTest extends TuleapTestCase {
+class SubmittedValueConvertorTest extends TuleapTestCase
+{
 
     /** @var SubmittedValueConvertor */
     private $convertor;
@@ -193,7 +194,6 @@ class SubmittedValueConvertorTest extends TuleapTestCase {
         );
         $this->assertEqual($updated_submitted_value['list_of_artifactlinkinfo']['123']->getNature(), null);
         $this->assertEqual($updated_submitted_value['list_of_artifactlinkinfo']['124']->getNature(), null);
-
     }
 
     public function itConvertsWhenThereIsOnlyOneNature()
@@ -211,7 +211,6 @@ class SubmittedValueConvertorTest extends TuleapTestCase {
         );
         $this->assertEqual($updated_submitted_value['list_of_artifactlinkinfo']['123']->getNature(), '_is_child');
         $this->assertEqual($updated_submitted_value['list_of_artifactlinkinfo']['124']->getNature(), '_is_child');
-
     }
 
     public function itConvertsWhenEachArtifactLinkHasItsOwnNature()
@@ -229,6 +228,5 @@ class SubmittedValueConvertorTest extends TuleapTestCase {
         );
         $this->assertEqual($updated_submitted_value['list_of_artifactlinkinfo']['123']->getNature(), '_is_child');
         $this->assertEqual($updated_submitted_value['list_of_artifactlinkinfo']['124']->getNature(), '_is_foo');
-
     }
 }

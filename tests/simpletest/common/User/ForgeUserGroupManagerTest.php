@@ -20,7 +20,8 @@
 
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
 
-class User_ForgeUserGroupFactory_UpdateUserGroupTest extends TuleapTestCase {
+class User_ForgeUserGroupFactory_UpdateUserGroupTest extends TuleapTestCase
+{
 
     /**
      * @var User_ForgeUserGroupPermissionsDao

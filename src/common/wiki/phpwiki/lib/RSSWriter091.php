@@ -36,16 +36,17 @@ class RSSWriter091 extends RssWriter
    */
     function finish()
     {
-        if (isset($this->_finished))
+        if (isset($this->_finished)) {
             return;
+        }
 
         $channel = &$this->_channel;
         $items = &$this->_items;
 
-        if ($items)
-            {
-            foreach ($items as $i)
+        if ($items) {
+            foreach ($items as $i) {
                     $channel->pushContent($i);
+            }
         }
         $this->pushContent($channel);
         $this->spew();
@@ -57,8 +58,11 @@ class RSSWriter091 extends RssWriter
      */
     function node($type, $properties, $uri = false)
     {
-        return new XmlElement($type, '',
-                              $this->elementize($properties));
+        return new XmlElement(
+            $type,
+            '',
+            $this->elementize($properties)
+        );
     }
 
     /**
@@ -72,12 +76,9 @@ class RSSWriter091 extends RssWriter
         print("\"http://my.netscape.com/publish/formats/rss-0.91.dtd\">\n\n");
         $this->printXML();
     }
-
-
 }
 
-class _RecentChanges_RssFormatter091
-extends _RecentChanges_RssFormatter
+class _RecentChanges_RssFormatter091 extends _RecentChanges_RssFormatter
 // This class should probably go at then of RecentChanges.php
 {
     function format($changes)
@@ -87,14 +88,18 @@ extends _RecentChanges_RssFormatter
 
         $rss->channel($this->channel_properties());
 
-        if (($props = $this->image_properties()))
+        if (($props = $this->image_properties())) {
             $rss->image($props);
-        if (($props = $this->textinput_properties()))
+        }
+        if (($props = $this->textinput_properties())) {
             $rss->textinput($props);
+        }
 
         while ($rev = $changes->next()) {
-            $rss->addItem($this->item_properties($rev),
-                          $this->pageURI($rev));
+            $rss->addItem(
+                $this->item_properties($rev),
+                $this->pageURI($rev)
+            );
         }
 
         global $request;
@@ -147,4 +152,3 @@ extends _RecentChanges_RssFormatter
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

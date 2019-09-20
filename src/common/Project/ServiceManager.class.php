@@ -21,7 +21,8 @@ use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Service\ServiceCannotBeUpdatedException;
 use Tuleap\Project\Service\ServiceNotFoundException;
 
-class ServiceManager {
+class ServiceManager
+{
 
     public const CUSTOM_SERVICE_SHORTNAME = '';
 

@@ -20,7 +20,8 @@
 
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 
-class Tracker_REST_FormElement_FieldDateRepresentation extends Tracker_REST_FormElementRepresentation {
+class Tracker_REST_FormElement_FieldDateRepresentation extends Tracker_REST_FormElementRepresentation
+{
 
     /**
      * @var bool

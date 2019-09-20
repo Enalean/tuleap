@@ -21,4 +21,6 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use Tuleap\REST\v1\OrderRepresentationBase;
 
-class OrderRepresentation extends OrderRepresentationBase {}
+class OrderRepresentation extends OrderRepresentationBase
+{
+}

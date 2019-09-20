@@ -73,7 +73,7 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
         if ($end_date < $start_date) {
             $logger->warn(
                 sprintf(
-                'Inconsistent TimePeriod: end date %s is lesser than start date %s.',
+                    'Inconsistent TimePeriod: end date %s is lesser than start date %s.',
                     (new \DateTimeImmutable())->setTimestamp($end_date)->format('Y-m-d'),
                     (new \DateTimeImmutable())->setTimestamp($start_date)->format('Y-m-d')
                 )
@@ -118,7 +118,7 @@ class TimePeriodWithoutWeekEnd implements TimePeriod
     {
         $dates = array();
 
-        foreach($this->getDayOffsets() as $day_offset) {
+        foreach ($this->getDayOffsets() as $day_offset) {
             $day     = strtotime("+$day_offset days", (int) $this->getStartDate());
             $dates[] = date('D d', $day);
         }

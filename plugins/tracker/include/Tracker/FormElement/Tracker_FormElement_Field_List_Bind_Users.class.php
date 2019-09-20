@@ -25,7 +25,8 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\REST\FieldListBindUserValueRepresentation;
 
-class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind {
+class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind
+{
 
     public const TYPE = 'users';
 
@@ -46,7 +47,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     {
         parent::__construct($field, $default_values, $decorators);
 
-        if ( !empty($value_function) ) {
+        if (!empty($value_function)) {
             $this->value_function = explode(',', $value_function);
         }
         $this->userManager = UserManager::instance();
@@ -146,7 +147,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     {
         $uh = UserHelper::instance();
         $values = array();
-        foreach($this->getDao()->searchChangesetValues($changeset_id, $this->field->id, $uh->getDisplayNameSQLQuery(), $uh->getDisplayNameSQLOrder()) as $row) {
+        foreach ($this->getDao()->searchChangesetValues($changeset_id, $this->field->id, $uh->getDisplayNameSQLQuery(), $uh->getDisplayNameSQLOrder()) as $row) {
             $values[] =  new Tracker_FormElement_Field_List_Bind_UsersValue($row['id'], $row['user_name'], $row['full_name']);
         }
         return $values;
@@ -192,7 +193,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
         $rest_values = array();
         if (! empty($ugroups)) {
-            foreach($this->getAllValuesByUGroupList($ugroups) as $value) {
+            foreach ($this->getAllValuesByUGroupList($ugroups) as $value) {
                 $rest_values[] = $this->getRESTBindValue($value);
             }
         }
@@ -207,7 +208,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     protected function getRESTBindingList()
     {
         $ugroups = array();
-        foreach($this->value_function as $ugroup) {
+        foreach ($this->value_function as $ugroup) {
             if ($ugroup) {
                 switch ($ugroup) {
                     case 'group_members':
@@ -523,7 +524,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         $values_array = array();
         if ($v = $changeset->getValue($this->field)) {
             $values = $v->getListValues();
-            foreach($values as $val) {
+            foreach ($values as $val) {
                 $values_array[] = $val->getLabel();
             }
         }
@@ -580,12 +581,12 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         $html = '';
         $html .= '<input type="hidden" name="'. $select_name .'" value="" />';
         $html .= '<select multiple="multiple" name="'. $select_name .'">
-                  <option value="">'.$GLOBALS['Language']->getText('global','none').'</option>';
+                  <option value="">'.$GLOBALS['Language']->getText('global', 'none').'</option>';
         $selected = "";
         if (in_array("artifact_submitters", $value_function)) {
             $selected = 'selected="selected"';
         }
-        $html .= '<option value="artifact_submitters" '.$selected.'>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','submitters').'</option>';
+        $html .= '<option value="artifact_submitters" '.$selected.'>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'submitters').'</option>';
 
         $selected = "";
         $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_MEMBERS']);
@@ -606,8 +607,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         /** @psalm-suppress DeprecatedFunction */
         $ugroup_res = ugroup_db_get_existing_ugroups(100);
         $rows = db_numrows($ugroup_res);
-        for ( $i = 0 ; $i < $rows ; $i++) {
-            $ug = db_result($ugroup_res, $i,'ugroup_id');
+        for ($i = 0; $i < $rows; $i++) {
+            $ug = db_result($ugroup_res, $i, 'ugroup_id');
             $selected = "";
             if (($ug == $GLOBALS['UGROUP_NONE']) ||
                 ($ug == $GLOBALS['UGROUP_ANONYMOUS']) ||
@@ -630,9 +631,9 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             /** @psalm-suppress DeprecatedFunction */
             $ugroup_res = ugroup_db_get_existing_ugroups($group_id);
             $rows = db_numrows($ugroup_res);
-            for ($i = 0 ; $i < $rows ; $i++) {
+            for ($i = 0; $i < $rows; $i++) {
                 $selected = "";
-                $ug  = db_result($ugroup_res, $i,'ugroup_id');
+                $ug  = db_result($ugroup_res, $i, 'ugroup_id');
                 $ugr = "ugroup_". $ug;
                 if (in_array($ugr, $value_function)) {
                     $selected = 'selected="selected"';
@@ -706,7 +707,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function testImport()
     {
-        if(parent::testImport()){
+        if (parent::testImport()) {
             if (static::class == 'Tracker_FormElement_Field_Text') {
                 if (!(isset($this->default_properties['rows']) && isset($this->default_properties['cols']))) {
                     var_dump($this, 'Properties must be "rows" and "cols"');
@@ -761,7 +762,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     private function extractBindValuesByIds(array $values, array $bindvalue_ids)
     {
         $list_of_bindvalues = array();
-        foreach($bindvalue_ids as $i) {
+        foreach ($bindvalue_ids as $i) {
             if (isset($values[$i])) {
                 $list_of_bindvalues[$i] = $values[$i];
             } else {
@@ -825,7 +826,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                 if (stripos($v, '!') !== false) {
                     //we check the string is an email
                     $rule = new Rule_Email();
-                    if(!$rule->isValid($v)) {
+                    if (!$rule->isValid($v)) {
                         //we check the string correspond to a username
                         if (!$this->userManager->getUserByIdentifier(substr($v, 1))) {
                             return false;
@@ -876,7 +877,6 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             $representation = new \Tuleap\User\REST\UserRepresentation();
             $representation->build($value->getUser());
             $rest_array[] = $representation;
-
         }
         return $rest_array;
     }
@@ -981,7 +981,6 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                         $order_by_sql     = $user_helper->getDisplayNameSQLOrder();
                         if ($keyword) {
                             $keyword = $da->quoteLikeValueSurround($keyword);
-
                         }
                         $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
 
@@ -1046,7 +1045,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         $dao     = $this->getDefaultValueDao();
         $rows    = $dao->retrieve($query);
 
-        if(!$rows) {
+        if (!$rows) {
             return [];
         }
 

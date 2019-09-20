@@ -34,8 +34,7 @@ rcs_id('$Id: WikiAdminRemove.php,v 1.30 2004/11/23 15:17:19 rurban Exp $');
 require_once('lib/PageList.php');
 require_once('lib/plugin/WikiAdminSelect.php');
 
-class WikiPlugin_WikiAdminRemove
-extends WikiPlugin_WikiAdminSelect
+class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
 {
     function getName()
     {
@@ -49,16 +48,18 @@ extends WikiPlugin_WikiAdminSelect
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.30 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.30 $"
+        );
     }
 
     function getDefaultArguments()
     {
-        return array_merge
-            (
-             PageList::supportedArgs(),
-             array(
+        return array_merge(
+            PageList::supportedArgs(),
+            array(
                    's'     => false,
                      /*
                       * Show only pages which have been 'deleted' this
@@ -78,35 +79,37 @@ extends WikiPlugin_WikiAdminSelect
                      'max_age' => 31,
                      /* Columns to include in listing */
                      'info'     => 'most',
-                   ));
+            )
+        );
     }
 
-    function collectPages(&$list, &$dbi, $sortby, $limit=0)
+    function collectPages(&$list, &$dbi, $sortby, $limit = 0)
     {
         extract($this->_args);
 
         $now = time();
 
-        $allPages = $dbi->getAllPages('include_empty',$sortby,$limit);
+        $allPages = $dbi->getAllPages('include_empty', $sortby, $limit);
         while ($pagehandle = $allPages->next()) {
             $pagename = $pagehandle->getName();
             $current = $pagehandle->getCurrentRevision();
-            if ($current->getVersion() < 1)
+            if ($current->getVersion() < 1) {
                 continue;       // No versions in database
+            }
 
             $empty = $current->hasDefaultContents();
             if ($empty) {
                 $age = ($now - $current->get('mtime')) / (24 * 3600.0);
                 $checked = $age >= $max_age;
-            }
-            else {
+            } else {
                 $age = 0;
                 $checked = false;
             }
 
             if ($age >= $min_age) {
-                if (empty($list[$pagename]))
+                if (empty($list[$pagename])) {
                     $list[$pagename] = $checked;
+                }
             }
         }
         return $list;
@@ -115,10 +118,11 @@ extends WikiPlugin_WikiAdminSelect
     function removePages(&$request, $pages)
     {
         $ul = HTML::ul();
-        $dbi = $request->getDbh(); $count = 0;
+        $dbi = $request->getDbh();
+        $count = 0;
         foreach ($pages as $name) {
-            $name = str_replace(array('%5B','%5D'),array('[',']'),$name);
-            if (mayAccessPage('remove',$name)) {
+            $name = str_replace(array('%5B','%5D'), array('[',']'), $name);
+            if (mayAccessPage('remove', $name)) {
                 $dbi->deletePage($name);
                 $ul->pushContent(HTML::li(fmt("Removed page '%s' successfully.", $name)));
                 $count++;
@@ -126,20 +130,27 @@ extends WikiPlugin_WikiAdminSelect
                 $ul->pushContent(HTML::li(fmt("Didn't removed page '%s'. Access denied.", $name)));
             }
         }
-        if ($count) $dbi->touch();
-        return HTML($ul,
-                    HTML::p(fmt("%d pages have been permanently removed.",$count)));
+        if ($count) {
+            $dbi->touch();
+        }
+        return HTML(
+            $ul,
+            HTML::p(fmt("%d pages have been permanently removed.", $count))
+        );
     }
 
     function run($dbi, $argstr, &$request, $basepage)
     {
-        if ($request->getArg('action') != 'browse')
-            if ($request->getArg('action') != _("PhpWikiAdministration/Remove"))
+        if ($request->getArg('action') != 'browse') {
+            if ($request->getArg('action') != _("PhpWikiAdministration/Remove")) {
                 return $this->disabled("(action != 'browse')");
+            }
+        }
 
         $args = $this->getArgs($argstr, $request);
-        if (!is_numeric($args['min_age']))
+        if (!is_numeric($args['min_age'])) {
             $args['min_age'] = -1;
+        }
         $this->_args = $args;
         /*if (!empty($args['exclude']))
             $exclude = explodePageList($args['exclude']);
@@ -148,14 +159,15 @@ extends WikiPlugin_WikiAdminSelect
         $this->preSelectS($args, $request);
 
         $p = $request->getArg('p');
-        if (!$p) $p = $this->_list;
+        if (!$p) {
+            $p = $this->_list;
+        }
         $post_args = $request->getArg('admin_remove');
 
         $next_action = 'select';
         $pages = array();
         if ($p && $request->isPost() &&
             !empty($post_args['remove']) && empty($post_args['cancel'])) {
-
             // check individual PagePermissions
             if (!ENABLE_PAGEPERM and !$request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
@@ -169,76 +181,94 @@ extends WikiPlugin_WikiAdminSelect
             if ($post_args['action'] == 'select') {
                 $next_action = 'verify';
                 foreach ($p as $name => $c) {
-                    $name = str_replace(array('%5B','%5D'),array('[',']'),$name);
+                    $name = str_replace(array('%5B','%5D'), array('[',']'), $name);
                     $pages[$name] = $c;
                 }
             }
         } elseif ($p && is_array($p) && !$request->isPost()) { // from WikiAdminSelect
             $next_action = 'verify';
             foreach ($p as $name => $c) {
-                $name = str_replace(array('%5B','%5D'),array('[',']'),$name);
+                $name = str_replace(array('%5B','%5D'), array('[',']'), $name);
                 $pages[$name] = $c;
             }
-            $request->setArg('p',false);
+            $request->setArg('p', false);
         }
         if ($next_action == 'select') {
             // List all pages to select from.
             $pages = $this->collectPages($pages, $dbi, $args['sortby'], $args['limit'], $args['exclude']);
         }
-        $pagelist = new PageList_Selectable($args['info'], $args['exclude'],
-                                            array('types' =>
+        $pagelist = new PageList_Selectable(
+            $args['info'],
+            $args['exclude'],
+            array('types' =>
                                                   array('remove'
-                                                        => new _PageList_Column_remove('remove', _("Remove")))));
+            => new _PageList_Column_remove('remove', _("Remove"))))
+        );
         $pagelist->addPageList($pages);
 
         $header = HTML::p();
         if ($next_action == 'verify') {
             $button_label = _("Yes");
             $header->pushContent(HTML::strong(
-                _("Are you sure you want to permanently remove the selected files?")));
-        }
-        else {
+                _("Are you sure you want to permanently remove the selected files?")
+            ));
+        } else {
             $button_label = _("Remove selected pages");
-            $header->pushContent(_("Permanently remove the selected files:"),HTML::br());
+            $header->pushContent(_("Permanently remove the selected files:"), HTML::br());
             if ($args['min_age'] > 0) {
                 $header->pushContent(
-                    fmt("Also pages which have been deleted at least %s days.",
-                        $args['min_age']));
-            }
-            else {
+                    fmt(
+                        "Also pages which have been deleted at least %s days.",
+                        $args['min_age']
+                    )
+                );
+            } else {
                 $header->pushContent(_("List all pages."));
             }
 
             if ($args['max_age'] > 0) {
                 $header->pushContent(
                     " ",
-                    fmt("(Pages which have been deleted at least %s days are already checked.)",
-                        $args['max_age']));
+                    fmt(
+                        "(Pages which have been deleted at least %s days are already checked.)",
+                        $args['max_age']
+                    )
+                );
             }
         }
 
-        $buttons = HTML::p(Button('submit:admin_remove[remove]', $button_label, 'wikiadmin'),
-                           Button('submit:admin_remove[cancel]', _("Cancel"), 'button'));
+        $buttons = HTML::p(
+            Button('submit:admin_remove[remove]', $button_label, 'wikiadmin'),
+            Button('submit:admin_remove[cancel]', _("Cancel"), 'button')
+        );
 
         // TODO: quick select by regex javascript?
-        return HTML::form(array('action' => $request->getPostURL(),
+        return HTML::form(
+            array('action' => $request->getPostURL(),
                                 'method' => 'post'),
-                          $header,
-                          $pagelist->getContent(),
-                          HiddenInputs($request->getArgs(),
-                                        false,
-                                        array('admin_remove')),
-                          HiddenInputs(array('admin_remove[action]' => $next_action,
+            $header,
+            $pagelist->getContent(),
+            HiddenInputs(
+                $request->getArgs(),
+                false,
+                array('admin_remove')
+            ),
+            HiddenInputs(array('admin_remove[action]' => $next_action,
                                              'require_authority_for_post' => WIKIAUTH_ADMIN)),
-                          $buttons);
+            $buttons
+        );
     }
 }
 
-class _PageList_Column_remove extends _PageList_Column {
+class _PageList_Column_remove extends _PageList_Column
+{
     function _getValue($page_handle, &$revision_handle)
     {
-        return Button(array('action' => 'remove'), _("Remove"),
-                      $page_handle->getName());
+        return Button(
+            array('action' => 'remove'),
+            _("Remove"),
+            $page_handle->getName()
+        );
     }
 };
 
@@ -397,4 +427,3 @@ class _PageList_Column_remove extends _PageList_Column {
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

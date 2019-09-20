@@ -21,7 +21,8 @@
 /**
  *  Data Access Object for Tracker_FormElement_Field
  */
-class Tracker_FormElement_Field_DateDao extends Tracker_FormElement_SpecificPropertiesDao {
+class Tracker_FormElement_Field_DateDao extends Tracker_FormElement_SpecificPropertiesDao
+{
 
     function __construct()
     {

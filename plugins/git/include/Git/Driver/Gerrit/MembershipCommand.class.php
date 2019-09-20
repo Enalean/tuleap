@@ -21,7 +21,8 @@
 /**
  * I'm responsible of managing propagation of user membership changes (add/remove) to gerrit.
  */
-abstract class Git_Driver_Gerrit_MembershipCommand {
+abstract class Git_Driver_Gerrit_MembershipCommand
+{
     /** @var Git_Driver_Gerrit_MembershipManager */
     protected $membership_manager;
 

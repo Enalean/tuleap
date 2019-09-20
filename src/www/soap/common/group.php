@@ -26,133 +26,133 @@ require_once __DIR__ . '/../../include/user.php';
 require_once __DIR__ . '/../../include/utils_soap.php';
 
 if (defined('NUSOAP')) {
-
 // Type definition
     $server->wsdl->addComplexType(
-    'Group',
-    'complexType',
-    'struct',
-    'all',
-    '',
-    array(
+        'Group',
+        'complexType',
+        'struct',
+        'all',
+        '',
+        array(
         'group_id' => array('name'=>'group_id', 'type'=>'xsd:int'),
         'group_name' => array('name'=>'group_name', 'type'=>'xsd:string'),
         'unix_group_name' => array('name'=>'unix_group_name', 'type'=>'xsd:string'),
         'description' => array('name'=>'description', 'type'=>'xsd:string')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfGroup',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(
+        'ArrayOfGroup',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(
         array('ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:Group[]')
-    ),
-    'tns:Group'
+        ),
+        'tns:Group'
     );
 
     $server->wsdl->addComplexType(
-    'UGroupMember',
-    'complexType',
-    'struct',
-    'all',
-    '',
-    array(
+        'UGroupMember',
+        'complexType',
+        'struct',
+        'all',
+        '',
+        array(
         'user_id'   => array('name'=>'user_id',   'type'=>'xsd:int'),
         'user_name' => array('name'=>'user_name', 'type'=>'xsd:string')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfUGroupMember',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(
+        'ArrayOfUGroupMember',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(
         array('ref' => 'SOAP-ENC:arrayType', 'wsdl:arrayType' => 'tns:UGroupMember[]')
-    ),
-    'tns:UGroupMember'
+        ),
+        'tns:UGroupMember'
     );
 
     $GLOBALS['server']->wsdl->addComplexType(
-    'Ugroup',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'Ugroup',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'ugroup_id' => array('name'=>'ugroup_id', 'type' => 'xsd:int'),
         'name' => array('name'=>'name', 'type' => 'xsd:string'),
         'members' => array('name'=>'members', 'type' => 'tns:ArrayOfUGroupMember'),
-    )
+        )
     );
 
     $GLOBALS['server']->wsdl->addComplexType(
-    'ArrayOfUgroup',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Ugroup[]')),
-    'tns:Ugroup'
+        'ArrayOfUgroup',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Ugroup[]')),
+        'tns:Ugroup'
     );
 
 // Function definition
-    $server->register('getMyProjects',               // method name
-    array('sessionKey' => 'xsd:string'               // input parameters
-    ),
-    array('return'   => 'tns:ArrayOfGroup'),           // output parameters
-    $uri,                   // namespace
-    $uri.'#getMyProjects',        // soapaction
-    'rpc',                           // style
-    'encoded',                           // use
-    'Returns the list of Groups that the current user belong to'             // documentation
+    $server->register(
+        'getMyProjects',               // method name
+        array('sessionKey' => 'xsd:string'               // input parameters
+        ),
+        array('return'   => 'tns:ArrayOfGroup'),           // output parameters
+        $uri,                   // namespace
+        $uri.'#getMyProjects',        // soapaction
+        'rpc',                           // style
+        'encoded',                           // use
+        'Returns the list of Groups that the current user belong to'             // documentation
     );
 
     $server->register(
-    'getGroupByName',
-    array('sessionKey'=>'xsd:string',
+        'getGroupByName',
+        array('sessionKey'=>'xsd:string',
         'unix_group_name'=>'xsd:string'),
-    array('return'=>'tns:Group'),
-    $uri,
-    $uri.'#getGroupByName',
-    'rpc',
-    'encoded',
-    'Returns a Group object matching with the given unix_group_name, or a soap fault if the name does not match with a valid project.'
+        array('return'=>'tns:Group'),
+        $uri,
+        $uri.'#getGroupByName',
+        'rpc',
+        'encoded',
+        'Returns a Group object matching with the given unix_group_name, or a soap fault if the name does not match with a valid project.'
     );
 
     $server->register(
-    'getGroupById',
-    array('sessionKey'=>'xsd:string',
+        'getGroupById',
+        array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:Group'),
-    $uri,
-    $uri.'#getGroupById',
-    'rpc',
-    'encoded',
-    'Returns the Group object associated with the given ID, or a soap fault if the ID does not match with a valid project.'
+        ),
+        array('return'=>'tns:Group'),
+        $uri,
+        $uri.'#getGroupById',
+        'rpc',
+        'encoded',
+        'Returns the Group object associated with the given ID, or a soap fault if the ID does not match with a valid project.'
     );
 
 
     $server->register(
-    'getGroupUgroups',
-    array('sessionKey'=>'xsd:string',
+        'getGroupUgroups',
+        array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfUgroup'),
-    $uri,
-    $uri.'#getGroupUgroups',
-    'rpc',
-    'encoded',
-    'Returns the Ugroups associated to the given project:
+        ),
+        array('return'=>'tns:ArrayOfUgroup'),
+        $uri,
+        $uri.'#getGroupUgroups',
+        'rpc',
+        'encoded',
+        'Returns the Ugroups associated to the given project:
      <pre>
        [ 
          ["ugroup_id" => 120,
@@ -167,16 +167,16 @@ if (defined('NUSOAP')) {
     );
 
     $server->register(
-    'getProjectGroupsAndUsers',
-    array('sessionKey' => 'xsd:string',
+        'getProjectGroupsAndUsers',
+        array('sessionKey' => 'xsd:string',
           'group_id'   => 'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfUgroup'),
-    $uri,
-    $uri.'#getProjectGroupsAndUsers',
-    'rpc',
-    'encoded',
-    'Returns all groups defined in project both dynamic and static (aka user group).
+        ),
+        array('return'=>'tns:ArrayOfUgroup'),
+        $uri,
+        $uri.'#getProjectGroupsAndUsers',
+        'rpc',
+        'encoded',
+        'Returns all groups defined in project both dynamic and static (aka user group).
      <pre>
       [
         ["ugroup_id" => 3,
@@ -197,8 +197,6 @@ if (defined('NUSOAP')) {
      </pre>
     '
     );
-
-
 } else {
 
 
@@ -228,7 +226,7 @@ if (defined('NUSOAP')) {
  */
     function getMyProjects($sessionKey)
     {
-        if (session_continue($sessionKey)){
+        if (session_continue($sessionKey)) {
             $gf = new GroupFactory();
             $my_groups = $gf->getMyGroups();
             return groups_to_soap($my_groups);
@@ -258,7 +256,7 @@ if (defined('NUSOAP')) {
                 return $e;
             }
         } else {
-            return new SoapFault(invalid_session_fault,'Invalid Session','getGroupByName');
+            return new SoapFault(invalid_session_fault, 'Invalid Session', 'getGroupByName');
         }
     }
 
@@ -283,7 +281,7 @@ if (defined('NUSOAP')) {
                 return $e;
             }
         } else {
-            return new SoapFault(invalid_session_fault,'Invalid Session','getGroup');
+            return new SoapFault(invalid_session_fault, 'Invalid Session', 'getGroup');
         }
     }
 
@@ -313,13 +311,13 @@ if (defined('NUSOAP')) {
             $project_manager        = ProjectManager::instance();
             $user_manager           = UserManager::instance();
             $soap_request_validator = new SOAPRequestValidatorImplementation(
-            $project_manager,
-            $user_manager,
-            new ProjectAccessChecker(
-                new PermissionsOverrider_PermissionsOverriderManager(),
-                new RestrictedUserCanAccessProjectVerifier(),
-                EventManager::instance()
-            )
+                $project_manager,
+                $user_manager,
+                new ProjectAccessChecker(
+                    new PermissionsOverrider_PermissionsOverriderManager(),
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    EventManager::instance()
+                )
             );
 
             $user    = $soap_request_validator->continueSession($session_key);
@@ -345,8 +343,6 @@ if (defined('NUSOAP')) {
             'getGroupById',
             'getGroupUgroups',
             'getProjectGroupsAndUsers',
-            ));
-
+        )
+    );
 }
-
-?>

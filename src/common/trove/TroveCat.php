@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TroveCat {
+class TroveCat
+{
 
     public const ROOT_ID = 0;
 

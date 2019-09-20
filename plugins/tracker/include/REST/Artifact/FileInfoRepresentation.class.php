@@ -22,7 +22,8 @@ namespace Tuleap\Tracker\REST\Artifact;
 
 use Tuleap\REST\JsonCast;
 
-class FileInfoRepresentation {
+class FileInfoRepresentation
+{
     /**
      * @var int ID of the file
      */

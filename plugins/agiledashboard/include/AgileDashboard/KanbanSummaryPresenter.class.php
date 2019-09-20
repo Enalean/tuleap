@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Presenter_KanbanSummaryPresenter {
+class AgileDashboard_Presenter_KanbanSummaryPresenter
+{
 
     /** @var AgileDashboard_Kanban */
     private $kanban;
@@ -60,12 +61,12 @@ class AgileDashboard_Presenter_KanbanSummaryPresenter {
 
     public function open()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','open');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'open');
     }
 
     public function closed()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','closed');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'closed');
     }
 
     public function cardwall()

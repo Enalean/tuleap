@@ -25,7 +25,8 @@
 
 define('CODENDI_PURIFIER_FORUMML', 20);
 
-class ForumML_HTMLPurifier extends Codendi_HTMLPurifier {
+class ForumML_HTMLPurifier extends Codendi_HTMLPurifier
+{
 
     /**
      * Hold an instance of the class
@@ -75,7 +76,7 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier {
     function getHPConfig($level)
     {
         $config = null;
-        switch($level) {
+        switch ($level) {
             case CODENDI_PURIFIER_FORUMML:
                 $config = $this->getForumMLConfig();
                 break;
@@ -89,20 +90,18 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier {
     /**
     * Perform HTML purification depending of level purification required and create links.
     */
-    function purify($html, $level=0, $groupId=0)
+    function purify($html, $level = 0, $groupId = 0)
     {
         $clean = '';
-        switch($level) {
+        switch ($level) {
             case CODENDI_PURIFIER_FORUMML:
                 $hp = HTMLPurifier::getInstance();
                 $config = $this->getHPConfig($level);
                 $clean = parent::purify($hp->purify($html, $config), CODENDI_PURIFIER_BASIC_NOBR, $groupId);
                 break;
             default:
-                $clean = parent::purify($html,$level,$groupId);
+                $clean = parent::purify($html, $level, $groupId);
         }
         return $clean;
     }
 }
-
-?>

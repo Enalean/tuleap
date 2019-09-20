@@ -31,7 +31,8 @@
  * - a warning if the target project does not have corresponding static ugroups
  * - an info if the target project has corresponding static ugroups
  */
-class Tracker_UgroupPermissionsConsistencyChecker {
+class Tracker_UgroupPermissionsConsistencyChecker
+{
 
     /** @var Tracker_UgroupPermissionsGoldenRetriever */
     private $permissions_retriever;

@@ -23,7 +23,7 @@ if (db_numrows($result)>0) {
     $pm = ProjectManager::instance();
     $group = $pm->getProject($row['group_id']);
 
-    $at = new ArtifactType($group,$atid);
+    $at = new ArtifactType($group, $atid);
     if ($at->userCanView()) {
         $art_field_fact = new ArtifactFieldFactory($at); // Grrr! don't use global >_<
         $a = new Artifact($at, $artifact_id);
@@ -33,20 +33,16 @@ if (db_numrows($result)>0) {
             $result=db_query($sql);
 
             if ($result && db_numrows($result) > 0) {
-
-                if (db_result($result,0,'filesize') == 0) {
-
-                    exit_error($Language->getText('global', 'error'),$Language->getText('tracker_download','file_is_null'));
-
+                if (db_result($result, 0, 'filesize') == 0) {
+                    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_download', 'file_is_null'));
                 } else {
-
                     // Download the patch with the correct filetype
                     $http = Codendi_HTTPPurifier::instance();
                     header('X-Content-Type-Options: nosniff');
-                    header('Content-Type: '.$http->purify(db_result($result,0,'filetype')));
-                    header('Content-Length: '.$http->purify(db_result($result,0,'filesize')));
-                    header('Content-Disposition: attachment; filename="'.$http->purify(db_result($result,0,'filename')).'"');
-                    header('Content-Description: '. $http->purify(db_result($result,0,'description')));
+                    header('Content-Type: '.$http->purify(db_result($result, 0, 'filetype')));
+                    header('Content-Length: '.$http->purify(db_result($result, 0, 'filesize')));
+                    header('Content-Disposition: attachment; filename="'.$http->purify(db_result($result, 0, 'filename')).'"');
+                    header('Content-Description: '. $http->purify(db_result($result, 0, 'description')));
 
                     $attachment_path = ArtifactFile::getPathOnFilesystem($a, $id);
                     if (is_file($attachment_path)) {
@@ -55,18 +51,16 @@ if (db_numrows($result)>0) {
                         }
                         readfile($attachment_path);
                     } else {
-                        echo db_result($result,0,'bin_data');
+                        echo db_result($result, 0, 'bin_data');
                     }
                     exit();
                 }
             }
         } else {
-            exit_error($Language->getText('global', 'error'),$Language->getText('global', 'perm_denied'));
+            exit_error($Language->getText('global', 'error'), $Language->getText('global', 'perm_denied'));
         }
     } else {
-        exit_error($Language->getText('global', 'error'),$Language->getText('global', 'perm_denied'));
+        exit_error($Language->getText('global', 'error'), $Language->getText('global', 'perm_denied'));
     }
 }
-exit_error($Language->getText('global', 'error'),$Language->getText('tracker_download', 'file_not_found', $id));
-
-?>
+exit_error($Language->getText('global', 'error'), $Language->getText('tracker_download', 'file_not_found', $id));

@@ -21,7 +21,8 @@
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
-class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly {
+class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly
+{
 
     public $default_properties = array();
 
@@ -310,7 +311,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
             $is_valid = false;
             $this->setHasErrors(true);
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
-        } else if ($submitted_value !== null &&  ! $this->userCanUpdate()) {
+        } elseif ($submitted_value !== null &&  ! $this->userCanUpdate()) {
             $is_valid = true;
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', array($this->getName())));
         }
@@ -359,7 +360,6 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
 
     public function afterCreate(array $form_element_data, $tracker_is_empty)
     {
-
     }
 
     /**

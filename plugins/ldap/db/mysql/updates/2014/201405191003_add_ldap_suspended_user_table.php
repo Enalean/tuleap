@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201405191003_add_ldap_suspended_user_table extends ForgeUpgrade_Bucket {
+class b201405191003_add_ldap_suspended_user_table extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -72,5 +73,3 @@ EOT;
         }
     }
 }
-
-?>

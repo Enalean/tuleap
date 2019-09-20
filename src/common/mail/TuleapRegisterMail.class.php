@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TuleapRegisterMail {
+class TuleapRegisterMail
+{
 
     /** @var MailPresenterFactory */
     private $mail_presenter_factory;
@@ -46,10 +47,10 @@ class TuleapRegisterMail {
         if ($presenter_role === "user") {
             $subject = $GLOBALS['Language']->getText('include_proj_email', 'account_register', $GLOBALS['sys_name']);
             include($GLOBALS['Language']->getContent('include/new_user_email'));
-        } else if ($presenter_role === "admin") {
+        } elseif ($presenter_role === "admin") {
             $subject = $GLOBALS['Language']->getText('account_register', 'welcome_email_title', $GLOBALS['sys_name']);
             include($GLOBALS['Language']->getContent('account/new_account_email'));
-        } else if ($presenter_role === "admin-notification") {
+        } elseif ($presenter_role === "admin-notification") {
             $redirect_url = $base_url ."/admin/approve_pending_users.php?page=pending";
             $subject = $GLOBALS['Language']->getText('account_register', 'mail_approval_subject', $login);
             $message = $this->createNotificationMessageText($login, $redirect_url);
@@ -153,5 +154,4 @@ class TuleapRegisterMail {
 
         return $cid_logo;
     }
-
 }

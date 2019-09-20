@@ -24,7 +24,8 @@ namespace Tuleap\ProFTPd\Directory;
 /**
  * This class is a representation of an item into a SFTP directory
  */
-class DirectoryItem {
+class DirectoryItem
+{
 
     /** @var String */
     private $name;

@@ -22,7 +22,8 @@ namespace Tuleap\Tracker\REST;
 
 use Tuleap\REST\JsonCast;
 
-class SemanticStatusRepresentation {
+class SemanticStatusRepresentation
+{
     /**
      * @var int
      */

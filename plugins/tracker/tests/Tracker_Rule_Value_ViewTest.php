@@ -9,7 +9,8 @@
 
 require_once('bootstrap.php');
 
-class Tracker_Rule_List_ViewTest extends TuleapTestCase {
+class Tracker_Rule_List_ViewTest extends TuleapTestCase
+{
 
     function testFetch()
     {

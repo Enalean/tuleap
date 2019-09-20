@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class b201504241113_update_private_projects extends ForgeUpgrade_Bucket {
+class b201504241113_update_private_projects extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once __DIR__.'/../../bootstrap.php';
-class Tracker_HierarchyTest extends TuleapTestCase {
+class Tracker_HierarchyTest extends TuleapTestCase
+{
 
     public function testWithEmptyHierarchGetLevelyShouldThrowExceptionForAnyTracker()
     {
@@ -146,7 +147,8 @@ class Tracker_HierarchyTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Hierarchy_GetParentTest extends TuleapTestCase {
+class Tracker_Hierarchy_GetParentTest extends TuleapTestCase
+{
 
     public function itReturnsParent()
     {
@@ -167,7 +169,8 @@ class Tracker_Hierarchy_GetParentTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Hierarchy_SortTest extends TuleapTestCase {
+class Tracker_Hierarchy_SortTest extends TuleapTestCase
+{
 
     public function itReturnsEmptyArrayWhenNoHierarchy()
     {
@@ -217,7 +220,8 @@ class Tracker_Hierarchy_SortTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Hierarchy_GetLastLevelTest extends TuleapTestCase {
+class Tracker_Hierarchy_GetLastLevelTest extends TuleapTestCase
+{
     public function itReturnsAnEpmtyArrayIfNoRelationshipsExist()
     {
         $hierarchy = new Tracker_Hierarchy();
@@ -250,5 +254,3 @@ class Tracker_Hierarchy_GetLastLevelTest extends TuleapTestCase {
         $this->assertEqual($expected, $result);
     }
 }
-
-?>

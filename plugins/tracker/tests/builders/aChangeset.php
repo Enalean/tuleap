@@ -29,7 +29,8 @@ function aChangesetComment()
     return new Test_Tracker_Artifact_Changeset_Comment_Builder();
 }
 
-class Test_Tracker_Changeset_Builder {
+class Test_Tracker_Changeset_Builder
+{
     private $id;
     private $email;
     private $submitted_on;
@@ -90,7 +91,8 @@ class Test_Tracker_Changeset_Builder {
     }
 }
 
-class Test_Tracker_Artifact_Changeset_Comment_Builder {
+class Test_Tracker_Artifact_Changeset_Comment_Builder
+{
     private $id;
     private $changeset;
     private $comment_type_id;

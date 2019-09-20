@@ -22,7 +22,8 @@
 
 require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
-class Rule_FRSFileNameTest extends TuleapTestCase {
+class Rule_FRSFileNameTest extends TuleapTestCase
+{
 
     function testNameValid()
     {
@@ -49,7 +50,7 @@ class Rule_FRSFileNameTest extends TuleapTestCase {
     function testNameContainsInvalidCharacterAnywhere()
     {
         $str = "`!\"$%^,&*();=|{}<>?/";
-        for($i = 0; $i < strlen($str); $i++) {
+        for ($i = 0; $i < strlen($str); $i++) {
             $this->_testStringWithChar($str[$i]);
         }
     }
@@ -74,7 +75,4 @@ class Rule_FRSFileNameTest extends TuleapTestCase {
 
         $this->assertFalse($r->isValid('zata/../toto'));
     }
-
 }
-
-?>

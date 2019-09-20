@@ -18,12 +18,15 @@
  */
 
 
-class SVN_Apache_ModFromPlugin extends SVN_Apache {
+class SVN_Apache_ModFromPlugin extends SVN_Apache
+{
     protected function getProjectAuthentication($row)
-    {}
+    {
+    }
 }
 
-class SVN_Apache_Auth_FactoryTestEventManager extends EventManager {
+class SVN_Apache_Auth_FactoryTestEventManager extends EventManager
+{
     public function processEvent($event_name, $params = [])
     {
         $project_row = array();

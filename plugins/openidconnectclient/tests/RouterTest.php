@@ -22,7 +22,8 @@ require_once __DIR__.'/bootstrap.php';
 
 use Tuleap\OpenIDConnectClient\Router;
 
-class RouterTest extends TuleapTestCase {
+class RouterTest extends TuleapTestCase
+{
 
     public function itOnlyAcceptsHTTPS()
     {

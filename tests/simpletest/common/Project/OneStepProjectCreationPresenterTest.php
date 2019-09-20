@@ -20,7 +20,8 @@
 
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
-class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
+class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase
+{
     protected function aOneStepProjectCreationForm($request_data)
     {
         $project_manager  = mock('ProjectManager');
@@ -105,7 +106,7 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $request_data          = array();
         $single_step = $this->aOneStepProjectCreationForm($request_data);
 
-        $this->assertEqual(Project_OneStepCreation_OneStepCreationPresenter::DEFAULT_TEMPLATE_ID , $single_step->getTemplateId());
+        $this->assertEqual(Project_OneStepCreation_OneStepCreationPresenter::DEFAULT_TEMPLATE_ID, $single_step->getTemplateId());
     }
 
     public function testNewObjectSetsProjectApprobation()
@@ -120,4 +121,3 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $this->assertTrue($single_step->getTosApproval());
     }
 }
-?>

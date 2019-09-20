@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-class Tracker_Artifact_Presenter_FollowUpCommentsPresenter {
+class Tracker_Artifact_Presenter_FollowUpCommentsPresenter
+{
 
     /** @var PFUser */
     protected $user;

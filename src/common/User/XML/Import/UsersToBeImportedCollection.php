@@ -19,7 +19,8 @@
  */
 namespace User\XML\Import;
 
-class UsersToBeImportedCollection {
+class UsersToBeImportedCollection
+{
 
     private $users = array();
 

@@ -34,7 +34,8 @@
  * factories plus the factory method (getFromItem) to get the right concrete
  * object from the item that hold the table.
  */
-abstract class Docman_ApprovalTableFactory {
+abstract class Docman_ApprovalTableFactory
+{
     var $item;
     var $table;
     var $customizable;
@@ -52,7 +53,7 @@ abstract class Docman_ApprovalTableFactory {
     static function getReviewerFactoryFromItem($item)
     {
         $appTableFactory = Docman_ApprovalTableFactoriesFactory::getFromItem($item);
-        if($appTableFactory !== null) {
+        if ($appTableFactory !== null) {
             $table = $appTableFactory->getTable();
             return $appTableFactory->_getReviewerFactory($table, $item);
         }
@@ -122,11 +123,11 @@ abstract class Docman_ApprovalTableFactory {
     {
         $deleted = false;
         $table = $this->getTable();
-        if($table !== null) {
+        if ($table !== null) {
             $reviewerFactory = $this->_getReviewerFactory($table, $this->item);
             $dao = $this->_getDao();
             $deleted = $dao->deleteTable($table->getId());
-            if($deleted) {
+            if ($deleted) {
                 $deleted = $reviewerFactory->deleteTable();
                 $table = null;
                 $this->table = null;
@@ -141,12 +142,14 @@ abstract class Docman_ApprovalTableFactory {
     protected function _updateTable($table)
     {
         $dao = $this->_getDao();
-        return $dao->updateTable($table->getId(),
-                                 $table->getDescription(),
-                                 $table->getStatus(),
-                                 $table->getNotification(),
-                                 $table->getNotificationOccurence(),
-                                 $table->getOwner());
+        return $dao->updateTable(
+            $table->getId(),
+            $table->getDescription(),
+            $table->getStatus(),
+            $table->getNotification(),
+            $table->getNotificationOccurence(),
+            $table->getOwner()
+        );
     }
 
     /**
@@ -159,7 +162,7 @@ abstract class Docman_ApprovalTableFactory {
     function updateTable($status, $notification, $notificationOccurence, $description, $owner)
     {
         $table = $this->getTable();
-        if($table !== null) {
+        if ($table !== null) {
             $table->setStatus($status);
             $table->setNotification($notification);
             $table->setNotificationOccurence($notificationOccurence);
@@ -176,10 +179,10 @@ abstract class Docman_ApprovalTableFactory {
      */
     function getTable($withReviewers = true)
     {
-        if($this->table === null) {
+        if ($this->table === null) {
             $this->table = $this->_getTable();
-            if($this->table !== null) {
-                if($withReviewers)  {
+            if ($this->table !== null) {
+                if ($withReviewers) {
                     $reviewerFactory = $this->_getReviewerFactory($this->table, $this->item);
                     $reviewerFactory->appendReviewerList();
                 }
@@ -187,7 +190,6 @@ abstract class Docman_ApprovalTableFactory {
             }
         }
         return $this->table;
-
     }
 
     /**

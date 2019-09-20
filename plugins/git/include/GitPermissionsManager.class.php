@@ -211,5 +211,4 @@ class GitPermissionsManager
             $permission_name
         );
     }
-
 }

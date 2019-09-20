@@ -56,7 +56,8 @@ use Tuleap\PHPWiki\WikiPage;
  *
  */
 
-class Wiki_PermissionsManager {
+class Wiki_PermissionsManager
+{
 
     public const WIKI_PERMISSION_READ         = 'WIKIPAGE_READ';
     public const SERVICE_WIKI_PERMISSION_READ = 'WIKI_READ';
@@ -98,7 +99,7 @@ class Wiki_PermissionsManager {
     {
         $wiki_service_ugroup_ids = $this->getWikiServicePermissions($project);
 
-        foreach($wiki_service_ugroup_ids as $wiki_service_ugroup_id) {
+        foreach ($wiki_service_ugroup_ids as $wiki_service_ugroup_id) {
             $this->checkServiceOverridesPagePermission($wiki_page_ugroup_ids, $wiki_service_ugroup_id);
         }
 
@@ -111,8 +112,7 @@ class Wiki_PermissionsManager {
 
     private function checkServiceOverridesPagePermission(array &$wiki_page_ugroup_ids, $wiki_service_ugroup_id)
     {
-        foreach($wiki_page_ugroup_ids as $key => $wiki_page_ugroup_id) {
-
+        foreach ($wiki_page_ugroup_ids as $key => $wiki_page_ugroup_id) {
             $comparable_wiki_page_ugroup_id    = $this->getComparableUGroupId($wiki_page_ugroup_id);
             $comparable_wiki_service_ugroup_id = $this->getComparableUGroupId($wiki_service_ugroup_id);
 

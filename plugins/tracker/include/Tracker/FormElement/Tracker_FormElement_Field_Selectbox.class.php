@@ -29,7 +29,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      */
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','selectbox');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'selectbox');
     }
 
     /**
@@ -37,7 +37,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      */
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','selectbox_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'selectbox_description');
     }
 
     /**
@@ -71,7 +71,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
             if (!is_array($submitted_values[$this->id])) {
                 $submitted_values_array[] = $submitted_values[$this->id];
                 $values = $submitted_values_array;
-            }else {
+            } else {
                 $values = $submitted_values[$this->id];
             }
         } else {
@@ -136,7 +136,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         $default_value = $this->getDefaultValue();
         $values = $this->getBind()->getAllValues();
         $html .= "\n\t.addOption('None'.escapeHTML(), '100', ". ($default_value==100?'true':'false') .")";
-        $html .= "\n\t.addOption('".$hp->purify($GLOBALS['Language']->getText('global','unchanged'), CODENDI_PURIFIER_JS_QUOTE)."'.escapeHTML(), '".$hp->purify(BindStaticValueUnchanged::VALUE_ID, CODENDI_PURIFIER_JS_QUOTE)."', false)";
+        $html .= "\n\t.addOption('".$hp->purify($GLOBALS['Language']->getText('global', 'unchanged'), CODENDI_PURIFIER_JS_QUOTE)."'.escapeHTML(), '".$hp->purify(BindStaticValueUnchanged::VALUE_ID, CODENDI_PURIFIER_JS_QUOTE)."', false)";
 
         foreach ($values as $id => $value) {
             $html .= "\n\t.addOption('". $hp->purify($value->getLabel(), CODENDI_PURIFIER_JS_QUOTE) ."'.escapeHTML(), '". (int)$id ."', ". ($id==$default_value?'true':'false') .")";
@@ -170,9 +170,9 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         $purifier = Codendi_HTMLPurifier::instance();
         $check = '';
 
-        if(is_array($transitions) && count($transitions)>0) {
-            foreach($transitions as $transition) {
-                if($field_value_from===$transition->getFieldValueFrom()&&$field_value_to===$transition->getFieldValueTo()) {
+        if (is_array($transitions) && count($transitions)>0) {
+            foreach ($transitions as $transition) {
+                if ($field_value_from===$transition->getFieldValueFrom()&&$field_value_to===$transition->getFieldValueTo()) {
                     $check = 'checked="checked"';
                     break;
                 }
@@ -188,7 +188,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
           echo '</td>';
     }
 
-    function displayTransitionsMatrix($transitions=null)
+    function displayTransitionsMatrix($transitions = null)
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $field=Tracker_FormElementFactory::instance()->getFormElementById($this->id);
@@ -210,7 +210,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
 
            echo "<tr class=\"".util_get_alt_row_color(1)."\">\n";
            echo "<td></td>";
-        foreach($field_values as $field_value_id=>$field_value) {
+        foreach ($field_values as $field_value_id => $field_value) {
             echo '<td class="matrix_cell">'.$purifier->purify($field_value->getLabel())."</td>";
         }
            echo "</tr>";
@@ -220,7 +220,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
            echo "<tr class=\"".util_get_alt_row_color($j)."\">\n";
            echo "<td>(New Artifact)</td>";
            $field_value_from=null;
-        foreach($field_values as $field_value_id_to=>$field_value_to) {
+        foreach ($field_values as $field_value_id_to => $field_value_to) {
             $field_value_from=null;
             $box_value = '_'.$field_value_id_to;
             $this->displayCheckbox($field_value_from, $field_value_to, $transitions, $box_value);
@@ -229,14 +229,14 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
            $j++;
 
            //Display the available transitions
-        foreach($field_values as $field_value_id_from=>$field_value_from) {
+        foreach ($field_values as $field_value_id_from => $field_value_from) {
             echo "<tr class=\"".util_get_alt_row_color($j)."\">\n";
             echo "<td>".$purifier->purify($field_value_from->getLabel())."</td>";
-            foreach($field_values as $field_value_id_to=>$field_value_to) {
+            foreach ($field_values as $field_value_id_to => $field_value_to) {
                 $box_value = $field_value_id_from.'_'.$field_value_id_to;
                 if ($field_value_id_from!=$field_value_id_to) {
                     $this->displayCheckbox($field_value_from, $field_value_to, $transitions, $box_value);
-                }else {
+                } else {
                     echo '<td align="center" class="matrix_cell"><input type="hidden">-&nbsp;</td>';
                 }
             }
@@ -331,5 +331,4 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
 
         return Tracker_FormElement_Field_List_Bind::NONE_VALUE;
     }
-
 }

@@ -28,7 +28,8 @@
  * Static Fields are not real fields, as they don't have a specific value for each artifact.
  * The value can be updated, but is the same for every artifact.
  */
-abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
+abstract class Tracker_FormElement_StaticField extends Tracker_FormElement
+{
 
     /**
      * getLabel - the label of this Tracker_FormElement_Line_Break
@@ -214,7 +215,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
         return true;
     }
 
-    protected abstract function fetchReadOnly();
+    abstract protected function fetchReadOnly();
 
     /**
      * @see Tracker_FormElement::fetchArtifactCopyMode

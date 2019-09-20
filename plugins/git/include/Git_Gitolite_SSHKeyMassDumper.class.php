@@ -86,5 +86,3 @@ class Git_Gitolite_SSHKeyMassDumper implements MassDumper
         return strpos($file_name, Rule_UserName::RESERVED_PREFIX.Git_RemoteServer_Gerrit_ReplicationSSHKey::KEYNAME_PREFIX) === 0;
     }
 }
-
-?>

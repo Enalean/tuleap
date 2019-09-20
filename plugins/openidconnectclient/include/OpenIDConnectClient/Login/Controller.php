@@ -37,7 +37,8 @@ use User_LoginException;
 use UserNotActiveException;
 use UserManager;
 
-class Controller {
+class Controller
+{
     /**
      * @var UserManager
      */
@@ -115,7 +116,7 @@ class Controller {
     private function checkIfUserAlreadyLogged($return_to)
     {
         $user = $this->user_manager->getCurrentUser();
-        if($user->isLoggedIn()) {
+        if ($user->isLoggedIn()) {
             \account_redirect_after_login($return_to);
         }
     }

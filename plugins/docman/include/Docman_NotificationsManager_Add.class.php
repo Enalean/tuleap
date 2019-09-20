@@ -22,7 +22,8 @@
 require_once('Docman_NotificationsManager.class.php');
 require_once('Docman_Path.class.php');
 
-class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
+class Docman_NotificationsManager_Add extends Docman_NotificationsManager
+{
 
     public const MESSAGE_ADDED = 'added'; // X has been added
 
@@ -32,7 +33,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
     }
     function _buildMessage($event, $params, $user)
     {
-        switch($event) {
+        switch ($event) {
             case 'plugin_docman_event_add':
                 $parent = $this->_item_factory->getItemFromDb($params['item']->getParentId());
                 $this->_addMessage(
@@ -53,7 +54,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
     function _getMessageForUser($user, $message_type, $params)
     {
         $msg = '';
-        switch($message_type) {
+        switch ($message_type) {
             case self::MESSAGE_ADDED:
                 $monitoredItem = $this->_getMonitoredItemForUser($user, $params['parent']);
 
@@ -78,7 +79,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
 
     protected function getMessageLink($type, $params)
     {
-        switch($type) {
+        switch ($type) {
             case self::MESSAGE_ADDED:
                 $link = $this->getUrlProvider()->getShowLinkUrl($params['parent']);
                 break;

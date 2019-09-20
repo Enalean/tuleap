@@ -67,7 +67,7 @@ class TimeRetriever
             foreach ($this->dao->getAllTimesAddedInArtifact($artifact->getId()) as $row_time) {
                 $times[] = $this->buildTimeFromRow($row_time);
             }
-        } else if ($this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
+        } elseif ($this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
             foreach ($this->dao->getTimesAddedInArtifactByUser($user->getId(), $artifact->getId()) as $row_time) {
                 $times[] = $this->buildTimeFromRow($row_time);
             }

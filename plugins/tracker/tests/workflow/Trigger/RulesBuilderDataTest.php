@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
+class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase
+{
 
     public function itHasNoData()
     {
@@ -81,8 +82,8 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
 
         $tracker_id = 90;
         $triggering_field = new Tracker_Workflow_Trigger_RulesBuilderTriggeringFields(
-           aTracker()->withId($tracker_id)->withName('Tasks')->build(),
-           new ArrayIterator(array($field))
+            aTracker()->withId($tracker_id)->withName('Tasks')->build(),
+            new ArrayIterator(array($field))
         );
 
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator(), array($triggering_field));
@@ -92,5 +93,3 @@ class Tracker_Workflow_Trigger_RulesBuilderDataTest extends TuleapTestCase {
         $this->assertEqual($trigger['fields'][$field_id], 'whatever');
     }
 }
-
-?>

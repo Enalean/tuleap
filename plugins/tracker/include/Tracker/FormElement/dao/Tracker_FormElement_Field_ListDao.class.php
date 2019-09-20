@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Field_ListDao extends DataAccessObject {
+class Tracker_FormElement_Field_ListDao extends DataAccessObject
+{
     function __construct()
     {
         parent::__construct();
@@ -51,4 +52,3 @@ class Tracker_FormElement_Field_ListDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-?>

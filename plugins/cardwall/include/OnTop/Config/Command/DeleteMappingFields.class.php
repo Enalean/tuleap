@@ -22,7 +22,8 @@
 /**
  * Create a MappingField for a cardwall on top of a tracker
  */
-class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_Config_Command {
+class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_Config_Command
+{
 
     /**
      * @var Cardwall_OnTop_ColumnMappingFieldDao
@@ -92,4 +93,3 @@ class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_C
             && $this->value_dao->delete($this->tracker->getId(), $mapping_tracker->getId());
     }
 }
-?>

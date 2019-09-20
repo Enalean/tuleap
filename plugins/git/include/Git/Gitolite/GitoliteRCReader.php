@@ -20,7 +20,8 @@
 
 use Tuleap\Git\Gitolite\VersionDetector;
 
-class Git_Gitolite_GitoliteRCReader {
+class Git_Gitolite_GitoliteRCReader
+{
 
     public const OLD_GITOLITE_RC_PATH = "/usr/com/gitolite/.gitolite.rc";
     public const NEW_GITOLITE_RC_PATH = "/var/lib/gitolite/.gitolite.rc";
@@ -52,7 +53,6 @@ class Git_Gitolite_GitoliteRCReader {
         }
 
         return $match[1];
-
     }
 
     public function getHostname()

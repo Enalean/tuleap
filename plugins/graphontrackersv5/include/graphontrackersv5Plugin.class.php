@@ -58,15 +58,15 @@ class GraphOnTrackersV5Plugin extends Plugin
 
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
-            $this->addHook('cssfile',                           'cssFile',                           false);
+            $this->addHook('cssfile', 'cssFile', false);
 
             //Tracker report renderer
-            $this->addHook('tracker_report_renderer_instance',  'tracker_report_renderer_instance',  false);
+            $this->addHook('tracker_report_renderer_instance', 'tracker_report_renderer_instance', false);
             $this->addHook(ImportRendererFromXmlEvent::NAME);
-            $this->addHook('tracker_report_add_renderer' ,      'tracker_report_add_renderer',       false);
-            $this->addHook('tracker_report_create_renderer' ,      'tracker_report_create_renderer',       false);
-            $this->addHook('tracker_report_renderer_types' ,    'tracker_report_renderer_types',     false);
-            $this->addHook('trackers_get_renderers' ,    'trackers_get_renderers',     false);
+            $this->addHook('tracker_report_add_renderer', 'tracker_report_add_renderer', false);
+            $this->addHook('tracker_report_create_renderer', 'tracker_report_create_renderer', false);
+            $this->addHook('tracker_report_renderer_types', 'tracker_report_renderer_types', false);
+            $this->addHook('trackers_get_renderers', 'trackers_get_renderers', false);
 
             //Widgets
             $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
@@ -178,7 +178,7 @@ class GraphOnTrackersV5Plugin extends Plugin
      */
     public function tracker_report_renderer_types($params)
     {
-        $params['types'][self::RENDERER_TYPE] = $GLOBALS['Language']->getText('plugin_tracker_report','charts');
+        $params['types'][self::RENDERER_TYPE] = $GLOBALS['Language']->getText('plugin_tracker_report', 'charts');
     }
 
      /**
@@ -191,13 +191,13 @@ class GraphOnTrackersV5Plugin extends Plugin
         if ($params['renderer_type'] == 'plugin_graphontrackersv5') {
             require_once('GraphOnTrackersV5_Renderer.class.php');
             $params['renderers'][$params['renderer_key']] = new GraphOnTrackersV5_Renderer(
-                    $params['renderer_key'],
-                    $params['report'],
-                    $params['name'],
-                    $params['description'],
-                    $params['rank'],
-                    $this,
-                    UserManager::instance()
+                $params['renderer_key'],
+                $params['report'],
+                $params['name'],
+                $params['description'],
+                $params['rank'],
+                $this,
+                UserManager::instance()
             );
             $params['renderers'][$params['renderer_key']]->initiateSession();
         }
@@ -260,7 +260,7 @@ class GraphOnTrackersV5Plugin extends Plugin
     {
         $request = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
-        if(!isset($this->allowedForProject[$group_id])) {
+        if (!isset($this->allowedForProject[$group_id])) {
             $pM = PluginManager::instance();
             $this->allowedForProject[$group_id] = $pM->isPluginAllowedForProject($this, $group_id);
         }
@@ -294,17 +294,17 @@ class GraphOnTrackersV5Plugin extends Plugin
         $params['factories']['pie'] = array(
             'chart_type'      => 'pie',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Pie',
-            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','pie'),
+            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'pie'),
         );
         $params['factories']['bar'] = array(
             'chart_type'      => 'bar',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Bar',
-            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','bar'),
+            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'bar'),
         );
         $params['factories']['gantt'] = array(
             'chart_type'      => 'gantt',
             'chart_classname' => 'GraphOnTrackersV5_Chart_Gantt',
-            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','gantt'),
+            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'gantt'),
         );
         $params['factories']['burndown'] = array(
             //The type of the chart
@@ -320,7 +320,7 @@ class GraphOnTrackersV5Plugin extends Plugin
             //The classname of the chart. The class must be already declared.
             'chart_classname' => 'GraphOnTrackersV5_Chart_CumulativeFlow',
             //The title for the button 'Add a chart'
-            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','cumulative_flow'),
+            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report', 'cumulative_flow'),
         );
     }
 

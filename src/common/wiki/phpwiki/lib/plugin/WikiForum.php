@@ -46,8 +46,7 @@ rcs_id('$Id: WikiForum.php,v 1.3 2004/06/14 11:31:39 rurban Exp $');
 
 include_once("lib/plugin/WikiBlog.php");
 
-class WikiPlugin_WikiForum
-extends WikiPlugin_WikiBlog
+class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
 {
     function getName()
     {
@@ -61,8 +60,11 @@ extends WikiPlugin_WikiBlog
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.3 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.3 $"
+        );
     }
 
     function getDefaultArguments()
@@ -78,8 +80,9 @@ extends WikiPlugin_WikiBlog
     function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
-        if (!$args['pagename'])
+        if (!$args['pagename']) {
             return $this->error(_("No pagename specified"));
+        }
 
         // Get our form args.
         $forum = $request->getArg('forum');
@@ -93,22 +96,23 @@ extends WikiPlugin_WikiBlog
         // for new comments
         $html = HTML();
         foreach (explode(',', $args['mode']) as $show) {
-            if (!empty($seen[$show]))
+            if (!empty($seen[$show])) {
                 continue;
+            }
             $seen[$show] = 1;
 
             switch ($show) {
                 case 'summary': // main page: list of all titles
                     $html->pushContent($this->showTopics($request, $args));
-                break;
+                    break;
                 case 'show':    // list of all contents
                     $html->pushContent($this->showAll($request, $args, 'wikiforum'));
-                break;
+                    break;
                 case 'add':     // add to or create a new thread
                     $html->pushContent($this->showForm($request, $args, 'forumadd'));
-                break;
+                    break;
                 default:
-                return $this->error(sprintf("Bad mode ('%s')", $show));
+                    return $this->error(sprintf("Bad mode ('%s')", $show));
             }
         }
         // FIXME: on empty showTopics() and mode!=add and mode!=summary provide a showForm() here.
@@ -124,18 +128,22 @@ extends WikiPlugin_WikiBlog
         $dbi = $request->getDbh();
         $topics = $this->findBlogs($dbi, $args['pagename'], 'wikiforum');
         $html = HTML::table(array('border'=>0));
-        $row = HTML::tr(HTML::th('title'),
-                        HTML::th('last post'),
-                        HTML::th('author'));
+        $row = HTML::tr(
+            HTML::th('title'),
+            HTML::th('last post'),
+            HTML::th('author')
+        );
         $html->pushContent($row);
         foreach ($topics as $rev) {
             //TODO: get numposts, number of replies
             $meta = $rev->get('wikiforum');
             // format as list, not as wikiforum content
-            $page = new WikiPageName($rev,$args['pagename']);
-            $row = HTML::tr(HTML::td(WikiLink($page,'if_known',$rev->get('summary'))),
-                            HTML::td($WikiTheme->formatDateTime($meta['ctime'])),
-                            HTML::td(WikiLink($meta['creator'],'if_known')));
+            $page = new WikiPageName($rev, $args['pagename']);
+            $row = HTML::tr(
+                HTML::td(WikiLink($page, 'if_known', $rev->get('summary'))),
+                HTML::td($WikiTheme->formatDateTime($meta['ctime'])),
+                HTML::td(WikiLink($meta['creator'], 'if_known'))
+            );
             $html->pushContent($row);
         }
         return $html;
@@ -167,4 +175,3 @@ extends WikiPlugin_WikiBlog
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

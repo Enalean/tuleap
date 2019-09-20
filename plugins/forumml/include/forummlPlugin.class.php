@@ -28,15 +28,16 @@ use Tuleap\SystemEvent\RootDailyStartEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class ForumMLPlugin extends Plugin {
+class ForumMLPlugin extends Plugin
+{
     public const SEARCH_TYPE = 'mail';
 
     public function __construct($id)
     {
         parent::__construct($id);
 
-        $this->addHook('browse_archives','forumml_browse_archives');
-        $this->addHook('cssfile','cssFile');
+        $this->addHook('browse_archives', 'forumml_browse_archives');
+        $this->addHook('cssfile', 'cssFile');
         $this->addHook('javascript_file', 'jsFile');
         $this->addHook(RootDailyStartEvent::NAME);
 
@@ -73,7 +74,7 @@ class ForumMLPlugin extends Plugin {
     {
         $request  = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
-        if(!isset($this->allowedForProject[$group_id])) {
+        if (!isset($this->allowedForProject[$group_id])) {
             $pM = PluginManager::instance();
             $this->allowedForProject[$group_id] = $pM->isPluginAllowedForProject($this, $group_id);
         }
@@ -84,10 +85,10 @@ class ForumMLPlugin extends Plugin {
     {
         $request = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
-        if($group_id && $request->exist('list')) {
+        if ($group_id && $request->exist('list')) {
             $params['search_entries'][] = array(
                 'value' => 'mail',
-                'label' => $GLOBALS['Language']->getText('plugin_forumml','this_list'),
+                'label' => $GLOBALS['Language']->getText('plugin_forumml', 'this_list'),
                 'selected' => true,
             );
             $params['hidden_fields'][] = array(
@@ -146,7 +147,7 @@ class ForumMLPlugin extends Plugin {
 
             $params['project_presenters'][] = new Search_SearchTypePresenter(
                 self::SEARCH_TYPE,
-                $GLOBALS['Language']->getText('plugin_forumml','search_list'),
+                $GLOBALS['Language']->getText('plugin_forumml', 'search_list'),
                 $lists
             );
         }

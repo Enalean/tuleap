@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ApprovalTableLink extends Docman_ApprovalTableVersionned {
+class Docman_ApprovalTableLink extends Docman_ApprovalTableVersionned
+{
     private $item_id;
     private $versionId = null;
 
@@ -43,10 +44,10 @@ class Docman_ApprovalTableLink extends Docman_ApprovalTableVersionned {
     function initFromRow($row)
     {
         parent::initFromRow($row);
-        if(isset($row['link_version_id'])) {
+        if (isset($row['link_version_id'])) {
             $this->versionId = $row['link_version_id'];
         }
-        if(isset($row['version_number'])) {
+        if (isset($row['version_number'])) {
             $this->versionNumber = $row['version_number'];
         }
         if (isset($row['link_item_id'])) {

@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_Item {
+class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_Item
+{
 
     public const NO_CONTEXT = '-1';
 
@@ -213,7 +214,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         if (! is_null($this->context) && $this->context !== self::NO_CONTEXT) {
             $html .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_in') . ' ';
 
-            if ($this->context === '0' ) {
+            if ($this->context === '0') {
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_backlog');
             } else {
                 $artifact = $this->tracker_artifact_factory->getArtifactById($this->context);

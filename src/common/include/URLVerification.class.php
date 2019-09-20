@@ -37,7 +37,8 @@ use Tuleap\Request\RequestInstrumentation;
  * Check the URL validity (protocol, host name, query) regarding server constraints
  * (anonymous, user status, project privacy, ...) and manage redirection when needed
  */
-class URLVerification {
+class URLVerification
+{
 
     protected $urlChunks = null;
 
@@ -250,8 +251,7 @@ class URLVerification {
     {
         $user = $this->getCurrentUser();
 
-        if (
-            $this->getForgeAccess()->doesPlatformRequireLogin() &&
+        if ($this->getForgeAccess()->doesPlatformRequireLogin() &&
             $user->isAnonymous() &&
             ! $this->isScriptAllowedForAnonymous($server)
         ) {
@@ -409,7 +409,6 @@ class URLVerification {
                 }
 
                 return true;
-
             } catch (Project_AccessRestrictedException $exception) {
                 if (! isset($project)) {
                     $project = null;
@@ -581,5 +580,4 @@ class URLVerification {
             )
         );
     }
-
 }

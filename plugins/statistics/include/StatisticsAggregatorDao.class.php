@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class StatisticsAggregatorDao extends DataAccessObject {
+class StatisticsAggregatorDao extends DataAccessObject
+{
 
     public function addStatistic($project_id, $statistic_name)
     {

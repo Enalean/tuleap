@@ -55,15 +55,17 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
     {
         $html = '';
 
-        $mdCmp = new Docman_MetadataComparator($this->srcGo->getGroupId(),
-                                               $this->dstGo->getGroupId(),
-                                               $this->_controller->getThemePath());
+        $mdCmp = new Docman_MetadataComparator(
+            $this->srcGo->getGroupId(),
+            $this->dstGo->getGroupId(),
+            $this->_controller->getThemePath()
+        );
         $cmpTable = $mdCmp->getMetadataCompareTable($sthToImport);
-        if($sthToImport) {
+        if ($sthToImport) {
             $html .= '<h2>'. $GLOBALS['Language']->getText('plugin_docman', 'details_paste_mddiff_title') .'</h2>';
             $dPm = Docman_PermissionsManager::instance($this->dstGo->getGroupId());
             $current_user = UserManager::instance()->getCurrentUser();
-            if($dPm->userCanAdmin($current_user)) {
+            if ($dPm->userCanAdmin($current_user)) {
                 $mdDiffers = 'admin';
                 $html .= $cmpTable;
             } else {
@@ -107,7 +109,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         $content .= $itemRanking->getDropDownWidget($this->item);
         $content .= '</p>';
 
-        if($this->mode == 'copy' && $mdDiffers == 'admin') {
+        if ($this->mode == 'copy' && $mdDiffers == 'admin') {
             $content .= '<p>';
             $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_paste_importmd', array($this->srcGo->getPublicName()));
             $content .= ' ';
@@ -116,7 +118,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         }
 
         $buttonTxt = $GLOBALS['Language']->getText('plugin_docman', 'details_paste_button_paste');
-        if($this->mode == 'copy' && $mdDiffers == 'user') {
+        if ($this->mode == 'copy' && $mdDiffers == 'user') {
             $buttonTxt = $GLOBALS['Language']->getText('plugin_docman', 'details_paste_button_pasteanyway');
         }
         $content .= '<input type="submit" name="submit" value="'.$buttonTxt.'" />';

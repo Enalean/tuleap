@@ -20,7 +20,8 @@
 
 namespace Tuleap\Template\Plugin;
 
-class PluginInfo extends \PluginInfo {
+class PluginInfo extends \PluginInfo
+{
 
     public function __construct(\Plugin $plugin)
     {

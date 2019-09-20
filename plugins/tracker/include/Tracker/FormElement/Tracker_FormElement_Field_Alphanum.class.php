@@ -23,7 +23,8 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 /**
  * Base class for alphanumeric fields (Int, Float, String, Text)
  */
-abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Field {
+abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Field
+{
 
     protected function buildMatchExpression($field_name, $criteria_value)
     {
@@ -31,7 +32,6 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
         $matches = array();
         // If it is sourrounded by /.../ then assume a regexp
         if (preg_match('#(!?)/(.*)/#', $criteria_value, $matches)) {
-
             //if it has a ! at the beginning then assume negation
             // !/toto/ => will search all content that doesn't contain the word 'toto'
             $not = '';

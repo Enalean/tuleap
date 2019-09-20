@@ -20,40 +20,34 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_SqlFilterFactory {
+class Docman_SqlFilterFactory
+{
     function __construct()
     {
-
     }
 
     function getFromFilter($filter)
     {
         $f = null;
 
-        if(is_a($filter, 'Docman_FilterDateAdvanced')) {
+        if (is_a($filter, 'Docman_FilterDateAdvanced')) {
             $f = new Docman_SqlFilterDateAdvanced($filter);
-        }
-        elseif(is_a($filter, 'Docman_FilterDate')) {
+        } elseif (is_a($filter, 'Docman_FilterDate')) {
             $f = new Docman_SqlFilterDate($filter);
-        }
-        elseif(is_a($filter, 'Docman_FilterGlobalText')) {
+        } elseif (is_a($filter, 'Docman_FilterGlobalText')) {
             $f = new Docman_SqlFilterGlobalText($filter);
-        }
-        elseif(is_a($filter, 'Docman_FilterOwner')) {
+        } elseif (is_a($filter, 'Docman_FilterOwner')) {
             $f = new Docman_SqlFilterOwner($filter);
-        }
-        elseif(is_a($filter, 'Docman_FilterText')) {
+        } elseif (is_a($filter, 'Docman_FilterText')) {
             $f = new Docman_SqlFilterText($filter);
-        }
-        elseif(is_a($filter, 'Docman_FilterListAdvanced')) {
-            if(!in_array(0, $filter->getValue())) {
+        } elseif (is_a($filter, 'Docman_FilterListAdvanced')) {
+            if (!in_array(0, $filter->getValue())) {
                 $f = new Docman_SqlFilterListAdvanced($filter);
             }
-        }
-        elseif(is_a($filter, 'Docman_FilterList')) {
+        } elseif (is_a($filter, 'Docman_FilterList')) {
             // A value equals to 0 means that we selected "All" in the list
             // so we don't want to use this filter
-            if($filter->getValue() != 0) {
+            if ($filter->getValue() != 0) {
                 $f = new Docman_SqlFilter($filter);
             }
         }
@@ -61,8 +55,8 @@ class Docman_SqlFilterFactory {
     }
 }
 
-class Docman_SqlFilter
-extends Docman_MetadataSqlQueryChunk {
+class Docman_SqlFilter extends Docman_MetadataSqlQueryChunk
+{
 
     /**
      * The search type is the full text one
@@ -83,8 +77,8 @@ extends Docman_MetadataSqlQueryChunk {
     {
         $tables = array();
 
-        if($this->isRealMetadata) {
-            if($this->filter->getValue() !== null &&
+        if ($this->isRealMetadata) {
+            if ($this->filter->getValue() !== null &&
                $this->filter->getValue() != '') {
                 $tables[] = $this->_getMdvJoin();
             }
@@ -97,7 +91,7 @@ extends Docman_MetadataSqlQueryChunk {
     {
         $stmt = array();
 
-        if($this->filter->getValue() !== null &&
+        if ($this->filter->getValue() !== null &&
            $this->filter->getValue() != '') {
             $data_access = CodendiDataAccess::instance();
             $stmt[] = $this->field.' = '.$data_access->quoteSmart($this->filter->getValue());
@@ -135,12 +129,12 @@ extends Docman_MetadataSqlQueryChunk {
     function getSearchType($qv)
     {
         $res = array();
-        if (preg_match ('/^\*(.+)$/', $qv)) {
+        if (preg_match('/^\*(.+)$/', $qv)) {
             $matches = array();
             $data_access = CodendiDataAccess::instance();
-            if (preg_match ('/^\*(.+)\*$/', $qv, $matches)) {
+            if (preg_match('/^\*(.+)\*$/', $qv, $matches)) {
                 $pattern = $data_access->quoteLikeValueSurround($matches[1]);
-            } else  {
+            } else {
                 $qv_without_star = substr($qv, 1);
                 $pattern         = $data_access->quoteLikeValuePrefix($qv_without_star);
             }
@@ -153,8 +147,8 @@ extends Docman_MetadataSqlQueryChunk {
     }
 }
 
-class Docman_SqlFilterDate
-extends Docman_SqlFilter {
+class Docman_SqlFilterDate extends Docman_SqlFilter
+{
 
     function __construct($filter)
     {
@@ -166,7 +160,7 @@ extends Docman_SqlFilter {
     {
         $stmt = '';
         list($time, $ok) = util_date_to_unixtime($value);
-        if($ok) {
+        if ($ok) {
             list($year,$month,$day) = util_date_explode($value);
             $time_before = mktime(23, 59, 59, $month, $day-1, $year);
             $stmt = $this->field." <= ".$time_before;
@@ -179,7 +173,7 @@ extends Docman_SqlFilter {
     {
         $stmt = '';
         list($time, $ok) = util_date_to_unixtime($value);
-        if($ok) {
+        if ($ok) {
             list($year,$month,$day) = util_date_explode($value);
             $time_end = mktime(23, 59, 59, $month, $day, $year);
             $stmt = $this->field." >= ".$time." AND ".$this->field." <= ".$time_end;
@@ -192,7 +186,7 @@ extends Docman_SqlFilter {
     {
         $stmt = '';
         list($time, $ok) = util_date_to_unixtime($value);
-        if($ok) {
+        if ($ok) {
             list($year,$month,$day) = util_date_explode($value);
             $time_after = mktime(0, 0, 0, $month, $day+1, $year);
             $stmt = $this->field." >= ".$time_after;
@@ -204,34 +198,34 @@ extends Docman_SqlFilter {
     {
         $stmt = array();
 
-        switch($this->filter->getOperator()) {
+        switch ($this->filter->getOperator()) {
             case '-1': // '<'
                 $s = $this->_getEndStatement($this->filter->getValue());
-                if($s != '') {
+                if ($s != '') {
                     $stmt[] = $s;
                 }
-            break;
+                break;
             case '0': // '=' means that day between 00:00 and 23:59
                 $s = $this->_getEqualStatement($this->filter->getValue());
-                if($s != '') {
+                if ($s != '') {
                     $stmt[] = $s;
                 }
-            break;
+                break;
             case '1': // '>'
             default:
                 $s = $this->_getStartStatement($this->filter->getValue());
-                if($s != '') {
+                if ($s != '') {
                     $stmt[] = $s;
                 }
-            break;
+                break;
         }
 
         return $stmt;
     }
 }
 
-class Docman_SqlFilterDateAdvanced
-extends Docman_SqlFilterDate {
+class Docman_SqlFilterDateAdvanced extends Docman_SqlFilterDate
+{
 
     function __construct($filter)
     {
@@ -244,26 +238,26 @@ extends Docman_SqlFilterDate {
 
         $startValue = $this->filter->getValueStart();
         $endValue   = $this->filter->getValueEnd();
-        if($startValue != '') {
-            if($endValue == $startValue) {
+        if ($startValue != '') {
+            if ($endValue == $startValue) {
                 // Equal
                 $s = $this->_getEqualStatement($startValue);
-                if($s != '') {
+                if ($s != '') {
                     $stmt[] = $s;
                 }
             } else {
                 // Lower end
                 $s = $this->_getStartStatement($startValue);
-                if($s != '') {
+                if ($s != '') {
                     $stmt[] = $s;
                 }
             }
         }
-        if($endValue != '') {
-            if($endValue != $startValue) {
+        if ($endValue != '') {
+            if ($endValue != $startValue) {
                 // Higher end
                 $s = $this->_getEndStatement($endValue);
-                if($s != '') {
+                if ($s != '') {
                     $stmt[] = $s;
                 }
             }
@@ -273,8 +267,8 @@ extends Docman_SqlFilterDate {
     }
 }
 
-class Docman_SqlFilterOwner
-extends Docman_SqlFilter {
+class Docman_SqlFilterOwner extends Docman_SqlFilter
+{
 
     function __construct($filter)
     {
@@ -285,7 +279,7 @@ extends Docman_SqlFilter {
     function getFrom()
     {
         $tables = array();
-        if($this->filter->getValue() !== null
+        if ($this->filter->getValue() !== null
            && $this->filter->getValue() != '') {
             $tables[] = 'user ON (i.user_id = user.user_id)';
         }
@@ -293,8 +287,8 @@ extends Docman_SqlFilter {
     }
 }
 
-class Docman_SqlFilterText
-extends Docman_SqlFilter {
+class Docman_SqlFilterText extends Docman_SqlFilter
+{
 
     function __construct($filter)
     {
@@ -304,7 +298,7 @@ extends Docman_SqlFilter {
     function _getSpecificSearchChunk()
     {
         $stmt = array();
-        if($this->filter->getValue() !== null &&
+        if ($this->filter->getValue() !== null &&
            $this->filter->getValue() != '') {
             $qv = $this->filter->getValue();
             $searchType = $this->getSearchType($qv);
@@ -318,8 +312,8 @@ extends Docman_SqlFilter {
     }
 }
 
-class Docman_SqlFilterGlobalText
-extends Docman_SqlFilterText {
+class Docman_SqlFilterGlobalText extends Docman_SqlFilterText
+{
 
     function __construct($filter)
     {
@@ -329,9 +323,9 @@ extends Docman_SqlFilterText {
     function getFrom()
     {
         $tables = array();
-        if($this->filter->getValue() !== null &&
+        if ($this->filter->getValue() !== null &&
            $this->filter->getValue() != '') {
-            foreach($this->filter->dynTextFields as $f) {
+            foreach ($this->filter->dynTextFields as $f) {
                 $tables[] = $this->_getMdvJoin($f);
             }
         }
@@ -341,7 +335,7 @@ extends Docman_SqlFilterText {
     function _getSpecificSearchChunk()
     {
         $stmt = array();
-        if($this->filter->getValue() !== null &&
+        if ($this->filter->getValue() !== null &&
            $this->filter->getValue() != '') {
             $qv = $this->filter->getValue();
             $searchType = $this->getSearchType($qv);
@@ -349,7 +343,7 @@ extends Docman_SqlFilterText {
                 $matches[] = ' i.title LIKE '.$searchType['pattern'].'  OR i.description LIKE '.$searchType['pattern'];
                 $matches[] = ' v.label LIKE '.$searchType['pattern'].'  OR  v.changelog LIKE '.$searchType['pattern'].'  OR v.filename LIKE '.$searchType['pattern'];
 
-                foreach($this->filter->dynTextFields as $f) {
+                foreach ($this->filter->dynTextFields as $f) {
                     $matches[] = ' mdv_'.$f.'.valueText LIKE '.$searchType['pattern'].'  OR  mdv_'.$f.'.valueString LIKE '.$searchType['pattern'];
                 }
 
@@ -358,7 +352,7 @@ extends Docman_SqlFilterText {
                 $matches[] = "MATCH (i.title, i.description) AGAINST ('".db_es($qv)."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
                 $matches[] = "MATCH (v.label, v.changelog, v.filename) AGAINST ('".db_es($qv)."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
 
-                foreach($this->filter->dynTextFields as $f) {
+                foreach ($this->filter->dynTextFields as $f) {
                     $matches[] = "MATCH (mdv_".$f.".valueText, mdv_".$f.".valueString) AGAINST ('".db_es($qv)."' ".Docman_SqlFilter::BOOLEAN_SEARCH_TYPE.")";
                 }
 
@@ -367,11 +361,10 @@ extends Docman_SqlFilterText {
         }
         return $stmt;
     }
-
 }
 
-class Docman_SqlFilterListAdvanced
-extends Docman_SqlFilter {
+class Docman_SqlFilterListAdvanced extends Docman_SqlFilter
+{
 
     function __construct($filter)
     {
@@ -383,7 +376,7 @@ extends Docman_SqlFilter {
         $stmt = array();
 
         $v = $this->filter->getValue();
-        if($v !== null
+        if ($v !== null
            && (count($v) > 0
                || (count($v) == 1 && $v[0] != '')
                )
@@ -394,5 +387,3 @@ extends Docman_SqlFilter {
         return $stmt;
     }
 }
-
-?>

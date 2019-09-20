@@ -24,7 +24,8 @@
  *   that means that at least one child (the one modified) satify the pre condition
  *   therefore, the rule can be applied.
  */
-class Tracker_Workflow_Trigger_RulesProcessor_AtLeastOneStrategy implements Tracker_Workflow_Trigger_RulesProcessor_Strategy {
+class Tracker_Workflow_Trigger_RulesProcessor_AtLeastOneStrategy implements Tracker_Workflow_Trigger_RulesProcessor_Strategy
+{
 
     /**
      * @see Tracker_Workflow_Trigger_RulesProcessor_Strategy::allPrecondtionsAreMet
@@ -35,5 +36,3 @@ class Tracker_Workflow_Trigger_RulesProcessor_AtLeastOneStrategy implements Trac
         return true;
     }
 }
-
-?>

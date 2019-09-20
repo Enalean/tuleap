@@ -22,7 +22,8 @@
  * This interface is responsible for the display preferences
  * of cards.
  */
-interface Tracker_CardDisplayPreferences {
+interface Tracker_CardDisplayPreferences
+{
 
     /**
      * @return bool True if users' avatars should be
@@ -30,4 +31,3 @@ interface Tracker_CardDisplayPreferences {
      */
     public function shouldDisplayAvatars();
 }
-?>

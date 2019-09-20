@@ -84,4 +84,3 @@ abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction
         }
     }
 }
-?>

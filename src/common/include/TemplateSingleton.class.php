@@ -47,7 +47,7 @@ class TemplateSingleton
 
     function getLabel($proj_type)
     {
-        return $GLOBALS['Language']->getText('include_common_template',$this->data_array[$proj_type]);
+        return $GLOBALS['Language']->getText('include_common_template', $this->data_array[$proj_type]);
     }
 
     function update()
@@ -56,7 +56,7 @@ class TemplateSingleton
         $this->data_array=array();
         $rows=db_numrows($db_res);
         for ($i=0; $i<$rows; $i++) {
-            $this->data_array[db_result($db_res,$i,'type_id')] = db_result($db_res,$i,'name');
+            $this->data_array[db_result($db_res, $i, 'type_id')] = db_result($db_res, $i, 'name');
         }
     }
 
@@ -75,13 +75,13 @@ class TemplateSingleton
         return ($id == self::TEST_PROJECT);
     }
 
-    function showTypeBox($name='group_type',$checked_val='xzxz')
+    function showTypeBox($name = 'group_type', $checked_val = 'xzxz')
     {
         $localizedTypes = array();
         foreach (array_keys($this->data_array) as $type_id) {
             $localizedTypes[] = $this->getLabel($type_id);
         }
-        return html_build_select_box_from_arrays (array_keys($this->data_array),$localizedTypes,$name,$checked_val,false);
+        return html_build_select_box_from_arrays(array_keys($this->data_array), $localizedTypes, $name, $checked_val, false);
     }
 
     public function getLocalizedTypes()

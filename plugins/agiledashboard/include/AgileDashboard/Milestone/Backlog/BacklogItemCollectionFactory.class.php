@@ -356,7 +356,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
 
     private function setParentItemName(Planning_Milestone $milestone, $name)
     {
-        if (! $milestone->getArtifactId() ) {
+        if (! $milestone->getArtifactId()) {
             return;
         }
 
@@ -493,7 +493,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
 
     protected function setInitialEffort(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item, $semantics_per_artifact)
     {
-        if ( isset($semantics_per_artifact[AgileDashBoard_Semantic_InitialEffort::NAME]) ) {
+        if (isset($semantics_per_artifact[AgileDashBoard_Semantic_InitialEffort::NAME])) {
             $backlog_item->setInitialEffort($semantics_per_artifact[AgileDashBoard_Semantic_InitialEffort::NAME]);
         }
     }

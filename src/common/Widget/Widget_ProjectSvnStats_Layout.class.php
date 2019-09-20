@@ -21,7 +21,8 @@
  * to specify 2 (or more columns) to avoid that the legend box become too large and hide the image.
  * Legend ratio is computed in order to specify the number of text columns to use in the legend text box.
  */
-class Widget_ProjectSvnStats_Layout {
+class Widget_ProjectSvnStats_Layout
+{
 
     /**
      * The number of lgend plots
@@ -106,7 +107,7 @@ class Widget_ProjectSvnStats_Layout {
     {
         if ($this->hasMoreThanTwoColumns()) {
             $legend_y_position = 0.6;
-        } else if ($this->hasOnlyOneColumn()) {
+        } elseif ($this->hasOnlyOneColumn()) {
             $legend_y_position = 0.99;
         } else {
             $legend_y_position = 0.645;
@@ -144,6 +145,4 @@ class Widget_ProjectSvnStats_Layout {
     {
         return $this->legend_ratio > 2;
     }
-
 }
-?>

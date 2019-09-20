@@ -45,19 +45,20 @@ use Tuleap\User\REST\v1\UserResource;
 /**
  * Inject core resources into restler
  */
-class ResourcesInjector {
+class ResourcesInjector
+{
 
     public function populate(Restler $restler)
     {
-        $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource',   ProjectRepresentation::ROUTE);
-        $restler->addAPIClass(TokenResource::class,       TokenRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource', ProjectRepresentation::ROUTE);
+        $restler->addAPIClass(TokenResource::class, TokenRepresentation::ROUTE);
         $restler->addAPIClass(UserGroupResource::class, UserGroupRepresentation::ROUTE);
-        $restler->addAPIClass(UserResource::class,         UserRepresentation::ROUTE);
+        $restler->addAPIClass(UserResource::class, UserRepresentation::ROUTE);
         $restler->addAPIClass(UserMembershipResource::class, UserMembershipRepresentation::ROUTE);
-        $restler->addAPIClass(PhpWikiResource::class,  PhpWikiPageRepresentation::ROUTE);
-        $restler->addAPIClass(JWTResource::class,  JWTRepresentation::ROUTE);
-        $restler->addAPIClass(SystemEventResource::class,  SystemEventRepresentation::ROUTE);
-        $restler->addAPIClass(AccessKeyResource::class,  AccessKeyResource::ROUTE);
+        $restler->addAPIClass(PhpWikiResource::class, PhpWikiPageRepresentation::ROUTE);
+        $restler->addAPIClass(JWTResource::class, JWTRepresentation::ROUTE);
+        $restler->addAPIClass(SystemEventResource::class, SystemEventRepresentation::ROUTE);
+        $restler->addAPIClass(AccessKeyResource::class, AccessKeyResource::ROUTE);
         $restler->addAPIClass(ServiceResource::class, ServiceRepresentation::ROUTE);
     }
 

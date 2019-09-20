@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class MediawikiAdminLanguagePanePresenter extends MediawikiAdminPanePresenter {
+class MediawikiAdminLanguagePanePresenter extends MediawikiAdminPanePresenter
+{
 
     /** @var array */
     private $supported_languages;

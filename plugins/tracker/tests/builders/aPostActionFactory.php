@@ -24,13 +24,16 @@ function aPostActionFactory()
     return new Test_Transition_PostActionFactoryBuilder();
 }
 
-class Test_Transition_PostActionFactoryBuilder {
+class Test_Transition_PostActionFactoryBuilder
+{
 
     public function __construct()
     {
-        $this->factory = TestHelper::getPartialMock('Transition_PostActionFactory',
-                                                    array('getDao',
-                                                          'getFormElementFactory'));
+        $this->factory = TestHelper::getPartialMock(
+            'Transition_PostActionFactory',
+            array('getDao',
+            'getFormElementFactory')
+        );
 
         $this->form_element_factory = mock('Tracker_FormElementFactory');
 
@@ -40,7 +43,7 @@ class Test_Transition_PostActionFactoryBuilder {
             'field_float' => mock('Transition_PostAction_Field_FloatDao'),
         );
 
-        foreach($this->daos as $short_name => $dao) {
+        foreach ($this->daos as $short_name => $dao) {
             stub($dao)->searchByTransitionId('*')->returns(array());
         }
     }
@@ -72,10 +75,9 @@ class Test_Transition_PostActionFactoryBuilder {
     public function build()
     {
         stub($this->factory)->getFormElementFactory()->returns($this->form_element_factory);
-        foreach($this->daos as $short_name => $dao) {
+        foreach ($this->daos as $short_name => $dao) {
             stub($this->factory)->getDao($short_name)->returns($dao);
         }
         return $this->factory;
     }
 }
-?>

@@ -4,8 +4,9 @@
  */
 
 // Encoding for RSS output.
-if (!defined('RSS_ENCODING'))
-  define('RSS_ENCODING', $GLOBALS['charset']);
+if (!defined('RSS_ENCODING')) {
+    define('RSS_ENCODING', $GLOBALS['charset']);
+}
 
 /**
  * A class for writing RSS 1.0.
@@ -17,9 +18,11 @@ class RssWriter extends XmlElement
 {
     function __construct()
     {
-        parent::__construct('rdf:RDF',
-                          array('xmlns' => "http://purl.org/rss/1.0/",
-                                'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'));
+        parent::__construct(
+            'rdf:RDF',
+            array('xmlns' => "http://purl.org/rss/1.0/",
+            'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+        );
 
         $this->_modules = array(
             //Standards
@@ -89,16 +92,18 @@ class RssWriter extends XmlElement
      */
     function finish()
     {
-        if (isset($this->_finished))
+        if (isset($this->_finished)) {
             return;
+        }
 
         $channel = &$this->_channel;
         $items = &$this->_items;
 
         $seq = new XmlElement('rdf:Seq');
         if ($items) {
-            foreach ($items as $item)
+            foreach ($items as $item) {
                 $seq->pushContent($this->ref('rdf:li', $item));
+            }
         }
         $channel->pushContent(new XmlElement('items', false, $seq));
 
@@ -112,8 +117,9 @@ class RssWriter extends XmlElement
         }
 
         $this->pushContent($channel);
-        if ($items)
-        $this->pushContent($items);
+        if ($items) {
+            $this->pushContent($items);
+        }
 
         $this->spew();
         $this->_finished = true;
@@ -137,11 +143,15 @@ class RssWriter extends XmlElement
      */
     protected function node($type, $properties, $uri = false)
     {
-        if (! $uri)
-        $uri = $properties['link'];
+        if (! $uri) {
+            $uri = $properties['link'];
+        }
         $attr['rdf:about'] = $this->uniquify_uri($uri);
-        return new XmlElement($type, $attr,
-                              $this->elementize($properties));
+        return new XmlElement(
+            $type,
+            $attr,
+            $this->elementize($properties)
+        );
     }
 
     /**
@@ -179,8 +189,9 @@ class RssWriter extends XmlElement
         if (preg_match('/^([^:]+):[^:]/', $name, $m)) {
             $ns = $m[1];
             if (! $this->getAttr("xmlns:$ns")) {
-                if (!isset($this->_modules[$ns]))
-                die("$name: unknown namespace ($ns)");
+                if (!isset($this->_modules[$ns])) {
+                    die("$name: unknown namespace ($ns)");
+                }
                 $this->setAttr("xmlns:$ns", $this->_modules[$ns]);
             }
         }
@@ -205,4 +216,3 @@ class RssWriter extends XmlElement
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

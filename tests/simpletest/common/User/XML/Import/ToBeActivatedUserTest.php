@@ -21,7 +21,8 @@ namespace User\XML\Import;
 
 use TuleapTestCase;
 
-class ToBeActivatedUser_isActionAllowedTest extends TuleapTestCase {
+class ToBeActivatedUser_isActionAllowedTest extends TuleapTestCase
+{
 
     /** @var ToBeActivatedUser */
     protected $user;

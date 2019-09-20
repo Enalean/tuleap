@@ -31,7 +31,8 @@ Mock::generate('UserManager');
 
 Mock::generate('PFUser');
 
-class Tracker_FormElement_Field_List_Bind_UsersValueTest extends TuleapTestCase {
+class Tracker_FormElement_Field_List_Bind_UsersValueTest extends TuleapTestCase
+{
 
     public function testGetLabel()
     {
@@ -58,10 +59,10 @@ class Tracker_FormElement_Field_List_Bind_UsersValueTest extends TuleapTestCase 
 
         $this->assertEqual($bv->getUser(), $u);
     }
-
 }
 
-class Tracker_FormElement_Field_List_Bind_UsersValue_fetchJSONTest extends TuleapTestCase {
+class Tracker_FormElement_Field_List_Bind_UsersValue_fetchJSONTest extends TuleapTestCase
+{
     public $user_manager;
     public $user;
 
@@ -103,4 +104,3 @@ class Tracker_FormElement_Field_List_Bind_UsersValue_fetchJSONTest extends Tulea
         $this->assertNull($json);
     }
 }
-?>

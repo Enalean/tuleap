@@ -21,7 +21,8 @@
 
 require_once('bootstrap.php');
 
-class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
+class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase
+{
 
     private $field;
     private $user;
@@ -31,12 +32,12 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends TuleapTestCase {
         parent::setUp();
 
         $base_language = mock('BaseLanguage');
-        stub($base_language)->getText('plugin_tracker_artifact','changed_from')->returns('changed from');
-        stub($base_language)->getText('plugin_tracker_artifact','to')->returns('to');
-        stub($base_language)->getText('plugin_tracker_artifact','cleared')->returns('cleared');
-        stub($base_language)->getText('plugin_tracker_artifact','set_to')->returns('set to');
-        stub($base_language)->getText('plugin_tracker_artifact','added')->returns('added');
-        stub($base_language)->getText('plugin_tracker_artifact','removed')->returns('removed');
+        stub($base_language)->getText('plugin_tracker_artifact', 'changed_from')->returns('changed from');
+        stub($base_language)->getText('plugin_tracker_artifact', 'to')->returns('to');
+        stub($base_language)->getText('plugin_tracker_artifact', 'cleared')->returns('cleared');
+        stub($base_language)->getText('plugin_tracker_artifact', 'set_to')->returns('set to');
+        stub($base_language)->getText('plugin_tracker_artifact', 'added')->returns('added');
+        stub($base_language)->getText('plugin_tracker_artifact', 'removed')->returns('removed');
 
         $GLOBALS['Language'] = $base_language;
 

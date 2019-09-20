@@ -21,7 +21,8 @@
 /**
  * A swimline in the dashboard
  */
-class Cardwall_Swimline {
+class Cardwall_Swimline
+{
 
     /**
      * @var Cardwall_CardInCellPresenter
@@ -86,4 +87,3 @@ class Cardwall_Swimline {
         return $this->cells;
     }
 }
-?>

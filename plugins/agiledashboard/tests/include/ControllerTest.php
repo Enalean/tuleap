@@ -141,7 +141,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase
     }
 }
 
-abstract class Planning_ControllerAdminTest extends Planning_Controller_BaseTest {
+abstract class Planning_ControllerAdminTest extends Planning_Controller_BaseTest
+{
 
     protected function renderAdminScrum()
     {
@@ -159,7 +160,8 @@ abstract class Planning_ControllerAdminTest extends Planning_Controller_BaseTest
     }
 }
 
-class Planning_ControllerNonEmptyAdminTest extends Planning_ControllerAdminTest {
+class Planning_ControllerNonEmptyAdminTest extends Planning_ControllerAdminTest
+{
     function setUp()
     {
         parent::setUp();
@@ -174,14 +176,15 @@ class Planning_ControllerNonEmptyAdminTest extends Planning_ControllerAdminTest 
 
     public function itListsExistingPlannings()
     {
-        foreach($this->plannings as $planning) {
+        foreach ($this->plannings as $planning) {
             $this->assertPattern('/'.$planning->getName().'/', $this->output);
             $this->assertPattern('/href=".*?planning_id='.$planning->getId().'.*"/', $this->output);
         }
     }
 }
 
-class Planning_ControllerNewTest extends TuleapTestCase {
+class Planning_ControllerNewTest extends TuleapTestCase
+{
 
     private $available_backlog_trackers;
 
@@ -276,7 +279,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
     }
 }
 
-abstract class Planning_ControllerCreateTest extends Planning_Controller_BaseTest {
+abstract class Planning_ControllerCreateTest extends Planning_Controller_BaseTest
+{
     public function setUp()
     {
         parent::setUp();
@@ -286,7 +290,8 @@ abstract class Planning_ControllerCreateTest extends Planning_Controller_BaseTes
     }
 }
 
-class Planning_ControllerCreateWithInvalidParamsTest extends Planning_ControllerCreateTest {
+class Planning_ControllerCreateWithInvalidParamsTest extends Planning_ControllerCreateTest
+{
     public function setUp()
     {
         parent::setUp();
@@ -305,7 +310,8 @@ class Planning_ControllerCreateWithInvalidParamsTest extends Planning_Controller
     }
 }
 
-class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCreateTest {
+class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCreateTest
+{
     public function setUp()
     {
         parent::setUp();
@@ -341,7 +347,8 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
     }
 }
 
-class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
+class Planning_Controller_EditTest extends Planning_Controller_BaseTest
+{
 
     public function itRendersTheEditTemplate()
     {
@@ -397,7 +404,8 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
     }
 }
 
-class Planning_Controller_Update_BaseTest extends Planning_Controller_BaseTest {
+class Planning_Controller_Update_BaseTest extends Planning_Controller_BaseTest
+{
 
     protected $planning_id         = 123;
     protected $planning_parameters = array(
@@ -424,7 +432,8 @@ class Planning_Controller_Update_BaseTest extends Planning_Controller_BaseTest {
     }
 }
 
-class Planning_Controller_ValidUpdateTest extends Planning_Controller_Update_BaseTest {
+class Planning_Controller_ValidUpdateTest extends Planning_Controller_Update_BaseTest
+{
 
     public function itUpdatesThePlanningAndRedirectToTheIndex()
     {
@@ -441,7 +450,8 @@ class Planning_Controller_ValidUpdateTest extends Planning_Controller_Update_Bas
     }
 }
 
-class Planning_Controller_InvalidUpdateTest extends Planning_Controller_Update_BaseTest {
+class Planning_Controller_InvalidUpdateTest extends Planning_Controller_Update_BaseTest
+{
 
     protected $planning_parameters = array();
 
@@ -470,7 +480,8 @@ class Planning_Controller_InvalidUpdateTest extends Planning_Controller_Update_B
     }
 }
 
-class Planning_ControllerDeleteTest extends Planning_Controller_BaseTest {
+class Planning_ControllerDeleteTest extends Planning_Controller_BaseTest
+{
 
     protected $planning_id = '12';
 

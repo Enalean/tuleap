@@ -36,11 +36,11 @@ class Docman_View_GetFieldsVisitor implements ItemVisitor
     function buildFieldArray($mdIter, $params)
     {
         $formName = '';
-        if(isset($params['form_name'])) {
+        if (isset($params['form_name'])) {
             $formName = $params['form_name'];
         }
         $themePath = '';
-        if(isset($params['theme_path'])) {
+        if (isset($params['theme_path'])) {
             $themePath = $params['theme_path'];
         }
         $mdHtmlFactory = new Docman_MetadataHtmlFactory();
@@ -57,7 +57,7 @@ class Docman_View_GetFieldsVisitor implements ItemVisitor
     {
         $folderMetadata = array('title', 'description','create_date', 'update_date');
         $mda = array();
-        foreach($folderMetadata as $mdLabel) {
+        foreach ($folderMetadata as $mdLabel) {
             $mda[] = $item->getMetadataFromLabel($mdLabel);
         }
         $mdIter = new ArrayIterator($mda);

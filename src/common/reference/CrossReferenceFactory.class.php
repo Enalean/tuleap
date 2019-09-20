@@ -8,7 +8,8 @@
  * Cross Reference Factory class
  */
 
-class CrossReferenceFactory {
+class CrossReferenceFactory
+{
 
     var $entity_id;
     var $entity_gid;
@@ -33,7 +34,7 @@ class CrossReferenceFactory {
      * Constructor
      * Note that we need a valid reference parameter
      */
-    function __construct($entity_id,$entity_type,$entity_group_id)
+    function __construct($entity_id, $entity_type, $entity_group_id)
     {
         $this->entity_id=$entity_id;
         $this->entity_type=$entity_type;
@@ -53,12 +54,10 @@ class CrossReferenceFactory {
 
         $res = db_query($sql);
         if ($res && db_numrows($res) > 0) {
-
             $this->source_refs_datas=array();
             $this->target_refs_datas=array();
 
             while ($field_array = db_fetch_array($res)) {
-
                 $target_id=$field_array['target_id'];
                 $target_gid=$field_array['target_gid'];
                 $target_type=$field_array['target_type'];
@@ -72,20 +71,19 @@ class CrossReferenceFactory {
                 $user_id=$field_array['user_id'];
                 $created_at=$field_array['created_at'];
 
-                if ( ($target_id==$this->entity_id) &&
+                if (($target_id==$this->entity_id) &&
                      ($target_gid==$this->entity_gid) &&
                      ($target_type==$this->entity_type)
                     ) {
-                    $this->source_refs_datas[] = new CrossReference($source_id,$source_gid,$source_type,$source_key,$target_id,$target_gid,$target_type,$target_key,$user_id);
+                    $this->source_refs_datas[] = new CrossReference($source_id, $source_gid, $source_type, $source_key, $target_id, $target_gid, $target_type, $target_key, $user_id);
                 }
-                if ( ($source_id==$this->entity_id) &&
+                if (($source_id==$this->entity_id) &&
                      ($source_gid==$this->entity_gid) &&
                      ($source_type==$this->entity_type)
                     ) {
-                    $this->target_refs_datas[] = new CrossReference($source_id,$source_gid,$source_type,$source_key,$target_id,$target_gid,$target_type,$target_key,$user_id);
+                    $this->target_refs_datas[] = new CrossReference($source_id, $source_gid, $source_type, $source_key, $target_id, $target_gid, $target_type, $target_key, $user_id);
                 }
             }
-
         }
     }
 
@@ -97,10 +95,12 @@ class CrossReferenceFactory {
     /** Accessors */
     function getRefSource()
     {
-        return $this->source_refs_datas;}
+        return $this->source_refs_datas;
+    }
     function getRefTarget()
     {
-        return $this->target_refs_datas;}
+        return $this->target_refs_datas;
+    }
 
     /**Display function */
     function DisplayCrossRefs()
@@ -132,7 +132,7 @@ class CrossReferenceFactory {
         $refs = array();
         foreach ($crossRefArray as $nature => $refArraySourceTarget) {
             foreach (array('both', 'target', 'source') as $key) {
-                if ( array_key_exists($key, $refArraySourceTarget) ) {
+                if (array_key_exists($key, $refArraySourceTarget)) {
                     foreach ($refArraySourceTarget[$key] as $currRef) {
                         if ($key === 'source') {
                             $ref = $currRef->getRefSourceKey() ." #". $currRef->getRefSourceId();
@@ -192,9 +192,9 @@ class CrossReferenceFactory {
         $user = UserManager::instance()->getCurrentUser();
 
         $itemIsReferenced = false;
-        if($isBrowser && ($user->isSuperUser() || $user->isMember($this->entity_gid, 'A'))){
+        if ($isBrowser && ($user->isSuperUser() || $user->isMember($this->entity_gid, 'A'))) {
                 $can_delete = true;
-        }else{
+        } else {
                 $can_delete = false;
         }
 
@@ -213,7 +213,7 @@ class CrossReferenceFactory {
          // HTML part (stored in $display)
         $display = '';
         if (!$condensed) {
-            $display .= '<p id="cross_references_legend">' . $Language->getText('cross_ref_fact_include','legend') . '</p>';
+            $display .= '<p id="cross_references_legend">' . $Language->getText('cross_ref_fact_include', 'legend') . '</p>';
         }
         // loop through natures
         foreach ($crossRefArray as $nature => $refArraySourceTarget) {
@@ -237,10 +237,10 @@ class CrossReferenceFactory {
                     $display .= $GLOBALS['HTML']->getImage(
                         'ic/'. $img[$key][0] .'.png',
                         array(
-                            'alt'    => $Language->getText('cross_ref_fact_include',$img[$key][1]),
+                            'alt'    => $Language->getText('cross_ref_fact_include', $img[$key][1]),
                             'align'  => 'top-left',
                             'hspace' => '5',
-                            'title'  => $Language->getText('cross_ref_fact_include',$img[$key][1])
+                            'title'  => $Language->getText('cross_ref_fact_include', $img[$key][1])
                         )
                     );
 
@@ -272,11 +272,11 @@ class CrossReferenceFactory {
                                            href="/reference/rmreference.php'. $params .'"
                                            onClick="return delete_ref(\''. $id .'\', \''. $message .'\');">';
                             $span .= $GLOBALS['HTML']->getImage(
-                               'ic/cross.png',
-                               array(
-                                   'alt'   => $Language->getText('cross_ref_fact_include','delete'),
-                                   'title' => $Language->getText('cross_ref_fact_include','delete')
-                               )
+                                'ic/cross.png',
+                                array(
+                                   'alt'   => $Language->getText('cross_ref_fact_include', 'delete'),
+                                   'title' => $Language->getText('cross_ref_fact_include', 'delete')
+                                )
                             );
                             $span .= '</a>';
                         }
@@ -343,7 +343,6 @@ class CrossReferenceFactory {
                 }
             }
             $html .= implode(', ', $refs);
-
         }
 
         return $html;

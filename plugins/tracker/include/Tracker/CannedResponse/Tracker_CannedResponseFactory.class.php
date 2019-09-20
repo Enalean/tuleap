@@ -19,7 +19,8 @@
  */
 
 
-class Tracker_CannedResponseFactory {
+class Tracker_CannedResponseFactory
+{
 
     /**
      * Constructor
@@ -56,10 +57,12 @@ class Tracker_CannedResponseFactory {
      */
     public function getInstanceFromRow($row)
     {
-        return new Tracker_CannedResponse($row['id'],
-                                          $row['tracker'],
-                                          $row['title'],
-                                          $row['body']);
+        return new Tracker_CannedResponse(
+            $row['id'],
+            $row['tracker'],
+            $row['title'],
+            $row['body']
+        );
     }
 
     /**
@@ -209,7 +212,4 @@ class Tracker_CannedResponseFactory {
     {
         return TrackerFactory::instance();
     }
-
 }
-
-?>

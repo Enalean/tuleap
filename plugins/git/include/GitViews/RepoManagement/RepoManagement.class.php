@@ -37,7 +37,8 @@ use Tuleap\Git\Webhook\WebhookFactory;
 /**
  * Dedicated screen for repo management
  */
-class GitViews_RepoManagement {
+class GitViews_RepoManagement
+{
 
     /**
      * @var GitPermissionsManager
@@ -247,4 +248,3 @@ class GitViews_RepoManagement {
         echo '<a href="'. $url .'" title="'. $purifier->purify($pane->getTitle()) .'">'. $purifier->purify($pane->getLabel()) .'</a></li>';
     }
 }
-?>

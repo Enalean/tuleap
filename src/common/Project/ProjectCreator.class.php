@@ -23,7 +23,7 @@ require_once __DIR__ . '/../../www/include/trove.php';
 require_once __DIR__ . '/../../common/wiki/lib/WikiCloner.class.php';
 
 define('PROJECT_APPROVAL_BY_ADMIN', 'P');
-define('PROJECT_APPROVAL_AUTO',     'A');
+define('PROJECT_APPROVAL_AUTO', 'A');
 
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;
@@ -357,7 +357,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     private function createGroupEntry($data)
     {
         srand((double)microtime()*1000000);
-        $random_num=rand(0,1000000);
+        $random_num=rand(0, 1000000);
 
         if (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
             $http_domain=$GLOBALS['sys_default_domain'];
@@ -393,7 +393,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $result=db_query($sql);
 
         if (!$result) {
-            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','upd_fail',array($GLOBALS['sys_email_admin'],db_error())));
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'upd_fail', array($GLOBALS['sys_email_admin'],db_error())));
             return false;
         } else {
             $group_id = db_insertid($result);
@@ -408,21 +408,21 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $fields_factory = new DescriptionFieldsFactory(new DescriptionFieldsDao());
         $descfieldsinfos = $fields_factory->getAllDescriptionFields();
 
-        for($i=0;$i<sizeof($descfieldsinfos);$i++){
+        for ($i=0; $i<sizeof($descfieldsinfos); $i++) {
             $desc_id_val = $data->getField($descfieldsinfos[$i]["group_desc_id"]);
-            if($desc_id_val !== null && $desc_id_val != ''){
+            if ($desc_id_val !== null && $desc_id_val != '') {
                 $sql="INSERT INTO group_desc_value (group_id, group_desc_id, value) VALUES ('".db_ei($group_id)."','".db_ei($descfieldsinfos[$i]["group_desc_id"])."','".db_escape_string(trim($desc_id_val))."')";
                 $result=db_query($sql);
 
                 if (!$result) {
-                    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-                    exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','ins_desc_fail',array($host,db_error())));
+                    list($host,$port) = explode(':', $GLOBALS['sys_default_domain']);
+                    exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'ins_desc_fail', array($host,db_error())));
                 }
             }
         }
 
-        foreach($data->getTroveData() as $root => $values) {
-            foreach($values as $value) {
+        foreach ($data->getTroveData() as $root => $values) {
+            foreach ($values as $value) {
                 db_query("INSERT INTO trove_group_link (trove_cat_id,trove_cat_version,"
                          ."group_id,trove_cat_root) VALUES (". db_ei($value) .",". time() .",". db_ei($group_id) .",". db_ei($root) .")");
             }
@@ -434,8 +434,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     {
         $result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".$this->project_manager->getProject($group_id)->getUnixName()."')");
         if (!$result) {
-            list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','ins_file_fail',array($host,db_error())));
+            list($host,$port) = explode(':', $GLOBALS['sys_default_domain']);
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'ins_file_fail', array($host,db_error())));
         }
     }
 
@@ -457,7 +457,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             . "2," // svn_flags
             . "2)"); // news_flags
         if (!$result) {
-            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','set_owner_fail',array($GLOBALS['sys_email_admin'],db_error())));
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'set_owner_fail', array($GLOBALS['sys_email_admin'],db_error())));
         }
 
         // clear the user data to take into account this new group.
@@ -509,7 +509,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                     'is_used' => $is_used,
                 )
             )) {
-                exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_create_service') .'<br>'. db_error());
+                exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_create_service') .'<br>'. db_error());
             }
         }
 
@@ -528,7 +528,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $result = $this->project_manager->setMessageToRequesterForAccessProject($group_id, 'member_request_delegation_msg_to_requester');
         }
         if (!$result) {
-            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_msg_to_requester'));
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_msg_to_requester'));
         }
     }
 
@@ -537,8 +537,14 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $sql = "SELECT forum_name, is_public, description FROM forum_group_list WHERE group_id=$template_id ";
         $result=db_query($sql);
         while ($arr = db_fetch_array($result)) {
-            $fid = forum_create_forum($group_id,$arr['forum_name'],$arr['is_public'],1,
-                      $arr['description'], $need_feedback = false);
+            $fid = forum_create_forum(
+                $group_id,
+                $arr['forum_name'],
+                $arr['is_public'],
+                1,
+                $arr['description'],
+                $need_feedback = false
+            );
             if ($fid != -1) {
                 forum_add_monitor($fid, UserManager::instance()->getCurrentUser()->getId());
             }
@@ -559,7 +565,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $result=db_query($query);
         if (!$result) {
-            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_cvs_infos'));
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_cvs_infos'));
         }
     }
 
@@ -572,7 +578,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $result = db_query($sql);
         if (!$result) {
-            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_svn_infos'));
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_svn_infos'));
         }
 
         $sql = "SELECT svn_tracker, svn_preamble, svn_mandatory_ref, svn_commit_to_tag_denied FROM groups WHERE group_id=$template_id ";
@@ -589,7 +595,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $result=db_query($query);
         if (!$result) {
-            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_svn_infos'));
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_svn_infos'));
         }
     }
 
@@ -644,17 +650,17 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             // Add all trackers from template project (tracker templates) that need to be instanciated for new trackers.
             $res = $atf->getTrackerTemplatesForNewProjects();
             while ($arr_template = db_fetch_array($res)) {
-                $ath_temp = new ArtifactType($template_group,$arr_template['group_artifact_id']);
+                $ath_temp = new ArtifactType($template_group, $arr_template['group_artifact_id']);
                 $report_mapping_for_this_tracker = array();
-                $new_at_id = $atf->create($group_id,$template_group->getID(),$ath_temp->getID(),db_escape_string($ath_temp->getName()),db_escape_string($ath_temp->getDescription()),$ath_temp->getItemName(),$ugroup_mapping,$report_mapping_for_this_tracker);
-                if ( !$new_at_id ) {
+                $new_at_id = $atf->create($group_id, $template_group->getID(), $ath_temp->getID(), db_escape_string($ath_temp->getName()), db_escape_string($ath_temp->getDescription()), $ath_temp->getItemName(), $ugroup_mapping, $report_mapping_for_this_tracker);
+                if (!$new_at_id) {
                     $GLOBALS['Response']->addFeedback('error', $atf->getErrorMessage());
                 } else {
                     $report_mapping = $report_mapping + $report_mapping_for_this_tracker;
                     $tracker_mapping[$ath_temp->getID()] = $new_at_id;
 
                     // Copy all the artifacts from the template tracker to the new tracker
-                    $ath_new = new ArtifactType($group,$new_at_id);
+                    $ath_new = new ArtifactType($group, $new_at_id);
 
                     // not now. perhaps one day
                         //if (!$ath_new->copyArtifacts($ath_temp->getID()) ) {
@@ -662,16 +668,18 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                     //}
 
                     // Create corresponding reference
-                    $ref = new Reference(0, // no ID yet
-                                         strtolower($ath_temp->getItemName()),
-                                         $GLOBALS['Language']->getText('project_reference','reference_art_desc_key'), // description
-                                         '/tracker/?func=detail&aid=$1&group_id=$group_id', // link
-                                         'P', // scope is 'project'
-                                         'tracker',  // service short name
-                                         ReferenceManager::REFERENCE_NATURE_ARTIFACT,   // nature
-                                         '1', // is_used
-                                         $group_id);
-                    $result = $this->reference_manager->createReference($ref,true); // Force reference creation because default trackers use reserved keywords
+                    $ref = new Reference(
+                        0, // no ID yet
+                        strtolower($ath_temp->getItemName()),
+                        $GLOBALS['Language']->getText('project_reference', 'reference_art_desc_key'), // description
+                        '/tracker/?func=detail&aid=$1&group_id=$group_id', // link
+                        'P', // scope is 'project'
+                        'tracker',  // service short name
+                        ReferenceManager::REFERENCE_NATURE_ARTIFACT,   // nature
+                        '1', // is_used
+                        $group_id
+                    );
+                    $result = $this->reference_manager->createReference($ref, true); // Force reference creation because default trackers use reserved keywords
                 }
             }
         }
@@ -684,7 +692,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $clone = new WikiCloner($template_id, $group_id);
 
         // check if the template project has a wiki initialised
-        if ($clone->templateWikiExists() and $clone->newWikiIsUsed()){
+        if ($clone->templateWikiExists() and $clone->newWikiIsUsed()) {
             //clone wiki.
             $clone->CloneWiki();
         }
@@ -707,7 +715,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $result = db_query($sql);
         if (!$result) {
-            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_truncated_emails'));
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_truncated_emails'));
         }
     }
 

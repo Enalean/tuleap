@@ -62,7 +62,7 @@ class Tracker_FormElement_Container_Column_Group
         return $this->fetchGroup($columns, 'fetchAdminInGroup', [$tracker]);
     }
 
-    public function fetchMailArtifact($columns, $recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false)
+    public function fetchMailArtifact($columns, $recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
         return $this->fetchMailGroup($columns, 'fetchMailArtifactInGroup', array($recipient, $artifact, $format, $ignore_perms), $format);
     }
@@ -121,6 +121,4 @@ class Tracker_FormElement_Container_Column_Group
         }
         return '';
     }
-
 }
-?>

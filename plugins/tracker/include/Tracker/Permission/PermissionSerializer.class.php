@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Permission_PermissionsSerializer {
+class Tracker_Permission_PermissionsSerializer
+{
 
     /**
      * @var Tracker_Permission_PermissionRetrieveAssignee

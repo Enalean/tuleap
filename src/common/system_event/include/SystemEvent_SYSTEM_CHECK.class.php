@@ -24,7 +24,8 @@
 * System Event classes
 *
 */
-class SystemEvent_SYSTEM_CHECK extends SystemEvent {
+class SystemEvent_SYSTEM_CHECK extends SystemEvent
+{
 
     /**
      * Verbalize the parameters so they are readable and much user friendly in
@@ -74,7 +75,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         // (re-)create missing ML
         $mailinglistdao = new MailingListDao();
         $dar = $mailinglistdao->searchAllActiveML();
-        foreach($dar as $row) {
+        foreach ($dar as $row) {
             $list = new MailingList($row);
             if (!$backendMailingList->listExists($list)) {
                 $backendMailingList->createList($list->getId());
@@ -83,8 +84,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         }
 
         $project_manager = ProjectManager::instance();
-        foreach($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
-
+        foreach ($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
             // Recreate project directories if they were deleted
             if (!$backendSystem->createProjectHome($project->getId())) {
                 $this->error("Could not create project home");
@@ -166,7 +166,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                     'logger' => $logger,
                 )
             );
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             $this->error($exception->getMessage());
             return false;
         }
@@ -190,5 +190,4 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
 
         $token_manager->expireOldTokens();
     }
-
 }

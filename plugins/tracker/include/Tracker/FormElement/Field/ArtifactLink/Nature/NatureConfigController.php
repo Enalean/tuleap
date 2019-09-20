@@ -153,7 +153,6 @@ class NatureConfigController
                 Feedback::INFO,
                 $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'delete_success')
             );
-
         } catch (NatureManagementException $exception) {
             $response->addFeedback(
                 Feedback::ERROR,

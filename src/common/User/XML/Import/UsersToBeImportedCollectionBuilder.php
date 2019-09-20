@@ -27,7 +27,8 @@ use XML_Security;
 use XML_RNGValidator;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 
-class UsersToBeImportedCollectionBuilder {
+class UsersToBeImportedCollectionBuilder
+{
 
     /**
      * @var XML_RNGValidator
@@ -119,7 +120,6 @@ class UsersToBeImportedCollectionBuilder {
             (string) $xml_user->id,
             (string) $xml_user->ldapid
         );
-
     }
 
     private function instantiateUserToBeImported(SimpleXMLElement $user)

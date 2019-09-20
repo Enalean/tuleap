@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201601141739_add_plugin_git_default_project_mirrors_table extends ForgeUpgrade_Bucket {
+class b201601141739_add_plugin_git_default_project_mirrors_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

@@ -18,7 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class Admin_Homepage_Router {
+class Admin_Homepage_Router
+{
 
     /**
      * @var Codendi_Request

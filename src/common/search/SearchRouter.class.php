@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchRouter {
+class Search_SearchRouter
+{
     private $controller;
     public function __construct()
     {

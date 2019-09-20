@@ -27,7 +27,8 @@
 * Javascript representation (JSON) of a rule
 *
 */
-class ArtifactRuleValueJavascript extends ArtifactRuleValueView {
+class ArtifactRuleValueJavascript extends ArtifactRuleValueView
+{
 
     /**
      *  ArtifactRuleHtml() - constructor
@@ -51,5 +52,3 @@ class ArtifactRuleValueJavascript extends ArtifactRuleValueView {
         return $output;
     }
 }
-
-?>

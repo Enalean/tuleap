@@ -25,7 +25,8 @@ Mock::generate('PFUser');
 Mock::generate('ProjectManager');
 
 
-class GitViewsTest extends TuleapTestCase {
+class GitViewsTest extends TuleapTestCase
+{
 
     public function testCanReturnOptionsListOfProjectsTheUserIsAdminOf()
     {
@@ -77,7 +78,6 @@ class GitViewsTest extends TuleapTestCase {
 
         $view = TestHelper::getPartialMock('GitViews', array());
         $this->assertNoPattern('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '123'));
-
     }
 
     public function testProjectListMustContainsOnlyProjectsWithGitEnabled()
@@ -88,7 +88,6 @@ class GitViewsTest extends TuleapTestCase {
 
         $view = TestHelper::getPartialMock('GitViews', array());
         $this->assertNoPattern('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
-
     }
 
     private function GivenAProject($id, $name, $unixName = null, $useGit = true)
@@ -122,5 +121,4 @@ class GitViewsTest extends TuleapTestCase {
         $user->setReturnValue('isMember', false, array('456', 'A'));
         return $user;
     }
-
 }

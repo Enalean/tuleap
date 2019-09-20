@@ -11,8 +11,8 @@
   */
 
 // Check if this tracker is valid (not deleted)
-if ( !$ath->isValid() ) {
-    exit_error($Language->getText('global','error'),$Language->getText('tracker_add', 'invalid'));
+if (!$ath->isValid()) {
+    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_add', 'invalid'));
 }
 
 // Create factories
@@ -20,16 +20,18 @@ $art_field_fact = new ArtifactFieldFactory($ath);
 $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
 
 // Printer version ?
-if ( !$request->exist('pv') ) {
+if (!$request->exist('pv')) {
     $pv = false;
     $ro = !user_isloggedin();
 } else {
     $pv = $request->get('pv');
-    if ( $pv ) $ro = true;
+    if ($pv) {
+        $ro = true;
+    }
 }
 
 $GLOBALS['HTML']->addFeed(
-    $group->getPublicName().' '.$ath->getName() .' #'. $ah->getId() .' - '. html_entity_decode($ah->getValue('summary'), ENT_QUOTES) .' - '. $Language->getText('tracker_include_artifact','follow_ups'),
+    $group->getPublicName().' '.$ath->getName() .' #'. $ah->getId() .' - '. html_entity_decode($ah->getValue('summary'), ENT_QUOTES) .' - '. $Language->getText('tracker_include_artifact', 'follow_ups'),
     '/tracker/?func=rss&aid='. (int)$ah->getId() .'&atid='. (int)$ath->getID() .'&group_id='. (int)$group->getGroupId()
 );
 $params=array('title'=>$group->getPublicName().' '.$ath->getName().' #'.$ah->getID(). ' - \'' . $ah->getSummary().'\'',
@@ -43,7 +45,7 @@ $ath->header($params);
 
 
 // artifact object (and field values) initialized in script above (index.php)
-$ah->display($ro,$pv,UserManager::instance()->getCurrentUser()->getId());
+$ah->display($ro, $pv, UserManager::instance()->getCurrentUser()->getId());
 
 echo '<script type="text/javascript">'. "\n";
 $armh = new ArtifactRulesManagerHtml($ath);
@@ -51,9 +53,9 @@ $armh->displayRulesAsJavascript();
 echo "Event.observe(window, 'load', function() {
         if ($('tracker_details')) {
             new com.xerox.codendi.FieldEditor('tracker_details', {
-                edit:    '". addslashes($Language->getText('tracker_fieldeditor','edit')) ."',
-                preview: '". addslashes($Language->getText('tracker_fieldeditor','preview')) ."',
-                warning: '". addslashes($Language->getText('tracker_fieldeditor','warning')) ."',
+                edit:    '". addslashes($Language->getText('tracker_fieldeditor', 'edit')) ."',
+                preview: '". addslashes($Language->getText('tracker_fieldeditor', 'preview')) ."',
+                warning: '". addslashes($Language->getText('tracker_fieldeditor', 'warning')) ."',
                 group_id:". (int)$ath->getGroupId(). "
             });
         }
@@ -66,5 +68,3 @@ echo "</script>";
 
 // Display footer page
 $ath->footer($params);
-
-?>

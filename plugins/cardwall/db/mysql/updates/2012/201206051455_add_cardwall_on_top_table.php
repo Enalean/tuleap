@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201206051455_add_cardwall_on_top_table extends ForgeUpgrade_Bucket {
+class b201206051455_add_cardwall_on_top_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -47,4 +48,3 @@ EOT;
         }
     }
 }
-?>

@@ -19,7 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-class Docman_SubItemsRemovalVisitor /* implements Visitor */ {
+class Docman_SubItemsRemovalVisitor /* implements Visitor */
+{
 
     function visitFolder(&$item, $params = array())
     {
@@ -51,4 +52,3 @@ class Docman_SubItemsRemovalVisitor /* implements Visitor */ {
         $this->visitDocument($item, $params);
     }
 }
-?>

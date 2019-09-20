@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once __DIR__.'/../bootstrap.php';
-class MockHierarchyFactoryBuilder {
+class MockHierarchyFactoryBuilder
+{
     public function __construct()
     {
         $this->factory = mock('Tracker_HierarchyFactory');
@@ -45,4 +46,3 @@ function aMockHierarchyFactory()
 {
     return new MockHierarchyFactoryBuilder();
 }
-?>

@@ -81,7 +81,7 @@ class Docman_ItemFactoryTest extends TuleapTestCase
         $rootId = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
         $this->assertEqual($wantedItems, array(150));
         $this->assertEqual($orphans, array(112 => 112));
-        $this->assertEqual($itemList,    array(112 => $c_fld112, 113 => $c_fld113));
+        $this->assertEqual($itemList, array(112 => $c_fld112, 113 => $c_fld113));
         $this->assertFalse($rootId);
     }
 
@@ -211,8 +211,8 @@ class Docman_ItemFactoryTest extends TuleapTestCase
         $itemFactory->setReturnValue('isRoot', false, array($fld111));
         $itemFactory->setReturnValue('isRoot', true, array($fld110));
 
-        $itemFactory->expectCallCount('getItemFromDb',2);
-        $itemFactory->expectCallCount('isRoot',2);
+        $itemFactory->expectCallCount('getItemFromDb', 2);
+        $itemFactory->expectCallCount('isRoot', 2);
         $fld110->expectNever('getParentId');
         $fld111->expectNever('getParentId');
         $fld112->expectOnce('getParentId');
@@ -247,8 +247,8 @@ class Docman_ItemFactoryTest extends TuleapTestCase
         $itemFactory->setReturnValue('isRoot', false, array($fld111));
         $itemFactory->setReturnValue('isRoot', true, array($fld110));
 
-        $itemFactory->expectCallCount('getItemFromDb',3);
-        $itemFactory->expectCallCount('isRoot',3);
+        $itemFactory->expectCallCount('getItemFromDb', 3);
+        $itemFactory->expectCallCount('isRoot', 3);
         $fld110->expectNever('getParentId');
         $fld111->expectOnce('getParentId');
         $fld112->expectOnce('getParentId');
@@ -315,8 +315,8 @@ class Docman_ItemFactoryTest extends TuleapTestCase
         $itemFactory->setReturnValue('isRoot', false, array($fld111));
         $itemFactory->setReturnValue('isRoot', true, array($fld110));
 
-        $itemFactory->expectCallCount('getItemFromDb',3);
-        $itemFactory->expectCallCount('isRoot',3);
+        $itemFactory->expectCallCount('getItemFromDb', 3);
+        $itemFactory->expectCallCount('isRoot', 3);
         $fld110->expectNever('getParentId');
         $fld111->expectOnce('getParentId');
         $fld112->expectOnce('getParentId');

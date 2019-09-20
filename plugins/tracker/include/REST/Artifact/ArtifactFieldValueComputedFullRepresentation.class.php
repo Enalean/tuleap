@@ -62,6 +62,5 @@ class ArtifactFieldComputedValueFullRepresentation
         $this->is_autocomputed = JsonCast::toBoolean($is_autocomputed);
         $this->value           = JsonCast::toFloat($autocomputed_value);
         $this->manual_value    = JsonCast::toFloat($manual_value);
-
     }
 }

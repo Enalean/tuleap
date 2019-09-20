@@ -20,7 +20,8 @@
 
 require_once 'GerritREST_Base.php';
 
-class Git_DriverREST_Gerrit_manageGroupsTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_manageGroupsTest {
+class Git_DriverREST_Gerrit_manageGroupsTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_manageGroupsTest
+{
 
     public function setUp()
     {
@@ -82,7 +83,8 @@ class Git_DriverREST_Gerrit_manageGroupsTest extends Git_Driver_GerritREST_base 
         $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', 'firefox/project_admins');
     }
     public function itRaisesAGerritDriverExceptionOnGroupsCreation()
-    {}
+    {
+    }
 
     public function itCreatesGroupWithoutOwnerWhenSelfOwnedToAvoidChickenEggIssue()
     {

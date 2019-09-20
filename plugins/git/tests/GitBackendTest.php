@@ -30,7 +30,8 @@ Mock::generate('GitRepository');
 Mock::generate('Project');
 Mock::generate('SystemEventManager');
 
-class GitBackendTest extends TuleapTestCase {
+class GitBackendTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -120,5 +121,3 @@ class GitBackendTest extends TuleapTestCase {
         chdir($this->cwd);
     }
 }
-
-?>

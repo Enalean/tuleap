@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_Exception_CannotCreateNewChangeset extends Tracker_Artifact_Exception_CannotCreateChangeset {
+class Tracker_Artifact_Exception_CannotCreateNewChangeset extends Tracker_Artifact_Exception_CannotCreateChangeset
+{
     public function __construct()
     {
         parent::__construct('Update');

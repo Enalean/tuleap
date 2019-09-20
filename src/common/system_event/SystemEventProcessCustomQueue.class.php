@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEventProcessCustomQueue implements SystemEventProcess {
+class SystemEventProcessCustomQueue implements SystemEventProcess
+{
 
     /** @var string */
     private $queue;

@@ -22,7 +22,8 @@
 /**
  * Base interface for all form elements in trackers, from fieldsets to selectboxes
  */
-interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface, Tracker_FormElement_IHaveAnId, Tracker_FormElement_Usable{
+interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface, Tracker_FormElement_IHaveAnId, Tracker_FormElement_Usable
+{
 
     /**
      * get the permissions for thios tracker

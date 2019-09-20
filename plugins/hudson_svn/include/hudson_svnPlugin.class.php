@@ -43,7 +43,8 @@ use Tuleap\SVN\Dao as SvnDao;
 use Tuleap\SVN\SvnLogger;
 use Tuleap\SVN\SvnAdmin;
 
-class hudson_svnPlugin extends Plugin {
+class hudson_svnPlugin extends Plugin
+{
 
     public function __construct($id)
     {
@@ -226,7 +227,7 @@ class hudson_svnPlugin extends Plugin {
     {
         if ($this->isJobValid($params['job_id'])) {
             if (! $this->getJobManager()->delete($params['job_id'])) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson_svn','ci_trigger_not_deleted'));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson_svn', 'ci_trigger_not_deleted'));
             }
         }
     }

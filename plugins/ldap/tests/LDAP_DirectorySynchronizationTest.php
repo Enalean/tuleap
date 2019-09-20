@@ -39,7 +39,8 @@ Mock::generate('LDAP_SyncReminderNotificationManager');
 Mock::generate('LDAP_SyncNotificationManager');
 
 // Ensure user is suspended
-class MyUmMock4Suspended extends MockUserManager {
+class MyUmMock4Suspended extends MockUserManager
+{
     private $_myUmTest;
     function __construct($test)
     {
@@ -56,7 +57,8 @@ class MyUmMock4Suspended extends MockUserManager {
     }
 }
 
-class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
+class LDAP_DirectorySynchronizationTest extends TuleapTestCase
+{
 
     private $previous_log_dir;
 
@@ -363,5 +365,4 @@ class LDAP_DirectorySynchronizationTest extends TuleapTestCase {
                      );
         $sync->ldapSync($row, 1);
     }
-
 }

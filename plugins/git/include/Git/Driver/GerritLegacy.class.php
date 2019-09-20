@@ -21,7 +21,8 @@
 /**
  * I know how to speak to a Gerrit 2.5 remote server
  */
-class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
+class Git_Driver_GerritLegacy implements Git_Driver_Gerrit
+{
     public const INDEX_GROUPS_VERBOSE_NAME = 0;
     public const INDEX_GROUPS_VERBOSE_UUID = 1;
 
@@ -241,7 +242,6 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
     private function computeException(Git_Driver_Gerrit_RemoteSSHCommandFailure $e, $command)
     {
         return $this->isGerritFailure($e) ? $this->gerritDriverException($e, $command) : $e;
-
     }
 
     private function isGerritFailure($e)
@@ -362,7 +362,7 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
         $this->flushGerritCaches($server, self::CACHE_GROUPS_INCLUDES);
     }
 
-    private function flushGerritCaches($server, $cache=null)
+    private function flushGerritCaches($server, $cache = null)
     {
         $query = self::COMMAND .' flush-caches';
         if ($cache) {
@@ -436,7 +436,6 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
     {
         $query = self::COMMAND .' set-project-parent '. $project_name .' --parent '. self::DEFAULT_PARENT_PROJECT;
         $this->ssh->execute($server, $query);
-
     }
 
     /**
@@ -449,7 +448,7 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
 
         try {
             $plugins_list = $this->ssh->execute($server, $query);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 

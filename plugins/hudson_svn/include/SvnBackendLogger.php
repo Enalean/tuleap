@@ -24,7 +24,8 @@ use TruncateLevelLogger;
 use BackendLogger;
 use ForgeConfig;
 
-class SvnBackendLogger extends TruncateLevelLogger {
+class SvnBackendLogger extends TruncateLevelLogger
+{
 
     public function __construct()
     {

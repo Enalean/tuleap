@@ -24,7 +24,8 @@ require_once __DIR__ . '/../../www/svn/svn_utils.php';
 /**
 * Widget_MyLatestSvnCommits
 */
-class Widget_MyLatestSvnCommits extends Widget {
+class Widget_MyLatestSvnCommits extends Widget
+{
 
     /**
      * Default number of SVN commits to display (if user did not change/set preferences)
@@ -40,7 +41,7 @@ class Widget_MyLatestSvnCommits extends Widget {
     {
         parent::__construct('mylatestsvncommits');
         $this->_nb_svn_commits = user_get_preference('my_latests_svn_commits_nb_display');
-        if($this->_nb_svn_commits === false) {
+        if ($this->_nb_svn_commits === false) {
             $this->_nb_svn_commits = self::NB_COMMITS_TO_DISPLAY;
             user_set_preference('my_latests_svn_commits_nb_display', $this->_nb_svn_commits);
         }
@@ -48,7 +49,7 @@ class Widget_MyLatestSvnCommits extends Widget {
 
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('my_index','my_latest_svn_commit');
+        return $GLOBALS['Language']->getText('my_index', 'my_latest_svn_commit');
     }
     public function _getLinkToCommit($group_id, $commit_id)
     {
@@ -87,10 +88,10 @@ class Widget_MyLatestSvnCommits extends Widget {
                             $html .= '<div class="'. util_get_alt_row_color($i++) .'" style="border-bottom:1px solid #ddd">';
                             $html .= '<div style="font-size:0.98em;" class="project-last-commit-text">';
                             $html .= '<a href="'. $this->_getLinkToCommit($project->getGroupId(), $data['revision']) .'">rev #'.$data['revision'].'</a>';
-                            $html .= ' '.$GLOBALS['Language']->getText('my_index','my_latest_svn_commit_on').' ';
+                            $html .= ' '.$GLOBALS['Language']->getText('my_index', 'my_latest_svn_commit_on').' ';
                             //In the db, svn dates are stored as int whereas cvs dates are stored as timestamp
                             $html .= format_date($GLOBALS['Language']->getText('system', 'datefmt'), (is_numeric($data['date']) ? $data['date'] : strtotime($data['date'])));
-                            $html .= ' '.$GLOBALS['Language']->getText('my_index','my_latest_svn_commit_by').' ';
+                            $html .= ' '.$GLOBALS['Language']->getText('my_index', 'my_latest_svn_commit_by').' ';
                             if (isset($data['whoid'])) {
                                 $name = $uh->getDisplayNameFromUserId($data['whoid']);
                             } else {
@@ -113,7 +114,6 @@ class Widget_MyLatestSvnCommits extends Widget {
                         $html .= '<div>' .
                             $GLOBALS['Language']->getText('my_index', 'my_latest_commit_empty') . '</div>';
                     }
-
                 } else {
                     $html .= '<div></div>';
                 }
@@ -176,7 +176,7 @@ class Widget_MyLatestSvnCommits extends Widget {
     }
     function getDescription()
     {
-        return $GLOBALS['Language']->getText('widget_description_my_latest_svn_commits','description');
+        return $GLOBALS['Language']->getText('widget_description_my_latest_svn_commits', 'description');
     }
     function isAjax()
     {

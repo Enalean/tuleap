@@ -36,7 +36,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vCanChangeSVNLog = new Valid_WhiteList('form_can_change_svn_log', array('0', '1'));
     $vCanChangeSVNLog->required();
 
-    if( $request->valid($vTracked) &&
+    if ($request->valid($vTracked) &&
         $request->valid($vPreamble) &&
         $request->valid($vMandatoryRef) &&
         $request->valid($vCanChangeSVNLog)
@@ -57,12 +57,12 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 
         if ($ret) {
             EventManager::instance()->processEvent(Event::SVN_UPDATE_HOOKS, array('group_id' => $group_id));
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_general_settings','upd_success'));
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_general_settings', 'upd_success'));
         } else {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_general_settings','upd_fail'));
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_general_settings', 'upd_fail'));
         }
     } else {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_general_settings','upd_fail'));
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_general_settings', 'upd_fail'));
     }
     $GLOBALS['Response']->redirect('/svn/admin/?func=general_settings&group_id='.$group_id);
 }
@@ -71,7 +71,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
 // htmlcharized and displayed with the entities.
 
 // Display the form
-svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings','gen_settings'),
+svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings', 'gen_settings'),
                         'help' => 'svn.html#general-settings'));
 
 $pm = ProjectManager::instance();

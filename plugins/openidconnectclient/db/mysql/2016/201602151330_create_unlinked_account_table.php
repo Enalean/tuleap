@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201602151330_create_unlinked_account_table extends ForgeUpgrade_Bucket {
+class b201602151330_create_unlinked_account_table extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return 'Create table plugin_openidconnectclient_unlinked_account for OpenID Connect Client plugin';

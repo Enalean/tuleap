@@ -22,7 +22,8 @@
 
 require_once('Docman_MetadataFactory.class.php');
 
-class Docman_MetadataSqlQueryChunk {
+class Docman_MetadataSqlQueryChunk
+{
     var $isRealMetadata;
 
     // SQL aliase for field name in metadata_value or item tables
@@ -38,27 +39,26 @@ class Docman_MetadataSqlQueryChunk {
 
         $this->isRealMetadata = Docman_MetadataFactory::isRealMetadata($md->getLabel());
 
-        if($this->isRealMetadata) {
-            switch($md->getType()) {
+        if ($this->isRealMetadata) {
+            switch ($md->getType()) {
                 case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
                     $this->field = $this->mdv.'.valueText';
-                break;
+                    break;
                 case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
                     $this->field = $this->mdv.'.valueString';
-                break;
+                    break;
                 case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
                     $this->field = $this->mdv.'.valueDate';
-                break;
+                    break;
                 case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
                     $this->field = $this->mdv.'.valueInt';
-                break;
+                    break;
             }
-        }
-        else {
-            switch($md->getLabel()) {
+        } else {
+            switch ($md->getLabel()) {
                 case 'owner':
                     $this->field = 'i.user_id';
-                break;
+                    break;
                 default:
                     $this->field = 'i.'.$md->getLabel();
             }
@@ -80,9 +80,9 @@ class Docman_MetadataSqlQueryChunk {
         return '';
     }
 
-    function _getMdvJoin($label=null)
+    function _getMdvJoin($label = null)
     {
-        if($label !== null) {
+        if ($label !== null) {
             $mdv = 'mdv_'.$label;
             $fieldId = substr($label, 6);
         } else {
@@ -95,5 +95,3 @@ class Docman_MetadataSqlQueryChunk {
         return $stmt;
     }
 }
-
-?>

@@ -21,7 +21,8 @@
 
 require_once 'bootstrap.php';
 
-class Tracker_Semantic_TitleTest extends TuleapTestCase {
+class Tracker_Semantic_TitleTest extends TuleapTestCase
+{
 
     private $xml_security;
 
@@ -50,8 +51,8 @@ class Tracker_Semantic_TitleTest extends TuleapTestCase {
     public function testExport()
     {
         $GLOBALS['Language'] = mock('BaseLanguage');
-        $GLOBALS['Language']->setReturnValue('getText','Title',array('plugin_tracker_admin_semantic','title_label'));
-        $GLOBALS['Language']->setReturnValue('getText','Define the title of an artifact',array('plugin_tracker_admin_semantic','title_description'));
+        $GLOBALS['Language']->setReturnValue('getText', 'Title', array('plugin_tracker_admin_semantic','title_label'));
+        $GLOBALS['Language']->setReturnValue('getText', 'Define the title of an artifact', array('plugin_tracker_admin_semantic','title_description'));
 
         $array_mapping = array('F13' => '102');
         $this->semantic_title->exportToXML($this->root, $array_mapping);

@@ -23,7 +23,8 @@
 /**
  * Graphic engine which builds a graph
  */
-abstract class GraphOnTrackersV5_Engine {
+abstract class GraphOnTrackersV5_Engine
+{
 
     public $graph;
     public $data;
@@ -40,7 +41,7 @@ abstract class GraphOnTrackersV5_Engine {
         } else {
             $GLOBALS['Response']->addFeedback(
                 'info',
-                $GLOBALS['Language']->getText('plugin_graphontrackersv5_engine','no_datas',array($this->title))
+                $GLOBALS['Language']->getText('plugin_graphontrackersv5_engine', 'no_datas', array($this->title))
             );
 
             return false;
@@ -79,7 +80,7 @@ abstract class GraphOnTrackersV5_Engine {
     /** @return bool */
     private function isColorUndefined($color)
     {
-        return $color[0] === NULL || $color[1] === NULL || $color[2] === NULL;
+        return $color[0] === null || $color[1] === null || $color[2] === null;
     }
 
     /** @return string hexadecimal representation of the color */
@@ -112,7 +113,7 @@ abstract class GraphOnTrackersV5_Engine {
     private function getArrayColors()
     {
         $colors = array();
-        foreach($this->colors as $color) {
+        foreach ($this->colors as $color) {
             $colors[] = $this->getColorOrNull($color);
         }
         return $colors;
@@ -139,4 +140,3 @@ abstract class GraphOnTrackersV5_Engine {
         return ! is_array($color) && strpos($color, '-') > 0;
     }
 }
-?>

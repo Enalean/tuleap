@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201604171720_add_remote_servers_auth_type extends ForgeUpgrade_Bucket {
+class b201604171720_add_remote_servers_auth_type extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket

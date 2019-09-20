@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_HTTP_Wrapper {
+class Git_HTTP_Wrapper
+{
 
     /**
      * @var Logger
@@ -62,7 +63,7 @@ class Git_HTTP_Wrapper {
             while ($result = stream_get_contents($pipes[1], self::CHUNK_LENGTH)) {
                 if ($first) {
                     list($headers, $body) = http_split_header_body($result);
-                    foreach(explode("\r\n", $headers) as $header) {
+                    foreach (explode("\r\n", $headers) as $header) {
                         header($header);
                     }
                     file_put_contents('php://output', $body);

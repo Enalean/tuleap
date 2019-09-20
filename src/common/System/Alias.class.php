@@ -23,7 +23,8 @@
  *
  * @see `man alias` for reference.
  */
-class System_Alias {
+class System_Alias
+{
 
     private $value;
     private $name;

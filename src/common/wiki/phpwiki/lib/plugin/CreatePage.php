@@ -33,8 +33,7 @@ rcs_id('$Id: CreatePage.php,v 1.7 2004/09/06 10:22:15 rurban Exp $');
  * Usage: <?plugin-form CreatePage template=SomeTemplatePage vars="year=2004&name=None" ?>
  * @authors: Dan Frankowski, Reini Urban
  */
-class WikiPlugin_CreatePage
-extends WikiPlugin
+class WikiPlugin_CreatePage extends WikiPlugin
 {
     function getName()
     {
@@ -48,8 +47,11 @@ extends WikiPlugin
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.7 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.7 $"
+        );
     }
 
     function getDefaultArguments()
@@ -67,8 +69,9 @@ extends WikiPlugin
     function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
-        if (!$s)
+        if (!$s) {
             return '';
+        }
         // Prevent spaces at the start and end of a page name
         $s = trim($s);
 
@@ -87,8 +90,7 @@ extends WikiPlugin
         // FIXME: expand vars in templates here.
         if (strlen($url) > 255
             or (!empty($vars) and !empty($param['template']))
-            or preg_match('/%%\w+%%/', $initial_content)) // need variable expansion
-        {
+            or preg_match('/%%\w+%%/', $initial_content)) { // need variable expansion
             unset($param['initial_content']);
             $url = WikiURL($s, $param, 'absurl');
             $page = $dbi->getPage($s);
@@ -111,17 +113,20 @@ extends WikiPlugin
                 if (preg_match('/%%\w+%%/', $initial_content)) {
                     $var = array();
                     if (!empty($vars)) {
-                        foreach (preg_split("/&/D",$vars) as $pair) {
-                            list($key,$val) = preg_split("/=/D",$pair);
+                        foreach (preg_split("/&/D", $vars) as $pair) {
+                            list($key,$val) = preg_split("/=/D", $pair);
                             $var[$key] = $val;
                         }
                     }
-                    if (empty($var['pagename']))
+                    if (empty($var['pagename'])) {
                         $var['pagename'] = $s;
-                    if (empty($var['ctime']) and preg_match('/%%ctime%%/', $initial_content))
+                    }
+                    if (empty($var['ctime']) and preg_match('/%%ctime%%/', $initial_content)) {
                         $var['ctime'] = $GLOBALS['WikiTheme']->formatDateTime(time());
-                    if (empty($var['author']) and preg_match('/%%author%%/', $initial_content))
+                    }
+                    if (empty($var['author']) and preg_match('/%%author%%/', $initial_content)) {
                         $var['author'] = $user->getId();
+                    }
 
                     foreach ($var as $key => $val) {
                         $initial_content = preg_replace('/%%' . preg_quote($key, '/') . '%%/', $val, $initial_content);
@@ -183,4 +188,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

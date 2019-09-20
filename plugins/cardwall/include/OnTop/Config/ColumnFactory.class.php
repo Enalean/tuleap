@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__). '/../../constants.php';
 
-class Cardwall_OnTop_Config_ColumnFactory {
+class Cardwall_OnTop_Config_ColumnFactory
+{
 
     public const DEFAULT_HEADER_COLOR = 'rgb(248,248,248)';
 
@@ -99,7 +100,8 @@ class Cardwall_OnTop_Config_ColumnFactory {
             } else {
                 try {
                     $field_values[] = $field->getBind()->getValue($value_id);
-                } catch (Tracker_FormElement_InvalidFieldValueException $exception) {}
+                } catch (Tracker_FormElement_InvalidFieldValueException $exception) {
+                }
             }
         }
         return $field_values;
@@ -141,7 +143,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
 
         if ($tlp_color_name) {
             $header_color = $tlp_color_name;
-        } else if ($r !== null && $g !== null && $b !== null) {
+        } elseif ($r !== null && $g !== null && $b !== null) {
             $header_color = "rgb($r, $g, $b)";
         }
 

@@ -42,7 +42,8 @@ function group_get_object_by_name($groupname)
     return $pm->getProjectByUnixName($groupname);
 }
 
-class Group {
+class Group
+{
 
     //associative array of data from db
     var $data_array;
@@ -78,12 +79,12 @@ class Group {
         if (is_array($param)) {
             $this->group_id=$param['group_id'];
             $this->data_array=$param;
-        } elseif(intval($param) > 0) {
+        } elseif (intval($param) > 0) {
             $this->group_id=(int)$param; // TODO db_es()?
             $this->db_result=db_query("SELECT * FROM groups WHERE group_id=".$this->group_id);
             if (db_numrows($this->db_result) < 1) {
              //function in class we extended
-                $this->setError($Language->getText('include_group','g_not_found'));
+                $this->setError($Language->getText('include_group', 'g_not_found'));
                 $this->data_array=array();
             } else {
              //set up an associative array for use by other functions
@@ -268,7 +269,7 @@ class Group {
     function getMembersUserNames(?ProjectManager $pm = null)
     {
         if (!$this->members_usernames_data_array) {
-            if(is_null($pm)) {
+            if (is_null($pm)) {
                 $pm = ProjectManager::instance();
             }
             $this->members_usernames_data_array = $pm->getProjectMembers($this->getGroupId());
@@ -287,7 +288,7 @@ class Group {
     /*
         Simple test to see if the current user is a member of this project
     */
-    function userIsMember($field='user_id',$value=0)
+    function userIsMember($field = 'user_id', $value = 0)
     {
         if ($this->userIsAdmin()) {
      //admins are tested first so that super-users can return true
@@ -318,7 +319,6 @@ class Group {
             if (HTTPRequest::instance()->getCurrentUser()->isSuperUser()) {
                 $this->is_admin = true;
             } else {
-
                 if (user_isloggedin()) {
                     $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
                     //check to see if site super-user
@@ -431,7 +431,4 @@ class Group {
     {
         return $this->error_state;
     }
-
 }
-
-?>

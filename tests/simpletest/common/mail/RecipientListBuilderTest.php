@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Mail_RecipientListBuilderTest extends TuleapTestCase {
+class Mail_RecipientListBuilderTest extends TuleapTestCase
+{
 
     private $external_address           = 'toto@example.com';
     private $external_address2          = 'toto2@example.com';

@@ -97,7 +97,6 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget
             } else {
                 $this->job = null;
             }
-
         }
     }
 

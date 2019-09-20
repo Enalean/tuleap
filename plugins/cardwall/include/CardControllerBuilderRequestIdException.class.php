@@ -19,11 +19,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class CardControllerBuilderRequestIdException extends Exception {
+class CardControllerBuilderRequestIdException extends Exception
+{
     public function __construct()
     {
         $message = 'Invalid/missing card id (id)';
         parent::__construct($message);
     }
 }
-?>

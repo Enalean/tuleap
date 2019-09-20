@@ -18,5 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Exception_TV3XMLException extends Exception {
+class Exception_TV3XMLException extends Exception
+{
 }

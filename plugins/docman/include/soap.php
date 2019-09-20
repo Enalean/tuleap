@@ -29,15 +29,14 @@ define('PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN', '3020');
 define('invalid_operator', '3021');
 
 if (defined('NUSOAP')) {
-
 // Type definition
     $GLOBALS['server']->wsdl->addComplexType(
-    'Docman_Item',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'Docman_Item',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'item_id' => array('name'=>'item_id', 'type' => 'xsd:int'),
         'parent_id' => array('name'=>'parent', 'type' => 'xsd:int'),
         'group_id' => array('name'=>'group_id', 'type' => 'xsd:int'),
@@ -51,144 +50,142 @@ if (defined('NUSOAP')) {
         'obsolescence_date' => array('name'=>'obsolescence_date', 'type' => 'xsd:int'),
         'rank' => array('name'=>'rank', 'type' => 'xsd:int'),
         'item_type' => array('name'=>'item_type', 'type' => 'xsd:int'),
-    )
+        )
     );
 
     $GLOBALS['server']->wsdl->addComplexType(
-    'ArrayOfDocman_Item',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Docman_Item[]')),
-    'tns:Docman_Item'
+        'ArrayOfDocman_Item',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Docman_Item[]')),
+        'tns:Docman_Item'
     );
 
     $GLOBALS['server']->wsdl->addComplexType(
-    'Permission',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'Permission',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'type' => array('name'=>'type', 'type' => 'xsd:string'),
         'ugroup_id' => array('name'=>'ugroup_id', 'type' => 'xsd:int'),
-    )
+        )
     );
 
     $GLOBALS['server']->wsdl->addComplexType(
-    'ArrayOfPermission',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Permission[]')),
-    'tns:Permission'
+        'ArrayOfPermission',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Permission[]')),
+        'tns:Permission'
     );
 
     $GLOBALS['server']->wsdl->addComplexType(
-    'MetadataValue',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'MetadataValue',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'label' => array('name'=>'label', 'type' => 'xsd:string'),
         'value' => array('name'=>'value', 'type' => 'xsd:string'),
-    )
+        )
     );
 
     $GLOBALS['server']->wsdl->addComplexType(
-    'ArrayOfMetadataValue',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:MetadataValue[]')),
-    'tns:MetadataValue'
+        'ArrayOfMetadataValue',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:MetadataValue[]')),
+        'tns:MetadataValue'
     );
 
     $GLOBALS['server']->wsdl->addComplexType(
-    'MetadataListValue',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'MetadataListValue',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'id' => array('name'=>'id', 'type' => 'xsd:int'),
         'name'     => array('name'=>'name', 'type' => 'xsd:string'),
-    )
+        )
     );
 
     $GLOBALS['server']->wsdl->addComplexType(
-    'ArrayOfMetadataListValue',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:MetadataListValue[]')),
-    'tns:MetadataListValue'
+        'ArrayOfMetadataListValue',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:MetadataListValue[]')),
+        'tns:MetadataListValue'
     );
 
     $GLOBALS['server']->wsdl->addComplexType(
-    'Metadata',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'Metadata',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'label' => array('name'=>'label', 'type' => 'xsd:string'),
         'name' => array('name'=>'name', 'type' => 'xsd:string'),
         'type' => array('name'=>'type', 'type' => 'xsd:string'),
         'isMultipleValuesAllowed' => array('name'=>'isMultipleValuesAllowed', 'type' => 'xsd:int'),
         'isEmptyAllowed' => array('name'=>'isEmptyAllowed', 'type' => 'xsd:int'),
         'listOfValues' => array('name'=>'listOfValues', 'type' => 'tns:ArrayOfMetadataListValue'),
-    )
+        )
     );
 
     $GLOBALS['server']->wsdl->addComplexType(
-    'ArrayOfMetadata',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Metadata[]')),
-    'tns:Metadata'
+        'ArrayOfMetadata',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Metadata[]')),
+        'tns:Metadata'
     );
 
     $GLOBALS['server']->wsdl->addComplexType(
-    'ItemInfo',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ItemInfo',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'id' => array('name'=>'id', 'type' => 'xsd:int'),
         'parent_id' => array('name'=>'parent_id', 'type' => 'xsd:int'),
         'title' => array('name'=>'title', 'type' => 'xsd:string'),
         'filename' => array('name'=>'filename', 'type' => 'xsd:string'),
         'type' => array('name'=>'type', 'type' => 'xsd:string'),
         'nb_versions' => array('name'=>'nb_versions', 'type' => 'xsd:int'),
-    )
+        )
     );
 
     $GLOBALS['server']->wsdl->addComplexType(
-    'ArrayOfItemInfo',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ItemInfo[]')),
-    'tns:ItemInfo'
+        'ArrayOfItemInfo',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ItemInfo[]')),
+        'tns:ItemInfo'
     );
-
-
 }
 
 /**
@@ -287,10 +284,18 @@ function _get_metadata_as_array($metadata)
 function _get_status_value($status)
 {
     switch ($status) {
-        case 'draft' : $value = PLUGIN_DOCMAN_ITEM_STATUS_DRAFT; break;
-        case 'approved' : $value = PLUGIN_DOCMAN_ITEM_STATUS_APPROVED; break;
-        case 'rejected' : $value = PLUGIN_DOCMAN_ITEM_STATUS_REJECTED; break;
-        default : $value = PLUGIN_DOCMAN_ITEM_STATUS_NONE; break;
+        case 'draft':
+            $value = PLUGIN_DOCMAN_ITEM_STATUS_DRAFT;
+            break;
+        case 'approved':
+            $value = PLUGIN_DOCMAN_ITEM_STATUS_APPROVED;
+            break;
+        case 'rejected':
+            $value = PLUGIN_DOCMAN_ITEM_STATUS_REJECTED;
+            break;
+        default:
+            $value = PLUGIN_DOCMAN_ITEM_STATUS_NONE;
+            break;
     }
 
     return $value;
@@ -361,15 +366,33 @@ function _buildItemParams($group_id, $perm_item_id, $title, $description, $statu
 {
     $params = array();
 
-    if ($title !== null)       $params['item']['title'] = $title;
-    if ($description !== null) $params['item']['description'] = $description;
-    if ($type !== null)        $params['item']['item_type'] = $type;
-    if ($status !== null)      $params['item']['status'] = _get_status_value($status);
-    if ($create_date !== null) $params['item']['create_date'] = $create_date;
-    if ($update_date !== null) $params['item']['update_date'] = $update_date;
-    if ($owner !== null)       $params['item']['owner'] = $owner;
-    if ($permissions !== null) $params['permissions'] = _get_permissions_as_array($group_id, $perm_item_id, $permissions);
-    if ($metadata !== null)    $params['metadata'] = _get_metadata_as_array($metadata);
+    if ($title !== null) {
+        $params['item']['title'] = $title;
+    }
+    if ($description !== null) {
+        $params['item']['description'] = $description;
+    }
+    if ($type !== null) {
+        $params['item']['item_type'] = $type;
+    }
+    if ($status !== null) {
+        $params['item']['status'] = _get_status_value($status);
+    }
+    if ($create_date !== null) {
+        $params['item']['create_date'] = $create_date;
+    }
+    if ($update_date !== null) {
+        $params['item']['update_date'] = $update_date;
+    }
+    if ($owner !== null) {
+        $params['item']['owner'] = $owner;
+    }
+    if ($permissions !== null) {
+        $params['permissions'] = _get_permissions_as_array($group_id, $perm_item_id, $permissions);
+    }
+    if ($metadata !== null) {
+        $params['metadata'] = _get_metadata_as_array($metadata);
+    }
 
     return $params;
 }
@@ -422,7 +445,9 @@ function _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $descript
  */
 function _createDocmanDocument($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams = array())
 {
-    if ($obsolescence_date !== null) $extraParams['item']['obsolescence_date'] = $obsolescence_date;
+    if ($obsolescence_date !== null) {
+        $extraParams['item']['obsolescence_date'] = $obsolescence_date;
+    }
     return _createDocmanItem($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $type, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
 }
 
@@ -462,7 +487,7 @@ function _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $descri
 /**
 * Returns the document object that is at the top of the docman given a group object.
 */
-function getRootFolder($sessionKey,$group_id)
+function getRootFolder($sessionKey, $group_id)
 {
     return _makeDocmanRequest($sessionKey, $group_id, 'getRootFolder');
 }
@@ -472,7 +497,7 @@ $soapFunctions[] = array('getRootFolder', 'Returns the document object id that i
 /**
 * Lists the contents of a folder
 */
-function listFolder($sessionKey,$group_id,$item_id)
+function listFolder($sessionKey, $group_id, $item_id)
 {
     $params = array('id' => $item_id, 'report' => 'List');
     return _makeDocmanRequest($sessionKey, $group_id, 'show', $params);
@@ -483,16 +508,16 @@ function operatorToValue($operator)
 {
     if ($operator == '=') {
         return 0;
-    } else if ($operator == '<') {
+    } elseif ($operator == '<') {
         return -1;
-    } else if ($operator == '>') {
+    } elseif ($operator == '>') {
         return 1;
     }
 }
 
 function isValidOperator($operator)
 {
-    if($operator == '<' ||
+    if ($operator == '<' ||
        $operator == '>' ||
        $operator == '=') {
         return true;
@@ -506,8 +531,7 @@ function isValidOperator($operator)
 function searchDocmanItem($sessionKey, $group_id, $item_id, $criterias)
 {
     $params = array('id' => $item_id);
-    foreach($criterias as $criteria) {
-
+    foreach ($criterias as $criteria) {
         $params[$criteria->field_name.'_value'] = $criteria->field_value;
         if (!isValidOperator($criteria->operator)) {
             return new SoapFault(invalid_operator, 'This operator is not valid. Only <, >, = are valid.', 'searchDocmanItem');
@@ -566,7 +590,7 @@ function getDocmanProjectMetadata($sessionKey, $group_id)
 
     foreach ($result as &$md) {
         $md->listOfValues = array();
-        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+        if ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             $md->listOfValues = _makeDocmanRequest($sessionKey, $group_id, 'getMetadataListOfValues', array('label' => $md->getLabel()));
         }
     }
@@ -854,7 +878,9 @@ $soapFunctions[] = array('updateDocmanEmbeddedFile', 'Updates a docman embedded 
  */
 function updateDocmanWikiPage($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date)
 {
-    if ($content !== null) $extraParams['item']['wiki_page'] = $content;
+    if ($content !== null) {
+        $extraParams['item']['wiki_page'] = $content;
+    }
     return _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
 }
 $soapFunctions[] = array('updateDocmanWikiPage', 'Updates a docman wiki page');
@@ -865,7 +891,9 @@ $soapFunctions[] = array('updateDocmanWikiPage', 'Updates a docman wiki page');
  */
 function updateDocmanLink($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, $content, $permissions, $metadata, $owner, $create_date, $update_date)
 {
-    if ($content !== null) $extraParams['item']['link_url'] = $content;
+    if ($content !== null) {
+        $extraParams['item']['link_url'] = $content;
+    }
     return _updateDocmanDocument($sessionKey, $group_id, $item_id, $title, $description, $status, $obsolescence_date, PLUGIN_DOCMAN_ITEM_TYPE_LINK, $permissions, $metadata, $owner, $create_date, $update_date, $extraParams);
 }
 $soapFunctions[] = array('updateDocmanLink', 'Updates a docman link');
@@ -973,5 +1001,3 @@ function _registerFunctions($functions)
 }
 
 _registerFunctions($soapFunctions);
-
-?>

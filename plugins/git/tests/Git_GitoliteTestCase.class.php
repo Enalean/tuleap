@@ -26,7 +26,8 @@ Mock::generate('PermissionsManager');
 Mock::generate('DataAccessResult');
 Mock::generate('Git_PostReceiveMailManager');
 
-abstract class Git_GitoliteTestCase extends TuleapTestCase {
+abstract class Git_GitoliteTestCase extends TuleapTestCase
+{
 
     /** @var Git_GitoliteDriver */
     protected $driver;
@@ -101,7 +102,6 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
             mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory'),
             mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
             mock(EventManager::class)
-
         );
 
         $this->git_system_event_manager = mock('Git_SystemEventManager');

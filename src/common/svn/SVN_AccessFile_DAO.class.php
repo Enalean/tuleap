@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SVN_AccessFile_DAO extends DataAccessObject {
+class SVN_AccessFile_DAO extends DataAccessObject
+{
 
     private function addNewVersion($group_id, $content)
     {
@@ -131,7 +132,7 @@ class SVN_AccessFile_DAO extends DataAccessObject {
 
         $result = $this->retrieve($sql);
 
-        if(! $result) {
+        if (! $result) {
             return null;
         }
 
@@ -150,7 +151,7 @@ class SVN_AccessFile_DAO extends DataAccessObject {
 
         $result = $this->retrieve($sql);
 
-        if(! $result) {
+        if (! $result) {
             return null;
         }
 

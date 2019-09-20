@@ -22,7 +22,8 @@ namespace Tuleap\Tracker\Artifact\Attachment;
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
-class PaginatedTemporaryFiles {
+class PaginatedTemporaryFiles
+{
 
     private $total_count;
 

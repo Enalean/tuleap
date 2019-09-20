@@ -18,5 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_NoPlanningsException extends Exception{}
-?>
+class Planning_NoPlanningsException extends Exception
+{
+}

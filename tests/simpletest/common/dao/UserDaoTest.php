@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class UserDaoTest extends TuleapTestCase {
+class UserDaoTest extends TuleapTestCase
+{
 
     function testReplaceStringInList()
     {
@@ -46,4 +47,3 @@ class UserDaoTest extends TuleapTestCase {
         $this->assertEqual($dao->replaceStringInList('foo,bar,foo', 'foo', 'tutu'), 'tutu,bar,tutu');
     }
 }
-?>

@@ -22,7 +22,8 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_Admin_Permissions extends Docman_View_Extra {
+class Docman_View_Admin_Permissions extends Docman_View_Extra
+{
 
     function _title($params)
     {

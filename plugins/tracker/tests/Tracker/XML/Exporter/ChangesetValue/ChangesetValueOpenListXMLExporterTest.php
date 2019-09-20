@@ -19,7 +19,8 @@
  */
 require_once __DIR__.'/../../../../bootstrap.php';
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter_UsersTest extends TuleapTestCase {
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter_UsersTest extends TuleapTestCase
+{
 
     /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter */
     private $exporter;
@@ -83,7 +84,8 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter_User
     }
 }
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter_UgroupsTest extends TuleapTestCase {
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter_UgroupsTest extends TuleapTestCase
+{
 
     /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter */
     private $exporter;
@@ -148,7 +150,8 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter_Ugro
     }
 }
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter_StaticTest extends TuleapTestCase {
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter_StaticTest extends TuleapTestCase
+{
 
     /** @var Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter */
     private $exporter;

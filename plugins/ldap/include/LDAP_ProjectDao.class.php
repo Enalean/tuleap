@@ -26,8 +26,7 @@
  * Access to LDAP project settings
  *
  */
-class LDAP_ProjectDao
-extends DataAccessObject
+class LDAP_ProjectDao extends DataAccessObject
 {
     /**
      * Check if given project has its svn repository with LDAP authentication
@@ -68,13 +67,10 @@ extends DataAccessObject
             ' JOIN groups USING (group_id)'.
             ' WHERE unix_group_name='.$this->da->quoteSmart($groupName);
         $dar = $this->retrieve($sql);
-        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             return true;
         } else {
             return false;
         }
     }
-
 }
-
-?>

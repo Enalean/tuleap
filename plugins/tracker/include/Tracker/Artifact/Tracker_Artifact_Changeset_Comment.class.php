@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_Changeset_Comment {
+class Tracker_Artifact_Changeset_Comment
+{
 
     /**
      * @const Changeset comment format is text.
@@ -305,7 +306,7 @@ class Tracker_Artifact_Changeset_Comment {
         } else {
             $user = UserManager::instance()->getUserAnonymous();
             $user->setEmail($this->changeset->getEmail());
-            $user_info = $GLOBALS['Language']->getText('tracker_include_artifact','anon_user');
+            $user_info = $GLOBALS['Language']->getText('tracker_include_artifact', 'anon_user');
         }
 
         return $user_info;

@@ -35,7 +35,8 @@
  *   real metadata all parameters may change. But for HardCoded metadata, only
  *   some parmaeters of some metadata may change (eg. 'use_it' for 'status').
  */
-class Docman_Metadata {
+class Docman_Metadata
+{
     var $id;
     var $groupId;
     var $name;
@@ -193,49 +194,44 @@ class Docman_Metadata {
     //{{{ Convenient accessors
     function isEmptyAllowed()
     {
-        if($this->isEmptyAllowed == PLUGIN_DOCMAN_DB_TRUE) {
+        if ($this->isEmptyAllowed == PLUGIN_DOCMAN_DB_TRUE) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     function isMultipleValuesAllowed()
     {
-        if($this->isMultipleValuesAllowed == PLUGIN_DOCMAN_DB_TRUE) {
+        if ($this->isMultipleValuesAllowed == PLUGIN_DOCMAN_DB_TRUE) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     function isRequired()
     {
-        if($this->isRequired == PLUGIN_DOCMAN_DB_TRUE) {
+        if ($this->isRequired == PLUGIN_DOCMAN_DB_TRUE) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
     function isUsed()
     {
-        if($this->useIt == PLUGIN_DOCMAN_METADATA_USED) {
+        if ($this->useIt == PLUGIN_DOCMAN_METADATA_USED) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     function isSpecial()
     {
-        if($this->special > 0) {
+        if ($this->special > 0) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -315,17 +311,39 @@ class Docman_Metadata {
 
     function initFromRow($row)
     {
-        if(isset($row['field_id'])) $this->id = $row['field_id'];
-        if(isset($row['group_id'])) $this->groupId = $row['group_id'];
-        if(isset($row['name'])) $this->name = $row['name'];
-        if(isset($row['data_type'])) $this->type = $row['data_type'];
-        if(isset($row['label'])) $this->label = $row['label'];
-        if(isset($row['description'])) $this->description = $row['description'];
-        if(isset($row['required'])) $this->isRequired = $row['required'];
-        if(isset($row['empty_ok'])) $this->isEmptyAllowed = $row['empty_ok'];
-        if(isset($row['mul_val_ok'])) $this->isMultipleValuesAllowed = $row['mul_val_ok'];
-        if(isset($row['special'])) $this->special = $row['special'];
-        if(isset($row['use_it'])) $this->useIt = $row['use_it'];
+        if (isset($row['field_id'])) {
+            $this->id = $row['field_id'];
+        }
+        if (isset($row['group_id'])) {
+            $this->groupId = $row['group_id'];
+        }
+        if (isset($row['name'])) {
+            $this->name = $row['name'];
+        }
+        if (isset($row['data_type'])) {
+            $this->type = $row['data_type'];
+        }
+        if (isset($row['label'])) {
+            $this->label = $row['label'];
+        }
+        if (isset($row['description'])) {
+            $this->description = $row['description'];
+        }
+        if (isset($row['required'])) {
+            $this->isRequired = $row['required'];
+        }
+        if (isset($row['empty_ok'])) {
+            $this->isEmptyAllowed = $row['empty_ok'];
+        }
+        if (isset($row['mul_val_ok'])) {
+            $this->isMultipleValuesAllowed = $row['mul_val_ok'];
+        }
+        if (isset($row['special'])) {
+            $this->special = $row['special'];
+        }
+        if (isset($row['use_it'])) {
+            $this->useIt = $row['use_it'];
+        }
 
         $this->setCanChangeValue(true);
     }
@@ -400,7 +418,8 @@ class Docman_Metadata {
  * - a list of values the user selected, accessible by regular setValue() and
  *   getValue().
  */
-class Docman_ListMetadata extends Docman_Metadata {
+class Docman_ListMetadata extends Docman_Metadata
+{
     var $listOfValue;
 
     function __construct()
@@ -428,10 +447,10 @@ class Docman_ListMetadata extends Docman_Metadata {
 
     function setDefaultValue($v)
     {
-        if(is_a($v, 'Iterator')) {
+        if (is_a($v, 'Iterator')) {
             $v->rewind();
             //if(is_a($love, 'Docman_MetadataListOfValuesElement')) {
-            while($v->valid()) {
+            while ($v->valid()) {
                 $love = $v->current();
                 $this->defaultValue[] = $love->getId();
                 $v->next();
@@ -439,8 +458,5 @@ class Docman_ListMetadata extends Docman_Metadata {
         } else {
             $this->defaultValue[] = $v;
         }
-
     }
 }
-
-?>

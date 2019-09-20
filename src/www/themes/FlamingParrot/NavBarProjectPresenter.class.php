@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FlamingParrot_NavBarProjectPresenter {
+class FlamingParrot_NavBarProjectPresenter
+{
 
     /** @var  string */
     public $project_name;

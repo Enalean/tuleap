@@ -24,7 +24,8 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 
-class AgileDashboardScrumConfigurationUpdater {
+class AgileDashboardScrumConfigurationUpdater
+{
 
     /** @var int */
     private $project_id;
@@ -96,7 +97,7 @@ class AgileDashboardScrumConfigurationUpdater {
         if ($this->request->get('home-ease-onboarding') === false) {
             if ($this->request->get('activate-scrum-v2') && $is_scrum_mono_milestone_enabled === false) {
                 $this->scrum_mono_milestone_enabler->enableScrumForMonoMilestones($this->project_id);
-            } else if ($this->request->get('activate-scrum-v2') == false && $is_scrum_mono_milestone_enabled === true) {
+            } elseif ($this->request->get('activate-scrum-v2') == false && $is_scrum_mono_milestone_enabled === true) {
                 $this->scrum_mono_milestone_disabler->disableScrumForMonoMilestones($this->project_id);
             }
         }

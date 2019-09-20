@@ -20,7 +20,8 @@
 
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
 
-class SystemEvent_GIT_REPO_FORK extends SystemEvent {
+class SystemEvent_GIT_REPO_FORK extends SystemEvent
+{
     public const NAME =  'GIT_REPO_FORK';
 
     /** @var GitRepositoryFactory */
@@ -87,7 +88,4 @@ class SystemEvent_GIT_REPO_FORK extends SystemEvent {
         $project = $repository->getProject();
         return '<a href="/plugins/git/?action=repo_management&group_id='.$project->getId().'&repo_id='.$repository->getId().'">'.$project->getUnixName().'/'.$repository->getFullName().'</a>';
     }
-
 }
-
-?>

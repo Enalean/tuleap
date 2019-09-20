@@ -27,7 +27,8 @@
 *
 * @abstract
 */
-/* abstract */ class ArtifactRule {
+/* abstract */ class ArtifactRule
+{
 
     var $id;
     var $group_artifact_id;
@@ -44,4 +45,3 @@
         $this->target_field      = $target_field;
     }
 }
-?>

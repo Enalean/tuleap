@@ -25,7 +25,8 @@ require_once __DIR__.'/../../bootstrap.php';
 Mock::generate('Project');
 Mock::generate('TrackerFactory');
 
-class HierarchicalTrackerFactoryTest extends TuleapTestCase {
+class HierarchicalTrackerFactoryTest extends TuleapTestCase
+{
 
     function testGetWithChildren()
     {

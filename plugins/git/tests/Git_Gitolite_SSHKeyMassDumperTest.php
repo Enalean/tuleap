@@ -21,7 +21,8 @@
 require_once 'Git_Gitolite_SSHKeyDumperTest.php';
 require_once 'bootstrap.php';
 
-class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase {
+class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
+{
     protected $mass_dumper;
 
     public function setUp()

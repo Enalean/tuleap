@@ -114,7 +114,7 @@ class Tracker_HierarchyFactory
     {
         if (!isset($this->cache_children_of_tracker[$tracker_id])) {
             $this->cache_children_of_tracker[$tracker_id] = array();
-            foreach($this->hierarchy_dao->searchChildTrackerIds($tracker_id) as $row) {
+            foreach ($this->hierarchy_dao->searchChildTrackerIds($tracker_id) as $row) {
                 $this->cache_children_of_tracker[$tracker_id][] = $this->tracker_factory->getTrackerById($row['id']);
             }
         }
@@ -322,5 +322,3 @@ class Tracker_HierarchyFactory
         $stack[] = $child_id;
     }
 }
-
-?>

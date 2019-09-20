@@ -42,7 +42,8 @@ use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
  *
  * @see       WikiAttachment
  */
-class WikiAttachmentRevision {
+class WikiAttachmentRevision
+{
     var $id;
     var $attachmentId;
     var $owner_id;
@@ -62,9 +63,9 @@ class WikiAttachmentRevision {
     private $displayFilename;
 
 
-    function __construct($gid=null)
+    function __construct($gid = null)
     {
-        if(is_numeric($gid)) {
+        if (is_numeric($gid)) {
             $this->gid = (int) $gid;
             $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'].'/'.$this->gid;
         }
@@ -74,7 +75,7 @@ class WikiAttachmentRevision {
     {
         static $_codendi_wikiattachmentrevisiondao_instance;
 
-        if(!$_codendi_wikiattachmentrevisiondao_instance) {
+        if (!$_codendi_wikiattachmentrevisiondao_instance) {
             $_codendi_wikiattachmentrevisiondao_instance = new WikiAttachmentRevisionDao(CodendiDataAccess::instance());
         }
 
@@ -86,17 +87,20 @@ class WikiAttachmentRevision {
         $dao = $this->getDao();
         $dar = $dao->getRevision($this->attachmentId, $this->revision);
 
-        if($dar->rowCount() > 1) {
-            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev',
-                                                        'err_multi_id',
-                                                        array($GLOBALS['sys_email_admin'],
+        if ($dar->rowCount() > 1) {
+            trigger_error(
+                $GLOBALS['Language']->getText(
+                    'wiki_lib_attachment_rev',
+                    'err_multi_id',
+                    array($GLOBALS['sys_email_admin'],
                                                               $this->attachmentId,
                                                               $this->revision,
-                                                              $GLOBALS['sys_fullname']))
-                          ,E_USER_ERROR);
+                    $GLOBALS['sys_fullname'])
+                ),
+                E_USER_ERROR
+            );
             return false;
-        }
-        else {
+        } else {
             $this->setFromRow($dar->getRow());
         }
     }
@@ -111,11 +115,15 @@ class WikiAttachmentRevision {
         $waIter = $this->getRevisionIterator();
         $this->revision = $waIter->count();
 
-        if(!move_uploaded_file($userfile_tmpname, $file_dir.'/'.$this->revision)) {
-            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev',
-                                                        'err_upl_mv',
-                                                        array($this->filename)),
-                          E_USER_ERROR);
+        if (!move_uploaded_file($userfile_tmpname, $file_dir.'/'.$this->revision)) {
+            trigger_error(
+                $GLOBALS['Language']->getText(
+                    'wiki_lib_attachment_rev',
+                    'err_upl_mv',
+                    array($this->filename)
+                ),
+                E_USER_ERROR
+            );
             return false;
         }
 
@@ -131,20 +139,25 @@ class WikiAttachmentRevision {
     function dbadd()
     {
         $dao = $this->getDao();
-        $res = $dao->create($this->attachmentId,
-                            $this->owner_id,
-                            $this->date,
-                            $this->revision,
-                            $this->mimeType,
-                            $this->size);
+        $res = $dao->create(
+            $this->attachmentId,
+            $this->owner_id,
+            $this->date,
+            $this->revision,
+            $this->mimeType,
+            $this->size
+        );
 
-        if($res === false) {
-            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev',
-                                                        'err_create'),
-                          E_USER_ERROR);
+        if ($res === false) {
+            trigger_error(
+                $GLOBALS['Language']->getText(
+                    'wiki_lib_attachment_rev',
+                    'err_create'
+                ),
+                E_USER_ERROR
+            );
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -187,11 +200,13 @@ class WikiAttachmentRevision {
     function log($userId)
     {
         $dao = $this->getDao();
-        $dao->log($this->attachmentId,
-                  $this->id,
-                  $this->gid,
-                  $userId,
-                  time());
+        $dao->log(
+            $this->attachmentId,
+            $this->id,
+            $this->gid,
+            $userId,
+            time()
+        );
     }
 
 
@@ -206,7 +221,7 @@ class WikiAttachmentRevision {
         $this->size         = $row['size'];
     }
 
-    function setFilename($name="")
+    function setFilename($name = "")
     {
         $this->filename = $name;
         return true;
@@ -214,7 +229,7 @@ class WikiAttachmentRevision {
 
     function setGid($gid)
     {
-        if(is_numeric($gid)) {
+        if (is_numeric($gid)) {
             $this->gid = (int) $gid;
             $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'].'/'.$this->gid;
         }
@@ -225,9 +240,13 @@ class WikiAttachmentRevision {
         global $sys_max_size_upload;
 
         if ($s> $sys_max_size_upload) {
-            trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev',
-                                                        'err_too_big'),
-                          E_USER_ERROR);
+            trigger_error(
+                $GLOBALS['Language']->getText(
+                    'wiki_lib_attachment_rev',
+                    'err_too_big'
+                ),
+                E_USER_ERROR
+            );
             return false;
         }
 
@@ -273,7 +292,7 @@ class WikiAttachmentRevision {
 
     function getFilename()
     {
-        if(empty($this->filename)) {
+        if (empty($this->filename)) {
             $wa = new WikiAttachment();
             // @todo: catch error when wiki no attachementId is set.
             $wa->initWithId($this->attachmentId);
@@ -318,21 +337,20 @@ class WikiAttachmentRevision {
      * @access public static
      * @param  Iterator
      */
-    function getRevisionIterator($gid=null, $id=null)
+    function getRevisionIterator($gid = null, $id = null)
     {
         $warArray = array();
-        if($id !== null) {
+        if ($id !== null) {
             $id  = (int) $id;
             $gid = (int) $gid;
-        }
-        else {
+        } else {
             $gid = $this->gid;
             $id  = $this->attachmentId;
         }
 
         $dao = WikiAttachmentRevision::getDao();
         $dar = $dao->getAllRevisions($id);
-        while($row = $dar->getRow()) {
+        while ($row = $dar->getRow()) {
             $war = new WikiAttachmentRevision($gid);
             $war->setFromRow($row);
             $warArray[] = $war;
@@ -342,7 +360,4 @@ class WikiAttachmentRevision {
         $ai = new ArrayIterator($warArray);
         return $ai;
     }
-
 }
-
-?>

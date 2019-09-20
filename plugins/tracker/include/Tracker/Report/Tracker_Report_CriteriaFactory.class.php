@@ -19,7 +19,8 @@
  */
 
 
-class Tracker_Report_CriteriaFactory {
+class Tracker_Report_CriteriaFactory
+{
 
     /**
      * A protected constructor; prevents direct creation of object
@@ -56,7 +57,8 @@ class Tracker_Report_CriteriaFactory {
             $row['report'],
             $row['field'],
             $row['rank'],
-            $row['is_advanced']);
+            $row['is_advanced']
+        );
     }
 
     /**
@@ -93,7 +95,6 @@ class Tracker_Report_CriteriaFactory {
 
     public function saveObject($criteria)
     {
-
     }
 
     protected function getDao()
@@ -101,4 +102,3 @@ class Tracker_Report_CriteriaFactory {
         return new Tracker_Report_CriteriaDao();
     }
 }
-?>

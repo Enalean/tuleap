@@ -21,7 +21,8 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-class NatureSelectorPresenter {
+class NatureSelectorPresenter
+{
 
     public $natures;
     public $select_classes;

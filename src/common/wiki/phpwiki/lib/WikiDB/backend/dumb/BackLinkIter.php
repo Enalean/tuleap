@@ -10,8 +10,7 @@ require_once('lib/WikiDB/backend.php');
  *
  * This is mostly here for testing, 'cause it's slow,slow,slow.
  */
-class WikiDB_backend_dumb_BackLinkIter
-extends WikiDB_backend_iterator
+class WikiDB_backend_dumb_BackLinkIter extends WikiDB_backend_iterator
 {
     function __construct(&$backend, &$all_pages, $pagename)
     {
@@ -48,5 +47,3 @@ extends WikiDB_backend_iterator
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-
-?>

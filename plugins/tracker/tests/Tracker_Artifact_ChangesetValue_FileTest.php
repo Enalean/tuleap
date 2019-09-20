@@ -25,7 +25,8 @@ Mock::generate('Tracker_FormElement_Field_File');
 
 Mock::generate('Tracker_FileInfo');
 
-class Tracker_Artifact_ChangesetValue_FileTest extends TuleapTestCase {
+class Tracker_Artifact_ChangesetValue_FileTest extends TuleapTestCase
+{
 
     public function setUp()
     {

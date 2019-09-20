@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FlamingParrot_NavBarItemDropdownPresenter extends FlamingParrot_NavBarItemPresenter {
+class FlamingParrot_NavBarItemDropdownPresenter extends FlamingParrot_NavBarItemPresenter
+{
 
     public $is_dropdown = true;
 

@@ -22,7 +22,8 @@ namespace Tuleap\HudsonSvn;
 
 use ForgeConfig;
 
-class FormPresenter {
+class FormPresenter
+{
 
     /**
      * @var string

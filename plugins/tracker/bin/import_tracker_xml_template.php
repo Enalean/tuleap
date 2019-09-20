@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $posix_user = posix_getpwuid(posix_geteuid());
 $sys_user = $posix_user['name'];
-if ( $sys_user !== 'root' && $sys_user !== 'codendiadm' ) {
+if ($sys_user !== 'root' && $sys_user !== 'codendiadm') {
     die('Unsufficient privileges for user '.$sys_user.PHP_EOL);
 }
 
@@ -17,7 +17,7 @@ $group_id    =  !empty($argv[2]) ? $argv[2] : 100;
 $GLOBALS['Response'] = new Response();
 $user = UserManager::instance()->forceLogin('admin');
 
-if ( !is_readable($xmlFile) ) {
+if (!is_readable($xmlFile)) {
     die('Unable to read xml file'.PHP_EOL);
 }
 
@@ -31,12 +31,12 @@ try {
     if ($project && ! $project->isError()) {
         TrackerXmlImport::build(new XMLImportHelper(UserManager::instance()), $logger)
             ->createFromXMLFile($project, $xmlFile);
-        if ( $GLOBALS['Response']->feedbackHasErrors() ) {
+        if ($GLOBALS['Response']->feedbackHasErrors()) {
             echo $GLOBALS['Response']->getRawFeedback();
             exit(1);
         }
 
-        if ( $GLOBALS['Response']->feedbackHasWarningsOrErrors() ) {
+        if ($GLOBALS['Response']->feedbackHasWarningsOrErrors()) {
             echo $GLOBALS['Response']->getRawFeedback();
             exit(2);
         }

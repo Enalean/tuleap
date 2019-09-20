@@ -20,7 +20,8 @@
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
-class SystemEventDao_SearchWithParamTest extends TuleapTestCase {
+class SystemEventDao_SearchWithParamTest extends TuleapTestCase
+{
 
     private $da;
 
@@ -87,4 +88,3 @@ class SystemEventDao_SearchWithParamTest extends TuleapTestCase {
         $dao->searchWithParam('all', $this->search_term, $this->event_type, $this->status);
     }
 }
-

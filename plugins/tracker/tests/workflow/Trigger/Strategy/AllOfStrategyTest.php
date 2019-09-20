@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../../bootstrap.php';
 
-abstract class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_BaseTest  extends TuleapTestCase {
+abstract class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_BaseTest extends TuleapTestCase
+{
 
     protected $parent;
     protected $artifact;
@@ -73,7 +74,8 @@ abstract class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_BaseTest  e
     }
 }
 
-class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_OneRuleTest extends Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_BaseTest {
+class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_OneRuleTest extends Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_BaseTest
+{
 
     private $bug_tracker;
 
@@ -131,7 +133,8 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_OneRuleTest extends 
     }
 }
 
-class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_SeveralRulesTest extends Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_BaseTest {
+class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_SeveralRulesTest extends Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_BaseTest
+{
 
     private $bug_tracker;
 
@@ -204,5 +207,3 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy_SeveralRulesTest ext
         $this->assertFalse($this->strategy->allPrecondtionsAreMet());
     }
 }
-
-?>

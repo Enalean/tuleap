@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once __DIR__.'/../../../../bootstrap.php';
-class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCase {
+class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCase
+{
 
     private $xml_mapping = array();
 
@@ -94,4 +95,3 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
         $this->permissions_factory->duplicate($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
     }
 }
-?>

@@ -21,7 +21,8 @@
 /**
  * I retrieve a milestone given a criteria
  */
-class AgileDashboard_Milestone_SelectedMilestoneProvider {
+class AgileDashboard_Milestone_SelectedMilestoneProvider
+{
 
     public const FIELD_NAME             = AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME;
     public const ANY                    = AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY;
@@ -68,7 +69,7 @@ class AgileDashboard_Milestone_SelectedMilestoneProvider {
             return;
         }
 
-        if ( $this->additional_criteria[self::FIELD_NAME]->getValue() == self::TOP_BACKLOG_IDENTIFIER) {
+        if ($this->additional_criteria[self::FIELD_NAME]->getValue() == self::TOP_BACKLOG_IDENTIFIER) {
             $this->milestone = $this->milestone_factory->getVirtualTopMilestone($this->user, $this->project);
             return;
         }

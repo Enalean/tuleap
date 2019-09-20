@@ -19,7 +19,8 @@
  */
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class AgileDashboard_XMLimporterTest extends TuleapTestCase {
+class AgileDashboard_XMLimporterTest extends TuleapTestCase
+{
 
     /**
      *
@@ -145,5 +146,3 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase {
         $this->importer->toArray($this->xml_object, $tracker_mappings);
     }
 }
-
-?>

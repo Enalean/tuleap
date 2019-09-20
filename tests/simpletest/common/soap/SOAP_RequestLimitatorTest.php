@@ -22,7 +22,8 @@ Mock::generate('SOAP_RequestLimitatorDao');
 /**
  * Ensure the given value is ~1h ago (from execution time).
  */
-class AboutOneHourAgoExpectation extends SimpleExpectation {
+class AboutOneHourAgoExpectation extends SimpleExpectation
+{
 
     public function test($input)
     {
@@ -41,7 +42,8 @@ class AboutOneHourAgoExpectation extends SimpleExpectation {
     }
 }
 
-class SOAP_RequestLimitatorTest extends TuleapTestCase {
+class SOAP_RequestLimitatorTest extends TuleapTestCase
+{
 
     private function GivenThereWasAlreadyOneCallTheLastHour()
     {
@@ -112,5 +114,3 @@ class SOAP_RequestLimitatorTest extends TuleapTestCase {
         $limitator->logCallTo('addProject');
     }
 }
-
-?>

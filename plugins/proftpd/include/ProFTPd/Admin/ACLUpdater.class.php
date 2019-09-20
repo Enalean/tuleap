@@ -24,7 +24,8 @@ use Backend;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 
-class ACLUpdater {
+class ACLUpdater
+{
     public const PARENT_DIR  = '..';
     public const CURRENT_DIR = '.';
     public const FILE        = 'file';

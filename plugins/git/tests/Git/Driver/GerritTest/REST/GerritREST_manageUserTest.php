@@ -20,7 +20,8 @@
 
 require_once 'GerritREST_Base.php';
 
-class Git_DriverREST_Gerrit_manageUserTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_manageUserTest {
+class Git_DriverREST_Gerrit_manageUserTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_manageUserTest
+{
     private $username = 'someuser';
 
     /** @var Git_Driver_Gerrit_User */

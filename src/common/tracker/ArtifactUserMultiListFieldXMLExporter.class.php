@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactUserMultiListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
+class ArtifactUserMultiListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter
+{
     public const LABEL_VALUES_INDEX  = 'valueLabelList';
     public const TV3_TYPE            = 'MB_5';
     public const TV5_TYPE            = 'list';

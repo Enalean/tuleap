@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class RandomNumberGeneratorTest extends TuleapTestCase {
+class RandomNumberGeneratorTest extends TuleapTestCase
+{
     public function itGeneratesTokenOfTheAskedSize()
     {
         $number_generator_8_bits = new RandomNumberGenerator(1);

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchTrackerV3 {
+class Search_SearchTrackerV3
+{
     public const NAME = 'tracker';
 
     /**
@@ -73,17 +74,21 @@ class Search_SearchTrackerV3 {
             $title_arr = array();
 
             $summary_field = $art_field_fact->getFieldFromName("summary");
-            if ($summary_field->userCanRead($group_id, $atid))
+            if ($summary_field->userCanRead($group_id, $atid)) {
                 $title_arr[] = $GLOBALS['Language']->getText('search_index', 'artifact_summary');
+            }
             $submitted_field = $art_field_fact->getFieldFromName("submitted_by");
-            if ($submitted_field->userCanRead($group_id, $atid))
+            if ($submitted_field->userCanRead($group_id, $atid)) {
                 $title_arr[] = $GLOBALS['Language']->getText('search_index', 'submitted_by');
+            }
             $date_field = $art_field_fact->getFieldFromName("open_date");
-            if ($date_field->userCanRead($group_id, $atid))
+            if ($date_field->userCanRead($group_id, $atid)) {
                 $title_arr[] = $GLOBALS['Language']->getText('search_index', 'date');
+            }
             $status_field = $art_field_fact->getFieldFromName("status_id");
-            if ($status_field->userCanRead($group_id, $atid))
+            if ($status_field->userCanRead($group_id, $atid)) {
                 $title_arr[] = $GLOBALS['Language']->getText('global', 'status');
+            }
 
             echo html_build_list_table_top($title_arr);
 
@@ -101,16 +106,20 @@ class Search_SearchTrackerV3 {
                 // Only display artifacts that the user is allowed to see
                 if ($curArtifact->userCanView()) {
                     print "\n<TR class=\"" . html_get_alt_row_color($art_displayed) . "\">";
-                    if ($summary_field->userCanRead($group_id, $atid))
+                    if ($summary_field->userCanRead($group_id, $atid)) {
                         print "<TD><A HREF=\"/tracker/?group_id=$group_id&func=detail&atid=$atid&aid="
                                 . $arr['artifact_id'] . "\"><IMG SRC=\"" . util_get_image_theme('msg.png') . "\" BORDER=0 HEIGHT=12 WIDTH=10> "
                                 . $arr['summary'] . "</A></TD>";
-                    if ($submitted_field->userCanRead($group_id, $atid))
+                    }
+                    if ($submitted_field->userCanRead($group_id, $atid)) {
                         print "<TD>" . $arr['user_name'] . "</TD>";
-                    if ($date_field->userCanRead($group_id, $atid))
+                    }
+                    if ($date_field->userCanRead($group_id, $atid)) {
                         print "<TD>" . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $arr['open_date']) . "</TD>";
-                    if ($status_field->userCanRead($group_id, $atid))
+                    }
+                    if ($status_field->userCanRead($group_id, $atid)) {
                         print "<TD>" . $status . "</TD>";
+                    }
                     print "</TR>";
                     $art_displayed++;
                     if ($art_displayed > $query->getNumberOfResults()) {

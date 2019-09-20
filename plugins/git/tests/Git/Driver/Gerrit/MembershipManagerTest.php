@@ -20,7 +20,8 @@
 
 require_once __DIR__ .'/../../../bootstrap.php';
 
-abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestCase {
+abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestCase
+{
     protected $user_ldap_id;
     protected $membership_manager;
     protected $driver;
@@ -77,7 +78,8 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
     }
 }
 
-class Git_Driver_Gerrit_MembershipManager_NoGerritRepoTest extends Git_Driver_Gerrit_MembershipManagerCommonTest {
+class Git_Driver_Gerrit_MembershipManager_NoGerritRepoTest extends Git_Driver_Gerrit_MembershipManagerCommonTest
+{
 
     public function setUp()
     {
@@ -113,10 +115,10 @@ class Git_Driver_Gerrit_MembershipManager_NoGerritRepoTest extends Git_Driver_Ge
 
         $this->membership_manager->addUserToGroup($this->user, $this->u_group);
     }
-
 }
 
-abstract class Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest extends Git_Driver_Gerrit_MembershipManagerCommonTest {
+abstract class Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest extends Git_Driver_Gerrit_MembershipManagerCommonTest
+{
     public function setUp()
     {
         parent::setUp();
@@ -136,7 +138,8 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest extends Git
     }
 }
 
-class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest {
+class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest
+{
 
     public function itAsksTheGerritDriverToAddAUserToThreeGroups()
     {
@@ -219,7 +222,8 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
     }
 }
 
-class Git_Driver_Gerrit_MembershipManager_ProjectAdminTest extends Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest {
+class Git_Driver_Gerrit_MembershipManager_ProjectAdminTest extends Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest
+{
 
     public function setUp()
     {
@@ -244,14 +248,15 @@ class Git_Driver_Gerrit_MembershipManager_ProjectAdminTest extends Git_Driver_Ge
         stub($this->admin_ugroup)->getNormalizedName()->returns('project_admins');
 
         $gerrit_project_project_admins_group_name = $this->project_name.'/'.'project_admins';
-        expect($this->driver)->addUserToGroup($this->remote_server,  $this->gerrit_user, $gerrit_project_project_admins_group_name)->once();
+        expect($this->driver)->addUserToGroup($this->remote_server, $this->gerrit_user, $gerrit_project_project_admins_group_name)->once();
         expect($this->driver)->flushGerritCacheAccounts()->once();
 
         $this->membership_manager->addUserToGroup($this->user, $this->admin_ugroup);
     }
 }
 
-class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCase {
+class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCase
+{
 
     /** @var ProjectManager */
     protected $project_manager;
@@ -362,7 +367,8 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
     }
 }
 
-abstract class Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest extends TuleapTestCase {
+abstract class Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest extends TuleapTestCase
+{
     /** @var Git_Driver_Gerrit */
     protected $driver;
 
@@ -436,7 +442,8 @@ abstract class Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest extend
     }
 }
 
-class Git_Driver_Gerrit_MembershipManagerProjectAdminsIsDaOwnerOfAllAndEverythingTest extends Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest {
+class Git_Driver_Gerrit_MembershipManagerProjectAdminsIsDaOwnerOfAllAndEverythingTest extends Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest
+{
 
     public function setUp()
     {
@@ -470,7 +477,8 @@ class Git_Driver_Gerrit_MembershipManagerProjectAdminsIsDaOwnerOfAllAndEverythin
  * Fix for request #5031 - Fatal error when adding a group in an umbrella parent project
  * @see https://tuleap.net/plugins/tracker/?aid=5031
  */
-class Git_Driver_Gerrit_MembershipManager_CreateGroupForUmbrellaTest extends Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest {
+class Git_Driver_Gerrit_MembershipManager_CreateGroupForUmbrellaTest extends Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest
+{
     private $child_project;
 
     public function setUp()
@@ -519,7 +527,8 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupForUmbrellaTest extends Git
     }
 }
 
-class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest {
+class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Gerrit_MembershipManagerGroupCreationCommonTest
+{
     private $logger;
     private $dao;
 
@@ -770,7 +779,8 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends Git_Driver_Ger
     }
 }
 
-class Git_Driver_Gerrit_MembershipManagerListGroupsTest extends Git_Driver_Gerrit_MembershipManagerCommonTest {
+class Git_Driver_Gerrit_MembershipManagerListGroupsTest extends Git_Driver_Gerrit_MembershipManagerCommonTest
+{
 
     public function setUp()
     {
@@ -827,7 +837,8 @@ class Git_Driver_Gerrit_MembershipManagerListGroupsTest extends Git_Driver_Gerri
     }
 }
 
-class Git_Driver_Gerrit_MembershipManagerListGroupsCacheTest extends Git_Driver_Gerrit_MembershipManagerCommonTest {
+class Git_Driver_Gerrit_MembershipManagerListGroupsCacheTest extends Git_Driver_Gerrit_MembershipManagerCommonTest
+{
 
     public function setUp()
     {

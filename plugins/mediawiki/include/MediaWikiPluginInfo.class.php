@@ -20,7 +20,8 @@
  *
  * Portions Copyright 2010 (c) Mélanie Le Bail
  */
-class MediaWikiPluginInfo extends PluginFileInfo {
+class MediaWikiPluginInfo extends PluginFileInfo
+{
 
     function __construct(&$plugin)
     {

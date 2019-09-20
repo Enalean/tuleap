@@ -79,7 +79,7 @@ class b201706091011_migrate_old_dashboard extends ForgeUpgrade_Bucket
         if ($type === self::OLD_USER_OWNER_TYPE) {
             return "INSERT INTO user_dashboards (user_id, name)
                     VALUES (:owner_id, :name)";
-        } else if ($type === self::OLD_PROJECT_OWNER_TYPE) {
+        } elseif ($type === self::OLD_PROJECT_OWNER_TYPE) {
             return "INSERT INTO project_dashboards (project_id, name)
                     VALUES (:owner_id, :name)";
         }

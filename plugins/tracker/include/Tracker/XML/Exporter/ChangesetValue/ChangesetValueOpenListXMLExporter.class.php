@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter {
+class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter
+{
 
     /**
      * @var UserXMLExporter
@@ -77,7 +78,6 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter exte
         } else {
             $this->appendValueToFieldChangeNode($value, $field_xml);
         }
-
     }
 
     private function appendUserValueToFieldChangeNode($value, SimpleXMLElement $field_xml)

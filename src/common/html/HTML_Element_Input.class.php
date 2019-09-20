@@ -23,7 +23,8 @@ require_once('HTML_Element.class.php');
 /**
  * Define a generic html input field
  */
-abstract class HTML_Element_Input extends HTML_Element {
+abstract class HTML_Element_Input extends HTML_Element
+{
     protected function renderValue()
     {
         $hp = Codendi_HTMLPurifier::instance();
@@ -31,7 +32,7 @@ abstract class HTML_Element_Input extends HTML_Element {
                          id="'. $this->id .'" 
                          name="'.  $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) .'" 
                          value="'.  parent::renderValue() .'" ';
-        foreach($this->params as $key => $value) {
+        foreach ($this->params as $key => $value) {
             $html .= $key .'="'. $value .'" ';
         }
         $html .= ' />';
@@ -40,5 +41,3 @@ abstract class HTML_Element_Input extends HTML_Element {
 
     abstract protected function getInputType();
 }
-
-?>

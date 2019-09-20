@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchController {
+class Search_SearchController
+{
 
     public const DEFAULT_SEARCH = Search_SearchProject::NAME;
 
@@ -225,7 +226,7 @@ class Search_SearchController {
         if ($results->getResultsHtml() !== '') {
             return $results;
         }
-        if ( ! isset($this->search_types[$query->getTypeOfSearch()])) {
+        if (! isset($this->search_types[$query->getTypeOfSearch()])) {
             return $results;
         }
 

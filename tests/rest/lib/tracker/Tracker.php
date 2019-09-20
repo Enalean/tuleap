@@ -23,7 +23,8 @@ namespace Test\Rest\Tracker;
 use Guzzle\Http\Client;
 use Test\Rest\RequestWrapper;
 
-class Tracker {
+class Tracker
+{
     private $client;
     private $user_name;
     /** @var RequestWrapper */
@@ -104,7 +105,8 @@ class Tracker {
         return array(
             'field_id' => $this->getArtifactLinkFieldId(),
             'links' => array_map(function ($id) {
-                return array('id' => $id); }, $ids)
+                return array('id' => $id);
+            }, $ids)
         );
     }
 

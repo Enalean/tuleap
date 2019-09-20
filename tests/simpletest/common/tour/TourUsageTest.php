@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tuleap_TourUsageTest extends TuleapTestCase {
+class Tuleap_TourUsageTest extends TuleapTestCase
+{
 
     /** @var PFUser */
     private $user;
@@ -80,7 +81,8 @@ class Tuleap_TourUsageTest extends TuleapTestCase {
     }
 }
 
-class Tuleap_TourUsageTest_FakeTour extends Tuleap_Tour {
+class Tuleap_TourUsageTest_FakeTour extends Tuleap_Tour
+{
     public function __construct()
     {
         parent::__construct(

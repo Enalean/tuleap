@@ -21,7 +21,8 @@
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class AgileDashboard_HierarchyCheckerTest extends TuleapTestCase {
+class AgileDashboard_HierarchyCheckerTest extends TuleapTestCase
+{
 
     /** @var  Tracker_HierarchyFactory */
     private $hierarchy_factory;

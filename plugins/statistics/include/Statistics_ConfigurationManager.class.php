@@ -22,7 +22,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Statistics_ConfigurationManager {
+class Statistics_ConfigurationManager
+{
 
     /**
      * @var Statistics_ConfigurationDao
@@ -44,5 +45,4 @@ class Statistics_ConfigurationManager {
     {
         return $this->configuration_dao->activateDailyPurge();
     }
-
 }

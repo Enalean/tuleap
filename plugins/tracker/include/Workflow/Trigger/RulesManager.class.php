@@ -21,7 +21,8 @@
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
-class Tracker_Workflow_Trigger_RulesManager {
+class Tracker_Workflow_Trigger_RulesManager
+{
     /** @var Tracker_Workflow_Trigger_RulesDao */
     private $dao;
 
@@ -96,7 +97,7 @@ class Tracker_Workflow_Trigger_RulesManager {
 
     public function createFromXML(SimpleXMLElement $xml_element, array $xmlMapping)
     {
-        foreach($xml_element->trigger_rule as $trigger_rule_xml) {
+        foreach ($xml_element->trigger_rule as $trigger_rule_xml) {
             $triggers = array();
             foreach ($trigger_rule_xml->triggers->trigger as $trigger_xml) {
                 $triggers[] = new Tracker_Workflow_Trigger_FieldValue(
@@ -106,13 +107,13 @@ class Tracker_Workflow_Trigger_RulesManager {
             }
 
             $new_trigger_rule = new Tracker_Workflow_Trigger_TriggerRule(
-                    0,
-                    new Tracker_Workflow_Trigger_FieldValue(
-                        $xmlMapping[(string) $trigger_rule_xml->target->field_id['REF']],
-                        $xmlMapping[(string) $trigger_rule_xml->target->field_value_id['REF']]
-                    ),
-                    (string) $trigger_rule_xml->condition,
-                    $triggers
+                0,
+                new Tracker_Workflow_Trigger_FieldValue(
+                    $xmlMapping[(string) $trigger_rule_xml->target->field_id['REF']],
+                    $xmlMapping[(string) $trigger_rule_xml->target->field_value_id['REF']]
+                ),
+                (string) $trigger_rule_xml->condition,
+                $triggers
             );
 
             $this->add($new_trigger_rule);
@@ -306,10 +307,10 @@ class Tracker_Workflow_Trigger_RulesManager {
             $new_triggers = $this->buildRuleTriggersFromTemplateTriggerRule($old_triggers, $field_mapping);
 
             $new_trigger_rule = new Tracker_Workflow_Trigger_TriggerRule(
-                    0,
-                    $new_target,
-                    $template_trigger_rule->getCondition(),
-                    $new_triggers
+                0,
+                $new_target,
+                $template_trigger_rule->getCondition(),
+                $new_triggers
             );
 
             $this->add($new_trigger_rule);
@@ -331,8 +332,8 @@ class Tracker_Workflow_Trigger_RulesManager {
         }
 
         return new Tracker_Workflow_Trigger_FieldValue(
-                $target_field,
-                $target_value
+            $target_field,
+            $target_value
         );
     }
 

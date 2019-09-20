@@ -22,7 +22,8 @@
  * VersionFactory is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_LinkVersionFactory {
+class Docman_LinkVersionFactory
+{
 
     /**
      * @var Docman_LinkVersionDao

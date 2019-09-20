@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_MIMETypeDetector {
+class Docman_MIMETypeDetector
+{
 
     private $office_types = array(
         '.doc'  => 'application/msword',

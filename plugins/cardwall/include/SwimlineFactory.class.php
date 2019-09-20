@@ -25,7 +25,8 @@ require_once 'FieldProviders/IProvideFieldGivenAnArtifact.class.php';
 /**
  * Build swimlines for the dashboard
  */
-class Cardwall_SwimlineFactory {
+class Cardwall_SwimlineFactory
+{
 
     /** @var Cardwall_OnTop_Config */
     private $config;
@@ -74,9 +75,6 @@ class Cardwall_SwimlineFactory {
         $artifact        = $presenter->getArtifact();
         if ($this->config->isInColumn($artifact, $this->field_provider, $column)) {
             $presenters[] = $presenter;
-
         }
     }
-
 }
-?>

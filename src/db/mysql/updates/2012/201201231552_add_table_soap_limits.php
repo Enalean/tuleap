@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201201231552_add_table_soap_limits extends ForgeUpgrade_Bucket {
+class b201201231552_add_table_soap_limits extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -49,6 +50,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('soap_call_counter table is missing');
         }
     }
-
 }
-?>

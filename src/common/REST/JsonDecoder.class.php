@@ -22,7 +22,8 @@ namespace Tuleap\REST;
 
 use Tuleap\REST\Exceptions\InvalidJsonException;
 
-class JsonDecoder {
+class JsonDecoder
+{
 
     /**
      * Heuristic to decide whether user submitted a string or tried to upload json
@@ -60,11 +61,11 @@ class JsonDecoder {
     private function checkForJsonErrors($key)
     {
         switch (json_last_error()) {
-            case JSON_ERROR_NONE :
+            case JSON_ERROR_NONE:
                 return;
-            case JSON_ERROR_DEPTH :
-            case JSON_ERROR_STATE_MISMATCH :
-            case JSON_ERROR_CTRL_CHAR :
+            case JSON_ERROR_DEPTH:
+            case JSON_ERROR_STATE_MISMATCH:
+            case JSON_ERROR_CTRL_CHAR:
             case JSON_ERROR_SYNTAX:
                 throw new InvalidJsonException('parameter "'.$key.'" syntax error, invalid JSON');
             case JSON_ERROR_UTF8:

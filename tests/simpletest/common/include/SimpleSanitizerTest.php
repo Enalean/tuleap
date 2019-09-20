@@ -21,7 +21,8 @@
 
 require_once('SimpleSanitizerTestCase.class.php');
 
-class SimpleSanitizerTest extends SimpleSanitizerTestCase {
+class SimpleSanitizerTest extends SimpleSanitizerTestCase
+{
 
     /**
      * initialize variables for tests
@@ -30,6 +31,4 @@ class SimpleSanitizerTest extends SimpleSanitizerTestCase {
     {
         $this->sanitizer = new SimpleSanitizer();
     }
-
 }
-?>

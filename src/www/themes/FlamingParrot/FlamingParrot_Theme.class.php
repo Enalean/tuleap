@@ -27,7 +27,8 @@ use Tuleap\Project\Flags\ProjectFlagsDao;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-class FlamingParrot_Theme extends Layout {
+class FlamingParrot_Theme extends Layout
+{
 
     /**
      * @var TemplateRenderer
@@ -236,22 +237,21 @@ class FlamingParrot_Theme extends Layout {
         $this->showFlamingParrotBurningParrotUnificationTour($current_user);
 
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
-                $this->imgroot,
-                $current_user,
-                $current_project_navbar_info,
-                $_SERVER['REQUEST_URI'],
-                $selected_top_tab,
-                HTTPRequest::instance(),
-                $params['title'],
-                $search_form_presenter,
-                $this->displayNewAccount(),
-                $this->getMOTD(),
-                $navbar_items_builder->buildNavBarItemPresentersCollection(),
-                $this->getUserActions($current_user),
-                $csrf_logout_token,
-                $url_redirect
-            )
-        );
+            $this->imgroot,
+            $current_user,
+            $current_project_navbar_info,
+            $_SERVER['REQUEST_URI'],
+            $selected_top_tab,
+            HTTPRequest::instance(),
+            $params['title'],
+            $search_form_presenter,
+            $this->displayNewAccount(),
+            $this->getMOTD(),
+            $navbar_items_builder->buildNavBarItemPresentersCollection(),
+            $this->getUserActions($current_user),
+            $csrf_logout_token,
+            $url_redirect
+        ));
 
         $this->container($params, $project_manager, $current_user);
     }

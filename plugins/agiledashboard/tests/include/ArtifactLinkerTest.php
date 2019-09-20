@@ -22,7 +22,8 @@ require_once __DIR__ . '/../bootstrap.php';
 require_once __DIR__ . '/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
-class Planning_ArtifactLinkerTest extends TuleapTestCase {
+class Planning_ArtifactLinkerTest extends TuleapTestCase
+{
 
     protected $faq_id     = 13;
     protected $group_id   = 666;
@@ -65,15 +66,15 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
 
         $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
 
-        $this->faq     = $this->getArtifact($this->faq_id,     $faq_tracker,     array());
-        $this->group   = $this->getArtifact($this->group_id,   $group_tracker,   array());
-        $this->corp    = $this->getArtifact($this->corp_id,    $corp_tracker,    array($this->group));
+        $this->faq     = $this->getArtifact($this->faq_id, $faq_tracker, array());
+        $this->group   = $this->getArtifact($this->group_id, $group_tracker, array());
+        $this->corp    = $this->getArtifact($this->corp_id, $corp_tracker, array($this->group));
         $this->product = $this->getArtifact($this->product_id, $product_tracker, array($this->corp, $this->group));
         $this->release = $this->getArtifact($this->release_id, $release_tracker, array($this->product, $this->corp, $this->group));
-        $this->sprint  = $this->getArtifact($this->sprint_id,  $sprint_tracker,  array($this->release, $this->product, $this->corp, $this->group));
-        $this->theme   = $this->getArtifact($this->theme_id,   $theme_tracker,   array());
+        $this->sprint  = $this->getArtifact($this->sprint_id, $sprint_tracker, array($this->release, $this->product, $this->corp, $this->group));
+        $this->theme   = $this->getArtifact($this->theme_id, $theme_tracker, array());
         // Epic has no parent yet because the whole thing is to manage Theme creation after Epic
-        $this->epic    = $this->getArtifact($this->epic_id,    $epic_tracker,    array());
+        $this->epic    = $this->getArtifact($this->epic_id, $epic_tracker, array());
 
         $this->linker = new Planning_ArtifactLinker($this->artifact_factory, $planning_factory);
     }
@@ -89,7 +90,8 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
     }
 }
 
-class Planning_ArtifactLinker_linkWithParentsTest extends Planning_ArtifactLinkerTest {
+class Planning_ArtifactLinker_linkWithParentsTest extends Planning_ArtifactLinkerTest
+{
 
     public function itDoesntLinkWhenItWasLinkedToAParent()
     {
@@ -117,7 +119,8 @@ class Planning_ArtifactLinker_linkWithParentsTest extends Planning_ArtifactLinke
     }
 }
 
-class Planning_ArtifactLinker_LinkWithPlanningTest extends Planning_ArtifactLinkerTest {
+class Planning_ArtifactLinker_LinkWithPlanningTest extends Planning_ArtifactLinkerTest
+{
 
     public function itLinksTheThemeWithCorpWhenCorpIsParentOfProduct()
     {
@@ -143,7 +146,8 @@ class Planning_ArtifactLinker_LinkWithPlanningTest extends Planning_ArtifactLink
     }
 }
 
-class Planning_ArtifactLinker_linkBacklogWithPlanningItemsTest extends Planning_ArtifactLinkerTest {
+class Planning_ArtifactLinker_linkBacklogWithPlanningItemsTest extends Planning_ArtifactLinkerTest
+{
 
     public function itReturnsNullWhenNotLinkedToAnyArtifacts()
     {

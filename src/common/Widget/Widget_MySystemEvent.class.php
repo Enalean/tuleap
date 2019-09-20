@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Widget_MySystemEvent extends Widget {
+class Widget_MySystemEvent extends Widget
+{
 
     /**
      * Constructor
@@ -68,8 +69,6 @@ class Widget_MySystemEvent extends Widget {
      */
     function getDescription()
     {
-        return $GLOBALS['Language']->getText('widget_description_my_system_event','description');
+        return $GLOBALS['Language']->getText('widget_description_my_system_event', 'description');
     }
 }
-
-?>

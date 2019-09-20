@@ -18,6 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FileInfo_InvalidFileInfoException extends Tracker_Exception {}
-
-?>
+class Tracker_FileInfo_InvalidFileInfoException extends Tracker_Exception
+{
+}

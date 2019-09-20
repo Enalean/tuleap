@@ -20,7 +20,8 @@
 
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
-class Tracker_REST_Artifact_ArtifactValidator {
+class Tracker_REST_Artifact_ArtifactValidator
+{
 
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;

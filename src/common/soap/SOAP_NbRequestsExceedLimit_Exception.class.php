@@ -17,11 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class SOAP_NbRequestsExceedLimit_Exception extends Exception {
+class SOAP_NbRequestsExceedLimit_Exception extends Exception
+{
     public function __construct($message = 'The number of SOAP call exceeded quota.')
     {
         parent::__construct($message, '4000');
     }
 }
-
-?>

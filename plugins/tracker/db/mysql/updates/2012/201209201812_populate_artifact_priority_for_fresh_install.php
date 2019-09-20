@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201209201812_populate_artifact_priority_for_fresh_install extends ForgeUpgrade_Bucket {
+class b201209201812_populate_artifact_priority_for_fresh_install extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -102,4 +103,3 @@ EOT;
         return true;
     }
 }
-?>

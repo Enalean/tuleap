@@ -22,7 +22,8 @@
 /**
  * Widget_ProjectLatestNews
  */
-class Widget_ProjectLatestNews extends Widget {
+class Widget_ProjectLatestNews extends Widget
+{
 
     var $content;
 
@@ -114,5 +115,4 @@ class Widget_ProjectLatestNews extends Widget {
     {
         return ProjectManager::instance();
     }
-
 }

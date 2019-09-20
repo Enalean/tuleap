@@ -21,20 +21,20 @@
 /**
  * Define an html selectbox field for Numeric/Selectbox, not-standard, not-user, fields provided by the tracker
  */
-class HTML_Element_Selectbox_TrackerFields_NumericFieldsV5 extends HTML_Element_Selectbox {
+class HTML_Element_Selectbox_TrackerFields_NumericFieldsV5 extends HTML_Element_Selectbox
+{
 
-    public function __construct($tracker, $label, $name, $value, $with_none = false, $onchange = "", $desc="")
+    public function __construct($tracker, $label, $name, $value, $with_none = false, $onchange = "", $desc = "")
     {
         parent::__construct($label, $name, $value, $with_none, $onchange, $desc);
 
         $aff = Tracker_FormElementFactory::instance();
 
         foreach ($aff->getUsedNumericFields($tracker) as $field) {
-            if($field->userCanRead()){
+            if ($field->userCanRead()) {
                 $selected = $this->value == $field->id;
                 $this->addOption(new HTML_Element_Option($field->getLabel(), $field->id, $selected));
             }
         }
     }
 }
-?>

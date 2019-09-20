@@ -24,7 +24,8 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
-class FRSFile {
+class FRSFile
+{
 
     public const EVT_CREATE  = 301;
     public const EVT_UPDATE  = 302;
@@ -248,8 +249,8 @@ class FRSFile {
     {
         $size_in_kbytes = $size_in_bytes / 1024;
 
-        $decimal_separator = $GLOBALS['Language']->getText('system','decimal_separator');
-        $thousand_separator = $GLOBALS['Language']->getText('system','thousand_separator');
+        $decimal_separator = $GLOBALS['Language']->getText('system', 'decimal_separator');
+        $thousand_separator = $GLOBALS['Language']->getText('system', 'thousand_separator');
         // because I don't know how to specify a space in a .tab file
         if ($thousand_separator == "' '") {
             $thousand_separator = ' ';
@@ -349,20 +350,48 @@ class FRSFile {
 
     function initFromArray($array)
     {
-        if (isset($array['file_id']))       $this->setFileID($array['file_id']);
-        if (isset($array['filename']))      $this->setFileName($array['filename']);
-        if (isset($array['filepath']))      $this->setFilePath($array['filepath']);
-        if (isset($array['release_id']))    $this->setReleaseID($array['release_id']);
-        if (isset($array['type_id']))       $this->setTypeID($array['type_id']);
-        if (isset($array['processor_id']))  $this->setProcessorID($array['processor_id']);
-        if (isset($array['release_time']))  $this->setReleaseTime($array['release_time']);
-        if (isset($array['file_size']))     $this->setFileSize($array['file_size']);
-        if (isset($array['post_date']))     $this->setPostDate($array['post_date']);
-        if (isset($array['status']))        $this->setStatus($array['status']);
-        if (isset($array['computed_md5']))  $this->setComputedMd5($array['computed_md5']);
-        if (isset($array['reference_md5'])) $this->setReferenceMd5($array['reference_md5']);
-        if (isset($array['user_id']))       $this->setUserID($array['user_id']);
-        if (isset($array['comment']))       $this->setComment($array['comment']);
+        if (isset($array['file_id'])) {
+            $this->setFileID($array['file_id']);
+        }
+        if (isset($array['filename'])) {
+            $this->setFileName($array['filename']);
+        }
+        if (isset($array['filepath'])) {
+            $this->setFilePath($array['filepath']);
+        }
+        if (isset($array['release_id'])) {
+            $this->setReleaseID($array['release_id']);
+        }
+        if (isset($array['type_id'])) {
+            $this->setTypeID($array['type_id']);
+        }
+        if (isset($array['processor_id'])) {
+            $this->setProcessorID($array['processor_id']);
+        }
+        if (isset($array['release_time'])) {
+            $this->setReleaseTime($array['release_time']);
+        }
+        if (isset($array['file_size'])) {
+            $this->setFileSize($array['file_size']);
+        }
+        if (isset($array['post_date'])) {
+            $this->setPostDate($array['post_date']);
+        }
+        if (isset($array['status'])) {
+            $this->setStatus($array['status']);
+        }
+        if (isset($array['computed_md5'])) {
+            $this->setComputedMd5($array['computed_md5']);
+        }
+        if (isset($array['reference_md5'])) {
+            $this->setReferenceMd5($array['reference_md5']);
+        }
+        if (isset($array['user_id'])) {
+            $this->setUserID($array['user_id']);
+        }
+        if (isset($array['comment'])) {
+            $this->setComment($array['comment']);
+        }
     }
 
     function toArray()
@@ -430,7 +459,7 @@ class FRSFile {
      */
     function getGroup()
     {
-        if(empty($this->group)) {
+        if (empty($this->group)) {
             $pm = ProjectManager::instance();
             // retrieve the release the file belongs to
             $release_id = $this->getReleaseID();
@@ -457,13 +486,13 @@ class FRSFile {
      *
      * @return mixed the content of the file
      */
-    function getContent($offset=0, $size=-1)
+    function getContent($offset = 0, $size = -1)
     {
         if ($size == -1) {
             $size = $this->getFileSize();
         }
         $path = PHP_BigFile::stream(realpath($this->getFileLocation()));
-        return file_get_contents($path, false, NULL, $offset, $size);
+        return file_get_contents($path, false, null, $offset, $size);
     }
 
     /**
@@ -516,10 +545,10 @@ class FRSFile {
             $group = $this->getGroup();
             $group_id = $group->getID();
             if (permission_exist('RELEASE_READ', $this->getReleaseID())) {
-                if (permission_is_authorized('RELEASE_READ',$this->getReleaseID(),$user_id,$group_id)) {
+                if (permission_is_authorized('RELEASE_READ', $this->getReleaseID(), $user_id, $group_id)) {
                     $user_can_download = true;
                 }
-            } else if (permission_is_authorized('PACKAGE_READ',$this->getPackageID(),$user_id,$group_id)) {
+            } elseif (permission_is_authorized('PACKAGE_READ', $this->getPackageID(), $user_id, $group_id)) {
                 $user_can_download = true;
             }
         }

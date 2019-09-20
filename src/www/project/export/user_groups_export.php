@@ -56,7 +56,7 @@ if ($request->valid($vExport)) {
                       'status'   => _('Status'));
     $um  = UserManager::instance();
 
-    switch($export) {
+    switch ($export) {
         case 'user_groups':
             $sep = get_csv_separator();
             $eol = "\n";
@@ -68,7 +68,7 @@ if ($request->valid($vExport)) {
 
             /** @psalm-suppress DeprecatedFunction */
             $ugs = ugroup_db_get_existing_ugroups($group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
-            while($ugrp = db_fetch_array($ugs)) {
+            while ($ugrp = db_fetch_array($ugs)) {
                 if ($ugrp['ugroup_id'] <= 100) {
                     $sqlUsers = ugroup_db_get_dynamic_members($ugrp['ugroup_id'], false, $group_id, false, null, true, true);
                 } else {
@@ -91,8 +91,8 @@ if ($request->valid($vExport)) {
             break;
 
         case 'user_groups_format':
-            echo '<h3>'.$Language->getText('project_export_user_groups','exp_format').'</h3>';
-            echo '<p>'.$Language->getText('project_export_user_groups','exp_format_msg').'</p>';
+            echo '<h3>'.$Language->getText('project_export_user_groups', 'exp_format').'</h3>';
+            echo '<p>'.$Language->getText('project_export_user_groups', 'exp_format_msg').'</p>';
 
             // Pick-up a random project member
             $sqlUsers = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_MEMBERS'], false, $group_id, false, null, true, true);
@@ -114,9 +114,7 @@ if ($request->valid($vExport)) {
                               'realname' => $user->getRealName(),
                               'email'    => $user->getEmail(),
                               'status'   => $user_status_presenter->status_label);
-            display_exported_fields($col_list,$lbl_list,$dsc_list,$record);
+            display_exported_fields($col_list, $lbl_list, $dsc_list, $record);
             break;
     }
 }
-
-?>

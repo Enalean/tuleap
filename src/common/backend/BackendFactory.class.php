@@ -17,7 +17,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class BackendFactory {
+class BackendFactory
+{
 
     /**
      * Return a Backend instance
@@ -127,5 +128,3 @@ class BackendFactory {
         return $backend;
     }
 }
-
-?>

@@ -22,7 +22,8 @@ namespace Tuleap\ProFTPd\Xferlog;
 
 use DataAccessObject;
 
-class Dao extends DataAccessObject {
+class Dao extends DataAccessObject
+{
     public const DIRECTION_UPLOAD  = 'i';
     public const DIRECTION_DOWNLOAD = 'o';
     public const DIRECTION_DELETE = 'd';

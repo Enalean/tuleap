@@ -20,7 +20,8 @@
 
 require_once 'GerritREST_Base.php';
 
-class Git_Driver_GerritREST_projectExistsTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_projectExistsTest {
+class Git_Driver_GerritREST_projectExistsTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_projectExistsTest
+{
 
     public function itReturnsFalseIfParentProjectDoNotExists()
     {

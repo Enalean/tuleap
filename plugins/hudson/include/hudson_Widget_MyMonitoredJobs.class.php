@@ -75,7 +75,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
             $not_monitored_jobs = array();
             while ($dar->valid()) {
                 $row = $dar->current();
-                if ( ! in_array($row['job_id'], $monitored_jobs)) {
+                if (! in_array($row['job_id'], $monitored_jobs)) {
                     $not_monitored_jobs[] = $row['job_id'];
                 }
                 $dar->next();
@@ -209,7 +209,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         $monitored_jobs = array();
         while ($dar->valid()) {
             $row = $dar->current();
-            if ( ! in_array($row['job_id'], $this->_not_monitored_jobs)) {
+            if (! in_array($row['job_id'], $this->_not_monitored_jobs)) {
                 $monitored_jobs[] = $row['job_id'];
             }
             $dar->next();

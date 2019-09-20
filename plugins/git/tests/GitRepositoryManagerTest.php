@@ -20,7 +20,8 @@
 
 require_once 'bootstrap.php';
 
-class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
+class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase
+{
     private $project;
     private $git_repository_manager;
     private $git_system_event_manager;
@@ -87,7 +88,8 @@ class GitRepositoryManager_DeleteAllRepositoriesTest extends TuleapTestCase {
     }
 }
 
-class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCase {
+class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCase
+{
     private $factory;
     private $project;
     private $manager;
@@ -189,7 +191,8 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
     }
 }
 
-class GitRepositoryManager_CreateTest extends TuleapTestCase {
+class GitRepositoryManager_CreateTest extends TuleapTestCase
+{
 
     private $creator;
     private $dao;
@@ -277,7 +280,8 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
     }
 }
 
-class GitRepositoryIdMatchExpectation extends SimpleExpectation {
+class GitRepositoryIdMatchExpectation extends SimpleExpectation
+{
     private $repository_id;
 
     public function __construct($repository_id)
@@ -300,7 +304,8 @@ class GitRepositoryIdMatchExpectation extends SimpleExpectation {
     }
 }
 
-class GitRepositoryManager_ForkTest extends TuleapTestCase {
+class GitRepositoryManager_ForkTest extends TuleapTestCase
+{
     private $backend;
     private $repository;
     private $user;
@@ -597,7 +602,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         return $repo;
     }
 
-    private function forkRepositories($repositories, $namespace=null)
+    private function forkRepositories($repositories, $namespace = null)
     {
         $this->manager->forkRepositories($repositories, $this->project, $this->user, $namespace, null, $this->forkPermissions);
     }

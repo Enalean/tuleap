@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Cardwall_REST_ResourcesInjector {
+class Cardwall_REST_ResourcesInjector
+{
 
     public function populate(Luracast\Restler\Restler $restler)
     {

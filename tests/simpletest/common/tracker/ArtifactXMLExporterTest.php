@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
+abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase
+{
     /** @var ArtifactXMLExporter */
     protected $exporter;
     /** @var ArtifactXMLExporterDao */
@@ -183,25 +184,25 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
         switch ($json_error) {
             case JSON_ERROR_NONE:
                 $msg = 'No errors';
-            break;
+                break;
             case JSON_ERROR_DEPTH:
                 $msg = 'Maximum stack depth exceeded';
-            break;
+                break;
             case JSON_ERROR_STATE_MISMATCH:
                 $msg = 'Underflow or the modes mismatch';
-            break;
+                break;
             case JSON_ERROR_CTRL_CHAR:
                 $msg = 'Unexpected control character found';
-            break;
+                break;
             case JSON_ERROR_SYNTAX:
                 $msg = 'Syntax error, malformed JSON';
-            break;
+                break;
             case JSON_ERROR_UTF8:
                 $msg = 'Malformed UTF-8 characters, possibly incorrectly encoded';
-            break;
+                break;
             default:
                 $msg = 'Unknown error';
-            break;
+                break;
         }
 
         throw new Exception($msg);
@@ -219,7 +220,7 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
 
     protected function findValue(SimpleXMLElement $field_change, $name)
     {
-        foreach($field_change as $change) {
+        foreach ($field_change as $change) {
             if ($change['field_name'] == $name) {
                 return $change;
             }
@@ -228,7 +229,8 @@ abstract class ArtifactXMLExporter_BaseTest extends TuleapTestCase {
     }
 }
 
-class ArtifactXMLExporter_SummaryTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_SummaryTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory()
     {
@@ -287,7 +289,8 @@ class ArtifactXMLExporter_SummaryTest extends ArtifactXMLExporter_BaseTest {
     }
 }
 
-class ArtifactXMLExporter_CommentTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_CommentTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function _itHasChangesetPerComment()
     {
@@ -332,7 +335,8 @@ class ArtifactXMLExporter_CommentTest extends ArtifactXMLExporter_BaseTest {
     }
 }
 
-class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itCreatesAChangesetWithOneAttachment()
     {
@@ -346,7 +350,7 @@ class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->field_change->value[0]['ref'], 'File30');
         $this->assertEqual((string)$this->xml->artifact->changeset[1]->submitted_on, $this->toExpectedDate(3234567900));
 
-        expect($this->archive)->addFile($this->fixtures_dir.'/'.ArtifactFile::ROOT_DIRNAME.'/1/30','data/ArtifactFile30.bin')->once();
+        expect($this->archive)->addFile($this->fixtures_dir.'/'.ArtifactFile::ROOT_DIRNAME.'/1/30', 'data/ArtifactFile30.bin')->once();
 
         $this->assertCount($this->xml->artifact->file, 1);
         $this->assertEqual((string)$this->xml->artifact->file[0]['id'], 'File30');
@@ -412,7 +416,8 @@ class ArtifactXMLExporter_AttachmentTest extends ArtifactXMLExporter_BaseTest {
     }
 }
 
-class ArtifactXMLExporter_CCTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_CCTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory()
     {
@@ -425,7 +430,7 @@ class ArtifactXMLExporter_CCTest extends ArtifactXMLExporter_BaseTest {
 
     private function assertChangesItCreatesAnInitialChangesetATheTimeOfOpenDateWhenThereIsNoHistory(SimpleXMLElement $field_change)
     {
-        switch($field_change['field_name']) {
+        switch ($field_change['field_name']) {
             case 'cc':
                 $this->assertEqual((string)$field_change['type'], 'open_list');
                 $this->assertEqual((string)$field_change['bind'], 'users');
@@ -471,7 +476,8 @@ class ArtifactXMLExporter_CCTest extends ArtifactXMLExporter_BaseTest {
     }
 }
 
-class ArtifactXMLExporter_SeverityTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_SeverityTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itSetNoneAsOriginalSeverityValue()
     {
@@ -484,7 +490,8 @@ class ArtifactXMLExporter_SeverityTest extends ArtifactXMLExporter_BaseTest {
     }
 }
 
-class ArtifactXMLExporter_AttachmentAndSummaryTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_AttachmentAndSummaryTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itCreatesASingleChangesetWithSummaryAndAttachment()
     {
@@ -503,7 +510,7 @@ class ArtifactXMLExporter_AttachmentAndSummaryTest extends ArtifactXMLExporter_B
 
     private function assertChangesItCreatesASingleChangesetWithSummaryAndAttachment(SimpleXMLElement $field_change)
     {
-        switch($field_change['field_name']) {
+        switch ($field_change['field_name']) {
             case 'attachment':
                 $this->assertEqual($field_change->value[0]['ref'], 'File30');
                 break;
@@ -570,7 +577,8 @@ class ArtifactXMLExporter_AttachmentAndSummaryTest extends ArtifactXMLExporter_B
     }
 }
 
-class ArtifactXMLExporter_PermissionsOnArtifactTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_PermissionsOnArtifactTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itDoesNotExportPermsIfThereIsNoPerms()
     {
@@ -643,7 +651,8 @@ class ArtifactXMLExporter_PermissionsOnArtifactTest extends ArtifactXMLExporter_
     }
 }
 
-class ArtifactXMLExporter_StringFieldTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_StringFieldTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itCreatesAChangesetForEachHistoryEntry()
     {
@@ -675,7 +684,7 @@ class ArtifactXMLExporter_StringFieldTest extends ArtifactXMLExporter_BaseTest {
 
     private function assertChangesItCreatesASingleChangesetWithSummaryAndString(SimpleXMLElement $field_change)
     {
-        switch($field_change['field_name']) {
+        switch ($field_change['field_name']) {
             case 'field_14':
                 $this->assertEqual($field_change->value, 'The error code is not returned');
                 break;
@@ -706,7 +715,8 @@ class ArtifactXMLExporter_StringFieldTest extends ArtifactXMLExporter_BaseTest {
     }
 }
 
-class ArtifactXMLExporter_FloatFieldTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_FloatFieldTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itDoesntCreateAnExtraChangesetWhenThereIsAFloatToStringConversionWithTrailingZero()
     {
@@ -741,7 +751,8 @@ class ArtifactXMLExporter_FloatFieldTest extends ArtifactXMLExporter_BaseTest {
     }
 }
 
-class ArtifactXMLExporter_IntegerFieldTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_IntegerFieldTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itDoesntCreateAnExtraChangesetWhenThereIsAnIntToStringConversionWithTrailingZero()
     {
@@ -777,7 +788,8 @@ class ArtifactXMLExporter_IntegerFieldTest extends ArtifactXMLExporter_BaseTest 
     }
 }
 
-class ArtifactXMLExporter_ScalarFieldTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_ScalarFieldTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itCreatesAChangesetForEachHistoryEntry()
     {
@@ -858,7 +870,8 @@ class ArtifactXMLExporter_ScalarFieldTest extends ArtifactXMLExporter_BaseTest {
     }
 }
 
-class ArtifactXMLExporter_CloseDateFieldTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_CloseDateFieldTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itCreatesTheChangesetWithValueStoredOnArtifactTable()
     {
@@ -908,7 +921,8 @@ class ArtifactXMLExporter_CloseDateFieldTest extends ArtifactXMLExporter_BaseTes
     }
 }
 
-class ArtifactXMLExporter_StatusFieldTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_StatusFieldTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itCreatesTheInitialChangesetWithRecoredValue()
     {
@@ -939,7 +953,8 @@ class ArtifactXMLExporter_StatusFieldTest extends ArtifactXMLExporter_BaseTest {
     }
 }
 
-class ArtifactXMLExporter_StaticListFieldTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_StaticListFieldTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itCreatesAChangesetForEachHistoryEntry()
     {
@@ -984,7 +999,8 @@ class ArtifactXMLExporter_StaticListFieldTest extends ArtifactXMLExporter_BaseTe
     }
 }
 
-class ArtifactXMLExporter_UserListFieldTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_UserListFieldTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itCreatesAChangesetForEachHistoryEntry()
     {
@@ -1022,7 +1038,8 @@ class ArtifactXMLExporter_UserListFieldTest extends ArtifactXMLExporter_BaseTest
     }
 }
 
-class ArtifactXMLExporter_StaticMultiListFieldTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_StaticMultiListFieldTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itCreatesAChangesetForEachHistoryEntryInHappyPath()
     {
@@ -1093,7 +1110,6 @@ class ArtifactXMLExporter_StaticMultiListFieldTest extends ArtifactXMLExporter_B
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change['type'], 'list');
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change['bind'], 'static');
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->submitted_on, $this->toExpectedDate(3234590000));
-
     }
 
     public function itDoesNotCreateAChangesetForAnHistoryEnrtyIfItHasAZeroValue()
@@ -1182,11 +1198,11 @@ class ArtifactXMLExporter_StaticMultiListFieldTest extends ArtifactXMLExporter_B
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['type'], 'list');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->field_change['bind'], 'static');
         $this->assertEqual((string)$this->xml->artifact->changeset[2]->submitted_on, $this->toExpectedDate(3234580000));
-
     }
 }
 
-class ArtifactXMLExporter_UserMultiListFieldTest extends ArtifactXMLExporter_BaseTest {
+class ArtifactXMLExporter_UserMultiListFieldTest extends ArtifactXMLExporter_BaseTest
+{
 
     public function itCreatesAChangesetForEachHistoryEntryInHappyPath()
     {
@@ -1257,7 +1273,6 @@ class ArtifactXMLExporter_UserMultiListFieldTest extends ArtifactXMLExporter_Bas
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change['type'], 'list');
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->field_change['bind'], 'users');
         $this->assertEqual((string)$this->xml->artifact->changeset[4]->submitted_on, $this->toExpectedDate(3234590000));
-
     }
 
     public function itDoesNotCreateAnExtraChangesetIfUsersAreNotInTheSameOrder()

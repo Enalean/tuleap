@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class StandardPasswordHandler extends PasswordHandler {
+class StandardPasswordHandler extends PasswordHandler
+{
     public function verifyHashPassword($plain_password, $hash_password)
     {
         return password_verify($plain_password, $hash_password);

@@ -20,7 +20,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Valid {
+class Valid
+{
     /**
      * @access private
      */
@@ -88,7 +89,7 @@ class Valid {
      * @param Rule   Reference on rule.
      * @param String Error message.
      */
-    function addRule($rule, $message=false)
+    function addRule($rule, $message = false)
     {
         $this->rules[]  = $rule;
         $this->errors[] = $message;
@@ -156,17 +157,17 @@ class Valid {
      */
     function populateFeedback()
     {
-        if($this->useFeedback) {
+        if ($this->useFeedback) {
             $level = 'warning';
-            if($this->isRequired) {
+            if ($this->isRequired) {
                 $level = 'error';
             }
-            if($this->globalErrorMessage !== null &&
+            if ($this->globalErrorMessage !== null &&
                !$this->isValid) {
                 $this->addFeedback($level, $this->globalErrorMessage);
             } else {
-                foreach($this->errors as $error) {
-                    if($error != '') {
+                foreach ($this->errors as $error) {
+                    if ($error != '') {
                         $this->addFeedback($level, $error);
                     }
                 }
@@ -185,10 +186,10 @@ class Valid {
      */
     function errorMessage($i, $result)
     {
-        if($result === true) {
+        if ($result === true) {
             $this->errors[$i] = '';
         } else {
-            if($this->errors[$i] === false) {
+            if ($this->errors[$i] === false) {
                 $this->errors[$i] = $this->rules[$i]->getErrorMessage($this->key);
             }
         }
@@ -204,12 +205,12 @@ class Valid {
     {
         $isValid = true;
         $rCtr = count($this->rules);
-        for($i = 0; $i < $rCtr; $i++) {
+        for ($i = 0; $i < $rCtr; $i++) {
             $valid = $this->rules[$i]->isValid($value);
             $this->errorMessage($i, $valid);
             $isValid = $isValid && $valid;
         }
-        if($isValid && $this->isRequired && $this->isValueEmpty($value)) {
+        if ($isValid && $this->isRequired && $this->isValueEmpty($value)) {
             $this->isValid = false;
         } else {
             $this->isValid = $isValid;
@@ -224,7 +225,7 @@ class Valid {
      */
     function validate($value)
     {
-        if($this->isRequired
+        if ($this->isRequired
            || (!$this->isRequired && !$this->isValueEmpty($value))) {
             $this->checkEachRules($value);
             return $this->isValid;
@@ -232,5 +233,3 @@ class Valid {
         return true;
     }
 }
-
-?>

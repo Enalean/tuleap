@@ -37,7 +37,8 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
-class ProjectImportTest_SystemEventRunner extends Tuleap\Project\SystemEventRunner {
+class ProjectImportTest_SystemEventRunner extends Tuleap\Project\SystemEventRunner
+{
 
 }
 

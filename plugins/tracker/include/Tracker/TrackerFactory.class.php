@@ -23,7 +23,8 @@ use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
-class TrackerFactory {
+class TrackerFactory
+{
 
     public const LEGACY_SUFFIX = '_from_tv3';
 
@@ -154,7 +155,7 @@ class TrackerFactory {
     public function getTrackersByGroupId($group_id)
     {
         $trackers = array();
-        foreach($this->getDao()->searchByGroupId($group_id) as $row) {
+        foreach ($this->getDao()->searchByGroupId($group_id) as $row) {
             $tracker_id = $row['id'];
             $trackers[$tracker_id] = $this->getCachedInstanceFromRow($row);
         }
@@ -167,10 +168,10 @@ class TrackerFactory {
     public function getTrackersByGroupIdUserCanView($group_id, PFUser $user)
     {
         $trackers = array();
-        foreach($this->getDao()->searchByGroupId($group_id) as $row) {
+        foreach ($this->getDao()->searchByGroupId($group_id) as $row) {
             $tracker_id = $row['id'];
             $tracker    = $this->getCachedInstanceFromRow($row);
-            if($tracker->userCanView($user)) {
+            if ($tracker->userCanView($user)) {
                 $trackers[$tracker_id] = $tracker;
             }
         }
@@ -183,7 +184,7 @@ class TrackerFactory {
     public function getTrackersByProjectIdUserCanAdministration($project_id, PFUser $user)
     {
         $trackers = [];
-        foreach($this->getDao()->searchByGroupId($project_id) as $row) {
+        foreach ($this->getDao()->searchByGroupId($project_id) as $row) {
             $tracker_id = $row['id'];
             $tracker    = $this->getCachedInstanceFromRow($row);
             if ($tracker->userIsAdmin($user)) {
@@ -250,21 +251,21 @@ class TrackerFactory {
     public function getInstanceFromRow($row)
     {
         return new Tracker(
-                    $row['id'],
-                    $row['group_id'],
-                    $row['name'],
-                    $row['description'],
-                    $row['item_name'],
-                    $row['allow_copy'],
-                    $row['submit_instructions'],
-                    $row['browse_instructions'],
-                    $row['status'],
-                    $row['deletion_date'],
-                    $row['instantiate_for_new_projects'],
-                    $row['log_priority_changes'],
-                    $row['notifications_level'],
-                    TrackerColor::fromName($row['color']),
-                    $row['enable_emailgateway']
+            $row['id'],
+            $row['group_id'],
+            $row['name'],
+            $row['description'],
+            $row['item_name'],
+            $row['allow_copy'],
+            $row['submit_instructions'],
+            $row['browse_instructions'],
+            $row['status'],
+            $row['deletion_date'],
+            $row['instantiate_for_new_projects'],
+            $row['log_priority_changes'],
+            $row['notifications_level'],
+            TrackerColor::fromName($row['color']),
+            $row['enable_emailgateway']
         );
     }
 
@@ -400,29 +401,29 @@ class TrackerFactory {
     public function validMandatoryInfoOnCreate($name, $description, $itemname, $group_id)
     {
         if (! $this->isRequiredInformationsAvailable($name, $description, $itemname)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','name_requ'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'name_requ'));
             return false;
         }
 
         // Necessary test to avoid issues when exporting the tracker to a DB (e.g. '-' not supported as table name)
         if (! $this->isShortNameValid($itemname)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','invalid_shortname',$itemname));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'invalid_shortname', $itemname));
             return false;
         }
 
-        if($this->isNameExists($name, $group_id)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','name_already_exists',$itemname));
+        if ($this->isNameExists($name, $group_id)) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'name_already_exists', $itemname));
             return false;
         }
 
-        if($this->isShortNameExists($itemname, $group_id)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','shortname_already_exists',$itemname));
+        if ($this->isShortNameExists($itemname, $group_id)) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'shortname_already_exists', $itemname));
             return false;
         }
 
         $reference_manager = $this->getReferenceManager();
-        if($reference_manager->_isKeywordExists($itemname, $group_id)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','shortname_already_exists',$itemname));
+        if ($reference_manager->_isKeywordExists($itemname, $group_id)) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'shortname_already_exists', $itemname));
             return false;
         }
 
@@ -479,30 +480,28 @@ class TrackerFactory {
     {
 
         if ($this->validMandatoryInfoOnCreate($name, $description, $itemname, $project_id)) {
-
             // Get the template tracker
             $template_tracker = $this->getTrackerById($id_template);
             if (!$template_tracker) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','invalid_tracker_tmpl'));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'invalid_tracker_tmpl'));
                 return false;
             }
 
             $template_group = $template_tracker->getProject();
             if (!$template_group || !is_object($template_group) || $template_group->isError()) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','invalid_templ'));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'invalid_templ'));
                 return false;
             }
             $project_id_template = $template_group->getId();
 
             //Ask to dao to duplicate the tracker
             if ($id = $this->getDao()->duplicate($id_template, $project_id, $name, $description, $itemname)) {
-
                 // Duplicate Form Elements
                 $field_mapping = Tracker_FormElementFactory::instance()->duplicate($id_template, $id, $ugroup_mapping);
 
                 if ($ugroup_mapping) {
                     $duplicate_type = PermissionsDao::DUPLICATE_NEW_PROJECT;
-                } else if ($project_id == $project_id_template) {
+                } elseif ($project_id == $project_id_template) {
                      $duplicate_type = PermissionsDao::DUPLICATE_SAME_PROJECT;
                 } else {
                     $ugroup_manager = new UGroupManager();
@@ -636,18 +635,18 @@ class TrackerFactory {
         $params = array('project_id' => $from_project_id, 'tracker_ids_list' => &$tracker_ids_list);
         EventManager::instance()->processEvent(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED, $params);
         $tracker_ids_list = array_unique($tracker_ids_list);
-        foreach($this->getTrackersByGroupId($from_project_id) as $tracker) {
+        foreach ($this->getTrackersByGroupId($from_project_id) as $tracker) {
             if ($tracker->mustBeInstantiatedForNewProjects() || in_array($tracker->getId(), $tracker_ids_list)) {
                 $trackers_from_template[] = $tracker;
                 list($tracker_mapping, $field_mapping, $report_mapping) = $this->duplicateTracker(
-                        $tracker_mapping,
-                        $field_mapping,
-                        $report_mapping,
-                        $tracker,
-                        $from_project_id,
-                        $to_project_id,
-                        $ugroup_mapping
-                        );
+                    $tracker_mapping,
+                    $field_mapping,
+                    $report_mapping,
+                    $tracker,
+                    $from_project_id,
+                    $to_project_id,
+                    $ugroup_mapping
+                );
                 /*
                  * @todo
                  * Unless there is some odd dependency on the last tracker meeting
@@ -667,7 +666,6 @@ class TrackerFactory {
 
             $trigger_rules_manager = $this->getTriggerRulesManager();
             $trigger_rules_manager->duplicate($trackers_from_template, $field_mapping);
-
         }
         $shared_factory = $this->getFormElementFactory();
         $shared_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, $field_mapping);
@@ -713,20 +711,22 @@ class TrackerFactory {
         $to_project_id,
         $ugroup_mapping
     ) {
-        $tracker_and_field_and_report_mapping = $this->create($to_project_id,
-                $from_project_id,
-                $tracker->getId(),
-                $tracker->getName(),
-                $tracker->getDescription(),
-                $tracker->getItemName(),
-                $ugroup_mapping);
+        $tracker_and_field_and_report_mapping = $this->create(
+            $to_project_id,
+            $from_project_id,
+            $tracker->getId(),
+            $tracker->getName(),
+            $tracker->getDescription(),
+            $tracker->getItemName(),
+            $ugroup_mapping
+        );
 
         if ($tracker_and_field_and_report_mapping) {
             $tracker_mapping[$tracker->getId()] = $tracker_and_field_and_report_mapping['tracker']->getId();
             $field_mapping  = array_merge($field_mapping, $tracker_and_field_and_report_mapping['field_mapping']);
             $report_mapping = $report_mapping + $tracker_and_field_and_report_mapping['report_mapping'];
         } else {
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin','tracker_not_duplicated', array($tracker->getName())));
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin', 'tracker_not_duplicated', array($tracker->getName())));
         }
 
         return array($tracker_mapping, $field_mapping, $report_mapping);
@@ -768,7 +768,7 @@ class TrackerFactory {
     public function saveTrackerDefaultPermission($tracker_id)
     {
         $pm = PermissionsManager::instance();
-        if(!$pm->addPermission(Tracker::PERMISSION_FULL, $tracker_id, ProjectUGroup::ANONYMOUS)) {
+        if (!$pm->addPermission(Tracker::PERMISSION_FULL, $tracker_id, ProjectUGroup::ANONYMOUS)) {
             return false;
         }
         return true;
@@ -785,20 +785,20 @@ class TrackerFactory {
         // create tracker
         $this->getDao()->startTransaction();
         $tracker_id = $this->getDao()->create(
-                $tracker->group_id,
-                $tracker->name,
-                $tracker->description,
-                $tracker->item_name,
-                $tracker->allow_copy,
-                $tracker->submit_instructions,
-                $tracker->browse_instructions,
-                '',
-                '',
-                $tracker->instantiate_for_new_projects,
-                $tracker->log_priority_changes,
-                $tracker->getNotificationsLevel(),
-                $tracker->getColor()->getName(),
-                $tracker->isEmailgatewayEnabled()
+            $tracker->group_id,
+            $tracker->name,
+            $tracker->description,
+            $tracker->item_name,
+            $tracker->allow_copy,
+            $tracker->submit_instructions,
+            $tracker->browse_instructions,
+            '',
+            '',
+            $tracker->instantiate_for_new_projects,
+            $tracker->log_priority_changes,
+            $tracker->getNotificationsLevel(),
+            $tracker->getColor()->getName(),
+            $tracker->isEmailgatewayEnabled()
         );
         if ($tracker_id) {
             $trackerDB = $this->getTrackerById($tracker_id);
@@ -874,12 +874,12 @@ class TrackerFactory {
             throw new Tracker_Exception_Migration_GetTv3Exception($tv3->getErrorMessage());
         }
         // Check if this tracker is valid (not deleted)
-        if (! $tv3->isValid() ) {
-            throw new Tracker_Exception_Migration_GetTv3Exception($GLOBALS['Language']->getText('tracker_add','invalid'));
+        if (! $tv3->isValid()) {
+            throw new Tracker_Exception_Migration_GetTv3Exception($GLOBALS['Language']->getText('tracker_add', 'invalid'));
         }
         //Check if the user can view the artifact
         if (! $tv3->userCanView($user->getId())) {
-            throw new Tracker_Exception_Migration_GetTv3Exception($GLOBALS['Language']->getText('include_exit','no_perm'));
+            throw new Tracker_Exception_Migration_GetTv3Exception($GLOBALS['Language']->getText('include_exit', 'no_perm'));
         }
 
         return $this->createTracker($name, $description, $itemname, $project, $tv3);

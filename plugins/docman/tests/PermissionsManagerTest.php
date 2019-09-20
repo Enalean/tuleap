@@ -31,7 +31,8 @@ Mock::generate('PermissionsManager');
 Mock::generate('Docman_PermissionsManagerDao');
 Mock::generate('DataAccessResult');
 
-class Docman_PermissionsManagerTest extends TuleapTestCase {
+class Docman_PermissionsManagerTest extends TuleapTestCase
+{
     private $user;
     /**
      * @var \Mockery\MockInterface|Docman_PermissionsManager
@@ -128,7 +129,6 @@ class Docman_PermissionsManagerTest extends TuleapTestCase {
         $this->assertFalse($this->docmanPm->userCanManage($this->user, 123));
         $this->assertFalse($this->docmanPm->userCanWrite($this->user, 123));
         $this->assertFalse($this->docmanPm->userCanRead($this->user, 123));
-
     }
 
     // Functional test (should never change)

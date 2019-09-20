@@ -33,7 +33,8 @@ class Tracker_Widget_MyRenderer extends Tracker_Widget_Renderer
     function __construct()
     {
         parent::__construct(
-            self::ID, UserManager::instance()->getCurrentUser()->getId(),
+            self::ID,
+            UserManager::instance()->getCurrentUser()->getId(),
             UserDashboardController::LEGACY_DASHBOARD_TYPE
         );
     }

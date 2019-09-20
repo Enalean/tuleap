@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FlamingParrot_SearchFormPresenter {
+class FlamingParrot_SearchFormPresenter
+{
 
     private $selected_entry;
 

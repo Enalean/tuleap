@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/DatabaseInitialization.class.php';
 
-class PullRequestDataBuilder extends REST_TestDataBuilder {
+class PullRequestDataBuilder extends REST_TestDataBuilder
+{
 
     public function setUp()
     {
@@ -33,5 +34,4 @@ class PullRequestDataBuilder extends REST_TestDataBuilder {
         $initializer = new Tuleap\PullRequest\REST\DatabaseInitialization();
         $initializer->setUp();
     }
-
 }

@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_WatcherDao extends DataAccessObject {
+class Tracker_WatcherDao extends DataAccessObject
+{
 
     function __construct()
     {
@@ -48,4 +49,3 @@ class Tracker_WatcherDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 }
-?>

@@ -8,7 +8,8 @@
 */
 
 
-class Docman_View_GetClassForLinkVisitor /* implements Visitor*/ {
+class Docman_View_GetClassForLinkVisitor /* implements Visitor*/
+{
 
     function visitFolder(&$item, $params = array())
     {
@@ -40,6 +41,4 @@ class Docman_View_GetClassForLinkVisitor /* implements Visitor*/ {
     {
         return $this->visitDocument($item, $params);
     }
-
 }
-?>

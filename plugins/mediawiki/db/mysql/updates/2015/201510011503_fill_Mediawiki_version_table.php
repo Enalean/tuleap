@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201510011503_fill_Mediawiki_version_table extends ForgeUpgrade_Bucket {
+class b201510011503_fill_Mediawiki_version_table extends ForgeUpgrade_Bucket
+{
 
     public const MW_123_VERSION = '1.23';
     public const MW_120_VERSION = '1.20';
@@ -84,7 +85,7 @@ EOT;
         $sql = "SHOW TABLES IN $database LIKE 'mwsites'";
         $res = $this->queryDB($sql, "An error occured while getting mediawiki version of project $project_id");
 
-        if ( count($res->fetchAll()) == 0) {
+        if (count($res->fetchAll()) == 0) {
             return self::MW_120_VERSION;
         }
 

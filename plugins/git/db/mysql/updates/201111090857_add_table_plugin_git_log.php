@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201111090857_add_table_plugin_git_log extends ForgeUpgrade_Bucket {
+class b201111090857_add_table_plugin_git_log extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -70,7 +71,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_git_log table is missing');
         }
     }
-
 }
-
-?>

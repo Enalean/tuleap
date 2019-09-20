@@ -23,7 +23,8 @@
  *
  */
 
-class Rule_NumericalTest extends TuleapTestCase {
+class Rule_NumericalTest extends TuleapTestCase
+{
 
     function UnitTestCase($name = 'Rule_Numerical test')
     {
@@ -141,6 +142,4 @@ class Rule_NumericalTest extends TuleapTestCase {
         $this->assertFalse($r->isValid('11'));
         $this->assertFalse($r->isValid('20'));
     }*/
-
 }
-?>

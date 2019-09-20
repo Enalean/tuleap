@@ -20,7 +20,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GraphOnTrackersV5_Chart_PieDao extends DataAccessObject {
+class GraphOnTrackersV5_Chart_PieDao extends DataAccessObject
+{
 
     function __construct($da = null)
     {
@@ -61,7 +62,7 @@ class GraphOnTrackersV5_Chart_PieDao extends DataAccessObject {
                 WHERE id = $from_chart_id";
 
         $this->update($sql);
-        foreach($field_mapping as $mapping) {
+        foreach ($field_mapping as $mapping) {
             $from  = $this->da->escapeInt($mapping['from']);
             $to    = $this->da->escapeInt($mapping['to']);
             $sql = "UPDATE $this->table_name 
@@ -72,4 +73,3 @@ class GraphOnTrackersV5_Chart_PieDao extends DataAccessObject {
         }
     }
 }
-?>

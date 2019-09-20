@@ -20,7 +20,8 @@
 
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 
-class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder {
+class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
+{
 
     /** @var BacklogItemRepresentationFactory */
     private $backlog_item_representation_factory;
@@ -78,5 +79,4 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder {
     {
         return $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $milestone, $backlog, false);
     }
-
 }

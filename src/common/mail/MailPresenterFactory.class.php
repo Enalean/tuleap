@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MailPresenterFactory {
+class MailPresenterFactory
+{
 
     public const FLAMING_PARROT_THEME = 'FlamingParrot';
 
@@ -46,9 +47,9 @@ class MailPresenterFactory {
 
         if ($presenter_role === "user") {
             $presenter = $this->createUserEmailPresenter($attributes_presenter);
-        } else if ($presenter_role === "admin") {
+        } elseif ($presenter_role === "admin") {
             $presenter = $this->createAdminEmailPresenter($attributes_presenter);
-        } else if ($presenter_role === "admin-notification") {
+        } elseif ($presenter_role === "admin-notification") {
             $presenter = $this->createAdminNotificationPresenter($attributes_presenter);
         } else {
             $presenter = $this->createApprovalEmailPresenter($attributes_presenter);
@@ -132,19 +133,19 @@ class MailPresenterFactory {
         $redirect_url = $base_url ."/account/login.php?confirm_hash=$confirm_hash";
 
         $presenter = new MailRegisterByUserPresenter(
-             $attributes_presenter["logo_url"],
-             $title,
-             $section_one,
-             $section_two,
-             $section_after_login,
-             $thanks,
-             $signature,
-             $help,
-             $attributes_presenter["color_logo"],
-             $login,
-             $redirect_url,
-             $redirect_button,
-             $attributes_presenter["color_button"]
+            $attributes_presenter["logo_url"],
+            $title,
+            $section_one,
+            $section_two,
+            $section_after_login,
+            $thanks,
+            $signature,
+            $help,
+            $attributes_presenter["color_logo"],
+            $login,
+            $redirect_url,
+            $redirect_button,
+            $attributes_presenter["color_button"]
         );
         return $presenter;
     }

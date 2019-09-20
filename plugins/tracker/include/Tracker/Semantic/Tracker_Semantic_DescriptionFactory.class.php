@@ -92,6 +92,4 @@ class Tracker_Semantic_DescriptionFactory implements IBuildSemanticFromXML, IDup
             }
         }
     }
-
 }
-?>

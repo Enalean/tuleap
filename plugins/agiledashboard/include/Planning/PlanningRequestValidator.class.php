@@ -21,7 +21,8 @@
 /**
  * Validates planning creation requests.
  */
-class Planning_RequestValidator {
+class Planning_RequestValidator
+{
 
     /**
      * @var PlanningFactory

@@ -29,7 +29,8 @@ Mock::generate('BackendSVN');
 
 Mock::generate('BackendCVS');
 
-class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
+class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -50,7 +51,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
     public function testRenameOps()
     {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
-        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT,'142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject($this);
@@ -81,22 +82,22 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $backendSystem->setReturnValue('projectHomeExists', true);
         $backendSystem->setReturnValue('isProjectNameAvailable', true);
         $backendSystem->setReturnValue('renameProjectHomeDirectory', true);
-        $backendSystem->expectOnce('renameProjectHomeDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameProjectHomeDirectory', array($project, 'FooBar'));
         $backendSystem->expectOnce('setNeedRefreshGroupCache');
         $evt->setReturnValue('getBackend', $backendSystem, array('System'));
 
         //FRS
         $backendSystem->setReturnValue('renameFileReleasedDirectory', true);
-        $backendSystem->expectOnce('renameFileReleasedDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameFileReleasedDirectory', array($project, 'FooBar'));
         $evt->setReturnValue('getBackend', $backendSystem, array('System'));
 
         //FTP
         $backendSystem->setReturnValue('renameAnonFtpDirectory', true);
-        $backendSystem->expectOnce('renameAnonFtpDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameAnonFtpDirectory', array($project, 'FooBar'));
         $evt->setReturnValue('getBackend', $backendSystem, array('System'));
 
         //DB
-        $evt->setReturnValue('updateDB',true);
+        $evt->setReturnValue('updateDB', true);
 
         // Event
         $em = \Mockery::mock(EventManager::class);
@@ -117,8 +118,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
 
         // The project
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestProj',array(false));
-        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('getUnixName', 'TestProj', array(false));
+        $project->setReturnValue('getUnixName', 'testproj', array(true));
         $evt->setReturnValue('getProject', $project, array('142'));
 
         // SVN
@@ -144,11 +145,11 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
 
         // FRS
         $backendSystem->setReturnValue('renameFileReleasedDirectory', true);
-        $backendSystem->expectOnce('renameFileReleasedDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameFileReleasedDirectory', array($project, 'FooBar'));
 
         // FTP
         $backendSystem->setReturnValue('renameAnonFtpDirectory', true);
-        $backendSystem->expectOnce('renameAnonFtpDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameAnonFtpDirectory', array($project, 'FooBar'));
 
         $evt->setReturnValue('getBackend', $backendSystem, array('System'));
 
@@ -175,8 +176,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
 
         // The project
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestProj',array(false));
-        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('getUnixName', 'TestProj', array(false));
+        $project->setReturnValue('getUnixName', 'testproj', array(true));
         $evt->setReturnValue('getProject', $project, array('142'));
 
         // SVN
@@ -201,11 +202,11 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
 
         // FRS
         $backendSystem->setReturnValue('renameFileReleasedDirectory', true);
-        $backendSystem->expectOnce('renameFileReleasedDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameFileReleasedDirectory', array($project, 'FooBar'));
 
         // FTP
         $backendSystem->setReturnValue('renameAnonFtpDirectory', true);
-        $backendSystem->expectOnce('renameAnonFtpDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameAnonFtpDirectory', array($project, 'FooBar'));
 
         $evt->setReturnValue('getBackend', $backendSystem, array('System'));
 
@@ -232,8 +233,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
 
         // The project
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestProj',array(false));
-        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('getUnixName', 'TestProj', array(false));
+        $project->setReturnValue('getUnixName', 'testproj', array(true));
         $evt->setReturnValue('getProject', $project, array('142'));
 
         // SVN
@@ -258,11 +259,11 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
 
         // FRS
         $backendSystem->setReturnValue('renameFileReleasedDirectory', true);
-        $backendSystem->expectOnce('renameFileReleasedDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameFileReleasedDirectory', array($project, 'FooBar'));
 
         // FTP
         $backendSystem->setReturnValue('renameAnonFtpDirectory', true);
-        $backendSystem->expectOnce('renameAnonFtpDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameAnonFtpDirectory', array($project, 'FooBar'));
 
         $evt->setReturnValue('getBackend', $backendSystem, array('System'));
 
@@ -293,8 +294,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
 
         // The project
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestProj',array(false));
-        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('getUnixName', 'TestProj', array(false));
+        $project->setReturnValue('getUnixName', 'testproj', array(true));
         $evt->setReturnValue('getProject', $project, array('142'));
 
         // SVN
@@ -311,17 +312,17 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $backendSystem = new MockBackendSystem($this);
         $backendSystem->setReturnValue('projectHomeExists', true);
         $backendSystem->setReturnValue('isProjectNameAvailable', true);
-        $backendSystem->expectOnce('renameProjectHomeDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameProjectHomeDirectory', array($project, 'FooBar'));
         $backendSystem->setReturnValue('renameProjectHomeDirectory', false);
         $backendSystem->expectNever('setNeedRefreshGroupCache');
 
         // FRS
         $backendSystem->setReturnValue('renameFileReleasedDirectory', true);
-        $backendSystem->expectOnce('renameFileReleasedDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameFileReleasedDirectory', array($project, 'FooBar'));
 
         // FTP
         $backendSystem->setReturnValue('renameAnonFtpDirectory', true);
-        $backendSystem->expectOnce('renameAnonFtpDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameAnonFtpDirectory', array($project, 'FooBar'));
 
         $evt->setReturnValue('getBackend', $backendSystem, array('System'));
 
@@ -352,8 +353,8 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
 
         // The project
         $project = new MockProject($this);
-        $project->setReturnValue('getUnixName', 'TestProj',array(false));
-        $project->setReturnValue('getUnixName', 'testproj',array(true));
+        $project->setReturnValue('getUnixName', 'TestProj', array(false));
+        $project->setReturnValue('getUnixName', 'testproj', array(true));
         $evt->setReturnValue('getProject', $project, array('142'));
 
         // SVN
@@ -371,13 +372,13 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $backendSystem->setReturnValue('projectHomeExists', false);
 
         //FRS
-        $backendSystem->expectOnce('renameFileReleasedDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameFileReleasedDirectory', array($project, 'FooBar'));
         $backendSystem->setReturnValue('renameFileReleasedDirectory', false);
         $evt->setReturnValue('getBackend', $backendSystem, array('System'));
 
         // FTP
         $backendSystem->setReturnValue('renameAnonFtpDirectory', true);
-        $backendSystem->expectOnce('renameAnonFtpDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameAnonFtpDirectory', array($project, 'FooBar'));
 
         $evt->setReturnValue('getBackend', $backendSystem, array('System'));
 
@@ -430,7 +431,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $backendSystem->setReturnValue('renameFileReleasedDirectory', true);
 
         //FTP
-        $backendSystem->expectOnce('renameAnonFtpDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameAnonFtpDirectory', array($project, 'FooBar'));
         $backendSystem->setReturnValue('renameAnonFtpDirectory', false);
 
         $evt->setReturnValue('getBackend', $backendSystem, array('System'));
@@ -485,7 +486,7 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
 
         // FTP
         $backendSystem->setReturnValue('renameAnonFtpDirectory', true);
-        $backendSystem->expectOnce('renameAnonFtpDirectory',array($project, 'FooBar'));
+        $backendSystem->expectOnce('renameAnonFtpDirectory', array($project, 'FooBar'));
 
         $evt->setReturnValue('getBackend', $backendSystem, array('System'));
 
@@ -553,4 +554,3 @@ class SystemEvent_PROJECT_RENAME_Test extends TuleapTestCase {
         $this->assertPattern('/.*CVS repository.*not available/', $evt->getLog());
     }
 }
-?>

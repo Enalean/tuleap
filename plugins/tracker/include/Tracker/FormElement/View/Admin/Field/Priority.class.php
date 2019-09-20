@@ -19,7 +19,8 @@
  */
 
 
-class Tracker_FormElement_View_Admin_Priority extends Tracker_FormElement_View_Admin {
+class Tracker_FormElement_View_Admin_Priority extends Tracker_FormElement_View_Admin
+{
 
     /**
      * Fetch the "required" part of field admin
@@ -45,5 +46,3 @@ class Tracker_FormElement_View_Admin_Priority extends Tracker_FormElement_View_A
         return $html;
     }
 }
-
-?>

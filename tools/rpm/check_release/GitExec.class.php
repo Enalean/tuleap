@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class GitExec {
+class GitExec
+{
 
     public function hasChangedSince($path, $version)
     {
@@ -41,5 +42,3 @@ class GitExec {
         return $output;
     }
 }
-
-?>

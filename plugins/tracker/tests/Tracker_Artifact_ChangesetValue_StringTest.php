@@ -20,7 +20,8 @@
 
 require_once 'bootstrap.php';
 
-class Tracker_Artifact_ChangesetValue_String_RESTTest extends TuleapTestCase {
+class Tracker_Artifact_ChangesetValue_String_RESTTest extends TuleapTestCase
+{
 
     public function itReturnsTheRESTValue()
     {

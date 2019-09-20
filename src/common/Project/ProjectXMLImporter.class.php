@@ -325,14 +325,14 @@ class ProjectXMLImporter
 
             list($ugroups_in_xml, $project_members) = $this->getUgroupsFromXMLToAdd($project, $xml_element->ugroups);
 
-            foreach($project_members as $user) {
+            foreach ($project_members as $user) {
                 $this->addProjectMember($project, $user);
             }
 
             foreach ($ugroups_in_xml as $ugroup_def) {
                 $ugroup = $this->ugroup_manager->getDynamicUGoupByName($project, $ugroup_def['name']);
 
-                if(empty($ugroup)) {
+                if (empty($ugroup)) {
                     $this->logger->debug("Creating empty ugroup " . $ugroup_def['name']);
                     try {
                         $new_ugroup_id = $this->ugroup_manager->createEmptyUgroup(
@@ -480,7 +480,7 @@ class ProjectXMLImporter
         $xml->loadXML($file_contents, $this->getLibXMLOptions());
         $errors = libxml_get_errors();
 
-        if (! empty($errors)){
+        if (! empty($errors)) {
             throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_xml'));
         }
     }

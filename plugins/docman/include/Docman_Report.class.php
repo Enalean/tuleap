@@ -22,7 +22,8 @@
 
 require_once('Docman_FilterFactory.class.php');
 
-class Docman_Report {
+class Docman_Report
+{
     var $id;
     var $name;
     var $title;
@@ -157,17 +158,39 @@ class Docman_Report {
 
     function initFromRow($row)
     {
-        if(isset($row['report_id'])) $this->id = $row['report_id'];
-        if(isset($row['name'])) $this->name = $row['name'];
-        if(isset($row['title'])) $this->title = $row['title'];
-        if(isset($row['group_id'])) $this->groupId = $row['group_id'];
-        if(isset($row['user_id'])) $this->userId = $row['user_id'];
-        if(isset($row['item_id'])) $this->itemId = $row['item_id'];
-        if(isset($row['scope'])) $this->scope = $row['scope'];
-        if(isset($row['is_default'])) $this->isDefault = $row['is_default'];
-        if(isset($row['advanced_search'])) $this->advancedSearch = $row['advanced_search'];
-        if(isset($row['description'])) $this->description = $row['description'];
-        if(isset($row['image'])) $this->image = $row['image'];
+        if (isset($row['report_id'])) {
+            $this->id = $row['report_id'];
+        }
+        if (isset($row['name'])) {
+            $this->name = $row['name'];
+        }
+        if (isset($row['title'])) {
+            $this->title = $row['title'];
+        }
+        if (isset($row['group_id'])) {
+            $this->groupId = $row['group_id'];
+        }
+        if (isset($row['user_id'])) {
+            $this->userId = $row['user_id'];
+        }
+        if (isset($row['item_id'])) {
+            $this->itemId = $row['item_id'];
+        }
+        if (isset($row['scope'])) {
+            $this->scope = $row['scope'];
+        }
+        if (isset($row['is_default'])) {
+            $this->isDefault = $row['is_default'];
+        }
+        if (isset($row['advanced_search'])) {
+            $this->advancedSearch = $row['advanced_search'];
+        }
+        if (isset($row['description'])) {
+            $this->description = $row['description'];
+        }
+        if (isset($row['image'])) {
+            $this->image = $row['image'];
+        }
     }
 
     function addColumn(&$c)
@@ -211,7 +234,7 @@ class Docman_Report {
         }*/
 
         // Advanced search
-        if($this->advancedSearch) {
+        if ($this->advancedSearch) {
             $param['advsearch'] = 1;
         }
         return $param;
@@ -229,6 +252,3 @@ class Docman_Report {
         return $filterFactory->getItemTypeSearchMetadata();
     }
 }
-
-
-?>

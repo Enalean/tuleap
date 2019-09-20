@@ -23,7 +23,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter;
 
-class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest extends TuleapTestCase {
+class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest extends TuleapTestCase
+{
 
     protected $field;
     protected $command;

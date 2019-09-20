@@ -23,7 +23,8 @@ Mock::generatePartial('Plugin', 'PluginTestVersion', array('_getPluginManager'))
 
 Mock::generate('PluginManager');
 
-class FakePluginToTestHooks extends Plugin {
+class FakePluginToTestHooks extends Plugin
+{
 
     public function hook1()
     {
@@ -50,7 +51,8 @@ class FakePluginToTestHooks extends Plugin {
     }
 }
 
-class PluginTest extends TuleapTestCase {
+class PluginTest extends TuleapTestCase
+{
 
     function testId()
     {
@@ -77,8 +79,8 @@ class PluginTest extends TuleapTestCase {
         $col = $p->getHooksAndCallbacks();
         $it = $col->iterator();
         $current_hook = $it->current();
-        $this->assertEqual($current_hook['hook'],       $hook);
-        $this->assertEqual($current_hook['callback'],   'anEvent');
+        $this->assertEqual($current_hook['hook'], $hook);
+        $this->assertEqual($current_hook['callback'], 'anEvent');
         $this->assertFalse($current_hook['recallHook']);
     }
 
@@ -92,8 +94,8 @@ class PluginTest extends TuleapTestCase {
         $col = $p->getHooksAndCallbacks();
         $it = $col->iterator();
         $current_hook = $it->current();
-        $this->assertEqual($current_hook['hook'],       $hook);
-        $this->assertEqual($current_hook['callback'],   $callback);
+        $this->assertEqual($current_hook['hook'], $hook);
+        $this->assertEqual($current_hook['callback'], $callback);
         $this->assertFalse($current_hook['recallHook']);
     }
 
@@ -108,8 +110,8 @@ class PluginTest extends TuleapTestCase {
         $col = $p->getHooksAndCallbacks();
         $it = $col->iterator();
         $current_hook = $it->current();
-        $this->assertEqual($current_hook['hook'],       $hook);
-        $this->assertEqual($current_hook['callback'],   $callback);
+        $this->assertEqual($current_hook['hook'], $hook);
+        $this->assertEqual($current_hook['callback'], $callback);
         $this->assertEqual($current_hook['recallHook'], $recall);
     }
 

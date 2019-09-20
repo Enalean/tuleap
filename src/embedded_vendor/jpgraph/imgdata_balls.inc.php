@@ -8,7 +8,8 @@
 // Copyright (c) Asial Corporation. All rights reserved.
 //========================================================================
 
-class ImgData_Balls extends ImgData {
+class ImgData_Balls extends ImgData
+{
     protected $name = 'Round Balls';
     protected $an = array(MARK_IMG_LBALL => 'imgdata_large',
     MARK_IMG_MBALL => 'imgdata_small',
@@ -48,9 +49,9 @@ class ImgData_Balls extends ImgData {
     protected $imgdata_large, $imgdata_small, $imgdata_xsmall ;
 
 
-    function GetImg($aMark,$aIdx)
+    function GetImg($aMark, $aIdx)
     {
-        switch( $aMark ) {
+        switch ($aMark) {
             case MARK_IMG_SBALL:
             case MARK_IMG_BALL:
                 $this->colors = $this->colors_3;
@@ -68,7 +69,7 @@ class ImgData_Balls extends ImgData {
                 $this->maxidx = $this->maxidx_1 ;
                 break;
         }
-        return parent::GetImg($aMark,$aIdx);
+        return parent::GetImg($aMark, $aIdx);
     }
 
     function __construct()
@@ -1054,5 +1055,3 @@ class ImgData_Balls extends ImgData {
         'AAAABJRU5ErkJggg==' ;
     }
 }
-
-?>

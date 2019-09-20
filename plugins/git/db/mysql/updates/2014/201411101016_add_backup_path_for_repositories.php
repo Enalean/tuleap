@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class b201411101016_add_backup_path_for_repositories extends ForgeUpgrade_Bucket {
+class b201411101016_add_backup_path_for_repositories extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

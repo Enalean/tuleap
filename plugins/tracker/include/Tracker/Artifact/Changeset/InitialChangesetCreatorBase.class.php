@@ -122,7 +122,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         return $changeset_id;
     }
 
-    protected abstract function saveNewChangesetForField(
+    abstract protected function saveNewChangesetForField(
         Tracker_FormElement_Field $field,
         Tracker_Artifact $artifact,
         array $fields_data,

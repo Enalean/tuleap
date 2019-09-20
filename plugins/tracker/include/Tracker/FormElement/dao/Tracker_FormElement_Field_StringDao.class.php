@@ -21,7 +21,8 @@
 /**
  *  Data Access Object for Tracker_FormElement_Field
  */
-class Tracker_FormElement_Field_StringDao extends Tracker_FormElement_SpecificPropertiesDao {
+class Tracker_FormElement_Field_StringDao extends Tracker_FormElement_SpecificPropertiesDao
+{
 
     function __construct()
     {
@@ -74,4 +75,3 @@ class Tracker_FormElement_Field_StringDao extends Tracker_FormElement_SpecificPr
         return $this->update($sql);
     }
 }
-?>

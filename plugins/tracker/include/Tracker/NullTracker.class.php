@@ -23,14 +23,17 @@ use Tuleap\Tracker\TrackerColor;
 /**
  * Null pattern for Tracker.
  */
-class NullTracker extends Tracker {
+class NullTracker extends Tracker
+{
     public function __construct()
     {
         parent::__construct(null, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
     }
 
     public function getId()
-    {}
+    {
+    }
     public function getName()
-    {}
+    {
+    }
 }

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_Presenter_MilestoneSummaryPresenter extends Planning_Presenter_MilestoneSummaryPresenterAbstract {
+class Planning_Presenter_MilestoneSummaryPresenter extends Planning_Presenter_MilestoneSummaryPresenterAbstract
+{
 
     /**
      * A status array. E.g.
@@ -55,12 +56,11 @@ class Planning_Presenter_MilestoneSummaryPresenter extends Planning_Presenter_Mi
 
     public function open()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','open');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'open');
     }
 
     public function closed()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','closed');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'closed');
     }
 }
-?>

@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_MutableInfoPresenter extends User_ImmutableInfoPresenter {
+class User_MutableInfoPresenter extends User_ImmutableInfoPresenter
+{
     private $change;
 
     public function __construct($label, $value, $change)

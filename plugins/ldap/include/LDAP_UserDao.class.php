@@ -26,7 +26,8 @@
  * Interact with plugin_ldap_user table in database
  *
  */
-class LDAP_UserDao extends DataAccessObject {
+class LDAP_UserDao extends DataAccessObject
+{
 
     /**
      *
@@ -80,7 +81,7 @@ class LDAP_UserDao extends DataAccessObject {
      *
      * @return bool
      */
-    function createLdapUser($userId, $date=0, $ldap_uid="")
+    function createLdapUser($userId, $date = 0, $ldap_uid = "")
     {
         $sql = 'INSERT INTO plugin_ldap_user'.
             '(user_id, login_confirmation_date, ldap_uid)'.

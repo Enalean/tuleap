@@ -102,4 +102,3 @@ class Docman_LockDao extends DataAccessObject
         return $this->update($sql);
     }
 }
-?>

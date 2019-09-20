@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase {
+class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase
+{
 
     private $artifact_id_1;
     private $artifact_id_2;

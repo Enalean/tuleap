@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_FilterFactory {
+class Docman_FilterFactory
+{
     var $dynTextFields;
     var $groupId;
 
@@ -46,21 +47,20 @@ class Docman_FilterFactory {
         $metadataFactory = new Docman_MetadataFactory($report->getGroupId());
         $dao = $this->getDao();
         $dar = $dao->searchByReportId($report->getId());
-        if($dar && !$dar->isError()) {
-            while($dar->valid()) {
+        if ($dar && !$dar->isError()) {
+            while ($dar->valid()) {
                 $row = $dar->current();
                 if ($row['label'] == $gsMd->getLabel()) {
                     $gsRow = $row;
                     $globalSearch = true;
-                } else if ($row['label'] == $itsMd->getLabel()) {
+                } elseif ($row['label'] == $itsMd->getLabel()) {
                     $itsRows[] = $row;
                     $itemTypeSearchSearch = true;
                 } else {
-                    if(isset($filtersArray[$row['label']])) {
+                    if (isset($filtersArray[$row['label']])) {
                         $f = $filtersArray[$row['label']];
                         $f->initFromRow($row);
-                    }
-                    else {
+                    } else {
                         $md = $metadataFactory->getFromLabel($row['label']);
                         $f = $this->createFromMetadata($md, $report->getAdvancedSearch());
                         $f->initFromRow($row);
@@ -77,27 +77,27 @@ class Docman_FilterFactory {
         // url, we have to use the MD order returned by getMetadataForGroup
         // method of metadataFactory: first the hardcoded md like defined in
         // the class and then the real metadata ordered by label ASC.
-        foreach(Docman_MetadataFactory::HARDCODED_METADATA_LABELS as $mdLabel) {
-            if(isset($filtersArray[$mdLabel])) {
+        foreach (Docman_MetadataFactory::HARDCODED_METADATA_LABELS as $mdLabel) {
+            if (isset($filtersArray[$mdLabel])) {
                 $report->addFilter($filtersArray[$mdLabel]);
                 unset($filtersArray[$mdLabel]);
             }
         }
         // Then loop on the real md.
-        foreach($filtersArray as $f) {
+        foreach ($filtersArray as $f) {
             $report->addFilter($f);
             unset($f);
         }
 
         // Add global search always at the end
-        if($globalSearch) {
+        if ($globalSearch) {
             $f = new Docman_FilterGlobalText($gsMd, $this->dynTextFields);
             $f->initFromRow($gsRow);
             $report->addFilter($f);
             unset($f);
         }
 
-        if($itemTypeSearchSearch) {
+        if ($itemTypeSearchSearch) {
             $f = $this->createItemTypeFilter($itsMd, $report->getAdvancedSearch());
 
             foreach ($itsRows as $itsRow) {
@@ -192,32 +192,31 @@ class Docman_FilterFactory {
     {
         $filter = null;
 
-        if($md->getLabel() == 'owner') {
+        if ($md->getLabel() == 'owner') {
             $filter = new Docman_FilterOwner($md);
-        }
-        else {
-            switch($md->getType()) {
+        } else {
+            switch ($md->getType()) {
                 case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
                 case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
                     $filter = new Docman_FilterText($md);
-                    if(Docman_MetadataFactory::isRealMetadata($md->getLabel())) {
+                    if (Docman_MetadataFactory::isRealMetadata($md->getLabel())) {
                         $this->dynTextFields[] = $md->getLabel();
                     }
-                break;
+                    break;
                 case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
-                    if($advSearch) {
+                    if ($advSearch) {
                         $filter = new Docman_FilterDateAdvanced($md);
                     } else {
                         $filter = new Docman_FilterDate($md);
                     }
-                break;
+                    break;
                 case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
-                    if($advSearch) {
+                    if ($advSearch) {
                         $filter = new Docman_FilterListAdvanced($md);
                     } else {
                         $filter = new Docman_FilterList($md);
                     }
-                break;
+                    break;
             }
         }
 
@@ -237,8 +236,8 @@ class Docman_FilterFactory {
 
     function _initFilter($filter, $request)
     {
-        if($filter !== null) {
-            if($filter->initOnUrlMatch($request)) {
+        if ($filter !== null) {
+            if ($filter->initOnUrlMatch($request)) {
                 return $filter;
             }
         }
@@ -248,7 +247,7 @@ class Docman_FilterFactory {
     function createFiltersFromReport($report)
     {
         $fi = $report->getFilterIterator();
-        while($fi->valid()) {
+        while ($fi->valid()) {
             $filter = $fi->current();
             $this->createFilter($report->getId(), $filter);
             $fi->next();
@@ -259,21 +258,17 @@ class Docman_FilterFactory {
     {
         $dao = $this->getDao();
 
-        if(is_a($filter, 'Docman_FilterDateAdvanced')) {
+        if (is_a($filter, 'Docman_FilterDateAdvanced')) {
             $dao->createFilterDateAdvanced($reportId, $filter->md->getLabel(), $filter->getValueStart(), $filter->getValueEnd());
-        }
-        elseif(is_a($filter, 'Docman_FilterDate')) {
+        } elseif (is_a($filter, 'Docman_FilterDate')) {
             $dao->createFilterDate($reportId, $filter->md->getLabel(), $filter->getValue(), $filter->getOperator());
-        }
-        elseif(is_a($filter, 'Docman_FilterListAdvanced')) {
-            foreach($filter->getValue() as $val) {
+        } elseif (is_a($filter, 'Docman_FilterListAdvanced')) {
+            foreach ($filter->getValue() as $val) {
                 $dao->createFilterList($reportId, $filter->md->getLabel(), $val);
             }
-        }
-        elseif(is_a($filter, 'Docman_FilterList')) {
+        } elseif (is_a($filter, 'Docman_FilterList')) {
             $dao->createFilterList($reportId, $filter->md->getLabel(), $filter->getValue());
-        }
-        else {
+        } else {
             $dao->createFilterText($reportId, $filter->md->getLabel(), $filter->getValue());
         }
     }
@@ -306,7 +301,7 @@ class Docman_FilterFactory {
 
         $fi = $srcReport->getFilterIterator();
         $fi->rewind();
-        while($fi->valid()) {
+        while ($fi->valid()) {
             $srcFilter = $fi->current();
             $this->cloneFilter($srcFilter, $dstReport, $metadataMapping);
             $fi->next();
@@ -331,11 +326,11 @@ class Docman_FilterFactory {
         $dstMdFactory = new Docman_MetadataFactory($dstReport->getGroupId());
 
         $newLabel = null;
-        if($dstMdFactory->isRealMetadata($srcFilter->md->getLabel())) {
+        if ($dstMdFactory->isRealMetadata($srcFilter->md->getLabel())) {
             // Check if there is a corresponding MD in the dst project
             // Should never happens in case of initial template clone
             // but main exists with 'clone this report' function
-            if(isset($metadataMapping['md'][$srcFilter->md->getId()])) {
+            if (isset($metadataMapping['md'][$srcFilter->md->getId()])) {
                 // For real metadata, create MD based on the new ID
                 $newLabel = 'field_'.$metadataMapping['md'][$srcFilter->md->getId()];
             }
@@ -344,11 +339,11 @@ class Docman_FilterFactory {
             $newLabel = $srcFilter->md->getLabel();
         }
 
-        if($newLabel !== null) {
+        if ($newLabel !== null) {
             $dstFilterFactory = $this->getFilterFactory($dstReport->getGroupId());
 
             $gsMd = $this->getGlobalSearchMetadata();
-            if($newLabel == $gsMd->getLabel()) {
+            if ($newLabel == $gsMd->getLabel()) {
                 $newMd = $gsMd;
             } else {
                 $itMd = $this->getItemTypeSearchMetadata();
@@ -359,7 +354,7 @@ class Docman_FilterFactory {
                 }
             }
 
-            if($newMd->isUsed()) {
+            if ($newMd->isUsed()) {
                 // Create new filter
                 $dstFilter = $dstFilterFactory->createFromMetadata($newMd, $dstReport->getAdvancedSearch());
 
@@ -376,31 +371,27 @@ class Docman_FilterFactory {
     {
         $dstVal = null;
 
-        if(is_a($srcFilter, 'Docman_FilterDateAdvanced')) {
+        if (is_a($srcFilter, 'Docman_FilterDateAdvanced')) {
             $dstFilter->setValueStart($srcFilter->getValueStart());
             $dstFilter->setValueEnd($srcFilter->getValueEnd());
-        }
-        elseif(is_a($srcFilter, 'Docman_FilterDate')) {
+        } elseif (is_a($srcFilter, 'Docman_FilterDate')) {
             $dstFilter->setValue($srcFilter->getValue());
             $dstFilter->setOperator($srcFilter->getOperator());
-        }
-        elseif(is_a($srcFilter, 'Docman_FilterListAdvanced')) {
+        } elseif (is_a($srcFilter, 'Docman_FilterListAdvanced')) {
             $dstVal = array();
-            foreach($srcFilter->getValue() as $val) {
+            foreach ($srcFilter->getValue() as $val) {
                 $v = $this->getLoveClonedValue($srcFilter, $val, $metadataMapping);
-                if($v !== null) {
+                if ($v !== null) {
                     $dstVal[] = $v;
                 }
             }
-        }
-        elseif(is_a($srcFilter, 'Docman_FilterList')) {
+        } elseif (is_a($srcFilter, 'Docman_FilterList')) {
             $dstVal = $this->getLoveClonedValue($srcFilter, $srcFilter->getValue(), $metadataMapping);
-        }
-        else {
+        } else {
             $dstVal = $srcFilter->getValue();
         }
 
-        if($dstVal !== null) {
+        if ($dstVal !== null) {
             $dstFilter->setValue($dstVal);
         }
     }
@@ -409,10 +400,9 @@ class Docman_FilterFactory {
     {
         $dstVal = null;
 
-        if($srcFilter->md->getLabel() == 'status' || $srcFilter->md->getLabel() == 'item_type') {
+        if ($srcFilter->md->getLabel() == 'status' || $srcFilter->md->getLabel() == 'item_type') {
             $dstVal = $value;
-        }
-        elseif(isset($metadataMapping['love'][$value])) {
+        } elseif (isset($metadataMapping['love'][$value])) {
             $dstVal = $metadataMapping['love'][$value];
         }
 
@@ -424,7 +414,4 @@ class Docman_FilterFactory {
         $dao = new Docman_FilterDao(CodendiDataAccess::instance());
         return $dao;
     }
-
 }
-
-?>

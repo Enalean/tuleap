@@ -23,7 +23,8 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 /**
  * Wraps user request for one step creation form
  */
-class Project_OneStepCreation_OneStepCreationRequest {
+class Project_OneStepCreation_OneStepCreationRequest
+{
 
     /**
      *
@@ -268,7 +269,7 @@ class Project_OneStepCreation_OneStepCreationRequest {
 
     private function setUnixName(array $data) : self
     {
-        if(isset($data[Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME])) {
+        if (isset($data[Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME])) {
             $this->unix_name = $data[Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME];
         }
 
@@ -277,7 +278,7 @@ class Project_OneStepCreation_OneStepCreationRequest {
 
     private function setFullName(array $data) : self
     {
-        if(isset($data[Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME])) {
+        if (isset($data[Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME])) {
             $this->full_name = $data[Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME];
         }
 
@@ -286,7 +287,7 @@ class Project_OneStepCreation_OneStepCreationRequest {
 
     private function setShortDescription(array $data) : self
     {
-        if(isset($data[Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION])) {
+        if (isset($data[Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION])) {
             $this->short_description = trim($data[Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION]);
         }
 
@@ -295,7 +296,7 @@ class Project_OneStepCreation_OneStepCreationRequest {
 
     private function setTemplateId(array $data) : self
     {
-        if(isset($data[Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID])) {
+        if (isset($data[Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID])) {
             $this->templateId = $data[Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID];
         } else {
             $this->templateId = Project_OneStepCreation_OneStepCreationPresenter::DEFAULT_TEMPLATE_ID;
@@ -306,7 +307,7 @@ class Project_OneStepCreation_OneStepCreationRequest {
 
     private function setIsPublic(array $data) : self
     {
-        if(isset($data[Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC])) {
+        if (isset($data[Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC])) {
             $this->is_public = $data[Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC];
         }
 
@@ -368,7 +369,7 @@ class Project_OneStepCreation_OneStepCreationRequest {
     {
         $services = array();
         $project = $this->project_manager->getProject($this->getTemplateId());
-        foreach($project->getServices() as $service) {
+        foreach ($project->getServices() as $service) {
             $id = $service->getId();
             $services[$id]['is_used'] = $service->isUsed();
         }

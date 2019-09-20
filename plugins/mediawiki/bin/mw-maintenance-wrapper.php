@@ -35,7 +35,7 @@ if (count($argv) < 3) {
 $GLOBALS['TULEAP_MW_PROJECT'] = $argv[1];
 require_once __DIR__.'/../www/setenv.php';
 
-$wrapperscript = array_shift ($argv);
+$wrapperscript = array_shift($argv);
 $fusionforgeproject = array_shift($argv);
 $mwscript = array_shift($argv) ;
 

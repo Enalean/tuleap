@@ -33,7 +33,8 @@ include_once __DIR__ . '/../../../src/www/project/admin/permissions.php';
 /**
  * GitViews
  */
-class GitViews extends PluginViews {
+class GitViews extends PluginViews
+{
 
     /** @var Project */
     private $project;
@@ -186,7 +187,7 @@ class GitViews extends PluginViews {
         $repoName     = $repository->getName();
         $initialized  = $repository->isInitialized();
         $mails        = $params['mails'];
-        if ( $this->getController()->isAPermittedAction('save') ) :
+        if ($this->getController()->isAPermittedAction('save')) :
             ?>
         <div class="confirm">
         <h3><?php echo dgettext('tuleap-git', 'Do you confirm change of repository access to private ?'); ?></h3>
@@ -219,7 +220,7 @@ class GitViews extends PluginViews {
         $params = $this->getData();
 
         $this->_tree($params);
-        if ( $this->getController()->isAPermittedAction('add') ) {
+        if ($this->getController()->isAPermittedAction('add')) {
             $this->_createForm();
         }
     }
@@ -233,7 +234,7 @@ class GitViews extends PluginViews {
             echo dgettext('tuleap-git', '<p>You can create personal forks of any reference repositories. By default forks will end up into your personal area of this project.</p></p>');
         }
         echo dgettext('tuleap-git', '<p>You might choose to fork into another project. In this case, fork creates new "References" in the target project.<br />You need to be administrator of the target project to do so and Git service must be activated.</p>');
-        if ( !empty($params['repository_list']) ) {
+        if (!empty($params['repository_list'])) {
             echo '<form action="" method="POST">';
             echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
             echo '<input type="hidden" name="action" value="fork_repositories_permissions" />';
@@ -411,7 +412,7 @@ class GitViews extends PluginViews {
         $mirrors           = $this->mirror_data_mapper->fetchAllForProject($this->project);
         $mirror_presenters = array();
 
-        foreach($mirrors as $mirror) {
+        foreach ($mirrors as $mirror) {
             $mirror_presenters[] = new GitPresenters_MirrorPresenter($mirror, false);
         }
 

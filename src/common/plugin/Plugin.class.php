@@ -25,7 +25,8 @@ use Tuleap\Layout\IncludeAssets;
 /**
  * Plugin
  */
-class Plugin implements PFO_Plugin {
+class Plugin implements PFO_Plugin
+{
     /** @var BackendLogger */
     private $backend_logger;
 
@@ -81,7 +82,7 @@ class Plugin implements PFO_Plugin {
 
     public function isAllowed($group_id)
     {
-        if(!isset($this->allowedForProject[$group_id])) {
+        if (!isset($this->allowedForProject[$group_id])) {
             $this->allowedForProject[$group_id] = PluginManager::instance()->isPluginAllowedForProject($this, $group_id);
         }
         return $this->allowedForProject[$group_id];
@@ -222,9 +223,11 @@ class Plugin implements PFO_Plugin {
     public function getPluginPath()
     {
         $pm = $this->_getPluginManager();
-        if (isset($GLOBALS['sys_pluginspath']))
+        if (isset($GLOBALS['sys_pluginspath'])) {
             $path = $GLOBALS['sys_pluginspath'];
-        else $path="";
+        } else {
+            $path="";
+        }
         if ($pm->pluginIsCustom($this)) {
             $path = $GLOBALS['sys_custompluginspath'];
         }

@@ -26,7 +26,8 @@ use TuleapTestCase;
 
 require_once 'bootstrap.php';
 
-class PathJoinUtilTest extends TuleapTestCase {
+class PathJoinUtilTest extends TuleapTestCase
+{
 
     function testEmptyArrayReturnsEmptyPath()
     {
@@ -37,21 +38,19 @@ class PathJoinUtilTest extends TuleapTestCase {
     {
         $this->assertEqual('/toto', PathJoinUtil::unixPathJoin(array('/toto')));
         $this->assertEqual('/toto/tata/', PathJoinUtil::unixPathJoin(array('/toto', 'tata/')));
-
     }
 
     function testAtTheEndThereIsASlashOnlyIfTheLastElementHasOne()
     {
         $this->assertEqual('toto/', PathJoinUtil::unixPathJoin(array('toto/')));
         $this->assertEqual('toto/tata/', PathJoinUtil::unixPathJoin(array('toto','tata/')));
-
     }
 
     function testRemoveSlashesWhenThereAreMoreThanOne()
     {
         $this->assertEqual('/toto', PathJoinUtil::unixPathJoin(array('//toto')));
         $this->assertEqual('toto/tata', PathJoinUtil::unixPathJoin(array('toto/', '/tata')));
-        $this->assertEqual('/toto/tata/titi/tutu',PathJoinUtil::unixPathJoin(array('/toto/', '/tata/', '/titi/', '//tutu')));
+        $this->assertEqual('/toto/tata/titi/tutu', PathJoinUtil::unixPathJoin(array('/toto/', '/tata/', '/titi/', '//tutu')));
     }
 
     function testAllEmptyElementsAreIgnored()

@@ -8,7 +8,8 @@ rcs_id('$Id: BogoLogin.php,v 1.6 2005/08/06 13:21:37 rurban Exp $');
 /** Without stored password. A _BogoLoginPassUser with password
  *  is automatically upgraded to a PersonalPagePassUser.
  */
-class _BogoLoginPassUser extends _PassUser {
+class _BogoLoginPassUser extends _PassUser
+{
 
     var $_authmethod = 'BogoLogin';
 
@@ -93,4 +94,3 @@ class _BogoLoginPassUser extends _PassUser {
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

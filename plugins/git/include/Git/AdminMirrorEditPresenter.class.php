@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_AdminMirrorEditPresenter extends Git_AdminMirrorPresenter{
+class Git_AdminMirrorEditPresenter extends Git_AdminMirrorPresenter
+{
 
     public $btn_submit;
 

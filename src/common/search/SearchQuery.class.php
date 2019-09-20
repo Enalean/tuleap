@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Search_SearchQuery {
+class Search_SearchQuery
+{
 
     private $project;
     private $type_of_search;
@@ -96,5 +97,4 @@ class Search_SearchQuery {
     {
         return $this->number_of_results;
     }
-
 }

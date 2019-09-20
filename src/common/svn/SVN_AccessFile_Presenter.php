@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class SVN_AccessFile_Presenter {
+class SVN_AccessFile_Presenter
+{
     /** @var Project */
     private $project;
 
@@ -80,12 +81,12 @@ class SVN_AccessFile_Presenter {
 
     public function access_ctrl_file()
     {
-        return $GLOBALS['Language']->getText('svn_admin_access_control','access_ctrl_file');
+        return $GLOBALS['Language']->getText('svn_admin_access_control', 'access_ctrl_file');
     }
 
     public function access_form_title()
     {
-        return $GLOBALS['Language']->getText('svn_admin_access_control','access_ctrl');
+        return $GLOBALS['Language']->getText('svn_admin_access_control', 'access_ctrl');
     }
 
     public function other_version_title()

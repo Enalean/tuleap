@@ -31,12 +31,13 @@ require_once PHPWIKI_DIR.'/lib/IniConfig.php';
  * This class wrap WikiDB object located in phpwiki/lib/WikiDB.php
  *
  */
-class WikiPageWrapper {
+class WikiPageWrapper
+{
   /* private string */ var $wikiname;
   /* private int    */ var $gid;
 
 
-    function __construct($id=0)
+    function __construct($id = 0)
     {
         $this->gid = (int) $id;
 
@@ -103,13 +104,14 @@ class WikiPageWrapper {
             $version = $current->getVersion();
             $text = $current->getPackedContent();
             $meta = $current->_data;
-        }
-        else {
+        } else {
           // Create a new page (first use or page previously erased)
             $version = 0;
-            $text = $GLOBALS['Language']->getText('wiki_lib_wikipagewrap',
-                                            'new_page_text',
-                                            array($projectPageName));
+            $text = $GLOBALS['Language']->getText(
+                'wiki_lib_wikipagewrap',
+                'new_page_text',
+                array($projectPageName)
+            );
         }
 
         $page_created = $dbi->getPage($pagename);
@@ -118,20 +120,22 @@ class WikiPageWrapper {
             $user_manager  = UserManager::instance();
             $user          = $user_manager->getCurrentUser();
             $event_manager->processEvent(
-            "wiki_page_created",
-            array(
+                "wiki_page_created",
+                array(
                 'group_id'         => $this->gid,
                 'wiki_page'        => $pagename,
                 'user'             => $user,
                 'version'          => $version
-            )
+                )
             );
         }
 
         $text .= "\n* [$pagename]";
-        $meta['summary'] =  $GLOBALS['Language']->getText('wiki_lib_wikipagewrap',
-                                                      'page_added',
-                                                      array($pagename));
+        $meta['summary'] =  $GLOBALS['Language']->getText(
+            'wiki_lib_wikipagewrap',
+            'page_added',
+            array($pagename)
+        );
         $meta['author'] = user_getname();
         $pagehandle->save($text, $version + 1, $meta);
     }
@@ -155,8 +159,7 @@ class WikiPageWrapper {
             $version = $current->getVersion();
             $text = $current->getPackedContent();
             $meta = $current->_data;
-        }
-        else {
+        } else {
             // Create a new page (first use or page previously erased)
             $version = 0;
             $text = '__Upload a file which will be accessible by typing:__
@@ -176,9 +179,9 @@ Upload:num_rev/filename
     }
 
 
-    function render($lite=false, $full_screen=false)
+    function render($lite = false, $full_screen = false)
     {
-        if($lite) {
+        if ($lite) {
             define('THEME', 'Codendi-lite');
         }
         if ($full_screen) {
@@ -196,11 +199,15 @@ Upload:num_rev/filename
    */
     function install()
     {
-        if($this->gid == 1) {
-            if(!user_is_super_user()) {
-                exit_error($GLOBALS['Language']->getText('global','error'),
-                         $GLOBALS['Language']->getText('wiki_lib_wikipagewrap',
-                                                       'right_error'));
+        if ($this->gid == 1) {
+            if (!user_is_super_user()) {
+                exit_error(
+                    $GLOBALS['Language']->getText('global', 'error'),
+                    $GLOBALS['Language']->getText(
+                        'wiki_lib_wikipagewrap',
+                        'right_error'
+                    )
+                );
             }
         }
         $we = new WikiEntry();
@@ -213,23 +220,26 @@ Upload:num_rev/filename
         $name_en = "Home Page";
         $page_en = "HomePage";
         $desc_en = "Initial wiki document";
-        switch ($we->getLanguage_id()){
+        switch ($we->getLanguage_id()) {
               // English
-            case 'en_US':   define('WIKI_PGSRC', 'codendipgsrc');
+            case 'en_US':
+                define('WIKI_PGSRC', 'codendipgsrc');
                 define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codendipgsrc');
                 $we->setName($name_en);
                 $we->setPage($page_en);
                 $we->setDesc($desc_en);
-     break;
+                break;
          // French
-            case 'fr_FR':   define('WIKI_PGSRC', 'pgsrc');
+            case 'fr_FR':
+                define('WIKI_PGSRC', 'pgsrc');
                 define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/locale/fr/pgsrc');
                 $we->setName($name_fr);
                 $we->setPage($page_fr);
                 $we->setDesc($desc_fr);
-     break;
+                break;
 
-            default : define('WIKI_PGSRC', 'codendipgsrc');
+            default:
+                define('WIKI_PGSRC', 'codendipgsrc');
                 define('DEFAULT_WIKI_PGSRC', PHPWIKI_DIR.'/codendipgsrc');
                 $we->setName($name_en);
                 $we->setPage($page_en);
@@ -243,15 +253,17 @@ Upload:num_rev/filename
     {
         $nextId = null;
 
-        $sql = sprintf('SELECT SQL_CALC_FOUND_ROWS DISTINCT group_id'.
+        $sql = sprintf(
+            'SELECT SQL_CALC_FOUND_ROWS DISTINCT group_id'.
                        ' FROM wiki_page'.
                        ' WHERE group_id > %d'.
                        ' ORDER BY group_id ASC'.
                        ' LIMIT 1',
-                       $currentGroupId);
+            $currentGroupId
+        );
           $res = db_query($sql);
-        if($res) {
-            if($row = db_fetch_array($res)) {
+        if ($res) {
+            if ($row = db_fetch_array($res)) {
                 $nextId = $row['group_id'];
 
                 $sql          = 'SELECT FOUND_ROWS() AS nb';
@@ -287,4 +299,3 @@ Upload:num_rev/filename
         CheckPgsrcUpdate($request, $check);
     }
 }
-?>

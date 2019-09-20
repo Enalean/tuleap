@@ -19,14 +19,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Mock::generatePartial('SystemEvent_UGROUP_MODIFY',
-                      'SystemEvent_UGROUP_MODIFY_TestVersion',
-                      array('getProject',
+Mock::generatePartial(
+    'SystemEvent_UGROUP_MODIFY',
+    'SystemEvent_UGROUP_MODIFY_TestVersion',
+    array('getProject',
                             'getBackend',
                             'done',
                             'processUgroupBinding',
                             'error',
-                            'getParametersAsArray'));
+    'getParametersAsArray')
+);
 Mock::generatePartial(
     'SystemEvent_UGROUP_MODIFY',
     'SystemEvent_UGROUP_MODIFY_TestUGroupVersion',
@@ -48,7 +50,8 @@ Mock::generate('UGroupBinding');
 /**
  * Test for project delete system event
  */
-class SystemEvent_UGROUP_MODIFY_Test extends TuleapTestCase {
+class SystemEvent_UGROUP_MODIFY_Test extends TuleapTestCase
+{
 
     /**
      * ProjectUGroup modify Users fail
@@ -174,7 +177,8 @@ class SystemEvent_UGROUP_MODIFY_Test extends TuleapTestCase {
     }
 }
 
-class SystemEvent_UGROUP_MODIFY_RenameTest extends TuleapTestCase {
+class SystemEvent_UGROUP_MODIFY_RenameTest extends TuleapTestCase
+{
 
     private $system_event;
     private $project;

@@ -14,7 +14,8 @@
  //========================================================================
  */
 
-class PlotLine {
+class PlotLine
+{
     public $scaleposition, $direction=-1;
     protected $weight=1;
     protected $color = 'black';
@@ -22,7 +23,7 @@ class PlotLine {
     private $iLineStyle='solid';
     public $numpoints=0; // Needed since the framework expects this property
 
-    function __construct($aDir=HORIZONTAL,$aPos=0,$aColor='black',$aWeight=1)
+    function __construct($aDir = HORIZONTAL, $aPos = 0, $aColor = 'black', $aWeight = 1)
     {
         $this->direction = $aDir;
         $this->color=$aColor;
@@ -30,7 +31,7 @@ class PlotLine {
         $this->scaleposition=$aPos;
     }
 
-    function SetLegend($aLegend,$aCSIM='',$aCSIMAlt='',$aCSIMWinTarget='')
+    function SetLegend($aLegend, $aCSIM = '', $aCSIMAlt = '', $aCSIMWinTarget = '')
     {
         $this->legend = $aLegend;
         $this->legendcsimtarget = $aCSIM;
@@ -38,7 +39,7 @@ class PlotLine {
         $this->legendcsimalt = $aCSIMAlt;
     }
 
-    function HideLegend($f=true)
+    function HideLegend($f = true)
     {
         $this->hidelegend = $f;
     }
@@ -78,17 +79,26 @@ class PlotLine {
 
     function DoLegend($graph)
     {
-        if( !$this->hidelegend ) $this->Legend($graph);
+        if (!$this->hidelegend) {
+            $this->Legend($graph);
+        }
     }
 
     // Framework function the chance for each plot class to set a legend
     function Legend($aGraph)
     {
-        if( $this->legend != '' ) {
+        if ($this->legend != '') {
             $dummyPlotMark = new PlotMark();
             $lineStyle = 1;
-            $aGraph->legend->Add($this->legend,$this->color,$dummyPlotMark,$lineStyle,
-            $this->legendcsimtarget,$this->legendcsimalt,$this->legendcsimwintarget);
+            $aGraph->legend->Add(
+                $this->legend,
+                $this->color,
+                $dummyPlotMark,
+                $lineStyle,
+                $this->legendcsimtarget,
+                $this->legendcsimalt,
+                $this->legendcsimwintarget
+            );
         }
     }
 
@@ -120,32 +130,31 @@ class PlotLine {
         return array(null,null);
     }
 
-    function _Stroke($aImg,$aMinX,$aMinY,$aMaxX,$aMaxY,$aXPos,$aYPos)
+    function _Stroke($aImg, $aMinX, $aMinY, $aMaxX, $aMaxY, $aXPos, $aYPos)
     {
         $aImg->SetColor($this->color);
         $aImg->SetLineWeight($this->weight);
         $oldStyle = $aImg->SetLineStyle($this->iLineStyle);
-        if( $this->direction == VERTICAL ) {
+        if ($this->direction == VERTICAL) {
             $ymin_abs = $aMinY;
             $ymax_abs = $aMaxY;
             $xpos_abs = $aXPos;
             $aImg->StyleLine($xpos_abs, $ymin_abs, $xpos_abs, $ymax_abs);
-        }
-        elseif( $this->direction == HORIZONTAL ) {
+        } elseif ($this->direction == HORIZONTAL) {
             $xmin_abs = $aMinX;
             $xmax_abs = $aMaxX;
             $ypos_abs = $aYPos;
             $aImg->StyleLine($xmin_abs, $ypos_abs, $xmax_abs, $ypos_abs);
-        }
-        else {
+        } else {
             JpGraphError::RaiseL(25125);//(" Illegal direction for static line");
         }
         $aImg->SetLineStyle($oldStyle);
     }
 
-    function Stroke($aImg,$aXScale,$aYScale)
+    function Stroke($aImg, $aXScale, $aYScale)
     {
-        $this->_Stroke($aImg,
+        $this->_Stroke(
+            $aImg,
             $aImg->left_margin,
             $aYScale->Translate($aYScale->GetMinVal()),
             $aImg->width-$aImg->right_margin,
@@ -155,6 +164,3 @@ class PlotLine {
         );
     }
 }
-
-
-?>

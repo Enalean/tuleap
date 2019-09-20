@@ -26,7 +26,8 @@ use Tuleap\Tracker\XML\Importer\TrackerExtraConfiguration;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import\ImportConfig;
 
-class TrackerXmlImportTestInstance extends TrackerXmlImport {
+class TrackerXmlImportTestInstance extends TrackerXmlImport
+{
 
     public function getInstanceFromXML(SimpleXMLElement $xml, Project $project, $name, $description, $itemname)
     {
@@ -44,7 +45,8 @@ class TrackerXmlImportTestInstance extends TrackerXmlImport {
     }
 }
 
-class TrackerXmlImportTest extends TuleapTestCase {
+class TrackerXmlImportTest extends TuleapTestCase
+{
 
     /**
      * @var Logger
@@ -100,7 +102,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         stub($this->project)->getID()->returns($this->group_id);
 
         $this->xml_tracker1 = new SimpleXMLElement(
-                 '<tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
+            '<tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
                     <name>name10</name>
                     <item_name>item11</item_name>
                     <description>desc12</description>
@@ -108,7 +110,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         );
 
         $this->xml_tracker2 = new SimpleXMLElement(
-                 '<tracker id="T102" parent_id="T101" instantiate_for_new_projects="1">
+            '<tracker id="T102" parent_id="T101" instantiate_for_new_projects="1">
                     <name>name20</name>
                     <item_name>item21</item_name>
                     <description>desc22</description>
@@ -116,7 +118,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         );
 
         $this->xml_tracker3 = new SimpleXMLElement(
-                 '<tracker id="T103" parent_id="T102" instantiate_for_new_projects="1">
+            '<tracker id="T103" parent_id="T102" instantiate_for_new_projects="1">
                     <name>name30</name>
                     <item_name>item31</item_name>
                     <description>desc32</description>
@@ -276,10 +278,10 @@ class TrackerXmlImportTest extends TuleapTestCase {
                     $parameters['mapping'] === $this->mapping &&
                     $parameters['field_mapping'] === [] &&
                     $parameters['mappings_registery'] === $this->mapping_registery &&
-                    is_a($parameters['artifact_id_mapping'],  Tracker_XML_Importer_ArtifactImportedMapping::class) &&
+                    is_a($parameters['artifact_id_mapping'], Tracker_XML_Importer_ArtifactImportedMapping::class) &&
                     $parameters['extraction_path'] === $this->extraction_path &&
                     $parameters['logger'] === $this->logger &&
-                    is_a($parameters['value_mapping'],  TrackerXmlFieldsMapping_FromAnotherPlatform::class);
+                    is_a($parameters['value_mapping'], TrackerXmlFieldsMapping_FromAnotherPlatform::class);
             })
         )->once();
 
@@ -310,7 +312,7 @@ class TrackerXmlImportTest extends TuleapTestCase {
         $expected_hierarchy = array(444 => array(555, 666));
         $mapper             = array("T101" => 444, "T103" => 666);
         $xml_tracker        = new SimpleXMLElement(
-                 '<tracker id="T103" parent_id="T101" instantiate_for_new_projects="1">
+            '<tracker id="T103" parent_id="T101" instantiate_for_new_projects="1">
                     <name>t30</name>
                     <item_name>t31</item_name>
                     <description>t32</description>
@@ -403,11 +405,11 @@ class TrackerXmlImportTest extends TuleapTestCase {
             $this->mapping_registery,
             $this->extraction_path
         );
-
     }
 }
 
-class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase {
+class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase
+{
     private $configuration;
 
     public function setUp()
@@ -569,7 +571,8 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase
     }
 }
 
-class TrackerFactoryInstanceFromXMLTest extends TuleapTestCase {
+class TrackerFactoryInstanceFromXMLTest extends TuleapTestCase
+{
 
     public function testGetInstanceFromXmlGeneratesRulesFromDependencies()
     {
@@ -644,14 +647,15 @@ XML;
                 }
             ),
             array(),
-            $tracker)->once();
+            $tracker
+        )->once();
 
         $tracker_xml_importer->getInstanceFromXML($xml, $this->project, $name, $description, $itemname);
     }
-
 }
 
-class Tracker_FormElementFactoryForXMLTests extends Tracker_FormElementFactory {
+class Tracker_FormElementFactoryForXMLTests extends Tracker_FormElementFactory
+{
     private $mapping = array();
     public function __construct($mapping)
     {
@@ -664,7 +668,8 @@ class Tracker_FormElementFactoryForXMLTests extends Tracker_FormElementFactory {
     }
 }
 
-class TrackerXmlImport_TriggersTest extends TuleapTestCase {
+class TrackerXmlImport_TriggersTest extends TuleapTestCase
+{
 
     private $xml_input;
     private $group_id = 145;
@@ -767,8 +772,7 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase {
                 </trackers>
                 <cardwall/>
                 <agiledashboard/>
-            </project>'
-        );
+            </project>');
 
         $this->triggers = new SimpleXMLElement('<triggers>
                             <trigger_rule>
@@ -881,7 +885,8 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase {
     }
 }
 
-class TrackerXmlImport_PermissionsTest extends TuleapTestCase {
+class TrackerXmlImport_PermissionsTest extends TuleapTestCase
+{
     private $configuration;
 
     public function setUp()
@@ -1002,7 +1007,8 @@ XML;
     }
 }
 
-class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
+class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase
+{
     private $configuration;
 
     public function setUp()
@@ -1074,7 +1080,6 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase {
         expect($this->artifact_link_usage_updater)->forceUsageOfArtifactLinkTypes()->never();
 
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '');
-
     }
 
     public function itShouldActivateIfAttributeIsTrueAndProjectDoesNotUseNature()

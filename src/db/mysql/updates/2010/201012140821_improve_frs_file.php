@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201012140821_improve_frs_file extends ForgeUpgrade_Bucket {
+class b201012140821_improve_frs_file extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -109,7 +110,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('user_id not created in frs_file_deleted');
         }
     }
-
 }
-
-?>

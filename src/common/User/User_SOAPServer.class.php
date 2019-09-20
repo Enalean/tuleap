@@ -21,7 +21,8 @@ use Tuleap\User\SessionNotCreatedException;
 
 require_once 'UserManager.class.php';
 
-class User_SOAPServer {
+class User_SOAPServer
+{
 
     /**
      * @var UserManager
@@ -50,7 +51,7 @@ class User_SOAPServer {
             return new SoapFault('3300', 'Permission denied. You must be site admin to loginAs someonelse');
         } catch (UserNotExistException $e) {
             return new SoapFault('3301', 'User not exist');
-        }catch (UserNotActiveException $e) {
+        } catch (UserNotActiveException $e) {
             return new SoapFault('3302', 'User not active');
         } catch (SessionNotCreatedException $e) {
             return new SoapFault('3303', 'Temporary error creating a session, please try again in a couple of seconds');
@@ -73,7 +74,4 @@ class User_SOAPServer {
         }
         throw new SoapFault('3001', 'Invalid session');
     }
-
 }
-
-?>

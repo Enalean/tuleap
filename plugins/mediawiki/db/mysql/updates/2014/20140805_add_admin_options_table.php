@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b20140805_add_admin_options_table extends ForgeUpgrade_Bucket {
+class b20140805_add_admin_options_table extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -63,5 +64,3 @@ EOT;
         }
     }
 }
-
-?>

@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201306061508_add_interwiki_table extends ForgeUpgrade_Bucket {
+class b201306061508_add_interwiki_table extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -68,7 +69,4 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message.implode(', ', $this->db->dbh->errorInfo()));
         }
     }
-
 }
-
-?>

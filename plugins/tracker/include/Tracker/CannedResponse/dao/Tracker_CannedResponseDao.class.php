@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_CannedResponseDao extends DataAccessObject {
+class Tracker_CannedResponseDao extends DataAccessObject
+{
     public function __construct()
     {
         parent::__construct();
@@ -76,4 +77,3 @@ class Tracker_CannedResponseDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-?>

@@ -21,7 +21,8 @@
 /**
  * Encapsulate the orchestration between PermissionsManager and UgroupManager
  */
-class Git_Driver_Gerrit_UserAccountManager {
+class Git_Driver_Gerrit_UserAccountManager
+{
 
     /**
      * @var Git_Driver_Gerrit_GerritDriverFactory
@@ -95,12 +96,12 @@ class Git_Driver_Gerrit_UserAccountManager {
         $errors = array();
         $remote_servers = $this->remote_gerrit_factory->getRemoteServersForUser($user);
 
-        foreach($remote_servers as $remote_server) {
+        foreach ($remote_servers as $remote_server) {
             $errors += $this->removeKeys($remote_server, $keys_to_add, $gerrit_user);
             $errors += $this->removeKeys($remote_server, $keys_to_remove, $gerrit_user);
         }
         //double foreach to workaround gerrit bug
-        foreach($remote_servers as $remote_server) {
+        foreach ($remote_servers as $remote_server) {
             $errors += $this->addKeys($remote_server, $keys_to_add, $gerrit_user);
         }
 
@@ -133,7 +134,7 @@ class Git_Driver_Gerrit_UserAccountManager {
         $errors = array();
         $remote_servers = $this->remote_gerrit_factory->getRemoteServersForUser($user);
 
-        foreach($remote_servers as $remote_server) {
+        foreach ($remote_servers as $remote_server) {
             $errors += $this->removeKeys($remote_server, $user_keys, $gerrit_user);
             $errors += $this->addKeys($remote_server, $user_keys, $gerrit_user);
         }
@@ -155,7 +156,7 @@ class Git_Driver_Gerrit_UserAccountManager {
     private function addKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys, Git_Driver_Gerrit_User $gerrit_user)
     {
         $errors = array();
-        foreach($keys as $key) {
+        foreach ($keys as $key) {
             try {
                 $this->gerrit_driver_factory->getDriver($remote_server)->addSSHKeyToAccount($remote_server, $gerrit_user, $key);
             } catch (Git_Driver_Gerrit_Exception $exception) {
@@ -176,7 +177,7 @@ class Git_Driver_Gerrit_UserAccountManager {
     private function removeKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys, Git_Driver_Gerrit_User $gerrit_user)
     {
         $errors = array();
-        foreach($keys as $key) {
+        foreach ($keys as $key) {
             try {
                 $this->gerrit_driver_factory->getDriver($remote_server)->removeSSHKeyFromAccount($remote_server, $gerrit_user, $key);
             } catch (Git_Driver_Gerrit_Exception $exception) {
@@ -219,4 +220,3 @@ class Git_Driver_Gerrit_UserAccountManager {
         return $keys_to_add || $keys_to_remove;
     }
 }
-?>

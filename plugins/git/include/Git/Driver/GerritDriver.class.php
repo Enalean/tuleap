@@ -21,7 +21,8 @@
 /**
  * I know how to speak to a Gerrit remote server
  */
-interface Git_Driver_Gerrit {
+interface Git_Driver_Gerrit
+{
 
     public const CACHE_ACCOUNTS        = 'accounts';
     public const CACHE_GROUPS_INCLUDES = 'groups_byinclude';

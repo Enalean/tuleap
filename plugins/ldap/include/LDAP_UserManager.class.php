@@ -27,7 +27,8 @@ use Tuleap\LDAP\Exception\IdentifierTypeNotRecognizedException;
 /**
  * Manage interaction between an LDAP group and Codendi user_group.
  */
-class LDAP_UserManager {
+class LDAP_UserManager
+{
 
 
     public const EVENT_UPDATE_LOGIN = 'PLUGIN_LDAP_UPDATE_LOGIN';
@@ -148,7 +149,7 @@ class LDAP_UserManager {
     function getUserFromLdap(LDAPResult $lr)
     {
         $user = $this->getUserManager()->getUserByLdapId($lr->getEdUid());
-        if(!$user) {
+        if (!$user) {
             $user = $this->createAccountFromLdap($lr);
         }
         return $user;
@@ -166,9 +167,9 @@ class LDAP_UserManager {
     {
         $userIds = array();
         $dao = $this->getDao();
-        foreach($ldapIds as $lr) {
+        foreach ($ldapIds as $lr) {
             $user = $this->getUserManager()->getUserByLdapId($lr->getEdUid());
-            if($user) {
+            if ($user) {
                 $userIds[$user->getId()] = $user->getId();
             } else {
                 $user = $this->createAccountFromLdap($lr);
@@ -191,9 +192,9 @@ class LDAP_UserManager {
     {
         $userIds = array();
         $userList = array_map('trim', preg_split('/[,;]/', $userList));
-        foreach($userList as $u) {
+        foreach ($userList as $u) {
             $user = $this->getUserManager()->findUser($u);
-            if($user) {
+            if ($user) {
                 $userIds[] = $user->getId();
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_ldap', 'user_manager_user_not_found', $u));
@@ -225,7 +226,7 @@ class LDAP_UserManager {
         $account_name = $this->getLoginFromString($uid);
         $uid = $account_name;
         $i=2;
-        while($this->userNameIsAvailable($uid) !== true) {
+        while ($this->userNameIsAvailable($uid) !== true) {
             $uid = $account_name.$i;
             $i++;
         }
@@ -286,7 +287,7 @@ class LDAP_UserManager {
      */
     function createAccount($eduid, $uid, $cn, $email)
     {
-        if(trim($uid) == '' || trim($eduid) == '') {
+        if (trim($uid) == '' || trim($eduid) == '') {
             return false;
         }
 
@@ -307,7 +308,7 @@ class LDAP_UserManager {
         $user->setRegisterPurpose('LDAP');
         $user->setUnixStatus('S');
         $user->setTimezone('GMT');
-        $user->setLanguageID($GLOBALS['Language']->getText('conf','language_id'));
+        $user->setLanguageID($GLOBALS['Language']->getText('conf', 'language_id'));
 
         $um = $this->getUserManager();
         $u  = $um->createAccount($user);
@@ -468,7 +469,7 @@ class LDAP_UserManager {
         $users_to_be_suspended = array();
         $active_users          = $this->getDao()->getActiveUsers();
         foreach ($active_users as $active_user) {
-            if($this->isUserDeletedFromLdap($active_user)) {
+            if ($this->isUserDeletedFromLdap($active_user)) {
                 $user = new PFUser($active_user);
                 array_push($users_to_be_suspended, $user);
             }
@@ -516,13 +517,13 @@ class LDAP_UserManager {
      */
     public function checkThreshold($nbr_users_to_suspend, $nbr_all_users)
     {
-        if($nbr_users_to_suspend == 0 || $nbr_all_users == 0) {
+        if ($nbr_users_to_suspend == 0 || $nbr_all_users == 0) {
             return true;
         }
         $percentage_users_to_suspend = ($nbr_users_to_suspend / $nbr_all_users) *100;
         $threshold_users_suspension  = $this->ldap->getLDAPParam('threshold_users_suspension');
         $logger = new \Tuleap\LDAP\LdapLogger();
-        if($percentage_users_to_suspend <= $threshold_users_suspension) {
+        if ($percentage_users_to_suspend <= $threshold_users_suspension) {
             $logger->info("[LDAP] Percentage of suspended users is ( ".$percentage_users_to_suspend."% ) and threshold is ( ".$threshold_users_suspension."% )");
             $logger->info("[LDAP] Number of suspended users is ( ".$nbr_users_to_suspend." ) and number of active users is ( ".$nbr_all_users." )");
             return true;

@@ -21,7 +21,8 @@
 /**
  * User-editable parameters of the planning.
  */
-class PlanningParameters {
+class PlanningParameters
+{
 
     public const NAME                = 'name';
     public const BACKLOG_TITLE       = 'backlog_title';

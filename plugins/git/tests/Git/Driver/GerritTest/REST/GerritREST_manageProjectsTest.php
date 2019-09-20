@@ -20,7 +20,8 @@
 
 require_once 'GerritREST_Base.php';
 
-class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_manageProjectsTest {
+class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_base implements Git_Driver_Gerrit_manageProjectsTest
+{
 
     public function itExecutesTheCreateCommandForProjectOnTheGerritServer()
     {
@@ -97,9 +98,11 @@ class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_bas
     }
 
     public function itDoesntTransformExceptionsThatArentRelatedToGerrit()
-    {}
+    {
+    }
     public function itInformsAboutProjectInitialization()
-    {}
+    {
+    }
 
     public function itPutsThneProjectInReadOnly()
     {
@@ -158,18 +161,18 @@ class Git_DriverREST_Gerrit_manageProjectsTest extends Git_Driver_GerritREST_bas
            .'/a/projects/'. urlencode($this->project_name) .'/parent';
 
         $expected_json_data = json_encode(
-           array(
+            array(
                'parent' => Git_Driver_Gerrit::DEFAULT_PARENT_PROJECT
-           )
+            )
         );
 
         expect($this->guzzle_client)->put(
-           $url,
-           array(
+            $url,
+            array(
                Git_Driver_GerritREST::HEADER_CONTENT_TYPE => Git_Driver_GerritREST::MIME_JSON,
                'verify' => false,
-           ),
-           $expected_json_data
+            ),
+            $expected_json_data
         )->once();
         stub($this->guzzle_client)->put()->returns($this->guzzle_request);
 

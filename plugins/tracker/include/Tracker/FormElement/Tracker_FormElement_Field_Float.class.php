@@ -21,14 +21,15 @@
 
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\ChangesChecker;
 
-class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric {
+class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
+{
 
     public const FLOAT_DECIMALS = 4;
 
     public function getCriteriaFrom($criteria)
     {
         //Only filter query if field is used
-        if($this->isUsed()) {
+        if ($this->isUsed()) {
             //Only filter query if criteria is valuated
             $criteria_value = $this->getCriteriaValue($criteria);
 
@@ -104,7 +105,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
      *
      * @return string the string value of the float field (or '' if none)
      */
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report = null, $from_aid = null)
     {
         if ($value === null) {
             return '';
@@ -127,7 +128,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
      */
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','float');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'float');
     }
 
     /**
@@ -135,7 +136,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
      */
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','float_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'float_description');
     }
 
     /**

@@ -22,7 +22,8 @@
 /**
  * This is a web based WebDAV client added as a plugin into the WebDAV server
  */
-class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
+class BrowserPlugin extends Sabre_DAV_Browser_Plugin
+{
 
     private $purifier;
 
@@ -163,16 +164,15 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
             return true;
         }
         if (isset($_POST['action'])) {
-            switch($_POST['action']) {
-
-                case 'mkcol' :
+            switch ($_POST['action']) {
+                case 'mkcol':
                     if (isset($_POST['name']) && trim($_POST['name'])) {
                         // Using basename() because we won't allow slashes
                         list(, $folderName) = Sabre_DAV_URLUtil::splitPath(trim($_POST['name']));
                         $this->server->createDirectory($this->server->getRequestUri() . '/' . $folderName);
                     }
                     break;
-                case 'put' :
+                case 'put':
                     if ($_FILES) {
                         $file = current($_FILES);
                     } else {
@@ -192,20 +192,20 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
                         $parent->createFile($newName, fopen($file['tmp_name'], 'r'));
                     }
                     break;
-                case 'delete' :
+                case 'delete':
                     if ($_POST['node']) {
                         $node = $this->server->tree->getNodeForPath($_POST['node']);
                         $node->delete();
                     }
                     break;
-                case 'rename' :
+                case 'rename':
                     if ($_POST['node']) {
                         $node = $this->server->tree->getNodeForPath($_POST['node']);
                         $name = $_POST['name'];
                         $node->setName($name);
                     }
                     break;
-                case 'move' :
+                case 'move':
                     if ($_POST['node'] && $_POST['select'] && $_POST['select']!= '') {
                         $node        = $this->server->tree->getNodeForPath($_POST['node']);
                         $destination = $this->server->tree->getNodeForPath($_POST['select']);
@@ -216,7 +216,6 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
         }
         $this->server->httpResponse->setHeader('Location', $this->server->httpRequest->getUri());
         return false;
-
     }
 
     /**
@@ -269,12 +268,14 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
         echo "</tr><tr><td colspan=\"6\"><hr /></td></tr>";
 
         $files = $this->server->getPropertiesForPath(
-            $path, array(
+            $path,
+            array(
             '{DAV:}resourcetype',
             '{DAV:}getcontenttype',
             '{DAV:}getcontentlength',
             '{DAV:}getlastmodified',
-        ), 1
+            ),
+            1
         );
 
         if ($path) {
@@ -285,7 +286,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
 
         foreach ($files as $file) {
             // This is the current directory, we can skip it
-            if (rtrim($file['href'],'/')==$path) {
+            if (rtrim($file['href'], '/')==$path) {
                 continue;
             }
 
@@ -298,7 +299,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
                 if (!is_array($type)) {
                     $type = array($type);
                 }
-                foreach($type as $k=>$v) {
+                foreach ($type as $k => $v) {
                     // Some name mapping is preferred
                     if ($v == '{DAV:}collection') {
                         $type[$k] = $GLOBALS["Language"]->getText("plugin_webdav_html", "directory");
@@ -311,7 +312,6 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
                     }
                 }
                 $type = implode(', ', $type);
-
             }
             $type = $this->escapeHTML($type);
             $size = isset($file[200]['{DAV:}getcontentlength'])?(int)$file[200]['{DAV:}getcontentlength']:'';
@@ -353,7 +353,6 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
                 }
             }
             echo "</tr>";
-
         }
 
         echo "<tr><td colspan=\"6\"><hr /></td></tr>
@@ -398,6 +397,5 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
         echo $GLOBALS['HTML']->pv_footer(array());
 
         return ob_get_clean();
-
     }
 }

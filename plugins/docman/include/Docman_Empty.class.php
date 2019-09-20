@@ -23,7 +23,8 @@
 
 require_once('Docman_Document.class.php');
 
-class Docman_Empty extends Docman_Document {
+class Docman_Empty extends Docman_Document
+{
 
     function __construct($data = null)
     {
@@ -46,7 +47,4 @@ class Docman_Empty extends Docman_Document {
     {
         return $GLOBALS['Language']->getText('plugin_docman', 'doc_type_empty');
     }
-
 }
-
-?>

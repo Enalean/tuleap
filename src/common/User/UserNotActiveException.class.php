@@ -17,10 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class UserNotActiveException extends Exception {
+class UserNotActiveException extends Exception
+{
     function __construct($message = 'user not active')
     {
         parent::__construct($message, 3300);
     }
 }
-?>

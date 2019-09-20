@@ -14,8 +14,7 @@ rcs_id('$Id: Comment.php,v 1.2 2004/02/17 12:11:36 rurban Exp $');
  * ?>
  */
 
-class WikiPlugin_Comment
-extends WikiPlugin
+class WikiPlugin_Comment extends WikiPlugin
 {
     // Five required functions in a WikiPlugin.
 
@@ -27,13 +26,15 @@ extends WikiPlugin
     function getDescription()
     {
         return _("Embed hidden comments in WikiPages.");
-
     }
 
     function getVersion()
     {
-        return preg_replace("/[Revision: $]/", '',
-                            "\$Revision: 1.2 $");
+        return preg_replace(
+            "/[Revision: $]/",
+            '',
+            "\$Revision: 1.2 $"
+        );
     }
 
     // No arguments here.
@@ -48,7 +49,6 @@ extends WikiPlugin
 
     // function handle_plugin_args_cruft(&$argstr, &$args) {
     // }
-
 };
 
 // $Log: Comment.php,v $
@@ -65,4 +65,3 @@ extends WikiPlugin
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

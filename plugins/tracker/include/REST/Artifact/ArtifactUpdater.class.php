@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_REST_Artifact_ArtifactUpdater {
+class Tracker_REST_Artifact_ArtifactUpdater
+{
 
     /** @var Tracker_REST_Artifact_ArtifactValidator */
     private $artifact_validator;
@@ -52,7 +53,7 @@ class Tracker_REST_Artifact_ArtifactUpdater {
             throw new \Luracast\Restler\RestException(403, 'You have not the permission to update this card');
         }
 
-        if ($this->clientWantsToUpdateLatestVersion() && ! $this->isUpdatingLatestVersion($artifact) ) {
+        if ($this->clientWantsToUpdateLatestVersion() && ! $this->isUpdatingLatestVersion($artifact)) {
             throw new \Luracast\Restler\RestException(412, 'Artifact has been modified since you last requested it. Please edit the latest version');
         }
     }

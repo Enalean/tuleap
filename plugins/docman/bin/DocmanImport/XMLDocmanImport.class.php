@@ -22,7 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class XMLDocmanImport {
+class XMLDocmanImport
+{
 
     // Directory where content files are located
     protected $dataBaseDir;
@@ -189,7 +190,7 @@ class XMLDocmanImport {
     {
         if (($node1['type'] == 'folder') && ($node2['type'] != 'folder')) {
             return -1;
-        } else if (($node2['type'] == 'folder') && ($node1['type'] != 'folder')) {
+        } elseif (($node2['type'] == 'folder') && ($node1['type'] != 'folder')) {
             return 1;
         } else {
             $title1 = (string)$node1->properties->title;
@@ -227,7 +228,7 @@ class XMLDocmanImport {
         $this->loadXML($xmlDoc);
         $rootNode = $this->findPath($path);
         if ($rootNode instanceof SimpleXMLElement) {
-            foreach($this->reorderItemNodes($rootNode->xpath('item')) as $child) {
+            foreach ($this->reorderItemNodes($rootNode->xpath('item')) as $child) {
                 $this->recurseOnNode($child, $parentId);
             }
         }
@@ -289,7 +290,7 @@ class XMLDocmanImport {
                                 }
                             }
                         }
-                    } else if (!$metadata->isEmptyAllowed) {
+                    } elseif (!$metadata->isEmptyAllowed) {
                         $missingProp[] = $metadata->name;
                     }
                 }
@@ -456,7 +457,7 @@ class XMLDocmanImport {
                             throw new Exception("Item '$item_name':\tThe list property '$title' allows only one value, but ".count($values)." values are given.");
                         }
                         // Check if no value is given to a list that require a value
-                        else if (count($values) == 0 && !$metadataDef['isEmptyAllowed']) {
+                        elseif (count($values) == 0 && !$metadataDef['isEmptyAllowed']) {
                             throw new Exception("Item '$item_name':\tThe list property '$title' is required, but no <value> element is found.");
                         }
                 }
@@ -484,7 +485,7 @@ class XMLDocmanImport {
                 $searchedProperty = $properties->xpath("property[@title='$requiredProperty']");
                 if (count($searchedProperty) == 0) {
                     throw new Exception("Item '$item_name':\tThe required property '$requiredProperty' is not set.");
-                } else if ((string)$searchedProperty[0] == '') {
+                } elseif ((string)$searchedProperty[0] == '') {
                     throw new Exception("Item '$item_name':\tThe required property '$requiredProperty' is set to an empty value.");
                 }
             }
@@ -563,7 +564,6 @@ class XMLDocmanImport {
             $type = self::typeStringToCode((string)$propdef['type']);
             // First check if the metadata exists on the server
             if (isset($this->metadataMap[$name])) {
-
                 // Check if the metadata type is the same in the XML document and on the server
                 if ($type == $this->metadataMap[$name]['type']) {
                     if ($type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
@@ -586,7 +586,7 @@ class XMLDocmanImport {
                             throw new Exception($errorMsg);
                         }
                     }
-                } else if ($type === null) {
+                } elseif ($type === null) {
                       throw new Exception("The property '$name' has an incorrect type: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'");
                 } else {
                      throw new Exception("The property '$name' has not the same type as in the target project: '".$propdef['type']."' should be '".self::typeCodeToString($this->metadataMap[$name]['type'])."'");
@@ -597,7 +597,7 @@ class XMLDocmanImport {
                 // 'true' is the default value if nothing is specified
                 if (($empty == 'true' || $empty == null) && !$this->metadataMap[$name]['isEmptyAllowed']) {
                     throw new Exception("The property '$name' doesn't allow empty values in the target project. Please set the \"empty\" attribute to \"false\" to the corresponding propdef element.");
-                } else if ($empty == 'false' && $this->metadataMap[$name]['isEmptyAllowed']) {
+                } elseif ($empty == 'false' && $this->metadataMap[$name]['isEmptyAllowed']) {
                     throw new Exception("The property '$name' allows empty values in the target project. Please set the \"empty\" attribute to \"true\", or remove this attribute (\"true\" is implicit).");
                 }
 
@@ -607,7 +607,7 @@ class XMLDocmanImport {
                     // 'false' is the default value if nothing is specified
                     if (($multival == 'false' || $multival == null) && $this->metadataMap[$name]['isMultipleValuesAllowed']) {
                         throw new Exception("The property '$name' allows multiple values. Please set the attribute multivalue to \"true\" to the corresponding propdef element.");
-                    } else if ($multival == 'true' && !$this->metadataMap[$name]['isMultipleValuesAllowed']) {
+                    } elseif ($multival == 'true' && !$this->metadataMap[$name]['isMultipleValuesAllowed']) {
                         throw new Exception("The property '$name' doesn't allow multiple values. Please set the attribute empty to \"false\", or remove this attribute (\"false\" is implicit).");
                     }
                 }
@@ -623,11 +623,16 @@ class XMLDocmanImport {
     private static function typeCodeToString($type)
     {
         switch ($type) {
-            case PLUGIN_DOCMAN_METADATA_TYPE_STRING: return 'string';
-            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:   return 'text';
-            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:   return 'date';
-            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:   return 'list';
-            default:                                 return null;
+            case PLUGIN_DOCMAN_METADATA_TYPE_STRING:
+                return 'string';
+            case PLUGIN_DOCMAN_METADATA_TYPE_TEXT:
+                return 'text';
+            case PLUGIN_DOCMAN_METADATA_TYPE_DATE:
+                return 'date';
+            case PLUGIN_DOCMAN_METADATA_TYPE_LIST:
+                return 'list';
+            default:
+                return null;
         }
     }
 
@@ -637,11 +642,16 @@ class XMLDocmanImport {
     private static function typeStringToCode($type)
     {
         switch ($type) {
-            case 'string': return PLUGIN_DOCMAN_METADATA_TYPE_STRING;
-            case 'text':   return PLUGIN_DOCMAN_METADATA_TYPE_TEXT;
-            case 'date':   return PLUGIN_DOCMAN_METADATA_TYPE_DATE;
-            case 'list':   return PLUGIN_DOCMAN_METADATA_TYPE_LIST;
-            default:       return null;
+            case 'string':
+                return PLUGIN_DOCMAN_METADATA_TYPE_STRING;
+            case 'text':
+                return PLUGIN_DOCMAN_METADATA_TYPE_TEXT;
+            case 'date':
+                return PLUGIN_DOCMAN_METADATA_TYPE_DATE;
+            case 'list':
+                return PLUGIN_DOCMAN_METADATA_TYPE_LIST;
+            default:
+                return null;
         }
     }
 
@@ -729,14 +739,14 @@ class XMLDocmanImport {
 
         // Dynamic metadata
         $metadata = array();
-        foreach($node->xpath('properties/property') as $property) {
+        foreach ($node->xpath('properties/property') as $property) {
             $this->extractOneMetadata($property, $metadata);
         }
         $information[] = $metadata;
 
         // Permissions
         $permissions = array();
-        foreach($node->xpath('permissions/permission') as $permission) {
+        foreach ($node->xpath('permissions/permission') as $permission) {
             $this->extractOnePermission($permission, $permissions);
         }
         $information[] = $permissions;
@@ -783,13 +793,12 @@ class XMLDocmanImport {
 
         $ordering         = 'end';
 
-        switch($node['type']) {
+        switch ($node['type']) {
             case 'file':
                 $iFiles = 0;
                 $itemId = false;
 
                 foreach ($node->xpath('versions/version') as $version) {
-
                     list(
                         $file,
                         $label,
@@ -802,10 +811,10 @@ class XMLDocmanImport {
                     $fileType = (string)$version->filetype;
 
                     // If this is the initial version
-                    if($iFiles == 0) {
+                    if ($iFiles == 0) {
                         $itemId = $this->createFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file, $fileName, $fileType, $author, $date, $owner, $createDate, $updateDate);
                     } else {
-                        if($itemId !== false) {
+                        if ($itemId !== false) {
                             $this->createFileVersion($itemId, $label, $changelog, $file, $fileName, $fileType, $author, $date);
                         }
                     }
@@ -817,8 +826,7 @@ class XMLDocmanImport {
             case 'embeddedfile':
                 $iFiles = 0;
                 $itemId = false;
-                foreach($node->xpath('versions/version') as $version) {
-
+                foreach ($node->xpath('versions/version') as $version) {
                     list(
                         $file,
                         $label,
@@ -828,10 +836,10 @@ class XMLDocmanImport {
                     ) = $this->getVersionInformation($version);
 
                     // If this is the initial version
-                    if($iFiles == 0) {
+                    if ($iFiles == 0) {
                         $itemId = $this->createEmbeddedFile($parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $file, $author, $date, $owner, $createDate, $updateDate);
                     } else {
-                        if($itemId !== false) {
+                        if ($itemId !== false) {
                             $this->createEmbeddedFileVersion($itemId, $label, $changelog, $file, $author, $date);
                         }
                     }
@@ -855,7 +863,7 @@ class XMLDocmanImport {
 
             case 'folder':
                 $newParentId = $this->createFolder($parentId, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $createDate, $updateDate);
-                foreach($this->reorderItemNodes($node->xpath('item')) as $child) {
+                foreach ($this->reorderItemNodes($node->xpath('item')) as $child) {
                     $this->recurseOnNode($child, $newParentId);
                 }
                 break;
@@ -872,8 +880,8 @@ class XMLDocmanImport {
 
         if ($this->metadataMap[$propTitle]['type'] == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             $values = $property->xpath('value');
-            if($values !== false && count($values) > 0) {
-                foreach($values as $value) {
+            if ($values !== false && count($values) > 0) {
+                foreach ($values as $value) {
                     $val = (string) $value;
                     $metadata[] = array('label' => $dstMetadataLabel, 'value' => $this->metadataMap[$propTitle]['values'][$val]);
                 }
@@ -898,15 +906,21 @@ class XMLDocmanImport {
     {
         $ugroup_id = (string)$permission['ugroup'];
         switch ((string)$permission) {
-            case 'read':    $type = 'PLUGIN_DOCMAN_READ'; break;
-            case 'write':   $type = 'PLUGIN_DOCMAN_WRITE'; break;
-            case 'manage':  $type = 'PLUGIN_DOCMAN_MANAGE'; break;
+            case 'read':
+                $type = 'PLUGIN_DOCMAN_READ';
+                break;
+            case 'write':
+                $type = 'PLUGIN_DOCMAN_WRITE';
+                break;
+            case 'manage':
+                $type = 'PLUGIN_DOCMAN_MANAGE';
+                break;
             case 'none':
-            default:        $type = '';
+            default:
+                $type = '';
         }
 
         $permissions[] = array('ugroup_id' => $ugroup_id, 'type' => $type);
-
     }
 
     protected function askWhatToDo($e)
@@ -926,7 +940,7 @@ class XMLDocmanImport {
             if ($op == 'A') {
                 $this->logger->info('Import aborted.');
                 die;
-            } else if ($op == 'C') {
+            } elseif ($op == 'C') {
                 $this->logger->info('Continuing...');
                 $retry = false;
             } else {
@@ -963,7 +977,7 @@ class XMLDocmanImport {
                 $id = $this->soap->createDocmanFolder($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $permissions, $metadata, $owner, $createDate, $updateDate);
                 $this->logger->info(" #$id");
                 return $id;
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
@@ -984,7 +998,7 @@ class XMLDocmanImport {
                 $id = $this->soap->createDocmanEmptyDocument($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $owner, $createDate, $updateDate);
                 $this->logger->info(" #$id");
                 return $id;
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
@@ -1005,7 +1019,7 @@ class XMLDocmanImport {
                 $id = $this->soap->createDocmanWikiPage($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $pagename, $permissions, $metadata, $owner, $createDate, $updateDate);
                 $this->logger->info(" #$id");
                 return $id;
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
@@ -1026,7 +1040,7 @@ class XMLDocmanImport {
                 $id = $this->soap->createDocmanLink($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $url, $permissions, $metadata, $owner, $createDate, $updateDate);
                 $this->logger->info(" #$id");
                 return $id;
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
@@ -1049,7 +1063,7 @@ class XMLDocmanImport {
                 $id = $this->soap->createDocmanEmbeddedFile($this->hash, $this->groupId, $parentId, $title, $description, $ordering, $status, $obsolescenceDate, $contents, $permissions, $metadata, $author, $date, $owner, $createDate, $updateDate);
                 $this->logger->info(" #$id");
                 return $id;
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 $retry = $this->askWhatToDo($e);
             }
         } while ($retry);
@@ -1085,22 +1099,46 @@ class XMLDocmanImport {
                     $this->logger->info("\r$infoStr attempt to upload first chunk");
                     // If this is the first chunk, then use the original soapCommand...
                     $item_id = $this->soap->createDocmanFile(
-                        $this->hash, $this->groupId, $parentId, $title,
-                        $description, $ordering, $status, $obsolescenceDate, $permissions, $metadata, $fileSize,
-                        $fileName, $fileType, base64_encode($contents), $chunk_offset, $this->chunk_size, $author, $date, $owner,
-                        $createDate, $updateDate);
+                        $this->hash,
+                        $this->groupId,
+                        $parentId,
+                        $title,
+                        $description,
+                        $ordering,
+                        $status,
+                        $obsolescenceDate,
+                        $permissions,
+                        $metadata,
+                        $fileSize,
+                        $fileName,
+                        $fileType,
+                        base64_encode($contents),
+                        $chunk_offset,
+                        $this->chunk_size,
+                        $author,
+                        $date,
+                        $owner,
+                        $createDate,
+                        $updateDate
+                    );
                 } else {
                     // Display progress bar
                     $chunk_count = ceil($fileSize / $this->chunk_size);
                     $this->logger->info("\r$infoStr ". floor($chunk_offset / $chunk_count * 100)  ."%");
 
                     // If this is not the first chunk, then we have to append the chunk
-                    $this->soap->appendDocmanFileChunk($this->hash, $this->groupId, $item_id, base64_encode($contents),
-                        $chunk_offset, $this->chunk_size);
+                    $this->soap->appendDocmanFileChunk(
+                        $this->hash,
+                        $this->groupId,
+                        $item_id,
+                        base64_encode($contents),
+                        $chunk_offset,
+                        $this->chunk_size
+                    );
                 }
                 $chunk_offset++;
                 unset($contents);
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 unset($contents);
                 if ($this->requestEntityTooLarge($e)) {
                     $continue = $this->adjustChunkSize();
@@ -1121,7 +1159,7 @@ class XMLDocmanImport {
                 $this->logger->error("ERROR: Checksum error");
                 return false;
             }
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $this->printException($e);
         }
     }
@@ -1205,7 +1243,7 @@ class XMLDocmanImport {
                 }
                 $chunk_offset++;
                 unset($contents);
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 unset($contents);
                 if ($this->requestEntityTooLarge($e)) {
                     $continue = $this->adjustChunkSize();
@@ -1226,7 +1264,7 @@ class XMLDocmanImport {
                 $this->logger->error("ERROR: Checksum error");
                 return false;
             }
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $this->printException($e);
         }
     }
@@ -1244,7 +1282,7 @@ class XMLDocmanImport {
 
             try {
                 $this->soap->createDocmanEmbeddedFileVersion($this->hash, $this->groupId, $itemId, $label, $changeLog, $contents, $author, $date);
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 $retry = $this->askWhatToDo($e);
             }
         } while ($retry);

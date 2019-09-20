@@ -25,7 +25,8 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
  * ItemAction is a transport object (aka container) used to share data between
  * Model/Controler and View layer of the application
  */
-class Docman_ItemAction {
+class Docman_ItemAction
+{
     var $item;
     var $action;
     var $class;
@@ -70,7 +71,8 @@ class Docman_ItemAction {
         return $html;
     }
 }
-class Docman_ItemActionNewFolder extends Docman_ItemAction {
+class Docman_ItemActionNewFolder extends Docman_ItemAction
+{
     function __construct(&$item)
     {
         parent::__construct($item);
@@ -79,7 +81,8 @@ class Docman_ItemActionNewFolder extends Docman_ItemAction {
         $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_newfolder');
     }
 }
-class Docman_ItemActionNewDocument extends Docman_ItemAction {
+class Docman_ItemActionNewDocument extends Docman_ItemAction
+{
     function __construct(&$item)
     {
         parent::__construct($item);
@@ -88,7 +91,8 @@ class Docman_ItemActionNewDocument extends Docman_ItemAction {
         $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_newdocument');
     }
 }
-class Docman_ItemActionDetails extends Docman_ItemAction {
+class Docman_ItemActionDetails extends Docman_ItemAction
+{
     function __construct(&$item)
     {
         parent::__construct($item);
@@ -97,7 +101,8 @@ class Docman_ItemActionDetails extends Docman_ItemAction {
         $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_details');
     }
 }
-class Docman_ItemActionNewVersion extends Docman_ItemAction {
+class Docman_ItemActionNewVersion extends Docman_ItemAction
+{
     function __construct(&$item)
     {
         parent::__construct($item);
@@ -106,7 +111,8 @@ class Docman_ItemActionNewVersion extends Docman_ItemAction {
         $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_newversion');
     }
 }
-class Docman_ItemActionMove extends Docman_ItemAction {
+class Docman_ItemActionMove extends Docman_ItemAction
+{
     function __construct(&$item)
     {
         parent::__construct($item);
@@ -119,7 +125,8 @@ class Docman_ItemActionMove extends Docman_ItemAction {
         $this->other_icons[]    = 'move-end';
     }
 }
-class Docman_ItemActionPermissions extends Docman_ItemAction {
+class Docman_ItemActionPermissions extends Docman_ItemAction
+{
     function __construct(&$item)
     {
         parent::__construct($item);
@@ -128,7 +135,8 @@ class Docman_ItemActionPermissions extends Docman_ItemAction {
         $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_permissions');
     }
 }
-class Docman_ItemActionHistory extends Docman_ItemAction {
+class Docman_ItemActionHistory extends Docman_ItemAction
+{
     function __construct(&$item)
     {
         parent::__construct($item);
@@ -137,7 +145,8 @@ class Docman_ItemActionHistory extends Docman_ItemAction {
         $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_history');
     }
 }
-class Docman_ItemActionNotifications extends Docman_ItemAction {
+class Docman_ItemActionNotifications extends Docman_ItemAction
+{
     function __construct(&$item)
     {
         parent::__construct($item);
@@ -146,7 +155,8 @@ class Docman_ItemActionNotifications extends Docman_ItemAction {
         $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_notifications');
     }
 }
-class Docman_ItemActionDelete extends Docman_ItemAction {
+class Docman_ItemActionDelete extends Docman_ItemAction
+{
     function __construct(&$item)
     {
         parent::__construct($item);
@@ -155,7 +165,8 @@ class Docman_ItemActionDelete extends Docman_ItemAction {
         $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_delete');
     }
 }
-class Docman_ItemActionUpdate extends Docman_ItemAction {
+class Docman_ItemActionUpdate extends Docman_ItemAction
+{
     function __construct(&$item)
     {
         parent::__construct($item);
@@ -165,7 +176,8 @@ class Docman_ItemActionUpdate extends Docman_ItemAction {
     }
 }
 
-class Docman_ItemActionCopy extends Docman_ItemAction {
+class Docman_ItemActionCopy extends Docman_ItemAction
+{
     function __construct(&$item, $params)
     {
         parent::__construct($item);
@@ -180,7 +192,8 @@ class Docman_ItemActionCopy extends Docman_ItemAction {
     }
 }
 
-class Docman_ItemActionCut extends Docman_ItemAction {
+class Docman_ItemActionCut extends Docman_ItemAction
+{
     function __construct(&$item, $params)
     {
         parent::__construct($item);
@@ -195,7 +208,8 @@ class Docman_ItemActionCut extends Docman_ItemAction {
     }
 }
 
-class Docman_ItemActionPaste extends Docman_ItemAction {
+class Docman_ItemActionPaste extends Docman_ItemAction
+{
     function __construct(&$item, $params)
     {
         parent::__construct($item);
@@ -205,7 +219,8 @@ class Docman_ItemActionPaste extends Docman_ItemAction {
     }
 }
 
-class Docman_ItemActionApproval extends Docman_ItemAction {
+class Docman_ItemActionApproval extends Docman_ItemAction
+{
     function __construct(&$item)
     {
         parent::__construct($item);
@@ -214,5 +229,3 @@ class Docman_ItemActionApproval extends Docman_ItemAction {
         $this->title            = $GLOBALS['Language']->getText('plugin_docman', 'action_approval');
     }
 }
-
-?>

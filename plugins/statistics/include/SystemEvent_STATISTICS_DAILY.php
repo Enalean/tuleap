@@ -18,7 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class SystemEvent_STATISTICS_DAILY extends SystemEvent {
+class SystemEvent_STATISTICS_DAILY extends SystemEvent
+{
 
     /**
      * @var Logger
@@ -122,7 +123,7 @@ class SystemEvent_STATISTICS_DAILY extends SystemEvent {
         $res = db_query($sql);
         if ($res && db_numrows($res) == 1) {
             $row = db_fetch_array($res);
-            if($row['max'] != null) {
+            if ($row['max'] != null) {
                 $max = $row['max'];
             }
         }

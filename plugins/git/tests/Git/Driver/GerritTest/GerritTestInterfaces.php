@@ -21,20 +21,24 @@
 require_once dirname(__FILE__).'/../../../bootstrap.php';
 require_once dirname(__FILE__).'/../../../../../ldap/include/LDAP_User.class.php';
 
-interface Git_Driver_Gerrit_addIncludedGroupTest {
+interface Git_Driver_Gerrit_addIncludedGroupTest
+{
     public function itAddAnIncludedGroup();
 }
 
-interface Git_Driver_Gerrit_removeIncludedGroupTest {
+interface Git_Driver_Gerrit_removeIncludedGroupTest
+{
     public function itRemovesAllIncludedGroups();
 }
 
-interface Git_Driver_Gerrit_projectExistsTest {
+interface Git_Driver_Gerrit_projectExistsTest
+{
     public function itReturnsTrueIfParentProjectExists();
     public function itReturnsFalseIfParentProjectDoNotExists();
 }
 
-interface Git_Driver_Gerrit_manageProjectsTest {
+interface Git_Driver_Gerrit_manageProjectsTest
+{
     public function itExecutesTheCreateCommandForProjectOnTheGerritServer();
     public function itExecutesTheCreateCommandForParentProjectOnTheGerritServer();
     public function itReturnsTheNameOfTheCreatedProject();
@@ -43,19 +47,22 @@ interface Git_Driver_Gerrit_manageProjectsTest {
     public function itInformsAboutProjectInitialization();
 }
 
-interface Git_Driver_Gerrit_groupExistsTest {
+interface Git_Driver_Gerrit_groupExistsTest
+{
     public function itReturnsTrueIfGroupExists();
     public function itReturnsFalseIfGroupDoNotExists();
 }
 
-interface Git_Driver_Gerrit_DeletePluginTest {
+interface Git_Driver_Gerrit_DeletePluginTest
+{
     public function itReturnsFalseIfPluginIsNotInstalled();
     public function itReturnsFalseIfPluginIsInstalledAndNotEnabled();
     public function itReturnsTrueIfPluginIsInstalledAndEnabled();
     public function itThrowsAProjectDeletionExceptionIfThereAreOpenChanges();
 }
 
-interface Git_Driver_Gerrit_manageGroupsTest {
+interface Git_Driver_Gerrit_manageGroupsTest
+{
     public function itCreatesGroupsIfItNotExistsOnGerrit();
     public function itDoesNotCreateGroupIfItAlreadyExistsOnGerrit();
     public function itInformsAboutGroupCreation();
@@ -68,7 +75,8 @@ interface Git_Driver_Gerrit_manageGroupsTest {
     public function itReturnsAllGroups();
 }
 
-interface Git_Driver_Gerrit_manageUserTest {
+interface Git_Driver_Gerrit_manageUserTest
+{
     public function itExecutesTheInsertCommand();
     public function itExecutesTheDeletionCommand();
     public function itRemovesAllMembers();

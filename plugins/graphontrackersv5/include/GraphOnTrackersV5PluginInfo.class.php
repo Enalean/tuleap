@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GraphOnTrackersV5PluginInfo extends PluginInfo {
+class GraphOnTrackersV5PluginInfo extends PluginInfo
+{
 
     public function __construct($plugin)
     {

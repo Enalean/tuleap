@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FlamingParrot_NavBarItemProjectsPresenter extends FlamingParrot_NavBarItemPresenter {
+class FlamingParrot_NavBarItemProjectsPresenter extends FlamingParrot_NavBarItemPresenter
+{
 
     public $is_projects = true;
 
@@ -43,9 +44,9 @@ class FlamingParrot_NavBarItemProjectsPresenter extends FlamingParrot_NavBarItem
 
         $this->label                = $GLOBALS['Language']->getText('include_menu', 'projects');
         $this->filter_project       = $GLOBALS['Language']->getText('include_menu', 'filter_project');
-        $this->menu_projects_text   = $GLOBALS['Language']->getText('include_menu','projects');
-        $this->browse_projects_text = $GLOBALS['Language']->getText('include_menu','browse_projects');
-        $this->register_new_proj    = $GLOBALS['Language']->getText('include_menu','register_new_proj');
+        $this->menu_projects_text   = $GLOBALS['Language']->getText('include_menu', 'projects');
+        $this->browse_projects_text = $GLOBALS['Language']->getText('include_menu', 'browse_projects');
+        $this->register_new_proj    = $GLOBALS['Language']->getText('include_menu', 'register_new_proj');
 
         $this->is_trove_cat_enabled            = ForgeConfig::get('sys_use_trove');
         $this->is_project_registration_enabled = ForgeConfig::get('sys_use_project_registration', true);

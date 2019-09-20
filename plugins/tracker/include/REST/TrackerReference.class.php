@@ -23,7 +23,8 @@ use Tracker;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 
-class TrackerReference {
+class TrackerReference
+{
 
     /**
      * @var int ID of the tracker {@type int} {@required true}

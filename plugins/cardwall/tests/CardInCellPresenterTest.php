@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__) .'/bootstrap.php';
 
-class CardInCellPresenterTest extends TuleapTestCase {
+class CardInCellPresenterTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -61,4 +62,3 @@ class CardInCellPresenterTest extends TuleapTestCase {
         $this->assertEqual($this->card_id, $this->presenter->getId());
     }
 }
-?>

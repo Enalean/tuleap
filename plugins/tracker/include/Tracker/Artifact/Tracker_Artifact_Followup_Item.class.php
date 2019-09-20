@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Tracker_Artifact_Followup_Item {
+abstract class Tracker_Artifact_Followup_Item
+{
 
     abstract public function getId();
 
@@ -37,7 +38,7 @@ abstract class Tracker_Artifact_Followup_Item {
      *
      * @return string html
      */
-    public abstract function diffToPrevious(
+    abstract public function diffToPrevious(
         $format = 'html',
         $user = null,
         $ignore_perms = false,
@@ -77,5 +78,4 @@ abstract class Tracker_Artifact_Followup_Item {
     {
         return DateHelper::timeAgoInWords($this->getFollowUpDate(), false, true);
     }
-
 }

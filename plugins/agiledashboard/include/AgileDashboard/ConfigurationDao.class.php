@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_ConfigurationDao extends DataAccessObject {
+class AgileDashboard_ConfigurationDao extends DataAccessObject
+{
 
     public function updateConfiguration(
         $project_id,

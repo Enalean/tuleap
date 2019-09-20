@@ -30,15 +30,17 @@ function codendi_main()
     validateSessionPath();
 
     global $request;
-    if ((DEBUG & _DEBUG_APD) and extension_loaded("apd"))
+    if ((DEBUG & _DEBUG_APD) and extension_loaded("apd")) {
         apd_set_session_trace(9);
+    }
 
     // Postpone warnings
     global $ErrorManager;
-    if (defined('E_STRICT')) // and (E_ALL & E_STRICT)) // strict php5?
+    if (defined('E_STRICT')) { // and (E_ALL & E_STRICT)) // strict php5?
         $ErrorManager->setPostponedErrorMask(E_NOTICE|E_USER_NOTICE|E_USER_WARNING|E_WARNING|E_STRICT);
-    else
+    } else {
         $ErrorManager->setPostponedErrorMask(E_NOTICE|E_USER_NOTICE|E_USER_WARNING|E_WARNING);
+    }
     $request = new WikiRequest();
 
     /*
@@ -48,10 +50,11 @@ function codendi_main()
      * See also <?plugin WikiAdminUtils action=purge-cache ?>
      */
     if (!defined('WIKIDB_NOCACHE_MARKUP')) {
-        if ($request->getArg('nocache')) // 1 or purge
+        if ($request->getArg('nocache')) { // 1 or purge
             define('WIKIDB_NOCACHE_MARKUP', $request->getArg('nocache'));
-        else
+        } else {
             define('WIKIDB_NOCACHE_MARKUP', false); // redundant, but explicit
+        }
     }
 
     // Initialize with system defaults in case user not logged in.
@@ -68,8 +71,9 @@ function codendi_main()
     // Memory optimization:
     // http://www.procata.com/blog/archives/2004/05/27/rephlux-and-php-memory-usage/
     // kill the global PEAR _PEAR_destructor_object_list
-    if (!empty($_PEAR_destructor_object_list))
+    if (!empty($_PEAR_destructor_object_list)) {
         $_PEAR_destructor_object_list = array();
+    }
     require_once __DIR__ . '/lib/prepend.php';
     $request->possiblyDeflowerVirginWiki();
 
@@ -102,12 +106,12 @@ function codendi_main()
 
 //site_project_footer($html_params);
 
-    if (DEBUG and DEBUG & _DEBUG_INFO) phpinfo(INFO_VARIABLES | INFO_MODULES);
+    if (DEBUG and DEBUG & _DEBUG_INFO) {
+        phpinfo(INFO_VARIABLES | INFO_MODULES);
+    }
     $request->finish();
 }
 
 include_once(PHPWIKI_DIR."/lib/main.php");
 
 codendi_main();
-
-?>

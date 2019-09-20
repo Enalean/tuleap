@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
+class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject
+{
     public function create($tv3_id, $tv5_id)
     {
         if (! $this->pluginIsInstalled()) {
@@ -266,4 +267,3 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $this->update($sql);
     }
 }
-?>

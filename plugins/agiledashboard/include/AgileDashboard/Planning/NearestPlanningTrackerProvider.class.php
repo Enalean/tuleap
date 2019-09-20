@@ -30,7 +30,8 @@
  * => The nearest planning tracker of task is sprint.
  * => The nearest planning tracker of sprint is null.
  */
-class AgileDashboard_Planning_NearestPlanningTrackerProvider {
+class AgileDashboard_Planning_NearestPlanningTrackerProvider
+{
 
     /** @var PlanninqFactory */
     private $planning_factory;

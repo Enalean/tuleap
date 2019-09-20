@@ -26,7 +26,8 @@ use Valid_UInt;
 use Project;
 use SVNPathsUpdater;
 
-class Manager {
+class Manager
+{
 
     /**
      * @var SVNPathsUpdater
@@ -64,7 +65,7 @@ class Manager {
         if (! $params['request']->valid($valid_repo_id) && ! $repository_id) {
             $GLOBALS['Response']->addFeedback(
                 'error',
-                $GLOBALS['Language']->getText('plugin_hudson_svn','request_not_valid')
+                $GLOBALS['Language']->getText('plugin_hudson_svn', 'request_not_valid')
             );
 
             return;
@@ -73,7 +74,7 @@ class Manager {
         if (! $this->doesRepositoryExist($params['request']->getProject(), $repository_id)) {
             $GLOBALS['Response']->addFeedback(
                 'error',
-                $GLOBALS['Language']->getText('plugin_hudson_svn','repository_not_found')
+                $GLOBALS['Language']->getText('plugin_hudson_svn', 'repository_not_found')
             );
 
             return;
@@ -85,7 +86,7 @@ class Manager {
         if (! $this->dao->saveTrigger($params['job_id'], $repository_id, $path)) {
             $GLOBALS['Response']->addFeedback(
                 'error',
-                $GLOBALS['Language']->getText('plugin_hudson_svn','ci_trigger_not_saved')
+                $GLOBALS['Language']->getText('plugin_hudson_svn', 'ci_trigger_not_saved')
             );
         }
     }

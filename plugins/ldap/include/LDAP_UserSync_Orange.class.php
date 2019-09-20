@@ -20,7 +20,8 @@
 /**
  * Handle synchro between LDAP and Tuleap user.
  */
-class LDAP_UserSync_Orange extends LDAP_UserSync {
+class LDAP_UserSync_Orange extends LDAP_UserSync
+{
 
     /**
      * Return the sync attributes
@@ -50,7 +51,7 @@ class LDAP_UserSync_Orange extends LDAP_UserSync {
         $modified  = false;
 
         $ldapEmail = $lr->getEmail();
-        $realname  = ucwords(preg_replace('/^(\w+).(\w+)@.*/','\\1 \\2', $ldapEmail));
+        $realname  = ucwords(preg_replace('/^(\w+).(\w+)@.*/', '\\1 \\2', $ldapEmail));
 
         if (($realname !== null) && ($user->getRealName() != substr($realname, 0, 32))) {
             $user->setRealName($realname);
@@ -65,5 +66,3 @@ class LDAP_UserSync_Orange extends LDAP_UserSync {
         return $modified;
     }
 }
-
-?>

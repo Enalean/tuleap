@@ -28,7 +28,8 @@
  *
  * This class follow the Null Object Pattern
  */
-class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
+class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset
+{
     /**
      * Constructor
      */

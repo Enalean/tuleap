@@ -21,7 +21,8 @@
 /**
  * Presenter for one step registration project
  */
-class Project_OneStepRegistration_OneStepRegistrationApprovalPresenter {
+class Project_OneStepRegistration_OneStepRegistrationApprovalPresenter
+{
 
     public function get_title()
     {

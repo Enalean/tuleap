@@ -180,7 +180,7 @@ class Tracker_FormElement_Field_List_BindDecorator
         $html = '';
         $bgcolor = '';
 
-        if ($r !== null && $g !== null && $b !== null ) {
+        if ($r !== null && $g !== null && $b !== null) {
             $r = (int) $r;
             $g = (int) $g;
             $b = (int) $b;
@@ -280,7 +280,7 @@ class Tracker_FormElement_Field_List_BindDecorator
      */
     public function css($default = 'transparent')
     {
-        if ($this->r !== null && $this->g !== null && $this->b !== null ) {
+        if ($this->r !== null && $this->g !== null && $this->b !== null) {
             return 'rgb('. (int)$this->r .', '. (int)$this->g .', '. (int)$this->b .');';
         }
         return $default;
@@ -291,7 +291,7 @@ class Tracker_FormElement_Field_List_BindDecorator
      */
     public function isDark()
     {
-        if ($this->r !== null && $this->g !== null && $this->b !== null ) {
+        if ($this->r !== null && $this->g !== null && $this->b !== null) {
             return (0.3 * $this->r + 0.59 * $this->g + 0.11 * $this->b) < 128;
         }
         return false;

@@ -23,7 +23,8 @@
  * The aim of this presenter is to be used in conjunction with a view that enables quick access
  * to each milestone.
  */
-class Planning_Presenter_MilestoneAccessPresenter {
+class Planning_Presenter_MilestoneAccessPresenter
+{
 
     /**
      * @var Planning_Milestone[]
@@ -43,12 +44,12 @@ class Planning_Presenter_MilestoneAccessPresenter {
 
     public function content()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','details_pane_title');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'details_pane_title');
     }
 
     public function planning()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard','planning');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning');
     }
 
     public function no_milestone()
@@ -61,4 +62,3 @@ class Planning_Presenter_MilestoneAccessPresenter {
         return '/plugins/tracker/?aid=';
     }
 }
-?>

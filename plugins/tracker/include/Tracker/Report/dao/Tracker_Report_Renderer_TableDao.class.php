@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Report_Renderer_TableDao extends DataAccessObject {
+class Tracker_Report_Renderer_TableDao extends DataAccessObject
+{
     function __construct()
     {
         parent::__construct();
@@ -73,4 +74,3 @@ class Tracker_Report_Renderer_TableDao extends DataAccessObject {
         return $this->update($sql);
     }
 }
-?>

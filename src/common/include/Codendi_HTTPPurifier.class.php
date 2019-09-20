@@ -23,7 +23,8 @@
  *
  * This class aims to purify the header to prevent header injections
  */
-class Codendi_HTTPPurifier {
+class Codendi_HTTPPurifier
+{
     /**
      * Singleton access.
      *
@@ -32,7 +33,7 @@ class Codendi_HTTPPurifier {
     function &instance()
     {
         static $__Codendi_HTTPPurifier_instance;
-        if(!$__Codendi_HTTPPurifier_instance) {
+        if (!$__Codendi_HTTPPurifier_instance) {
             $__Codendi_HTTPPurifier_instance = new Codendi_HTTPPurifier();
         }
         return $__Codendi_HTTPPurifier_instance;
@@ -44,5 +45,3 @@ class Codendi_HTTPPurifier {
         return $clean;
     }
 }
-
-?>

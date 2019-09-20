@@ -24,7 +24,8 @@
 
 require_once 'HTML_TableTest.php';
 
-class HTML_Table_BoostrapTest extends HTML_TableTest {
+class HTML_Table_BoostrapTest extends HTML_TableTest
+{
 
     /**
      * @var HTML_Table_Boostrap
@@ -47,5 +48,3 @@ class HTML_Table_BoostrapTest extends HTML_TableTest {
         $this->assertPattern('%<table class="table bla">%', $this->html_table->addTableClass('bla')->render());
     }
 }
-
-?>

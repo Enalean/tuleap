@@ -22,7 +22,8 @@
 /**
  * I know how to speak to a Gerrit 2.8+ remote server
  */
-class Git_Driver_GerritREST implements Git_Driver_Gerrit {
+class Git_Driver_GerritREST implements Git_Driver_Gerrit
+{
 
 
     /**
@@ -140,8 +141,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         } catch (Guzzle\Http\Exception\ClientErrorResponseException $exception) {
             $this->logger->info("Gerrit REST driver: project $project_name does not exist");
             return false;
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             $this->throwGerritException("Gerrit REST driver: an error occured while checking existance of project (".$exception->getMessage().")");
         }
     }
@@ -424,7 +424,6 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
         foreach ($gerrit_ssh_key_ids as $gerrit_key_id) {
             $this->actionRemoveSSHKey($server, $user, $gerrit_key_id);
         }
-
     }
 
     /**
@@ -508,8 +507,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             return false;
         } catch (Guzzle\Http\Exception\CurlException $exception) {
             return false;
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             $this->throwGerritException("Gerrit REST driver: An error occured while checking if deleted plugins is available: ". $exception->getMessage());
         }
     }
@@ -576,7 +574,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $members = $this->decodeGerritResponse($response->getBody(true));
 
             return array_map(array($this, 'pluckUsername'), $members);
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             return array();
         }
     }
@@ -596,7 +594,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit {
             $members = $this->decodeGerritResponse($response->getBody(true));
 
             return array_map(array($this, 'pluckGroupname'), $members);
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             return array();
         }
     }

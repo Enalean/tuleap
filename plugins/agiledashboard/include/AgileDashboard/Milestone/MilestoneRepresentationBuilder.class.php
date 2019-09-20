@@ -22,7 +22,8 @@ use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
 
-class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
+class AgileDashboard_Milestone_MilestoneRepresentationBuilder
+{
 
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
@@ -107,7 +108,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
             ->getPaginatedSubMilestonesWithStatusCriterion($user, $milestone, $criterion, $limit, $offset, $order);
 
         $submilestones_representations = array();
-        foreach($sub_milestones->getMilestones() as $submilestone) {
+        foreach ($sub_milestones->getMilestones() as $submilestone) {
             $submilestones_representations[] = $this->getMilestoneRepresentation($submilestone, $user, $representation_type);
         }
 
@@ -157,7 +158,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder {
             ->getPaginatedTopMilestonesWithStatusCriterion($user, $project, $criterion, $limit, $offset, $order);
 
         $submilestones_representations = array();
-        foreach($sub_milestones->getMilestones() as $submilestone) {
+        foreach ($sub_milestones->getMilestones() as $submilestone) {
             $submilestones_representations[] = $this->getMilestoneRepresentation($submilestone, $user, $representation_type);
         }
 

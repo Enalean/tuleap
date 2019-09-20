@@ -23,7 +23,8 @@
  * database result set
  * @deprecated See \Tuleap\DB\DataAccessObject
  */
-interface IProvideDataAccessResult extends Iterator, Countable {
+interface IProvideDataAccessResult extends Iterator, Countable
+{
 
     /**
      * Returns an array from query row or false if no more rows
@@ -45,7 +46,4 @@ interface IProvideDataAccessResult extends Iterator, Countable {
      * @return mixed
      */
     public function isError();
-
 }
-
-?>

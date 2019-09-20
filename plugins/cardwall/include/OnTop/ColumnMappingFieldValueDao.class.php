@@ -19,7 +19,8 @@
  */
 
 
-class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject {
+class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject
+{
 
     public function searchMappingFieldValues($cardwall_tracker_id)
     {
@@ -140,4 +141,3 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject {
         return $stmt;
     }
 }
-?>

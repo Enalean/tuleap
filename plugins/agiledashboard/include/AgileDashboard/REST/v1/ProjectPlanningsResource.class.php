@@ -28,7 +28,8 @@ use Tuleap\REST\Header;
 /**
  * Wrapper for milestone related REST methods
  */
-class ProjectPlanningsResource {
+class ProjectPlanningsResource
+{
     public const MAX_LIMIT = 50;
 
     public function get(PFUser $user, Project $project, $limit, $offset)
@@ -44,7 +45,7 @@ class ProjectPlanningsResource {
         $all_plannings = PlanningFactory::build()->getPlannings($user, $project_id);
         $plannings     = array_slice($all_plannings, $offset, $limit);
 
-        foreach($plannings as $planning) {
+        foreach ($plannings as $planning) {
             $planning_representation = new PlanningRepresentation();
             $planning_representation->build($planning);
             $planning_representations[] = $planning_representation;
@@ -76,4 +77,3 @@ class ProjectPlanningsResource {
         Header::allowOptionsGet();
     }
 }
-?>

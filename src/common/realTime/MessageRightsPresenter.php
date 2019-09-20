@@ -19,4 +19,7 @@
 
 namespace Tuleap\RealTime;
 
-interface MessageRightsPresenter{}
+interface MessageRightsPresenter
+{
+
+}

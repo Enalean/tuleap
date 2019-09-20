@@ -21,7 +21,8 @@
 /**
  * provides information on whether the formElement is used or not
  */
-interface Tracker_FormElement_Usable {
+interface Tracker_FormElement_Usable
+{
 
     /**
      * say if a formElement is used
@@ -30,5 +31,3 @@ interface Tracker_FormElement_Usable {
      */
     public function isUsed();
 }
-
-?>

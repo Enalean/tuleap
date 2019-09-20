@@ -20,24 +20,24 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_ValidateFilterFactory {
+class Docman_ValidateFilterFactory
+{
     function __construct()
     {
-
     }
 
     function getFromFilter($filter)
     {
         $f = null;
-        if(is_a($filter, 'Docman_FilterDate')) {
+        if (is_a($filter, 'Docman_FilterDate')) {
             $f = new Docman_ValidateFilterDate($filter);
         }
         return $f;
     }
-
 }
 
-class Docman_ValidateFilter {
+class Docman_ValidateFilter
+{
     var $filter;
     var $message;
     var $isValid;
@@ -60,7 +60,8 @@ class Docman_ValidateFilter {
     }
 }
 
-class Docman_ValidateFilterDate extends Docman_ValidateFilter {
+class Docman_ValidateFilterDate extends Docman_ValidateFilter
+{
 
     function __construct($filter)
     {
@@ -69,16 +70,16 @@ class Docman_ValidateFilterDate extends Docman_ValidateFilter {
 
     function validate()
     {
-        if($this->isValid === null) {
+        if ($this->isValid === null) {
             $this->isValid = false;
-            if($this->filter->getValue() == '') {
+            if ($this->filter->getValue() == '') {
                 $this->isValid = true;
-            }
-            elseif(preg_match('/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/',
-                              $this->filter->getValue())) {
+            } elseif (preg_match(
+                '/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/',
+                $this->filter->getValue()
+            )) {
                 $this->isValid = true;
-            }
-            else {
+            } else {
                 $today = date("Y-n-j");
                 $this->message = $GLOBALS['Language']->getText('plugin_docman', 'filters_date_message', array($this->filter->md->getName(), $today));
             }
@@ -86,5 +87,3 @@ class Docman_ValidateFilterDate extends Docman_ValidateFilter {
         return $this->isValid;
     }
 }
-
-?>

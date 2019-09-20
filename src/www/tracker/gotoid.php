@@ -26,25 +26,24 @@ require_once('../svn/svn_data.php');
  * If the name is not the same as the tracker's short name, a warning is displayed.
  * If the artifact does not belong to the same project as the referring page, a warning is also displayed.
  */
-function generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art_name)
+function generic_redirect($location, $aid, $group_id, $art_group_id, $atid, $atn, $art_name)
 {
     global $Language;
     $feed = '';
     if (($group_id)&&($group_id != $art_group_id)) {
         // The link is coming from another project, add a warning msg
         $group_name=util_get_group_name_from_id($art_group_id);
-        $feed="&feedback=".urlencode($Language->getText('tracker_gotoid','art_belongs_to',$group_name));
+        $feed="&feedback=".urlencode($Language->getText('tracker_gotoid', 'art_belongs_to', $group_name));
     }
     if (($atn)&&(strtolower($atn) != strtolower($art_name))) {
         if ((strtolower($atn)!="art")&&(strtolower($atn)!="artifact")) {
-            $feed.=urlencode($Language->getText('tracker_gotoid','art_is_a',array($art_name,$atn)));
+            $feed.=urlencode($Language->getText('tracker_gotoid', 'art_is_a', array($art_name,$atn)));
         }
     }
 
     $location .= "/tracker/?func=detail&aid=".(int)$aid."&group_id=".(int)$art_group_id."&atid=".((int)$atid).$feed;
     header($location);
     exit;
-
 }
 
 
@@ -83,7 +82,7 @@ if ($atn == 'commit') {
         if (($commit_group_id)&&($group_id != $commit_group_id)) {
             // The link is coming from another project, add a warning msg
             $group_name=util_get_group_name_from_id($commit_group_id);
-            $feed="&feedback".urlencode($Language->getText('tracker_gotoid','commit_belongs_to',$group_name));
+            $feed="&feedback".urlencode($Language->getText('tracker_gotoid', 'commit_belongs_to', $group_name));
         }
         $location .= $cvs_loc.$feed;
     }
@@ -97,10 +96,10 @@ if (!$group_id) {
     // group_id is necessary for legacy trackers -> link to generic tracker
     $art_group_id = $request->get('art_group_id');
     $art_name     = $request->get('art_name');
-    if (!util_get_ids_from_aid($aid,$art_group_id,$atid,$art_name)) {
-        exit_error($Language->getText('global','error'),$Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
+    if (!util_get_ids_from_aid($aid, $art_group_id, $atid, $art_name)) {
+        exit_error($Language->getText('global', 'error'), $Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
     }
-    generic_redirect($location,$aid,$art_group_id,$art_group_id,$atid,$atn,$art_name);
+    generic_redirect($location, $aid, $art_group_id, $art_group_id, $atid, $atn, $art_name);
 }
 
 // not standard atn -> generic tracker.
@@ -108,5 +107,3 @@ if (!util_get_ids_from_aid($aid, $art_group_id, $atid, $art_name)) {
     exit_error($Language->getText('global', 'error'), $Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
 }
 generic_redirect($location, $aid, $group_id, $art_group_id, $atid, $atn, $art_name);
-
-?>

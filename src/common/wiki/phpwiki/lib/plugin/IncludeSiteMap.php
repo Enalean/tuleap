@@ -46,8 +46,7 @@ rcs_id('$Id: IncludeSiteMap.php,v 1.2 2004/03/09 12:26:20 rurban Exp $');
 require_once('lib/PageList.php');
 require_once('lib/plugin/SiteMap.php');
 
-class WikiPlugin_IncludeSiteMap
-extends WikiPlugin_SiteMap
+class WikiPlugin_IncludeSiteMap extends WikiPlugin_SiteMap
 {
     function getName()
     {
@@ -56,8 +55,10 @@ extends WikiPlugin_SiteMap
 
     function getDescription()
     {
-        return sprintf(_("Include recursively all linked pages starting at %s"),
-        $this->_pagename);
+        return sprintf(
+            _("Include recursively all linked pages starting at %s"),
+            $this->_pagename
+        );
     }
     function getDefaultArguments()
     {
@@ -95,4 +96,3 @@ extends WikiPlugin_SiteMap
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

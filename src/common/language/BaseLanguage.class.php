@@ -21,7 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class BaseLanguage {
+class BaseLanguage
+{
 
     public const DEFAULT_LANG = 'en_US';
 
@@ -49,7 +50,7 @@ class BaseLanguage {
     {
         $this->allLanguages = array();
         $supported_languages = explode(',', $supported_languages);
-        foreach($supported_languages as $v) {
+        foreach ($supported_languages as $v) {
             if (trim($v) !== '') {
                 $this->allLanguages[] = trim($v);
             }
@@ -92,7 +93,7 @@ class BaseLanguage {
         // 1) load all the en_US for official code (core + plugins) in order
         // to define all the default values (all other language load while
         // override existing values. If no overriding: the en_US value appears.
-        if($lang != self::DEFAULT_LANG) {
+        if ($lang != self::DEFAULT_LANG) {
             $this->loadCoreSiteContent(self::DEFAULT_LANG, $text_array);
             $this->loadPluginsSiteContent(self::DEFAULT_LANG, $text_array);
         }
@@ -150,16 +151,16 @@ class BaseLanguage {
      */
     function _loadPluginsSiteContent($basedir, $lang, &$text_array)
     {
-        if(is_dir($basedir)) {
+        if (is_dir($basedir)) {
             $fd = opendir($basedir);
-            while(false !== ($file = readdir($fd))) {
-                if(is_dir($basedir.'/'.$file)
+            while (false !== ($file = readdir($fd))) {
+                if (is_dir($basedir.'/'.$file)
                    && $file != '.'
                    && $file != '..'
                    && $file != '.svn'
                    && $file != 'CVS') {
                     $location = $basedir.'/'.$file.'/site-content/'.$lang;
-                    if(is_dir($location)) {
+                    if (is_dir($location)) {
                         $this->loadAllTabFiles($location, $text_array);
                     }
                 }
@@ -173,13 +174,12 @@ class BaseLanguage {
      */
     function loadAllTabFiles($basedir, &$text_array)
     {
-        if(is_dir($basedir)) {
+        if (is_dir($basedir)) {
             $fd = opendir($basedir);
-            while(false !== ($file = readdir($fd))) {
-                if(preg_match('/\.tab$/', $file)) {
+            while (false !== ($file = readdir($fd))) {
+                if (preg_match('/\.tab$/', $file)) {
                     $this->parseLanguageFile($basedir.'/'.$file, $text_array);
-                }
-                elseif(is_dir($basedir.'/'.$file)
+                } elseif (is_dir($basedir.'/'.$file)
                        && $file != '.'
                        && $file != '..'
                        && $file != '.svn'
@@ -209,8 +209,8 @@ class BaseLanguage {
      */
     function parseLanguageFile($fname, &$text_array)
     {
-        $ary = @file($fname,1);
-        for( $i=0; $i<sizeof($ary); $i++) {
+        $ary = @file($fname, 1);
+        for ($i=0; $i<sizeof($ary); $i++) {
             if (substr($ary[$i], 0, 1) == '#' ||  //ignore comments...
                 strlen(trim($ary[$i])) == 0) {    //...or empty lines
                 continue;
@@ -235,7 +235,7 @@ class BaseLanguage {
 
     function loadLanguage($lang)
     {
-        if($this->lang !== $lang) {
+        if ($this->lang !== $lang) {
             $this->lang = $lang;
             $this->loadFromSerialized($lang) || $this->loadFromTabs($lang);
         }
@@ -265,7 +265,7 @@ class BaseLanguage {
         $this->text_array = $this->compileLanguage($lang);
     }
 
-    function getText($pagename, $category, $args="")
+    function getText($pagename, $category, $args = "")
     {
         // If the language files were modified by an update, the compiled version might not have been generated,
         // and the message not present.
@@ -333,7 +333,7 @@ class BaseLanguage {
         } else {
             $custom_fn = $GLOBALS['sys_custompluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.$ext ;
         }
-        if ( file_exists($custom_fn) ) {
+        if (file_exists($custom_fn)) {
             // The custom file exists.
             return $custom_fn;
         } else {
@@ -344,7 +344,7 @@ class BaseLanguage {
             } else {
                 $fn = $GLOBALS['sys_pluginsroot'].'/'.$plugin_name.'/site-content/'.$lang_code.'/'.$file.$ext;
             }
-            if ( file_exists($fn) ) {
+            if (file_exists($fn)) {
                 // The custom file exists.
                 return $fn;
             } else {
@@ -368,7 +368,7 @@ class BaseLanguage {
     public function getLanguages()
     {
         $ret = array();
-        foreach($this->allLanguages as $lang) {
+        foreach ($this->allLanguages as $lang) {
             $text_array = $this->compileLanguage($lang);
             $ret[$lang] = $text_array['system']['locale_label'];
         }
@@ -408,9 +408,11 @@ class BaseLanguage {
         $lang_parse = array();
 
         // break up string into pieces (languages and q factors)
-        preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i',
-                       $accept_language,
-                       $lang_parse);
+        preg_match_all(
+            '/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i',
+            $accept_language,
+            $lang_parse
+        );
 
         if (count($lang_parse[1])) {
             // create a list like "en" => 0.8
@@ -447,25 +449,22 @@ class BaseLanguage {
 
         //extract language abbr and country codes from Codendi languages
         $provided_languages = array();
-        foreach($this->allLanguages as $lang) {
+        foreach ($this->allLanguages as $lang) {
             list($l,$c) = explode('_', $lang);
             $provided_languages[strtolower($l)][strtolower($c)] = $lang;
         }
 
         //Now do the same thing for accept_language,
         $parse_accept_lang = $this->parseAcceptLanguage($accept_language);
-        foreach($parse_accept_lang as $lang => $score) {
+        foreach ($parse_accept_lang as $lang => $score) {
             $lang = explode('-', $lang);
             $l = strtolower($lang[0]);
             if (isset($provided_languages[$l])) {
-
                 //We've just found a matching languages
                 //check now for the country code
                 if (isset($lang[1]) && isset($provided_languages[$l][strtolower($lang[1])])) {
-
                     $relevant_language = $provided_languages[$l][strtolower($lang[1])];
                 } else {
-
                     //If there is no country code, then take the first one
                     //provided by Codendi
                     $relevant_language = array_shift($provided_languages[strtolower($lang[0])]);
@@ -490,10 +489,10 @@ class BaseLanguage {
 
     public function invalidateCache()
     {
-        foreach(glob($this->getCacheDirectory().DIRECTORY_SEPARATOR.'*.php') as $file) {
+        foreach (glob($this->getCacheDirectory().DIRECTORY_SEPARATOR.'*.php') as $file) {
             unlink($file);
         }
-        foreach(glob($this->getCacheDirectory().DIRECTORY_SEPARATOR.'*.bin') as $file) {
+        foreach (glob($this->getCacheDirectory().DIRECTORY_SEPARATOR.'*.bin') as $file) {
             unlink($file);
         }
     }
@@ -503,7 +502,7 @@ class BaseLanguage {
         return ForgeConfig::getCacheDir().DIRECTORY_SEPARATOR.'lang';
     }
 
-    public function getOverridableText($pagename, $category, $args="")
+    public function getOverridableText($pagename, $category, $args = "")
     {
         return $this->getText($pagename, $category, $args);
     }

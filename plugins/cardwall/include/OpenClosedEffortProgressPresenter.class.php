@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgressPresenter {
+class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgressPresenter
+{
     public const COUNT_STYLE = 'cards';
 
     private $nb_total;

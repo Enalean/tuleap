@@ -22,8 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Git_Command_UnknownObjectTypeException extends Exception {
+class Git_Command_UnknownObjectTypeException extends Exception
+{
 
 }
-
-?>

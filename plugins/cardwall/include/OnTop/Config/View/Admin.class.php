@@ -22,7 +22,8 @@
 /**
  * Display the admin of the Cardwall
  */
-class Cardwall_OnTop_Config_View_Admin {
+class Cardwall_OnTop_Config_View_Admin
+{
 
     public function displayAdminOnTop(Cardwall_OnTop_Config $config)
     {
@@ -65,4 +66,3 @@ class Cardwall_OnTop_Config_View_Admin {
         return new Cardwall_OnTop_Config_View_ColumnDefinition($config);
     }
 }
-?>

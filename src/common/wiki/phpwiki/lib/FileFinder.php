@@ -41,8 +41,9 @@ class FileFinder
     function __construct($path = false)
     {
         $this->_pathsep = $this->_get_syspath_separator();
-        if (!isset($this->_path) and $path === false)
+        if (!isset($this->_path) and $path === false) {
             $path = $this->_get_include_path();
+        }
         $this->_path = $path;
     }
 
@@ -55,10 +56,10 @@ class FileFinder
     function findFile($file, $missing_okay = false)
     {
         if ($this->_is_abs($file)) {
-            if (file_exists($file))
+            if (file_exists($file)) {
                 return $file;
-        }
-        elseif ( ($dir = $this->_search_path($file)) ) {
+            }
+        } elseif (($dir = $this->_search_path($file))) {
             return $dir . $this->_use_path_separator($dir) . $file;
         }
         return $missing_okay ? false : $this->_not_found($file);
@@ -77,27 +78,35 @@ class FileFinder
     /**
      * Force using '/' as path seperator.
      */
-    function forcePathSlashes($path, $sep='/')
+    function forcePathSlashes($path, $sep = '/')
     {
         if (is_array($path)) {
             $result = array();
-            foreach ($path as $dir) { $result[] = $this->forcePathSlashes($dir,$sep); }
+            foreach ($path as $dir) {
+                $result[] = $this->forcePathSlashes($dir, $sep);
+            }
             return $result;
         } else {
             if (isWindows() or $this->_isOtherPathsep()) {
-                if (isMac()) $from = ":";
-                elseif (isWindows()) $from = "\\";
-                else $from = "\\";
+                if (isMac()) {
+                    $from = ":";
+                } elseif (isWindows()) {
+                    $from = "\\";
+                } else {
+                    $from = "\\";
+                }
                 // PHP is stupid enough to use \\ instead of \
                 if (isWindows()) {
-                    if (substr($path,0,2) != '\\\\')
-                        $path = str_replace('\\\\','\\',$path);
-                    else // UNC paths
-                        $path = '\\\\' . str_replace('\\\\','\\',substr($path,2));
+                    if (substr($path, 0, 2) != '\\\\') {
+                        $path = str_replace('\\\\', '\\', $path);
+                    } else { // UNC paths
+                        $path = '\\\\' . str_replace('\\\\', '\\', substr($path, 2));
+                    }
                 }
                 return strtr($path, $from, $sep);
-            } else
+            } else {
                 return $path;
+            }
         }
     }
 
@@ -113,11 +122,12 @@ class FileFinder
      */
     function includeOnce($file)
     {
-        if ( ($ret = @include_once($file)) )
+        if (($ret = @include_once($file))) {
             return $ret;
+        }
 
         if (!$this->_is_abs($file)) {
-            if ( ($dir = $this->_search_path($file)) && is_file($dir . $this->_pathsep . $file)) {
+            if (($dir = $this->_search_path($file)) && is_file($dir . $this->_pathsep . $file)) {
                 $this->_append_to_include_path($dir);
                 return include_once($file);
             }
@@ -141,12 +151,19 @@ class FileFinder
      */
     function _get_syspath_separator()
     {
-        if (!empty($this->_pathsep)) return $this->_pathsep;
-        elseif (isWindowsNT()) return "/"; // we can safely use '/'
-        elseif (isWindows()) return "\\";  // FAT might use '\'
-        elseif (isMac()) return ':';    // MacOsX is /
+        if (!empty($this->_pathsep)) {
+            return $this->_pathsep;
+        } elseif (isWindowsNT()) {
+            return "/"; // we can safely use '/'
+        } elseif (isWindows()) {
+            return "\\";  // FAT might use '\'
+        } elseif (isMac()) {
+            return ':';    // MacOsX is /
+        }
         // VMS or LispM is really weird, we ignore it.
-        else return '/';
+        else {
+            return '/';
+        }
     }
 
     /**
@@ -164,11 +181,17 @@ class FileFinder
     function _use_path_separator($path)
     {
         if (isWindows95()) {
-            if (empty($path)) return "\\";
-            else return (strchr($path,"\\")) ? "\\" : '/';
+            if (empty($path)) {
+                return "\\";
+            } else {
+                return (strchr($path, "\\")) ? "\\" : '/';
+            }
         } elseif (isMac()) {
-            if (empty($path)) return ":";
-            else return (strchr($path,":")) ? ":" : '/';
+            if (empty($path)) {
+                return ":";
+            } else {
+                return (strchr($path, ":")) ? ":" : '/';
+            }
         } else {
             return $this->_get_syspath_separator();
         }
@@ -183,9 +206,13 @@ class FileFinder
      */
     function _is_abs($path)
     {
-        if (preg_match('#^/#D', $path)) return true;
-        elseif (isWindows() and (preg_match('#^[a-z]:[/\\]#Di', $path))) return true;
-        else return false;
+        if (preg_match('#^/#D', $path)) {
+            return true;
+        } elseif (isWindows() and (preg_match('#^[a-z]:[/\\]#Di', $path))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -198,11 +225,13 @@ class FileFinder
     function _strip_last_pathchar(&$path)
     {
         if (isMac()) {
-            if (substr($path,-1) == ':' or substr($path,-1) == "/")
-                $path = substr($path,0,-1);
+            if (substr($path, -1) == ':' or substr($path, -1) == "/") {
+                $path = substr($path, 0, -1);
+            }
         } else {
-            if (substr($path,-1) == '/' or substr($path,-1) == "\\")
-                $path = substr($path,0,-1);
+            if (substr($path, -1) == '/' or substr($path, -1) == "\\") {
+                $path = substr($path, 0, -1);
+            }
         }
         return $path;
     }
@@ -236,10 +265,12 @@ class FileFinder
             if ($this->_isOtherPathsep()) {
                 $dir = $this->slashifyPath($dir);
                 $file = $this->slashifyPath($file);
-                if (file_exists($dir . $this->_pathsep . $file))
+                if (file_exists($dir . $this->_pathsep . $file)) {
                     return $dir;
-            } elseif (@file_exists($dir . $this->_pathsep . $file))
+                }
+            } elseif (@file_exists($dir . $this->_pathsep . $file)) {
                    return $dir;
+            }
         }
         return false;
     }
@@ -267,16 +298,17 @@ class FileFinder
      */
     function _get_include_path()
     {
-        if (defined("INCLUDE_PATH"))
+        if (defined("INCLUDE_PATH")) {
             $path = INCLUDE_PATH;
-        else {
+        } else {
             // Tuleap: never trust /etc/php.ini, always rely on environment.
             // $path = @get_cfg_var('include_path'); // FIXME: report warning
             // if (empty($path)) $path = @ini_get('include_path');
             $path = @ini_get('include_path');
         }
-        if (empty($path))
+        if (empty($path)) {
             $path = '.';
+        }
         return explode($this->_get_ini_separator(), $this->slashifyPath($path));
     }
 
@@ -337,8 +369,9 @@ class FileFinder
         // Try less specific versions of the locale
         $langs[] = $lang;
         foreach (array('@', '.', '_') as $sep) {
-            if ( ($tail = strchr($lang, $sep)) )
+            if (($tail = strchr($lang, $sep))) {
                 $langs[] = substr($lang, 0, -strlen($tail));
+            }
         }
         return $langs;
     }
@@ -351,19 +384,22 @@ class FileFinder
      */
     function _get_lang()
     {
-        if (!empty($GLOBALS['LANG']))
+        if (!empty($GLOBALS['LANG'])) {
             return $GLOBALS['LANG'];
+        }
 
         foreach (array('LC_ALL', 'LC_MESSAGES', 'LC_RESPONSES') as $var) {
             $lang = setlocale(constant($var), 0);
-            if (!empty($lang))
+            if (!empty($lang)) {
                 return $lang;
+            }
         }
 
         foreach (array('LC_ALL', 'LC_MESSAGES', 'LC_RESPONSES', 'LANG') as $var) {
             $lang = getenv($var);
-            if (!empty($lang))
+            if (!empty($lang)) {
                 return $lang;
+            }
         }
 
         return "C";
@@ -388,8 +424,7 @@ class FileFinder
  * file will be included. (If the file is not found, and E_USER_ERROR
  * will be thrown.)
  */
-class PearFileFinder
-    extends FileFinder
+class PearFileFinder extends FileFinder
 {
     /**
      *
@@ -401,8 +436,8 @@ class PearFileFinder
     function __construct($path = array())
     {
         parent::__construct(array_merge(
-                          $path,
-                          array('/usr/share/php4',
+            $path,
+            array('/usr/share/php4',
                                 '/usr/share/php',
                                 '/usr/lib/php4',
                                 '/usr/lib/php',
@@ -412,7 +447,8 @@ class PearFileFinder
                                 '/usr/local/lib/php',
                                 '/System/Library/PHP',
                                 '/Apache/pear'        // Windows
-                                )));
+            )
+        ));
     }
 }
 
@@ -427,8 +463,7 @@ class PearFileFinder
  * also search under various less specific variations like
  * "de_DE.iso8859-1", "de_DE" and "de".
  */
-class LocalizedFileFinder
-extends FileFinder
+class LocalizedFileFinder extends FileFinder
 {
     function __construct()
     {
@@ -441,7 +476,9 @@ extends FileFinder
 
         if ($locales = $this->locale_versions($lang)) {
             foreach ($locales as $lang) {
-                if ($lang == 'C') $lang = 'en';
+                if ($lang == 'C') {
+                    $lang = 'en';
+                }
                 foreach ($include_path as $dir) {
                     $path[] = $this->slashifyPath($dir . "/locale/$lang");
                 }
@@ -462,8 +499,7 @@ extends FileFinder
  * also search under various less specific variations like
  * "de_DE.iso8859-1", "de_DE" and "de".
  */
-class LocalizedButtonFinder
-extends FileFinder
+class LocalizedButtonFinder extends FileFinder
 {
     function __construct()
     {
@@ -479,7 +515,9 @@ extends FileFinder
         if (is_object($WikiTheme)) {
             $langs = $this->locale_versions($lang);
             foreach ($langs as $lang) {
-                if ($lang == 'C') $lang = 'en';
+                if ($lang == 'C') {
+                    $lang = 'en';
+                }
                 foreach ($include_path as $dir) {
                     $path[] = $this->slashifyPath($WikiTheme->file("buttons/$lang"));
                 }
@@ -497,17 +535,19 @@ function FindFile($file, $missing_okay = false, $slashify = false)
     if (!isset($finder)) {
         $finder = new FileFinder;
         // remove "/lib" from dirname(__FILE__)
-        $wikidir = preg_replace('/.lib$/','',dirname(__FILE__));
+        $wikidir = preg_replace('/.lib$/', '', dirname(__FILE__));
         // let the system favor its local pear?
         $finder->_append_to_include_path(dirname(__FILE__)."/pear");
         $finder->_prepend_to_include_path($wikidir);
         // Don't override existing INCLUDE_PATH config.
-        if (!defined("INCLUDE_PATH"))
-        define("INCLUDE_PATH", implode($finder->_get_ini_separator(), $finder->_path));
+        if (!defined("INCLUDE_PATH")) {
+            define("INCLUDE_PATH", implode($finder->_get_ini_separator(), $finder->_path));
+        }
     }
     $s = $finder->findFile($file, $missing_okay);
-    if ($slashify)
+    if ($slashify) {
         $s = $finder->slashifyPath($s);
+    }
     return $s;
 }
 
@@ -516,16 +556,18 @@ function FindFile($file, $missing_okay = false, $slashify = false)
 function FindLocalizedFile($file, $missing_okay = false, $re_init = false)
 {
     static $finder;
-    if ($re_init or !isset($finder))
+    if ($re_init or !isset($finder)) {
         $finder = new LocalizedFileFinder;
+    }
     return $finder->findFile($file, $missing_okay);
 }
 
 function FindLocalizedButtonFile($file, $missing_okay = false, $re_init = false)
 {
     static $buttonfinder;
-    if ($re_init or !isset($buttonfinder))
+    if ($re_init or !isset($buttonfinder)) {
         $buttonfinder = new LocalizedButtonFinder;
+    }
     return $buttonfinder->findFile($file, $missing_okay);
 }
 
@@ -545,11 +587,14 @@ function NormalizeLocalFileName($file)
         $finder = new FileFinder;
     }
     // remove "/lib" from dirname(__FILE__)
-    if ($finder->_is_abs($file))
+    if ($finder->_is_abs($file)) {
         return $finder->slashifyPath($file);
-    else {
-        if (defined("PHPWIKI_DIR")) $wikidir = PHPWIKI_DIR;
-        else $wikidir = preg_replace('/.lib$/','',dirname(__FILE__));
+    } else {
+        if (defined("PHPWIKI_DIR")) {
+            $wikidir = PHPWIKI_DIR;
+        } else {
+            $wikidir = preg_replace('/.lib$/', '', dirname(__FILE__));
+        }
         $wikidir = $finder->_strip_last_pathchar($wikidir);
         $pathsep = $finder->_use_path_separator($wikidir);
         return $finder->slashifyPath($wikidir . $pathsep . $file);
@@ -569,10 +614,11 @@ function NormalizeWebFileName($file)
     if (defined("DATA_PATH")) {
         $wikipath = DATA_PATH;
         $wikipath = $finder->_strip_last_pathchar($wikipath);
-        if (!$file)
+        if (!$file) {
             return $finder->forcePathSlashes($wikipath);
-        else
+        } else {
             return $finder->forcePathSlashes($wikipath . '/' . $file);
+        }
     } else {
         return $finder->forcePathSlashes($file);
     }
@@ -581,16 +627,20 @@ function NormalizeWebFileName($file)
 function isWindows()
 {
     static $win;
-    if (isset($win)) return $win;
+    if (isset($win)) {
+        return $win;
+    }
     //return preg_match('/^Windows/', php_uname());
-    $win = (substr(PHP_OS,0,3) == 'WIN');
+    $win = (substr(PHP_OS, 0, 3) == 'WIN');
     return $win;
 }
 
 function isWindows95()
 {
     static $win95;
-    if (isset($win95)) return $win95;
+    if (isset($win95)) {
+        return $win95;
+    }
     $win95 = isWindows() and !isWindowsNT();
     return $win95;
 }
@@ -598,13 +648,16 @@ function isWindows95()
 function isWindowsNT()
 {
     static $winnt;
-    if (isset($winnt)) return $winnt;
+    if (isset($winnt)) {
+        return $winnt;
+    }
     // FIXME: Do this using PHP_OS instead of php_uname().
     // $winnt = (PHP_OS == "WINNT"); // example from http://www.php.net/manual/en/ref.readline.php
-    if (function_usable('php_uname'))
+    if (function_usable('php_uname')) {
         $winnt = preg_match('/^Windows NT/', php_uname());
-    else
+    } else {
         $winnt = false;         // FIXME: punt.
+    }
     return $winnt;
 }
 
@@ -616,13 +669,13 @@ function isWindowsNT()
  */
 function isMac()
 {
-    return (substr(PHP_OS,0,9) == 'Macintosh'); // not tested!
+    return (substr(PHP_OS, 0, 9) == 'Macintosh'); // not tested!
 }
 
 // probably not needed, same behaviour as on unix.
 function isCygwin()
 {
-    return (substr(PHP_OS,0,6) == 'CYGWIN');
+    return (substr(PHP_OS, 0, 6) == 'CYGWIN');
 }
 
 // $Log: FileFinder.php,v $
@@ -695,4 +748,3 @@ function isCygwin()
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

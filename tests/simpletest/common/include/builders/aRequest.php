@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Codendi_Request_TestBuilder {
+class Codendi_Request_TestBuilder
+{
 
     /**
      * @var array
@@ -95,9 +96,11 @@ class Codendi_Request_TestBuilder {
     private function extractParamsFromQuery($query)
     {
         $params = array();
-        if ($query === '') return $params;
+        if ($query === '') {
+            return $params;
+        }
 
-        foreach(explode('&', $query) as $param_name_and_value) {
+        foreach (explode('&', $query) as $param_name_and_value) {
             list($param_name, $param_value) = explode('=', $param_name_and_value);
             $params[$param_name] = $param_value;
         }

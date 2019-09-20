@@ -31,7 +31,8 @@ Mock::generatePartial(
 Mock::generate('ReferenceManager');
 
 
-class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier {
+class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier
+{
     private static $Codendi_HTMLPurifier_testversion_instance;
     // Need to redfine this method too because the parent one return a
     // 'Codendi_HTMLPurifier' object.
@@ -50,7 +51,8 @@ class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier {
     }
 }
 
-class ReferenceManagerTestMakeLinks extends MockReferenceManager {
+class ReferenceManagerTestMakeLinks extends MockReferenceManager
+{
     function insertReferences(&$data, $group_id)
     {
         $data = preg_replace('/art #1/', '<a href="link-to-art-1">art #1</a>', $data);
@@ -60,7 +62,8 @@ class ReferenceManagerTestMakeLinks extends MockReferenceManager {
 /**
  * Tests the class CodendiHTMLPurifier
  */
-class Codendi_HTMLPurifierTest extends TuleapTestCase {
+class Codendi_HTMLPurifierTest extends TuleapTestCase
+{
 
     function testPurifySimple()
     {
@@ -120,7 +123,6 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
         $this->assertEqual('Text<br />', $p->purify('Text<br>', CODENDI_PURIFIER_LIGHT));
 
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href=\'http://php.net\'>Text', CODENDI_PURIFIER_LIGHT));
-
     }
 
     function testPurifyArraySimple()
@@ -155,8 +157,10 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
         $this->assertEqual('a\u0022', $p->purify('a"', CODENDI_PURIFIER_JS_DQUOTE));
         $this->assertEqual('\u0022', $p->purify('"', CODENDI_PURIFIER_JS_DQUOTE));
         $this->assertEqual('\"', $p->purify('"', CODENDI_PURIFIER_JS_QUOTE));
-        $this->assertEqual('\u003C\/script\u003E\\\nbla bla\\\n\u003C\/script\u003E\\\nbla bla\\\n\u003C\/script\u003E',
-                $p->purify('</script>\nbla bla\n</script>\nbla bla\n</script>', CODENDI_PURIFIER_JS_DQUOTE));
+        $this->assertEqual(
+            '\u003C\/script\u003E\\\nbla bla\\\n\u003C\/script\u003E\\\nbla bla\\\n\u003C\/script\u003E',
+            $p->purify('</script>\nbla bla\n</script>\nbla bla\n</script>', CODENDI_PURIFIER_JS_DQUOTE)
+        );
         $this->assertEqual('\u003C\/script\u003E', $p->purify('</script>', CODENDI_PURIFIER_JS_QUOTE));
         $this->assertEqual('100', $p->purify(100, CODENDI_PURIFIER_JS_QUOTE));
     }

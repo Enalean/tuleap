@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class XML_ParseException extends Exception {
+class XML_ParseException extends Exception
+{
     /** @var XML_ParseError[] */
     private $errors;
     private $indented_xml;

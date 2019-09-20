@@ -23,7 +23,8 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
+class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
+{
 
     function _title($params)
     {
@@ -47,7 +48,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
         $mdContent .= $metaMdHtml->getDescription($sthCanChange);
         $mdContent .= $metaMdHtml->getType($sthCanChange);
         $mdContent .= $metaMdHtml->getEmptyAllowed($sthCanChange);
-        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+        if ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             $mdContent .= $metaMdHtml->getMultipleValuesAllowed($sthCanChange);
         }
         $mdContent .= $metaMdHtml->getUseIt($sthCanChange);
@@ -55,7 +56,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
 
         $mdContent .= '</table>';
 
-        if($sthCanChange) {
+        if ($sthCanChange) {
             $act_url = DocmanViewURLBuilder::buildUrl($params['default_url'], array());
             echo '<form name="md_details_update" method="POST" action="'.$act_url.'" class="docman_form">';
             echo '<input type="hidden" name="label" value="'.$md->getLabel().'" />';
@@ -63,13 +64,12 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
             echo $mdContent;
             echo '<input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_details_update').'" />';
             echo '</form>';
-        }
-        else {
+        } else {
             echo $mdContent;
         }
 
         // Display list of values
-        if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
+        if ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             echo '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_title').'</h3>';
 
             echo '<div class="docman_admin_list_values">'."\n";
@@ -82,41 +82,39 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
             $vIter = $md->getListOfValueIterator();
             $vIter->rewind();
             $rowColorIdx = 0;
-            while($vIter->valid()) {
+            while ($vIter->valid()) {
                 $e = $vIter->current();
 
                 // Status
                 $canDelete = false;
                 $displayed = true;
-                switch($e->getStatus()) {
+                switch ($e->getStatus()) {
                     case 'A':
                         $canDelete = true;
                         $status = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_active');
-                    break;
+                        break;
                     case 'P':
                         $status = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_perm');
-                    break;
+                        break;
                     case 'D':
                         $displayed = false;
-                    break;
+                        break;
                     default:
                         $status = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_inactive');
                 }
 
-                if($displayed) {
-
+                if ($displayed) {
                     $class = ' class="'.html_get_alt_row_color($rowColorIdx++).'"';
                     echo '<tr'.$class.'>';
 
                     // Name
                     $name = Docman_MetadataHtmlList::_getElementName($e);
-                    if($e->getId() > 100) {
+                    if ($e->getId() > 100) {
                         $url = DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_display_love',
                                                                              'md' => $md->getLabel(),
                                                                              'loveid' => $e->getId()));
                         $href = '<a href="'.$url.'">'.$name.'</a>';
-                    }
-                    else {
+                    } else {
                         $href = $name;
                     }
                     echo '<td>'.$href.'</td>';
@@ -129,7 +127,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
 
                     // Delete
                     $trash = '-';
-                    if($canDelete) {
+                    if ($canDelete) {
                         $link = '?group_id='.$params['group_id'].'&action=admin_delete_love&loveid='.$e->getId().'&md='.$md->getLabel();
                         $warn = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_delete_warn', array($name));
                         $alt  = $GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_delete_alt', array($name));
@@ -144,7 +142,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
             echo '</table>';
             echo '</div><!--  docman_admin_list_values -->'."\n";
 
-            if($md->getLabel() != 'status') {
+            if ($md->getLabel() != 'status') {
                 echo '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_val_create_title').'</h3>';
 
                 $loveDetailsHtml = new Docman_View_LoveDetails($md);
@@ -166,8 +164,10 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra {
             }
         }
 
-        $backUrl  = DocmanViewURLBuilder::buildUrl($params['default_url'],
-                                    array('action' => 'admin_metadata'));
+        $backUrl  = DocmanViewURLBuilder::buildUrl(
+            $params['default_url'],
+            array('action' => 'admin_metadata')
+        );
         echo '<p><a href="'.$backUrl.'">'.$GLOBALS['Language']->getText('plugin_docman', 'admin_md_detail_backtomenu').'</a></p>';
     }
 }

@@ -23,7 +23,8 @@ namespace Tuleap\ProFTPd\Presenter;
 use Tuleap\ProFTPd\Admin\PermissionsManager;
 use ProjectUGroup;
 
-class AdminPresenter {
+class AdminPresenter
+{
     /** @var int */
     private $project_id;
 
@@ -136,8 +137,7 @@ class AdminPresenter {
     {
         return sprintf(
             dgettext('tuleap-proftpd', 'You can also <a href="%1$s">create or modify</a>
-                user groups in project administration.'
-            ),
+                user groups in project administration.'),
             $this->admin_ugroup_url
         );
     }

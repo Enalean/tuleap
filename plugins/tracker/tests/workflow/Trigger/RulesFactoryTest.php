@@ -20,7 +20,8 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test extends TuleapTestCase {
+class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test extends TuleapTestCase
+{
 
     protected $tracker_id;
     protected $tracker;
@@ -42,7 +43,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test extends Tule
     }
 }
 
-class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TargetTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test {
+class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TargetTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test
+{
 
     public function setUp()
     {
@@ -106,10 +108,10 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TargetTest extend
 
         $this->factory->getRuleFromJson($this->tracker, $this->json_input);
     }
-
 }
 
-class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_ConditionTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test {
+class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_ConditionTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test
+{
 
     public function setUp()
     {
@@ -134,7 +136,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_ConditionTest ext
     }
 }
 
-class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test {
+class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test
+{
 
     public function setUp()
     {
@@ -257,7 +260,8 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest exten
     }
 }
 
-class Tracker_Workflow_Trigger_RulesFactory_JsonInputOutput_TriggerTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test {
+class Tracker_Workflow_Trigger_RulesFactory_JsonInputOutput_TriggerTest extends Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_Test
+{
 
     public function setUp()
     {
@@ -334,5 +338,3 @@ class Tracker_Workflow_Trigger_RulesFactory_JsonInputOutput_TriggerTest extends 
         $this->assertEqual($json_output, $json_input);
     }
 }
-
-?>

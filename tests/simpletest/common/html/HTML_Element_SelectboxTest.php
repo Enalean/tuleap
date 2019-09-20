@@ -18,7 +18,8 @@
 
 Mock::generate('BaseLanguage');
 
-class HTML_Element_SelectboxTest extends TuleapTestCase {
+class HTML_Element_SelectboxTest extends TuleapTestCase
+{
 
     public function setup()
     {

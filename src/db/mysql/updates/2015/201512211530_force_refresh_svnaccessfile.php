@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201512211530_force_refresh_svnaccessfile extends ForgeUpgrade_Bucket {
+class b201512211530_force_refresh_svnaccessfile extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

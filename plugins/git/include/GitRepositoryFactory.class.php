@@ -238,7 +238,6 @@ class GitRepositoryFactory
                 $repositories[$row['repository_id']] = $repo_with_perms;
             }
             $repo_with_perms->addUGroupForPermissionType($row['permission_type'], $row['ugroup_id']);
-
         }
         return $repositories;
     }
@@ -267,7 +266,6 @@ class GitRepositoryFactory
         }
 
         return $all_repositories;
-
     }
 
     /**
@@ -405,7 +403,7 @@ class GitRepositoryFactory
         $repository->setDescription($description);
         $repository->setCreator($creator);
         $repository->setProject($project);
-        $repository->setName(preg_replace('/\/+/','/', $repository_name));
+        $repository->setName(preg_replace('/\/+/', '/', $repository_name));
         return $repository;
     }
 }

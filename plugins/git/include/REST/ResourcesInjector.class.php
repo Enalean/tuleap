@@ -25,7 +25,8 @@ use Tuleap\Project\REST\ProjectResourceReference;
 /**
  * Inject resource into restler
  */
-class Git_REST_ResourcesInjector {
+class Git_REST_ResourcesInjector
+{
 
     public function populate(Luracast\Restler\Restler $restler)
     {

@@ -20,7 +20,8 @@
  */
 
 
-class ArtifactTypeFactory {
+class ArtifactTypeFactory
+{
 
     /**
      * The Group object.
@@ -52,7 +53,7 @@ class ArtifactTypeFactory {
      */
     public function __construct($Group)
     {
-        if ( $Group ) {
+        if ($Group) {
             if ($Group->isError()) {
                 $this->setError('ArtifactTypeFactory:: '.$Group->getErrorMessage());
                 return false;
@@ -85,7 +86,7 @@ class ArtifactTypeFactory {
         $count_array=array();
         $sql="select status_id,count(*) from artifact where group_artifact_id = ". db_ei($group_artifact_id).
         " group by status_id";
-        $result = db_query ($sql);
+        $result = db_query($sql);
 
         $rows = db_numrows($result);
 
@@ -95,7 +96,7 @@ class ArtifactTypeFactory {
         } else {
             $count_array['count'] = 0;
             while ($arr = db_fetch_array($result)) {
-                if ( $arr['status_id'] == 1 ) {
+                if ($arr['status_id'] == 1) {
                     $count_array['open_count'] = $arr[1];
                 }
                 $count_array['count'] += $arr[1];
@@ -126,18 +127,18 @@ class ArtifactTypeFactory {
         }
         $sql .= " ORDER BY name ASC";
 
-        $result = db_query ($sql);
+        $result = db_query($sql);
 
         $rows = db_numrows($result);
 
         if (!$result || $rows < 1) {
-            $this->setError($Language->getText('tracker_common_type','none_found').' '.db_error());
+            $this->setError($Language->getText('tracker_common_type', 'none_found').' '.db_error());
             return false;
         } else {
             while ($arr = db_fetch_array($result)) {
           // Retrieve status counts
                 $arr_count = $this->getStatusIdCount($arr['group_artifact_id']);
-                if ( $arr_count ) {
+                if ($arr_count) {
                     $arr['open_count'] = array_key_exists('open_count', $arr_count)?$arr_count['open_count']:0;
                     $arr['count'] = $arr_count['count'];
                 }
@@ -166,12 +167,12 @@ class ArtifactTypeFactory {
 			AND status!='D'
 			ORDER BY group_artifact_id ASC";
 
-          $result = db_query ($sql);
+          $result = db_query($sql);
           $rows = db_numrows($result);
           $myArtifactTypes=array();
 
         if (!$result || $rows < 1) {
-            $this->setError($Language->getText('tracker_common_type','none_found').' '.db_error());
+            $this->setError($Language->getText('tracker_common_type', 'none_found').' '.db_error());
             return false;
         } else {
             $pm = ProjectManager::instance();
@@ -204,10 +205,10 @@ class ArtifactTypeFactory {
 
      //echo $sql;
 
-        $result = db_query ($sql);
+        $result = db_query($sql);
         $rows = db_numrows($result);
         if (!$result || $rows < 1) {
-            $this->setError($Language->getText('tracker_common_type','none_found').' '.db_error());
+            $this->setError($Language->getText('tracker_common_type', 'none_found').' '.db_error());
             return false;
         }
 
@@ -269,27 +270,27 @@ class ArtifactTypeFactory {
      // Delete artifact_canned_responses
         $sql = "DELETE FROM artifact_canned_responses 
 			    WHERE group_artifact_id=". db_ei($atid);
-        db_query ($sql);
+        db_query($sql);
 
      // Delete artifact_notification
         $sql = "DELETE FROM artifact_notification  
 			    WHERE group_artifact_id=". db_ei($atid);
-        db_query ($sql);
+        db_query($sql);
 
      // Delete artifact_notification_event
         $sql = "DELETE FROM artifact_notification_event   
 			    WHERE group_artifact_id=". db_ei($atid);
-        db_query ($sql);
+        db_query($sql);
 
      // Delete artifact_notification_role
         $sql = "DELETE FROM artifact_notification_role   
 			    WHERE group_artifact_id=". db_ei($atid);
-        db_query ($sql);
+        db_query($sql);
 
      // Delete artifact_perm
         $sql = "DELETE FROM artifact_perm   
 			    WHERE group_artifact_id=". db_ei($atid);
-        db_query ($sql);
+        db_query($sql);
 
         // We need to instanciate an artifactType to instanciate the factories
         $artifactType = new ArtifactType($this->getGroup(), $atid, false);
@@ -308,7 +309,7 @@ class ArtifactTypeFactory {
         //Generate an event
         $em = EventManager::instance();
         $pref_params = array('atid'   => $atid);
-        $em->processEvent('artifactType_deleted',$pref_params);
+        $em->processEvent('artifactType_deleted', $pref_params);
 
         // Delete the artifact rules
         $art_rule_fact = ArtifactRuleFactory::instance();
@@ -317,7 +318,7 @@ class ArtifactTypeFactory {
         // Delete artifact_watcher (be carefull, the column is named artifact_group_id)
         $sql = "DELETE FROM artifact_watcher   
 			    WHERE artifact_group_id=". db_ei($atid);
-        db_query ($sql);
+        db_query($sql);
 
      // Delete all records linked to artifact_id
         $sql_artifacts='SELECT artifact_id '.
@@ -354,7 +355,6 @@ class ArtifactTypeFactory {
       // Delete artifact records
             $sql = "DELETE FROM artifact WHERE artifact_id = ".db_ei($id);
             db_query($sql);
-
         } // while
 
                 // Delete file attachments
@@ -365,7 +365,7 @@ class ArtifactTypeFactory {
 			    WHERE group_artifact_id=". db_ei($atid);
      //echo $sql;
 
-        $result = db_query ($sql);
+        $result = db_query($sql);
 
         if (!$result || db_affected_rows($result) <= 0) {
             $this->setError('Error: deleteArtifactType '.db_error());
@@ -391,19 +391,22 @@ class ArtifactTypeFactory {
      *  @param view: 1 means assigned, 2 means Submitted, 3 means Both
      *    @return    db_result
      */
-    function getMyArtifacts($user_id, $view='AS')
+    function getMyArtifacts($user_id, $view = 'AS')
     {
         $assignee = false;
         $submitter = false;
 
-        if(strpos($view, 'A') !== false)
+        if (strpos($view, 'A') !== false) {
             $assignee = true;
+        }
 
-        if(strpos($view, 'S') !== false)
+        if (strpos($view, 'S') !== false) {
             $submitter = true;
+        }
 
-        if(!$assignee && !$submitter)
+        if (!$assignee && !$submitter) {
             return false;
+        }
 
         $finalSql = '';
 
@@ -425,24 +428,23 @@ class ArtifactTypeFactory {
 
         $assigneeSql  = '';
         $submitterSql = '';
-        if($assignee) {
+        if ($assignee) {
             $assigneeSql = $sql.
                            ' AND afv.valueInt='. db_ei($user_id).
                            ' GROUP BY a.artifact_id';
             $finalSql = $assigneeSql;
-            if(!$submitter) {
+            if (!$submitter) {
                 $finalSql .= ' ORDER BY group_name, name, artifact_id';
             }
         }
 
-        if($submitter) {
+        if ($submitter) {
             $submitterSql = $sql.
                             ' AND a.submitted_by='. db_ei($user_id).
                             ' GROUP BY a.artifact_id';
-            if($assignee) {
+            if ($assignee) {
                 $finalSql = '('.$assigneeSql.') UNION ALL ('.$submitterSql.') ORDER BY group_name, name, artifact_id';
-            }
-            else {
+            } else {
                 $finalSql = $submitterSql.' ORDER BY group_name, name, artifact_id';
             }
         }
@@ -472,7 +474,7 @@ class ArtifactTypeFactory {
         $result = db_query($sql);
         $rows = db_numrows($result);
         if (!$result || $rows != 1) {
-            $this->setError($Language->getText('tracker_common_type','none_found').' '.db_error());
+            $this->setError($Language->getText('tracker_common_type', 'none_found').' '.db_error());
             return false;
         } else {
             $pm = ProjectManager::instance();
@@ -481,7 +483,7 @@ class ArtifactTypeFactory {
                 if ($new_at->userCanView()) {
                     return $new_at;
                 } else {
-                    $this->setError($Language->getText('tracker_common_type','no_view_permission').' '.db_error());
+                    $this->setError($Language->getText('tracker_common_type', 'no_view_permission').' '.db_error());
                     return false;
                 }
             }
@@ -541,29 +543,29 @@ class ArtifactTypeFactory {
      *    @param    itemname: the itemname of the new tracker
      *    @return id on success, false on failure.
      */
-    function create($group_id,$group_id_template,$atid_template,$name,$description,$itemname,$ugroup_mapping=false,&$report_mapping=array())
+    function create($group_id, $group_id_template, $atid_template, $name, $description, $itemname, $ugroup_mapping = false, &$report_mapping = array())
     {
         global $Language;
 
-        if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == ""  ) {
-            $this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','name_requ'));
+        if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == "") {
+            $this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type', 'name_requ'));
             return false;
         }
 
          // Necessary test to avoid issues when exporting the tracker to a DB (e.g. '-' not supported as table name)
-        if (! preg_match("/^[a-zA-Z0-9_]+$/i",$itemname)) {
-                $this->setError($Language->getText('tracker_common_type','invalid_shortname',$itemname));
+        if (! preg_match("/^[a-zA-Z0-9_]+$/i", $itemname)) {
+                $this->setError($Language->getText('tracker_common_type', 'invalid_shortname', $itemname));
                 return false;
         }
 
          $reference_manager = ReferenceManager::instance();
-        if($reference_manager->_isKeywordExists($itemname, $group_id)) {
-            $this->setError($Language->getText('tracker_common_type','shortname_already_exists',$itemname));
+        if ($reference_manager->_isKeywordExists($itemname, $group_id)) {
+            $this->setError($Language->getText('tracker_common_type', 'shortname_already_exists', $itemname));
                return false;
         }
 
-        if($this->isNameExists($name, $group_id)) {
-            $this->setError($Language->getText('tracker_common_type','name_already_exists',$name));
+        if ($this->isNameExists($name, $group_id)) {
+            $this->setError($Language->getText('tracker_common_type', 'name_already_exists', $name));
             return false;
         }
 
@@ -572,18 +574,18 @@ class ArtifactTypeFactory {
         $template_group = $pm->getProject($group_id_template);
 
         if (!$template_group || !is_object($template_group) || $template_group->isError()) {
-            $this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','invalid_templ'));
+            $this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type', 'invalid_templ'));
         }
 
      // get the Group object of the new tracker
         $pm = ProjectManager::instance();
         $group = $pm->getProject($group_id);
         if (!$group || !is_object($group) || $group->isError()) {
-            $this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','invalid_templ'));
+            $this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type', 'invalid_templ'));
         }
 
      // We retrieve allow_copy from template
-        $at_template = new ArtifactType($template_group,$atid_template);
+        $at_template = new ArtifactType($template_group, $atid_template);
 
         $id_sharing = new TrackerIdSharingDao();
         if ($id = $id_sharing->generateTrackerId()) {
@@ -612,12 +614,11 @@ class ArtifactTypeFactory {
             } else {
                 //No need to get the last insert id since we already know the id : $id
                 //$id = db_insertid($res,'artifact_group_list','group_artifact_id');
-                $at_new = new ArtifactType($group,$id);
+                $at_new = new ArtifactType($group, $id);
                 if (!$at_new->fetchData($id)) {
-                    $this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','load_fail'));
+                    $this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type', 'load_fail'));
                     return false;
                 } else {
-
                     //create global notifications
                     $sql = "INSERT INTO artifact_global_notification (tracker_id, addresses, all_updates, check_permissions)
                     SELECT ". db_ei($id) .", addresses, all_updates, check_permissions
@@ -632,7 +633,7 @@ class ArtifactTypeFactory {
                     $art_fieldset_fact = new ArtifactFieldSetFactory($at_template);
                     // Then copy all the field sets.
                     $mapping_field_set_array = $art_fieldset_fact->copyFieldSets($atid_template, $id);
-                    if ( ! $mapping_field_set_array) {
+                    if (! $mapping_field_set_array) {
                         $this->setError('ArtifactTypeFactory: '.$art_fieldset_fact->getErrorMessage());
                         return false;
                     }
@@ -641,7 +642,7 @@ class ArtifactTypeFactory {
                     $art_field_fact = new ArtifactFieldFactory($at_template);
 
                     // Then copy all the fields informations
-                    if ( !$art_field_fact->copyFields($id, $mapping_field_set_array,$ugroup_mapping) ) {
+                    if (!$art_field_fact->copyFields($id, $mapping_field_set_array, $ugroup_mapping)) {
                         $this->setError('ArtifactTypeFactory: '.$art_field_fact->getErrorMessage());
                         return false;
                     }
@@ -650,25 +651,25 @@ class ArtifactTypeFactory {
                     // Create field factory
                     $art_report_fact = new ArtifactReportFactory();
 
-                    if ( !$report_mapping = $art_report_fact->copyReports($atid_template,$id) ) {
+                    if (!$report_mapping = $art_report_fact->copyReports($atid_template, $id)) {
                         $this->setError('ArtifactTypeFactory: '.$art_report_fact->getErrorMessage());
                         return false;
                     }
                     $em = EventManager::instance();
                     $pref_params = array('atid_source'   => $atid_template,
                                          'atid_dest'     => $id);
-                    $em->processEvent('artifactType_created',$pref_params);
+                    $em->processEvent('artifactType_created', $pref_params);
 
                     // Copy artifact_notification_event and artifact_notification_role
-                    if ( !$at_new->copyNotificationEvent($id) ) {
+                    if (!$at_new->copyNotificationEvent($id)) {
                         return false;
                     }
-                    if ( !$at_new->copyNotificationRole($id) ) {
+                    if (!$at_new->copyNotificationRole($id)) {
                         return false;
                     }
 
                     // Create user permissions: None for group members and Admin for group admin
-                    if ( !$at_new->createUserPerms($id) ) {
+                    if (!$at_new->createUserPerms($id)) {
                         return false;
                     }
 
@@ -677,7 +678,7 @@ class ArtifactTypeFactory {
                     $canned_template = $at_template->getCannedResponses();
                     if ($canned_template && db_numrows($canned_template) > 0) {
                         while ($row = db_fetch_array($canned_template)) {
-                            $canned_new->create($row['title'],$row['body']);
+                            $canned_new->create($row['title'], $row['body']);
                         }
                     }
 
@@ -727,7 +728,4 @@ class ArtifactTypeFactory {
     {
         return $this->error_state;
     }
-
 }
-
-?>

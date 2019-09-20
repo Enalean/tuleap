@@ -23,7 +23,8 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
 use Tracker_FormElement_Field_ArtifactLink;
 
-class NatureIsChildPresenter extends NaturePresenter {
+class NatureIsChildPresenter extends NaturePresenter
+{
 
     public function __construct()
     {

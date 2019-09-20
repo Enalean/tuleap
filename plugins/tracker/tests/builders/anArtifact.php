@@ -29,7 +29,8 @@ function anArtifact()
     return new Test_Artifact_Builder();
 }
 
-class Test_Artifact_Builder {
+class Test_Artifact_Builder
+{
     private $id;
     private $tracker;
     private $tracker_id;
@@ -170,4 +171,3 @@ class Test_Artifact_Builder {
         return $artifact;
     }
 }
-?>

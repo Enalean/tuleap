@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201602091428_create_plugin_svn_notification extends ForgeUpgrade_Bucket {
+class b201602091428_create_plugin_svn_notification extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

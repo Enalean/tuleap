@@ -21,7 +21,8 @@
 /**
  * A TreeNode that holds an Tracker_Artifact
  */
-class ArtifactNode extends TreeNode {
+class ArtifactNode extends TreeNode
+{
 
     public function __construct(Tracker_Artifact $artifact, ?array $data = null)
     {
@@ -36,7 +37,4 @@ class ArtifactNode extends TreeNode {
     {
         return $this->getObject();
     }
-
 }
-
-?>

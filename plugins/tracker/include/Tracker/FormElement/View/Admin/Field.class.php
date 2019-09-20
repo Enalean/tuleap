@@ -18,7 +18,8 @@
  */
 
 
-class Tracker_FormElement_View_Admin_Field extends Tracker_FormElement_View_Admin {
+class Tracker_FormElement_View_Admin_Field extends Tracker_FormElement_View_Admin
+{
 
     /**
      * If the formElement has specific properties then this method
@@ -87,7 +88,4 @@ class Tracker_FormElement_View_Admin_Field extends Tracker_FormElement_View_Admi
         $html .= '</p>';
         return $html;
     }
-
 }
-
-?>

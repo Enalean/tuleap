@@ -26,7 +26,8 @@
  * common behaviors (deleteWorkflow, duplicate, ...) are silently aggregated
  * without having to heavily modify the PostActionFactory.
  */
-class Transition_PostActionSubFactories {
+class Transition_PostActionSubFactories
+{
 
     /** @var array of Transition_PostActionSubFactory */
     private $factories;
@@ -114,4 +115,3 @@ class Transition_PostActionSubFactories {
         return $html;
     }
 }
-?>

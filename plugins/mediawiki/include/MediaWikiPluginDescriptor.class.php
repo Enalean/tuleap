@@ -21,7 +21,8 @@
  * Portions Copyright 2011 (c) France Telecom
  */
 
-class MediaWikiPluginDescriptor extends PluginDescriptor {
+class MediaWikiPluginDescriptor extends PluginDescriptor
+{
 
     function __construct()
     {

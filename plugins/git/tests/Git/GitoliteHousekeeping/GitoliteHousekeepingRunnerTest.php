@@ -20,7 +20,8 @@
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends TuleapTestCase {
+class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends TuleapTestCase
+{
 
     public function setUp()
     {

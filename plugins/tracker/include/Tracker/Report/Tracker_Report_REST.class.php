@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_Report_REST extends Tracker_Report {
+class Tracker_Report_REST extends Tracker_Report
+{
 
     public const OPERATOR_PROPERTY_NAME = 'operator';
     public const VALUE_PROPERTY_NAME    = 'value';
@@ -92,20 +93,20 @@ class Tracker_Report_REST extends Tracker_Report {
     {
         $error = '';
         switch (json_last_error()) {
-            case JSON_ERROR_NONE :
+            case JSON_ERROR_NONE:
                 return;
-            case JSON_ERROR_DEPTH :
-            case JSON_ERROR_STATE_MISMATCH :
-            case JSON_ERROR_CTRL_CHAR :
+            case JSON_ERROR_DEPTH:
+            case JSON_ERROR_STATE_MISMATCH:
+            case JSON_ERROR_CTRL_CHAR:
             case JSON_ERROR_SYNTAX:
                 $error = 'Criteria syntax error, invalid JSON';
-            break;
+                break;
             case JSON_ERROR_UTF8:
                 $error = 'Malformed UTF-8 characters, possibly incorrectly encoded criteria';
-            break;
+                break;
             default:
                 $error = 'Unknown JSON criteria error';
-            break;
+                break;
         }
 
         throw new Tracker_Report_InvalidRESTCriterionException($error);
@@ -206,5 +207,3 @@ class Tracker_Report_REST extends Tracker_Report {
         }
     }
 }
-
-?>

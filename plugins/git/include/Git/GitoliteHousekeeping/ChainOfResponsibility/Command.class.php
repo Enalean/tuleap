@@ -23,7 +23,8 @@
  *
  * @see http://en.wikipedia.org/wiki/Chain-of-responsibility_pattern
  */
-abstract class Git_GitoliteHousekeeping_ChainOfResponsibility_Command {
+abstract class Git_GitoliteHousekeeping_ChainOfResponsibility_Command
+{
 
     /** @var Git_GitoliteHousekeeping_ChainOfResponsibility_Command */
     private $next_command;
@@ -49,5 +50,5 @@ abstract class Git_GitoliteHousekeeping_ChainOfResponsibility_Command {
     }
 
     /** @return void */
-    public abstract function execute();
+    abstract public function execute();
 }

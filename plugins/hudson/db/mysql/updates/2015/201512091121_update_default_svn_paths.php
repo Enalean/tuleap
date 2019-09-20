@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201512091121_update_default_svn_paths extends ForgeUpgrade_Bucket {
+class b201512091121_update_default_svn_paths extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

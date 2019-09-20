@@ -20,7 +20,8 @@
 
 namespace Tuleap\HudsonGit\Plugin;
 
-class PluginDescriptor extends \PluginDescriptor {
+class PluginDescriptor extends \PluginDescriptor
+{
 
     public function __construct()
     {

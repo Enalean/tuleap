@@ -18,6 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Report_Criteria_Text_ValueDao extends Tracker_Report_Criteria_Alphanum_ValueDao {
+class Tracker_Report_Criteria_Text_ValueDao extends Tracker_Report_Criteria_Alphanum_ValueDao
+{
 }
-?>

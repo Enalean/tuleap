@@ -137,7 +137,8 @@ class AgileDashboardRouterBuilder
             new ScrumPlanningFilter($mono_milestone_checker, $planning_factory),
             new AgileDashboardJSONPermissionsRetriever(
                 new AgileDashboardPermissionsRepresentationBuilder(
-                    $ugroup_manager, $planning_factory,
+                    $ugroup_manager,
+                    $planning_factory,
                     new PlanningPermissionsRepresentationBuilder(
                         new PlanningPermissionsManager(),
                         PermissionsManager::instance(),

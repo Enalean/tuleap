@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Mediawiki_UnsupportedLanguageException extends Exception {
+class Mediawiki_UnsupportedLanguageException extends Exception
+{
 
     private $language;
 

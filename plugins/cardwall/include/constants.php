@@ -28,5 +28,4 @@ define('CARDWALL_BASE_URL', '/plugins/cardwall');
  *   'use_standard' => boolean
  *
  */
-define('CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT','cardwall_event_use_standard_javascript');
-?>
+define('CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT', 'cardwall_event_use_standard_javascript');

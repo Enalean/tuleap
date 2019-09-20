@@ -20,5 +20,7 @@
 
 namespace Tuleap\OpenIDConnectClient\UserMapping;
 
+class UserMappingNotFoundException extends \Exception
+{
 
-class UserMappingNotFoundException extends \Exception { }
+}

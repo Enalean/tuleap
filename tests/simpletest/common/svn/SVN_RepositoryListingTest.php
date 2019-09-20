@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class SVN_RepositoryListing_getSvnPathTest extends TuleapTestCase {
+class SVN_RepositoryListing_getSvnPathTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -63,7 +64,8 @@ class SVN_RepositoryListing_getSvnPathTest extends TuleapTestCase {
     }
 }
 
-class SVN_RepositoryListing_getSvnPathWithLogDetailsTest extends TuleapTestCase {
+class SVN_RepositoryListing_getSvnPathWithLogDetailsTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -83,7 +85,6 @@ class SVN_RepositoryListing_getSvnPathWithLogDetailsTest extends TuleapTestCase 
                          "/my/Project/tags/1.0/",
                          "/my/Project/tags/2.0/");
         stub($this->svnlook)->getDirectoryListing($this->project, '/my/Project/tags')->returns($content);
-
     }
 
 
@@ -223,5 +224,3 @@ class SVN_RepositoryListing_getSvnPathWithLogDetailsTest extends TuleapTestCase 
         $this->assertCount($last_revision, 0);
     }
 }
-
-?>

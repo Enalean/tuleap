@@ -23,9 +23,11 @@ Mock::generate('PluginDao');
 Mock::generate('DataAccessResult');
 Mock::generate('Plugin');
 
-class officialPlugin extends Plugin {
+class officialPlugin extends Plugin
+{
 }
-class customPlugin extends Plugin {
+class customPlugin extends Plugin
+{
 }
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -34,7 +36,8 @@ class customPlugin extends Plugin {
  *
  * Tests the class PluginFactory
  */
-class PluginFactoryTest extends TuleapTestCase {
+class PluginFactoryTest extends TuleapTestCase
+{
 
     function testGetPluginById()
     {

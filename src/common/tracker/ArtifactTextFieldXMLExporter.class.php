@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactTextFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter {
+class ArtifactTextFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporter
+{
     public const TV3_DISPLAY_TYPE = 'TA';
     public const TV3_DATA_TYPE    = '1';
     public const TV3_TYPE         = 'TA_1';

@@ -31,15 +31,20 @@ class DbaDatabase
         $this->_timeout = DBA_DATABASE_DEFAULT_TIMEOUT;
         $this->_dbh = false;
         if (function_exists("dba_handlers")) { // since 4.3.0
-            if (!in_array($handler, dba_handlers()))
+            if (!in_array($handler, dba_handlers())) {
                 $this->_error(
                     sprintf(
                         _("The DBA handler %s is unsupported!")."\n".
                             _("Supported handlers are: %s"),
-                            $handler, join(",",dba_handlers())));
+                        $handler,
+                        join(",", dba_handlers())
+                    )
+                );
+            }
         }
-        if ($mode)
+        if ($mode) {
             $this->open($mode);
+        }
     }
 
     function set_timeout($timeout)
@@ -49,8 +54,9 @@ class DbaDatabase
 
     function open($mode = 'w')
     {
-        if ($this->_dbh)
+        if ($this->_dbh) {
             return;             // already open.
+        }
 
         $watchdog = $this->_timeout;
 
@@ -72,29 +78,32 @@ class DbaDatabase
             }
         }
         while (($dbh = dba_open($this->_file, $mode, $this->_handler)) < 1) {
-            if ($watchdog <= 0)
+            if ($watchdog <= 0) {
                 break;
+            }
             flush();
             // "c" failed, try "w" instead.
-            if (substr($mode,0,1) == "c" and file_exists($this->_file))
+            if (substr($mode, 0, 1) == "c" and file_exists($this->_file)) {
                 $mode = "w";
+            }
             // conflict: wait some random time to unlock (see ethernet)
-            $secs = 0.5 + ((double)rand(1,32767)/32767);
+            $secs = 0.5 + ((double)rand(1, 32767)/32767);
             sleep($secs);
             $watchdog -= $secs;
-            if (strlen($mode) == 2) $mode = substr($mode,0,-1);
+            if (strlen($mode) == 2) {
+                $mode = substr($mode, 0, -1);
+            }
         }
         $ErrorManager->popErrorHandler();
 
         if (!$dbh) {
-            if ( ($error = $this->_dba_open_error) ) {
+            if (($error = $this->_dba_open_error)) {
                 $error->errno = E_USER_ERROR;
                 $error->errstr .= "\nfile: " . $this->_file
                                .  "\nmode: " . $mode
                                .  "\nhandler: " . $this->_handler;
                 $ErrorManager->handleError($error);
-            }
-            else {
+            } else {
                 trigger_error("dba_open failed", E_USER_ERROR);
             }
         }
@@ -104,8 +113,9 @@ class DbaDatabase
 
     function close()
     {
-        if ($this->_dbh)
+        if ($this->_dbh) {
             dba_close($this->_dbh);
+        }
         $this->_dbh = false;
     }
 
@@ -117,21 +127,24 @@ class DbaDatabase
     function fetch($key)
     {
         $val = dba_fetch($key, $this->_dbh);
-        if ($val === false)
+        if ($val === false) {
             return $this->_error("fetch($key)");
+        }
         return $val;
     }
 
     function insert($key, $val)
     {
-        if (!dba_insert($key, $val, $this->_dbh))
+        if (!dba_insert($key, $val, $this->_dbh)) {
             return $this->_error("insert($key)");
+        }
     }
 
     function replace($key, $val)
     {
-        if (!dba_replace($key, $val, $this->_dbh))
+        if (!dba_replace($key, $val, $this->_dbh)) {
             return $this->_error("replace($key)");
+        }
     }
 
 
@@ -147,8 +160,9 @@ class DbaDatabase
 
     function delete($key)
     {
-        if (!dba_delete($key, $this->_dbh))
+        if (!dba_delete($key, $this->_dbh)) {
             return $this->_error("delete($key)");
+        }
     }
 
     function get($key)
@@ -161,30 +175,33 @@ class DbaDatabase
         $dbh = &$this->_dbh;
         if (dba_exists($key, $dbh)) {
             if ($val !== false) {
-                if (!dba_replace($key, $val, $dbh))
+                if (!dba_replace($key, $val, $dbh)) {
                     return $this->_error("store[replace]($key)");
-            }
-            else {
-                if (!dba_delete($key, $dbh))
+                }
+            } else {
+                if (!dba_delete($key, $dbh)) {
                     return $this->_error("store[delete]($key)");
+                }
             }
-        }
-        else {
-            if (!dba_insert($key, $val, $this->_dbh))
+        } else {
+            if (!dba_insert($key, $val, $this->_dbh)) {
                 return $this->_error("store[insert]($key)");
+            }
         }
     }
 
     function sync()
     {
-        if (!dba_sync($this->_dbh))
+        if (!dba_sync($this->_dbh)) {
             return $this->_error("sync()");
+        }
     }
 
     function optimize()
     {
-        if (!dba_optimize($this->_dbh))
+        if (!dba_optimize($this->_dbh)) {
             return $this->_error("optimize()");
+        }
         return 1;
     }
 
@@ -199,8 +216,9 @@ class DbaDatabase
     function _dump()
     {
         $dbh = &$this->_dbh;
-        for ($key = $this->firstkey($dbh); $key; $key = $this->nextkey($dbh))
+        for ($key = $this->firstkey($dbh); $key; $key = $this->nextkey($dbh)) {
             printf("%10s: %s\n", $key, $this->fetch($key));
+        }
     }
 
     function _dba_open_error_handler($error)
@@ -219,4 +237,3 @@ class DbaDatabase
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-?>

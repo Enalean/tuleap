@@ -23,7 +23,8 @@ function aMockProject()
     return new MockProjectBuilder();
 }
 
-class MockProjectBuilder {
+class MockProjectBuilder
+{
 
     private $project;
     private $id        = false;
@@ -62,5 +63,3 @@ class MockProjectBuilder {
         return $this->project;
     }
 }
-
-?>

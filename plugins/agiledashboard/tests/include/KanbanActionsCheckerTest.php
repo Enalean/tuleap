@@ -20,7 +20,8 @@
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class AgileDashboard_KanbanActionsCheckerTest extends TuleapTestCase {
+class AgileDashboard_KanbanActionsCheckerTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -70,7 +71,6 @@ class AgileDashboard_KanbanActionsCheckerTest extends TuleapTestCase {
 
         $checker      = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
         $add_in_place = $checker->checkUserCanAddInPlace($this->user, $kanban);
-
     }
 
     public function itRaisesAnExceptionIfNoSemanticTitle()

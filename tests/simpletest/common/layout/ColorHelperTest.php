@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ColorHelperTest extends TuleapTestCase {
+class ColorHelperTest extends TuleapTestCase
+{
 
     private $colorSet = array(
         '#FFFFFF' => array(255, 255, 255),
@@ -44,5 +45,3 @@ class ColorHelperTest extends TuleapTestCase {
         }
     }
 }
-
-?>

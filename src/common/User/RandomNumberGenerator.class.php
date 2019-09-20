@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class RandomNumberGenerator {
+class RandomNumberGenerator
+{
     private $token_size;
 
     // 128 bits of entropy is enough most of the time

@@ -25,7 +25,8 @@ require_once 'Controller.class.php';
  *
  * @see MVC2_Controller
  */
-abstract class MVC2_PluginController extends MVC2_Controller {
+abstract class MVC2_PluginController extends MVC2_Controller
+{
 
     protected $group_id;
 
@@ -52,4 +53,3 @@ abstract class MVC2_PluginController extends MVC2_Controller {
         }
     }
 }
-?>

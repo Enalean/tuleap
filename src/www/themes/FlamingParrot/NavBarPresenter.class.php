@@ -123,9 +123,9 @@ class FlamingParrot_NavBarPresenter
         $this->url_redirect                = $url_redirect;
 
         $this->logout_label         = $GLOBALS['Language']->getText('include_menu', 'logout');
-        $this->my_account_label     = $GLOBALS['Language']->getText('my_index','account_maintenance');
+        $this->my_account_label     = $GLOBALS['Language']->getText('my_index', 'account_maintenance');
         $this->join_community_title = $GLOBALS['Language']->getText('include_menu', 'join_community');
-        $this->search_label         = $GLOBALS['Language']->getText('include_menu','search');
+        $this->search_label         = $GLOBALS['Language']->getText('include_menu', 'search');
 
         $this->current_user_id = $user->getId();
         $this->history         = _('History');
@@ -191,7 +191,7 @@ class FlamingParrot_NavBarPresenter
 
     public function account_options_text()
     {
-        return $GLOBALS['Language']->getText('account_options','preferences');
+        return $GLOBALS['Language']->getText('account_options', 'preferences');
     }
 
     public function menu_home_text()
@@ -201,17 +201,17 @@ class FlamingParrot_NavBarPresenter
 
     public function include_menu_login_text()
     {
-        return $GLOBALS['Language']->getText('include_menu','login');
+        return $GLOBALS['Language']->getText('include_menu', 'login');
     }
 
     public function include_menu_new_user_text()
     {
-        return $GLOBALS['Language']->getText('include_menu','new_user');
+        return $GLOBALS['Language']->getText('include_menu', 'new_user');
     }
 
     public function search_placeholder()
     {
-        return $GLOBALS['Language']->getText('include_menu','search');
+        return $GLOBALS['Language']->getText('include_menu', 'search');
     }
 
     private function getClassnameNavItemActive($pathsToDetect, $toptab = null)

@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201210111401_add_remote_servers extends ForgeUpgrade_Bucket {
+class b201210111401_add_remote_servers extends ForgeUpgrade_Bucket
+{
 
     /**
      * Description of the bucket
@@ -70,5 +71,3 @@ EOT;
         }
     }
 }
-
-?>

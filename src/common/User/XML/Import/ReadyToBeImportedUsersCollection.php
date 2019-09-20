@@ -22,7 +22,8 @@ namespace User\XML\Import;
 use UserManager;
 use Logger;
 
-class ReadyToBeImportedUsersCollection {
+class ReadyToBeImportedUsersCollection
+{
 
     private $users_by_name    = array();
     private $users_by_id      = array();

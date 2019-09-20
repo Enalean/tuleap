@@ -38,7 +38,7 @@
  * and null
  *
  */
-class Planning_VirtualTopMilestone  implements Planning_Milestone
+class Planning_VirtualTopMilestone implements Planning_Milestone
 {
 
     /**

@@ -19,15 +19,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-abstract class PasswordHandler {
+abstract class PasswordHandler
+{
     // We need 16 hex chars (8 bytes) to use as a salt to generate the UNIX password
     public const SALT_SIZE = 8;
 
-    public abstract function verifyHashPassword($plain_password, $hash_password);
+    abstract public function verifyHashPassword($plain_password, $hash_password);
 
-    public abstract function computeHashPassword($plain_password);
+    abstract public function computeHashPassword($plain_password);
 
-    public abstract function isPasswordNeedRehash($hash_password);
+    abstract public function isPasswordNeedRehash($hash_password);
 
     /**
      * Generate Unix shadow password
@@ -36,5 +37,5 @@ abstract class PasswordHandler {
      *
      * @return String
      */
-    public abstract function computeUnixPassword($plain_password);
+    abstract public function computeUnixPassword($plain_password);
 }

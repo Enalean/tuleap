@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class SystemEvent_GIT_GERRIT_PROJECT_READONLY extends SystemEvent {
+class SystemEvent_GIT_GERRIT_PROJECT_READONLY extends SystemEvent
+{
 
     public const NAME = 'GIT_GERRIT_PROJECT_READONLY';
 

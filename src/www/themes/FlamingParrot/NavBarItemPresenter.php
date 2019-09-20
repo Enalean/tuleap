@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class FlamingParrot_NavBarItemPresenter {
+abstract class FlamingParrot_NavBarItemPresenter
+{
 
     public $is_link     = false;
     public $is_dropdown = false;

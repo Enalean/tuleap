@@ -58,14 +58,14 @@ if ($atid && !$group_id) {
 //define undefined variables
 $func = $request->getValidated('func', 'string', '');
 
-if ( $func == 'gotoid' ) {
+if ($func == 'gotoid') {
     // Direct access to an artifact
     if (!$aid) {
-        exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'art_id_necessary'));
+        exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'art_id_necessary'));
     } else {
         require('./gotoid.php');
     }
-} else if ($group_id && $atid) {
+} elseif ($group_id && $atid) {
         //      get the Group object
         $pm = ProjectManager::instance();
         $group = $pm->getProject($group_id);
@@ -73,16 +73,16 @@ if ( $func == 'gotoid' ) {
             exit_no_group();
     }
         //      Create the ArtifactType object
-        $ath = new ArtifactTypeHtml($group,$atid);
+        $ath = new ArtifactTypeHtml($group, $atid);
     if (!$ath || !is_object($ath)) {
-            exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_at'));
+            exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_at'));
     }
     if ($ath->isError()) {
-            exit_error($Language->getText('global','error'),$ath->getErrorMessage());
+            exit_error($Language->getText('global', 'error'), $ath->getErrorMessage());
     }
         // Check if this tracker is valid (not deleted)
-    if ( !$ath->isValid() ) {
-            exit_error($Language->getText('global','error'),$Language->getText('tracker_add','invalid'));
+    if (!$ath->isValid()) {
+            exit_error($Language->getText('global', 'error'), $Language->getText('tracker_add', 'invalid'));
     }
         //Check if the user can view the artifact
     if (!$ath->userCanView()) {
@@ -96,9 +96,9 @@ if ( $func == 'gotoid' ) {
     switch ($func) {
         case 'rss':
             if ($aid) {
-                $ah=new ArtifactHtml($ath,$aid);
+                $ah=new ArtifactHtml($ath, $aid);
                 if (!$ah || !is_object($ah)) {
-                    exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_art'));
+                    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
                 } else {
                     $ah->displayRSS();
                 }
@@ -109,7 +109,7 @@ if ( $func == 'gotoid' ) {
         case 'add' : {
                 $ah=new ArtifactHtml($ath);
             if (!$ah || !is_object($ah)) {
-                    exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_art'));
+                    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
             } else {
                     require('./add.php');
             }
@@ -121,10 +121,10 @@ if ( $func == 'gotoid' ) {
                 //              Create a new Artifact
                 $ah=new ArtifactHtml($ath);
             if (!$ah || !is_object($ah)) {
-                    exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_art'));
+                    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
             } else {
                     // Check if a user can submit a new without loggin
-                if ( !user_isloggedin() && !$ath->allowsAnon() ) {
+                if (!user_isloggedin() && !$ath->allowsAnon()) {
                         exit_not_logged_in();
                         return;
                 }
@@ -140,44 +140,46 @@ if ( $func == 'gotoid' ) {
                     $add_cc = $request->get('add_cc');
                     $array_add_cc = preg_split('/[,;]/D', $add_cc);
                 if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
-                    exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
+                    exit_error($Language->getText('tracker_index', 'cc_list_invalid'), $message);
                 }
             // Files
                 if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($_FILES['input_file']['tmp_name'])) {
-                        exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
+                        exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'invalid_filename'));
                 }
 
                     //Check Field Dependencies
                     $arm = new ArtifactRulesManager();
                 if (!$arm->validate($atid, $art_field_fact->extractFieldList(), $art_field_fact)) {
-                    exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_field_dependency'));
+                    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'invalid_field_dependency'));
                 }
 
                     // Artifact creation
                 if (!$ah->create()) {
-                        exit_error($Language->getText('global','error'),$ah->getErrorMessage());
+                        exit_error($Language->getText('global', 'error'), $ah->getErrorMessage());
                 } else {
                         //      Attach file to this Artifact.
                     if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
                             $afh=new ArtifactFileHtml($ah);
                         if (!$afh || !is_object($afh)) {
-                            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','not_create_file'));
+                            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'not_create_file'));
                         } elseif ($afh->isError()) {
                                 $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage());
                         } else {
-                            if (!$afh->upload($_FILES['input_file']['tmp_name'],
-                                                  $_FILES['input_file']['name'],
-                                                  $_FILES['input_file']['type'],
-                                                  $sanitizer->sanitize($request->get('file_description')),$changes))
-                                {
-                                    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','not_attach_file',$afh->getErrorMessage()));
+                            if (!$afh->upload(
+                                $_FILES['input_file']['tmp_name'],
+                                $_FILES['input_file']['name'],
+                                $_FILES['input_file']['type'],
+                                $sanitizer->sanitize($request->get('file_description')),
+                                $changes
+                            )) {
+                                    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'not_attach_file', $afh->getErrorMessage()));
                             }
                         }
                     }
 
                         // Add new cc if any
                     if ($add_cc) {
-                        $ah->addCC($add_cc,$sanitizer->sanitize($request->get('cc_comment')),$changes);
+                        $ah->addCC($add_cc, $sanitizer->sanitize($request->get('cc_comment')), $changes);
                     }
 
                         // send an email to notify the user of the artifact add
@@ -188,8 +190,11 @@ if ( $func == 'gotoid' ) {
                         $em->processEvent('tracker_postadd', array('ah' => $ah, 'ath' => $ath));
 
                         $itemname = $ath->getItemName();
-                        $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',
-                            '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODENDI_PURIFIER_LIGHT);
+                        $GLOBALS['Response']->addFeedback('info', $Language->getText(
+                            'tracker_index',
+                            'create_success',
+                            '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'
+                        ), CODENDI_PURIFIER_LIGHT);
                         $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
                 }
             }
@@ -199,10 +204,10 @@ if ( $func == 'gotoid' ) {
                 //              Create a new Artifact
                 $ah=new ArtifactHtml($ath);
             if (!$ah || !is_object($ah)) {
-                    exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_art'));
+                    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
             } else {
                     // Check if a user can submit a new without loggin
-                if ( !user_isloggedin() && !$ath->allowsAnon() ) {
+                if (!user_isloggedin() && !$ath->allowsAnon()) {
                         exit_not_logged_in();
                         return;
                 }
@@ -219,39 +224,41 @@ if ( $func == 'gotoid' ) {
                     $add_cc = $request->get('add_cc');
                     $array_add_cc = preg_split('/[,;]/D', $add_cc);
                 if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
-                    exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
+                    exit_error($Language->getText('tracker_index', 'cc_list_invalid'), $message);
                 }
 
             // Files
                 if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($_FILES['input_file']['tmp_name'])) {
-                        exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
+                        exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'invalid_filename'));
                 }
 
                     // Artifact creation
                 if (!$ah->create()) {
-                        exit_error($Language->getText('global','error'),$ah->getErrorMessage());
+                        exit_error($Language->getText('global', 'error'), $ah->getErrorMessage());
                 } else {
                         //      Attach file to this Artifact.
                     if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
                             $afh=new ArtifactFileHtml($ah);
                         if (!$afh || !is_object($afh)) {
-                            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','not_create_file'));
+                            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'not_create_file'));
                         } elseif ($afh->isError()) {
                                $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage());
                         } else {
-                            if (!$afh->upload($_FILES['input_file']['tmp_name'],
-                                                  $_FILES['input_file']['name'],
-                                                  $_FILES['input_file']['type'],
-                                                  $sanitizer->sanitize($request->get('file_description')),$changes))
-                                {
-                                    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','not_attach_file',$afh->getErrorMessage()));
+                            if (!$afh->upload(
+                                $_FILES['input_file']['tmp_name'],
+                                $_FILES['input_file']['name'],
+                                $_FILES['input_file']['type'],
+                                $sanitizer->sanitize($request->get('file_description')),
+                                $changes
+                            )) {
+                                    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'not_attach_file', $afh->getErrorMessage()));
                             }
                         }
                     }
 
                         // Add new cc if any
                     if ($add_cc) {
-                        $ah->addCC($add_cc,$sanitizer->sanitize($request->get('cc_comment')),$changes);
+                        $ah->addCC($add_cc, $sanitizer->sanitize($request->get('cc_comment')), $changes);
                     }
 
                 // Add new dependencies if any
@@ -266,7 +273,7 @@ if ( $func == 'gotoid' ) {
                         $canned_response = $request->get('canned_response');
                         $vFormat = new Valid_WhiteList('comment_format', array(Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT));
                         $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
-                        $ah->addFollowUpComment($follow_up_comment,$comment_type_id,$canned_response,$changes,$comment_format);
+                        $ah->addFollowUpComment($follow_up_comment, $comment_type_id, $canned_response, $changes, $comment_format);
 
                         // send an email to notify the user of the artifact update
                             $agnf = new ArtifactGlobalNotificationFactory();
@@ -276,10 +283,13 @@ if ( $func == 'gotoid' ) {
                             $em->processEvent('postcopy', array('ah' => $ah, 'ath' => $ath));
 
                             $itemname = $ath->getItemName();
-                            $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','create_success',
-                                '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODENDI_PURIFIER_LIGHT);
+                            $GLOBALS['Response']->addFeedback('info', $Language->getText(
+                                'tracker_index',
+                                'create_success',
+                                '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'
+                            ), CODENDI_PURIFIER_LIGHT);
                     if ($ath->getStopNotification()) {
-                        $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
+                        $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index', 'notification_stopped'));
                     }
                         $GLOBALS['Response']->redirect('?group_id='. $group_id .'&atid='. $atid .'&func=browse');
                 }
@@ -289,11 +299,11 @@ if ( $func == 'gotoid' ) {
 
         case 'delete_cc' : {
 
-                $ah=new ArtifactHtml($ath,$aid);
+                $ah=new ArtifactHtml($ath, $aid);
             if (!$ah || !is_object($ah)) {
-                    exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
-            } else if ($ah->isError()) {
-                    exit_error($Language->getText('global','error'),$ah->getErrorMessage());
+                    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
+            } elseif ($ah->isError()) {
+                    exit_error($Language->getText('global', 'error'), $ah->getErrorMessage());
             } else {
                 $artifact_cc_id = $request->get('artifact_cc_id');
                     $cc_array = $ah->getCC($artifact_cc_id);
@@ -303,12 +313,11 @@ if ( $func == 'gotoid' ) {
                     // (b) then CC name is the current user
                     // (c) the CC email address matches the one of the current user
                     // (d) the current user is the person who added a gieven name in CC list
-                if ( user_ismember($group_id) ||
+                if (user_ismember($group_id) ||
                     (user_getname($user_id) == $cc_array['email']) ||
                     (user_getemail($user_id) == $cc_array['email']) ||
                     (user_getname($user_id) == $cc_array['user_name'] )) {
-
-                        $changed = $ah->deleteCC($artifact_cc_id,$changes);
+                        $changed = $ah->deleteCC($artifact_cc_id, $changes);
                     if ($changed) {
                         $agnf = new ArtifactGlobalNotificationFactory();
                         $addresses = $agnf->getAllAddresses($ath->getID(), true);
@@ -316,37 +325,35 @@ if ( $func == 'gotoid' ) {
                     }
 
                         $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&aid='. (int)$aid .'&func=detail');
-
                 } else {
                         // Invalid permission
                         exit_permission_denied();
                         return;
                 }
-
             }
             break;
         }
 
         case 'delete_comment' : {
-            if ( !user_isloggedin() ) {
+            if (!user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if ( !user_ismember($group_id) ) {
+            if (!user_ismember($group_id)) {
                 exit_permission_denied();
                 return;
             }
 
-                $ah=new ArtifactHtml($ath,$aid);
+                $ah=new ArtifactHtml($ath, $aid);
             if (!$ah || !is_object($ah)) {
-                exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
-            } else if ($ah->isError()) {
-                exit_error($Language->getText('global','error'),$ah->getErrorMessage());
+                exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
+            } elseif ($ah->isError()) {
+                exit_error($Language->getText('global', 'error'), $ah->getErrorMessage());
             } else {
                 $artifact_history_id = $request->get('artifact_history_id');
                 if ($ah->userCanEditFollowupComment($artifact_history_id)) {
-                    $ah->deleteFollowupComment($aid,$artifact_history_id);
+                    $ah->deleteFollowupComment($aid, $artifact_history_id);
                     $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&aid='. (int)$aid .'&func=detail');
                 } else {
                     // Invalid permission
@@ -359,24 +366,24 @@ if ( $func == 'gotoid' ) {
 
         case 'delete_dependent' : {
 
-            if ( !user_isloggedin() ) {
+            if (!user_isloggedin()) {
                     exit_not_logged_in();
                     return;
             }
 
-            if ( !user_ismember($group_id) ) {
+            if (!user_ismember($group_id)) {
                         exit_permission_denied();
                         return;
             }
 
-                $ah=new ArtifactHtml($ath,$aid);
+                $ah=new ArtifactHtml($ath, $aid);
             if (!$ah || !is_object($ah)) {
-                exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
-            } else if ($ah->isError()) {
-                exit_error($Language->getText('global','error'),$ah->getErrorMessage());
+                exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
+            } elseif ($ah->isError()) {
+                exit_error($Language->getText('global', 'error'), $ah->getErrorMessage());
             } else {
                 $dependent_on_artifact_id = $request->get('dependent_on_artifact_id');
-                $changed = $ah->deleteDependency($dependent_on_artifact_id,$changes);
+                $changed = $ah->deleteDependency($dependent_on_artifact_id, $changes);
                 if ($changed) {
                         $agnf = new ArtifactGlobalNotificationFactory();
                         $addresses = $agnf->getAllAddresses($ath->getID(), true);
@@ -390,28 +397,26 @@ if ( $func == 'gotoid' ) {
 
         case 'delete_file' : {
                 //      Delete a file from this artifact
-                $ah=new ArtifactHtml($ath,$aid);
+                $ah=new ArtifactHtml($ath, $aid);
 
                 // Check permissions
                 $id = $request->get('id');
                 $file_array = $ah->getAttachedFile($id);
-            if ( user_ismember($group_id) ||
+            if (user_ismember($group_id) ||
                 (user_getname(UserManager::instance()->getCurrentUser()->getId()) == $file_array['user_name'] )) {
-
-                        $afh=new ArtifactFileHtml($ah,$id);
+                        $afh=new ArtifactFileHtml($ah, $id);
                 if (!$afh || !is_object($afh)) {
-                        $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','not_create_file_obj',$afh->getName()));
+                        $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'not_create_file_obj', $afh->getName()));
                 } elseif ($afh->isError()) {
                         $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage().'::'. $hp->purify($afh->getName(), CODENDI_PURIFIER_CONVERT_HTML));
                 } else {
                     if (!$afh->delete()) {
-                                $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','file_delete',$afh->getErrorMessage()));
+                                $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'file_delete', $afh->getErrorMessage()));
                     } else {
-                                    $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','file_delete_success'));
+                                    $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index', 'file_delete_success'));
                     }
                 }
                         $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&aid='. (int)$aid .'&func=detail');
-
             } else {
                     // Invalid permission
                     exit_permission_denied();
@@ -424,24 +429,23 @@ if ( $func == 'gotoid' ) {
 
         case 'postmod' : {
                 //      Modify an Artifact
-                $ah=new ArtifactHtml($ath,$aid);
+                $ah=new ArtifactHtml($ath, $aid);
             if (!$ah || !is_object($ah)) {
-                    exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
-            } else if ($ah->isError()) {
-                    exit_error($Language->getText('global','error'),$ah->getErrorMessage());
+                    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
+            } elseif ($ah->isError()) {
+                    exit_error($Language->getText('global', 'error'), $ah->getErrorMessage());
             } else {
-
                     // Check if users can update anonymously
-                if ( !user_isloggedin() && !$ath->allowsAnon() ) {
+                if (!user_isloggedin() && !$ath->allowsAnon()) {
                     exit_not_logged_in();
                 }
 
                     // Check timestamp
                     $artifact_timestamp = $request->get('artifact_timestamp');
-                if ( isset($artifact_timestamp) &&
+                if (isset($artifact_timestamp) &&
                          ($ah->getLastUpdateDate() > $artifact_timestamp) ) {
                     // Artifact was updated between the time it was sent to the user, and the time it was submitted
-                    exit_error($Language->getText('tracker_index','artifact_has_changed_title'),$Language->getText('tracker_index','artifact_has_changed',"/tracker/?func=detail&aid=$aid&atid=$atid&group_id=$group_id"));
+                    exit_error($Language->getText('tracker_index', 'artifact_has_changed_title'), $Language->getText('tracker_index', 'artifact_has_changed', "/tracker/?func=detail&aid=$aid&atid=$atid&group_id=$group_id"));
                 }
 
                     // First check parameters
@@ -450,22 +454,22 @@ if ( $func == 'gotoid' ) {
                     $add_cc = $request->get('add_cc');
                     $array_add_cc = preg_split('/[,;]/D', $add_cc);
                 if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
-                    exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
+                    exit_error($Language->getText('tracker_index', 'cc_list_invalid'), $message);
                 }
                     // Files
                 if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($_FILES['input_file']['tmp_name'])) {
-                        exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
+                        exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'invalid_filename'));
                 }
 
                     //Check Field Dependencies
                     $arm = new ArtifactRulesManager();
                 if (!$arm->validate($atid, $art_field_fact->extractFieldList(), $art_field_fact)) {
-                    exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_field_dependency'));
+                    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'invalid_field_dependency'));
                 }
 
                     //data control layer
                     $canned_response = $request->get('canned_response');
-                    $changed = $ah->handleUpdate($request->get('artifact_id_dependent'),$canned_response,$changes);
+                    $changed = $ah->handleUpdate($request->get('artifact_id_dependent'), $canned_response, $changes);
                 if (!$changed) {
                         $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
                         exit();
@@ -475,16 +479,18 @@ if ( $func == 'gotoid' ) {
                 if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
                         $afh=new ArtifactFileHtml($ah);
                     if (!$afh || !is_object($afh)) {
-                            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','not_create_file'));
+                            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'not_create_file'));
                     } elseif ($afh->isError()) {
                         $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage());
                     } else {
-                        if (!$afh->upload($_FILES['input_file']['tmp_name'],
-                                              $_FILES['input_file']['name'],
-                                              $_FILES['input_file']['type'],
-                                              $sanitizer->sanitize($request->get('file_description')),$changes))
-                            {
-                            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','file_upload_err',$afh->getErrorMessage()));
+                        if (!$afh->upload(
+                            $_FILES['input_file']['tmp_name'],
+                            $_FILES['input_file']['name'],
+                            $_FILES['input_file']['type'],
+                            $sanitizer->sanitize($request->get('file_description')),
+                            $changes
+                        )) {
+                            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'file_upload_err', $afh->getErrorMessage()));
                                 $was_error=true;
                         } else {
                              // Remove verbose feedback
@@ -495,7 +501,7 @@ if ( $func == 'gotoid' ) {
 
                     // Add new cc if any
                 if ($add_cc) {
-                    $changed |= $ah->addCC($add_cc,$sanitizer->sanitize($request->get('cc_comment')),$changes);
+                    $changed |= $ah->addCC($add_cc, $sanitizer->sanitize($request->get('cc_comment')), $changes);
                 }
                 if ($changed && $changes) {
                     $agnf = new ArtifactGlobalNotificationFactory();
@@ -511,10 +517,13 @@ if ( $func == 'gotoid' ) {
                     //      Show just one feedback entry if no errors
                 if (!isset($was_error) || !$was_error) {
                     $itemname = $ath->getItemName();
-                    $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','update_success',
-                            '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'),CODENDI_PURIFIER_LIGHT);
+                    $GLOBALS['Response']->addFeedback('info', $Language->getText(
+                        'tracker_index',
+                        'update_success',
+                        '<a href="/goto?key='.$itemname.'&val='.$ah->getID().'&group_id='.$group_id.'">'.$itemname.' #'.$ah->getID().'</a>'
+                    ), CODENDI_PURIFIER_LIGHT);
                     if ($ah->ArtifactType->getStopNotification()) {
-                        $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
+                        $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index', 'notification_stopped'));
                     }
                 }
                 if ($request->isAjax()) {
@@ -534,11 +543,11 @@ if ( $func == 'gotoid' ) {
                 //      Modify several Artifacts
                 //
                 // Check if users can update anonymously
-            if ( !user_isloggedin() && !$ath->allowsAnon() ) {
+            if (!user_isloggedin() && !$ath->allowsAnon()) {
                 exit_not_logged_in();
             }
 
-            if ( !$ath->userIsAdmin() ) {
+            if (!$ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -549,21 +558,21 @@ if ( $func == 'gotoid' ) {
                 $add_cc = $request->get('add_cc');
                 $array_add_cc = preg_split('/[,;]/D', $add_cc);
             if ($add_cc && !util_validateCCList($array_add_cc, $message)) {
-                exit_error($Language->getText('tracker_index','cc_list_invalid'), $message);
+                exit_error($Language->getText('tracker_index', 'cc_list_invalid'), $message);
             }
          // Files
             if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE && !util_check_fileupload($_FILES['input_file']['tmp_name'])) {
-                exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename'));
+                exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'invalid_filename'));
             }
                 $report_id = $request->get('report_id');
             if ($report_id) {
              // Create factories
                 $report_fact = new ArtifactReportFactory();
              // Create the HTML report object
-                $art_report_html = $report_fact->getArtifactReportHtml($report_id,$atid);
-                $query = $art_field_fact->extractFieldList(true,'query_');
+                $art_report_html = $report_fact->getArtifactReportHtml($report_id, $atid);
+                $query = $art_field_fact->extractFieldList(true, 'query_');
                 $advsrch = $request->get('advsrch');
-                $art_report_html->getQueryElements($query,$advsrch,$from,$where);
+                $art_report_html->getQueryElements($query, $advsrch, $from, $where);
                 $sql = "select distinct a.artifact_id ".$from." ".$where;
 
                 $result = db_query($sql);
@@ -580,40 +589,43 @@ if ( $func == 'gotoid' ) {
                 if ($report_id) {
                     $row = db_fetch_array($result);
                     $aid = $row['artifact_id'];
-
                 } else {
                     $aid = $mass_change_ids[$i];
                 }
 
-                $ah=new ArtifactHtml($ath,$aid);
+                $ah=new ArtifactHtml($ath, $aid);
                 if (!$ah || !is_object($ah)) {
-                    exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
-                } else if ($ah->isError()) {
-                    exit_error($Language->getText('global','error'),$ah->getErrorMessage());
+                    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
+                } elseif ($ah->isError()) {
+                    exit_error($Language->getText('global', 'error'), $ah->getErrorMessage());
                 } else {
-
                   //data control layer
-                    $changed = $ah->handleUpdate($request->get('artifact_id_dependent'),$canned_response,$changes,true);
+                    $changed = $ah->handleUpdate($request->get('artifact_id_dependent'), $canned_response, $changes, true);
                     if ($changed) {
-                        if ($i > 0) $feedback .= ",";
-                        if ($i == 0) $feedback .= $Language->getText('tracker_index','updated_aid');
+                        if ($i > 0) {
+                            $feedback .= ",";
+                        }
+                        if ($i == 0) {
+                            $feedback .= $Language->getText('tracker_index', 'updated_aid');
+                        }
                         $feedback .= " ". (int)$aid;
-
                     }
             //  Attach file to this Artifact.
                     if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
                         $afh=new ArtifactFileHtml($ah);
                         if (!$afh || !is_object($afh)) {
-                            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','not_create_file'));
+                            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'not_create_file'));
                         } elseif ($afh->isError()) {
                             $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage());
                         } else {
-                            if (!$afh->upload($_FILES['input_file']['tmp_name'],
-                            $_FILES['input_file']['name'],
-                            $_FILES['input_file']['type'],
-                            $sanitizer->sanitize($request->get('file_description')),$changes))
-                            {
-                                  $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','file_upload_err',$afh->getErrorMessage()));
+                            if (!$afh->upload(
+                                $_FILES['input_file']['tmp_name'],
+                                $_FILES['input_file']['name'],
+                                $_FILES['input_file']['type'],
+                                $sanitizer->sanitize($request->get('file_description')),
+                                $changes
+                            )) {
+                                  $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'file_upload_err', $afh->getErrorMessage()));
                                   $was_error=true;
                             }
                         }
@@ -621,14 +633,12 @@ if ( $func == 'gotoid' ) {
 
             // Add new cc if any
                     if ($add_cc) {
-                        $changed |= $ah->addCC($add_cc,$sanitizer->sanitize($request->get('cc_comment')),$changes,true);
+                        $changed |= $ah->addCC($add_cc, $sanitizer->sanitize($request->get('cc_comment')), $changes, true);
                     }
 
                   // Update the 'last_update_date' artifact field
                   // Should check that the artifact was really modified?
                     $res_last_up = $ah->update_last_update_date();
-
-
                 }
             }
             $GLOBALS['Response']->addFeedback('info', $feedback);
@@ -654,13 +664,13 @@ if ( $func == 'gotoid' ) {
 
         //update group history
             $old_value = $ath->getName();
-            (new ProjectHistoryDao())->groupAddHistory('mass_change',$old_value,$group_id);
+            (new ProjectHistoryDao())->groupAddHistory('mass_change', $old_value, $group_id);
 
         //      Show just one feedback entry if no errors
             if (!$was_error) {
-                $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index','mass_update_success'));
+                $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_index', 'mass_update_success'));
                 if ($ath->getStopNotification()) {
-                            $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index','notification_stopped'));
+                            $GLOBALS['Response']->addFeedback('warning', $Language->getText('tracker_index', 'notification_stopped'));
                 }
             }
             require('./browse.php');
@@ -670,11 +680,11 @@ if ( $func == 'gotoid' ) {
         case 'postaddcomment' : {
             //  Attach a comment to an artifact
             //  Used by non-admins
-            $ah=new ArtifactHtml($ath,$aid);
+            $ah=new ArtifactHtml($ath, $aid);
             if (!$ah || !is_object($ah)) {
-                exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
-            } else if ($ah->isError()) {
-                exit_error($Language->getText('global','error'),$ah->getErrorMessage());
+                exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
+            } elseif ($ah->isError()) {
+                exit_error($Language->getText('global', 'error'), $ah->getErrorMessage());
             }
 
             $comment = $request->get('comment');
@@ -682,36 +692,37 @@ if ( $func == 'gotoid' ) {
             if ($comment) {
                 $vFormat = new Valid_WhiteList('comment_format', array(Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT));
                 $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
-                if (!$ah->addComment($comment,$email,$changes,$comment_format)) {
-                    exit_error($Language->getText('global','error'), $Language->getText('tracker_index','not_saved_comment'));
+                if (!$ah->addComment($comment, $email, $changes, $comment_format)) {
+                    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_saved_comment'));
                 }
             }
 
             // Add CC
             if ($add_cc = trim($request->get('add_cc'))) {
-                $ah->addCC($add_cc,$sanitizer->sanitize($request->get('cc_comment')),$changes);
+                $ah->addCC($add_cc, $sanitizer->sanitize($request->get('cc_comment')), $changes);
             }
 
 
             //  Attach file to this Artifact.
             if (isset($_FILES['input_file']['error']) && $_FILES['input_file']['error'] != UPLOAD_ERR_NO_FILE) {
-
                 if (!util_check_fileupload($_FILES['input_file']['tmp_name'])) {
-                    exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_filename_attach'));
+                    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'invalid_filename_attach'));
                 }
 
                 $afh=new ArtifactFileHtml($ah);
                 if (!$afh || !is_object($afh)) {
-                    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index','not_create_file'));
+                    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'not_create_file'));
                 } elseif ($afh->isError()) {
                     $GLOBALS['Response']->addFeedback('error', $afh->getErrorMessage());
                 } else {
-                    if (!$afh->upload($_FILES['input_file']['tmp_name'],
-                                      $_FILES['input_file']['name'],
-                                      $_FILES['input_file']['type'],
-                                      $sanitizer->sanitize($request->get('file_description')),$changes))
-                    {
-                        $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'not_attach_file',$afh->getErrorMessage()));
+                    if (!$afh->upload(
+                        $_FILES['input_file']['tmp_name'],
+                        $_FILES['input_file']['name'],
+                        $_FILES['input_file']['type'],
+                        $sanitizer->sanitize($request->get('file_description')),
+                        $changes
+                    )) {
+                        $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_index', 'not_attach_file', $afh->getErrorMessage()));
                     }
                 }
             }
@@ -726,13 +737,13 @@ if ( $func == 'gotoid' ) {
 
         case 'editcomment' : {
 
-            if ( !user_isloggedin()) {
+            if (!user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
-            $ah=new ArtifactHtml($ath,$aid);
+            $ah=new ArtifactHtml($ath, $aid);
             if (!$ah || !is_object($ah)) {
-                exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
+                exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
             } else {
                 require('./edit_comment.php');
             }
@@ -749,13 +760,13 @@ if ( $func == 'gotoid' ) {
             if ($ah) {
                 require('./get_comment.php');
             } else {
-                exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
+                exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
             }
             break;
         }
 
         case 'import' : {
-            if ( !user_isloggedin()) {
+            if (!user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
@@ -768,13 +779,12 @@ if ( $func == 'gotoid' ) {
 
 
 
-            if($group_id && $atid && $user_id) {
-
-                $import = new ArtifactImportHtml($ath,$art_field_fact,$group);
+            if ($group_id && $atid && $user_id) {
+                $import = new ArtifactImportHtml($ath, $art_field_fact, $group);
                  $mode = $request->get('mode');
                 if ($mode == "parse") {
                     $import->displayParse($_FILES['csv_filename']['tmp_name']);
-                } else if ($mode == "import") {
+                } elseif ($mode == "import") {
                     $count_artifacts = $request->getValidated('count_artifacts', 'uint', 0);
                     $parsed_labels   = $request->get('parsed_labels');
                     $aid_column      = $request->get('aid_column');
@@ -787,13 +797,12 @@ if ( $func == 'gotoid' ) {
                         }
                         $artifacts_data[] = $data;
                     }
-                    $import->displayImport($parsed_labels,$artifacts_data,$aid_column,$count_artifacts);
+                    $import->displayImport($parsed_labels, $artifacts_data, $aid_column, $count_artifacts);
                     require('./browse.php');
-
-                } else if ($mode == "showformat") {
+                } elseif ($mode == "showformat") {
                     $import->displayShowFormat();
                 } else {
-                    $import->displayCSVInput($atid,$user_id);
+                    $import->displayCSVInput($atid, $user_id);
                 }
             } else {
                 exit_no_group();
@@ -809,20 +818,20 @@ if ( $func == 'gotoid' ) {
             $artifact_id = $request->get('artifact_id');
             if (user_isloggedin() && $request->exist('followup_update')) {
                 $followup_update = $request->get('followup_update');
-                $ah = new ArtifactHtml($ath,$artifact_id);
+                $ah = new ArtifactHtml($ath, $artifact_id);
                 $vFormat = new Valid_WhiteList('comment_format', array(Artifact::FORMAT_HTML, Artifact::FORMAT_TEXT));
                 $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
-                if ($ah->updateFollowupComment($request->get('artifact_history_id'),$followup_update,$changes,$comment_format)) {
-                    $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_succ'));
+                if ($ah->updateFollowupComment($request->get('artifact_history_id'), $followup_update, $changes, $comment_format)) {
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_common_artifact', 'followup_upd_succ'));
                     $agnf = new ArtifactGlobalNotificationFactory();
                     $addresses = $agnf->getAllAddresses($ath->getID(), true);
-                    $ah->mailFollowupWithPermissions($addresses,$changes);
+                    $ah->mailFollowupWithPermissions($addresses, $changes);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_fail'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'followup_upd_fail'));
                 }
             }
             $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&aid='. (int)$artifact_id .'&func=detail');
-        break;
+            break;
         case 'browse' : {
                 $masschange = false;
             if ($request->get('change_report_column')) {
@@ -833,7 +842,7 @@ if ( $func == 'gotoid' ) {
                     $report->toggleFieldColumnUsage($field_name);
                 }
                 $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
-            } else if ($request->get('change_report_query')) {
+            } elseif ($request->get('change_report_query')) {
                 $report_id = $request->getValidated('report_id', 'uint');
                 $field_name  = $request->getValidated('change_report_query', 'string');
                 $arf = new ArtifactReportFactory();
@@ -841,7 +850,7 @@ if ( $func == 'gotoid' ) {
                     $report->toggleFieldQueryUsage($field_name);
                 }
                 $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
-            } else if($reordercolumns = $request->get('reordercolumns')) {
+            } elseif ($reordercolumns = $request->get('reordercolumns')) {
                 if (is_array($reordercolumns)) {
                     $report_id = $request->getValidated('report_id', 'uint');
                     $arf = new ArtifactReportFactory();
@@ -867,7 +876,7 @@ if ( $func == 'gotoid' ) {
                 if ($request->isAjax()) {
                     exit;
                 }
-            } else if($resizecolumns = $request->get('resizecolumns')) {
+            } elseif ($resizecolumns = $request->get('resizecolumns')) {
                 if (is_array($resizecolumns)) {
                     $report_id = $request->getValidated('report_id', 'uint');
                     $arf = new ArtifactReportFactory();
@@ -896,7 +905,7 @@ if ( $func == 'gotoid' ) {
         case 'masschange_detail' : {
             $ah=new ArtifactHtml($ath);
             if (!$ah || !is_object($ah)) {
-                    exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
+                    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
             } else {
                 require('./masschange_detail.php');
             }
@@ -907,19 +916,18 @@ if ( $func == 'gotoid' ) {
         case 'detail' : {
                 //      users can modify their own tickets if they submitted them
                 //      even if they are not artifact admins
-                $ah=new ArtifactHtml($ath,$aid);
+                $ah=new ArtifactHtml($ath, $aid);
             if (!$ah || !is_object($ah)) {
-                    exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
-            } else if ($ah->isError()) {
-                    exit_error($Language->getText('global','error'),$ah->getErrorMessage());
+                    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
+            } elseif ($ah->isError()) {
+                    exit_error($Language->getText('global', 'error'), $ah->getErrorMessage());
             } else {
-
                     // Check if users can browse anonymously
-                if ( !user_isloggedin() && !$ath->userCanView() ) {
+                if (!user_isloggedin() && !$ath->userCanView()) {
                     exit_not_logged_in();
                 }
 
-                if ( user_ismember($group_id) ) {
+                if (user_ismember($group_id)) {
                         require('./mod.php');
                 } else {
                         require('./detail.php');
@@ -929,25 +937,23 @@ if ( $func == 'gotoid' ) {
         }
 
         case 'copy': {
-            $ah=new ArtifactHtml($ath,$aid);
+            $ah=new ArtifactHtml($ath, $aid);
             if (!$ah || !is_object($ah)) {
-                exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
-            } else if ($ah->isError()) {
-                exit_error($Language->getText('global','error'),$ah->getErrorMessage());
+                exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
+            } elseif ($ah->isError()) {
+                exit_error($Language->getText('global', 'error'), $ah->getErrorMessage());
             } else {
-
           // Check if users can browse anonymously
-                if ( !user_isloggedin() && !$ath->allowsAnon() ) {
+                if (!user_isloggedin() && !$ath->allowsAnon()) {
                     exit_not_logged_in();
                 }
 
               // !!!! need to specify here for which users we allow to copy artifacts !!!!
-                if ( user_ismember($group_id) ) {
+                if (user_ismember($group_id)) {
                             require('./copy.php');
                 } else {
-                     exit_error($Language->getText('global','error'),$Language->getText('tracker_index', 'not_create_art'));
+                     exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
                 }
-
             }
             break;
         }
@@ -973,9 +979,8 @@ if ( $func == 'gotoid' ) {
                 require('./browse.php');
                 break;
         }
-
     } // switch
-} else if ($group_id) {
+} elseif ($group_id) {
         //  get the Group object
         $pm = ProjectManager::instance();
         $group = $pm->getProject($group_id);
@@ -984,7 +989,7 @@ if ( $func == 'gotoid' ) {
     }
         $atf = new ArtifactTypeFactory($group);
     if (!$group || !is_object($group) || $group->isError()) {
-        exit_error($Language->getText('global','error'), $Language->getText('tracker_import_admin', 'not_get_atf'));
+        exit_error($Language->getText('global', 'error'), $Language->getText('tracker_import_admin', 'not_get_atf'));
     }
 
         // Get the artfact type list
@@ -996,7 +1001,7 @@ if ( $func == 'gotoid' ) {
         $params['group']=$group_id;
         $params['toptab']='tracker';
         $params['pagename']='trackers';
-        $params['title']=$Language->getText('tracker_index','trackers_for',$group->getPublicName());
+        $params['title']=$Language->getText('tracker_index', 'trackers_for', $group->getPublicName());
         $params['sectionvals']=array($group->getPublicName());
         $params['help']='tracker-v3.html';
         $params['pv']  = $pv ? $pv : '';
@@ -1005,8 +1010,8 @@ if ( $func == 'gotoid' ) {
         echo '<strong>';
         // Admin link and create link are only displayed if the user is a project administrator
     if (user_ismember($group_id, 'A')) {
-        echo '<a href="/tracker/admin/?group_id='. (int)$group_id.'">'.$Language->getText('tracker_index','admin_all_trackers').'</a>';
-        echo ' | <a href="/tracker/admin/?group_id='. (int)$group_id.'&func=create">'.$Language->getText('tracker_index','create_new_tracker').'</a>';
+        echo '<a href="/tracker/admin/?group_id='. (int)$group_id.'">'.$Language->getText('tracker_index', 'admin_all_trackers').'</a>';
+        echo ' | <a href="/tracker/admin/?group_id='. (int)$group_id.'&func=create">'.$Language->getText('tracker_index', 'create_new_tracker').'</a>';
         if ($params['help']) {
             echo ' | ';
         }
@@ -1014,12 +1019,12 @@ if ( $func == 'gotoid' ) {
         echo "</strong><p>";
 
     if (!$at_arr || count($at_arr) < 1) {
-        echo '<h2>'.$Language->getText('tracker_index','no_accessible_trackers_hdr').'</h2>';
-        echo '<p>'.$Language->getText('tracker_index','no_accessible_trackers_msg').'</p>';
+        echo '<h2>'.$Language->getText('tracker_index', 'no_accessible_trackers_hdr').'</h2>';
+        echo '<p>'.$Language->getText('tracker_index', 'no_accessible_trackers_msg').'</p>';
     } else {
-        echo "<p>".$Language->getText('tracker_index','choose_tracker');
+        echo "<p>".$Language->getText('tracker_index', 'choose_tracker');
         if (!$pv) {
-            echo " ( <A HREF='?group_id=". (int)$group_id ."&pv=1'><img src='".util_get_image_theme("ic/printer.png")."' border='0'>&nbsp;".$Language->getText('global','printer_version')."</A> )";
+            echo " ( <A HREF='?group_id=". (int)$group_id ."&pv=1'><img src='".util_get_image_theme("ic/printer.png")."' border='0'>&nbsp;".$Language->getText('global', 'printer_version')."</A> )";
         }
         echo "<p>";
 
@@ -1029,12 +1034,12 @@ if ( $func == 'gotoid' ) {
                 echo '
                         <a href="/tracker/?atid='. (int)($at_arr[$j]->getID()) .
                     '&group_id='. (int)$group_id.'&func=browse">' .
-                    html_image("ic/tracker20w.png",array("border"=>"0","width"=>"20","height"=>"20"),0) .
+                    html_image("ic/tracker20w.png", array("border"=>"0","width"=>"20","height"=>"20"), 0) .
                     '&nbsp;'.
                      $hp->purify(SimpleSanitizer::unsanitize($at_arr[$j]->getName()), CODENDI_PURIFIER_CONVERT_HTML)  .'</a> ';
                 // Only show number of artifacts if the user has full access on the tracker.
                 if ($at_arr[$j]->userHasFullAccess()) {
-                    echo '( <strong>'. (int)($at_arr[$j]->getOpenCount()) .' '.$Language->getText('tracker_index','open').' / '. (int)($at_arr[$j]->getTotalCount()) .' '.$Language->getText('tracker_index','total').'</strong> )';
+                    echo '( <strong>'. (int)($at_arr[$j]->getOpenCount()) .' '.$Language->getText('tracker_index', 'open').' / '. (int)($at_arr[$j]->getTotalCount()) .' '.$Language->getText('tracker_index', 'total').'</strong> )';
                 }
                 echo '<br />'. $hp->purify(SimpleSanitizer::unsanitize($at_arr[$j]->getDescription()), CODENDI_PURIFIER_BASIC, $group_id)  .'<p>';
             }
@@ -1044,4 +1049,3 @@ if ( $func == 'gotoid' ) {
 } else {
     exit_no_group();
 }
-?>

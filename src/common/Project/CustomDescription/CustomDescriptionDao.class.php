@@ -19,7 +19,8 @@
  *
  */
 
-class Project_CustomDescription_CustomDescriptionDao extends DataAccessObject {
+class Project_CustomDescription_CustomDescriptionDao extends DataAccessObject
+{
 
     /**
      *
@@ -64,4 +65,3 @@ class Project_CustomDescription_CustomDescriptionDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 }
-?>

@@ -19,7 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201504171343_restore_FRS_owner_group extends ForgeUpgrade_Bucket {
+class b201504171343_restore_FRS_owner_group extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -38,7 +39,7 @@ class b201504171343_restore_FRS_owner_group extends ForgeUpgrade_Bucket {
 
     public function up()
     {
-        include ('/etc/codendi/conf/local.inc');
+        include('/etc/codendi/conf/local.inc');
         $project_dirs = new DirectoryIterator($ftp_frs_dir_prefix);
 
         foreach ($project_dirs as $project_dir) {
@@ -54,7 +55,6 @@ class b201504171343_restore_FRS_owner_group extends ForgeUpgrade_Bucket {
     private function checkInProjectFolder(DirectoryIterator $frs_project_dirs)
     {
         foreach ($frs_project_dirs as $frs_project_dir) {
-
             if ($this->folderNeedsToBeUpdated($frs_project_dir)) {
                 echo $frs_project_dir->getPathname() . ' needs to be updated' . PHP_EOL;
 

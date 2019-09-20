@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Tracker_Artifact_PaginatedArtifacts {
+class Tracker_Artifact_PaginatedArtifacts
+{
 
     /**
      * @var Tracker_Artifact[]
@@ -54,4 +55,3 @@ class Tracker_Artifact_PaginatedArtifacts {
         return $this->artifacts;
     }
 }
-?>

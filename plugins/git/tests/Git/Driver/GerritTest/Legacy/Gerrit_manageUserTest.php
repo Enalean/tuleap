@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/GerritTestBase.php';
 
-class Git_Driver_GerritLegacy_manageUserTest extends Git_Driver_GerritLegacy_baseTest implements Git_Driver_Gerrit_manageUserTest {
+class Git_Driver_GerritLegacy_manageUserTest extends Git_Driver_GerritLegacy_baseTest implements Git_Driver_Gerrit_manageUserTest
+{
     private $groupname;
     private $ldap_uid;
     private $user;

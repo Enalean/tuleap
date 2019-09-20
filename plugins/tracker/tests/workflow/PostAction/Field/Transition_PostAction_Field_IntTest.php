@@ -21,7 +21,8 @@
 require_once __DIR__.'/../../../bootstrap.php';
 Mock::generatePartial('Transition_PostAction_Field_Int', 'Transition_PostAction_Field_IntTestVersion', array('getDao', 'addFeedback', 'getFormElementFactory', 'isDefined', 'getFieldIdOfPostActionToUpdate'));
 
-class Transition_PostAction_Field_IntTest extends TuleapTestCase {
+class Transition_PostAction_Field_IntTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -43,9 +44,9 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
     {
         $new_field_id = 4572;
         $new_value    = 10;
-        $request      = aRequest()->with('workflow_postaction_field_int',       array($this->post_action_id => $new_field_id))
+        $request      = aRequest()->with('workflow_postaction_field_int', array($this->post_action_id => $new_field_id))
                                   ->with('workflow_postaction_field_int_value', array($this->post_action_id => $new_value))
-                                  ->with('remove_postaction',                   array())
+                                  ->with('remove_postaction', array())
                                   ->build();
 
         $field = stub('Tracker_FormElement_Field_Integer')->getId()->returns(4572);
@@ -128,4 +129,3 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
         $this->assertTrue($post_action->isDefined());
     }
 }
-?>

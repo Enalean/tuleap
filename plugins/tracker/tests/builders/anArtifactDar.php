@@ -29,7 +29,8 @@ function anArtifactDar()
     return new Test_ArtifactDar_Builder();
 }
 
-class Test_ArtifactDar_Builder {
+class Test_ArtifactDar_Builder
+{
     private $row;
 
     public function __construct()
@@ -66,4 +67,3 @@ class Test_ArtifactDar_Builder {
         return $this->row;
     }
 }
-?>

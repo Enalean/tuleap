@@ -119,8 +119,7 @@ class VividTheme extends Theme
     function ApplyPlot($plot)
     {
 
-        switch (get_class($plot))
-        {
+        switch (get_class($plot)) {
             case 'GroupBarPlot':
             {
                 foreach ($plot->plots as $_plot) {
@@ -177,6 +176,3 @@ class VividTheme extends Theme
         }
     }
 }
-
-
-?>

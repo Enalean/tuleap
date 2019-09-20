@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class LogoRetriever {
+class LogoRetriever
+{
     private $logo_path;
     private $logo_mimetype;
 
@@ -53,5 +54,4 @@ class LogoRetriever {
     {
         return file_exists($this->logo_path);
     }
-
 }

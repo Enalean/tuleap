@@ -23,7 +23,7 @@ require_once $gfplugins.'mediawiki/include/mediawikiPlugin.class.php' ;
 
 $MediaWikiPluginObject = new MediaWikiPlugin ;
 
-register_plugin ($MediaWikiPluginObject) ;
+register_plugin($MediaWikiPluginObject) ;
 
 // Local Variables:
 // mode: php

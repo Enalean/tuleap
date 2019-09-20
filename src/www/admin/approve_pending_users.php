@@ -59,13 +59,12 @@ $csrf_token = new CSRFSynchronizerToken('/admin/approve_pending_users.php?page='
 $expiry_date = 0;
 if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $request->get('form_expiry'))) {
     $feedback .= ' '.$Language->getText('admin_approve_pending_users', 'data_not_parsed');
-}else{
+} else {
     $vDate = new Valid_String();
     if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && $vDate->validate($request->get('form_expiry'))) {
         $date_list = explode("-", $request->get('form_expiry'), 3);
         $unix_expiry_time = mktime(0, 0, 0, $date_list[1], $date_list[2], $date_list[0]);
         $expiry_date = $unix_expiry_time;
-
     }
 
     if (($action_select=='activate')) {
@@ -75,7 +74,9 @@ if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg
         if ($status=='restricted') {
             $newstatus='R';
             $shell=",shell='".$GLOBALS['codendi_bin_prefix'] ."/cvssh-restricted'";
-        } else $newstatus='A';
+        } else {
+            $newstatus='A';
+        }
 
         $users_ids = db_ei_implode($users_array);
         // update the user status flag to active
@@ -115,12 +116,11 @@ if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg
                 $Language->getText('admin_approve_pending_users', 'user_activated_success')
             );
         }
-
-    } else if($action_select=='validate'){
+    } elseif ($action_select=='validate') {
         $csrf_token->check();
-        if($status=='restricted'){
+        if ($status=='restricted') {
             $newstatus='W';
-        }else{
+        } else {
             $newstatus='V';
         }
 
@@ -155,8 +155,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg
                 $Language->getText('admin_approve_pending_users', 'user_validated_success')
             );
         }
-
-    } else if ($action_select=='delete') {
+    } elseif ($action_select=='delete') {
         $csrf_token->check();
         db_query("UPDATE user SET status='D', approved_by='".UserManager::instance()->getCurrentUser()->getId()."'".
                  " WHERE user_id IN (".implode(',', $users_array).")");
@@ -176,7 +175,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg
                 $Language->getText('admin_approve_pending_users', 'user_deleted_success')
             );
         }
-    } else if ($action_select === 'resend_email') {
+    } elseif ($action_select === 'resend_email') {
         $csrf_token->check();
         $user_manager = UserManager::instance();
         foreach ($users_array as $user_id) {
@@ -194,8 +193,11 @@ if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg
             if ($is_mail_sent) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
-                    $Language->getText('admin_approve_pending_users', 'resend_mail_success',
-                        array($user->getEmail()))
+                    $Language->getText(
+                        'admin_approve_pending_users',
+                        'resend_mail_success',
+                        array($user->getEmail())
+                    )
                 );
             } else {
                 $GLOBALS['Response']->addFeedback(
@@ -208,16 +210,16 @@ if ($request->exist('form_expiry') && $request->get('form_expiry')!='' && ! preg
 }
 // No action - First time in this script
 // Show the list of pending user waiting for approval
-if ($page == ADMIN_APPROVE_PENDING_PAGE_PENDING){
+if ($page == ADMIN_APPROVE_PENDING_PAGE_PENDING) {
     $res = db_query("SELECT * FROM user WHERE status='P'");
-    $msg = $Language->getText('admin_approve_pending_users','no_pending_validated');
-    if($GLOBALS['sys_user_approval'] == 0) {
+    $msg = $Language->getText('admin_approve_pending_users', 'no_pending_validated');
+    if ($GLOBALS['sys_user_approval'] == 0) {
         $res = db_query("SELECT * FROM user WHERE status='P' OR status='V' OR status='W'");
-        $msg = $Language->getText('admin_approve_pending_users','no_pending');
+        $msg = $Language->getText('admin_approve_pending_users', 'no_pending');
     }
-}else if($page == ADMIN_APPROVE_PENDING_PAGE_VALIDATED){
+} elseif ($page == ADMIN_APPROVE_PENDING_PAGE_VALIDATED) {
     $res = db_query("SELECT * FROM user WHERE status='V' OR status='W'");
-    $msg = $Language->getText('admin_approve_pending_users','no_validated');
+    $msg = $Language->getText('admin_approve_pending_users', 'no_validated');
 }
 
 $users = array();

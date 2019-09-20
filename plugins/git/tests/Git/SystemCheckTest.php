@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class Git_SystemCheckTest extends TuleapTestCase {
+class Git_SystemCheckTest extends TuleapTestCase
+{
 
     private $driver;
     private $gitgc;

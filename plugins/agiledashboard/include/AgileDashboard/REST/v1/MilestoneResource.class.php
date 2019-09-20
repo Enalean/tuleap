@@ -72,7 +72,8 @@ use UserManager;
 /**
  * Wrapper for milestone related REST methods
  */
-class MilestoneResource extends AuthenticatedResource {
+class MilestoneResource extends AuthenticatedResource
+{
 
     public const MAX_LIMIT = 100;
 
@@ -491,7 +492,12 @@ class MilestoneResource extends AuthenticatedResource {
 
         $paginated_milestones_representations = $this->milestone_representation_builder
             ->getPaginatedSiblingMilestonesRepresentations(
-                $milestone, $user, MilestoneRepresentation::SLIM, $criterion, $limit, $offset
+                $milestone,
+                $user,
+                MilestoneRepresentation::SLIM,
+                $criterion,
+                $limit,
+                $offset
             );
 
         $this->sendAllowHeaderForSubmilestones();
@@ -553,7 +559,13 @@ class MilestoneResource extends AuthenticatedResource {
 
         $paginated_milestones_representations = $this->milestone_representation_builder
             ->getPaginatedSubMilestonesRepresentations(
-                $milestone, $user, $fields, $criterion, $limit, $offset, $order
+                $milestone,
+                $user,
+                $fields,
+                $criterion,
+                $limit,
+                $offset,
+                $order
             );
 
         $this->sendAllowHeaderForSubmilestones();

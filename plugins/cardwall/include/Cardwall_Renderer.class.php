@@ -178,7 +178,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
 
             $swimline_factory = new Cardwall_SwimlineFactory($this->config, $field_provider);
 
-            $board_builder = new Cardwall_RendererBoardBuilder($presenter_builder,  Tracker_ArtifactFactory::instance(), $swimline_factory);
+            $board_builder = new Cardwall_RendererBoardBuilder($presenter_builder, Tracker_ArtifactFactory::instance(), $swimline_factory);
             $board         = $board_builder->getBoard($artifact_ids, $columns, $mapping_collection);
         }
 
@@ -188,7 +188,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     /*----- Implements below some abstract methods ----*/
 
     public function delete()
-    {}
+    {
+    }
 
     public function getType()
     {
@@ -200,7 +201,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         $renderer_parameters = $request->get('renderer_cardwall');
         $this->initiateSession();
         if ($renderer_parameters && is_array($renderer_parameters)) {
-
             //Update the field_id parameter
             if (isset($renderer_parameters['columns'])) {
                 $new_columns_field = (int)$renderer_parameters['columns'];
@@ -214,7 +214,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
                     $this->field = $this->getFormElementFactory()->getFieldById($new_columns_field);
                 }
             }
-
         }
     }
 
@@ -275,7 +274,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     }
 
     public function duplicate($from_renderer, $field_mapping)
-    { }
+    {
+    }
 
     public function afterSaveObject(Tracker_Report_Renderer $renderer)
     {

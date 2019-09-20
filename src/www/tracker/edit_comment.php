@@ -23,8 +23,8 @@
 
 
 // Check if this tracker is valid (not deleted)
-if ( !$ath->isValid() ) {
-    exit_error($Language->getText('global','error'),$Language->getText('tracker_add','invalid'));
+if (!$ath->isValid()) {
+    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_add', 'invalid'));
 }
 if (!$ah->userCanEditFollowupComment($request->get('artifact_history_id'))) {
     exit_permission_denied();
@@ -44,5 +44,3 @@ echo '<div id="tracker_toolbar_clear"></div>';
 $ah->displayEditFollowupComment($request->get('artifact_history_id'));
 
 $ath->footer($params);
-
-?>

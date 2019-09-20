@@ -1,40 +1,39 @@
 <?php
 // define fault code constants
-define ('get_group_fault', '3000');
-define ('get_artifact_type_factory_fault', '3002');
-define ('get_artifact_factory_fault', '3003');
-define ('get_artifact_field_factory_fault', '3004');
-define ('get_artifact_type_fault', '3005');
-define ('get_artifact_fault', '3006');
-define ('create_artifact_fault', '3007');
-define ('invalid_field_dependency_fault', '3009');
-define ('update_artifact_fault', '3010');
-define ('get_artifact_file_fault', '3011');
-define ('add_dependency_fault', '3012');
-define ('delete_dependency_fault', '3013');
-define ('create_followup_fault', '3014');
-define ('get_artifact_field_fault', '3015');
-define ('add_cc_fault', '3016');
-define ('invalid_field_fault', '3017');
-define ('delete_cc_fault', '3018');
-define ('get_service_fault', '3020');
-define ('get_artifact_report_fault', '3021');
-define('update_artifact_followup_fault','3022');
-define('delete_artifact_followup_fault','3023');
+define('get_group_fault', '3000');
+define('get_artifact_type_factory_fault', '3002');
+define('get_artifact_factory_fault', '3003');
+define('get_artifact_field_factory_fault', '3004');
+define('get_artifact_type_fault', '3005');
+define('get_artifact_fault', '3006');
+define('create_artifact_fault', '3007');
+define('invalid_field_dependency_fault', '3009');
+define('update_artifact_fault', '3010');
+define('get_artifact_file_fault', '3011');
+define('add_dependency_fault', '3012');
+define('delete_dependency_fault', '3013');
+define('create_followup_fault', '3014');
+define('get_artifact_field_fault', '3015');
+define('add_cc_fault', '3016');
+define('invalid_field_fault', '3017');
+define('delete_cc_fault', '3018');
+define('get_service_fault', '3020');
+define('get_artifact_report_fault', '3021');
+define('update_artifact_followup_fault', '3022');
+define('delete_artifact_followup_fault', '3023');
 
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../common/session.php';
 
 if (defined('NUSOAP')) {
-
 // Type definition
     $server->wsdl->addComplexType(
-    'TrackerDesc',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'TrackerDesc',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'group_artifact_id' => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
         'group_id' => array('name'=>'group_id', 'type' => 'xsd:int'),
         'name' => array('name'=>'name', 'type' => 'xsd:string'),
@@ -43,27 +42,27 @@ if (defined('NUSOAP')) {
         'open_count' => array('name'=>'open_count', 'type' => 'xsd:int'),
         'total_count' => array('name'=>'total_count', 'type' => 'xsd:int'),
         'reports_desc' => array('name'=>'reports', 'type' => 'tns:ArrayOfArtifactReportDesc'),
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfTrackerDesc',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:TrackerDesc[]')),
-    'tns:TrackerDesc'
+        'ArrayOfTrackerDesc',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:TrackerDesc[]')),
+        'tns:TrackerDesc'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactType',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactType',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'group_artifact_id' => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
         'group_id' => array('name'=>'group_id', 'type' => 'xsd:int'),
         'name' => array('name'=>'name', 'type' => 'xsd:string'),
@@ -74,27 +73,27 @@ if (defined('NUSOAP')) {
         'total_file_size' => array('name'=>'total_file_size', 'type' => 'xsd:float'),
         'field_sets' => array('name' => 'field_sets', 'type' => 'tns:ArrayOfArtifactFieldSet'),
         'field_dependencies' => array('name' => 'field_dependencies', 'type' => 'tns:ArrayOfArtifactRule')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactType',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactType[]')),
-    'tns:ArtifactType'
+        'ArrayOfArtifactType',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactType[]')),
+        'tns:ArtifactType'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactFieldSet',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactFieldSet',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'field_set_id' => array('name'=>'field_set_id', 'type' => 'xsd:int'),
         'group_artifact_id'  => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
         'name' => array('name'=>'name', 'type' => 'xsd:string'),
@@ -103,27 +102,27 @@ if (defined('NUSOAP')) {
         'description_text' => array('name'=>'description_text', 'type' => 'xsd:string'),
         'rank' => array('name'=>'rank', 'type' => 'xsd:int'),
         'fields'=> array('name'=>'fields', 'type' => 'tns:ArrayOfArtifactField'),
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactFieldSet',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFieldSet[]')),
-    'tns:ArtifactFieldSet'
+        'ArrayOfArtifactFieldSet',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFieldSet[]')),
+        'tns:ArtifactFieldSet'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactField',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactField',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'field_id' => array('name' => 'field_id', 'type' => 'xsd:int'),
         'group_artifact_id' => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
         'field_set_id' => array('name'=>'field_set_id', 'type' => 'xsd:int'),
@@ -145,80 +144,80 @@ if (defined('NUSOAP')) {
         'user_can_update' => array('name' => 'user_can_update', 'type' => 'xsd:boolean'),
         'user_can_read'   => array('name' => 'user_can_read', 'type' => 'xsd:boolean'),
         'is_standard_field'   => array('name' => 'is_standard_field', 'type' => 'xsd:boolean')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactField',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(
+        'ArrayOfArtifactField',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(
         array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactField[]')
-    ),
-    'tns:ArtifactField'
+        ),
+        'tns:ArtifactField'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactFieldValue',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactFieldValue',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'field_id' => array('name' => 'field_id', 'type' => 'xsd:int'),
         'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
         'field_value' => array('name' => 'field_value', 'type' => 'xsd:string')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactFieldValue',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(
+        'ArrayOfArtifactFieldValue',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(
         array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFieldValue[]')
-    ),
-    'tns:ArtifactFieldValue'
+        ),
+        'tns:ArtifactFieldValue'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactFieldNameValue',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactFieldNameValue',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'field_name' => array('name' => 'field_name', 'type' => 'xsd:string'),
         'field_value' => array('name' => 'field_value', 'type' => 'xsd:string')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactFieldNameValue',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(
+        'ArrayOfArtifactFieldNameValue',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(
         array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFieldNameValue[]')
-    ),
-    'tns:ArtifactFieldNameValue'
+        ),
+        'tns:ArtifactFieldNameValue'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactFieldValueList',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactFieldValueList',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'field_id' => array('name' => 'field_id', 'type' => 'xsd:int'),
         'group_artifact_id' => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
         'value_id' => array('name' => 'value_id', 'type' => 'xsd:int'),
@@ -226,56 +225,56 @@ if (defined('NUSOAP')) {
         'description' => array('name' => 'description', 'type' => 'xsd:string'),
         'order_id' => array('name' => 'order_id', 'type' => 'xsd:int'),
         'status' => array('name' => 'status', 'type' => 'xsd:string')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactFieldValueList',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(
+        'ArrayOfArtifactFieldValueList',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(
         array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFieldValueList[]')
-    ),
-    'tns:ArtifactFieldValueList'
+        ),
+        'tns:ArtifactFieldValueList'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactRule',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactRule',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'rule_id' => array('name'=>'rule_id', 'type' => 'xsd:int'),
         'group_artifact_id'  => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
         'source_field_id' => array('name'=>'source_field_id', 'type' => 'xsd:int'),
         'source_value_id' => array('name'=>'source_value_id', 'type' => 'xsd:int'),
         'target_field_id' => array('name'=>'target_field_id', 'type' => 'xsd:int'),
         'target_value_id' => array('name'=>'target_value_id', 'type' => 'xsd:int')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactRule',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactRule[]')),
-    'tns:ArtifactRule'
+        'ArrayOfArtifactRule',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactRule[]')),
+        'tns:ArtifactRule'
     );
 
     $server->wsdl->addComplexType(
-    'Artifact',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'Artifact',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
         'group_artifact_id' => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
         'status_id' => array('name'=>'status_id', 'type' => 'xsd:int'),
@@ -287,112 +286,112 @@ if (defined('NUSOAP')) {
         'details' => array('name'=>'details', 'type' => 'xsd:string'),
         'severity'=>array('name'=>'severity', 'type' => 'xsd:int'),
         'extra_fields'=>array('name'=>'extra_fields', 'type' => 'tns:ArrayOfArtifactFieldValue')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifact',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Artifact[]')),
-    'tns:Artifact'
+        'ArrayOfArtifact',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Artifact[]')),
+        'tns:Artifact'
     );
 
     $server->wsdl->addComplexType(
-    'Criteria',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'Criteria',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'field_name' => array('name'=>'field_name', 'type' => 'xsd:string'),
         'field_value' => array('name'=>'field_value', 'type' => 'xsd:string'),
         'operator' => array('name'=>'operator', 'type' => 'xsd:string')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfCriteria',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Criteria[]')),
-    'tns:Criteria'
+        'ArrayOfCriteria',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Criteria[]')),
+        'tns:Criteria'
     );
 
     $server->wsdl->addComplexType(
-    'SortCriteria',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'SortCriteria',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'field_name' => array('name'=>'field_name', 'type' => 'xsd:string'),
         'sort_direction' => array('name'=>'sort_direction', 'type' => 'xsd:string')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfSortCriteria',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:SortCriteria[]')),
-    'tns:SortCriteria'
+        'ArrayOfSortCriteria',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:SortCriteria[]')),
+        'tns:SortCriteria'
     );
 
 
     $server->wsdl->addComplexType(
-    'ArtifactQueryResult',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactQueryResult',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'total_artifacts_number' => array('name'=>'total_artifacts_number', 'type' => 'xsd:int'),
         'artifacts' => array('name'=>'artifacts', 'type' => 'tns:ArrayOfArtifact')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactCanned',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactCanned',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'artifact_canned_id' => array('name'=>'artifact_canned_id', 'type' => 'xsd:int'),
         'group_artifact_id'  => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
         'title'          => array('name'=>'title', 'type' => 'xsd:string'),
         'body'              => array('name'=>'body', 'type' => 'xsd:string')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactCanned',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactCanned[]')),
-    'tns:ArtifactCanned'
+        'ArrayOfArtifactCanned',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactCanned[]')),
+        'tns:ArtifactCanned'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactFollowup',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactFollowup',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'artifact_id'          => array('name'=>'artifact_id', 'type' => 'xsd:int'),
         'follow_up_id'          => array('name'=>'follow_up_id', 'type' => 'xsd:int'),
         'comment'           => array('name'=>'comment', 'type' => 'xsd:string'),
@@ -404,80 +403,80 @@ if (defined('NUSOAP')) {
         'comment_type'     => array('name'=>'comment_type', 'type' => 'xsd:string'),
         'field_name'     => array('name'=>'field_name', 'type' => 'xsd:string'),
         'user_can_edit'  => array('name'=>'user_can_edit', 'type' => 'xsd:int')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactFollowup',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFollowup[]')),
-    'tns:ArtifactFollowup'
+        'ArrayOfArtifactFollowup',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFollowup[]')),
+        'tns:ArtifactFollowup'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactReport',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactReport',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'report_id'         => array('name'=>'report_id', 'type' => 'xsd:int'),
         'group_artifact_id' => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
         'name'              => array('name'=>'name', 'type' => 'xsd:string'),
         'description'       => array('name'=>'description', 'type' => 'xsd:string'),
         'scope'             => array('name'=>'scope', 'type' => 'xsd:string'),
         'fields'            => array('name'=>'fields', 'type' => 'tns:ArrayOfArtifactReportField')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactReport',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactReport[]')),
-    'tns:ArtifactReport'
+        'ArrayOfArtifactReport',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactReport[]')),
+        'tns:ArtifactReport'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactReportDesc',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactReportDesc',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'report_id'         => array('name'=>'report_id', 'type' => 'xsd:int'),
         'group_artifact_id' => array('name'=>'group_artifact_id', 'type' => 'xsd:int'),
         'name'              => array('name'=>'name', 'type' => 'xsd:string'),
         'description'       => array('name'=>'description', 'type' => 'xsd:string'),
         'scope'             => array('name'=>'scope', 'type' => 'xsd:string')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactReportDesc',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactReportDesc[]')),
-    'tns:ArtifactReportDesc'
+        'ArrayOfArtifactReportDesc',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactReportDesc[]')),
+        'tns:ArtifactReportDesc'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactFile',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactFile',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'id' => array('name'=>'id', 'type' => 'xsd:int'),
         'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
         'filename' => array('name'=>'filename', 'type' => 'xsd:string'),
@@ -487,27 +486,27 @@ if (defined('NUSOAP')) {
         'filetype' => array('name'=>'filetype', 'type' => 'xsd:string'),
         'adddate' => array('name'=>'adddate', 'type' => 'xsd:int'),
         'submitted_by' => array('name'=>'submitted_by', 'type' => 'xsd:string')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactFile',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFile[]')),
-    'tns:ArtifactFile'
+        'ArrayOfArtifactFile',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFile[]')),
+        'tns:ArtifactFile'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactReportField',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactReportField',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'report_id'           => array('name'=>'report_id', 'type' => 'xsd:int'),
         'field_name'          => array('name'=>'field_name', 'type' => 'xsd:string'),
         'show_on_query'       => array('name'=>'show_on_query', 'type' => 'xsd:int'),
@@ -515,84 +514,84 @@ if (defined('NUSOAP')) {
         'place_query'           => array('name'=>'place_query', 'type' => 'xsd:int'),
         'place_result'           => array('name'=>'place_result', 'type' => 'xsd:int'),
         'col_width'          => array('name'=>'col_width', 'type' => 'xsd:int')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactReportField',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactReportField[]')),
-    'tns:ArtifactReportField'
+        'ArrayOfArtifactReportField',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactReportField[]')),
+        'tns:ArtifactReportField'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactCC',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
-    'artifact_cc_id' => array('name'=>'artifact_cc_id', 'type' => 'xsd:int'),
-    'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
-    'email' => array('name'=>'email', 'type' => 'xsd:string'),
-    'added_by' => array('name'=>'added_by', 'type' => 'xsd:int'),
-    'added_by_name' => array('name'=>'added_by_name', 'type' => 'xsd:string'),
-    'comment' => array('name'=>'comment', 'type' => 'xsd:string'),
-    'date' => array('name'=>'date', 'type' => 'xsd:int')
-    )
+        'ArtifactCC',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
+        'artifact_cc_id' => array('name'=>'artifact_cc_id', 'type' => 'xsd:int'),
+        'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
+        'email' => array('name'=>'email', 'type' => 'xsd:string'),
+        'added_by' => array('name'=>'added_by', 'type' => 'xsd:int'),
+        'added_by_name' => array('name'=>'added_by_name', 'type' => 'xsd:string'),
+        'comment' => array('name'=>'comment', 'type' => 'xsd:string'),
+        'date' => array('name'=>'date', 'type' => 'xsd:int')
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactCC',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactCC[]')),
-    'tns:ArtifactCC'
+        'ArrayOfArtifactCC',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactCC[]')),
+        'tns:ArtifactCC'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactDependency',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
-    'artifact_depend_id'          => array('name'=>'artifact_depend_id', 'type' => 'xsd:int'),
-    'artifact_id'                 => array('name'=>'artifact_id', 'type' => 'xsd:int'),
-    'is_dependent_on_artifact_id' => array('name'=>'is_dependent_on_artifact_id', 'type' => 'xsd:int'),
-    'summary' => array('name'=>'summary', 'type' => 'xsd:string'),
-    'tracker_id' => array('name'=>'tracker_id', 'type' => 'xsd:int'),
-    'tracker_name' => array('name'=>'tracker_name', 'type' => 'xsd:string'),
-    'group_id' => array('name'=>'group_id', 'type' => 'xsd:int'),
-    'group_name' => array('name'=>'group_name', 'type' => 'xsd:string')
-    )
+        'ArtifactDependency',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
+        'artifact_depend_id'          => array('name'=>'artifact_depend_id', 'type' => 'xsd:int'),
+        'artifact_id'                 => array('name'=>'artifact_id', 'type' => 'xsd:int'),
+        'is_dependent_on_artifact_id' => array('name'=>'is_dependent_on_artifact_id', 'type' => 'xsd:int'),
+        'summary' => array('name'=>'summary', 'type' => 'xsd:string'),
+        'tracker_id' => array('name'=>'tracker_id', 'type' => 'xsd:int'),
+        'tracker_name' => array('name'=>'tracker_name', 'type' => 'xsd:string'),
+        'group_id' => array('name'=>'group_id', 'type' => 'xsd:int'),
+        'group_name' => array('name'=>'group_name', 'type' => 'xsd:string')
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactDependency',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactDependency[]')),
-    'tns:ArtifactDependency'
+        'ArrayOfArtifactDependency',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactDependency[]')),
+        'tns:ArtifactDependency'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactHistory',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactHistory',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         //'artifact_history_id' => array('name'=>'artifact_history_id', 'type' => 'xsd:int'),
         //'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
         'field_name' => array('name'=>'field_name', 'type' => 'xsd:string'),
@@ -600,149 +599,149 @@ if (defined('NUSOAP')) {
         'new_value' => array('name'=>'new_value', 'type' => 'xsd:string'),
         'modification_by' => array('name'=>'modification_by', 'type' => 'xsd:string'),
         'date' => array('name'=>'date', 'type' => 'xsd:int')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactHistory',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactHistory[]')),
-    'tns:ArtifactHistory'
+        'ArrayOfArtifactHistory',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactHistory[]')),
+        'tns:ArtifactHistory'
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfInt',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'xsd:int[]')),
-    'xsd:int'
+        'ArrayOfInt',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'xsd:int[]')),
+        'xsd:int'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactFromReport',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactFromReport',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
         'severity' => array('name'=>'severity', 'type' => 'xsd:int'),
         'fields'=>array('name'=>'fields', 'type' => 'tns:ArrayOfArtifactFieldFromReport')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactFromReport',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFromReport[]')),
-    'tns:ArtifactFromReport'
+        'ArrayOfArtifactFromReport',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFromReport[]')),
+        'tns:ArtifactFromReport'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactFieldFromReport',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactFieldFromReport',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'field_name'=>array('name'=>'field_name', 'type' => 'xsd:string'),
         'field_value'=>array('name'=>'field_value', 'type' => 'xsd:string')
-    )
+        )
     );
 
     $server->wsdl->addComplexType(
-    'ArrayOfArtifactFieldFromReport',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFieldFromReport[]')),
-    'tns:ArtifactFieldFromReport'
+        'ArrayOfArtifactFieldFromReport',
+        'complexType',
+        'array',
+        '',
+        'SOAP-ENC:Array',
+        array(),
+        array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFieldFromReport[]')),
+        'tns:ArtifactFieldFromReport'
     );
 
     $server->wsdl->addComplexType(
-    'ArtifactFromReportResult',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
+        'ArtifactFromReportResult',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
         'total_artifacts_number' => array('name'=>'total_artifacts_number', 'type' => 'xsd:int'),
         'artifacts' => array('name'=>'artifacts', 'type' => 'tns:ArrayOfArtifactFromReport')
-    )
+        )
     );
 
 // Function definition
     $server->register(
-    'getTrackerList', // method name
-    array('sessionKey'=>'xsd:string', // input parameters
+        'getTrackerList', // method name
+        array('sessionKey'=>'xsd:string', // input parameters
           'group_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfTrackerDesc'), // output parameters
-    $uri, // namespace
-    $uri.'#getTrackerList', // soapaction
-    'rpc', // style
-    'encoded', // use
-    'Returns the array of TrackerDesc (light description of trackers) that belongs to the group identified by group ID.
+        ),
+        array('return'=>'tns:ArrayOfTrackerDesc'), // output parameters
+        $uri, // namespace
+        $uri.'#getTrackerList', // soapaction
+        'rpc', // style
+        'encoded', // use
+        'Returns the array of TrackerDesc (light description of trackers) that belongs to the group identified by group ID.
      Returns a soap fault if the group ID does not match with a valid project.' // documentation
     );
 
     $server->register(
-    'getArtifactType', // method name
-    array('sessionKey'=>'xsd:string', // input parameters
+        'getArtifactType', // method name
+        array('sessionKey'=>'xsd:string', // input parameters
           'group_id'=>'xsd:int',
           'group_artifact_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:ArtifactType'), // output parameters
-    $uri, // namespace
-    $uri.'#getArtifactType', // soapaction
-    'rpc', // style
-    'encoded', // use
-    'Returns the ArtifactType (tracker) with the ID group_artifact_id that belongs to the group identified by group ID.
+        ),
+        array('return'=>'tns:ArtifactType'), // output parameters
+        $uri, // namespace
+        $uri.'#getArtifactType', // soapaction
+        'rpc', // style
+        'encoded', // use
+        'Returns the ArtifactType (tracker) with the ID group_artifact_id that belongs to the group identified by group ID.
      Returns a soap fault if the group ID does not match with a valid project, or if the group_artifact_id is invalid or is not a tracker of the project.' // documentation
     );
 
     $server->register(
-    'getArtifactTypes', // method name
-    array('sessionKey'=>'xsd:string', // input parameters
+        'getArtifactTypes', // method name
+        array('sessionKey'=>'xsd:string', // input parameters
           'group_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfArtifactType'), // output parameters
-    $uri, // namespace
-    $uri.'#getArtifactTypes', // soapaction
-    'rpc', // style
-    'encoded', // use
-    'Returns the array of ArtifactType (trackers) that belongs to the group identified by group ID.
+        ),
+        array('return'=>'tns:ArrayOfArtifactType'), // output parameters
+        $uri, // namespace
+        $uri.'#getArtifactTypes', // soapaction
+        'rpc', // style
+        'encoded', // use
+        'Returns the array of ArtifactType (trackers) that belongs to the group identified by group ID.
      Returns a soap fault if the group ID does not match with a valid project.' // documentation
     );
 
     $server->register(
-    'getArtifacts',
-    array('sessionKey'=>'xsd:string',
+        'getArtifacts',
+        array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
           'group_artifact_id'=>'xsd:int',
           'criteria' => 'tns:ArrayOfCriteria',
           'offset' => 'xsd:int',
           'max_rows' => 'xsd:int'
-    ),
-    array('return'=>'tns:ArtifactQueryResult'),
-    $uri,
-    $uri.'#getArtifacts',
-    'rpc',
-    'encoded',
-    'Returns the ArtifactQueryResult of the tracker group_artifact_id in the project group_id 
+        ),
+        array('return'=>'tns:ArtifactQueryResult'),
+        $uri,
+        $uri.'#getArtifacts',
+        'rpc',
+        'encoded',
+        'Returns the ArtifactQueryResult of the tracker group_artifact_id in the project group_id 
      that are matching the given criteria. If offset AND max_rows are filled, it returns only 
      max_rows artifacts, skipping the first offset ones.
      It is not possible to sort artifact with this function (use getArtifactsFromReport if you want to sort).
@@ -750,8 +749,8 @@ if (defined('NUSOAP')) {
     );
 
     $server->register(
-    'getArtifactsFromReport',
-    array('sessionKey'=>'xsd:string',
+        'getArtifactsFromReport',
+        array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
           'group_artifact_id'=>'xsd:int',
           'report_id' => 'xsd:int',
@@ -759,13 +758,13 @@ if (defined('NUSOAP')) {
           'offset' => 'xsd:int',
           'max_rows' => 'xsd:int',
           'sort_criteria' => 'tns:ArrayOfSortCriteria'
-    ),
-    array('return'=>'tns:ArtifactFromReportResult'),
-    $uri,
-    $uri.'#getArtifactsFromReport',
-    'rpc',
-    'encoded',
-    'Returns the ArtifactReportResult of the tracker group_artifact_id in the project group_id 
+        ),
+        array('return'=>'tns:ArtifactFromReportResult'),
+        $uri,
+        $uri.'#getArtifactsFromReport',
+        'rpc',
+        'encoded',
+        'Returns the ArtifactReportResult of the tracker group_artifact_id in the project group_id 
      with the report report_id that are matching the given criteria. 
      If offset AND max_rows are filled, it returns only max_rows artifacts, skipping the first offset ones.
      The result will be sorted, as defined in the param sort_criteria.
@@ -773,8 +772,8 @@ if (defined('NUSOAP')) {
     );
 
     $server->register(
-    'addArtifact',
-    array('sessionKey'=>'xsd:string',
+        'addArtifact',
+        array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'group_artifact_id'=>'xsd:int',
         'status_id' =>'xsd:int',
@@ -783,21 +782,21 @@ if (defined('NUSOAP')) {
         'details'=>'xsd:string',
         'severity'=>'xsd:int',
         'extra_fields'=>'tns:ArrayOfArtifactFieldValue'
-    ),
-    array('return'=>'xsd:int'),
-    $uri,
-    $uri.'#addArtifact',
-    'rpc',
-    'encoded',
-    'Add an Artifact in the tracker group_artifact_id of the project group_id with the values given by 
+        ),
+        array('return'=>'xsd:int'),
+        $uri,
+        $uri.'#addArtifact',
+        'rpc',
+        'encoded',
+        'Add an Artifact in the tracker group_artifact_id of the project group_id with the values given by 
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields. 
      Returns the Id of the created artifact if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, or if the add failed.'
     );
 
     $server->register(
-    'addArtifactWithFieldNames',
-    array('sessionKey'=>'xsd:string',
+        'addArtifactWithFieldNames',
+        array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'group_artifact_id'=>'xsd:int',
         'status_id' =>'xsd:int',
@@ -806,21 +805,21 @@ if (defined('NUSOAP')) {
         'details'=>'xsd:string',
         'severity'=>'xsd:int',
         'extra_fields'=>'tns:ArrayOfArtifactFieldNameValue'
-    ),
-    array('return'=>'xsd:int'),
-    $uri,
-    $uri.'#addArtifact',
-    'rpc',
-    'encoded',
-    'Add an Artifact in the tracker tracker_name of the project group_id with the values given by 
+        ),
+        array('return'=>'xsd:int'),
+        $uri,
+        $uri.'#addArtifact',
+        'rpc',
+        'encoded',
+        'Add an Artifact in the tracker tracker_name of the project group_id with the values given by 
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields. 
      Returns the Id of the created artifact if the creation succeed.
      Returns a soap fault if the group_id is not a valid one, if the tracker_name is not a valid one, or if the add failed.'
     );
 
     $server->register(
-    'updateArtifact',
-    array('sessionKey'=>'xsd:string',
+        'updateArtifact',
+        array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'group_artifact_id'=>'xsd:int',
         'artifact_id'=>'xsd:int',
@@ -830,21 +829,21 @@ if (defined('NUSOAP')) {
         'details'=>'xsd:string',
         'severity'=>'xsd:int',
         'extra_fields'=>'tns:ArrayOfArtifactFieldValue'
-    ),
-    array('return'=>'xsd:int'),
-    $uri,
-    $uri.'#updateArtifact',
-    'rpc',
-    'encoded',
-    'Update the artifact $artifact_id of the tracker $group_artifact_id in the project group_id with the values given by 
+        ),
+        array('return'=>'xsd:int'),
+        $uri,
+        $uri.'#updateArtifact',
+        'rpc',
+        'encoded',
+        'Update the artifact $artifact_id of the tracker $group_artifact_id in the project group_id with the values given by 
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifart_id is not a valid one, or if the update failed.'
     );
 
     $server->register(
-    'updateArtifactWithFieldNames',
-    array('sessionKey'=>'xsd:string',
+        'updateArtifactWithFieldNames',
+        array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'group_artifact_id'=>'xsd:int',
         'artifact_id'=>'xsd:int',
@@ -854,155 +853,155 @@ if (defined('NUSOAP')) {
         'details'=>'xsd:string',
         'severity'=>'xsd:int',
         'extra_fields'=>'tns:ArrayOfArtifactFieldNameValue'
-    ),
-    array('return'=>'xsd:int'),
-    $uri,
-    $uri.'#updateArtifact',
-    'rpc',
-    'encoded',
-    'Update the artifact $artifact_id of the tracker $tracker_name in the project group_id with the values given by 
+        ),
+        array('return'=>'xsd:int'),
+        $uri,
+        $uri.'#updateArtifact',
+        'rpc',
+        'encoded',
+        'Update the artifact $artifact_id of the tracker $tracker_name in the project group_id with the values given by 
      status_id, close_date, summary, details, severity and extra_fields for the non-standard fields.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifart_id is not a valid one, or if the update failed.'
     );
 
     $server->register(
-    'getArtifactFollowups',
-    array('sessionKey'=>'xsd:string',
+        'getArtifactFollowups',
+        array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'group_artifact_id'=>'xsd:int',
         'artifact_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfArtifactFollowup'),
-    $uri,
-    $uri.'#getArtifactFollowups',
-    'rpc',
-    'encoded',
-    'Returns the list of follow-ups (ArtifactFollowup) of the artifact artifact_id of the tracker group_artifact_id in the project group_id.
+        ),
+        array('return'=>'tns:ArrayOfArtifactFollowup'),
+        $uri,
+        $uri.'#getArtifactFollowups',
+        'rpc',
+        'encoded',
+        'Returns the list of follow-ups (ArtifactFollowup) of the artifact artifact_id of the tracker group_artifact_id in the project group_id.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      or if the artifart_id is not a valid one.'
     );
 
     $server->register(
-    'getArtifactCannedResponses',
-    array('sessionKey'=>'xsd:string',
+        'getArtifactCannedResponses',
+        array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'group_artifact_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfArtifactCanned'),
-    $uri,
-    $uri.'#getArtifactCannedResponses',
-    'rpc',
-    'encoded',
-    'Returns the list of canned responses (ArtifactCanned) for the tracker group_artifact_id of the project group_id. 
+        ),
+        array('return'=>'tns:ArrayOfArtifactCanned'),
+        $uri,
+        $uri.'#getArtifactCannedResponses',
+        'rpc',
+        'encoded',
+        'Returns the list of canned responses (ArtifactCanned) for the tracker group_artifact_id of the project group_id. 
      Returns a soap fault if the group_id is not a valid one or if group_artifact_id is not a valid one.'
     );
 
     $server->register(
-    'getArtifactReports',
-    array('sessionKey'=>'xsd:string',
+        'getArtifactReports',
+        array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'group_artifact_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfArtifactReport'),
-    $uri,
-    $uri.'#getArtifactReports',
-    'rpc',
-    'encoded',
-    'Returns the list of reports (ArtifactReport) for the tracker group_artifact_id of the project group_id of the current user. 
+        ),
+        array('return'=>'tns:ArrayOfArtifactReport'),
+        $uri,
+        $uri.'#getArtifactReports',
+        'rpc',
+        'encoded',
+        'Returns the list of reports (ArtifactReport) for the tracker group_artifact_id of the project group_id of the current user. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one.'
     );
 
     $server->register(
-    'getArtifactAttachedFiles',
-    array('sessionKey'=>'xsd:string',
+        'getArtifactAttachedFiles',
+        array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
           'group_artifact_id'=>'xsd:int',
           'artifact_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfArtifactFile'),
-    $uri,
-    $uri.'#getArtifactAttachedFiles',
-    'rpc',
-    'encoded',
-    'Returns the array of attached files (ArtifactFile) attached to the artifact artifact_id in the tracker group_artifact_id of the project group_id. 
+        ),
+        array('return'=>'tns:ArrayOfArtifactFile'),
+        $uri,
+        $uri.'#getArtifactAttachedFiles',
+        'rpc',
+        'encoded',
+        'Returns the array of attached files (ArtifactFile) attached to the artifact artifact_id in the tracker group_artifact_id of the project group_id. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      or if the artifact_id is not a valid one. NOTE : for performance reasons, the result does not contain the content of the file. Please use getArtifactAttachedFile to get the content of a single file'
     );
 
     $server->register(
-    'getArtifactAttachedFile',
-    array('sessionKey'=>'xsd:string',
+        'getArtifactAttachedFile',
+        array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
           'group_artifact_id'=>'xsd:int',
           'artifact_id'=>'xsd:int',
           'file_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:ArtifactFile'),
-    $uri,
-    $uri.'#getArtifactAttachedFile',
-    'rpc',
-    'encoded',
-    'Returns the attached file (ArtifactFile) with the id file_id attached to the artifact artifact_id in the tracker group_artifact_id of the project group_id. 
+        ),
+        array('return'=>'tns:ArtifactFile'),
+        $uri,
+        $uri.'#getArtifactAttachedFile',
+        'rpc',
+        'encoded',
+        'Returns the attached file (ArtifactFile) with the id file_id attached to the artifact artifact_id in the tracker group_artifact_id of the project group_id. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifact_id is not a valid one, or if the file_id doesnt match with the given artifact_id.'
     );
 
 
     $server->register(
-    'getArtifactById',
-    array('sessionKey'=>'xsd:string',
+        'getArtifactById',
+        array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
           'group_artifact_id'=>'xsd:int',
           'artifact_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:Artifact'),
-    $uri,
-    $uri.'#getArtifactById',
-    'rpc',
-    'encoded',
-    'Returns the artifact (Artifact) identified by the id artifact_id in the tracker group_artifact_id of the project group_id. 
+        ),
+        array('return'=>'tns:Artifact'),
+        $uri,
+        $uri.'#getArtifactById',
+        'rpc',
+        'encoded',
+        'Returns the artifact (Artifact) identified by the id artifact_id in the tracker group_artifact_id of the project group_id. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      or if the artifact_id is not a valid one.'
     );
 
     $server->register(
-    'getArtifactDependencies',
-    array('sessionKey'=>'xsd:string',
+        'getArtifactDependencies',
+        array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
           'group_artifact_id'=>'xsd:int',
           'artifact_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfArtifactDependency'),
-    $uri,
-    $uri.'#getArtifactDependencies',
-    'rpc',
-    'encoded',
-    'Returns the list of the dependencies (ArtifactDependency) for the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
+        ),
+        array('return'=>'tns:ArrayOfArtifactDependency'),
+        $uri,
+        $uri.'#getArtifactDependencies',
+        'rpc',
+        'encoded',
+        'Returns the list of the dependencies (ArtifactDependency) for the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      or if the artifact_id is not a valid one.'
     );
 
     $server->register(
-    'getArtifactInverseDependencies',
-    array('sessionKey'=>'xsd:string',
+        'getArtifactInverseDependencies',
+        array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
           'group_artifact_id'=>'xsd:int',
           'artifact_id'=>'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfArtifactDependency'),
-    $uri,
-    $uri.'#getArtifactInverseDependencies',
-    'rpc',
-    'encoded',
-    'Returns the list of the dependencies (ArtifactDependency) that other artifact can have with the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
+        ),
+        array('return'=>'tns:ArrayOfArtifactDependency'),
+        $uri,
+        $uri.'#getArtifactInverseDependencies',
+        'rpc',
+        'encoded',
+        'Returns the list of the dependencies (ArtifactDependency) that other artifact can have with the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      or if the artifact_id is not a valid one.'
     );
 
     $server->register(
-    'addArtifactAttachedFile',
-    array('sessionKey'=>'xsd:string',
+        'addArtifactAttachedFile',
+        array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'group_artifact_id'=>'xsd:int',
         'artifact_id'=>'xsd:int',
@@ -1010,13 +1009,13 @@ if (defined('NUSOAP')) {
         'description'=>'xsd:string',
         'filename'=>'xsd:string',
         'filetype'=>'xsd:string'
-    ),
-    array('return'=>'xsd:int'),
-    $uri,
-    $uri.'#addArtifactAttachedFile',
-    'rpc',
-    'encoded',
-    'Add an attached file to the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
+        ),
+        array('return'=>'xsd:int'),
+        $uri,
+        $uri.'#addArtifactAttachedFile',
+        'rpc',
+        'encoded',
+        'Add an attached file to the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
      The attached file is described by the raw encoded_data (encoded in base64), the description of the file, 
      the name of the file and it type (the mimi-type -- plain/text, image/jpeg, etc ...). 
      Returns the ID of the attached file if the attachment succeed.
@@ -1025,38 +1024,38 @@ if (defined('NUSOAP')) {
     );
 
     $server->register(
-    'deleteArtifactAttachedFile',
-    array('sessionKey'=>'xsd:string',
+        'deleteArtifactAttachedFile',
+        array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'group_artifact_id'=>'xsd:int',
         'artifact_id'=>'xsd:int',
         'file_id'=>'xsd:int'
-    ),
-    array('return'=>'xsd:int'),
-    $uri,
-    $uri.'#deleteArtifactAttachedFile',
-    'rpc',
-    'encoded',
-    'Delete the attached file file_id from the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
+        ),
+        array('return'=>'xsd:int'),
+        $uri,
+        $uri.'#deleteArtifactAttachedFile',
+        'rpc',
+        'encoded',
+        'Delete the attached file file_id from the artifact artifact_id of the tracker group_artifact_id of the project group_id. 
      Returns the ID of the deleted file if the deletion succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifact_id is not a valid one, if the file_id is not a valid one or if the deletion failed.'
     );
 
     $server->register(
-    'addArtifactDependencies',
-    array('sessionKey'=>'xsd:string',
+        'addArtifactDependencies',
+        array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'group_artifact_id'=>'xsd:int',
         'artifact_id'=>'xsd:int',
         'is_dependent_on_artifact_ids'=>'xsd:string'
-    ),
-    array('return'=>'xsd:boolean'),
-    $uri,
-    $uri.'#addArtifactDependencies',
-    'rpc',
-    'encoded',
-    'Add the list of dependencies is_dependent_on_artifact_id to the list of dependencies of the artifact artifact_id 
+        ),
+        array('return'=>'xsd:boolean'),
+        $uri,
+        $uri.'#addArtifactDependencies',
+        'rpc',
+        'encoded',
+        'Add the list of dependencies is_dependent_on_artifact_id to the list of dependencies of the artifact artifact_id 
      of the tracker group_artifact_id of the project group_id.
      Returns true if the add succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
@@ -1064,40 +1063,40 @@ if (defined('NUSOAP')) {
     );
 
     $server->register(
-    'deleteArtifactDependency',
-    array('sessionKey'=>'xsd:string',
+        'deleteArtifactDependency',
+        array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'group_artifact_id'=>'xsd:int',
         'artifact_id'=>'xsd:int',
         'dependent_on_artifact_id'=>'xsd:int'
-    ),
-    array('return'=>'xsd:int'),
-    $uri,
-    $uri.'#deleteArtifactDependency',
-    'rpc',
-    'encoded',
-    'Delete the dependency between the artifact dependent_on_artifact_id and the artifact artifact_id of the tracker group_artifact_id of the project group_id.
+        ),
+        array('return'=>'xsd:int'),
+        $uri,
+        $uri.'#deleteArtifactDependency',
+        'rpc',
+        'encoded',
+        'Delete the dependency between the artifact dependent_on_artifact_id and the artifact artifact_id of the tracker group_artifact_id of the project group_id.
      Returns the ID of the deleted dependency if the deletion succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifact_id is not a valid one, if the dependent_on_artifact_id is not a valid artifact id, or if the deletion failed.'
     );
 
     $server->register(
-    'addArtifactFollowup',
-    array('sessionKey' => 'xsd:string',
+        'addArtifactFollowup',
+        array('sessionKey' => 'xsd:string',
         'group_id' => 'xsd:int',
         'group_artifact_id' => 'xsd:int',
         'artifact_id' => 'xsd:int',
         'body' => 'xsd:string',
         'comment_type_id' => 'xsd:int',
         'format' => 'xsd:int'
-    ),
-    array('return'=>'xsd:boolean'),
-    $uri,
-    $uri.'#addArtifactFollowup',
-    'rpc',
-    'encoded',
-    'Add a follow-up body to the artifact artifact_id of the tracker group_artifact_id of the project group_id,
+        ),
+        array('return'=>'xsd:boolean'),
+        $uri,
+        $uri.'#addArtifactFollowup',
+        'rpc',
+        'encoded',
+        'Add a follow-up body to the artifact artifact_id of the tracker group_artifact_id of the project group_id,
      with optionals comment type and canned response. If canned response is set, it will replace the body.
      Returns nothing if the add succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
@@ -1105,120 +1104,119 @@ if (defined('NUSOAP')) {
     );
 
     $server->register(
-    'updateArtifactFollowUp',
-    array('sessionKey'=>'xsd:string',
+        'updateArtifactFollowUp',
+        array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'group_artifact_id'=>'xsd:int',
         'artifact_id'=>'xsd:int',
         'artifact_history_id'=>'xsd:int',
         'comment'=>'xsd:string',
-    ),
-    array('return'=>'xsd:boolean'),
-    $uri,
-    $uri.'#updateArtifact',
-    'rpc',
-    'encoded',
-    'Update the follow_up artifact_history_id of the tracker $group_artifact_id in the project group_id for the artifact $artifact_id with the new comment $comment.
+        ),
+        array('return'=>'xsd:boolean'),
+        $uri,
+        $uri.'#updateArtifact',
+        'rpc',
+        'encoded',
+        'Update the follow_up artifact_history_id of the tracker $group_artifact_id in the project group_id for the artifact $artifact_id with the new comment $comment.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifart_id is not a valid one, if the artifact_history_id is not a valid one, or if the update failed.'
     );
 
     $server->register(
-    'deleteArtifactFollowUp',
-    array('sessionKey'=>'xsd:string',
+        'deleteArtifactFollowUp',
+        array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
         'group_artifact_id'=>'xsd:int',
         'artifact_id'=>'xsd:int',
         'artifact_history_id'=>'xsd:int'
-    ),
-    array('return'=>'xsd:boolean'),
-    $uri,
-    $uri.'#deleteArtifact',
-    'rpc',
-    'encoded',
-    'Delete the follow_up artifact_history_id of the tracker $group_artifact_id in the project group_id for the artifact $artifact_id.
+        ),
+        array('return'=>'xsd:boolean'),
+        $uri,
+        $uri.'#deleteArtifact',
+        'rpc',
+        'encoded',
+        'Delete the follow_up artifact_history_id of the tracker $group_artifact_id in the project group_id for the artifact $artifact_id.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifart_id is not a valid one, if the artifact_history_id is not a valid one, or if the deletion failed.'
     );
 
     $server->register(
-    'existArtifactSummary',
-    array('sessionKey' => 'xsd:string',
+        'existArtifactSummary',
+        array('sessionKey' => 'xsd:string',
         'group_artifact_id' => 'xsd:int',
         'summary' => 'xsd:string'
-    ),
-    array('return'=>'xsd:int'),
-    $uri,
-    $uri.'#existArtifactSummary',
-    'rpc',
-    'encoded',
-    'Check if there is an artifact in the tracker group_artifact_id that already have the summary summary (the summary is unique inside a given tracker).
+        ),
+        array('return'=>'xsd:int'),
+        $uri,
+        $uri.'#existArtifactSummary',
+        'rpc',
+        'encoded',
+        'Check if there is an artifact in the tracker group_artifact_id that already have the summary summary (the summary is unique inside a given tracker).
      Returns the ID of the artifact containing the same summary in the tracker, or -1 if the summary does not exist in this tracker.'
     );
 
     $server->register(
-    'getArtifactCCList',
-    array('sessionKey' => 'xsd:string',
+        'getArtifactCCList',
+        array('sessionKey' => 'xsd:string',
         'group_id' => 'xsd:int',
         'group_artifact_id' => 'xsd:int',
         'artifact_id' => 'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfArtifactCC'),
-    $uri,
-    $uri.'#getArtifactCCList',
-    'rpc',
-    'encoded',
-    'Get the list of emails or logins in the CC list of a specific artifact'
+        ),
+        array('return'=>'tns:ArrayOfArtifactCC'),
+        $uri,
+        $uri.'#getArtifactCCList',
+        'rpc',
+        'encoded',
+        'Get the list of emails or logins in the CC list of a specific artifact'
     );
 
     $server->register(
-    'addArtifactCC',
-    array('sessionKey' => 'xsd:string',
+        'addArtifactCC',
+        array('sessionKey' => 'xsd:string',
         'group_id' => 'xsd:int',
         'group_artifact_id' => 'xsd:int',
         'artifact_id' => 'xsd:int',
         'cc_list' => 'xsd:string',
         'cc_comment' => 'xsd:string'
-    ),
-    array('return'=>'xsd:boolean'),
-    $uri,
-    $uri.'#addArtifactCC',
-    'rpc',
-    'encoded',
-    'Add a list of emails or logins in the CC list of a specific artifact, with an optional comment'
+        ),
+        array('return'=>'xsd:boolean'),
+        $uri,
+        $uri.'#addArtifactCC',
+        'rpc',
+        'encoded',
+        'Add a list of emails or logins in the CC list of a specific artifact, with an optional comment'
     );
 
     $server->register(
-    'deleteArtifactCC',
-    array('sessionKey' => 'xsd:string',
+        'deleteArtifactCC',
+        array('sessionKey' => 'xsd:string',
         'group_id' => 'xsd:int',
         'group_artifact_id' => 'xsd:int',
         'artifact_id' => 'xsd:int',
         'artifact_cc_id' => 'xsd:int'
-    ),
-    array('return'=>'xsd:boolean'),
-    $uri,
-    $uri.'#deleteArtifactCC',
-    'rpc',
-    'encoded',
-    'Delete a CC to the CC list of the artifact'
+        ),
+        array('return'=>'xsd:boolean'),
+        $uri,
+        $uri.'#deleteArtifactCC',
+        'rpc',
+        'encoded',
+        'Delete a CC to the CC list of the artifact'
     );
 
     $server->register(
-    'getArtifactHistory',
-    array('sessionKey' => 'xsd:string',
+        'getArtifactHistory',
+        array('sessionKey' => 'xsd:string',
         'group_id' => 'xsd:int',
         'group_artifact_id' => 'xsd:int',
         'artifact_id' => 'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfArtifactHistory'),
-    $uri,
-    $uri.'#getArtifactHistory',
-    'rpc',
-    'encoded',
-    'Get the history of the artifact (the history of the fields values)'
+        ),
+        array('return'=>'tns:ArrayOfArtifactHistory'),
+        $uri,
+        $uri.'#getArtifactHistory',
+        'rpc',
+        'encoded',
+        'Get the history of the artifact (the history of the fields values)'
     );
-
 } else {
 
 
@@ -1246,14 +1244,14 @@ if (defined('NUSOAP')) {
 
             $atf = new ArtifactTypeFactory($group);
             if (!$atf || !is_object($atf)) {
-                return new SoapFault(get_artifact_type_factory_fault, 'Could Not Get ArtifactTypeFactory','getTrackerList');
+                return new SoapFault(get_artifact_type_factory_fault, 'Could Not Get ArtifactTypeFactory', 'getTrackerList');
             } elseif ($atf->isError()) {
                 return new SoapFault(get_artifact_type_factory_fault, $atf->getErrorMessage(), 'getTrackerList');
             }
             // The function getArtifactTypes returns only the trackers the user is allowed to view
             return trackerlist_to_soap($atf->getArtifactTypes());
         } else {
-            return new SoapFault(invalid_session_fault,'Invalid Session','getTrackerList');
+            return new SoapFault(invalid_session_fault, 'Invalid Session', 'getTrackerList');
         }
     }
 
@@ -1277,19 +1275,18 @@ if (defined('NUSOAP')) {
             } else {
                 $ath = new ArtifactType($at_arr[$i]->getGroup(), $at_arr[$i]->getID());
                 if (!$ath || !is_object($ath)) {
-                    return new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created','getArtifactTypes');
+                    return new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created', 'getArtifactTypes');
                 }
                 if ($ath->isError()) {
-                    return new SoapFault(get_artifact_type_fault, $ath->getErrorMessage(),'getArtifactTypes');
+                    return new SoapFault(get_artifact_type_fault, $ath->getErrorMessage(), 'getArtifactTypes');
                 }
                 // Check if this tracker is valid (not deleted)
-                if ( !$ath->isValid() ) {
-                    return new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.','getArtifactTypes');
+                if (!$ath->isValid()) {
+                    return new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.', 'getArtifactTypes');
                 }
 
                 // Check if the user can view this tracker
                 if ($ath->userCanView($user_id)) {
-
                     // get the reports description (light desc of reports)
                     $report_fact = new ArtifactReportFactory();
                     if (!$report_fact || !is_object($report_fact)) {
@@ -1324,7 +1321,7 @@ if (defined('NUSOAP')) {
     {
         $return = array();
         if (is_array($artifactreportsdesc) && count($artifactreportsdesc)) {
-            foreach ($artifactreportsdesc as $arid => $artifactreportdesc){
+            foreach ($artifactreportsdesc as $arid => $artifactreportdesc) {
                 if ($artifactreportdesc->isError()) {
                     //skip if error
                 } else {
@@ -1362,7 +1359,7 @@ if (defined('NUSOAP')) {
 
             $at = new ArtifactType($group, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_factory_fault, 'Could Not Get ArtifactType','getArtifactType');
+                return new SoapFault(get_artifact_type_factory_fault, 'Could Not Get ArtifactType', 'getArtifactType');
             } elseif ($at->isError()) {
                 return new SoapFault(get_artifact_type_factory_fault, $at->getErrorMessage(), 'getArtifactType');
             }
@@ -1377,9 +1374,8 @@ if (defined('NUSOAP')) {
             } else {
                 return new SoapFault(get_artifact_type_fault, 'Permission denied.', 'getArtifactType');
             }
-
         } else {
-            return new SoapFault(invalid_session_fault,'Invalid Session','getArtifactType');
+            return new SoapFault(invalid_session_fault, 'Invalid Session', 'getArtifactType');
         }
     }
 
@@ -1402,14 +1398,14 @@ if (defined('NUSOAP')) {
 
             $atf = new ArtifactTypeFactory($group);
             if (!$atf || !is_object($atf)) {
-                return new SoapFault(get_artifact_type_factory_fault, 'Could Not Get ArtifactTypeFactory','getArtifactTypes');
+                return new SoapFault(get_artifact_type_factory_fault, 'Could Not Get ArtifactTypeFactory', 'getArtifactTypes');
             } elseif ($atf->isError()) {
                 return new SoapFault(get_artifact_type_factory_fault, $atf->getErrorMessage(), 'getArtifactTypes');
             }
             // The function getArtifactTypes returns only the trackers the user is allowed to view
             return artifacttypes_to_soap($atf->getArtifactTypes());
         } else {
-            return new SoapFault(invalid_session_fault,'Invalid Session','getArtifactTypes');
+            return new SoapFault(invalid_session_fault, 'Invalid Session', 'getArtifactTypes');
         }
     }
 
@@ -1431,7 +1427,7 @@ if (defined('NUSOAP')) {
         // number of opend artifact are not part of ArtifactType, so we have to get it with ArtifactTypeFactory (could need some refactoring maybe)
         $atf = new ArtifactTypeFactory($at->getGroup());
         $arr_count = $atf->getStatusIdCount($at->getID());
-        if ( $arr_count ) {
+        if ($arr_count) {
             $open_count = array_key_exists('open_count', $arr_count)?$arr_count['open_count']:-1;
             $count = array_key_exists('count', $arr_count)?$arr_count['count']:-1;
         } else {
@@ -1442,49 +1438,47 @@ if (defined('NUSOAP')) {
         $field_sets = array();
         $ath = new ArtifactType($at->getGroup(), $at->getID());
         if (!$ath || !is_object($ath)) {
-            return new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created','getArtifactTypes');
+            return new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created', 'getArtifactTypes');
         }
         if ($ath->isError()) {
-            return new SoapFault(get_artifact_type_fault, $ath->getErrorMessage(),'getArtifactTypes');
+            return new SoapFault(get_artifact_type_fault, $ath->getErrorMessage(), 'getArtifactTypes');
         }
         // Check if this tracker is valid (not deleted)
-        if ( !$ath->isValid() ) {
-            return new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.','getArtifactTypes');
+        if (!$ath->isValid()) {
+            return new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.', 'getArtifactTypes');
         }
         // Check if the user can view this tracker
         if ($ath->userCanView($user_id)) {
-
             $art_fieldset_fact = new ArtifactFieldSetFactory($at);
             if (!$art_fieldset_fact || !is_object($art_fieldset_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldSetFactory','getFieldSets');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldSetFactory', 'getFieldSets');
             } elseif ($art_fieldset_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_fieldset_fact->getErrorMessage(),'getFieldSets');
+                return new SoapFault(get_artifact_field_factory_fault, $art_fieldset_fact->getErrorMessage(), 'getFieldSets');
             }
             $result_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
 
-            foreach($result_fieldsets as $fieldset_id => $result_fieldset) {
+            foreach ($result_fieldsets as $fieldset_id => $result_fieldset) {
                 $fields = array();
                 $fields_in_fieldset = $result_fieldset->getAllUsedFields();
                 $group_id = $at->Group->getID();
                 $group_artifact_id = $at->getID();
                 foreach ($fields_in_fieldset as $key => $field) {
-
-                    if ($field->userCanRead($group_id,$group_artifact_id,$user_id)) {
+                    if ($field->userCanRead($group_id, $group_artifact_id, $user_id)) {
                         $availablevalues = array();
                         $result = $field->getFieldPredefinedValues($at->getID(), false, false, false, false);
                         $rows=db_numrows($result);
                         $cols=db_numfields($result);
                         for ($j=0; $j<$rows; $j++) {
-                            $field_status = ($cols > 2) ? db_result($result,$j,6) : '';
+                            $field_status = ($cols > 2) ? db_result($result, $j, 6) : '';
                             // we don't send hidden values (status == 'H')
                             if ($field_status != 'H') {
                                 $availablevalues[] = array (
                                 'field_id' => $field->getID(),
                                 'group_artifact_id' => $at->getID(),
-                                'value_id' => db_result($result,$j,0),
-                                'value' => SimpleSanitizer::unsanitize(db_result($result,$j,1)),
-                                'description' => SimpleSanitizer::unsanitize(($cols > 2) ? db_result($result,$j,4) : ''),
-                                'order_id' => ($cols > 2) ? db_result($result,$j,5) : 0,
+                                'value_id' => db_result($result, $j, 0),
+                                'value' => SimpleSanitizer::unsanitize(db_result($result, $j, 1)),
+                                'description' => SimpleSanitizer::unsanitize(($cols > 2) ? db_result($result, $j, 4) : ''),
+                                'order_id' => ($cols > 2) ? db_result($result, $j, 5) : 0,
                                 'status' => $field_status
                                 );
                             }
@@ -1524,9 +1518,9 @@ if (defined('NUSOAP')) {
                         'value_function' => implode(",", $field->getValueFunction()),
                         'available_values' => $availablevalues,
                         'default_value' => $defaultvalue,
-                        'user_can_submit' => $field->userCanSubmit($group_id,$group_artifact_id,$user_id),
-                        'user_can_read' => $field->userCanRead($group_id,$group_artifact_id,$user_id),
-                        'user_can_update' => $field->userCanUpdate($group_id,$group_artifact_id,$user_id),
+                        'user_can_submit' => $field->userCanSubmit($group_id, $group_artifact_id, $user_id),
+                        'user_can_read' => $field->userCanRead($group_id, $group_artifact_id, $user_id),
+                        'user_can_update' => $field->userCanUpdate($group_id, $group_artifact_id, $user_id),
                         'is_standard_field' => $field->isStandardField()
                         );
                     }
@@ -1624,7 +1618,7 @@ if (defined('NUSOAP')) {
  * @return the SOAPArtifactQueryResult that match the criteria $criteria and belong to the project $group_id and the tracker $group_artifact_id,
  *          or a soap fault if group_id does not match with a valid project, or if group_artifact_id does not match with a valid tracker.
  */
-    function getArtifacts($sessionKey,$group_id,$group_artifact_id, $criteria, $offset, $max_rows)
+    function getArtifacts($sessionKey, $group_id, $group_artifact_id, $criteria, $offset, $max_rows)
     {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
@@ -1634,32 +1628,32 @@ if (defined('NUSOAP')) {
             } catch (SoapFault $e) {
                 return $e;
             }
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','getArtifacts');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifacts');
             } elseif (! $at->userCanView()) {
-                return new SoapFault(get_artifact_type_fault,'Permission Denied: You are not granted sufficient permission to perform this operation.','getArtifacts');
+                return new SoapFault(get_artifact_type_fault, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifacts');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'getArtifacts');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'getArtifacts');
             }
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','getArtifactTypes');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactTypes');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'getArtifactTypes');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'getArtifactTypes');
             }
             $af = new ArtifactFactory($at);
             if (!$af || !is_object($af)) {
-                return new SoapFault(get_artifact_factory_fault,'Could Not Get ArtifactFactory','getArtifacts');
+                return new SoapFault(get_artifact_factory_fault, 'Could Not Get ArtifactFactory', 'getArtifacts');
             } elseif ($af->isError()) {
-                return new SoapFault(get_artifact_factory_fault,$af->getErrorMessage(),'getArtifacts');
+                return new SoapFault(get_artifact_factory_fault, $af->getErrorMessage(), 'getArtifacts');
             }
             $total_artifacts = 0;
             // the function getArtifacts returns only the artifacts the user is allowed to view
             $artifacts = $af->getArtifacts($criteria, $offset, $max_rows, $total_artifacts);
             return artifact_query_result_to_soap($artifacts, $total_artifacts);
         } else {
-            return new SoapFault(invalid_session_fault,'Invalid Session ','getArtifactTypes');
+            return new SoapFault(invalid_session_fault, 'Invalid Session ', 'getArtifactTypes');
         }
     }
 
@@ -1683,7 +1677,7 @@ if (defined('NUSOAP')) {
  * @return the SOAPArtifactFromReportResult that match the criteria $criteria and belong to the project $group_id and the tracker $group_artifact_id,
  *          or a soap fault if group_id does not match with a valid project, or if group_artifact_id does not match with a valid tracker.
  */
-    function getArtifactsFromReport($sessionKey,$group_id,$group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria)
+    function getArtifactsFromReport($sessionKey, $group_id, $group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria)
     {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
@@ -1693,43 +1687,43 @@ if (defined('NUSOAP')) {
             } catch (SoapFault $e) {
                 return $e;
             }
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','getArtifactsFromReport');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactsFromReport');
             } elseif (! $at->userCanView()) {
-                return new SoapFault(get_artifact_type_fault,'Permission Denied: You are not granted sufficient permission to perform this operation.','getArtifactsFromReport');
+                return new SoapFault(get_artifact_type_fault, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifactsFromReport');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'getArtifactsFromReport');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'getArtifactsFromReport');
             }
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','getArtifactsFromReport');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactsFromReport');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'getArtifactsFromReport');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'getArtifactsFromReport');
             }
             $af = new ArtifactFactory($at);
             if (!$af || !is_object($af)) {
-                return new SoapFault(get_artifact_factory_fault,'Could Not Get ArtifactFactory','getArtifactsFromReport');
+                return new SoapFault(get_artifact_factory_fault, 'Could Not Get ArtifactFactory', 'getArtifactsFromReport');
             } elseif ($af->isError()) {
-                return new SoapFault(get_artifact_factory_fault,$af->getErrorMessage(),'getArtifactsFromReport');
+                return new SoapFault(get_artifact_factory_fault, $af->getErrorMessage(), 'getArtifactsFromReport');
             }
 
             $ar = new ArtifactReport($report_id, $group_artifact_id);
             if (!$ar || !is_object($ar)) {
-                return new SoapFault(get_artifact_report_fault,'Could Not Get ArtifactFactory','getArtifactsFromReport');
+                return new SoapFault(get_artifact_report_fault, 'Could Not Get ArtifactFactory', 'getArtifactsFromReport');
             } elseif ($ar->isError()) {
-                return new SoapFault(get_artifact_report_fault,$ar->getErrorMessage(),'getArtifactsFromReport');
+                return new SoapFault(get_artifact_report_fault, $ar->getErrorMessage(), 'getArtifactsFromReport');
             }
 
             $total_artifacts = 0;
             // the function getArtifacts returns only the artifacts the user is allowed to view
             $artifacts = $af->getArtifactsFromReport($group_id, $group_artifact_id, $report_id, $criteria, $offset, $max_rows, $sort_criteria, $total_artifacts);
             if ($af->isError()) {
-                return new SoapFault(get_artifact_report_fault,$af->getErrorMessage(),'getArtifactsFromReport');
+                return new SoapFault(get_artifact_report_fault, $af->getErrorMessage(), 'getArtifactsFromReport');
             }
             return artifact_report_result_to_soap($artifacts, $total_artifacts);
         } else {
-            return new SoapFault(invalid_session_fault,'Invalid Session ','getArtifactsFromReport');
+            return new SoapFault(invalid_session_fault, 'Invalid Session ', 'getArtifactsFromReport');
         }
     }
 
@@ -1745,10 +1739,10 @@ if (defined('NUSOAP')) {
  *          or a soap fault if group_id does not match with a valid project, or if group_artifact_id does not match with a valid tracker,
  *          or if artifact_id is not a valid artifact of this tracker.
  */
-    function getArtifactById($sessionKey,$group_id,$group_artifact_id, $artifact_id)
+    function getArtifactById($sessionKey, $group_id, $group_artifact_id, $artifact_id)
     {
         global $art_field_fact, $ath;
-        if (session_continue($sessionKey)){
+        if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactById');
@@ -1758,21 +1752,21 @@ if (defined('NUSOAP')) {
 
             $ath = new ArtifactType($grp, $group_artifact_id);
             if (!$ath || !is_object($ath)) {
-                return new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created','getArtifactById');
+                return new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created', 'getArtifactById');
             }
             if ($ath->isError()) {
-                return new SoapFault(get_artifact_type_fault, $ath->getErrorMessage(),'getArtifactById');
+                return new SoapFault(get_artifact_type_fault, $ath->getErrorMessage(), 'getArtifactById');
             }
             // Check if this tracker is valid (not deleted)
-            if ( !$ath->isValid() ) {
-                return new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.','getArtifactById');
+            if (!$ath->isValid()) {
+                return new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.', 'getArtifactById');
             }
 
             $art_field_fact = new ArtifactFieldFactory($ath);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','getArtifactById');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactById');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'getArtifactById');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'getArtifactById');
             }
             $a = new Artifact($ath, $artifact_id);
             if (!$a || !is_object($a)) {
@@ -1782,7 +1776,7 @@ if (defined('NUSOAP')) {
             }
             return artifact_to_soap($a);
         } else {
-            return new SoapFault(invalid_session_fault,'Invalid Session','getArtifactById');
+            return new SoapFault(invalid_session_fault, 'Invalid Session', 'getArtifactById');
         }
     }
 
@@ -1805,10 +1799,10 @@ if (defined('NUSOAP')) {
         if ($artifact->userCanView($user_id)) {
             $extrafieldvalues = array();
             $extrafielddata   = $artifact->getExtraFieldData();
-            if (is_array($extrafielddata) && count($extrafielddata) > 0 ) {
+            if (is_array($extrafielddata) && count($extrafielddata) > 0) {
                 foreach ($extrafielddata as $field_id => $value) {
                     $field = $art_field_fact->getFieldFromId($field_id);
-                    if ($field->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), $user_id)) {
+                    if ($field->userCanRead($artifact->ArtifactType->Group->getID(), $artifact->ArtifactType->getID(), $user_id)) {
                         $extrafieldvalues[] = array (
                         'field_id'    => $field_id,
                         'artifact_id' => $artifact->getID(),
@@ -1821,49 +1815,49 @@ if (defined('NUSOAP')) {
             // Check Permissions on standard fields (status_id, submitted_by, open_date, close_date, last_update_date, summary, details, severity)
             // artifact_id
             $field_artifact_id = $art_field_fact->getFieldFromName('artifact_id');
-            if ($field_artifact_id && $field_artifact_id->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), $user_id)) {
+            if ($field_artifact_id && $field_artifact_id->userCanRead($artifact->ArtifactType->Group->getID(), $artifact->ArtifactType->getID(), $user_id)) {
                 $return['artifact_id'] = $artifact->getID();
             }
             // group_artifact_id
             $return['group_artifact_id'] = $artifact->ArtifactType->getID();
             // status_id
             $field_status_id = $art_field_fact->getFieldFromName('status_id');
-            if ($field_status_id && $field_status_id->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), $user_id)) {
+            if ($field_status_id && $field_status_id->userCanRead($artifact->ArtifactType->Group->getID(), $artifact->ArtifactType->getID(), $user_id)) {
                 $return['status_id'] = $artifact->getStatusID();
             }
             // submitted_by
             $field_submitted_by = $art_field_fact->getFieldFromName('submitted_by');
-            if ($field_submitted_by && $field_submitted_by->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), $user_id)) {
+            if ($field_submitted_by && $field_submitted_by->userCanRead($artifact->ArtifactType->Group->getID(), $artifact->ArtifactType->getID(), $user_id)) {
                 $return['submitted_by'] = $artifact->getSubmittedBy();
             }
             // open_date
             $field_open_date = $art_field_fact->getFieldFromName('open_date');
-            if ($field_open_date && $field_open_date->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), $user_id)) {
+            if ($field_open_date && $field_open_date->userCanRead($artifact->ArtifactType->Group->getID(), $artifact->ArtifactType->getID(), $user_id)) {
                 $return['open_date'] = $artifact->getOpenDate();
             }
             // close_date
             $field_close_date = $art_field_fact->getFieldFromName('close_date');
-            if ($field_close_date && $field_close_date->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), $user_id)) {
+            if ($field_close_date && $field_close_date->userCanRead($artifact->ArtifactType->Group->getID(), $artifact->ArtifactType->getID(), $user_id)) {
                 $return['close_date'] = $artifact->getCloseDate();
             }
             // last_update_date
             $field_last_update_date = $art_field_fact->getFieldFromName('last_update_date');
-            if ($field_last_update_date && $field_last_update_date->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), $user_id)) {
+            if ($field_last_update_date && $field_last_update_date->userCanRead($artifact->ArtifactType->Group->getID(), $artifact->ArtifactType->getID(), $user_id)) {
                 $return['last_update_date'] = $artifact->getLastUpdateDate();
             }
             // summary
             $field_summary = $art_field_fact->getFieldFromName('summary');
-            if ($field_summary && $field_summary->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), $user_id)) {
+            if ($field_summary && $field_summary->userCanRead($artifact->ArtifactType->Group->getID(), $artifact->ArtifactType->getID(), $user_id)) {
                 $return['summary'] = util_unconvert_htmlspecialchars($artifact->getSummary());
             }
             // details
             $field_details = $art_field_fact->getFieldFromName('details');
-            if ($field_details && $field_details->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), $user_id)) {
+            if ($field_details && $field_details->userCanRead($artifact->ArtifactType->Group->getID(), $artifact->ArtifactType->getID(), $user_id)) {
                 $return['details'] = util_unconvert_htmlspecialchars($artifact->getDetails());
             }
             // severity
             $field_severity = $art_field_fact->getFieldFromName('severity');
-            if ($field_severity && $field_severity->userCanRead($artifact->ArtifactType->Group->getID(),$artifact->ArtifactType->getID(), $user_id)) {
+            if ($field_severity && $field_severity->userCanRead($artifact->ArtifactType->Group->getID(), $artifact->ArtifactType->getID(), $user_id)) {
                 $return['severity'] = $artifact->getSeverity();
             }
             $return['extra_fields'] = $extrafieldvalues;
@@ -1924,7 +1918,7 @@ if (defined('NUSOAP')) {
             $severity_field = array_shift($artifact);
         }
 
-        foreach($artifact as $field_name => $field_value) {
+        foreach ($artifact as $field_name => $field_value) {
             $return_fields[] = array('field_name' =>$field_name, 'field_value' => $field_value);
         }
         $return['fields'] = $return_fields;
@@ -1959,25 +1953,33 @@ if (defined('NUSOAP')) {
 
         $data = array();
         // set standard fields data
-        if (isset($status_id))       $data ['status_id']    =  $status_id;
-        if (isset($close_date) && $close_date!=0)   $data ['close_date']   =  date("Y-m-d", $close_date); // Dates are internally stored in timestamp, but for update and create functions, date must be Y-m-d
-        if (isset($summary))      $data ['summary']      =  $summary;
-        if (isset($details))      $data ['details']      =  $details;
-        if (isset($severity) && $severity!=0)     $data ['severity']     =  $severity;
+        if (isset($status_id)) {
+            $data ['status_id']    =  $status_id;
+        }
+        if (isset($close_date) && $close_date!=0) {
+            $data ['close_date']   =  date("Y-m-d", $close_date); // Dates are internally stored in timestamp, but for update and create functions, date must be Y-m-d
+        }
+        if (isset($summary)) {
+            $data ['summary']      =  $summary;
+        }
+        if (isset($details)) {
+            $data ['details']      =  $details;
+        }
+        if (isset($severity) && $severity!=0) {
+            $data ['severity']     =  $severity;
+        }
 
         // set extra fields data
         if (is_array($extra_fields) && count($extra_fields) > 0) {
-
             foreach ($extra_fields as $e => $extra_field) {
-                if(is_object($extra_field)) {
+                if (is_object($extra_field)) {
                     $extra_field = objectToArray($extra_field);
                 }
 
                 $field = $art_field_fact->getFieldFromId($extra_field['field_id']);
                 if ($field->isStandardField()) {
                     continue;
-                }
-                else {
+                } else {
                     if ($field->isMultiSelectBox()) {
                         $value = explode(",", $extra_field['field_value']);
                         $data [$field->getName()] = $value;
@@ -2029,14 +2031,14 @@ if (defined('NUSOAP')) {
 
             $ath = new ArtifactType($grp, $group_artifact_id);
             if (!$ath || !is_object($ath)) {
-                return new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created','addArtifact');
+                return new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created', 'addArtifact');
             }
             if ($ath->isError()) {
-                return new SoapFault(get_artifact_type_fault, $ath->getErrorMessage(),'addArtifact');
+                return new SoapFault(get_artifact_type_fault, $ath->getErrorMessage(), 'addArtifact');
             }
             // Check if this tracker is valid (not deleted)
-            if ( !$ath->isValid() ) {
-                return new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.','addArtifact');
+            if (!$ath->isValid()) {
+                return new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.', 'addArtifact');
             }
 
             // check the user if he can submit artifacts for this tracker
@@ -2046,20 +2048,19 @@ if (defined('NUSOAP')) {
 
             $art_field_fact = new ArtifactFieldFactory($ath);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','addArtifact');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'addArtifact');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'addArtifact');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'addArtifact');
             }
 
             // 1) The permissions check will be done in the Artifact create function
             // 2) Check the allow empty value and the default value for each field.
             $all_used_fields = $art_field_fact->getAllUsedFields();
 
-            foreach($all_used_fields as $used_field) {
+            foreach ($all_used_fields as $used_field) {
                  // We only check the field the user is allowed to submit
                 // because the Artifact create function expect only these fields in the array $vfl
                 if ($used_field->userCanSubmit($group_id, $group_artifact_id, $user_id)) {
-
                     // We skip these 4 fields, because their value is automatically filled
                     if ($used_field->getName() == 'open_date' || $used_field->getName() == 'last_update_date' || $used_field->getName() == 'submitted_by' || $used_field->getName() == 'artifact_id') {
                         continue;
@@ -2067,10 +2068,8 @@ if (defined('NUSOAP')) {
 
                     // check the allow empty value. If the empty value is not allowed and the field not filled, we put the default value.
                     if (!$used_field->isEmptyOk()) {
-
                         // the field must be filled, so we will check if it is
                         if ($used_field->isStandardField()) {
-
                             $used_field_name = $used_field->getName();
 
                             if (! isset($$used_field_name)) {
@@ -2081,14 +2080,13 @@ if (defined('NUSOAP')) {
                                 } else {
                                     $$used_field_name = $used_field->getDefaultValue();
                                 }
-
                             }
                         } else {
                             $used_field_present = false;
                             // We will search if the field is filled
 
-                            foreach($extra_fields as $extra_field) {
-                                if(is_object($extra_field)) {
+                            foreach ($extra_fields as $extra_field) {
+                                if (is_object($extra_field)) {
                                     $extra_field = objectToArray($extra_field);
                                 }
 
@@ -2098,7 +2096,6 @@ if (defined('NUSOAP')) {
                             }
 
                             if (! $used_field_present) {
-
                                 // the field is required, but there is no value, so we put the default value
                                 $extra_field_to_add = array();
                                 $extra_field_to_add['field_id'] = $used_field->getID();
@@ -2130,9 +2127,8 @@ if (defined('NUSOAP')) {
                 return new SoapFault(invalid_field_dependency_fault, 'Invalid Field Dependency', 'addArtifact');
             }
             if (!$a->create($data)) {
-                return new SoapFault(create_artifact_fault,$a->getErrorMessage(),'addArtifact');
+                return new SoapFault(create_artifact_fault, $a->getErrorMessage(), 'addArtifact');
             } else {
-
                 // Send the notification
                 $agnf = new ArtifactGlobalNotificationFactory();
                 $addresses = $agnf->getAllAddresses($ath->getID());
@@ -2141,7 +2137,7 @@ if (defined('NUSOAP')) {
                 return $a->getID();
             }
         } else {
-               return new SoapFault(invalid_session_fault,'Invalid Session ','addArtifact');
+               return new SoapFault(invalid_session_fault, 'Invalid Session ', 'addArtifact');
         }
     }
 
@@ -2186,41 +2182,40 @@ if (defined('NUSOAP')) {
             }
             $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created','addArtifact');
+                return new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created', 'addArtifact');
             }
             if ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(),'addArtifact');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'addArtifact');
             }
             // Check if this tracker is valid (not deleted)
-            if ( !$at->isValid() ) {
-                return new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.','addArtifact');
+            if (!$at->isValid()) {
+                return new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.', 'addArtifact');
             }
 
             $group_artifact_id = $at->getID();
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','addArtifact');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'addArtifact');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'addArtifact');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'addArtifact');
             }
 
             // translate the field_name in field_id, in order to call the real addArtifact function
             $extrafields_with_id = array();
-            foreach($extra_fields as $extra_field_name) {
+            foreach ($extra_fields as $extra_field_name) {
                 $field = $art_field_fact->getFieldFromName($extra_field_name->field_name);
                 if ($field) {
                     $extra_field_id = $field->getID();
                     $extrafields_with_id[] = array('field_id' => $extra_field_id, 'artifact_id' => 0, 'field_value' => $extra_field_name->field_value);
                 } else {
-                    return new SoapFault(invalid_field_fault,'Invalid Field:'.$extra_field_name->field_name,'addArtifact');
+                    return new SoapFault(invalid_field_fault, 'Invalid Field:'.$extra_field_name->field_name, 'addArtifact');
                 }
             }
 
             return addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $close_date, $summary, $details, $severity, $extrafields_with_id);
-
         } else {
-               return new SoapFault(invalid_session_fault,'Invalid Session ','addArtifact');
+               return new SoapFault(invalid_session_fault, 'Invalid Session ', 'addArtifact');
         }
     }
 
@@ -2258,21 +2253,21 @@ if (defined('NUSOAP')) {
 
             $ath = new ArtifactType($grp, $group_artifact_id);
             if (!$ath || !is_object($ath)) {
-                return new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created','updateArtifact');
+                return new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created', 'updateArtifact');
             }
             if ($ath->isError()) {
-                return new SoapFault(get_artifact_type_fault, $ath->getErrorMessage(),'updateArtifact');
+                return new SoapFault(get_artifact_type_fault, $ath->getErrorMessage(), 'updateArtifact');
             }
             // Check if this tracker is valid (not deleted)
-            if ( !$ath->isValid() ) {
-                return new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.','updateArtifact');
+            if (!$ath->isValid()) {
+                return new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.', 'updateArtifact');
             }
 
             $art_field_fact = new ArtifactFieldFactory($ath);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','updateArtifact');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'updateArtifact');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'updateArtifact');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'updateArtifact');
             }
             ;
             $a = new Artifact($ath, $artifact_id);
@@ -2293,9 +2288,8 @@ if (defined('NUSOAP')) {
             if (! $a->handleUpdate($artifact_id_dependent, $canned_response, $changes, false, $data, true)) {
                 return new SoapFault(update_artifact_fault, $a->getErrorMessage(), 'updateArtifact');
             } else {
-
                 if ($a->isError()) {
-                    return new SoapFault(get_artifact_type_fault, $a->getErrorMessage(),'updateArtifact');
+                    return new SoapFault(get_artifact_type_fault, $a->getErrorMessage(), 'updateArtifact');
                 }
                 // Update last_update_date field
                 $a->update_last_update_date();
@@ -2308,9 +2302,8 @@ if (defined('NUSOAP')) {
 
                 return $a->getID();
             }
-
         } else {
-            return new SoapFault(invalid_session_fault,'Invalid Session ','updateArtifact');
+            return new SoapFault(invalid_session_fault, 'Invalid Session ', 'updateArtifact');
         }
     }
 
@@ -2347,41 +2340,40 @@ if (defined('NUSOAP')) {
             }
             $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created','updateArtifact');
+                return new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created', 'updateArtifact');
             }
             if ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(),'updateArtifact');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'updateArtifact');
             }
             // Check if this tracker is valid (not deleted)
-            if ( !$at->isValid() ) {
-                return new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.','updateArtifact');
+            if (!$at->isValid()) {
+                return new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.', 'updateArtifact');
             }
 
             $group_artifact_id = $at->getID();
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','updateArtifact');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'updateArtifact');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'updateArtifact');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'updateArtifact');
             }
 
             // translate the field_name in field_id, in order to call the real addArtifact function
             $extrafields_with_id = array();
-            foreach($extra_fields as $extra_field_name) {
+            foreach ($extra_fields as $extra_field_name) {
                 $field = $art_field_fact->getFieldFromName($extra_field_name->field_name);
                 if ($field) {
                     $extra_field_id = $field->getID();
                     $extrafields_with_id[] = array('field_id' => $extra_field_id, 'field_value' => $extra_field_name->field_value);
                 } else {
-                    return new SoapFault(invalid_field_fault,'Invalid Field:'.$extra_field_name->field_name,'updateArtifact');
+                    return new SoapFault(invalid_field_fault, 'Invalid Field:'.$extra_field_name->field_name, 'updateArtifact');
                 }
             }
 
             return updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extrafields_with_id, $artifact_id_dependent, $canned_response);
-
         } else {
-            return new SoapFault(invalid_session_fault,'Invalid Session ','updateArtifact');
+            return new SoapFault(invalid_session_fault, 'Invalid Session ', 'updateArtifact');
         }
     }
 
@@ -2402,7 +2394,7 @@ if (defined('NUSOAP')) {
     function getArtifactFollowups($sessionKey, $group_id, $group_artifact_id, $artifact_id)
     {
         global $art_field_fact;
-        if (session_continue($sessionKey)){
+        if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactFollowups');
@@ -2410,18 +2402,18 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','getArtifactFollowups');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactFollowups');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'getArtifactFollowups');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'getArtifactFollowups');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','getArtifactFollowups');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactFollowups');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'getArtifactFollowups');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'getArtifactFollowups');
             }
 
             $a = new Artifact($at, $artifact_id);
@@ -2434,7 +2426,7 @@ if (defined('NUSOAP')) {
             $return  = artifactfollowups_to_soap($a->getFollowups(), $group_id, $group_artifact_id, $a);
             return $return;
         } else {
-            return new SoapFault(invalid_session_fault,'Invalid Session ','getArtifactFollowups');
+            return new SoapFault(invalid_session_fault, 'Invalid Session ', 'getArtifactFollowups');
         }
     }
 
@@ -2483,15 +2475,15 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','getArtifactCannedResponses');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactCannedResponses');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'getArtifactCannedResponses');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'getArtifactCannedResponses');
             }
             return artifactcannedresponses_to_soap($at->getCannedResponses(), $group_artifact_id);
         } else {
-            return new SoapFault(invalid_session_fault,'Invalid Session ','getArtifactCannedResponses');
+            return new SoapFault(invalid_session_fault, 'Invalid Session ', 'getArtifactCannedResponses');
         }
     }
 
@@ -2532,14 +2524,14 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','getArtifactReports');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactReports');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'getArtifactReports');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'getArtifactReports');
             }
             if (! $at->userCanView($user_id)) {
-                return new SoapFault(get_artifact_type_fault,'Permissions denied.','getArtifactReports');
+                return new SoapFault(get_artifact_type_fault, 'Permissions denied.', 'getArtifactReports');
             }
 
             $report_fact = new ArtifactReportFactory();
@@ -2548,7 +2540,6 @@ if (defined('NUSOAP')) {
             }
 
             return artifactreports_to_soap($report_fact->getReports($group_artifact_id, $user_id));
-
         } else {
             return new SoapFault(invalid_session_fault, 'Invalid Session ', 'getArtifactReports');
         }
@@ -2558,13 +2549,13 @@ if (defined('NUSOAP')) {
     {
         $return = array();
         if (is_array($artifactreports) && count($artifactreports)) {
-            foreach ($artifactreports as $arid => $artifactreport){
+            foreach ($artifactreports as $arid => $artifactreport) {
                 $fields = array();
                 if ($artifactreport->isError()) {
                     //skip if error
                 } else {
                     $report_fields = $artifactreport->getSortedFields();
-                    if(is_array($report_fields) && count($report_fields) > 0 ) {
+                    if (is_array($report_fields) && count($report_fields) > 0) {
                         foreach ($report_fields as $field) {
                             $fields[] = array (
                             'report_id'      => $artifactreport->getID(),
@@ -2606,7 +2597,7 @@ if (defined('NUSOAP')) {
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
  */
-    function getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$artifact_id,$set_bin_data = false)
+    function getArtifactAttachedFiles($sessionKey, $group_id, $group_artifact_id, $artifact_id, $set_bin_data = false)
     {
         global $art_field_fact;
 
@@ -2618,27 +2609,27 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','getArtifactAttachedFiles');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactAttachedFiles');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'getArtifactAttachedFiles');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'getArtifactAttachedFiles');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','getArtifactAttachedFiles');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactAttachedFiles');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'getArtifactAttachedFiles');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'getArtifactAttachedFiles');
             }
 
-            $a = new Artifact($at,$artifact_id);
+            $a = new Artifact($at, $artifact_id);
             if (!$a || !is_object($a)) {
-                return new SoapFault(get_artifact_fault,'Could Not Get Artifact','getArtifactAttachedFiles');
+                return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifactAttachedFiles');
             } elseif ($a->isError()) {
-                return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'getArtifactAttachedFiles');
+                return new SoapFault(get_artifact_fault, $a->getErrorMessage(), 'getArtifactAttachedFiles');
             } elseif (! $a->userCanView()) {
-                return new SoapFault(get_artifact_fault,'Permissions denied','getArtifactAttachedFiles');
+                return new SoapFault(get_artifact_fault, 'Permissions denied', 'getArtifactAttachedFiles');
             }
 
             return artifactfiles_to_soap($a->getAttachedFiles(), $set_bin_data);
@@ -2662,7 +2653,7 @@ if (defined('NUSOAP')) {
  *              - artifact_id does not match with a valid artifact
  *              - file_id does not match with the given artifact_id
  */
-    function getArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id, $file_id)
+    function getArtifactAttachedFile($sessionKey, $group_id, $group_artifact_id, $artifact_id, $file_id)
     {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
@@ -2673,27 +2664,27 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','getArtifactAttachedFile');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactAttachedFile');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'getArtifactAttachedFile');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'getArtifactAttachedFile');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','getArtifactAttachedFile');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactAttachedFile');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'getArtifactAttachedFile');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'getArtifactAttachedFile');
             }
 
-            $a = new Artifact($at,$artifact_id);
+            $a = new Artifact($at, $artifact_id);
             if (!$a || !is_object($a)) {
-                return new SoapFault(get_artifact_fault,'Could Not Get Artifact','getArtifactAttachedFile');
+                return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifactAttachedFile');
             } elseif ($a->isError()) {
-                return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'getArtifactAttachedFile');
+                return new SoapFault(get_artifact_fault, $a->getErrorMessage(), 'getArtifactAttachedFile');
             } elseif (! $a->userCanView()) {
-                return new SoapFault(get_artifact_fault,'Permissions denied','getArtifactAttachedFile');
+                return new SoapFault(get_artifact_fault, 'Permissions denied', 'getArtifactAttachedFile');
             }
             $file = artifactfile_to_soap($file_id, $a, true);
             if ($file != null) {
@@ -2771,7 +2762,7 @@ if (defined('NUSOAP')) {
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
  */
-    function getArtifactDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id)
+    function getArtifactDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id)
     {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
@@ -2782,27 +2773,27 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','getArtifactDependencies');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactDependencies');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'getArtifactDependencies');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'getArtifactDependencies');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','getArtifactDependencies');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactDependencies');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'getArtifactDependencies');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'getArtifactDependencies');
             }
 
-            $a = new Artifact($at,$artifact_id);
+            $a = new Artifact($at, $artifact_id);
             if (!$a || !is_object($a)) {
-                return new SoapFault(get_artifact_fault,'Could Not Get Artifact','getArtifactDependencies');
+                return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifactDependencies');
             } elseif ($a->isError()) {
-                return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'getArtifactDependencies');
+                return new SoapFault(get_artifact_fault, $a->getErrorMessage(), 'getArtifactDependencies');
             } elseif (! $a->userCanView()) {
-                return new SoapFault(get_artifact_fault,'Permissions denied','getArtifactDependencies');
+                return new SoapFault(get_artifact_fault, 'Permissions denied', 'getArtifactDependencies');
             }
 
             return dependencies_to_soap($at, $a->getDependencies());
@@ -2849,7 +2840,7 @@ if (defined('NUSOAP')) {
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
  */
-    function getArtifactInverseDependencies($sessionKey,$group_id,$group_artifact_id,$artifact_id)
+    function getArtifactInverseDependencies($sessionKey, $group_id, $group_artifact_id, $artifact_id)
     {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
@@ -2860,27 +2851,27 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','getArtifactInverseDependencies');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactInverseDependencies');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'getArtifactInverseDependencies');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'getArtifactInverseDependencies');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','getArtifactInverseDependencies');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactInverseDependencies');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'getArtifactInverseDependencies');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'getArtifactInverseDependencies');
             }
 
-            $a = new Artifact($at,$artifact_id);
+            $a = new Artifact($at, $artifact_id);
             if (!$a || !is_object($a)) {
-                return new SoapFault(get_artifact_fault,'Could Not Get Artifact','getArtifactInverseDependencies');
+                return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifactInverseDependencies');
             } elseif ($a->isError()) {
-                return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'getArtifactInverseDependencies');
+                return new SoapFault(get_artifact_fault, $a->getErrorMessage(), 'getArtifactInverseDependencies');
             } elseif (! $a->userCanView()) {
-                return new SoapFault(get_artifact_fault,'Permissions denied','getArtifactInverseDependencies');
+                return new SoapFault(get_artifact_fault, 'Permissions denied', 'getArtifactInverseDependencies');
             }
 
             return inverse_dependencies_to_soap($at, $artifact_id, $a->getInverseDependencies());
@@ -2933,7 +2924,7 @@ if (defined('NUSOAP')) {
  *              - artifact_id does not match with a valid artifact
  *              - the file attachment to the artifact failed
  */
-    function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$encoded_data,$description,$filename,$filetype)
+    function addArtifactAttachedFile($sessionKey, $group_id, $group_artifact_id, $artifact_id, $encoded_data, $description, $filename, $filetype)
     {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
@@ -2944,42 +2935,42 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','addArtifactFile');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'addArtifactFile');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'addArtifactFile');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'addArtifactFile');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','addArtifactFile');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'addArtifactFile');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'addArtifactFile');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'addArtifactFile');
             }
 
-            $a = new Artifact($at,$artifact_id);
+            $a = new Artifact($at, $artifact_id);
             if (!$a || !is_object($a)) {
-                return new SoapFault(get_artifact_fault,'Could Not Get Artifact','addArtifactFile');
+                return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'addArtifactFile');
             } elseif ($a->isError()) {
-                return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'addArtifactFile');
+                return new SoapFault(get_artifact_fault, $a->getErrorMessage(), 'addArtifactFile');
             }
 
             $af = new ArtifactFile($a);
             if (!$af || !is_object($af)) {
-                return new SoapFault(get_artifact_file_fault,'Could Not Create File Object','addArtifactFile');
-            } else if ($af->isError()) {
-                return new SoapFault(get_artifact_file_fault,$af->getErrorMessage(),'addArtifactFile');
+                return new SoapFault(get_artifact_file_fault, 'Could Not Create File Object', 'addArtifactFile');
+            } elseif ($af->isError()) {
+                return new SoapFault(get_artifact_file_fault, $af->getErrorMessage(), 'addArtifactFile');
             }
 
             $bin_data = base64_decode($encoded_data);
 
             $filesize = strlen($bin_data);
 
-            $id = $af->create($filename,$filetype,$filesize,$bin_data,$description, $changes);
+            $id = $af->create($filename, $filetype, $filesize, $bin_data, $description, $changes);
 
             if (!$id) {
-                return new SoapFault(get_artifact_file_fault,$af->getErrorMessage(),'addArtifactFile');
+                return new SoapFault(get_artifact_file_fault, $af->getErrorMessage(), 'addArtifactFile');
             } else {
                 // Send the notification
                 if ($changes) {
@@ -3011,7 +3002,7 @@ if (defined('NUSOAP')) {
  *              - file_id does not match with a valid attached file
  *              - the file deletion failed
  */
-    function deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artifact_id,$file_id)
+    function deleteArtifactAttachedFile($sessionKey, $group_id, $group_artifact_id, $artifact_id, $file_id)
     {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
@@ -3022,36 +3013,36 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','deleteArtifactFile');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'deleteArtifactFile');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'deleteArtifactFile');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'deleteArtifactFile');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','deleteArtifactFile');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'deleteArtifactFile');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'deleteArtifactFile');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'deleteArtifactFile');
             }
 
-            $a = new Artifact($at,$artifact_id);
+            $a = new Artifact($at, $artifact_id);
             if (!$a || !is_object($a)) {
-                return new SoapFault(get_artifact_fault,'Could Not Get Artifact','deleteArtifactFile');
+                return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'deleteArtifactFile');
             } elseif ($a->isError()) {
-                return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'deleteArtifactFile');
+                return new SoapFault(get_artifact_fault, $a->getErrorMessage(), 'deleteArtifactFile');
             }
 
             $af = new ArtifactFile($a, $file_id);
             if (!$af || !is_object($af)) {
-                return new SoapFault(get_artifact_file_fault,'Could Not Create File Object','deleteArtifactFile');
-            } else if ($af->isError()) {
-                return new SoapFault(get_artifact_file_fault,$af->getErrorMessage(),'deleteArtifactFile');
+                return new SoapFault(get_artifact_file_fault, 'Could Not Create File Object', 'deleteArtifactFile');
+            } elseif ($af->isError()) {
+                return new SoapFault(get_artifact_file_fault, $af->getErrorMessage(), 'deleteArtifactFile');
             }
 
             if (!$af->delete()) {
-                return new SoapFault(get_artifact_file_fault,$af->getErrorMessage(),'deleteArtifactFile');
+                return new SoapFault(get_artifact_file_fault, $af->getErrorMessage(), 'deleteArtifactFile');
             }
 
             return $file_id;
@@ -3085,25 +3076,25 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','addArtifactDependencies');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'addArtifactDependencies');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'addArtifactDependencies');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'addArtifactDependencies');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','addArtifactDependencies');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'addArtifactDependencies');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'addArtifactDependencies');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'addArtifactDependencies');
             }
 
-            $a = new Artifact($at,$artifact_id);
+            $a = new Artifact($at, $artifact_id);
             if (!$a || !is_object($a)) {
-                return new SoapFault(get_artifact_fault,'Could Not Get Artifact','addArtifactDependencies');
+                return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'addArtifactDependencies');
             } elseif ($a->isError()) {
-                return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'addArtifactDependencies');
+                return new SoapFault(get_artifact_fault, $a->getErrorMessage(), 'addArtifactDependencies');
             }
 
             $changes = array();
@@ -3139,7 +3130,7 @@ if (defined('NUSOAP')) {
     function updateArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $artifact_id, $artifact_history_id, $comment)
     {
         global $art_field_fact, $changes;
-        if (session_continue($sessionKey)){
+        if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'updateArtifactFollowUp');
@@ -3147,18 +3138,18 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','updateArtifactFollowUp');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'updateArtifactFollowUp');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'updateArtifactFollowUp');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'updateArtifactFollowUp');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','getArtifactById');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactById');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'getArtifactById');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'getArtifactById');
             }
 
             $a = new Artifact($at, $artifact_id);
@@ -3171,10 +3162,9 @@ if (defined('NUSOAP')) {
 
             $res = $a->getFollowUpDetails($artifact_history_id);
 
-            if(!$a->updateFollowupComment($artifact_history_id, $comment, $changes, $res['format'])){
+            if (!$a->updateFollowupComment($artifact_history_id, $comment, $changes, $res['format'])) {
                 return new SoapFault(update_artifact_followup_fault, $a->getErrorMessage(), 'updateArtifactFollowUp');
-            }else{
-
+            } else {
             // Send the notification
                 if ($changes) {
                     $agnf = new ArtifactGlobalNotificationFactory();
@@ -3184,9 +3174,8 @@ if (defined('NUSOAP')) {
 
                 return true;
             }
-
         } else {
-            return new SoapFault(invalid_session_fault,'Invalid Session ','updateArtifactFollowUp');
+            return new SoapFault(invalid_session_fault, 'Invalid Session ', 'updateArtifactFollowUp');
         }
     }
 
@@ -3210,7 +3199,7 @@ if (defined('NUSOAP')) {
     function deleteArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $artifact_id, $artifact_history_id)
     {
         global $art_field_fact, $changes;
-        if (session_continue($sessionKey)){
+        if (session_continue($sessionKey)) {
             try {
                 $pm = ProjectManager::instance();
                 $grp = $pm->getGroupByIdForSoap($group_id, 'deleteArtifactFollowUp');
@@ -3218,18 +3207,18 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','deleteArtifactFollowUp');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'deleteArtifactFollowUp');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'deleteArtifactFollowUp');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'deleteArtifactFollowUp');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','getArtifactById');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactById');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'getArtifactById');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'getArtifactById');
             }
 
             $a = new Artifact($at, $artifact_id);
@@ -3240,15 +3229,13 @@ if (defined('NUSOAP')) {
                 return new SoapFault(get_artifact_fault, $a->getErrorMessage(), 'deleteArtifactFollowUp');
             }
 
-            if (!$a->deleteFollowupComment($artifact_id, $artifact_history_id)){
+            if (!$a->deleteFollowupComment($artifact_id, $artifact_history_id)) {
                 return new SoapFault(delete_artifact_followup_fault, $a->getErrorMessage(), 'deleteArtifactFollowUp');
-            }else{
-
+            } else {
                 return true;
             }
-
         } else {
-            return new SoapFault(invalid_session_fault,'Invalid Session ','deleteArtifactFollowUp');
+            return new SoapFault(invalid_session_fault, 'Invalid Session ', 'deleteArtifactFollowUp');
         }
     }
 
@@ -3278,33 +3265,32 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','deleteArtifactDependency');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'deleteArtifactDependency');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'deleteArtifactDependency');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'deleteArtifactDependency');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','deleteArtifactDependency');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'deleteArtifactDependency');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'deleteArtifactDependency');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'deleteArtifactDependency');
             }
 
-            $a = new Artifact($at,$artifact_id);
+            $a = new Artifact($at, $artifact_id);
             if (!$a || !is_object($a)) {
-                return new SoapFault(get_artifact_fault,'Could Not Get Artifact','deleteArtifactDependency');
+                return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'deleteArtifactDependency');
             } elseif ($a->isError()) {
-                return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'deleteArtifactDependency');
+                return new SoapFault(get_artifact_fault, $a->getErrorMessage(), 'deleteArtifactDependency');
             }
 
-            if (!$a->existDependency($dependent_on_artifact_id) || !$a->deleteDependency($dependent_on_artifact_id,$changes)) {
+            if (!$a->existDependency($dependent_on_artifact_id) || !$a->deleteDependency($dependent_on_artifact_id, $changes)) {
                 return new SoapFault(delete_dependency_fault, 'Error deleting dependency'. $dependent_on_artifact_id, 'deleteArtifactDependency');
             } else {
                 return $dependent_on_artifact_id;
             }
-
         } else {
             return new SoapFault(invalid_session_fault, 'Invalid Session', 'deleteArtifactDependency');
         }
@@ -3327,7 +3313,7 @@ if (defined('NUSOAP')) {
  * - artifact_id does not match with a valid artifact
  * - the add failed
  */
-    function addArtifactFollowup($sessionKey, $group_id,$group_artifact_id,$artifact_id,$body, $comment_type_id, $format)
+    function addArtifactFollowup($sessionKey, $group_id, $group_artifact_id, $artifact_id, $body, $comment_type_id, $format)
     {
         global $art_field_fact, $ath;
         if (session_continue($sessionKey)) {
@@ -3338,25 +3324,25 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $ath = new ArtifactType($grp,$group_artifact_id);
+            $ath = new ArtifactType($grp, $group_artifact_id);
             if (!$ath || !is_object($ath)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','addArtifactFollowup');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'addArtifactFollowup');
             } elseif ($ath->isError()) {
-                return new SoapFault(get_artifact_type_fault,$ath->getErrorMessage(),'addArtifactFollowup');
+                return new SoapFault(get_artifact_type_fault, $ath->getErrorMessage(), 'addArtifactFollowup');
             }
 
             $art_field_fact = new ArtifactFieldFactory($ath);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','addArtifactFollowup');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'addArtifactFollowup');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'addArtifactFollowup');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'addArtifactFollowup');
             }
 
-            $a = new Artifact($ath,$artifact_id);
+            $a = new Artifact($ath, $artifact_id);
             if (!$a || !is_object($a)) {
-                return new SoapFault(get_artifact_fault,'Could Not Get Artifact','addArtifactFollowup');
+                return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'addArtifactFollowup');
             } elseif ($a->isError()) {
-                return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'addArtifactFollowup');
+                return new SoapFault(get_artifact_fault, $a->getErrorMessage(), 'addArtifactFollowup');
             }
             // add the follow up with 0 as canned_response_id. To set a canned response, just put the content in the body comment.
             if (!$a->addFollowUpComment($body, $comment_type_id, 0, $changes, $format)) {
@@ -3370,7 +3356,6 @@ if (defined('NUSOAP')) {
             }
             // Update last_update_date field
             $a->update_last_update_date();
-
         } else {
             return new SoapFault(invalid_session_fault, 'Invalid Session', 'addArtifactFollowup');
         }
@@ -3433,7 +3418,7 @@ if (defined('NUSOAP')) {
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
  */
-    function getArtifactCCList($sessionKey,$group_id,$group_artifact_id,$artifact_id)
+    function getArtifactCCList($sessionKey, $group_id, $group_artifact_id, $artifact_id)
     {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
@@ -3444,27 +3429,27 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','getArtifactCCList');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactCCList');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'getArtifactCCList');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'getArtifactCCList');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','getArtifactCCList');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactCCList');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'getArtifactCCList');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'getArtifactCCList');
             }
 
-            $a = new Artifact($at,$artifact_id);
+            $a = new Artifact($at, $artifact_id);
             if (!$a || !is_object($a)) {
-                return new SoapFault(get_artifact_fault,'Could Not Get Artifact','getArtifactCCList');
+                return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifactCCList');
             } elseif ($a->isError()) {
-                return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'getArtifactCCList');
+                return new SoapFault(get_artifact_fault, $a->getErrorMessage(), 'getArtifactCCList');
             } elseif (! $a->userCanView()) {
-                return new SoapFault(get_artifact_fault,'Permissions denied','getArtifactCCList');
+                return new SoapFault(get_artifact_fault, 'Permissions denied', 'getArtifactCCList');
             }
 
             return artifactCC_to_soap($group_id, $group_artifact_id, $artifact_id, $a->getCCList());
@@ -3473,7 +3458,7 @@ if (defined('NUSOAP')) {
         }
     }
 
-    function artifactCC_to_soap($group_id,$group_artifact_id,$artifact_id, $artifact_cc_list)
+    function artifactCC_to_soap($group_id, $group_artifact_id, $artifact_id, $artifact_cc_list)
     {
         $return = array();
         $rows=db_numrows($artifact_cc_list);
@@ -3513,25 +3498,25 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','addArtifactCC');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'addArtifactCC');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'addArtifactCC');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'addArtifactCC');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','addArtifactCC');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'addArtifactCC');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'addArtifactCC');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'addArtifactCC');
             }
 
-            $a = new Artifact($at,$artifact_id);
+            $a = new Artifact($at, $artifact_id);
             if (!$a || !is_object($a)) {
-                return new SoapFault(get_artifact_fault,'Could Not Get Artifact','addArtifactCC');
+                return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'addArtifactCC');
             } elseif ($a->isError()) {
-                return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'addArtifactCC');
+                return new SoapFault(get_artifact_fault, $a->getErrorMessage(), 'addArtifactCC');
             }
             $changes = array();
             if (! $ok = $a->addCC($cc_list, $cc_comment, $changes, false)) {
@@ -3565,25 +3550,25 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','deleteArtifactCC');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'deleteArtifactCC');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'deleteArtifactCC');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'deleteArtifactCC');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','deleteArtifactCC');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'deleteArtifactCC');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'deleteArtifactCC');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'deleteArtifactCC');
             }
 
-            $a = new Artifact($at,$artifact_id);
+            $a = new Artifact($at, $artifact_id);
             if (!$a || !is_object($a)) {
-                return new SoapFault(get_artifact_fault,'Could Not Get Artifact','deleteArtifactCC');
+                return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'deleteArtifactCC');
             } elseif ($a->isError()) {
-                return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'deleteArtifactCC');
+                return new SoapFault(get_artifact_fault, $a->getErrorMessage(), 'deleteArtifactCC');
             }
             $changes = array();
             if (! $ok = $a->deleteCC($artifact_cc_id, $changes, false)) {
@@ -3609,7 +3594,7 @@ if (defined('NUSOAP')) {
  *              - group_artifact_id does not match with a valid tracker
  *              - artifact_id does not match with a valid artifact
  */
-    function getArtifactHistory($sessionKey,$group_id,$group_artifact_id,$artifact_id)
+    function getArtifactHistory($sessionKey, $group_id, $group_artifact_id, $artifact_id)
     {
         global $art_field_fact;
         if (session_continue($sessionKey)) {
@@ -3620,27 +3605,27 @@ if (defined('NUSOAP')) {
                 return $e;
             }
 
-            $at = new ArtifactType($grp,$group_artifact_id);
+            $at = new ArtifactType($grp, $group_artifact_id);
             if (!$at || !is_object($at)) {
-                return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','getArtifactHistory');
+                return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactHistory');
             } elseif ($at->isError()) {
-                return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'getArtifactHistory');
+                return new SoapFault(get_artifact_type_fault, $at->getErrorMessage(), 'getArtifactHistory');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
             if (!$art_field_fact || !is_object($art_field_fact)) {
-                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','getArtifactHistory');
+                return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactHistory');
             } elseif ($art_field_fact->isError()) {
-                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'getArtifactHistory');
+                return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(), 'getArtifactHistory');
             }
 
-            $a = new Artifact($at,$artifact_id);
+            $a = new Artifact($at, $artifact_id);
             if (!$a || !is_object($a)) {
-                return new SoapFault(get_artifact_fault,'Could Not Get Artifact','getArtifactHistory');
+                return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifactHistory');
             } elseif ($a->isError()) {
-                return new SoapFault(get_artifact_fault,$a->getErrorMessage(),'getArtifactHistory');
+                return new SoapFault(get_artifact_fault, $a->getErrorMessage(), 'getArtifactHistory');
             } elseif (! $a->userCanView()) {
-                return new SoapFault(get_artifact_fault,'Permissions denied','getArtifactHistory');
+                return new SoapFault(get_artifact_fault, 'Permissions denied', 'getArtifactHistory');
             }
 
             return history_to_soap($group_id, $group_artifact_id, $a->getHistory());
@@ -3649,7 +3634,7 @@ if (defined('NUSOAP')) {
         }
     }
 
-    function history_to_soap($group_id,$group_artifact_id,$history)
+    function history_to_soap($group_id, $group_artifact_id, $history)
     {
         global $art_field_fact;
 
@@ -3660,7 +3645,7 @@ if (defined('NUSOAP')) {
             $field_name = db_result($history, $i, 'field_name');
             $field = $art_field_fact->getFieldFromName($field_name);
             if ($field) {
-                if ($field->userCanRead($group_id,$group_artifact_id)) {
+                if ($field->userCanRead($group_id, $group_artifact_id)) {
                     $return[]=array(
                     //'artifact_history_id' => db_result($history, $i, 'artifact_history_id'),
                     //'artifact_id' => db_result($history, $i, 'artifact_id'),
@@ -3674,7 +3659,7 @@ if (defined('NUSOAP')) {
             } else {
                 // used to put non-field changes (e.g: cc list, follow-up comments, etc)
                  $field_name = db_result($history, $i, 'field_name');
-                if (preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) {
+                if (preg_match("/^(lbl_)/", $field_name) && preg_match("/(_comment)$/", $field_name)) {
                     $field_name = "comment";
                 }
                 $return[]=array(
@@ -3726,6 +3711,4 @@ if (defined('NUSOAP')) {
             'getArtifactHistory',
         )
     );
-
 }
-?>

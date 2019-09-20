@@ -21,7 +21,8 @@
 /**
  * Verify that all of siblings artifacts meet rule trigger conditions
  */
-class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy implements Tracker_Workflow_Trigger_RulesProcessor_Strategy {
+class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy implements Tracker_Workflow_Trigger_RulesProcessor_Strategy
+{
     /** @var Tracker_Artifact */
     private $artifact;
 
@@ -73,5 +74,3 @@ class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategy implements Tracker_W
         return true;
     }
 }
-
-?>

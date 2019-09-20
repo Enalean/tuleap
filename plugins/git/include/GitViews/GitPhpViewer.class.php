@@ -101,7 +101,6 @@ class GitViews_GitPhpViewer
                 $controller->RenderHeaders();
                 $controller->Render();
             }
-
         } catch (Exception $e) {
             $controller = new Controller_Message();
             $controller->SetParam('message', $e->getMessage());
@@ -113,7 +112,6 @@ class GitViews_GitPhpViewer
             }
             $controller->RenderHeaders();
             $controller->Render();
-
         }
     }
 

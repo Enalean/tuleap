@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_XML_ChildrenCollector {
+class Tracker_XML_ChildrenCollector
+{
     /*
      * This value has been set on the basis of
      * tests which shown that creating 30 children

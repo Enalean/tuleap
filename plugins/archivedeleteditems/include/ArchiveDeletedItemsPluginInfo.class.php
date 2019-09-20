@@ -19,7 +19,8 @@
 /**
  * ArchiveDeletedItemsInfo
  */
-class ArchiveDeletedItemsPluginInfo extends PluginFileInfo {
+class ArchiveDeletedItemsPluginInfo extends PluginFileInfo
+{
 
     /**
      * Constructor
@@ -33,6 +34,4 @@ class ArchiveDeletedItemsPluginInfo extends PluginFileInfo {
         parent::__construct($plugin, 'archivedeleteditems');
         $this->setPluginDescriptor(new ArchiveDeletedItemsPluginDescriptor());
     }
-
 }
-?>

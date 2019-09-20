@@ -23,7 +23,8 @@
  * MailingList object
  *
  */
-class MailingList {
+class MailingList
+{
 
     protected $id;
     protected $group_id;
@@ -80,6 +81,4 @@ class MailingList {
     {
         return $this->is_public;
     }
-
 }
-?>

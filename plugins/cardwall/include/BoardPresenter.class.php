@@ -21,7 +21,8 @@
 /**
  * A board to display
  */
-abstract class Cardwall_BoardPresenter {
+abstract class Cardwall_BoardPresenter
+{
 
     /**
      * @var Cardwall_Board

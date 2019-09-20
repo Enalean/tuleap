@@ -21,7 +21,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201309251016_add_agiledashboard_criteria_table extends ForgeUpgrade_Bucket {
+class b201309251016_add_agiledashboard_criteria_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {
@@ -51,4 +52,3 @@ EOT;
         }
     }
 }
-?>

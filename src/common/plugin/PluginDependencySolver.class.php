@@ -21,7 +21,8 @@
 /**
  * This class is responsible of detecting if there are unmet dependencies in plugin
  */
-class PluginDependencySolver {
+class PluginDependencySolver
+{
 
     /** @var PluginManager */
     private $plugin_manager;
@@ -95,4 +96,3 @@ class PluginDependencySolver {
         return $missing_dependencies;
     }
 }
-?>

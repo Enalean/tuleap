@@ -23,7 +23,8 @@ Mock::generate('BaseLanguage');
 
 require_once __DIR__ . '/../../../../src/www/include/utils.php';
 
-class DateHelperTest extends TuleapTestCase {
+class DateHelperTest extends TuleapTestCase
+{
 
     public function test_distanceOfTimeInWords()
     {
@@ -133,7 +134,8 @@ class DateHelperTest extends TuleapTestCase {
     }
 }
 
-class DateHelp_FutureOrPastTest extends TuleapTestCase {
+class DateHelp_FutureOrPastTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -160,10 +162,10 @@ class DateHelp_FutureOrPastTest extends TuleapTestCase {
         expect($GLOBALS['Language'])->getText('include_utils', 'time_in_future', '*')->at(1);
         DateHelper::timeAgoInWords($_SERVER['REQUEST_TIME'] + 500);
     }
-
 }
 
-class DateHelper_DistanceTest extends TuleapTestCase {
+class DateHelper_DistanceTest extends TuleapTestCase
+{
     private $today_at_midnight;
 
     public function setUp()
@@ -184,4 +186,3 @@ class DateHelper_DistanceTest extends TuleapTestCase {
         $this->assertEqual($expected_time, DateHelper::getTimestampAtMidnight("+3 days"));
     }
 }
-?>

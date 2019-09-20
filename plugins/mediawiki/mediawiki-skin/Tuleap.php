@@ -10,23 +10,25 @@
  * @ingroup Skins
  */
 
-if( !defined( 'MEDIAWIKI' ) )
-    die( -1 );
+if (!defined('MEDIAWIKI')) {
+    die(-1);
+}
 
 /**
  * Inherit main code from SkinTemplate, set the CSS and template filter.
  * @todo document
  * @ingroup Skins
  */
-class SkinTuleap extends SkinTemplate {
+class SkinTuleap extends SkinTemplate
+{
 
-    public CONST MEDIAWIKI_URL = '/\/plugins\/mediawiki\/wiki\/(.*)\/index.php\//';
+    public const MEDIAWIKI_URL = '/\/plugins\/mediawiki\/wiki\/(.*)\/index.php\//';
 
     /** Using fusionforge. */
     var $skinname = 'tuleap', $stylename = 'tuleap',
             $template = 'TuleapTemplate', $useHeadElement = true;
 
-    function setupTemplate( $classname, $repository = false, $cache_dir = false )
+    function setupTemplate($classname, $repository = false, $cache_dir = false)
     {
             $tc = new $classname();
 
@@ -37,7 +39,7 @@ class SkinTuleap extends SkinTemplate {
                     $project->getID();
                 $tc->params['toptab'] = 'plugin_mediawiki';
                 //$page_name = substr($_SERVER['REQUEST_URI'], (strpos($_SERVER['REQUEST_URI'], 'index.php/') + strlen('index.php/')), strlen($_SERVER['REQUEST_URI']));
-                $page_name = preg_replace(self::MEDIAWIKI_URL,'',$_SERVER['REQUEST_URI']);
+                $page_name = preg_replace(self::MEDIAWIKI_URL, '', $_SERVER['REQUEST_URI']);
                 $tc->params['title'] = 'Mediawiki-' . $page_name;
         }
 
@@ -47,7 +49,7 @@ class SkinTuleap extends SkinTemplate {
     /**
      * @param $out OutputPage
      */
-    function setupSkinUserCss( OutputPage $out )
+    function setupSkinUserCss(OutputPage $out)
     {
             global $wgHandheldStyle;
             /* add Tuleap styles */
@@ -55,21 +57,21 @@ class SkinTuleap extends SkinTemplate {
                 $out->addStyle($sheet['css'], $sheet['media']);
         }
 
-            parent::setupSkinUserCss( $out );
+            parent::setupSkinUserCss($out);
 
-            $out->addModuleStyles( 'skins.monobook' );
+            $out->addModuleStyles('skins.monobook');
 
             // Ugh. Can't do this properly because $wgHandheldStyle may be a URL
-        if( $wgHandheldStyle ) {
+        if ($wgHandheldStyle) {
                 // Currently in testing... try 'chick/main.css'
-                $out->addStyle( $wgHandheldStyle, 'handheld' );
+                $out->addStyle($wgHandheldStyle, 'handheld');
         }
 
             // TODO: Migrate all of these
-            $out->addStyle( 'tuleap/main.css', 'screen');
-            $out->addStyle( 'tuleap/TuleapSkin.css', 'screen');
-            $out->addStyle( 'tuleap/IE60Fixes.css', 'screen', 'IE 6' );
-            $out->addStyle( 'tuleap/IE70Fixes.css', 'screen', 'IE 7' );
+            $out->addStyle('tuleap/main.css', 'screen');
+            $out->addStyle('tuleap/TuleapSkin.css', 'screen');
+            $out->addStyle('tuleap/IE60Fixes.css', 'screen', 'IE 6');
+            $out->addStyle('tuleap/IE70Fixes.css', 'screen', 'IE 7');
     }
 }
 
@@ -77,7 +79,8 @@ class SkinTuleap extends SkinTemplate {
  * @todo document
  * @ingroup Skins
  */
-class TuleapTemplate extends BaseTemplate {
+class TuleapTemplate extends BaseTemplate
+{
 
         var $project = false;
 
@@ -95,7 +98,7 @@ class TuleapTemplate extends BaseTemplate {
      // Suppress warnings to prevent notices about missing indexes in $this->data
         wfSuppressWarnings();
 
-        $this->html( 'headelement' );
+        $this->html('headelement');
 
         echo "\n<!-- FUSIONFORGE BodyHeader BEGIN -->\n";
         $GLOBALS['HTML']->header($this->params);
@@ -105,24 +108,32 @@ class TuleapTemplate extends BaseTemplate {
         ?><div id="globalWrapper">
 <div id="column-content"><div id="content">
     <a id="top"></a>
-        <?php if($this->data['sitenotice']) { ?><div id="siteNotice"><?php $this->html('sitenotice') ?></div><?php } ?>
+        <?php if ($this->data['sitenotice']) {
+            ?><div id="siteNotice"><?php $this->html('sitenotice') ?></div><?php
+        } ?>
 
-    <h1 id="firstHeading" class="firstHeading"><span<?php if ($wgHtml5) echo ' dir="auto"'; ?>><?php $this->html('title') ?></span></h1>
+    <h1 id="firstHeading" class="firstHeading"><span<?php if ($wgHtml5) {
+        echo ' dir="auto"';
+                                                    } ?>><?php $this->html('title') ?></span></h1>
     <div id="bodyContent" class="mw-body">
         <div id="siteSub"><?php $this->msg('tagline') ?></div>
         <div id="contentSub"<?php $this->html('userlangattributes') ?>><?php $this->html('subtitle') ?></div>
-        <?php if($this->data['undelete']) { ?>
+        <?php if ($this->data['undelete']) { ?>
         <div id="contentSub2"><?php $this->html('undelete') ?></div>
-<?php } ?><?php if($this->data['newtalk'] ) { ?>
+        <?php } ?><?php if ($this->data['newtalk']) { ?>
         <div class="usermessage"><?php $this->html('newtalk')  ?></div>
-<?php } ?><?php if($this->data['showjumplinks']) { ?>
+        <?php } ?><?php if ($this->data['showjumplinks']) { ?>
         <div id="jump-to-nav" class="mw-jump"><?php $this->msg('jumpto') ?> <a href="#column-one"><?php $this->msg('jumptonavigation') ?></a>, <a href="#searchInput"><?php $this->msg('jumptosearch') ?></a></div>
-<?php } ?>
+        <?php } ?>
         <!-- start content -->
         <?php $this->html('bodytext') ?>
-        <?php if($this->data['catlinks']) { $this->html('catlinks'); } ?>
+        <?php if ($this->data['catlinks']) {
+            $this->html('catlinks');
+        } ?>
         <!-- end content -->
-        <?php if($this->data['dataAfterContent']) { $this->html ('dataAfterContent'); } ?>
+        <?php if ($this->data['dataAfterContent']) {
+            $this->html('dataAfterContent');
+        } ?>
         <div class="visualClear"></div>
     </div>
 </div></div>
@@ -149,35 +160,35 @@ class TuleapTemplate extends BaseTemplate {
         </div>
     </div>
         <?php
-        $this->renderPortals( $this->data['sidebar'] );
+        $this->renderPortals($this->data['sidebar']);
         ?>
 </div><!-- end of the left (by default at least) column -->
 <div class="visualClear"></div>
         <?php
-        $validFooterIcons = $this->getFooterIcons( "icononly" );
-        $validFooterLinks = $this->getFooterLinks( "flat" ); // Additional footer links
+        $validFooterIcons = $this->getFooterIcons("icononly");
+        $validFooterLinks = $this->getFooterLinks("flat"); // Additional footer links
 
-        if ( count( $validFooterIcons ) + count( $validFooterLinks ) > 0 ) { ?>
+        if (count($validFooterIcons) + count($validFooterLinks) > 0) { ?>
 <div id="footer"<?php $this->html('userlangattributes') ?>>
             <?php
             $footerEnd = '</div>';
         } else {
             $footerEnd = '';
         }
-        foreach ( $validFooterIcons as $blockName => $footerIcons ) { ?>
+        foreach ($validFooterIcons as $blockName => $footerIcons) { ?>
     <div id="f-<?php echo htmlspecialchars($blockName); ?>ico">
-            <?php foreach ( $footerIcons as $icon ) { ?>
-                <?php echo $this->getSkin()->makeFooterIcon( $icon ); ?>
+            <?php foreach ($footerIcons as $icon) { ?>
+                <?php echo $this->getSkin()->makeFooterIcon($icon); ?>
 
-        <?php }
+            <?php }
             ?>
     </div>
         <?php }
 
-        if ( count( $validFooterLinks ) > 0 ) {
+        if (count($validFooterLinks) > 0) {
             ?>    <ul id="f-list">
             <?php
-            foreach( $validFooterLinks as $aLink ) { ?>
+            foreach ($validFooterLinks as $aLink) { ?>
         <li id="<?php echo $aLink ?>"><?php $this->html($aLink) ?></li>
                 <?php
             }
@@ -196,24 +207,31 @@ class TuleapTemplate extends BaseTemplate {
     } // end of execute() method
 
 
-    protected function renderPortals( $sidebar )
+    protected function renderPortals($sidebar)
     {
-        if ( !isset( $sidebar['SEARCH'] ) ) $sidebar['SEARCH'] = true;
-        if ( !isset( $sidebar['TOOLBOX'] ) ) $sidebar['TOOLBOX'] = true;
-        if ( !isset( $sidebar['LANGUAGES'] ) ) $sidebar['LANGUAGES'] = true;
+        if (!isset($sidebar['SEARCH'])) {
+            $sidebar['SEARCH'] = true;
+        }
+        if (!isset($sidebar['TOOLBOX'])) {
+            $sidebar['TOOLBOX'] = true;
+        }
+        if (!isset($sidebar['LANGUAGES'])) {
+            $sidebar['LANGUAGES'] = true;
+        }
 
-        foreach( $sidebar as $boxName => $content ) {
-            if ( $content === false )
-            continue;
+        foreach ($sidebar as $boxName => $content) {
+            if ($content === false) {
+                continue;
+            }
 
-            if ( $boxName == 'SEARCH' ) {
+            if ($boxName == 'SEARCH') {
                             //keep empty to remove html search box
-            } elseif ( $boxName == 'TOOLBOX' ) {
+            } elseif ($boxName == 'TOOLBOX') {
                 $this->toolbox();
-            } elseif ( $boxName == 'LANGUAGES' ) {
+            } elseif ($boxName == 'LANGUAGES') {
                 $this->languageBox();
             } else {
-                $this->customBox( $boxName, $content );
+                $this->customBox($boxName, $content);
             }
         }
     }
@@ -229,9 +247,9 @@ class TuleapTemplate extends BaseTemplate {
         <h5><?php $this->msg('views') ?></h5>
         <div class="pBody">
             <ul><?php
-            foreach($this->data['content_actions'] as $key => $tab) {
+            foreach ($this->data['content_actions'] as $key => $tab) {
                 echo '
-				' . $this->makeListItem( $key, $tab );
+				' . $this->makeListItem($key, $tab);
             } ?>
 
             </ul>
@@ -247,13 +265,13 @@ class TuleapTemplate extends BaseTemplate {
         <div class="pBody">
             <ul>
         <?php
-        foreach ( $this->getToolbox() as $key => $tbitem ) { ?>
+        foreach ($this->getToolbox() as $key => $tbitem) { ?>
             <?php echo $this->makeListItem($key, $tbitem); ?>
 
             <?php
         }
-        wfRunHooks( 'MonoBookTemplateToolboxEnd', array( &$this ) );
-        wfRunHooks( 'SkinTemplateToolboxEnd', array( &$this, true ) );
+        wfRunHooks('MonoBookTemplateToolboxEnd', array( &$this ));
+        wfRunHooks('SkinTemplateToolboxEnd', array( &$this, true ));
         ?>
             </ul>
         </div>
@@ -263,16 +281,16 @@ class TuleapTemplate extends BaseTemplate {
 
     function languageBox()
     {
-        if( $this->data['language_urls'] ) {
+        if ($this->data['language_urls']) {
             ?>
     <div id="p-lang" class="portlet">
         <h5<?php $this->html('userlangattributes') ?>><?php $this->msg('otherlanguages') ?></h5>
         <div class="pBody">
             <ul>
-            <?php	    foreach($this->data['language_urls'] as $key => $langlink) { ?>
+            <?php	    foreach ($this->data['language_urls'] as $key => $langlink) { ?>
                 <?php echo $this->makeListItem($key, $langlink); ?>
 
-<?php	    } ?>
+            <?php	    } ?>
             </ul>
         </div>
     </div>
@@ -280,30 +298,31 @@ class TuleapTemplate extends BaseTemplate {
         }
     }
 
-    function customBox( $bar, $cont )
+    function customBox($bar, $cont)
     {
-        $portletAttribs = array( 'class' => 'generated-sidebar portlet', 'id' => Sanitizer::escapeId( "p-$bar" ) );
-        $tooltip = Linker::titleAttrib( "p-$bar" );
-        if ( $tooltip !== false ) {
+        $portletAttribs = array( 'class' => 'generated-sidebar portlet', 'id' => Sanitizer::escapeId("p-$bar") );
+        $tooltip = Linker::titleAttrib("p-$bar");
+        if ($tooltip !== false) {
             $portletAttribs['title'] = $tooltip;
         }
-        echo '	' . Html::openElement( 'div', $portletAttribs );
+        echo '	' . Html::openElement('div', $portletAttribs);
         ?>
 
-        <h5><?php $msg = wfMessage( $bar ); echo htmlspecialchars( $msg->exists() ? $msg->text() : $bar ); ?></h5>
+        <h5><?php $msg = wfMessage($bar);
+        echo htmlspecialchars($msg->exists() ? $msg->text() : $bar); ?></h5>
         <div class='pBody'>
-        <?php   if ( is_array( $cont ) ) { ?>
+        <?php   if (is_array($cont)) { ?>
             <ul>
-            <?php             foreach($cont as $key => $val) { ?>
+            <?php             foreach ($cont as $key => $val) { ?>
                 <?php echo $this->makeListItem($key, $val); ?>
 
-<?php	        } ?>
+            <?php	        } ?>
             </ul>
-<?php   } else {
+        <?php   } else {
             // allow raw HTML block to be defined by extensions
             print $cont;
-}
-?>
+        }
+        ?>
         </div>
     </div>
         <?php

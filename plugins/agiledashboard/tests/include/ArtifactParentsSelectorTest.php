@@ -22,7 +22,8 @@
 require_once __DIR__.'/../bootstrap.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
-class ArtifactParentsSelectorTest extends TuleapTestCase {
+class ArtifactParentsSelectorTest extends TuleapTestCase
+{
 
     protected $faq_id      = 13;
     protected $corp_id     = 42;
@@ -80,17 +81,17 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $this->milestone_factory = \Mockery::spy(\Planning_MilestoneFactory::class);
 
-        list($this->faq,      $this->faq_milestone)      = $this->getArtifact($this->faq_id,     $this->faq_tracker,      array());
-        list($this->corp,     $this->corp_milestone)     = $this->getArtifact($this->corp_id,    $this->corp_tracker,     array());
-        list($this->product,  $this->product_milestone)  = $this->getArtifact($this->product_id, $this->product_tracker,  array($this->corp));
+        list($this->faq,      $this->faq_milestone)      = $this->getArtifact($this->faq_id, $this->faq_tracker, array());
+        list($this->corp,     $this->corp_milestone)     = $this->getArtifact($this->corp_id, $this->corp_tracker, array());
+        list($this->product,  $this->product_milestone)  = $this->getArtifact($this->product_id, $this->product_tracker, array($this->corp));
         list($this->product2, $this->product2_milestone) = $this->getArtifact($this->product2_id, $this->product_tracker, array($this->corp));
-        list($this->release,  $this->release_milestone)  = $this->getArtifact($this->release_id, $this->release_tracker,  array($this->product, $this->corp));
+        list($this->release,  $this->release_milestone)  = $this->getArtifact($this->release_id, $this->release_tracker, array($this->product, $this->corp));
         list($this->release2, $this->release2_milestone) = $this->getArtifact($this->release2_id, $this->release_tracker, array($this->product2, $this->corp));
-        list($this->sprint,   $this->sprint_milestone)   = $this->getArtifact($this->sprint_id,  $this->sprint_tracker,   array($this->release, $this->product, $this->corp));
-        list($this->theme,    $this->theme_milestone)    = $this->getArtifact($this->theme_id,   $this->theme_tracker,    array());
-        list($this->theme2,   $this->theme2_milestone)   = $this->getArtifact($this->theme2_id,   $this->theme_tracker,   array());
-        list($this->epic,     $this->epic_milestone)     = $this->getArtifact($this->epic_id,    $this->epic_tracker,     array($this->theme));
-        list($this->epic2,    $this->epic2_milestone)    = $this->getArtifact($this->epic2_id,    $this->epic_tracker,    array($this->theme));
+        list($this->sprint,   $this->sprint_milestone)   = $this->getArtifact($this->sprint_id, $this->sprint_tracker, array($this->release, $this->product, $this->corp));
+        list($this->theme,    $this->theme_milestone)    = $this->getArtifact($this->theme_id, $this->theme_tracker, array());
+        list($this->theme2,   $this->theme2_milestone)   = $this->getArtifact($this->theme2_id, $this->theme_tracker, array());
+        list($this->epic,     $this->epic_milestone)     = $this->getArtifact($this->epic_id, $this->epic_tracker, array($this->theme));
+        list($this->epic2,    $this->epic2_milestone)    = $this->getArtifact($this->epic2_id, $this->epic_tracker, array($this->theme));
 
         stub($this->corp_milestone)->getPlannedArtifacts()->returns(aNode()->withChildren(
             aNode()->withObject($this->product),

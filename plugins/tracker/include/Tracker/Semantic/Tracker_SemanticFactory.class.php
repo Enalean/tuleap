@@ -25,7 +25,8 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
 
-class Tracker_SemanticFactory {
+class Tracker_SemanticFactory
+{
 
     /**
      * Hold an instance of the class
@@ -226,4 +227,3 @@ class Tracker_SemanticFactory {
         return $duplicators;
     }
 }
-?>

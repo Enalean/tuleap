@@ -17,11 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-interface User_UGroup {
+interface User_UGroup
+{
     public function getName();
 
     public function getId();
 
     public function getDescription();
 }
-?>

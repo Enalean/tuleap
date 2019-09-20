@@ -20,13 +20,12 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GraphOnTrackersV5PluginDescriptor extends PluginDescriptor {
+class GraphOnTrackersV5PluginDescriptor extends PluginDescriptor
+{
 
     function __construct()
     {
         parent::__construct($GLOBALS['Language']->getText('plugin_graphontrackersv5', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_graphontrackersv5', 'descriptor_description'));
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
-
 }
-?>

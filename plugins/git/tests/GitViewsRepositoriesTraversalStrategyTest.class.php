@@ -24,7 +24,8 @@ Mock::generate('GitViews');
 Mock::generate('PFUser');
 Mock::generate('Git_Backend_Gitolite');
 
-abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase {
+abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase
+{
 
     public function __construct($classname)
     {
@@ -54,7 +55,7 @@ abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase 
         $this->assertPattern('`'. $expectedPattern .'`', $strategy->fetch($repositories, $user));
     }
 
-    public abstract function getExpectedPattern($repositories);
+    abstract public function getExpectedPattern($repositories);
 
     protected function getFlatTree($strategy)
     {
@@ -77,4 +78,3 @@ abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase 
         return $repositories;
     }
 }
-?>

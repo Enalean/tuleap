@@ -22,7 +22,8 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201502061635_add_planning_priority_change_permission extends ForgeUpgrade_Bucket {
+class b201502061635_add_planning_priority_change_permission extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

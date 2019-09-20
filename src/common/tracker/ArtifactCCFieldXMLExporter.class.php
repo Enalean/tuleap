@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtifactCCFieldXMLExporter extends ArtifactFieldXMLExporter {
+class ArtifactCCFieldXMLExporter extends ArtifactFieldXMLExporter
+{
     public const TV3_TYPE = 'cc';
     public const TV5_TYPE = 'open_list';
 

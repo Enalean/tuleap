@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MilestoneParentLinker {
+class MilestoneParentLinker
+{
 
     /**
      * @var AgileDashboard_Milestone_Backlog_BacklogFactory
@@ -55,9 +56,10 @@ class MilestoneParentLinker {
         }
 
         if (! $this->isParentLinkedToParentMilestone(
-                $artifact_added,
-                $parent_milestone_artifact,
-                $user)
+            $artifact_added,
+            $parent_milestone_artifact,
+            $user
+        )
         ) {
             $parent_milestone_artifact->linkArtifact($artifact_added->getId(), $user);
             $this->linkToMilestoneParent($parent_milestone, $user, $artifact_added);

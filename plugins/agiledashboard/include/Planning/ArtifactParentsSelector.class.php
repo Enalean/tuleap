@@ -28,7 +28,8 @@
  * Then the selector on story artifact creation will propose only
  * epics associated to S->release
  */
-class Planning_ArtifactParentsSelector {
+class Planning_ArtifactParentsSelector
+{
 
     /**
      * @var array of Planning_ArtifactParentsSelector_Command
@@ -59,4 +60,3 @@ class Planning_ArtifactParentsSelector {
         return array();
     }
 }
-?>

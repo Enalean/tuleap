@@ -24,9 +24,8 @@
 /**
  * Description of DVCSDriverclass
  */
-interface DVCSDriver {
+interface DVCSDriver
+{
 
 
 }
-
-?>

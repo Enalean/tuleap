@@ -30,7 +30,8 @@ require_once dirname(__FILE__).'/../bootstrap.php';
 /**
  * @group GitTests
  */
-class RepositoryTest extends TestBase {
+class RepositoryTest extends TestBase
+{
 
     protected function getResponseForNonMember($request)
     {
@@ -50,7 +51,7 @@ class RepositoryTest extends TestBase {
     {
         $response = $this->getResponse(
             $this->client->get(
-            'git/' . GitDataBuilder::REPOSITORY_GIT_ID
+                'git/' . GitDataBuilder::REPOSITORY_GIT_ID
             ),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
@@ -463,7 +464,6 @@ class RepositoryTest extends TestBase {
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertGETPullRequests($response);
-
     }
 
     private function assertGETPullRequests(Response $response): void

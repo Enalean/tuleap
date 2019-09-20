@@ -17,7 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class SVN_SvnlookException extends Exception {
+class SVN_SvnlookException extends Exception
+{
     public $command;
     public $output;
     public $returnValue;
@@ -29,5 +30,3 @@ class SVN_SvnlookException extends Exception {
         parent::__construct($message, $return_value);
     }
 }
-
-?>

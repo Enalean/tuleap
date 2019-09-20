@@ -173,4 +173,3 @@ $repositories = array(
       'repository_backend_type' => 'gitshell',
     ),
 );
-?>

@@ -21,7 +21,8 @@
 
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
-class Docman_View_Icons extends Docman_View_Browse {
+class Docman_View_Icons extends Docman_View_Browse
+{
 
     /* protected */ function _content($params)
     {
@@ -38,7 +39,7 @@ class Docman_View_Icons extends Docman_View_Browse {
             $folders   = array();
             $documents = array();
             $it = $items->iterator();
-            while($it->valid()) {
+            while ($it->valid()) {
                 $o = $it->current();
                 $this->is_folder = false;
                 $o->accept($this);
@@ -68,9 +69,9 @@ class Docman_View_Icons extends Docman_View_Browse {
                 'show_options'           => ($this->_controller->request->exist('show_options') ? $this->_controller->request->get('show_options') : false),
                 'item'                  => $params['item'],
             );
-            foreach($rows as $row) {
+            foreach ($rows as $row) {
                 $html .= '<tr style="vertical-align:top">';
-                foreach($row as $cell => $nop) {
+                foreach ($row as $cell => $nop) {
                     $html .= '<td width="'. $width .'%">'. $this->_displayItem($row[$cell], $item_parameters) .'</td>';
                 }
                 $html .= '<td width="'. $width .'%">&nbsp;</td>';

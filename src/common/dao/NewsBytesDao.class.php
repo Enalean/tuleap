@@ -19,7 +19,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class NewsBytesDao extends DataAccessObject {
+class NewsBytesDao extends DataAccessObject
+{
 
     public function __construct()
     {

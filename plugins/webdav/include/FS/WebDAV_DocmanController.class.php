@@ -29,7 +29,8 @@
  * Using this pattern, we ensure a perfect alignment between WebDav access code and Docman
  * access code.
  */
-class WebDAV_DocmanController extends Docman_Controller {
+class WebDAV_DocmanController extends Docman_Controller
+{
 
     public function __construct(DocmanPlugin $plugin, WebDAV_Request $request)
     {
@@ -78,4 +79,3 @@ class WebDAV_DocmanController extends Docman_Controller {
     {
     }
 }
-?>

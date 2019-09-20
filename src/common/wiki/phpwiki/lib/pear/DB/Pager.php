@@ -114,7 +114,7 @@ class DB_Pager extends PEAR
     /**
     * @deprecated
     */
-    function fetchRow($mode=DB_FETCHMODE_DEFAULT)
+    function fetchRow($mode = DB_FETCHMODE_DEFAULT)
     {
         $this->current++;
         if ($this->current >= $this->top) {
@@ -126,7 +126,7 @@ class DB_Pager extends PEAR
     /**
     * @deprecated
     */
-    function fetchInto(&$arr, $mode=DB_FETCHMODE_DEFAULT)
+    function fetchInto(&$arr, $mode = DB_FETCHMODE_DEFAULT)
     {
         $this->current++;
         if ($this->current >= $this->top) {
@@ -174,8 +174,15 @@ class DB_Pager extends PEAR
         $from = (empty($from)) ? 0 : $from;
 
         if ($limit <= 0) {
-            return PEAR::raiseError (null, 'wrong "limit" param', null,
-                                     null, null, 'DB_Error', true);
+            return PEAR::raiseError(
+                null,
+                'wrong "limit" param',
+                null,
+                null,
+                null,
+                'DB_Error',
+                true
+            );
         }
 
         // Total number of pages
@@ -198,8 +205,15 @@ class DB_Pager extends PEAR
             }
         }
         if (!isset($data['current'])) {
-            return PEAR::raiseError (null, 'wrong "from" param', null,
-                                     null, null, 'DB_Error', true);
+            return PEAR::raiseError(
+                null,
+                'wrong "from" param',
+                null,
+                null,
+                null,
+                'DB_Error',
+                true
+            );
         }
 
         // Limit number of pages (goole algoritm)
@@ -249,4 +263,3 @@ class DB_Pager extends PEAR
         return $data;
     }
 }
-?>

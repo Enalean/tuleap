@@ -19,12 +19,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class DocmanExportException extends Exception {
+class DocmanExportException extends Exception
+{
 
     public function __construct($msg)
     {
         parent::__construct(self::class.' : '.$msg);
     }
 }
-
-?>

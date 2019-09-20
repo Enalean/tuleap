@@ -21,7 +21,8 @@
 /**
  * A swimline for solo item in the dashboard
  */
-class Cardwall_SwimlineSolo extends Cardwall_Swimline{
+class Cardwall_SwimlineSolo extends Cardwall_Swimline
+{
 
     /**
      * @param string $title
@@ -38,4 +39,3 @@ class Cardwall_SwimlineSolo extends Cardwall_Swimline{
         return false;
     }
 }
-?>

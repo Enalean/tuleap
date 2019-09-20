@@ -113,7 +113,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function getChangesetValues($changeset_id)
     {
         $values = array();
-        foreach($this->getValueDao()->searchChangesetValues($changeset_id, $this->field->id) as $row) {
+        foreach ($this->getValueDao()->searchChangesetValues($changeset_id, $this->field->id) as $row) {
             $values[] = $this->getValueFromRow($row);
         }
         return $values;
@@ -364,7 +364,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $values_array = array();
         if ($v = $changeset->getValue($this->field)) {
             $values = $v->getListValues();
-            foreach($values as $val) {
+            foreach ($values as $val) {
                 $values_array[] = $val->getLabel();
             }
         }
@@ -406,7 +406,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function fetchAdminEditForm()
     {
         $html = '';
-        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','bind_to_ugroups') .'</h3>';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'bind_to_ugroups') .'</h3>';
         $html .= self::fetchSelectUgroups('bind[values][]', $this->field, $this->values);
 
         //Select default values
@@ -593,7 +593,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     private function extractBindValuesByIds(array $values, array $bindvalue_ids)
     {
         $list_of_bindvalues = array();
-        foreach($bindvalue_ids as $i) {
+        foreach ($bindvalue_ids as $i) {
             if (isset($values[$i])) {
                 $list_of_bindvalues[$i] = $values[$i];
             }
@@ -706,7 +706,6 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
             $representation = new UserGroupRepresentation();
             $representation->build((int) $project_id, $value->getUgroup());
             $rest_array[] = $representation;
-
         }
         return $rest_array;
     }
@@ -732,7 +731,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
             if (! $bind_value) {
                 $identifier = $user_group->getName();
             }
-        } else if (isset($rest_data['short_name'])) {
+        } elseif (isset($rest_data['short_name'])) {
             $name       = (string) $rest_data['short_name'];
             $user_group = $this->ugroup_manager->getUGroupByName($project, $name);
 

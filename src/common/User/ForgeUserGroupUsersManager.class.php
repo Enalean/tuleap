@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class User_ForgeUserGroupUsersManager {
+class User_ForgeUserGroupUsersManager
+{
 
     /** @var User_ForgeUserGroupUsersDao */
     private $users_dao;
@@ -45,5 +46,4 @@ class User_ForgeUserGroupUsersManager {
     {
         return $this->users_dao->isUserInGroup($user->getId(), $user_group->getId());
     }
-
 }

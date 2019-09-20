@@ -21,8 +21,7 @@
  */
 require_once('Docman_Actions.class.php');
 
-class Docman_HTTPActions extends Docman_Actions {
+class Docman_HTTPActions extends Docman_Actions
+{
 
 }
-
-?>

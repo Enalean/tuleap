@@ -28,7 +28,8 @@
  *
  * This is the same type of algorithm than used in AgileDashboard_Milestone_Backlog_ArtifactsFinder
  */
-class AgileDashboard_BacklogItem_SubBacklogItemProvider {
+class AgileDashboard_BacklogItem_SubBacklogItemProvider
+{
 
     /** @var Tracker_ArtifactDao */
     private $dao;

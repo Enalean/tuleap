@@ -26,7 +26,8 @@
  *    release of the sprint. The release contains epics that are suitable parents
  *    for the upcoming story.
  */
-class Planning_ArtifactParentsSelector_NearestMilestoneWithBacklogTrackerCommand extends Planning_ArtifactParentsSelector_Command {
+class Planning_ArtifactParentsSelector_NearestMilestoneWithBacklogTrackerCommand extends Planning_ArtifactParentsSelector_Command
+{
 
     /**
      * @see Planning_ArtifactParentsSelector_Command
@@ -59,4 +60,3 @@ class Planning_ArtifactParentsSelector_NearestMilestoneWithBacklogTrackerCommand
         }
     }
 }
-?>

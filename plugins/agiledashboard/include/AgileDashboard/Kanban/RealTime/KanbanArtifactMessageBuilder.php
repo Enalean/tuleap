@@ -145,7 +145,7 @@ class KanbanArtifactMessageBuilder
     {
         if ($is_none_status) {
             $column = ColumnIdentifier::BACKLOG_COLUMN;
-        } else if (! $is_open_status) {
+        } elseif (! $is_open_status) {
             $column = ColumnIdentifier::ARCHIVE_COLUMN;
         } else {
             $column = $this->getColumnId($values, $status);
@@ -179,7 +179,7 @@ class KanbanArtifactMessageBuilder
 
         if ($in_column === ColumnIdentifier::BACKLOG_COLUMN) {
             $items_in_column = $this->kanban_item_dao->getKanbanBacklogItemIds($artifact->getTracker()->getId());
-        } else if ($in_column === ColumnIdentifier::ARCHIVE_COLUMN) {
+        } elseif ($in_column === ColumnIdentifier::ARCHIVE_COLUMN) {
             $items_in_column = $this->kanban_item_dao->getKanbanArchiveItemIds($artifact->getTracker()->getId());
         } else {
             $items_in_column = $this->kanban_item_dao->getItemsInColumn($artifact->getTracker()->getId(), $this->getColumnId($values, $status));

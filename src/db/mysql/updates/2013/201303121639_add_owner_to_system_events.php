@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201303121639_add_owner_to_system_events extends ForgeUpgrade_Bucket {
+class b201303121639_add_owner_to_system_events extends ForgeUpgrade_Bucket
+{
     public function description()
     {
         return <<<EOT
@@ -47,5 +48,3 @@ EOT;
         }
     }
 }
-
-?>

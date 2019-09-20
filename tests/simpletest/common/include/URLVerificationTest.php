@@ -23,14 +23,17 @@ use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 
 Mock::generate('PFUser');
 
-Mock::generatepartial('URLVerification',
-                      'URLVerificationTestVersion2',
-                      array('getUrlChunks',
+Mock::generatepartial(
+    'URLVerification',
+    'URLVerificationTestVersion2',
+    array('getUrlChunks',
                             'getProjectManager',
                             'userCanAccessProject',
-                            'exitError'));
+    'exitError')
+);
 
-class URLVerificationBaseTest extends TuleapTestCase {
+class URLVerificationBaseTest extends TuleapTestCase
+{
 
     protected $user_manager;
     protected $user;
@@ -72,7 +75,8 @@ class URLVerificationBaseTest extends TuleapTestCase {
     }
 }
 
-class URLVerificationTest extends URLVerificationBaseTest {
+class URLVerificationTest extends URLVerificationBaseTest
+{
 
     function testIsScriptAllowedForAnonymous()
     {
@@ -212,7 +216,8 @@ class URLVerificationTest extends URLVerificationBaseTest {
     }
 }
 
-class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
+class URLVerification_WithAnonymousTest extends URLVerificationBaseTest
+{
 
     private $urlVerification;
     private $em;
@@ -336,7 +341,8 @@ class URLVerification_WithAnonymousTest extends URLVerificationBaseTest {
     }
 }
 
-class URLVerification_RedirectionTests extends URLVerificationBaseTest {
+class URLVerification_RedirectionTests extends URLVerificationBaseTest
+{
 
     function testGetRedirectionProtocolModified()
     {
@@ -528,7 +534,8 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
     }
 }
 
-class URLVerification_PrivateRestrictedTest extends TuleapTestCase {
+class URLVerification_PrivateRestrictedTest extends TuleapTestCase
+{
 
     private $url_verification;
     private $user;
@@ -559,22 +566,22 @@ class URLVerification_PrivateRestrictedTest extends TuleapTestCase {
         $this->assertFalse($this->url_verification->isInternal('javascript:alert(1)'));
         $this->assertTrue($this->url_verification->isInternal('/path/to/feature'));
         $this->assertFalse(
-                $this->url_verification->isInternal('http://' . ForgeConfig::get('sys_default_domain') . '/smthing')
-            );
+            $this->url_verification->isInternal('http://' . ForgeConfig::get('sys_default_domain') . '/smthing')
+        );
         $this->assertFalse(
-                $this->url_verification->isInternal('https://' . ForgeConfig::get('sys_https_host') . '/smthing')
-            );
+            $this->url_verification->isInternal('https://' . ForgeConfig::get('sys_https_host') . '/smthing')
+        );
 
         $this->assertFalse($this->url_verification->isInternal('//example.com'));
         $this->assertFalse($this->url_verification->isInternal('/\example.com'));
         $this->assertFalse($this->url_verification->isInternal(
-            'https://' . ForgeConfig::get('sys_https_host') . '@evil.example.com')
-        );
-
+            'https://' . ForgeConfig::get('sys_https_host') . '@evil.example.com'
+        ));
     }
 }
 
-class URLVerification_PermissionsOverriderTest extends URLVerificationBaseTest {
+class URLVerification_PermissionsOverriderTest extends URLVerificationBaseTest
+{
 
     protected $urlVerification;
     protected $event_manager;
@@ -615,7 +622,8 @@ class URLVerification_PermissionsOverriderTest extends URLVerificationBaseTest {
     }
 }
 
-class URLVerification_PermissionsOverrider_AnonymousPlatformAndNoOverriderTest extends URLVerification_PermissionsOverriderTest {
+class URLVerification_PermissionsOverrider_AnonymousPlatformAndNoOverriderTest extends URLVerification_PermissionsOverriderTest
+{
 
     public function setUp()
     {
@@ -642,7 +650,8 @@ class URLVerification_PermissionsOverrider_AnonymousPlatformAndNoOverriderTest e
     }
 }
 
-class URLVerification_PermissionsOverrider_RegularPlatformAndNoOverriderTest extends URLVerification_PermissionsOverriderTest {
+class URLVerification_PermissionsOverrider_RegularPlatformAndNoOverriderTest extends URLVerification_PermissionsOverriderTest
+{
 
     public function setUp()
     {
@@ -660,7 +669,6 @@ class URLVerification_PermissionsOverrider_RegularPlatformAndNoOverriderTest ext
         stub($this->user)->isAnonymous()->returns(true);
 
         $this->assertEqual($this->getScriptChunk(), '/account/login.php?return_to=%2Fmy%2F');
-
     }
 
     function itForceAnonymousToLoginToAccessScript()
@@ -684,7 +692,8 @@ class URLVerification_PermissionsOverrider_RegularPlatformAndNoOverriderTest ext
     }
 }
 
-class URLVerification_PermissionsOverrider_RestrictedPlatformAndNoOverriderTest extends URLVerification_PermissionsOverriderTest {
+class URLVerification_PermissionsOverrider_RestrictedPlatformAndNoOverriderTest extends URLVerification_PermissionsOverriderTest
+{
 
     public function setUp()
     {
@@ -702,7 +711,6 @@ class URLVerification_PermissionsOverrider_RestrictedPlatformAndNoOverriderTest 
         stub($this->user)->isAnonymous()->returns(true);
 
         $this->assertEqual($this->getScriptChunk(), '/account/login.php?return_to=%2Fmy%2F');
-
     }
 
     function itForceAnonymousToLoginToAccessScript()
@@ -727,7 +735,8 @@ class URLVerification_PermissionsOverrider_RestrictedPlatformAndNoOverriderTest 
 }
 
 // Bug when platform use forceAnonymous & reverse proxy...
-class URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAnonymousTest extends URLVerification_PermissionsOverriderTest {
+class URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAnonymousTest extends URLVerification_PermissionsOverriderTest
+{
 
     public function setUp()
     {
@@ -746,7 +755,6 @@ class URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAn
         stub($this->user)->isAnonymous()->returns(true);
 
         $this->assertEqual($this->getScriptChunk(), '/account/login.php?return_to=%2Fmy%2F');
-
     }
 
     function itForceAnonymousToLoginToAccessScript()
@@ -772,7 +780,8 @@ class URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAn
 
 // follow-up of URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAnonymousTest but
 // PermissionOverrider enter in action
-class URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAnonymousButOverriderForceGrantTest extends URLVerification_PermissionsOverriderTest {
+class URLVerification_PermissionsOverrider_RestrictedPlatformAndOverriderForceAnonymousButOverriderForceGrantTest extends URLVerification_PermissionsOverriderTest
+{
 
     public function setUp()
     {

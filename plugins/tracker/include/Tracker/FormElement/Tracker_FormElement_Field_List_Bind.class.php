@@ -80,7 +80,6 @@ abstract class Tracker_FormElement_Field_List_Bind implements
                 Tracker_FormElement_Field_List_Bind::REST_LABEL_KEY => $value->getAPIValue()
             ));
             $rest_array[] = $representation;
-
         }
         return $rest_array;
     }
@@ -96,7 +95,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     /**
      * @return Tracker_FormElement_Field_List_BindValue[]
      */
-    public abstract function getAllValues();
+    abstract public function getAllValues();
 
     /**
      * @return Tracker_FormElement_Field_List_BindValue[]
@@ -124,7 +123,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     public function fetchFormattedForJson()
     {
         $values = array();
-        foreach($this->getAllValues() as $value) {
+        foreach ($this->getAllValues() as $value) {
             $values[] = $value->fetchFormattedForJson();
         }
         return $values;
@@ -144,7 +143,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @return array
      */
-    protected abstract function getRESTBindingList();
+    abstract protected function getRESTBindingList();
 
     /**
      * Get the field data for artifact submission
@@ -154,45 +153,45 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @return mixed the field data corresponding to the value for artifact submision
      */
-    public abstract function getFieldData($submitted_value, $is_multiple);
+    abstract public function getFieldData($submitted_value, $is_multiple);
     /**
      * @return array|Tracker_FormElement_Field_List_BindValue|null
      * @throws Tracker_FormElement_InvalidFieldValueException
      */
-    public abstract function getValue($value_id);
+    abstract public function getValue($value_id);
     /**
      * @return array
      */
-    public abstract function getChangesetValues($changeset_id);
+    abstract public function getChangesetValues($changeset_id);
 
     /**
      * Fetch the value
      * @param mixed $value the value of the field
      * @return string
      */
-    public abstract function fetchRawValue($value);
+    abstract public function fetchRawValue($value);
 
     /**
      * Fetch the value in a specific changeset
      * @param Tracker_Artifact_Changeset $changeset
      * @return string
      */
-    public abstract function fetchRawValueFromChangeset($changeset);
+    abstract public function fetchRawValueFromChangeset($changeset);
 
     /**
      * @return string
      */
-    public abstract function formatCriteriaValue($value_id);
+    abstract public function formatCriteriaValue($value_id);
 
     /**
      * @return string
      */
-    public abstract function formatMailCriteriaValue($value_id);
+    abstract public function formatMailCriteriaValue($value_id);
 
     /**
      * @return string
      */
-    public abstract function formatChangesetValue($value);
+    abstract public function formatChangesetValue($value);
 
     /**
      * @return string
@@ -206,7 +205,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     /**
      * @return string
      */
-    public abstract function formatChangesetValueForCSV($value);
+    abstract public function formatChangesetValueForCSV($value);
 
     /**
      * Formatted changeset are considered without link by default.
@@ -312,7 +311,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
             array_merge(
                 array(100),
                 array_keys($this->getAllValues())
-            ));
+            )
+        );
     }
 
     /**
@@ -320,7 +320,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      * @return string
      * @see getQueryFrom
      */
-    public abstract function getQuerySelect();
+    abstract public function getQuerySelect();
 
     /**
      * Get the "select" statement to retrieve field values with their decorator if they exist
@@ -342,7 +342,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @return string
      */
-    public abstract function getQueryFrom($changesetvalue_table = 'tracker_changeset_value_list');
+    abstract public function getQueryFrom($changesetvalue_table = 'tracker_changeset_value_list');
 
     /**
      * Get the "from" statement to retrieve field values with their decorator if they exist
@@ -371,7 +371,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @return Tracker_FormElement_Field_List_BindValue
      */
-    public abstract function getValueFromRow($row);
+    abstract public function getValueFromRow($row);
 
     /**
      * Get the sql fragment used to retrieve value for a changeset to display the bindvalue in table rows for example.
@@ -384,17 +384,17 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *                  'bindtable_join_on_id' => 'user.user_id',
      *              }
      */
-    public abstract function getBindtableSqlFragment();
+    abstract public function getBindtableSqlFragment();
 
     /**
      * Get the "order by" statement to retrieve field values
      */
-    public abstract function getQueryOrderby();
+    abstract public function getQueryOrderby();
 
     /**
      * Get the "group by" statement to retrieve field values
      */
-    public abstract function getQueryGroupby();
+    abstract public function getQueryGroupby();
 
     public function fetchDecoratorsAsJavascript()
     {
@@ -402,7 +402,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         if (is_array($this->decorators) && count($this->decorators)) {
             $html .= '<script type="text/javascript">'.PHP_EOL;
             $html .= 'codendi.tracker.decorator.decorators['. $this->field->id .'] = [];'. PHP_EOL;
-            foreach($this->decorators as $d) {
+            foreach ($this->decorators as $d) {
                 $html .= 'codendi.tracker.decorator.decorators['. $this->field->id .']['. $d->value_id .'] = '. $d->toJSON() .';'. PHP_EOL;
             }
             $html .= '</script>';
@@ -427,15 +427,15 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         }
     }
 
-    public abstract function getDao();
-    public abstract function getValueDao();
+    abstract public function getDao();
+    abstract public function getValueDao();
 
     /**
      * Fetch the form to edit the formElement
      *
      * @return string html
      */
-    public abstract function fetchAdminEditForm();
+    abstract public function fetchAdminEditForm();
 
     /**
      * Process the request
@@ -524,12 +524,12 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @return string html
      */
-    public static abstract function fetchAdminCreateForm($field);
+    abstract public static function fetchAdminCreateForm($field);
 
     /**
      * Transforms Bind into a SimpleXMLElement
      */
-    public abstract function exportToXml(
+    abstract public function exportToXml(
         SimpleXMLElement $root,
         &$xmlMapping,
         $project_export_context,
@@ -544,7 +544,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @Return array the BindValue(s)
      */
-    public abstract function getBindValues($bindvalue_ids = null);
+    abstract public function getBindValues($bindvalue_ids = null);
 
     /**
      * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids.
@@ -554,18 +554,18 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @return Tracker_FormElement_Field_List_BindValue[]
      */
-    public abstract function getBindValuesForIds(array $bindvalue_ids);
+    abstract public function getBindValuesForIds(array $bindvalue_ids);
 
     /**
      * @return string
      */
-    public abstract function getType();
+    abstract public function getType();
 
     /**
      * @param int $bindvalue_id
      * @return Tracker_FormElement_Field_List_BindValue
      */
-    public abstract function getBindValueById($bindvalue_id);
+    abstract public function getBindValueById($bindvalue_id);
 
     /**
      * Fetch sql snippets needed to compute aggregate functions on this field.
@@ -594,7 +594,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *               - selectbox: count group by
      *               - multiselectbox: all (else it breaks other computations)
      */
-    public abstract function getQuerySelectAggregate($functions);
+    abstract public function getQuerySelectAggregate($functions);
 
     /**
      * Saves a bind in the database
@@ -618,7 +618,6 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         if (is_array($this->decorators) && ! empty($this->decorators)) {
             $values = $this->getBindValues();
             foreach ($this->decorators as $decorator) {
-
                 if (! $decorator->isUsingOldPalette()) {
                     $color = $decorator->tlp_color_name;
                 } else {
@@ -668,10 +667,10 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     {
         $values = array();
         //pretty slow, but we do not have a better way to filter a value function
-        foreach($this->getAllValues($keyword) as $v) {
+        foreach ($this->getAllValues($keyword) as $v) {
             if (false !== stripos($v->getLabel(), $keyword)) {
                 $values[] = $v;
-                if ( --$limit === 0 ) {
+                if (--$limit === 0) {
                     break;
                 }
             }
@@ -685,7 +684,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      * @param Tracker_Artifact_ChangesetValue $changeset_value
      * @return array of numeric bind values
      */
-    public abstract function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value);
+    abstract public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value);
 
     /**
      * @psalm-param ListValueBinding $value
@@ -704,15 +703,15 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     public function getRESTAvailableValues()
     {
         $rest_values = array();
-        foreach($this->getAllValues() as $value) {
+        foreach ($this->getAllValues() as $value) {
             $rest_values[] = $this->getRESTBindValue($value);
         }
         return $rest_values;
     }
 
-    public abstract function getFullRESTValue(Tracker_FormElement_Field_List_Value $value);
+    abstract public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value);
 
-    public abstract function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field);
+    abstract public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field);
 
     public function getFieldDataFromRESTValue($value)
     {

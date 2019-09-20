@@ -21,7 +21,8 @@
  *
  */
 
-class BackendMailingList extends Backend {
+class BackendMailingList extends Backend
+{
 
     protected $_mailinglistdao = null;
 
@@ -71,7 +72,7 @@ class BackendMailingList extends Backend {
 
             if (system(
                 $GLOBALS['mailman_bin_dir']. '/config_list -i ' . escapeshellarg($config_file) . ' ' . escapeshellarg($list->getListName())
-                ) !== false) {
+            ) !== false) {
                 if (unlink($config_file)) {
                     return true;
                 }
@@ -125,12 +126,11 @@ class BackendMailingList extends Backend {
             $list=new MailingList($row);
             $list_dir = $GLOBALS['mailman_list_dir']."/".$list->getListName();
             if ((is_dir($list_dir))&&($list->getIsPublic() == 9)) {
-
                 // Archive first
                 $list_archive_dir = $GLOBALS['mailman_list_dir']."/../archives/private/".$list->getListName(); // Does it work? TODO
                 $backupfile=ForgeConfig::get('sys_project_backup_path')."/".$list->getListName()."-mailman.tgz";
                 system('tar cfz ' . escapeshellarg($backupfile) . ' ' . escapeshellarg($list_dir) . ' ' . escapeshellarg($list_archive_dir));
-                chmod($backupfile,0600);
+                chmod($backupfile, 0600);
 
                 // Delete the mailing list if asked to and the mailing exists (archive deleted as well)
                 system($GLOBALS['mailman_bin_dir']. '/rmlist -a '. escapeshellarg($list->getListName()) .' >/dev/null');
@@ -148,7 +148,9 @@ class BackendMailingList extends Backend {
     {
         // Is this the best test?
         $list_dir = $GLOBALS['mailman_list_dir']."/".$list->getListName();
-        if (! is_dir($list_dir)) return false;
+        if (! is_dir($list_dir)) {
+            return false;
+        }
         return true;
     }
 
@@ -176,5 +178,3 @@ class BackendMailingList extends Backend {
         return false;
     }
 }
-
-?>

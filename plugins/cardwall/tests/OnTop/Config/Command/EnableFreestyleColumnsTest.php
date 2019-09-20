@@ -21,7 +21,8 @@
 require_once dirname(__FILE__) .'/../../../bootstrap.php';
 require_once dirname(__FILE__) .'/../../../../../../tests/simpletest/common/include/builders/aRequest.php';
 
-class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends TuleapTestCase
+{
 
     public function setUp()
     {
@@ -71,4 +72,3 @@ class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends TuleapTes
         $this->command->execute($request);
     }
 }
-?>

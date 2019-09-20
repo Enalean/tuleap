@@ -24,7 +24,8 @@ namespace Tuleap\Git\REST\v1;
 use Git_RemoteServer_GerritServer;
 use Tuleap\REST\JsonCast;
 
-class GerritServerRepresentation {
+class GerritServerRepresentation
+{
 
     public const ROUTE = 'gerrit';
 

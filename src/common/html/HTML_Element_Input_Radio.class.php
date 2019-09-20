@@ -23,7 +23,8 @@ require_once('HTML_Element_Input_Hidden.class.php');
 /**
  * Define a html input Radio field
  */
-class HTML_Element_Input_Radio extends HTML_Element_Input {
+class HTML_Element_Input_Radio extends HTML_Element_Input
+{
 
     public function __construct($label, $name, $value, $checked)
     {
@@ -45,8 +46,6 @@ class HTML_Element_Input_Radio extends HTML_Element_Input {
 
     protected function getInputType()
     {
-        return 'radio'; }
-
+        return 'radio';
+    }
 }
-
-?>

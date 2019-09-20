@@ -20,5 +20,7 @@
 
 namespace Tuleap\OpenIDConnectClient\Provider;
 
+class ProviderDataAccessException extends \Exception
+{
 
-class ProviderDataAccessException extends \Exception { }
+}

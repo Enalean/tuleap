@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class MediawikiGroupPresenter {
+class MediawikiGroupPresenter
+{
 
     /** @var ProjectUGroup[] */
     private $available_ugroups;

@@ -21,7 +21,8 @@
 /**
  * Factory for BaseLanguage objects
  */
-class BaseLanguageFactory {
+class BaseLanguageFactory
+{
 
     /**
      * @var array of BaseLanguage

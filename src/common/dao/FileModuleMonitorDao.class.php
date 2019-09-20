@@ -19,22 +19,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FileModuleMonitorDao extends DataAccessObject {
+class FileModuleMonitorDao extends DataAccessObject
+{
 
     function whoIsMonitoringPackageByID($group_id, $package_id)
     {
         $_package_id = (int) $package_id;
         $_group_id = (int) $group_id;
 
-        $sql = sprintf("SELECT u.email,u.user_id,p.name "
+        $sql = sprintf(
+            "SELECT u.email,u.user_id,p.name "
               ."FROM user AS u,filemodule_monitor AS fm, frs_package AS p "
               ."WHERE u.user_id = fm.user_id "
               ."AND fm.filemodule_id = p.package_id "
               ."AND fm.filemodule_id = %s "
               ."AND p.group_id = %s "
               ."AND ( u.status='A' OR u.status='R' )",
-              $this->da->quoteSmart($_package_id),
-              $this->da->quoteSmart($_group_id));
+            $this->da->quoteSmart($_package_id),
+            $this->da->quoteSmart($_group_id)
+        );
 
         return $this->retrieve($sql);
     }
@@ -153,5 +156,3 @@ class FileModuleMonitorDao extends DataAccessObject {
         return $deleted;
     }
 }
-
-?>

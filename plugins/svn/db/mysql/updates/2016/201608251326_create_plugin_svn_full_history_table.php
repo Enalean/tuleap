@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201608251326_create_plugin_svn_full_history_table extends ForgeUpgrade_Bucket {
+class b201608251326_create_plugin_svn_full_history_table extends ForgeUpgrade_Bucket
+{
 
     public function description()
     {

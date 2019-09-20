@@ -98,7 +98,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
                 $this->error("Could not set svn privacy for project $group_id");
                 return false;
             }
-            if (!$backendSVN->updateSVNAccess($group_id, $project->getSVNRootPath()) ) {
+            if (!$backendSVN->updateSVNAccess($group_id, $project->getSVNRootPath())) {
                 $this->error("Could not update svn access file for project $group_id");
                 return false;
             }
@@ -113,7 +113,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
         }
 
         //allows to link plugins to this system event
-        $this->callSystemEventListeners( self::class );
+        $this->callSystemEventListeners(self::class);
 
         $this->done();
 
@@ -145,7 +145,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
 
     private function notifyProjectMembers(Project $project)
     {
-        foreach($project->getMembers() as $member) {
+        foreach ($project->getMembers() as $member) {
             $this->notifyUser($project, $member);
         }
     }
@@ -202,7 +202,6 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
                         'email_visibility_change_body_private_unrestricted',
                         $project->getUnconvertedPublicName()
                     );
-
             }
         } else {
             return $user_language->getText(

@@ -24,7 +24,8 @@
 /**
  * Container for ListOfValues elements.
  */
-class Docman_MetadataListOfValuesElement {
+class Docman_MetadataListOfValuesElement
+{
     var $id;
     var $name;
     var $description;
@@ -87,11 +88,21 @@ class Docman_MetadataListOfValuesElement {
 
     function initFromRow($row)
     {
-        if(isset($row['value_id'])) $this->id = $row['value_id'];
-        if(isset($row['name'])) $this->name = $row['name'];
-        if(isset($row['description'])) $this->description = $row['description'];
-        if(isset($row['rank'])) $this->rank = $row['rank'];
-        if(isset($row['status'])) $this->status = $row['status'];
+        if (isset($row['value_id'])) {
+            $this->id = $row['value_id'];
+        }
+        if (isset($row['name'])) {
+            $this->name = $row['name'];
+        }
+        if (isset($row['description'])) {
+            $this->description = $row['description'];
+        }
+        if (isset($row['rank'])) {
+            $this->rank = $row['rank'];
+        }
+        if (isset($row['status'])) {
+            $this->status = $row['status'];
+        }
     }
 
     public function getMetadataValue(): string
@@ -103,4 +114,3 @@ class Docman_MetadataListOfValuesElement {
         return $this->getName();
     }
 }
-?>

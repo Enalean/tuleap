@@ -21,7 +21,8 @@
 
 require_once('bootstrap.php');
 
-abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
+abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase
+{
     protected $fixture_dir;
     protected $attachment_dir;
     protected $thumbnails_dir;
@@ -35,17 +36,17 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
         $this->setUpGlobalsMockery();
         ForgeConfig::store();
         $this->fixture_dir    = '/var/tmp'.'/_fixtures';
-        if(!is_dir($this->fixture_dir)) {
+        if (!is_dir($this->fixture_dir)) {
             mkdir($this->fixture_dir);
         }
 
         $this->attachment_dir = $this->fixture_dir.'/attachments';
-        if(!is_dir($this->attachment_dir)) {
+        if (!is_dir($this->attachment_dir)) {
             mkdir($this->attachment_dir);
         }
 
         $this->thumbnails_dir = $this->attachment_dir.'/thumbnails';
-        if(!is_dir($this->thumbnails_dir)) {
+        if (!is_dir($this->thumbnails_dir)) {
             mkdir($this->thumbnails_dir);
         }
 
@@ -62,7 +63,7 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
 
     public function tearDown()
     {
-        foreach(glob($this->thumbnails_dir.'/*') as $f) {
+        foreach (glob($this->thumbnails_dir.'/*') as $f) {
             if ($f != '.' && $f != '..') {
                 unlink($f);
             }
@@ -73,10 +74,10 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
 
         parent::tearDown();
     }
-
 }
 
-class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_BaseTest {
+class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_BaseTest
+{
     function testGetChangesetValue()
     {
         $value_dao = \Mockery::spy(\Tracker_FormElement_Field_Value_FileDao::class);
@@ -708,7 +709,8 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
     }
 }
 
-class Tracker_FormElement_Field_File_RESTTests extends TuleapTestCase {
+class Tracker_FormElement_Field_File_RESTTests extends TuleapTestCase
+{
 
     public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName()
     {

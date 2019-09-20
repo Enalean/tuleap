@@ -36,4 +36,3 @@ class LdapPluginDescriptor extends PluginDescriptor
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }
-?>
