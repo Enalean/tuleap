@@ -21,13 +21,21 @@ import { RootState } from "../type";
 import { Store, StoreOptions } from "vuex";
 import error from "./error";
 import swimlane from "./swimlane";
+import { UserState } from "./user/type";
+import { createUserModule } from "./user";
 
-export function createStore(initial_global_state: RootState): Store<RootState> {
+export function createStore(
+    initial_root_state: RootState,
+    initial_user_state: UserState
+): Store<RootState> {
+    const user = createUserModule(initial_user_state);
+
     return new Store({
-        state: initial_global_state,
+        state: initial_root_state,
         modules: {
             error,
-            swimlane
+            swimlane,
+            user
         }
     } as StoreOptions<RootState>);
 }

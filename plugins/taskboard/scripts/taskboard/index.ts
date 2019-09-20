@@ -25,6 +25,7 @@ import App from "./src/components/App.vue";
 import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
 import { ColumnDefinition, RootState } from "./src/type";
 import Vuex from "vuex";
+import { UserState } from "./src/store/user/type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("taskboard");
@@ -52,16 +53,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const AppComponent = Vue.extend(App);
 
-    const initial_state: RootState = {
-        user_is_admin,
+    const initial_root_state: RootState = {
         admin_url,
-        user_id,
         columns,
         has_content,
-        milestone_id,
+        milestone_id
+    };
+
+    const initial_user_state: UserState = {
+        user_is_admin,
+        user_id,
         user_has_accessibility_mode
     };
+
     new AppComponent({
-        store: createStore(initial_state)
+        store: createStore(initial_root_state, initial_user_state)
     }).$mount(vue_mount_point);
 });

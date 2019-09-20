@@ -47,13 +47,15 @@
 import { modal as createModal } from "tlp";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
+
+const user = namespace("user");
 
 const storage_key_root = "tuleap-taskboard-under-construction-modal-hidden-";
 
 @Component
 export default class UnderConstructionModal extends Vue {
-    @State
+    @user.State
     readonly user_id!: number;
 
     mounted(): void {
