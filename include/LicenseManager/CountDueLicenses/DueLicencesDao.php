@@ -48,5 +48,4 @@ class DueLicencesDao extends DataAccessObject
 
         return $this->getDB()->run($sql, PFUser::STATUS_ACTIVE, $projects_id);
     }
-
 }

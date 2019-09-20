@@ -143,4 +143,3 @@ class CountDueLicensesController
         $this->output->writeln('');
     }
 }
-

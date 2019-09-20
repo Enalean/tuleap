@@ -36,6 +36,7 @@ use Tuleap\Webhook\Emitter;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class enalean_licensemanagerPlugin extends Plugin
 {
     public function __construct($id)
@@ -52,8 +53,8 @@ class enalean_licensemanagerPlugin extends Plugin
         $this->addHook(Event::GET_SITEADMIN_WARNINGS);
 
         $this->addHook('project_admin_activate_user', 'userStatusActivity', true);
-        $this->addHook('project_admin_delete_user',   'userStatusActivity', true);
-        $this->addHook('project_admin_suspend_user',  'userStatusActivity', true);
+        $this->addHook('project_admin_delete_user', 'userStatusActivity', true);
+        $this->addHook('project_admin_suspend_user', 'userStatusActivity', true);
 
         $this->addHook(CollectTuleapComputedMetrics::NAME);
         $this->addHook(CLICommandsCollector::NAME);
@@ -93,7 +94,7 @@ class enalean_licensemanagerPlugin extends Plugin
     }
 
     /** @see Event::GET_SITEADMIN_WARNINGS */
-    public function get_siteadmin_warnings(array $params)
+    public function get_siteadmin_warnings(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $nb_max_users = $this->getMaxUsers();
         if (! $nb_max_users) {
@@ -104,13 +105,13 @@ class enalean_licensemanagerPlugin extends Plugin
 
         if ($this->isQuotaExceeded($nb_used_users, $nb_max_users)) {
             $params['warnings'][] = $this->getExceededWarning($nb_max_users);
-        } else if ($this->isQuotaExceedingSoon($nb_used_users, $nb_max_users)) {
+        } elseif ($this->isQuotaExceedingSoon($nb_used_users, $nb_max_users)) {
             $params['warnings'][] = $this->getExceedingSoonWarning($nb_used_users, $nb_max_users);
         }
     }
 
     /** @see Event::GET_SITEADMIN_HOMEPAGE_USER_STATISTICS */
-    public function get_siteadmin_homepage_user_statistics(array $params)
+    public function get_siteadmin_homepage_user_statistics(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $nb_max_users = $this->getMaxUsers();
         if (! $nb_max_users) {
@@ -142,7 +143,7 @@ class enalean_licensemanagerPlugin extends Plugin
         $level = StatisticsBadgePresenter::LEVEL_SECONDARY;
         if ($this->isQuotaExceeded($nb_used_users, $nb_max_users)) {
             $level = StatisticsBadgePresenter::LEVEL_DANGER;
-        } else if ($this->isQuotaExceedingSoon($nb_used_users, $nb_max_users)) {
+        } elseif ($this->isQuotaExceedingSoon($nb_used_users, $nb_max_users)) {
             $level = StatisticsBadgePresenter::LEVEL_WARNING;
         }
 
