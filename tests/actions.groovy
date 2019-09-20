@@ -51,6 +51,13 @@ def runRESTTests(String version) {
     """
 }
 
+def runDBTests(String version) {
+    sh """
+    mkdir -p results/db/${version}
+    docker run --rm -v \$WORKSPACE/sources:/usr/share/tuleap:ro --mount type=tmpfs,destination=/tmp -v \$WORKSPACE/results/db/${version}:/output --network none \$DOCKER_REGISTRY/enalean/tuleap-test-rest:${version} /usr/share/tuleap/tests/integration/bin/run.sh
+    """
+}
+
 def runSOAPTests(String name, String imageVersion) {
     sh """
     cid="\$(docker create -v \$WORKSPACE/sources:/usr/share/tuleap:ro --network none \$DOCKER_REGISTRY/enalean/tuleap-test-soap:${imageVersion})"

@@ -57,10 +57,10 @@ setup_database() {
     MYSQL="mysql -h$MYSQL_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD"
 
     echo "Setup database $MYSQL_DAEMON"
-    if [ "$MYSQL_DAEMON" = "rh-mysql56-mysqld" ]; then
+    if [ "$MYSQL_DAEMON" = "rh-mysql57-mysqld" ]; then
         mkdir -p /tmp/mysql
         chown mysql:mysql /tmp/mysql
-        cp /usr/share/tuleap/tests/rest/etc/mysql-server.cnf /etc/opt/rh/rh-mysql56/my.cnf.d/mysql-server.cnf
+        cp /usr/share/tuleap/tests/rest/etc/mysql-server.cnf /etc/opt/rh/rh-mysql57/my.cnf.d/mysql-server.cnf
     fi
 
     service $MYSQL_DAEMON start
