@@ -22,19 +22,23 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201605271655_add_channels extends ForgeUpgrade_Bucket {
+class b201605271655_add_channels extends ForgeUpgrade_Bucket
+{
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add channels names.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE `plugin_botmattermost_channel` (
             bot_id int(11) UNSIGNED NOT NULL ,
             name varchar(255) NOT NULL ,

@@ -20,7 +20,6 @@
 
 namespace Tuleap\BotMattermost\Controller;
 
-
 use BaseLanguage;
 use EventManager;
 use Exception;
@@ -39,7 +38,6 @@ use Tuleap\BotMattermost\Exception\CannotUpdateBotException;
 use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
 use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\Exception\ChannelsNotFoundException;
-
 
 class AdminController
 {
@@ -113,7 +111,7 @@ class AdminController
                 $event = new BotMattermostDeleted($bot);
                 $this->bot_factory->deleteBotById($bot->getId());
                 $this->event_manager->processEvent($event);
-                $response->addFeedback(Feedback::INFO, $this->language->getText('plugin_botmattermost','alert_success_delete_bot'));
+                $response->addFeedback(Feedback::INFO, $this->language->getText('plugin_botmattermost', 'alert_success_delete_bot'));
             } catch (CannotDeleteBotException $e) {
                 $response->addFeedback(Feedback::ERROR, $e->getMessage());
             }

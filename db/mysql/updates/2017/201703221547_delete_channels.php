@@ -22,19 +22,23 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201703221547_delete_channels extends ForgeUpgrade_Bucket {
+class b201703221547_delete_channels extends ForgeUpgrade_Bucket
+{
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Deletes channels.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "DROP TABLE `plugin_botmattermost_channel`";
 
         $res = $this->db->dbh->exec($sql);

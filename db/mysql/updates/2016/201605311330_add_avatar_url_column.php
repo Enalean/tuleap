@@ -22,19 +22,23 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201605311330_add_avatar_url_column extends ForgeUpgrade_Bucket {
+class b201605311330_add_avatar_url_column extends ForgeUpgrade_Bucket
+{
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add channels names.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE `plugin_botmattermost_bot`
             ADD avatar_url varchar(255) NOT NULL";
 

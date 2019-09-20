@@ -20,7 +20,6 @@
 
 namespace Tuleap\BotMattermostGit\SenderServices;
 
-
 class Attachment
 {
     public const COLOR_BLUE = '#36a64f';

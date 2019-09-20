@@ -55,7 +55,7 @@ class MarkdownMustacheRenderer extends MustacheRenderer
         return new MustacheEngine(
             $loader,
             $template_cache,
-            function($value) use ($special_characters) {
+            function ($value) use ($special_characters) {
                 return strtr($value, $special_characters);
             }
         );

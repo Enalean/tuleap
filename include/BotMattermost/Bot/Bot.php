@@ -20,7 +20,8 @@
 
 namespace Tuleap\BotMattermost\Bot;
 
-class Bot {
+class Bot
+{
 
     private $id;
     private $name;

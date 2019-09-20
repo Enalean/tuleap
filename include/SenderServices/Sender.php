@@ -59,12 +59,14 @@ class Sender
         }
     }
 
-    private function pushNotificationByChannel(Bot $bot, Message $message, $channel) {
+    private function pushNotificationByChannel(Bot $bot, Message $message, $channel)
+    {
         $this->logger->debug('channel: '.$channel);
         $this->generateAndSendNotification($bot, $message, $channel);
     }
 
-    private function pushNotificationWithoutChannel(Bot $bot, Message $message) {
+    private function pushNotificationWithoutChannel(Bot $bot, Message $message)
+    {
         $this->logger->debug('No channel specified, default channel will be used');
         $this->generateAndSendNotification($bot, $message, self::DEFAULT_CHANNEL);
     }

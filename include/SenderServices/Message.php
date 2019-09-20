@@ -20,7 +20,6 @@
 
 namespace Tuleap\BotMattermost\SenderServices;
 
-
 use Tuleap\BotMattermostGit\SenderServices\Attachment;
 
 class Message
