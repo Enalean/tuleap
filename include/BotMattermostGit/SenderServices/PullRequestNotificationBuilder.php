@@ -81,7 +81,8 @@ class PullRequestNotificationBuilder
                 $project,
                 $repository_destination,
                 $this->repository_url_manager
-        ));
+            )
+        );
     }
 
     private function makeText($pull_request_description)
@@ -97,10 +98,11 @@ class PullRequestNotificationBuilder
     private function makeTitleLink(PullRequest $pull_request, HTTPRequest $request, Project $project)
     {
         return $request->getServerUrl() . GIT_BASE_URL . '/?' . http_build_query(
-                array(
+            array(
                     'action'   => 'pull-requests',
                     'repo_id'  => $pull_request->getRepositoryId(),
                     'group_id' => $project->getID(),
-                )) . '#/pull-requests/' . $pull_request->getId() . '/overview';
+            )
+        ) . '#/pull-requests/' . $pull_request->getId() . '/overview';
     }
 }

@@ -20,7 +20,6 @@
 
 namespace Tuleap\BotMattermostGit;
 
-
 use CSRFSynchronizerToken;
 use Exception;
 use Feedback;

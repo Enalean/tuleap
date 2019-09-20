@@ -72,7 +72,7 @@ class Dao extends DataAccessObject
 
         $notification_id = $this->getNotificationId($repository_id);
 
-        if ($notification_id === false){
+        if ($notification_id === false) {
             $this->da->rollback();
 
             return false;
@@ -151,7 +151,7 @@ class Dao extends DataAccessObject
     private function createChannels(array $channels, $notification_id)
     {
         $channels_value_sql = array();
-        foreach($channels as $channel_name) {
+        foreach ($channels as $channel_name) {
             $channels_value_sql[] = $this->getChannelValueSqlForInsert($notification_id, $channel_name);
         }
 
@@ -168,7 +168,7 @@ class Dao extends DataAccessObject
             return false;
         }
         if ($this->hasValue($channels)) {
-            if(! $this->createChannels($channels, $notification_id)) {
+            if (! $this->createChannels($channels, $notification_id)) {
                 return false;
             }
         }

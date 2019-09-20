@@ -22,19 +22,23 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201703221614_add_channel_for_git_notification extends ForgeUpgrade_Bucket {
+class b201703221614_add_channel_for_git_notification extends ForgeUpgrade_Bucket
+{
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add channels table for git notification.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql1 = "CREATE TABLE `plugin_botmattermost_git_notification_channel` (
                     notification_id int(11) NOT NULL ,
                     channel_name VARCHAR(255) NOT NULL ,

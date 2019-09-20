@@ -133,7 +133,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
             $pull_request_notification_sender = new PullRequestNotificationSender(
                 $this->getSender($logger),
                 $this->getFactory(),
-                new PullRequestNotificationBuilder($logger,  $this->getGitRepositoryUrlManager()),
+                new PullRequestNotificationBuilder($logger, $this->getGitRepositoryUrlManager()),
                 $this->getLogger()
             );
 
@@ -154,7 +154,6 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
             $asset = new IncludeAssets(
                 __DIR__ . '/../../../src/www/assets/botmattermost_git/',
                 '/assets/botmattermost_git'
-
             );
             echo '<link rel="stylesheet" type="text/css" href="'.$asset->getFileURL('style.css').'" />';
         }
@@ -167,7 +166,6 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
             $asset = new IncludeAssets(
                 __DIR__ . '/../../../src/www/assets/botmattermost_git/',
                 '/assets/botmattermost_git'
-
             );
             echo $asset->getHTMLSnippet('autocompleter.js');
         }
