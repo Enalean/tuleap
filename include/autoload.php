@@ -6,7 +6,7 @@ function autoload2f37625d0681a2f7a9a71857a8ad34a6($class) {
     static $classes = null;
     if ($classes === null) {
         $classes = array(
-            'botmattermost_gitplugin' => '/botmattermost_gitPlugin.class.php',
+            'botmattermost_gitplugin' => '/botmattermost_gitPlugin.php',
             'tuleap\\botmattermostgit\\botmattermostgitnotification\\botmattermostgitnotification' => '/BotMattermostGit/BotMattermostGitNotification/BotMattermostGitNotification.php',
             'tuleap\\botmattermostgit\\botmattermostgitnotification\\dao' => '/BotMattermostGit/BotMattermostGitNotification/Dao.php',
             'tuleap\\botmattermostgit\\botmattermostgitnotification\\factory' => '/BotMattermostGit/BotMattermostGitNotification/Factory.php',

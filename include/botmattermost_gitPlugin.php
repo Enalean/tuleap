@@ -40,8 +40,8 @@ use Tuleap\PullRequest\GetCreatePullRequest;
 
 require_once 'autoload.php';
 require_once 'constants.php';
-require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.class.php';
-require_once __DIR__ . '/../../git/include/gitPlugin.class.php';
+require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.php';
+require_once __DIR__ . '/../../git/include/gitPlugin.php';
 
 class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
 {
