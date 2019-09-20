@@ -23,7 +23,8 @@ namespace Tuleap\TestManagement\REST\v1;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\REST\UserRepresentation;
 
-class PreviousResultRepresentation {
+class PreviousResultRepresentation
+{
 
     /**
      * @var DateTime

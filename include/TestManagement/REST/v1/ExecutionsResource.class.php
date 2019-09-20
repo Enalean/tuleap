@@ -202,28 +202,32 @@ class ExecutionsResource
     /**
      * @url OPTIONS
      */
-    public function options() {
+    public function options()
+    {
         Header::allowOptions();
     }
 
     /**
      * @url OPTIONS {id}/presences
      */
-    public function optionsPresences($id) {
+    public function optionsPresences($id)
+    {
         Header::allowOptionsPatch();
     }
 
     /**
      * @url OPTIONS {id}/issues
      */
-    public function optionsIssues($id) {
+    public function optionsIssues($id)
+    {
         Header::allowOptionsPatch();
     }
 
     /**
      * @url OPTIONS {id}
      */
-    public function optionsId($id) {
+    public function optionsId($id)
+    {
         Header::allowOptionsGet();
     }
 
@@ -409,7 +413,8 @@ class ExecutionsResource
      *
      * @throws 404
      */
-    protected function presences($id, $uuid, $remove_from = '') {
+    protected function presences($id, $uuid, $remove_from = '')
+    {
         $user = UserManager::instance()->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
 
@@ -417,7 +422,7 @@ class ExecutionsResource
             $artifact->getTracker()->getProject()
         );
 
-        if(! $artifact) {
+        if (! $artifact) {
             throw new RestException(404);
         }
 
@@ -604,7 +609,8 @@ class ExecutionsResource
         return $value_representation;
     }
 
-    private function getFieldByName($field_name, $tracker_id, $user) {
+    private function getFieldByName($field_name, $tracker_id, $user)
+    {
         return  $this->formelement_factory->getUsedFieldByNameForUser(
             $tracker_id,
             $field_name,
@@ -617,7 +623,8 @@ class ExecutionsResource
      *
      * @return Tracker_Artifact
      */
-    private function getArtifactById(PFUser $user, $id) {
+    private function getArtifactById(PFUser $user, $id)
+    {
         $artifact = $this->testmanagement_artifact_factory->getArtifactByIdUserCanView($user, $id);
         if ($artifact) {
             ProjectAuthorization::userCanAccessProject(
@@ -686,9 +693,9 @@ class ExecutionsResource
         $artifact_values_representation->field_id = $field_id;
         if ($key == 'value') {
             $artifact_values_representation->value = $value;
-        } else if ($key == 'bind_value_ids') {
+        } elseif ($key == 'bind_value_ids') {
             $artifact_values_representation->bind_value_ids = $value;
-        } else if ($key == 'links') {
+        } elseif ($key == 'links') {
             $artifact_values_representation->links = $value;
         }
 

@@ -66,7 +66,8 @@ class ArtifactFactory
      *
      * @return array of Tracker_Artifact
      */
-    public function getArtifactsByIdListUserCanView(PFUser $user, array $artifact_ids) {
+    public function getArtifactsByIdListUserCanView(PFUser $user, array $artifact_ids)
+    {
         $artifacts = array();
         foreach ($artifact_ids as $artifact_id) {
             $artifact = $this->getArtifactById($artifact_id);

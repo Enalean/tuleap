@@ -20,7 +20,7 @@
 
 namespace Tuleap\TestManagement\Criterion;
 
-interface ISearchOnMilestone {
+interface ISearchOnMilestone
+{
     public function getMilestoneId();
 }
-

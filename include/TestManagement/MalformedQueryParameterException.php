@@ -22,9 +22,11 @@ namespace Tuleap\TestManagement;
 
 use Exception;
 
-class MalformedQueryParameterException extends Exception {
+class MalformedQueryParameterException extends Exception
+{
 
-    public function __construct($message = null) {
+    public function __construct($message = null)
+    {
         if (! isset($message)) {
             $message = 'Expecting a JSON object.';
         }

@@ -20,7 +20,6 @@
 
 namespace Tuleap\TestManagement;
 
-
 use CSRFSynchronizerToken;
 
 class StartTestManagementPresenter

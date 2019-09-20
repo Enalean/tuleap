@@ -26,7 +26,8 @@ use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 class ArtifactDao extends DataAccessObject
 {
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->table_name = 'tracker_artifact';
     }
@@ -50,7 +51,8 @@ class ArtifactDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchPaginatedOpenByTrackerId($tracker_id, $milestone_id, $limit, $offset) {
+    public function searchPaginatedOpenByTrackerId($tracker_id, $milestone_id, $limit, $offset)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $milestone_id = $this->da->escapeInt($milestone_id);
         $limit      = $this->da->escapeInt($limit);
@@ -78,7 +80,8 @@ class ArtifactDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchPaginatedClosedByTrackerId($tracker_id, $milestone_id, $limit, $offset) {
+    public function searchPaginatedClosedByTrackerId($tracker_id, $milestone_id, $limit, $offset)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $milestone_id = $this->da->escapeInt($milestone_id);
         $limit      = $this->da->escapeInt($limit);

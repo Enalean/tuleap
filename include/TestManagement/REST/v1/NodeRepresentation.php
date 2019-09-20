@@ -20,10 +20,10 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-class NodeRepresentation extends NodeReferenceRepresentation {
+class NodeRepresentation extends NodeReferenceRepresentation
+{
 
     public $links = array();
 
     public $reverse_links = array();
-
 }

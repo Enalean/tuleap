@@ -84,7 +84,7 @@ class FirstConfigCreator
         );
         $project_tracker_ids = array();
 
-        foreach($template_tracker_ids as $tracker_itemname => $tracker_id) {
+        foreach ($template_tracker_ids as $tracker_itemname => $tracker_id) {
             if (! isset($tracker_mapping[$tracker_id])) {
                 $tracker = $this->getTracker($project, $tracker_itemname);
                 $project_tracker_ids[$tracker_itemname] = $tracker->getId();
@@ -116,7 +116,7 @@ class FirstConfigCreator
             return;
         }
 
-        foreach($tracker_itemnames as $tracker_itemname) {
+        foreach ($tracker_itemnames as $tracker_itemname) {
             $tracker = $this->getTracker($project, $tracker_itemname);
             $tracker_ids[$tracker_itemname] = $tracker->getId();
         }
@@ -216,4 +216,3 @@ class FirstConfigCreator
         return $is_tracker_already_created;
     }
 }
-

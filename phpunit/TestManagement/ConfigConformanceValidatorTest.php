@@ -117,25 +117,29 @@ class ConfigConformanceAsserterTest extends TestCase
         $this->artifact_outside_of_project->shouldReceive('getTracker')->andReturn($tracker);
     }
 
-    public function testItReturnsFalseWhenProjectHasNoCampaignTracker() {
+    public function testItReturnsFalseWhenProjectHasNoCampaignTracker()
+    {
         $this->assertFalse(
             $this->validator->isArtifactACampaign($this->artifact_outside_of_project)
         );
     }
 
-    public function testItReturnsFalseWhenTrackerIsNotACampaignTracker() {
+    public function testItReturnsFalseWhenTrackerIsNotACampaignTracker()
+    {
         $this->assertFalse(
             $this->validator->isArtifactACampaign($this->execution_artifact)
         );
     }
 
-    public function testItReturnsTrueWhenTrackerIsACampaignTracker() {
+    public function testItReturnsTrueWhenTrackerIsACampaignTracker()
+    {
         $this->assertTrue(
             $this->validator->isArtifactACampaign($this->campaign_artifact)
         );
     }
 
-    public function testItReturnsTrueWhenExecutionBelongsToDefinition() {
+    public function testItReturnsTrueWhenExecutionBelongsToDefinition()
+    {
         $this->assertTrue(
             $this->validator->isArtifactAnExecutionOfDefinition(
                 $this->execution_artifact,
@@ -144,7 +148,8 @@ class ConfigConformanceAsserterTest extends TestCase
         );
     }
 
-    public function testItReturnsFalseWhenExecutionDoesNotBelongsToDefinition() {
+    public function testItReturnsFalseWhenExecutionDoesNotBelongsToDefinition()
+    {
         $this->assertFalse(
             $this->validator->isArtifactAnExecutionOfDefinition(
                 $this->another_execution_artifact,

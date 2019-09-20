@@ -22,7 +22,8 @@ namespace Tuleap\TestManagement;
 
 use Project;
 
-class Config {
+class Config
+{
 
     /** @var Dao */
     private $dao;
@@ -32,7 +33,8 @@ class Config {
      */
     private $properties = array();
 
-    public function __construct(Dao $dao) {
+    public function __construct(Dao $dao)
+    {
         $this->dao = $dao;
     }
 
@@ -54,19 +56,23 @@ class Config {
         );
     }
 
-    public function getCampaignTrackerId(Project $project) {
+    public function getCampaignTrackerId(Project $project)
+    {
         return $this->getProperty($project, 'campaign_tracker_id');
     }
 
-    public function getTestExecutionTrackerId(Project $project) {
+    public function getTestExecutionTrackerId(Project $project)
+    {
         return $this->getProperty($project, 'test_execution_tracker_id');
     }
 
-    public function getTestDefinitionTrackerId(Project $project) {
+    public function getTestDefinitionTrackerId(Project $project)
+    {
         return $this->getProperty($project, 'test_definition_tracker_id');
     }
 
-    public function getIssueTrackerId(Project $project) {
+    public function getIssueTrackerId(Project $project)
+    {
         return $this->getProperty($project, 'issue_tracker_id');
     }
 
@@ -93,7 +99,8 @@ class Config {
         return $this->properties[$project_id][$key];
     }
 
-    private function getPropertiesForProject(Project $project) {
+    private function getPropertiesForProject(Project $project)
+    {
         return $this->dao->searchByProjectId($project->getId())->getRow();
     }
 }

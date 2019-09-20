@@ -30,7 +30,8 @@ class TestManagementDataBuilder extends REST_TestDataBuilder
     public const USER_TESTER_PASS   = 'welcome0';
     public const USER_TESTER_STATUS = 'A';
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->instanciateFactories();
 

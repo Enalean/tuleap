@@ -32,7 +32,8 @@ use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
 
-class DefinitionsResource {
+class DefinitionsResource
+{
 
     /** @var UserManager */
     private $user_manager;
@@ -43,7 +44,8 @@ class DefinitionsResource {
     /** @var DefinitionRepresentationBuilder */
     private $definition_representation_builder;
 
-    public function __construct() {
+    public function __construct()
+    {
         $config                = new Config(new Dao());
         $conformance_validator = new ConfigConformanceValidator($config);
         $artifact_dao          = new ArtifactDao();
@@ -69,7 +71,8 @@ class DefinitionsResource {
     /**
      * @url OPTIONS {id}
      */
-    protected function optionsId($id) {
+    protected function optionsId($id)
+    {
         Header::allowOptionsGet();
     }
 
@@ -86,7 +89,8 @@ class DefinitionsResource {
      *
      * @throws RestException 403
      */
-    protected function getId($id) {
+    protected function getId($id)
+    {
         $user       = $this->user_manager->getCurrentUser();
         $definition = $this->testmanagement_artifact_factory->getArtifactByIdUserCanView($user, $id);
         if ($definition === null) {

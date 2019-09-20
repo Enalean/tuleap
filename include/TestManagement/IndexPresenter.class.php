@@ -26,7 +26,8 @@ use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use stdClass;
 use ForgeConfig as TuleapConfig;
 
-class IndexPresenter {
+class IndexPresenter
+{
 
     /** @var int */
     public $project_id;
@@ -109,7 +110,8 @@ class IndexPresenter {
         $this->current_milestone          = json_encode($milestone_representation);
     }
 
-    private function getLanguageAbbreviation($current_user) {
+    private function getLanguageAbbreviation($current_user)
+    {
         list($lang, $country) = explode('_', $current_user->getLocale());
 
         return $lang;

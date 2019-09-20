@@ -20,7 +20,8 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-class SlicedExecutionRepresentations {
+class SlicedExecutionRepresentations
+{
 
     /**
      * @var ExecutionRepresentation[]
@@ -37,19 +38,22 @@ class SlicedExecutionRepresentations {
      * @param ExecutionRepresentation[] $representations
      * @param int $total_size
      */
-    public function __construct(array $representations, $total_size) {
+    public function __construct(array $representations, $total_size)
+    {
         $this->representations = $representations;
         $this->total_size      = $total_size;
     }
 
-    public function getTotalSize() {
+    public function getTotalSize()
+    {
         return $this->total_size;
     }
 
     /**
      * @return ExecutionRepresentation[]
      */
-    public function getRepresentations() {
+    public function getRepresentations()
+    {
         return $this->representations;
     }
 }

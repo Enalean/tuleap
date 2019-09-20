@@ -20,8 +20,8 @@
 
 namespace Tuleap\TestManagement;
 
-
-class PaginatedCampaignsRepresentations {
+class PaginatedCampaignsRepresentations
+{
 
     /** @var array */
     public $campaign_representations;
@@ -30,17 +30,19 @@ class PaginatedCampaignsRepresentations {
     public $total_size;
 
 
-    public function __construct(array $campaign_representations, $total_size) {
+    public function __construct(array $campaign_representations, $total_size)
+    {
         $this->campaign_representations   = $campaign_representations;
         $this->total_size                 = $total_size;
     }
 
-    public function getCampaignsRepresentations() {
+    public function getCampaignsRepresentations()
+    {
         return $this->campaign_representations;
     }
 
-    public function getTotalSize() {
+    public function getTotalSize()
+    {
         return $this->total_size;
     }
-
 }

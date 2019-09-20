@@ -33,7 +33,8 @@ use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
-class ExecutionCreator {
+class ExecutionCreator
+{
 
     /** @var Tracker_FormElementFactory */
     private $formelement_factory;
@@ -72,7 +73,8 @@ class ExecutionCreator {
     /**
      * @return ArtifactReference
      */
-    public function createTestExecution($project_id, PFUser $user, Tracker_Artifact $definition) {
+    public function createTestExecution($project_id, PFUser $user, Tracker_Artifact $definition)
+    {
         $tracker = $this->getExecutionTrackerReferenceForProject($project_id);
         $values  = $this->getFieldValuesForExecutionArtifactCreation($tracker, $user, $definition->getId());
 
@@ -85,7 +87,8 @@ class ExecutionCreator {
         return $execution;
     }
 
-    private function getExecutionTrackerReferenceForProject($project_id) {
+    private function getExecutionTrackerReferenceForProject($project_id)
+    {
         $project = $this->project_manager->getProject($project_id);
         if ($project->isError()) {
             throw new RestException(404, 'Project not found');

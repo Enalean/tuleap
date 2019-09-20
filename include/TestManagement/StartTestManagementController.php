@@ -120,12 +120,12 @@ class StartTestManagementController
             );
         } catch (TrackerComesFromLegacyEngineException $exception) {
             $GLOBALS['Response']->addFeedback(
-                    Feedback::WARN,
-                    sprintf(
-                        dgettext('tuleap-testmanagement', 'We tried to configure Test Management for you but an existing tracker (%1$s) is using Tracker Engine v3 and prevented it.'),
-                        $exception->getTrackerShortname()
-                    )
-                );
+                Feedback::WARN,
+                sprintf(
+                    dgettext('tuleap-testmanagement', 'We tried to configure Test Management for you but an existing tracker (%1$s) is using Tracker Engine v3 and prevented it.'),
+                    $exception->getTrackerShortname()
+                )
+            );
 
             $this->redirectToTestManagementHomepage($project);
         } catch (TrackerNotCreatedException $exception) {
@@ -143,7 +143,8 @@ class StartTestManagementController
         $GLOBALS['Response']->redirect(TESTMANAGEMENT_BASE_URL . '/?group_id=' . urlencode($project->getID()));
     }
 
-    public function getBreadcrumbs() {
+    public function getBreadcrumbs()
+    {
         return new NoCrumb();
     }
 
@@ -156,7 +157,8 @@ class StartTestManagementController
         }
     }
 
-    private function getRenderer() {
+    private function getRenderer()
+    {
         $templates_path = join(
             '/',
             array(

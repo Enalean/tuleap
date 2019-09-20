@@ -22,7 +22,8 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Tuleap\REST\JsonCast;
 
-class NodeReferenceRepresentation {
+class NodeReferenceRepresentation
+{
 
     public const ROUTE = 'testmanagement_nodes';
 

@@ -22,9 +22,11 @@ namespace Tuleap\TestManagement;
 
 use DataAccessObject;
 
-class Dao extends DataAccessObject {
+class Dao extends DataAccessObject
+{
 
-    public function searchByProjectId($project_id) {
+    public function searchByProjectId($project_id)
+    {
         $project_id = $this->da->escapeInt($project_id);
 
         $sql = "SELECT * FROM plugin_testmanagement WHERE project_id = $project_id";

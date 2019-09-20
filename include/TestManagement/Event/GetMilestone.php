@@ -70,5 +70,4 @@ class GetMilestone implements Dispatchable
     {
         $this->milestone = $milestone;
     }
-
 }

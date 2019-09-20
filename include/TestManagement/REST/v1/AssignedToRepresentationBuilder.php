@@ -26,7 +26,8 @@ use PFUser;
 use Tracker_FormElementFactory;
 use UserManager;
 
-class AssignedToRepresentationBuilder {
+class AssignedToRepresentationBuilder
+{
 
     /**
      * @var UserManager
@@ -47,7 +48,8 @@ class AssignedToRepresentationBuilder {
     /**
      * @return \Tuleap\User\REST\UserRepresentation|null
      */
-    public function getAssignedToRepresentationForExecution(PFUser $user, Tracker_Artifact $execution) {
+    public function getAssignedToRepresentationForExecution(PFUser $user, Tracker_Artifact $execution)
+    {
         $field_value  = $this->getExecutionAssignedTo($user, $execution);
         $user_id      = array_pop($field_value);
         if (! $user_id) {
@@ -65,7 +67,8 @@ class AssignedToRepresentationBuilder {
         return $user_representation;
     }
 
-    private function getExecutionAssignedTo(PFUser $user, Tracker_Artifact $execution) {
+    private function getExecutionAssignedTo(PFUser $user, Tracker_Artifact $execution)
+    {
         $assigned_to_field = $this->tracker_form_element_factory->getUsedFieldByNameForUser(
             $execution->getTrackerId(),
             ExecutionRepresentation::FIELD_ASSIGNED_TO,

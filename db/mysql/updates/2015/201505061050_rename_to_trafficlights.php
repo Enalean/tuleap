@@ -18,19 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class b201505061050_rename_to_trafficlights extends ForgeUpgrade_Bucket {
+class b201505061050_rename_to_trafficlights extends ForgeUpgrade_Bucket
+{
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Re-apply permissions for private projects
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->createTable();
         $this->feedTable();
         $this->dropTable();
@@ -39,7 +43,8 @@ EOT;
         $this->updatePlugin();
     }
 
-    private function createTable() {
+    private function createTable()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS plugin_trafficlights(
             project_id INT(11) UNSIGNED NOT NULL PRIMARY KEY,
             campaign_tracker_id INT(11) NOT NULL,
@@ -53,7 +58,8 @@ EOT;
         }
     }
 
-    private function feedTable() {
+    private function feedTable()
+    {
         $sql = "INSERT INTO plugin_trafficlights(project_id, campaign_tracker_id, test_definition_tracker_id, test_execution_tracker_id)
                 SELECT project_id, campaign_tracker_id, test_definition_tracker_id, test_execution_tracker_id
                 FROM plugin_testing
@@ -65,7 +71,8 @@ EOT;
         }
     }
 
-    private function dropTable() {
+    private function dropTable()
+    {
         $sql = "DROP TABLE plugin_testing";
         $res = $this->db->dbh->exec($sql);
 
@@ -74,7 +81,8 @@ EOT;
         }
     }
 
-    private function updateServiceTemplate() {
+    private function updateServiceTemplate()
+    {
         $sql = "UPDATE service
                 SET label = 'plugin_trafficlights:service_lbl_key',
                     description = 'plugin_trafficlights:service_desc_key',
@@ -91,7 +99,8 @@ EOT;
         }
     }
 
-    private function updateService() {
+    private function updateService()
+    {
         $sql = "UPDATE service
                 SET label = 'plugin_trafficlights:service_lbl_key',
                     description = 'plugin_trafficlights:service_desc_key',
@@ -108,7 +117,8 @@ EOT;
         }
     }
 
-    private function updatePlugin() {
+    private function updatePlugin()
+    {
         $sql = "UPDATE plugin
                 SET name = 'trafficlights'
                 WHERE name = 'testing'

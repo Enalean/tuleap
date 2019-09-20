@@ -22,7 +22,8 @@ namespace Tuleap\TestManagement\Breadcrumbs;
 
 use Project;
 
-class NoCrumb implements Breadcrumbs {
+class NoCrumb implements Breadcrumbs
+{
 
     /**
      * @return array

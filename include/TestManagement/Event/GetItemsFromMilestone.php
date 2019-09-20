@@ -70,5 +70,4 @@ class GetItemsFromMilestone implements Dispatchable
     {
         $this->items_ids = $items_ids;
     }
-
 }

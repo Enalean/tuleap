@@ -20,7 +20,8 @@
 
 namespace Tuleap\TestManagement\Criterion;
 
-class StatusOpen implements ISearchOnStatus {
+class StatusOpen implements ISearchOnStatus
+{
 
     public function shouldRetrieveOpenCampaigns()
     {

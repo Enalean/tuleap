@@ -33,7 +33,8 @@ use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\Dao as TestManagementDao;
 
-class NodeBuilderFactory {
+class NodeBuilderFactory
+{
 
     /** @var TestManagementDao */
     private $dao;
@@ -44,7 +45,8 @@ class NodeBuilderFactory {
     /** @var ArtifactNodeBuilder */
     private $artifact_builder;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->dao = new TestManagementDao();
         $config    = new Config($this->dao);
 
@@ -61,7 +63,8 @@ class NodeBuilderFactory {
         );
     }
 
-    public function getNodeRepresentation(PFUser $user, Tracker_Artifact $artifact) {
+    public function getNodeRepresentation(PFUser $user, Tracker_Artifact $artifact)
+    {
         return $this->artifact_builder->getNodeRepresentation($user, $artifact);
     }
 
@@ -71,7 +74,8 @@ class NodeBuilderFactory {
      *
      * @return Tracker_Artifact
      */
-    public function getArtifactById(PFUser $user, $id) {
+    public function getArtifactById(PFUser $user, $id)
+    {
         $artifact = $this->testmanagement_artifact_factory->getArtifactByIdUserCanView($user, $id);
         if ($artifact) {
             ProjectAuthorization::userCanAccessProject(

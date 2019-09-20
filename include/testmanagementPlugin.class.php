@@ -119,7 +119,8 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
         return parent::getHooksAndCallbacks();
     }
 
-    public function javascript_file() {
+    public function javascript_file()
+    {
         if ($this->canIncludeStepDefinitionAssets()) {
             $include_assets = new IncludeAssets(
                 __DIR__ . '/../../../src/www/assets/testmanagement/js/',
@@ -148,7 +149,8 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
         return ['tracker'];
     }
 
-    public function getServiceShortname() {
+    public function getServiceShortname()
+    {
         return 'plugin_testmanagement';
     }
 
@@ -224,7 +226,8 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event) {
+    public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event)
+    {
         $tracker = $event->getArtifact()->getTracker();
         $project = $tracker->getProject();
 
@@ -364,7 +367,8 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
     /**
      * @return TestManagementPluginInfo
      */
-    public function getPluginInfo() {
+    public function getPluginInfo()
+    {
         if (!$this->pluginInfo) {
             $this->pluginInfo = new TestManagementPluginInfo($this);
         }
@@ -457,7 +461,8 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
     /**
      * @see REST_RESOURCES
      */
-    public function rest_resources(array $params) {
+    public function rest_resources(array $params)
+    {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
@@ -465,7 +470,8 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
     /**
      * @see REST_PROJECT_RESOURCES
      */
-    public function rest_project_resources(array $params) {
+    public function rest_project_resources(array $params)
+    {
         $injector = new ResourcesInjector();
         $injector->declareProjectResource($params['resources'], $params['project']);
     }

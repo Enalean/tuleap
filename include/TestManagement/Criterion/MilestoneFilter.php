@@ -22,12 +22,14 @@ namespace Tuleap\TestManagement\Criterion;
 
 use PFUser;
 
-class MilestoneFilter implements ISearchOnMilestone {
+class MilestoneFilter implements ISearchOnMilestone
+{
 
     /** @var int */
     private $milestone_id;
 
-    public function __construct($milestone_id) {
+    public function __construct($milestone_id)
+    {
         $this->milestone_id = $milestone_id;
     }
 
@@ -37,4 +39,3 @@ class MilestoneFilter implements ISearchOnMilestone {
         return $this->milestone_id;
     }
 }
-

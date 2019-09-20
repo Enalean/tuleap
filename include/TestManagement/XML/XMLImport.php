@@ -91,8 +91,7 @@ class XMLImport
                     $execution_tracker_id,
                     $issue_tracker_id
                 );
-            } catch (
-                TrackerNotInProjectException |
+            } catch (TrackerNotInProjectException |
                 TrackerHasAtLeastOneFrozenFieldsPostActionException |
                 TrackerHasAtLeastOneHiddenFieldsetsPostActionException $exception
             ) {

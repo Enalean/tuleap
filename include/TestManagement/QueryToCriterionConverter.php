@@ -27,8 +27,8 @@ use Tuleap\TestManagement\Criterion\StatusOpen;
 use Tuleap\TestManagement\Criterion\MilestoneAll;
 use Tuleap\TestManagement\Criterion\MilestoneFilter;
 
-
-class QueryToCriterionConverter {
+class QueryToCriterionConverter
+{
 
     /** @var ConfigConformanceValidator */
     private $config_validator;
@@ -49,7 +49,8 @@ class QueryToCriterionConverter {
      * @return StatusAll|StatusClosed|StatusOpen
      * @throws MalformedQueryParameterException
      */
-    public function convertStatus($query) {
+    public function convertStatus($query)
+    {
         $error_message = 'Expecting {"status":"open"} or {"status":"closed"}.';
 
         if (! isset($query)) {
@@ -68,7 +69,7 @@ class QueryToCriterionConverter {
 
         if ($query_object->status === 'open') {
             return new StatusOpen();
-        } else if ($query_object->status === 'closed') {
+        } elseif ($query_object->status === 'closed') {
             return new StatusClosed();
         } else {
             throw new MalformedQueryParameterException($error_message);
@@ -80,7 +81,8 @@ class QueryToCriterionConverter {
      * @return MilestoneAll|MilestoneFilter
      * @throws MalformedQueryParameterException
      */
-    public function convertMilestone($query) {
+    public function convertMilestone($query)
+    {
         $error_message = 'Expecting {"milestone_id":<id>}.';
 
         if (! isset($query)) {
@@ -99,7 +101,7 @@ class QueryToCriterionConverter {
 
         if ($query_object->milestone_id === 0) {
             return new MilestoneAll();
-        } else if (is_int($query_object->milestone_id)) {
+        } elseif (is_int($query_object->milestone_id)) {
             return new MilestoneFilter($query_object->milestone_id);
         } else {
             throw new MalformedQueryParameterException($error_message);

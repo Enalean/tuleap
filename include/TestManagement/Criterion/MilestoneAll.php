@@ -22,7 +22,8 @@ namespace Tuleap\TestManagement\Criterion;
 
 use PFUser;
 
-class MilestoneAll implements ISearchOnMilestone {
+class MilestoneAll implements ISearchOnMilestone
+{
 
     /** @return null */
     public function getMilestoneId()
@@ -30,4 +31,3 @@ class MilestoneAll implements ISearchOnMilestone {
         return null;
     }
 }
-

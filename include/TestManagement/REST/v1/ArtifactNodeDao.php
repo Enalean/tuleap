@@ -23,9 +23,11 @@ namespace Tuleap\TestManagement\REST\v1;
 use DataAccessObject;
 use Tracker_Artifact;
 
-class ArtifactNodeDao extends DataAccessObject {
+class ArtifactNodeDao extends DataAccessObject
+{
 
-    public function getTitlesStatusAndTypes(array $artifact_ids) {
+    public function getTitlesStatusAndTypes(array $artifact_ids)
+    {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
         $sql = "SELECT artifact.id, tracker.color, tracker.item_name, tracker.name as tracker_label, cvt_title.value as title, IF(cvl_status.bindvalue_id IS NULL, '".Tracker_Artifact::STATUS_CLOSED."', '".Tracker_Artifact::STATUS_OPEN."') AS status_semantic, lbsv_status.label AS status_label
                     FROM tracker_artifact AS artifact
@@ -62,7 +64,8 @@ class ArtifactNodeDao extends DataAccessObject {
      * @param int $artifact_id
      * @return DataAccessResult
      */
-    public function getReverseLinkedArtifacts($artifact_id) {
+    public function getReverseLinkedArtifacts($artifact_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
 
         $sql = "SELECT DISTINCT a.*
@@ -75,7 +78,8 @@ class ArtifactNodeDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getCrossReferencesFromArtifact($artifact_id) {
+    public function getCrossReferencesFromArtifact($artifact_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
 
         $sql = "SELECT target_id as id
@@ -87,7 +91,8 @@ class ArtifactNodeDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function getReverseCrossReferencesFromArtifact($artifact_id) {
+    public function getReverseCrossReferencesFromArtifact($artifact_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
 
         $sql = "SELECT source_id as id

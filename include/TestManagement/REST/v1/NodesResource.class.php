@@ -28,19 +28,22 @@ use Tracker_Artifact;
 use Tuleap\REST\ProjectStatusVerificator;
 use UserManager;
 
-class NodeResource {
+class NodeResource
+{
 
     /**
      * @url OPTIONS
      */
-    public function options() {
+    public function options()
+    {
         Header::allowOptions();
     }
 
     /**
      * @url OPTIONS {id}
      */
-    public function optionsId($id) {
+    public function optionsId($id)
+    {
         Header::allowOptionsGet();
     }
 
@@ -56,7 +59,8 @@ class NodeResource {
      * @throws 500
      * @return NodeRepresentation
      */
-    protected function getId($id) {
+    protected function getId($id)
+    {
         try {
             $factory = new NodeBuilderFactory();
             $user = UserManager::instance()->getCurrentUser();
@@ -83,7 +87,8 @@ class NodeResource {
     }
 
 
-    private function sendAllowHeaders(Tracker_Artifact $artifact) {
+    private function sendAllowHeaders(Tracker_Artifact $artifact)
+    {
         $date = $artifact->getLastUpdateDate();
         Header::allowOptionsGet();
         Header::lastModified($date);

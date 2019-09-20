@@ -185,7 +185,6 @@ class AdminController extends TestManagementController
             );
 
             return $original_id;
-
         } catch (TrackerHasAtLeastOneHiddenFieldsetsPostActionException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,

@@ -141,5 +141,3 @@ class NatureCoveredByOverriderTest extends TestCase
         $this->assertNull($overridingNature);
     }
 }
-
-

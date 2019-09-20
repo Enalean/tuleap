@@ -30,7 +30,8 @@ use Tuleap\TestManagement\Criterion\ISearchOnStatus;
 use Tuleap\TestManagement\PaginatedCampaignsRepresentations;
 use UserManager;
 
-class CampaignRepresentationBuilder {
+class CampaignRepresentationBuilder
+{
 
     /**
      * @var UserManager
@@ -98,7 +99,7 @@ class CampaignRepresentationBuilder {
 
         if ($status_criterion->shouldRetrieveOnlyClosedCampaigns()) {
             $paginated_campaigns = $this->testmanagement_artifact_factory->getPaginatedClosedArtifactsByTrackerIdUserCanView($user, $campaign_tracker_id, $milestone_id, $limit, $offset);
-        } else if ($status_criterion->shouldRetrieveOnlyOpenCampaigns()) {
+        } elseif ($status_criterion->shouldRetrieveOnlyOpenCampaigns()) {
             $paginated_campaigns = $this->testmanagement_artifact_factory->getPaginatedOpenArtifactsByTrackerIdUserCanView($user, $campaign_tracker_id, $milestone_id, $limit, $offset);
         } else {
             $paginated_campaigns = $this->testmanagement_artifact_factory->getPaginatedArtifactsByTrackerIdUserCanView($user, $campaign_tracker_id, $milestone_id, $limit, $offset, true);

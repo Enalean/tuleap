@@ -26,7 +26,6 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
 use Tuleap\REST\JsonCast;
 
-
 class MinimalDefinitionRepresentation
 {
     public const ROUTE = 'testmanagement_definitions';

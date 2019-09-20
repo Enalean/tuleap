@@ -69,4 +69,3 @@ class AgileDashboardPaneInfo extends PaneInfo
         return 'fa-check';
     }
 }
-

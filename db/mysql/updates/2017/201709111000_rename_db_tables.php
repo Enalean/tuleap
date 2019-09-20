@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
@@ -21,19 +20,23 @@
 
 class b201709111000_rename_db_tables extends ForgeUpgrade_Bucket
 {
-    public function description() {
+    public function description()
+    {
         return "Replace trafficlights with testmanagement in DB table names.";
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $this->renamePluginTable();
     }
 
-    private function renamePluginTable() {
+    private function renamePluginTable()
+    {
         $sql         = "RENAME TABLE plugin_trafficlights TO plugin_testmanagement";
         $exec_result = $this->db->dbh->exec($sql);
 
@@ -42,10 +45,10 @@ class b201709111000_rename_db_tables extends ForgeUpgrade_Bucket
         }
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if ($this->db->tableNameExists('plugin_testmanagement') === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('An error occurred while renaming table.');
         }
     }
 }
-?>

@@ -214,11 +214,11 @@ class AdminControllerTest extends TestCase
         $this->tracker_checker->shouldReceive('checkTrackerIsInProject')->times(2);
 
         $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')
-            ->with($this->project,999)
+            ->with($this->project, 999)
             ->andThrow(TrackerHasAtLeastOneFrozenFieldsPostActionException::class);
 
         $this->tracker_checker->shouldReceive('checkSubmittedTrackerCanBeUsed')
-            ->with($this->project,self::EXECUTION_TRACKER_ID)
+            ->with($this->project, self::EXECUTION_TRACKER_ID)
             ->once();
 
         $this->admin_controller->update();

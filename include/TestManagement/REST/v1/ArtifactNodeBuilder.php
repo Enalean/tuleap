@@ -26,7 +26,8 @@ use Tracker_ArtifactDao;
 use Tracker_ResourceDoesntExistException;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
-class ArtifactNodeBuilder {
+class ArtifactNodeBuilder
+{
 
     /**
      * @var NodeBuilderFactory
@@ -43,13 +44,15 @@ class ArtifactNodeBuilder {
      */
     private $artifact_dao;
 
-    public function __construct(Tracker_ArtifactDao $artifact_dao, ArtifactNodeDao $dao, NodeBuilderFactory $node_builder_factory) {
+    public function __construct(Tracker_ArtifactDao $artifact_dao, ArtifactNodeDao $dao, NodeBuilderFactory $node_builder_factory)
+    {
         $this->artifact_dao                   = $artifact_dao;
         $this->dao                            = $dao;
         $this->node_builder_factory           = $node_builder_factory;
     }
 
-    public function getNodeRepresentation(PFUser $user, Tracker_Artifact $artifact) {
+    public function getNodeRepresentation(PFUser $user, Tracker_Artifact $artifact)
+    {
         $nodes        = array();
         $artifact_ids = array($artifact->getId());
 
@@ -64,7 +67,8 @@ class ArtifactNodeBuilder {
         return $node;
     }
 
-    private function getLinks(PFUser $user, $id, array &$nodes, array &$artifact_ids) {
+    private function getLinks(PFUser $user, $id, array &$nodes, array &$artifact_ids)
+    {
         $links = array();
         $this->appendNodeReferenceRepresentations(
             $links,
@@ -85,7 +89,8 @@ class ArtifactNodeBuilder {
         return array_values($links);
     }
 
-    private function getReverseLinks(PFUser $user, $id, array &$nodes, array &$artifact_ids) {
+    private function getReverseLinks(PFUser $user, $id, array &$nodes, array &$artifact_ids)
+    {
         $links = array();
         $this->appendNodeReferenceRepresentations(
             $links,
@@ -106,7 +111,8 @@ class ArtifactNodeBuilder {
         return array_values($links);
     }
 
-    private function appendNodeReferenceRepresentations(array &$links, LegacyDataAccessResultInterface $dar, PFUser $user, $id, array &$nodes, array &$artifact_ids) {
+    private function appendNodeReferenceRepresentations(array &$links, LegacyDataAccessResultInterface $dar, PFUser $user, $id, array &$nodes, array &$artifact_ids)
+    {
         foreach ($this->getArtifactIdsUserCanSee($user, $dar, $links) as $id) {
             $link = new NodeReferenceRepresentation();
             $this->buildNode($link, $id, $nodes);
@@ -115,7 +121,8 @@ class ArtifactNodeBuilder {
         }
     }
 
-    private function getArtifactIdsUserCanSee(PFUser $user, LegacyDataAccessResultInterface $dar, array $already_linked_ids) {
+    private function getArtifactIdsUserCanSee(PFUser $user, LegacyDataAccessResultInterface $dar, array $already_linked_ids)
+    {
         $artifact_ids = array();
         foreach ($dar as $row) {
             try {
@@ -123,18 +130,20 @@ class ArtifactNodeBuilder {
                     $this->node_builder_factory->getArtifactById($user, $row['id']);
                     $artifact_ids[] = $row['id'];
                 }
-            } catch(Tracker_ResourceDoesntExistException $exception) {
+            } catch (Tracker_ResourceDoesntExistException $exception) {
                 // user cannot see, just skip
             }
         }
         return $artifact_ids;
     }
 
-    private function notAlreadyLinked(array $already_linked_ids, $id) {
+    private function notAlreadyLinked(array $already_linked_ids, $id)
+    {
         return ! isset($already_linked_ids[$id]);
     }
 
-    private function buildNode(NodeReferenceRepresentation $node, $id, array &$nodes) {
+    private function buildNode(NodeReferenceRepresentation $node, $id, array &$nodes)
+    {
         $nodes[$id][] = $node;
         return $node;
     }
@@ -147,7 +156,7 @@ class ArtifactNodeBuilder {
     {
         $dar = $this->dao->getTitlesStatusAndTypes($artifact_ids);
         foreach ($dar as $row) {
-            foreach($nodes[$row['id']] as $node) {
+            foreach ($nodes[$row['id']] as $node) {
                 $node->build(
                     $row['id'],
                     NodeReferenceRepresentation::NATURE_ARTIFACT,

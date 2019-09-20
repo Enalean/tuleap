@@ -23,9 +23,10 @@ namespace Tuleap\TestManagement;
 use Exception;
 use Tracker;
 
-class LabelFieldNotFoundException extends Exception {
-    public function __construct(Tracker $tracker) {
+class LabelFieldNotFoundException extends Exception
+{
+    public function __construct(Tracker $tracker)
+    {
         parent::__construct("No label field found. $tracker->name tracker misconfigured");
     }
 }
-

@@ -37,7 +37,8 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use UserManager;
 use XMLImportHelper;
 
-class Router {
+class Router
+{
 
     /**
      * @var Plugin
@@ -195,7 +196,8 @@ class Router {
         );
     }
 
-    public function renderIndex(Codendi_Request $request) {
+    public function renderIndex(Codendi_Request $request)
+    {
         $controller = new IndexController(
             $request,
             $this->config,
@@ -253,7 +255,8 @@ class Router {
      *
      * @return string
      */
-    private function getHeaderTitle($action_name) {
+    private function getHeaderTitle($action_name)
+    {
         $header_title = array(
             'index' => dgettext('tuleap-testmanagement', 'Test Management'),
             'admin' => $GLOBALS['Language']->getText('global', 'Admin'),
@@ -273,7 +276,8 @@ class Router {
      *
      * @return \Service
      */
-    private function getService(Codendi_Request $request) {
+    private function getService(Codendi_Request $request)
+    {
         if ($this->service == null) {
             $project = $request->getProject();
             $this->service = $project->getService('plugin_testmanagement');
@@ -300,7 +304,8 @@ class Router {
                 $GLOBALS['Language']->getText(
                     'project_service',
                     'service_not_used',
-                    dgettext('tuleap-testmanagement', 'Test Management'))
+                    dgettext('tuleap-testmanagement', 'Test Management')
+                )
             );
         }
 
@@ -320,7 +325,8 @@ class Router {
         $service->displayHeader($title, $breadcrumbs->getCrumbs($project), $toolbar, array('body_class' => array('testmanagement')));
     }
 
-    private function userIsAdmin(Codendi_Request $request) {
+    private function userIsAdmin(Codendi_Request $request)
+    {
         return $request->getProject()->userIsAdmin($request->getCurrentUser());
     }
 
@@ -329,15 +335,15 @@ class Router {
      *
      * @param Codendi_Request $request
      */
-    private function displayFooter(Codendi_Request $request) {
+    private function displayFooter(Codendi_Request $request)
+    {
         $this->getService($request)->displayFooter();
     }
 
-   protected function checkUserCanAdministrate(Project $project, PFUser $user)
+    protected function checkUserCanAdministrate(Project $project, PFUser $user)
     {
         if (! $user->isAdmin($project->getId())) {
             throw new UserIsNotAdministratorException();
         }
     }
-
 }

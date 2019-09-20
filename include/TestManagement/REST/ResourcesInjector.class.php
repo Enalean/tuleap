@@ -29,9 +29,11 @@ use Tuleap\TestManagement\REST\v1\NodeReferenceRepresentation;
 /**
  * Inject resource into restler
  */
-class ResourcesInjector {
+class ResourcesInjector
+{
 
-    public function populate(\Luracast\Restler\Restler $restler) {
+    public function populate(\Luracast\Restler\Restler $restler)
+    {
         $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\ProjectResource', 'projects');
         $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\CampaignsResource', 'testmanagement_campaigns');
         $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\DefinitionsResource', 'testmanagement_definitions');
@@ -39,7 +41,8 @@ class ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\TestManagement\\REST\\v1\\NodeResource', 'testmanagement_nodes');
     }
 
-    public function declareProjectResource(array &$resources, Project $project) {
+    public function declareProjectResource(array &$resources, Project $project)
+    {
         $routes = array(
             CampaignRepresentation::ROUTE,
             DefinitionRepresentation::ROUTE,

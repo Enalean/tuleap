@@ -43,7 +43,8 @@ use Tuleap\TestManagement\MalformedQueryParameterException;
 use Tuleap\TestManagement\QueryToCriterionConverter;
 use UserManager;
 
-class ProjectResource {
+class ProjectResource
+{
 
     public const MAX_LIMIT = 1000;
 
@@ -119,7 +120,8 @@ class ProjectResource {
     /**
      * @url OPTIONS {id}/testmanagement_campaigns
      */
-    public function optionsCampaigns($id) {
+    public function optionsCampaigns($id)
+    {
         Header::allowOptionsGet();
     }
 
@@ -189,7 +191,8 @@ class ProjectResource {
     /**
      * @url OPTIONS {id}/testmanagement_definitions
      */
-    public function optionsDefinitions($id) {
+    public function optionsDefinitions($id)
+    {
         Header::allowOptionsGet();
     }
 
@@ -209,7 +212,8 @@ class ProjectResource {
      *
      * @throws RestException 403
      */
-    protected function getDefinitions($id, $limit = 10, $offset = 0, $report_id = null) {
+    protected function getDefinitions($id, $limit = 10, $offset = 0, $report_id = null)
+    {
         $this->optionsDefinitions($id);
 
         $project = $this->getProject($id);
@@ -246,7 +250,8 @@ class ProjectResource {
     }
 
     /** @return \Tracker_Report */
-    private function getReportById(PFUser $user, $id) {
+    private function getReportById(PFUser $user, $id)
+    {
         $store_in_session = false;
         $report = Tracker_ReportFactory::instance()->getReportById(
             $id,
@@ -269,7 +274,8 @@ class ProjectResource {
     }
 
     /** @return array {Tracker_Artifact} */
-    private function getDefinitionsSliceFromReport($report_id, $limit, $offset) {
+    private function getDefinitionsSliceFromReport($report_id, $limit, $offset)
+    {
         $report = $this->getReportById($this->user, $report_id);
         $matching_ids = $report->getMatchingIds();
 
@@ -288,7 +294,8 @@ class ProjectResource {
     }
 
     /** @return array {Tracker_Artifact} */
-    private function getDefinitionsSliceFromTracker($tracker_id, $limit, $offset) {
+    private function getDefinitionsSliceFromTracker($tracker_id, $limit, $offset)
+    {
         $paginated_artifacts =
             $this->testmanagement_artifact_factory
                  ->getPaginatedArtifactsByTrackerIdUserCanView(
@@ -310,7 +317,8 @@ class ProjectResource {
     }
 
     /** @return array {DefinitionRepresentation} */
-    private function getDefinitionRepresentationsFromArtifactsList(array $artifacts) {
+    private function getDefinitionRepresentationsFromArtifactsList(array $artifacts)
+    {
         $definition_representations = array();
 
         foreach ($artifacts as $artifact) {
@@ -326,7 +334,8 @@ class ProjectResource {
         return $definition_representations;
     }
 
-    private function getProject($id) {
+    private function getProject($id)
+    {
         $project = $this->project_manager->getProject($id);
         if ($project->isError()) {
             throw new RestException(404, 'Project not found');
@@ -335,7 +344,8 @@ class ProjectResource {
         return $project;
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size) {
+    private function sendPaginationHeaders($limit, $offset, $size)
+    {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 

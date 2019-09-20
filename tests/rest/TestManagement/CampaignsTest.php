@@ -86,7 +86,8 @@ final class CampaignsTest extends BaseTest
         $this->assertExecutionsContains($executions, 'Delete a repository');
     }
 
-    private function assertExecutionsContains($executions, $summary) {
+    private function assertExecutionsContains($executions, $summary)
+    {
         foreach ($executions as $execution) {
             if ($summary === $execution['definition']['summary']) {
                 $this->assertTrue(true);
@@ -165,7 +166,6 @@ final class CampaignsTest extends BaseTest
         $this->assertEquals('so secret', $updated_campaign['job_configuration']['token']);
 
         $this->revertCampaign($campaign);
-
     }
 
     public function testPatchCampaignThrow400IfJobUrlIsInvalid()

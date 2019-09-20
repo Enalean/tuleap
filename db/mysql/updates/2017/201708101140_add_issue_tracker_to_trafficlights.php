@@ -45,6 +45,4 @@ class b201708101140_add_issue_tracker_to_trafficlights extends ForgeUpgrade_Buck
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding issue tracker id in table columns');
         }
     }
-
 }
-?>
