@@ -26,13 +26,15 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import BoardWithoutAnyColumnsErrorForAdmin from "./BoardWithoutAnyColumnsErrorForAdmin.vue";
 import BoardWithoutAnyColumnsErrorForUsers from "./BoardWithoutAnyColumnsErrorForUsers.vue";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
+
+const user = namespace("user");
 
 @Component({
     components: { BoardWithoutAnyColumnsErrorForUsers, BoardWithoutAnyColumnsErrorForAdmin }
 })
 export default class BoardWithoutAnyColumnsError extends Vue {
-    @State
+    @user.State
     readonly user_is_admin!: boolean;
 }
 </script>

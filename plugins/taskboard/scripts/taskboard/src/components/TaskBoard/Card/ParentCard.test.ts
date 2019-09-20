@@ -26,7 +26,9 @@ jest.useFakeTimers();
 describe("ParentCard", () => {
     it("displays a parent card", () => {
         const wrapper = shallowMount(ParentCard, {
-            mocks: { $store: createStoreMock({ state: { user_has_accessibility_mode: false } }) },
+            mocks: {
+                $store: createStoreMock({ state: { user: { user_has_accessibility_mode: false } } })
+            },
             propsData: {
                 card: {
                     id: 43,
@@ -40,7 +42,9 @@ describe("ParentCard", () => {
 
     it("doesn't add a dummy taskboard-card-background- class if the card has no background color", () => {
         const wrapper = shallowMount(ParentCard, {
-            mocks: { $store: createStoreMock({ state: { user_has_accessibility_mode: false } }) },
+            mocks: {
+                $store: createStoreMock({ state: { user: { user_has_accessibility_mode: false } } })
+            },
             propsData: {
                 card: {
                     id: 43,
@@ -54,7 +58,9 @@ describe("ParentCard", () => {
 
     it("adds accessibility class if user needs it", () => {
         const wrapper = shallowMount(ParentCard, {
-            mocks: { $store: createStoreMock({ state: { user_has_accessibility_mode: true } }) },
+            mocks: {
+                $store: createStoreMock({ state: { user: { user_has_accessibility_mode: true } } })
+            },
             propsData: {
                 card: {
                     id: 43,
@@ -69,7 +75,9 @@ describe("ParentCard", () => {
 
     it("removes the show classes after 500ms", () => {
         const wrapper = shallowMount(ParentCard, {
-            mocks: { $store: createStoreMock({ state: { user_has_accessibility_mode: false } }) },
+            mocks: {
+                $store: createStoreMock({ state: { user: { user_has_accessibility_mode: false } } })
+            },
             propsData: {
                 card: {
                     id: 43,

@@ -32,13 +32,15 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Card } from "../../../type";
 import CardXrefLabel from "./CardXrefLabel.vue";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
+
+const user = namespace("user");
 
 @Component({
     components: { CardXrefLabel }
 })
 export default class ParentCard extends Vue {
-    @State
+    @user.State
     readonly user_has_accessibility_mode!: boolean;
 
     @Prop({ required: true })

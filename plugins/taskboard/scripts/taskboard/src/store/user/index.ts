@@ -15,32 +15,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-export interface ColumnDefinition {
-    id: number;
-    label: string;
-    color: string;
-}
+import { Module } from "vuex";
+import { RootState } from "../../type";
+import { UserState } from "./type";
 
-export interface Swimlane {
-    card: Card;
-}
-
-export interface Card {
-    id: number;
-    label: string;
-    xref: string;
-    rank: number;
-    color: string;
-    background_color: string;
-    artifact_html_uri: string;
-}
-
-interface RootState {
-    admin_url: string;
-    has_content: boolean;
-    columns: Array<ColumnDefinition>;
-    milestone_id: number;
+export function createUserModule(initial_user_state: UserState): Module<UserState, RootState> {
+    return {
+        namespaced: true,
+        state: initial_user_state
+    } as Module<UserState, RootState>;
 }

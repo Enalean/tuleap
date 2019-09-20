@@ -42,7 +42,9 @@ async function createWrapper<G, Spy>(
 }
 
 interface TestState {
-    user_id: number;
+    user: {
+        user_id: number;
+    };
 }
 
 const storage_key = "tuleap-taskboard-under-construction-modal-hidden-104";
@@ -52,7 +54,7 @@ describe("UnderConstructionModal", () => {
     const tlp_modal = (tlp.modal as unknown) as jest.SpyInstance;
     let hide_listener: Function;
     beforeEach(() => {
-        store = createStoreMock({ state: { user_id: 104 } });
+        store = createStoreMock({ state: { user: { user_id: 104 } } });
         tlp_modal.mockReset();
         tlp_modal.mockImplementation(() => {
             return {
@@ -110,7 +112,7 @@ describe("UnderConstructionModal", () => {
 
     it(`When I'm browsing as anonymous user,
         the session storage key will be suffixed by "0"`, async () => {
-        store.state.user_id = 0;
+        store.state.user.user_id = 0;
         await createWrapper(store);
         hide_listener();
 
