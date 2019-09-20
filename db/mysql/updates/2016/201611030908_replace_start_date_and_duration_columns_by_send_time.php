@@ -22,19 +22,23 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class b201611030908_replace_start_date_and_duration_columns_by_send_time extends ForgeUpgrade_Bucket {
+class b201611030908_replace_start_date_and_duration_columns_by_send_time extends ForgeUpgrade_Bucket
+{
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Replace the start date and the duration by a send time.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql1 = "ALTER TABLE plugin_botmattermost_agiledashboard
                 CHANGE start_time send_time time;";
         $sql2 = "ALTER TABLE plugin_botmattermost_agiledashboard

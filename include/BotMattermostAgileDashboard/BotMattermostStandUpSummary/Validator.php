@@ -56,7 +56,7 @@ class Validator
                     default:
                         return false;
                 }
-             }
+            }
         }
 
         return false;
@@ -67,7 +67,7 @@ class Validator
         if ($request->exist('bot_id')&&
             $request->existAndNonEmpty('send_time') &&
             $request->exist('channels')
-        ){
+        ) {
             return $this->validBotId($request->get('bot_id'));
         }
         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_invalid_post_arguments'));
@@ -79,7 +79,7 @@ class Validator
     {
         if ($request->existAndNonEmpty('send_time') &&
             $request->exist('channels')
-        ){
+        ) {
             return true;
         }
         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_botmattermost', 'alert_error_invalid_post_arguments'));
@@ -92,14 +92,14 @@ class Validator
         try {
             $this->bot_factory->getBotById($bot_id);
         } catch (Exception $e) {
-
             return false;
         }
 
         return $this->validId($bot_id);
     }
 
-    private function validId($id) {
+    private function validId($id)
+    {
         $valid_int = new Valid_UInt();
 
         return $valid_int->validate($id);

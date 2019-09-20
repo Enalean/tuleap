@@ -63,7 +63,7 @@ class AdminNotificationPresenter
         array $bots,
         $project_id,
         $bot_assigned
-    ){
+    ) {
         $this->csrf_token   = $csrf_token;
         $this->bots         = $bots;
         $this->project_id   = $project_id;
@@ -94,9 +94,9 @@ class AdminNotificationPresenter
         $this->input_channels_handles = $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_input_channels_handles');
 
         $this->purified_info_channels_handles = Codendi_HTMLPurifier::instance()->purify(
-                $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_info_channels_handles'),
-                CODENDI_PURIFIER_LIGHT
-            );
+            $GLOBALS['Language']->getText('plugin_botmattermost_agiledashboard', 'configuration_info_channels_handles'),
+            CODENDI_PURIFIER_LIGHT
+        );
         $this->alert_time_warning             = $GLOBALS['Language']->getText(
             'plugin_botmattermost_agiledashboard',
             'admin_notification_time_warning',

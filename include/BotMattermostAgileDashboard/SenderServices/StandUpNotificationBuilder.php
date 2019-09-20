@@ -70,7 +70,9 @@ class StandUpNotificationBuilder
                 array($last_planning->getName(), $project_name)
             );
             $last_plannings_for_presenter['milestones'] = $this->buildMilestonesForNotification(
-                $http_request, $last_planning, $user
+                $http_request,
+                $last_planning,
+                $user
             );
             $last_plannings_for_presenter['no_current_milestones'] =  $this->language->getText(
                 'plugin_botmattermost_agiledashboard',

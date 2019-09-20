@@ -20,7 +20,6 @@
 
 namespace Tuleap\BotMattermostAgileDashboard\Presenter;
 
-
 class StandUpSummaryPresenter
 {
     public $last_plannings;
