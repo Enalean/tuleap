@@ -6,7 +6,7 @@ function autoload7d47422aadbba8a14eac6a447376085b($class) {
     static $classes = null;
     if ($classes === null) {
         $classes = array(
-            'botmattermost_agiledashboardplugin' => '/botmattermost_agiledashboardPlugin.class.php',
+            'botmattermost_agiledashboardplugin' => '/botmattermost_agiledashboardPlugin.php',
             'tuleap\\botmattermostagiledashboard\\botmattermoststandupsummary\\botmattermoststandupsummary' => '/BotMattermostAgileDashboard/BotMattermostStandUpSummary/BotMattermostStandUpSummary.php',
             'tuleap\\botmattermostagiledashboard\\botmattermoststandupsummary\\dao' => '/BotMattermostAgileDashboard/BotMattermostStandUpSummary/Dao.php',
             'tuleap\\botmattermostagiledashboard\\botmattermoststandupsummary\\factory' => '/BotMattermostAgileDashboard/BotMattermostStandUpSummary/Factory.php',
