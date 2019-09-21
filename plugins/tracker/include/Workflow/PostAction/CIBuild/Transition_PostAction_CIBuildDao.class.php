@@ -22,7 +22,9 @@
 /**
  * Base class for field post action DAOs.
  */
-class Transition_PostAction_CIBuildDao extends DataAccessObject{ // phpcs:ignoreFile
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Transition_PostAction_CIBuildDao extends DataAccessObject
+{
 
     /**
      * Create a new postaction entry
@@ -32,7 +34,8 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject{ // phpcs:ignore
      *
      * @return int|false ID if success false otherwise
      */
-    public function create($transition_id, $job_url) {
+    public function create($transition_id, $job_url)
+    {
         $transition_id = $this->da->escapeInt($transition_id);
         $job_url       = $this->da->quoteSmart($job_url);
 
@@ -42,7 +45,8 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject{ // phpcs:ignore
         return $this->updateAndGetLastId($sql);
     }
 
-    public function searchByTransitionId($transition_id) {
+    public function searchByTransitionId($transition_id)
+    {
         $transition_id = $this->da->escapeInt($transition_id);
 
         $sql = "SELECT *
@@ -61,7 +65,8 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject{ // phpcs:ignore
      *
      * @return bool true if success false otherwise
      */
-    public function updatePostAction($id, $job_url) {
+    public function updatePostAction($id, $job_url)
+    {
         $id       = $this->da->escapeInt($id);
         $job_url    = $this->da->quoteSmart($job_url);
 
@@ -71,7 +76,8 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject{ // phpcs:ignore
         return $this->update($sql);
     }
 
-    public function deletePostAction($id) {
+    public function deletePostAction($id)
+    {
         $id = $this->da->escapeInt($id);
 
         $sql = "DELETE FROM tracker_workflow_transition_postactions_cibuild
@@ -79,7 +85,8 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject{ // phpcs:ignore
         return $this->update($sql);
     }
 
-    public function deletePostActionsByWorkflowId($workflow_id) {
+    public function deletePostActionsByWorkflowId($workflow_id)
+    {
         $workflow_id = $this->da->escapeInt($workflow_id);
 
         $sql = "DELETE P
@@ -88,7 +95,6 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject{ // phpcs:ignore
                 WHERE T.workflow_id = $workflow_id";
 
         return $this->update($sql);
-
     }
 
     public function deletePostActionByTransition(int $transition_id) : bool
@@ -108,7 +114,8 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject{ // phpcs:ignore
      *
      * @return bool true if success false otherwise
      */
-    public function duplicate($from_transition_id, $to_transition_id) {
+    public function duplicate($from_transition_id, $to_transition_id)
+    {
         $from_transition_id = $this->da->escapeInt($from_transition_id);
         $to_transition_id   = $this->da->escapeInt($to_transition_id);
 
@@ -120,5 +127,3 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject{ // phpcs:ignore
         return $this->update($sql);
     }
 }
-
-?>

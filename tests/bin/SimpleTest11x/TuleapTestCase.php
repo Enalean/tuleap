@@ -16,8 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
- * @codingStandardsIgnoreFile
  */
 
 require_once __DIR__.'/../../simpletest/common/User/UserTestBuilder.php';
@@ -30,7 +28,7 @@ require_once __DIR__.'/../../lib/MockeryOngoingIntelligentStub.php';
 require_once __DIR__.'/../../lib/TestHelper.class.php';
 require_once __DIR__.'/../../lib/MockBuilder.php';
 
-abstract class TuleapTestCase extends UnitTestCase
+abstract class TuleapTestCase extends UnitTestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     /**
@@ -62,7 +60,6 @@ abstract class TuleapTestCase extends UnitTestCase
         $GLOBALS['Language'] = new MockBaseLanguage();
         $GLOBALS['HTML']     = new MockLayout();
         $GLOBALS['Response'] = $GLOBALS['HTML'];
-
     }
 
     protected function setUpGlobalsMockery()
@@ -111,33 +108,40 @@ abstract class TuleapTestCase extends UnitTestCase
         return parent::isTest($method);
     }
 
-    public function expectRedirectTo($url) {
+    public function expectRedirectTo($url)
+    {
         $GLOBALS['Response']->expectOnce('redirect', array($url));
     }
 
-    public function expectFeedback($level, $message) {
+    public function expectFeedback($level, $message)
+    {
         $GLOBALS['Response']->expectOnce('addFeedback', array($level, $message));
     }
 
-    protected function setText($text, $args) {
+    protected function setText($text, $args)
+    {
         $GLOBALS['Language']->setReturnValue('getText', $text, $args);
     }
 
-    protected function assertNotEmpty($string) {
+    protected function assertNotEmpty($string)
+    {
         $this->assertTrue(is_string($string));
         return $this->assertNotNull($string) && $this->assertNotEqual($string, '');
     }
 
-    protected function assertArrayNotEmpty($a) {
+    protected function assertArrayNotEmpty($a)
+    {
         $this->assertFalse(count($a) == 0, "expected array not to be empty, but it contains 0 elements");
     }
 
-    protected function assertArrayEmpty($a) {
+    protected function assertArrayEmpty($a)
+    {
         return $this->assertTrue(is_array($a), "expected an array") &&
             $this->assertTrue(empty($a), "expected array to be empty, but it contains ". count($a). " elements");
     }
 
-    protected function assertNotBlank($string) {
+    protected function assertNotBlank($string)
+    {
         // What about trim() ?
         return $this->assertNotEmpty($string) && $this->assertNoPattern('/^[ ]+$/', $string);
     }
@@ -146,9 +150,10 @@ abstract class TuleapTestCase extends UnitTestCase
      * assert that $substring is present $string
      * @param string $string
      * @param string $substring
-     * @return boolean true if $substring is present in $string
+     * @return bool true if $substring is present in $string
      */
-    protected function assertStringContains($string, $substring) {
+    protected function assertStringContains($string, $substring)
+    {
         return $this->assertPattern("/$substring/", $string);
     }
 
@@ -158,7 +163,8 @@ abstract class TuleapTestCase extends UnitTestCase
      * @param type $param
      * @param type $value
      */
-    protected function assertUriHasArgument($uri, $param, $value) {
+    protected function assertUriHasArgument($uri, $param, $value)
+    {
         $query_string = parse_url($uri, PHP_URL_QUERY);
         parse_str($query_string, $args);
         return $this->assertTrue(isset($args[$param]) && $args[$param] == $value);
@@ -169,7 +175,8 @@ abstract class TuleapTestCase extends UnitTestCase
      * @param type $string
      * @param type $start_sequence
      */
-    protected function assertStringBeginsWith($string, $start_sequence) {
+    protected function assertStringBeginsWith($string, $start_sequence)
+    {
         return $this->assertPattern("%^$start_sequence%", $string);
     }
 
@@ -180,9 +187,10 @@ abstract class TuleapTestCase extends UnitTestCase
      * @param type $lower_bound
      * @param type $higher_bound
      */
-    protected function assertBetweenClosedInterval($var, $lower_bound, $higher_bound) {
+    protected function assertBetweenClosedInterval($var, $lower_bound, $higher_bound)
+    {
         $this->assertTrue($var <= $higher_bound, "$var should be lesser than or equal to $higher_bound");
-        $this->assertTrue($var >= $lower_bound,  "$var should be greater than or equal to $lower_bound");
+        $this->assertTrue($var >= $lower_bound, "$var should be greater than or equal to $lower_bound");
     }
 
     /**
@@ -191,15 +199,18 @@ abstract class TuleapTestCase extends UnitTestCase
      * @param array $array
      * @param int $expected_count
      */
-    protected function assertCount($array, $expected_count) {
+    protected function assertCount($array, $expected_count)
+    {
         return $this->assertEqual(count($array), $expected_count);
     }
 
-    protected function assertFileExists($path) {
+    protected function assertFileExists($path)
+    {
         return $this->assertTrue(is_file($path));
     }
 
-    protected function assertFileDoesntExist($path) {
+    protected function assertFileDoesntExist($path)
+    {
         return $this->assertFalse(is_file($path));
     }
 
@@ -207,11 +218,12 @@ abstract class TuleapTestCase extends UnitTestCase
     /**
      * Creates a tmpDir and returns the path (dir automtically deleted in tearDown)
      */
-    protected function getTmpDir() {
+    protected function getTmpDir()
+    {
         if (!$this->tmp_dir) {
             clearstatcache();
             do {
-                $this->tmp_dir = '/tmp/tuleap_tests_'.rand(0,10000);
+                $this->tmp_dir = '/tmp/tuleap_tests_'.rand(0, 10000);
             } while (file_exists($this->tmp_dir));
         }
         if (!is_dir($this->tmp_dir)) {
@@ -220,7 +232,8 @@ abstract class TuleapTestCase extends UnitTestCase
         return $this->tmp_dir;
     }
 
-    private function removeTmpDir() {
+    private function removeTmpDir()
+    {
         if ($this->tmp_dir && file_exists($this->tmp_dir)) {
             $this->recurseDeleteInDir($this->tmp_dir);
             rmdir($this->tmp_dir);
@@ -237,7 +250,8 @@ abstract class TuleapTestCase extends UnitTestCase
      *
      * @return void
      */
-    protected function recurseDeleteInDir($mypath) {
+    protected function recurseDeleteInDir($mypath)
+    {
         $mypath = rtrim($mypath, '/');
         $d      = opendir($mypath);
         if (! $d) {
@@ -245,7 +259,6 @@ abstract class TuleapTestCase extends UnitTestCase
         }
         while (($file = readdir($d)) !== false) {
             if ($file != "." && $file != "..") {
-
                 $typepath = $mypath . "/" . $file ;
 
                 if (is_file($typepath) || is_link($typepath)) {
@@ -259,17 +272,20 @@ abstract class TuleapTestCase extends UnitTestCase
         closedir($d);
     }
 
-    protected function setServerValue($variable, $value) {
+    protected function setServerValue($variable, $value)
+    {
         $this->preserveServer($variable);
         $_SERVER[$variable] = $value;
     }
 
-    protected function preserveServer($variable) {
+    protected function preserveServer($variable)
+    {
         $this->original_server[$variable] = isset($_SERVER[$variable]) ? $_SERVER[$variable] : null;
         unset($_SERVER[$variable]);
     }
 
-    protected function restoreOriginalServer() {
+    protected function restoreOriginalServer()
+    {
         foreach ($this->original_server as $variable => $value) {
             if ($value === null) {
                 unset($_SERVER[$variable]);

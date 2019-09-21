@@ -20,7 +20,7 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //phpcs:ignoreFile
+class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase
 {
     /** @var Tracker_Artifact_Changeset_NewChangesetFieldsValidator */
     private $new_changeset_fields_validator;
@@ -98,7 +98,8 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         stub($this->artifact_update)->getWorkflow()->returns($this->workflow);
     }
 
-    private function getFieldWithId($id) {
+    private function getFieldWithId($id)
+    {
         $mocked_methods = array(
             'isValid',
             'isRequired',
@@ -115,7 +116,8 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         );
     }
 
-    public function testValidateFields_basicvalid() {
+    public function testValidateFields_basicvalid()
+    {
         stub($this->field1)->isValid()->returns(true);
         stub($this->field2)->isValid()->returns(true);
         stub($this->field3)->isValid()->returns(true);
@@ -130,7 +132,8 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         $this->assertFalse(isset($fields_data[103]));
     }
 
-    public function testValidateSubmitFieldNotRequired() {
+    public function testValidateSubmitFieldNotRequired()
+    {
         stub($this->field1)->isValid()->returns(true);
         stub($this->field1)->userCanSubmit()->returns(true);
         stub($this->field2)->isValid()->returns(true);
@@ -144,7 +147,8 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         $this->assertEqual($fields_data[101], 444);
     }
 
-    function testValidateSubmitFieldNotRequiredNotSubmittedDefaultValue() {
+    function testValidateSubmitFieldNotRequiredNotSubmittedDefaultValue()
+    {
         stub($this->field1)->isValid()->returns(true);
         stub($this->field1)->hasDefaultValue()->returns(true);
         stub($this->field1)->getDefaultValue()->returns('DefaultValue');
@@ -158,7 +162,8 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         $this->assertFalse(isset($fields_data[101]));
     }
 
-    function testValidateSubmitFieldNotRequiredNotSubmittedNoDefaultValue() {
+    function testValidateSubmitFieldNotRequiredNotSubmittedNoDefaultValue()
+    {
         stub($this->field1)->isValid()->returns(true);
         stub($this->field2)->isValid()->returns(true);
         stub($this->field3)->isValid()->returns(true);
@@ -170,7 +175,8 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         $this->assertFalse(isset($fields_data[101]));
     }
 
-    function testValidateSubmitFieldRequired() {
+    function testValidateSubmitFieldRequired()
+    {
         stub($this->field1)->isValid()->returns(true);
         stub($this->field1)->isRequired()->returns(true);
         stub($this->field2)->isValid()->returns(true);
@@ -184,7 +190,8 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         $this->assertEqual($fields_data[101], 666);
     }
 
-    function testValidateSubmitFieldRequiredNotSubmittedDefaultValue() {
+    function testValidateSubmitFieldRequiredNotSubmittedDefaultValue()
+    {
         stub($this->field1)->isValid()->returns(true);
         stub($this->field1)->userCanSubmit()->returns(true);
         stub($this->field1)->isRequired()->returns(true);
@@ -202,7 +209,8 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         $this->assertFalse(isset($fields_data[101]));
     }
 
-    function testValidateSubmitFieldRequiredNotSubmittedNoDefaultValue() {
+    function testValidateSubmitFieldRequiredNotSubmittedNoDefaultValue()
+    {
         stub($this->field1)->isValid()->returns(false);
         stub($this->field1)->userCanSubmit()->returns(true);
         stub($this->field1)->isRequired()->returns(true);
@@ -219,7 +227,8 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
     }
 
     // ARTIFACT MODIFICATION
-    function testValidateUpdateFieldSubmitted() {
+    function testValidateUpdateFieldSubmitted()
+    {
         stub($this->field1)->isValid()->returns(true);
         stub($this->field1)->userCanUpdate()->returns(true);
         stub($this->field2)->isValid()->returns(true);
@@ -233,7 +242,8 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         $this->assertEqual($fields_data[101], 666);
     }
 
-    function testValidateUpdateFieldNotSubmitted() {
+    function testValidateUpdateFieldNotSubmitted()
+    {
         stub($this->field1)->isValid()->returns(true);
         stub($this->field1)->userCanUpdate()->returns(true);
         stub($this->field1)->isRequired()->returns(true);
@@ -250,7 +260,8 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         $this->assertFalse(isset($fields_data[101]));
     }
 
-    function testValidateFields_missing_fields_on_submission() {
+    function testValidateFields_missing_fields_on_submission()
+    {
         stub($this->field1)->isValid()->returns(true);
         stub($this->field1)->userCanSubmit()->returns(true);
         stub($this->field2)->isValid()->returns(true);
@@ -271,7 +282,8 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         $this->assertEqual($fields_data[103], 444);
     }
 
-    function testValidateFields_missing_fields_on_update() {
+    function testValidateFields_missing_fields_on_update()
+    {
         stub($this->field1)->isValid()->returns(true);
         stub($this->field1)->userCanUpdate()->returns(true);
         stub($this->field2)->isValid()->returns(true);
@@ -291,7 +303,8 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         $this->assertFalse(isset($fields_data[102]));
     }
 
-    function testValidateFields_missing_fields_in_previous_changeset_on_update() {
+    function testValidateFields_missing_fields_in_previous_changeset_on_update()
+    {
         stub($this->field1)->isValid()->returns(true);
         stub($this->field1)->userCanUpdate()->returns(true);
         stub($this->field2)->isValid()->returns(true);
@@ -311,7 +324,8 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         $this->assertFalse(isset($fields_data[102]));
     }
 
-    function testValidateFields_basicnotvalid() {
+    function testValidateFields_basicnotvalid()
+    {
         stub($this->field1)->isValid()->returns(true);
         stub($this->field1)->userCanSubmit()->returns(true);
         stub($this->field2)->isValid()->returns(false);
@@ -330,7 +344,8 @@ class Tracker_Artifact_Changeset_FieldsValidatorTest extends TuleapTestCase //ph
         $this->assertFalse(isset($fields_data[103]));
     }
 
-    function testValidateFields_valid() {
+    function testValidateFields_valid()
+    {
         stub($this->field1)->isValid()->returns(true);
         stub($this->field1)->userCanSubmit()->returns(true);
         stub($this->field2)->isValid('*', '123')->returns(true);

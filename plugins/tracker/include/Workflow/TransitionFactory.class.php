@@ -22,7 +22,8 @@
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;
 use Tuleap\Tracker\Workflow\TransitionDeletionException;
 
-class TransitionFactory //phpcs:ignoreFile
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class TransitionFactory
 {
 
     /** @var Workflow_Transition_ConditionFactory */
@@ -41,7 +42,7 @@ class TransitionFactory //phpcs:ignoreFile
     /**
      * Hold an instance of the class
      */
-    protected static $_instance;
+    protected static $_instance; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
     /**
      * The singleton method
@@ -51,7 +52,7 @@ class TransitionFactory //phpcs:ignoreFile
     public static function instance()
     {
         if (!isset(self::$_instance)) {
-            $c = __CLASS__;
+            $c = self::class;
             self::$_instance = new $c(Workflow_Transition_ConditionFactory::build());
         }
         return self::$_instance;
@@ -65,7 +66,7 @@ class TransitionFactory //phpcs:ignoreFile
      *
      * @return Transition
      */
-    public function getInstanceFromRow($row, Workflow $workflow = null)
+    public function getInstanceFromRow($row, ?Workflow $workflow = null)
     {
         if (!$workflow) {
             $workflow = WorkflowFactory::instance()->getWorkflow($row['workflow_id']);
@@ -256,7 +257,7 @@ class TransitionFactory //phpcs:ignoreFile
      *
      * @param Workflow $workflow
      *
-     * @return boolean
+     * @return bool
      */
     public function deleteWorkflow($workflow)
     {
@@ -311,7 +312,7 @@ class TransitionFactory //phpcs:ignoreFile
     public function getTransitionsForAGivenDestination(Workflow $workflow, int $to_id)
     {
         $transitions = [];
-        foreach ($this->getDao()->searchByWorkflowAndToId($workflow->getId(), $to_id) as $row) {
+        foreach ($this->getDao()->searchByWorkflowAndToId((int) $workflow->getId(), $to_id) as $row) {
             $transitions[] = $this->getInstanceFromRow($row, $workflow);
         }
         return $transitions;
@@ -366,7 +367,7 @@ class TransitionFactory //phpcs:ignoreFile
      * @param array $ugroups_ids the list of ugroups ids
      * @param int $transition_id  The transition id
      *
-     * @return boolean
+     * @return bool
      */
     public function addPermissions(array $ugroups_ids, $transition_id)
     {
@@ -399,7 +400,7 @@ class TransitionFactory //phpcs:ignoreFile
                 if ($transition->getFieldValueFrom() == null) {
                     $from_id = 'null';
                     $to      = $transition->getFieldValueTo()->getId();
-                    foreach ($values as $value=>$id_value) {
+                    foreach ($values as $value => $id_value) {
                         if ($value == $to) {
                             $to_id = $id_value;
                         }
@@ -407,7 +408,7 @@ class TransitionFactory //phpcs:ignoreFile
                 } else {
                     $from = $transition->getFieldValueFrom()->getId();
                     $to   = $transition->getFieldValueTo()->getId();
-                    foreach ($values as $value=>$id_value) {
+                    foreach ($values as $value => $id_value) {
                         if ($value == $from) {
                             $from_id = $id_value;
                         }
@@ -454,7 +455,8 @@ class TransitionFactory //phpcs:ignoreFile
             if (!$this->getDao()->deleteTransition(
                 $transition->getWorkflow()->getId(),
                 $transition->getIdFrom(),
-                $transition->getIdTo())
+                $transition->getIdTo()
+            )
             ) {
                 throw new TransitionDeletionException();
             }

@@ -138,7 +138,7 @@ class CSVRepresentationBuilder
         $title = new TextValue($artifact->getTitle());
         $formatted_title = $title->accept($this->visitor, $formatter_parameters);
 
-        $description = new TextValue($artifact->getDescription());
+        $description = new TextValue((string) $artifact->getDescription());
         $formatted_description = $description->accept($this->visitor, $formatter_parameters);
 
         $status = new TextValue($artifact->getStatus());

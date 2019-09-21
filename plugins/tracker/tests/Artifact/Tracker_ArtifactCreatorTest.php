@@ -20,7 +20,7 @@
 
 require_once __DIR__.'/../bootstrap.php';
 
-class Tracker_ArtifactCreator_createTest extends TuleapTestCase //phpcs:ignoreFile
+class Tracker_ArtifactCreator_createTest extends TuleapTestCase
 {
     /** @var Tracker_Artifact_Changeset_InitialChangesetCreatorBase */
     private $changeset_creator;
@@ -54,7 +54,8 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase //phpcs:ignoreFi
     private $submitted_on      = 1234567890;
     private $send_notification = true;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->setUpGlobalsMockery();
         Tracker_ArtifactFactory::clearInstance();
@@ -79,12 +80,14 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase //phpcs:ignoreFi
         );
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         Tracker_ArtifactFactory::clearInstance();
         parent::tearDown();
     }
 
-    public function itValidateFields() {
+    public function itValidateFields()
+    {
         $this->fields_validator->shouldReceive('validate')
             ->with(
                 Mockery::on(function ($artifact) {
@@ -106,7 +109,8 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase //phpcs:ignoreFi
         );
     }
 
-    public function itReturnsFalseIfFIeldsAreNotValid() {
+    public function itReturnsFalseIfFIeldsAreNotValid()
+    {
         stub($this->fields_validator)->validate()->returns(false);
 
         expect($this->dao)->create()->never();
@@ -123,7 +127,8 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase //phpcs:ignoreFi
         $this->assertFalse($result);
     }
 
-    public function itCreateArtifactsInDbIfFieldsAreValid() {
+    public function itCreateArtifactsInDbIfFieldsAreValid()
+    {
         stub($this->fields_validator)->validate()->returns(true);
 
         expect($this->dao)->create(123, 101, 1234567890, 0)->once();
@@ -137,7 +142,8 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase //phpcs:ignoreFi
         );
     }
 
-    public function itReturnsFalseIfCreateArtifactsInDbFails() {
+    public function itReturnsFalseIfCreateArtifactsInDbFails()
+    {
         stub($this->fields_validator)->validate()->returns(true);
         stub($this->dao)->create()->returns(false);
 
@@ -154,7 +160,8 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase //phpcs:ignoreFi
         $this->assertFalse($result);
     }
 
-    public function itCreateChangesetIfCreateArtifactsInDbSucceeds() {
+    public function itCreateChangesetIfCreateArtifactsInDbSucceeds()
+    {
         stub($this->fields_validator)->validate()->returns(true);
         stub($this->dao)->create()->returns(1001);
 

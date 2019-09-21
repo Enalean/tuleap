@@ -18,17 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//phpcs:ignoreFile
-
 use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Condition
 {
 
     /** @var string */
     public $identifier = 'perms';
 
-    const PERMISSION_TRANSITION = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
+    public const PERMISSION_TRANSITION = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
 
     /** @var PermissionsManager */
     private $permission_manager;
@@ -36,7 +35,8 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     /** @var array */
     private $authorized_ugroups_keyname = array();
 
-    public function __construct(Transition $transition) {
+    public function __construct(Transition $transition)
+    {
         parent::__construct($transition);
         $this->permission_manager = PermissionsManager::instance();
     }
@@ -44,9 +44,10 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     /**
      * @see Workflow_Transition_Condition::fetch()
      */
-    public function fetch() {
+    public function fetch()
+    {
         $html  = '';
-        $html .= $GLOBALS['Language']->getText('workflow_admin','label_define_transition_permissions');
+        $html .= $GLOBALS['Language']->getText('workflow_admin', 'label_define_transition_permissions');
         $html .= '<br />';
         $html .= '<p>';
         $html .= plugin_tracker_permission_fetch_selection_field(
@@ -61,7 +62,8 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     /**
      * @see Workflow_Transition_Condition::exportToXml()
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    {
         $child = $root->addChild('condition');
         $child->addAttribute('type', $this->identifier);
 
@@ -75,14 +77,16 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
         }
     }
 
-    public function setAuthorizedUgroupsKeyname($authorized_ugroups_keyname) {
+    public function setAuthorizedUgroupsKeyname($authorized_ugroups_keyname)
+    {
         $this->authorized_ugroups_keyname = $authorized_ugroups_keyname;
     }
 
     /**
      * @see Workflow_Transition_Condition::saveObject()
      */
-    public function saveObject() {
+    public function saveObject()
+    {
         $this->addPermissions($this->authorized_ugroups_keyname);
     }
 
@@ -91,9 +95,10 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
      *
      * @param array $ugroups The list of ugroups
      *
-     * @return boolean
+     * @return bool
      */
-    private function addPermissions($ugroups) {
+    private function addPermissions($ugroups)
+    {
         foreach ($ugroups as $ugroup) {
             if (! $this->permission_manager->addPermission(self::PERMISSION_TRANSITION, (int)$this->transition->getId(), $ugroup)) {
                 return false;
@@ -105,13 +110,15 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     /**
      * @return string or false if not exportable
      */
-    private function getExportableUGroupKeyname($ugroup_id) {
+    private function getExportableUGroupKeyname($ugroup_id)
+    {
         if ($ugroup_id < ProjectUGroup::NONE) {
             return array_search($ugroup_id, $GLOBALS['UGROUPS']);
         }
     }
 
-    public function validate($fields_data, Tracker_Artifact $artifact, $comment_body) {
+    public function validate($fields_data, Tracker_Artifact $artifact, $comment_body)
+    {
         $current_user = UserManager::instance()->getCurrentUser();
 
         if (! $this->isUserAllowedToSeeTransition($current_user, $artifact->getTracker())) {
@@ -132,7 +139,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
         }
 
         $transition_ugroups = $this->getAuthorizedUGroups();
-        foreach($transition_ugroups as $ugroup) {
+        foreach ($transition_ugroups as $ugroup) {
             if ($user->isMemberOfUGroup($ugroup['ugroup_id'], $tracker->getGroupId())) {
                 return true;
             }

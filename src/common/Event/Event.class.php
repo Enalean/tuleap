@@ -19,9 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//phpcs:ignoreFile
-
-class Event {
+class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+{
 
     /**
      * Project creation
@@ -34,7 +33,7 @@ class Event {
      * 'project_creation_data' => ProjectCreationData: Data passed for project creation
      * 'project_administrator' => PFUser: Administrator of the project
      */
-    const REGISTER_PROJECT_CREATION = 'register_project_creation';
+    public const REGISTER_PROJECT_CREATION = 'register_project_creation';
 
     /**
      * Periodical system check event.
@@ -42,7 +41,7 @@ class Event {
      * No Parameters.
      * No expected results
      */
-    const SYSTEM_CHECK = 'system_check';
+    public const SYSTEM_CHECK = 'system_check';
 
     /**
      * The user has just changed his ssh authorized keys.
@@ -52,7 +51,7 @@ class Event {
      *
      * No expected results
      */
-    const EDIT_SSH_KEYS = 'edit_ssh_keys';
+    public const EDIT_SSH_KEYS = 'edit_ssh_keys';
 
     /**
      * Dump all ssh keys.
@@ -60,7 +59,7 @@ class Event {
      * No parameters
      * No expected results
      */
-    const DUMP_SSH_KEYS = 'dump_ssh_keys';
+    public const DUMP_SSH_KEYS = 'dump_ssh_keys';
 
     /**
      * The user is accessing a list of their keys
@@ -69,7 +68,7 @@ class Event {
      *   'user' => PFUser
      *   'html' => string An emty string of html output- passed by reference
      */
-    const LIST_SSH_KEYS = 'list_ssh_keys';
+    public const LIST_SSH_KEYS = 'list_ssh_keys';
 
     /**
      * Force aliases database update.
@@ -77,7 +76,7 @@ class Event {
      * No Parameters.
      * No expected results
      */
-    const UPDATE_ALIASES = 'update_aliases';
+    public const UPDATE_ALIASES = 'update_aliases';
 
     /**
      * The user is updated
@@ -88,7 +87,7 @@ class Event {
      *
      * No expected results
      */
-    const USER_MANAGER_UPDATE_DB = 'user_manager_update_db';
+    public const USER_MANAGER_UPDATE_DB = 'user_manager_update_db';
 
     /**
      * We are retrieving an instance of Backend.
@@ -96,7 +95,7 @@ class Event {
      *
      * @see BACKEND_FACTORY_GET_PREFIX
      */
-    const BACKEND_FACTORY_GET_BACKEND = 'backend_factory_get_backend';
+    public const BACKEND_FACTORY_GET_BACKEND = 'backend_factory_get_backend';
 
     /**
      * We are retrieving an instance of BackendSystem.
@@ -104,7 +103,7 @@ class Event {
      *
      * @see BACKEND_FACTORY_GET_PREFIX
      */
-    const BACKEND_FACTORY_GET_SYSTEM = 'backend_factory_get_system';
+    public const BACKEND_FACTORY_GET_SYSTEM = 'backend_factory_get_system';
 
     /**
      * We are retrieving an instance of BackendAliases.
@@ -112,7 +111,7 @@ class Event {
      *
      * @see BACKEND_FACTORY_GET_PREFIX
      */
-    const BACKEND_FACTORY_GET_ALIASES = 'backend_factory_get_aliases';
+    public const BACKEND_FACTORY_GET_ALIASES = 'backend_factory_get_aliases';
 
     /**
      * We are retrieving an instance of BackendMailingList.
@@ -120,7 +119,7 @@ class Event {
      *
      * @see BACKEND_FACTORY_GET_PREFIX
      */
-    const BACKEND_FACTORY_GET_MAILINGLIST = 'backend_factory_get_mailinglist';
+    public const BACKEND_FACTORY_GET_MAILINGLIST = 'backend_factory_get_mailinglist';
 
     /**
      * We are retrieving an instance of BackendCVS.
@@ -128,7 +127,7 @@ class Event {
      *
      * @see BACKEND_FACTORY_GET_PREFIX
      */
-    const BACKEND_FACTORY_GET_CVS = 'backend_factory_get_cvs';
+    public const BACKEND_FACTORY_GET_CVS = 'backend_factory_get_cvs';
 
     /**
      * We are retrieving an instance of BackendSVN.
@@ -136,7 +135,7 @@ class Event {
      *
      * @see BACKEND_FACTORY_GET_PREFIX
      */
-    const BACKEND_FACTORY_GET_SVN = 'backend_factory_get_svn';
+    public const BACKEND_FACTORY_GET_SVN = 'backend_factory_get_svn';
 
     /**
      * Use this prefix to override plugin's backend.
@@ -155,7 +154,7 @@ class Event {
      * A backend class name in the 'base' parameter if needed.
      * The subclass must inherit from the wanted backend.
      */
-    const BACKEND_FACTORY_GET_PREFIX = 'backend_factory_get_';
+    public const BACKEND_FACTORY_GET_PREFIX = 'backend_factory_get_';
 
     /**
      * Use this event to get the class name of an external event type (plugins)
@@ -180,12 +179,12 @@ class Event {
      *     }
      * }
      */
-     const GET_SYSTEM_EVENT_CLASS = 'get_system_event_class';
+    public const GET_SYSTEM_EVENT_CLASS = 'get_system_event_class';
 
      /**
       * This event is used to get all reserved keywords provided by plugins for reference
       */
-     const GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES = 'get_plugins_available_keywords_references';
+    public const GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES = 'get_plugins_available_keywords_references';
 
      /**
       * This event is used to get all extra references.
@@ -194,7 +193,7 @@ class Event {
       *  'reference_manager' => the ReferenceManager instance
       *  'refs'              => result array. See EventManager::additional_references
       */
-     const GET_PLUGINS_EXTRA_REFERENCES = 'get_plugins_extra_references';
+    public const GET_PLUGINS_EXTRA_REFERENCES = 'get_plugins_extra_references';
 
      /**
       * Allow to define specific references natures provided by a plugin
@@ -206,7 +205,7 @@ class Event {
       *   A new nature added into $params['nature']
       *   array('keyword' => 'awsome', label => 'Really kick ass')
       */
-     const GET_AVAILABLE_REFERENCE_NATURE = 'get_available_reference_natures';
+    public const GET_AVAILABLE_REFERENCE_NATURE = 'get_available_reference_natures';
 
      /**
       * Allow to override default behaviour when managing reference
@@ -221,7 +220,7 @@ class Event {
       * Expected results:
       *  'reference'         => Reference | false
       */
-     const GET_REFERENCE = 'get_reference';
+    public const GET_REFERENCE = 'get_reference';
 
      /**
       * Allow to define the group_id of an artifact reference
@@ -232,7 +231,7 @@ class Event {
       * Expected results:
       *     'group_id'    => Id of the project the artifact belongs to
       */
-     const GET_ARTIFACT_REFERENCE_GROUP_ID = 'get_artifact_reference_group_id';
+    public const GET_ARTIFACT_REFERENCE_GROUP_ID = 'get_artifact_reference_group_id';
 
      /**
       * Build a reference for given entry in database
@@ -244,7 +243,7 @@ class Event {
       * Expected result IN/OUT:
       *     'ref' => a Reference object
       */
-     const BUILD_REFERENCE = 'build_reference';
+    public const BUILD_REFERENCE = 'build_reference';
 
     /**
      * Project unix name changed
@@ -255,7 +254,7 @@ class Event {
      *
      * No expected results
      */
-    const PROJECT_RENAME = 'project_rename';
+    public const PROJECT_RENAME = 'project_rename';
 
     /**
      * User name changed
@@ -267,7 +266,7 @@ class Event {
      *
      * No expected results
      */
-    const USER_RENAME = 'user_rename';
+    public const USER_RENAME = 'user_rename';
 
     /**
      * Instanciate a new PFUser object from a row (probably DB)
@@ -278,9 +277,9 @@ class Event {
      * Expected results:
      *     'user' => a PFUser object
      */
-    const USER_MANAGER_GET_USER_INSTANCE = 'user_manager_get_user_instance';
+    public const USER_MANAGER_GET_USER_INSTANCE = 'user_manager_get_user_instance';
 
-    const COMPUTE_MD5SUM = 'compute_md5sum';
+    public const COMPUTE_MD5SUM = 'compute_md5sum';
 
     /**
      * Get the additionnal types of system events for default queue
@@ -291,7 +290,7 @@ class Event {
      * Expected results
      *  array of string
      */
-    const SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE = 'system_event_get_types_for_default_queue';
+    public const SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE = 'system_event_get_types_for_default_queue';
 
     /**
      * Get the types of system events that are used in a custom queue
@@ -303,7 +302,7 @@ class Event {
      * Expected results
      *  array of string
      */
-    const SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE = 'system_event_get_types_for_custom_queue';
+    public const SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE = 'system_event_get_types_for_custom_queue';
 
     /**
      * Get system event custom queues
@@ -311,7 +310,7 @@ class Event {
      * Expected results:
      *   'queues' => SystemEventQueue[] indexed by queue name
      */
-    const SYSTEM_EVENT_GET_CUSTOM_QUEUES = 'system_event_get_custom_queues';
+    public const SYSTEM_EVENT_GET_CUSTOM_QUEUES = 'system_event_get_custom_queues';
 
     /**
      * Get an instance of service object corresponding to $row
@@ -322,7 +321,7 @@ class Event {
      * Example (in tracker plugin):
      * $params['classnames']['plugin_tracker'] = 'ServiceTracker';
      */
-    const SERVICE_CLASSNAMES = 'service_classnames';
+    public const SERVICE_CLASSNAMES = 'service_classnames';
 
     /**
      * Display javascript snippets in the page header (<head>)
@@ -332,7 +331,7 @@ class Event {
      * Expected result:
      *   Javascript snippets are directly output to the browser
      */
-    const JAVASCRIPT = 'javascript';
+    public const JAVASCRIPT = 'javascript';
 
     /**
      * Manage the toggle of an element
@@ -344,7 +343,7 @@ class Event {
      * Expected result:
      *  'done' => set to true if the element has been toggled
      */
-    const TOGGLE = 'toggle';
+    public const TOGGLE = 'toggle';
 
     /**
      * Let display a sparkline next to a cross reference
@@ -358,7 +357,7 @@ class Event {
      * Expected result:
      *   'sparkline' => The url to the sparkline image
      */
-    const AJAX_REFERENCE_SPARKLINE = 'ajax_reference_sparkline';
+    public const AJAX_REFERENCE_SPARKLINE = 'ajax_reference_sparkline';
 
     /**
      * Say if we can display a [remove] button on a given wiki page
@@ -370,7 +369,7 @@ class Event {
      * Expected result:
      *   'display_remove_button' => boolean, true if ok false otherwise
      */
-    const WIKI_DISPLAY_REMOVE_BUTTON = 'wiki_display_remove_button';
+    public const WIKI_DISPLAY_REMOVE_BUTTON = 'wiki_display_remove_button';
 
     /**
      * Allow to replace the default SVN_Apache_Auth object to be used for
@@ -381,7 +380,7 @@ class Event {
      *     'cache_parameters'          => Parameters concerning SVN authentication cache
      *     'svn_apache_auth'           => SVN_Apache_Auth, object to generate the conf if relevant
      */
-    const SVN_APACHE_AUTH = 'svn_apache_auth';
+    public const SVN_APACHE_AUTH = 'svn_apache_auth';
 
     /**
      * Extends doc to soap types.
@@ -392,7 +391,7 @@ class Event {
      * Expected results
      *     'doc2soap_types' => The extended map of doc -> soap types
      */
-    const WSDL_DOC2SOAP_TYPES = 'wsdl_doc2soap_types';
+    public const WSDL_DOC2SOAP_TYPES = 'wsdl_doc2soap_types';
 
     /**
      * Check that the update of members of an ugroup is allowed or not.
@@ -403,7 +402,7 @@ class Event {
      * Expected results
      *     'allowed' => Boolean indicating that the update of members of the ugroup is allowed
      */
-    const  UGROUP_UPDATE_USERS_ALLOWED = 'ugroup_update_users_allowed';
+    public const  UGROUP_UPDATE_USERS_ALLOWED = 'ugroup_update_users_allowed';
 
     /**
      * Raised when an ugroup is bound to another one
@@ -415,7 +414,7 @@ class Event {
      * Expected results:
      *     void
      */
-    const UGROUP_MANAGER_UPDATE_UGROUP_BINDING_ADD = 'ugroup_manager_update_ugroup_binding_add';
+    public const UGROUP_MANAGER_UPDATE_UGROUP_BINDING_ADD = 'ugroup_manager_update_ugroup_binding_add';
 
     /**
      * Raised when an ugroup binding is removed
@@ -426,7 +425,7 @@ class Event {
      * Expected results:
      *     void
      */
-    const UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE = 'ugroup_manager_update_ugroup_binding_remove';
+    public const UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE = 'ugroup_manager_update_ugroup_binding_remove';
 
     /**
      * Get ldap login for a given user
@@ -437,7 +436,7 @@ class Event {
      * Expected results:
      *    'login' => String, ldap username
      */
-    const GET_LDAP_LOGIN_NAME_FOR_USER = 'get_ldap_login_name_for_user';
+    public const GET_LDAP_LOGIN_NAME_FOR_USER = 'get_ldap_login_name_for_user';
 
     /**
      * Event launched during the system check event
@@ -448,7 +447,7 @@ class Event {
      * Expected results:
      *    An exception is raised if the system check is in error
      */
-    const PROCCESS_SYSTEM_CHECK = 'proccess_system_check';
+    public const PROCCESS_SYSTEM_CHECK = 'proccess_system_check';
 
     /**
      * Event launched during the project creation
@@ -462,7 +461,7 @@ class Event {
      * Expected results:
      *  The link contains the right project information
      */
-    const SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK = 'service_replace_template_name_in_link';
+    public const SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK = 'service_replace_template_name_in_link';
 
     /**
      * Event launched while exporting a project into xml format
@@ -479,7 +478,7 @@ class Event {
      * Expected Results:
      *   The various plugins inject stuff in the given xml element
      */
-    const EXPORT_XML_PROJECT = 'export_xml_project';
+    public const EXPORT_XML_PROJECT = 'export_xml_project';
 
     /**
      * Event launched while importing a project from a xml content
@@ -495,7 +494,7 @@ class Event {
      * Expected Results:
      *   The various plugins create objects from the xml content
      */
-    const IMPORT_XML_PROJECT = 'import_xml_project';
+    public const IMPORT_XML_PROJECT = 'import_xml_project';
 
     /**
      * Event launched to check if a project can be imported from XML content
@@ -508,7 +507,7 @@ class Event {
      * Expected Results:
      *   'errors' => All errors messages have been collected
      */
-    const COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT = 'collect_errors_without_importing_xml_project';
+    public const COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT = 'collect_errors_without_importing_xml_project';
 
     /**
      * Event launched when compat cross ref needs to be imported from XML content
@@ -521,7 +520,7 @@ class Event {
      *   'project'       => The project being imported
      *   'configuration' => ImportConfig configuration of import
      */
-    const IMPORT_COMPAT_REF_XML = 'import_compat_ref_xml';
+    public const IMPORT_COMPAT_REF_XML = 'import_compat_ref_xml';
 
     /**
      * Event launched while importing a project from a xml content
@@ -539,7 +538,7 @@ class Event {
      * Expected Results:
      *   The various plugins create objects from the xml content
      */
-    const IMPORT_XML_PROJECT_TRACKER_DONE = 'import_xml_project_tracker_done';
+    public const IMPORT_XML_PROJECT_TRACKER_DONE = 'import_xml_project_tracker_done';
 
     /**
      * Event raised to display the list of deleted Trackers
@@ -547,7 +546,7 @@ class Event {
      * Expected results:
      *     Void
      */
-    const LIST_DELETED_TRACKERS = 'display_deleted_trackers';
+    public const LIST_DELETED_TRACKERS = 'display_deleted_trackers';
 
     /**
      * Event launched while importing a cardwall from a xml content
@@ -560,7 +559,7 @@ class Event {
      * Expected Results:
      *   The various plugins create objects from the xml content
      */
-    const IMPORT_XML_PROJECT_CARDWALL_DONE = 'import_xml_project_cardwall_done';
+    public const IMPORT_XML_PROJECT_CARDWALL_DONE = 'import_xml_project_cardwall_done';
 
     /**
      * Event raised when svn hooks are updated
@@ -571,7 +570,7 @@ class Event {
      * Expected results:
      *     Void
      */
-    const SVN_UPDATE_HOOKS = 'svn_update_hooks';
+    public const SVN_UPDATE_HOOKS = 'svn_update_hooks';
 
     /**
      * Event raised when admin define project to authorize SVN tokens
@@ -582,7 +581,7 @@ class Event {
      * Expected results:
      *     Void
      */
-    const SVN_AUTHORIZE_TOKENS = 'svn_authorize_tokens';
+    public const SVN_AUTHORIZE_TOKENS = 'svn_authorize_tokens';
 
     /**
      * Event raised when admin revoke project authorization for SVN tokens
@@ -590,12 +589,12 @@ class Event {
      * Expected results:
      *     Void
      */
-    const SVN_REVOKE_TOKENS = 'svn_revoke_tokens';
+    public const SVN_REVOKE_TOKENS = 'svn_revoke_tokens';
 
     /**
      * Event raised when an admin changes the SVN authentication cache parameters
      */
-    const SVN_AUTH_CACHE_CHANGE = 'svn_auth_cache_change';
+    public const SVN_AUTH_CACHE_CHANGE = 'svn_auth_cache_change';
 
     /**
      * Event raised to see if additional info must be displayed in SVN homepage
@@ -607,7 +606,7 @@ class Event {
      *     'svn_intro_info'      => mixed
      *
      */
-    const SVN_INTRO = 'svn_intro';
+    public const SVN_INTRO = 'svn_intro';
 
     /**
      * Event raised when a project has a new parent
@@ -619,7 +618,7 @@ class Event {
      * Expected results:
      *     Void
      */
-    const PROJECT_SET_PARENT_PROJECT= 'project_set_parent_project';
+    public const PROJECT_SET_PARENT_PROJECT= 'project_set_parent_project';
 
     /**
      *  Event raised when project parent is removed
@@ -630,7 +629,7 @@ class Event {
      * Expected results:
      *     Void
      */
-    const PROJECT_UNSET_PARENT_PROJECT= 'project_unset_parent_project';
+    public const PROJECT_UNSET_PARENT_PROJECT= 'project_unset_parent_project';
 
     /**
      * Build search entries in Layout
@@ -640,14 +639,14 @@ class Event {
      *     'search_entries' => Array (OUT) where to add entries
      *     'hidden_fields'  => Array (OUT) add extra info on search
      */
-    const LAYOUT_SEARCH_ENTRY = 'layout_search_entry';
+    public const LAYOUT_SEARCH_ENTRY = 'layout_search_entry';
 
     /**
      * Fetches the sidebar options for searching on the serach homepgae. This is
      * only for display; it does not execute any search query whilst fetching
      * the search sidebar options.
      */
-    const SEARCH_TYPES_PRESENTERS = 'search_types_presenters';
+    public const SEARCH_TYPES_PRESENTERS = 'search_types_presenters';
 
     /**
      * Sends-out a search a query
@@ -656,7 +655,7 @@ class Event {
      *  'query'   => Search_SearchQuery - object representing query details
      *  'results' => Search_SearchResults - search results object
      */
-    const SEARCH_TYPE = 'search_type';
+    public const SEARCH_TYPE = 'search_type';
 
     /**
      * Register REST resources
@@ -664,7 +663,7 @@ class Event {
      * Parameters:
      *  'restler' => \Luracast\Restler\Restler
      */
-    const REST_RESOURCES = 'rest_resources';
+    public const REST_RESOURCES = 'rest_resources';
 
     /**
      * Register REST resources for v2
@@ -672,7 +671,7 @@ class Event {
      * Parameters:
      *  'restler' => \Luracast\Restler\Restler
      */
-    const REST_RESOURCES_V2 = 'rest_resources_v2';
+    public const REST_RESOURCES_V2 = 'rest_resources_v2';
 
 
     /**
@@ -683,7 +682,7 @@ class Event {
      *  'current_user' => PFUser
      *  'informations  => array
      */
-    const REST_PROJECT_ADDITIONAL_INFORMATIONS = 'rest_project_additional_informations';
+    public const REST_PROJECT_ADDITIONAL_INFORMATIONS = 'rest_project_additional_informations';
 
     /**
      * Check if the old password is required to change the current password
@@ -691,7 +690,7 @@ class Event {
      * Parameters:
      *   'old_password_required' => Boolean (OUT)
      */
-    const IS_OLD_PASSWORD_REQUIRED_FOR_PASSWORD_CHANGE = 'old_password_required_for_password_change';
+    public const IS_OLD_PASSWORD_REQUIRED_FOR_PASSWORD_CHANGE = 'old_password_required_for_password_change';
 
     /**
      * Allow plugin to deal with authentication
@@ -703,7 +702,7 @@ class Event {
      * 'auth_user_id'     => Boolean (OUT)
      * 'auth_user_status' => String  (OUT)
      */
-    const SESSION_BEFORE_LOGIN = 'session_before_login';
+    public const SESSION_BEFORE_LOGIN = 'session_before_login';
 
     /**
      * Allow plugin to deal after authentication
@@ -712,7 +711,7 @@ class Event {
      * 'user'                => PFUser  (IN)
      * 'allow_codendi_login' => Boolean (OUT)
      */
-    const SESSION_AFTER_LOGIN = 'session_after_login';
+    public const SESSION_AFTER_LOGIN = 'session_after_login';
 
     /**
      * Allow plugin to add another ways to log in
@@ -720,7 +719,7 @@ class Event {
      * Parameters:
      * 'login_additional_connector' => string
      */
-    const LOGIN_ADDITIONAL_CONNECTOR = 'login_additional_connector';
+    public const LOGIN_ADDITIONAL_CONNECTOR = 'login_additional_connector';
 
     /**
      * Get the login, can be used to redirect a non logged user for example
@@ -729,7 +728,7 @@ class Event {
      *   'return_to' => string (IN)
      *   'login_url' => string (OUT)
      */
-    const GET_LOGIN_URL = 'get_login_url';
+    public const GET_LOGIN_URL = 'get_login_url';
 
     /**
      * Allow plugin to add fields in the user register form
@@ -738,7 +737,7 @@ class Event {
      * 'request' => HTTPRequest (IN)
      * 'field'   => string      (OUT)
      */
-    const USER_REGISTER_ADDITIONAL_FIELD = 'user_register_additional_field';
+    public const USER_REGISTER_ADDITIONAL_FIELD = 'user_register_additional_field';
 
     /**
      * Allow plugin to deal before user registration
@@ -746,7 +745,7 @@ class Event {
      * 'request'               => HTTPRequest (IN)
      * 'is_registration_valid' => bool (OUT)
      */
-    const BEFORE_USER_REGISTRATION = 'before_user_registration';
+    public const BEFORE_USER_REGISTRATION = 'before_user_registration';
 
     /**
      * Allow plugin to deal after user registration
@@ -754,7 +753,7 @@ class Event {
      * 'user_id' => int (IN)
      * 'request' => HTTPRequest (IN)
      */
-    const AFTER_USER_REGISTRATION = 'after_user_registration';
+    public const AFTER_USER_REGISTRATION = 'after_user_registration';
 
     /**
      * Event raised to get plannings from a project with REST
@@ -766,7 +765,7 @@ class Event {
      *     'offset'  => int
      *     'result'  => array
      */
-    const REST_GET_PROJECT_PLANNINGS = 'rest_get_project_plannings';
+    public const REST_GET_PROJECT_PLANNINGS = 'rest_get_project_plannings';
 
     /**
      * Event raised to get plannings options from a project with REST
@@ -778,7 +777,7 @@ class Event {
      *     'offset'  => int
      *     'result'  => array
      */
-    const REST_OPTIONS_PROJECT_PLANNINGS = 'rest_options_project_plannings';
+    public const REST_OPTIONS_PROJECT_PLANNINGS = 'rest_options_project_plannings';
 
     /**
      * Event raised to get the list of resources associated with a project
@@ -788,7 +787,7 @@ class Event {
      *     'project'   => Project
      *     'resources' => array
      */
-    const REST_PROJECT_RESOURCES = 'rest_project_resources';
+    public const REST_PROJECT_RESOURCES = 'rest_project_resources';
 
     /**
      * Event raised to get top milestones from a project with REST
@@ -803,7 +802,7 @@ class Event {
      *     'order'               => string
      *     'result'              => array
      */
-    const REST_GET_PROJECT_MILESTONES = 'rest_get_project_milestones';
+    public const REST_GET_PROJECT_MILESTONES = 'rest_get_project_milestones';
 
     /**
      * Event raised to get trackers from a project with REST
@@ -816,7 +815,7 @@ class Event {
      *     'offset'         => int
      *     'result'         => array
      */
-    const REST_GET_PROJECT_TRACKERS = 'rest_get_project_trackers';
+    public const REST_GET_PROJECT_TRACKERS = 'rest_get_project_trackers';
 
     /**
      * Event raised to get top backlog items from a project with REST
@@ -828,7 +827,7 @@ class Event {
      *     'offset'  => int
      *     'result'  => array
      */
-    const REST_GET_PROJECT_BACKLOG = 'rest_get_project_backlog';
+    public const REST_GET_PROJECT_BACKLOG = 'rest_get_project_backlog';
 
     /**
      * Event raised to get top milestones options from a project with REST
@@ -840,7 +839,7 @@ class Event {
      *     'offset'  => int
      *     'result'  => array
      */
-    const REST_OPTIONS_PROJECT_MILESTONES = 'rest_options_project_milestones';
+    public const REST_OPTIONS_PROJECT_MILESTONES = 'rest_options_project_milestones';
 
     /**
      * Event raised to get trackers options from a project with REST
@@ -852,7 +851,7 @@ class Event {
      *     'offset'  => int
      *     'result'  => array
      */
-    const REST_OPTIONS_PROJECT_TRACKERS = 'rest_options_project_trackers';
+    public const REST_OPTIONS_PROJECT_TRACKERS = 'rest_options_project_trackers';
 
     /**
      * Event raised to get top backlog items options from a project with REST
@@ -864,7 +863,7 @@ class Event {
      *     'offset'  => int
      *     'result'  => array
      */
-    const REST_OPTIONS_PROJECT_BACKLOG = 'rest_options_project_backlog';
+    public const REST_OPTIONS_PROJECT_BACKLOG = 'rest_options_project_backlog';
 
     /**
      * Event raised to order top backlog items from a project with REST
@@ -876,7 +875,7 @@ class Event {
      *     'offset'  => int
      *     'result'  => array
      */
-    const REST_PUT_PROJECT_BACKLOG = 'rest_put_project_backlog';
+    public const REST_PUT_PROJECT_BACKLOG = 'rest_put_project_backlog';
 
     /**
      * Event raised to order top backlog items from a project with REST
@@ -887,7 +886,7 @@ class Event {
      *     'order'   => OrderRepresentation
      *     'result'  => array
      */
-    const REST_PATCH_PROJECT_BACKLOG = 'rest_patch_project_backlog';
+    public const REST_PATCH_PROJECT_BACKLOG = 'rest_patch_project_backlog';
 
     /**
      * Fetch interface html to manage 3rd party apps
@@ -896,7 +895,7 @@ class Event {
      *     'user' => PFUser
      *     'html' => string
      */
-    const MANAGE_THIRD_PARTY_APPS = 'manage_third_party_apps';
+    public const MANAGE_THIRD_PARTY_APPS = 'manage_third_party_apps';
 
     /**
      * Detect the project id in a url
@@ -910,7 +909,7 @@ class Event {
      * @deprecated
      * @see \Tuleap\Request\DispatchableWithProject
      */
-    const GET_PROJECTID_FROM_URL = 'get_projectid_from_url';
+    public const GET_PROJECTID_FROM_URL = 'get_projectid_from_url';
 
     /**
      * Gives the path to the ftp incoming folder
@@ -922,7 +921,7 @@ class Event {
      * Expected result:
      *  'src_dir' => string
      */
-    const GET_FTP_INCOMING_DIR = 'get_ftp_incoming_dir';
+    public const GET_FTP_INCOMING_DIR = 'get_ftp_incoming_dir';
 
     /**
      * Sends-out an event to see if the user can access a page.
@@ -936,7 +935,7 @@ class Event {
      * Expected result:
      *    'can_access' => boolean
      */
-    const HAS_USER_BEEN_DELEGATED_ACCESS = 'has_user_been_delegated_access';
+    public const HAS_USER_BEEN_DELEGATED_ACCESS = 'has_user_been_delegated_access';
 
     /**
      * Sends-out an event to get all services that handle independently restricted users
@@ -947,7 +946,7 @@ class Event {
      * Expected result:
      *    'allowed_services' => array
      */
-    const GET_SERVICES_ALLOWED_FOR_RESTRICTED = 'get_services_allowed_for_restricted';
+    public const GET_SERVICES_ALLOWED_FOR_RESTRICTED = 'get_services_allowed_for_restricted';
 
     /**
      * We are writing aliases, so if you have any it is time to give them.
@@ -955,7 +954,7 @@ class Event {
      * Expected result:
      *      'aliases' => System_Alias[]
      */
-    const BACKEND_ALIAS_GET_ALIASES = 'backend_alias_get_aliases';
+    public const BACKEND_ALIAS_GET_ALIASES = 'backend_alias_get_aliases';
 
     /**
      *  Parameters:
@@ -963,14 +962,14 @@ class Event {
      *      'success'     => boolean (true by default)
      *      'new_name'    => string
      */
-    const RENAME_PROJECT = 'rename_project';
+    public const RENAME_PROJECT = 'rename_project';
 
     /**
      *  Parameters:
      *      'executed_events_ids' => array
      *      'queue_name'          => string
      */
-    const POST_SYSTEM_EVENTS_ACTIONS = 'post_system_events_actions';
+    public const POST_SYSTEM_EVENTS_ACTIONS = 'post_system_events_actions';
 
     /**
      * Event raised to get project's Git repositories information with REST
@@ -986,7 +985,7 @@ class Event {
      *     'order_by'        => String push_date|path
      *     'total_git_repo'  => int
      */
-    const REST_PROJECT_GET_GIT = 'rest_project_get_git';
+    public const REST_PROJECT_GET_GIT = 'rest_project_get_git';
 
     /**
      * Event raised to know if Git plugin is activated for REST
@@ -994,7 +993,7 @@ class Event {
      * Parameters:
      *     'activated' => boolean
      */
-    const REST_PROJECT_OPTIONS_GIT = 'rest_project_options_git';
+    public const REST_PROJECT_OPTIONS_GIT = 'rest_project_options_git';
 
     /**
      * Event raised to know if agiledashboard plugin is activated for REST
@@ -1002,7 +1001,7 @@ class Event {
      * Parameters:
      *     'available' => boolean
      */
-    const REST_PROJECT_AGILE_ENDPOINTS = 'rest_project_agile_endpoints';
+    public const REST_PROJECT_AGILE_ENDPOINTS = 'rest_project_agile_endpoints';
 
     /**
      * Throw an event to allow a plugin to refdefine the type of search
@@ -1013,7 +1012,7 @@ class Event {
      *     'project_id'   => int,
      *     'user'         => PFUser,
      */
-    const REDEFINE_SEARCH_TYPE = 'redefine_search_type';
+    public const REDEFINE_SEARCH_TYPE = 'redefine_search_type';
 
     /**
      * When access level of project changes
@@ -1024,12 +1023,12 @@ class Event {
      *      'old_access' => string (previous access)
      *
      */
-    const PROJECT_ACCESS_CHANGE = 'project_access_change';
+    public const PROJECT_ACCESS_CHANGE = 'project_access_change';
 
     /**
      * When access level of platform changes
      */
-    const SITE_ACCESS_CHANGE = 'site_access_change';
+    public const SITE_ACCESS_CHANGE = 'site_access_change';
 
     /**
      * When a user account is created
@@ -1037,7 +1036,7 @@ class Event {
      * Parameter:
      *     'user' => PFUser
      */
-    const USER_MANAGER_CREATE_ACCOUNT = 'user_manager_create_account';
+    public const USER_MANAGER_CREATE_ACCOUNT = 'user_manager_create_account';
 
     /**
      * When a user account is created
@@ -1047,7 +1046,7 @@ class Event {
      *     'user'       => PFUser
      *     'project'    => Project
      */
-    const CAN_USER_ACCESS_UGROUP_INFO = 'can_user_access_ugroup_info';
+    public const CAN_USER_ACCESS_UGROUP_INFO = 'can_user_access_ugroup_info';
 
     /**
      * Gather the services allowed for a given project
@@ -1056,7 +1055,7 @@ class Event {
      *     'project'  => Project (IN)
      *     'services' => array of allowed services (OUT)
      */
-    const SERVICES_ALLOWED_FOR_PROJECT = 'services_allowed_for_project';
+    public const SERVICES_ALLOWED_FOR_PROJECT = 'services_allowed_for_project';
 
     /**
      * Gather the services who can send truncated emails
@@ -1065,7 +1064,7 @@ class Event {
      *     'project'  => Project
      *     'services' => array
      */
-    const SERVICES_TRUNCATED_EMAILS = 'services_truncated_emails';
+    public const SERVICES_TRUNCATED_EMAILS = 'services_truncated_emails';
 
     /**
      * Allow plugins to insert links in the builded navbar
@@ -1075,7 +1074,7 @@ class Event {
      *   'selected_top_tab' => (string) current tab, to know if added item can be flaged as active
      *   'request_uri'      => (string)
      */
-    const NAVBAR_ITEMS = 'navbar_items';
+    public const NAVBAR_ITEMS = 'navbar_items';
 
     /**
      * Retrieve sql fragments in ordoer to retrieve all repositories of all projects.
@@ -1090,7 +1089,7 @@ class Event {
      * Parameters:
      *      'sql_fragments' => array
      */
-    const GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS = 'get_svn_list_repositories_sql_fragments';
+    public const GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS = 'get_svn_list_repositories_sql_fragments';
 
     /**
      * When a user group is modified
@@ -1100,7 +1099,7 @@ class Event {
      *   'new_ugroup_name' => String|null
      *   'old_ugroup_name' => String|null
      */
-    const UGROUP_MODIFY = 'ugroup_modify';
+    public const UGROUP_MODIFY = 'ugroup_modify';
 
     /**
      * When a user is added to a project
@@ -1108,7 +1107,7 @@ class Event {
      * Paramters:
      *   'project'         => Project
      */
-    const MEMBERSHIP_CREATE = 'membership_create';
+    public const MEMBERSHIP_CREATE = 'membership_create';
 
     /**
      * When a user is removed to a project
@@ -1116,7 +1115,7 @@ class Event {
      * Paramters:
      *   'project' => Project
      */
-    const MEMBERSHIP_DELETE = 'membership_delete';
+    public const MEMBERSHIP_DELETE = 'membership_delete';
 
     /**
      * Retrieve project_id for an artifact reference
@@ -1125,7 +1124,7 @@ class Event {
      *   artifact_id => int
      *   reference   => Reference
      */
-    const SET_ARTIFACT_REFERENCE_GROUP_ID = 'set_artifact_reference_group_id';
+    public const SET_ARTIFACT_REFERENCE_GROUP_ID = 'set_artifact_reference_group_id';
 
     /**
      * Toggle usage of a service
@@ -1135,7 +1134,7 @@ class Event {
      *   is_used   => boolean
      *   group_id  => int
      */
-    const SERVICE_IS_USED = 'service_is_used';
+    public const SERVICE_IS_USED = 'service_is_used';
 
     /**
      * Allow plugins to add user actions in the navbar
@@ -1144,7 +1143,7 @@ class Event {
      *  - user    => (input)  PFUser
      *  - actions => (output) Tuleap\User\UserActionPresenter[]
      */
-    const USER_ACTIONS = "user_actions";
+    public const USER_ACTIONS = "user_actions";
 
     /**
      * When an SVN repository is created
@@ -1153,7 +1152,7 @@ class Event {
      *  - project_id => (input) int
      *
      */
-    const SVN_REPOSITORY_CREATED = 'svn_repository_created';
+    public const SVN_REPOSITORY_CREATED = 'svn_repository_created';
 
     /**
      * When a project is created, ask plugins if some actions must be made for ugroup duplication
@@ -1163,7 +1162,7 @@ class Event {
      *  - new_ugroup_id => (input) int
      *
      */
-    const UGROUP_DUPLICATION = 'ugroup_duplication';
+    public const UGROUP_DUPLICATION = 'ugroup_duplication';
     /**
      * When a project is created, ask plugins if they authorized project creation
      *
@@ -1171,7 +1170,7 @@ class Event {
      *  - xml_content => (input) SimpleXmlElement
      *
      */
-    const IMPORT_XML_IS_PROJECT_VALID = 'import_xml_is_project_valid';
+    public const IMPORT_XML_IS_PROJECT_VALID = 'import_xml_is_project_valid';
 
     /**
      * CSS stylesheets that will be added to the page's <head>
@@ -1182,7 +1181,7 @@ class Event {
      *
      * @deprecated
      */
-    const BURNING_PARROT_GET_STYLESHEETS = 'burning_parrot_get_stylesheets';
+    public const BURNING_PARROT_GET_STYLESHEETS = 'burning_parrot_get_stylesheets';
 
     /**
      * JavaScript files that will be added to the page's <footer>
@@ -1192,7 +1191,7 @@ class Event {
      *
      * @deprecated
      */
-    const BURNING_PARROT_GET_JAVASCRIPT_FILES = 'burning_parrot_get_javascript_files';
+    public const BURNING_PARROT_GET_JAVASCRIPT_FILES = 'burning_parrot_get_javascript_files';
 
     /**
      * Event raised when site admin wants to send email to the platform
@@ -1202,7 +1201,7 @@ class Event {
      *    'message'     => <string>,
      *    'subject'     => <string>
      */
-    const MASSMAIL = 'massmail';
+    public const MASSMAIL = 'massmail';
 
 
     /**
@@ -1210,7 +1209,7 @@ class Event {
      *
      * Parameters:
      */
-    const AFTER_MASSMAIL_TO_PROJECT_ADMINS = 'after_massmail_to_project_admins';
+    public const AFTER_MASSMAIL_TO_PROJECT_ADMINS = 'after_massmail_to_project_admins';
 
     /**
      * Event sent to get whitelisted external scripts that can be loaded
@@ -1218,7 +1217,7 @@ class Event {
      * Parameters:
      * 'whitelist_scripts' => array (OUT)
      */
-    const CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST = 'content_security_policy_script_whitelist';
+    public const CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST = 'content_security_policy_script_whitelist';
 
     /**
      * Event sent at each hit
@@ -1227,12 +1226,12 @@ class Event {
      * 'is_script' => boolean (IN)
      * 'request'   => HTTPRequest (IN)
      */
-    const HIT = 'hit';
+    public const HIT = 'hit';
 
     /**
      * Event sent at the beginning of display the homepage
      */
-    const DISPLAYING_HOMEPAGE = 'displaying_homepage';
+    public const DISPLAYING_HOMEPAGE = 'displaying_homepage';
 
     /**
      * Event raised while displaying the user statistics widget on site admin homepage
@@ -1241,7 +1240,7 @@ class Event {
      *  - nb_users_by_status    => (in)  Tuleap\Admin\Homepage\NbUsersByStatus
      *  - additional_statistics => (out) Tuleap\Admin\Homepage\StatisticsPresenter[]
      */
-    const GET_SITEADMIN_HOMEPAGE_USER_STATISTICS = 'get_siteadmin_homepage_user_statistics';
+    public const GET_SITEADMIN_HOMEPAGE_USER_STATISTICS = 'get_siteadmin_homepage_user_statistics';
 
     /**
      * Event raised to collect warnings to be displayed to the site admins on their personal page
@@ -1251,7 +1250,7 @@ class Event {
      *  - nb_users_by_status => (in)  Tuleap\Admin\Homepage\NbUsersByStatus
      *  - warnings           => (out) string[] (html snippets)
      */
-    const GET_SITEADMIN_WARNINGS = 'get_siteadmin_warnings';
+    public const GET_SITEADMIN_WARNINGS = 'get_siteadmin_warnings';
 
     /**
      * Event raised when references are extracted from a text (commit message, follow-up comments, …).
@@ -1261,7 +1260,7 @@ class Event {
      *  - cross_reference            => CrossReference (IN)
      *  - reverse_reference_instance => ReferenceInstance (IN)
      */
-    const POST_REFERENCE_EXTRACTED = 'post_reference_extracted';
+    public const POST_REFERENCE_EXTRACTED = 'post_reference_extracted';
 
     /**
      * Event raised to remove a cross reference in the db.
@@ -1271,7 +1270,7 @@ class Event {
      *  - cross_reference      => CrossReference (IN)
      *  - is_reference_removed => bool (OUT)
      */
-    const REMOVE_CROSS_REFERENCE = 'remove_cross_reference';
+    public const REMOVE_CROSS_REFERENCE = 'remove_cross_reference';
 
     /**
      * Event raised to know if a reference can be edited/deleted
@@ -1281,7 +1280,7 @@ class Event {
      *  - can_be_deleted => bool (OUT)
      *  - can_be_edited  => bool (OUT)
      */
-    const GET_REFERENCE_ADMIN_CAPABILITIES = 'get_reference_admin_capabilities';
+    public const GET_REFERENCE_ADMIN_CAPABILITIES = 'get_reference_admin_capabilities';
 
     /**
      * All natures cannot be used by users
@@ -1290,7 +1289,7 @@ class Event {
      *  - nature         => string (IN) The name of the nature
      *  - can_be_created => bool (OUT)
      */
-    const CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE = 'can_user_create_reference_with_this_nature';
+    public const CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE = 'can_user_create_reference_with_this_nature';
 
     /**
      * Clear the user's history
@@ -1298,5 +1297,5 @@ class Event {
      * Parameters
      *  - user    => PFUser (IN)
      */
-    const USER_HISTORY_CLEAR = 'user_history_clear';
+    public const USER_HISTORY_CLEAR = 'user_history_clear';
 }

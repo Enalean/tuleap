@@ -18,16 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//phpcs:ignoreFile
-
-class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workflow_Action_Transitions {
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_Workflow_Action_Transitions_DefineWorkflow extends Tracker_Workflow_Action_Transitions
+{
     /** @var WorkflowFactory */
     private $workflow_factory;
 
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
 
-    public function __construct(Tracker $tracker, WorkflowFactory $workflow_factory, Tracker_FormElementFactory $form_element_factory) {
+    public function __construct(Tracker $tracker, WorkflowFactory $workflow_factory, Tracker_FormElementFactory $form_element_factory)
+    {
         parent::__construct($tracker);
         $this->workflow_factory     = $workflow_factory;
         $this->form_element_factory = $form_element_factory;
@@ -43,7 +44,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
             $this->displayLegacy($workflow);
         }
 
-        echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title_define_transitions').'</h3>';
+        echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin', 'title_define_transitions').'</h3>';
 
         echo '<div class="workflow_transitions">';
         if ($workflow !== null) {
@@ -51,7 +52,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         } else {
             //Display creation form
             echo '<p>';
-            echo $GLOBALS['Language']->getText('workflow_admin','choose_field');
+            echo $GLOBALS['Language']->getText('workflow_admin', 'choose_field');
             echo '<p>';
 
             echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
@@ -70,33 +71,32 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
             echo '<br>';
             echo '<input type="submit" name="create" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
             echo '</form>';
-
         }
         echo '</div>';
         $this->displayFooter($layout);
     }
 
-     private function displayAdminWorkflow(
-         TrackerManager $layout,
-         Codendi_Request $request,
-         PFUser $current_user,
-         Workflow $workflow
-     ) {
-         if (! $workflow->isAdvanced()) {
-             echo '<div class="alert alert-warning">';
-             echo '<p>';
-             echo dgettext('tuleap-tracker', "This workflow is in simple mode and cannot be displayed in legacy UI.");
-             echo '</p>';
-             echo '</div>';
+    private function displayAdminWorkflow(
+        TrackerManager $layout,
+        Codendi_Request $request,
+        PFUser $current_user,
+        Workflow $workflow
+    ) {
+        if (! $workflow->isAdvanced()) {
+            echo '<div class="alert alert-warning">';
+            echo '<p>';
+            echo dgettext('tuleap-tracker', "This workflow is in simple mode and cannot be displayed in legacy UI.");
+            echo '</p>';
+            echo '</div>';
 
-             return;
-         }
+            return;
+        }
 
-         echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(
+        echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(
             array(
-                'tracker' => (int)$this->tracker->id,
-                'func'    => Workflow::FUNC_ADMIN_TRANSITIONS)
-            ) .'" method="POST">';
+               'tracker' => (int)$this->tracker->id,
+               'func'    => Workflow::FUNC_ADMIN_TRANSITIONS)
+        ) .'" method="POST">';
 
         $this->displayField($workflow);
         $this->displayEnabled($workflow);
@@ -104,15 +104,16 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         $this->displayTransitionsMatrix($workflow, $layout, $request, $current_user);
         echo '<input type="submit" name="transitions" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         echo '</form>';
-     }
+    }
 
-    private function displayField(Workflow $workflow) {
+    private function displayField(Workflow $workflow)
+    {
         $field = $this->form_element_factory->getFormElementById($workflow->field_id);
         $hp = Codendi_HTMLPurifier::instance();
         echo '<p>';
-        echo '<label>'. $GLOBALS['Language']->getText('workflow_admin','field') .'</label> ';
+        echo '<label>'. $GLOBALS['Language']->getText('workflow_admin', 'field') .'</label> ';
         echo '<strong>'. $hp->purify($field->label) .'</strong>';
-        $delete_title = $GLOBALS['Language']->getText('workflow_admin','delete');
+        $delete_title = $GLOBALS['Language']->getText('workflow_admin', 'delete');
         $delete_url = TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'tracker' => (int)$this->tracker->id,
@@ -120,7 +121,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
                 'delete'  => (int)$workflow->workflow_id
             )
         );
-        $onclick = 'return confirm(\''.addslashes($GLOBALS['Language']->getText('workflow_admin','delete_workflow')).'\')';
+        $onclick = 'return confirm(\''.addslashes($GLOBALS['Language']->getText('workflow_admin', 'delete_workflow')).'\')';
         echo ' <a href="'. $delete_url .'" onClick="'. $onclick .'" title="'. $delete_title .'">';
         echo $GLOBALS['HTML']->getImage('ic/cross.png', array('style' => 'vertical-align:middle;'));
         echo '</a>';
@@ -149,7 +150,8 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         echo '</form>';
     }
 
-    private function displayEnabled(Workflow $workflow) {
+    private function displayEnabled(Workflow $workflow)
+    {
         $checked    = '';
         $classnames = '';
         if ($workflow->is_used) {
@@ -169,7 +171,8 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         echo '</div>';
     }
 
-    protected function displayTransitionsMatrix($workflow, $layout, $request, $current_user) {
+    protected function displayTransitionsMatrix($workflow, $layout, $request, $current_user)
+    {
         $workflow = $this->workflow_factory->getWorkflowByTrackerId($this->tracker->id);
         $field = $this->form_element_factory->getFormElementById($workflow->field_id);
         if ($workflow->hasTransitions()) {

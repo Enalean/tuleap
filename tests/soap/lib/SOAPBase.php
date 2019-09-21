@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-// phpcs:ignoreFile
-
-class SOAPBase extends \PHPUnit\Framework\TestCase
+class SOAPBase extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     protected $server_base_url;

@@ -22,8 +22,7 @@
 
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 
-//phpcs:ignoreFile
-class Transition
+class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const EXPORT_XML_FROM_NEW_VALUE = "null";
 
@@ -68,16 +67,21 @@ class Transition
     /**
      * Constructor
      *
-     * @param Integer                                   $transition_id Id of the transition
-     * @param Integer                                   $workflow_id   Id of the workflow
+     * @param int|null $transition_id Id of the transition
+     * @param int $workflow_id Id of the workflow
      * @param Tracker_FormElement_Field_List_Value|null $from          Source value
      * @param Tracker_FormElement_Field_List_Value|null $to            Destination value
      */
-    public function __construct($transition_id, $workflow_id, $from, $to) {
+    public function __construct($transition_id, $workflow_id, $from, $to)
+    {
         $this->transition_id = $transition_id;
         $this->workflow_id   = $workflow_id;
-        $this->from          = $from;
-        $this->to            = $to;
+        if ($from !== null) {
+            $this->from = $from;
+        }
+        if ($to !== null) {
+            $this->to = $to;
+        }
     }
 
     /**
@@ -85,7 +89,8 @@ class Transition
      *
      * @param Workflow $workflow Workflow
      */
-    public function setWorkflow(Workflow $workflow) {
+    public function setWorkflow(Workflow $workflow)
+    {
         $this->workflow = $workflow;
     }
 
@@ -94,7 +99,8 @@ class Transition
      *
      * @return Tracker_FormElement_Field_List_Value
      */
-    public function getFieldValueFrom() {
+    public function getFieldValueFrom()
+    {
         return $this->from;
     }
 
@@ -103,7 +109,8 @@ class Transition
      *
      * @return Tracker_FormElement_Field_List_Value
      */
-    public function getFieldValueTo() {
+    public function getFieldValueTo()
+    {
         return $this->to;
     }
 
@@ -114,7 +121,8 @@ class Transition
      *
      * @return bool
      */
-    public function equals(Transition $transition) {
+    public function equals(Transition $transition)
+    {
         $source_from = $this->getFieldValueFrom();
         $source_to   = $this->getFieldValueTo();
         $target_from = $transition->getFieldValueFrom();
@@ -140,11 +148,13 @@ class Transition
      *
      * @return int
      */
-    public function getTransitionId() {
+    public function getTransitionId()
+    {
         return $this->transition_id;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->transition_id;
     }
 
@@ -155,7 +165,8 @@ class Transition
      *
      * @return int
      */
-    public function setTransitionId($id) {
+    public function setTransitionId($id)
+    {
         $this->transition_id = $id;
     }
 
@@ -165,7 +176,8 @@ class Transition
      * @return Workflow
      * @throws OrphanTransitionException if this transition has no workflow
      */
-    public function getWorkflow() {
+    public function getWorkflow()
+    {
         if (!$this->workflow) {
             $this->workflow = WorkflowFactory::instance()->getWorkflow($this->workflow_id);
         }
@@ -175,13 +187,15 @@ class Transition
         return $this->workflow;
     }
 
-    public function displayTransitionDetails() {
+    public function displayTransitionDetails()
+    {
     }
 
     /**
      * @return int
      */
-    public function getGroupId() {
+    public function getGroupId()
+    {
         return $this->getWorkflow()->getTracker()->getGroupId();
     }
 
@@ -193,7 +207,8 @@ class Transition
      *
      * @return void
      */
-    public function before(&$fields_data, PFUser $current_user) {
+    public function before(&$fields_data, PFUser $current_user)
+    {
         $post_actions = $this->getPostActions();
         foreach ($post_actions as $post_action) {
             $post_action->before($fields_data, $current_user);
@@ -206,7 +221,8 @@ class Transition
      * @param Tracker_Artifact_Changeset $changeset
      * @return void
      */
-    public function after(Tracker_Artifact_Changeset $changeset) {
+    public function after(Tracker_Artifact_Changeset $changeset)
+    {
         $post_actions = $this->getPostActions();
         foreach ($post_actions as $post_action) {
             $post_action->after($changeset);
@@ -220,7 +236,8 @@ class Transition
      *
      * @return bool, true if the transition can occur, false otherwise
      */
-    public function validate($fields_data, Tracker_Artifact $artifact, $comment_body) {
+    public function validate($fields_data, Tracker_Artifact $artifact, $comment_body)
+    {
         return $this->getConditions()->validate($fields_data, $artifact, $comment_body);
     }
 
@@ -231,7 +248,8 @@ class Transition
      *
      * @return void
      */
-    public function setPostActions($post_actions) {
+    public function setPostActions($post_actions)
+    {
         $this->post_actions = $post_actions;
     }
 
@@ -240,7 +258,8 @@ class Transition
      *
      * @return Array
      */
-    public function getPostActions() {
+    public function getPostActions()
+    {
         return $this->post_actions;
     }
 
@@ -249,7 +268,8 @@ class Transition
      *
      * @return Array
      */
-    public function getAllPostActions() {
+    public function getAllPostActions()
+    {
         return array_merge($this->post_actions, $this->post_actions_after);
     }
 
@@ -258,7 +278,8 @@ class Transition
      *
      * @return Array
      */
-    public function getPostActionsAfter() {
+    public function getPostActionsAfter()
+    {
         return $this->post_actions_after;
     }
 
@@ -267,7 +288,8 @@ class Transition
      *
      * @return string html
      */
-    public function fetchPostActions() {
+    public function fetchPostActions()
+    {
         $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($post_actions = $this->getAllPostActions()) {
@@ -287,7 +309,7 @@ class Transition
 
                 // the delete buttton
                 $html .= '<input type="hidden" name="remove_postaction['. (int)$pa->getId() .']" value="0" />';
-                $html .= '<label class="pc_checkbox" title="'. $hp->purify($GLOBALS['Language']->getText('workflow_admin','remove_postaction')) .'">&nbsp';
+                $html .= '<label class="pc_checkbox" title="'. $hp->purify($GLOBALS['Language']->getText('workflow_admin', 'remove_postaction')) .'">&nbsp';
                 $html .= '<input type="checkbox" name="remove_postaction['. (int)$pa->getId() .']" value="1" />';
                 $html .= '</label>';
 
@@ -303,7 +325,8 @@ class Transition
     /**
      * @return string html permission form for the transition
      */
-    public function fetchConditions() {
+    public function fetchConditions()
+    {
         return $this->getConditions()->fetch();
     }
 
@@ -311,21 +334,24 @@ class Transition
      * @deprecated use ConditionFactory get*Condition methods
      * @return Workflow_Transition_ConditionsCollection
      */
-    public function getConditions() {
+    public function getConditions()
+    {
         if (! $this->conditions) {
             $this->conditions = $this->getConditionFactory()->getConditions($this);
         }
         return $this->conditions;
     }
 
-    public function setConditions(Workflow_Transition_ConditionsCollection $conditions) {
+    public function setConditions(Workflow_Transition_ConditionsCollection $conditions)
+    {
         $this->conditions = $conditions;
     }
 
     /**
      * @return Workflow_Transition_ConditionFactory
      */
-    private function getConditionFactory() {
+    private function getConditionFactory()
+    {
         return Workflow_Transition_ConditionFactory::build();
     }
 
@@ -342,7 +368,7 @@ class Transition
         $child = $root->addChild('transition');
         if ($this->getFieldValueFrom() == null) {
             $child->addChild('from_id')->addAttribute('REF', self::EXPORT_XML_FROM_NEW_VALUE);
-        }else {
+        } else {
             $child->addChild('from_id')->addAttribute('REF', array_search($this->getFieldValueFrom()->getId(), $xmlMapping['values']));
         }
         $child->addChild('to_id')->addAttribute('REF', array_search($this->getFieldValueTo()->getId(), $xmlMapping['values']));
@@ -363,9 +389,10 @@ class Transition
     *
     * @param Tracker_FormElement_Field $field
     *
-    * @return boolean true if the permissions on the field can be by passed, false otherwise
+    * @return bool true if the permissions on the field can be by passed, false otherwise
     */
-    public function bypassPermissions(Tracker_FormElement_Field $field) {
+    public function bypassPermissions(Tracker_FormElement_Field $field)
+    {
         $postactions = $this->getPostActions();
         foreach ($postactions as $postaction) {
             if ($postaction->bypassPermissions($field)) {
@@ -375,7 +402,8 @@ class Transition
         return false;
     }
 
-    public function getIdFrom() {
+    public function getIdFrom()
+    {
         $from = $this->getFieldValueFrom();
         if ($from) {
             return $from->getId();
@@ -383,7 +411,8 @@ class Transition
         return '';
     }
 
-    public function getIdTo() {
+    public function getIdTo()
+    {
         $to = $this->getFieldValueTo();
         if ($to) {
             return $to->getId();

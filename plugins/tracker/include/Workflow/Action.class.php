@@ -24,15 +24,13 @@ use Tuleap\Tracker\Workflow\FeatureFlag;
 /**
  * Base class to manage action that can be done on a workflow
  */
-
-//phpcs:ignoreFile
-
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Tracker_Workflow_Action
 {
-    const PANE_RULES                  = 'rules';
-    const PANE_TRANSITIONS            = 'transitions';
-    const PANE_CROSS_TRACKER_TRIGGERS = 'triggers';
-    const PANE_WEBHOOKS               = 'webhooks';
+    public const PANE_RULES                  = 'rules';
+    public const PANE_TRANSITIONS            = 'transitions';
+    public const PANE_CROSS_TRACKER_TRIGGERS = 'triggers';
+    public const PANE_WEBHOOKS               = 'webhooks';
 
     /** @var Tracker */
     protected $tracker;
@@ -161,10 +159,10 @@ abstract class Tracker_Workflow_Action
     /**
      * @return string eg: rules, transitions
      */
-    protected abstract function getPaneIdentifier();
+    abstract protected function getPaneIdentifier();
 
     /**
      * Process the request
      */
-    public abstract function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user);
+    abstract public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user);
 }

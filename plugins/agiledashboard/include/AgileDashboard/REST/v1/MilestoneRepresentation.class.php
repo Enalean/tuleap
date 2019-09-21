@@ -68,7 +68,7 @@ class MilestoneRepresentation extends MilestoneRepresentationBase
         $this->artifact = new ArtifactReference();
         $this->artifact->build($milestone->getArtifact());
 
-        $this->description = $milestone->getArtifact()->getDescription();
+        $this->description = (string) $milestone->getArtifact()->getDescription();
 
         $this->start_date = null;
         if ($milestone->getStartDate()) {

@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Workflow_TransitionDao extends DataAccessObject //phpcs:ignoreFile
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Workflow_TransitionDao extends DataAccessObject
 {
     public function addTransition($workflow_id, $from, $to)
     {

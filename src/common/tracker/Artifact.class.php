@@ -3417,7 +3417,7 @@ class Artifact
          * @param group_artifact_id: the artifact type ID
          * @param ascii: ascii mode
          *
-         * @return void
+         * @return string
          */
     function showCCList($group_id, $group_artifact_id, $ascii = false, $pv = 0)
     {
@@ -3522,7 +3522,7 @@ class Artifact
          * @param group_artifact_id: the artifact type ID
          * @param ascii: ascii mode
          *
-         * @return void
+         * @return string
          */
     function showDependencies($group_id, $group_artifact_id, $ascii = false, $pv = 0)
     {
@@ -3619,7 +3619,7 @@ class Artifact
          * @param group_artifact_id: the artifact type ID
          * @param ascii: ascii mode
          *
-         * @return void
+         * @return string
          */
     function showAttachedFiles($group_id, $group_artifact_id, $ascii = false, $pv = 0)
     {

@@ -28,7 +28,8 @@ use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsFactory;
 /**
  * Collection of subfactories to CRUD postactions. Uniq entry point from the transition point of view.
  */
-class Transition_PostActionFactory //phpcs:ignoreFile
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Transition_PostActionFactory
 {
 
     private $shortnames_by_xml_tag_name = array(
@@ -57,7 +58,8 @@ class Transition_PostActionFactory //phpcs:ignoreFile
      *
      * @return string html
      */
-    public function fetchPostActions() {
+    public function fetchPostActions()
+    {
         $html  = '';
         $html .= '<p>'.$GLOBALS['Language']->getText('workflow_admin', 'add_new_action');
         $html .= '<select name="add_postaction">';
@@ -74,7 +76,8 @@ class Transition_PostActionFactory //phpcs:ignoreFile
      *
      * @return void
      */
-    public function addPostAction(Transition $transition, $requested_postaction) {
+    public function addPostAction(Transition $transition, $requested_postaction)
+    {
         $this->getSubFactory($requested_postaction)->addPostAction($transition, $requested_postaction);
     }
 
@@ -85,7 +88,8 @@ class Transition_PostActionFactory //phpcs:ignoreFile
      *
      * @return void
      */
-    public function loadPostActions(Transition $transition) {
+    public function loadPostActions(Transition $transition)
+    {
         return $this->getSubFactories()->loadPostActions($transition);
     }
 
@@ -116,7 +120,8 @@ class Transition_PostActionFactory //phpcs:ignoreFile
      *
      * @return bool
      */
-    public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
+    public function isFieldUsedInPostActions(Tracker_FormElement_Field $field)
+    {
         return $this->getSubFactories()->isFieldUsedInPostActions($field);
     }
 
@@ -126,7 +131,8 @@ class Transition_PostActionFactory //phpcs:ignoreFile
      * @param int $workflow_id the id of the workflow
      *
      */
-    public function deleteWorkflow($workflow_id) {
+    public function deleteWorkflow($workflow_id)
+    {
         return $this->getSubFactories()->deleteWorkflow($workflow_id);
     }
 
@@ -137,7 +143,8 @@ class Transition_PostActionFactory //phpcs:ignoreFile
      * @param int $to_transition_id the id of the transition
      * @param Array $field_mapping the field mapping
      */
-    public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping) {
+    public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping)
+    {
         $this->getSubFactories()->duplicate($from_transition, $to_transition_id, $field_mapping);
     }
 
@@ -150,7 +157,8 @@ class Transition_PostActionFactory //phpcs:ignoreFile
      *
      * @return Transition_PostAction The  Transition_PostAction object, or null if error
      */
-    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
+    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
+    {
         $post_actions  = array();
         foreach ($xml->children() as $child) {
             $short_name = $this->deductPostActionShortNameFromXmlTagName($child->getName());
@@ -162,12 +170,14 @@ class Transition_PostActionFactory //phpcs:ignoreFile
     }
 
     /** For testing purpose */
-    public function setCIBuildFactory(Transition_PostAction_CIBuildFactory $postaction_cibuild_factory) {
+    public function setCIBuildFactory(Transition_PostAction_CIBuildFactory $postaction_cibuild_factory)
+    {
         $this->postaction_cibuild_factory = $postaction_cibuild_factory;
     }
 
     /** For testing purpose */
-    public function setFieldFactory(Transition_PostAction_FieldFactory $postaction_field_factory) {
+    public function setFieldFactory(Transition_PostAction_FieldFactory $postaction_field_factory)
+    {
         $this->postaction_field_factory = $postaction_field_factory;
     }
 
@@ -178,7 +188,8 @@ class Transition_PostActionFactory //phpcs:ignoreFile
     }
 
     /** @return Transition_PostActionSubFactory */
-    private function getSubFactory($post_action_short_name) {
+    private function getSubFactory($post_action_short_name)
+    {
         $field_factory = $this->getFieldFactory();
         $factories     = array(
             Transition_PostAction_Field_Float::SHORT_NAME => $field_factory,
@@ -196,7 +207,8 @@ class Transition_PostActionFactory //phpcs:ignoreFile
     }
 
     /** @return Transition_PostAction_FieldFactory */
-    private function getFieldFactory() {
+    private function getFieldFactory()
+    {
         if (!$this->postaction_field_factory) {
             $this->postaction_field_factory = new Transition_PostAction_FieldFactory(
                 Tracker_FormElementFactory::instance(),
@@ -209,7 +221,8 @@ class Transition_PostActionFactory //phpcs:ignoreFile
     }
 
     /** @return Transition_PostAction_CIBuildFactory */
-    private function getCIBuildFactory() {
+    private function getCIBuildFactory()
+    {
         if (!$this->postaction_cibuild_factory) {
             $this->postaction_cibuild_factory = new Transition_PostAction_CIBuildFactory(
                 new Transition_PostAction_CIBuildDao()
@@ -254,7 +267,8 @@ class Transition_PostActionFactory //phpcs:ignoreFile
     }
 
     /** @return string */
-    private function deductPostActionShortNameFromXmlTagName($xml_tag_name) {
+    private function deductPostActionShortNameFromXmlTagName($xml_tag_name)
+    {
         if (isset($this->shortnames_by_xml_tag_name[$xml_tag_name])) {
             return $this->shortnames_by_xml_tag_name[$xml_tag_name];
         }

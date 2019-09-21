@@ -16,8 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
- * @codingStandardsIgnoreFile
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -28,6 +26,7 @@ use Tuleap\ReferenceAliasCore\ReferencesImporter;
 use Tuleap\ReferenceAliasCore\ReferencesBuilder;
 use Tuleap\Project\XML\Import\ImportConfig;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class referencealias_corePlugin extends Plugin
 {
 

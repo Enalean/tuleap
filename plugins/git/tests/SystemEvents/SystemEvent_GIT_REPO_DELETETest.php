@@ -19,15 +19,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//phpcs:ignoreFile
-
-
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 
 require_once __DIR__ .'/../bootstrap.php';
 
-class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase
+{
     private $project_id;
     private $repository_id;
     private $repository;
@@ -41,7 +40,8 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
      */
     private $event_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->project_id    = 101;
@@ -71,7 +71,8 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
         );
     }
 
-    public function itDeletesTheRepository() {
+    public function itDeletesTheRepository()
+    {
         expect($this->repository)->delete()->once();
 
         $this->event->process();
@@ -85,7 +86,8 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
         $this->event->process();
     }
 
-    public function itAsksToDeleteRepositoryFromManifestFiles() {
+    public function itAsksToDeleteRepositoryFromManifestFiles()
+    {
         expect($this->system_event_manager)->queueGrokMirrorManifestRepoDelete($this->repository->getPath())->once();
 
         $this->event->process();
