@@ -22,6 +22,7 @@
     <div class="taskboard-card taskboard-card-parent" v-bind:class="additional_classnames">
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card"/>
+            <card-assignees v-bind:assignees="card.assignees"/>
         </div>
         <div class="taskboard-card-accessibility" v-if="user_has_accessibility_mode"></div>
     </div>
@@ -32,12 +33,16 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Card } from "../../../type";
 import CardXrefLabel from "./CardXrefLabel.vue";
+import CardAssignees from "./CardAssignees.vue";
 import { namespace } from "vuex-class";
 
 const user = namespace("user");
 
 @Component({
-    components: { CardXrefLabel }
+    components: {
+        CardXrefLabel,
+        CardAssignees
+    }
 })
 export default class ParentCard extends Vue {
     @user.State

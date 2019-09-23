@@ -33,7 +33,8 @@ describe("ParentCard", () => {
                 card: {
                     id: 43,
                     color: "lake-placid-blue",
-                    background_color: "fiesta-red"
+                    background_color: "fiesta-red",
+                    assignees: []
                 }
             }
         });
@@ -49,7 +50,8 @@ describe("ParentCard", () => {
                 card: {
                     id: 43,
                     color: "lake-placid-blue",
-                    background_color: ""
+                    background_color: "",
+                    assignees: []
                 }
             }
         });
@@ -65,7 +67,8 @@ describe("ParentCard", () => {
                 card: {
                     id: 43,
                     color: "lake-placid-blue",
-                    background_color: ""
+                    background_color: "",
+                    assignees: []
                 }
             }
         });
@@ -82,7 +85,8 @@ describe("ParentCard", () => {
                 card: {
                     id: 43,
                     color: "lake-placid-blue",
-                    background_color: "fiesta-red"
+                    background_color: "fiesta-red",
+                    assignees: []
                 }
             }
         });

@@ -36,6 +36,7 @@ export interface Card {
     color: string;
     background_color: string;
     artifact_html_uri: string;
+    assignees: Array<User>;
 }
 
 interface RootState {
@@ -43,4 +44,10 @@ interface RootState {
     has_content: boolean;
     columns: Array<ColumnDefinition>;
     milestone_id: number;
+}
+
+interface User {
+    id: number;
+    avatar_url: string;
+    display_name: string;
 }

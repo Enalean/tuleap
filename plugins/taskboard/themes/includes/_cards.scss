@@ -132,6 +132,15 @@ a.taskboard-card-xref {
     height: 100%;
 }
 
+.taskboard-card-assignees {
+    display: flex;
+    flex-direction: column;
+}
+
+.taskboard-card-assignees-avatars {
+    margin: 0 0 5px 5px;
+}
+
 @keyframes showCard {
     0% {
         transform: scale(0);
