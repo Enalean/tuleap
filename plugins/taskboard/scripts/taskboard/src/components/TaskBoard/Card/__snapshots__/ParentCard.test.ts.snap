@@ -10,6 +10,10 @@ exports[`ParentCard displays a parent card 1`] = `
     <card-xref-label-stub
       card="[object Object]"
     />
+     
+    <card-assignees-stub
+      assignees=""
+    />
   </div>
    
   <!---->

@@ -26,6 +26,7 @@ use Cardwall_Semantic_CardFields;
 use PFUser;
 use Tracker_Artifact;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\User\REST\UserRepresentation;
 
 class CardRepresentationBuilder
 {
@@ -43,10 +44,26 @@ class CardRepresentationBuilder
     {
         $card_fields_semantic = Cardwall_Semantic_CardFields::load($artifact->getTracker());
         $background_color     = $this->background_color_builder->build($card_fields_semantic, $artifact, $user);
+        $assignees            = $this->getAssignees($artifact, $user);
 
         $representation = new CardRepresentation();
-        $representation->build($artifact, $background_color, $rank);
+        $representation->build($artifact, $background_color, $rank, $assignees);
 
         return $representation;
+    }
+
+    /**
+     * @return UserRepresentation[]
+     */
+    private function getAssignees(Tracker_Artifact $artifact, PFUser $user) : array
+    {
+        $assignees = $artifact->getAssignedTo($user);
+
+        return array_map(
+            function (PFUser $user) : UserRepresentation {
+                return (new UserRepresentation())->build($user);
+            },
+            $assignees
+        );
     }
 }

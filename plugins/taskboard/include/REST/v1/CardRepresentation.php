@@ -25,6 +25,7 @@ namespace Tuleap\Taskboard\REST\v1;
 use Tracker_Artifact;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\REST\JsonCast;
+use Tuleap\User\REST\UserRepresentation;
 
 class CardRepresentation
 {
@@ -57,7 +58,15 @@ class CardRepresentation
      */
     public $artifact_html_uri;
 
-    public function build(Tracker_Artifact $artifact, BackgroundColor $background_color, int $rank): void
+    /**
+     * @var UserRepresentation[]
+     */
+    public $assignees;
+
+    /**
+     * @params UserRepresentation[] $assignees
+     */
+    public function build(Tracker_Artifact $artifact, BackgroundColor $background_color, int $rank, array $assignees): void
     {
         $this->id                = JsonCast::toInt($artifact->getId());
         $this->label             = $artifact->getTitle();
@@ -66,5 +75,6 @@ class CardRepresentation
         $this->color             = $artifact->getTracker()->getColor()->getName();
         $this->artifact_html_uri = $artifact->getUri();
         $this->background_color  = (string) $background_color->getBackgroundColorName();
+        $this->assignees         = $assignees;
     }
 }
