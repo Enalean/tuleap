@@ -19,4 +19,4 @@
  *
  *
  */
-require_once __DIR__ . '/../include/frsPlugin.class.php';
+require_once __DIR__ . '/../include/frsPlugin.php';

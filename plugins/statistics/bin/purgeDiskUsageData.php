@@ -23,7 +23,7 @@
 */
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__.'/../include/statisticsPlugin.class.php';
+require_once __DIR__ . '/../include/statisticsPlugin.php';
 
 $disk_data_purger = new Statistics_DiskUsagePurger(
     new Statistics_DiskUsageDao(),

@@ -58,7 +58,7 @@ require_once $GLOBALS['db_config_file'];
 ForgeConfig::loadFromFile($local_inc);
 ForgeConfig::loadFromFile($GLOBALS['db_config_file']);
 
-require_once __DIR__.'/../include/mediawikiPlugin.class.php';
+require_once __DIR__ . '/../include/mediawikiPlugin.php';
 
 $dao = new MediawikiSiteAdminResourceRestrictorDao();
 

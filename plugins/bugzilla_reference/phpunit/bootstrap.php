@@ -19,4 +19,4 @@
  *
  */
 
-require_once __DIR__ . '/../include/bugzilla_referencePlugin.class.php';
+require_once __DIR__ . '/../include/bugzilla_referencePlugin.php';

@@ -18,5 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../include/webdavPlugin.class.php';
-require_once __DIR__ . '/../../docman/include/docmanPlugin.class.php';
+require_once __DIR__ . '/../include/webdavPlugin.php';
+require_once __DIR__ . '/../../docman/include/docmanPlugin.php';

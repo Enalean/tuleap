@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../include/gitPlugin.class.php';
+require_once __DIR__ . '/../include/gitPlugin.php';
 
 foreach (glob(dirname(__FILE__).'/builders/*.php') as $file) {
     require_once $file;

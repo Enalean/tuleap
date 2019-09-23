@@ -18,5 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once __DIR__ . '/../include/trackerPlugin.class.php';
+require_once __DIR__ . '/../include/trackerPlugin.php';
 require_once __DIR__ . '/builders/all.php';

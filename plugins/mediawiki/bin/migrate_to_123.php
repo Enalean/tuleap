@@ -31,7 +31,7 @@ $IS_RUNNING_UPDATE       = true;
 
 if (file_exists('/usr/share/mediawiki-tuleap-123/maintenance/update.php')) {
     require_once __DIR__ . '/../../../src/www/include/pre.php';
-    require_once __DIR__ . '/../include/mediawikiPlugin.class.php';
+    require_once __DIR__ . '/../include/mediawikiPlugin.php';
     include('/usr/share/mediawiki-tuleap-123/maintenance/update.php');
 } else {
     fwrite(STDERR, "Unable to find /usr/share/mediawiki-tuleap-123, did you install RPMs ?\n");

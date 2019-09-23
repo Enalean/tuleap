@@ -18,4 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../include/prometheus_metricsPlugin.class.php';
+require_once __DIR__ . '/../include/prometheus_metricsPlugin.php';

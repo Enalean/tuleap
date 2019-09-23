@@ -20,8 +20,8 @@
 
 namespace Tuleap\Cardwall\Semantic;
 
-require_once __DIR__ . '/../../../include/cardwallPlugin.class.php';
-require_once __DIR__ . '/../../../../tracker/include/trackerPlugin.class.php';
+require_once __DIR__ . '/../../../include/cardwallPlugin.php';
+require_once __DIR__ . '/../../../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../../../../tracker/tests/builders/aField.php';
 
 use Mockery;

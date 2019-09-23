@@ -24,7 +24,7 @@
  */
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
-require_once __DIR__.'/../include/svnPlugin.class.php';
+require_once __DIR__ . '/../include/svnPlugin.php';
 
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;

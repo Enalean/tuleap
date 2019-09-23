@@ -18,4 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once __DIR__ . '/../include/referencealias_corePlugin.class.php';
+require_once __DIR__ . '/../include/referencealias_corePlugin.php';

@@ -6,7 +6,7 @@ function autoload05f5f6356f162273d6e2d918b3f49691($class) {
     static $classes = null;
     if ($classes === null) {
         $classes = array(
-            'templateplugin' => '/templatePlugin.class.php',
+            'templateplugin' => '/templatePlugin.php',
             'tuleap\\template\\plugin\\plugindescriptor' => '/Template/Plugin/PluginDescriptor.php',
             'tuleap\\template\\plugin\\plugininfo' => '/Template/Plugin/PluginInfo.php'
         );

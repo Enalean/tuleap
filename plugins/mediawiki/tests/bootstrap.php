@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../include/mediawikiPlugin.class.php';
+require_once __DIR__ . '/../include/mediawikiPlugin.php';
 
 foreach (glob(__DIR__ .'/builders/*.php') as $file) {
     require_once $file;
