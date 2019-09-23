@@ -26,7 +26,7 @@ use Tuleap\Baseline\ServiceController;
 use Tuleap\Layout\ServiceUrlCollector;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 class baselinePlugin extends Plugin  // @codingStandardsIgnoreLine
 {

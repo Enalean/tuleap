@@ -22,7 +22,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../../../tests/phpunit/bootstrap.php';
-require_once __DIR__ . '/../include/baselinePlugin.class.php';
+require_once __DIR__ . '/../include/baselinePlugin.php';
 
 foreach (['Factory', 'Stub', 'Support'] as $folder) {
     $files = glob(__DIR__ . '/' . $folder . '/*.php');
