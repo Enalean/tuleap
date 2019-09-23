@@ -20,6 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import SwimlaneSkeleton from "./SwimlaneSkeleton.vue";
+import ColumnsSkeleton from "./ColumnsSkeleton.vue";
 
 describe("SwimlaneSkeleton", () => {
     it("displays a fixed amount of skeletons in each column", () => {
@@ -42,16 +43,15 @@ describe("SwimlaneSkeleton", () => {
             }
         });
 
-        const columns = wrapper.findAll(".taskboard-cell");
-        expect(columns.length).toBe(9);
-        expect(columns.at(0).contains(".taskboard-card-parent.taskboard-card-skeleton")).toBe(true);
-        expect(columns.at(0).findAll(".taskboard-card-skeleton").length).toBe(1);
-        expect(columns.at(1).findAll(".taskboard-card-skeleton").length).toBe(4);
-        expect(columns.at(2).findAll(".taskboard-card-skeleton").length).toBe(1);
-        expect(columns.at(3).findAll(".taskboard-card-skeleton").length).toBe(2);
-        expect(columns.at(4).findAll(".taskboard-card-skeleton").length).toBe(3);
-        expect(columns.at(5).findAll(".taskboard-card-skeleton").length).toBe(1);
-        expect(columns.at(6).findAll(".taskboard-card-skeleton").length).toBe(4);
-        expect(columns.at(7).findAll(".taskboard-card-skeleton").length).toBe(1);
+        expect(
+            wrapper
+                .find(".taskboard-cell")
+                .contains(".taskboard-card-parent.taskboard-card-skeleton")
+        ).toBe(true);
+        const skeletons = wrapper.findAll(ColumnsSkeleton);
+        expect(skeletons.length).toBe(8);
+        for (let i = 0; i < 8; i++) {
+            expect(skeletons.at(i).props("column_index")).toBe(i);
+        }
     });
 });
