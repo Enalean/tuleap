@@ -25,5 +25,5 @@ export function createUserModule(initial_user_state: UserState): Module<UserStat
     return {
         namespaced: true,
         state: initial_user_state
-    } as Module<UserState, RootState>;
+    };
 }
