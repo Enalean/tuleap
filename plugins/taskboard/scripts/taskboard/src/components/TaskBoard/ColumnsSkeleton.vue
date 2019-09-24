@@ -20,7 +20,7 @@
 
 <template>
     <div class="taskboard-cell">
-        <div class="tlp-card tlp-skeleton-card taskboard-card-skeleton" v-for="i in nb_skeletons(column_index)" v-bind:key="i"></div>
+        <div class="tlp-card tlp-skeleton-card taskboard-card-skeleton" v-for="i in nb_skeletons" v-bind:key="i"></div>
     </div>
 </template>
 
@@ -35,8 +35,8 @@ export default class ColumnsSkeleton extends Vue {
     @Prop({ required: true })
     readonly column_index!: number;
 
-    nb_skeletons(index: number): number {
-        return nb_skeletons_per_column[index % nb_skeletons_per_column.length];
+    get nb_skeletons(): number {
+        return nb_skeletons_per_column[this.column_index % nb_skeletons_per_column.length];
     }
 }
 </script>
