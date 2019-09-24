@@ -1,6 +1,6 @@
 <div class="taskboard-root">
     {{# milestone_presenter }}
-    <h1 class="tlp-framed-horizontally">
+    <h1 class="tlp-framed-horizontally taskboard-root-title">
         <div class="tlp-dropdown">
             <div id="agiledashboard-scrum-milestone-menu">
                 {{ milestoneTitle }}
@@ -23,7 +23,7 @@
         {{/ displayMilestoneDates }}
     </h1>
 
-    <nav class="tlp-tabs">
+    <nav class="tlp-tabs taskboard-root-tabs">
         {{# getPaneInfoList }}
             <a href="{{ getUri }}" class="tlp-tab {{# isActive }}tlp-tab-active{{/ isActive }}">
                 {{{ getTitle }}}

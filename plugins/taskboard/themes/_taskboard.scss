@@ -35,13 +35,18 @@
     margin: $tlp-spacing 0 0;
 }
 
+.taskboard-root-title,
+.taskboard-root-tabs {
+    flex: 0 0 auto;
+}
+
 .taskboard-app {
     flex-grow: 1;
 }
 
 .taskboard {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
 }

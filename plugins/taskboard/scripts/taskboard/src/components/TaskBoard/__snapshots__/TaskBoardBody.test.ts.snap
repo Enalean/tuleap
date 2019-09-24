@@ -1,44 +1,46 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TaskBoardBody displays swimlanes with empty columns 1`] = `
-<tbody>
-  <tr
+<div
+  class="taskboard-body"
+>
+  <div
     class="taskboard-swimlane"
   >
-    <td
+    <div
       class="taskboard-cell"
     >
       <parent-card-stub
         card="[object Object]"
       />
-    </td>
+    </div>
      
-    <td
+    <div
       class="taskboard-cell"
     />
-    <td
+    <div
       class="taskboard-cell"
     />
-  </tr>
-  <tr
+  </div>
+  <div
     class="taskboard-swimlane"
   >
-    <td
+    <div
       class="taskboard-cell"
     >
       <parent-card-stub
         card="[object Object]"
       />
-    </td>
+    </div>
      
-    <td
+    <div
       class="taskboard-cell"
     />
-    <td
+    <div
       class="taskboard-cell"
     />
-  </tr>
+  </div>
    
   <!---->
-</tbody>
+</div>
 `;

@@ -19,14 +19,14 @@
   -->
 
 <template>
-    <tr class="taskboard-swimlane">
-        <td class="taskboard-cell">
+    <div class="taskboard-swimlane">
+        <div class="taskboard-cell">
             <div class="tlp-card tlp-skeleton-card taskboard-card-parent taskboard-card-skeleton"></div>
-        </td>
-        <td class="taskboard-cell" v-for="(col, index) of columns" v-bind:key="col.id">
+        </div>
+        <div class="taskboard-cell" v-for="(col, index) of columns" v-bind:key="col.id">
             <div class="tlp-card tlp-skeleton-card taskboard-card-skeleton" v-for="i in nb_skeletons(index)" v-bind:key="i"></div>
-        </td>
-    </tr>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">

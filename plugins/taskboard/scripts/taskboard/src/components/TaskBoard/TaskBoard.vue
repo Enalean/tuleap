@@ -19,10 +19,10 @@
   -->
 
 <template>
-    <table class="taskboard">
+    <div class="taskboard">
         <task-board-header/>
         <task-board-body/>
-    </table>
+    </div>
 </template>
 
 <script lang="ts">
