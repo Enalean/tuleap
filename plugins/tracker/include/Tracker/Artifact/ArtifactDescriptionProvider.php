@@ -38,25 +38,25 @@ class ArtifactDescriptionProvider
         $this->semantic_description = $semantic_description;
     }
 
-    public function getDescription(Tracker_Artifact $artifact): ?string
+    public function getDescription(Tracker_Artifact $artifact): string
     {
         $description_field = $this->semantic_description->getField();
         if (! $description_field) {
-            return null;
+            return '';
         }
 
         if (! $description_field->userCanRead()) {
-            return null;
+            return '';
         }
 
         $last_changeset = $artifact->getLastChangeset();
         if (! $last_changeset) {
-            return null;
+            return '';
         }
 
         $description_field_value = $last_changeset->getValue($description_field);
         if (! $description_field_value instanceof Tracker_Artifact_ChangesetValue_Text) {
-            return null;
+            return '';
         }
 
         return $description_field_value->getContentAsText();
