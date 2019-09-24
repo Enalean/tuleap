@@ -54,7 +54,7 @@ class ArtifactDescriptionProviderTest extends TestCase
     {
         $this->semantic_description->shouldReceive('getField')->once()->andReturnNull();
 
-        $this->assertNull($this->provider->getDescription(Mockery::mock(Tracker_Artifact::class)));
+        $this->assertEquals('', $this->provider->getDescription(Mockery::mock(Tracker_Artifact::class)));
     }
 
     public function testGetDescriptionReturnNullIfUserCannotReadTheField(): void
@@ -64,7 +64,7 @@ class ArtifactDescriptionProviderTest extends TestCase
 
         $field->shouldReceive('userCanRead')->once()->andReturnFalse();
 
-        $this->assertNull($this->provider->getDescription(Mockery::mock(Tracker_Artifact::class)));
+        $this->assertEquals('', $this->provider->getDescription(Mockery::mock(Tracker_Artifact::class)));
     }
 
     public function testGetDescriptionReturnNullIfThereIsNoLastChangeset(): void
@@ -77,7 +77,7 @@ class ArtifactDescriptionProviderTest extends TestCase
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $artifact->shouldReceive('getLastChangeset')->once()->andReturnNull();
 
-        $this->assertNull($this->provider->getDescription($artifact));
+        $this->assertEquals('', $this->provider->getDescription($artifact));
     }
 
     public function testGetDescriptionReturnNullIfNoValueForField(): void
@@ -93,7 +93,7 @@ class ArtifactDescriptionProviderTest extends TestCase
 
         $changeset->shouldReceive('getValue')->with($field)->once()->andReturnNull();
 
-        $this->assertNull($this->provider->getDescription($artifact));
+        $this->assertEquals('', $this->provider->getDescription($artifact));
     }
 
     public function testGetDescriptionReturnTheDescriptionAsPlainText(): void

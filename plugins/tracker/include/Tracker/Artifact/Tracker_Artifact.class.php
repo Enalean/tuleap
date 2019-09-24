@@ -523,9 +523,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
-     * @return string|null the description of the artifact, or null if no description defined in semantics
+     * @return string the description of the artifact
      */
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
         $provider = new ArtifactDescriptionProvider(Tracker_Semantic_Description::load($this->getTracker()));
         return $provider->getDescription($this);
