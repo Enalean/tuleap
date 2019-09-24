@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "Close"
@@ -37,6 +37,9 @@ msgstr ""
 
 msgid "Incompatible usage of color"
 msgstr "Incompatibilité dans le choix de la couleur"
+
+msgid "Initial effort"
+msgstr "Effort estimé"
 
 msgid "It seems action you try to perform can't be done"
 msgstr ""

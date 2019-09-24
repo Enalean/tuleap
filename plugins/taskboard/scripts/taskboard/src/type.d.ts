@@ -44,6 +44,7 @@ export interface Card {
     assignees: Array<User>;
     has_children: boolean;
     status: Status | null;
+    initial_effort: number | null;
 }
 
 interface RootState {

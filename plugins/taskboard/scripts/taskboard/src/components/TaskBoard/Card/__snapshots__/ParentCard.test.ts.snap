@@ -11,9 +11,17 @@ exports[`ParentCard displays a parent card 1`] = `
       card="[object Object]"
     />
      
-    <card-assignees-stub
-      assignees=""
-    />
+    <div
+      class="taskboard-card-info"
+    >
+      <card-initial-effort-stub
+        card="[object Object]"
+      />
+       
+      <card-assignees-stub
+        assignees=""
+      />
+    </div>
   </div>
    
   <!---->

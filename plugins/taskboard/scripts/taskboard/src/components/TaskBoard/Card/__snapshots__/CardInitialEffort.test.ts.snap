@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CardInitialEffort displays the initial effort of the card in a badge 1`] = `
+<span
+  class="taskboard-card-inital-effort tlp-badge-outline tlp-tooltip tlp-tooltip-top tlp-badge-lake-placid-blue"
+  data-tlp-tooltip="Initial effort"
+>
+  <i
+    class="fa fa-flag-checkered fa-flip-horizontal tlp-badge-icon"
+  />
+  
+    666
+
+</span>
+`;
