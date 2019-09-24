@@ -33,11 +33,11 @@ exports[`TaskBoardBody displays swimlanes with empty columns 1`] = `
       />
     </div>
      
-    <div
-      class="taskboard-cell"
+    <columns-skeleton-stub
+      column_index="0"
     />
-    <div
-      class="taskboard-cell"
+    <columns-skeleton-stub
+      column_index="1"
     />
   </div>
    

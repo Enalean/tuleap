@@ -57,7 +57,10 @@ class CardRepresentation
      * @var string
      */
     public $artifact_html_uri;
-
+    /**
+     * @var bool
+     */
+    public $has_children;
     /**
      * @var UserRepresentation[]
      */
@@ -76,5 +79,6 @@ class CardRepresentation
         $this->artifact_html_uri = $artifact->getUri();
         $this->background_color  = (string) $background_color->getBackgroundColorName();
         $this->assignees         = $assignees;
+        $this->has_children      = JsonCast::toBoolean($artifact->hasChildren());
     }
 }

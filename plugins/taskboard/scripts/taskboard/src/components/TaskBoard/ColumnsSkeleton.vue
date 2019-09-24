@@ -19,26 +19,24 @@
   -->
 
 <template>
-    <div class="taskboard-swimlane">
-        <div class="taskboard-cell">
-            <div class="tlp-card tlp-skeleton-card taskboard-card-parent taskboard-card-skeleton"></div>
-        </div>
-        <columns-skeleton v-for="(col, index) of columns" v-bind:key="col.id" v-bind:column_index="index"/>
+    <div class="taskboard-cell">
+        <div class="tlp-card tlp-skeleton-card taskboard-card-skeleton" v-for="i in nb_skeletons(column_index)" v-bind:key="i"></div>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { ColumnDefinition } from "../../type";
-import { State } from "vuex-class";
-import ColumnsSkeleton from "./ColumnsSkeleton.vue";
+import { Component, Prop } from "vue-property-decorator";
 
-@Component({
-    components: { ColumnsSkeleton }
-})
-export default class SwimlaneSkeleton extends Vue {
-    @State
-    readonly columns!: Array<ColumnDefinition>;
+const nb_skeletons_per_column = [4, 1, 2, 3, 1];
+
+@Component
+export default class ColumnsSkeleton extends Vue {
+    @Prop({ required: true })
+    readonly column_index!: number;
+
+    nb_skeletons(index: number): number {
+        return nb_skeletons_per_column[index % nb_skeletons_per_column.length];
+    }
 }
 </script>

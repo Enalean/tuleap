@@ -21,6 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import TaskBoardBody from "./TaskBoardBody.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import SwimlaneSkeleton from "./SwimlaneSkeleton.vue";
+import { Swimlane } from "../../type";
 
 describe("TaskBoardBody", () => {
     it("displays swimlanes with empty columns", () => {
@@ -36,17 +37,19 @@ describe("TaskBoardBody", () => {
                                         id: 43,
                                         label: "Story 2",
                                         xref: "story #43",
-                                        rank: 11
+                                        rank: 11,
+                                        has_children: false
                                     }
-                                },
+                                } as Swimlane,
                                 {
                                     card: {
                                         id: 44,
                                         label: "Story 3",
                                         xref: "story #44",
-                                        rank: 12
+                                        rank: 12,
+                                        has_children: true
                                     }
-                                }
+                                } as Swimlane
                             ]
                         }
                     }

@@ -37,6 +37,7 @@ export interface Card {
     background_color: string;
     artifact_html_uri: string;
     assignees: Array<User>;
+    has_children: boolean;
 }
 
 interface RootState {
