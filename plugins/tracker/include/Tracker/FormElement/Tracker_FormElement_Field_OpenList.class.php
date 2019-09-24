@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001 - 2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 
 class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List implements BindVisitor
@@ -114,7 +115,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         $html .= '<div class="textboxlist-auto" id="tracker_artifact_textboxlist_'. $this->id .'">';
         $html .= '<div class="default">'.  $hp->purify($this->getProperty('hint'), CODENDI_PURIFIER_LIGHT) .'</div>';
         $html .= '<ul class="feed">';
-        $html .= '<li value="'.$GLOBALS['Language']->getText('global', 'unchanged').'">';
+        $html .= '<li value="'.$hp->purify(BindStaticValueUnchanged::VALUE_ID).'">';
         $html .= $GLOBALS['Language']->getText('global', 'unchanged');
         $html .= '</li>';
         $html .= '</ul>';
