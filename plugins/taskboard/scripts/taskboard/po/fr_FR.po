@@ -53,6 +53,11 @@ msgstr ""
 "Merci <a href=\"%s\">d'ajuster la configuration</a> afin d'utiliser une "
 "bonne couleur."
 
+msgid "Please edit the card to change the status, or add children if possible."
+msgstr ""
+"Veuillez éditer la carte pour changer son statut, ou ajouter des enfants si "
+"possible."
+
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
 
@@ -71,13 +76,15 @@ msgstr ""
 "La colonne est configurée pour utiliser une couleur (%s) qui fait partie de "
 "l'ancienne palette."
 
+msgid "This card does not have any status."
+msgstr "Cette carte n'a pas de statut."
+
 msgid ""
-"This card has a status that does not map to current taskboard columns. "
-"Please edit the card to change the status, or add children if possible."
+"This card has status <strong>%s</strong> that does not map to current "
+"taskboard columns."
 msgstr ""
-"Cette carte a un status qui ne correspond pas aux colonnes de ce tableau des "
-"tâches. Veuillez éditer la carte pour changer son status, ou ajouter des "
-"enfants si possible."
+"Cette carte a pour statut <strong>%s</strong> qui ne correspond pas aux "
+"colonnes de ce tableau des tâches."
 
 msgid "This feature is under construction"
 msgstr "Cette fonctionnalité est en cours de construction"

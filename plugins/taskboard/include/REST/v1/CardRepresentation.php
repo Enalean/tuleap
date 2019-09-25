@@ -65,12 +65,21 @@ class CardRepresentation
      * @var UserRepresentation[]
      */
     public $assignees;
+    /**
+     * @var StatusRepresentation|null
+     */
+    public $status;
 
     /**
      * @params UserRepresentation[] $assignees
      */
-    public function build(Tracker_Artifact $artifact, BackgroundColor $background_color, int $rank, array $assignees): void
-    {
+    public function build(
+        Tracker_Artifact $artifact,
+        BackgroundColor $background_color,
+        int $rank,
+        array $assignees,
+        ?StatusRepresentation $status
+    ): void {
         $this->id                = JsonCast::toInt($artifact->getId());
         $this->label             = $artifact->getTitle();
         $this->xref              = $artifact->getXRef();
@@ -80,5 +89,6 @@ class CardRepresentation
         $this->background_color  = (string) $background_color->getBackgroundColorName();
         $this->assignees         = $assignees;
         $this->has_children      = JsonCast::toBoolean($artifact->hasChildren());
+        $this->status            = $status;
     }
 }

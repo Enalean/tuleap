@@ -38,6 +38,8 @@ use Tuleap\REST\Header;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
+use Tuleap\Tracker\Semantic\Status\StatusValueProvider;
 use UserManager;
 
 class TaskboardResource extends AuthenticatedResource
@@ -93,7 +95,8 @@ class TaskboardResource extends AuthenticatedResource
         );
 
         $this->card_representation_builder = new CardRepresentationBuilder(
-            new BackgroundColorBuilder(new BindDecoratorRetriever())
+            new BackgroundColorBuilder(new BindDecoratorRetriever()),
+            new StatusValueProvider(new StatusValueForChangesetProvider())
         );
     }
 

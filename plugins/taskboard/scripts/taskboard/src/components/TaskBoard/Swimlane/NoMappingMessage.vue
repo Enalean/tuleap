@@ -22,18 +22,31 @@
     <p class="tlp-text-warning taskboard-no-mapping">
         <i class="fa fa-warning"></i>
         <span v-dompurify-html="message"></span>
+        <translate>Please edit the card to change the status, or add children if possible.</translate>
     </p>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
+import { sprintf } from "sprintf-js";
+import { Card } from "../../../type";
 
 @Component
 export default class NoMappingMessage extends Vue {
+    @Prop({ required: true })
+    readonly card!: Card;
+
     get message(): string {
-        return this.$gettext(
-            "This card has a status that does not map to current taskboard columns. Please edit the card to change the status, or add children if possible."
+        if (!this.card.status) {
+            return this.$gettext("This card does not have any status.");
+        }
+
+        return sprintf(
+            this.$gettext(
+                "This card has status <strong>%s</strong> that does not map to current taskboard columns."
+            ),
+            this.card.status.label
         );
     }
 }
