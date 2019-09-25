@@ -76,7 +76,6 @@
 }
 
 .test-results-pie-slice-success {
-
     > path {
         fill: $tlp-ui-success;
     }
@@ -87,7 +86,6 @@
 }
 
 .test-results-pie-slice-skipped {
-
     > path {
         fill: $tlp-ui-warning;
     }
@@ -98,7 +96,6 @@
 }
 
 .test-results-pie-slice-failed {
-
     > path {
         fill: $tlp-ui-danger;
     }

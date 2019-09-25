@@ -157,9 +157,9 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
     public function getStylesheetDependencies()
     {
         $theme_include_assets = new IncludeAssets(
-            __DIR__ . '/../www/themes/BurningParrot/assets',
-            HUDSON_BASE_URL . '/themes/BurningParrot/assets'
+            __DIR__ . '/../../../src/www/assets/hudson/themes',
+            '/assets/hudson/themes'
         );
-        return new CssAssetCollection([new CssAsset($theme_include_assets, 'style')]);
+        return new CssAssetCollection([new CssAsset($theme_include_assets, 'bp-style')]);
     }
 }

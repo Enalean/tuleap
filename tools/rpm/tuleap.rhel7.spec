@@ -487,6 +487,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/frs/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/git/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/graphontrackersv5/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files

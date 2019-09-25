@@ -1,10 +1,10 @@
 .legend {
-    font-style: italic;
-    font-size: smaller;
-    color: #666;
-    background: transparent;
     margin: 0 0 0 50px;
     padding: 0;
+    background: transparent;
+    color: #666666;
+    font-size: smaller;
+    font-style: italic;
 }
 
 table#jobs_table {
@@ -12,8 +12,8 @@ table#jobs_table {
 }
 
 span.job_action {
-    margin-left: 2px;
     margin-right: 2px;
+    margin-left: 2px;
 }
 
 td.widget_lastbuilds_weather {
