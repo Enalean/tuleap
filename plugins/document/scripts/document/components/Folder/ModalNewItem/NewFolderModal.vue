@@ -19,7 +19,12 @@
   -->
 
 <template>
-    <form class="tlp-modal" role="dialog" aria-labelledby="document-new-folder-modal" v-on:submit="addFolder">
+    <form class="tlp-modal"
+          role="dialog"
+          data-test="document-new-folder-modal"
+          aria-labelledby="document-new-folder-modal"
+          v-on:submit="addFolder"
+    >
         <modal-header v-bind:modal-title="modal_title"
                       v-bind:aria-labelled-by="aria_labelled_by"
                       v-bind:icon-header-class="'fa-plus'"

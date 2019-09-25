@@ -24,6 +24,7 @@
           aria-labelledby="document-new-item-modal"
           v-on:submit="addDocument"
           enctype="multipart/form-data"
+          data-test="document-new-item-modal"
     >
         <modal-header v-bind:modal-title="modal_title"
                       v-bind:aria-labelled-by="aria_labelled_by"

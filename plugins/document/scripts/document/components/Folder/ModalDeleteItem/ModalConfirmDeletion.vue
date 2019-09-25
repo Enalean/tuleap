@@ -51,7 +51,7 @@
             <button
                 type="button"
                 class="tlp-button-danger tlp-modal-action"
-                data-test="confirm-deletion-button"
+                data-test="document-confirm-deletion-button"
                 v-on:click="deleteItem()"
                 v-bind:class="{'disabled': is_confirm_button_disabled}"
                 v-bind:disabled="is_confirm_button_disabled"

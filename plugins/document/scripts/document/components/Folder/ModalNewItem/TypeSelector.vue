@@ -30,8 +30,11 @@
                v-for="icon of type.icons"
                v-bind:key="icon"
                v-bind:class="icon"
+               v-bind:data-test="type.identifier"
             ></i>
-            <span class="document-new-item-type-label">{{ type.label }}</span>
+            <span class="document-new-item-type-label">
+                {{ type.label }}
+            </span>
         </div>
     </div>
 </template>

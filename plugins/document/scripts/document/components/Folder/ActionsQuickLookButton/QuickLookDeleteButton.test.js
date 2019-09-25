@@ -56,12 +56,12 @@ describe("QuickLookDeleteButton", () => {
     it(`Displays the delete button because the user can write and has the right to delete items`, () => {
         store.state.is_deletion_allowed = true;
         const wrapper = delete_button_factory(true, TYPE_LINK);
-        expect(wrapper.find("[data-test=quick-look-delete-button]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=document-quick-look-delete-button]").exists()).toBeTruthy();
     });
     it(`Does not display the delete button if the user can't write but has the right to delete items`, () => {
         store.state.is_deletion_allowed = true;
         const wrapper = delete_button_factory(false, TYPE_LINK);
-        expect(wrapper.find("[data-test=quick-look-delete-button]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-quick-look-delete-button]").exists()).toBeFalsy();
     });
     it(`Does not display the delete button if the user can write but cannot to delete items`, () => {
         store.state.is_deletion_allowed = false;
@@ -73,7 +73,7 @@ describe("QuickLookDeleteButton", () => {
         store.state.is_deletion_allowed = true;
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
         const wrapper = delete_button_factory(true, TYPE_FILE);
-        wrapper.find("[data-test=quick-look-delete-button]").trigger("click");
+        wrapper.find("[data-test=document-quick-look-delete-button]").trigger("click");
 
         expect(event_bus_emit).toHaveBeenCalledWith(
             "show-confirm-item-deletion-modal",

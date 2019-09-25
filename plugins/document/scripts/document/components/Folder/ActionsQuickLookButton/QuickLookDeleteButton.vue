@@ -23,7 +23,7 @@
         type="button"
         class="tlp-button-small tlp-button-outline tlp-button-danger"
         v-on:click="processDeletion"
-        data-test="quick-look-delete-button"
+        data-test="document-quick-look-delete-button"
     >
         <i class="fa fa-trash-o tlp-button-icon"></i>
         <translate>Delete</translate>
