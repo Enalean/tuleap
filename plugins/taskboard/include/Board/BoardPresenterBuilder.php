@@ -64,7 +64,7 @@ class BoardPresenterBuilder
             new AgileDashboard_MilestonePresenter($milestone, $presenter_data),
             $user,
             $milestone,
-            $this->columns_retriever->getColumns($milestone->getPlanning()->getPlanningTracker()),
+            $this->columns_retriever->getColumns($milestone->getPlanning()),
             $has_content,
             $is_ie_11
         );
