@@ -145,6 +145,8 @@ export const createNewItem = async (context, [item, parent, current_folder]) => 
                 if (!parent.is_expanded && parent.id !== current_folder.id) {
                     should_display_item = false;
                 }
+
+                item_to_create.file_properties = item.file_properties;
                 await createNewFile(context, item_to_create, parent, should_display_item);
                 break;
             case TYPE_FOLDER:
