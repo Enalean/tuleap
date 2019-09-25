@@ -27,7 +27,7 @@
         <template v-else>
             <div class="taskboard-cell"></div>
             <div class="taskboard-cell" v-for="col of columns" v-bind:key="col.id">
-                <parent-card v-bind:card="card" v-if="target_column.id === col.id"/>
+                <solo-card-cell v-if="target_column.id === col.id" v-bind:card="card"/>
             </div>
         </template>
     </div>
@@ -38,11 +38,14 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Card, ColumnDefinition, Mapping, MappedListValue } from "../../../type";
 import ParentCell from "./ParentCell.vue";
+import SoloCardCell from "./SoloCardCell.vue";
 import ParentCard from "../Card/ParentCard.vue";
+import ParentCardRemainingEffort from "../Card/ParentCardRemainingEffort.vue";
+
 import { State } from "vuex-class";
 
 @Component({
-    components: { ParentCell, ParentCard }
+    components: { ParentCell, ParentCard, ParentCardRemainingEffort, SoloCardCell }
 })
 export default class SoloCard extends Vue {
     @Prop({ required: true })

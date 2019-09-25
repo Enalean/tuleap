@@ -55,6 +55,7 @@ export interface Card {
     has_children: boolean;
     mapped_list_value: MappedListValue | null;
     initial_effort: number | null;
+    remaining_effort: number | null;
 }
 
 interface RootState {

@@ -27,6 +27,7 @@ use PFUser;
 use Tracker_Artifact;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Taskboard\Card\CardRemainingEffortRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldValueRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -43,12 +44,19 @@ class CardRepresentationBuilder
      */
     private $mapped_field_value_retriever;
 
+    /**
+     * @var CardRemainingEffortRetriever
+     */
+    private $card_remaining_effort_retriever;
+
     public function __construct(
         BackgroundColorBuilder $background_color_builder,
-        MappedFieldValueRetriever $mapped_field_value_retriever
+        MappedFieldValueRetriever $mapped_field_value_retriever,
+        CardRemainingEffortRetriever $card_remaining_effort_retriever
     ) {
-        $this->background_color_builder     = $background_color_builder;
-        $this->mapped_field_value_retriever = $mapped_field_value_retriever;
+        $this->background_color_builder        = $background_color_builder;
+        $this->mapped_field_value_retriever    = $mapped_field_value_retriever;
+        $this->card_remaining_effort_retriever = $card_remaining_effort_retriever;
     }
 
     public function build(
@@ -62,6 +70,7 @@ class CardRepresentationBuilder
         $assignees            = $this->getAssignees($artifact, $user);
         $mapped_list_value    = $this->getMappedListValue($milestone, $artifact, $user);
         $initial_effort       = $this->getInitialEffort($artifact, $user);
+        $remaining_effort     = $this->card_remaining_effort_retriever->getRemainingEffortValue($user, $artifact);
 
         $representation = new CardRepresentation();
         $representation->build(
@@ -70,7 +79,8 @@ class CardRepresentationBuilder
             $rank,
             $assignees,
             $mapped_list_value,
-            $initial_effort
+            $initial_effort,
+            $remaining_effort
         );
 
         return $representation;
@@ -141,15 +151,18 @@ class CardRepresentationBuilder
 
     public static function buildSelf(): self
     {
+        $form_element_factory = \Tracker_FormElementFactory::instance();
+
         return new CardRepresentationBuilder(
             new BackgroundColorBuilder(new BindDecoratorRetriever()),
             new MappedFieldValueRetriever(
                 new \Cardwall_OnTop_ConfigFactory(
                     \TrackerFactory::instance(),
-                    \Tracker_FormElementFactory::instance()
+                    $form_element_factory
                 ),
                 new MappedFieldRetriever(new \Cardwall_FieldProviders_SemanticStatusFieldRetriever()),
-            )
+            ),
+            new CardRemainingEffortRetriever($form_element_factory)
         );
     }
 }

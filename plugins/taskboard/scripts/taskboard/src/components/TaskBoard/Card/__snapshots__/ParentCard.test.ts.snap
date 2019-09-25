@@ -25,5 +25,10 @@ exports[`ParentCard displays a parent card 1`] = `
   </div>
    
   <!---->
+   
+  <div
+    class="taskboard-card-progress taskboard-card-progress-lake-placid-blue"
+    style="width: 50%;"
+  />
 </div>
 `;
