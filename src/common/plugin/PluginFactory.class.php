@@ -166,21 +166,13 @@ class PluginFactory // phpcs:ignore
         $class_name = $name."Plugin";
         $custom     = false;
         $class_path = '';
-        $file_name = '/'.$name.'/include/'.$class_name.'.class.php';
+        $file_name = '/'.$name.'/include/'.$class_name.'.php';
         if (!class_exists($class_name)) {
             $this->loadClass($this->_getCustomPluginsRoot().$file_name);
         }
         if (empty($this->plugin_class_path[$name])) {
             $class_path = $this->getPluginClassPath($file_name);
             $custom = $this->classIsCustom($file_name);
-        }
-        if (!class_exists($class_name)) {
-            $file_name = '/'.$name.'/include/'.$class_name.'.php';
-            $this->loadClass($this->_getCustomPluginsRoot().$file_name);
-            if (empty($this->plugin_class_path[$name])) {
-                $class_path = $this->getPluginClassPath($file_name);
-                $custom = $this->classIsCustom($file_name);
-            }
         }
         if (!class_exists($class_name)) {
             $class_name = false;
