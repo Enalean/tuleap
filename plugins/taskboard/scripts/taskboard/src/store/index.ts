@@ -30,12 +30,14 @@ export function createStore(
 ): Store<RootState> {
     const user = createUserModule(initial_user_state);
 
-    return new Store({
+    const store_options: StoreOptions<RootState> = {
         state: initial_root_state,
         modules: {
             error,
             swimlane,
             user
         }
-    } as StoreOptions<RootState>);
+    };
+
+    return new Store(store_options);
 }

@@ -23,7 +23,7 @@ import { ErrorState } from "./type";
 import { Module } from "vuex";
 import { RootState } from "../../type";
 
-export default {
+const error_module_default: Module<ErrorState, RootState> = {
     namespaced: true,
     state: {
         global_error_message: "",
@@ -31,4 +31,5 @@ export default {
     },
     actions,
     mutations
-} as Module<ErrorState, RootState>;
+};
+export default error_module_default;

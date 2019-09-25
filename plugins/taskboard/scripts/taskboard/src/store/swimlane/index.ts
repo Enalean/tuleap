@@ -23,7 +23,7 @@ import { SwimlaneState } from "./type";
 import { Module } from "vuex";
 import { RootState } from "../../type";
 
-export default {
+const swimlane_module_default: Module<SwimlaneState, RootState> = {
     namespaced: true,
     actions,
     mutations,
@@ -31,4 +31,5 @@ export default {
         swimlanes: [],
         is_loading_swimlanes: false
     }
-} as Module<SwimlaneState, RootState>;
+};
+export default swimlane_module_default;
