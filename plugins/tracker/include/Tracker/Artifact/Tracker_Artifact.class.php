@@ -58,6 +58,8 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForRES
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
+use Tuleap\Tracker\Semantic\Status\StatusValueProvider;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -572,9 +574,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getStatus() {
         if ( ! isset($this->status)) {
-            $last_changeset = $this->getLastChangeset();
-            if ($last_changeset) {
-                $this->status = $this->getStatusForChangeset($last_changeset);
+            $this->status = '';
+            $provider = new StatusValueProvider(new StatusValueForChangesetProvider());
+            $status_value = $provider->getStatusValue($this, UserManager::instance()->getCurrentUser());
+            if ($status_value) {
+                $this->status = $status_value->getLabel();
             }
         }
 
@@ -587,15 +591,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return string the status of the artifact, or null if no status defined in semantics
      */
     public function getStatusForChangeset(Tracker_Artifact_Changeset $changeset) {
-        $status_field = Tracker_Semantic_Status::load($this->getTracker())->getField();
-        if (! $status_field) {
-            return null;
-        }
-        if (! $status_field->userCanRead()) {
+        $provider = new StatusValueForChangesetProvider();
+        $status_value = $provider->getStatusValueForChangeset($changeset, UserManager::instance()->getCurrentUser());
+        if (! $status_value) {
             return null;
         }
 
-        return $status_field->getFirstValueFor($changeset);
+        return $status_value->getLabel();
     }
 
 
