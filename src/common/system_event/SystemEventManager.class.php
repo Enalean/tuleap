@@ -24,6 +24,7 @@ use Tuleap\Project\UserRemoverDao;
 use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
 use Tuleap\System\ApacheServiceControl;
 use Tuleap\System\ServiceControl;
+use Tuleap\SystemEvent\SystemEventInstrumentation;
 use Tuleap\SystemEvent\SystemEventSVNAuthenticationCacheRefresh;
 use Tuleap\Redis;
 use Tuleap\SystemEvent\SystemEventUserActiveStatusChange;
@@ -394,6 +395,7 @@ class SystemEventManager
      */
     public function createEvent($type, $parameters, $priority, $owner = SystemEvent::OWNER_ROOT, $klass = null)
     {
+        SystemEventInstrumentation::increment(SystemEvent::STATUS_NEW);
         if ($id = $this->dao->store($type, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'], $owner)) {
             if ($klass) {
                 $sysevent = $this->instanciateSystemEventOnCreateByClass($id, $type, $owner, $parameters, $priority, $klass);

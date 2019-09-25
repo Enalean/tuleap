@@ -76,6 +76,15 @@ abstract class SystemEvent
     public const STATUS_WARNING    = "WARNING";
     public const STATUS_ERROR      = "ERROR";
 
+    public const ALL_STATUS = [
+        self::STATUS_NONE,
+        self::STATUS_NEW,
+        self::STATUS_RUNNING,
+        self::STATUS_DONE,
+        self::STATUS_WARNING,
+        self::STATUS_ERROR,
+    ];
+
     //Priority of the event
     public const PRIORITY_HIGH   = 1;
     public const PRIORITY_MEDIUM = 2;
@@ -194,7 +203,10 @@ abstract class SystemEvent
         return $this->priority;
     }
 
-    function getStatus()
+    /**
+     * @psalm-return value-of<self::ALL_STATUS>
+     */
+    public function getStatus(): string
     {
         return $this->status;
     }

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\SystemEvent\SystemEventInstrumentation;
+
 require_once 'SystemEventManager.class.php';
 require_once 'IRunInAMutex.php';
 
@@ -102,14 +104,15 @@ abstract class SystemEventProcessor implements IRunInAMutex
     {
         $this->logger->info("Processing event #".$sysevent->getId()." ".$sysevent->getType()."(".$sysevent->getParameters().")");
         try {
+            SystemEventInstrumentation::increment(SystemEvent::STATUS_RUNNING);
             $sysevent->process();
         } catch (Exception $exception) {
             $sysevent->logException($exception);
         }
+        SystemEventInstrumentation::increment($sysevent->getStatus());
         $this->dao->close($sysevent);
         $sysevent->notify();
-        $this->logger->info("Processing event #".$sysevent->getId().": done.", Backend::LOG_INFO);
-        // Output errors???
+        $this->logger->info("Processing event #".$sysevent->getId().": done.");
     }
 
     abstract protected function getOwner();
