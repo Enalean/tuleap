@@ -137,6 +137,9 @@ msgstr "L'élément n'est pas lié à ce jalon"
 msgid "Kanban"
 msgstr "Kanban"
 
+msgid "Kanban cards"
+msgstr "Carte de Kanban"
+
 msgid "Make sure to check their configuration."
 msgstr "Merci de vérifier leur configuration."
 
