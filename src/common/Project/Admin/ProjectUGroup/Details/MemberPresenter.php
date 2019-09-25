@@ -25,6 +25,7 @@ namespace Tuleap\Project\Admin\ProjectUGroup\Details;
 
 use ProjectUGroup;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupMemberUpdatable;
+use Tuleap\User\StatusPresenter;
 
 class MemberPresenter
 {
@@ -37,6 +38,10 @@ class MemberPresenter
     public $is_news_admin;
     public $member_updatable_messages;
     public $user_is_project_admin;
+    /**
+     * @var StatusPresenter
+     */
+    public $status_presenter;
 
     public function __construct(\UserHelper $user_helper, \PFUser $member, ProjectUGroup $ugroup, ProjectUGroupMemberUpdatable $ugroup_members_updatable)
     {
@@ -61,5 +66,6 @@ class MemberPresenter
         $this->member_updatable_messages = $updatable_error_messages;
         $this->is_news_admin             = $is_news_admin;
         $this->user_is_project_admin     = (int) $member->isAdmin($ugroup->getProjectId());
+        $this->status_presenter          = new StatusPresenter($member->getStatus());
     }
 }

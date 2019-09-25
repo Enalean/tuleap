@@ -26,12 +26,13 @@ use Event;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupMemberUpdatable;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 
 final class MembersPresenterBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, GlobalLanguageMock;
 
     /**
      * @var MembersPresenterBuilder
@@ -172,6 +173,7 @@ final class MembersPresenterBuilderTest extends TestCase
                 'getRealName' => 'Junko Most',
                 'hasAvatar'   => true,
                 'isAdmin'     => false,
+                'getStatus'   => 'A'
             ]
         );
         $ugroup->shouldReceive('getMembersIncludingSuspended')
@@ -213,6 +215,7 @@ final class MembersPresenterBuilderTest extends TestCase
                 'getRealName' => 'Junko Most',
                 'hasAvatar'   => true,
                 'isAdmin'     => false,
+                'getStatus'   => 'A'
             ]
         );
         $ugroup->shouldReceive('getMembersIncludingSuspended')
@@ -256,6 +259,7 @@ final class MembersPresenterBuilderTest extends TestCase
                 'getRealName' => 'Junko Most',
                 'hasAvatar'   => true,
                 'isAdmin'     => false,
+                'getStatus'   => 'A'
             ]
         );
         $first_member->shouldReceive('isMember')
