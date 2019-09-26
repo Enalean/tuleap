@@ -147,6 +147,7 @@ class TrackerFieldsTest extends TrackerBase
             str_replace('/api/v1', '', $this->client->getBaseUrl()),
             $this->client->getConfig()
         );
+        $tus_client->setCurlMulti($this->client->getCurlMulti());
         $tus_client->setSslVerification(false, false, false);
         $tus_response_upload = $this->getResponse(
             $tus_client->patch(
@@ -226,6 +227,7 @@ class TrackerFieldsTest extends TrackerBase
             str_replace('/api/v1', '', $this->client->getBaseUrl()),
             $this->client->getConfig()
         );
+        $tus_client->setCurlMulti($this->client->getCurlMulti());
         $tus_client->setSslVerification(false, false, false);
         $tus_response_upload = $this->getResponse(
             $tus_client->delete(

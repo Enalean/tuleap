@@ -372,6 +372,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
             str_replace('/api/v1', '', $this->client->getBaseUrl()),
             $this->client->getConfig()
         );
+        $general_use_http_client->setCurlMulti($this->client->getCurlMulti());
         $general_use_http_client->setSslVerification(false, false, false);
         $file_content        = str_repeat('A', $file_size);
         $tus_response_upload = $this->getResponseByName(
