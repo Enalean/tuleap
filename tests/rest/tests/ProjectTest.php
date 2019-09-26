@@ -1192,4 +1192,40 @@ class ProjectTest extends ProjectBase
 
         $this->assertEquals($response->getStatusCode(), 200);
     }
+
+    public function testPUTBanner(): void
+    {
+        $payload = json_encode([
+            'message' => 'a banner message'
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->put(
+                'projects/' . $this->project_public_member_id .'/banner',
+                null,
+                $payload
+            )
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testPUTEmptyMessageBannerShouldReturn400(): void
+    {
+        $payload = json_encode([
+            'message' => ''
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->put(
+                'projects/' . $this->project_public_member_id .'/banner',
+                null,
+                $payload
+            )
+        );
+
+        $this->assertEquals(400, $response->getStatusCode());
+    }
 }
