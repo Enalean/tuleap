@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NoMappingMessage displays a message when card has a status 1`] = `
+<p
+  class="tlp-text-warning taskboard-no-mapping"
+>
+  <i
+    class="fa fa-warning"
+  />
+   
+  <span>
+    This card has status 
+    <strong>
+      YOLO
+    </strong>
+     that does not map to current taskboard columns.
+  </span>
+   
+  <translate-stub
+    tag="span"
+  >
+    Please edit the card to change the status, or add children if possible.
+  </translate-stub>
+</p>
+`;
+
+exports[`NoMappingMessage displays another message when card has no status 1`] = `
+<p
+  class="tlp-text-warning taskboard-no-mapping"
+>
+  <i
+    class="fa fa-warning"
+  />
+   
+  <span>
+    This card does not have any status.
+  </span>
+   
+  <translate-stub
+    tag="span"
+  >
+    Please edit the card to change the status, or add children if possible.
+  </translate-stub>
+</p>
+`;

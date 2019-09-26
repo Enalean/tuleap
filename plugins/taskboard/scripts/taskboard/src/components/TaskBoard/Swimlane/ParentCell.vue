@@ -21,7 +21,7 @@
 <template>
     <div class="taskboard-cell">
         <parent-card v-bind:card="card"/>
-        <no-mapping-message v-if="should_no_mapping_message_be_displayed"/>
+        <no-mapping-message v-if="should_no_mapping_message_be_displayed" v-bind:card="card"/>
     </div>
 </template>
 

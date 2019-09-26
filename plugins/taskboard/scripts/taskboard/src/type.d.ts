@@ -28,6 +28,11 @@ export interface Swimlane {
     card: Card;
 }
 
+export interface Status {
+    id: number;
+    label: string;
+}
+
 export interface Card {
     id: number;
     label: string;
@@ -38,6 +43,7 @@ export interface Card {
     artifact_html_uri: string;
     assignees: Array<User>;
     has_children: boolean;
+    status: Status | null;
 }
 
 interface RootState {
