@@ -1325,6 +1325,8 @@ class DocmanPlugin extends Plugin
         $root_path                   = $this->getPluginInfo()->getPropertyValueForName('docman_root');
         $path_allocator              = (new UploadPathAllocatorBuilder())->getDocumentUploadPathAllocator();
         $user_manager                = UserManager::instance();
+        $event_manager               = EventManager::instance();
+
         return FileUploadController::build(
             new \Tuleap\Docman\Upload\Document\DocumentDataStore(
                 new \Tuleap\Docman\Upload\Document\DocumentBeingUploadedInformationProvider(
@@ -1344,13 +1346,15 @@ class DocmanPlugin extends Plugin
                     $path_allocator,
                     $this->getItemFactory(),
                     new Docman_VersionFactory(),
-                    EventManager::instance(),
+                    $event_manager,
                     $document_ongoing_upload_dao,
                     $this->getItemDao(),
                     new Docman_FileStorage($root_path),
                     new Docman_MIMETypeDetector(),
                     $user_manager,
-                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+                    new DocmanItemsEventAdder($event_manager),
+                    ProjectManager::instance()
                 ),
                 new \Tuleap\Docman\Upload\Document\DocumentUploadCanceler(
                     $path_allocator,

@@ -48,6 +48,7 @@ use Tuleap\Docman\Metadata\MetadataValueStore;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Docman\REST\v1\AfterItemCreationVisitor;
 use Tuleap\Docman\REST\v1\DocmanItemCreator;
+use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Docman\REST\v1\Files\EmptyFileToUploadFinisher;
 use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 use Tuleap\Docman\REST\v1\Metadata\CustomMetadataCollectionBuilder;
@@ -153,7 +154,9 @@ class DocmanItemCreatorBuilder
                     new Docman_FileStorage($docman_root),
                     new Docman_MIMETypeDetector(),
                     UserManager::instance(),
-                    $transaction_executor
+                    $transaction_executor,
+                    new DocmanItemsEventAdder($event_manager),
+                    ProjectManager::instance()
                 ),
                 $document_upload_path_allocator
             ),
