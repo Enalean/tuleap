@@ -56,11 +56,3 @@
         border-right: 0;
     }
 }
-
-.taskboard-no-mapping:last-child,
-.taskboard-no-mapping {
-    margin: $tlp-half-spacing 0 0;
-    padding: 0 $tlp-half-spacing 0 ($tlp-half-spacing + 3px);
-    font-size: 14px;
-    line-height: 20px;
-}

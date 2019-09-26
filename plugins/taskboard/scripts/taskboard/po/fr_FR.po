@@ -71,14 +71,6 @@ msgstr ""
 "La colonne est configurée pour utiliser une couleur (%s) qui fait partie de "
 "l'ancienne palette."
 
-msgid ""
-"This card has a status that does not map to current taskboard columns. "
-"Please edit the card to change the status, or add children if possible."
-msgstr ""
-"Cette carte a un status qui ne correspond pas aux colonnes de ce tableau des "
-"tâches. Veuillez éditer la carte pour changer son status, ou ajouter des "
-"enfants si possible."
-
 msgid "This feature is under construction"
 msgstr "Cette fonctionnalité est en cours de construction"
 
