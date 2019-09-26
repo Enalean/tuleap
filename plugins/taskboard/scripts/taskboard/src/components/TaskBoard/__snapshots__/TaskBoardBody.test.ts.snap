@@ -7,13 +7,9 @@ exports[`TaskBoardBody displays swimlanes with empty columns 1`] = `
   <div
     class="taskboard-swimlane"
   >
-    <div
-      class="taskboard-cell"
-    >
-      <parent-card-stub
-        card="[object Object]"
-      />
-    </div>
+    <parent-cell-stub
+      card="[object Object]"
+    />
      
     <div
       class="taskboard-cell"
@@ -25,13 +21,9 @@ exports[`TaskBoardBody displays swimlanes with empty columns 1`] = `
   <div
     class="taskboard-swimlane"
   >
-    <div
-      class="taskboard-cell"
-    >
-      <parent-card-stub
-        card="[object Object]"
-      />
-    </div>
+    <parent-cell-stub
+      card="[object Object]"
+    />
      
     <columns-skeleton-stub
       column_index="0"

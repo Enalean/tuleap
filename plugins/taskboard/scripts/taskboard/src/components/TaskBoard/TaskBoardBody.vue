@@ -21,7 +21,7 @@
 <template>
     <div class="taskboard-body">
         <div class="taskboard-swimlane" v-for="swimlane of swimlanes" v-bind:key="swimlane.card.id">
-            <div class="taskboard-cell"><parent-card v-bind:card="swimlane.card"/></div>
+            <parent-cell v-bind:card="swimlane.card"/>
             <template v-if="swimlane.card.has_children">
                 <columns-skeleton v-for="(col, index) of columns" v-bind:key="col.id" v-bind:column_index="index"/>
             </template>
@@ -38,14 +38,15 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
 import { ColumnDefinition, Swimlane } from "../../type";
-import ParentCard from "./Card/ParentCard.vue";
 import SwimlaneSkeleton from "./SwimlaneSkeleton.vue";
 import ColumnsSkeleton from "./ColumnsSkeleton.vue";
+import NoMappingMessage from "./Swimlane/NoMappingMessage.vue";
+import ParentCell from "./Swimlane/ParentCell.vue";
 
 const swimlane = namespace("swimlane");
 
 @Component({
-    components: { ColumnsSkeleton, SwimlaneSkeleton, ParentCard }
+    components: { NoMappingMessage, ColumnsSkeleton, SwimlaneSkeleton, ParentCell }
 })
 export default class TaskBoardBody extends Vue {
     @swimlane.State
