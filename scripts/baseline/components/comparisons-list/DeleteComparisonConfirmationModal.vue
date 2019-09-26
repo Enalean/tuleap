@@ -57,7 +57,12 @@ export default {
     },
     methods: {
         async confirm() {
-            await deleteComparison(this.comparison.id);
+            try {
+                await deleteComparison(this.comparison.id);
+            } catch (e) {
+                // Error handling is missing
+                return;
+            }
             this.$store.commit("comparisons/delete", this.comparison);
             this.$store.commit("dialog_interface/notify", {
                 text: this.$gettext("The comparison was deleted"),
