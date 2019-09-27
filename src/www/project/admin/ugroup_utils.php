@@ -266,9 +266,13 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid = 0)
         // Registered user
         return $user_id != 0;
     } elseif ($ugroup_id==$GLOBALS['UGROUP_REGISTERED'] && ForgeConfig::areRestrictedUsersAllowed()) {
-        $event = new RestrictedUsersAreHandledByPluginEvent($_SERVER['REQUEST_URI']);
-        EventManager::instance()->processEvent($event);
-        $called_script_handles_restricted = $event->getPluginHandleRestricted();
+        if (! isset($_SERVER['REQUEST_URI'])) {
+            $called_script_handles_restricted = false;
+        } else {
+            $event = new RestrictedUsersAreHandledByPluginEvent($_SERVER['REQUEST_URI']);
+            EventManager::instance()->processEvent($event);
+            $called_script_handles_restricted = $event->getPluginHandleRestricted();
+        }
 
         // Non-restricted user or restricted member in service that doesn't yet handle restricted users independently
         return ! $user->isAnonymous() && (! $user->isRestricted() || ! $called_script_handles_restricted);
