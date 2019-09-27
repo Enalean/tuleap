@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SoloCard displays the parent card in Done column when status maps this column 1`] = `
+<div
+  class="taskboard-swimlane"
+>
+  <div
+    class="taskboard-cell"
+  />
+   
+  <div
+    class="taskboard-cell"
+  >
+    <!---->
+  </div>
+  <div
+    class="taskboard-cell"
+  >
+    <parent-card-stub
+      card="[object Object]"
+    />
+  </div>
+</div>
+`;
+
+exports[`SoloCard displays the parent card in its own cell when status is null 1`] = `
+<div
+  class="taskboard-swimlane"
+>
+  <parent-cell-stub
+    card="[object Object]"
+  />
+   
+  <div
+    class="taskboard-cell"
+  />
+  <div
+    class="taskboard-cell"
+  />
+</div>
+`;
+
+exports[`SoloCard displays the parent card in its own cell when tracker id is not part of columns mapping 1`] = `
+<div
+  class="taskboard-swimlane"
+>
+  <parent-cell-stub
+    card="[object Object]"
+  />
+   
+  <div
+    class="taskboard-cell"
+  />
+  <div
+    class="taskboard-cell"
+  />
+</div>
+`;

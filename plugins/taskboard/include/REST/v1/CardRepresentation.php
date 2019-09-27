@@ -34,6 +34,10 @@ class CardRepresentation
      */
     public $id;
     /**
+     * @var int
+     */
+    public $tracker_id;
+    /**
      * @var string
      */
     public $label;
@@ -87,6 +91,7 @@ class CardRepresentation
         $initial_effort
     ): void {
         $this->id                = JsonCast::toInt($artifact->getId());
+        $this->tracker_id        = JsonCast::toInt($artifact->getTrackerId());
         $this->label             = $artifact->getTitle();
         $this->xref              = $artifact->getXRef();
         $this->rank              = $rank;

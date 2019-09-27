@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CardWithChildren displays the parent card in its own cell with columns skeletons 1`] = `
+<div
+  class="taskboard-swimlane"
+>
+  <parent-cell-stub
+    card="[object Object]"
+  />
+   
+  <columns-skeleton-stub
+    column_index="0"
+  />
+  <columns-skeleton-stub
+    column_index="1"
+  />
+</div>
+`;

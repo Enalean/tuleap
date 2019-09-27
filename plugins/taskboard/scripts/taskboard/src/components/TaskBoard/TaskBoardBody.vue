@@ -20,15 +20,10 @@
 
 <template>
     <div class="taskboard-body">
-        <div class="taskboard-swimlane" v-for="swimlane of swimlanes" v-bind:key="swimlane.card.id">
-            <parent-cell v-bind:card="swimlane.card"/>
-            <template v-if="swimlane.card.has_children">
-                <columns-skeleton v-for="(col, index) of columns" v-bind:key="col.id" v-bind:column_index="index"/>
-            </template>
-            <template v-else>
-                <div class="taskboard-cell" v-for="col of columns" v-bind:key="col.id"></div>
-            </template>
-        </div>
+        <template v-for="swimlane of swimlanes">
+            <card-with-children v-bind:key="swimlane.card.id" v-bind:card="swimlane.card" v-if="swimlane.card.has_children"/>
+            <solo-card v-bind:key="swimlane.card.id" v-bind:card="swimlane.card" v-else/>
+        </template>
         <swimlane-skeleton v-if="is_loading_swimlanes"/>
     </div>
 </template>
@@ -36,24 +31,20 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { namespace, State } from "vuex-class";
-import { ColumnDefinition, Swimlane } from "../../type";
+import { namespace } from "vuex-class";
+import { Swimlane } from "../../type";
 import SwimlaneSkeleton from "./SwimlaneSkeleton.vue";
-import ColumnsSkeleton from "./ColumnsSkeleton.vue";
-import NoMappingMessage from "./Swimlane/NoMappingMessage.vue";
-import ParentCell from "./Swimlane/ParentCell.vue";
+import CardWithChildren from "./Swimlane/CardWithChildren.vue";
+import SoloCard from "./Swimlane/SoloCard.vue";
 
 const swimlane = namespace("swimlane");
 
 @Component({
-    components: { NoMappingMessage, ColumnsSkeleton, SwimlaneSkeleton, ParentCell }
+    components: { SwimlaneSkeleton, SoloCard, CardWithChildren }
 })
 export default class TaskBoardBody extends Vue {
     @swimlane.State
     readonly swimlanes!: Array<Swimlane>;
-
-    @State
-    readonly columns!: Array<ColumnDefinition>;
 
     @swimlane.State
     readonly is_loading_swimlanes!: boolean;
