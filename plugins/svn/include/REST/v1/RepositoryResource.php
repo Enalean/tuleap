@@ -148,6 +148,9 @@ class RepositoryResource extends AuthenticatedResource
         $dao                        = new Dao();
         $logger                     = new SvnLogger();
         $system_command             = new \System_Command();
+        /**
+         * @var \BackendSVN $backend_svn
+         */
         $backend_svn                = \Backend::instance(\Backend::SVN);
         $project_history_dao        = new ProjectHistoryDao();
         $this->system_event_manager = \SystemEventManager::instance();
@@ -194,7 +197,8 @@ class RepositoryResource extends AuthenticatedResource
             new AccessFileHistoryDao(),
             $access_file_history_factory,
             $project_history_dao,
-            $project_history_formatter
+            $project_history_formatter,
+            $backend_svn
         );
 
         $this->ugroup_manager = new UGroupManager();

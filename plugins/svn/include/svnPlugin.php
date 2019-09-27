@@ -22,6 +22,7 @@ require_once 'constants.php';
 require_once __DIR__. '/../vendor/autoload.php';
 
 use FastRoute\RouteCollector;
+use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 use Tuleap\CVS\DiskUsage\FullHistoryDao;
@@ -47,6 +48,7 @@ use Tuleap\SVN\AccessControl\AccessControlController;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
+use Tuleap\SVN\AccessControl\SVNRefreshAllAccessFilesCommand;
 use Tuleap\SVN\Admin\AdminController;
 use Tuleap\SVN\Admin\GlobalAdminController;
 use Tuleap\SVN\Admin\ImmutableTagController;
@@ -110,11 +112,13 @@ use Tuleap\SVN\ViewVC\AccessHistorySaver;
 use Tuleap\SVN\ViewVC\ViewVCProxy;
 use Tuleap\SVN\XMLImporter;
 use Tuleap\SVN\XMLSvnExporter;
+use Tuleap\System\ApacheServiceControl;
+use Tuleap\System\ServiceControl;
 
 /**
  * SVN plugin
  */
-class SvnPlugin extends Plugin
+class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const SERVICE_SHORTNAME  = 'plugin_svn';
     public const SYSTEM_NATURE_NAME = 'svn_revision';
@@ -177,6 +181,7 @@ class SvnPlugin extends Plugin
         $this->addHook(Event::EXPORT_XML_PROJECT);
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
         $this->addHook(Event::SITE_ACCESS_CHANGE);
+        $this->addHook(CLICommandsCollector::NAME);
 
         $this->addHook(EVENT::REST_RESOURCES);
         $this->addHook(EVENT::REST_PROJECT_RESOURCES);
@@ -202,7 +207,7 @@ class SvnPlugin extends Plugin
         return parent::getHooksAndCallbacks();
     }
 
-    public function export_xml_project($params)
+    public function export_xml_project($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         if (! isset($params['options']['all']) || $params['options']['all'] === false) {
             return;
@@ -250,6 +255,20 @@ class SvnPlugin extends Plugin
         );
     }
 
+    public function collectCLICommands(CLICommandsCollector $commands_collector): void
+    {
+        $commands_collector->addCommand(
+            SVNRefreshAllAccessFilesCommand::NAME,
+            function (): SVNRefreshAllAccessFilesCommand {
+                return new SVNRefreshAllAccessFilesCommand(
+                    $this->getRepositoryManager(),
+                    $this->getAccessFileHistoryFactory(),
+                    $this->getAccessFileHistoryCreator()
+                );
+            }
+        );
+    }
+
     /**
      * Returns the configuration defined for given variable name
      *
@@ -263,7 +282,7 @@ class SvnPlugin extends Plugin
     }
 
     /** @see Event::UGROUP_MODIFY */
-    public function ugroup_modify(array $params)
+    public function ugroup_modify(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $project         = $params['project'];
 
@@ -271,7 +290,7 @@ class SvnPlugin extends Plugin
     }
 
     /** @see Event::MEMBERSHIP_CREATE */
-    public function membership_create(array $params)
+    public function membership_create(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $project         = $params['project'];
         $new_ugroup_name = null;
@@ -281,7 +300,7 @@ class SvnPlugin extends Plugin
     }
 
     /** @see Event::MEMBERSHIP_DELETE */
-    public function membership_delete(array $params)
+    public function membership_delete(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $project         = $params['project'];
         $new_ugroup_name = null;
@@ -299,7 +318,7 @@ class SvnPlugin extends Plugin
         $this->updateAllAccessFileOfProject($project, null, null);
     }
 
-    public function systemevent_user_rename(array $params)
+    public function systemevent_user_rename(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $new_ugroup_name = null;
         $old_ugroup_name = null;
@@ -326,20 +345,20 @@ class SvnPlugin extends Plugin
         }
     }
 
-    public function get_svn_list_repositories_sql_fragments(array $params)
+    public function get_svn_list_repositories_sql_fragments(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $dao = new Dao();
         $params['sql_fragments'][] = $dao->getListRepositoriesSqlFragment();
     }
 
-    public function system_event_get_types_for_default_queue($params)
+    public function system_event_get_types_for_default_queue($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $params['types'][] = 'Tuleap\\SVN\\Events\\'.SystemEvent_SVN_CREATE_REPOSITORY::NAME;
         $params['types'][] = 'Tuleap\\SVN\\Events\\'.SystemEvent_SVN_DELETE_REPOSITORY::NAME;
         $params['types'][] = 'Tuleap\\SVN\\Events\\'.SystemEvent_SVN_RESTORE_REPOSITORY::NAME;
     }
 
-    public function get_system_event_class($params)
+    public function get_system_event_class($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         switch ($params['type']) {
             case 'Tuleap\\SVN\\Events\\'.SystemEvent_SVN_CREATE_REPOSITORY::NAME:
@@ -420,7 +439,8 @@ class SvnPlugin extends Plugin
                 $this->getAccessFileHistoryDao(),
                 $this->getAccessFileHistoryFactory(),
                 $this->getProjectHistoryDao(),
-                $this->getProjectHistoryFormatter()
+                $this->getProjectHistoryFormatter(),
+                $this->getBackendSVN()
             );
         }
 
@@ -493,7 +513,7 @@ class SvnPlugin extends Plugin
         }
     }
 
-    public function javascript_file()
+    public function javascript_file() // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         // Only show the javascript if we're actually in the svn pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
@@ -505,7 +525,7 @@ class SvnPlugin extends Plugin
         $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/user-and-ugroup-autocompleter.js');
     }
 
-    public function service_classnames(array &$params)
+    public function service_classnames(array &$params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\SVN\ServiceSvn::class;
     }
@@ -514,7 +534,7 @@ class SvnPlugin extends Plugin
      * @param array $params
      * @see Event::IMPORT_XML_PROJECT
      */
-    public function import_xml_project($params)
+    public function import_xml_project($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $xml             = $params['xml_content'];
         $extraction_path = $params['extraction_path'];
@@ -655,7 +675,7 @@ class SvnPlugin extends Plugin
         return Backend::instance(Backend::SVN);
     }
 
-    public function get_reference($params)
+    public function get_reference($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $keyword = $params['keyword'];
 
@@ -689,7 +709,7 @@ class SvnPlugin extends Plugin
         return true;
     }
 
-    public function svn_repository_created($params)
+    public function svn_repository_created($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $backend           = Backend::instance();
         $svn_plugin_folder = ForgeConfig::get('sys_data_dir') .'/svn_plugin/';
@@ -704,7 +724,7 @@ class SvnPlugin extends Plugin
         $backend->chgrp($svn_project_folder, $backend->getHTTPUser());
     }
 
-    public function project_is_deleted($params)
+    public function project_is_deleted($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         if (! empty($params['group_id'])) {
             $project = ProjectManager::instance()->getProject($params['group_id']);
@@ -714,12 +734,12 @@ class SvnPlugin extends Plugin
         }
     }
 
-    public function codendi_daily_start()
+    public function codendi_daily_start() // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $this->getRepositoryManager()->purgeArchivedRepositories();
     }
 
-    public function show_pending_documents($params)
+    public function show_pending_documents($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $project_id            = $params['group_id'];
         $project               = ProjectManager::instance()->getProject($project_id);
@@ -730,7 +750,7 @@ class SvnPlugin extends Plugin
         $params['html'][]   = $tab_content;
     }
 
-    public function logs_daily($params)
+    public function logs_daily($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $project_manager = ProjectManager::instance();
         $project         = $project_manager->getProject($params['group_id']);
@@ -746,7 +766,7 @@ class SvnPlugin extends Plugin
         }
     }
 
-    public function statistics_collector(array $params)
+    public function statistics_collector(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         if (! empty($params['formatter'])) {
             $statistic_dao       = new \Tuleap\SVN\Statistic\SCMUsageDao();
@@ -756,14 +776,14 @@ class SvnPlugin extends Plugin
         }
     }
 
-    public function plugin_statistics_service_usage(array $params)
+    public function plugin_statistics_service_usage(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $statistic_dao       = new \Tuleap\SVN\Statistic\ServiceUsageDao();
         $statistic_collector = new \Tuleap\SVN\Statistic\ServiceUsageCollector($statistic_dao);
         $statistic_collector->collect($params['csv_exporter'], $params['start_date'], $params['end_date']);
     }
 
-    public function project_creation_remove_legacy_services($params)
+    public function project_creation_remove_legacy_services($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         if (! $this->isRestricted()) {
             $this->getServiceActivator()->unuseLegacyService($params);
@@ -789,7 +809,7 @@ class SvnPlugin extends Plugin
     }
 
     /** @see Event::SITE_ACCESS_CHANGE */
-    public function site_access_change(array $params)
+    public function site_access_change(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $updater = $this->getUgroupToNotifyUpdater();
         $updater->updateSiteAccess($params['old_value']);
@@ -803,7 +823,7 @@ class SvnPlugin extends Plugin
         return new UgroupsToNotifyUpdater($this->getUGroupNotifyDao());
     }
 
-    public function project_admin_remove_user(array $params)
+    public function project_admin_remove_user(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $project_id = $params['group_id'];
         $user_id    = $params['user_id'];
@@ -818,7 +838,7 @@ class SvnPlugin extends Plugin
         $notifications_for_project_member_cleaner->cleanNotificationsAfterUserRemoval($project, $user);
     }
 
-    public function project_admin_ugroup_deletion($params)
+    public function project_admin_ugroup_deletion($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $project_id = $params['group_id'];
         $ugroup     = $params['ugroup'];
@@ -831,7 +851,7 @@ class SvnPlugin extends Plugin
     /**
      * @param array $params
      */
-    public function plugin_statistics_disk_usage_collect_project(array $params)
+    public function plugin_statistics_disk_usage_collect_project(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $start   = microtime(true);
         $project = $params['project'];
@@ -853,7 +873,7 @@ class SvnPlugin extends Plugin
      *
      * @param array $params
      */
-    public function plugin_statistics_disk_usage_service_label($params)
+    public function plugin_statistics_disk_usage_service_label($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $params['services'][self::SERVICE_SHORTNAME] = dgettext('tuleap-svn', 'Multi SVN');
     }
@@ -863,7 +883,7 @@ class SvnPlugin extends Plugin
      *
      * @param array $params
      */
-    public function plugin_statistics_color($params)
+    public function plugin_statistics_color($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         if ($params['service'] == self::SERVICE_SHORTNAME) {
             $params['color'] = 'forestgreen';
@@ -908,7 +928,7 @@ class SvnPlugin extends Plugin
         return new DiskUsageCollector($this->getRetriever(), new Statistics_DiskUsageDao());
     }
 
-    public function rest_resources($params)
+    public function rest_resources($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $injector = new \Tuleap\SVN\REST\ResourcesInjector();
         $injector->populate($params['restler']);
@@ -917,13 +937,13 @@ class SvnPlugin extends Plugin
     /**
      * @see Event::REST_PROJECT_RESOURCES
      */
-    public function rest_project_resources(array $params)
+    public function rest_project_resources(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $injector = new \Tuleap\SVN\REST\ResourcesInjector();
         $injector->declareProjectResource($params['resources'], $params['project']);
     }
 
-    public function rest_project_get_svn(ProjectGetSvn $event)
+    public function rest_project_get_svn(ProjectGetSvn $event) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $event->setPluginActivated();
 
@@ -942,7 +962,7 @@ class SvnPlugin extends Plugin
         $event->addTotalRepositories($collection->getTotalSize());
     }
 
-    public function rest_project_options_svn(ProjectOptionsSvn $event)
+    public function rest_project_options_svn(ProjectOptionsSvn $event) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $event->setPluginActivated();
     }
@@ -1001,7 +1021,7 @@ class SvnPlugin extends Plugin
         );
     }
 
-    public function project_registration_activate_service(ProjectRegistrationActivateService $event)
+    public function project_registration_activate_service(ProjectRegistrationActivateService $event) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
         $this->getServiceActivator()->forceUsageOfService($event->getProject(), $event->getTemplate(), $event->getLegacy());
     }

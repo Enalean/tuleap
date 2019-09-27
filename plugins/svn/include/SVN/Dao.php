@@ -291,4 +291,19 @@ class Dao extends DataAccessObject
 
         return $row['nb'];
     }
+
+    public function searchRepositoriesOfNonDeletedProjects()
+    {
+        $status_deleted = $this->da->quoteSmart(Project::STATUS_DELETED);
+
+        $sql = 'SELECT plugin_svn_repositories.*
+                FROM plugin_svn_repositories
+                    INNER JOIN groups AS project
+                    ON plugin_svn_repositories.project_id = project.group_id
+                WHERE project.status <> ' . $status_deleted .'
+                AND repository_deletion_date IS NULL
+                ORDER BY project_id, name ASC';
+
+        return $this->retrieve($sql);
+    }
 }

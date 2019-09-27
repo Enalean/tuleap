@@ -33,7 +33,6 @@ use SystemEvent;
 use SystemEventManager;
 use Tuleap\Event\Events\ArchiveDeletedItemEvent;
 use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
-use Tuleap\Git\GitPHP\Archive;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Events\SystemEvent_SVN_RESTORE_REPOSITORY;
@@ -375,5 +374,26 @@ class RepositoryManager
         }
 
         return false;
+    }
+
+    /**
+     * @return RepositoryByProjectCollection[]
+     */
+    public function getRepositoriesOfNonDeletedProjects(): array
+    {
+        $repository_list = $this->dao->searchRepositoriesOfNonDeletedProjects();
+
+        $repository_by_projects = [];
+        foreach ($repository_list as $repository) {
+            $repository_by_projects[$repository['project_id']][] = $this->instantiateFromRowWithoutProject($repository);
+        }
+
+        $collection = [];
+        foreach ($repository_by_projects as $project_id => $project_repositories) {
+            $project      = $this->project_manager->getProject($project_id);
+            $collection[] = RepositoryByProjectCollection::build($project, $project_repositories);
+        }
+
+        return $collection;
     }
 }
