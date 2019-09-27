@@ -26,7 +26,7 @@ use Cardwall_OnTop_ColumnDao;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenterBuilder;
 
 class ColumnPresenterCollectionRetrieverTest extends TestCase
 {
@@ -40,11 +40,13 @@ class ColumnPresenterCollectionRetrieverTest extends TestCase
             ->once()
             ->andReturn([]);
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->once()->andReturn(101);
+        $mappings_builder = Mockery::mock(TrackerMappingPresenterBuilder::class);
 
-        $retriever = new ColumnPresenterCollectionRetriever($dao);
-        $collection = $retriever->getColumns($tracker);
+        $planning = Mockery::mock(\Planning::class);
+        $planning->shouldReceive('getPlanningTrackerId')->once()->andReturn(101);
+
+        $retriever  = new ColumnPresenterCollectionRetriever($dao, $mappings_builder);
+        $collection = $retriever->getColumns($planning);
 
         $this->assertEmpty($collection);
     }
@@ -61,11 +63,18 @@ class ColumnPresenterCollectionRetrieverTest extends TestCase
                 ['id' => 6, 'label' => 'Done', 'bg_red' => 135, 'bg_green' => 219, 'bg_blue' => 239, 'tlp_color_name' => '']
             ]);
 
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->once()->andReturn(101);
+        $planning = Mockery::mock(\Planning::class);
+        $planning->shouldReceive('getPlanningTrackerId')->once()->andReturn(101);
 
-        $retriever = new ColumnPresenterCollectionRetriever($dao);
-        $collection = $retriever->getColumns($tracker);
+        $mappings_builder = Mockery::mock(TrackerMappingPresenterBuilder::class);
+        $mappings_builder->shouldReceive('buildMappings')->withArgs(
+            function (int $column_id, \Planning $planning) {
+                return $column_id === 2 || $column_id === 4 || $column_id === 6;
+            }
+        )->andReturn([]);
+
+        $retriever  = new ColumnPresenterCollectionRetriever($dao, $mappings_builder);
+        $collection = $retriever->getColumns($planning);
 
         $this->assertCount(3, $collection);
         $this->assertEquals('To do', $collection[0]->label);

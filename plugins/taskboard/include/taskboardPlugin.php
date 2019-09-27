@@ -30,6 +30,7 @@ use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfoBuilder;
 use Tuleap\Taskboard\Board\BoardPresenterBuilder;
 use Tuleap\Taskboard\Column\ColumnPresenterCollectionRetriever;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenterBuilder;
 use Tuleap\Taskboard\REST\ResourcesInjector;
 use Tuleap\Taskboard\Routing\MilestoneExtractor;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
@@ -90,6 +91,9 @@ class taskboardPlugin extends Plugin
             throw new RuntimeException('Cannot instantiate Agiledashboard plugin');
         }
 
+        $dao        = new Cardwall_OnTop_Dao();
+        $column_dao = new Cardwall_OnTop_ColumnDao();
+
         return new \Tuleap\Taskboard\Routing\TaskboardController(
             new MilestoneExtractor(
                 $agiledashboard_plugin->getMilestoneFactory(),
@@ -99,7 +103,22 @@ class taskboardPlugin extends Plugin
             $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
             new BoardPresenterBuilder(
                 $agiledashboard_plugin->getMilestonePaneFactory(),
-                new ColumnPresenterCollectionRetriever(new Cardwall_OnTop_ColumnDao()),
+                new ColumnPresenterCollectionRetriever(
+                    $column_dao,
+                    new TrackerMappingPresenterBuilder(
+                        $dao,
+                        new Cardwall_OnTop_Config_ColumnFactory($column_dao, $dao),
+                        new Cardwall_OnTop_Config_TrackerMappingFactory(
+                            TrackerFactory::instance(),
+                            Tracker_FormElementFactory::instance(),
+                            new Cardwall_OnTop_ColumnMappingFieldDao(),
+                            new Cardwall_OnTop_Config_ValueMappingFactory(
+                                Tracker_FormElementFactory::instance(),
+                                new Cardwall_OnTop_ColumnMappingFieldValueDao()
+                            )
+                        )
+                    )
+                ),
                 new AgileDashboard_BacklogItemDao()
             ),
             $agiledashboard_plugin->getIncludeAssets(),

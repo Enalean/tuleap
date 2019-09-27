@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,37 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Taskboard\Column;
+namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenter;
-
-class ColumnPresenter
+class ListFieldValuePresenter
 {
     /**
      * @var int
      */
     public $id;
 
-    /**
-     * @var string
-     */
-    public $label;
-
-    /**
-     * @var string
-     */
-    public $color;
-
-    /**
-     * @var TrackerMappingPresenter[]
-     */
-    public $mappings = [];
-
-    public function __construct(int $id, string $label, string $color, array $mappings)
+    public function __construct(int $id)
     {
-        $this->id       = $id;
-        $this->label    = $label;
-        $this->color    = $color;
-        $this->mappings = $mappings;
+        $this->id = $id;
     }
 }

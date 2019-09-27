@@ -23,31 +23,41 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column;
 
 use Cardwall_OnTop_ColumnDao;
-use Tracker;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenterBuilder;
 
 class ColumnPresenterCollectionRetriever
 {
     /**
      * @var Cardwall_OnTop_ColumnDao
      */
-    private $dao;
+    private $column_dao;
+    /**
+     * @var TrackerMappingPresenterBuilder
+     */
+    private $tracker_mapping_builder;
 
-    public function __construct(Cardwall_OnTop_ColumnDao $dao)
-    {
-        $this->dao = $dao;
+    public function __construct(
+        Cardwall_OnTop_ColumnDao $column_dao,
+        TrackerMappingPresenterBuilder $tracker_mapping_builder
+    ) {
+        $this->column_dao              = $column_dao;
+        $this->tracker_mapping_builder = $tracker_mapping_builder;
     }
 
     /**
      * @return ColumnPresenter[]
      */
-    public function getColumns(Tracker $tracker): array
+    public function getColumns(\Planning $planning): array
     {
         $collection = [];
-        foreach ($this->dao->searchColumnsByTrackerId($tracker->getId()) as $row) {
+        foreach ($this->column_dao->searchColumnsByTrackerId($planning->getPlanningTrackerId()) as $row) {
+            $column_id    = (int) $row['id'];
+            $mappings     = $this->tracker_mapping_builder->buildMappings($column_id, $planning);
             $collection[] = new ColumnPresenter(
-                (int) $row['id'],
+                $column_id,
                 $row['label'],
-                $this->getColor($row)
+                $this->getColor($row),
+                $mappings
             );
         }
 
