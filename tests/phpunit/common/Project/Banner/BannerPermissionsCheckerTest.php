@@ -47,7 +47,7 @@ class BannerPermissionsCheckerTest extends TestCase
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturn(108);
 
-        $this->assertNull($this->banner_permissions_checker->getUpdateBannerPermission($user, $project));
+        $this->assertNull($this->banner_permissions_checker->getEditBannerPermission($user, $project));
     }
 
     public function testGetUpdateBannerPermissionShouldReturnThePermissionIfUserIsProjectAdmin()
@@ -58,9 +58,9 @@ class BannerPermissionsCheckerTest extends TestCase
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturn(108);
 
-        $permission = $this->banner_permissions_checker->getUpdateBannerPermission($user, $project);
+        $permission = $this->banner_permissions_checker->getEditBannerPermission($user, $project);
 
-        $this->assertInstanceOf(UserCanUpdateBannerPermission::class, $permission);
+        $this->assertInstanceOf(UserCanEditBannerPermission::class, $permission);
         $this->assertEquals(108, $permission->getProject()->getID());
     }
 }

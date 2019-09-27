@@ -35,7 +35,7 @@ class BannerCreator
     }
 
     public function addBanner(
-        UserCanUpdateBannerPermission $update_permission,
+        UserCanEditBannerPermission $update_permission,
         string $message
     ): void {
         $this->banner_dao->addBanner(

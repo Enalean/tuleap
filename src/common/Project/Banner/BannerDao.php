@@ -18,6 +18,8 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Project\Banner;
 
 use Tuleap\DB\DataAccessObject;
@@ -30,5 +32,10 @@ class BannerDao extends DataAccessObject
         $sql = "REPLACE INTO project_banner(project_id, message) VALUES (?,?)";
 
         $this->getDB()->run($sql, $project_id, $message);
+    }
+
+    public function deleteBanner(int $project_id): void
+    {
+        $this->getDB()->run('DELETE FROM project_banner WHERE project_id = ?', $project_id);
     }
 }

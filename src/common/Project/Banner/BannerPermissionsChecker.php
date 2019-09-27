@@ -25,10 +25,10 @@ use Project;
 
 class BannerPermissionsChecker
 {
-    public function getUpdateBannerPermission(PFUser $user, Project $project): ?UserCanUpdateBannerPermission
+    public function getEditBannerPermission(PFUser $user, Project $project): ?UserCanEditBannerPermission
     {
         if ($user->isAdmin($project->getID())) {
-            return new UserCanUpdateBannerPermission($project);
+            return new UserCanEditBannerPermission($project);
         }
 
         return null;

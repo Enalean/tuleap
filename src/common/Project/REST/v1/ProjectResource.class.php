@@ -46,6 +46,7 @@ use Tuleap\Label\REST\LabelRepresentation;
 use Tuleap\Project\Banner\BannerCreator;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerPermissionsChecker;
+use Tuleap\Project\Banner\BannerRemover;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\Project\HeartbeatsEntryCollection;
@@ -1443,13 +1444,12 @@ class ProjectResource extends AuthenticatedResource
      * </pre>
      *
      * @url PUT {id}/banner
-     * @access hybrid
      *
      * @param int $id id of the project
      * @param BannerRepresentation $banner banner to be displayed {@from body}
      * @throws RestException
      */
-    public function putBanner($id, BannerRepresentation $banner): void
+    protected function putBanner($id, BannerRepresentation $banner): void
     {
         $this->checkAccess();
 
@@ -1458,7 +1458,7 @@ class ProjectResource extends AuthenticatedResource
         }
 
         $project           = $this->getProjectForUser($id);
-        $update_permission = $this->banner_permissions_checker->getUpdateBannerPermission(
+        $update_permission = $this->banner_permissions_checker->getEditBannerPermission(
             $this->user_manager->getCurrentUser(),
             $project
         );
@@ -1471,6 +1471,31 @@ class ProjectResource extends AuthenticatedResource
             $update_permission,
             $banner->message
         );
+    }
+
+    /**
+     * Delete the banner message
+     *
+     * @url DELETE {id}/banner
+     *
+     * @param int $id id of the project
+     * @return 200
+     * @throws RestException 403
+     */
+    protected function deleteBanner(int $id) : void
+    {
+        $project           = $this->getProjectForUser($id);
+        $delete_permission = $this->banner_permissions_checker->getEditBannerPermission(
+            $this->user_manager->getCurrentUser(),
+            $project
+        );
+
+        if ($delete_permission === null) {
+            throw new RestException(403);
+        }
+
+        $banner_remover = new BannerRemover(new BannerDao());
+        $banner_remover->deleteBanner($delete_permission);
     }
 
     private function getRepositoryNameFromQuery($query)
