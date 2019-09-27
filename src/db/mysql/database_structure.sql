@@ -1701,6 +1701,12 @@ CREATE TABLE project_ugroup_synchronized_membership (
     project_id INT(11) NOT NULL PRIMARY KEY,
     is_activated TINYINT(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS project_banner;
+CREATE TABLE project_banner (
+    project_id INT(11) NOT NULL PRIMARY KEY,
+    message text
+);
 #
 # EOF
 #

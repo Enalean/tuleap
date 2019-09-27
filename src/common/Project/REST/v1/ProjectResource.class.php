@@ -43,6 +43,9 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
+use Tuleap\Project\Banner\BannerCreator;
+use Tuleap\Project\Banner\BannerDao;
+use Tuleap\Project\Banner\BannerPermissionsChecker;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\Project\HeartbeatsEntryCollection;
@@ -127,6 +130,16 @@ class ProjectResource extends AuthenticatedResource
      */
     private $forge_ugroup_permissions_manager;
 
+    /**
+     * @var BannerCreator
+     */
+    private $banner_creator;
+
+    /**
+     * @var BannerPermissionsChecker
+     */
+    private $banner_permissions_checker;
+
     public function __construct()
     {
         $this->user_manager      = UserManager::instance();
@@ -189,6 +202,11 @@ class ProjectResource extends AuthenticatedResource
         $this->labels_retriever = new LabelsCurlyCoatedRetriever(
             new PaginatedCollectionsOfLabelsBuilder(),
             $label_dao
+        );
+
+        $this->banner_permissions_checker = new BannerPermissionsChecker();
+        $this->banner_creator             = new BannerCreator(
+            new BannerDao()
         );
     }
 
@@ -1410,6 +1428,49 @@ class ProjectResource extends AuthenticatedResource
         $this->sendPaginationHeaders($limit, $offset, $event->getTotalRepositories());
 
         return ['repositories' => $event->getRepositoriesRepresentations()];
+    }
+
+    /**
+     * Put banner
+     *
+     * Put the banner message to be displayed
+     *
+     * <br>
+     * <pre>
+     * {<br>
+     *   &nbsp;"message": "A message to be displayed on the project"<br>
+     *  }<br>
+     * </pre>
+     *
+     * @url PUT {id}/banner
+     * @access hybrid
+     *
+     * @param int $id id of the project
+     * @param BannerRepresentation $banner banner to be displayed {@from body}
+     * @throws RestException
+     */
+    public function putBanner($id, BannerRepresentation $banner): void
+    {
+        $this->checkAccess();
+
+        if (empty($banner->message)) {
+            throw new RestException(400, 'Message cannot be empty');
+        }
+
+        $project           = $this->getProjectForUser($id);
+        $update_permission = $this->banner_permissions_checker->getUpdateBannerPermission(
+            $this->user_manager->getCurrentUser(),
+            $project
+        );
+
+        if (! $update_permission) {
+            throw new RestException(403);
+        }
+
+        $this->banner_creator->addBanner(
+            $update_permission,
+            $banner->message
+        );
     }
 
     private function getRepositoryNameFromQuery($query)
