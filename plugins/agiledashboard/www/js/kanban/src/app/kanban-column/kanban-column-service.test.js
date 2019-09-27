@@ -8,7 +8,7 @@ describe("KanbanColumnService -", () => {
     beforeEach(() => {
         angular.mock.module(kanban_module, function($provide) {
             $provide.decorator("$filter", function() {
-                return jasmine.createSpy("$filter").and.callFake(() => () => []);
+                return jest.fn(() => () => []);
             });
 
             $provide.decorator("KanbanFilterValue", function() {
@@ -18,7 +18,7 @@ describe("KanbanColumnService -", () => {
             });
 
             $provide.decorator("KanbanItemRestService", function($delegate) {
-                spyOn($delegate, "getItem");
+                jest.spyOn($delegate, "getItem").mockImplementation(() => {});
 
                 return $delegate;
             });
@@ -305,7 +305,7 @@ describe("KanbanColumnService -", () => {
                 content: [{ id: 46 }, { id: 37 }, { id: 62 }],
                 filtered_content: [{ id: 46 }, { id: 37 }, { id: 62 }]
             };
-            $filter.and.callFake(function() {
+            $filter.mockImplementation(function() {
                 return function() {
                     return [{ id: 46 }, { id: 62 }];
                 };
@@ -334,10 +334,10 @@ describe("KanbanColumnService -", () => {
                 filtered_content: []
             };
 
-            KanbanItemRestService.getItem.and.returnValue($q.when(item));
+            KanbanItemRestService.getItem.mockReturnValue($q.when(item));
 
-            spyOn(KanbanColumnService, "moveItem");
-            spyOn(KanbanColumnService, "filterItems");
+            jest.spyOn(KanbanColumnService, "moveItem").mockImplementation(() => {});
+            jest.spyOn(KanbanColumnService, "filterItems").mockImplementation(() => {});
 
             KanbanColumnService.findItemAndReorderItems(50, source_column, destination_column, [
                 46,
@@ -372,8 +372,8 @@ describe("KanbanColumnService -", () => {
                 fully_loaded: true,
                 filtered_content: [{ id: 46 }, { id: 37 }, { id: 62 }]
             };
-            spyOn(KanbanColumnService, "moveItem");
-            spyOn(KanbanColumnService, "filterItems");
+            jest.spyOn(KanbanColumnService, "moveItem").mockImplementation(() => {});
+            jest.spyOn(KanbanColumnService, "filterItems").mockImplementation(() => {});
 
             KanbanColumnService.findItemAndReorderItems(50, source_column, destination_column, [
                 46,
@@ -409,7 +409,7 @@ describe("KanbanColumnService -", () => {
                 filtered_content: [{ id: 46 }, { id: 37 }, { id: 62 }]
             };
 
-            KanbanItemRestService.getItem.and.returnValue($q.when(item));
+            KanbanItemRestService.getItem.mockReturnValue($q.when(item));
 
             KanbanColumnService.findItemAndReorderItems(50, source_column, destination_column, [
                 46,
@@ -493,7 +493,7 @@ describe("KanbanColumnService -", () => {
                 is_collapsed: true,
                 updating: true,
                 timeinfo: {
-                    archive: jasmine.any(Date)
+                    archive: expect.any(Date)
                 }
             });
         });
@@ -514,8 +514,8 @@ describe("KanbanColumnService -", () => {
 
             expect(item.in_column).toEqual(28);
             expect(item.timeinfo).toEqual({
-                kanban: jasmine.any(Date),
-                28: jasmine.any(Date)
+                kanban: expect.any(Date),
+                28: expect.any(Date)
             });
         });
 
@@ -535,7 +535,7 @@ describe("KanbanColumnService -", () => {
 
             expect(item.in_column).toEqual("backlog");
             expect(item.timeinfo).toEqual({
-                backlog: jasmine.any(Date)
+                backlog: expect.any(Date)
             });
         });
     });

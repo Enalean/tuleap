@@ -51,13 +51,13 @@ describe("InPropertiesItemFilter", () => {
     });
 
     it("filters on label", function() {
-        expect(in_properties_filter(list, "Donald")).toContain({
+        expect(in_properties_filter(list, "Donald")).toContainEqual({
             label: "Donald",
             id: "uncle",
             card_fields: [],
             internal_property: "has nephews"
         });
-        expect(in_properties_filter(list, "Donald")).toContain({
+        expect(in_properties_filter(list, "Donald")).toContainEqual({
             label: "Donald & Daisy",
             id: "significant others",
             card_fields: []
@@ -70,7 +70,7 @@ describe("InPropertiesItemFilter", () => {
     });
 
     it("is case insensitive", function() {
-        expect(in_properties_filter(list, "RIRI")).toContain({
+        expect(in_properties_filter(list, "RIRI")).toContainEqual({
             label: "Riri",
             id: "nephew",
             card_fields: []
@@ -78,17 +78,17 @@ describe("InPropertiesItemFilter", () => {
     });
 
     it("filters on id", function() {
-        expect(in_properties_filter(list, "nephew")).toContain({
+        expect(in_properties_filter(list, "nephew")).toContainEqual({
             label: "Riri",
             id: "nephew",
             card_fields: []
         });
-        expect(in_properties_filter(list, "nephew")).toContain({
+        expect(in_properties_filter(list, "nephew")).toContainEqual({
             label: "Fifi",
             id: "nephew",
             card_fields: []
         });
-        expect(in_properties_filter(list, "nephew")).toContain({
+        expect(in_properties_filter(list, "nephew")).toContainEqual({
             label: "Loulou",
             id: "nephew",
             card_fields: []
@@ -110,7 +110,7 @@ describe("InPropertiesItemFilter", () => {
     });
 
     it("filters on both label and id", function() {
-        expect(in_properties_filter(list, "nephew riri")).toContain({
+        expect(in_properties_filter(list, "nephew riri")).toContainEqual({
             label: "Riri",
             id: "nephew",
             card_fields: []
@@ -118,7 +118,7 @@ describe("InPropertiesItemFilter", () => {
     });
 
     it("returns items that match all criteria", function() {
-        expect(in_properties_filter(list, "donald daisy")).toContain({
+        expect(in_properties_filter(list, "donald daisy")).toContainEqual({
             label: "Donald & Daisy",
             id: "significant others",
             card_fields: []
@@ -129,7 +129,7 @@ describe("InPropertiesItemFilter", () => {
             card_fields: [],
             internal_property: "has nephews"
         });
-        expect(in_properties_filter(list, "daisy donald")).toContain({
+        expect(in_properties_filter(list, "daisy donald")).toContainEqual({
             label: "Donald & Daisy",
             id: "significant others",
             card_fields: []

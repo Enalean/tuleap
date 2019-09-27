@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,10 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const base_config = require("../../../../tests/jest/jest.base.config.js");
-
-module.exports = {
-    ...base_config,
-    displayName: "tuleap-agiledashboard",
-    testPathIgnorePatterns: ["/node_modules/", "<rootDir>/kanban"]
-};
+import "../../../../../../src/www/themes/common/tlp/angular-tlp/tlp-modal-service-test.js";

@@ -1,14 +1,15 @@
 import kanban_module from "./app.js";
 import angular from "angular";
 import "angular-mocks";
-import tlp from "tlp";
 import BaseController from "./app-kanban-controller.js";
+import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
 describe("KanbanCtrl - ", function() {
-    var $rootScope,
+    let $rootScope,
         $scope,
         $controller,
         $q,
+        wrapPromise,
         KanbanCtrl,
         SharedPropertiesService,
         KanbanService,
@@ -65,26 +66,24 @@ describe("KanbanCtrl - ", function() {
             tracker_id: 56
         };
 
-        spyOn(SharedPropertiesService, "getKanban").and.returnValue(kanban);
-        spyOn(SharedPropertiesService, "getUserId").and.returnValue(757);
+        jest.spyOn(SharedPropertiesService, "getKanban").mockReturnValue(kanban);
+        jest.spyOn(SharedPropertiesService, "getUserId").mockReturnValue(757);
 
-        spyOn(KanbanService, "getBacklog").and.returnValue($q.defer().promise);
-        spyOn(KanbanService, "getBacklogSize").and.returnValue($q.defer().promise);
-        spyOn(KanbanService, "getArchive").and.returnValue($q.defer().promise);
-        spyOn(KanbanService, "getArchiveSize").and.returnValue($q.defer().promise);
-        spyOn(KanbanService, "getColumnContentSize").and.returnValue($q.defer().promise);
+        jest.spyOn(KanbanService, "getBacklog").mockReturnValue($q.defer().promise);
+        jest.spyOn(KanbanService, "getBacklogSize").mockReturnValue($q.defer().promise);
+        jest.spyOn(KanbanService, "getArchive").mockReturnValue($q.defer().promise);
+        jest.spyOn(KanbanService, "getArchiveSize").mockReturnValue($q.defer().promise);
+        jest.spyOn(KanbanService, "getColumnContentSize").mockReturnValue($q.defer().promise);
 
-        spyOn(KanbanColumnService, "filterItems");
-        spyOn(KanbanColumnService, "moveItem");
-        spyOn(DroppedService, "getComparedTo");
-        spyOn(DroppedService, "getComparedToBeFirstItemOfColumn");
-        spyOn(DroppedService, "getComparedToBeLastItemOfColumn");
-        spyOn(DroppedService, "reorderColumn").and.returnValue($q.when());
-        spyOn(DroppedService, "moveToColumn").and.returnValue($q.when());
-        spyOn(ColumnCollectionService, "getColumn");
-        spyOn(SocketService, "listenNodeJSServer").and.returnValue($q.defer().promise);
-
-        tlp.modal = jasmine.createSpy("modal");
+        jest.spyOn(KanbanColumnService, "filterItems").mockImplementation(() => {});
+        jest.spyOn(KanbanColumnService, "moveItem").mockImplementation(() => {});
+        jest.spyOn(DroppedService, "getComparedTo").mockImplementation(() => {});
+        jest.spyOn(DroppedService, "getComparedToBeFirstItemOfColumn").mockImplementation(() => {});
+        jest.spyOn(DroppedService, "getComparedToBeLastItemOfColumn").mockImplementation(() => {});
+        jest.spyOn(DroppedService, "reorderColumn").mockReturnValue($q.when());
+        jest.spyOn(DroppedService, "moveToColumn").mockReturnValue($q.when());
+        jest.spyOn(ColumnCollectionService, "getColumn").mockImplementation(() => {});
+        jest.spyOn(SocketService, "listenNodeJSServer").mockReturnValue($q.defer().promise);
 
         $scope = $rootScope.$new();
 
@@ -101,7 +100,7 @@ describe("KanbanCtrl - ", function() {
             UserPreferencesService: UserPreferencesService
         });
 
-        installPromiseMatchers();
+        wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
     describe("init() -", function() {
@@ -109,7 +108,7 @@ describe("KanbanCtrl - ", function() {
             it("Given that the archive column was open, when I load it, then its content will be loaded and filtered", function() {
                 KanbanCtrl.archive.is_open = true;
                 var get_archive_request = $q.defer();
-                KanbanService.getArchive.and.returnValue(get_archive_request.promise);
+                KanbanService.getArchive.mockReturnValue(get_archive_request.promise);
 
                 KanbanCtrl.$onInit();
 
@@ -129,7 +128,7 @@ describe("KanbanCtrl - ", function() {
 
             it("Given that the archive column was closed, when I load it, then only its total number of items will be loaded", function() {
                 var get_archive_size_request = $q.defer();
-                KanbanService.getArchiveSize.and.returnValue(get_archive_size_request.promise);
+                KanbanService.getArchiveSize.mockReturnValue(get_archive_size_request.promise);
 
                 KanbanCtrl.archive.is_open = false;
 
@@ -148,7 +147,7 @@ describe("KanbanCtrl - ", function() {
             it("Given that the backlog column was open, when I load it, then its content will be loaded", function() {
                 KanbanCtrl.backlog.is_open = true;
                 var get_backlog_request = $q.defer();
-                KanbanService.getBacklog.and.returnValue(get_backlog_request.promise);
+                KanbanService.getBacklog.mockReturnValue(get_backlog_request.promise);
 
                 KanbanCtrl.$onInit();
 
@@ -168,7 +167,7 @@ describe("KanbanCtrl - ", function() {
 
             it("Given that the backlog column was closed, when I load it, then only its total number of items will be loaded", function() {
                 var get_backlog_size_request = $q.defer();
-                KanbanService.getBacklogSize.and.returnValue(get_backlog_size_request.promise);
+                KanbanService.getBacklogSize.mockReturnValue(get_backlog_size_request.promise);
 
                 KanbanCtrl.backlog.is_open = false;
 
@@ -186,7 +185,7 @@ describe("KanbanCtrl - ", function() {
         describe("loadColumns() -", function() {
             it("Given a kanban column that was open, when I load it, then its content will be loaded", function() {
                 var get_column_request = $q.defer();
-                spyOn(KanbanService, "getItems").and.returnValue(get_column_request.promise);
+                jest.spyOn(KanbanService, "getItems").mockReturnValue(get_column_request.promise);
                 kanban.columns = [];
                 kanban.columns[0] = {
                     id: 10,
@@ -224,7 +223,7 @@ describe("KanbanCtrl - ", function() {
 
             it("Given a kanban column that was closed, when I load it, then only its total number of items will be loaded", function() {
                 var get_column_size_request = $q.defer();
-                KanbanService.getColumnContentSize.and.returnValue(get_column_size_request.promise);
+                KanbanService.getColumnContentSize.mockReturnValue(get_column_size_request.promise);
                 kanban.columns = [];
                 kanban.columns[0] = {
                     id: 75,
@@ -265,7 +264,7 @@ describe("KanbanCtrl - ", function() {
 
     describe("toggleArchive() -", function() {
         it("Given that the archive column was open, when I toggle it, then it will be collapsed and its filtered content will be emptied", function() {
-            spyOn(KanbanService, "collapseArchive");
+            jest.spyOn(KanbanService, "collapseArchive").mockImplementation(() => {});
             KanbanCtrl.archive.is_open = true;
             KanbanCtrl.archive.filtered_content = [{ id: 82 }];
 
@@ -282,7 +281,7 @@ describe("KanbanCtrl - ", function() {
             });
 
             it("and fully loaded, when I toggle it, then it will be expanded and filtered", function() {
-                spyOn(KanbanService, "expandArchive");
+                jest.spyOn(KanbanService, "expandArchive").mockImplementation(() => {});
                 KanbanCtrl.archive.fully_loaded = true;
                 KanbanCtrl.archive.content = [{ id: 36 }];
 
@@ -305,7 +304,7 @@ describe("KanbanCtrl - ", function() {
 
     describe("toggleBacklog() -", function() {
         it("Given that the backlog column was open, when I toggle it, then it will be collapsed and its filtered content will be emptied", function() {
-            spyOn(KanbanService, "collapseBacklog");
+            jest.spyOn(KanbanService, "collapseBacklog").mockImplementation(() => {});
             KanbanCtrl.backlog.is_open = true;
             KanbanCtrl.backlog.filtered_content = [{ id: 70 }];
 
@@ -322,7 +321,7 @@ describe("KanbanCtrl - ", function() {
             });
 
             it("and fully loaded, when I toggle it, then it will be expanded and filtered", function() {
-                spyOn(KanbanService, "expandBacklog");
+                jest.spyOn(KanbanService, "expandBacklog").mockImplementation(() => {});
                 KanbanCtrl.backlog.fully_loaded = true;
                 KanbanCtrl.backlog.content = [{ id: 80 }];
 
@@ -345,7 +344,7 @@ describe("KanbanCtrl - ", function() {
 
     describe("toggleColumn() -", function() {
         it("Given a kanban column that was open, when I toggle it, then it will be collapsed and its filtered content will be emptied", function() {
-            spyOn(KanbanService, "collapseColumn");
+            jest.spyOn(KanbanService, "collapseColumn").mockImplementation(() => {});
             var column = {
                 id: 22,
                 is_open: true,
@@ -369,7 +368,7 @@ describe("KanbanCtrl - ", function() {
             });
 
             it("and fully loaded, when I toggle it, then it will be expanded and filtered", function() {
-                spyOn(KanbanService, "expandColumn");
+                jest.spyOn(KanbanService, "expandColumn").mockImplementation(() => {});
                 column.fully_loaded = true;
                 column.content = [{ id: 81 }];
 
@@ -385,8 +384,12 @@ describe("KanbanCtrl - ", function() {
     describe("createItemInPlace() -", function() {
         it("Given a label and a kanban column, when I create a new kanban item, then it will be created using KanbanItemRestService and will be appended to the given column", function() {
             var create_item_request = $q.defer();
-            spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").and.returnValue(true);
-            spyOn(KanbanItemRestService, "createItem").and.returnValue(create_item_request.promise);
+            jest.spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").mockReturnValue(
+                true
+            );
+            jest.spyOn(KanbanItemRestService, "createItem").mockReturnValue(
+                create_item_request.promise
+            );
             var column = {
                 id: 5,
                 content: [{ id: 97 }, { id: 69 }],
@@ -431,8 +434,10 @@ describe("KanbanCtrl - ", function() {
     describe("createItemInPlaceInBacklog() -", function() {
         it("Given a label, when I create a new kanban item in the backlog, then it will be created using KanbanItemRestService and will be appended to the backlog", function() {
             var create_item_request = $q.defer();
-            spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").and.returnValue(true);
-            spyOn(KanbanItemRestService, "createItemInBacklog").and.returnValue(
+            jest.spyOn(SharedPropertiesService, "doesUserPrefersCompactCards").mockReturnValue(
+                true
+            );
+            jest.spyOn(KanbanItemRestService, "createItemInBacklog").mockReturnValue(
                 create_item_request.promise
             );
             KanbanCtrl.backlog.content = [{ id: 91 }, { id: 85 }];
@@ -543,11 +548,11 @@ describe("KanbanCtrl - ", function() {
     describe("showEditModal() -", function() {
         var fake_event;
         beforeEach(function() {
-            spyOn(NewTuleapArtifactModalService, "showEdition");
-            SharedPropertiesService.getUserId.and.returnValue(102);
+            jest.spyOn(NewTuleapArtifactModalService, "showEdition").mockImplementation(() => {});
+            SharedPropertiesService.getUserId.mockReturnValue(102);
             fake_event = {
                 which: 1,
-                preventDefault: jasmine.createSpy("preventDefault")
+                preventDefault: jest.fn()
             };
         });
 
@@ -570,7 +575,7 @@ describe("KanbanCtrl - ", function() {
                 102,
                 56,
                 4288,
-                jasmine.any(Function)
+                expect.any(Function)
             );
         });
 
@@ -579,12 +584,17 @@ describe("KanbanCtrl - ", function() {
             var get_request;
 
             beforeEach(function() {
-                NewTuleapArtifactModalService.showEdition.and.callFake(function(c, a, b, callback) {
+                NewTuleapArtifactModalService.showEdition.mockImplementation(function(
+                    c,
+                    a,
+                    b,
+                    callback
+                ) {
                     callback();
                 });
                 get_request = $q.defer();
-                spyOn(KanbanItemRestService, "getItem").and.returnValue(get_request.promise);
-                spyOn(KanbanCtrl, "moveItemAtTheEnd");
+                jest.spyOn(KanbanItemRestService, "getItem").mockReturnValue(get_request.promise);
+                jest.spyOn(KanbanCtrl, "moveItemAtTheEnd").mockImplementation(() => {});
 
                 var archive = {
                     id: "archive"
@@ -592,7 +602,7 @@ describe("KanbanCtrl - ", function() {
                 var column = {
                     id: 252
                 };
-                ColumnCollectionService.getColumn.and.callFake(function(column_id) {
+                ColumnCollectionService.getColumn.mockImplementation(function(column_id) {
                     if (column_id === "archive") {
                         return archive;
                     }
@@ -632,7 +642,7 @@ describe("KanbanCtrl - ", function() {
                 // see https://github.com/jasmine/jasmine/issues/872
                 // I'd rather have an imprecise test than a misleading one, so I used jasmine.any(Object)
                 expect(KanbanCtrl.moveItemAtTheEnd).toHaveBeenCalledWith(
-                    jasmine.any(Object),
+                    expect.any(Object),
                     "archive"
                 );
             });
@@ -653,9 +663,15 @@ describe("KanbanCtrl - ", function() {
     });
 
     describe("moveItemAtTheEnd() -", function() {
-        it("Given a kanban item in a column and another kanban column, when I move the item to the column, then the item will be marked as updating, will be removed from the previous column's content, will be appended to the given column's content, the REST backend will be called to move the item in the new column and a resolved promise will be returned", function() {
+        it(`Given a kanban item in a column and another kanban column,
+            when I move the item to the column,
+            then the item will be marked as updating,
+            will be removed from the previous column's content,
+            will be appended to the given column's content,
+            the REST backend will be called to move the item in the new column
+            and a resolved promise will be returned`, () => {
             var move_request = $q.defer();
-            DroppedService.moveToColumn.and.returnValue(move_request.promise);
+            DroppedService.moveToColumn.mockReturnValue(move_request.promise);
             var item = {
                 id: 19,
                 updating: false,
@@ -667,14 +683,14 @@ describe("KanbanCtrl - ", function() {
             var destination_column = {
                 id: 6
             };
-            ColumnCollectionService.getColumn.and.callFake(function(column_id) {
+            ColumnCollectionService.getColumn.mockImplementation(function(column_id) {
                 if (column_id === 3) {
                     return source_column;
                 }
 
                 return destination_column;
             });
-            DroppedService.getComparedToBeLastItemOfColumn.and.returnValue(null);
+            DroppedService.getComparedToBeLastItemOfColumn.mockReturnValue(null);
 
             var promise = KanbanCtrl.moveItemAtTheEnd(item, destination_column.id, item.in_column);
 
@@ -691,7 +707,8 @@ describe("KanbanCtrl - ", function() {
                 null,
                 3
             );
-            expect(promise).toBeResolved();
+
+            return wrapPromise(promise);
         });
     });
 
@@ -705,12 +722,12 @@ describe("KanbanCtrl - ", function() {
             var column = {
                 id: 95
             };
-            ColumnCollectionService.getColumn.and.returnValue(column);
+            ColumnCollectionService.getColumn.mockReturnValue(column);
             var compared_to = {
                 direction: "before",
                 item_id: 44
             };
-            DroppedService.getComparedToBeFirstItemOfColumn.and.returnValue(compared_to);
+            DroppedService.getComparedToBeFirstItemOfColumn.mockReturnValue(compared_to);
 
             KanbanCtrl.moveKanbanItemToTop(item);
 
@@ -739,12 +756,12 @@ describe("KanbanCtrl - ", function() {
             var archive = {
                 id: "archive"
             };
-            ColumnCollectionService.getColumn.and.returnValue(archive);
+            ColumnCollectionService.getColumn.mockReturnValue(archive);
             var compared_to = {
                 direction: "after",
                 item_id: 10
             };
-            DroppedService.getComparedToBeLastItemOfColumn.and.returnValue(compared_to);
+            DroppedService.getComparedToBeLastItemOfColumn.mockReturnValue(compared_to);
 
             KanbanCtrl.moveKanbanItemToBottom(item);
 
@@ -766,9 +783,9 @@ describe("KanbanCtrl - ", function() {
     describe("saveCardsViewMode() -", () => {
         beforeEach(() => {
             kanban.id = 33;
-            spyOn(SharedPropertiesService, "setUserPrefersCompactCards").and.callThrough();
-            spyOn(UserPreferencesService, "setPreference");
-            spyOn(KanbanCtrl, "reflowKustomScrollBars");
+            jest.spyOn(SharedPropertiesService, "setUserPrefersCompactCards");
+            jest.spyOn(UserPreferencesService, "setPreference").mockImplementation(() => {});
+            jest.spyOn(KanbanCtrl, "reflowKustomScrollBars").mockImplementation(() => {});
             kanban.backlog.content = [{ is_collapsed: false }, { is_collapsed: true }];
             kanban.archive.content = [{ is_collapsed: true }, { is_collapsed: false }];
             kanban.columns[0].content = [{ is_collapsed: false }];

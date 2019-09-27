@@ -96,7 +96,7 @@ describe("FilterTrackerReportService -", () => {
 
     describe("areCardsAndWIPUpdated() -", () => {
         it("Given node.js server address and a selected report, then false will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -116,7 +116,7 @@ describe("FilterTrackerReportService -", () => {
         });
 
         it("Given empty node.js server address and a selected report, then false will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -136,7 +136,7 @@ describe("FilterTrackerReportService -", () => {
         });
 
         it("Given empty node.js server address and no selected report, then false will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -155,7 +155,7 @@ describe("FilterTrackerReportService -", () => {
         });
 
         it("Given node.js server address and no selected report, then true will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -176,7 +176,7 @@ describe("FilterTrackerReportService -", () => {
 
     describe("isWIPUpdated() -", () => {
         it("Given empty node.js server address and a selected report, then false will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -196,7 +196,7 @@ describe("FilterTrackerReportService -", () => {
         });
 
         it("Given empty node.js server address and no selected report, then true will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -215,7 +215,7 @@ describe("FilterTrackerReportService -", () => {
         });
 
         it("Given node.js server address and a selected report, then false will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -235,7 +235,7 @@ describe("FilterTrackerReportService -", () => {
         });
 
         it("Given node.js server address and no selected report, then false will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -256,7 +256,7 @@ describe("FilterTrackerReportService -", () => {
 
     describe("areNotCardsAndWIPUpdated() -", () => {
         it("Given node.js server address and a selected report, then true will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -276,7 +276,7 @@ describe("FilterTrackerReportService -", () => {
         });
 
         it("Given empty node.js server address and a selected report, then false will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -296,7 +296,7 @@ describe("FilterTrackerReportService -", () => {
         });
 
         it("Given empty node.js server address and no selected report, then false will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -315,7 +315,7 @@ describe("FilterTrackerReportService -", () => {
         });
 
         it("Given node.js server address and no selected report, then false will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -336,7 +336,7 @@ describe("FilterTrackerReportService -", () => {
 
     describe("isNotWIPUpdated() -", () => {
         it("Given empty node.js server address and a selected report, then true will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -356,7 +356,7 @@ describe("FilterTrackerReportService -", () => {
         });
 
         it("Given empty node.js server address and no selected report, then false will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -375,7 +375,7 @@ describe("FilterTrackerReportService -", () => {
         });
 
         it("Given node.js server address and a selected report, then false will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,
@@ -395,7 +395,7 @@ describe("FilterTrackerReportService -", () => {
         });
 
         it("Given node.js server address and no selected report, then false will be returned", () => {
-            spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
+            jest.spyOn(SharedPropertiesService, "thereIsNodeServerAddress").mockReturnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
                     id: 305,

@@ -64,9 +64,6 @@ pipeline {
                         stage('Karma AgileDashboard PlanningV2') {
                             steps { script { actions.runKarmaTests('planning', 'plugins/agiledashboard/www/js/planning-v2') } }
                         }
-                        stage('Karma AgileDashboard Kanban') {
-                            steps { script { actions.runKarmaTests('kanban', 'plugins/agiledashboard/www/js/kanban') } }
-                        }
                     }
                     post { always { junit 'results/karma/test-*-results.xml' } }
                 }

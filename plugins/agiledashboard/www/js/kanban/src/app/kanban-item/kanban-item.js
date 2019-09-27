@@ -2,7 +2,7 @@ import angular from "angular";
 import "angular-gettext";
 import ngSanitize from "angular-sanitize";
 
-import card_fields from "card-fields/index.js";
+import card_fields from "../../../../card-fields/index.js";
 
 import KanbanItemDirective from "./kanban-item-directive.js";
 import TimeInfoComponent from "./time-info/time-info-component.js";

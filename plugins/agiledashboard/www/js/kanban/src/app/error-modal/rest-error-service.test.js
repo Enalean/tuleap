@@ -8,7 +8,7 @@ describe("RestErrorService -", function() {
     beforeEach(function() {
         angular.mock.module(error_modal_module, function($provide) {
             $provide.decorator("TlpModalService", function($delegate) {
-                spyOn($delegate, "open");
+                jest.spyOn($delegate, "open").mockImplementation(() => {});
 
                 return $delegate;
             });

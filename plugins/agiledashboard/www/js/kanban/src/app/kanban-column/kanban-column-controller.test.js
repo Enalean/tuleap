@@ -2,6 +2,16 @@ import kanban_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
 
+function createElement(tag_name, no_drag) {
+    const local_document = document.implementation.createHTMLDocument();
+    const element = local_document.createElement(tag_name);
+    if (!no_drag) {
+        return element;
+    }
+    element.setAttribute("data-nodrag", true);
+    return element;
+}
+
 describe("KanbanColumnController -", function() {
     var $rootScope,
         $scope,
@@ -35,15 +45,15 @@ describe("KanbanColumnController -", function() {
             DroppedService = _DroppedService_;
         });
 
-        spyOn(KanbanColumnService, "moveItem");
-        spyOn(DroppedService, "getComparedTo");
-        spyOn(DroppedService, "reorderColumn");
-        spyOn(DroppedService, "moveToColumn");
-        spyOn(ColumnCollectionService, "getColumn");
-        spyOn(SharedPropertiesService, "getKanban");
+        jest.spyOn(KanbanColumnService, "moveItem").mockImplementation(() => {});
+        jest.spyOn(DroppedService, "getComparedTo").mockImplementation(() => {});
+        jest.spyOn(DroppedService, "reorderColumn").mockImplementation(() => {});
+        jest.spyOn(DroppedService, "moveToColumn").mockImplementation(() => {});
+        jest.spyOn(ColumnCollectionService, "getColumn").mockImplementation(() => {});
+        jest.spyOn(SharedPropertiesService, "getKanban").mockImplementation(() => {});
 
         $scope = $rootScope.$new();
-        $element = affix("div");
+        $element = angular.element(createElement("div", false));
 
         KanbanColumnController = $controller("KanbanColumnController", {
             $scope: $scope,
@@ -90,8 +100,9 @@ describe("KanbanColumnController -", function() {
             current_kanban = {
                 id: 8
             };
-            SharedPropertiesService.getKanban.and.returnValue(current_kanban);
-            $target_element = affix("ul");
+            SharedPropertiesService.getKanban.mockReturnValue(current_kanban);
+
+            $target_element = createElement("ul", false);
 
             source_column = {
                 id: 69,
@@ -99,7 +110,7 @@ describe("KanbanColumnController -", function() {
             };
             KanbanColumnController.column = source_column;
             KanbanColumnController.dragularOptions().onInit();
-            spyOn($rootScope, "$broadcast").and.callThrough();
+            jest.spyOn($rootScope, "$broadcast");
         });
 
         it("When I reorder an item in the same column, then the item will be reordered using DroppedService", function() {
@@ -113,9 +124,9 @@ describe("KanbanColumnController -", function() {
             };
             angular.element($target_element).data("column-id", source_column.id);
 
-            DroppedService.getComparedTo.and.returnValue(compared_to);
-            DroppedService.reorderColumn.and.returnValue($q.when());
-            ColumnCollectionService.getColumn.and.returnValue(source_column);
+            DroppedService.getComparedTo.mockReturnValue(compared_to);
+            DroppedService.reorderColumn.mockReturnValue($q.when());
+            ColumnCollectionService.getColumn.mockReturnValue(source_column);
 
             $scope.$emit(
                 "dragulardrop",
@@ -164,9 +175,9 @@ describe("KanbanColumnController -", function() {
             };
             angular.element($target_element).data("column-id", target_column.id);
 
-            DroppedService.getComparedTo.and.returnValue(compared_to);
-            DroppedService.moveToColumn.and.returnValue($q.when());
-            ColumnCollectionService.getColumn.and.returnValue(target_column);
+            DroppedService.getComparedTo.mockReturnValue(compared_to);
+            DroppedService.moveToColumn.mockReturnValue($q.when());
+            ColumnCollectionService.getColumn.mockReturnValue(target_column);
 
             $scope.$emit(
                 "dragulardrop",
@@ -205,7 +216,9 @@ describe("KanbanColumnController -", function() {
 
     describe("dragularDrag() -", function() {
         it("When I start dragging an item, then all wip edition dropdowns will be closed", function() {
-            spyOn(ColumnCollectionService, "cancelWipEditionOnAllColumns");
+            jest.spyOn(ColumnCollectionService, "cancelWipEditionOnAllColumns").mockImplementation(
+                () => {}
+            );
             KanbanColumnController.dragularOptions().onInit();
 
             $scope.$emit("dragulardrag");
@@ -218,8 +231,11 @@ describe("KanbanColumnController -", function() {
         var $element_to_drag, $container, $handle_element;
 
         it("Given a handle element that had an ancestor with data-nodrag='true', when I check if it is draggable, then false will be returned", function() {
-            var $parent_element = affix("a[data-nodrag=true]");
-            $handle_element = $parent_element.affix("span");
+            const $parent_element = createElement("a", true);
+
+            const handle = createElement("span", false);
+            $handle_element = angular.element(handle);
+            $parent_element.appendChild(handle);
 
             var result = KanbanColumnController.dragularOptions().moves(
                 $element_to_drag,
@@ -231,7 +247,7 @@ describe("KanbanColumnController -", function() {
         });
 
         it("Given a handle element that had itself data-nodrag='true', when I check if it is draggable, then false will be returned", function() {
-            $handle_element = affix("div[data-nodrag=true]");
+            $handle_element = createElement("div", true);
 
             var result = KanbanColumnController.dragularOptions().moves(
                 $element_to_drag,
@@ -243,8 +259,9 @@ describe("KanbanColumnController -", function() {
         });
 
         it("Given a handle element that did not have any ancestor with data-nodrag='true', when I check if it is draggable, then true will be returned", function() {
-            var $parent_element = affix("div");
-            $handle_element = $parent_element.affix("span");
+            const $parent_element = createElement("div", false);
+            $handle_element = createElement("span", false);
+            $parent_element.appendChild($handle_element);
 
             var result = KanbanColumnController.dragularOptions().moves(
                 $element_to_drag,
@@ -294,7 +311,7 @@ describe("KanbanColumnController -", function() {
     describe("cancelDrag() -", function() {
         it("When I cancel the drag, then dragular's cancel will be called and the custom 'appending_item' class will be removed", function() {
             var drake = {
-                cancel: jasmine.createSpy("cancel")
+                cancel: jest.fn()
             };
             KanbanColumnController.drake = drake;
 
