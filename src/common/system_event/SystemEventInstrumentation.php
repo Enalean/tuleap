@@ -23,15 +23,35 @@ declare(strict_types=1);
 
 namespace Tuleap\SystemEvent;
 
+use Tuleap\Instrument\Prometheus\Prometheus;
+
 class SystemEventInstrumentation
 {
     private const METRIC_NAME = 'system_events_total';
+
+    private const DURATION_NAME = 'system_events_duration';
+    private const DURATION_HELP = 'Duration of system events processing (only processing time, time spent in queue excluded) in seconds';
+    private const DURATION_BUCKETS = [1, 2, 5, 10, 30, 60, 120, 300, 600];
 
     /**
      * @psalm-param value-of<\SystemEvent::ALL_STATUS> $status
      */
     public static function increment(string $status): void
     {
-        \Tuleap\Instrument\Prometheus\Prometheus::instance()->increment(self::METRIC_NAME, 'Total number of system events', ['status' => $status]);
+        Prometheus::instance()->increment(self::METRIC_NAME, 'Total number of system events', ['status' => $status]);
+    }
+
+    public static function durationHistogram(int $time): void
+    {
+        if ($time <= 0) {
+            return;
+        }
+        Prometheus::instance()->histogram(
+            self::DURATION_NAME,
+            self::DURATION_HELP,
+            $time,
+            [],
+            self::DURATION_BUCKETS
+        );
     }
 }

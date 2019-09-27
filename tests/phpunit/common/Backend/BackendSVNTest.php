@@ -32,12 +32,13 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use Project_AccessRestrictedException;
 use ProjectUGroup;
+use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\ProjectAccessChecker;
 use UGroupDao;
 
 class BackendSVNTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, GlobalSVNPollution;
 
     /**
      * @var MockInterface|BackendSVN
@@ -45,32 +46,11 @@ class BackendSVNTest extends TestCase
     private $backend;
 
     /**
-     * @var bool
-     */
-    private $globals_svnaccess_set_initially;
-    /**
-     * @var bool
-     */
-    private $globals_svngroups_set_initially;
-
-    /**
      * @before
      */
     public function createInstance() : void
     {
-        $this->globals_svnaccess_set_initially = isset($GLOBALS['SVNACCESS']);
-        $this->globals_svngroups_set_initially = isset($GLOBALS['SVNGROUPS']);
         $this->backend                         = Mockery::mock(BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
-    }
-
-    protected function tearDown() : void
-    {
-        if (! $this->globals_svnaccess_set_initially) {
-            unset($GLOBALS['SVNACCESS']);
-        }
-        if (! $this->globals_svngroups_set_initially) {
-            unset($GLOBALS['SVNGROUPS']);
-        }
     }
 
     public function testItAddsProjectMembers()
