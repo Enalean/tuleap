@@ -58,7 +58,7 @@ class MediawikiMaintenanceWrapper
         Project $project,
         ArchiveInterface $archive,
         $temporary_dump_path_on_filesystem,
-        $mediawiki_data_directory
+        $project_name_dir
     ) {
         $folder_picture = "files";
         $archive->addEmptyDir($folder_picture);
@@ -67,7 +67,7 @@ class MediawikiMaintenanceWrapper
         $this->copyFoundImagesAndIgnoreExceptionWhenMediawikiHasNoImage(
             $project,
             $temporary_dump_path_on_filesystem,
-            $mediawiki_data_directory,
+            $project_name_dir,
             $folder_picture
         );
     }
@@ -83,11 +83,11 @@ class MediawikiMaintenanceWrapper
     private function copyFoundImagesAndIgnoreExceptionWhenMediawikiHasNoImage(
         Project $project,
         $temporary_dump_path_on_filesystem,
-        $mediawiki_data_directory,
+        $project_name_dir,
         $folder_picture
     ) {
         $picture_system_path = escapeshellarg($temporary_dump_path_on_filesystem . "/" . $folder_picture);
-        $export_folder       = escapeshellarg("$mediawiki_data_directory/projects/" . $project->getID() . "/images");
+        $export_folder       = escapeshellarg($project_name_dir . "/images");
         $project_name        = escapeshellarg($project->getUnixName());
         $command             = ForgeConfig::get('codendi_dir') . '/src/utils/php-launcher.sh ' .
             $this->getMaintenanceWrapperPath() .

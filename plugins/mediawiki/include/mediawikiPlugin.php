@@ -26,6 +26,7 @@ use Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB;
 use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 use Tuleap\Mediawiki\Maintenance\CleanUnused;
 use Tuleap\Mediawiki\Maintenance\CleanUnusedDao;
+use Tuleap\Mediawiki\MediawikiDataDir;
 use Tuleap\Mediawiki\Migration\MoveToCentralDbDao;
 use Tuleap\Mediawiki\PermissionsPerGroup\PermissionPerGroupPaneBuilder;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
@@ -181,13 +182,13 @@ class MediaWikiPlugin extends Plugin
     {
         $sys_command = new System_Command();
         return new XMLMediaWikiExporter(
-            $sys_command,
             ProjectManager::instance()->getProject($group_id),
             new MediawikiManager(new MediawikiDao()),
             new UGroupManager(),
             new ProjectXMLExporterLogger(),
             new MediawikiMaintenanceWrapper($sys_command),
-            new MediawikiLanguageManager(new MediawikiLanguageDao())
+            new MediawikiLanguageManager(new MediawikiLanguageDao()),
+            new MediawikiDataDir()
         );
     }
 
