@@ -59,20 +59,6 @@ class PluginFactoryTest extends TestCase
     }
 
     /**
-     * @testWith ["gitman", "gitmanPlugin", false]
-     *           ["customgitman", "customgitmanPlugin", true]
-     */
-    public function testInstantiatePluginReturnsInstanceWithLegacyClassExtension(
-        string $plugin_name,
-        string $expected_class,
-        bool $expected_is_custom
-    ): void {
-        $plugin = $this->factory->instantiatePlugin(1, $plugin_name);
-        $this->assertInstanceOf($expected_class, $plugin);
-        $this->assertEquals($expected_is_custom, $plugin->isCustom());
-    }
-
-    /**
      * @testWith ["doc", "docPlugin", false]
      *           ["customdoc", "customdocPlugin", true]
      */
