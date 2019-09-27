@@ -77,6 +77,13 @@ class TaskboardTest extends RestBase
             $this->assertEquals($expected_background_color, $cards[$key]['background_color']);
             $expected_has_children = $label === 'US6';
             $this->assertEquals($expected_has_children, $cards[$key]['has_children']);
+            $this->assertArrayHasKey('initial_effort', $cards[$key]);
+            $this->assertArrayHasKey('assignees', $cards[$key]);
+
+            if ($label === 'US1') {
+                $this->assertNotEmpty($cards[$key]['assignees']);
+                $this->assertEquals($cards[$key]['assignees'][0]['username'], 'rest_api_tester_1');
+            }
         }
     }
 

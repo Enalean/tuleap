@@ -27,6 +27,7 @@ use PFUser;
 use Tracker_Artifact;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueListFullRepresentation;
 use Tuleap\Tracker\Semantic\Status\StatusValueProvider;
 use Tuleap\User\REST\UserRepresentation;
 
@@ -55,9 +56,10 @@ class CardRepresentationBuilder
         $background_color     = $this->background_color_builder->build($card_fields_semantic, $artifact, $user);
         $assignees            = $this->getAssignees($artifact, $user);
         $status               = $this->getStatus($artifact, $user);
+        $initial_effort       = $this->getInitialEffort($artifact, $user);
 
         $representation = new CardRepresentation();
-        $representation->build($artifact, $background_color, $rank, $assignees, $status);
+        $representation->build($artifact, $background_color, $rank, $assignees, $status, $initial_effort);
 
         return $representation;
     }
@@ -88,5 +90,37 @@ class CardRepresentationBuilder
             },
             $assignees
         );
+    }
+
+    private function getInitialEffort(Tracker_Artifact $artifact, PFUser $user)
+    {
+        $initial_effort_field = \AgileDashBoard_Semantic_InitialEffort::load($artifact->getTracker())->getField();
+
+        if (! $initial_effort_field) {
+            return null;
+        }
+
+        $last_changeset_value = $initial_effort_field->getLastChangesetValue($artifact);
+
+        if (! $last_changeset_value) {
+            return null;
+        }
+
+        if ($last_changeset_value instanceof \Tracker_Artifact_ChangesetValue_List) {
+            return $this->getListFieldFirstValue($user, $last_changeset_value);
+        }
+
+        return $last_changeset_value->getValue();
+    }
+
+    private function getListFieldFirstValue(PFUser $user, \Tracker_Artifact_ChangesetValue_List $value_list)
+    {
+        $list_values = $value_list->getListValues();
+
+        if (count($list_values) === 0) {
+            return null;
+        }
+
+        return reset($list_values)->getLabel();
     }
 }

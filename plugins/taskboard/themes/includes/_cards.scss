@@ -132,11 +132,23 @@ a.taskboard-card-xref {
     height: 100%;
 }
 
+.taskboard-card-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
 .taskboard-card-assignees {
     display: flex;
     flex-direction: column;
 }
 
+.taskboard-card-inital-effort {
+    cursor: default;
+}
+
+.taskboard-card-inital-effort,
 .taskboard-card-assignees-avatars {
     margin: 0 0 5px 5px;
 }

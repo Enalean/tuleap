@@ -1262,6 +1262,21 @@
             </formElement>
           </formElements>
         </formElement>
+        <formElement type="fieldset" ID="F585960" rank="666666">
+          <name>Contributors</name>
+          <label><![CDATA[Contributors]]></label>
+          <formElements>
+            <formElement type="sb" ID="F696969" rank="0">
+              <name>assigned_to</name>
+              <label><![CDATA[Assigned to]]></label>
+              <bind type="users">
+                <items>
+                  <item label="group_members"/>
+                </items>
+              </bind>
+            </formElement>
+          </formElements>
+        </formElement>
       </formElements>
       <semantics>
         <semantic type="title">
@@ -1303,6 +1318,12 @@
           <closed_values>
             <closed_value REF="V10532"/>
           </closed_values>
+        </semantic>
+        <semantic type="contributor">
+          <shortname>contributor</shortname>
+          <label>Contributor/assignee</label>
+          <description>Define the contributor/assignee of an artifact</description>
+          <field REF="F696969"/>
         </semantic>
       </semantics>
       <rules>
@@ -1517,6 +1538,7 @@
         <permission scope="field" REF="F26646" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F26647" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F26648" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F696969" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
       </permissions>
       <artifacts>
         <artifact id="2235">
@@ -1544,6 +1566,9 @@
             </field_change>
             <field_change field_name="status" type="list" bind="static">
               <value format="id">10529</value>
+            </field_change>
+            <field_change field_name="assigned_to" type="list" bind="users">
+              <value format="username">rest_api_tester_1</value>
             </field_change>
             <field_change field_name="links" type="art_link"/>
           </changeset>
