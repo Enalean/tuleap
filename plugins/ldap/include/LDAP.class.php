@@ -197,7 +197,6 @@ class LDAP
                 $this->bound = false;
             }
 
-            /** @psalm-suppress PossiblyNullArgument Psalm's callmap seems to be incorrect, ldap_bind() accept a null $binddn */
             if ($bind_result = @ldap_bind($this->ds, $binddn, $bindpw)) {
                 $this->bound = true;
             } else {

@@ -107,9 +107,13 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
             } else {
                 $split = preg_split('/\s+/', $criteria_value);
             }
-            $words = array();
+            $words        = array();
+            $criterie_dao = $this->getCriteriaDao();
+            if ($criterie_dao === null) {
+                return '';
+            }
             foreach ($split as $w) {
-                $words[] = $field_name." LIKE ". $this->getCriteriaDao()->getDa()->quoteLikeValueSurround($w);
+                $words[] = $field_name." LIKE ". $criterie_dao->getDa()->quoteLikeValueSurround($w);
             }
             $expr = join(' AND ', $words);
         }

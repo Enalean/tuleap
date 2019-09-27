@@ -256,7 +256,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
      * Fetch the html code to display the field value in tooltip
      *
      * @param Tracker_Artifact $artifact
-     * @param Tracker_Artifact_ChangesetValue_Date $value The changeset value for this field
+     * @param Tracker_Artifact_ChangesetValue $value The changeset value for this field
      * @return string
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
@@ -265,6 +265,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
         if (!$value) {
             $value = new Tracker_Artifact_ChangesetValue_Date(null, $artifact->getFirstChangeset(), $this, false, $artifact->getSubmittedOn());
         }
+        assert($value instanceof Tracker_Artifact_ChangesetValue_Date);
         $value = $value->getTimestamp();
         $value = $value ? DateHelper::timeAgoInWords($value) : '';
         $html .= $value;

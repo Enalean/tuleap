@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2017-2018. All rights reserved
+ * Copyright (c) Enalean 2017-Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2010. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -213,7 +213,7 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      * Fetch the html code to display the field value in tooltip
      *
      * @param Tracker_Artifact $artifact
-     * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
+     * @param Tracker_Artifact_ChangesetValue $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)

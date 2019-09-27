@@ -20,7 +20,9 @@
  */
 
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueOpenListRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentationData;
 
 /**
  * Manage values in changeset for fields
@@ -135,7 +137,7 @@ abstract class Tracker_Artifact_ChangesetValue
      *
      * @param PFUser $user
      *
-     * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
+     * @return ArtifactFieldValueRepresentationData
      */
     abstract public function getRESTValue(PFUser $user);
 
@@ -144,7 +146,7 @@ abstract class Tracker_Artifact_ChangesetValue
      *
      * @param PFUser $user
      *
-     * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
+     * @return ArtifactFieldValueRepresentationData
      */
     abstract public function getFullRESTValue(PFUser $user);
 

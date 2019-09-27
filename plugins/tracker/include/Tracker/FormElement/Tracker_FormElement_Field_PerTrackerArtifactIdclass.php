@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2017. All rights reserved
+ * Copyright (c) Enalean 2017-Present. All rights reserved
  * Copyright (c) Tuleap, 2013. All Rights Reserved.
  *
  * Originally written by Yoann Celton, 2013. Jtekt Europe.
@@ -160,7 +160,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
      * Fetch the html code to display the field value in tooltip
      *
      * @param Tracker_Artifact $artifact
-     * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
+     * @param Tracker_Artifact_ChangesetValue $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)

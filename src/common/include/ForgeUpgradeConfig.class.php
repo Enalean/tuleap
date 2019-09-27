@@ -43,7 +43,7 @@ class ForgeUpgradeConfig
     public function __construct(System_Command $command, $filePath = null)
     {
         $this->command = $command;
-        if (is_file($filePath)) {
+        if ($filePath !== null && is_file($filePath)) {
             $this->setFilePath($filePath);
         }
     }
