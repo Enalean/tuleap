@@ -22,7 +22,7 @@
         <permission-error v-if="has_folder_permission_error "/>
         <document-breadcrumb v-if="! has_folder_permission_error"/>
         <loading-error v-if="has_folder_loading_error || has_document_loading_error || has_document_lock_error"/>
-        <item-permission-error v-if="has_document_permission_error"/>
+        <item-permission-error v-if="has_document_permission_error" v-bind:csrf_token="csrf_token" v-bind:csrf_token_name="csrf_token_name"/>
         <router-view/>
         <switch-to-old-u-i v-if="user_id !== 0"/>
         <post-item-deletion-notification/>
@@ -58,7 +58,9 @@ export default {
         embedded_are_allowed: Boolean,
         is_deletion_allowed: Boolean,
         is_item_status_metadata_used: Boolean,
-        is_obsolescence_date_metadata_used: Boolean
+        is_obsolescence_date_metadata_used: Boolean,
+        csrf_token: String,
+        csrf_token_name: String
     },
     computed: {
         ...mapState("error", [

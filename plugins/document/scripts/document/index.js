@@ -62,6 +62,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const is_obsolescence_date_metadata_used = Boolean(
         vue_mount_point.dataset.isObsolescenceDateMetadataUsed
     );
+    const csrf_token_name = vue_mount_point.dataset.csrfTokenName;
+    const csrf_token = vue_mount_point.dataset.csrfToken;
 
     moment.tz(user_timezone);
     moment.locale(user_locale);
@@ -84,7 +86,9 @@ document.addEventListener("DOMContentLoaded", () => {
             embedded_are_allowed,
             is_deletion_allowed,
             is_item_status_metadata_used,
-            is_obsolescence_date_metadata_used
+            is_obsolescence_date_metadata_used,
+            csrf_token_name,
+            csrf_token
         }
     }).$mount(vue_mount_point);
 });

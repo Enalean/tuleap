@@ -24,8 +24,10 @@ use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
 use Tuleap\Docman\ExternalLinks\Link;
 use Tuleap\Document\DocumentUsageRetriever;
 use Tuleap\Document\LinkProvider\DocumentLinkProvider;
+use Tuleap\Document\PermissionDeniedDocumentMailSender;
 use Tuleap\Document\Tree\DocumentTreeController;
 use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
+use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Request\CollectRoutesEvent;
 
@@ -89,9 +91,21 @@ class documentPlugin extends Plugin // phpcs:ignore
         return new DocumentTreeController($this->getProjectExtractor(), $this->getOldPluginInfo());
     }
 
+    public function routeSendRequestMail(): PermissionDeniedDocumentMailSender
+    {
+        return new PermissionDeniedDocumentMailSender(
+            new PlaceHolderBuilder(\ProjectManager::instance()),
+            new CSRFSynchronizerToken('plugin-document')
+        );
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup('/plugins/document', function (FastRoute\RouteCollector $r) {
+            $r->post(
+                '/PermissionDeniedRequestMessage/{project_id:\d+}',
+                $this->getRouteHandler('routeSendRequestMail')
+            );
             $r->get('/{project_name:[A-z0-9-]+}/[{vue-routing:.*}]', $this->getRouteHandler('routeGet'));
         });
     }

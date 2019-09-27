@@ -23,14 +23,14 @@
  * It allows the management of permission denied error.
  * It offres to user the possibility to request the project membership directly.
  */
-abstract class Error_PermissionDenied
+abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var URL
      */
     protected $url;
 
-    function __construct(?URL $url = null)
+    public function __construct(?URL $url = null)
     {
         if ($url === null) {
             $url = new URL();
@@ -43,14 +43,14 @@ abstract class Error_PermissionDenied
      *
      * @return String
      */
-    abstract function getType();
+    abstract function getType(); // phpcs:ignore Squiz.Scope.MethodScope.Missing
 
     /**
      * Returns the base on language file
      *
      * @return String
      */
-    function getTextBase()
+    function getTextBase()  // phpcs:ignore Squiz.Scope.MethodScope.Missing
     {
         return 'include_exit';
     }
@@ -61,7 +61,7 @@ abstract class Error_PermissionDenied
      *
      * @return Array
      */
-    abstract function returnBuildInterfaceParam();
+    abstract function returnBuildInterfaceParam();  // phpcs:ignore Squiz.Scope.MethodScope.Missing
 
     /**
      * Returns the url link after modification if needed else returns the same string
@@ -69,7 +69,7 @@ abstract class Error_PermissionDenied
      * @param String $link
      * @param BaseLanguage $language
      */
-    function getRedirectLink($link, $language)
+    function getRedirectLink($link, $language)  // phpcs:ignore Squiz.Scope.MethodScope.Missing
     {
         return $link;
     }
@@ -78,7 +78,7 @@ abstract class Error_PermissionDenied
      * Build the user interface to ask for membership
      *
      */
-    function buildInterface(PFUser $user, ?Project $project = null)
+    function buildInterface(PFUser $user, ?Project $project = null)  // phpcs:ignore Squiz.Scope.MethodScope.Missing
     {
         if ($user->isAnonymous()) {
             $event_manager = EventManager::instance();
@@ -98,7 +98,7 @@ abstract class Error_PermissionDenied
      *
      * @return Array
      */
-    function extractReceiver($project, $urlData)
+    function extractReceiver($project, $urlData)  // phpcs:ignore Squiz.Scope.MethodScope.Missing
     {
         $admins = array();
         $status  = true;
@@ -161,7 +161,7 @@ abstract class Error_PermissionDenied
      * Prepare the mail inputs
      * @return String $messageToAdmin
      */
-    function processMail($messageToAdmin)
+    function processMail($messageToAdmin)  // phpcs:ignore Squiz.Scope.MethodScope.Missing
     {
         $request =HTTPRequest::instance();
 
@@ -190,7 +190,7 @@ abstract class Error_PermissionDenied
      * @param String  $hrefApproval
      * @param String  $messageToAdmin
      */
-    function sendMail($project, $user, $urlData, $hrefApproval, $messageToAdmin)
+    public function sendMail($project, $user, $urlData, $hrefApproval, $messageToAdmin)
     {
         $mail = new Codendi_Mail();
 
@@ -203,10 +203,10 @@ abstract class Error_PermissionDenied
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->addAdditionalHeader('Reply-To', $user->getEmail());
 
-        $mail->setSubject($GLOBALS['Language']->getText($this->getTextBase(), 'mail_subject_'.$this->getType(), array($project->getPublicName(), $user->getRealName())));
+        $mail->setSubject($this->getPermissionDeniedMailSubject($project, $user));
 
         $link = $this->getRedirectLink($urlData, $GLOBALS['Language']);
-        $body = $GLOBALS['Language']->getText($this->getTextBase(), 'mail_content_'.$this->getType(), array($user->getRealName(), $user->getName(), $link, $project->getPublicName(), $hrefApproval, $messageToAdmin, $user->getEmail()));
+        $body = $this->getPermissionDeniedMailBody($project, $user, $hrefApproval, $messageToAdmin, $link);
         if ($adminList['status']== false) {
             $body .= "\n\n". $GLOBALS['Language']->getText($this->getTextBase(), 'mail_content_unvalid_ugroup', array($project->getPublicName()));
         }
@@ -289,5 +289,36 @@ abstract class Error_PermissionDenied
         }
 
         $GLOBALS['HTML']->footer(array('showfeedback' => false));
+    }
+
+    protected function getPermissionDeniedMailBody(
+        Project $project,
+        PFUser $user,
+        string $href_approval,
+        string $message_to_admin,
+        string $link
+    ) {
+        return $GLOBALS['Language']->getText(
+            $this->getTextBase(),
+            'mail_content_' . $this->getType(),
+            [
+                $user->getRealName(),
+                $user->getName(),
+                $link,
+                $project->getPublicName(),
+                $href_approval,
+                $message_to_admin,
+                $user->getEmail()
+            ]
+        );
+    }
+
+    protected function getPermissionDeniedMailSubject(Project $project, PFUser $user)
+    {
+        return $GLOBALS['Language']->getText(
+            $this->getTextBase(),
+            'mail_subject_' . $this->getType(),
+            [$project->getPublicName(), $user->getRealName()]
+        );
     }
 }
