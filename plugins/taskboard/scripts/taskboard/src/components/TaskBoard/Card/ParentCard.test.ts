@@ -62,7 +62,27 @@ describe("ParentCard", () => {
         expect(wrapper.classes()).not.toContain("taskboard-card-background-");
     });
 
-    it("adds accessibility class if user needs it", () => {
+    it("adds accessibility class if user needs it and card has a background color", () => {
+        const wrapper = shallowMount(ParentCard, {
+            mocks: {
+                $store: createStoreMock({ state: { user: { user_has_accessibility_mode: true } } })
+            },
+            propsData: {
+                card: {
+                    id: 43,
+                    color: "lake-placid-blue",
+                    background_color: "fiesta-red",
+                    assignees: [],
+                    initial_effort: 666,
+                    remaining_effort: 333
+                }
+            }
+        });
+        expect(wrapper.contains(".taskboard-card-accessibility")).toBe(true);
+        expect(wrapper.classes()).toContain("taskboard-card-with-accessibility");
+    });
+
+    it("does not add accessibility class if user needs it but card has no background color", () => {
         const wrapper = shallowMount(ParentCard, {
             mocks: {
                 $store: createStoreMock({ state: { user: { user_has_accessibility_mode: true } } })
@@ -74,12 +94,12 @@ describe("ParentCard", () => {
                     background_color: "",
                     assignees: [],
                     initial_effort: 666,
-                    remaining_effort: 333
+                    remaining_effort: 222
                 }
             }
         });
-        expect(wrapper.contains(".taskboard-card-accessibility")).toBe(true);
-        expect(wrapper.classes()).toContain("taskboard-card-with-accessibility");
+        expect(wrapper.contains(".taskboard-card-accessibility")).toBe(false);
+        expect(wrapper.classes()).not.toContain("taskboard-card-with-accessibility");
     });
 
     it("removes the show classes after 500ms", () => {

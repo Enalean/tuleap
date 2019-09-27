@@ -27,7 +27,7 @@
                 <card-assignees v-bind:assignees="card.assignees"/>
             </div>
         </div>
-        <div class="taskboard-card-accessibility" v-if="user_has_accessibility_mode"></div>
+        <div class="taskboard-card-accessibility" v-if="show_accessibility_pattern"></div>
         <div class="taskboard-card-progress" v-bind:class="progress_color" v-bind:style="{ width: progress_bar_width }"></div>
     </div>
 </template>
@@ -73,7 +73,7 @@ export default class ParentCard extends Vue {
             classnames.push(`taskboard-card-background-${this.card.background_color}`);
         }
 
-        if (this.user_has_accessibility_mode) {
+        if (this.show_accessibility_pattern) {
             classnames.push("taskboard-card-with-accessibility");
         }
 
@@ -94,6 +94,10 @@ export default class ParentCard extends Vue {
 
     get progress_color(): string {
         return `taskboard-card-progress-${this.card.color}`;
+    }
+
+    get show_accessibility_pattern(): boolean {
+        return this.user_has_accessibility_mode && this.card.background_color.length > 0;
     }
 }
 </script>
