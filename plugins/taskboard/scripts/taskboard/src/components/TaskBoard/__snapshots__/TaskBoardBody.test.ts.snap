@@ -1,37 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TaskBoardBody displays swimlanes with empty columns 1`] = `
+exports[`TaskBoardBody displays swimlanes for solo cards or cards with children 1`] = `
 <div
   class="taskboard-body"
 >
-  <div
-    class="taskboard-swimlane"
-  >
-    <parent-cell-stub
-      card="[object Object]"
-    />
-     
-    <div
-      class="taskboard-cell"
-    />
-    <div
-      class="taskboard-cell"
-    />
-  </div>
-  <div
-    class="taskboard-swimlane"
-  >
-    <parent-cell-stub
-      card="[object Object]"
-    />
-     
-    <columns-skeleton-stub
-      column_index="0"
-    />
-    <columns-skeleton-stub
-      column_index="1"
-    />
-  </div>
+  <solo-card-stub
+    card="[object Object]"
+  />
+  <card-with-children-stub
+    card="[object Object]"
+  />
    
   <!---->
 </div>

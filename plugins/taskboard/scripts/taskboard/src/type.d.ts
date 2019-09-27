@@ -18,23 +18,33 @@
  *
  */
 
+export interface Mapping {
+    tracker_id: number;
+    accepts: Array<ListValue>;
+}
+
+export interface ListValue {
+    id: number;
+}
+
 export interface ColumnDefinition {
     id: number;
     label: string;
     color: string;
+    mappings: Array<Mapping>;
 }
 
 export interface Swimlane {
     card: Card;
 }
 
-export interface Status {
-    id: number;
+export interface Status extends ListValue {
     label: string;
 }
 
 export interface Card {
     id: number;
+    tracker_id: number;
     label: string;
     xref: string;
     rank: number;
