@@ -143,6 +143,9 @@ msgstr "Carte de Kanban"
 msgid "Make sure to check their configuration."
 msgstr "Merci de vérifier leur configuration."
 
+msgid "Milestones"
+msgstr "Jalons"
+
 msgid "None"
 msgstr "Aucun"
 

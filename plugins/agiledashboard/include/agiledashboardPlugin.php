@@ -111,7 +111,7 @@ require_once 'constants.php';
 /**
  * AgileDashboardPlugin
  */
-class AgileDashboardPlugin extends Plugin
+class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const PLUGIN_NAME = 'agiledashboard';
     public const PLUGIN_SHORTNAME = 'plugin_agiledashboard';
@@ -246,7 +246,7 @@ class AgileDashboardPlugin extends Plugin
         $visit_cleaner->deleteVisitByUserId((int) $user->getId());
     }
 
-    public function tracker_formelement_get_classnames($params)
+    public function tracker_formelement_get_classnames($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['dynamic']['burnup'] = "Tuleap\AgileDashboard\FormElement\Burnup";
     }
@@ -264,12 +264,12 @@ class AgileDashboardPlugin extends Plugin
         return self::PLUGIN_SHORTNAME;
     }
 
-    public function service_classnames(&$params)
+    public function service_classnames(&$params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\AgileDashboard\AgileDashboardService::class;
     }
 
-    public function register_project_creation($params)
+    public function register_project_creation($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['project_creation_data']->projectShouldInheritFromTemplate()) {
             $this->getConfigurationManager()->duplicate(
@@ -284,7 +284,7 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    public function collect_errors_without_importing_xml_project($params)
+    public function collect_errors_without_importing_xml_project($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $is_mono_milestone_enabled = $this->getMonoMilestoneChecker()->isMonoMilestoneEnabled(
             $params['project']->getId()
@@ -308,7 +308,7 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    public function cardwall_event_get_swimline_tracker($params)
+    public function cardwall_event_get_swimline_tracker($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $planning_factory = $this->getPlanningFactory();
         if ($planning = $planning_factory->getPlanningByPlanningTracker($params['tracker'])) {
@@ -319,7 +319,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA
      */
-    public function tracker_event_report_display_additional_criteria($params)
+    public function tracker_event_report_display_additional_criteria($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $backlog_tracker = $params['tracker'];
         if (! $backlog_tracker) {
@@ -337,7 +337,7 @@ class AgileDashboardPlugin extends Plugin
             ),
             new AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider(
                 new AgileDashboard_Planning_NearestPlanningTrackerProvider($planning_factory),
-                new AgileDashboard_Milestone_MilestoneDao(),
+                $this->getMilestoneDao(),
                 Tracker_HierarchyFactory::instance(),
                 $planning_factory,
                 TrackerFactory::instance(),
@@ -356,7 +356,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see TRACKER_EVENT_REPORT_PROCESS_ADDITIONAL_QUERY
      */
-    public function tracker_event_report_process_additional_query($params)
+    public function tracker_event_report_process_additional_query($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $backlog_tracker = $params['tracker'];
 
@@ -382,7 +382,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA
      */
-    public function tracker_event_report_save_additional_criteria($params)
+    public function tracker_event_report_save_additional_criteria($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $dao     = new MilestoneReportCriterionDao();
         $project = $params['report']->getTracker()->getProject();
@@ -400,7 +400,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA
      */
-    public function tracker_event_report_load_additional_criteria($params)
+    public function tracker_event_report_load_additional_criteria($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $dao        = new MilestoneReportCriterionDao();
         $report_id  = $params['report']->getId();
@@ -412,7 +412,7 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    public function event_artifact_parents_selector($params)
+    public function event_artifact_parents_selector($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $artifact_parents_selector = new Planning_ArtifactParentsSelector(
             $this->getArtifactFactory(),
@@ -424,7 +424,7 @@ class AgileDashboardPlugin extends Plugin
         $event_listener->process($params);
     }
 
-    public function tracker_event_include_css_file($params)
+    public function tracker_event_include_css_file($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request = HTTPRequest::instance();
         if ($request->get('pane') === CardwallPaneInfo::IDENTIFIER || $this->isHomepageURL($request)) {
@@ -432,7 +432,7 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    public function tracker_event_general_settings($params)
+    public function tracker_event_general_settings($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $hierarchyChecker = new AgileDashboard_HierarchyChecker(
             $this->getPlanningFactory(),
@@ -442,7 +442,7 @@ class AgileDashboardPlugin extends Plugin
         $params['cannot_configure_instantiate_for_new_projects']= $hierarchyChecker->isPartOfScrumOrKanbanHierarchy($params['tracker']);
     }
 
-    public function tracker_event_project_creation_trackers_required($params)
+    public function tracker_event_project_creation_trackers_required($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $hierarchyChecker = new AgileDashboard_HierarchyChecker(
             $this->getPlanningFactory(),
@@ -455,7 +455,7 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    public function tracker_event_trackers_duplicated($params)
+    public function tracker_event_trackers_duplicated($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         PlanningFactory::build()->duplicatePlannings(
             $params['group_id'],
@@ -470,7 +470,7 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    public function tracker_event_redirect_after_artifact_creation_or_update($params)
+    public function tracker_event_redirect_after_artifact_creation_or_update($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params_extractor        = new AgileDashboard_PaneRedirectionExtractor();
         $artifact_linker         = new Planning_ArtifactLinker($this->getArtifactFactory(), PlanningFactory::build());
@@ -482,7 +482,7 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    public function tracker_usage($params)
+    public function tracker_usage($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tracker    = $params['tracker'];
         $tracker_id = $tracker->getId();
@@ -628,7 +628,7 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    public function tracker_event_build_artifact_form_action($params)
+    public function tracker_event_build_artifact_form_action($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->setQueryParametersFromRequest($params['request'], $params['redirect']);
         if ($params['request']->exist('child_milestone')) {
@@ -670,7 +670,7 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    public function javascript_file()
+    public function javascript_file() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isAnAgiledashboardRequest()) {
             echo $this->getMinifiedAssetHTML()."\n";
@@ -685,7 +685,7 @@ class AgileDashboardPlugin extends Plugin
     }
 
     /** @see Event::BURNING_PARROT_GET_STYLESHEETS */
-    public function burning_parrot_get_stylesheets(array $params)
+    public function burning_parrot_get_stylesheets(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $theme_include_assets = new IncludeAssets(
             AGILEDASHBOARD_BASE_DIR . '/../www/themes/BurningParrot/assets',
@@ -700,7 +700,7 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    public function burning_parrot_get_javascript_files(array $params)
+    public function burning_parrot_get_javascript_files(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isInOverviewTab()) {
             $assets = $this->getIncludeAssets();
@@ -798,7 +798,7 @@ class AgileDashboardPlugin extends Plugin
             $this->getTrackerFactory(),
             $this->getStatusCounter(),
             new PlanningPermissionsManager(),
-            new AgileDashboard_Milestone_MilestoneDao(),
+            $this->getMilestoneDao(),
             $this->getMonoMilestoneChecker(),
             new TimeframeBuilder(
                 $form_element_factory,
@@ -830,7 +830,7 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    public function tracker_event_artifact_association_edited($params)
+    public function tracker_event_artifact_association_edited($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['request']->isAjax()) {
             $milestone_factory = $this->getMilestoneFactory();
@@ -852,7 +852,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see Event::TRACKER_EVENT_MANAGE_SEMANTICS
      */
-    public function tracker_event_manage_semantics($parameters)
+    public function tracker_event_manage_semantics($parameters) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tracker   = $parameters['tracker'];
         /** @var Tracker_SemanticCollection $semantics */
@@ -865,7 +865,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see Event::TRACKER_EVENT_SEMANTIC_FROM_XML
      */
-    public function tracker_event_semantic_from_xml(&$parameters)
+    public function tracker_event_semantic_from_xml(&$parameters) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tracker           = $parameters['tracker'];
         $xml               = $parameters['xml'];
@@ -894,7 +894,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS
      */
-    public function tracker_event_get_semantic_duplicators($params)
+    public function tracker_event_get_semantic_duplicators($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['factories'][] = $this->getSemanticInitialEffortFactory();
     }
@@ -909,7 +909,7 @@ class AgileDashboardPlugin extends Plugin
      *
      * @see TRACKER_EVENT_GET_SEMANTICS_NAMES
      */
-    public function tracker_event_get_semantics_names(&$params)
+    public function tracker_event_get_semantics_names(&$params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['semantics'][] = AgileDashBoard_Semantic_InitialEffort::NAME;
     }
@@ -923,7 +923,7 @@ class AgileDashboardPlugin extends Plugin
      *      mapping     array           An array of mappings between xml tracker IDs and their true IDs
      *
      */
-    public function import_xml_project_cardwall_done($params)
+    public function import_xml_project_cardwall_done($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request = new HTTPRequest($params);
         $request->set('action', 'import');
@@ -935,7 +935,7 @@ class AgileDashboardPlugin extends Plugin
         $this->routeLegacyController()->process($request, $GLOBALS['Response'], []);
     }
 
-    public function plugin_statistics_service_usage($params)
+    public function plugin_statistics_service_usage($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $dao                  = new AgileDashboard_Dao();
         $statistic_aggregator = new AgileDashboardStatisticsAggregator();
@@ -953,7 +953,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_PROJECT_ADDITIONAL_INFORMATIONS
      */
-    public function rest_project_additional_informations($params)
+    public function rest_project_additional_informations($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $root_planning = $this->getPlanningFactory()->getRootPlanning($this->getCurrentUser(), $params['project']->getGroupId());
         if (! $root_planning) {
@@ -969,7 +969,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_RESOURCES
      */
-    public function rest_resources($params)
+    public function rest_resources($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $injector = new AgileDashboard_REST_ResourcesInjector();
         $injector->populate($params['restler']);
@@ -983,7 +983,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_RESOURCES_V2
      */
-    public function rest_resources_v2($params)
+    public function rest_resources_v2($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $injector = new AgileDashboard_REST_v2_ResourcesInjector();
         $injector->populate($params['restler']);
@@ -992,7 +992,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_GET_PROJECT_PLANNINGS
      */
-    public function rest_get_project_plannings($params)
+    public function rest_get_project_plannings($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $user              = $this->getCurrentUser();
         $planning_resource = $this->buildRightVersionOfProjectPlanningsResource($params['version']);
@@ -1008,7 +1008,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_OPTIONS_PROJECT_PLANNINGS
      */
-    public function rest_options_project_plannings($params)
+    public function rest_options_project_plannings($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $user              = $this->getCurrentUser();
         $planning_resource = $this->buildRightVersionOfProjectPlanningsResource($params['version']);
@@ -1030,7 +1030,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see Event::REST_PROJECT_RESOURCES
      */
-    public function rest_project_resources(array $params)
+    public function rest_project_resources(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $injector = new AgileDashboard_REST_ResourcesInjector();
         $injector->declareProjectPlanningResource($params['resources'], $params['project']);
@@ -1039,7 +1039,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_GET_PROJECT_MILESTONES
      */
-    public function rest_get_project_milestones($params)
+    public function rest_get_project_milestones($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $user               = $this->getCurrentUser();
         $milestone_resource = $this->buildRightVersionOfProjectMilestonesResource($params['version']);
@@ -1058,7 +1058,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_OPTIONS_PROJECT_MILESTONES
      */
-    public function rest_options_project_milestones($params)
+    public function rest_options_project_milestones($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $user               = $this->getCurrentUser();
         $milestone_resource = $this->buildRightVersionOfProjectMilestonesResource($params['version']);
@@ -1080,7 +1080,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_GET_PROJECT_BACKLOG
      */
-    public function rest_get_project_backlog($params)
+    public function rest_get_project_backlog($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $user                     = $this->getCurrentUser();
         $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
@@ -1096,7 +1096,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_OPTIONS_PROJECT_BACKLOG
      */
-    public function rest_options_project_backlog($params)
+    public function rest_options_project_backlog($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $user                     = $this->getCurrentUser();
         $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
@@ -1112,7 +1112,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_PUT_PROJECT_BACKLOG
      */
-    public function rest_put_project_backlog($params)
+    public function rest_put_project_backlog($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $user                     = $this->getCurrentUser();
         $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
@@ -1127,7 +1127,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see REST_PATCH_PROJECT_BACKLOG
      */
-    public function rest_patch_project_backlog($params)
+    public function rest_patch_project_backlog($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $user                     = UserManager::instance()->getCurrentUser();
         $project_backlog_resource = $this->buildRightVersionOfProjectBacklogResource($params['version']);
@@ -1143,7 +1143,7 @@ class AgileDashboardPlugin extends Plugin
     /**
     * @see ITEM_PRIORITY_CHANGE
     */
-    public function item_priority_change($params)
+    public function item_priority_change($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $planning_id = $this->getPlanningIdFromParameters($params);
 
@@ -1188,7 +1188,7 @@ class AgileDashboardPlugin extends Plugin
     }
 
     /** @see Event::GET_PROJECTID_FROM_URL */
-    public function get_projectid_from_url($params)
+    public function get_projectid_from_url($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($params['url'], '/plugins/agiledashboard/') === 0) {
             $params['project_id'] = $params['request']->get('group_id');
@@ -1198,7 +1198,7 @@ class AgileDashboardPlugin extends Plugin
     /**
      * @see TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT
      */
-    public function tracker_event_field_augment_data_for_report($params)
+    public function tracker_event_field_augment_data_for_report($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $this->isFieldPriority($params['field'])) {
             return;
@@ -1252,7 +1252,7 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    public function cardwall_event_use_standard_javascript($params)
+    public function cardwall_event_use_standard_javascript($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request = HTTPRequest::instance();
         $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
@@ -1262,13 +1262,13 @@ class AgileDashboardPlugin extends Plugin
     }
 
 
-    public function rest_project_agile_endpoints($params)
+    public function rest_project_agile_endpoints($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['available'] = true;
     }
 
     /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */
-    public function tracker_artifact_editrenderer_add_view_in_collection(array $params)
+    public function tracker_artifact_editrenderer_add_view_in_collection(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $user       = $params['user'];
         $request    = $params['request'];
@@ -1281,7 +1281,7 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    public function burning_parrot_compatible_page(BurningParrotCompatiblePageEvent $event)
+    public function burning_parrot_compatible_page(BurningParrotCompatiblePageEvent $event) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isKanbanURL() ||
             $this->isInOverviewTab() ||
@@ -1512,7 +1512,7 @@ class AgileDashboardPlugin extends Plugin
         );
     }
 
-    public function tracker_event_artifact_post_update(array $params)
+    public function tracker_event_artifact_post_update(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $artifact  = $params['artifact'];
         $this->getRealtimeMessageController()->sendMessageForKanban(
@@ -1563,7 +1563,7 @@ class AgileDashboardPlugin extends Plugin
         $widget_kanban_config_updater->deleteConfigurationForWidgetMatchingReportId($report);
     }
 
-    public function codendi_daily_start($params)
+    public function codendi_daily_start($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         SystemEventManager::instance()->createEvent(
             SystemEvent_BURNUP_DAILY::class,
@@ -1574,7 +1574,7 @@ class AgileDashboardPlugin extends Plugin
     }
 
 
-    public function get_system_event_class($params)
+    public function get_system_event_class($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         switch ($params['type']) {
             case SystemEvent_BURNUP_DAILY::class:
@@ -1608,7 +1608,7 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    public function system_event_get_types_for_default_queue($params)
+    public function system_event_get_types_for_default_queue($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['types'][] = SystemEvent_BURNUP_DAILY::class;
         $params['types'][] = SystemEvent_BURNUP_GENERATE::class;
@@ -1676,7 +1676,7 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    public function import_xml_project_tracker_done(array $params)
+    public function import_xml_project_tracker_done(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $xml             = $params['xml_content'];
         $tracker_mapping = $params['mapping'];
@@ -1773,7 +1773,7 @@ class AgileDashboardPlugin extends Plugin
         }
     }
 
-    public function tracker_event_artifact_delete(array $params)
+    public function tracker_event_artifact_delete(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $burnup_cache_dao = new BurnupCacheDao();
         $artifact         = $params['artifact'];
@@ -2000,10 +2000,21 @@ class AgileDashboardPlugin extends Plugin
             $this->getKanbanDao()->countKanbanCards(),
             $this->getKanbanDao()->countKanbanCardsAfter($collector->getTimestamp())
         );
+
+        $collector->addStatistics(
+            dgettext('tuleap-agiledashboard', 'Milestones'),
+            $this->getMilestoneDao()->countMilestones(),
+            $this->getMilestoneDao()->countMilestonesAfter($collector->getTimestamp())
+        );
     }
 
     private function getKanbanDao(): AgileDashboard_KanbanDao
     {
         return new AgileDashboard_KanbanDao();
+    }
+
+    private function getMilestoneDao(): AgileDashboard_Milestone_MilestoneDao
+    {
+        return new AgileDashboard_Milestone_MilestoneDao();
     }
 }
