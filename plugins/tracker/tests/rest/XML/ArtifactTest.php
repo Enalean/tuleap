@@ -48,17 +48,6 @@ class ArtifactTest extends TrackerBase
      */
     private $xml_client;
 
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->xml_client = new Client($this->base_url);
-        $this->xml_client->setSslVerification(false, false, false);
-
-        $this->xml_client->setDefaultOption('headers/Accept', 'application/xml');
-        $this->xml_client->setDefaultOption('headers/Content-Type', 'application/xml; charset=UTF8');
-    }
-
     public function setUp() : void
     {
         parent::setUp();
@@ -80,6 +69,16 @@ class ArtifactTest extends TrackerBase
         }
 
         $this->getReleaseTrackerInformation();
+
+        if ($this->xml_client === null) {
+            $this->xml_client = new Client($this->base_url);
+            $this->xml_client->setSslVerification(false, false, false);
+
+            $this->xml_client->setDefaultOption('headers/Accept', 'application/xml');
+            $this->xml_client->setDefaultOption('headers/Content-Type', 'application/xml; charset=UTF8');
+
+            $this->xml_client->setCurlMulti($this->client->getCurlMulti());
+        }
     }
 
     private function getReleaseTrackerInformation()

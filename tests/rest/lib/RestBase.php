@@ -103,6 +103,7 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         );
         $this->client->setSslVerification(false, false, false);
         $this->setup_client = new Client($this->setup_url);
+        $this->setup_client->setCurlMulti($this->client->getCurlMulti());
         $this->setup_client->setSslVerification(false, false, false);
 
         $this->client->setDefaultOption('headers/Accept', 'application/json');
