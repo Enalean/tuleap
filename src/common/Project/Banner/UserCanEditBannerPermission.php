@@ -22,7 +22,7 @@ namespace Tuleap\Project\Banner;
 
 use Project;
 
-class UserCanUpdateBannerPermission
+class UserCanEditBannerPermission
 {
     /**
      * @var Project

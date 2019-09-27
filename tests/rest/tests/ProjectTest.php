@@ -1228,4 +1228,16 @@ class ProjectTest extends ProjectBase
 
         $this->assertEquals(400, $response->getStatusCode());
     }
+
+    public function testDELETEBanner(): void
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->delete(
+                'projects/' . $this->project_public_member_id .'/banner'
+            )
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 }
