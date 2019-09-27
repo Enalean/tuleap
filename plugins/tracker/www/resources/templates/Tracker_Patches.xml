@@ -28,29 +28,19 @@
         <formElement type="sb" ID="F5" rank="4">
           <name>severity</name>
           <label>Severity</label>
-          <description>Impact of the artifact on the system (Critical, Major,...)</description>
+          <description>Impact of the artifact on the system (Critical, Marginal,...)</description>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="F5-V0" label="1 - Ordinary"/>
-              <item ID="F5-V1" label="2"/>
-              <item ID="F5-V2" label="3"/>
-              <item ID="F5-V3" label="4"/>
-              <item ID="F5-V4" label="5 - Major"/>
-              <item ID="F5-V5" label="6"/>
-              <item ID="F5-V6" label="7"/>
-              <item ID="F5-V7" label="8"/>
-              <item ID="F5-V8" label="9 - Critical"/>
+              <item ID="F5-V0" label="Negligible"/>
+              <item ID="F5-V1" label="Marginal"/>
+              <item ID="F5-V2" label="Critical"/>
+              <item ID="F5-V3" label="Catastrophic"/>
             </items>
             <decorators>
-              <decorator REF="F5-V0" r="218" g="218" b="218"/>
-              <decorator REF="F5-V1" r="218" g="208" b="208"/>
-              <decorator REF="F5-V2" r="218" g="202" b="202"/>
-              <decorator REF="F5-V3" r="218" g="192" b="192"/>
-              <decorator REF="F5-V4" r="218" g="186" b="186"/>
-              <decorator REF="F5-V5" r="218" g="176" b="176"/>
-              <decorator REF="F5-V6" r="218" g="170" b="170"/>
-              <decorator REF="F5-V7" r="218" g="144" b="144"/>
-              <decorator REF="F5-V8" r="218" g="138" b="138"/>
+              <decorator REF="F5-V0" tlp_color_name="graffiti-yellow"/>
+              <decorator REF="F5-V1" tlp_color_name="clockwork-orange"/>
+              <decorator REF="F5-V2" tlp_color_name="fiesta-red"/>
+              <decorator REF="F5-V3" tlp_color_name="red-wine"/>
             </decorators>
           </bind>
         </formElement>

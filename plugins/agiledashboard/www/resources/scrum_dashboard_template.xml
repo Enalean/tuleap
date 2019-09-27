@@ -135,9 +135,9 @@
                       <item ID="V13146" label="Critical impact" is_hidden="0"/>
                     </items>
                     <decorators>
-                      <decorator REF="V13144" r="218" g="218" b="218"/>
-                      <decorator REF="V13145" r="255" g="204" b="102"/>
-                      <decorator REF="V13146" r="255" g="51" b="0"/>
+                      <decorator REF="V13144" tlp_color_name="graffiti-yellow"/>
+                      <decorator REF="V13145" tlp_color_name="clockwork-orange"/>
+                      <decorator REF="V13146" tlp_color_name="fiesta-red"/>
                     </decorators>
                     <default_values>
                       <value REF="V13144"/>
@@ -1193,9 +1193,9 @@
                       <item ID="V13155" label="Closed" is_hidden="0"/>
                     </items>
                     <decorators>
-                      <decorator REF="V13153" r="255" g="102" b="0"/>
-                      <decorator REF="V13154" r="0" g="204" b="0"/>
-                      <decorator REF="V13155" r="153" g="51" b="0"/>
+                      <decorator REF="V13153" tlp_color_name="daphne-blue"/>
+                      <decorator REF="V13154" tlp_color_name="deep-blue"/>
+                      <decorator REF="V13155" tlp_color_name="neon-green"/>
                     </decorators>
                     <default_values>
                       <value REF="V13153"/>
@@ -1436,10 +1436,10 @@
                       <item ID="V13159" label="Refactoring" is_hidden="0"/>
                     </items>
                     <decorators>
-                      <decorator REF="V13156" r="51" g="153" b="255"/>
-                      <decorator REF="V13157" r="153" g="204" b="153"/>
-                      <decorator REF="V13158" r="255" g="153" b="51"/>
-                      <decorator REF="V13159" r="204" g="51" b="51"/>
+                      <decorator REF="V13156" tlp_color_name="lake-placid-blue"/>
+                      <decorator REF="V13157" tlp_color_name="neon-green"/>
+                      <decorator REF="V13158" tlp_color_name="clockwork-orange"/>
+                      <decorator REF="V13159" tlp_color_name="fiesta-red"/>
                     </decorators>
                     <default_values>
                       <value REF="V13156"/>
@@ -1802,9 +1802,9 @@
                       <item ID="V13166" label="Advanced User" is_hidden="0"/>
                     </items>
                     <decorators>
-                      <decorator REF="V13164" r="0" g="102" b="204"/>
-                      <decorator REF="V13165" r="153" g="255" b="102"/>
-                      <decorator REF="V13166" r="255" g="51" b="255"/>
+                      <decorator REF="V13164" tlp_color_name="deep-blue"/>
+                      <decorator REF="V13165" tlp_color_name="acid-green"/>
+                      <decorator REF="V13166" tlp_color_name="peggy-pink"/>
                     </decorators>
                   </bind>
                 </formElement>
@@ -1871,10 +1871,10 @@
                       <item ID="V13170" label="Done" is_hidden="0"/>
                     </items>
                     <decorators>
-                      <decorator REF="V13167" r="204" g="0" b="204"/>
-                      <decorator REF="V13168" r="51" g="153" b="153"/>
-                      <decorator REF="V13169" r="0" g="204" b="255"/>
-                      <decorator REF="V13170" r="0" g="51" b="255"/>
+                      <decorator REF="V13167" tlp_color_name="daphne-blue"/>
+                      <decorator REF="V13168" tlp_color_name="lake-placid-blue"/>
+                      <decorator REF="V13169" tlp_color_name="deep-blue"/>
+                      <decorator REF="V13170" tlp_color_name="neon-green"/>
                     </decorators>
                     <default_values>
                       <value REF="V13167"/>
@@ -2229,10 +2229,10 @@
       <tracker id="T1016"/>
       <tracker id="T1017">
         <columns>
-          <column label="Todo" id="C540" bg_red="248" bg_green="248" bg_blue="248"/>
-          <column label="On Going" id="C541" bg_red="248" bg_green="248" bg_blue="248"/>
-          <column label="Review" id="C542" bg_red="248" bg_green="248" bg_blue="248"/>
-          <column label="Done" id="C543" bg_red="248" bg_green="248" bg_blue="248"/>
+          <column label="Todo" id="C540" tlp_color_name="daphne-blue"/>
+          <column label="On Going" id="C541" tlp_color_name="lake-placid-blue"/>
+          <column label="Review" id="C542" tlp_color_name="deep-blue"/>
+          <column label="Done" id="C543" tlp_color_name="neon-green"/>
         </columns>
         <mappings>
           <mapping tracker_id="T1015" field_id="F22712">
@@ -2258,10 +2258,10 @@
       </tracker>
       <tracker id="T1018">
         <columns>
-          <column label="Todo" id="C544" bg_red="153" bg_green="204" bg_blue="255"/>
-          <column label="On Going" id="C545" bg_red="51" bg_green="153" bg_blue="255"/>
-          <column label="Review" id="C546" bg_red="0" bg_green="51" bg_blue="102"/>
-          <column label="Done" id="C547" bg_red="248" bg_green="248" bg_blue="248"/>
+          <column label="Todo" id="C544" tlp_color_name="daphne-blue"/>
+          <column label="On Going" id="C545" tlp_color_name="lake-placid-blue"/>
+          <column label="Review" id="C546" tlp_color_name="deep-blue"/>
+          <column label="Done" id="C547" tlp_color_name="neon-green"/>
         </columns>
         <mappings>
           <mapping tracker_id="T1015" field_id="F22712">

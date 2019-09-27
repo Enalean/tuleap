@@ -42,26 +42,14 @@
           <description>How quickly the artifact must be completed</description>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="F7-V0" label="1 - Lowest"/>
-              <item ID="F7-V1" label="2"/>
-              <item ID="F7-V2" label="3"/>
-              <item ID="F7-V3" label="4"/>
-              <item ID="F7-V4" label="5 - Medium"/>
-              <item ID="F7-V5" label="6"/>
-              <item ID="F7-V6" label="7"/>
-              <item ID="F7-V7" label="8"/>
-              <item ID="F7-V8" label="9 - Highest"/>
+              <item ID="F7-V0" label="Low"/>
+              <item ID="F7-V1" label="Medium"/>
+              <item ID="F7-V2" label="High"/>
             </items>
             <decorators>
-              <decorator REF="F7-V0" r="218" g="218" b="218"/>
-              <decorator REF="F7-V1" r="218" g="208" b="208"/>
-              <decorator REF="F7-V2" r="218" g="202" b="202"/>
-              <decorator REF="F7-V3" r="218" g="192" b="192"/>
-              <decorator REF="F7-V4" r="218" g="186" b="186"/>
-              <decorator REF="F7-V5" r="218" g="176" b="176"/>
-              <decorator REF="F7-V6" r="218" g="170" b="170"/>
-              <decorator REF="F7-V7" r="218" g="144" b="144"/>
-              <decorator REF="F7-V8" r="218" g="138" b="138"/>
+              <decorator REF="F7-V0" tlp_color_name="graffiti-yellow"/>
+              <decorator REF="F7-V1" tlp_color_name="clockwork-orange"/>
+              <decorator REF="F7-V2" tlp_color_name="fiesta-red"/>
             </decorators>
           </bind>
         </formElement>
@@ -232,15 +220,15 @@
             <description>Graphic Report By Default For Support Requests</description>
             <charts>
                 <chart type="pie" width="600" height="400" rank="0" base="F16">
-	                <title>Status</title> 	 
+	                <title>Status</title>
 	                <description>Number of Artifacts by Status</description>
-	            </chart> 	 
-	            <chart type="bar" width="600" height="400" rank="1" base="F15" group="F7"> 
-	                <title>Severity</title> 	 
+	            </chart>
+	            <chart type="bar" width="600" height="400" rank="1" base="F15" group="F7">
+	                <title>Severity</title>
 	                <description>Number of Artifacts by severity level</description>
-	            </chart> 	 
+	            </chart>
 	            <chart type="pie" width="600" height="400" rank="2" base="F15">
-	                <title>Assignment</title> 	 
+	                <title>Assignment</title>
 	                <description>Number of Artifacts by Assignee</description>
 	            </chart>
             </charts>
@@ -277,15 +265,15 @@
           <description>Graphic Report By Default For Support Requests</description>
           <charts>
               <chart type="pie" width="600" height="400" rank="0" base="F16">
-	              <title>Status</title> 	 
+	              <title>Status</title>
 	              <description>Number of Artifacts by Status</description>
-	          </chart> 	 
-	          <chart type="bar" width="600" height="400" rank="1" base="F15" group="F7"> 
-	              <title>Severity</title> 	 
+	          </chart>
+	          <chart type="bar" width="600" height="400" rank="1" base="F15" group="F7">
+	              <title>Severity</title>
 	              <description>Number of Artifacts by severity level</description>
-	          </chart> 	 
+	          </chart>
 	          <chart type="pie" width="600" height="400" rank="2" base="F15">
-	              <title>Assignment</title> 	 
+	              <title>Assignment</title>
 	              <description>Number of Artifacts by Assignee</description>
 	          </chart>
          </charts>
