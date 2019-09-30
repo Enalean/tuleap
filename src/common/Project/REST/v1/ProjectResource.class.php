@@ -47,6 +47,7 @@ use Tuleap\Project\Banner\BannerCreator;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerPermissionsChecker;
 use Tuleap\Project\Banner\BannerRemover;
+use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\Project\HeartbeatsEntryCollection;
@@ -141,6 +142,11 @@ class ProjectResource extends AuthenticatedResource
      */
     private $banner_permissions_checker;
 
+    /**
+     * @var BannerRetriever
+     */
+    private $banner_retriever;
+
     public function __construct()
     {
         $this->user_manager      = UserManager::instance();
@@ -205,10 +211,10 @@ class ProjectResource extends AuthenticatedResource
             $label_dao
         );
 
+        $banner_dao = new BannerDao();
         $this->banner_permissions_checker = new BannerPermissionsChecker();
-        $this->banner_creator             = new BannerCreator(
-            new BannerDao()
-        );
+        $this->banner_creator             = new BannerCreator($banner_dao);
+        $this->banner_retriever           = new BannerRetriever($banner_dao);
     }
 
     /**
@@ -1496,6 +1502,35 @@ class ProjectResource extends AuthenticatedResource
 
         $banner_remover = new BannerRemover(new BannerDao());
         $banner_remover->deleteBanner($delete_permission);
+    }
+
+     /**
+      * Get banner
+      *
+      * Get the banner
+      *
+      * @url GET {id}/banner
+      * @access hybrid
+      *
+      * @param int $id id of the project
+      * @return BannerRepresentation
+      * @throws RestException
+      */
+    public function getBanner($id): BannerRepresentation
+    {
+        $this->checkAccess();
+
+        $project = $this->getProjectForUser($id);
+        $banner  = $this->banner_retriever->getBannerForProject($project);
+
+        if (! $banner) {
+            throw new RestException(404, 'No banner set for this project');
+        }
+
+        $representation = new BannerRepresentation();
+        $representation->build($banner);
+
+        return $representation;
     }
 
     private function getRepositoryNameFromQuery($query)

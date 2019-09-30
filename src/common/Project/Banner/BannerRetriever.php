@@ -18,33 +18,30 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\Project\Banner;
 
-use Tuleap\DB\DataAccessObject;
+use Project;
 
-class BannerDao extends DataAccessObject
+class BannerRetriever
 {
+    /**
+     * @var BannerDao
+     */
+    private $banner_dao;
 
-    public function addBanner(int $project_id, string $message): void
+    public function __construct(BannerDao $banner_dao)
     {
-        $sql = "REPLACE INTO project_banner(project_id, message) VALUES (?,?)";
-
-        $this->getDB()->run($sql, $project_id, $message);
+        $this->banner_dao = $banner_dao;
     }
 
-    public function deleteBanner(int $project_id): void
+    public function getBannerForProject(Project $project): ?Banner
     {
-        $this->getDB()->run('DELETE FROM project_banner WHERE project_id = ?', $project_id);
-    }
+        $message = $this->banner_dao->findBannerByProjectId($project->getID());
 
-    public function findBannerByProjectId(int $project_id): ?string
-    {
-        $sql = "SELECT message
-            FROM project_banner
-            WHERE project_id=?";
+        if (! $message) {
+            return null;
+        }
 
-        return $this->getDB()->cell($sql, $project_id)?:null;
+        return new Banner($message);
     }
 }

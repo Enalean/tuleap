@@ -20,10 +20,17 @@
 
 namespace Tuleap\Project\REST\v1;
 
+use Tuleap\Project\Banner\Banner;
+
 class BannerRepresentation
 {
     /**
      * @var string {@required true}
      */
     public $message;
+
+    public function build(Banner $banner): void
+    {
+        $this->message = $banner->getMessage();
+    }
 }
