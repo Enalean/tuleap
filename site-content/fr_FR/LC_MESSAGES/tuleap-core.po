@@ -252,6 +252,9 @@ msgstr "Demander à rejoindre"
 msgid "Ask to join this project"
 msgstr "Demander à rejoindre ce projet"
 
+msgid "Banner"
+msgstr "Bannière"
+
 msgid "Beyond 3 columns, each column<br>will have the same size."
 msgstr "Au-delà de 3 colonnes, chaque colonne<br>aura la même taille."
 
@@ -1033,6 +1036,9 @@ msgid ""
 msgstr ""
 "Les administrateurs ne peuvent pas être retirés du projet. Vous devez "
 "d'abord les retirer du groupe Administrateurs du projet."
+
+msgid "Project banner"
+msgstr "Bannière du projet"
 
 msgid "Project categories"
 msgstr "Catégories de projet"
