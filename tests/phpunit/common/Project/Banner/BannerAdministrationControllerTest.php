@@ -31,6 +31,7 @@ use ProjectManager;
 use TemplateRendererFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Request\ForbiddenException;
 
@@ -58,7 +59,9 @@ final class BannerAdministrationControllerTest extends TestCase
         $this->controller                  = new BannerAdministrationController(
             TemplateRendererFactory::build(),
             $this->header_navigation_displayer,
-            $this->project_manager
+            Mockery::mock(IncludeAssets::class),
+            $this->project_manager,
+            Mockery::mock(BannerRetriever::class)
         );
     }
 

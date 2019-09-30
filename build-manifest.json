@@ -71,6 +71,10 @@
         "project-admin-services": {
             "src": "src/www/scripts/project/admin/services/src",
             "po": "src/www/scripts/project/admin/services/po"
+        },
+        "project-admin-banner": {
+            "src": "src/www/scripts/project/admin/banner/src",
+            "po": "src/www/scripts/project/admin/banner/po"
         }
     }
 }

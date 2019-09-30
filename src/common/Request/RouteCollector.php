@@ -78,6 +78,8 @@ use Tuleap\Project\Admin\ProjectUGroup\MemberRemovalController;
 use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
 use Tuleap\Project\Banner\BannerAdministrationController;
+use Tuleap\Project\Banner\BannerDao;
+use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\Home;
 use Tuleap\Project\Service\AddController;
 use Tuleap\Project\Service\DeleteController;
@@ -493,7 +495,9 @@ class RouteCollector
         return new BannerAdministrationController(
             \TemplateRendererFactory::build(),
             new HeaderNavigationDisplayer(),
-            ProjectManager::instance()
+            new IncludeAssets(__DIR__ . '/../../www/assets/', '/assets'),
+            ProjectManager::instance(),
+            new BannerRetriever(new BannerDao())
         );
     }
 
