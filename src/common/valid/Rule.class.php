@@ -47,7 +47,7 @@ abstract class Rule
      * Default error message if rule is not apply on value.
      *
      * @param String $val Value to check.
-     * @return bool
+     * @return string
      */
     function getErrorMessage($key = '')
     {
@@ -572,7 +572,7 @@ class Rule_UserName extends Rule
     /**
      * Error message
      *
-     * @return String
+     * @return string
      */
     public function getErrorMessage($key = '')
     {
@@ -791,7 +791,7 @@ class Rule_ProjectFullName extends Rule_UserName
     /**
      * Error message
      *
-     * @return String
+     * @return string
      */
     public function getErrorMessage($key = '')
     {

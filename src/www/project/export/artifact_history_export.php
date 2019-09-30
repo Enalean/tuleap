@@ -103,6 +103,7 @@ $eol = "\n";
 $result = extract_history($atid);
 $rows = db_numrows($result);
 
+$export = isset($export) ? (string) $export : '';
 if ($export == 'artifact_history') {
     // Send the result in CSV format
     if ($result && $rows > 0) {

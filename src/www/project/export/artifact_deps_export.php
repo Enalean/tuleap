@@ -65,6 +65,7 @@ $eol = "\n";
 $result=db_query($sql);
 $rows = db_numrows($result);
 
+$export = isset($export) ? (string) $export : '';
 if ($export == 'artifact_deps') {
     // Send the result in CSV format
     if ($result && $rows > 0) {

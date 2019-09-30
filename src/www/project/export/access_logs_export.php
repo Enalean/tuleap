@@ -299,6 +299,7 @@ function export_plugin_logs($log, $project)
 $project = new Project($group_id);
 
 if (isset($export)) {
+    $export = (string) $export;
     if ($export == 'access_logs') {
         $span = 52*30.5;
         $who = "allusers";

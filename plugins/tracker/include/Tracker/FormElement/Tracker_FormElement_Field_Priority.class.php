@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -244,7 +244,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      * Fetch the html code to display the field value in tooltip
      *
      * @param Tracker_Artifact $artifact
-     * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
+     * @param Tracker_Artifact_ChangesetValue $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)

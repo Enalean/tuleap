@@ -96,7 +96,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Return the dao of the criteria value used with this field.
-     * @return DataAccessObject
+     * @return DataAccessObject|null
      */
     abstract protected function getCriteriaDao();
 

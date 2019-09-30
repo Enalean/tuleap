@@ -467,7 +467,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      * Fetch the html code to display the field value in tooltip
      *
      * @param Tracker_Artifact $artifact
-     * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
+     * @param Tracker_Artifact_ChangesetValue $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
@@ -593,29 +593,34 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $GLOBALS['HTML']->getImagePath('ic/sum.png');
     }
 
-    protected function getDao()
+    protected function getDao(): Tracker_FormElement_Field_ComputedDao
     {
         return new Tracker_FormElement_Field_ComputedDao();
     }
 
     public function getCriteriaFrom($criteria)
     {
+        return '';
     }
 
     public function getCriteriaWhere($criteria)
     {
+        return '';
     }
 
     public function getQuerySelect()
     {
+        return '';
     }
 
     public function getQueryFrom()
     {
+        return '';
     }
 
     public function fetchCriteriaValue($criteria)
     {
+        return '';
     }
 
     public function fetchRawValue($value)
@@ -780,6 +785,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public function fetchFollowUp($artifact, $from, $to)
     {
+        return '';
     }
 
     public function isArtifactValueAutocomputed(Tracker_Artifact $artifact)
