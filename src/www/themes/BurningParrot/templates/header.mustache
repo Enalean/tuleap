@@ -52,6 +52,14 @@
             {{/ sidebar }}
 
             <main role="main" class="{{ main_classes }}">
+                {{# current_project_navbar_info_presenter }}
+                    {{# purified_banner }}
+                        <div class="project-banner">
+                            <p>{{{ purified_banner }}}</p>
+                        </div>
+                    {{/ purified_banner }}
+                {{/ current_project_navbar_info_presenter }}
+
                 {{# has_breadcrumbs }}
                     {{> breadcrumbs/breadcrumbs }}
                 {{/ has_breadcrumbs }}

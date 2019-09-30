@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,12 +19,12 @@
 /* Global constants are evil, please avoid them whenever possible.
  * Use class constants instead.
  */
-define('CODENDI_PURIFIER_CONVERT_HTML', 0);
-define('CODENDI_PURIFIER_STRIP_HTML', 1);
-define('CODENDI_PURIFIER_BASIC', 5);
-define('CODENDI_PURIFIER_BASIC_NOBR', 6);
-define('CODENDI_PURIFIER_LIGHT', 10);
-define('CODENDI_PURIFIER_FULL', 15);
-define('CODENDI_PURIFIER_JS_QUOTE', 20);
-define('CODENDI_PURIFIER_JS_DQUOTE', 25);
-define('CODENDI_PURIFIER_DISABLED', 100);
+define('CODENDI_PURIFIER_CONVERT_HTML', Codendi_HTMLPurifier::CONFIG_CONVERT_HTML);
+define('CODENDI_PURIFIER_STRIP_HTML', Codendi_HTMLPurifier::CONFIG_STRIP_HTML);
+define('CODENDI_PURIFIER_BASIC', Codendi_HTMLPurifier::CONFIG_BASIC);
+define('CODENDI_PURIFIER_BASIC_NOBR', Codendi_HTMLPurifier::CONFIG_BASIC_NOBR);
+define('CODENDI_PURIFIER_LIGHT', Codendi_HTMLPurifier::CONFIG_LIGHT);
+define('CODENDI_PURIFIER_FULL', Codendi_HTMLPurifier::CONFIG_FULL);
+define('CODENDI_PURIFIER_JS_QUOTE', Codendi_HTMLPurifier::CONFIG_JS_QUOTE);
+define('CODENDI_PURIFIER_JS_DQUOTE', Codendi_HTMLPurifier::CONFIG_JS_DQUOTE);
+define('CODENDI_PURIFIER_DISABLED', Codendi_HTMLPurifier::CONFIG_DISABLED);

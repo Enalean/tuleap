@@ -36,10 +36,19 @@
  * </pre>
  */
 
-require_once __DIR__.'/../constants.php';
-
 class Codendi_HTMLPurifier
 {
+    public const CONFIG_CONVERT_HTML                  = 0;
+    public const CONFIG_STRIP_HTML                    = 1;
+    public const CONFIG_BASIC                         = 5;
+    public const CONFIG_BASIC_NOBR                    = 6;
+    public const CONFIG_LIGHT                         = 10;
+    public const CONFIG_FULL                          = 15;
+    public const CONFIG_JS_QUOTE                      = 20;
+    public const CONFIG_JS_DQUOTE                     = 25;
+    public const CONFIG_MINIMAL_FORMATTING_NO_NEWLINE = 35;
+    public const CONFIG_DISABLED                      = 100;
+
     private static $allowed_schemes = array(
         'http'   => true,
         'https'  => true,
@@ -146,6 +155,13 @@ class Codendi_HTMLPurifier
         return $config;
     }
 
+    private function getMinimalFormattingNoNewlineConfig() : HTMLPurifier_Config
+    {
+        $config = $this->getCodendiConfig();
+        $this->setConfigAttribute($config, 'HTML', 'Allowed', 'a[href],strong,em,b,i');
+        return $config;
+    }
+
     /**
      * HTML Purifier configuration factory
      */
@@ -155,16 +171,19 @@ class Codendi_HTMLPurifier
             return $this->config[$level];
         }
         switch ($level) {
-            case CODENDI_PURIFIER_LIGHT:
-                $this->config[CODENDI_PURIFIER_LIGHT] = $this->getLightConfig();
+            case self::CONFIG_LIGHT:
+                $this->config[self::CONFIG_LIGHT] = $this->getLightConfig();
                 break;
 
-            case CODENDI_PURIFIER_FULL:
-                $this->config[CODENDI_PURIFIER_FULL] = $this->getCodendiConfig();
+            case self::CONFIG_FULL:
+                $this->config[self::CONFIG_FULL] = $this->getCodendiConfig();
                 break;
 
-            case CODENDI_PURIFIER_STRIP_HTML:
-                $this->config[CODENDI_PURIFIER_STRIP_HTML] = $this->getStripConfig();
+            case self::CONFIG_STRIP_HTML:
+                $this->config[self::CONFIG_STRIP_HTML] = $this->getStripConfig();
+                break;
+            case self::CONFIG_MINIMAL_FORMATTING_NO_NEWLINE:
+                $this->config[self::CONFIG_MINIMAL_FORMATTING_NO_NEWLINE] = $this->getMinimalFormattingNoNewlineConfig();
                 break;
         }
         return $this->config[$level];
@@ -206,72 +225,74 @@ class Codendi_HTMLPurifier
      *
      * There are 5 level of purification, from the most restrictive to most
      * permissive:
-     * - CODENDI_PURIFIER_CONVERT_HTML (default)
+     * - CONFIG_CONVERT_HTML (default)
      *   Transform HTML markups it in entities.
      *
-     * - CODENDI_PURIFIER_STRIP_HTML
-     *   Removes all HTML markups. Note: as we relly on HTML Purifier to
+     * - CONFIG_STRIP_HTML
+     *   Removes all HTML markups. Note: as we rely on HTML Purifier to
      *   perform this operation this option is not considered as secure as
      *   CONVERT_HTML. If you are looking for the most secure option please
      *   consider CONVERT_HTML.
      *
-     * - CODENDI_PURIFIER_BASIC (need $groupId to be set for automagic links)
+     * - CONFIG_BASIC (need $groupId to be set for automagic links)
      *   Removes all user submitted HTML markups but:
      *    - transform typed URLs into clickable URLs.
-     *    - transform autmagic links.
-     *    - transform carrige return into HTML br markup.
+     *    - transform automagic links.
+     *    - transform carriage return into HTML br markup.
      *
-     * - CODENDI_PURIFIER_LIGHT
+     * - CONFIG_LIGHT
      *   First set of HTML formatting (@see getLightConfig() for allowed
-     *   markups) plus all what is allowed by CODENDI_PURIFIER_BASIC.
+     *   markups) plus all what is allowed by CONFIG_BASIC.
      *
-     * - CODENDI_PURIFIER_FULL
+     * - CONFIG_FULL
      *   Clean-up plain HTML using HTML Purifier rules (remove forms,
-     *   javascript, ...). Warning: there is no longer codendi facilities
-     *   (neither automagic links nor carrige return to br transformation).
+     *   javascript, ...). Warning: there is no longer Tuleap facilities
+     *   (neither automagic links nor carriage return to br transformation).
      *
-     * - CODENDI_PURIFIER_DISABLED
+     * - CONFIG_DISABLED
      *   No filter at all.
      */
-    function purify($html, $level = 0, $groupId = 0)
+    public function purify($html, $level = 0, $groupId = 0)
     {
         $clean = '';
         switch ($level) {
-            case CODENDI_PURIFIER_DISABLED:
+            case self::CONFIG_DISABLED:
                 $clean = $html;
                 break;
 
-            case CODENDI_PURIFIER_LIGHT:
+            case self::CONFIG_LIGHT:
                 if (empty($html)) {
                     $clean = $html;
                     break;
                 }
                 $this->insertReferences($html, $groupId);
-            case CODENDI_PURIFIER_STRIP_HTML:
-            case CODENDI_PURIFIER_FULL:
+            case self::CONFIG_STRIP_HTML:
+            case self::CONFIG_FULL:
+            case self::CONFIG_MINIMAL_FORMATTING_NO_NEWLINE:
                 $hp = HTMLPurifier::getInstance();
 
                 $config = $this->getHPConfig($level);
                 $clean = $hp->purify($html, $config);
                 break;
 
-            case CODENDI_PURIFIER_BASIC:
+            case self::CONFIG_BASIC:
                 $data  = $this->linkifyMails(htmlentities($html, ENT_QUOTES, 'UTF-8'));
                 $data  = $this->dealWithSpecialCasesWithFramingURLCharacters($data);
                 $clean = $this->purify(nl2br($data), CODENDI_PURIFIER_LIGHT, $groupId);
                 break;
-            case CODENDI_PURIFIER_BASIC_NOBR:
+            case self::CONFIG_BASIC_NOBR:
                 $data  = $this->linkifyMails(htmlentities($html, ENT_QUOTES, 'UTF-8'));
                 $data  = $this->dealWithSpecialCasesWithFramingURLCharacters($data);
                 $clean = $this->purify($data, CODENDI_PURIFIER_LIGHT, $groupId);
                 break;
-            case CODENDI_PURIFIER_JS_QUOTE:
+
+            case self::CONFIG_JS_QUOTE:
                 $clean = $this->js_string_purifier($html, JSON_HEX_APOS);
                 break;
-            case CODENDI_PURIFIER_JS_DQUOTE:
+            case self::CONFIG_JS_DQUOTE:
                 $clean = $this->js_string_purifier($html, JSON_HEX_QUOT);
                 break;
-            case CODENDI_PURIFIER_CONVERT_HTML:
+            case self::CONFIG_CONVERT_HTML:
             default:
                 $clean = htmlentities($html, ENT_QUOTES, 'UTF-8');
                 break;

@@ -23,6 +23,7 @@ namespace Tuleap\Theme\BurningParrot;
 use Codendi_HTMLPurifier;
 use ForgeConfig;
 use Project;
+use Tuleap\Project\Banner\Banner;
 
 class CurrentProjectNavbarInfoPresenter
 {
@@ -59,8 +60,17 @@ class CurrentProjectNavbarInfoPresenter
      */
     public $project_is_private_incl_restricted;
 
-    public function __construct(Project $project, $project_privacy, array $project_flags)
-    {
+    /**
+     * @var string
+     */
+    public $purified_banner = '';
+
+    public function __construct(
+        Project $project,
+        $project_privacy,
+        array $project_flags,
+        ?Banner $banner
+    ) {
         $purifier = Codendi_HTMLPurifier::instance();
 
         $this->project_link      = '/projects/' . $project->getUnixName() . '/';
@@ -79,6 +89,13 @@ class CurrentProjectNavbarInfoPresenter
             $this->project_is_public_incl_restricted  = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;
             $this->project_is_private                 = $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED;
             $this->project_is_private_incl_restricted = $project->getAccess() === Project::ACCESS_PRIVATE;
+        }
+
+        if ($banner !== null) {
+            $this->purified_banner = $purifier->purify(
+                $banner->getMessage(),
+                Codendi_HTMLPurifier::CONFIG_MINIMAL_FORMATTING_NO_NEWLINE
+            );
         }
     }
 }
