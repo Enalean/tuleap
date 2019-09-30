@@ -77,6 +77,7 @@ use Tuleap\Project\Admin\ProjectUGroup\MemberAdditionController;
 use Tuleap\Project\Admin\ProjectUGroup\MemberRemovalController;
 use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
+use Tuleap\Project\Banner\BannerAdministrationController;
 use Tuleap\Project\Home;
 use Tuleap\Project\Service\AddController;
 use Tuleap\Project\Service\DeleteController;
@@ -487,6 +488,15 @@ class RouteCollector
         );
     }
 
+    public static function getGetProjectBannerAdministration() : DispatchableWithRequest
+    {
+        return new BannerAdministrationController(
+            \TemplateRendererFactory::build(),
+            new HeaderNavigationDisplayer(),
+            ProjectManager::instance()
+        );
+    }
+
     public function getLegacyController(string $path)
     {
         return new LegacyRoutesController($path);
@@ -527,6 +537,7 @@ class RouteCollector
             $r->post('/services/add', [self::class, 'getPostServicesAdd']);
             $r->post('/services/edit', [self::class, 'getPostServicesEdit']);
             $r->post('/services/delete', [self::class, 'getPostServicesDelete']);
+            $r->get('/banner', [self::class, 'getGetProjectBannerAdministration']);
         });
 
         $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', [self::class, 'getOrPostProjectHome']);
