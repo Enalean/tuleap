@@ -27,8 +27,9 @@ use PFUser;
 use Tracker_Artifact;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueListFullRepresentation;
-use Tuleap\Tracker\Semantic\Status\StatusValueProvider;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldValueRetriever;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\User\REST\UserRepresentation;
 
 class CardRepresentationBuilder
@@ -38,41 +39,55 @@ class CardRepresentationBuilder
      */
     private $background_color_builder;
     /**
-     * @var StatusValueProvider
+     * @var MappedFieldValueRetriever
      */
-    private $status_value_provider;
+    private $mapped_field_value_retriever;
 
     public function __construct(
         BackgroundColorBuilder $background_color_builder,
-        StatusValueProvider $status_value_provider
+        MappedFieldValueRetriever $mapped_field_value_retriever
     ) {
-        $this->background_color_builder = $background_color_builder;
-        $this->status_value_provider    = $status_value_provider;
+        $this->background_color_builder     = $background_color_builder;
+        $this->mapped_field_value_retriever = $mapped_field_value_retriever;
     }
 
-    public function build(Tracker_Artifact $artifact, PFUser $user, int $rank): CardRepresentation
-    {
+    public function build(
+        \Planning_ArtifactMilestone $milestone,
+        Tracker_Artifact $artifact,
+        PFUser $user,
+        int $rank
+    ): CardRepresentation {
         $card_fields_semantic = Cardwall_Semantic_CardFields::load($artifact->getTracker());
         $background_color     = $this->background_color_builder->build($card_fields_semantic, $artifact, $user);
         $assignees            = $this->getAssignees($artifact, $user);
-        $status               = $this->getStatus($artifact, $user);
+        $mapped_list_value    = $this->getMappedListValue($milestone, $artifact, $user);
         $initial_effort       = $this->getInitialEffort($artifact, $user);
 
         $representation = new CardRepresentation();
-        $representation->build($artifact, $background_color, $rank, $assignees, $status, $initial_effort);
+        $representation->build(
+            $artifact,
+            $background_color,
+            $rank,
+            $assignees,
+            $mapped_list_value,
+            $initial_effort
+        );
 
         return $representation;
     }
 
-    private function getStatus(Tracker_Artifact $artifact, PFUser $user): ?StatusRepresentation
-    {
-        $status_value = $this->status_value_provider->getStatusValue($artifact, $user);
-        if (! $status_value instanceof Tracker_FormElement_Field_List_BindValue) {
+    private function getMappedListValue(
+        \Planning_ArtifactMilestone $milestone,
+        Tracker_Artifact $artifact,
+        PFUser $user
+    ): ?MappedListValueRepresentation {
+        $mapped_list_value = $this->mapped_field_value_retriever->getValueAtLastChangeset($milestone, $artifact, $user);
+        if (! $mapped_list_value instanceof Tracker_FormElement_Field_List_BindValue) {
             return null;
         }
 
-        $representation = new StatusRepresentation();
-        $representation->build($status_value);
+        $representation = new MappedListValueRepresentation();
+        $representation->build($mapped_list_value);
 
         return $representation;
     }
@@ -122,5 +137,19 @@ class CardRepresentationBuilder
         }
 
         return reset($list_values)->getLabel();
+    }
+
+    public static function buildSelf(): self
+    {
+        return new CardRepresentationBuilder(
+            new BackgroundColorBuilder(new BindDecoratorRetriever()),
+            new MappedFieldValueRetriever(
+                new \Cardwall_OnTop_ConfigFactory(
+                    \TrackerFactory::instance(),
+                    \Tracker_FormElementFactory::instance()
+                ),
+                new MappedFieldRetriever(new \Cardwall_FieldProviders_SemanticStatusFieldRetriever()),
+            )
+        );
     }
 }

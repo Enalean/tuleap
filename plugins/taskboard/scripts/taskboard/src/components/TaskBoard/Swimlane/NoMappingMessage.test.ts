@@ -28,7 +28,7 @@ describe("NoMappingMessage", () => {
             localVue: await createTaskboardLocalVue(),
             propsData: {
                 card: {
-                    status: { label: "YOLO" }
+                    mapped_list_value: { label: "YOLO" }
                 } as Card
             }
         });
@@ -40,7 +40,7 @@ describe("NoMappingMessage", () => {
             localVue: await createTaskboardLocalVue(),
             propsData: {
                 card: {
-                    status: null
+                    mapped_list_value: null
                 } as Card
             }
         });

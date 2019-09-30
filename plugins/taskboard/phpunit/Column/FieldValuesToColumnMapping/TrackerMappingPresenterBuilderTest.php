@@ -36,108 +36,101 @@ final class TrackerMappingPresenterBuilderTest extends TestCase
      */
     private $builder;
     /**
-     * @var \Cardwall_OnTop_Dao|M\LegacyMockInterface|M\MockInterface
+     * @var \Cardwall_OnTop_ConfigFactory|M\LegacyMockInterface|M\MockInterface
      */
-    private $cardwall_dao;
+    private $config_factory;
     /**
-     * @var \Cardwall_OnTop_Config_ColumnFactory|M\LegacyMockInterface|M\MockInterface
+     * @var M\LegacyMockInterface|M\MockInterface|MappedFieldRetriever
      */
-    private $column_factory;
-    /**
-     * @var \Cardwall_OnTop_Config_TrackerMappingFactory|M\LegacyMockInterface|M\MockInterface
-     */
-    private $tracker_mapping_factory;
+    private $mapped_field_retriever;
 
     protected function setUp(): void
     {
-        $this->cardwall_dao            = M::mock(\Cardwall_OnTop_Dao::class);
-        $this->column_factory          = M::mock(\Cardwall_OnTop_Config_ColumnFactory::class);
-        $this->tracker_mapping_factory = M::mock(\Cardwall_OnTop_Config_TrackerMappingFactory::class);
-        $this->builder                 = new TrackerMappingPresenterBuilder(
-            $this->cardwall_dao,
-            $this->column_factory,
-            $this->tracker_mapping_factory
+        $this->config_factory         = M::mock(\Cardwall_OnTop_ConfigFactory::class);
+        $this->mapped_field_retriever = M::mock(MappedFieldRetriever::class);
+        $this->builder                = new TrackerMappingPresenterBuilder(
+            $this->config_factory,
+            $this->mapped_field_retriever
         );
     }
 
     public function testNoTrackers(): void
     {
-        $this->tracker_mapping_factory->shouldReceive('getTrackers')
+        $empty_config = $this->mockConfig();
+        $empty_config->shouldReceive('getTrackers')
             ->once()
             ->andReturn([]);
-        $planning = $this->mockPlanning();
+        $planning = M::mock(\Planning::class);
 
         $this->assertEquals([], $this->builder->buildMappings(25, $planning));
     }
 
     public function testNoValuesForTracker(): void
     {
-        list($tracker, $mapping) = $this->mockMappingForATracker('76', []);
-        $this->tracker_mapping_factory->shouldReceive('getTrackers')
+        $config  = $this->mockConfig();
+        $tracker = $this->mockMappingForATracker($config, '76', []);
+        $config->shouldReceive('getTrackers')
             ->once()
             ->andReturn([$tracker]);
-        $this->tracker_mapping_factory->shouldReceive('getMappings')
-            ->once()
-            ->andReturn(['76' => $mapping]);
-        $planning = $this->mockPlanning();
+        $planning = M::mock(\Planning::class);
+        $this->mockMappedField('3086', $tracker);
 
         $result = $this->builder->buildMappings(25, $planning);
 
-        $expected_empty_mapping = new TrackerMappingPresenter(76, []);
+        $expected_empty_mapping = new TrackerMappingPresenter(76, 3086, []);
         $this->assertEquals([$expected_empty_mapping], $result);
     }
 
     public function testBuildMappingsOnlyReturnsMappingsForGivenColumn(): void
     {
-        list($tracker, $mapping) = $this->mockMappingForATracker('76', [1674 => 25, 1676 => 28]);
-        $this->tracker_mapping_factory->shouldReceive('getTrackers')
+        $config  = $this->mockConfig();
+        $tracker = $this->mockMappingForATracker($config, '76', [1674 => 25, 1676 => 28]);
+        $config->shouldReceive('getTrackers')
             ->once()
             ->andReturn([$tracker]);
-        $this->tracker_mapping_factory->shouldReceive('getMappings')
-            ->once()
-            ->andReturn(['76' => $mapping]);
-        $planning = $this->mockPlanning();
+        $planning = M::mock(\Planning::class);
+        $this->mockMappedField('3086', $tracker);
 
         $result = $this->builder->buildMappings(25, $planning);
 
-        $expected_mapping = new TrackerMappingPresenter(76, [new ListFieldValuePresenter(1674)]);
+        $expected_mapping = new TrackerMappingPresenter(76, 3086, [new ListFieldValuePresenter(1674)]);
         $this->assertEquals([$expected_mapping], $result);
     }
 
     public function testBuildMappingsMultipleTrackers(): void
     {
-        list($first_tracker, $first_mapping) = $this->mockMappingForATracker('76', [1674 => 25]);
-        list($second_tracker, $second_mapping) = $this->mockMappingForATracker('83', [1857 => 25, 1858 => 25]);
-        $this->tracker_mapping_factory->shouldReceive('getTrackers')
+        $config         = $this->mockConfig();
+        $first_tracker  = $this->mockMappingForATracker($config, '76', [1674 => 25]);
+        $second_tracker = $this->mockMappingForATracker($config, '83', [1857 => 25, 1858 => 25]);
+        $config->shouldReceive('getTrackers')
             ->once()
             ->andReturn([$first_tracker, $second_tracker]);
-        $this->tracker_mapping_factory->shouldReceive('getMappings')
-            ->once()
-            ->andReturn(['76' => $first_mapping, '83' => $second_mapping]);
-        $planning = $this->mockPlanning();
+        $planning = M::mock(\Planning::class);
+
+        $this->mockMappedField('3086', $first_tracker);
+        $this->mockMappedField('4597', $second_tracker);
 
         $result = $this->builder->buildMappings(25, $planning);
 
-        $expected_first_mapping  = new TrackerMappingPresenter(76, [new ListFieldValuePresenter(1674)]);
+        $expected_first_mapping  = new TrackerMappingPresenter(76, 3086, [new ListFieldValuePresenter(1674)]);
         $expected_second_mapping = new TrackerMappingPresenter(
             83,
+            4597,
             [new ListFieldValuePresenter(1857), new ListFieldValuePresenter(1858)]
         );
         $this->assertEquals([$expected_first_mapping, $expected_second_mapping], $result);
     }
 
     /**
-     * @return M\MockInterface|\Planning
+     * @return \Cardwall_OnTop_Config|M\LegacyMockInterface|M\MockInterface
      */
-    private function mockPlanning()
+    private function mockConfig()
     {
-        $cardwall_tracker = M::mock(\Tracker::class);
-        $cardwall_tracker->shouldReceive('getId')->andReturn('89');
-        $planning = M::mock(\Planning::class);
-        $planning->shouldReceive('getPlanningTracker')
+        $config = M::mock(\Cardwall_OnTop_Config::class);
+        $this->config_factory->shouldReceive('getOnTopConfigByPlanning')
             ->once()
-            ->andReturn($cardwall_tracker);
-        return $planning;
+            ->andReturn($config);
+        return $config;
     }
 
     private function getValueMapping(int $list_value_id, int $column_id): \Cardwall_OnTop_Config_ValueMapping
@@ -150,8 +143,14 @@ final class TrackerMappingPresenterBuilderTest extends TestCase
         );
     }
 
-    private function mockMappingForATracker(string $tracker_id, array $list_values_to_column_mapping)
-    {
+    /**
+     * @return \Tracker
+     */
+    private function mockMappingForATracker(
+        M\MockInterface $config,
+        string $tracker_id,
+        array $list_values_to_column_mapping
+    ) {
         $tracker = M::mock(\Tracker::class);
         $tracker->shouldReceive('getId')->andReturn($tracker_id);
 
@@ -165,8 +164,22 @@ final class TrackerMappingPresenterBuilderTest extends TestCase
         $mapping->shouldReceive('getValueMappings')
             ->once()
             ->andReturn($value_mappings);
-        $this->column_factory->shouldReceive('getDashboardColumns')
-            ->andReturn(new \Cardwall_OnTop_Config_ColumnCollection($columns));
-        return [$tracker, $mapping];
+        $config->shouldReceive('getMappingFor')
+            ->with($tracker)
+            ->andReturn($mapping);
+
+        return $tracker;
+    }
+
+    /**
+     * @param $tracker
+     */
+    private function mockMappedField(string $field_id, $tracker): void
+    {
+        $mapped_field = M::mock(\Tracker_FormElement_Field_List::class);
+        $mapped_field->shouldReceive('getId')->andReturn($field_id);
+        $this->mapped_field_retriever->shouldReceive('getField')
+            ->with(M::any(), $tracker)
+            ->andReturn($mapped_field);
     }
 }

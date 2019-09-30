@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,7 +37,7 @@ class Cardwall_FieldProviders_CustomFieldRetriever implements Cardwall_FieldProv
     }
 
     /**
-     * @return Tracker_FormElement_Field_Selectbox
+     * @return Tracker_FormElement_Field_Selectbox | null
      */
     public function getField(Tracker $tracker)
     {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -134,7 +134,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
     /**
      * @param Tracker $mapping_tracker
      *
-     * @return Cardwall_OnTop_Config_TrackerMapping
+     * @return Cardwall_OnTop_Config_TrackerMapping | null
      */
     public function getMappingFor(Tracker $mapping_tracker)
     {

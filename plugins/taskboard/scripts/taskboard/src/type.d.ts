@@ -38,7 +38,7 @@ export interface Swimlane {
     card: Card;
 }
 
-export interface Status extends ListValue {
+export interface MappedListValue extends ListValue {
     label: string;
 }
 
@@ -53,7 +53,7 @@ export interface Card {
     artifact_html_uri: string;
     assignees: Array<User>;
     has_children: boolean;
-    status: Status | null;
+    mapped_list_value: MappedListValue | null;
     initial_effort: number | null;
 }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ interface Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
 {
 
     /**
-     * @return Tracker_FormElement_Field
+     * @return Tracker_FormElement_Field_Selectbox | null
      */
-    function getField(Tracker $tracker);
+    public function getField(Tracker $tracker);
 }
