@@ -29,7 +29,6 @@ use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
-use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
 use Tuleap\Docman\DocmanLegacyController;
@@ -59,9 +58,6 @@ use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Docman\PermissionsPerGroup\PermissionPerGroupDocmanServicePaneBuilder;
 use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
-use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
-use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
-use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\Docman\Upload\UploadPathAllocatorBuilder;
 use Tuleap\Docman\Upload\Version\DocumentOnGoingVersionToUploadDAO;
 use Tuleap\Docman\Upload\Version\VersionBeingUploadedInformationProvider;
@@ -460,7 +456,8 @@ class DocmanPlugin extends Plugin
         $proxy = new DocmanHTTPControllerProxy(
             EventManager::instance(),
             new ExternalLinkParametersExtractor(),
-            $this->getHTTPController()
+            $this->getHTTPController(),
+            $this->getItemDao()
         );
 
         $proxy->process($request, $user);
@@ -1421,7 +1418,12 @@ class DocmanPlugin extends Plugin
 
     public function routeLegacyController() : DocmanLegacyController
     {
-        return new DocmanLegacyController($this, EventManager::instance(), new ExternalLinkParametersExtractor());
+        return new DocmanLegacyController(
+            $this,
+            EventManager::instance(),
+            new ExternalLinkParametersExtractor(),
+            $this->getItemDao()
+        );
     }
 
     public function routeFileDownload() : DocmanFileDownloadController

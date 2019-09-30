@@ -42,15 +42,21 @@ final class DocmanLegacyController implements DispatchableWithRequest
      * @var ExternalLinkParametersExtractor
      */
     private $link_parameters_extractor;
+    /**
+     * @var \Docman_ItemDao
+     */
+    private $dao;
 
     public function __construct(
         \DocmanPlugin $plugin,
         \EventManager $event_manager,
-        ExternalLinkParametersExtractor $link_parameters_extractor
+        ExternalLinkParametersExtractor $link_parameters_extractor,
+        \Docman_ItemDao $dao
     ) {
         $this->plugin                    = $plugin;
         $this->event_manager             = $event_manager;
         $this->link_parameters_extractor = $link_parameters_extractor;
+        $this->dao                       = $dao;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables) : void
@@ -64,7 +70,8 @@ final class DocmanLegacyController implements DispatchableWithRequest
                     $this->plugin->getPluginPath(),
                     $this->plugin->getThemePath(),
                     $request
-                )
+                ),
+                $this->dao
             )
         )->process($request, $request->getCurrentUser());
     }

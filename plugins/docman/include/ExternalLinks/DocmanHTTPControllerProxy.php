@@ -22,6 +22,8 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\ExternalLinks;
 
+use Docman_ItemDao;
+
 class DocmanHTTPControllerProxy
 {
     /**
@@ -36,25 +38,37 @@ class DocmanHTTPControllerProxy
      * @var \Docman_HTTPController
      */
     private $docman_HTTP_controller;
+    /**
+     * @var Docman_ItemDao
+     */
+    private $docman_item_dao;
 
     public function __construct(
         \EventManager $event_manager,
         ExternalLinkParametersExtractor $parameters_extractor,
-        \Docman_HTTPController $docman_HTTP_controller
+        \Docman_HTTPController $docman_HTTP_controller,
+        Docman_ItemDao $docman_item_dao
     ) {
         $this->event_manager          = $event_manager;
         $this->parameters_extractor   = $parameters_extractor;
         $this->docman_HTTP_controller = $docman_HTTP_controller;
+        $this->docman_item_dao        = $docman_item_dao;
     }
 
     public function process(\HTTPRequest $request, \PFUser $user) : void
     {
         $folder_id = $this->parameters_extractor->extractFolderIdFromParams($request);
 
+        $root_folder = $this->docman_item_dao->searchRootItemForGroupId($request->getProject()->getID());
+        if (! $root_folder) {
+            throw new \RuntimeException('Project has no document root folder');
+        }
+
         $redirector = new ExternalLinkRedirector(
             $user,
             $request,
-            $folder_id
+            $folder_id,
+            (int) $root_folder['item_id']
         );
 
         $this->processEventWhenNeeded($request, $redirector);
