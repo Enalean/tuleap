@@ -29,5 +29,6 @@ class ResourcesInjector
     public function populate(Restler $restler): void
     {
         $restler->addAPIClass(v1\TaskboardResource::class, 'taskboard');
+        $restler->addAPIClass(v1\TaskboardCardResource::class, 'taskboard_cards');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,34 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
- /**
- * Sliced Artifacts are like paginated artifacts. The difference
- * is that SQL runs the paginated request but the result might
- * contains artifacts you cannot see. This possibly subset is what
- * we call Sliced Artifacts.
- */
-class Tracker_SlicedArtifacts
-{
+declare(strict_types=1);
 
-    /** @var Tracker_Artifact[] */
-    private $artifacts;
+namespace Tuleap\Tracker\Artifact;
+
+use Tracker_Artifact;
+
+class RankedArtifact
+{
+    /** @var Tracker_Artifact */
+    private $artifact;
 
     /** @var int */
-    private $total_size;
+    private $rank;
 
-    public function __construct(array $artifacts, $total_size)
+    public function __construct(Tracker_Artifact $artifact, int $rank)
     {
-        $this->artifacts  = $artifacts;
-        $this->total_size = $total_size;
+        $this->artifact = $artifact;
+        $this->rank     = $rank;
     }
 
-    public function getArtifacts()
+    public function getArtifact(): Tracker_Artifact
     {
-        return $this->artifacts;
+        return $this->artifact;
     }
 
-    public function getTotalSize()
+    public function getRank(): int
     {
-        return $this->total_size;
+        return $this->rank;
     }
 }
