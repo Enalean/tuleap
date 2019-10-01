@@ -31,7 +31,7 @@ module.exports = {
         "project-admin-banner": "./project/admin/banner/index-banner-project-admin.ts"
     },
     context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(assets_dir_path),
+    output: webpack_configurator.configureOutput(assets_dir_path, "/assets/"),
     externals: {
         tlp: "tlp"
     },
