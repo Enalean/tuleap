@@ -22,11 +22,11 @@
     background-color: $tlp-ui-warning;
 }
 
-.project-banner p {
+.project-banner > p {
     color: $tlp-ui-white;
 }
 
-.project-banner p a {
+.project-banner > p > a {
     color: $tlp-ui-white;
     text-decoration: underline;
 }

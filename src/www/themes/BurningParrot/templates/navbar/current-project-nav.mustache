@@ -35,6 +35,13 @@
             <p class="current-project-nav-title-popover-description">{{ project_privacy }}</p>
         </div>
     </section>
+    {{# current_project_navbar_info_presenter }}
+        {{# purified_banner }}
+        <span id="current-project-banner-bullhorn">
+            <a href="#" aria-labelledby="current-project-banner-message"><i class="fa fa-bullhorn"></i></a>
+        </span>
+        {{/ purified_banner }}
+    {{/ current_project_navbar_info_presenter }}
     {{# has_project_flags }}
         <span class="current-project-nav-flag"
               id="current-project-nav-flag"

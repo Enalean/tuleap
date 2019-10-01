@@ -219,9 +219,9 @@
 
 .current-project-nav-flag-labels {
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    flex-direction: column;
     margin: 0 0 0 7px;
 
     @media screen and (max-width: 900px) {
@@ -303,6 +303,11 @@
     margin: 0 5px 0 0;
     color: $tlp-theme-color;
     font-size: 16px;
+}
+
+#current-project-banner-bullhorn > a {
+    padding: 0 0 0 $tlp-spacing;
+    color: $tlp-ui-warning;
 }
 
 .join-tuleap-community {
