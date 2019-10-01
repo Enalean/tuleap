@@ -624,7 +624,7 @@ class ReferenceManager
     private function insertLinksForMentions(&$html)
     {
         $html = preg_replace_callback(
-            '/(^|\W)@([a-zA-Z]\w+)/',
+            '/(^|\W)@([a-zA-Z][a-zA-Z0-9\-_\.]{2,})/',
             array($this,"insertMentionCallback"),
             $html
         );

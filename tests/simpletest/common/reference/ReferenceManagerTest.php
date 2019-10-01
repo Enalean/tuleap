@@ -273,6 +273,42 @@ class ReferenceManagerTest extends TuleapTestCase
         $this->assertEqual($html, '/cc <a href="/users/username">@username</a>');
     }
 
+    public function itInsertsLinkForMentionWhenPointAtTheMiddle()
+    {
+        stub($this->user_manager)->getUserByUserName('user.name')->returns(mock('PFUser'));
+
+        $html = '/cc @user.name';
+        $this->rm->insertReferences($html, 0);
+        $this->assertEqual($html, '/cc <a href="/users/user.name">@user.name</a>');
+    }
+
+    public function itInsertsLinkForMentionWhenHyphenAtTheMiddle()
+    {
+        stub($this->user_manager)->getUserByUserName('user-name')->returns(mock('PFUser'));
+
+        $html = '/cc @user-name';
+        $this->rm->insertReferences($html, 0);
+        $this->assertEqual($html, '/cc <a href="/users/user-name">@user-name</a>');
+    }
+
+    public function itInsertsLinkForMentionWhenUnderscoreAtTheMiddle()
+    {
+        stub($this->user_manager)->getUserByUserName('user_name')->returns(mock('PFUser'));
+
+        $html = '/cc @user_name';
+        $this->rm->insertReferences($html, 0);
+        $this->assertEqual($html, '/cc <a href="/users/user_name">@user_name</a>');
+    }
+
+    public function itDoesNotInsertsLinkIfInvalidCaracterAtBegining()
+    {
+        stub($this->user_manager)->getUserByUserName('1username')->returns(mock('PFUser'));
+
+        $html = '@1username';
+        $this->rm->insertReferences($html, 0);
+        $this->assertEqual($html, '@1username');
+    }
+
     public function itDoesNotBreakEmailAddress()
     {
         $html = 'toto@userna.me';
