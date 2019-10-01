@@ -619,7 +619,13 @@ span.select2-container--tlp-select2-large {
 
     > input {
         margin: 0 3px 0 0;
+        outline: 0 solid transparent;
         vertical-align: bottom;
+
+        &:focus {
+            transition: outline-color $tlp-form-element-border-transition-duration linear;
+            outline: 1px solid $tlp-theme-color;
+        }
     }
 
     + .tlp-text-muted,
