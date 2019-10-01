@@ -26,7 +26,7 @@ use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
  * This is typically the case when there is no workflow defined(aka no transition)
  * for a given tracker.
  */
-class WorkflowWithoutTransition extends Workflow //phpcs:ignoreFile
+class WorkflowWithoutTransition extends Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function __construct(
         Tracker_RulesManager $global_rules_manager,

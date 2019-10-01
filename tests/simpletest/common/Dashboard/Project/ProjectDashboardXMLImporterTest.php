@@ -16,8 +16,6 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
- * @codingStandardsIgnoreFile
  */
 
 namespace Tuleap\Dashboard\Project;
@@ -31,7 +29,7 @@ use Tuleap\Widget\WidgetFactory;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\XML\MappingsRegistry;
 
-class ProjectDashboardXMLImporter_Base extends \TuleapTestCase
+class ProjectDashboardXMLImporter_Base extends \TuleapTestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var ProjectDashboardSaver
@@ -106,10 +104,10 @@ class ProjectDashboardXMLImporter_Base extends \TuleapTestCase
 
         $this->user    = mock('PFUser');
         $this->project = aMockProject()->withId(101)->build();
-
     }
 }
 
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
 class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporter_Base
 {
     public function itLogsAWarningWhenUserDontHavePrivilegeToAddAProjectDashboard()
@@ -193,6 +191,7 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporter_Base
     }
 }
 
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
 class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_Base
 {
     public function itImportsALine()
@@ -769,7 +768,9 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
     }
 }
 
-class ProjectDashboardXMLImporter_PluginTest extends ProjectDashboardXMLImporter_Base {
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
+class ProjectDashboardXMLImporter_PluginTest extends ProjectDashboardXMLImporter_Base
+{
 
     public function setUp()
     {
@@ -784,7 +785,7 @@ class ProjectDashboardXMLImporter_PluginTest extends ProjectDashboardXMLImporter
         );
     }
 
-    function tearDown()
+    public function tearDown()
     {
         \Mockery::close();
         parent::tearDown();

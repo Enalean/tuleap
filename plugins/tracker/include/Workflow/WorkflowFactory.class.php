@@ -27,7 +27,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
-class WorkflowFactory //phpcs:ignoreFile
+class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     /** @var TransitionFactory */
@@ -78,7 +78,7 @@ class WorkflowFactory //phpcs:ignoreFile
     /**
      * Hold an instance of the class
      */
-    protected static $_instance;
+    protected static $_instance; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
     public static function setInstance($instance)
     {
@@ -113,7 +113,7 @@ class WorkflowFactory //phpcs:ignoreFile
                 new WorkflowRulesManagerLoopSafeGuard($logger)
             );
 
-            $c = __CLASS__;
+            $c = self::class;
             self::$_instance = new $c(
                 TransitionFactory::instance(),
                 TrackerFactory::instance(),
@@ -502,7 +502,8 @@ class WorkflowFactory //phpcs:ignoreFile
 
     public function getGlobalRulesManager(Tracker $tracker)
     {
-        return new Tracker_RulesManager($tracker,
+        return new Tracker_RulesManager(
+            $tracker,
             $this->formelement_factory,
             $this->read_only_dao,
             new TrackerRulesListValidator($this->formelement_factory),

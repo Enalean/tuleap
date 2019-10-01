@@ -23,17 +23,17 @@ use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
-class Workflow //phpcs:ignoreFile
+class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    const FUNC_ADMIN_RULES       = 'admin-workflow';
-    const FUNC_ADMIN_TRANSITIONS = 'admin-workflow-transitions';
-    const FUNC_ADMIN_CROSS_TRACKER_TRIGGERS = 'admin-workflow-triggers';
-    const FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA = 'admin-get-triggers-rules-builder-data';
-    const FUNC_ADMIN_ADD_TRIGGER = 'admin-workflow-add-trigger';
-    const FUNC_ADMIN_DELETE_TRIGGER = 'admin-workflow-delete-trigger';
+    public const FUNC_ADMIN_RULES       = 'admin-workflow';
+    public const FUNC_ADMIN_TRANSITIONS = 'admin-workflow-transitions';
+    public const FUNC_ADMIN_CROSS_TRACKER_TRIGGERS = 'admin-workflow-triggers';
+    public const FUNC_ADMIN_GET_TRIGGERS_RULES_BUILDER_DATA = 'admin-get-triggers-rules-builder-data';
+    public const FUNC_ADMIN_ADD_TRIGGER = 'admin-workflow-add-trigger';
+    public const FUNC_ADMIN_DELETE_TRIGGER = 'admin-workflow-delete-trigger';
 
-    const BASE_PATH = '/workflow';
-    const TRANSITION_PATH = '/transitions';
+    public const BASE_PATH = '/workflow';
+    public const TRANSITION_PATH = '/transitions';
 
     public $workflow_id;
     public $tracker_id;
@@ -111,12 +111,14 @@ class Workflow //phpcs:ignoreFile
      *
      * @param Tracker_Artifact $artifact artifact the workflow control
      */
-    public function setArtifact(Tracker_Artifact $artifact) {
+    public function setArtifact(Tracker_Artifact $artifact)
+    {
         $this->artifact = $artifact;
     }
 
     /** @return Tracker_Artifact */
-    public function getArtifact() {
+    public function getArtifact()
+    {
         return $this->artifact;
     }
 
@@ -125,7 +127,8 @@ class Workflow //phpcs:ignoreFile
      *
      * @param Tracker_FormElement_Field $field Field
      */
-    public function setField(Tracker_FormElement_Field $field) {
+    public function setField(Tracker_FormElement_Field $field)
+    {
         $this->field    = $field;
         $this->field_id = $field->getId();
     }
@@ -133,28 +136,32 @@ class Workflow //phpcs:ignoreFile
     /**
      * @return string
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->workflow_id;
     }
 
     /**
      * @return string
      */
-    public function getTrackerId() {
+    public function getTrackerId()
+    {
         return $this->tracker_id;
     }
 
     /**
      * @return string
      */
-    public function getFieldId() {
+    public function getFieldId()
+    {
         return $this->field_id;
     }
 
     /**
      * @return Tracker_FormElement_Field
      */
-    public function getField() {
+    public function getField()
+    {
         if (!$this->field) {
             $this->field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId());
         }
@@ -166,7 +173,8 @@ class Workflow //phpcs:ignoreFile
      *
      * @return Array of Tracker_FormElement_Field_List_Value
      */
-    public function getAllFieldValues() {
+    public function getAllFieldValues()
+    {
         if (!$this->field_values) {
             $this->field_values = $this->getField()->getBind()->getAllValues();
         }
@@ -178,14 +186,16 @@ class Workflow //phpcs:ignoreFile
      *
      * @return Tracker
      */
-    public function getTracker() {
+    public function getTracker()
+    {
         return TrackerFactory::instance()->getTrackerByid($this->tracker_id);
     }
 
     /**
      * @return Transition[]
      */
-    public function getTransitions() {
+    public function getTransitions()
+    {
         if ($this->transitions === null) {
             $this->transitions = TransitionFactory::instance()->getTransitions($this);
         }
@@ -195,12 +205,13 @@ class Workflow //phpcs:ignoreFile
     /**
      * Return transition corresponding to parameters
      *
-     * @param Integer $field_value_id_from
-     * @param Integer $field_value_id_to
+     * @param int|null $field_value_id_from
+     * @param int|null $field_value_id_to
      *
-     * @return Transition or null if no transition match
+     * @return Transition|null Transition or null if no transition match
      */
-    public function getTransition($field_value_id_from, $field_value_id_to) {
+    public function getTransition($field_value_id_from, $field_value_id_to)
+    {
         foreach ($this->getTransitions() as $transition) {
             $from = $transition->getFieldValueFrom();
             if ($from === null && $field_value_id_from === null || $from !== null && $from->getId() == $field_value_id_from) {
@@ -217,14 +228,16 @@ class Workflow //phpcs:ignoreFile
      *
      * @return bool
      */
-    public function getIsUsed() {
+    public function getIsUsed()
+    {
         return $this->isUsed();
     }
 
     /**
      * @return bool
      */
-    public function isUsed() {
+    public function isUsed()
+    {
         return $this->is_used;
     }
 
@@ -234,15 +247,15 @@ class Workflow //phpcs:ignoreFile
      * @param Tracker_FormElement_Field_List_Value $field_value_from
      * @param Tracker_FormElement_Field_List_Value $field_value_to
      *
-     * @return Boolean
+     * @return bool
      */
-    public function isTransitionExist($field_value_from, $field_value_to) {
+    public function isTransitionExist($field_value_from, $field_value_to)
+    {
         if ($field_value_from != $field_value_to) {
             $transitions = $this->getTransitions();
 
             if ($transitions != null) {
                 foreach ($transitions as $transition) {
-
                     if ($transition->equals(new Transition(0, $this->workflow_id, $field_value_from, $field_value_to))) {
                          return true;
                     }
@@ -258,18 +271,20 @@ class Workflow //phpcs:ignoreFile
         }
     }
 
-    public function getTransitionIdFromTo($field_value_from, $field_value_to) {
+    public function getTransitionIdFromTo($field_value_from, $field_value_to)
+    {
         $res = WorkflowFactory::instance()->getTransitionIdFromTo($this->workflow_id, $field_value_from, $field_value_to);
         $row = $res->getRow();
         return $row['transition_id'];
     }
 
-    public function hasTransitions() {
-         if ($this->getTransitions() === array()) {
-             return false;
-         }else {
-             return true;
-         }
+    public function hasTransitions()
+    {
+        if ($this->getTransitions() === array()) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -279,7 +294,8 @@ class Workflow //phpcs:ignoreFile
      *
      * @return void
      */
-    public function setTracker(Tracker $tracker) {
+    public function setTracker(Tracker $tracker)
+    {
         $this->tracker_id = $tracker->getId();
     }
 
@@ -291,14 +307,15 @@ class Workflow //phpcs:ignoreFile
      *
      * @return void
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    {
            $root->addChild('field_id')->addAttribute('REF', array_search($this->field_id, $xmlMapping));
            $root->addChild('is_used', $this->is_used);
            $child = $root->addChild('transitions');
            $transitions = $this->getTransitions($this->workflow_id);
-           foreach ($transitions as $transition) {
-               $transition->exportToXml($child, $xmlMapping);
-           }
+        foreach ($transitions as $transition) {
+            $transition->exportToXml($child, $xmlMapping);
+        }
     }
 
     /**
@@ -344,7 +361,7 @@ class Workflow //phpcs:ignoreFile
     public function after(
         array $fields_data,
         Tracker_Artifact_Changeset $new_changeset,
-        Tracker_Artifact_Changeset $previous_changeset = null
+        ?Tracker_Artifact_Changeset $previous_changeset = null
     ) {
         $artifact_id = $new_changeset->getArtifact()->getId();
 
@@ -372,7 +389,8 @@ class Workflow //phpcs:ignoreFile
      *
      * @return void
      */
-    public function validate($fields_data, Tracker_Artifact $artifact, $comment_body) {
+    public function validate($fields_data, Tracker_Artifact $artifact, $comment_body)
+    {
         if (! $this->is_used) {
             return;
         }
@@ -385,7 +403,8 @@ class Workflow //phpcs:ignoreFile
         }
     }
 
-    private function getCurrentTransition($fields_data, Tracker_Artifact_Changeset $changeset = null) {
+    private function getCurrentTransition($fields_data, ?Tracker_Artifact_Changeset $changeset = null)
+    {
         $oldValues = null;
         if ($changeset) {
             $oldValues = $changeset->getValue($this->getField());
@@ -408,7 +427,8 @@ class Workflow //phpcs:ignoreFile
     /**
      * @throws Tracker_Workflow_GlobalRulesViolationException
      */
-    public function checkGlobalRules(array $fields_data) {
+    public function checkGlobalRules(array $fields_data)
+    {
         if ($this->disabled) {
             return true;
         }
@@ -421,11 +441,13 @@ class Workflow //phpcs:ignoreFile
      *
      * @return Tracker_RulesManager
      */
-    public function getGlobalRulesManager() {
+    public function getGlobalRulesManager()
+    {
         return $this->global_rules_manager;
     }
 
-    public function disable() {
+    public function disable()
+    {
         $this->is_used  = false;
         $this->disabled = true;
     }
@@ -435,7 +457,7 @@ class Workflow //phpcs:ignoreFile
     *
     * @param Tracker_FormElement_Field $field
     *
-    * @return boolean true if the permissions on the field can be bypassed, false otherwise
+    * @return bool true if the permissions on the field can be bypassed, false otherwise
     */
     public function bypassPermissions($field)
     {

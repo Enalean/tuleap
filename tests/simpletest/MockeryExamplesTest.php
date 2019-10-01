@@ -16,8 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
- * @codingStandardsIgnoreFile
  */
 
 namespace Tuleap\Test;
@@ -35,7 +33,7 @@ class FooBar
     }
 }
 
-class MockeryExamplesTest extends \TuleapTestCase
+class MockeryExamplesTest extends \TuleapTestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MultipleClasses
 {
     public function itMatchArgumentAndReturnValue()
     {

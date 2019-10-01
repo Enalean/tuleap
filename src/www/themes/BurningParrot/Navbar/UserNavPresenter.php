@@ -30,7 +30,7 @@ use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\History\UserHisto
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\Presenter as MenuItemPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\MenuItem\LogoutPresenter;
 
-class UserNavPresenter // phpcs:ignoreFile
+class UserNavPresenter
 {
     /** @var HTTPRequest */
     private $request;
@@ -57,42 +57,42 @@ class UserNavPresenter // phpcs:ignoreFile
         $this->url_redirect               = $url_redirect;
     }
 
-    public function is_user_logged_in()
+    public function is_user_logged_in() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->current_user->isLoggedIn();
     }
 
-    public function user_real_name()
+    public function user_real_name() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->current_user->getRealName();
     }
 
-    public function user_user_name()
+    public function user_user_name() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->current_user->getUserName();
     }
 
-    public function user_has_avatar()
+    public function user_has_avatar() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->current_user->hasAvatar();
     }
 
-    public function user_avatar_url()
+    public function user_avatar_url() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->current_user->getAvatarUrl();
     }
 
-    public function user_avatar_alt()
+    public function user_avatar_alt() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return _('User avatar');
     }
 
-    public function my_account_label()
+    public function my_account_label() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('menu', 'my_personal_page');
     }
 
-    public function login_menu_item()
+    public function login_menu_item() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return new MenuItemPresenter(
             $GLOBALS['Language']->getText('include_menu', 'login'),
@@ -103,7 +103,7 @@ class UserNavPresenter // phpcs:ignoreFile
         );
     }
 
-    public function new_user_menu_item()
+    public function new_user_menu_item() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return new MenuItemPresenter(
             $GLOBALS['Language']->getText('include_menu', 'new_user'),
@@ -114,7 +114,7 @@ class UserNavPresenter // phpcs:ignoreFile
         );
     }
 
-    public function user_history_dropdown()
+    public function user_history_dropdown() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return new DropdownMenuItemPresenter(
             _('History'),
@@ -124,7 +124,7 @@ class UserNavPresenter // phpcs:ignoreFile
         );
     }
 
-    public function user_nav_items()
+    public function user_nav_items() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return array(
             new MenuItemPresenter(
@@ -137,7 +137,7 @@ class UserNavPresenter // phpcs:ignoreFile
         );
     }
 
-    public function logout_menu_item()
+    public function logout_menu_item() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $logout_csrf = new CSRFSynchronizerToken('logout_action');
         return new LogoutPresenter(

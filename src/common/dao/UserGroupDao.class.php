@@ -87,7 +87,7 @@ class UserGroupDao extends DataAccessObject
      *
      * @param int $groupId
      *
-     * @return Data Access Result
+     * @return DataAccessResult
      */
     function returnProjectAdminsByGroupId($groupId)
     {
@@ -152,7 +152,7 @@ class UserGroupDao extends DataAccessObject
      * @param int $groupId Id of the project
      * @param Array   $predefined List of predefined ugroup id
      *
-     * @return DataAccessResult
+     * @return DataAccessResult|false
      */
     public function getExistingUgroups($groupId, $predefined = null)
     {

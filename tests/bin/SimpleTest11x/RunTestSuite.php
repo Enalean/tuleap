@@ -16,11 +16,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
- * @codingStandardsIgnoreFile
  */
 
-class RunTestSuite
+class RunTestSuite // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private $targets = [];
     private $junit_file;

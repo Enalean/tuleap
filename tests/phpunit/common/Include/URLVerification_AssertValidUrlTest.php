@@ -16,14 +16,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
- * @codingStandardsIgnoreFile
  */
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Project\ProjectAccessSuspendedException;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class URLVerification_AssertValidUrlTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -127,7 +126,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'), $this->request);
     }
 
-        public function testCheckActiveProjectNoError()
+    public function testCheckActiveProjectNoError()
     {
         $GLOBALS['group_id'] = 1;
         $project = Mockery::mock(Project::class, ['isActive' => true, 'isPublic' => true, 'isError' => false, 'getID' => 101]);

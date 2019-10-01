@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//phpcs:ignoreFile
-
 require_once __DIR__ .'/../bootstrap.php';
 
-abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase
+{
 
     /**
      * @var SystemEvent_GIT_GERRIT_MIGRATION
@@ -37,7 +37,8 @@ abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase 
     protected $gitolite_backend;
     protected $user_manager;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->dao              = \Mockery::spy(GitDao::class);
@@ -53,35 +54,44 @@ abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase 
         stub($factory)->getRepositoryById($this->repository_id)->returns($this->repository);
 
         $id= $type= $parameters= $priority= $status= $create_date= $process_date= $end_date= $log = 0;
-        $this->event = TestHelper::getPartialMock('SystemEvent_GIT_GERRIT_MIGRATION', array('done', 'warning', 'error'),
-                                                  array($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log));
+        $this->event = TestHelper::getPartialMock(
+            'SystemEvent_GIT_GERRIT_MIGRATION',
+            array('done', 'warning', 'error'),
+            array($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log)
+        );
         $this->event->setParameters("$this->repository_id::$this->remote_server_id::true");
         $this->logger = mock('Logger');
         $this->event->injectDependencies($this->dao, $factory, $this->server_factory, $this->logger, $this->project_creator, mock('Git_GitRepositoryUrlManager'), $this->user_manager, mock('MailBuilder'));
     }
 }
 
-class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRIT_MIGRATION_BaseTest  {
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
+class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRIT_MIGRATION_BaseTest
+{
 
-    public function itSwitchesTheBackendToGerrit() {
+    public function itSwitchesTheBackendToGerrit()
+    {
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         expect($this->dao)->switchToGerrit($this->repository_id, $this->remote_server_id)->once();
         $this->event->process();
     }
 
-    public function itCallsDoneAndReturnsTrue() {
+    public function itCallsDoneAndReturnsTrue()
+    {
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         expect($this->event)->done()->once();
         $this->assertTrue($this->event->process());
     }
 
-    public function itUpdatesGitolitePermissionsToForbidPushesByAnyoneButGerrit() {
+    public function itUpdatesGitolitePermissionsToForbidPushesByAnyoneButGerrit()
+    {
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         expect($this->gitolite_backend)->updateRepoConf()->once();
         $this->assertTrue($this->event->process());
     }
 
-    public function itInformsAboutMigrationSuccess() {
+    public function itInformsAboutMigrationSuccess()
+    {
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         $remote_project = 'tuleap.net-Firefox/mobile';
         $gerrit_url     = 'https://gerrit.example.com:8888/';
@@ -91,7 +101,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
         $this->event->process();
     }
 
-    public function itInformsAboutAnyGenericFailure() {
+    public function itInformsAboutAnyGenericFailure()
+    {
         stub($this->user_manager)->getUserById()->returns(aUser()->withId(0)->build());
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         $e = new Exception("failure detail");
@@ -101,7 +112,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
         $this->event->process();
     }
 
-    public function itInformsAboutAnyGerritRelatedFailureByAddingAPrefix() {
+    public function itInformsAboutAnyGerritRelatedFailureByAddingAPrefix()
+    {
         stub($this->user_manager)->getUserById()->returns(aUser()->withId(0)->build());
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         $e = new Git_Driver_Gerrit_Exception("failure detail");
@@ -111,7 +123,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
         $this->event->process();
     }
 
-    public function itInformsAboutAnyServerFactoryFailure() {
+    public function itInformsAboutAnyServerFactoryFailure()
+    {
         stub($this->user_manager)->getUserById()->returns(aUser()->withId(0)->build());
         $e = new Exception("failure detail");
         stub($this->server_factory)->getServer()->throws($e);
@@ -120,16 +133,20 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
         $this->event->process();
     }
 
-    public function itMarksTheEventAsWarningWhenTheRepoDoesNotExist() {
+    public function itMarksTheEventAsWarningWhenTheRepoDoesNotExist()
+    {
         $this->event->setParameters("$this->deleted_repository_id::$this->remote_server_id");
         expect($this->event)->error('Unable to find repository, perhaps it was deleted in the mean time?')->once();
         $this->event->process();
     }
 }
 
-class SystemEvent_GIT_GERRIT_MIGRATION_CallsToProjectCreatorTest extends SystemEvent_GIT_GERRIT_MIGRATION_BaseTest  {
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
+class SystemEvent_GIT_GERRIT_MIGRATION_CallsToProjectCreatorTest extends SystemEvent_GIT_GERRIT_MIGRATION_BaseTest
+{
 
-    public function itCreatesAProject() {
+    public function itCreatesAProject()
+    {
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
         expect($this->project_creator)->createGerritProject($this->gerrit_server, $this->repository, "true")->once();

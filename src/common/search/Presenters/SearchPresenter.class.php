@@ -18,9 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//phpcs:ignoreFile
-
-class Search_Presenter_SearchPresenter {
+class Search_Presenter_SearchPresenter
+{
 
     public $template = 'site-search';
 
@@ -36,7 +35,8 @@ class Search_Presenter_SearchPresenter {
 
     public $number_of_page_results;
 
-    public function __construct($type_of_search, $words, $search_result, array $search_panes, $project) {
+    public function __construct($type_of_search, $words, $search_result, array $search_panes, $project)
+    {
         $this->type_of_search         = $type_of_search;
         $this->words                  = $words;
         $this->search_result          = $search_result;
@@ -49,7 +49,8 @@ class Search_Presenter_SearchPresenter {
         $this->number_of_page_results = Search_SearchPlugin::RESULTS_PER_QUERY;
     }
 
-    public function classic_search_tab_label() {
+    public function classic_search_tab_label()
+    {
         return $GLOBALS['Language']->getText('search_index', 'search_tab');
     }
 }

@@ -16,14 +16,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
- * @codingStandardsIgnoreFile
  */
 
 use PHPUnit\Framework\TestCase;
 use Tuleap\CookieManager;
 
-class UserManagerTest extends TestCase
+class UserManagerTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
