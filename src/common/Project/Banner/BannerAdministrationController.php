@@ -27,6 +27,7 @@ use Project;
 use ProjectManager;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -48,15 +49,27 @@ final class BannerAdministrationController implements DispatchableWithRequest, D
      * @var ProjectManager
      */
     private $project_manager;
+    /**
+     * @var IncludeAssets
+     */
+    private $banner_assets;
+    /**
+     * @var BannerRetriever
+     */
+    private $banner_retriever;
 
     public function __construct(
         TemplateRendererFactory $template_renderer_factory,
         HeaderNavigationDisplayer $navigation_displayer,
-        ProjectManager $project_manager
+        IncludeAssets $banner_assets,
+        ProjectManager $project_manager,
+        BannerRetriever $banner_retriever
     ) {
         $this->template_renderer_factory = $template_renderer_factory;
         $this->navigation_displayer      = $navigation_displayer;
+        $this->banner_assets             = $banner_assets;
         $this->project_manager           = $project_manager;
+        $this->banner_retriever          = $banner_retriever;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -68,16 +81,22 @@ final class BannerAdministrationController implements DispatchableWithRequest, D
             throw new ForbiddenException();
         }
 
+        $layout->includeFooterJavascriptFile($this->banner_assets->getFileURL('project-admin-banner.js'));
         $this->navigation_displayer->displayBurningParrotNavigation(
             _('Project banner'),
             $project,
             'banner'
         );
+
+        $banner = $this->banner_retriever->getBannerForProject($project);
+
         $this->template_renderer_factory
             ->getRenderer(__DIR__ . '/../../../templates/project/admin/banner/')
             ->renderToPage(
                 'administration',
-                []
+                [
+                    'message' => $banner === null ? '' : $banner->getMessage()
+                ]
             );
         project_admin_footer([]);
     }

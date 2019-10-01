@@ -27,7 +27,8 @@ module.exports = {
         "news-permissions": "./news/permissions-per-group/index.js",
         "frs-permissions": "./frs/permissions-per-group/index.js",
         "project-admin-services": "./project/admin/services/src/index-project-admin.js",
-        "site-admin-services": "./project/admin/services/src/index-site-admin.js"
+        "site-admin-services": "./project/admin/services/src/index-site-admin.js",
+        "project-admin-banner": "./project/admin/banner/index-banner-project-admin.ts"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
@@ -36,13 +37,22 @@ module.exports = {
     },
     module: {
         rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader
         ]
     },
-    plugins: [webpack_configurator.getVueLoaderPlugin()],
+    plugins: [
+        webpack_configurator.getVueLoaderPlugin(),
+        webpack_configurator.getTypescriptCheckerPlugin(true)
+    ],
     resolveLoader: {
         alias: webpack_configurator.easygettext_loader_alias
+    },
+    resolve: {
+        extensions: [".js", ".ts", ".vue"]
     }
 };
