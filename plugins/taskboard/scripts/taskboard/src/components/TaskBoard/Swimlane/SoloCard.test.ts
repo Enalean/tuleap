@@ -38,7 +38,7 @@ describe("SoloCard", () => {
             propsData: {
                 card: {
                     id: 43,
-                    status: null
+                    mapped_list_value: null
                 } as Card
             }
         });
@@ -70,7 +70,7 @@ describe("SoloCard", () => {
                 card: {
                     id: 43,
                     tracker_id: 666,
-                    status: {
+                    mapped_list_value: {
                         id: 1001,
                         label: "Fixed"
                     }
@@ -117,7 +117,7 @@ describe("SoloCard", () => {
                 card: {
                     id: 43,
                     tracker_id: 43,
-                    status: {
+                    mapped_list_value: {
                         id: 1001,
                         label: "Fixed"
                     }

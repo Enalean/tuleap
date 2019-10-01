@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Tuleap\Cardwall\REST\v1;
 
 use Luracast\Restler\RestException;
@@ -54,6 +55,9 @@ class CardValidator
     private function getColumnIdFieldData(Cardwall_SingleCard $single_card, $column_id)
     {
         $mapping = $single_card->getMapping();
+        if (! $mapping) {
+            return [];
+        }
         foreach ($mapping->getValueMappings() as $value_mapping) {
             if ($value_mapping->getColumnId() == $column_id) {
                 return array(

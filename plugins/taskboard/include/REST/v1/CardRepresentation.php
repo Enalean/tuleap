@@ -70,11 +70,10 @@ class CardRepresentation
      */
     public $assignees;
     /**
-     * @var StatusRepresentation|null
+     * @var MappedListValueRepresentation|null
      */
-    public $status;
-
-    /*
+    public $mapped_list_value;
+    /**
      * @var int|float|null
      */
     public $initial_effort;
@@ -87,7 +86,7 @@ class CardRepresentation
         BackgroundColor $background_color,
         int $rank,
         array $assignees,
-        ?StatusRepresentation $status,
+        ?MappedListValueRepresentation $mapped_list_value,
         $initial_effort
     ): void {
         $this->id                = JsonCast::toInt($artifact->getId());
@@ -100,7 +99,7 @@ class CardRepresentation
         $this->background_color  = (string) $background_color->getBackgroundColorName();
         $this->assignees         = $assignees;
         $this->has_children      = JsonCast::toBoolean($artifact->hasChildren());
-        $this->status            = $status;
+        $this->mapped_list_value = $mapped_list_value;
         $this->initial_effort    = $initial_effort;
     }
 }

@@ -25,26 +25,20 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 class TrackerMappingPresenterBuilder
 {
     /**
-     * @var \Cardwall_OnTop_Dao
+     * @var \Cardwall_OnTop_ConfigFactory
      */
-    private $cardwall_dao;
+    private $config_factory;
     /**
-     * @var \Cardwall_OnTop_Config_ColumnFactory
+     * @var MappedFieldRetriever
      */
-    private $column_factory;
-    /**
-     * @var \Cardwall_OnTop_Config_TrackerMappingFactory
-     */
-    private $tracker_mapping_factory;
+    private $mapped_field_retriever;
 
     public function __construct(
-        \Cardwall_OnTop_Dao $cardwall_dao,
-        \Cardwall_OnTop_Config_ColumnFactory $column_factory,
-        \Cardwall_OnTop_Config_TrackerMappingFactory $tracker_mapping_factory
+        \Cardwall_OnTop_ConfigFactory $config_factory,
+        MappedFieldRetriever $mapped_field_retriever
     ) {
-        $this->cardwall_dao            = $cardwall_dao;
-        $this->column_factory          = $column_factory;
-        $this->tracker_mapping_factory = $tracker_mapping_factory;
+        $this->config_factory         = $config_factory;
+        $this->mapped_field_retriever = $mapped_field_retriever;
     }
 
     /**
@@ -52,15 +46,12 @@ class TrackerMappingPresenterBuilder
      */
     public function buildMappings(int $column_id, \Planning $planning): array
     {
-        $config   = new \Cardwall_OnTop_Config(
-            $planning->getPlanningTracker(),
-            $this->cardwall_dao,
-            $this->column_factory,
-            $this->tracker_mapping_factory
-        );
+        $config   = $this->config_factory->getOnTopConfigByPlanning($planning);
         $mappings = [];
-        foreach ($config->getTrackers() as $tracker) {
-            $mappings[] = $this->buildMappingForATracker($column_id, $config, $tracker);
+        if ($config) {
+            foreach ($config->getTrackers() as $tracker) {
+                $mappings[] = $this->buildMappingForATracker($column_id, $config, $tracker);
+            }
         }
         return $mappings;
     }
@@ -70,8 +61,9 @@ class TrackerMappingPresenterBuilder
         \Cardwall_OnTop_Config $config,
         \Tracker $tracker
     ): TrackerMappingPresenter {
-        $mapping                  = $config->getMappingFor($tracker);
         $value_mapping_presenters = [];
+        $mapping                  = $config->getMappingFor($tracker);
+        $field                    = $this->mapped_field_retriever->getField($config, $tracker);
 
         if ($mapping !== null) {
             $value_mappings = $this->filterValueMappingsByColumn($column_id, $mapping->getValueMappings());
@@ -79,8 +71,9 @@ class TrackerMappingPresenterBuilder
                 $value_mapping_presenters[] = new ListFieldValuePresenter((int) $value_mapping->getValueId());
             }
         }
+        $field_id = $field !== null ? (int) $field->getId() : null;
 
-        return new TrackerMappingPresenter((int) $tracker->getId(), $value_mapping_presenters);
+        return new TrackerMappingPresenter((int) $tracker->getId(), $field_id, $value_mapping_presenters);
     }
 
     /**

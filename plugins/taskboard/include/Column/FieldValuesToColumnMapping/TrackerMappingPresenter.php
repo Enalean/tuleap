@@ -27,12 +27,16 @@ class TrackerMappingPresenter
     /** @var int */
     public $tracker_id;
 
+    /** @var int | null */
+    public $field_id;
+
     /** @var ListFieldValuePresenter[] */
     public $accepts = [];
 
-    public function __construct(int $tracker_id, array $accepts)
+    public function __construct(int $tracker_id, ?int $field_id, array $accepts)
     {
         $this->tracker_id = $tracker_id;
+        $this->field_id   = $field_id;
         $this->accepts    = $accepts;
     }
 }

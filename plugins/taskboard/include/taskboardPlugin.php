@@ -30,6 +30,7 @@ use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfoBuilder;
 use Tuleap\Taskboard\Board\BoardPresenterBuilder;
 use Tuleap\Taskboard\Column\ColumnPresenterCollectionRetriever;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenterBuilder;
 use Tuleap\Taskboard\REST\ResourcesInjector;
 use Tuleap\Taskboard\Routing\MilestoneExtractor;
@@ -106,17 +107,11 @@ class taskboardPlugin extends Plugin
                 new ColumnPresenterCollectionRetriever(
                     $column_dao,
                     new TrackerMappingPresenterBuilder(
-                        $dao,
-                        new Cardwall_OnTop_Config_ColumnFactory($column_dao, $dao),
-                        new Cardwall_OnTop_Config_TrackerMappingFactory(
+                        new Cardwall_OnTop_ConfigFactory(
                             TrackerFactory::instance(),
-                            Tracker_FormElementFactory::instance(),
-                            new Cardwall_OnTop_ColumnMappingFieldDao(),
-                            new Cardwall_OnTop_Config_ValueMappingFactory(
-                                Tracker_FormElementFactory::instance(),
-                                new Cardwall_OnTop_ColumnMappingFieldValueDao()
-                            )
-                        )
+                            Tracker_FormElementFactory::instance()
+                        ),
+                        new MappedFieldRetriever(new Cardwall_FieldProviders_SemanticStatusFieldRetriever())
                     )
                 ),
                 new AgileDashboard_BacklogItemDao()

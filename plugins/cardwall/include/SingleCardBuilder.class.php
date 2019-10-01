@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013 - 2018. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -215,10 +211,17 @@ class Cardwall_SingleCardBuilder
      *
      * @return Cardwall_CardInCellPresenterFactory
      */
-    private function getCardInCellPresenterFactory(Cardwall_OnTop_Config $config, Tracker_Artifact $artifact, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, Cardwall_OnTop_Config_ColumnCollection $columns)
-    {
+    private function getCardInCellPresenterFactory(
+        Cardwall_OnTop_Config $config,
+        Tracker_Artifact $artifact,
+        Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
+        Cardwall_OnTop_Config_ColumnCollection $columns
+    ) {
         $field = $field_provider->getField($artifact->getTracker());
-        $status_fields[$field->getId()] = $field;
+        $status_fields = [];
+        if ($field !== null) {
+            $status_fields[$field->getId()] = $field;
+        }
         return new Cardwall_CardInCellPresenterFactory(
             $field_provider,
             $config->getCardwallMappings($status_fields, $columns)

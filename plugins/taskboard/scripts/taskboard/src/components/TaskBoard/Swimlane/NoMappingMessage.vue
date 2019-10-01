@@ -38,7 +38,7 @@ export default class NoMappingMessage extends Vue {
     readonly card!: Card;
 
     get message(): string {
-        if (!this.card.status) {
+        if (!this.card.mapped_list_value) {
             return this.$gettext("This card does not have any status.");
         }
 
@@ -46,7 +46,7 @@ export default class NoMappingMessage extends Vue {
             this.$gettext(
                 "This card has status <strong>%s</strong> that does not map to current taskboard columns."
             ),
-            this.card.status.label
+            this.card.mapped_list_value.label
         );
     }
 }

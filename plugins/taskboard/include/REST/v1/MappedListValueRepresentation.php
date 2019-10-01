@@ -25,7 +25,7 @@ namespace Tuleap\Taskboard\REST\v1;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\REST\JsonCast;
 
-class StatusRepresentation
+class MappedListValueRepresentation
 {
     /**
      * @var int
@@ -36,9 +36,9 @@ class StatusRepresentation
      */
     public $label;
 
-    public function build(Tracker_FormElement_Field_List_BindValue $status_value): void
+    public function build(Tracker_FormElement_Field_List_BindValue $bind_value): void
     {
-        $this->id    = JsonCast::toInt($status_value->getId());
-        $this->label = $status_value->getLabel();
+        $this->id    = JsonCast::toInt($bind_value->getId());
+        $this->label = $bind_value->getLabel();
     }
 }

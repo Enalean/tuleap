@@ -30,16 +30,11 @@ use PFUser;
 use Planning_ArtifactMilestone;
 use PluginManager;
 use RuntimeException;
-use Tracker_Artifact_PriorityDao;
 use Tracker_ArtifactFactory;
-use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
-use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
-use Tuleap\Tracker\Semantic\Status\StatusValueProvider;
 use UserManager;
 
 class TaskboardResource extends AuthenticatedResource
@@ -66,10 +61,6 @@ class TaskboardResource extends AuthenticatedResource
      * @var MilestoneIsAllowedChecker
      */
     private $milestone_checker;
-    /**
-     * @var CardRepresentationBuilder
-     */
-    private $card_representation_builder;
 
     public function __construct()
     {
@@ -92,11 +83,6 @@ class TaskboardResource extends AuthenticatedResource
             new Cardwall_OnTop_Dao(),
             $plugin_manager,
             $taskboard_plugin
-        );
-
-        $this->card_representation_builder = new CardRepresentationBuilder(
-            new BackgroundColorBuilder(new BindDecoratorRetriever()),
-            new StatusValueProvider(new StatusValueForChangesetProvider())
         );
     }
 
@@ -130,6 +116,8 @@ class TaskboardResource extends AuthenticatedResource
         $this->sendCardsAllowHeaders();
         $this->checkAccess();
 
+        $card_representation_builder = CardRepresentationBuilder::buildSelf();
+
         $user        = $this->user_manager->getCurrentUser();
         $collection  = [];
         $milestone   = $this->getMilestone($user, $id);
@@ -144,7 +132,7 @@ class TaskboardResource extends AuthenticatedResource
             if (! $artifact->userCanView($user)) {
                 continue;
             }
-            $collection[] = $this->card_representation_builder->build($artifact, $user, (int) $row['rank']);
+            $collection[] = $card_representation_builder->build($milestone, $artifact, $user, (int) $row['rank']);
         }
 
         Header::sendPaginationHeaders($limit, $offset, $total_count, self::MAX_LIMIT);
