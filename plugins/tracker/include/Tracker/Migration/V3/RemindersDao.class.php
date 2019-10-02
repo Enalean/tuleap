@@ -119,7 +119,7 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject
         $ugroups = array();
         foreach (explode(',', $notified_people) as $id) {
             $id = trim($id);
-            if ($id{0} == 'g') {
+            if ($id[0] == 'g') {
                 $ugroups[] = substr($id, 1);
             }
         }

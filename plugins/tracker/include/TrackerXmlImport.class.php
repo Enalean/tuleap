@@ -421,7 +421,7 @@ class TrackerXmlImport
 
     private function activateArtlinkV2(Project $project, SimpleXMLElement $xml_element)
     {
-        $use_natures = $xml_element{'use-natures'};
+        $use_natures = $xml_element['use-natures'];
         if ($use_natures == 'true') {
             if ($this->artifact_links_usage_updater->isProjectAllowedToUseArtifactLinkTypes($project)) {
                 $this->logger->info("This project already uses artifact links nature feature.");

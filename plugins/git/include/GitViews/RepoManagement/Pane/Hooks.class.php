@@ -177,7 +177,7 @@ class Hooks extends Pane
     {
         $classname = 'text-success';
         $icon      = 'fa fa-check-circle';
-        if ($status{0} !== '2') {
+        if ($status[0] !== '2') {
             $classname = 'text-warning';
             $icon      = 'fa fa-exclamation-triangle';
         }

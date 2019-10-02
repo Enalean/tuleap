@@ -330,12 +330,12 @@ class Pack
          * starting with that byte can be found
          * (first level fan-out)
          */
-        if ($binaryHash{0} == "\x00") {
+        if ($binaryHash[0] == "\x00") {
             $low = 0;
             fseek($index, $offset);
             $high = Pack::fuint32($index);
         } else {
-            fseek($index, $offset + (ord($binaryHash{0}) - 1) * 4);
+            fseek($index, $offset + (ord($binaryHash[0]) - 1) * 4);
             $low = Pack::fuint32($index);
             $high = Pack::fuint32($index);
         }
@@ -432,7 +432,7 @@ class Pack
             $off = -1;
             do {
                 $off++;
-                $c = ord($buf{$pos++});
+                $c = ord($buf[$pos++]);
                 $off = ($off << 7) + ($c & 0x7f);
             } while ($c & 0x80);
 
@@ -500,30 +500,30 @@ class Pack
         $data = '';
         $deltalen = strlen($delta);
         while ($pos < $deltalen) {
-            $opcode = ord($delta{$pos++});
+            $opcode = ord($delta[$pos++]);
             if ($opcode & 0x80) {
                 $off = 0;
                 if ($opcode & 0x01) {
-                    $off = ord($delta{$pos++});
+                    $off = ord($delta[$pos++]);
                 }
                 if ($opcode & 0x02) {
-                    $off |= ord($delta{$pos++}) <<  8;
+                    $off |= ord($delta[$pos++]) <<  8;
                 }
                 if ($opcode & 0x04) {
-                    $off |= ord($delta{$pos++}) << 16;
+                    $off |= ord($delta[$pos++]) << 16;
                 }
                 if ($opcode & 0x08) {
-                    $off |= ord($delta{$pos++}) << 24;
+                    $off |= ord($delta[$pos++]) << 24;
                 }
                 $len = 0;
                 if ($opcode & 0x10) {
-                    $len = ord($delta{$pos++});
+                    $len = ord($delta[$pos++]);
                 }
                 if ($opcode & 0x20) {
-                    $len |= ord($delta{$pos++}) <<  8;
+                    $len |= ord($delta[$pos++]) <<  8;
                 }
                 if ($opcode & 0x40) {
-                    $len |= ord($delta{$pos++}) << 16;
+                    $len |= ord($delta[$pos++]) << 16;
                 }
                 if ($len == 0) {
                     $len = 0x10000;
@@ -557,7 +557,7 @@ class Pack
         $ret = 0;
         $byte = 0x80;
         for ($shift = 0; $byte & 0x80; $shift += 7) {
-            $byte = ord($str{$pos++});
+            $byte = ord($str[$pos++]);
             $ret |= (($byte & 0x7F) << $shift);
         }
         return $ret;

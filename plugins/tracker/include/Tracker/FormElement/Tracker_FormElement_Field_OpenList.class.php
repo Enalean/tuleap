@@ -400,7 +400,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         foreach ($values as $v) {
             $bindvalue_id = null;
             $openvalue_id = null;
-            switch ($v{0}) {
+            switch ($v[0]) {
                 case self::BIND_PREFIX: // bind value
                     $bindvalue_id = (int)substr($v, 1);
                     break;
@@ -442,7 +442,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         foreach ($values as $v) {
             $v = trim($v);
             if ($v) {
-                switch ($v{0}) {
+                switch ($v[0]) {
                     case self::BIND_PREFIX: // bind value
                         if ($bindvalue_id = (int)substr($v, 1)) {
                             $sanitized[] = $v;
@@ -471,7 +471,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         foreach ($values as $v) {
             $v = trim($v);
             if ($v) {
-                switch ($v{0}) {
+                switch ($v[0]) {
                     case self::BIND_PREFIX: // bind value
                         if ($bindvalue_id = (int)substr($v, 1)) {
                             $sanitized[] = $this->getBind()->getBindValueById($bindvalue_id);
@@ -755,16 +755,16 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             $val = trim($val);
             if (!$val) {
                 unset($criteria_value[$key]);
-            } elseif ($val{0} === self::OPEN_PREFIX) {
+            } elseif ($val[0] === self::OPEN_PREFIX) {
                 if ($v = $this->getOpenValueById(substr($val, 1))) {
                     $criteria_value[$key] = $v;
                 } else {
                     unset($criteria_value[$key]);
                 }
-            } elseif ($val{0} === self::BIND_PREFIX) {
+            } elseif ($val[0] === self::BIND_PREFIX) {
                 $bindvalue_ids[] = substr($val, 1);
                 $criteria_value[$key] = $val; //store the trimmed val
-            } elseif ($val{0} === self::NEW_VALUE_PREFIX) {
+            } elseif ($val[0] === self::NEW_VALUE_PREFIX) {
                 $criteria_value[$key] = new Tracker_FormElement_Field_List_UnsavedValue(substr($val, 1));
             } else {
                 unset($criteria_value[$key]);

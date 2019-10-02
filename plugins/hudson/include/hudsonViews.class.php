@@ -47,7 +47,7 @@ class hudsonViews extends Views
     }
     function _getHelp($section = '', $questionmark = false)
     {
-        if (trim($section) !== '' && $section{0} !== '#') {
+        if (trim($section) !== '' && $section[0] !== '#') {
             $section = '#'.$section;
         }
         if ($questionmark) {

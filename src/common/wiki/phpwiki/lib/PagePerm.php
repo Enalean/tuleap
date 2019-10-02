@@ -385,7 +385,7 @@ class PagePermission
      */
     function isAuthorized($access, $user)
     {
-        if (!empty($this->perm{$access})) {
+        if (!empty($this->perm[$access])) {
             foreach ($this->perm[$access] as $group => $bool) {
                 if ($this->isMember($user, $group)) {
                     return $bool;

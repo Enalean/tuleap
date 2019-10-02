@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2017. All rights reserved
+ * Copyright (c) Enalean, 2012-Present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -136,26 +136,6 @@ class HTTPRequest extends Codendi_Request
     }
 
     /**
-     * Remove slashes in $value. If $value is an array, remove slashes for each
-     * element.
-     *
-     * @access private
-     * @param mixed $value
-     * @return mixed
-     */
-    protected function _stripslashes($value)
-    {
-        if (is_string($value)) {
-            $value = stripslashes($value);
-        } elseif (is_array($value)) {
-            foreach ($value as $key => $val) {
-                $value[$key] = $this->_stripslashes($val);
-            }
-        }
-        return $value;
-    }
-
-    /**
      * Get the value of $variable in $array. If magic_quotes are enabled, the
      * value is escaped.
      *
@@ -166,7 +146,7 @@ class HTTPRequest extends Codendi_Request
     function _get($variable, $array)
     {
         if ($this->_exist($variable, $array)) {
-            return (get_magic_quotes_gpc() ? $this->_stripslashes($array[$variable]) : $array[$variable]);
+            return $array[$variable];
         } else {
             return false;
         }
