@@ -49,7 +49,7 @@
     vertical-align: top;
 
     &:first-child {
-        background: transparentize($tlp-ui-white, .6);
+        background: mix($tlp-theme-background-color, $tlp-ui-white, 60%);
     }
 
     &:last-child {
