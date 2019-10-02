@@ -37,7 +37,6 @@ use Tracker_Semantic_Status;
 use Tracker_Semantic_Title;
 use Tracker_SemanticCollection;
 use Tracker_SemanticManager;
-use Tracker_SlicedArtifactsBuilder;
 use TrackerFactory;
 use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\v1\Scrum\BacklogItem\InitialEffortSemanticUpdater;
@@ -45,6 +44,7 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use UserManager;
@@ -253,7 +253,7 @@ class BacklogItemResource extends AuthenticatedResource
         $sliced_children = $this->getSlicedArtifactsBuilder()->getSlicedChildrenArtifactsForUser($artifact, $this->getCurrentUser(), $limit, $offset);
 
         foreach ($sliced_children->getArtifacts() as $child) {
-            $backlog_item                    = $this->getBacklogItem($current_user, $child);
+            $backlog_item                    = $this->getBacklogItem($current_user, $child->getArtifact());
             $backlog_items_representations[] = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
         }
 
@@ -403,7 +403,7 @@ class BacklogItemResource extends AuthenticatedResource
 
     private function getSlicedArtifactsBuilder()
     {
-        return new Tracker_SlicedArtifactsBuilder(new Tracker_ArtifactDao());
+        return new SlicedArtifactsBuilder(new Tracker_ArtifactDao(), Tracker_ArtifactFactory::instance());
     }
 
     private function checkContentLimit($limit)

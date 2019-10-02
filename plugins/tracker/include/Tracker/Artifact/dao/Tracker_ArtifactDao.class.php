@@ -632,7 +632,7 @@ class Tracker_ArtifactDao extends DataAccessObject
         $limit        = $this->da->escapeInt($limit);
         $offset       = $this->da->escapeInt($offset);
 
-        $sql  = "SELECT SQL_CALC_FOUND_ROWS child_art.*, parent_art.id as parent_id".
+        $sql  = "SELECT SQL_CALC_FOUND_ROWS child_art.*, parent_art.id as parent_id, tracker_artifact_priority_rank.rank as rank".
                 $this->getSortedFromStatementForChildrenOfArtifacts($artifact_ids).
                 "LIMIT $limit
                  OFFSET $offset";
