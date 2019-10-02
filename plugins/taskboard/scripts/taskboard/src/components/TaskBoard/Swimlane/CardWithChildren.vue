@@ -20,27 +20,48 @@
 
 <template>
     <div class="taskboard-swimlane">
-        <parent-cell v-bind:card="card"/>
-        <columns-skeleton v-for="(col, index) of columns" v-bind:key="col.id" v-bind:column_index="index"/>
+        <parent-cell v-bind:card="swimlane.card"/>
+        <template v-for="(col, index) of columns">
+            <columns-skeleton
+                v-if="swimlane.is_loading_children_cards"
+                v-bind:key="col.id"
+                v-bind:column_index="index"
+            />
+            <div class="taskboard-cell" v-else v-bind:key="col.id">
+                <template v-for="card of getCardsOfColumn(col)">
+                    <child-card v-bind:key="card.id" v-bind:card="card"/>
+                </template>
+            </div>
+        </template>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Card, ColumnDefinition } from "../../../type";
+import { Card, ColumnDefinition, Swimlane } from "../../../type";
 import { State } from "vuex-class";
 import ParentCell from "./ParentCell.vue";
 import ColumnsSkeleton from "../ColumnsSkeleton.vue";
+import ChildCard from "../Card/ChildCard.vue";
+import { getColumnOfCard } from "../../../helpers/list-value-to-column-mapper";
 
 @Component({
-    components: { ColumnsSkeleton, ParentCell }
+    components: { ChildCard, ColumnsSkeleton, ParentCell }
 })
 export default class CardWithChildren extends Vue {
     @Prop({ required: true })
-    readonly card!: Card;
+    readonly swimlane!: Swimlane;
 
     @State
     readonly columns!: Array<ColumnDefinition>;
+
+    getCardsOfColumn(column: ColumnDefinition): Card[] {
+        return this.swimlane.children_cards.filter(card => this.getColumnOfCard(card) === column);
+    }
+
+    getColumnOfCard(card: Card): ColumnDefinition | undefined {
+        return getColumnOfCard(this.columns, card);
+    }
 }
 </script>

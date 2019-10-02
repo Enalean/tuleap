@@ -17,9 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Swimlane } from "../../type";
+import { Card, Swimlane } from "../../type";
 
 export interface SwimlaneState {
     swimlanes: Array<Swimlane>;
     is_loading_swimlanes: boolean;
+}
+
+export interface AddChildrenToSwimlanePayload {
+    swimlane: Swimlane;
+    children_cards: Card[];
 }
