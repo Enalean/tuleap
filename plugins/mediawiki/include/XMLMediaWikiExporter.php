@@ -28,16 +28,12 @@ use MediawikiManager;
 use Project;
 use ProjectUGroup;
 use SimpleXMLElement;
-use System_Command;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use UGroupManager;
+use Tuleap\Mediawiki\MediawikiDataDir;
 
 class XMLMediaWikiExporter
 {
-    /**
-     * @var System_Command
-     */
-    private $sys_command;
 
     /**
      * @var Project
@@ -65,32 +61,43 @@ class XMLMediaWikiExporter
      * @var MediawikiLanguageManager
      */
     private $language_manager;
+    /**
+     * @var MediawikiDataDir
+     */
+    private $mediawiki_data_dir;
 
     public function __construct(
-        System_Command $command,
         Project $project,
         MediawikiManager $manager,
         UGroupManager $ugroup_manager,
         Logger $logger,
         MediawikiMaintenanceWrapper $maintenance_wrapper,
-        MediawikiLanguageManager $language_manager
+        MediawikiLanguageManager $language_manager,
+        MediawikiDataDir $mediawiki_data_dir
     ) {
-        $this->sys_command         = $command;
         $this->project             = $project;
         $this->manager             = $manager;
         $this->ugroup_manager      = $ugroup_manager;
         $this->logger              = $logger;
         $this->maintenance_wrapper = $maintenance_wrapper;
         $this->language_manager    = $language_manager;
+        $this->mediawiki_data_dir  = $mediawiki_data_dir;
     }
 
     public function exportToXml(
         SimpleXMLElement $xml_content,
         ArchiveInterface $archive,
         $export_file,
-        $temporary_dump_path_on_filesystem,
-        $mediawiki_data_directory
+        $temporary_dump_path_on_filesystem
     ) {
+        $project_name_dir = $this->mediawiki_data_dir->getMediawikiDir($this->project);
+
+        if (! is_dir($project_name_dir)) {
+            $this->logger->info('Mediawiki not instantiated, skipping');
+
+            return;
+        }
+
         $this->logger->info('Export mediawiki');
         $root_node = $xml_content->addChild('mediawiki');
         $root_node->addAttribute('pages-backup', 'wiki_pages.xml');
@@ -107,7 +114,7 @@ class XMLMediaWikiExporter
             $this->project,
             $archive,
             $temporary_dump_path_on_filesystem,
-            $mediawiki_data_directory
+            $project_name_dir
         );
 
         $this->addFilesIntoArchive($archive, $export_file);
@@ -130,6 +137,9 @@ class XMLMediaWikiExporter
     private function addPicturesIntoArchive(ArchiveInterface $archive, $temporary_dump_path_on_filesystem)
     {
         $files_folder = $temporary_dump_path_on_filesystem . "/files";
+        if (! is_dir($files_folder)) {
+            return;
+        }
         foreach (new DirectoryIterator($files_folder) as $picture) {
             if ($picture->isDot()) {
                 continue;
