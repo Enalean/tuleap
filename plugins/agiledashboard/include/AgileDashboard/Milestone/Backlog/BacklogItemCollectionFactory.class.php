@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
+use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 
 /**
  * I build collections of IBacklogItem
@@ -181,7 +181,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
 
             $this->setInitialEffort($backlog_item, $semantics[$artifact_id]);
             $backlog_item->setRemainingEffort(
-                $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $backlog_item)
+                $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $backlog_item->getArtifact())
             );
 
             $collection->push($backlog_item);
@@ -240,7 +240,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
 
             $this->setInitialEffort($backlog_item, $semantics[$artifact_id]);
             $backlog_item->setRemainingEffort(
-                $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $backlog_item)
+                $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $backlog_item->getArtifact())
             );
 
             $collection->push($backlog_item);
@@ -541,7 +541,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
 
             $this->setInitialEffort($backlog_item, $semantics[$artifact_id]);
             $backlog_item->setRemainingEffort(
-                $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $backlog_item)
+                $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $backlog_item->getArtifact())
             );
             $this->todo_collection[$milestone->getArtifactId()]->push($backlog_item);
         }
@@ -556,7 +556,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     ) {
         $this->setInitialEffort($backlog_item, $semantics[$artifact->getId()]);
         $backlog_item->setRemainingEffort(
-            $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $backlog_item)
+            $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $backlog_item->getArtifact())
         );
 
         if ($semantics[$artifact->getId()][Tracker_Semantic_Status::NAME] != AgileDashboard_BacklogItemDao::STATUS_OPEN) {

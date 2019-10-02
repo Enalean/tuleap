@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\BacklogItem;
+namespace Tuleap\AgileDashboard;
 
-require_once __DIR__ . '/../../bootstrap.php';
+require_once __DIR__ . '/../bootstrap.php';
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -43,9 +43,6 @@ class RemainingEffortValueRetrieverTest extends TestCase
     /** @var \Tracker */
     private $tracker;
 
-    /** @var \AgileDashboard_Milestone_Backlog_BacklogItem */
-    private $backlog_item;
-
     /** @var \Tracker_FormElement_Field_Float */
     private $remaining_effort_field;
 
@@ -59,11 +56,6 @@ class RemainingEffortValueRetrieverTest extends TestCase
         $this->tracker  = Mockery::mock(\Tracker::class);
         $this->artifact = Mockery::mock(\Tracker_Artifact::class);
         $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
-        $this->backlog_item = Mockery::mock(
-            \AgileDashboard_Milestone_Backlog_BacklogItem::class,
-            \AgileDashboard_Milestone_Backlog_IBacklogItem::class
-        );
-        $this->backlog_item->shouldReceive('getArtifact')->andReturn($this->artifact);
     }
 
     public function tearDown() : void
@@ -79,9 +71,19 @@ class RemainingEffortValueRetrieverTest extends TestCase
         $this->setUpChangesetValue($float_value);
         $this->setUpField();
 
-        $value = $this->remaining_effort_retriever->getRemainingEffortValue($this->user, $this->backlog_item);
+        $value = $this->remaining_effort_retriever->getRemainingEffortValue($this->user, $this->artifact);
 
         $this->assertEquals(6.7, $value);
+    }
+
+    public function testItReturnsNullWhenThereIsNoLastChangeset()
+    {
+        $this->artifact->shouldReceive('getLastChangeset')->andReturnNull();
+        $this->setUpField();
+
+        $value = $this->remaining_effort_retriever->getRemainingEffortValue($this->user, $this->artifact);
+
+        $this->assertEquals(null, $value);
     }
 
     public function testItReturnsNullWhenThereIsNoValue()
@@ -89,7 +91,7 @@ class RemainingEffortValueRetrieverTest extends TestCase
         $this->setUpChangesetValue(null);
         $this->setUpField();
 
-        $value = $this->remaining_effort_retriever->getRemainingEffortValue($this->user, $this->backlog_item);
+        $value = $this->remaining_effort_retriever->getRemainingEffortValue($this->user, $this->artifact);
 
         $this->assertEquals(null, $value);
     }
@@ -98,7 +100,7 @@ class RemainingEffortValueRetrieverTest extends TestCase
     {
         $this->form_element_factory->shouldReceive('getNumericFieldByNameForUser')->andReturn(null);
 
-        $value = $this->remaining_effort_retriever->getRemainingEffortValue($this->user, $this->backlog_item);
+        $value = $this->remaining_effort_retriever->getRemainingEffortValue($this->user, $this->artifact);
 
         $this->assertEquals(null, $value);
     }
