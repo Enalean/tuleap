@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ParentCardRemainingEffort displays the remaining effort of the parent card in a badge 1`] = `
+<span
+  class="taskboard-card-remaining-effort tlp-badge-lake-placid-blue taskboard-card-remaining-effort-lake-placid-blue"
+>
+  
+    666
+    
+  <i
+    class="fa fa-long-arrow-right"
+  />
+   
+  <i
+    class="fa fa-flag-checkered"
+  />
+</span>
+`;

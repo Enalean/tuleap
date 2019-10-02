@@ -35,6 +35,7 @@
     }
 
     &.taskboard-card-parent {
+        align-self: stretch;
         margin: 0;
     }
 
@@ -73,6 +74,13 @@
             }
         }
     }
+}
+
+.taskboard-cell-parent-card,
+.taskboard-cell-solo-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
 
 .taskboard-cell:first-child > .taskboard-card {
@@ -151,6 +159,42 @@ a.taskboard-card-xref {
 .taskboard-card-inital-effort,
 .taskboard-card-assignees-avatars {
     margin: 0 0 5px 5px;
+}
+
+.taskboard-card-progress {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    border-radius: 1px;
+
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.taskboard-card-progress-#{$color-name} {
+            background: map-get($colors, 'primary');
+        }
+    }
+}
+
+.taskboard-card-remaining-effort {
+    position: relative;
+    margin: 10px 12px 0 0;
+    padding-right: 1px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.taskboard-card-remaining-effort-#{$color-name}::after {
+            content: '';
+            position: absolute;
+            top: -1px;
+            right: -13px;
+            width: 0;
+            height: 0;
+            border-width: 13px 0 13px 12px;
+            border-style: solid;
+            border-color: transparent transparent transparent map-get($colors, 'primary');
+        }
+    }
 }
 
 @keyframes showCard {

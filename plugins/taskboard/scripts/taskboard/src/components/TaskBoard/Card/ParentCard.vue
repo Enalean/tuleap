@@ -28,6 +28,7 @@
             </div>
         </div>
         <div class="taskboard-card-accessibility" v-if="user_has_accessibility_mode"></div>
+        <div class="taskboard-card-progress" v-bind:class="progress_color" v-bind:style="{ width: progress_bar_width }"></div>
     </div>
 </template>
 
@@ -39,6 +40,7 @@ import CardXrefLabel from "./CardXrefLabel.vue";
 import CardAssignees from "./CardAssignees.vue";
 import CardInitialEffort from "./CardInitialEffort.vue";
 import { namespace } from "vuex-class";
+import { getWidthPercentage } from "../../../helpers/progress-bars";
 
 const user = namespace("user");
 
@@ -80,6 +82,18 @@ export default class ParentCard extends Vue {
         }
 
         return classnames.join(" ");
+    }
+
+    get progress_bar_width(): string {
+        const { initial_effort, remaining_effort } = this.card;
+
+        const percentage_width = getWidthPercentage(initial_effort, remaining_effort);
+
+        return `${percentage_width}%`;
+    }
+
+    get progress_color(): string {
+        return `taskboard-card-progress-${this.card.color}`;
     }
 }
 </script>

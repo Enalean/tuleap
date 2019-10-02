@@ -35,7 +35,8 @@ describe("ParentCard", () => {
                     color: "lake-placid-blue",
                     background_color: "fiesta-red",
                     assignees: [],
-                    initial_effort: 666
+                    initial_effort: 666,
+                    remaining_effort: 333
                 }
             }
         });
@@ -53,7 +54,8 @@ describe("ParentCard", () => {
                     color: "lake-placid-blue",
                     background_color: "",
                     assignees: [],
-                    initial_effort: 666
+                    initial_effort: 666,
+                    remaining_effort: 333
                 }
             }
         });
@@ -71,7 +73,8 @@ describe("ParentCard", () => {
                     color: "lake-placid-blue",
                     background_color: "",
                     assignees: [],
-                    initial_effort: 666
+                    initial_effort: 666,
+                    remaining_effort: 333
                 }
             }
         });
@@ -90,7 +93,8 @@ describe("ParentCard", () => {
                     color: "lake-placid-blue",
                     background_color: "fiesta-red",
                     assignees: [],
-                    initial_effort: 666
+                    initial_effort: 666,
+                    remaining_effort: 333
                 }
             }
         });

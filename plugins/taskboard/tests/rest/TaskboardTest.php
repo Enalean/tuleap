@@ -79,6 +79,7 @@ class TaskboardTest extends RestBase
             $this->assertEquals($expected_has_children, $cards[$key]['has_children']);
             $this->assertArrayHasKey('initial_effort', $cards[$key]);
             $this->assertArrayHasKey('assignees', $cards[$key]);
+            $this->assertArrayHasKey('remaining_effort', $cards[$key]);
 
             if ($label === 'US1') {
                 $this->assertNotEmpty($cards[$key]['assignees']);

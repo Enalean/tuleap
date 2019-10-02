@@ -16,7 +16,7 @@ exports[`SoloCard displays the parent card in Done column when status maps this 
   <div
     class="taskboard-cell"
   >
-    <parent-card-stub
+    <solo-card-cell-stub
       card="[object Object]"
     />
   </div>

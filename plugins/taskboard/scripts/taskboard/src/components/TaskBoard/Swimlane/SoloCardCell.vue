@@ -15,16 +15,12 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-  -
   -->
 
 <template>
-    <div class="taskboard-cell">
-        <div class="taskboard-cell-parent-card">
-            <parent-card v-bind:card="card"/>
-            <parent-card-remaining-effort v-bind:card="card"/>
-        </div>
-        <no-mapping-message v-if="should_no_mapping_message_be_displayed" v-bind:card="card"/>
+    <div class="taskboard-cell-solo-card">
+        <parent-card v-bind:card="card"/>
+        <parent-card-remaining-effort v-bind:card="card"/>
     </div>
 </template>
 
@@ -33,18 +29,13 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Card } from "../../../type";
 import ParentCard from "../Card/ParentCard.vue";
-import NoMappingMessage from "./NoMappingMessage.vue";
 import ParentCardRemainingEffort from "../Card/ParentCardRemainingEffort.vue";
 
 @Component({
-    components: { NoMappingMessage, ParentCard, ParentCardRemainingEffort }
+    components: { ParentCard, ParentCardRemainingEffort }
 })
-export default class ParentCell extends Vue {
+export default class SoloCardCell extends Vue {
     @Prop({ required: true })
     readonly card!: Card;
-
-    get should_no_mapping_message_be_displayed(): boolean {
-        return !this.card.has_children;
-    }
 }
 </script>

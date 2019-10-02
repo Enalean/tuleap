@@ -74,9 +74,14 @@ class CardRepresentation
      */
     public $mapped_list_value;
     /**
-     * @var int|float|null
+     * @var float|null
      */
     public $initial_effort;
+
+    /**
+     * @var float|null
+     */
+    public $remaining_effort;
 
     /**
      * @params UserRepresentation[] $assignees
@@ -87,7 +92,8 @@ class CardRepresentation
         int $rank,
         array $assignees,
         ?MappedListValueRepresentation $mapped_list_value,
-        $initial_effort
+        $initial_effort,
+        $remaining_effort
     ): void {
         $this->id                = JsonCast::toInt($artifact->getId());
         $this->tracker_id        = JsonCast::toInt($artifact->getTrackerId());
@@ -100,6 +106,21 @@ class CardRepresentation
         $this->assignees         = $assignees;
         $this->has_children      = JsonCast::toBoolean($artifact->hasChildren());
         $this->mapped_list_value = $mapped_list_value;
-        $this->initial_effort    = $initial_effort;
+        $this->initial_effort    = $this->formatNumeric($initial_effort);
+        $this->remaining_effort  = $this->formatNumeric($remaining_effort);
+    }
+
+    /**
+     * @param $potentially_a_string_number
+     *
+     * @return float | null
+     */
+    private function formatNumeric($potentially_a_string_number)
+    {
+        if (! is_numeric($potentially_a_string_number)) {
+            return null;
+        }
+
+        return JsonCast::toFloat($potentially_a_string_number);
     }
 }
