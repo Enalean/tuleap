@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2013 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -62,7 +62,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
         $this->milestone_factory                = mock('Planning_MilestoneFactory');
         $this->planning_factory                 = mock('PlanningFactory');
         $this->backlog_item_builder             = new AgileDashboard_Milestone_Backlog_BacklogItemBuilder();
-        $this->remaining_effort_value_retriever = mock('Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever');
+        $this->remaining_effort_value_retriever = mock(\Tuleap\AgileDashboard\RemainingEffortValueRetriever::class);
 
         $this->user = mock('PFUser');
 

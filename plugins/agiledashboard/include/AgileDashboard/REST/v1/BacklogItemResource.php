@@ -38,7 +38,7 @@ use Tracker_Semantic_Title;
 use Tracker_SemanticCollection;
 use Tracker_SemanticManager;
 use TrackerFactory;
-use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
+use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\v1\Scrum\BacklogItem\InitialEffortSemanticUpdater;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
@@ -74,7 +74,7 @@ class BacklogItemResource extends AuthenticatedResource
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
 
-    /** @var RemainingEffortValueRetriever */
+    /** @var \Tuleap\AgileDashboard\RemainingEffortValueRetriever */
     private $remaining_effort_value_retriever;
 
     public function __construct()
@@ -210,7 +210,7 @@ class BacklogItemResource extends AuthenticatedResource
         AgileDashboard_Milestone_Backlog_BacklogItem $backlog_item
     ) {
         $backlog_item->setRemainingEffort(
-            $this->remaining_effort_value_retriever->getRemainingEffortValue($current_user, $backlog_item)
+            $this->remaining_effort_value_retriever->getRemainingEffortValue($current_user, $backlog_item->getArtifact())
         );
 
         return $backlog_item;

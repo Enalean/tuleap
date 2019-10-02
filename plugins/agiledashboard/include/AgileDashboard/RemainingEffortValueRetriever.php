@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\AgileDashboard\BacklogItem;
+namespace Tuleap\AgileDashboard;
 
-use AgileDashboard_Milestone_Backlog_IBacklogItem;
 use PFUser;
+use Tracker_Artifact;
 
 class RemainingEffortValueRetriever
 {
@@ -35,19 +35,23 @@ class RemainingEffortValueRetriever
 
     public function getRemainingEffortValue(
         PFUser $current_user,
-        AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item
+        Tracker_Artifact $artifact
     ) {
-        $artifact               = $backlog_item->getArtifact();
         $remaining_effort_field = $this->form_element_factory->getNumericFieldByNameForUser(
             $artifact->getTracker(),
             $current_user,
-            $backlog_item::REMAINING_EFFORT_FIELD_NAME
+            \Tracker::REMAINING_EFFORT_FIELD_NAME
         );
         if (! $remaining_effort_field) {
             return null;
         }
 
-        $remaining_effort_value = $artifact->getLastChangeset()->getValue($remaining_effort_field);
+        $last_changeset = $artifact->getLastChangeset();
+        if (! $last_changeset) {
+            return null;
+        }
+
+        $remaining_effort_value = $last_changeset->getValue($remaining_effort_field);
         if (! $remaining_effort_value) {
             return null;
         }
