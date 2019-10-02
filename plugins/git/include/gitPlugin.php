@@ -156,7 +156,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 /**
  * GitPlugin
  */
-class GitPlugin extends Plugin
+class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      *
@@ -315,7 +315,7 @@ class GitPlugin extends Plugin
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\Git\GitService::class;
     }
 
-    public function export_xml_project($params)
+    public function export_xml_project($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getGitExporter($params['project'])->exportToXml(
             $params['into_xml'],
@@ -349,7 +349,7 @@ class GitPlugin extends Plugin
         return self::SERVICE_SHORTNAME;
     }
 
-    public function site_admin_option_hook($params)
+    public function site_admin_option_hook($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['plugins'][] = array(
             'label' => dgettext('tuleap-git', 'Git'),
@@ -368,7 +368,7 @@ class GitPlugin extends Plugin
     /**
      * @see Statistics_Event::FREQUENCE_STAT_ENTRIES
      */
-    public function plugin_statistics_frequence_stat_entries($params)
+    public function plugin_statistics_frequence_stat_entries($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['entries'][self::$FREQUENCIES_GIT_READ] = 'Git read access';
     }
@@ -376,7 +376,7 @@ class GitPlugin extends Plugin
     /**
      * @see Statistics_Event::FREQUENCE_STAT_SAMPLE
      */
-    public function plugin_statistics_frequence_stat_sample($params)
+    public function plugin_statistics_frequence_stat_sample($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['character'] === self::$FREQUENCIES_GIT_READ) {
             $params['sample'] = new Tuleap\Git\Statistics\FrequenciesSample();
@@ -430,20 +430,20 @@ class GitPlugin extends Plugin
         include $GLOBALS['Language']->getContent('script_locale', null, 'git');
     }
 
-    public function system_event_get_types_for_default_queue(array &$params)
+    public function system_event_get_types_for_default_queue(array &$params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['types'] = array_merge($params['types'], $this->getGitSystemEventManager()->getTypesForDefaultQueue());
     }
 
     /** @see Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES */
-    public function system_event_get_custom_queues(array &$params)
+    public function system_event_get_custom_queues(array &$params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['queues'][Git_SystemEventQueue::NAME] = new Git_SystemEventQueue($this->getLogger());
         $params['queues'][Git_Mirror_MirrorSystemEventQueue::NAME] = new Git_Mirror_MirrorSystemEventQueue($this->getLogger());
     }
 
     /** @see Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE */
-    public function system_event_get_types_for_custom_queue(array &$params)
+    public function system_event_get_types_for_custom_queue(array &$params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['queue'] == Git_SystemEventQueue::NAME) {
             $params['types'] = array_merge(
@@ -696,7 +696,7 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function get_reference($params)
+    public function get_reference($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['keyword'] == Git::REFERENCE_KEYWORD) {
             $reference = false;
@@ -729,7 +729,7 @@ class GitPlugin extends Plugin
         GitActions::renameProject($params['project'], $params['new_name']);
     }
 
-    public function file_exists_in_data_dir($params)
+    public function file_exists_in_data_dir($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['result'] = $this->isNameAvailable($params['new_name'], $params['error']);
     }
@@ -913,7 +913,7 @@ class GitPlugin extends Plugin
      *
      * @param array $params
      */
-    public function plugin_statistics_disk_usage_collect_project($params)
+    public function plugin_statistics_disk_usage_collect_project($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $start          = microtime(true);
         $row            = $params['project_row'];
@@ -944,7 +944,7 @@ class GitPlugin extends Plugin
      *
      * @param array $params
      */
-    function plugin_statistics_disk_usage_service_label($params)
+    public function plugin_statistics_disk_usage_service_label($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['services'][self::SERVICE_SHORTNAME] = 'Git';
     }
@@ -954,7 +954,7 @@ class GitPlugin extends Plugin
      *
      * @param array $params
      */
-    function plugin_statistics_color($params)
+    public function plugin_statistics_color($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['service'] == self::SERVICE_SHORTNAME) {
             $params['color'] = 'palegreen';
@@ -993,7 +993,7 @@ class GitPlugin extends Plugin
      * @see Event::EDIT_SSH_KEYS
      * @param array $params
      */
-    public function edit_ssh_keys(array $params)
+    public function edit_ssh_keys(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getGitSystemEventManager()->queueEditSSHKey($params['user_id'], $params['original_keys']);
     }
@@ -1005,7 +1005,7 @@ class GitPlugin extends Plugin
      *     'user' => PFUser,
      *     'original_keys' => string of concatenated ssh keys
      */
-    public function dump_ssh_keys(array $params)
+    public function dump_ssh_keys(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getGitSystemEventManager()->queueDumpAllSSHKeys();
     }
@@ -1123,7 +1123,7 @@ class GitPlugin extends Plugin
         return $params['user'];
     }
 
-    function permission_get_name($params)
+    public function permission_get_name($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (!$params['name']) {
             switch ($params['permission_type']) {
@@ -1141,7 +1141,7 @@ class GitPlugin extends Plugin
             }
         }
     }
-    function permission_get_object_type($params)
+    public function permission_get_object_type($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (!$params['object_type']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
@@ -1149,7 +1149,7 @@ class GitPlugin extends Plugin
             }
         }
     }
-    function permission_get_object_name($params)
+    public function permission_get_object_name($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (!$params['object_name']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
@@ -1164,7 +1164,7 @@ class GitPlugin extends Plugin
             }
         }
     }
-    function permission_get_object_fullname($params)
+    public function permission_get_object_fullname($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (!$params['object_fullname']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
@@ -1180,8 +1180,8 @@ class GitPlugin extends Plugin
         }
     }
 
-    var $_cached_permission_user_allowed_to_change;
-    function permission_user_allowed_to_change($params)
+    var $_cached_permission_user_allowed_to_change; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore, PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
+    public function permission_user_allowed_to_change($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (!$params['allowed']) {
             $user = $this->getCurrentUser();
@@ -1209,7 +1209,7 @@ class GitPlugin extends Plugin
         }
     }
 
-    public function proccess_system_check($params)
+    public function proccess_system_check($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $gitgc = new Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc(
             new Git_GitoliteHousekeeping_GitoliteHousekeepingDao(),
@@ -1256,7 +1256,7 @@ class GitPlugin extends Plugin
      *
      * @return void
      */
-    public function project_is_deleted($params)
+    public function project_is_deleted($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (!empty($params['group_id'])) {
             $project = ProjectManager::instance()->getProject($params['group_id']);
@@ -1267,14 +1267,14 @@ class GitPlugin extends Plugin
         }
     }
 
-    public function project_is_active(array $params)
+    public function project_is_active(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! empty($params['group_id'])) {
             $this->getGitSystemEventManager()->queueRegenerateGitoliteConfig($params['group_id']);
         }
     }
 
-    public function project_is_suspended(array $params)
+    public function project_is_suspended(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! empty($params['group_id'])) {
             $this->getGitSystemEventManager()->queueProjectIsSuspended($params['group_id']);
@@ -1288,7 +1288,7 @@ class GitPlugin extends Plugin
      *
      * @return void
      */
-    public function statistics_collector($params)
+    public function statistics_collector($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (!empty($params['formatter'])) {
             include_once('GitBackend.class.php');
@@ -1305,7 +1305,7 @@ class GitPlugin extends Plugin
      *
      * @return Void
      */
-    public function collect_ci_triggers($params)
+    public function collect_ci_triggers($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $ci = new Git_Ci();
         $triggers = $ci->retrieveTriggers($params);
@@ -1321,7 +1321,7 @@ class GitPlugin extends Plugin
      *
      * @return Void
      */
-    public function save_ci_triggers($params)
+    public function save_ci_triggers($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (isset($params['job_id']) && !empty($params['job_id']) && isset($params['request']) && !empty($params['request'])) {
             if ($params['request']->get('hudson_use_plugin_git_trigger_checkbox')) {
@@ -1349,7 +1349,7 @@ class GitPlugin extends Plugin
      *
      * @return Void
      */
-    public function update_ci_triggers($params)
+    public function update_ci_triggers($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (isset($params['request']) && !empty($params['request'])) {
             $jobId        = $params['request']->get('job_id');
@@ -1384,7 +1384,7 @@ class GitPlugin extends Plugin
      *
      * @return Void
      */
-    public function delete_ci_triggers($params)
+    public function delete_ci_triggers($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (isset($params['job_id']) && !empty($params['job_id'])) {
             $ci = new Git_Ci();
@@ -1401,7 +1401,7 @@ class GitPlugin extends Plugin
      *
      * @return Void
      */
-    function logsDaily($params)
+    public function logsDaily($params)
     {
         $pm      = ProjectManager::instance();
         $project = $pm->getProject($params['group_id']);
@@ -1432,7 +1432,7 @@ class GitPlugin extends Plugin
         }
     }
 
-    public function project_admin_remove_user_from_project_ugroups($params)
+    public function project_admin_remove_user_from_project_ugroups($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         foreach ($params['ugroups'] as $ugroup_id) {
             $this->project_admin_ugroup_remove_user(
@@ -1467,7 +1467,7 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function project_admin_ugroup_deletion($params)
+    public function project_admin_ugroup_deletion($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $ugroup     = $params['ugroup'];
         $users      = $ugroup->getMembers();
@@ -1488,20 +1488,20 @@ class GitPlugin extends Plugin
         $this->getGitSystemEventManager()->queueProjectsConfigurationUpdate(array($project_id));
     }
 
-    public function project_admin_add_user($params)
+    public function project_admin_add_user($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['ugroup_id'] = ProjectUGroup::PROJECT_MEMBERS;
         $this->project_admin_ugroup_add_user($params);
     }
 
-    public function project_admin_remove_user($params)
+    public function project_admin_remove_user($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['ugroup_id'] = ProjectUGroup::PROJECT_MEMBERS;
         $this->project_admin_ugroup_remove_user($params);
         $this->projectRemoveUserFromNotification($params);
     }
 
-    public function project_admin_ugroup_add_user($params)
+    public function project_admin_ugroup_add_user($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getGerritMembershipManager()->addUserToGroup(
             $this->getUserFromParams($params),
@@ -1509,7 +1509,7 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function project_admin_ugroup_remove_user($params)
+    public function project_admin_ugroup_remove_user($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getGerritMembershipManager()->removeUserFromGroup(
             $this->getUserFromParams($params),
@@ -1517,14 +1517,14 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function project_admin_ugroup_creation($params)
+    public function project_admin_ugroup_creation($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getGerritMembershipManager()->createGroupOnProjectsServers(
             $this->getUGroupFromParams($params)
         );
     }
 
-    public function project_admin_parent_project_modification($params)
+    public function project_admin_parent_project_modification($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         try {
             $project        = ProjectManager::instance()->getProject($params['group_id']);
@@ -1538,7 +1538,7 @@ class GitPlugin extends Plugin
         }
     }
 
-    public function ugroup_manager_update_ugroup_binding_add($params)
+    public function ugroup_manager_update_ugroup_binding_add($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getGerritMembershipManager()->addUGroupBinding(
             $params['ugroup'],
@@ -1546,7 +1546,7 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function ugroup_manager_update_ugroup_binding_remove($params)
+    public function ugroup_manager_update_ugroup_binding_remove($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getGerritMembershipManager()->removeUGroupBinding(
             $params['ugroup']
@@ -2031,7 +2031,7 @@ class GitPlugin extends Plugin
      *     'user' => PFUser
      *     'html' => string
      */
-    public function manage_third_party_apps($params)
+    public function manage_third_party_apps($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->resynch_gerrit_groups_with_user($params);
     }
@@ -2042,7 +2042,7 @@ class GitPlugin extends Plugin
      *     'user' => PFUser
      *     'html' => string
      */
-    private function resynch_gerrit_groups_with_user($params)
+    private function resynch_gerrit_groups_with_user($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $this->getGerritServerFactory()->hasRemotesSetUp()) {
             return;
@@ -2067,12 +2067,12 @@ class GitPlugin extends Plugin
     /**
      * @see Event::USER_RENAME
      */
-    public function systemevent_user_rename($params)
+    public function systemevent_user_rename($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getGitSystemEventManager()->queueUserRenameUpdate($params['old_user_name'], $params['user']);
     }
 
-    public function register_project_creation($params)
+    public function register_project_creation($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getPermissionsManager()->duplicateWithStaticMapping(
             $params['template_id'],
@@ -2191,7 +2191,7 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function fill_project_history_sub_events($params)
+    public function fill_project_history_sub_events($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         array_push(
             $params['subEvents']['event_others'],
@@ -2212,7 +2212,7 @@ class GitPlugin extends Plugin
     /**
      * @see Event::POST_EVENTS_ACTIONS
      */
-    public function post_system_events_actions($params)
+    public function post_system_events_actions($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $this->pluginIsConcerned($params)) {
             return;
@@ -2245,7 +2245,7 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function rest_project_get_git($params)
+    public function rest_project_get_git($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $class            = "Tuleap\\Git\\REST\\".$params['version']."\\ProjectResource";
         $project          = $params['project'];
@@ -2267,7 +2267,7 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function rest_project_options_git($params)
+    public function rest_project_options_git($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['activated'] = true;
     }
@@ -2275,7 +2275,7 @@ class GitPlugin extends Plugin
     /**
      * @see Event::REST_PROJECT_RESOURCES
      */
-    public function rest_project_resources(array $params)
+    public function rest_project_resources(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $injector = new Git_REST_ResourcesInjector();
         $injector->declareProjectPlanningResource($params['resources'], $params['project']);
@@ -2284,7 +2284,7 @@ class GitPlugin extends Plugin
     /**
      * @see REST_RESOURCES
      */
-    public function rest_resources($params)
+    public function rest_resources($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $injector = new Git_REST_ResourcesInjector();
         $injector->populate($params['restler']);
@@ -2370,7 +2370,7 @@ class GitPlugin extends Plugin
         }
     }
 
-    public function get_services_allowed_for_restricted($params)
+    public function get_services_allowed_for_restricted($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['allowed_services'][] = $this->getServiceShortname();
     }
@@ -2392,7 +2392,7 @@ class GitPlugin extends Plugin
      * @see Event::SITE_ACCESS_CHANGE
      * @param array $params
      */
-    public function site_access_change(array $params)
+    public function site_access_change(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getGitPermissionsManager()->updateSiteAccess($params['old_value'], $params['new_value']);
 
@@ -2411,7 +2411,7 @@ class GitPlugin extends Plugin
     /**
      * @param PFUser user
      */
-    public function ldap_daily_synchro_update_user(PFUser $user)
+    public function ldap_daily_synchro_update_user(PFUser $user)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($user->getStatus() == PFUser::STATUS_SUSPENDED) {
             $factory = $this->getGerritServerFactory();
@@ -2425,7 +2425,7 @@ class GitPlugin extends Plugin
     }
 
     /** @see Event::SERVICES_TRUNCATED_EMAILS */
-    public function services_truncated_emails(array $params)
+    public function services_truncated_emails(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $project = $params['project'];
         if ($project->usesService($this->getServiceShortname())) {
@@ -2484,7 +2484,7 @@ class GitPlugin extends Plugin
         return new GitPhpAccessLogger($dao);
     }
 
-    public function codendi_daily_start()
+    public function codendi_daily_start()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $detector = new VersionDetector();
         if ($detector->isGitolite3()) {
@@ -2522,7 +2522,7 @@ class GitPlugin extends Plugin
         );
     }
 
-    public function collect_heartbeats_entries(HeartbeatsEntryCollection $collection)
+    public function collect_heartbeats_entries(HeartbeatsEntryCollection $collection)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $collector = new LatestHeartbeatsCollector(
             $this->getRepositoryFactory(),

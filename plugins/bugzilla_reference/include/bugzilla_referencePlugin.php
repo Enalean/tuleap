@@ -42,7 +42,7 @@ use Tuleap\Request\DispatchableWithRequest;
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class bugzilla_referencePlugin extends Plugin
+class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct($id)
     {
@@ -110,14 +110,14 @@ class bugzilla_referencePlugin extends Plugin
         });
     }
 
-    public function get_plugins_available_keywords_references(array $params)
+    public function get_plugins_available_keywords_references(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         foreach ($this->getReferenceRetriever()->getAllReferences() as $reference) {
             $params['keywords'][] = $reference->getKeyword();
         }
     }
 
-    public function get_available_reference_natures($params)
+    public function get_available_reference_natures($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['natures']['bugzilla'] =
             array(
@@ -144,7 +144,7 @@ class bugzilla_referencePlugin extends Plugin
     }
 
     /** @see \Event::POST_REFERENCE_EXTRACTED */
-    public function post_reference_extracted(array $params)
+    public function post_reference_extracted(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         /** @var CrossReference $cross_reference */
         $cross_reference = $params['cross_reference'];
@@ -173,7 +173,7 @@ class bugzilla_referencePlugin extends Plugin
     }
 
     /** @see \Event::REMOVE_CROSS_REFERENCE */
-    public function remove_cross_reference(array $params)
+    public function remove_cross_reference(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         /** @var CrossReference $cross_reference */
         $cross_reference = $params['cross_reference'];
@@ -188,7 +188,7 @@ class bugzilla_referencePlugin extends Plugin
     }
 
     /** @see \Event::GET_REFERENCE_ADMIN_CAPABILITIES */
-    public function get_reference_admin_capabilities(array $params)
+    public function get_reference_admin_capabilities(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         /** @var Reference $reference */
         $reference = $params['reference'];
@@ -200,7 +200,7 @@ class bugzilla_referencePlugin extends Plugin
     }
 
     /** @see \Event::CAN_USER_CREATE_REFERENCE_WITH_THIS_NATURE */
-    public function can_user_create_reference_with_this_nature(array $params)
+    public function can_user_create_reference_with_this_nature(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['nature'] === 'bugzilla') {
             $params['can_create'] = false;

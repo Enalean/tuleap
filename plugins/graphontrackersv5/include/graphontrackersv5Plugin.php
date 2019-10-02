@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 -Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
  *
@@ -28,28 +28,28 @@ use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ .  '/../vendor/autoload.php';
 
-class GraphOnTrackersV5Plugin extends Plugin
+class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const RENDERER_TYPE = 'plugin_graphontrackersv5';
 
-    var $report_id;
-    var $chunksz;
-    var $offset;
-    var $advsrch;
-    var $morder;
-    var $prefs;
-    var $group_id;
-    var $atid;
-    var $set;
-    var $report_graphic_id;
-    var $allowedForProject;
+    var $report_id; //phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
+    var $chunksz;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
+    var $offset;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
+    var $advsrch;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
+    var $morder;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
+    var $prefs;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
+    var $group_id;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
+    var $atid;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
+    var $set;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
+    var $report_graphic_id;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
+    var $allowedForProject;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
 
     /**
      *
      *
      * @param int $id plugin id
      */
-    function __construct($id)
+    public function __construct($id)
     {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
@@ -100,7 +100,7 @@ class GraphOnTrackersV5Plugin extends Plugin
      *
      * @return void
      */
-    public function tracker_report_renderer_instance($params)
+    public function tracker_report_renderer_instance($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['type'] == self::RENDERER_TYPE) {
             require_once('GraphOnTrackersV5_Renderer.class.php');
@@ -149,7 +149,7 @@ class GraphOnTrackersV5Plugin extends Plugin
      * @param string type the type of the new renderer
      * @param Report report the report
      */
-    public function tracker_report_add_renderer($params)
+    public function tracker_report_add_renderer($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['type'] == self::RENDERER_TYPE) {
             //Nothing to do for now
@@ -164,7 +164,7 @@ class GraphOnTrackersV5Plugin extends Plugin
      * @param string type the type of the new renderer
      * @param Report report the report
      */
-    public function tracker_report_create_renderer($params)
+    public function tracker_report_create_renderer($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['type'] == self::RENDERER_TYPE) {
             //Nothing to do for now
@@ -176,7 +176,7 @@ class GraphOnTrackersV5Plugin extends Plugin
      *
      * @param array types Output parameter. Expected format: $types['my_type'] => 'Label of the type'
      */
-    public function tracker_report_renderer_types($params)
+    public function tracker_report_renderer_types($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['types'][self::RENDERER_TYPE] = $GLOBALS['Language']->getText('plugin_tracker_report', 'charts');
     }
@@ -186,7 +186,7 @@ class GraphOnTrackersV5Plugin extends Plugin
      *
      * @param array types Output parameter. Expected format: $types['my_type'] => 'Label of the type'
      */
-    public function trackers_get_renderers($params)
+    public function trackers_get_renderers($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['renderer_type'] == 'plugin_graphontrackersv5') {
             require_once('GraphOnTrackersV5_Renderer.class.php');
@@ -244,7 +244,7 @@ class GraphOnTrackersV5Plugin extends Plugin
     /**
      * function to get plugin info
      */
-    function getPluginInfo()
+    public function getPluginInfo()
     {
         if (!is_a($this->pluginInfo, 'GraphOnTrackersV5PluginInfo')) {
             require_once('GraphOnTrackersV5PluginInfo.class.php');
@@ -283,7 +283,7 @@ class GraphOnTrackersV5Plugin extends Plugin
         return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/') === 0;
     }
 
-    function graphontrackersv5_load_chart_factories($params)
+    public function graphontrackersv5_load_chart_factories($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         require_once('GraphOnTrackersV5_Renderer.class.php');
         require_once('data-access/GraphOnTrackersV5_Chart_Bar.class.php');
@@ -327,7 +327,7 @@ class GraphOnTrackersV5Plugin extends Plugin
     /**
      * @see javascript_file
      */
-    public function javascript_file()
+    public function javascript_file()//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tracker_plugin = PluginManager::instance()->getPluginByName('tracker');
         if ($tracker_plugin->currentRequestIsForPlugin()) {

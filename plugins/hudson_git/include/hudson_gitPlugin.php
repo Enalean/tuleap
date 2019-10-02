@@ -35,7 +35,7 @@ use Tuleap\Git\GitViews\RepoManagement\Pane\Hooks;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 
-class hudson_gitPlugin extends PluginWithLegacyInternalRouting
+class hudson_gitPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const DISPLAY_HUDSON_ADDITION_INFO = 'display_hudson_addition_info';
 
@@ -53,7 +53,7 @@ class hudson_gitPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    public function display_hudson_addition_info($params)
+    public function display_hudson_addition_info($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['installed'] = defined('GIT_BASE_URL');
     }
@@ -78,7 +78,7 @@ class hudson_gitPlugin extends PluginWithLegacyInternalRouting
     }
 
     /** @see Tuleap\Git\GitViews\RepoManagement\Pane\Hooks::ADDITIONAL_WEBHOOKS */
-    public function plugin_git_settings_additional_webhooks(array $params)
+    public function plugin_git_settings_additional_webhooks(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isAllowed($params['repository']->getProjectId())) {
             $xzibit = new GitWebhooksSettingsEnhancer(
@@ -112,7 +112,7 @@ class hudson_gitPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    public function git_hook_post_receive_ref_update($params)
+    public function git_hook_post_receive_ref_update($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isAllowed($params['repository']->getProjectId())) {
             $http_client     = HttpClientFactory::createClient();

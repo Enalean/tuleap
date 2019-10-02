@@ -32,10 +32,10 @@ use Tuleap\Userlog\UserLogRouter;
 require_once 'constants.php';
 require_once __DIR__. '/../vendor/autoload.php';
 
-class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRequest
+class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRequest //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
-    function __construct($id)
+    public function __construct($id)
     {
         parent::__construct($id);
         $this->addHook('site_admin_option_hook', 'siteAdminHooks', false);
@@ -49,7 +49,7 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
     }
 
-    public function burning_parrot_get_stylesheets($params)
+    public function burning_parrot_get_stylesheets($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/userlog') === 0) {
             $variant = $params['variant'];
@@ -57,14 +57,14 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
         }
     }
 
-    public function burning_parrot_get_javascript_files($params)
+    public function burning_parrot_get_javascript_files($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/userlog') === 0) {
             $params['javascript_files'][] = $this->getPluginPath() .'/scripts/user-logging-date-picker.js';
         }
     }
 
-    function &getPluginInfo()
+    public function &getPluginInfo()
     {
         if (!is_a($this->pluginInfo, 'UserLogPluginInfo')) {
             require_once('UserLogPluginInfo.class.php');
@@ -73,7 +73,7 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
         return $this->pluginInfo;
     }
 
-    function cssFile($params)
+    public function cssFile($params)
     {
         // Only show the stylesheet if we're actually in the Docman pages.
         // This stops styles inadvertently clashing with the main site.

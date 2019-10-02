@@ -30,7 +30,7 @@ use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
-class hudsonPlugin extends PluginWithLegacyInternalRouting
+class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const ICONS_PATH = '/plugins/hudson/themes/default/images/ic/';
 
@@ -83,7 +83,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\Hudson\HudsonService::class;
     }
 
-    function cssFile($params)
+    public function cssFile($params)
     {
         // Only show the stylesheet if we're actually in the hudson pages.
         // This stops styles inadvertently clashing with the main site.
@@ -98,7 +98,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    function jsFile($params)
+    public function jsFile($params)
     {
         // Only include the js files if we're actually in the IM pages.
         // This stops styles inadvertently clashing with the main site.
@@ -115,7 +115,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
      *
      * @param mixed $params ($param['group_id'] the ID of the deleted project)
      */
-    function projectIsDeleted($params)
+    public function projectIsDeleted($params)
     {
         $group_id = $params['group_id'];
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
@@ -234,7 +234,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
         ));
     }
 
-    function getAvailableReferenceNatures($params)
+    public function getAvailableReferenceNatures($params)
     {
         $hudson_plugin_reference_natures = array(
             'hudson_build'  => array('keyword' => 'build', 'label' => $GLOBALS['Language']->getText('plugin_hudson', 'reference_build_nature_key')),
@@ -327,7 +327,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    function ajax_reference_sparkline($params)
+    public function ajax_reference_sparkline($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         require_once('HudsonJob.class.php');
         require_once('HudsonBuild.class.php');
@@ -399,7 +399,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting
      *
      * @return void
      */
-    public function statistics_collector($params)
+    public function statistics_collector($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (!empty($params['formatter'])) {
             $formatter = $params['formatter'];
