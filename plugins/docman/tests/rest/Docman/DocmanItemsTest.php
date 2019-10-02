@@ -303,10 +303,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals($file['embedded_file_properties'], null);
         $this->assertEquals($link['embedded_file_properties'], null);
         $this->assertEquals($embedded['embedded_file_properties']['file_type'], 'text/html');
-        $this->assertEquals(
-            $embedded['embedded_file_properties']['content'],
-            file_get_contents(dirname(__DIR__) . '/_fixtures/docmanFile/embeddedFile')
-        );
+        $this->assertArrayNotHasKey('content', $embedded['embedded_file_properties']);
         $this->assertEquals($wiki['embedded_file_properties'], null);
 
         $this->assertEquals($folder['link_properties'], null);

@@ -21,7 +21,7 @@
 namespace Tuleap\Docman\REST\v1;
 
 use Codendi_HTMLPurifier;
-use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
+use Tuleap\Docman\REST\v1\EmbeddedFiles\IEmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsRepresentation;
@@ -91,7 +91,7 @@ class ItemRepresentation
     public $file_properties;
 
     /**
-     * @var EmbeddedFilePropertiesRepresentation
+     * @var IEmbeddedFilePropertiesRepresentation
      */
     public $embedded_file_properties;
 
@@ -164,7 +164,7 @@ class ItemRepresentation
         ?ItemLockInfoRepresentation $lock_info,
         ?DocmanItemPermissionsForGroupsRepresentation $permissions_for_groups,
         ?FilePropertiesRepresentation $file_properties,
-        ?EmbeddedFilePropertiesRepresentation $embedded_file_properties,
+        ?IEmbeddedFilePropertiesRepresentation $embedded_file_properties,
         ?LinkPropertiesRepresentation $link_properties,
         ?WikiPropertiesRepresentation $wiki_properties
     ) {

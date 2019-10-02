@@ -26,7 +26,7 @@ use Docman_ItemFactory;
 use Project;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
-use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
+use Tuleap\Docman\REST\v1\EmbeddedFiles\IEmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Metadata\UnknownMetadataException;
@@ -135,7 +135,7 @@ class ItemRepresentationBuilder
         \PFUser $current_user,
         ?string $type,
         ?FilePropertiesRepresentation $file_properties = null,
-        ?EmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
+        ?IEmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
         ?LinkPropertiesRepresentation $link_properties = null,
         ?WikiPropertiesRepresentation $wiki_properties = null
     ) {
