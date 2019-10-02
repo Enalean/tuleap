@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\Banner\Banner;
+
 class FlamingParrot_ContainerPresenter
 {
     /** @var array */
@@ -67,6 +69,10 @@ class FlamingParrot_ContainerPresenter
      * @var bool
      */
     public $project_is_private_incl_restricted;
+    /**
+     * @var string
+     */
+    public $purified_banner_message = '';
 
     public function __construct(
         array $breadcrumbs,
@@ -79,6 +85,7 @@ class FlamingParrot_ContainerPresenter
         $feedback_content,
         $version,
         $sidebar_collapsable,
+        ?Banner $banner,
         ?Project $project = null
     ) {
         $this->breadcrumbs         = $breadcrumbs;
@@ -99,6 +106,14 @@ class FlamingParrot_ContainerPresenter
             $this->project_is_public_incl_restricted  = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;
             $this->project_is_private                 = $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED;
             $this->project_is_private_incl_restricted = $project->getAccess() === Project::ACCESS_PRIVATE;
+        }
+
+        if ($banner !== null) {
+            $purifier                      = Codendi_HTMLPurifier::instance();
+            $this->purified_banner_message = $purifier->purify(
+                $banner->getMessage(),
+                Codendi_HTMLPurifier::CONFIG_MINIMAL_FORMATTING_NO_NEWLINE
+            );
         }
     }
 
