@@ -51,7 +51,6 @@ class ExternalLinkRedirectorTest extends TestCase
         $this->user    = Mockery::mock(PFUser::class);
         $this->request = Mockery::mock(\HTTPRequest::class);
         $this->project = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getId')->andReturn(102);
 
         $this->request->shouldReceive("getProject")->andReturn($this->project);
     }
@@ -59,7 +58,8 @@ class ExternalLinkRedirectorTest extends TestCase
     public function testItShouldDoNothingIfUserIsAnonymous(): void
     {
         $folder_id = 10;
-        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id);
+        $root_folder_id = 3;
+        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
 
         $this->request->shouldReceive("exist")->with("action")->andReturn(false);
         $this->user->shouldReceive('isAnonymous')->andReturn(true);
@@ -71,7 +71,8 @@ class ExternalLinkRedirectorTest extends TestCase
     public function testItShouldNotRedirectWhenUserPreferenceIsForNewDocmanAndRequestIsForDocmanAdministrationUI(): void
     {
         $folder_id = 10;
-        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id);
+        $root_folder_id = 3;
+        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
 
         $this->request->shouldReceive("exist")->with("action")->andReturn(true);
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
@@ -83,24 +84,91 @@ class ExternalLinkRedirectorTest extends TestCase
     public function testItShouldRedirectUserWhenShouldRedirectUserIsSetToTrue(): void
     {
         $folder_id = 10;
-        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id);
+        $root_folder_id = 3;
+        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
 
         $this->request->shouldReceive("exist")->with("action")->andReturn(false);
+        $this->request->shouldReceive("exist")->with("group_id")->andReturn(false);
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
+
+        $this->project->shouldReceive('getUnixNameLowerCase')->once()->andReturn("project-short-name");
 
         $redirector->checkAndStoreIfUserHasToBeenRedirected(true);
         $this->assertTrue($redirector->shouldRedirectUserOnNewUI());
+        $this->assertEquals("/plugins/document/project-short-name/10", $redirector->getUrlRedirection());
     }
 
     public function testItShouldNotRedirectUserWhenShouldRedirectUserIsSetToFalse(): void
     {
         $folder_id = 10;
-        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id);
+        $root_folder_id = 3;
+        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
 
         $this->request->shouldReceive("exist")->with("action")->andReturn(false);
+        $this->request->shouldReceive("exist")->with("group_id")->andReturn(false);
         $this->user->shouldReceive('isAnonymous')->andReturn(false);
 
         $redirector->checkAndStoreIfUserHasToBeenRedirected(false);
         $this->assertFalse($redirector->shouldRedirectUserOnNewUI());
+    }
+
+    public function testItShouldStoreDocumentIdWhenUrlIsForAccessingToASpecificDocument(): void
+    {
+        $folder_id = 10;
+        $root_folder_id = 3;
+        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
+
+        $this->request->shouldReceive("exist")->with("action")->andReturn(false);
+        $this->request->shouldReceive("exist")->with("group_id")->andReturn(102);
+        $this->request->shouldReceive("exist")->with("id")->andReturn($folder_id);
+        $this->request->shouldReceive("get")->with("id")->andReturn($folder_id);
+        $this->user->shouldReceive('isAnonymous')->andReturn(false);
+
+        $this->project->shouldReceive('getUnixNameLowerCase')->once()->andReturn("project-short-name");
+
+        $redirector->checkAndStoreIfUserHasToBeenRedirected(true);
+
+        $this->assertTrue($redirector->shouldRedirectUserOnNewUI());
+        $this->assertEquals("/plugins/document/project-short-name/preview/10", $redirector->getUrlRedirection());
+    }
+
+    public function testItDoesNotUseUserPReferencyWhenUrlIsForAccessingToASpecificDocument(): void
+    {
+        $folder_id      = 10;
+        $root_folder_id = 3;
+        $redirector     = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
+
+        $this->request->shouldReceive("exist")->with("action")->andReturn(false);
+        $this->request->shouldReceive("exist")->with("group_id")->andReturn(102);
+        $this->request->shouldReceive("exist")->with("id")->andReturn($folder_id);
+        $this->request->shouldReceive("get")->with("id")->andReturn($folder_id);
+        $this->user->shouldReceive('isAnonymous')->andReturn(false);
+
+        $this->project->shouldReceive('getUnixNameLowerCase')->once()->andReturn("project-short-name");
+
+        $redirector->checkAndStoreIfUserHasToBeenRedirected(false);
+
+        $this->assertTrue($redirector->shouldRedirectUserOnNewUI());
+        $this->assertEquals("/plugins/document/project-short-name/preview/10", $redirector->getUrlRedirection());
+    }
+
+    public function testItShouldStoreDocumentIdAndRedirectToRootWhenUrlIsForAccessingRootDocument(): void
+    {
+        $folder_id = 0;
+        $root_folder_id = 3;
+        $redirector = new ExternalLinkRedirector($this->user, $this->request, $folder_id, $root_folder_id);
+
+        $this->request->shouldReceive("exist")->with("action")->andReturn(false);
+        $this->request->shouldReceive("exist")->with("group_id")->andReturn(102);
+        $this->request->shouldReceive("exist")->with("id")->andReturn($root_folder_id);
+        $this->request->shouldReceive("get")->with("id")->andReturn($root_folder_id);
+        $this->user->shouldReceive('isAnonymous')->andReturn(false);
+
+        $this->project->shouldReceive('getUnixNameLowerCase')->once()->andReturn("project-short-name");
+
+        $redirector->checkAndStoreIfUserHasToBeenRedirected(true);
+
+        $this->assertTrue($redirector->shouldRedirectUserOnNewUI());
+        $this->assertEquals("/plugins/document/project-short-name/", $redirector->getUrlRedirection());
     }
 }
