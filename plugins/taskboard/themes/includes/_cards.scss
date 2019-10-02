@@ -32,6 +32,11 @@
         &:not([class*='taskboard-card-background-']) > .taskboard-card-accessibility {
             display: none;
         }
+
+        > .taskboard-card-content
+        > .taskboard-card-info {
+            margin: 0 5px 0 0;
+        }
     }
 
     &.taskboard-card-parent {
