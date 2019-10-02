@@ -22,6 +22,7 @@ import TaskBoardBody from "./TaskBoardBody.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import SwimlaneSkeleton from "./SwimlaneSkeleton.vue";
 import { Swimlane } from "../../type";
+import CollapsedSwimlane from "./Swimlane/CollapsedSwimlane.vue";
 
 describe("TaskBoardBody", () => {
     it("displays swimlanes for solo cards or cards with children", () => {
@@ -29,20 +30,21 @@ describe("TaskBoardBody", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }],
                         swimlane: {
                             swimlanes: [
                                 {
                                     card: {
                                         id: 43,
                                         has_children: false
-                                    }
+                                    },
+                                    is_collapsed: false
                                 } as Swimlane,
                                 {
                                     card: {
                                         id: 44,
                                         has_children: true
-                                    }
+                                    },
+                                    is_collapsed: false
                                 } as Swimlane
                             ]
                         }
@@ -51,6 +53,29 @@ describe("TaskBoardBody", () => {
             }
         });
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("displays collapsed swimlanes", () => {
+        const wrapper = shallowMount(TaskBoardBody, {
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        swimlane: {
+                            swimlanes: [
+                                {
+                                    card: {
+                                        id: 43,
+                                        has_children: false
+                                    },
+                                    is_collapsed: true
+                                } as Swimlane
+                            ]
+                        }
+                    }
+                })
+            }
+        });
+        expect(wrapper.contains(CollapsedSwimlane)).toBe(true);
     });
 
     it("loads all swimlanes as soon as the component is created", () => {

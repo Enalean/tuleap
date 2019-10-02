@@ -19,28 +19,43 @@
   -->
 
 <template>
-    <div class="taskboard-swimlane">
-        <parent-cell v-bind:swimlane="swimlane"/>
-        <column-with-children v-for="(col, index) of columns" v-bind:key="col.id" v-bind:column="col" v-bind:column_index="index" v-bind:swimlane="swimlane"/>
+    <div class="taskboard-cell taskboard-cell-swimlane-header" v-bind:class="fullscreen_class">
+        <i class="fa fa-minus-square taskboard-swimlane-toggle"
+           v-bind:class="additional_classnames"
+           role="button"
+           v-bind:title="title"
+           v-on:click="collapseSwimlane(swimlane)"
+        ></i>
+        <slot/>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { ColumnDefinition, Swimlane } from "../../../type";
-import { State } from "vuex-class";
-import ParentCell from "./ParentCell.vue";
-import ColumnWithChildren from "./ColumnWithChildren.vue";
+import { Swimlane } from "../../../type";
+import { namespace } from "vuex-class";
 
-@Component({
-    components: { ColumnWithChildren, ParentCell }
-})
-export default class CardWithChildren extends Vue {
+const fullscreen = namespace("fullscreen");
+const swimlane_store = namespace("swimlane");
+
+@Component
+export default class SwimlaneHeader extends Vue {
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
 
-    @State
-    readonly columns!: Array<ColumnDefinition>;
+    @fullscreen.Getter
+    readonly fullscreen_class!: string;
+
+    @swimlane_store.Mutation
+    readonly collapseSwimlane!: (swimlane: Swimlane) => void;
+
+    get additional_classnames(): string {
+        return `taskboard-swimlane-toggle-${this.swimlane.card.color}`;
+    }
+
+    get title(): string {
+        return this.$gettext("Collapse");
+    }
 }
 </script>

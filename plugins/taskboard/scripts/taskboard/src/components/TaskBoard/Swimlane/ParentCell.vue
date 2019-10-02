@@ -19,38 +19,33 @@
   -->
 
 <template>
-    <div class="taskboard-cell taskboard-cell-swimlane-header" v-bind:class="fullscreen_class">
+    <swimlane-header v-bind:swimlane="swimlane">
         <div class="taskboard-cell-parent-card">
-            <parent-card v-bind:card="card"/>
-            <parent-card-remaining-effort v-bind:card="card"/>
+            <parent-card v-bind:card="swimlane.card"/>
+            <parent-card-remaining-effort v-bind:card="swimlane.card"/>
         </div>
-        <no-mapping-message v-if="should_no_mapping_message_be_displayed" v-bind:card="card"/>
-    </div>
+        <no-mapping-message v-if="should_no_mapping_message_be_displayed" v-bind:card="swimlane.card"/>
+    </swimlane-header>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { namespace } from "vuex-class";
 import { Component, Prop } from "vue-property-decorator";
-import { Card } from "../../../type";
+import { Swimlane } from "../../../type";
 import ParentCard from "../Card/ParentCard.vue";
 import NoMappingMessage from "./NoMappingMessage.vue";
 import ParentCardRemainingEffort from "../Card/ParentCardRemainingEffort.vue";
-
-const fullscreen = namespace("fullscreen");
+import SwimlaneHeader from "./SwimlaneHeader.vue";
 
 @Component({
-    components: { NoMappingMessage, ParentCard, ParentCardRemainingEffort }
+    components: { NoMappingMessage, ParentCard, ParentCardRemainingEffort, SwimlaneHeader }
 })
 export default class ParentCell extends Vue {
     @Prop({ required: true })
-    readonly card!: Card;
-
-    @fullscreen.Getter
-    readonly fullscreen_class!: string;
+    readonly swimlane!: Swimlane;
 
     get should_no_mapping_message_be_displayed(): boolean {
-        return !this.card.has_children;
+        return !this.swimlane.card.has_children;
     }
 }
 </script>

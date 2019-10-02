@@ -38,6 +38,7 @@ export interface Swimlane {
     card: Card;
     children_cards: Array<Card>;
     is_loading_children_cards: boolean;
+    is_collapsed: boolean;
 }
 
 export interface MappedListValue extends ListValue {

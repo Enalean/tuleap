@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import SoloCard from "./SoloCard.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
-import { Card, ColumnDefinition } from "../../../type";
+import { ColumnDefinition, Swimlane } from "../../../type";
 
 describe("SoloCard", () => {
     it("displays the parent card in its own cell when status is null", () => {
@@ -42,10 +42,12 @@ describe("SoloCard", () => {
                 })
             },
             propsData: {
-                card: {
-                    id: 43,
-                    mapped_list_value: null
-                } as Card
+                swimlane: {
+                    card: {
+                        id: 43,
+                        mapped_list_value: null
+                    }
+                } as Swimlane
             }
         });
 
@@ -79,14 +81,16 @@ describe("SoloCard", () => {
                 })
             },
             propsData: {
-                card: {
-                    id: 43,
-                    tracker_id: 666,
-                    mapped_list_value: {
-                        id: 1001,
-                        label: "Fixed"
+                swimlane: {
+                    card: {
+                        id: 43,
+                        tracker_id: 666,
+                        mapped_list_value: {
+                            id: 1001,
+                            label: "Fixed"
+                        }
                     }
-                } as Card
+                } as Swimlane
             }
         });
 
@@ -132,70 +136,19 @@ describe("SoloCard", () => {
                 })
             },
             propsData: {
-                card: {
-                    id: 43,
-                    tracker_id: 43,
-                    mapped_list_value: {
-                        id: 1001,
-                        label: "Fixed"
+                swimlane: {
+                    card: {
+                        id: 43,
+                        tracker_id: 43,
+                        mapped_list_value: {
+                            id: 1001,
+                            label: "Fixed"
+                        }
                     }
-                } as Card
+                } as Swimlane
             }
         });
 
         expect(wrapper.element).toMatchSnapshot();
-    });
-
-    it("toggles the fullscreen class when the card is in a column and the taskboard is in fullscreen mode", () => {
-        const wrapper = shallowMount(SoloCard, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        columns: [
-                            {
-                                id: 2,
-                                label: "To do",
-                                mappings: [
-                                    { tracker_id: 42, accepts: [{ id: 1002 }] },
-                                    {
-                                        tracker_id: 43,
-                                        accepts: [{ id: 1003 }]
-                                    }
-                                ]
-                            } as ColumnDefinition,
-                            {
-                                id: 3,
-                                label: "Done",
-                                mappings: [
-                                    { tracker_id: 42, accepts: [{ id: 1000 }] },
-                                    {
-                                        tracker_id: 43,
-                                        accepts: [{ id: 1001 }]
-                                    }
-                                ]
-                            } as ColumnDefinition
-                        ],
-                        fullscreen: {
-                            is_taskboard_in_fullscreen_mode: true
-                        }
-                    },
-                    getters: {
-                        "fullscreen/fullscreen_class": "taskboard-fullscreen"
-                    }
-                })
-            },
-            propsData: {
-                card: {
-                    id: 43,
-                    tracker_id: 43,
-                    mapped_list_value: {
-                        id: 1001,
-                        label: "Fixed"
-                    }
-                } as Card
-            }
-        });
-
-        expect(wrapper.contains(".taskboard-fullscreen")).toBe(true);
     });
 });

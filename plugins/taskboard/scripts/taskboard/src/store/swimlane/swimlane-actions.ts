@@ -33,11 +33,16 @@ export async function loadSwimlanes(
             },
             getCollectionCallback: (collection: Card[]): Swimlane[] => {
                 const swimlanes = collection.map(card => {
-                    return { card, children_cards: [], is_loading_children_cards: false };
+                    return {
+                        card,
+                        children_cards: [],
+                        is_loading_children_cards: false,
+                        is_collapsed: false
+                    };
                 });
                 context.commit("addSwimlanes", swimlanes);
                 swimlanes
-                    .filter(swimlane => swimlane.card.has_children === true)
+                    .filter(swimlane => swimlane.card.has_children)
                     .map(swimlane_with_children =>
                         context.dispatch("loadChildrenCards", swimlane_with_children)
                     );

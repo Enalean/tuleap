@@ -70,12 +70,14 @@ describe("Swimlane state actions", () => {
                 {
                     card: { id: 43 },
                     children_cards: [],
-                    is_loading_children_cards: false
+                    is_loading_children_cards: false,
+                    is_collapsed: false
                 },
                 {
                     card: { id: 44 },
                     children_cards: [],
-                    is_loading_children_cards: false
+                    is_loading_children_cards: false,
+                    is_collapsed: false
                 }
             ]);
         });
@@ -138,7 +140,8 @@ describe("Swimlane state actions", () => {
             swimlane = {
                 card: { id: 197 } as Card,
                 children_cards: [],
-                is_loading_children_cards: false
+                is_loading_children_cards: false,
+                is_collapsed: false
             };
         });
 

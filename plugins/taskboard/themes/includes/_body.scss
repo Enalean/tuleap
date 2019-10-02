@@ -26,7 +26,6 @@
 
 .taskboard-swimlane {
     display: flex;
-    justify-self: first baseline;
     flex: 1;
 
     &:first-child > .taskboard-cell {
@@ -37,6 +36,11 @@
     &:last-child > .taskboard-cell {
         border-bottom: 0;
     }
+}
+
+.taskboard-swimlane-collapsed {
+    max-height: 62px;
+
 }
 
 .taskboard-cell {
@@ -50,10 +54,32 @@
 
     &:first-child {
         background: mix($tlp-theme-background-color, $tlp-ui-white, 60%);
+
+        &:hover > .taskboard-swimlane-toggle {
+            opacity: 1;
+            background: mix($tlp-theme-background-color, $tlp-ui-white, 60%);
+        }
     }
 
     &:last-child {
         border-right: 0;
+    }
+}
+
+.taskboard-swimlane-toggle {
+    position: absolute;
+    z-index: 2;
+    top: 5px;
+    left: 6px;
+    transition: opacity ease-in-out 100ms;
+    opacity: 0;
+    font-size: 14px;
+    cursor: pointer;
+
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.taskboard-swimlane-toggle-#{$color-name}::before {
+            color: map-get($colors, 'primary');
+        }
     }
 }
 
