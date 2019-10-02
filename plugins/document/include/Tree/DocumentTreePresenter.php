@@ -22,6 +22,8 @@ declare(strict_types = 1);
 
 namespace Tuleap\Document\Tree;
 
+use CSRFSynchronizerToken;
+
 class DocumentTreePresenter
 {
     /**
@@ -64,6 +66,14 @@ class DocumentTreePresenter
      * @var bool
      */
     public $is_obsolescence_date_metadata_used;
+    /**
+     * @var string
+     */
+    public $csrf_token_name;
+    /**
+     * @var string
+     */
+    public $csrf_token;
 
     public function __construct(
         \Project $project,
@@ -71,7 +81,8 @@ class DocumentTreePresenter
         bool $embedded_are_allowed,
         bool $is_item_status_metadata_used,
         bool $is_obsolescence_date_metadata_used,
-        bool $only_siteadmin_can_delete_option
+        bool $only_siteadmin_can_delete_option,
+        CSRFSynchronizerToken $csrf
     ) {
         $this->project_id                         = $project->getID();
         $this->project_name                       = $project->getUnixNameLowerCase();
@@ -83,5 +94,7 @@ class DocumentTreePresenter
         $this->embedded_are_allowed               = $embedded_are_allowed;
         $this->is_item_status_metadata_used       = $is_item_status_metadata_used;
         $this->is_obsolescence_date_metadata_used = $is_obsolescence_date_metadata_used;
+        $this->csrf_token_name                    = $csrf->getTokenName();
+        $this->csrf_token                         = $csrf->getToken();
     }
 }

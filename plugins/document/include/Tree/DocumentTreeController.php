@@ -22,6 +22,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Document\Tree;
 
+use CSRFSynchronizerToken;
 use ForgeConfig;
 use HTTPRequest;
 use Project;
@@ -76,7 +77,8 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 (bool)$this->docman_plugin_info->getPropertyValueForName('embedded_are_allowed'),
                 $is_item_status_used,
                 $is_obsolescence_date_used,
-                (bool) $this->docman_plugin_info->getPropertyValueForName('only_siteadmin_can_delete')
+                (bool) $this->docman_plugin_info->getPropertyValueForName('only_siteadmin_can_delete'),
+                new CSRFSynchronizerToken('plugin-document')
             )
         );
 

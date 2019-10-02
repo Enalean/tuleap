@@ -281,6 +281,9 @@ msgstr "Verrouiller"
 msgid "Lock new version"
 msgstr "Verrouiller la nouvelle version"
 
+msgid "Mail content is required"
+msgstr "Le contenu du mail est requis"
+
 msgid "Manager"
 msgstr "Gestionnaire"
 
@@ -375,6 +378,11 @@ msgstr "Permissions"
 msgid "Please describe the changes of the new version here"
 msgstr "Merci de décrire ici le changement de version"
 
+msgid "Please enter a reason for why you need to access this document."
+msgstr ""
+"Merci d'indiquer la raison pour laquelle vous avez besoin d'accéder à ce "
+"document."
+
 msgid ""
 "Please note that if you check this option, the referenced wiki page will no "
 "longer exist in the wiki service too."
@@ -384,6 +392,9 @@ msgstr ""
 
 msgid "Please start again."
 msgstr "Merci de bien vouloir recommencer."
+
+msgid "Please write something meaningful for the admin."
+msgstr "Veuillez soumettre un message pertinent afin d'aider l'administrateur."
 
 msgid "Project documentation"
 msgstr "Documentation du projet"
@@ -405,6 +416,9 @@ msgstr "Rejeté"
 
 msgid "Reset the approval cycle."
 msgstr "Recommencer le cycle d'approbation."
+
+msgid "Send mail"
+msgstr "Envoyer un Email"
 
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
@@ -515,6 +529,13 @@ msgstr ""
 
 msgid "Wiki page"
 msgstr "Page wiki"
+
+msgid ""
+"Write your message below and click on the button to send your request to the "
+"project administrators"
+msgstr ""
+"Ecrivez votre message ci-dessous et cliquez sur le bouton pour envoyer votre "
+"requête aux administrateurs du projet."
 
 msgid "Writer"
 msgstr "Rédacteur"

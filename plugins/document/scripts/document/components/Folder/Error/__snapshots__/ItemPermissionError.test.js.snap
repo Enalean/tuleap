@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ItemPermissionError displays the error with a for to send custom email 1`] = `
+<div
+  class="empty-page document-folder-with-error"
+>
+  <div
+    class="empty-page-illustration"
+  >
+    <item-permission-error-svg-stub />
+  </div>
+   
+  <div
+    class="empty-page-text-with-small-text"
+  >
+    <translate-stub
+      tag="span"
+    >
+      You don't have read permission for this item.
+    </translate-stub>
+     
+    <div
+      class="empty-page-small-text"
+      data-current-language="en_US"
+      data-msgid="
+            You may only access documents you are granted read permission on.
+        "
+    >
+      
+            You may only access documents you are granted read permission on.
+        
+    </div>
+  </div>
+   
+  <form
+    action="/plugins/document/PermissionDeniedRequestMessage/101"
+    method="post"
+    name="display_form"
+  >
+    <input
+      name="challenge"
+      type="hidden"
+    />
+     
+    <div
+      class="tlp-form-element"
+    >
+      <label
+        class="tlp-label"
+        for="msg_private_project"
+      >
+        <translate-stub
+          tag="span"
+        >
+          Write your message below and click on the button to send your request to the project administrators
+        </translate-stub>
+         
+        <i
+          class="fa fa-asterisk"
+        />
+      </label>
+       
+      <textarea
+        cols="70"
+        id="msg_private_project"
+        name="msg_private_project"
+        placeholder="Please write something meaningful for the admin."
+        required="required"
+        rows="5"
+      />
+       
+      <input
+        name="groupId"
+        type="hidden"
+        value="101"
+      />
+       
+      <!---->
+    </div>
+     
+    <button
+      class="tlp-button-primary"
+      type="button"
+    >
+      <i
+        class="fa fa-envelope-o tlp-button-icon"
+      />
+       
+      <translate-stub
+        tag="span"
+      >
+        Send mail
+      </translate-stub>
+    </button>
+  </form>
+</div>
+`;
