@@ -33,5 +33,8 @@
         <testsuite name="Tuleap DB Integration Tests">
             <directory>tests</directory>
         </testsuite>
+        <testsuite name="Plugins">
+            <directory>../../plugins/*/tests/integration</directory>
+        </testsuite>
     </testsuites>
 </phpunit>

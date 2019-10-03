@@ -51,7 +51,7 @@ class Transition_PostActionFactory
     private $frozen_fields_factory;
 
     /** @var HiddenFieldsetsFactory */
-    private $hidden_fields_factory;
+    private $hidden_fieldsets_factory;
 
     /**
      * Get html code to let someone choose a post action for a transition
@@ -187,6 +187,11 @@ class Transition_PostActionFactory
         $this->frozen_fields_factory = $frozen_fields_factory;
     }
 
+    public function setHiddenFieldsetsFactory(HiddenFieldsetsFactory $hidden_fieldsets_factory)
+    {
+        $this->hidden_fieldsets_factory = $hidden_fieldsets_factory;
+    }
+
     /** @return Transition_PostActionSubFactory */
     private function getSubFactory($post_action_short_name)
     {
@@ -244,13 +249,13 @@ class Transition_PostActionFactory
 
     private function getHiddenFieldsetsFactory(): HiddenFieldsetsFactory
     {
-        if (! $this->hidden_fields_factory) {
-            $this->hidden_fields_factory = new HiddenFieldsetsFactory(
+        if (! $this->hidden_fieldsets_factory) {
+            $this->hidden_fieldsets_factory = new HiddenFieldsetsFactory(
                 new HiddenFieldsetsDao(),
                 Tracker_FormElementFactory::instance()
             );
         }
-        return $this->hidden_fields_factory;
+        return $this->hidden_fieldsets_factory;
     }
 
     /** @return Transition_PostActionSubFactories */
@@ -260,7 +265,7 @@ class Transition_PostActionFactory
             $this->getFieldFactory(),
             $this->getCIBuildFactory(),
             $this->getFrozenFieldsFactory(),
-            $this->getHiddenFieldsetsFactory()
+            $this->getHiddenFieldsetsFactory(),
         ];
 
         return new Transition_PostActionSubFactories($sub_factories);

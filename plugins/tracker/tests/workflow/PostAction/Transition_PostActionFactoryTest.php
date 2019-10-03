@@ -19,16 +19,41 @@
  */
 
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsFactory;
+use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsFactory;
 
 require_once __DIR__.'/../../bootstrap.php';
 
 class Transition_PostActionFactory_BaseTest extends TuleapTestCase
 {
 
+    /**
+     * @var Transition_PostActionFactory
+     */
     protected $factory;
+    /**
+     * @var \Transition_PostAction_FieldFactory
+     */
     protected $field_factory;
+    /**
+     * @var \Transition_PostAction_CIBuildFactory
+     */
     protected $cibuild_factory;
+    /**
+     * @var FrozenFieldsFactory
+     */
     protected $frozen_fields_actory;
+    /**
+     * @var int
+     */
+    protected $transition_id;
+    /**
+     * @var \Transition
+     */
+    protected $transition;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HiddenFieldsetsFactory
+     */
+    protected $hidden_fieldset_factory;
 
     public function setUp()
     {
@@ -43,10 +68,12 @@ class Transition_PostActionFactory_BaseTest extends TuleapTestCase
         $this->field_factory        = \Mockery::spy(\Transition_PostAction_FieldFactory::class);
         $this->cibuild_factory      = \Mockery::spy(\Transition_PostAction_CIBuildFactory::class);
         $this->frozen_fields_actory = \Mockery::spy(FrozenFieldsFactory::class);
+        $this->hidden_fieldset_factory = \Mockery::spy(HiddenFieldsetsFactory::class);
 
         $this->factory->setFieldFactory($this->field_factory);
         $this->factory->setCIBuildFactory($this->cibuild_factory);
         $this->factory->setFrozenFieldsFactory($this->frozen_fields_actory);
+        $this->factory->setHiddenFieldsetsFactory($this->hidden_fieldset_factory);
     }
 }
 
@@ -302,18 +329,33 @@ class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends Transiti
 class Transition_PostActionFactory_loadPostActionsTest extends Transition_PostActionFactory_BaseTest
 {
 
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Transition_PostAction
+     */
+    private $post_action_1;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Transition_PostAction
+     */
+    private $post_action_2;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Transition_PostAction
+     */
+    private $post_action_3;
+
     public function setUp()
     {
         parent::setUp();
         $this->setUpGlobalsMockery();
         $this->post_action_1 = \Mockery::spy(\Transition_PostAction::class);
         $this->post_action_2 = \Mockery::spy(\Transition_PostAction::class);
+        $this->post_action_3 = \Mockery::spy(\Transition_PostAction::class);
     }
 
     public function itLoadsPostActionFromAllSubFactories()
     {
         stub($this->cibuild_factory)->loadPostActions($this->transition)->returns(array($this->post_action_1))->once();
         stub($this->field_factory)->loadPostActions($this->transition)->returns(array($this->post_action_2))->once();
+        $this->hidden_fieldset_factory->shouldReceive('loadPostActions')->with($this->transition)->once()->andReturn([$this->post_action_3]);
 
         $this->factory->loadPostActions($this->transition);
     }
@@ -322,8 +364,9 @@ class Transition_PostActionFactory_loadPostActionsTest extends Transition_PostAc
     {
         stub($this->cibuild_factory)->loadPostActions($this->transition)->returns(array($this->post_action_1));
         stub($this->field_factory)->loadPostActions($this->transition)->returns(array($this->post_action_2));
+        $this->hidden_fieldset_factory->shouldReceive('loadPostActions')->with($this->transition)->once()->andReturn([$this->post_action_3]);
 
-        $expected     = array($this->post_action_1, $this->post_action_2);
+        $expected     = array($this->post_action_1, $this->post_action_2, $this->post_action_3);
         expect($this->transition)->setPostActions($expected)->once();
 
         $this->factory->loadPostActions($this->transition);
