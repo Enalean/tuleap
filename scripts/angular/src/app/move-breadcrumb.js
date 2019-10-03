@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,7 +29,12 @@ export function moveBreadCrumbs() {
             return;
         }
 
-        main.insertBefore(origin, main.firstElementChild);
+        const toolbar = document.querySelector("nav.toolbar");
+        if (!toolbar) {
+            return;
+        }
+
+        main.insertBefore(origin, toolbar);
         origin.removeAttribute("id");
 
         const breadcrumbs = origin.querySelectorAll(".breadcrumb-item");
