@@ -38,6 +38,10 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     /**
+     * @var \EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
+     */
+    private $event_manager;
+    /**
      * @var ItemRepresentationBuilder
      */
     private $item_representation_builder;
@@ -85,11 +89,13 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $this->item_representation_builder            = Mockery::mock(ItemRepresentationBuilder::class);
         $this->item_version_factory                   = Mockery::mock(\Docman_VersionFactory::class);
         $this->link_version_factory                   = Mockery::mock(\Docman_LinkVersionFactory::class);
+        $this->event_manager = Mockery::mock(\EventManager::class);
         $this->item_representation_visitor            = new ItemRepresentationVisitor(
             $this->item_representation_builder,
             $this->item_version_factory,
             $this->link_version_factory,
-            $this->item_factory
+            $this->item_factory,
+            $this->event_manager
         );
         $this->dao                                    = Mockery::mock(\Docman_ItemDao::class);
         $this->item_representation_collection_builder = new ItemRepresentationCollectionBuilder(

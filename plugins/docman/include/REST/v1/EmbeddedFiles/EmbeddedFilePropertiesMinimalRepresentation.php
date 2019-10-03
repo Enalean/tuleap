@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,21 +22,20 @@
 
 namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 
-class EmbeddedFilePropertiesRepresentation
+class EmbeddedFilePropertiesMinimalRepresentation implements IEmbeddedFilePropertiesRepresentation
 {
     /**
      * @var string
      */
     public $file_type;
 
-    /**
-     * @var string
-     */
-    public $content;
-
-    public function build(\Docman_Version $docman_version, $content)
+    private function __construct(\Docman_Version $docman_version)
     {
         $this->file_type = $docman_version->getFiletype();
-        $this->content   = $content;
+    }
+
+    public static function build(\Docman_Version $docman_version)
+    {
+        return new self($docman_version);
     }
 }

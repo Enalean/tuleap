@@ -32,6 +32,9 @@ class Docman_File extends Docman_Document
         parent::__construct($data);
     }
 
+    /**
+     * @var Docman_Version
+     */
     var $currentVersion;
     public function setCurrentVersion($currentVersion)
     {

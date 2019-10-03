@@ -109,7 +109,7 @@ class DocmanItemsResource extends AuthenticatedResource
 
         $representation_visitor = $this->getItemRepresentationVisitor($items_request);
         try {
-            return $item->accept($representation_visitor, ['current_user' => $items_request->getUser()]);
+            return $item->accept($representation_visitor, ['current_user' => $items_request->getUser(), 'is_a_direct_access' => true]);
         } catch (UnknownMetadataException $exception) {
             throw new RestException(
                 500,
@@ -260,17 +260,17 @@ class DocmanItemsResource extends AuthenticatedResource
         );
     }
 
-    /**
-     *
-     * @return ItemRepresentationVisitor
-     */
-    private function getItemRepresentationVisitor(DocmanItemsRequest $items_request)
+    private function getItemRepresentationVisitor(DocmanItemsRequest $items_request): ItemRepresentationVisitor
     {
+        $event_adder = new DocmanItemsEventAdder($this->event_manager);
+        $event_adder->addLogEvents();
+
         return new ItemRepresentationVisitor(
             $this->getItemRepresentationBuilder($items_request->getItem(), $items_request->getProject()),
             new \Docman_VersionFactory(),
             new \Docman_LinkVersionFactory(),
-            Docman_ItemFactory::instance($items_request->getProject()->getGroupId())
+            Docman_ItemFactory::instance($items_request->getProject()->getGroupId()),
+            $this->event_manager
         );
     }
 

@@ -69,7 +69,7 @@ class ItemRepresentationCollectionBuilder
         foreach ($dar as $row) {
             if ($row && $this->permission_manager->userCanRead($user, $row['item_id'])) {
                 $docman_item = $this->item_factory->getItemFromRow($row);
-                $children[]  = $docman_item->accept($this->item_representation_visitor, ['current_user' => $user]);
+                $children[]  = $docman_item->accept($this->item_representation_visitor, ['current_user' => $user, 'is_a_direct_access' => false]);
             }
         }
 

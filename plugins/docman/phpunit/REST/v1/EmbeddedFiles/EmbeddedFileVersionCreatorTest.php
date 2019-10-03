@@ -25,13 +25,14 @@ namespace Tuleap\Docman\REST\v1\Files;
 use DateTimeZone;
 use Docman_EmbeddedFile;
 use Docman_FileStorage;
+use Docman_Version;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFilesPATCHRepresentation;
-use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesRepresentation;
+use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesFullRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreator;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\REST\v1\PostUpdateEventAdder;
@@ -102,16 +103,20 @@ class EmbeddedFileVersionCreatorTest extends TestCase
         $obsolescence_date           = $date->modify('+1 day');
         $obsolescence_date_formatted = $obsolescence_date->format('Y-m-d');
 
-        $representation                                 = new DocmanEmbeddedFilesPATCHRepresentation();
-        $representation->change_log                     = 'changelog';
-        $representation->version_title                  = 'version title';
-        $representation->should_lock_file               = false;
-        $representation->embedded_properties            = new EmbeddedFilePropertiesRepresentation();
-        $representation->embedded_properties->file_type = 'file';
-        $representation->embedded_properties->content   = 'My custom content';
-        $representation->approval_table_action          = 'copy';
-        $representation->status                         = 'rejected';
-        $representation->obsolescence_date              = $obsolescence_date_formatted;
+        $file_version = Mockery::mock(Docman_Version::class);
+        $file_version->shouldReceive('getFiletype')->andReturn('file');
+
+        $representation                        = new DocmanEmbeddedFilesPATCHRepresentation();
+        $representation->change_log            = 'changelog';
+        $representation->version_title         = 'version title';
+        $representation->should_lock_file      = false;
+        $representation->embedded_properties   = EmbeddedFilePropertiesFullRepresentation::build(
+            $file_version,
+            'My custom content'
+        );
+        $representation->approval_table_action = 'copy';
+        $representation->status                = 'rejected';
+        $representation->obsolescence_date     = $obsolescence_date_formatted;
 
         $this->transaction_executor->shouldReceive('execute')->once();
 
