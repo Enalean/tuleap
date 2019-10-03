@@ -20,6 +20,11 @@
  */
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
+use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -1292,12 +1297,9 @@ class Tracker implements Tracker_Dispatchable_Interface
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $hp = Codendi_HTMLPurifier::instance();
 
-            $tracker_crumb = EventManager::instance()->dispatch(new TrackerCrumbInContext($this, UserManager::instance()->getCurrentUser()));
-            assert($tracker_crumb instanceof TrackerCrumbInContext);
-
             $breadcrumbs = array_merge(
                 array(
-                    $tracker_crumb->getCrumb(TrackerCrumbInContext::TRACKER_CRUMB_IDENTIFIER)
+                    $this->getCrumb()
                 ),
                 $breadcrumbs
             );
@@ -1307,6 +1309,51 @@ class Tracker implements Tracker_Dispatchable_Interface
             $title = ($title ? $title .' - ' : ''). $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML);
             $layout->displayHeader($project, $title, $breadcrumbs, $toolbar, $params);
         }
+    }
+
+    private function getCrumb(): BreadCrumb
+    {
+        $user          = UserManager::instance()->getCurrentUser();
+        $tracker_crumb = EventManager::instance()->dispatch(new TrackerCrumbInContext($this, $user));
+        assert($tracker_crumb instanceof TrackerCrumbInContext);
+
+        $crumb = $tracker_crumb->getCrumb(TrackerCrumbInContext::TRACKER_CRUMB_IDENTIFIER);
+        $sub_items = $crumb->getSubItems();
+        $existing_sections = $sub_items->getSections();
+
+
+        $links_collection = new BreadCrumbLinkCollection([
+            new BreadCrumbLinkWithIcon(
+                sprintf(dgettext('tuleap-tracker', 'New %s'), $this->getName()),
+                $this->getSubmitUrl(),
+                'fa-plus'
+            )
+        ]);
+        if ($this->userIsAdmin($user)) {
+            $links_collection->add(
+                new BreadCrumbLinkWithIcon(
+                    dgettext('tuleap-tracker', 'Administration'),
+                    $this->getAdministrationUrl(),
+                    'fa-cog'
+                )
+            );
+        }
+        if ($user->isLoggedIn()) {
+            $links_collection->add(
+                new BreadCrumbLinkWithIcon(
+                    dgettext('tuleap-tracker', 'My notifications'),
+                    TRACKER_BASE_URL.'/notifications/my/' . urlencode($this->id) . '/',
+                    'fa-bell'
+                )
+            );
+        }
+        $sub_items->setSections(
+            array_merge(
+                [new SubItemsSection('', $links_collection)],
+                $existing_sections
+            )
+        );
+        return $crumb;
     }
 
     public function getDefaultToolbar()
