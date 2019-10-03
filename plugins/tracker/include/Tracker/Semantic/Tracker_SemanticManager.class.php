@@ -74,17 +74,6 @@ class Tracker_SemanticManager
         $this->tracker->displayAdminItemHeader(
             $tracker_manager,
             'editsemantic',
-            array(
-                array(
-                    'url'         => TRACKER_BASE_URL.'/?'. http_build_query(array(
-                        'tracker'  => $this->tracker->getId(),
-                        'func'     => 'admin-semantic',
-                        'semantic' => $semantic->getShortName(),
-                    )),
-                    'title'       => $semantic->getLabel(),
-                    'description' => $semantic->getDescription(),
-                )
-            ),
             $semantic->getLabel()
         );
     }

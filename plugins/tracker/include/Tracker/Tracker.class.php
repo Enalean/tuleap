@@ -1544,9 +1544,9 @@ class Tracker implements Tracker_Dispatchable_Interface
         return $html;
     }
 
-    public function displayAdminItemHeader(Tracker_IDisplayTrackerLayout $layout, $item, $breadcrumbs = array(), $title = null, array $params = array())
+    public function displayAdminItemHeader(Tracker_IDisplayTrackerLayout $layout, $item, $title = null, array $params = array())
     {
-        $this->displayAdminItemHeaderWithoutTitle($layout, $item, $breadcrumbs, $title, $params);
+        $this->displayAdminItemHeaderWithoutTitle($layout, $item, $title, $params);
 
         if ($title !== null) {
             echo '<h1>'. $title .'</h1>';
@@ -1556,19 +1556,12 @@ class Tracker implements Tracker_Dispatchable_Interface
     private function displayAdminItemHeaderWithoutTitle(
         Tracker_IDisplayTrackerLayout $layout,
         $item,
-        $breadcrumbs = array(),
         $title = null,
         array $params = array()
     ) {
         $items = $this->getAdminItems();
         $title = $title ? $title : $items[$item]['title'];
-        $breadcrumbs = array_merge(
-            array(
-                $items[$item]
-            ),
-            $breadcrumbs
-        );
-        $this->displayAdminHeader($layout, $title, $breadcrumbs, $params);
+        $this->displayAdminHeader($layout, $title, [], $params);
     }
 
     /**
@@ -1608,11 +1601,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     public function displayAdminPermsHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs)
     {
-        $items = $this->getAdminItems();
-        $breadcrumbs = array_merge(array(
-                $items['editperms']
-                ), $breadcrumbs);
-        $this->displayAdminHeader($layout, $title, $breadcrumbs);
+        $this->displayAdminHeader($layout, $title, []);
     }
 
     public function getPermsItems()
@@ -1644,11 +1633,6 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     public function displayAdminFormElementsHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs)
     {
-        $items = $this->getAdminItems();
-        $breadcrumbs = array_merge(array(
-                $items['editformElements']
-                ), $breadcrumbs);
-
         $include_assets = new \Tuleap\Layout\IncludeAssets(
             __DIR__ . '/../../www/assets',
             TRACKER_BASE_URL . '/assets'
@@ -1715,11 +1699,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     public function displayAdminCSVImportHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs)
     {
-        $items = $this->getAdminItems();
-        $breadcrumbs = array_merge(array(
-                $items['csvimport']
-                ), $breadcrumbs);
-        $this->displayAdminHeader($layout, $title, $breadcrumbs);
+        $this->displayAdminHeader($layout, $title, []);
     }
 
     public function displayAdminCSVImport(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
