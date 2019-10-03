@@ -51,6 +51,9 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
+        if (isset($this->params['plain']) && $this->params['plain']) {
+            return 'blobplain.tpl';
+        }
         return 'tuleap/blob.tpl';
     }
 

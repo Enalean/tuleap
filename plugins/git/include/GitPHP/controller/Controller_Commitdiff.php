@@ -47,6 +47,9 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
      */
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
+        if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+            return 'commitdiffplain.tpl';
+        }
         if (! isset($this->params['diff-mode'])) {
             return 'tuleap/commit-diff.tpl';
         }
