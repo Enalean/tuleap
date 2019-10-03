@@ -25,7 +25,7 @@
             <div class="taskboard-cell" v-for="col of columns" v-bind:key="col.id"></div>
         </template>
         <template v-else>
-            <div class="taskboard-cell"></div>
+            <div class="taskboard-cell taskboard-cell-swimlane-header" v-bind:class="fullscreen_class"></div>
             <div class="taskboard-cell" v-for="col of columns" v-bind:key="col.id">
                 <solo-card-cell v-if="target_column.id === col.id" v-bind:card="card"/>
             </div>
@@ -43,7 +43,9 @@ import ParentCard from "../Card/ParentCard.vue";
 import ParentCardRemainingEffort from "../Card/ParentCardRemainingEffort.vue";
 import { getColumnOfCard } from "../../../helpers/list-value-to-column-mapper";
 
-import { State } from "vuex-class";
+import { State, namespace } from "vuex-class";
+
+const fullscreen = namespace("fullscreen");
 
 @Component({
     components: { ParentCell, ParentCard, ParentCardRemainingEffort, SoloCardCell }
@@ -54,6 +56,9 @@ export default class SoloCard extends Vue {
 
     @State
     readonly columns!: Array<ColumnDefinition>;
+
+    @fullscreen.Getter
+    readonly fullscreen_class!: string;
 
     get target_column(): ColumnDefinition | undefined {
         return getColumnOfCard(this.columns, this.card);

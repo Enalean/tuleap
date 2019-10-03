@@ -24,6 +24,7 @@
 @import 'includes/cards';
 @import 'includes/error';
 @import 'includes/swimlane-sticky-header';
+@import 'includes/button-bar';
 
 .taskboard-under-construction {
     color: $tlp-ui-dimmed;
@@ -50,4 +51,17 @@
     flex-direction: column;
     width: 100%;
     height: 100%;
+}
+
+.taskboard:fullscreen {
+    overflow: auto;
+    background-color: $tlp-theme-background-color;
+
+    > .taskboard-head {
+        top: 0;
+    }
+
+    > .taskboard-button-bar {
+        margin: $tlp-spacing 0;
+    }
 }

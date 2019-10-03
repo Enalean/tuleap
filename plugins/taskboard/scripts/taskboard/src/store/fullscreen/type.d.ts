@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.taskboard-cell-swimlane-header {
-    position: sticky;
-    z-index: 2;
-    left: $sidebar-expanded-width;
-
-    &.taskboard-fullscreen {
-        left: 0;
-    }
-}
-
-.sidebar-collapsed {
-    .taskboard-cell-swimlane-header {
-        left: $sidebar-collapsed-width;
-
-        &.taskboard-fullscreen {
-            left: 0;
-        }
-    }
+export interface FullscreenState {
+    is_taskboard_in_fullscreen_mode: boolean;
 }

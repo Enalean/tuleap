@@ -101,6 +101,9 @@ msgstr "Ce tableau des tâches n'est pas correctement configuré"
 msgid "This taskboard is not ready to be used"
 msgstr "Ce tableau des tâches n'est pas prêt à être utilisé"
 
+msgid "Toggle fullscreen mode"
+msgstr "Basculer le mode plein écran"
+
 msgid "You have to configure the columns mapping"
 msgstr "Vous devez configurer les colonnes"
 

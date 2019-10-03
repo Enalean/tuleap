@@ -26,10 +26,38 @@ describe("TaskBoardHeader", () => {
         const wrapper = shallowMount(TaskBoardHeader, {
             mocks: {
                 $store: createStoreMock({
-                    state: { columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] }
+                    state: {
+                        columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }],
+                        fullscreen: {
+                            is_taskboard_in_fullscreen_mode: false
+                        }
+                    },
+                    getters: {
+                        "fullscreen/fullscreen_class": ""
+                    }
                 })
             }
         });
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("toggles the fullscreen class if taskboard is in fullscreen mode", () => {
+        const wrapper = shallowMount(TaskBoardHeader, {
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }],
+                        fullscreen: {
+                            is_taskboard_in_fullscreen_mode: true
+                        }
+                    },
+                    getters: {
+                        "fullscreen/fullscreen_class": "taskboard-fullscreen"
+                    }
+                })
+            }
+        });
+
+        expect(wrapper.contains(".taskboard-fullscreen")).toBe(true);
     });
 });

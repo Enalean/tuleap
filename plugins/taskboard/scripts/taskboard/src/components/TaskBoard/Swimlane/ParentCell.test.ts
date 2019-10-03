@@ -21,10 +21,23 @@ import { shallowMount } from "@vue/test-utils";
 import ParentCell from "./ParentCell.vue";
 import ParentCard from "../Card/ParentCard.vue";
 import NoMappingMessage from "./NoMappingMessage.vue";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 
 describe("ParentCell", () => {
     it("displays the parent card in its own cell", () => {
         const wrapper = shallowMount(ParentCell, {
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        fullscreen: {
+                            is_taskboard_in_fullscreen_mode: false
+                        }
+                    },
+                    getters: {
+                        "fullscreen/fullscreen_class": ""
+                    }
+                })
+            },
             propsData: {
                 card: {
                     id: 43,
@@ -39,6 +52,18 @@ describe("ParentCell", () => {
 
     it("displays a no mapping message if card does not have any children", () => {
         const wrapper = shallowMount(ParentCell, {
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        fullscreen: {
+                            is_taskboard_in_fullscreen_mode: false
+                        }
+                    },
+                    getters: {
+                        "fullscreen/fullscreen_class": ""
+                    }
+                })
+            },
             propsData: {
                 card: {
                     id: 43,
@@ -49,5 +74,31 @@ describe("ParentCell", () => {
 
         expect(wrapper.contains(ParentCard)).toBe(true);
         expect(wrapper.contains(NoMappingMessage)).toBe(true);
+    });
+
+    it("toggles the fullscreen class if taskboard is in fullscreen mode", () => {
+        const wrapper = shallowMount(ParentCell, {
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        fullscreen: {
+                            is_taskboard_in_fullscreen_mode: true
+                        }
+                    },
+                    getters: {
+                        "fullscreen/fullscreen_class": "taskboard-fullscreen"
+                    }
+                })
+            },
+            propsData: {
+                card: {
+                    id: 43,
+                    has_children: true
+                }
+            }
+        });
+
+        expect(wrapper.contains(ParentCard)).toBe(true);
+        expect(wrapper.contains(NoMappingMessage)).toBe(false);
     });
 });

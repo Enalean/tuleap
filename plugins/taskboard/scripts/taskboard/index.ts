@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const user_id_string = document.body.dataset.userId || "0";
     const user_id = Number.parseInt(user_id_string, 10);
     const admin_url = vue_mount_point.dataset.adminUrl || "";
+    const milestone_title = vue_mount_point.dataset.milestoneTitle || "";
     const columns: Array<ColumnDefinition> =
         typeof vue_mount_point.dataset.columns !== "undefined"
             ? JSON.parse(vue_mount_point.dataset.columns)
@@ -57,7 +58,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         admin_url,
         columns,
         has_content,
-        milestone_id
+        milestone_id,
+        milestone_title
     };
 
     const initial_user_state: UserState = {

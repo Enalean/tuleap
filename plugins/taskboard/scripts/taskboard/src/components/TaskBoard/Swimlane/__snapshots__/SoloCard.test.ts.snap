@@ -5,7 +5,7 @@ exports[`SoloCard displays the parent card in Done column when status maps this 
   class="taskboard-swimlane"
 >
   <div
-    class="taskboard-cell"
+    class="taskboard-cell taskboard-cell-swimlane-header"
   />
    
   <div

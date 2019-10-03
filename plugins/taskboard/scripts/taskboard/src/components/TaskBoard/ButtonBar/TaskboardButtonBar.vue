@@ -15,26 +15,35 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-  -
   -->
 
 <template>
-    <div class="taskboard">
-        <taskboard-button-bar/>
-        <task-board-header/>
-        <task-board-body/>
+    <div class="taskboard-button-bar">
+        <div class="taskboard-button-bar-left">
+            <span class="taskboard-button-bar-milestone-title" v-if="is_taskboard_in_fullscreen_mode">{{ milestone_title }}</span>
+        </div>
+        <div class="taskboard-button-bar-right">
+            <switch-to-fullscreen/>
+        </div>
     </div>
 </template>
-
 <script lang="ts">
 import Vue from "vue";
+import { namespace } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import TaskBoardHeader from "./TaskBoardHeader.vue";
-import TaskBoardBody from "./TaskBoardBody.vue";
-import TaskboardButtonBar from "./ButtonBar/TaskboardButtonBar.vue";
+import { State } from "vuex-class";
+import SwitchToFullscreen from "./SwitchToFullscreen.vue";
+
+const fullscreen = namespace("fullscreen");
 
 @Component({
-    components: { TaskBoardBody, TaskBoardHeader, TaskboardButtonBar }
+    components: { SwitchToFullscreen }
 })
-export default class TaskBoard extends Vue {}
+export default class TaskboardButtonBar extends Vue {
+    @State
+    readonly milestone_title!: string;
+
+    @fullscreen.State
+    readonly is_taskboard_in_fullscreen_mode!: boolean;
+}
 </script>
