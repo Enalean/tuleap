@@ -43,12 +43,8 @@
     "bin": "../../../../node_modules/.bin/"
   },
   "scripts": {
-    "karma-artifact-modal": "$npm_package_config_bin/karma start ./angular-artifact-modal/karma.conf.js",
-    "karma-action-buttons": "$npm_package_config_bin/karma start ./artifact-action-buttons/karma.conf.js",
-    "karma-workflow": "$npm_package_config_bin/karma start ./workflow-transitions/karma.conf.js",
     "build": "NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
-    "coverage": "rm -rf ./coverage/* && export NODE_ENV=coverage; npm run karma-artifact-modal && npm run karma-action-buttons && npm run karma-workflow && $npm_package_config_bin/http-server -os -a 0.0.0.0 -p 9000 coverage/",
-    "test": "export NODE_ENV=test; npm run karma-artifact-modal && npm run karma-action-buttons && npm run karma-workflow",
-    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others 'gulp watch' '$npm_package_config_bin/webpack --watch --mode=development' 'npm run karma-artifact-modal' 'npm run karma-action-buttons' 'npm run karma-workflow'"
+    "test": "BABEL_ENV=test $npm_package_config_bin/jest",
+    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others 'gulp watch' '$npm_package_config_bin/webpack --watch --mode=development' 'CI=true npm test -- --watch'"
   }
 }

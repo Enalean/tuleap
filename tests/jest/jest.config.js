@@ -33,6 +33,10 @@ module.exports = {
             "../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js"
         ),
         tlp: path.resolve(__dirname, "../../src/www/themes/common/tlp/src/js/index.js"),
+        "tlp-fetch": path.resolve(
+            __dirname,
+            "../../src/www/themes/common/tlp/src/js/fetch-wrapper.js"
+        ),
         "angular-tlp": path.resolve(
             __dirname,
             "../../src/www/themes/common/tlp/angular-tlp/index.js"

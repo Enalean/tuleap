@@ -67,12 +67,6 @@ pipeline {
                         stage('Karma AgileDashboard Kanban') {
                             steps { script { actions.runKarmaTests('kanban', 'plugins/agiledashboard/www/js/kanban') } }
                         }
-                        stage('Karma Tracker') {
-                            steps { script { actions.runKarmaTests('tracker', 'plugins/tracker/www/scripts') } }
-                        }
-                        stage('Karma PullRequest plugin') {
-                            steps { script { actions.runKarmaTests('pullrequest', 'plugins/pullrequest/www/scripts') } }
-                        }
                     }
                     post { always { junit 'results/karma/test-*-results.xml' } }
                 }
