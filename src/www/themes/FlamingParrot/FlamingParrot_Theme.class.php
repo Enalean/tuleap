@@ -22,8 +22,6 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Banner\Banner;
-use Tuleap\Project\Banner\BannerDao;
-use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 
@@ -42,10 +40,6 @@ class FlamingParrot_Theme extends Layout
      * @var ProjectFlagsBuilder
      */
     private $project_flags_builder;
-    /**
-     * @var BannerRetriever
-     */
-    private $banner_retriever;
 
     public function __construct($root)
     {
@@ -54,8 +48,6 @@ class FlamingParrot_Theme extends Layout
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
 
         $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
-
-        $this->banner_retriever = new BannerRetriever(new BannerDao());
     }
 
     private function render($template_name, $presenter)
@@ -243,7 +235,7 @@ class FlamingParrot_Theme extends Layout
         $banner = null;
         if (!empty($params['group'])) {
             $project = $project_manager->getProject($params['group']);
-            $banner  = $this->banner_retriever->getBannerForProject($project);
+            $banner  = $this->getProjectBanner($project);
         }
 
         $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($project_manager, $params, $banner);
