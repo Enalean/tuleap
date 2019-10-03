@@ -5,7 +5,11 @@
 {{^hasSidebar}}
     <div class="main full container-fluid">
 {{/hasSidebar}}
-
+{{# purified_banner_message}}
+    <div class="project-banner">
+        <p>{{{ purified_banner_message }}}</p>
+    </div>
+{{/purified_banner_message}}
     <div class="row-fluid">
         <div class="span12">
             {{> breadcrumbs}}

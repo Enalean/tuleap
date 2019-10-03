@@ -18,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
+use Tuleap\Project\Banner\BannerDao;
+use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 
@@ -40,6 +41,10 @@ class FlamingParrot_Theme extends Layout
      * @var ProjectFlagsBuilder
      */
     private $project_flags_builder;
+    /**
+     * @var BannerRetriever
+     */
+    private $banner_retriever;
 
     public function __construct($root)
     {
@@ -48,6 +53,8 @@ class FlamingParrot_Theme extends Layout
         $this->renderer = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
 
         $this->project_flags_builder = new ProjectFlagsBuilder(new ProjectFlagsDao());
+
+        $this->banner_retriever = new BannerRetriever(new BannerDao());
     }
 
     private function render($template_name, $presenter)
@@ -320,6 +327,7 @@ class FlamingParrot_Theme extends Layout
         $project             = null;
         $project_privacy     = null;
         $sidebar_collapsable = false;
+        $banner              = null;
 
         if (! empty($params['group'])) {
             $this->show_sidebar = true;
@@ -331,6 +339,7 @@ class FlamingParrot_Theme extends Layout
             $project_link        = $this->getProjectLink($project);
             $project_privacy     = $this->getProjectPrivacy($project);
             $sidebar_collapsable = (! $current_user->isAnonymous() && $current_user->isLoggedIn()) ? true : false;
+            $banner              = $this->banner_retriever->getBannerForProject($project);
         }
 
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
@@ -348,6 +357,7 @@ class FlamingParrot_Theme extends Layout
             $this->_getFeedback(),
             $this->getForgeVersion(),
             $sidebar_collapsable,
+            $banner,
             $project
         ));
 
