@@ -28,7 +28,7 @@ use Tuleap\SystemEvent\RootDailyStartEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class ForumMLPlugin extends Plugin
+class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const SEARCH_TYPE = 'mail';
 
@@ -58,7 +58,7 @@ class ForumMLPlugin extends Plugin
         $this->allowedForProject = array();
     }
 
-    function getPluginInfo()
+    public function getPluginInfo()
     {
         if (!is_a($this->pluginInfo, 'ForumMLPluginInfo')) {
             require_once('ForumMLPluginInfo.class.php');
@@ -81,7 +81,7 @@ class ForumMLPlugin extends Plugin
         return $this->allowedForProject[$group_id];
     }
 
-    function layout_search_entry($params)
+    public function layout_search_entry($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
@@ -98,7 +98,7 @@ class ForumMLPlugin extends Plugin
         }
     }
 
-    public function forumml_browse_archives($params)
+    public function forumml_browse_archives($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request  = HTTPRequest::instance();
         $group_id = (int)$request->get('group_id');
@@ -107,7 +107,7 @@ class ForumMLPlugin extends Plugin
         }
     }
 
-    function cssFile($params)
+    public function cssFile($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $asset = new IncludeAssets(
@@ -118,7 +118,7 @@ class ForumMLPlugin extends Plugin
         }
     }
 
-    function jsFile($params)
+    public function jsFile($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/forumml.js"></script>'."\n";
@@ -128,7 +128,7 @@ class ForumMLPlugin extends Plugin
     /**
      * @see Event::SEARCH_TYPES_PRESENTERS
      */
-    public function search_types_presenters($params)
+    public function search_types_presenters($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isAllowed($params['project']->getId()) && ! $params['project']->isError()) {
             $lists = array();
@@ -153,7 +153,7 @@ class ForumMLPlugin extends Plugin
         }
     }
 
-    public function search_type($params)
+    public function search_type($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $query = $params['query'];
 
@@ -174,7 +174,7 @@ class ForumMLPlugin extends Plugin
      *
      * @param array $params
      */
-    public function plugin_statistics_disk_usage_collect_project($params)
+    public function plugin_statistics_disk_usage_collect_project($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $start       = microtime(true);
         $project_row = $params['project_row'];
@@ -207,7 +207,7 @@ class ForumMLPlugin extends Plugin
      *
      * @param array $params
      */
-    function plugin_statistics_disk_usage_service_label($params)
+    public function plugin_statistics_disk_usage_service_label($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['services']['plugin_forumml'] = 'ForumML';
     }
@@ -217,7 +217,7 @@ class ForumMLPlugin extends Plugin
      *
      * @param array $params
      */
-    function plugin_statistics_color($params)
+    public function plugin_statistics_color($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['service'] == 'plugin_forumml') {
             $params['color'] = 'lemonchiffon3';

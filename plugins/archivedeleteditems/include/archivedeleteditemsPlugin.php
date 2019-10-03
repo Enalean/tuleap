@@ -25,7 +25,7 @@ use Tuleap\ArchiveDeletedItems\ArchiveLogger;
 use Tuleap\ArchiveDeletedItems\FileCopier;
 use Tuleap\Event\Events\ArchiveDeletedItemEvent;
 
-class ArchivedeleteditemsPlugin extends Plugin
+class ArchivedeleteditemsPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * Constructor of the class

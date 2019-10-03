@@ -43,7 +43,7 @@ use Tuleap\SVN\Dao as SvnDao;
 use Tuleap\SVN\SvnLogger;
 use Tuleap\SVN\SvnAdmin;
 
-class hudson_svnPlugin extends Plugin
+class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     public function __construct($id)
@@ -90,14 +90,14 @@ class hudson_svnPlugin extends Plugin
         }
     }
 
-    public function javascript_file($params)
+    public function javascript_file($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], HUDSON_BASE_URL) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/form.js"></script>';
         }
     }
 
-    public function collect_ci_triggers($params)
+    public function collect_ci_triggers($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $project_id = $params['group_id'];
         $project    = $this->getProjectManager()->getProject($project_id);
@@ -202,14 +202,14 @@ class hudson_svnPlugin extends Plugin
         return $params['request']->get('hudson_use_plugin_svn_trigger_checkbox');
     }
 
-    public function save_ci_triggers($params)
+    public function save_ci_triggers($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isRequestWellFormed($params) && $this->isPluginConcerned($params)) {
             $this->getJobManager()->save($params);
         }
     }
 
-    public function update_ci_triggers($params)
+    public function update_ci_triggers($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['job_id'] = $params['request']->get('job_id');
         if ($this->isRequestWellFormed($params) && $this->isPluginConcerned($params)) {
@@ -223,7 +223,7 @@ class hudson_svnPlugin extends Plugin
         }
     }
 
-    public function delete_ci_triggers($params)
+    public function delete_ci_triggers($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isJobValid($params['job_id'])) {
             if (! $this->getJobManager()->delete($params['job_id'])) {
@@ -232,7 +232,7 @@ class hudson_svnPlugin extends Plugin
         }
     }
 
-    public function process_post_commit($params)
+    public function process_post_commit($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $http_client                  = HttpClientFactory::createClient();
         $http_request_factory         = HTTPFactoryBuilder::requestFactory();

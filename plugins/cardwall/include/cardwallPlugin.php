@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,23 +22,20 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\AllowedFieldRetriever;
-use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Cardwall\Semantic\BackgroundColorDao;
 use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFactory;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
 use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 
 /**
  * CardwallPlugin
  */
-class cardwallPlugin extends Plugin
+class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Cardwall_OnTop_ConfigFactory
@@ -110,7 +107,7 @@ class cardwallPlugin extends Plugin
         return array('tracker');
     }
 
-    public function tracker_event_export_full_xml($params)
+    public function tracker_event_export_full_xml($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $plannings = PlanningFactory::build()->getOrderedPlanningsWithBacklogTracker($params['user'], $params['group_id']);
         $this->getAgileDashboardExplorer()->export($params['xml_content'], $plannings);
@@ -134,7 +131,7 @@ class cardwallPlugin extends Plugin
     }
 
     // TODO : transform into a OnTop_Config_Command, and move code to ConfigFactory
-    public function tracker_event_trackers_duplicated($params)
+    public function tracker_event_trackers_duplicated($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         foreach ($params['tracker_mapping'] as $from_tracker_id => $to_tracker_id) {
             if ($this->getOnTopDao()->duplicate($from_tracker_id, $to_tracker_id)) {
@@ -150,7 +147,7 @@ class cardwallPlugin extends Plugin
      *
      * @param array types Input/Output parameter. Expected format: $types['my_type'] => 'Label of the type'
      */
-    public function tracker_report_renderer_types($params)
+    public function tracker_report_renderer_types($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['types'][self::RENDERER_TYPE] = $GLOBALS['Language']->getText('plugin_cardwall', 'title');
     }
@@ -166,7 +163,7 @@ class cardwallPlugin extends Plugin
      *
      * @return void
      */
-    public function tracker_report_renderer_instance($params)
+    public function tracker_report_renderer_instance($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['type'] == self::RENDERER_TYPE) {
             $report = $params['report'];
@@ -273,7 +270,7 @@ class cardwallPlugin extends Plugin
             || strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0;
     }
 
-    public function javascript_file($params)
+    public function javascript_file($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         // Only show the js if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
@@ -290,7 +287,7 @@ class cardwallPlugin extends Plugin
     /**
      * @see Event::TRACKER_EVENT_MANAGE_SEMANTICS
      */
-    public function tracker_event_manage_semantics($parameters)
+    public function tracker_event_manage_semantics($parameters) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tracker   = $parameters['tracker'];
         /** @var Tracker_SemanticCollection $semantics */
@@ -313,7 +310,7 @@ class cardwallPlugin extends Plugin
     /**
      * @see TRACKER_EVENT_SEMANTIC_FROM_XML
      */
-    public function tracker_event_semantic_from_xml($params)
+    public function tracker_event_semantic_from_xml($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tracker     = $params['tracker'];
         $xml         = $params['xml'];
@@ -374,12 +371,12 @@ class cardwallPlugin extends Plugin
     /**
      * @see Event::AGILEDASHBOARD_EVENT_GET_CARD_FIELDS
      */
-    public function agiledashboard_event_get_card_fields($parameters)
+    public function agiledashboard_event_get_card_fields($parameters) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $parameters['card_fields_semantic'] = Cardwall_Semantic_CardFields::load($parameters['tracker']);
     }
 
-    public function agiledashboard_event_additional_panes_on_milestone($params)
+    public function agiledashboard_event_additional_panes_on_milestone($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $pane_info = $this->getPaneInfo($params['milestone']);
 
@@ -405,7 +402,7 @@ class cardwallPlugin extends Plugin
         return new CardwallPaneInfo($milestone, $this->getThemePath());
     }
 
-    public function agiledashboard_event_index_page($params)
+    public function agiledashboard_event_index_page($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         // Only display a cardwall if there is something to display
         if ($params['milestone'] && $params['milestone']->getPlannedArtifacts() && count($params['milestone']->getPlannedArtifacts()->getChildren()) > 0) {
@@ -429,7 +426,7 @@ class cardwallPlugin extends Plugin
         return null;
     }
 
-    public function agiledashboard_event_milestone_selector_redirect($params)
+    public function agiledashboard_event_milestone_selector_redirect($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['milestone']->getArtifact()) {
             $tracker  = $params['milestone']->getArtifact()->getTracker();
@@ -439,7 +436,7 @@ class cardwallPlugin extends Plugin
         }
     }
 
-    public function tracker_event_redirect_after_artifact_creation_or_update($params)
+    public function tracker_event_redirect_after_artifact_creation_or_update($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $cardwall = $params['request']->get('cardwall');
         $redirect = $params['redirect'];
@@ -489,7 +486,7 @@ class cardwallPlugin extends Plugin
         );
     }
 
-    public function tracker_event_build_artifact_form_action($params)
+    public function tracker_event_build_artifact_form_action($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $cardwall = $params['request']->get('cardwall');
         if ($cardwall) {
@@ -509,7 +506,7 @@ class cardwallPlugin extends Plugin
      *  'project'  => The given project
      *  'into_xml' => The SimpleXMLElement to fill in
      */
-    public function agiledashboard_export_xml($params)
+    public function agiledashboard_export_xml($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tracker_factory = TrackerFactory::instance();
 
@@ -528,7 +525,7 @@ class cardwallPlugin extends Plugin
      * @param array $params
      * @see Event::IMPORT_XML_PROJECT_TRACKER_DONE
      */
-    public function import_xml_project_tracker_done($params)
+    public function import_xml_project_tracker_done($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $cardwall_ontop_import = new CardwallConfigXmlImport(
             $params['project']->getId(),
@@ -544,7 +541,7 @@ class cardwallPlugin extends Plugin
         $cardwall_ontop_import->import($params['xml_content']);
     }
 
-    public function agiledashboard_event_rest_get_milestone($params)
+    public function agiledashboard_event_rest_get_milestone($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $config = $this->getConfigFactory()->getOnTopConfig($params['milestone']->getPlanning()->getPlanningTracker());
         if ($config && $config->isEnabled()) {
@@ -558,7 +555,7 @@ class cardwallPlugin extends Plugin
         return new $class_with_right_namespace($this->getConfigFactory());
     }
 
-    public function agiledashboard_event_rest_get_cardwall($params)
+    public function agiledashboard_event_rest_get_cardwall($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $milestones_cardwall = $this->buildRightVersionOfMilestonesCardwallResource($params['version']);
 
@@ -574,7 +571,7 @@ class cardwallPlugin extends Plugin
      *  'tracker' => The planning tracker
      *  'view'    => A string of HTML
      */
-    public function agiledashboard_event_planning_config($params)
+    public function agiledashboard_event_planning_config($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tracker = $params['tracker'];
         $config  = $this->getConfigFactory()->getOnTopConfig($tracker);
@@ -583,7 +580,7 @@ class cardwallPlugin extends Plugin
         $params['view'] = $admin_view->displayAdminOnTop($config);
     }
 
-    public function agiledashboard_event_is_cardwall_enabled($params)
+    public function agiledashboard_event_is_cardwall_enabled($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tracker = $params['tracker'];
         $params['enabled'] = $this->getConfigFactory()
@@ -597,7 +594,7 @@ class cardwallPlugin extends Plugin
      *  'tracker' => The planning tracker
      *  'request' => The Request
      */
-    public function agiledashboard_event_planning_config_update($params)
+    public function agiledashboard_event_planning_config_update($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $request = $params['request'];
         $request->set('use_freestyle_columns', 1);
@@ -638,7 +635,7 @@ class cardwallPlugin extends Plugin
         return new Cardwall_OnTop_ColumnMappingFieldValueDao();
     }
 
-    public function agiledashboard_event_rest_resources($params)
+    public function agiledashboard_event_rest_resources($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $injector = new Cardwall_REST_ResourcesInjector();
         $injector->populate($params['restler']);
