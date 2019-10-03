@@ -95,7 +95,8 @@ final class BannerAdministrationController implements DispatchableWithRequest, D
             ->renderToPage(
                 'administration',
                 [
-                    'message' => $banner === null ? '' : $banner->getMessage()
+                    'message' => $banner === null ? '' : $banner->getMessage(),
+                    'project_id' => $project->getID()
                 ]
             );
         project_admin_footer([]);

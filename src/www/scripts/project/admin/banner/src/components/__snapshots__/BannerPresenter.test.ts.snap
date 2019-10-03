@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BannerPresenter displays the raw banner 1`] = `
+<p
+  class="project-admin-banner-message"
+>
+  &lt;b&gt;My banner content&lt;/b&gt;
+</p>
+`;
