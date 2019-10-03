@@ -36,11 +36,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Card, ColumnDefinition, Mapping, MappedListValue } from "../../../type";
+import { Card, ColumnDefinition } from "../../../type";
 import ParentCell from "./ParentCell.vue";
 import SoloCardCell from "./SoloCardCell.vue";
 import ParentCard from "../Card/ParentCard.vue";
 import ParentCardRemainingEffort from "../Card/ParentCardRemainingEffort.vue";
+import { getColumnOfCard } from "../../../helpers/list-value-to-column-mapper";
 
 import { State } from "vuex-class";
 
@@ -55,30 +56,7 @@ export default class SoloCard extends Vue {
     readonly columns!: Array<ColumnDefinition>;
 
     get target_column(): ColumnDefinition | undefined {
-        if (!this.card.mapped_list_value) {
-            return undefined;
-        }
-
-        const mapped_list_value = this.card.mapped_list_value;
-        return this.columns.find(column =>
-            this.is_status_accepted_by_column(mapped_list_value, column)
-        );
-    }
-
-    is_status_accepted_by_column(
-        mapped_list_value: MappedListValue,
-        column: ColumnDefinition
-    ): boolean {
-        return column.mappings.some(mapping =>
-            this.is_status_part_of_mapping(mapped_list_value, mapping)
-        );
-    }
-
-    is_status_part_of_mapping(mapped_list_value: MappedListValue, mapping: Mapping): boolean {
-        return (
-            mapping.tracker_id === this.card.tracker_id &&
-            mapping.accepts.some(list_value => list_value.id === mapped_list_value.id)
-        );
+        return getColumnOfCard(this.columns, this.card);
     }
 }
 </script>

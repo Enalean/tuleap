@@ -17,13 +17,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Swimlane } from "../../type";
-import { SwimlaneState } from "./type";
+import { Card, Swimlane } from "../../type";
+import { AddChildrenToSwimlanePayload, SwimlaneState } from "./type";
+import { findSwimlane, replaceSwimlane } from "./swimlane-helpers";
+
+function sortCardsByRank(a: Card, b: Card): number {
+    return Math.sign(a.rank - b.rank);
+}
+
+function sortSwimlanesByRank(a: Swimlane, b: Swimlane): number {
+    return sortCardsByRank(a.card, b.card);
+}
 
 export function addSwimlanes(state: SwimlaneState, swimlanes: Array<Swimlane>): void {
-    state.swimlanes = [...state.swimlanes, ...swimlanes];
+    state.swimlanes = state.swimlanes.concat(swimlanes);
+    state.swimlanes.sort(sortSwimlanesByRank);
 }
 
 export function setIsLoadingSwimlanes(state: SwimlaneState, is_loading_swimlanes: boolean): void {
     state.is_loading_swimlanes = is_loading_swimlanes;
+}
+
+export function addChildrenToSwimlane(
+    state: SwimlaneState,
+    payload: AddChildrenToSwimlanePayload
+): void {
+    const state_swimlane = findSwimlane(state, payload.swimlane);
+    const new_swimlane: Swimlane = {
+        ...state_swimlane,
+        children_cards: state_swimlane.children_cards.concat(payload.children_cards)
+    };
+    new_swimlane.children_cards.sort(sortCardsByRank);
+    replaceSwimlane(state, new_swimlane);
+    state.swimlanes.sort(sortSwimlanesByRank);
+}
+
+export function beginLoadingChildren(state: SwimlaneState, swimlane: Swimlane): void {
+    const state_swimlane = findSwimlane(state, swimlane);
+    state_swimlane.is_loading_children_cards = true;
+}
+
+export function endLoadingChildren(state: SwimlaneState, swimlane: Swimlane): void {
+    const state_swimlane = findSwimlane(state, swimlane);
+    state_swimlane.is_loading_children_cards = false;
 }

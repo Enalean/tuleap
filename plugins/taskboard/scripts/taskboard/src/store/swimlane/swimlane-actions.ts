@@ -29,14 +29,18 @@ export async function loadSwimlanes(
     try {
         await recursiveGet(`/api/v1/taskboard/${context.rootState.milestone_id}/cards`, {
             params: {
-                limit: 100,
-                offset: 0
+                limit: 100
             },
             getCollectionCallback: (collection: Card[]): Swimlane[] => {
                 const swimlanes = collection.map(card => {
-                    return { card };
+                    return { card, children_cards: [], is_loading_children_cards: false };
                 });
                 context.commit("addSwimlanes", swimlanes);
+                swimlanes
+                    .filter(swimlane => swimlane.card.has_children === true)
+                    .map(swimlane_with_children =>
+                        context.dispatch("loadChildrenCards", swimlane_with_children)
+                    );
 
                 return swimlanes;
             }
@@ -45,5 +49,32 @@ export async function loadSwimlanes(
         await context.dispatch("error/handleErrorMessage", error, { root: true });
     } finally {
         context.commit("setIsLoadingSwimlanes", false);
+    }
+}
+
+export async function loadChildrenCards(
+    context: ActionContext<SwimlaneState, RootState>,
+    swimlane: Swimlane
+): Promise<void> {
+    context.commit("beginLoadingChildren", swimlane);
+    try {
+        const card_id = swimlane.card.id;
+        await recursiveGet(`/api/v1/taskboard_cards/${card_id}/children`, {
+            params: {
+                milestone_id: context.rootState.milestone_id,
+                limit: 100
+            },
+            getCollectionCallback: (collection: Card[]): Card[] => {
+                context.commit("addChildrenToSwimlane", {
+                    swimlane,
+                    children_cards: collection
+                });
+                return collection;
+            }
+        });
+    } catch (error) {
+        // Show an error modal
+    } finally {
+        context.commit("endLoadingChildren", swimlane);
     }
 }

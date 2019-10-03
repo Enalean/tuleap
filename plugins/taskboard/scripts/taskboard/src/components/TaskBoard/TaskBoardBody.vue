@@ -21,7 +21,7 @@
 <template>
     <div class="taskboard-body">
         <template v-for="swimlane of swimlanes">
-            <card-with-children v-bind:key="swimlane.card.id" v-bind:card="swimlane.card" v-if="swimlane.card.has_children"/>
+            <card-with-children v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-if="swimlane.card.has_children"/>
             <solo-card v-bind:key="swimlane.card.id" v-bind:card="swimlane.card" v-else/>
         </template>
         <swimlane-skeleton v-if="is_loading_swimlanes"/>
