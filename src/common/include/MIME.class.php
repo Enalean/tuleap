@@ -80,7 +80,7 @@ class MIME
             // walk through the file line by line
             foreach ($this->globFileLines as $line) {
                 // check whether the line is a comment
-                if ($line{0} == '#') {
+                if ($line[0] == '#') {
                     continue;
                 }
 
@@ -134,11 +134,11 @@ class MIME
 
                 // go through the entire file
                 while ($buffer != '') {
-                    if ($buffer{0} != '[' && $buffer{0} != '>' && ($buffer{0} < '0' || $buffer{0} > '9')) {
+                    if ($buffer[0] != '[' && $buffer[0] != '>' && ($buffer[0] < '0' || $buffer[0] > '9')) {
                         break;
                     }
 
-                    switch ($buffer{0}) {
+                    switch ($buffer[0]) {
                         // create an entry for a new mimetype
                         case '[':
                             $mime = substr($buffer, 1, strpos($buffer, ']') - 1);
@@ -150,25 +150,25 @@ class MIME
                         // add a new rule to the current mimetype
                         case '>':
                         default:
-                            $indent = ($buffer{0} == '>' ? 0 : intval($buffer));
+                            $indent = ($buffer[0] == '>' ? 0 : intval($buffer));
                             $buffer = substr($buffer, strpos($buffer, '>') + 1);
                             $parents[$indent][] = new MIME_MagicRule;
                             $rulenum = sizeof($parents[$indent]) - 1;
                             $parents[$indent][$rulenum]->start_offset = intval($buffer);
                             $buffer = substr($buffer, strpos($buffer, '=') + 1);
-                            $value_length = 256 * ord($buffer{0}) + ord($buffer{1});
+                            $value_length = 256 * ord($buffer[0]) + ord($buffer[1]);
                             $buffer = substr($buffer, 2);
                             $parents[$indent][$rulenum]->value = substr($buffer, 0, $value_length);
                             $buffer = substr($buffer, $value_length);
-                            $parents[$indent][$rulenum]->mask = ($buffer{0} != '&' ? str_repeat("\xff", $value_length) : substr($buffer, 1, $value_length));
-                            if ($buffer{0} == '&') {
+                            $parents[$indent][$rulenum]->mask = ($buffer[0] != '&' ? str_repeat("\xff", $value_length) : substr($buffer, 1, $value_length));
+                            if ($buffer[0] == '&') {
                                 $buffer = substr($buffer, $value_length + 1);
                             }
-                            $parents[$indent][$rulenum]->word_size = ($buffer{0} != '~' ? 1 : intval(substr($buffer, 1)));
-                            while ($buffer{0} != '+' && $buffer{0} != "\n" && $buffer != '') {
+                            $parents[$indent][$rulenum]->word_size = ($buffer[0] != '~' ? 1 : intval(substr($buffer, 1)));
+                            while ($buffer[0] != '+' && $buffer[0] != "\n" && $buffer != '') {
                                 $buffer = substr($buffer, 1);
                             }
-                            $parents[$indent][$rulenum]->range_length = ($buffer{0} != '+' ? 1 : intval($buffer));
+                            $parents[$indent][$rulenum]->range_length = ($buffer[0] != '+' ? 1 : intval($buffer));
                             $buffer = substr($buffer, strpos($buffer, "\n") + 1);
                             $parents[$indent][$rulenum]->children = array();
                             $parents[$indent + 1] =& $parents[$indent][$rulenum]->children;
@@ -200,7 +200,7 @@ class MIME
         $data = fread($fp, $length);
         fclose($fp);
         for ($i = 0; $i < $length; $i++) {
-            if (!isset($data{$i}) || ($data{$i} < "\x20" && $data{$i} != "\x09" && $data{$i} != "\x0a" && $data{$i} != "\x0d")) {
+            if (!isset($data[$i]) || ($data[$i] < "\x20" && $data[$i] != "\x09" && $data[$i] != "\x0a" && $data[$i] != "\x0d")) {
                 return 'application/octet-stream';
             }
         }

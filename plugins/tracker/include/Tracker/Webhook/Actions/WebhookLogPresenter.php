@@ -53,6 +53,6 @@ class WebhookLogPresenter
 
     private function isStatusOk($status_message)
     {
-        return $status_message{0} === '2';
+        return $status_message[0] === '2';
     }
 }

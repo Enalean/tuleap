@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2016 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -47,9 +47,9 @@ class HookDao extends DataAccessObject
         }
 
         $sql = "INSERT INTO plugin_svn_hook_config";
-        $sql .= " (repository_id, " . join($cols, ", ") . ")";
-        $sql .= " VALUES ($id, " . join($vals, ", ") . ")";
-        $sql .= " ON DUPLICATE KEY UPDATE " . join($update, ", ") . ";";
+        $sql .= " (repository_id, " . implode(", ", $cols) . ")";
+        $sql .= " VALUES ($id, " . implode(", ", $vals) . ")";
+        $sql .= " ON DUPLICATE KEY UPDATE " . implode(", ", $update) . ";";
 
         return $this->update($sql);
     }

@@ -170,10 +170,10 @@ class LanguageConv
             return $unistring;
         } elseif (LANGUAGE_CYRILLIC) {
             if (CYRILLIC_FROM_WINDOWS && (!defined('LANGUAGE_CHARSET') || stristr(LANGUAGE_CHARSET, 'windows-1251'))) {
-                $aTxt = convert_cyr_string($aTxt, "w", "k");
+                $aTxt = mb_convert_encoding($aTxt, 'KOI8-R', 'Windows-1251');
             }
             if (!defined('LANGUAGE_CHARSET') || stristr(LANGUAGE_CHARSET, 'koi8-r') || stristr(LANGUAGE_CHARSET, 'windows-1251')) {
-                $isostring = convert_cyr_string($aTxt, "k", "i");
+                $isostring = mb_convert_encoding($aTxt, 'ISO-8859-5', 'KOI8-R');
                 $unistring = LanguageConv::iso2uni($isostring);
             } else {
                 $unistring = $aTxt;

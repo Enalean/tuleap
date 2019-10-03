@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -63,6 +63,6 @@ class Wrapper implements LoggerInterface
 
     private function formatMessage($message)
     {
-        return '['.implode($this->prefix, '][').'] '.$message;
+        return '['. implode('][', $this->prefix) .'] '.$message;
     }
 }

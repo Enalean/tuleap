@@ -591,7 +591,7 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
             $maxi = strlen($purified_body);
             for ($i = 0; $i < $maxi; ++$i) {
                 if ($search_for_quotes) {
-                    if ($purified_body{$i} == ">") {
+                    if ($purified_body[$i] == ">") {
                         ++$current_level;
                         if ($level < $current_level) {
                             $tab_body .= '<blockquote class="grep">';
@@ -603,18 +603,18 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
                             $tab_body .= '</blockquote>';
                             --$level;
                         }
-                        if ($purified_body{$i} == "\n" && $i < $maxi - 1) {
+                        if ($purified_body[$i] == "\n" && $i < $maxi - 1) {
                             $search_for_quotes = true;
                             $current_level = 0;
                         }
-                        $tab_body .= $purified_body{$i};
+                        $tab_body .= $purified_body[$i];
                     }
                 } else {
-                    if ($purified_body{$i} == "\n" && $i < $maxi - 1) {
+                    if ($purified_body[$i] == "\n" && $i < $maxi - 1) {
                         $search_for_quotes = true;
                         $current_level = 0;
                     }
-                    $tab_body .= $purified_body{$i};
+                    $tab_body .= $purified_body[$i];
                 }
             }
             $purified_body = str_replace('>', '&gt;', $purified_body);

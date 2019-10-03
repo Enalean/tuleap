@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -33,13 +33,8 @@ class HTTPRequestTest extends TuleapTestCase
         $_REQUEST['exists_empty'] = '';
         $_SERVER['server_exists'] = '1';
         $_SERVER['server_quote'] = "l'avion du server";
-        if (get_magic_quotes_gpc()) {
-            $_REQUEST['quote'] = "l\\'avion";
-            $_REQUEST['array'] = array('quote_1' => "l\\'avion", 'quote_2' => array('quote_3' => "l\\'oiseau"));
-        } else {
-            $_REQUEST['quote'] = "l'avion";
-            $_REQUEST['array'] = array('quote_1' => "l'avion", 'quote_2' => array('quote_3' => "l'oiseau"));
-        }
+        $_REQUEST['quote'] = "l'avion";
+        $_REQUEST['array'] = array('quote_1' => "l'avion", 'quote_2' => array('quote_3' => "l'oiseau"));
         $_REQUEST['testkey'] = 'testvalue';
         $_REQUEST['testarray'] = array('key1' => 'valuekey1');
         $_REQUEST['testkey_array'] = array('testvalue1', 'testvalue2', 'testvalue3');
