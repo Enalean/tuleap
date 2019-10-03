@@ -3,23 +3,25 @@
 #
 
 #[mysqld]
-#datadir=/var/opt/rh/rh-mysql56/lib/mysql
+#datadir=/var/opt/rh/rh-mysql57/lib/mysql
 #socket=/var/lib/mysql/mysql.sock
-#log-error=/var/opt/rh/rh-mysql56/log/mysql/mysqld.log
-#pid-file=/var/run/rh-mysql56-mysqld/mysqld.pid
+#log-error=/var/opt/rh/rh-mysql57/log/mysql/mysqld.log
+#pid-file=/var/run/rh-mysql57-mysqld/mysqld.pid
 
 [mysqld]
 #
 # * Basic Settings
 #
 user                                = mysql
-pid_file                            = /var/run/rh-mysql56-mysqld/mysqld.pid
+pid_file                            = /var/run/rh-mysql57-mysqld/mysqld.pid
 socket                              = /var/lib/mysql/mysql.sock
 port                                = 3306
 datadir                             = /tmp/mysql
 tmpdir                              = /tmp
 skip_external_locking
 bind_address                        = 0.0.0.0
+
+sql-mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
 
 #
 # * Fine Tuning
@@ -32,7 +34,7 @@ skip_name_resolve
 
 innodb_data_home_dir                = /tmp/mysql
 innodb_data_file_path               = ibdata1:32M:autoextend # default 12M
-#innodb_buffer_pool_size             = 512M # default: 128M
+innodb_buffer_pool_size             = 512M # default: 128M
 #innodb_additional_mem_pool_size     = 8M    # default: 8M
 innodb_log_group_home_dir           = /tmp/mysql
 innodb_log_files_in_group           = 2    # default: 2
@@ -70,7 +72,5 @@ query_cache_size                    = 0  # default: 1M
 # * Logging
 #
 general_log                         = 0
-general_log_file                    = /var/opt/rh/rh-mysql56/log/mysql/mysql-general.log
-slow_query_log                      = 1
-slow_query_log_file                 = /var/opt/rh/rh-mysql56/log/mysql/mysql-slow.log
+slow_query_log                      = 0
 long_query_time                     = 1

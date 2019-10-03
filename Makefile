@@ -108,6 +108,10 @@ tests_rest_73: ## Run all REST tests with PHP FPM 7.3
 tests_soap_73: ## Run all SOAP tests in PHP 7.3
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp --network none enalean/tuleap-test-soap:5
 
+tests_db_73: ## Run all DB integration tests (SETUP_ONLY=1 to disable auto run)
+	$(eval SETUP_ONLY ?= 0)
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp --network none -e SETUP_ONLY=$(SETUP_ONLY) enalean/tuleap-test-rest:c6-php73-mysql57 /usr/share/tuleap/tests/integration/bin/run.sh
+
 tests_cypress: ## Run Cypress tests
 	@tests/e2e/full/wrap.sh
 
@@ -160,14 +164,12 @@ simpletest-73-ci:
 	@mkdir -p $(WORKSPACE)/results/ut-simpletest/php-73
 	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp -v $(WORKSPACE)/results/ut-simpletest/php-73:/output:rw --network none -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php73 /opt/remi/php73/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run \
 	/tuleap/tests/simpletest \
-	/tuleap/plugins/ \
-	/tuleap/tests/integration
+	/tuleap/plugins/
 
 simpletest-73: ## Run SimpleTest with PHP 7.3
 	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp --network none -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php73 /opt/remi/php73/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
 	/tuleap/tests/simpletest \
-	/tuleap/plugins/ \
-	/tuleap/tests/integration
+	/tuleap/plugins/
 
 simpletest-73-file: ## Run SimpleTest with PHP 7.3 on a given file or directory with FILE variable
 	@docker run --rm -v $(CURDIR):/tuleap:ro --network none -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php73 /opt/remi/php73/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run $(FILE)
@@ -176,14 +178,12 @@ simpletest-74-ci:
 	@mkdir -p $(WORKSPACE)/results/ut-simpletest/php-74
 	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp -v $(WORKSPACE)/results/ut-simpletest/php-74:/output:rw -u $(id -u):$(id -g) enalean/tuleap-simpletest:c7-php74 /opt/remi/php74/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run \
 	/tuleap/tests/simpletest \
-	/tuleap/plugins/ \
-	/tuleap/tests/integration
+	/tuleap/plugins/
 
 simpletest-74: ## Run SimpleTest with PHP 7.4
 	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp -u $(id -u):$(id -g) enalean/tuleap-simpletest:c7-php74 /opt/remi/php74/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
 	/tuleap/tests/simpletest \
-	/tuleap/plugins/ \
-	/tuleap/tests/integration
+	/tuleap/plugins/
 
 simpletest-74-file: ## Run SimpleTest with PHP 7.4 on a given file or directory with FILE variable
 	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) enalean/tuleap-simpletest:c7-php74 /opt/remi/php74/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run $(FILE)

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,19 +16,30 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-require_once __DIR__ . '/../../src/www/include/exit.php';
-require_once __DIR__ . '/../../src/www/include/html.php';
-require_once __DIR__ . '/../../src/www/include/user.php';
+declare(strict_types=1);
 
+namespace Tuleap\Tests\Integration;
+
+use EventManager;
+use ForgeConfig;
+use PHPUnit\Framework\TestCase;
+use ProjectCreator;
+use ProjectHistoryDao;
+use ProjectManager;
+use ReferenceManager;
+use ServiceDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\DB\DBFactory;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
@@ -38,58 +49,40 @@ use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
+use UGroupBinding;
+use UGroupDao;
+use UGroupManager;
+use UGroupUserDao;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
+use UserManager;
 
-class ProjectCreationTest extends TuleapDbTestCase
+class ProjectCreationTest extends TestCase
 {
+    use GlobalLanguageMock;
 
-    public function __construct()
+    public function setUp(): void
     {
-        parent::__construct();
-
-        // Uncomment this during development to avoid aweful 50" setUp
-        // $this->markThisTestUnderDevelopment();
-    }
-
-    public function setUp()
-    {
-        parent::setUp();
-        $GLOBALS['feedback'] = '';
         $GLOBALS['svn_prefix'] = '/tmp';
         $GLOBALS['cvs_prefix'] = '/tmp';
-        $GLOBALS['grpdir_prefix'] = '/tmp';
-        $GLOBALS['ftp_frs_dir_prefix'] = '/tmp';
-        $GLOBALS['ftp_anon_dir_prefix'] = '/tmp';
         $GLOBALS['sys_default_domain'] = '';
-        $GLOBALS['sys_cookie_prefix'] = '';
-
-        $sys_dbhost   = ForgeConfig::get('sys_dbhost');
-        $sys_dbuser   = ForgeConfig::get('sys_dbuser');
-        $sys_dbpasswd = ForgeConfig::get('sys_dbpasswd');
-        $sys_dbname   = ForgeConfig::get('sys_dbname');
-
-        ForgeConfig::store();
-
-        ForgeConfig::set('sys_dbhost', $sys_dbhost);
-        ForgeConfig::set('sys_dbuser', $sys_dbuser);
-        ForgeConfig::set('sys_dbpasswd', $sys_dbpasswd);
-        ForgeConfig::set('sys_dbname', $sys_dbname);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
-        $this->mysqli->query('DELETE FROM groups WHERE unix_group_name = "short-name"');
+        DBFactory::getMainTuleapDBConnection()->getDB()->run('DELETE FROM groups WHERE unix_group_name = "short-name"');
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['cvs_prefix']);
-        unset($GLOBALS['grpdir_prefix']);
-        unset($GLOBALS['ftp_frs_dir_prefix']);
-        unset($GLOBALS['ftp_anon_dir_prefix']);
         unset($GLOBALS['sys_default_domain']);
-        unset($GLOBALS['sys_cookie_prefix']);
-        ForgeConfig::restore();
-        parent::tearDown();
+        unset($GLOBALS['feedback']);
+        unset($GLOBALS['TROVE_BROWSELIMIT']);
+        unset($GLOBALS['SVNACCESS']);
+        unset($GLOBALS['SVNGROUPS']);
+        $_GET = [];
+        $_REQUEST = [];
     }
 
-    public function itCreatesAProject()
+    public function testItCreatesAProject(): void
     {
         $send_notifications = true;
         $ugroup_user_dao    = new UGroupUserDao();
@@ -157,6 +150,6 @@ class ProjectCreationTest extends TuleapDbTestCase
 
         ProjectManager::clearInstance();
         $project = ProjectManager::instance()->getProjectByUnixName('short-name');
-        $this->assertEqual($project->getPublicName(), 'Long name');
+        $this->assertEquals('Long name', $project->getPublicName());
     }
 }

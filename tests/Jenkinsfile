@@ -100,6 +100,14 @@ pipeline {
                     }
                     post { always { junit 'results/api-rest/*/rest_tests.xml' } }
                 }
+                stage('DB Integration') {
+                    stages {
+                        stage('DB CentOS 6 PHP 7.3 MySQL 5.7') {
+                            steps { script { actions.runDBTests('c6-php73-mysql57') } }
+                        }
+                    }
+                    post { always { junit 'results/db/*/db_tests.xml' } }
+                }
                 stage('SOAP') {
                     stages {
                         stage('SOAP PHP 7.3') { steps { script { actions.runSOAPTests('php-73', '5') } } }
