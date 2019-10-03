@@ -40,13 +40,23 @@ describe(`Swimlane state mutations`, () => {
         });
     });
 
-    describe("setIsLoadingSwimlanes", () => {
+    describe("beginLoadingSwimlanes", () => {
         it("set swimlane to loading state", () => {
             const state: SwimlaneState = {
                 is_loading_swimlanes: false
             } as SwimlaneState;
-            mutations.setIsLoadingSwimlanes(state, true);
+            mutations.beginLoadingSwimlanes(state);
             expect(state.is_loading_swimlanes).toStrictEqual(true);
+        });
+    });
+
+    describe("endLoadingSwimlanes", () => {
+        it("set swimlane to no loading state", () => {
+            const state: SwimlaneState = {
+                is_loading_swimlanes: true
+            } as SwimlaneState;
+            mutations.endLoadingSwimlanes(state);
+            expect(state.is_loading_swimlanes).toStrictEqual(false);
         });
     });
 

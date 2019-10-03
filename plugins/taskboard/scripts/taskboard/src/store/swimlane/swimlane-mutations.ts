@@ -34,8 +34,12 @@ export function addSwimlanes(state: SwimlaneState, swimlanes: Array<Swimlane>): 
     state.swimlanes.sort(sortSwimlanesByRank);
 }
 
-export function setIsLoadingSwimlanes(state: SwimlaneState, is_loading_swimlanes: boolean): void {
-    state.is_loading_swimlanes = is_loading_swimlanes;
+export function beginLoadingSwimlanes(state: SwimlaneState): void {
+    state.is_loading_swimlanes = true;
+}
+
+export function endLoadingSwimlanes(state: SwimlaneState): void {
+    state.is_loading_swimlanes = false;
 }
 
 export function addChildrenToSwimlane(

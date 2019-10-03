@@ -45,8 +45,8 @@ describe("Swimlane state actions", () => {
     describe(`loadSwimlanes`, () => {
         it("Retrieves all top-level cards of the taskboard", async () => {
             await actions.loadSwimlanes(context);
-            expect(context.commit).toHaveBeenCalledWith("setIsLoadingSwimlanes", true);
-            expect(context.commit).toHaveBeenCalledWith("setIsLoadingSwimlanes", false);
+            expect(context.commit).toHaveBeenCalledWith("beginLoadingSwimlanes");
+            expect(context.commit).toHaveBeenCalledWith("endLoadingSwimlanes");
             expect(tlpRecursiveGetMock).toHaveBeenCalledWith(`/api/v1/taskboard/42/cards`, {
                 params: { limit: 100 },
                 getCollectionCallback: expect.any(Function)
@@ -130,7 +130,7 @@ describe("Swimlane state actions", () => {
             expect(context.dispatch).toHaveBeenCalledWith("error/handleErrorMessage", error, {
                 root: true
             });
-            expect(context.commit).toHaveBeenCalledWith("setIsLoadingSwimlanes", false);
+            expect(context.commit).toHaveBeenCalledWith("endLoadingSwimlanes");
         });
     });
 

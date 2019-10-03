@@ -25,7 +25,7 @@ import { SwimlaneState } from "./type";
 export async function loadSwimlanes(
     context: ActionContext<SwimlaneState, RootState>
 ): Promise<void> {
-    context.commit("setIsLoadingSwimlanes", true);
+    context.commit("beginLoadingSwimlanes");
     try {
         await recursiveGet(`/api/v1/taskboard/${context.rootState.milestone_id}/cards`, {
             params: {
@@ -48,7 +48,7 @@ export async function loadSwimlanes(
     } catch (error) {
         await context.dispatch("error/handleErrorMessage", error, { root: true });
     } finally {
-        context.commit("setIsLoadingSwimlanes", false);
+        context.commit("endLoadingSwimlanes");
     }
 }
 
