@@ -33,7 +33,9 @@ export {
     shouldDisplayEmbeddedInLargeMode,
     replaceCurrentFolder,
     setProjectUserGroups,
-    toggleQuickLook
+    toggleQuickLook,
+    beginLoadingCurrentlyPreviewedItem,
+    stopLoadingCurrentlyPreviewedItem
 };
 
 function initApp(
@@ -132,6 +134,13 @@ function replaceCurrentFolder(state, folder) {
     }
 }
 
+function beginLoadingCurrentlyPreviewedItem(state) {
+    state.is_loading_currently_previewed_item = true;
+}
+
+function stopLoadingCurrentlyPreviewedItem(state) {
+    state.is_loading_currently_previewed_item = false;
+}
 function updateCurrentlyPreviewedItem(state, item) {
     state.currently_previewed_item = item;
 }

@@ -2490,8 +2490,10 @@ describe("Store actions", () => {
 
             await toggleQuickLook(context, [item]);
 
+            expect(context.commit).toHaveBeenCalledWith("beginLoadingCurrentlyPreviewedItem");
             expect(context.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", item);
             expect(context.commit).toHaveBeenCalledWith("toggleQuickLook", true);
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingCurrentlyPreviewedItem");
         });
     });
     describe("createNewVersionFromEmpty - ", () => {

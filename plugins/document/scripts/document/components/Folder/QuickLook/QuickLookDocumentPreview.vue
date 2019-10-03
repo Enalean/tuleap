@@ -18,9 +18,12 @@
   -
   -->
 <template>
+    <div v-if="is_an_embedded_file && is_loading_content" class="document-quicklook-content">
+        <i class="fa fa-spin fa-circle-o-notch document-preview-spinner" data-test="document-preview-spinner"></i>
+    </div>
     <div v-dompurify-html="currently_previewed_item.embedded_file_properties.content"
          class="document-quick-look-embedded"
-         v-if="is_item_an_embedded_file(currently_previewed_item)"
+         v-else-if="is_an_embedded_file"
          data-test="document-quick-look-embedded"
     ></div>
 
@@ -92,6 +95,7 @@
 import { mapState, mapGetters } from "vuex";
 import IconQuicklookFolder from "../../svg/svg-icons/IconQuicklookFolder.vue";
 import IconQuicklookDropIntoFolder from "../../svg/svg-icons/IconQuicklookDropIntoFolder.vue";
+import { TYPE_EMBEDDED } from "../../../constants.js";
 
 export default {
     components: {
@@ -102,8 +106,15 @@ export default {
         iconClass: String
     },
     computed: {
-        ...mapState(["currently_previewed_item"]),
-        ...mapGetters(["is_item_a_folder", "is_item_an_embedded_file"]),
+        ...mapState(["currently_previewed_item", "is_loading_currently_previewed_item"]),
+        ...mapGetters(["is_item_a_folder"]),
+        is_loading_content() {
+            if (!this.is_an_embedded_file) {
+                return false;
+            }
+
+            return this.is_loading_currently_previewed_item === true;
+        },
         is_an_image() {
             if (!this.currently_previewed_item.file_properties) {
                 return false;
@@ -112,6 +123,9 @@ export default {
                 this.currently_previewed_item.file_properties &&
                 this.currently_previewed_item.file_properties.file_type.includes("image")
             );
+        },
+        is_an_embedded_file() {
+            return this.currently_previewed_item.type === TYPE_EMBEDDED;
         }
     }
 };
