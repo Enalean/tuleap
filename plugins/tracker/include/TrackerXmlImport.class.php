@@ -26,6 +26,7 @@ use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerFromXmlImportCannotBeUpdatedException;
 use Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker;
+use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\XML\MappingsRegistry;
@@ -397,7 +398,14 @@ class TrackerXmlImport
             $name = (string) $xml_tracker->name;
             $description = (string) $xml_tracker->description;
             $item_name = (string) $xml_tracker->item_name;
-            $trackers[] = $this->getInstanceFromXML($xml_tracker, $project, $name, $description, $item_name);
+            $trackers[] = $this->getInstanceFromXML(
+                $xml_tracker,
+                $project,
+                $name,
+                $description,
+                $item_name,
+                new TrackerXmlImportFeedbackCollector($this->logger),
+            );
         }
 
         $trackers_name_error = $this->tracker_factory->collectTrackersNameInErrorOnMandatoryCreationInfo(
@@ -684,20 +692,34 @@ class TrackerXmlImport
     {
         $tracker = null;
         if ($this->tracker_factory->validMandatoryInfoOnCreate($name, $description, $itemname, $project->getId())) {
-            $this->rng_validator->validate($xml_element, realpath(dirname(TRACKER_BASE_DIR).'/www/resources/tracker.rng'));
-
-            $tracker = $this->getInstanceFromXML($xml_element, $project, $name, $description, $itemname);
+            $this->rng_validator->validate(
+                $xml_element,
+                realpath(dirname(TRACKER_BASE_DIR) . '/www/resources/tracker.rng')
+            );
+            $feedback_collector = new TrackerXmlImportFeedbackCollector($this->logger);
+            $tracker = $this->getInstanceFromXML(
+                $xml_element,
+                $project,
+                $name,
+                $description,
+                $itemname,
+                $feedback_collector
+            );
             //Testing consistency of the imported tracker before updating database
             if ($tracker->testImport()) {
                 if ($tracker_id = $this->tracker_factory->saveObject($tracker)) {
                     $this->addTrackerProperties($tracker_id, $project, $xml_element);
                     $tracker->setId($tracker_id);
                 } else {
-                    throw new TrackerFromXmlException($GLOBALS['Language']->getText('plugin_tracker_admin', 'error_during_creation'));
+                    throw new TrackerFromXmlException(
+                        $GLOBALS['Language']->getText('plugin_tracker_admin', 'error_during_creation')
+                    );
                 }
             } else {
                 throw new TrackerFromXmlException('XML file cannot be imported');
             }
+
+            $this->displayWarnings($feedback_collector);
         }
 
         $this->formelement_factory->clearCaches();
@@ -731,7 +753,7 @@ class TrackerXmlImport
      * @return Tracker Object
      * @throws Tracker_Exception
      */
-    protected function getInstanceFromXML(SimpleXMLElement $xml, Project $project, $name, $description, $itemname)
+    protected function getInstanceFromXML(SimpleXMLElement $xml, Project $project, $name, $description, $itemname, TrackerXmlImportFeedbackCollector $feedback_collector)
     {
         $xml_tracker_color_name = (string) $xml->color;
         if ($xml_tracker_color_name === '') {
@@ -776,12 +798,19 @@ class TrackerXmlImport
 
         // set formElements
         foreach ($xml->formElements->formElement as $index => $elem) {
-            $tracker->formElements[] = $this->formelement_factory->getInstanceFromXML(
+            $form_element = $this->formelement_factory->getInstanceFromXML(
                 $tracker,
                 $elem,
                 $this->xml_fields_mapping,
-                $this->user_finder
+                $this->user_finder,
+                $feedback_collector
             );
+
+            if (! $form_element) {
+                continue;
+            }
+
+            $tracker->formElements[] = $form_element;
         }
 
         // set semantics
@@ -985,5 +1014,14 @@ class TrackerXmlImport
             : $deprecated_stop_notification;
 
         return $notifications_level;
+    }
+
+    private function displayWarnings(TrackerXmlImportFeedbackCollector $feedback_collector)
+    {
+        if (empty($feedback_collector->getWarnings())) {
+            return;
+        }
+
+        $feedback_collector->displayWarnings($this->logger);
     }
 }

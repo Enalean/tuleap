@@ -26,5 +26,5 @@ use Tracker_Semantic;
 
 interface IBuildSemanticFromXML
 {
-    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): Tracker_Semantic;
+    public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): ?Tracker_Semantic;
 }

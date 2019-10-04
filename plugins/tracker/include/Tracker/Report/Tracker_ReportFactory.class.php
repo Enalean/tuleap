@@ -281,7 +281,12 @@ class Tracker_ReportFactory
         // create criteria
         $report->criterias = array();
         foreach ($xml->criterias->criteria as $criteria) {
-            $report->criterias[] = $this->getCriteriaFactory()->getInstanceFromXML($criteria, $xmlMapping);
+            $report_criteria = $this->getCriteriaFactory()->getInstanceFromXML($criteria, $xmlMapping);
+            if (! $report_criteria) {
+                continue;
+            }
+
+            $report->criterias[] = $report_criteria;
         }
         // create renderers
         $report->renderers = array();

@@ -382,9 +382,15 @@ class Tracker_RuleFactory
 
         foreach ($list_rules->rule as $xml_rule) {
             $xml_source_field_attributes = $xml_rule->source_field->attributes();
+            if (! isset($xmlMapping[(string)$xml_source_field_attributes['REF']])) {
+                continue;
+            }
             $source_field = $xmlMapping[(string)$xml_source_field_attributes['REF']];
 
             $xml_target_field_attributes = $xml_rule->target_field->attributes();
+            if (! isset($xmlMapping[(string)$xml_target_field_attributes['REF']])) {
+                continue;
+            }
             $target_field = $xmlMapping[(string)$xml_target_field_attributes['REF']];
 
             $xml_source_value_attributes = $xml_rule->source_value->attributes();

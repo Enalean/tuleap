@@ -67,14 +67,19 @@ class Tracker_Report_CriteriaFactory
      * @param SimpleXMLElement $xml         containing the structure of the imported criteria
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      *
-     * @return Tracker_Report_Criteria Object
+     * @return null | Tracker_Report_Criteria Object
      */
     public function getInstanceFromXML($xml, &$xmlMapping)
     {
-        $att = $xml->attributes();
+        $att  = $xml->attributes();
         $fatt = $xml->field->attributes();
-        $row = array('field' => $xmlMapping[(string)$fatt['REF']],
-                     'rank' => (int)$att['rank']);
+        if (! isset($xmlMapping[(string)$fatt['REF']])) {
+            return null;
+        }
+        $row                = array(
+            'field' => $xmlMapping[(string)$fatt['REF']],
+            'rank' => (int)$att['rank']
+        );
         $row['is_advanced'] = isset($att['is_advanced']) ? (int)$att['is_advanced'] : 0;
         // in case old id values are important modify code here
         if (false) {
@@ -82,9 +87,10 @@ class Tracker_Report_CriteriaFactory
                 $row[$key] = (int)$value;
             }
         } else {
-            $row['id'] = 0;
+            $row['id']     = 0;
             $row['report'] = null;
         }
+
         return $this->getInstanceFromRow($row);
     }
 

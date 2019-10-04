@@ -1626,7 +1626,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         $order[] = $s['field']->getQueryOrderby() .' '. ($s['is_desc'] ? 'DESC' : 'ASC');
                     }
                 }
-                $queries[0] .= " ORDER BY ". implode(', ', $order);
+                if (empty($order)) {
+                    $queries[0] .= " ORDER BY ". implode(', ', $order);
+                }
             }
         }
         if (empty($queries)) {

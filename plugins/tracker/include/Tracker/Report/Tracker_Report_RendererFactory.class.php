@@ -509,8 +509,13 @@ class Tracker_Report_RendererFactory
                 //columns
                 $cols = array();
                 foreach ($xml->columns->field as $f) {
-                    $att = $f->attributes();
+                    $att    = $f->attributes();
                     $column = array();
+
+                    if (! isset($xmlMapping[(string)$att['REF']])) {
+                        continue;
+                    }
+
                     $column['field'] = $xmlMapping[(string)$att['REF']];
                     if (isset($att['artlink-nature'])) {
                         $column['artlink_nature'] = $att['artlink-nature'];
@@ -520,6 +525,7 @@ class Tracker_Report_RendererFactory
                     }
                     $cols[] = $column;
                 }
+
                 $row['columns'] = $cols;
 
                 //sort
@@ -528,6 +534,10 @@ class Tracker_Report_RendererFactory
                     foreach ($xml->sort->field as $f) {
                         $att = $f->attributes();
                         $column = array();
+                        if (! isset($xmlMapping[(string)$att['REF']])) {
+                            continue;
+                        }
+
                         $column['field'] = $xmlMapping[(string)$att['REF']];
                         $sort[] = $column;
                     }

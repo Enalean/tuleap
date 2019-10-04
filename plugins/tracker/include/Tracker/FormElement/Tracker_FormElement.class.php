@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
+
 /**
  * Base class for all fields in trackers, from fieldsets to selectboxes
  */
@@ -926,7 +928,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function continueGetInstanceFromXML(
         $xml,
         &$xmlMapping,
-        User\XML\Import\IFindUserFromXMLReference $user_finder
+        User\XML\Import\IFindUserFromXMLReference $user_finder,
+        TrackerXmlImportFeedbackCollector $feedback_collector
     ) {
         // add properties to specific fields
         if (isset($xml->properties)) {

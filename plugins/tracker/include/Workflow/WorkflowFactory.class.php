@@ -425,8 +425,10 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
             false,
             $transitions
         );
+        if ($workflow_field) {
+            $workflow->setField($workflow_field);
+        }
 
-        $workflow->setField($workflow_field);
         return $workflow;
     }
 
@@ -468,6 +470,9 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     {
         $xml_field_id = $xml->field_id;
         $xml_field_attributes = $xml_field_id->attributes();
+        if (! isset($xml_mapping[(string)$xml_field_attributes['REF']])) {
+            return null;
+        }
         $field = $xml_mapping[(string)$xml_field_attributes['REF']];
 
         return $field;

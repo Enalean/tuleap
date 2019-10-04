@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
+
 require_once('bootstrap.php');
 
 abstract class Tracker_FormElementFactoryAbstract extends TuleapTestCase
@@ -57,49 +59,6 @@ class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract
         $tff->shouldReceive('createFormElement')->andReturns(66);
 
         $this->assertEqual($tff->saveObject($tracker, $a_formelement, 0, $user, false), 66);
-    }
-
-    public function testImportFormElement()
-    {
-        $user_finder = \Mockery::spy(\User\XML\Import\IFindUserFromXMLReference::class);
-
-        $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
-            <formElement type="mon_type" ID="F0" rank="20" required="1" notifications="1">
-                <name>field_name</name>
-                <label>field_label</label>
-                <description>field_description</description>
-            </formElement>');
-
-        $mapping = array();
-
-        $a_formelement = \Mockery::spy(\Tracker_FormElement_Container_Fieldset::class);
-        $a_formelement->shouldReceive('continueGetInstanceFromXML')->with($xml, Mockery::any(), $user_finder)->once();
-
-        $tf = \Mockery::mock(\Tracker_FormElementFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $tf->shouldReceive('getInstanceFromRow')->with(array(
-            'formElement_type' => 'mon_type',
-            'name'             => 'field_name',
-            'label'            => 'field_label',
-            'rank'             => 20,
-            'use_it'           => 1,   //default
-                    'scope'            => 'P', //default
-                    'required'         => 1,
-            'notifications'    => 1,
-            'description'      => 'field_description',
-            'id'               => 0,
-            'tracker_id'       => 0,
-            'parent_id'        => 0,
-            'original_field_id'=> null,
-        ))->andReturns($a_formelement);
-
-        $tracker = aTracker()->build();
-
-        stub($a_formelement)->setTracker($tracker)->once();
-
-        $f = $tf->getInstanceFromXML($tracker, $xml, $mapping, $user_finder);
-
-        $this->assertReference($f, $a_formelement);
-        $this->assertReference($mapping['F0'], $a_formelement);
     }
 
     //WARNING : READ/UPDATE is actual when last is READ, UPDATE liste (weird case, but good to know)

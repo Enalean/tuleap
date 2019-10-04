@@ -3162,7 +3162,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function testImport()
     {
         foreach ($this->formElements as $form) {
-            if (!$form->testImport()) {
+            if (! $form || !$form->testImport()) {
                 return false;
             }
         }

@@ -22,6 +22,7 @@ require_once 'bootstrap.php';
 
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\Tracker\XML\Importer\TrackerExtraConfiguration;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -29,9 +30,9 @@ use Tuleap\Project\XML\Import\ImportConfig;
 class TrackerXmlImportTestInstance extends TrackerXmlImport
 {
 
-    public function getInstanceFromXML(SimpleXMLElement $xml, Project $project, $name, $description, $itemname)
+    public function getInstanceFromXML(SimpleXMLElement $xml, Project $project, $name, $description, $itemname, TrackerXmlImportFeedbackCollector $feedback_collector)
     {
-        return parent::getInstanceFromXML($xml, $project, $name, $description, $itemname);
+        return parent::getInstanceFromXML($xml, $project, $name, $description, $itemname, $feedback_collector);
     }
 
     public function getAllXmlTrackers(SimpleXMLElement $xml)
@@ -510,12 +511,18 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase
     private $tracker_xml_importer;
     private $xml_security;
 
+    /**
+     * @var \Mockery\MockInterface|TrackerXmlImportFeedbackCollector
+     */
+    private $error_logger;
+
     public function setUp()
     {
         parent::setUp();
         $this->setUpGlobalsMockery();
 
         $tracker_factory = \Mockery::mock(\TrackerFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->error_logger = \Mockery::mock(TrackerXmlImportFeedbackCollector::class);
 
         $this->tracker_xml_importer = new TrackerXmlImportTestInstance(
             $tracker_factory,
@@ -555,7 +562,7 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase
     public function testImport()
     {
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/TestTracker-1.xml');
-        $tracker = $this->tracker_xml_importer->getInstanceFromXML($xml, $this->project, '', '', '');
+        $tracker = $this->tracker_xml_importer->getInstanceFromXML($xml, $this->project, '', '', '', $this->error_logger);
 
         //testing general properties
         $this->assertEqual($tracker->submit_instructions, 'some submit instructions');
@@ -595,6 +602,8 @@ XML;
 
         $rule_factory = \Mockery::spy(\Tracker_RuleFactory::class);
         $tracker      = \Mockery::spy(\Tracker::class);
+
+        $error_logger = \Mockery::mock(TrackerXmlImportFeedbackCollector::class);
 
         $tracker_xml_importer = new TrackerXmlImportTestInstance(
             mockery_stub(\TrackerFactory::class)->getInstanceFromRow()->returns($tracker),
@@ -650,20 +659,32 @@ XML;
             $tracker
         )->once();
 
-        $tracker_xml_importer->getInstanceFromXML($xml, $this->project, $name, $description, $itemname);
+        $tracker_xml_importer->getInstanceFromXML($xml, $this->project, $name, $description, $itemname, $error_logger);
     }
 }
 
 class Tracker_FormElementFactoryForXMLTests extends Tracker_FormElementFactory
 {
     private $mapping = array();
+
+    /**
+     * @var \Mockery\MockInterface|TrackerXmlImportFeedbackCollector
+     */
+    private $error_logger;
+
     public function __construct($mapping)
     {
-        $this->mapping = $mapping;
+        $this->mapping      = $mapping;
+        $this->error_logger = \Mockery::mock(TrackerXmlImportFeedbackCollector::class);
     }
 
-    public function getInstanceFromXML(Tracker $tracker, $elem, &$xmlMapping, User\XML\Import\IFindUserFromXMLReference $user_finder)
-    {
+    public function getInstanceFromXML(
+        Tracker $tracker,
+        $elem,
+        &$xmlMapping,
+        User\XML\Import\IFindUserFromXMLReference $user_finder,
+        TrackerXmlImportFeedbackCollector $feedback_collector
+    ) {
         $xmlMapping = $this->mapping;
     }
 }
