@@ -249,10 +249,10 @@ function gettextJS($translated_plugin, $path, $manifest_json)
         $template = escapeshellarg("$path/${gettext['po']}/template.pot");
 
         executeCommandAndExitIfStderrNotEmpty("find $src \
-                            -name '*.js' \
                             -not -name '*.spec.js' \
                             -not -name '*.test.js' \
                             -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) \
+                            -name '*.js' \
                         | xargs xgettext \
                             --language=JavaScript \
                             --default-domain=core \
@@ -282,7 +282,7 @@ function gettextAngularJS(string $translated_plugin, string $path, array $manife
         $po       = escapeshellarg("$path/${gettext['po']}");
         $template = escapeshellarg("$path/${gettext['po']}/template.pot");
 
-        executeCommandAndExitIfStderrNotEmpty("node_modules/.bin/angular-gettext-cli --files '$src/**/*.+(js|html)' --exclude '**/*.spec.js' --dest $template");
+        executeCommandAndExitIfStderrNotEmpty("node_modules/.bin/angular-gettext-cli --files '$src/**/*.+(js|html)' --exclude '**/*.+(spec|test).js' --dest $template");
         executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output -o $template $template");
 
         info("$gettext_step_header Merging .pot file into .po files");
@@ -303,9 +303,11 @@ function gettextVue($translated_plugin, $path, $manifest_json)
         $template = escapeshellarg("$path/${gettext['po']}/template.pot");
 
         executeCommandAndExitIfStderrNotEmpty("tools/utils/scripts/vue-typescript-gettext-extractor-cli.js \
-        $(find $src -type f -name '*.vue' -o -name '*.ts' -o -name '*.js' \
-        -not \( -name '*.spec.js' -o -name '*.spec.ts' -o -name '*.d.ts' \) \
-        -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) ) \
+        $(find $src  \
+            -not \( -name '*.spec.js' -o -name '*.test.js' -o -name '*.test.ts' -o -name '*.d.ts' \) \
+            -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) \
+            -and \( -type f -name '*.vue' -o -name '*.ts' -o -name '*.js' \) \
+        ) \
         --output $template");
         executeCommandAndExitIfStderrNotEmpty("msguniq --sort-output --use-first -o $template $template");
 
@@ -329,9 +331,11 @@ function gettextTS($translated_plugin, $path, $manifest_json)
         $template = escapeshellarg("$path/${gettext['po']}/template.pot");
 
         executeCommandAndExitIfStderrNotEmpty("tools/utils/scripts/typescript-gettext-extractor-cli.js \
-        $(find $src -type f -name '*.ts' \
-        -not \( -name '*.spec.ts' -o -name '*.d.ts' \) \
-        -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) ) \
+        $(find $src \
+            -not \( -name '*.test.ts' -o -name '*.d.ts' \) \
+            -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) \
+            -and \( -type f -name '*.ts' \) \
+        ) \
         --output $template");
         executeCommandAndExitIfStderrNotEmpty("msguniq --sort-output --use-first -o $template $template");
 
