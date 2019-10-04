@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
+use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 
 require_once('bootstrap.php');
 Mock::generate('Tracker_Artifact');
@@ -548,17 +549,17 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase
 
         $GLOBALS['Language'] = new BaseLanguage('en_US', 'en_US');
         $GLOBALS['Language']->lang = 'en_US';
-        ;
 
         $user     = mock('PFUser');
         $artifact = new MockTracker_Artifact();
 
-        $date = partial_mock('Tracker_FormElement_Field_Date', array('formatDateForDisplay', 'isTimeDisplayed'));
-        stub($date)->formatDateForDisplay('2011-12-01')->returns(1322752769);
-        stub($date)->isTimeDisplayed()->returns(false);
+        $date = Mockery::mock(Tracker_FormElement_Field_Date::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $date->shouldReceive('formatDateForDisplay')->with('2011-12-01')->andReturn(1322752769);
+        $date->shouldReceive('isTimeDisplayed')->andReturnFalse();
+        $date->shouldReceive('getArtifactTimeframeHelper')->andReturn(Mockery::mock(ArtifactTimeframeHelper::class, ['artifactHelpShouldBeShownToUser' => false]));
 
-        $value = new MockTracker_Artifact_ChangesetValue_Date();
-        $value->setReturnValue('getTimestamp', 1322752769);
+        $value = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
+        $value->shouldReceive('getTimestamp')->andReturn(1322752769);
 
         $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'text'));
         $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'html'));
@@ -575,12 +576,13 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase
         $user     = mock('PFUser');
         $artifact = new MockTracker_Artifact();
 
-        $date = partial_mock('Tracker_FormElement_Field_Date', array('formatDateForDisplay', 'isTimeDisplayed'));
-        stub($date)->formatDateForDisplay('2011-12-01')->returns(1322752769);
-        stub($date)->isTimeDisplayed()->returns(false);
+        $date = Mockery::mock(Tracker_FormElement_Field_Date::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $date->shouldReceive('formatDateForDisplay')->with('2011-12-01')->andReturn(1322752769);
+        $date->shouldReceive('isTimeDisplayed')->andReturnFalse();
+        $date->shouldReceive('getArtifactTimeframeHelper')->andReturn(Mockery::mock(ArtifactTimeframeHelper::class, ['artifactHelpShouldBeShownToUser' => false]));
 
-        $value = new MockTracker_Artifact_ChangesetValue_Date();
-        $value->setReturnValue('getTimestamp', 1322752769);
+        $value = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
+        $value->shouldReceive('getTimestamp')->andReturn(1322752769);
 
         $this->assertEqual('01/12/2011', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'text'));
         $this->assertEqual('01/12/2011', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'html'));

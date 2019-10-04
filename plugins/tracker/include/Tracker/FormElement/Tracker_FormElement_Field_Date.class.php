@@ -1121,7 +1121,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return new Tracker_FormElement_DateFormatter($this);
     }
 
-    private function getArtifactTimeframeHelper() : ArtifactTimeframeHelper
+    protected function getArtifactTimeframeHelper() : ArtifactTimeframeHelper
     {
         $form_element_factory       = Tracker_FormElementFactory::instance();
         $semantic_timeframe_builder = new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory);
