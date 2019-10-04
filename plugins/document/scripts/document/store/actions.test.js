@@ -42,6 +42,7 @@ import {
     displayEmbeddedInLargeMode,
     displayEmbeddedInNarrowMode,
     getWikisReferencingSameWikiPage,
+    loadDocument,
     loadDocumentWithAscendentHierarchy,
     loadFolder,
     loadProjectUserGroupsIfNeeded,
@@ -61,6 +62,7 @@ import * as rest_querier from "../api/rest-querier.js";
 import * as upload_file from "./actions-helpers/upload-file.js";
 import * as handle_error from "./actions-helpers/handle-errors.js";
 import * as permissions_groups from "../helpers/permissions/ugroups.js";
+import { handleErrorsForDocument } from "./actions-helpers/handle-errors.js";
 
 describe("Store actions", () => {
     let context;
@@ -2470,7 +2472,12 @@ describe("Store actions", () => {
         let context;
 
         beforeEach(() => {
-            context = { commit: jest.fn() };
+            context = {
+                commit: jest.fn(),
+                state: {
+                    folder_content: [{ id: 100, type: TYPE_FILE }]
+                }
+            };
         });
 
         it("should load item and store it as open in quick look", async () => {
@@ -2488,10 +2495,22 @@ describe("Store actions", () => {
 
             jest.spyOn(rest_querier, "getItem").mockReturnValue(Promise.resolve(item));
 
-            await toggleQuickLook(context, [item]);
+            await toggleQuickLook(context, item.id);
 
             expect(context.commit).toHaveBeenCalledWith("beginLoadingCurrentlyPreviewedItem");
             expect(context.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", item);
+            expect(context.commit).toHaveBeenCalledWith("toggleQuickLook", true);
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingCurrentlyPreviewedItem");
+        });
+
+        it("does not load item if it's already loaded in store", async () => {
+            await toggleQuickLook(context, 100);
+
+            expect(context.commit).not.toHaveBeenCalledWith("beginLoadingCurrentlyPreviewedItem");
+            expect(context.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", {
+                id: 100,
+                type: TYPE_FILE
+            });
             expect(context.commit).toHaveBeenCalledWith("toggleQuickLook", true);
             expect(context.commit).toHaveBeenCalledWith("stopLoadingCurrentlyPreviewedItem");
         });
@@ -2684,6 +2703,51 @@ describe("Store actions", () => {
                 "updateCurrentItemForQuickLokDisplay",
                 updated_item
             );
+        });
+    });
+
+    describe("loadDocument", () => {
+        let getItem;
+
+        it("loads an item", async () => {
+            const item = {
+                id: 3,
+                title: "Project Documentation",
+                owner: {
+                    id: 101,
+                    display_name: "user (login)"
+                },
+                last_update_date: "2018-08-21T17:01:49+02:00"
+            };
+
+            context.state.item = item;
+
+            getItem = jest.spyOn(rest_querier, "getItem").mockReturnValue(Promise.resolve());
+
+            await loadDocument(context, 3);
+
+            expect(getItem).toHaveBeenCalled();
+        });
+
+        it("handle error when document load fails", async () => {
+            const item = {
+                id: 3,
+                title: "test",
+                owner: {
+                    id: 101,
+                    display_name: "user (login)"
+                },
+                last_update_date: "2018-08-21T17:01:49+02:00"
+            };
+
+            context.state.item = item;
+
+            getItem = jest.spyOn(rest_querier, "getItem").mockReturnValue(Promise.reject("error"));
+
+            await loadDocument(context, 3);
+
+            expect(getItem).toHaveBeenCalled();
+            handleErrorsForDocument;
         });
     });
 });

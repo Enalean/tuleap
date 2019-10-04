@@ -216,6 +216,14 @@ export const loadDocumentWithAscendentHierarchy = async (context, item_id) => {
     }
 };
 
+export const loadDocument = async (context, item_id) => {
+    try {
+        return await getItem(item_id);
+    } catch (exception) {
+        return handleErrorsForDocument(context, exception);
+    }
+};
+
 export const loadFolder = (context, folder_id) => {
     const { is_folder_found_in_hierarchy, current_folder } = getCurrentFolder();
     const loading_current_folder_promise = getLoadingCurrentFolderPromise(current_folder);
@@ -899,13 +907,18 @@ export const loadProjectUserGroupsIfNeeded = async context => {
 
 export const toggleQuickLook = async (context, item_id) => {
     try {
-        context.commit("beginLoadingCurrentlyPreviewedItem");
-        const item = await getItem(item_id);
+        let item = context.state.folder_content.find(({ id }) => id === item_id);
+        if (!item) {
+            context.commit("beginLoadingCurrentlyPreviewedItem");
+            item = await getItem(item_id);
+        }
+
         context.commit("updateCurrentlyPreviewedItem", item);
         context.commit("toggleQuickLook", true);
-        context.commit("stopLoadingCurrentlyPreviewedItem");
     } catch (exception) {
         await handleErrorsForDocument(context, exception);
+    } finally {
+        context.commit("stopLoadingCurrentlyPreviewedItem");
     }
 };
 

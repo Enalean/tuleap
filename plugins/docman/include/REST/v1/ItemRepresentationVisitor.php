@@ -112,13 +112,32 @@ class ItemRepresentationVisitor implements ItemVisitor
 
     public function visitLink(Docman_Link $item, array $params = [])
     {
+        $link_properties = null;
+        if ($this->isADirectAccessToDocument($params)) {
+            $link_properties = $this->buildLinkProperties($item);
+            $version = null;
+            if ($item->getCurrentVersion()) {
+                $version = $item->getCurrentVersion()->getNumber();
+            }
+
+            $this->event_manager->processEvent(
+                'plugin_docman_event_access',
+                [
+                    'group_id' => $item->getGroupId(),
+                    'item'     => $item,
+                    'version'  => $version,
+                    'user'     => $params['current_user']
+                ]
+            );
+        }
+
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             $params['current_user'],
             ItemRepresentation::TYPE_LINK,
             null,
             null,
-            $this->buildLinkProperties($item),
+            $link_properties,
             null
         );
     }

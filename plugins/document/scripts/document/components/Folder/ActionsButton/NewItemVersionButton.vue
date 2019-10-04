@@ -25,12 +25,13 @@
         v-on:click="goToUpdate"
         data-test="document-new-item-version-button"
     >
-        <i v-bind:class="iconClasses"></i>
+        <i v-if="is_loading_item" v-bind:class="iconClasses" class="fa fa-spin fa-circle-o-notch"></i>
+        <i v-else v-bind:class="iconClasses"></i>
         <translate>Create new version</translate>
     </a>
 </template>
 <script>
-import { TYPE_WIKI } from "../../../constants.js";
+import { TYPE_LINK, TYPE_WIKI } from "../../../constants.js";
 import EventBus from "../../../helpers/event-bus.js";
 
 export default {
@@ -39,6 +40,11 @@ export default {
         item: Object,
         buttonClasses: String,
         iconClasses: String
+    },
+    data() {
+        return {
+            is_loading_item: false
+        };
     },
     computed: {
         is_item_a_wiki_with_approval_table() {
@@ -59,8 +65,24 @@ export default {
         }
     },
     methods: {
-        goToUpdate() {
+        async goToUpdate() {
             if (this.is_item_a_wiki_with_approval_table) {
+                return;
+            }
+
+            if (this.item.type === TYPE_LINK) {
+                this.is_loading_item = true;
+
+                const link_with_all_properties = await this.$store.dispatch(
+                    "loadDocument",
+                    this.item.id
+                );
+
+                EventBus.$emit("show-create-new-item-version-modal", {
+                    detail: { current_item: link_with_all_properties }
+                });
+
+                this.is_loading_item = false;
                 return;
             }
 

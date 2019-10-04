@@ -290,14 +290,6 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals($embedded['file_properties'], null);
         $this->assertEquals($wiki['file_properties'], null);
 
-        $this->assertEquals($folder['link_properties'], null);
-        $this->assertEquals($empty['link_properties'], null);
-        $this->assertEquals($file['link_properties'], null);
-        $this->assertEquals($link['link_properties']['link_url'], 'https://my.example.test');
-
-        $this->assertEquals($embedded['link_properties'], null);
-        $this->assertEquals($embedded['link_properties'], null);
-
         $this->assertEquals($folder['embedded_file_properties'], null);
         $this->assertEquals($empty['embedded_file_properties'], null);
         $this->assertEquals($file['embedded_file_properties'], null);
@@ -309,7 +301,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $this->assertEquals($folder['link_properties'], null);
         $this->assertEquals($empty['link_properties'], null);
         $this->assertEquals($file['link_properties'], null);
-        $this->assertEquals($link['link_properties']['link_url'], 'https://my.example.test');
+        $this->assertEquals($link['link_properties'], null);
         $this->assertEquals($embedded['link_properties'], null);
         $this->assertEquals($wiki['link_properties'], null);
 

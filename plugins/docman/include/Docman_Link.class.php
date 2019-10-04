@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All rights reserved
+ * Copyright (c) Enalean, 2017-present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -25,7 +25,9 @@
  */
 class Docman_Link extends Docman_Document
 {
-
+    /**
+     * @var Docman_LinkVersion
+     */
     private $current_version;
 
     function __construct($data = null)
