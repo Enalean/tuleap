@@ -21,6 +21,7 @@ import { RootState } from "../type";
 import { Store, StoreOptions } from "vuex";
 import error from "./error";
 import swimlane from "./swimlane";
+import fullscreen from "./fullscreen";
 import { UserState } from "./user/type";
 import { createUserModule } from "./user";
 
@@ -35,7 +36,8 @@ export function createStore(
         modules: {
             error,
             swimlane,
-            user
+            user,
+            fullscreen
         }
     };
 

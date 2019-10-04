@@ -31,7 +31,13 @@ describe("SoloCard", () => {
                         columns: [
                             { id: 2, label: "To do" } as ColumnDefinition,
                             { id: 3, label: "Done" } as ColumnDefinition
-                        ]
+                        ],
+                        fullscreen: {
+                            is_taskboard_in_fullscreen_mode: false
+                        }
+                    },
+                    getters: {
+                        "fullscreen/fullscreen_class": ""
                     }
                 })
             },
@@ -62,7 +68,13 @@ describe("SoloCard", () => {
                                 label: "Done",
                                 mappings: [{ tracker_id: 42 }, { tracker_id: 43 }]
                             } as ColumnDefinition
-                        ]
+                        ],
+                        fullscreen: {
+                            is_taskboard_in_fullscreen_mode: false
+                        }
+                    },
+                    getters: {
+                        "fullscreen/fullscreen_class": ""
                     }
                 })
             },
@@ -109,7 +121,13 @@ describe("SoloCard", () => {
                                     }
                                 ]
                             } as ColumnDefinition
-                        ]
+                        ],
+                        fullscreen: {
+                            is_taskboard_in_fullscreen_mode: false
+                        }
+                    },
+                    getters: {
+                        "fullscreen/fullscreen_class": ""
                     }
                 })
             },
@@ -126,5 +144,58 @@ describe("SoloCard", () => {
         });
 
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("toggles the fullscreen class when the card is in a column and the taskboard is in fullscreen mode", () => {
+        const wrapper = shallowMount(SoloCard, {
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        columns: [
+                            {
+                                id: 2,
+                                label: "To do",
+                                mappings: [
+                                    { tracker_id: 42, accepts: [{ id: 1002 }] },
+                                    {
+                                        tracker_id: 43,
+                                        accepts: [{ id: 1003 }]
+                                    }
+                                ]
+                            } as ColumnDefinition,
+                            {
+                                id: 3,
+                                label: "Done",
+                                mappings: [
+                                    { tracker_id: 42, accepts: [{ id: 1000 }] },
+                                    {
+                                        tracker_id: 43,
+                                        accepts: [{ id: 1001 }]
+                                    }
+                                ]
+                            } as ColumnDefinition
+                        ],
+                        fullscreen: {
+                            is_taskboard_in_fullscreen_mode: true
+                        }
+                    },
+                    getters: {
+                        "fullscreen/fullscreen_class": "taskboard-fullscreen"
+                    }
+                })
+            },
+            propsData: {
+                card: {
+                    id: 43,
+                    tracker_id: 43,
+                    mapped_list_value: {
+                        id: 1001,
+                        label: "Fixed"
+                    }
+                } as Card
+            }
+        });
+
+        expect(wrapper.contains(".taskboard-fullscreen")).toBe(true);
     });
 });

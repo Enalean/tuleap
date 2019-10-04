@@ -5,7 +5,7 @@ exports[`TaskBoardHeader displays a header with many columns 1`] = `
   class="taskboard-head"
 >
   <div
-    class="taskboard-header"
+    class="taskboard-header taskboard-cell-swimlane-header"
   />
    
   <task-board-header-cell-stub

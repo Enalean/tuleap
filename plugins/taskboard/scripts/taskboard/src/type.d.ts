@@ -65,6 +65,7 @@ interface RootState {
     has_content: boolean;
     columns: Array<ColumnDefinition>;
     milestone_id: number;
+    milestone_title: string;
 }
 
 interface User {
