@@ -18,19 +18,6 @@
   -
   -->
 
-<template>
-    <div class="taskboard-cell">
-        <card-skeleton v-for="i in nb_skeletons" v-bind:key="i"/>
-    </div>
+<template functional>
+    <div class="tlp-card tlp-skeleton-card taskboard-card-skeleton"></div>
 </template>
-
-<script lang="ts">
-import { Component, Mixins } from "vue-property-decorator";
-import SkeletonMixin from "./Card/skeleton-mixin";
-import CardSkeleton from "./Card/CardSkeleton.vue";
-
-@Component({
-    components: { CardSkeleton }
-})
-export default class ColumnsSkeleton extends Mixins(SkeletonMixin) {}
-</script>

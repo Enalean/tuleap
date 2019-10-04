@@ -9,11 +9,15 @@ exports[`CardWithChildren when the swimlane is loading children cards,
     card="[object Object]"
   />
    
-  <columns-skeleton-stub
+  <column-with-children-stub
+    column="[object Object]"
     column_index="0"
+    swimlane="[object Object]"
   />
-  <columns-skeleton-stub
+  <column-with-children-stub
+    column="[object Object]"
     column_index="1"
+    swimlane="[object Object]"
   />
 </div>
 `;
