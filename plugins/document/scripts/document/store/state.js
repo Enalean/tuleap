@@ -36,6 +36,7 @@ const state = {
     max_size_upload: 1,
     files_uploads_list: [],
     embedded_are_allowed: false,
+    is_loading_currently_previewed_item: false,
     currently_previewed_item: null,
     is_item_status_metadata_used: false,
     is_obsolescence_date_metadata_used: false,

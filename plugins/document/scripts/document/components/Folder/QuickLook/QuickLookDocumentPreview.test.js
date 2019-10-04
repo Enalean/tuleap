@@ -95,4 +95,46 @@ describe("QuickLookDocumentPreview", () => {
         expect(wrapper.contains(".document-quick-look-image-container")).toBeFalsy();
         expect(wrapper.contains(".document-quick-look-embedded")).toBeFalsy();
     });
+
+    it("Display spinner when embedded file is loaded", () => {
+        store.state.currently_previewed_item = {
+            id: 42,
+            parent_id: 66,
+            type: TYPE_EMBEDDED
+        };
+        store.state.is_loading_currently_previewed_item = true;
+
+        const wrapper = preview_factory({ iconClass: "fa-link" });
+
+        expect(wrapper.contains("[data-test=document-preview-spinner]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=document-quick-look-embedded]")).toBeFalsy();
+
+        store.state.currently_previewed_item = {
+            id: 42,
+            parent_id: 66,
+            type: TYPE_EMBEDDED,
+            embedded_file_properties: {
+                content: "custom content"
+            }
+        };
+        store.state.is_loading_currently_previewed_item = false;
+        expect(wrapper.contains("[data-test=document-preview-spinner]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=document-quick-look-embedded]")).toBeTruthy();
+    });
+
+    it("Do not display spinner for other types", () => {
+        store.state.currently_previewed_item = {
+            id: 42,
+            parent_id: 66,
+            type: TYPE_FILE
+        };
+        store.state.is_loading_currently_previewed_item = true;
+
+        const wrapper = preview_factory({ iconClass: "fa-link" });
+
+        expect(wrapper.contains("[data-test=document-preview-spinner]")).toBeFalsy();
+
+        store.state.is_loading_currently_previewed_item = false;
+        expect(wrapper.contains("[data-test=document-preview-spinner]")).toBeFalsy();
+    });
 });

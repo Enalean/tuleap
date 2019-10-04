@@ -899,9 +899,11 @@ export const loadProjectUserGroupsIfNeeded = async context => {
 
 export const toggleQuickLook = async (context, item_id) => {
     try {
+        context.commit("beginLoadingCurrentlyPreviewedItem");
         const item = await getItem(item_id);
         context.commit("updateCurrentlyPreviewedItem", item);
         context.commit("toggleQuickLook", true);
+        context.commit("stopLoadingCurrentlyPreviewedItem");
     } catch (exception) {
         await handleErrorsForDocument(context, exception);
     }
