@@ -19,6 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ColumnsSkeleton from "./ColumnsSkeleton.vue";
+import CardSkeleton from "./Card/CardSkeleton.vue";
 
 describe("ColumnsSkeleton", () => {
     it("displays a fixed amount of skeletons depending on column index", () => {
@@ -32,9 +33,7 @@ describe("ColumnsSkeleton", () => {
             { column_index: 6, expected_number_of_skeletons: 1 }
         ].forEach(({ column_index, expected_number_of_skeletons }) => {
             const wrapper = shallowMount(ColumnsSkeleton, { propsData: { column_index } });
-            expect(wrapper.findAll(".taskboard-card-skeleton").length).toBe(
-                expected_number_of_skeletons
-            );
+            expect(wrapper.findAll(CardSkeleton).length).toBe(expected_number_of_skeletons);
         });
     });
 });
