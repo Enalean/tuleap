@@ -110,6 +110,9 @@ msgstr "Ajout de %s : %s"
 msgid "Added: %s"
 msgstr "Ajout : %s"
 
+msgid "Administration"
+msgstr "Administration"
+
 msgid ""
 "After artifact edition, all the disabled types used will be cleared without "
 "removing the existing link."
@@ -463,6 +466,13 @@ msgstr ""
 
 msgid "Move artifact"
 msgstr "Déplacer l'artéfact"
+
+msgid "My notifications"
+msgstr "Mes notifications"
+
+#, php-format
+msgid "New %s"
+msgstr "Ajouter un(e) %s"
 
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."

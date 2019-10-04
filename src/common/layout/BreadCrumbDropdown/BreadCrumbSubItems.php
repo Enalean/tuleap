@@ -42,4 +42,12 @@ class BreadCrumbSubItems
     {
         return $this->sections;
     }
+
+    /**
+     * @param SubItemsSection[] $sections
+     */
+    public function setSections(array $sections): void
+    {
+        $this->sections = $sections;
+    }
 }
