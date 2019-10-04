@@ -27,7 +27,9 @@ const error_module_default: Module<ErrorState, RootState> = {
     namespaced: true,
     state: {
         global_error_message: "",
-        has_global_error: false
+        has_global_error: false,
+        modal_error_message: "",
+        has_modal_error: false
     },
     actions,
     mutations

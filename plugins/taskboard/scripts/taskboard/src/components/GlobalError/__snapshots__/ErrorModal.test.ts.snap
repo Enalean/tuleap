@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ErrorModal it warns user that something is wrong with a button to show details 1`] = `
+<div
+  aria-labelledby="taskboard-error-modal-title"
+  class="tlp-modal tlp-modal-danger tlp-modal-display tlp-modal-shown"
+  role="dialog"
+>
+  <div
+    class="tlp-modal-header"
+  >
+    <h1
+      class="tlp-modal-title"
+      id="taskboard-error-modal-title"
+    >
+      <i
+        class="fa fa-warning tlp-modal-title-icon"
+      />
+       
+      <translate-stub
+        tag="span"
+      >
+        Oops, there's an issue
+      </translate-stub>
+    </h1>
+     
+    <div
+      aria-label="Close"
+      class="tlp-modal-close"
+      data-dismiss="modal"
+    >
+      
+            ×
+        
+    </div>
+  </div>
+   
+  <div
+    class="tlp-modal-body"
+  >
+    <p
+      data-current-language="en_US"
+      data-msgid="It seems an action you tried to perform can't be done"
+    >
+      It seems an action you tried to perform can't be done
+    </p>
+     
+    <a
+      class="taskboard-error-modal-link"
+      data-current-language="en_US"
+      data-msgid="
+                Show error details
+            "
+      data-test="show-details"
+    >
+      
+                Show error details
+            
+    </a>
+     
+    <!---->
+  </div>
+   
+  <div
+    class="tlp-modal-footer"
+  >
+    <button
+      class="tlp-button-danger tlp-button-outline tlp-modal-action"
+      data-current-language="en_US"
+      data-dismiss="modal"
+      data-msgid="
+            Close
+        "
+      type="button"
+    >
+      
+            Close
+        
+    </button>
+     
+    <button
+      class="tlp-button-danger tlp-modal-action"
+      type="button"
+    >
+      <i
+        class="fa fa-refresh tlp-button-icon"
+      />
+       
+      <translate-stub
+        tag="span"
+      >
+        Reload the page
+      </translate-stub>
+    </button>
+  </div>
+</div>
+`;

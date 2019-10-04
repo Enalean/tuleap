@@ -22,7 +22,7 @@ import { FetchWrapperError } from "tlp";
 import { ActionContext } from "vuex";
 import { ErrorState } from "./type";
 
-export async function handleErrorMessage(
+export async function handleGlobalError(
     context: ActionContext<ErrorState, RootState>,
     rest_error: FetchWrapperError
 ): Promise<void> {
@@ -31,5 +31,17 @@ export async function handleErrorMessage(
         context.commit("setGlobalErrorMessage", error.code + " " + error.message);
     } catch (error) {
         context.commit("setGlobalErrorMessage", "");
+    }
+}
+
+export async function handleModalError(
+    context: ActionContext<ErrorState, RootState>,
+    rest_error: FetchWrapperError
+): Promise<void> {
+    try {
+        const { error } = await rest_error.response.json();
+        context.commit("setModalErrorMessage", error.code + " " + error.message);
+    } catch (e) {
+        context.commit("setModalErrorMessage", "");
     }
 }

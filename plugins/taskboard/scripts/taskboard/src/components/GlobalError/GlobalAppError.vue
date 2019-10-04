@@ -28,23 +28,25 @@
 
         <div class="empty-page-text-with-small-text">
             <translate>Oops, there's an issue</translate>
-            <div class="empty-page-small-text" v-translate>It seems action you try to perform can't be done</div>
+            <div class="empty-page-small-text" v-translate>It seems an action you tried to perform can't be done</div>
             <template v-if="has_more_details">
                 <div class="taskboard-error-link">
                     <a v-if="! is_more_shown"
                        v-on:click="is_more_shown = true"
+                       data-test="show-details"
                        v-translate
                     >Show error details</a>
                 </div>
                 <pre v-if="is_more_shown"
                      class="taskboard-error-details"
+                     data-test="details"
                 >{{ global_error_message }}</pre>
             </template>
         </div>
 
         <button type="button" class="tlp-button-primary tlp-button-large" v-on:click="reloadPage">
             <i class="fa fa-refresh tlp-button-icon"></i>
-            Reload the page
+            <translate>Reload the page</translate>
         </button>
     </div>
 </template>

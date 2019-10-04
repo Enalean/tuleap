@@ -20,7 +20,7 @@
 import { ActionContext } from "vuex";
 import { RootState } from "../../type";
 import { FetchWrapperError } from "tlp";
-import { handleErrorMessage } from "./error-actions";
+import * as actions from "./error-actions";
 import { ErrorState } from "./type";
 
 describe("Error modules actions", () => {
@@ -32,33 +32,67 @@ describe("Error modules actions", () => {
         } as unknown) as ActionContext<ErrorState, RootState>;
     });
 
-    it("sets a global error message when a message can be extracted from the FetchWrapperError instance", async () => {
-        const error = new Error() as FetchWrapperError;
-        error.response = {
-            json: () =>
-                Promise.resolve({
-                    error: { code: 500, message: "Internal Server Error" }
-                })
-        } as Response;
+    describe(`handleGlobalError`, () => {
+        it("sets a global error message when a message can be extracted from the FetchWrapperError instance", async () => {
+            const error = new Error() as FetchWrapperError;
+            error.response = {
+                json: () =>
+                    Promise.resolve({
+                        error: { code: 500, message: "Internal Server Error" }
+                    })
+            } as Response;
 
-        await handleErrorMessage(context, error);
+            await actions.handleGlobalError(context, error);
 
-        expect(context.commit).toHaveBeenCalledTimes(1);
-        expect(context.commit).toHaveBeenCalledWith(
-            "setGlobalErrorMessage",
-            "500 Internal Server Error"
-        );
+            expect(context.commit).toHaveBeenCalledTimes(1);
+            expect(context.commit).toHaveBeenCalledWith(
+                "setGlobalErrorMessage",
+                "500 Internal Server Error"
+            );
+        });
+
+        it("leaves the global error message empty when a message can not be extracted from the FetchWrapperError instance", async () => {
+            const error = new Error() as FetchWrapperError;
+            error.response = {
+                json: () => Promise.reject()
+            } as Response;
+
+            await actions.handleGlobalError(context, error);
+
+            expect(context.commit).toHaveBeenCalledTimes(1);
+            expect(context.commit).toHaveBeenCalledWith("setGlobalErrorMessage", "");
+        });
     });
 
-    it("leaves the global error message empty when a message can not be extracted from the FetchWrapperError instance", async () => {
-        const error = new Error() as FetchWrapperError;
-        error.response = {
-            json: () => Promise.reject()
-        } as Response;
+    describe(`handleModalError`, () => {
+        it(`when a message can be extracted from the FetchWrapperError,
+            it will set an error message that will show up in a modal window`, async () => {
+            const error = new Error() as FetchWrapperError;
+            error.response = {
+                json: () =>
+                    Promise.resolve({
+                        error: { code: 500, message: "Internal Server Error" }
+                    })
+            } as Response;
 
-        await handleErrorMessage(context, error);
+            await actions.handleModalError(context, error);
 
-        expect(context.commit).toHaveBeenCalledTimes(1);
-        expect(context.commit).toHaveBeenCalledWith("setGlobalErrorMessage", "");
+            expect(context.commit).toHaveBeenCalledWith(
+                "setModalErrorMessage",
+                "500 Internal Server Error"
+            );
+        });
+
+        it(`when a message can't be extracted from the FetchWrapperError,
+            it will leave the modal error message empty`, async () => {
+            const error = new Error() as FetchWrapperError;
+            error.response = {
+                json: () => Promise.reject()
+            } as Response;
+
+            await actions.handleModalError(context, error);
+
+            expect(context.commit).toHaveBeenCalledWith("setModalErrorMessage", "");
+        });
     });
 });

@@ -46,7 +46,7 @@ export async function loadSwimlanes(
             }
         });
     } catch (error) {
-        await context.dispatch("error/handleErrorMessage", error, { root: true });
+        await context.dispatch("error/handleGlobalError", error, { root: true });
     } finally {
         context.commit("endLoadingSwimlanes");
     }
@@ -73,7 +73,7 @@ export async function loadChildrenCards(
             }
         });
     } catch (error) {
-        // Show an error modal
+        await context.dispatch("error/handleModalError", error, { root: true });
     } finally {
         context.commit("endLoadingChildren", swimlane);
     }

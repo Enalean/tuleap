@@ -23,3 +23,8 @@ export function setGlobalErrorMessage(state: ErrorState, message: string): void 
     state.global_error_message = message;
     state.has_global_error = true;
 }
+
+export function setModalErrorMessage(state: ErrorState, message: string): void {
+    state.modal_error_message = message;
+    state.has_modal_error = true;
+}

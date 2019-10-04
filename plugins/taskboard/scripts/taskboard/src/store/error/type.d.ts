@@ -20,4 +20,6 @@
 export interface ErrorState {
     global_error_message: string;
     has_global_error: boolean;
+    modal_error_message: string;
+    has_modal_error: boolean;
 }
