@@ -424,6 +424,12 @@ $nav-dropdown-content-border-radius: 3px;
     }
 }
 
+#current-project-banner-bullhorn > a {
+    padding: 0 0 0 20px;
+    color: $ui-color-warning;
+    font-size: 16px;
+}
+
 .current-project-nav-popover {
     width: 276px;
     padding: 0;

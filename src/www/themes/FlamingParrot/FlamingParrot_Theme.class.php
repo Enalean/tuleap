@@ -21,6 +21,7 @@
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
+use Tuleap\Project\Banner\Banner;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
@@ -239,7 +240,13 @@ class FlamingParrot_Theme extends Layout
         $csrf_logout_token     = new CSRFSynchronizerToken('logout_action');
         $url_redirect          = new URLRedirect($event_manager);
 
-        $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($project_manager, $params);
+        $banner = null;
+        if (!empty($params['group'])) {
+            $project = $project_manager->getProject($params['group']);
+            $banner  = $this->banner_retriever->getBannerForProject($project);
+        }
+
+        $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($project_manager, $params, $banner);
 
         $this->showFlamingParrotBurningParrotUnificationTour($current_user);
 
@@ -260,10 +267,10 @@ class FlamingParrot_Theme extends Layout
             $url_redirect
         ));
 
-        $this->container($params, $project_manager, $current_user);
+        $this->container($params, $project_manager, $current_user, $banner);
     }
 
-    private function getCurrentProjectNavbarInfo(ProjectManager $project_manager, array $params)
+    private function getCurrentProjectNavbarInfo(ProjectManager $project_manager, array $params, ?Banner $banner)
     {
         if (empty($params['group'])) {
             return false;
@@ -274,7 +281,8 @@ class FlamingParrot_Theme extends Layout
         return new FlamingParrot_CurrentProjectNavbarInfoPresenter(
             $project,
             $this->getProjectPrivacy($project),
-            $this->project_flags_builder->buildProjectFlags($project)
+            $this->project_flags_builder->buildProjectFlags($project),
+            $banner
         );
     }
 
@@ -319,7 +327,7 @@ class FlamingParrot_Theme extends Layout
         return $display_new_user;
     }
 
-    private function container(array $params, ProjectManager $project_manager, PFUser $current_user)
+    private function container(array $params, ProjectManager $project_manager, PFUser $current_user, ?Banner $banner)
     {
         $project_tabs        = null;
         $project_name        = null;
@@ -327,7 +335,6 @@ class FlamingParrot_Theme extends Layout
         $project             = null;
         $project_privacy     = null;
         $sidebar_collapsable = false;
-        $banner              = null;
 
         if (! empty($params['group'])) {
             $this->show_sidebar = true;
@@ -339,7 +346,6 @@ class FlamingParrot_Theme extends Layout
             $project_link        = $this->getProjectLink($project);
             $project_privacy     = $this->getProjectPrivacy($project);
             $sidebar_collapsable = (! $current_user->isAnonymous() && $current_user->isLoggedIn()) ? true : false;
-            $banner              = $this->banner_retriever->getBannerForProject($project);
         }
 
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
