@@ -21,6 +21,7 @@
 <template>
     <div class="taskboard-app">
         <under-construction-modal/>
+        <error-modal v-if="has_modal_error"/>
         <global-app-error v-if="has_global_error"/>
         <board-without-any-columns-error v-else-if="! has_at_least_one_column"/>
         <task-board v-else-if="has_content"/>
@@ -38,11 +39,13 @@ import UnderConstructionModal from "./UnderConstruction/UnderConstructionModal.v
 import { ColumnDefinition } from "../type";
 import TaskBoard from "./TaskBoard/TaskBoard.vue";
 import NoContentEmptyState from "./EmptyState/NoContentEmptyState.vue";
+import ErrorModal from "./GlobalError/ErrorModal.vue";
 
 const error = namespace("error");
 
 @Component({
     components: {
+        ErrorModal,
         NoContentEmptyState,
         TaskBoard,
         BoardWithoutAnyColumnsError,
@@ -59,6 +62,9 @@ export default class App extends Vue {
 
     @error.State
     readonly has_global_error!: boolean;
+
+    @error.State
+    readonly has_modal_error!: boolean;
 
     get has_at_least_one_column(): boolean {
         return this.columns.length > 0;

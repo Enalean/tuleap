@@ -32,9 +32,9 @@ exports[`GlobalAppError it warns user that something is wrong with a button to s
     <div
       class="empty-page-small-text"
       data-current-language="en_US"
-      data-msgid="It seems action you try to perform can't be done"
+      data-msgid="It seems an action you tried to perform can't be done"
     >
-      It seems action you try to perform can't be done
+      It seems an action you tried to perform can't be done
     </div>
      
     <div
@@ -43,6 +43,7 @@ exports[`GlobalAppError it warns user that something is wrong with a button to s
       <a
         data-current-language="en_US"
         data-msgid="Show error details"
+        data-test="show-details"
       >
         Show error details
       </a>
@@ -58,9 +59,12 @@ exports[`GlobalAppError it warns user that something is wrong with a button to s
     <i
       class="fa fa-refresh tlp-button-icon"
     />
-    
-        Reload the page
-    
+     
+    <translate-stub
+      tag="span"
+    >
+      Reload the page
+    </translate-stub>
   </button>
 </div>
 `;

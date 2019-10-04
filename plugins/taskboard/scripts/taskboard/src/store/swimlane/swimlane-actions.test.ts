@@ -120,14 +120,12 @@ describe("Swimlane state actions", () => {
             );
         });
 
-        it(`Given a rest error,
-            the error message is stored
-            and the loading flag will be removed`, async () => {
+        it(`When there is a REST error, it will stop the loading flag and will show a global error`, async () => {
             const error = new Error();
             tlpRecursiveGetMock.mockRejectedValue(error);
             await actions.loadSwimlanes(context);
             expect(context.dispatch).toHaveBeenCalledTimes(1);
-            expect(context.dispatch).toHaveBeenCalledWith("error/handleErrorMessage", error, {
+            expect(context.dispatch).toHaveBeenCalledWith("error/handleGlobalError", error, {
                 root: true
             });
             expect(context.commit).toHaveBeenCalledWith("endLoadingSwimlanes");
@@ -180,10 +178,13 @@ describe("Swimlane state actions", () => {
             });
         });
 
-        it(`When there is a REST error, it will stop the loading flag
-            but won't report the error for now`, async () => {
-            tlpRecursiveGetMock.mockRejectedValue(new Error());
+        it(`When there is a REST error, it will stop the loading flag and will show an error modal`, async () => {
+            const error = new Error();
+            tlpRecursiveGetMock.mockRejectedValue(error);
             await loadChildrenCards(context, swimlane);
+            expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
+                root: true
+            });
             expect(context.commit).toHaveBeenCalledWith("endLoadingChildren", swimlane);
         });
     });

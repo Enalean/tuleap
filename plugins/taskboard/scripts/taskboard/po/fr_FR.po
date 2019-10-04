@@ -41,7 +41,7 @@ msgstr "Incompatibilité dans le choix de la couleur"
 msgid "Initial effort"
 msgstr "Effort estimé"
 
-msgid "It seems action you try to perform can't be done"
+msgid "It seems an action you tried to perform can't be done"
 msgstr ""
 "Il semble que l'action que vous venez de tenter ne peut pas être réalisée"
 
@@ -60,6 +60,9 @@ msgid "Please edit the card to change the status, or add children if possible."
 msgstr ""
 "Veuillez éditer la carte pour changer son statut, ou ajouter des enfants si "
 "possible."
+
+msgid "Reload the page"
+msgstr "Recharger la page"
 
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
