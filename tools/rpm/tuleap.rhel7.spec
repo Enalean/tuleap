@@ -507,6 +507,8 @@ done
 # Install systemd Unit
 %{__install} -d $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap.service $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} src/utils/systemd/tuleap-workers.service $RPM_BUILD_ROOT/%{_unitdir}
+%{__install} src/utils/systemd/tuleap-worker@.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-svn-updater.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-php-fpm.service $RPM_BUILD_ROOT/%{_unitdir}
 %{__install} src/utils/systemd/tuleap-process-system-events-default.timer $RPM_BUILD_ROOT/%{_unitdir}
@@ -756,6 +758,7 @@ chmod 750 /var/lib/gitolite
 if [ $1 -eq 1 ]; then
     /usr/bin/systemctl enable \
         tuleap.service \
+        tuleap-workers.service \
         tuleap-php-fpm.service &>/dev/null || :
     /usr/bin/systemctl mask php73-php-fpm || :
 fi
@@ -782,6 +785,7 @@ if [ $1 -eq 0 ]; then
 
     /usr/bin/systemctl disable \
         tuleap.service \
+        tuleap-workers.service \
         tuleap-php-fpm.service &>/dev/null || :
 fi
 
@@ -929,6 +933,8 @@ fi
 
 # Unit files
 %attr(00644,root,root) %{_unitdir}/tuleap.service
+%attr(00644,root,root) %{_unitdir}/tuleap-workers.service
+%attr(00644,root,root) %{_unitdir}/tuleap-worker@.service
 %attr(00644,root,root) %{_unitdir}/tuleap-php-fpm.service
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-default.timer
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-default.service

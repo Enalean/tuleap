@@ -27,5 +27,8 @@ fi
 
 mkdir -p "$WORKSPACE/results/build-and-run-$OS"
 docker cp "$UNIQUE_NAME-rpm-installer":/output/index.html "$WORKSPACE/results/build-and-run-$OS"
+docker cp "$UNIQUE_NAME-rpm-installer":/var/log/nginx "$WORKSPACE/results/build-and-run-$OS/nginx"
+docker cp "$UNIQUE_NAME-rpm-installer":/var/opt/remi/php73/log/php-fpm "$WORKSPACE/results/build-and-run-$OS/fpm"
+docker cp "$UNIQUE_NAME-rpm-installer":/var/log/tuleap "$WORKSPACE/results/build-and-run-$OS/tuleap"
 
 grep "Tuleap $(cat "$WORKSPACE"/sources/VERSION)" "$WORKSPACE/results/build-and-run-$OS/index.html"

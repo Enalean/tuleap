@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011 - Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -21,7 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'SystemEventProcessor.class.php';
 
 class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor
 {
@@ -33,7 +32,6 @@ class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor
 
     protected function postEventsActions(array $executed_events_ids, $queue_name)
     {
-        $this->ensureWorkersAreRunning();
         $params = array(
             'executed_events_ids'  => $executed_events_ids,
             'queue_name'           => $queue_name
@@ -43,25 +41,6 @@ class SystemEventProcessor_ApplicationOwner extends SystemEventProcessor
             Event::POST_SYSTEM_EVENTS_ACTIONS,
             $params
         );
-    }
-
-    private function ensureWorkersAreRunning()
-    {
-        $this->logger->debug("Check if backend workers are running");
-        for ($i = 0; $i < $this->getBackendWorkerCount(); $i++) {
-            \Tuleap\Queue\Worker::run($this->logger, $i);
-        }
-    }
-
-    private function getBackendWorkerCount()
-    {
-        if (ForgeConfig::get('sys_nb_backend_workers') !== false) {
-            return abs((int) ForgeConfig::get('sys_nb_backend_workers'));
-        }
-        if (ForgeConfig::get('sys_async_emails') !== false) {
-            return 1;
-        }
-        return 0;
     }
 
     public function getProcessOwner()

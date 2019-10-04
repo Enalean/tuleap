@@ -101,9 +101,7 @@ class Worker
         if (isset($options['id'])) {
             if (ctype_digit((string) $options['id']) && $options['id'] >= 0) {
                 $this->id = (int) $options['id'];
-                if ($this->id > 0) {
-                    $this->pid_file = '/var/run/tuleap/worker_' . $this->id . '.pid';
-                }
+                $this->pid_file = self::getPidFilePath($this->id);
             } else {
                 $this->cliError("Invalid 'id' it should be a positive integer\n");
             }
@@ -201,33 +199,30 @@ EOT;
         exit(255);
     }
 
-    public static function run(Logger $logger, $id = 0)
+    public static function getWorkerPid(int $id): int
     {
-        try {
-            $pid_file = self::DEFAULT_PID_FILE_PATH;
-            if ($id !== 0) {
-                $id = abs((int) $id);
-                $pid_file = '/var/run/tuleap/worker_'.$id.'.pid';
-            }
-
-            $logger->debug("Check worker $id with $pid_file");
-            if (! self::isWorkerRunning($pid_file)) {
-                $logger->debug("Starting worker $id");
-                $command = new System_Command();
-                $command->exec('/usr/share/tuleap/src/utils/worker.php --id='.escapeshellarg($id).' >/dev/null 2>/dev/null &');
-            }
-        } catch (\System_Command_CommandException $exception) {
-            $logger->error("Unable to launch backend worker: ".$exception->getMessage());
+        $pid_file = self::getPidFilePath($id);
+        if (file_exists($pid_file)) {
+            return (int) trim(file_get_contents($pid_file));
         }
+        return -1;
     }
 
-    private static function isWorkerRunning($pid_file)
+    public static function isWorkerRunning(int $id): bool
     {
-        if (file_exists($pid_file)) {
-            $pid = (int) trim(file_get_contents($pid_file));
+        $pid = self::getWorkerPid($id);
+        if ($pid > 0) {
             $ret = posix_kill($pid, SIG_DFL);
             return $ret === true;
         }
         return false;
+    }
+
+    private static function getPidFilePath(int $id): string
+    {
+        if ($id === 0) {
+            return self::DEFAULT_PID_FILE_PATH;
+        }
+        return sprintf('/var/run/tuleap/worker_%d.pid', $id);
     }
 }

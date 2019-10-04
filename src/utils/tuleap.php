@@ -30,7 +30,9 @@ use Tuleap\CLI\Command\ImportProjectXMLCommand;
 use Tuleap\CLI\Command\LaunchEveryMinuteJobCommand;
 use Tuleap\CLI\Command\ProcessSystemEventsCommand;
 use Tuleap\CLI\Command\UserPasswordCommand;
+use Tuleap\CLI\Command\WorkerSupervisorCommand;
 use Tuleap\CLI\Command\WorkerSVNRootUpdateCommand;
+use Tuleap\CLI\Command\WorkerSystemCtlCommand;
 use Tuleap\CLI\DelayExecution\ConditionalTuleapCronEnvExecutionDelayer;
 use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
 use Tuleap\CLI\DelayExecution\ExecutionDelayerRandomizedSleep;
@@ -39,6 +41,7 @@ use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\Queue\TaskWorker\TaskWorkerProcessCommand;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyRevoker;
+use TuleapCfg\Command\ProcessFactory;
 
 (static function () {
     require_once __DIR__ . '/../vendor/autoload.php';
@@ -178,6 +181,25 @@ $CLI_command_collector->addCommand(
                 new BackendLogger(Tuleap\Queue\Worker::DEFAULT_LOG_FILE_PATH),
                 ForgeConfig::get('sys_logger_level')
             )
+        );
+    }
+);
+
+$CLI_command_collector->addCommand(
+    WorkerSupervisorCommand::NAME,
+    static function () : WorkerSupervisorCommand {
+        return new WorkerSupervisorCommand(
+            new ProcessFactory(),
+            new LockFactory(new SemaphoreStore()),
+        );
+    }
+);
+
+$CLI_command_collector->addCommand(
+    WorkerSystemCtlCommand::NAME,
+    static function () : WorkerSystemCtlCommand {
+        return new WorkerSystemCtlCommand(
+            new ProcessFactory(),
         );
     }
 );
