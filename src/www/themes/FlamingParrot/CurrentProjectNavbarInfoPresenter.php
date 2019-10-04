@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\Banner\Banner;
+
 class FlamingParrot_CurrentProjectNavbarInfoPresenter  // phpcs:ignore
 {
     public $project_privacy;
@@ -56,8 +58,12 @@ class FlamingParrot_CurrentProjectNavbarInfoPresenter  // phpcs:ignore
      * @var bool
      */
     public $project_is_private_incl_restricted;
+    /**
+     * @var bool
+     */
+    public $has_project_banner;
 
-    public function __construct(Project $project, $project_privacy, array $project_flags)
+    public function __construct(Project $project, $project_privacy, array $project_flags, ?Banner $banner)
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -79,6 +85,11 @@ class FlamingParrot_CurrentProjectNavbarInfoPresenter  // phpcs:ignore
             $this->project_is_public_incl_restricted  = $project->getAccess() === Project::ACCESS_PUBLIC_UNRESTRICTED;
             $this->project_is_private                 = $project->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED;
             $this->project_is_private_incl_restricted = $project->getAccess() === Project::ACCESS_PRIVATE;
+        }
+
+        $this->has_project_banner = false;
+        if ($banner !== null) {
+            $this->has_project_banner = true;
         }
     }
 }

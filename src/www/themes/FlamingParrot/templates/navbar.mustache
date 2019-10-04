@@ -37,6 +37,11 @@
 
                             {{ project_name }}
                         </a>
+                        {{# has_project_banner }}
+                            <span id="current-project-banner-bullhorn">
+                                <a href="#" aria-labelledby="current-project-banner-message"><i class="fa fa-bullhorn"></i></a>
+                            </span>
+                        {{/has_project_banner}}
                         {{# has_project_flags }}
                             <span class="current-project-nav-flag"
                                   title="{{# project_flags }}{{ label }} {{/ project_flags }}"
