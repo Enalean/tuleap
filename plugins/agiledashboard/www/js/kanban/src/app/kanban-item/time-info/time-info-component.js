@@ -36,7 +36,7 @@ function controller($sce, gettextCatalog) {
             return "";
         }
 
-        return `${label} ${moment().calendar(entry_date)}`;
+        return `${label} ${moment(entry_date).calendar()}`;
     }
 }
 
