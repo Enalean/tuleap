@@ -1,0 +1,152 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Tuleap\Tracker\Report;
+
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tracker_FormElement_Field_ArtifactId;
+use Tracker_Report;
+use Tracker_Report_Renderer_Table;
+
+class TrackerReportRendererTableTest extends TestCase
+{
+    use MockeryPHPUnitIntegration;
+
+    /**
+     * @var Mockery\MockInterface|Tracker_Report
+     */
+    private $tracker_report;
+
+    /**
+     * @var Mockery\MockInterface|Tracker_Report_Renderer_Table
+     */
+    private $tracker_report_renderer_table;
+
+    /**
+     * @var array
+     */
+    private $matchings_ids;
+    /**
+     * @var Mockery\MockInterface|Tracker_FormElement_Field_ArtifactId
+     */
+    private $form_elements_1;
+    /**
+     * @var Mockery\MockInterface|Tracker_FormElement_Field_ArtifactId
+     */
+    private $form_elements_2;
+    /**
+     * @var Mockery\MockInterface|Tracker_FormElement_Field_ArtifactId
+     */
+    private $form_elements_3;
+
+    /**
+     * @var array
+     */
+    private $columns;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->tracker_report = Mockery::mock(Tracker_Report::class);
+        $this->tracker_report_renderer_table  = \Mockery::mock(Tracker_Report_Renderer_Table::class)->makePartial();
+        $GLOBALS['sys_server_join'] = 20;
+
+
+        $this->matchings_ids = [
+            "last_changeset_id" => "98, 99, 100",
+        ];
+
+        $this->form_elements_1 = Mockery::mock(Tracker_FormElement_Field_ArtifactId::class);
+        $this->form_elements_2 = Mockery::mock(Tracker_FormElement_Field_ArtifactId::class);
+        $this->form_elements_3 = Mockery::mock(Tracker_FormElement_Field_ArtifactId::class);
+
+        $this->form_elements_1->shouldReceive('getId')->andReturn(101);
+        $this->form_elements_2->shouldReceive('getId')->andReturn(102);
+        $this->form_elements_3->shouldReceive('getId')->andReturn(103);
+
+        $this->form_elements_1->shouldReceive('isUsed')->andReturn(true);
+        $this->form_elements_2->shouldReceive('isUsed')->andReturn(true);
+        $this->form_elements_3->shouldReceive('isUsed')->andReturn(true);
+
+        $this->form_elements_1->shouldReceive('getQuerySelect')->andReturn("a.id AS `artifact_id`");
+        $this->form_elements_1->shouldReceive('getQueryFrom')->andReturn("");
+
+        $this->form_elements_2->shouldReceive('getQuerySelect')->andReturn("a.id AS `artifact_id`");
+        $this->form_elements_2->shouldReceive('getQueryFrom')->andReturn("");
+
+        $this->form_elements_3->shouldReceive('getQuerySelect')->andReturn("a.id AS `artifact_id`");
+        $this->form_elements_3->shouldReceive('getQueryFrom')->andReturn("");
+
+        $this->form_elements_1->shouldReceive('getQueryOrderby')->andReturn("artifact_id");
+
+        $this->columns = [
+            "101" => [
+                'field' => $this->form_elements_1,
+                'field_id' => "101"
+            ],
+            "102" => [
+                'field' => $this->form_elements_2,
+                'field_id' => "102"
+            ],
+            "103" => [
+                'field' => $this->form_elements_3,
+                'field_id' => "103"
+            ]
+        ];
+
+        $this->tracker_report_renderer_table->shouldReceive('sortHasUsedField')->andReturn(true);
+    }
+
+    public function tearDown(): void
+    {
+        unset($GLOBALS['sys_server_join']);
+    }
+
+    public function testOrderOnArtifactIdDescendingWhenSortIsDefined() : void
+    {
+        $this->tracker_report_renderer_table->shouldReceive('getSort')->andReturn(
+            [
+                '101' => [
+                    'field_id' => 101,
+                    'is_desc' => true,
+                    'rank' => 0,
+                    'field' => $this->form_elements_1
+                ]
+            ]
+        );
+
+        $this->assertSame(
+            [' SELECT a.id AS id, c.id AS changeset_id , a.id AS `artifact_id`, a.id AS `artifact_id`, a.id AS `artifact_id` FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id)    WHERE c.id IN (98,0,0)  GROUP BY id  ORDER BY artifact_id DESC'],
+            $this->tracker_report_renderer_table->buildOrderedQuery($this->matchings_ids, $this->columns, false, false)
+        );
+    }
+
+    public function testOrderNotDefinedWhenNoSortDefined() : void
+    {
+        $this->tracker_report_renderer_table->shouldReceive('getSort')->andReturn([]);
+
+        $this->assertSame(
+            [' SELECT a.id AS id, c.id AS changeset_id , a.id AS `artifact_id`, a.id AS `artifact_id`, a.id AS `artifact_id` FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id)    WHERE c.id IN (98,0,0)  GROUP BY id '],
+            $this->tracker_report_renderer_table->buildOrderedQuery($this->matchings_ids, $this->columns, false, false)
+        );
+    }
+}
