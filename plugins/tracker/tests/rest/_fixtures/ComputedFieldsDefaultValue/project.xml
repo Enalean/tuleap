@@ -55,6 +55,7 @@
                 <formElement type="computed" ID="F3439" rank="58843">
                     <name>computed</name>
                     <label><![CDATA[Computed]]></label>
+                    <properties default_value="5.2"/>
                 </formElement>
                 <formElement type="float" ID="F3440" rank="58844">
                     <name>float</name>

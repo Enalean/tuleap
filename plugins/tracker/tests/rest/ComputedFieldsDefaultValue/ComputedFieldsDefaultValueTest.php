@@ -31,10 +31,14 @@ class ComputedFieldsDefaultValueTest extends TrackerBase
         $computed_field_found = false;
 
         $tracker_representation = $this->tracker_representations[$this->computed_value_tracker_id];
+
         foreach ($tracker_representation['fields'] as $field) {
             if ($field['type'] === 'computed') {
                 $computed_field_found = true;
                 $this->assertArrayHasKey('default_value', $field);
+
+                $this->assertSame('manual_value', $field['default_value']['type']);
+                $this->assertSame(5.2, $field['default_value']['value']);
             }
         }
 
