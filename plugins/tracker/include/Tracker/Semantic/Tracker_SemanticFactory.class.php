@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -47,17 +47,12 @@ class Tracker_SemanticFactory
         return self::$instance;
     }
 
-    /**
-     * Creates a Tracker_Semantic Object
-     *
-     * @return Tracker_Semantic The semantic object, or null if error
-     */
     public function getInstanceFromXML(
         SimpleXMLElement $xml,
         SimpleXMLElement $full_semantic_xml,
         array $xml_mapping,
         Tracker $tracker
-    ) {
+    ): ?Tracker_Semantic {
         $semantic = null;
         $attributes = $xml->attributes();
         $type = $attributes['type'];
