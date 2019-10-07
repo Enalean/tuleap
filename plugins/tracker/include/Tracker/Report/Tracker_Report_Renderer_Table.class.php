@@ -27,6 +27,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureSelectorPresenter;
+use Tuleap\Tracker\Report\CSVExport\CSVFieldUsageChecker;
 use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
 use Tuleap\Tracker\Report\Renderer\Table\ProcessExportEvent;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
@@ -2125,7 +2126,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $head  = array('aid');
 
         foreach ($columns as $column) {
-            if (! $this->canFieldBeExportedToCSV($column['field'])) {
+            if (! CSVFieldUsageChecker::canFieldBeExportedToCSV($column['field'])) {
                 continue;
             }
 
@@ -2162,7 +2163,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $line[] = $row['id'];
 
                 foreach ($columns as $column) {
-                    if (! $this->canFieldBeExportedToCSV($column['field'])) {
+                    if (! CSVFieldUsageChecker::canFieldBeExportedToCSV($column['field'])) {
                         continue;
                     }
 
@@ -2210,16 +2211,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     {
         $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF));
         fputs($csv_file, $bom);
-    }
-
-    private function canFieldBeExportedToCSV(Tracker_FormElement_Field $field)
-    {
-        return $field->isUsed()
-            && $field->userCanRead()
-            && ! ($field instanceof Tracker_FormElement_Field_ArtifactId
-                || $field instanceof Tracker_FormElement_Field_PerTrackerArtifactId
-                || $field instanceof Tracker_FormElement_Field_Burndown
-            );
     }
 
     /**

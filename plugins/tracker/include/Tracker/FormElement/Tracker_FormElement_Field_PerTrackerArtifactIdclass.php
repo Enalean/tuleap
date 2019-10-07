@@ -174,4 +174,9 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
     {
         return $visitor->visitPerTrackerArtifactId($this);
     }
+
+    public function isCSVImportable()
+    {
+        return false;
+    }
 }
