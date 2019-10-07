@@ -40,6 +40,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             'value' => null,
             'type'  => 'upgrade_button',
         ),
+        'default_value' => array(
+            'value' => '',
+            'type'  => 'string',
+            'size'  => 40,
+        ),
     );
 
     public function __construct(
@@ -674,6 +679,24 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $html .= '</div></div></div>';
 
         return $html;
+    }
+
+    /**
+     * Returns the default value for this field, or null if no default value defined
+     *
+     * @return mixed The default value for this field, or null if no default value defined
+     */
+    public function getDefaultValue()
+    {
+        $property = $this->getProperty('default_value');
+        if ($property === null) {
+            return null;
+        }
+
+        return [
+            'type'  => self::FIELD_VALUE_MANUAL,
+            'value' => (float) $property
+        ];
     }
 
     public function fetchSubmitMasschange()
