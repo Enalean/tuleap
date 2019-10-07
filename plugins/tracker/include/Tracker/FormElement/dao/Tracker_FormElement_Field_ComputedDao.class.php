@@ -46,8 +46,10 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
         }
         $fast_compute = $this->da->escapeInt($fast_compute);
 
-        $sql = "REPLACE INTO $this->table_name (field_id, target_field_name, fast_compute)
-                VALUES ($field_id, $target_field_name, $fast_compute)";
+        $default_value = $this->da->escapeFloat($row['default_value'] ?? '');
+
+        $sql = "REPLACE INTO tracker_field_computed (field_id, default_value, target_field_name, fast_compute)
+                VALUES ($field_id, $default_value, $target_field_name, $fast_compute)";
 
         return $this->retrieve($sql);
     }
