@@ -31,6 +31,7 @@
         <ugroup name="project_members" description="">
             <members>
                 <member format="username">rest_api_tester_1</member>
+                <member format="username">rest_api_tester_3</member>
             </members>
         </ugroup>
         <ugroup name="project_admins" description="">
@@ -90,7 +91,7 @@
                 <permission scope="field" REF="F3438" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F3438" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
                 <permission scope="field" REF="F3439" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
-                <permission scope="field" REF="F3439" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F3439" ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
                 <permission scope="field" REF="F3439" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
                 <permission scope="field" REF="F3440" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
                 <permission scope="field" REF="F3440" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
