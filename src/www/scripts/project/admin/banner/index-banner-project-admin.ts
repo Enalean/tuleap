@@ -27,6 +27,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
+    if (!vue_mount_point.dataset.projectId) {
+        return;
+    }
+
     await initVueGettext(Vue, (locale: string) =>
         import(/* webpackChunkName: "project-admin-banner-po-" */ `./po/${locale}.po`)
     );
@@ -34,7 +38,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const AppComponent = Vue.extend(App);
     new AppComponent({
         propsData: {
-            message: vue_mount_point.dataset.bannerMessage || ""
+            message: vue_mount_point.dataset.bannerMessage || "",
+            project_id: parseInt(vue_mount_point.dataset.projectId, 10)
         }
     }).$mount(vue_mount_point);
 });

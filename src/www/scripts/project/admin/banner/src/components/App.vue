@@ -19,17 +19,54 @@
   -->
 
 <template>
-    <p v-if="message === ''" v-translate>No banner has been defined</p>
-    <p v-else> {{ message }}</p>
+    <div>
+        <div v-if="shouldDisplayErrorBanner" class="tlp-alert-danger" v-translate="{ error_message }">
+            An error occurred: %{ error_message }
+        </div>
+        <div v-if="message === ''" class="project-admin-banner-message">
+            <p v-translate>No banner has been defined</p>
+        </div>
+        <div v-else>
+            <banner-presenter v-bind:message="message"/>
+            <banner-deleter v-on:delete-banner="deleteBanner()"/>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
+import BannerDeleter from "./BannerDeleter.vue";
+import BannerPresenter from "./BannerPresenter.vue";
+import { deleteBannerForProject } from "../api/rest-querier";
 
-@Component
+@Component({
+    components: {
+        BannerDeleter,
+        BannerPresenter
+    }
+})
 export default class App extends Vue {
     @Prop({ required: true, type: String })
     readonly message!: string;
+
+    @Prop({ required: true, type: Number })
+    readonly project_id!: number;
+
+    error_message: string | null = null;
+
+    public deleteBanner(): void {
+        deleteBannerForProject(this.project_id)
+            .then(() => {
+                location.reload();
+            })
+            .catch(error => {
+                this.error_message = error.message;
+            });
+    }
+
+    get shouldDisplayErrorBanner(): boolean {
+        return this.error_message !== null;
+    }
 }
 </script>
