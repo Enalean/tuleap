@@ -28,10 +28,6 @@ tuleap.textarea = tuleap.textarea || {};
         init: function() {
             var self = this;
 
-            if (tuleap.browserCompatibility.isIE7()) {
-                return;
-            }
-
             $("a.backlog-item-link").each(function() {
                 $(this)
                     .off()

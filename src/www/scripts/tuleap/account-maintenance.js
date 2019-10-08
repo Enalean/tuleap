@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global tuleap:readonly codendi:readonly */
+/* global codendi:readonly */
 
 !(function($) {
     var themes_list,
@@ -223,16 +223,11 @@
             bindThemeSelect();
             fetchThemeVariants();
 
-            if (!tuleap.browserCompatibility.isIE7()) {
-                $(".navbar-inner").attr(
-                    "data-content",
-                    codendi.locales.account.theme_variant_preview
-                );
-                $(".navbar-inner").popover({
-                    placement: "bottom",
-                    trigger: "manual"
-                });
-            }
+            $(".navbar-inner").attr("data-content", codendi.locales.account.theme_variant_preview);
+            $(".navbar-inner").popover({
+                placement: "bottom",
+                trigger: "manual"
+            });
         }
     }
 
@@ -277,9 +272,7 @@
         theme_variant_group.css("display", "none");
 
         if (themes_length > 0) {
-            if (!tuleap.browserCompatibility.isIE7()) {
-                addCSSFilestoDOM(themes.css_files);
-            }
+            addCSSFilestoDOM(themes.css_files);
 
             theme_variant_group.css("display", "block");
             for (i = 0; i < themes_length; ++i) {
@@ -338,10 +331,6 @@
     }
 
     function applyThemeVariantToBody(theme_variant) {
-        if (tuleap.browserCompatibility.isIE7()) {
-            return;
-        }
-
         for (var i = 0, themes_length = themes_list.length; i < themes_length; ++i) {
             $(document.body).removeClass(themes_list[i]);
         }

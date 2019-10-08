@@ -39,7 +39,6 @@ const fat_combined_files = [
         "src/www/scripts/jquery/jquery-1.9.1.min.js",
         "src/www/scripts/jquery/jquery-ui.min.js",
         "src/www/scripts/jquery/jquery-noconflict.js",
-        "src/www/scripts/tuleap/browser-compatibility.js",
         "src/www/scripts/tuleap/project-history.js",
         "src/www/scripts/bootstrap/bootstrap-dropdown.js",
         "src/www/scripts/bootstrap/bootstrap-button.js",
