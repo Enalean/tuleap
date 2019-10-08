@@ -2953,7 +2953,7 @@ select[name='add_notempty_condition[]'] {
         display: block;
     }
 
-    .tracker-formelement-edit-for-modal, .tracker-formelement-edit-for-submit {
+    .tracker-formelement-edit-for-modal {
         font-size: 0.95em;
     }
 
@@ -2984,6 +2984,16 @@ select[name='add_notempty_condition[]'] {
 
     > .add-field {
         display: none;
+    }
+
+    &.with-default-value {
+        .auto-computed-for-submit {
+            display: none;
+        }
+
+        > .add-field {
+            display: block;
+        }
     }
 }
 
