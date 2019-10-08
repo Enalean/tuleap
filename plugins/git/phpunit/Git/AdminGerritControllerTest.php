@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,7 +30,7 @@ use PHPUnit\Framework\TestCase;
 use Response;
 use User_SSHKeyValidator;
 
-class GitAdminProcessTest extends TestCase
+class AdminGerritControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -68,7 +68,6 @@ class GitAdminProcessTest extends TestCase
             'identity_file'        => '/path/to/file',
             'replication_key'      => 'replication_key',
             'use_ssl'              => 0,
-            'gerrit_version'       => '2.5',
             'http_password'        => 'azerty',
             'replication_password' => 'replication_password',
             'auth_type'            => 'Basic'
@@ -83,7 +82,7 @@ class GitAdminProcessTest extends TestCase
             '/path/to/file',
             '',
             1,
-            '2.5',
+            '2.8+',
             'azerty',
             '',
             'Basic'
@@ -98,7 +97,7 @@ class GitAdminProcessTest extends TestCase
             '/path/to/file',
             'replication_key',
             0,
-            '2.5',
+            '2.8+',
             'azerty',
             'azerty',
             'Basic'
@@ -151,7 +150,6 @@ class GitAdminProcessTest extends TestCase
         $this->request->set('identity_file', '');
         $this->request->set('replication_key', '');
         $this->request->set('use_ssl', '');
-        $this->request->set('gerrit_version', '2.5');
         $this->request->set('http_password', '');
         $this->request->set('replication_password', '');
         $this->request->set('auth_type', 'Basic');
@@ -172,7 +170,6 @@ class GitAdminProcessTest extends TestCase
         $this->request->set('identity_file', '/path/to/file');
         $this->request->set('replication_key', '');
         $this->request->set('use_ssl', 0);
-        $this->request->set('gerrit_version', '2.5');
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
         $this->request->set('auth_type', 'Basic');
@@ -193,7 +190,6 @@ class GitAdminProcessTest extends TestCase
         $this->request->set('identity_file', '');
         $this->request->set('replication_key', '');
         $this->request->set('use_ssl', '');
-        $this->request->set('gerrit_version', '');
         $this->request->set('http_password', '');
         $this->request->set('replication_password', '');
         $this->request->set('auth_type', '');
@@ -214,7 +210,6 @@ class GitAdminProcessTest extends TestCase
         $this->request->set('identity_file', '/path/to/file');
         $this->request->set('replication_key', 'replication_key');
         $this->request->set('use_ssl', 1);
-        $this->request->set('gerrit_version', '2.5');
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
         $this->request->set('auth_type', 'Basic');
@@ -235,7 +230,6 @@ class GitAdminProcessTest extends TestCase
         $this->request->set('identity_file', '/path/to/file');
         $this->request->set('replication_key', 'replication_key');
         $this->request->set('use_ssl', 1);
-        $this->request->set('gerrit_version', '2.5');
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
         $this->request->set('auth_type', 'Basic');
@@ -270,7 +264,6 @@ class GitAdminProcessTest extends TestCase
         $this->request->set('identity_file', '/path/to/file');
         $this->request->set('replication_key', 'replication_key');
         $this->request->set('use_ssl', 1);
-        $this->request->set('gerrit_version', '2.5');
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
         $this->request->set('auth_type', 'Digest');
@@ -292,7 +285,6 @@ class GitAdminProcessTest extends TestCase
         $this->request->set('identity_file', '/path/to/file');
         $this->request->set('replication_key', 'replication_key');
         $this->request->set('use_ssl', 1);
-        $this->request->set('gerrit_version', '2.5');
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
         $this->factory->shouldReceive('save')->with($this->an_existing_server)->once();

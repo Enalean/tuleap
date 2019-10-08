@@ -66,18 +66,6 @@
                                     <span class="tlp-badge-danger">{{ no }}</span>
                                 {{/ use_ssl }}
                             </div>
-
-                            <div class="tlp-property">
-                                <label class="tlp-label">
-                                    {{ gerrit_label_gerrit_version }}
-                                </label>
-                                {{# use_gerrit_2_5 }}
-                                    <span class="tlp-badge-primary">2.5</span>
-                                {{/ use_gerrit_2_5 }}
-                                {{^ use_gerrit_2_5 }}
-                                    <span class="tlp-badge-primary">2.8+</span>
-                                {{/ use_gerrit_2_5}}
-                            </div>
                         </div>
 
                         <div class="gerrit-server-info-row">
@@ -129,6 +117,14 @@
                 </div>
                 <div class="tlp-pane-container gerrit-server-action-container">
                     <section class="tlp-pane-section gerrit-server-action">
+                        {{# use_gerrit_2_5 }}
+                            <span
+                                    class="tlp-text-danger tlp-tooltip tlp-tooltip-left gerrit-server-deprecated-configuration"
+                                    data-tlp-tooltip="{{# dgettext }} tuleap-git | This server is configured to use Gerrit 2.5 which is not supported anymore, please review the configuration and save it to migrate {{/ dgettext }}"
+                            >
+                                <i class="tlp-badge-icon fa fa-warning"></i>
+                            </span>
+                        {{/ use_gerrit_2_5 }}
                         <button type="button"
                                 class="tlp-button-primary tlp-button-outline action-item gerrit-action-edit-button"
                                 data-modal-id="gerrit-edit-modal-{{ id }}"

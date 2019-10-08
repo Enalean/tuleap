@@ -571,9 +571,6 @@ msgstr "Modèles Gerrit"
 msgid "Gerrit permission configuration templates"
 msgstr "Modèles de configuration de permissions Gerrit"
 
-msgid "Gerrit server version"
-msgstr "Version du serveur gerrit"
-
 #, php-format
 msgid ""
 "Gerrit: (%1$s) %2$s has been successfully suspended from gerrit server %3$s"
@@ -922,9 +919,6 @@ msgid ""
 msgstr ""
 "Vos anciennes clés ne sont pas poussées automatiquement. Toute nouvelle clé "
 "sera automatiquement poussée sur les serveurs suivants :"
-
-msgid "Once migrated, you will no more able to go back in version 2.5"
-msgstr "Une fois migré, vous ne pourrez plus revenir en version 2.5"
 
 msgid "Only one replication SSH key is allowed by server"
 msgstr "Seulement une clé SSH pour la réplication est acceptée par serveur"
@@ -1496,6 +1490,13 @@ msgstr ""
 
 msgid "This server is already used by some repositories."
 msgstr "Ce serveur est déjà utilisé par des dépôts."
+
+msgid ""
+"This server is configured to use Gerrit 2.5 which is not supported anymore, "
+"please review the configuration and save it to migrate"
+msgstr ""
+"Ce serveur est configuré pour utiliser Gerrit 2.5 qui n'est plus supporté. "
+"Merci de revoir la configuration et de la sauver pour migrer."
 
 msgid ""
 "This token is used to authenticate CIs like Jenkins when calling the build "

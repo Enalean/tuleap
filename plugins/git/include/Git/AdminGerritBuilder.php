@@ -37,23 +37,6 @@ class AdminGerritBuilder
 
     public function buildFromRequest(array $request)
     {
-
-        $gerrit_server                   = $this->initServer($request);
-        $gerrit_server['gerrit_version'] = $request['gerrit_version'];
-
-        return $gerrit_server;
-    }
-
-    public function buildFromRequestForEdition(array $request)
-    {
-        $gerrit_server = $this->initServer($request);
-        $gerrit_server['gerrit_version'] = isset($request['gerrit_version']) ? $request['gerrit_version'] : Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS;
-
-        return $gerrit_server;
-    }
-
-    private function initServer(array $request)
-    {
         $gerrit_server                         = array();
         $gerrit_server['host']                 = $request['host'];
         $gerrit_server['ssh_port']             = $request['ssh_port'];
@@ -65,6 +48,7 @@ class AdminGerritBuilder
         $gerrit_server['http_password']        = $request['http_password'];
         $gerrit_server['replication_password'] = $request['replication_password'];
         $gerrit_server['auth_type']            = $request['auth_type'];
+        $gerrit_server['gerrit_version']       = Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS;
 
         return $gerrit_server;
     }

@@ -64,23 +64,6 @@
             />
         </div>
 
-        {{^ gerrit_version_2_8_checked }}
-            <hr class="tlp-modal-separator">
-
-            <div class="tlp-form-element">
-                <p class="tlp-text-warning">
-                    {{ warning_no_possible_go_back }}
-                </p>
-                <label class="tlp-label">{{ gerrit_label_gerrit_version }}</label>
-                <label class="tlp-label tlp-radio">
-                    <input type="radio" name="gerrit_version" value="2.5" {{ gerrit_version_2_5_checked }}> 2.5
-                </label>
-                <label class="tlp-label tlp-radio">
-                    <input type="radio" name="gerrit_version" value="2.8+"> 2.8+
-                </label>
-            </div>
-        {{/ gerrit_version_2_8_checked }}
-
         <hr class="tlp-modal-separator">
 
         <div class="tlp-form-element">
