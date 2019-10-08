@@ -31,8 +31,6 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
-use Tuleap\Project\Banner\BannerDao;
-use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
@@ -63,10 +61,6 @@ class BurningParrotTheme extends BaseLayout
      * @var ProjectFlagsBuilder
      */
     private $project_flags_builder;
-    /**
-     * @var BannerRetriever
-     */
-    private $project_banner_retriever;
 
     public function __construct($root, PFUser $user)
     {
@@ -78,7 +72,6 @@ class BurningParrotTheme extends BaseLayout
         $this->renderer        = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
 
         $this->project_flags_builder    = new ProjectFlagsBuilder(new ProjectFlagsDao());
-        $this->project_banner_retriever = new BannerRetriever(new BannerDao());
 
         $tlp_include_assets = new IncludeAssets(
             ForgeConfig::get('tuleap_dir') . '/src/www/themes/common/tlp/dist',
@@ -287,7 +280,7 @@ class BurningParrotTheme extends BaseLayout
             $project,
             $this->getProjectPrivacy($project),
             $this->project_flags_builder->buildProjectFlags($project),
-            $this->project_banner_retriever->getBannerForProject($project)
+            $this->getProjectBanner($project)
         );
     }
 

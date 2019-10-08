@@ -37,6 +37,9 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\Project\Banner\Banner;
+use Tuleap\Project\Banner\BannerDao;
+use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Sanitizer\URISanitizer;
 use UserManager;
 use Valid_FTPURI;
@@ -596,6 +599,18 @@ abstract class BaseLayout extends Response
             return _('Project privacy set to private.') .' '.
                 _('Only project members can access its content.');
         }
+    }
+
+    final protected function getProjectBanner(Project $project) : ?Banner
+    {
+        $project_banner = (new BannerRetriever(new BannerDao()))->getBannerForProject($project);
+        if ($project_banner === null) {
+            return null;
+        }
+
+        $this->includeFooterJavascriptFile($this->include_asset->getFileURL('project-banner.js'));
+
+        return $project_banner;
     }
 
     protected function getFooterSiteJs()

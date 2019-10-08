@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,26 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.project-banner {
-    padding: $tlp-spacing;
-    background-color: $tlp-ui-warning;
-}
+import { allowUnclampingProjectBannerMessage } from "./project-banner-clamp";
 
-.project-banner-clamped {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.project-banner-can-be-unclamped {
-    cursor: pointer;
-}
-
-.project-banner > p {
-    color: $tlp-ui-white;
-}
-
-.project-banner > p > a {
-    color: $tlp-ui-white;
-    text-decoration: underline;
-}
+document.addEventListener("DOMContentLoaded", () => {
+    allowUnclampingProjectBannerMessage(document);
+});

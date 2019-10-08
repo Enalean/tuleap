@@ -154,9 +154,29 @@ const webpack_config_for_burning_parrot_code = {
     plugins: [manifest_plugin]
 };
 
+const webpack_config_for_project_banner = {
+    entry: {
+        "project-banner": "./project/banner/index.ts"
+    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
+    module: {
+        rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            )
+        ]
+    },
+    plugins: [webpack_configurator.getTypescriptCheckerPlugin(false)],
+    resolve: {
+        extensions: [".ts"]
+    }
+};
+
 const configs_with_manifest = [
     webpack_config_for_vue_components,
-    webpack_config_for_rich_text_editor
+    webpack_config_for_rich_text_editor,
+    webpack_config_for_project_banner
 ].map(config =>
     merge(config, {
         plugins: [manifest_plugin]

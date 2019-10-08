@@ -23,6 +23,16 @@
     background-color: $ui-color-warning;
 }
 
+.project-banner-clamped {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.project-banner-can-be-unclamped {
+    cursor: pointer;
+}
+
 .project-banner > p {
     margin: 0;
     color: $white;
