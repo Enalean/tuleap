@@ -19,8 +19,8 @@
 
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
-import BannerDeleter from "./BannerDeleter.vue";
 import { createProjectAdminBannerLocalVue } from "../helpers/local-vue-for-tests";
+import BannerPresenter from "./BannerPresenter.vue";
 import * as rest_querier from "../api/rest-querier";
 
 describe("App", () => {
@@ -33,7 +33,7 @@ describe("App", () => {
             }
         });
 
-        expect(wrapper.text()).not.toBe("");
+        expect(wrapper.element).toMatchSnapshot();
     });
 
     it("displays message and remove button when banner is not empty", async () => {
@@ -66,7 +66,9 @@ describe("App", () => {
                 return Promise.resolve();
             });
 
-        wrapper.find(BannerDeleter).vm.$emit("delete-banner");
+        wrapper
+            .find(BannerPresenter)
+            .vm.$emit("save-banner", { message: "some message", activated: false });
 
         await wrapper.vm.$nextTick();
 
@@ -87,10 +89,63 @@ describe("App", () => {
             return Promise.reject(new Error("an error message"));
         });
 
-        wrapper.find(BannerDeleter).vm.$emit("delete-banner");
+        wrapper
+            .find(BannerPresenter)
+            .vm.$emit("save-banner", { message: "test", activated: false });
 
         await wrapper.vm.$nextTick();
 
+        expect(wrapper.find(BannerPresenter).props().loading).toBe(false);
+        expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("Should be able to send the update request and lock form while doing it", async () => {
+        const wrapper = shallowMount(App, {
+            localVue: await createProjectAdminBannerLocalVue(),
+            propsData: {
+                message: "some message",
+                project_id: 108
+            }
+        });
+
+        const reload_page = jest.spyOn(window.location, "reload").mockImplementation();
+        const save_banner = jest
+            .spyOn(rest_querier, "saveBannerForProject")
+            .mockImplementation(() => {
+                return Promise.resolve();
+            });
+
+        wrapper
+            .find(BannerPresenter)
+            .vm.$emit("save-banner", { message: "a new message", activated: true });
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.find(BannerPresenter).props().loading).toBe(true);
+        expect(save_banner).toHaveBeenCalledTimes(1);
+        expect(reload_page).toHaveBeenCalledTimes(1);
+    });
+
+    it("Should display an error if banner update fails", async () => {
+        const wrapper = shallowMount(App, {
+            localVue: await createProjectAdminBannerLocalVue(),
+            propsData: {
+                message: "some message",
+                project_id: 108
+            }
+        });
+
+        jest.spyOn(rest_querier, "saveBannerForProject").mockImplementation(() => {
+            return Promise.reject(new Error("Ooops something went wrong"));
+        });
+
+        wrapper
+            .find(BannerPresenter)
+            .vm.$emit("save-banner", { message: "a new message", activated: true });
+
+        await wrapper.vm.$nextTick();
+
+        expect(wrapper.find(BannerPresenter).props().loading).toBe(false);
         expect(wrapper.element).toMatchSnapshot();
     });
 });

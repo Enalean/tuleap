@@ -10,11 +10,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Activate banner"
+msgstr "Activer la bannière"
+
 msgid "An error occurred: %{ error_message }"
 msgstr "Une erreur est survenue : %{ error_message }"
 
-msgid "No banner has been defined"
-msgstr "Aucune bannière a été définie"
+msgid "Choose a banner message"
+msgstr "Choisissez un message pour la bannière"
 
-msgid "Remove banner"
-msgstr "Supprimer la bannière"
+msgid "Message"
+msgstr "Message"
+
+msgid "No banner defined"
+msgstr "Aucune bannière définie"
+
+msgid "Save"
+msgstr "Sauvegarder"

@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
@@ -17,6 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.project-admin-banner-message {
-    margin: 0 0 $tlp-spacing;
+export interface BannerState {
+    message: string;
+    activated: boolean;
 }
