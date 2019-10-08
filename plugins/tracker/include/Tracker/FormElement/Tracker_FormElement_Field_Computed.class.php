@@ -648,12 +648,28 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return [];
     }
 
+    public function fetchSubmitForOverlay(array $submitted_values)
+    {
+        return $this->buildFieldForSubmission(
+            'tracker-formelement-edit-for-modal',
+            'auto-computed-for-modal'
+        );
+    }
+
     /**
      * Fetch the element for the submit new artifact form
      *
      * @return string html
      */
     public function fetchSubmit(array $submitted_values)
+    {
+        return $this->buildFieldForSubmission(
+            'tracker-formelement-edit-for-submit',
+            'auto-computed-for-submit'
+        );
+    }
+
+    private function buildFieldForSubmission(string $submit_class, string $auto_computed_class)
     {
         if (! $this->userCanSubmit()) {
             return '';
@@ -672,11 +688,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $html .= '<div class="tracker_artifact_field tracker_artifact_field-computed editable '.$extra_class.'">';
 
         $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
-        $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit tracker-formelement-edit-for-submit">' . $purifier->purify($this->getLabel())  . $required . '</button>';
+        $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit '.$submit_class.'">' . $purifier->purify($this->getLabel())  . $required . '</button>';
         $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $purifier->purify($this->description) .
             '" class="tracker_formelement_label">'. $purifier->purify($this->getLabel())  . $required .'</label>';
 
-        $html .= '<span class="auto-computed auto-computed-for-submit">'. $this->getNoValueLabel() .' (' .
+        $html .= '<span class="auto-computed '.$auto_computed_class.'">'. $this->getNoValueLabel() .' (' .
             $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field').')</span>';
 
         $html .= '<div class="input-append add-field" data-field-id="'. $this->getId() .'">';

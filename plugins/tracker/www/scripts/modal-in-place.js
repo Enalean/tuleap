@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -133,7 +133,7 @@ tuleap.textarea = tuleap.textarea || {};
         loadCreateArtifactModal: function(tracker_id, artifact_link_id, callback) {
             var self = this;
 
-            if (typeof callback == "undefined") {
+            if (typeof callback === "undefined") {
                 callback = this.defaultCallback;
             }
 
@@ -163,7 +163,12 @@ tuleap.textarea = tuleap.textarea || {};
                             .find(".add-field")
                             .data("field-id");
 
-                        self.displayAutocomputed($element);
+                        if ($element.hasClass("with-default-value")) {
+                            self.displayInEdition($element);
+                        } else {
+                            self.displayAutocomputed($element);
+                        }
+
                         $element.find(".tracker_formelement_edit").on("click", function() {
                             self.displayInEdition($element);
                             $element.off("click");
@@ -178,10 +183,7 @@ tuleap.textarea = tuleap.textarea || {};
                 })
                 .fail(function() {
                     tuleap.modal.hideLoad();
-                    codendi.feedback.log(
-                        "error",
-                        codendi.locales["tracker_modal_errors"].bad_request
-                    );
+                    codendi.feedback.log("error", codendi.locales.tracker_modal_errors.bad_request);
                 });
         },
 
@@ -252,10 +254,7 @@ tuleap.textarea = tuleap.textarea || {};
                 })
                 .fail(function() {
                     tuleap.modal.hideLoad();
-                    codendi.feedback.log(
-                        "error",
-                        codendi.locales["tracker_modal_errors"].bad_request
-                    );
+                    codendi.feedback.log("error", codendi.locales.tracker_modal_errors.bad_request);
                 });
         },
 
