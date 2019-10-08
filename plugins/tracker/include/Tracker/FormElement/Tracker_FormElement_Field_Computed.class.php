@@ -274,6 +274,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public function exportPropertiesToXML(&$root)
     {
+        $default_value = $this->getDefaultValue();
+        if ($default_value === null) {
+            return;
+        }
+
+        $child_properties = $root->addChild('properties');
+        $child_properties->addAttribute('default_value', (string) $default_value['value']);
     }
 
     /**
