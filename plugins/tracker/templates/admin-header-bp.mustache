@@ -1,0 +1,76 @@
+<section class="tracker-administration-tabs">
+    <h1 class="tlp-framed-horizontally">{{# dgettext }}tuleap-tracker | %s administration | {{ tracker_name }}{{/ dgettext }}</h1>
+    <nav class="tlp-tabs">
+        <div class="tlp-tab">{{# dgettext }}tuleap-tracker | Fields{{/ dgettext }} <i class="fa fa-caret-down"></i>
+            <nav class="tlp-tab-menu">
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-formElements" class="tlp-tab-menu-item">
+                    {{# dgettext }}tuleap-tracker | Manage fields{{/ dgettext }}
+                </a>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-dependencies" class="tlp-tab-menu-item">
+                    {{# dgettext }}tuleap-tracker | Field dependencies{{/ dgettext }}
+                </a>
+            </nav>
+        </div>
+        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-semantic" class="tlp-tab">
+            {{# dgettext }}tuleap-tracker | Semantics{{/ dgettext }}
+        </a>
+        <div class="tlp-tab">{{# dgettext }}tuleap-tracker | Permissions{{/ dgettext }} <i class="fa fa-caret-down"></i>
+            <nav class="tlp-tab-menu">
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-perms-tracker" class="tlp-tab-menu-item">
+                    {{# dgettext }}tuleap-tracker | Tracker permissions{{/ dgettext }}
+                </a>
+                <a href="/plugins/tracker/permissions/fields-by-field/{{ tracker_id }}" class="tlp-tab-menu-item">
+                    {{# dgettext }}tuleap-tracker | Fields permissions{{/ dgettext }}
+                </a>
+            </nav>
+        </div>
+        <div class="tlp-tab {{# is_workflow_tab_active }}tlp-tab-active{{/ is_workflow_tab_active }}">{{# dgettext }}tuleap-tracker | Workflow{{/ dgettext }} <i class="fa fa-caret-down"></i>
+            <nav class="tlp-tab-menu">
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-workflow" class="tlp-tab-menu-item">
+                    {{# dgettext }}tuleap-tracker | Global rules{{/ dgettext }}
+                </a>
+                <a href="/plugins/tracker/workflow/{{ tracker_id }}/transitions" class="tlp-tab-menu-item">
+                    {{# dgettext }}tuleap-tracker | Transition rules{{/ dgettext }}
+                </a>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-workflow-triggers" class="tlp-tab-menu-item">
+                    {{# dgettext }}tuleap-tracker | Triggers{{/ dgettext }}
+                </a>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-webhooks" class="tlp-tab-menu-item">
+                    {{# dgettext }}tuleap-tracker | Webhooks{{/ dgettext }}
+                </a>
+            </nav>
+        </div>
+        <a href="/plugins/tracker/notifications/{{ tracker_id }}/" class="tlp-tab">
+            {{# dgettext }}tuleap-tracker | Notifications{{/ dgettext }}
+        </a>
+        <div class="tlp-tab"><i class="fa fa-bars"></i> <i class="fa fa-caret-down"></i>
+            <nav class="tlp-tab-menu">
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-editoptions" class="tlp-tab-menu-item">
+                    {{# dgettext }}tuleap-tracker | General settings{{/ dgettext }}
+                </a>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-hierarchy" class="tlp-tab-menu-item">
+                    {{# dgettext }}tuleap-tracker | Tracker hierarchy{{/ dgettext }}
+                </a>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-canned" class="tlp-tab-menu-item">
+                    {{# dgettext }}tuleap-tracker | Canned responses{{/ dgettext }}
+                </a>
+                {{# additional_items }}
+                    <a href="{{ url }}" class="tlp-tab-menu-item">
+                        {{ title }}
+                    </a>
+                {{/ additional_items }}
+                <span class="tlp-tab-menu-title">Import / Export</span>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-csvimport" class="tlp-tab-menu-item">
+                    {{# dgettext }}tuleap-tracker | CSV import{{/ dgettext }}
+                </a>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-export" class="tlp-tab-menu-item">
+                    {{# dgettext }}tuleap-tracker | Structure XML export{{/ dgettext }}
+                </a>
+                <hr class="tlp-tab-menu-separator"/>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-clean" class="tlp-tab-menu-item tlp-text-danger">
+                    {{# dgettext }}tuleap-tracker | Delete artifacts {{/ dgettext }}
+                </a>
+            </nav>
+        </div>
+    </nav>
+</section>

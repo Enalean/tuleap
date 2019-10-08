@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -71,4 +71,46 @@
     height: 22px;
     margin: 0 2px 0 0;
     vertical-align: middle;
+}
+
+/* stylelint-disable selector-no-qualifying-type, selector-class-pattern, order/order */
+body.tracker-administration {
+    @import 'variables-orange';
+
+    &.FlamingParrot_Blue {
+        @import 'variables-blue';
+    }
+
+    &.FlamingParrot_Green {
+        @import 'variables-green';
+    }
+
+    &.FlamingParrot_BlueGrey {
+        @import 'variables-bluegrey';
+    }
+
+    &.FlamingParrot_Purple {
+        @import 'variables-purple';
+    }
+
+    &.FlamingParrot_Red {
+        @import 'variables-red';
+    }
+
+    background: $main-background;
+
+    .main {
+        #feedback > ul {
+            margin: 0 20px 20px;
+        }
+
+        .content {
+            padding: 0;
+        }
+    }
+}
+/* stylelint-enable */
+
+.tracker-administration-content {
+    margin: 20px;
 }

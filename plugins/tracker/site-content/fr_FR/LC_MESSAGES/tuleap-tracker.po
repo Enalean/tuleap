@@ -26,6 +26,9 @@ msgstr "Le champ \"Date de fin\" est vide ou invalide"
 msgid "\"start date\" field is empty or invalid"
 msgstr "Le champ \"start date\" est vide ou invalide"
 
+msgid "%s administration"
+msgstr "Administration de %s"
+
 #, php-format
 msgid "%s has been created"
 msgstr "%s a été créé"
@@ -254,11 +257,17 @@ msgstr ""
 "En cliquant sur \"Désactiver complètement le workflow\", le comportement de "
 "votre workflow sera corrigé."
 
+msgid "CSV import"
+msgstr "Import CSV"
+
 msgid "Can submit"
 msgstr "Peut soumettre"
 
 msgid "Cancel"
 msgstr "Annuler"
+
+msgid "Canned responses"
+msgstr "Réponses types"
 
 #, php-format
 msgid "Cannot update conditions of transition with id '%d'"
@@ -321,6 +330,9 @@ msgstr ""
 msgid "Delete"
 msgstr "Supprimer"
 
+msgid "Delete artifacts"
+msgstr "Suppression d'artefacts"
+
 msgid "Destination id does not exist."
 msgstr "L'id destination n'existe pas."
 
@@ -370,6 +382,9 @@ msgstr "Date de fin"
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
 
+msgid "Field dependencies"
+msgstr "Dépendances entre champs"
+
 msgid "Field not found."
 msgstr "Champ non trouvé."
 
@@ -379,14 +394,23 @@ msgstr "La valeur du champ ne peux pas être vide"
 msgid "Fields"
 msgstr "Champs"
 
+msgid "Fields permissions"
+msgstr "Permissions des champs"
+
 msgid "Force notification configuration usage to all users"
 msgstr "Forcer la configuration des notifications à tous les utilisateurs"
 
 msgid "Fully deactivate the workflow"
 msgstr "Désactiver complètement le workflow"
 
+msgid "General settings"
+msgstr "Options générales"
+
 msgid "Global Rules"
 msgstr "Règles Globales"
+
+msgid "Global rules"
+msgstr "Règles globales"
 
 msgid "Go to the administration of the cross-tracker triggers."
 msgstr ""
@@ -403,6 +427,9 @@ msgstr "Groupes de champs cachés:"
 
 msgid "Hierarchy"
 msgstr "Hiérarchie"
+
+msgid "Import / Export"
+msgstr "Import / Export"
 
 msgid "Invalid color tracker name"
 msgstr "Nom de couleur pour l'outil de suivi non valide"
@@ -427,6 +454,9 @@ msgstr "Configuration des e-mail"
 
 msgid "Manage Fields Permissions"
 msgstr "Gérer les permissions des champs"
+
+msgid "Manage fields"
+msgstr "Gérer les champs"
 
 msgid ""
 "Mandatory attribute field_id not found in action with type \"set_field_value"
@@ -553,6 +583,12 @@ msgstr "Un tracker ou plus est dupliqué : %s"
 msgid "Other groups"
 msgstr "Autre groupes"
 
+msgid "Others"
+msgstr "Autres"
+
+msgid "Permissions"
+msgstr "Permissions"
+
 msgid ""
 "Please note that project administrators and tracker administrators are "
 "granted full access to the tracker."
@@ -616,6 +652,9 @@ msgstr "La sémantique plage de temps a été réinitialisée avec succès"
 msgid "Semantic timeframe updated successfully"
 msgstr "La sémantique plage de temps a été mise à jour avec succès"
 
+msgid "Semantics"
+msgstr "Sémantiques"
+
 msgid "Shortcuts"
 msgstr "Raccourcis"
 
@@ -650,6 +689,9 @@ msgid ""
 msgstr ""
 "Notifications lors de la mise à jour du statut (les gens sont notifiés "
 "lorsqu'ils ont soumis, sont assignés, ont commenté ou sont en CC)"
+
+msgid "Structure XML export"
+msgstr "Export XML de la structure"
 
 msgid "Submit"
 msgstr "Valider"
@@ -1225,6 +1267,12 @@ msgstr "L'outil de suivi n'existe pas."
 msgid "Tracker global admininistration"
 msgstr "Administration globale des outils de suivi"
 
+msgid "Tracker hierarchy"
+msgstr "Hiérarchie de l'outil de suivi"
+
+msgid "Tracker permissions"
+msgstr "Permissions de l'outil de suivi"
+
 msgid "Tracker renderer"
 msgstr "Rendu d'un tracker"
 
@@ -1236,6 +1284,9 @@ msgstr "Trackers"
 
 msgid "Transition not found."
 msgstr "Transition non trouvée."
+
+msgid "Transition rules"
+msgstr "Règles de transitions"
 
 #, php-format
 msgid "Transition with id '%d' has no workflow"
@@ -1252,8 +1303,7 @@ msgstr "Déclenchements"
 
 #, php-format
 msgid ""
-"Type '%s' does not exist. This field is ignored. (Name : '%s', ID: "
-"'%s')."
+"Type '%s' does not exist. This field is ignored. (Name : '%s', ID: '%s')."
 msgstr "Type '%s' inexistant. Ce champ sera ignoré. (Nom : '%s', ID: '%s')."
 
 msgid "URL"

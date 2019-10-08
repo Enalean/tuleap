@@ -88,6 +88,11 @@ $tlp-tabs-transition: 75ms ease-out;
     }
 }
 
+.tlp-tab-menu-separator {
+    width: 100%;
+    border-top: 1px solid $tlp-ui-border-light;
+}
+
 .tlp-tab {
     display: flex;
     position: relative;
