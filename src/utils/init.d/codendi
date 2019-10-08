@@ -5,7 +5,7 @@
 # This file is a copy/modify/paste of mailman equivalent. Thanks to
 # them!
 #
-# Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+# Copyright (c) Enalean, 2016-Present. All Rights Reserved.
 # Copyright (C) 2001-2003 by the Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or
@@ -25,12 +25,12 @@
 # Copy this file to /etc/init.d/ (or /etc/rc.d/init.d/ depending on
 # your system) and activate it as such:
 #
-# On RedHat, and derivatives, install with "chkconfig --add codendi"
+# On RedHat, and derivatives, install with "chkconfig --add tuleap"
 
 # chkconfig:   - 86 14
 # description:  Tuleap background service
 
-CODENDI_HOME=/usr/share/codendi
+TULEAP_HOME=/usr/share/tuleap
 
 # We used to install the mailman cron jobs when the mailman rpm was
 # installed, irrespective of whether mailman was actually being
@@ -43,20 +43,21 @@ CODENDI_HOME=/usr/share/codendi
 # install or remove the cron jobs based on the service being enabled
 # or not.
 
-SRC_CRON_SCRIPT_ON=$CODENDI_HOME/src/utils/cron.d/codendi
-SRC_CRON_SCRIPT_OFF=$CODENDI_HOME/src/utils/cron.d/codendi-stop
+SRC_CRON_SCRIPT_ON=$TULEAP_HOME/src/utils/cron.d/codendi
+SRC_CRON_SCRIPT_OFF=$TULEAP_HOME/src/utils/cron.d/codendi-stop
 
-DST_CRON_SCRIPT=/etc/cron.d/codendi
-DST_GERRIT_CRON_SCRIPT=/etc/cron.d/gerrit-fetch
+DST_CRON_SCRIPT=/etc/cron.d/tuleap
 
 InstallCron()
 {
     install -m644 -o root -g root $SRC_CRON_SCRIPT_ON $DST_CRON_SCRIPT
+    /bin/rm -f /etc/cron.d/codendi
 }
 
 RemoveCron()
 {
     install -m644 -o root -g root $SRC_CRON_SCRIPT_OFF $DST_CRON_SCRIPT
+    /bin/rm -f /etc/cron.d/codendi
 }
 
 # Source function library.
@@ -67,17 +68,13 @@ prog="Tuleap"
 
 start()
 {
-    if [ "$1" == "gerrit" ]; then
-        InstallGerritCron
-        RETVAL=$?
-        return $RETVAL
-    fi
     echo "Restore application cache directories:"
     /usr/bin/tuleap -r
     echo "Invalidate application caches:"
     /usr/bin/tuleap -c
-    echo -n "Starting $prog: "
+    echo "Starting $prog:... "
     InstallCron
+    su -l codendiadm -c "/usr/bin/tuleap worker:supervisor start --daemon &"
     echo "[OK]"
     RETVAL=$?
     return $RETVAL
@@ -85,16 +82,9 @@ start()
 
 stop()
 {
-    if [ "$1" == "gerrit" ]; then
-        RETVAL=$?
-        return $RETVAL
-    fi
-    echo -n "Shutting down $prog: "
+    echo "Shutting down $prog:... "
     RemoveCron
-    for pid_file in $(/bin/ls /var/run/tuleap/worker*.pid); do
-        kill $(cat $pid_file)
-        rm -f $pid_file
-    done
+    /usr/bin/tuleap worker:supervisor stop
     echo "[OK]"
     RETVAL=$?
     return $RETVAL
@@ -152,6 +142,7 @@ case "$1" in
     else
         echo "Tuleap is stopped"
     fi
+    /usr/bin/tuleap worker:supervisor status
     ;;
 
 *)

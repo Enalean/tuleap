@@ -24,7 +24,7 @@ if [ -z "$SRC_DIR" ]; then
 fi
 
 if [ -z "$OS" ]; then
-    >&2 echo "OS environment variable must be defined"
+    >&2 echo "OS environment variable must be defined (centos7|centos6)"
     exit 1
 fi
 

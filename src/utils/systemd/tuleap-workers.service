@@ -1,0 +1,13 @@
+[Unit]
+Description=Umbrella service for 'tuleap-worker@' to start as many workers are configured in Tuleap conf
+After=tuleap.service
+PartOf=tuleap.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/tuleap worker:systemctl start
+ExecStop=/usr/bin/tuleap worker:systemctl stop
+
+[Install]
+WantedBy=tuleap.service

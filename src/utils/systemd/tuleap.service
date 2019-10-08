@@ -4,6 +4,7 @@ After=nginx.target httpd.target
 
 [Service]
 Type=oneshot
+RemainAfterExit=yes
 ExecStart=/usr/bin/tuleap --clear-caches --restore-caches
 
 [Install]

@@ -1,0 +1,9 @@
+[Unit]
+Description=Tuleap worker instance %i
+
+[Service]
+Type=simple
+Environment=DISPLAY_ERRORS=true
+ExecStart=/usr/share/tuleap/src/utils/worker.php -v --id=%i
+User=codendiadm
+Restart=always
