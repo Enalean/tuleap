@@ -958,7 +958,7 @@ describe("TuleapArtifactFieldValuesService", () => {
 
     describe("Given a tracker containing a computed field,", function() {
         it("and given a map of artifact field values containing that field, when I get the field's selected values, then a map of objects containing the fields' id and its value will be returned", function() {
-            var artifact_values = {
+            const artifact_values = {
                 665: {
                     field_id: 665,
                     is_autocomputed: false,
@@ -967,7 +967,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     value: null
                 }
             };
-            var tracker = {
+            const tracker = {
                 fields: [
                     {
                         field_id: 665,
@@ -978,7 +978,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                     }
                 ]
             };
-            var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
+            const output = FieldValuesService.getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
                 665: {
                     field_id: 665,
@@ -991,18 +991,72 @@ describe("TuleapArtifactFieldValuesService", () => {
         });
 
         it("when I get the fields' selected values, then a map of objects containing the fields' id, the is_autocomputed property set to true, and manual_value set to null will be returned", function() {
-            var tracker = {
+            const tracker = {
                 fields: [
                     {
                         field_id: 304,
                         label: "pommey",
                         name: "peepy",
                         permissions: ["read", "update", "create"],
-                        type: "computed"
+                        type: "computed",
+                        default_value: null
                     }
                 ]
             };
-            var output = FieldValuesService.getSelectedValues({}, tracker);
+            const output = FieldValuesService.getSelectedValues({}, tracker);
+            expect(output).toEqual({
+                304: {
+                    field_id: 304,
+                    is_autocomputed: true,
+                    permissions: ["read", "update", "create"],
+                    type: "computed",
+                    manual_value: null
+                }
+            });
+        });
+
+        it("when I get the fields' default values and a default value is set, then a map of objects containing the fields' id, the is_autocomputed property set to false, and manual_value set to the float value will be returned", function() {
+            const tracker = {
+                fields: [
+                    {
+                        field_id: 304,
+                        label: "pommey",
+                        name: "peepy",
+                        permissions: ["read", "update", "create"],
+                        type: "computed",
+                        default_value: {
+                            type: "manual_value",
+                            value: 4.2
+                        }
+                    }
+                ]
+            };
+            const output = FieldValuesService.getSelectedValues({}, tracker);
+            expect(output).toEqual({
+                304: {
+                    field_id: 304,
+                    is_autocomputed: false,
+                    permissions: ["read", "update", "create"],
+                    type: "computed",
+                    manual_value: 4.2
+                }
+            });
+        });
+
+        it("when I get the fields' default values and a default value is not set, then a map of objects containing the fields' id, the is_autocomputed property set to true, and manual_value set to null will be returned", function() {
+            const tracker = {
+                fields: [
+                    {
+                        field_id: 304,
+                        label: "pommey",
+                        name: "peepy",
+                        permissions: ["read", "update", "create"],
+                        type: "computed",
+                        default_value: null
+                    }
+                ]
+            };
+            const output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
                 304: {
                     field_id: 304,

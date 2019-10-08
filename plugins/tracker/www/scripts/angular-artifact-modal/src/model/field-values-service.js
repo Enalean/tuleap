@@ -198,8 +198,14 @@ function TuleapArtifactFieldValuesService($sce) {
                 value_obj.value = [];
                 break;
             case "computed":
-                value_obj.is_autocomputed = true;
-                value_obj.manual_value = null;
+                default_value = field.default_value;
+                if (default_value === null) {
+                    value_obj.is_autocomputed = true;
+                    value_obj.manual_value = null;
+                } else {
+                    value_obj.is_autocomputed = false;
+                    value_obj.manual_value = parseFloat(default_value.value, 10);
+                }
                 break;
             default:
                 // Do nothing
