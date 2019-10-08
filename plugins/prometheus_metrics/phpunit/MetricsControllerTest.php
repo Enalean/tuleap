@@ -55,6 +55,7 @@ final class MetricsControllerTest extends TestCase
         );
 
         $dao->shouldReceive('getProjectsByStatus')->andReturn([]);
+        $dao->shouldReceive('getNewSystemEventsCount')->andReturn([]);
         $nb_user_builder->shouldReceive('getNbUsersByStatusBuilder')->andReturn(
             new NbUsersByStatus(0, 0, 0, 0, 0, 0, 0)
         );
