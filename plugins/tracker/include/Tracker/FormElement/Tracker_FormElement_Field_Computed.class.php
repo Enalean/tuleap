@@ -280,7 +280,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         }
 
         $child_properties = $root->addChild('properties');
-        $child_properties->addAttribute('default_value', (string) $default_value['value']);
+        $child_properties->addAttribute('default_value', (string) $default_value[self::FIELD_VALUE_MANUAL]);
     }
 
     /**
@@ -659,25 +659,36 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             return '';
         }
 
+        $default_value = $this->getDefaultValue();
+        $extra_class   = '';
+        if ($default_value !== null) {
+            $extra_class = "in-edition with-default-value";
+        }
+
         $purifier = Codendi_HTMLPurifier::instance();
         $required = $this->required ? ' <span class="highlight">*</span>' : '';
 
         $html = '<div>';
-        $html .= '<div class="tracker_artifact_field tracker_artifact_field-computed editable">';
+        $html .= '<div class="tracker_artifact_field tracker_artifact_field-computed editable '.$extra_class.'">';
 
-        if ($this->userCanRead()) {
-            if ($this->userCanUpdate()) {
-                $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
-                $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit tracker-formelement-edit-for-submit">' . $purifier->purify($this->getLabel())  . $required . '</button>';
-                $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $purifier->purify($this->description) .
-                    '" class="tracker_formelement_label">'. $purifier->purify($this->getLabel())  . $required .'</label>';
-            }
-        }
+        $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
+        $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit tracker-formelement-edit-for-submit">' . $purifier->purify($this->getLabel())  . $required . '</button>';
+        $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $purifier->purify($this->description) .
+            '" class="tracker_formelement_label">'. $purifier->purify($this->getLabel())  . $required .'</label>';
+
         $html .= '<span class="auto-computed auto-computed-for-submit">'. $this->getNoValueLabel() .' (' .
             $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field').')</span>';
 
         $html .= '<div class="input-append add-field" data-field-id="'. $this->getId() .'">';
-        $html .= $this->fetchComputedInputs('', true);
+
+        $default_value_in_input = '';
+        $is_autocomputed        = true;
+        if ($default_value !== null) {
+            $default_value_in_input = (string) $default_value[self::FIELD_VALUE_MANUAL];
+            $is_autocomputed = false;
+        }
+
+        $html .= $this->fetchComputedInputs($default_value_in_input, $is_autocomputed);
         $html .= $this->fetchBackToAutocomputedButton(false);
         $html .= $this->fetchComputedValueWithLabel(
             $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field')
@@ -694,6 +705,19 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
      * @return mixed The default value for this field, or null if no default value defined
      */
     public function getDefaultValue()
+    {
+        $property = $this->getProperty('default_value');
+        if ($property === null) {
+            return null;
+        }
+
+        return [
+            self::FIELD_VALUE_IS_AUTOCOMPUTED => false,
+            self::FIELD_VALUE_MANUAL => (float) $property
+        ];
+    }
+
+    public function getDefaultRESTValue()
     {
         $property = $this->getProperty('default_value');
         if ($property === null) {
