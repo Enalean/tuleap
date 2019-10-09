@@ -37,4 +37,9 @@
             <directory>../../plugins/*/tests/integration</directory>
         </testsuite>
     </testsuites>
+    <groups>
+        <exclude>
+            <group>ToFatToRun</group>
+        </exclude>
+    </groups>
 </phpunit>

@@ -32,8 +32,6 @@ ini_set('memory_limit', '-1');
 ini_set('display_errors', 'on');
 date_default_timezone_set('Europe/Paris');
 
-exec('start-mysqld.sh');
-
 require_once __DIR__.'/../../src/etc/local.inc.dist';
 
 $cli_args = $argv;

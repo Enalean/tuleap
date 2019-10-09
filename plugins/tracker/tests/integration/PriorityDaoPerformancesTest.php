@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,19 +16,34 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-require_once __DIR__ . '/bootstrap.php';
+declare(strict_types=1);
 
-class PriorityDaoTestPerformances extends TuleapDbTestCase
+namespace Tuleap\Tracker;
+
+use PHPUnit\Framework\TestCase;
+use Tracker_Artifact_PriorityDao;
+use Tuleap\DB\DBFactory;
+
+/**
+ * Also need to increase the memory limit to execute properly
+ * @group ToFatToRun
+ */
+class PriorityDaoPerformancesTest extends TestCase
 {
     /** @var Tracker_Artifact_PriorityDao */
     private $dao;
+    /**
+     * @var \ParagonIE\EasyDB\EasyDB
+     */
+    private $db;
 
-    public function setUp()
+    public function setUp(): void
     {
-        parent::setUp();
         $this->dao = new Tracker_Artifact_PriorityDao();
+        $this->db = DBFactory::getMainTuleapDBConnection()->getDB();
     }
 
     public function testBenchmark()
@@ -75,9 +90,9 @@ class PriorityDaoTestPerformances extends TuleapDbTestCase
         for ($i = 1; $i <= $k; $i++) {
             $this->progress($i, $k);
             $this->generateRandomArtifactPriorities($n);
-            $start = microtime(1);
+            $start = microtime(true);
             $this->dao->putArtifactAtTheEndWithoutTransaction($n + $i);
-            $end = microtime(1);
+            $end = microtime(true);
             $times[] = $end - $start;
         }
         echo "\n";
@@ -123,9 +138,9 @@ class PriorityDaoTestPerformances extends TuleapDbTestCase
             $artifact_id = $row['artifact_id'];
             $row = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank = $new_rank")->getRow();
             $successor_id = $row['artifact_id'];
-            $start = microtime(1);
+            $start = microtime(true);
             $this->dao->moveListOfArtifactsBefore(array($artifact_id), $successor_id);
-            $end = microtime(1);
+            $end = microtime(true);
             $times[] = $end - $start;
         }
         echo "\n";
@@ -145,9 +160,9 @@ class PriorityDaoTestPerformances extends TuleapDbTestCase
             }
             $row = $this->dao->retrieve("SELECT artifact_id FROM tracker_artifact_priority_rank WHERE rank = $new_rank")->getRow();
             $successor_id = $row['artifact_id'];
-            $start = microtime(1);
+            $start = microtime(true);
             $this->dao->moveListOfArtifactsBefore($artifact_ids, $successor_id);
-            $end = microtime(1);
+            $end = microtime(true);
             $times[] = $end - $start;
         }
         echo "\n";
@@ -168,7 +183,7 @@ class PriorityDaoTestPerformances extends TuleapDbTestCase
 
     private function generateRandomArtifactPriorities($n)
     {
-        $this->truncateTable('tracker_artifact_priority_rank');
+        $this->db->run('TRUNCATE TABLE tracker_artifact_priority_rank');
         $artifact_ids = range(1, $n);
         shuffle($artifact_ids);
 
@@ -181,14 +196,14 @@ class PriorityDaoTestPerformances extends TuleapDbTestCase
         foreach (array_chunk($inserts, 10000) as $chunk) {
             $sql = "INSERT INTO tracker_artifact_priority_rank (artifact_id, rank) VALUES ";
             $sql .= implode(',', $chunk);
-            $this->mysqli->query($sql);
+            $this->db->run($sql);
         }
-        $this->mysqli->query('ANALYZE TABLE tracker_artifact_priority_rank');
+        $this->db->run('ANALYZE TABLE tracker_artifact_priority_rank');
     }
 
     private function progress($done, $total)
     {
-        $bar_size = floor($done * 30 / $total);
+        $bar_size = (int) floor($done * 30 / $total);
 
         $status_bar = "\r[";
         $status_bar .= str_repeat("=", $bar_size);
