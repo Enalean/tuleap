@@ -1094,7 +1094,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         if ($report) {
             $report->process($layout, $request, $current_user);
         } elseif (!$link_artifact_id) {
-            $this->displayHeader($layout, $this->name, array());
+            $this->displayHeader($layout, $this->name, array(), $this->getDefaultToolbar());
             echo $GLOBALS['Language']->getText('plugin_tracker', 'no_reports_available');
 
             if ($this->userIsAdmin($current_user)) {
@@ -1176,7 +1176,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                         'url'   => TRACKER_BASE_URL.'/?tracker='. $this->getId(),
                 ),
         );
-        $this->displayHeader($layout, $this->name, $breadcrumbs);
+        $this->displayHeader($layout, $this->name, $breadcrumbs, $this->getDefaultToolbar());
         $html = '';
 
         $words    = $request->get('words');
@@ -1292,8 +1292,13 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->displayFooter($layout);
     }
 
-    public function displayHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs, $toolbar = null, array $params = array())
-    {
+    public function displayHeader(
+        Tracker_IDisplayTrackerLayout $layout,
+        $title,
+        $breadcrumbs,
+        array $toolbar,
+        array $params = array()
+    ) {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $hp = Codendi_HTMLPurifier::instance();
 
@@ -1303,9 +1308,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 ),
                 $breadcrumbs
             );
-            if (!$toolbar) {
-                $toolbar = $this->getDefaultToolbar();
-            }
+
             $title = ($title ? $title .' - ' : ''). $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML);
             $layout->displayHeader($project, $title, $breadcrumbs, $toolbar, $params);
         }
@@ -1514,7 +1517,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $hp = Codendi_HTMLPurifier::instance();
             $title = ($title ? $title .' - ' : ''). $GLOBALS['Language']->getText('plugin_tracker_include_type', 'administration');
-            $toolbar = null;
+            $toolbar = $this->getDefaultToolbar();
             if ($this->userIsAdmin()) {
                 $breadcrumbs = array_merge(
                     array(
@@ -1816,7 +1819,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 'url'   => '#' //TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=display-masschange-form',
             ),
         );
-        $this->displayHeader($layout, $this->name, $breadcrumbs);
+        $this->displayHeader($layout, $this->name, $breadcrumbs, $this->getDefaultToolbar());
 
         $this->renderer->renderToPage(
             'masschange',

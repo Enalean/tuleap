@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright Enalean (c) 2014 - 2018. All rights reserved.
+/**
+ * Copyright Enalean (c) 2014 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -65,7 +65,14 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
                 'url'   => TRACKER_BASE_URL.'/?aid='. $this->artifact->getId().'&func=copy-artifact'
             )
         );
-        $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, null, array('body_class' => array('widgetable')));
+
+        $this->tracker->displayHeader(
+            $this->layout,
+            $title,
+            $breadcrumbs,
+            $this->tracker->getDefaultToolbar(),
+            array('body_class' => array('widgetable'))
+        );
     }
 
     public function display(Codendi_Request $request, PFUser $current_user)
