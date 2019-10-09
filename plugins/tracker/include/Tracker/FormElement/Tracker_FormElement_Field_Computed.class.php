@@ -565,7 +565,14 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     public function fetchAdminFormElement()
     {
         $html  = '<div class="input-append">';
-        $html .= $this->fetchComputedInputs('', true);
+
+        $default_value          = $this->getDefaultValue();
+        $default_value_in_input = '';
+        if ($default_value !== null) {
+            $default_value_in_input = (string) $default_value[self::FIELD_VALUE_MANUAL];
+        }
+
+        $html .= $this->fetchComputedInputs($default_value_in_input, true);
         $html .= $this->fetchBackToAutocomputedButton(true);
         $html .= $this->fetchComputedValueWithLabel($this->getFieldEmptyMessage());
         $html .= "</div>";
