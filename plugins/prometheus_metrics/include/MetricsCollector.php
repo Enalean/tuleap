@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PrometheusMetrics;
 
+use SystemEvent;
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Instrument\Prometheus\CollectTuleapComputedMetrics;
 use Tuleap\Instrument\Prometheus\Prometheus;
@@ -76,6 +77,7 @@ class MetricsCollector
         $this->setUsersByStatus();
         $this->setProjectsByStatus();
         $this->setWorkerStatus();
+        $this->setSystemEventsStatus();
         $this->event_manager->processEvent(new CollectTuleapComputedMetrics($this->prometheus));
     }
 
@@ -113,6 +115,20 @@ class MetricsCollector
         if ($this->redis !== null) {
             $nb_events = $this->redis->lLen(Worker::EVENT_QUEUE_NAME);
             $this->prometheus->gaugeSet('worker_events', 'Total number of worker events', $nb_events, ['queue' => Worker::EVENT_QUEUE_NAME]);
+        }
+    }
+
+    private function setSystemEventsStatus(): void
+    {
+        $all_status = [];
+        foreach (SystemEvent::ALL_STATUS as $status) {
+            $all_status[$status] = 0;
+        }
+        foreach ($this->dao->getNewSystemEventsCount() as $row) {
+            $all_status[$row['status']] = (int) $row['nb'];
+        }
+        foreach ($all_status as $status => $count) {
+            $this->prometheus->gaugeSet('system_events_count', 'Actual number (as in the database) of system_events per type', $count, ['status' => $status]);
         }
     }
 }

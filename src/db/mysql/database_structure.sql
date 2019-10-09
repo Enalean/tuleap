@@ -1495,7 +1495,8 @@ CREATE TABLE IF NOT EXISTS system_event (
   owner VARCHAR(255) NOT NULL default 'root',
   log TEXT,
   PRIMARY KEY (id),
-  INDEX type_idx (type(20))
+  INDEX type_idx (type(20)),
+  INDEX idx_status (status)
 );
 
 CREATE TABLE system_events_followers (

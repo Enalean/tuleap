@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,21 +19,28 @@
  *
  */
 
-namespace Tuleap\PrometheusMetrics;
+declare(strict_types = 1);
 
-use Tuleap\DB\DataAccessObject;
-
-class MetricsCollectorDao extends DataAccessObject
+class b201910081629_add_index_on_system_events extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
 {
-
-    public function getProjectsByStatus()
+    public function description()
     {
-        $sql = 'SELECT status, count(*) as nb FROM groups WHERE status IN ("A", "P", "D") GROUP BY status';
-        return $this->getDB()->run($sql);
+        return 'Add project banner table';
     }
 
-    public function getNewSystemEventsCount(): array
+    public function preUp()
     {
-        return $this->getDB()->run('SELECT status, count(*) as nb FROM system_event GROUP BY status');
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
+    }
+
+    public function up()
+    {
+        $sql = "ALTER TABLE system_event ADD INDEX idx_status(status)";
+
+        $res = $this->db->dbh->exec($sql);
+
+        if ($res === false) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to add index on status in system_event table');
+        }
     }
 }
