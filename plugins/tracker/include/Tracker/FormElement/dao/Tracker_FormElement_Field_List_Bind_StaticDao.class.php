@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -51,6 +52,20 @@ class Tracker_FormElement_Field_List_Bind_StaticDao extends DataAccessObject
                 VALUES ($field_id, $is_rank_alpha)";
         return $this->update($sql);
     }
+
+    public function updateChildrenAlphaRank(int $parent_id, int $is_rank_alpha)
+    {
+        $parent_id     = $this->da->escapeInt($parent_id);
+        $is_rank_alpha = $this->da->escapeInt($is_rank_alpha);
+
+        $sql = "UPDATE tracker_field_list_bind_static AS children_static_field
+                INNER JOIN tracker_field AS children_field ON children_field.id = children_static_field.field_id
+                SET children_static_field.is_rank_alpha = $is_rank_alpha
+                WHERE children_field.original_field_id = $parent_id";
+
+        return $this->update($sql);
+    }
+
     public function isRankAlpha($field_id)
     {
         $field_id  = $this->da->escapeInt($field_id);
