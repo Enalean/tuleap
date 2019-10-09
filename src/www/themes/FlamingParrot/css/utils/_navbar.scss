@@ -428,6 +428,19 @@ $nav-dropdown-content-border-radius: 3px;
     padding: 0 0 0 20px;
     color: $ui-color-warning;
     font-size: 16px;
+
+    > i {
+        padding: 7px;
+    }
+}
+
+#current-project-banner-bullhorn.project-banner-hidden > a {
+    color: $white;
+
+    > i {
+        background-color: $ui-color-warning;
+        border-radius: 50%;
+    }
 }
 
 .current-project-nav-popover {

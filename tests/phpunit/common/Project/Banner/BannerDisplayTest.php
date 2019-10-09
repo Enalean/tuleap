@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
@@ -17,30 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.project-banner {
-    padding: $tlp-spacing;
-    background-color: $tlp-ui-warning;
-}
+declare(strict_types=1);
 
-.project-banner-clamped {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+namespace Tuleap\Project\Banner;
 
-.project-banner-can-be-unclamped {
-    cursor: pointer;
-}
+use PHPUnit\Framework\TestCase;
 
-.project-banner > p {
-    color: $tlp-ui-white;
-}
+final class BannerDisplayTest extends TestCase
+{
+    public function testVisibleBanner(): void
+    {
+        $expected_message = 'My message';
+        $banner = BannerDisplay::buildVisibleBanner($expected_message);
 
-.project-banner > p > a {
-    color: $tlp-ui-white;
-    text-decoration: underline;
-}
+        $this->assertEquals($expected_message, $banner->getMessage());
+        $this->assertTrue($banner->isVisible());
+    }
 
-.project-banner.project-banner-hidden {
-    display: none;
+    public function testHiddenBanner(): void
+    {
+        $expected_message = 'My message';
+        $banner = BannerDisplay::buildHiddenBanner($expected_message);
+
+        $this->assertEquals($expected_message, $banner->getMessage());
+        $this->assertFalse($banner->isVisible());
+    }
 }

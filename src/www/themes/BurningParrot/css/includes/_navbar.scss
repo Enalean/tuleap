@@ -308,6 +308,19 @@
 #current-project-banner-bullhorn > a {
     padding: 0 0 0 $tlp-spacing;
     color: $tlp-ui-warning;
+
+    > i {
+        padding: 7px;
+    }
+}
+
+#current-project-banner-bullhorn.project-banner-hidden > a {
+    color: $tlp-ui-white;
+
+    > i {
+        background-color: $tlp-ui-warning;
+        border-radius: 50%;
+    }
 }
 
 .join-tuleap-community {

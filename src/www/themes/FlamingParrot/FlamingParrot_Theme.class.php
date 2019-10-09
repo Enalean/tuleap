@@ -21,7 +21,7 @@
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
-use Tuleap\Project\Banner\Banner;
+use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
 
@@ -235,7 +235,7 @@ class FlamingParrot_Theme extends Layout
         $banner = null;
         if (!empty($params['group'])) {
             $project = $project_manager->getProject($params['group']);
-            $banner  = $this->getProjectBanner($project);
+            $banner  = $this->getProjectBanner($project, $current_user);
         }
 
         $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($project_manager, $params, $banner);
@@ -262,7 +262,7 @@ class FlamingParrot_Theme extends Layout
         $this->container($params, $project_manager, $current_user, $banner);
     }
 
-    private function getCurrentProjectNavbarInfo(ProjectManager $project_manager, array $params, ?Banner $banner)
+    private function getCurrentProjectNavbarInfo(ProjectManager $project_manager, array $params, ?BannerDisplay $banner)
     {
         if (empty($params['group'])) {
             return false;
@@ -319,7 +319,7 @@ class FlamingParrot_Theme extends Layout
         return $display_new_user;
     }
 
-    private function container(array $params, ProjectManager $project_manager, PFUser $current_user, ?Banner $banner)
+    private function container(array $params, ProjectManager $project_manager, PFUser $current_user, ?BannerDisplay $banner)
     {
         $project_tabs        = null;
         $project_name        = null;
