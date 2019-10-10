@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,7 +37,7 @@ class Git_HTTP_CommandGitolite extends Git_HTTP_Command
         $this->env['REMOTE_ADDR']      = HTTPRequest::instance()->getIPAddress();
         $this->env['TERM']             = 'linux';
         $this->appendToEnv('REQUEST_URI');
-        $this->appendToEnv('REMOTE_PORT');
+        $this->env['REMOTE_PORT']      = $_SERVER['REMOTE_PORT'] ?? 'UNKNOWN';
         $this->appendToEnv('SERVER_ADDR');
         $this->appendToEnv('SERVER_PORT');
     }
