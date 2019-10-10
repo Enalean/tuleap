@@ -124,7 +124,27 @@ class ItemRepresentationVisitorTest extends TestCase
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
 
+        $this->link_version_factory->shouldReceive('getLatestVersion')->never();
+
+        $this->item_visitor->visitLink($item, $params);
+    }
+
+    public function testItVisitALinkAndStoreTheAccess(): void
+    {
+        $item   = Mockery::mock(\Docman_Link::class);
+        $item->shouldReceive('getGroupId')->once();
+
+        $version = Mockery::mock(\Docman_Version::class);
+        $version->shouldReceive('getNumber')->andReturn(1);
+
+        $item->shouldReceive('getCurrentVersion')->andReturn($version);
+        $params = ['current_user' => Mockery::mock(\PFUser::class), 'is_a_direct_access' => true];
+
+        $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
+
         $this->link_version_factory->shouldReceive('getLatestVersion')->once();
+
+        $this->event_manager->shouldReceive('processEvent')->once();
 
         $this->item_visitor->visitLink($item, $params);
     }

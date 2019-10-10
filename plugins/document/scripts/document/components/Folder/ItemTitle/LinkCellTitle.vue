@@ -26,9 +26,6 @@
         <a v-bind:href="document_link_url" class="document-folder-subitem-link">
             {{ title }}
         </a>
-        <span class="tlp-badge-warning document-badge-corrupted" v-translate v-if="is_corrupted">
-            Corrupted
-        </span>
     </div>
 </template>
 
@@ -54,9 +51,6 @@ export default {
         },
         title() {
             return getTitleWithElipsisIfNeeded(this.item);
-        },
-        is_corrupted() {
-            return !this.item.link_properties || !this.item.link_properties.link_url;
         }
     }
 };

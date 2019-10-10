@@ -18,18 +18,21 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest.js";
 import CreateNewItemVersionButton from "./NewItemVersionButton.vue";
 
 import localVue from "../../../helpers/local-vue.js";
 import EventBus from "../../../helpers/event-bus.js";
 
 describe("CreateNewItemVersionButton", () => {
-    let create_new_item_version_button_factory;
+    let create_new_item_version_button_factory, store;
     beforeEach(() => {
+        store = createStoreMock({});
         create_new_item_version_button_factory = (props = {}) => {
             return shallowMount(CreateNewItemVersionButton, {
                 localVue,
-                propsData: { ...props }
+                propsData: { ...props },
+                mocks: { $store: store }
             });
         };
     });
@@ -143,25 +146,19 @@ describe("CreateNewItemVersionButton", () => {
 
     it(`Given item is a link document
         When we click on [create new version]
-        Then create-new-item-version event should be dispatched`, () => {
-        jest.spyOn(document, "dispatchEvent").mockImplementation(() => {});
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
+        Then we should load link`, () => {
+        const item = {
+            id: 1,
+            title: "my item title",
+            type: "link",
+            user_can_write: true
+        };
 
-        const wrapper = create_new_item_version_button_factory({
-            item: {
-                id: 1,
-                title: "my item title",
-                type: "link",
-                user_can_write: true
-            }
-        });
+        const wrapper = create_new_item_version_button_factory({ item });
 
         wrapper.find("[data-test=document-new-item-version-button]").trigger("click");
 
-        expect(event_bus_emit).toHaveBeenCalledWith(
-            "show-create-new-item-version-modal",
-            expect.any(Object)
-        );
+        expect(store.dispatch).toHaveBeenCalledWith("loadDocument", 1);
     });
 
     it(`Given user can't write in folder
