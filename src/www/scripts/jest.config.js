@@ -17,4 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-module.exports = require("../../../tests/jest/jest.config.js");
+const base_config = require("../../../tests/jest/jest.base.config.js");
+
+module.exports = {
+    ...base_config,
+    displayName: "tuleap-core",
+    collectCoverageFrom: [
+        ...base_config.collectCoverageFrom,
+        "!**/jquery/**",
+        "!**/jscrollpane/**",
+        "!**/jstimezonedetect/**",
+        "!**/lightwindow/**",
+        "!**/lytebox/**",
+        "!**/protocheck/**",
+        "!**/prototype/**",
+        "!**/scriptaculous/**",
+        "!**/select2/**",
+        "!**/tablekit/**",
+        "!**/textboxlist/**",
+        "!**/viewportchecker/**",
+        "!**/bootstrap/**",
+        "!**/datepicker/**",
+        "!**/FlamingParrot/keymaster-sequence/**"
+    ]
+};
