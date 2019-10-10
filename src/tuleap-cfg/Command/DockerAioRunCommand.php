@@ -29,6 +29,7 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
+use Tuleap\System\ServiceControl;
 use TuleapCfg\Command\Configure\ConfigureApache;
 
 class DockerAioRunCommand extends Command
@@ -159,6 +160,7 @@ class DockerAioRunCommand extends Command
     {
         $output->writeln("Install Tuleap");
         $this->process_factory->getProcess(['/bin/bash', '+x', '/usr/share/tuleap/tools/setup.el7.sh', '--assumeyes', '--configure', '--server-name=tuleap.local', '--mysql-server=localhost', '--mysql-password='.getenv('MYSQL_ROOT_PASSWORD')])->mustRun();
+        $this->process_factory->getProcess(['/usr/bin/tuleap', 'config-set', ServiceControl::FORGECONFIG_INIT_MODE, ServiceControl::SUPERVISORD])->mustRun();
     }
 
     private function shutdownMysql(OutputInterface $output, Process $mysql_daemon): void

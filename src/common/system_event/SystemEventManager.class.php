@@ -28,6 +28,7 @@ use Tuleap\SystemEvent\SystemEventInstrumentation;
 use Tuleap\SystemEvent\SystemEventSVNAuthenticationCacheRefresh;
 use Tuleap\Redis;
 use Tuleap\SystemEvent\SystemEventUserActiveStatusChange;
+use TuleapCfg\Command\ProcessFactory;
 
 /**
 * Manager of system events
@@ -588,7 +589,7 @@ class SystemEventManager
         if (Redis\ClientFactory::canClientBeBuiltFromForgeConfig()) {
             $redis_client = Redis\ClientFactory::fromForgeConfig();
         }
-        return new SVNAuthenticationCacheInvalidator(new ApacheServiceControl(new ServiceControl()), $redis_client);
+        return new SVNAuthenticationCacheInvalidator(new ApacheServiceControl(new ServiceControl(), new ProcessFactory()), $redis_client);
     }
 
 

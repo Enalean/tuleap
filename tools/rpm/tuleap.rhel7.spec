@@ -765,11 +765,6 @@ fi
 
 %post core-subversion
 /usr/bin/systemctl daemon-reload &>/dev/null || :
-if [ $1 -eq 1 ]; then
-    /usr/bin/systemctl enable \
-        tuleap-svn-updater.service &>/dev/null || :
-fi
-
 
 #
 # Post install of git plugin
@@ -792,9 +787,6 @@ fi
 %preun core-subversion
 if [ $1 -eq 0 ]; then
     /usr/bin/systemctl stop tuleap.service &>/dev/null || :
-
-    /usr/bin/systemctl disable \
-        tuleap-svn-updater.service &>/dev/null || :
 fi
 
 %postun
@@ -803,10 +795,6 @@ fi
 
 %postun core-subversion
 /usr/bin/systemctl daemon-reload &>/dev/null || :
-if [ $1 -eq 1 ]; then
-    /usr/bin/systemctl restart \
-        tuleap-svn-updater.service&>/dev/null || :
-fi
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT

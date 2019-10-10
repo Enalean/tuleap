@@ -27,6 +27,7 @@ use Logger;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\System\ApacheServiceControl;
 use Tuleap\System\ServiceControl;
+use TuleapCfg\Command\ProcessFactory;
 use WrapperLogger;
 use Exception;
 
@@ -69,9 +70,10 @@ class SvnrootUpdater
             ForgeConfig::set('svn_root_file', '/etc/httpd/conf.d/svnroot.conf');
 
             $apache_conf_generator = new ApacheConfGenerator(
-                (new ApacheServiceControl(
-                    new ServiceControl()
-                ))->disableInitUsage(),
+                new ApacheServiceControl(
+                    new ServiceControl(),
+                    new ProcessFactory()
+                ),
                 Backend::instance('SVN')
             );
             $apache_conf_generator->generate();
