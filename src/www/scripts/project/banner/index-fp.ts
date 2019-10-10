@@ -18,7 +18,10 @@
  */
 
 import { allowUnclampingProjectBannerMessage } from "./project-banner-clamp";
+import { allowToHideAndShowProjectBanner } from "./project-banner-show-hide";
+import { patch } from "../../../themes/common/tlp/src/js/fetch-wrapper";
 
 document.addEventListener("DOMContentLoaded", () => {
     allowUnclampingProjectBannerMessage(document);
+    allowToHideAndShowProjectBanner(document, patch);
 });

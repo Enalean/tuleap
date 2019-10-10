@@ -156,10 +156,14 @@ const webpack_config_for_burning_parrot_code = {
 
 const webpack_config_for_project_banner = {
     entry: {
-        "project-banner": "./project/banner/index.ts"
+        "project-banner-bp": "./project/banner/index-bp.ts",
+        "project-banner-fp": "./project/banner/index-fp.ts"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
+    externals: {
+        tlp: "tlp"
+    },
     module: {
         rules: [
             ...webpack_configurator.configureTypescriptRules(
@@ -169,7 +173,7 @@ const webpack_config_for_project_banner = {
     },
     plugins: [webpack_configurator.getTypescriptCheckerPlugin(false)],
     resolve: {
-        extensions: [".ts"]
+        extensions: [".ts", ".js"]
     }
 };
 

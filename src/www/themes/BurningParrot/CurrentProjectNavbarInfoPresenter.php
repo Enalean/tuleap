@@ -32,6 +32,10 @@ class CurrentProjectNavbarInfoPresenter
     public $project_is_public;
     public $project_name;
     /**
+     * @var int
+     */
+    public $project_id;
+    /**
      * @var string[]
      */
     public $project_flags;
@@ -81,6 +85,7 @@ class CurrentProjectNavbarInfoPresenter
         $this->project_link      = '/projects/' . $project->getUnixName() . '/';
         $this->project_is_public = $project->isPublic();
         $this->project_name      = $project->getUnconvertedPublicName();
+        $this->project_id        = $project->getID();
         $this->project_privacy   = $purifier->purify($project_privacy, CODENDI_PURIFIER_STRIP_HTML);
         $this->project_flags     = $project_flags;
         $nb_project_flags        = count($project_flags);

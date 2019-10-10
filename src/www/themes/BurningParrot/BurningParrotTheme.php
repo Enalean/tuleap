@@ -280,7 +280,7 @@ class BurningParrotTheme extends BaseLayout
             $project,
             $this->getProjectPrivacy($project),
             $this->project_flags_builder->buildProjectFlags($project),
-            $this->getProjectBanner($project, $this->user)
+            $this->getProjectBanner($project, $this->user, 'project-banner-bp.js')
         );
     }
 
