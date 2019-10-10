@@ -53,7 +53,7 @@ export default class CollapsedSwimlane extends Vue {
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
 
-    @swimlane_store.Mutation
+    @swimlane_store.Action
     readonly expandSwimlane!: (swimlane: Swimlane) => void;
 
     get additional_classnames(): string {

@@ -81,6 +81,9 @@ class TaskboardTest extends RestBase
             $this->assertArrayHasKey('assignees', $cards[$key]);
             $this->assertArrayHasKey('remaining_effort', $cards[$key]);
 
+            $is_open = in_array($label, ['US2', 'US4', 'US5', 'US6'], true);
+            $this->assertEquals($is_open, $cards[$key]['is_open'], $label);
+
             if ($label === 'US1') {
                 $this->assertNotEmpty($cards[$key]['assignees']);
                 $this->assertEquals($cards[$key]['assignees'][0]['username'], 'rest_api_tester_1');
