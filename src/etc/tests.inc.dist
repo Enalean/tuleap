@@ -1,8 +1,0 @@
-<?php
-
-$sys_dbhost   = 'localhost';
-$sys_dbuser   = 'integration_test';
-$sys_dbpasswd = 'welcome0';
-$sys_dbname   = 'integration_test';
-
-?>
