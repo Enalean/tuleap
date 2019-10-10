@@ -23,7 +23,7 @@ namespace Tuleap\Theme\BurningParrot;
 use Codendi_HTMLPurifier;
 use ForgeConfig;
 use Project;
-use Tuleap\Project\Banner\Banner;
+use Tuleap\Project\Banner\BannerDisplay;
 
 class CurrentProjectNavbarInfoPresenter
 {
@@ -65,11 +65,16 @@ class CurrentProjectNavbarInfoPresenter
      */
     public $purified_banner = '';
 
+    /**
+     * @var bool
+     */
+    public $project_banner_is_visible = false;
+
     public function __construct(
         Project $project,
         $project_privacy,
         array $project_flags,
-        ?Banner $banner
+        ?BannerDisplay $banner
     ) {
         $purifier = Codendi_HTMLPurifier::instance();
 
@@ -96,6 +101,7 @@ class CurrentProjectNavbarInfoPresenter
                 $banner->getMessage(),
                 Codendi_HTMLPurifier::CONFIG_MINIMAL_FORMATTING_NO_NEWLINE
             );
+            $this->project_banner_is_visible = $banner->isVisible();
         }
     }
 }

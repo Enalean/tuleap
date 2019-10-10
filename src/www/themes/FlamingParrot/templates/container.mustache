@@ -6,7 +6,7 @@
     <div class="main full container-fluid">
 {{/hasSidebar}}
 {{# purified_banner_message}}
-    <div class="project-banner">
+    <div class="project-banner {{^ project_banner_is_visible }}project-banner-hidden{{/ project_banner_is_visible }}">
         <p id="current-project-banner-message" class="project-banner-clamped">{{{ purified_banner_message }}}</p>
     </div>
 {{/purified_banner_message}}

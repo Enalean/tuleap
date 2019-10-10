@@ -18,8 +18,11 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Project\Banner;
 
+use PFUser;
 use Project;
 
 class BannerRetriever
@@ -36,12 +39,30 @@ class BannerRetriever
 
     public function getBannerForProject(Project $project): ?Banner
     {
-        $message = $this->banner_dao->findBannerByProjectId($project->getID());
+        $message = $this->banner_dao->searchBannerByProjectId((int) $project->getID());
 
         if (! $message) {
             return null;
         }
 
         return new Banner($message);
+    }
+
+    public function getBannerForDisplayPurpose(Project $project, PFUser $user): ?BannerDisplay
+    {
+        $banner_with_visibility_row = $this->banner_dao->searchBannerWithVisibilityByProjectID(
+            (int) $project->getID(),
+            (int) $user->getId()
+        );
+
+        if ($banner_with_visibility_row === null) {
+            return null;
+        }
+
+        if ($banner_with_visibility_row['preference_value'] === 'hidden') {
+            return BannerDisplay::buildHiddenBanner($banner_with_visibility_row['message']);
+        }
+
+        return BannerDisplay::buildVisibleBanner($banner_with_visibility_row['message']);
     }
 }

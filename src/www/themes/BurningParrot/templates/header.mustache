@@ -54,7 +54,7 @@
             <main role="main" class="{{ main_classes }}">
                 {{# current_project_navbar_info_presenter }}
                     {{# purified_banner }}
-                        <div class="project-banner">
+                        <div class="project-banner {{^ project_banner_is_visible }}project-banner-hidden{{/ project_banner_is_visible }}">
                             <p id="current-project-banner-message" class="project-banner-clamped">{{{ purified_banner }}}</p>
                         </div>
                     {{/ purified_banner }}

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Project\Banner\Banner;
+use Tuleap\Project\Banner\BannerDisplay;
 
 class FlamingParrot_ContainerPresenter
 {
@@ -74,6 +74,11 @@ class FlamingParrot_ContainerPresenter
      */
     public $purified_banner_message = '';
 
+    /**
+     * @var bool
+     */
+    public $project_banner_is_visible = false;
+
     public function __construct(
         array $breadcrumbs,
         $toolbar,
@@ -85,7 +90,7 @@ class FlamingParrot_ContainerPresenter
         $feedback_content,
         $version,
         $sidebar_collapsable,
-        ?Banner $banner,
+        ?BannerDisplay $banner,
         ?Project $project = null
     ) {
         $this->breadcrumbs         = $breadcrumbs;
@@ -114,6 +119,7 @@ class FlamingParrot_ContainerPresenter
                 $banner->getMessage(),
                 Codendi_HTMLPurifier::CONFIG_MINIMAL_FORMATTING_NO_NEWLINE
             );
+            $this->project_banner_is_visible = $banner->isVisible();
         }
     }
 

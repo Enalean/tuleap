@@ -26,6 +26,7 @@ use EventManager;
 use ForgeConfig;
 use HTTPRequest;
 use PermissionsOverrider_PermissionsOverriderManager;
+use PFUser;
 use Project;
 use ProjectManager;
 use Response;
@@ -39,6 +40,7 @@ use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Project\Banner\Banner;
 use Tuleap\Project\Banner\BannerDao;
+use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Sanitizer\URISanitizer;
 use UserManager;
@@ -601,9 +603,9 @@ abstract class BaseLayout extends Response
         }
     }
 
-    final protected function getProjectBanner(Project $project) : ?Banner
+    final protected function getProjectBanner(Project $project, PFUser $current_user) : ?BannerDisplay
     {
-        $project_banner = (new BannerRetriever(new BannerDao()))->getBannerForProject($project);
+        $project_banner = (new BannerRetriever(new BannerDao()))->getBannerForDisplayPurpose($project, $current_user);
         if ($project_banner === null) {
             return null;
         }
