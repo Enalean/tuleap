@@ -176,6 +176,12 @@ class NavigationPresenterBuilder
                 )
             )
         );
+        $entries['banner'] = new NavigationItemPresenter(
+            _('Banner'),
+            '/project/' . urlencode((string) $project_id) . '/admin/banner',
+            'banner',
+            $current_pane_shortname
+        );
 
         return $entries;
     }
