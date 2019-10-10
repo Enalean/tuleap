@@ -57,7 +57,7 @@ describe("ColumnWithChildren", () => {
             card: { id: 43 } as Card,
             children_cards: [{ id: 104, tracker_id: 7, mapped_list_value: { id: 50 } } as Card],
             is_loading_children_cards: true
-        };
+        } as Swimlane;
         const wrapper = createWrapper(swimlane);
 
         expect(wrapper.findAll(ChildCard).length).toBe(0);
@@ -74,7 +74,7 @@ describe("ColumnWithChildren", () => {
                 { id: 104, tracker_id: 7, mapped_list_value: { id: 50 } } as Card
             ],
             is_loading_children_cards: true
-        };
+        } as Swimlane;
         const wrapper = createWrapper(swimlane);
 
         expect(wrapper.findAll(ChildCard).length).toBe(2);
@@ -91,7 +91,7 @@ describe("ColumnWithChildren", () => {
                 { id: 104, tracker_id: 7, mapped_list_value: { id: 50 } } as Card
             ],
             is_loading_children_cards: false
-        };
+        } as Swimlane;
         const wrapper = createWrapper(swimlane);
 
         expect(wrapper.findAll(ChildCard).length).toBe(2);

@@ -6,7 +6,7 @@ exports[`CardWithChildren when the swimlane is loading children cards,
   class="taskboard-swimlane"
 >
   <parent-cell-stub
-    card="[object Object]"
+    swimlane="[object Object]"
   />
    
   <column-with-children-stub

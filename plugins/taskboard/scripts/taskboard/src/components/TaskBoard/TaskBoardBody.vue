@@ -21,8 +21,9 @@
 <template>
     <div class="taskboard-body">
         <template v-for="swimlane of swimlanes">
-            <card-with-children v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-if="swimlane.card.has_children"/>
-            <solo-card v-bind:key="swimlane.card.id" v-bind:card="swimlane.card" v-else/>
+            <collapsed-swimlane v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-if="swimlane.is_collapsed"/>
+            <card-with-children v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-else-if="swimlane.card.has_children"/>
+            <solo-card v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-else/>
         </template>
         <swimlane-skeleton v-if="is_loading_swimlanes"/>
     </div>
@@ -36,11 +37,12 @@ import { Swimlane } from "../../type";
 import SwimlaneSkeleton from "./SwimlaneSkeleton.vue";
 import CardWithChildren from "./Swimlane/CardWithChildren.vue";
 import SoloCard from "./Swimlane/SoloCard.vue";
+import CollapsedSwimlane from "./Swimlane/CollapsedSwimlane.vue";
 
 const swimlane = namespace("swimlane");
 
 @Component({
-    components: { SwimlaneSkeleton, SoloCard, CardWithChildren }
+    components: { SwimlaneSkeleton, SoloCard, CardWithChildren, CollapsedSwimlane }
 })
 export default class TaskBoardBody extends Vue {
     @swimlane.State

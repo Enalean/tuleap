@@ -21,13 +21,13 @@
 <template>
     <div class="taskboard-swimlane">
         <template v-if="! target_column">
-            <parent-cell v-bind:card="card"/>
+            <parent-cell v-bind:swimlane="swimlane"/>
             <div class="taskboard-cell" v-for="col of columns" v-bind:key="col.id"></div>
         </template>
         <template v-else>
-            <div class="taskboard-cell taskboard-cell-swimlane-header" v-bind:class="fullscreen_class"></div>
+            <swimlane-header v-bind:swimlane="swimlane"/>
             <div class="taskboard-cell" v-for="col of columns" v-bind:key="col.id">
-                <solo-card-cell v-if="target_column.id === col.id" v-bind:card="card"/>
+                <solo-card-cell v-if="target_column.id === col.id" v-bind:card="swimlane.card"/>
             </div>
         </template>
     </div>
@@ -36,32 +36,28 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Card, ColumnDefinition } from "../../../type";
+import { ColumnDefinition, Swimlane } from "../../../type";
 import ParentCell from "./ParentCell.vue";
 import SoloCardCell from "./SoloCardCell.vue";
 import ParentCard from "../Card/ParentCard.vue";
 import ParentCardRemainingEffort from "../Card/ParentCardRemainingEffort.vue";
 import { getColumnOfCard } from "../../../helpers/list-value-to-column-mapper";
+import SwimlaneHeader from "./SwimlaneHeader.vue";
 
-import { State, namespace } from "vuex-class";
-
-const fullscreen = namespace("fullscreen");
+import { State } from "vuex-class";
 
 @Component({
-    components: { ParentCell, ParentCard, ParentCardRemainingEffort, SoloCardCell }
+    components: { ParentCell, ParentCard, ParentCardRemainingEffort, SoloCardCell, SwimlaneHeader }
 })
 export default class SoloCard extends Vue {
     @Prop({ required: true })
-    readonly card!: Card;
+    readonly swimlane!: Swimlane;
 
     @State
     readonly columns!: Array<ColumnDefinition>;
 
-    @fullscreen.Getter
-    readonly fullscreen_class!: string;
-
     get target_column(): ColumnDefinition | undefined {
-        return getColumnOfCard(this.columns, this.card);
+        return getColumnOfCard(this.columns, this.swimlane.card);
     }
 }
 </script>

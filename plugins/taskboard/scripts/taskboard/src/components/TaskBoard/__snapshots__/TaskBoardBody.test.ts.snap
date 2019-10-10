@@ -5,7 +5,7 @@ exports[`TaskBoardBody displays swimlanes for solo cards or cards with children 
   class="taskboard-body"
 >
   <solo-card-stub
-    card="[object Object]"
+    swimlane="[object Object]"
   />
   <card-with-children-stub
     swimlane="[object Object]"

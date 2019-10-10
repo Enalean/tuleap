@@ -22,6 +22,7 @@ import ParentCell from "./ParentCell.vue";
 import ParentCard from "../Card/ParentCard.vue";
 import NoMappingMessage from "./NoMappingMessage.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import { Swimlane } from "../../../type";
 
 describe("ParentCell", () => {
     it("displays the parent card in its own cell", () => {
@@ -39,10 +40,12 @@ describe("ParentCell", () => {
                 })
             },
             propsData: {
-                card: {
-                    id: 43,
-                    has_children: true
-                }
+                swimlane: {
+                    card: {
+                        id: 43,
+                        has_children: true
+                    }
+                } as Swimlane
             }
         });
 
@@ -65,40 +68,16 @@ describe("ParentCell", () => {
                 })
             },
             propsData: {
-                card: {
-                    id: 43,
-                    has_children: false
-                }
+                swimlane: {
+                    card: {
+                        id: 43,
+                        has_children: false
+                    }
+                } as Swimlane
             }
         });
 
         expect(wrapper.contains(ParentCard)).toBe(true);
         expect(wrapper.contains(NoMappingMessage)).toBe(true);
-    });
-
-    it("toggles the fullscreen class if taskboard is in fullscreen mode", () => {
-        const wrapper = shallowMount(ParentCell, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        fullscreen: {
-                            is_taskboard_in_fullscreen_mode: true
-                        }
-                    },
-                    getters: {
-                        "fullscreen/fullscreen_class": "taskboard-fullscreen"
-                    }
-                })
-            },
-            propsData: {
-                card: {
-                    id: 43,
-                    has_children: true
-                }
-            }
-        });
-
-        expect(wrapper.contains(ParentCard)).toBe(true);
-        expect(wrapper.contains(NoMappingMessage)).toBe(false);
     });
 });

@@ -159,4 +159,30 @@ describe(`Swimlane state mutations`, () => {
             expect(second_swimlane.is_loading_children_cards).toBe(true);
         });
     });
+
+    describe("collapseSwimlane", () => {
+        it("collapses swimlane", () => {
+            const swimlane: Swimlane = { is_collapsed: false } as Swimlane;
+
+            const state: SwimlaneState = {
+                swimlanes: [swimlane]
+            } as SwimlaneState;
+
+            mutations.collapseSwimlane(state, swimlane);
+            expect(state.swimlanes[0].is_collapsed).toBe(true);
+        });
+    });
+
+    describe("expandSwimlane", () => {
+        it("expands swimlane", () => {
+            const swimlane: Swimlane = { is_collapsed: true } as Swimlane;
+
+            const state: SwimlaneState = {
+                swimlanes: [swimlane]
+            } as SwimlaneState;
+
+            mutations.expandSwimlane(state, swimlane);
+            expect(state.swimlanes[0].is_collapsed).toBe(false);
+        });
+    });
 });

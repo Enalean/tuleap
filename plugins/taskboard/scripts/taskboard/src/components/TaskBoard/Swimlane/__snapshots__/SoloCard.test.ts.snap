@@ -4,8 +4,8 @@ exports[`SoloCard displays the parent card in Done column when status maps this 
 <div
   class="taskboard-swimlane"
 >
-  <div
-    class="taskboard-cell taskboard-cell-swimlane-header"
+  <swimlane-header-stub
+    swimlane="[object Object]"
   />
    
   <div
@@ -28,7 +28,7 @@ exports[`SoloCard displays the parent card in its own cell when status is null 1
   class="taskboard-swimlane"
 >
   <parent-cell-stub
-    card="[object Object]"
+    swimlane="[object Object]"
   />
    
   <div
@@ -45,7 +45,7 @@ exports[`SoloCard displays the parent card in its own cell when tracker id is no
   class="taskboard-swimlane"
 >
   <parent-cell-stub
-    card="[object Object]"
+    swimlane="[object Object]"
   />
    
   <div
