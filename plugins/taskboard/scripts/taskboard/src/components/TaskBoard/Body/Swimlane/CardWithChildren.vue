@@ -19,22 +19,28 @@
   -->
 
 <template>
-    <div class="taskboard">
-        <taskboard-button-bar/>
-        <task-board-header/>
-        <task-board-body/>
+    <div class="taskboard-swimlane">
+        <parent-cell v-bind:swimlane="swimlane"/>
+        <column-with-children v-for="(col, index) of columns" v-bind:key="col.id" v-bind:column="col" v-bind:column_index="index" v-bind:swimlane="swimlane"/>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import TaskBoardHeader from "./Header/TaskBoardHeader.vue";
-import TaskBoardBody from "./Body/TaskBoardBody.vue";
-import TaskboardButtonBar from "./ButtonBar/TaskboardButtonBar.vue";
+import { Component, Prop } from "vue-property-decorator";
+import { ColumnDefinition, Swimlane } from "../../../../type";
+import { State } from "vuex-class";
+import ParentCell from "./ParentCell.vue";
+import ColumnWithChildren from "./ColumnWithChildren.vue";
 
 @Component({
-    components: { TaskBoardBody, TaskBoardHeader, TaskboardButtonBar }
+    components: { ColumnWithChildren, ParentCell }
 })
-export default class TaskBoard extends Vue {}
+export default class CardWithChildren extends Vue {
+    @Prop({ required: true })
+    readonly swimlane!: Swimlane;
+
+    @State
+    readonly columns!: Array<ColumnDefinition>;
+}
 </script>

@@ -15,26 +15,27 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-  -
   -->
 
 <template>
-    <div class="taskboard">
-        <taskboard-button-bar/>
-        <task-board-header/>
-        <task-board-body/>
+    <div class="taskboard-cell-solo-card">
+        <parent-card v-bind:card="card"/>
+        <parent-card-remaining-effort v-bind:card="card"/>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import TaskBoardHeader from "./Header/TaskBoardHeader.vue";
-import TaskBoardBody from "./Body/TaskBoardBody.vue";
-import TaskboardButtonBar from "./ButtonBar/TaskboardButtonBar.vue";
+import { Component, Prop } from "vue-property-decorator";
+import { Card } from "../../../../type";
+import ParentCard from "./Card/ParentCard.vue";
+import ParentCardRemainingEffort from "./Card/ParentCardRemainingEffort.vue";
 
 @Component({
-    components: { TaskBoardBody, TaskBoardHeader, TaskboardButtonBar }
+    components: { ParentCard, ParentCardRemainingEffort }
 })
-export default class TaskBoard extends Vue {}
+export default class SoloCardCell extends Vue {
+    @Prop({ required: true })
+    readonly card!: Card;
+}
 </script>

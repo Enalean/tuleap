@@ -19,22 +19,26 @@
   -->
 
 <template>
-    <div class="taskboard">
-        <taskboard-button-bar/>
-        <task-board-header/>
-        <task-board-body/>
+    <div class="taskboard-swimlane">
+        <div class="taskboard-cell">
+            <div class="tlp-card tlp-skeleton-card taskboard-card-parent taskboard-card-skeleton"></div>
+        </div>
+        <columns-skeleton v-for="(col, index) of columns" v-bind:key="col.id" v-bind:column_index="index"/>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import TaskBoardHeader from "./Header/TaskBoardHeader.vue";
-import TaskBoardBody from "./Body/TaskBoardBody.vue";
-import TaskboardButtonBar from "./ButtonBar/TaskboardButtonBar.vue";
+import { ColumnDefinition } from "../../../../../type";
+import { State } from "vuex-class";
+import ColumnsSkeleton from "./ColumnsSkeleton.vue";
 
 @Component({
-    components: { TaskBoardBody, TaskBoardHeader, TaskboardButtonBar }
+    components: { ColumnsSkeleton }
 })
-export default class TaskBoard extends Vue {}
+export default class SwimlaneSkeleton extends Vue {
+    @State
+    readonly columns!: Array<ColumnDefinition>;
+}
 </script>

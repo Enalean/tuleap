@@ -19,22 +19,18 @@
   -->
 
 <template>
-    <div class="taskboard">
-        <taskboard-button-bar/>
-        <task-board-header/>
-        <task-board-body/>
+    <div class="taskboard-cell">
+        <card-skeleton v-for="i in nb_skeletons" v-bind:key="i"/>
     </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import TaskBoardHeader from "./Header/TaskBoardHeader.vue";
-import TaskBoardBody from "./Body/TaskBoardBody.vue";
-import TaskboardButtonBar from "./ButtonBar/TaskboardButtonBar.vue";
+import { Component, Mixins } from "vue-property-decorator";
+import SkeletonMixin from "./skeleton-mixin";
+import CardSkeleton from "./CardSkeleton.vue";
 
 @Component({
-    components: { TaskBoardBody, TaskBoardHeader, TaskboardButtonBar }
+    components: { CardSkeleton }
 })
-export default class TaskBoard extends Vue {}
+export default class ColumnsSkeleton extends Mixins(SkeletonMixin) {}
 </script>

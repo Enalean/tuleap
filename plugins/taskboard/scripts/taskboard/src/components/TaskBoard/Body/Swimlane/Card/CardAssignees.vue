@@ -19,22 +19,26 @@
   -->
 
 <template>
-    <div class="taskboard">
-        <taskboard-button-bar/>
-        <task-board-header/>
-        <task-board-body/>
+    <div class="taskboard-card-assignees">
+        <div
+            v-for="assignee in assignees"
+            class="tlp-avatar-small taskboard-card-assignees-avatars"
+            v-bind:title="assignee.display_name"
+            v-bind:key="assignee.id"
+        >
+            <img v-bind:src="assignee.avatar_url">
+        </div>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import TaskBoardHeader from "./Header/TaskBoardHeader.vue";
-import TaskBoardBody from "./Body/TaskBoardBody.vue";
-import TaskboardButtonBar from "./ButtonBar/TaskboardButtonBar.vue";
+import { Component, Prop } from "vue-property-decorator";
+import { User } from "../../../../../type";
 
-@Component({
-    components: { TaskBoardBody, TaskBoardHeader, TaskboardButtonBar }
-})
-export default class TaskBoard extends Vue {}
+@Component
+export default class CardAssignees extends Vue {
+    @Prop({ required: true })
+    readonly assignees!: Array<User>;
+}
 </script>
