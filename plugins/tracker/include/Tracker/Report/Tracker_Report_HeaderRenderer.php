@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -49,14 +49,20 @@ class Tracker_Report_HeaderRenderer
         $this->renderer             = $renderer;
     }
 
-    public function displayHeader(Tracker_IFetchTrackerSwitcher $layout, Codendi_Request $request, PFUser $current_user, Tracker_Report $report, $report_can_be_modified)
-    {
+    public function displayHeader(
+        Tracker_IFetchTrackerSwitcher $layout,
+        Codendi_Request $request,
+        PFUser $current_user,
+        Tracker_Report $report,
+        $report_can_be_modified
+    ) {
         $link_artifact_id = (int)$request->get('link-artifact-id');
         if ($report_can_be_modified) {
             $title            = '';
             $breadcrumbs      = array();
             $params           = array('body_class' => array('in_tracker_report'));
-            $toolbar          = null;
+            $toolbar          = $report->getTracker()->getDefaultToolbar();
+
             $report->getTracker()->displayHeader($layout, $title, $breadcrumbs, $toolbar, $params);
         }
 
