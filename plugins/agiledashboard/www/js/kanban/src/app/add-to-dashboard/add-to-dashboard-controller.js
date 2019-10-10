@@ -13,7 +13,7 @@ function AddToDashboardController($element, SharedPropertiesService) {
         report_id: SharedPropertiesService.getSelectedTrackerReportId(),
 
         showProjectDashboards,
-        showDashboardDropdown
+        showDashboardButton
     });
 
     function init() {
@@ -24,7 +24,7 @@ function AddToDashboardController($element, SharedPropertiesService) {
     }
 
     function showProjectDashboards() {
-        return userIsAdmin();
+        return userIsAdmin() && self.dashboard_dropdown.project_dashboards.length > 0;
     }
 
     function showDashboardDropdown() {
@@ -37,5 +37,13 @@ function AddToDashboardController($element, SharedPropertiesService) {
 
     function userIsAdmin() {
         return SharedPropertiesService.getUserIsAdmin();
+    }
+
+    function showUserDashboards() {
+        return self.dashboard_dropdown.user_dashboards.length > 0;
+    }
+
+    function showDashboardButton() {
+        return showDashboardDropdown && (showUserDashboards() || showProjectDashboards());
     }
 }

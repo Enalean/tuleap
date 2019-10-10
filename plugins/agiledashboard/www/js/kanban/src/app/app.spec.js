@@ -35,3 +35,5 @@ import "./kanban-item/kanban-item-rest-service.spec.js";
 import "./kanban-service.spec.js";
 import "./reports-modal/diagram-rest-service.spec.js";
 import "./reports-modal/reports-modal-controller.spec.js";
+
+import "./add-to-dashboard/add-to-dashboard-controller.spec.js";
