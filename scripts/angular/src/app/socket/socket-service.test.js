@@ -13,27 +13,29 @@ describe("SocketService -", () => {
             SocketService = _SocketService_;
             ExecutionService = _ExecutionService_;
         });
-
-        SocketFactory.on = jasmine.createSpy("on");
+        // eslint-disable-next-line jest/prefer-spy-on
+        SocketFactory.on = jest.fn();
     });
 
     describe("listenToArtifactLinked() -", () => {
         it("When an execution is linked to artifacts, then the execution will be updated with the newly linked artifacts", () => {
-            spyOn(ExecutionService, "addArtifactLink");
+            jest.spyOn(ExecutionService, "addArtifactLink").mockImplementation(() => {});
             const artifact_id = 87;
             const added_artifact_link = { id: 53, title: "visuosensory" };
-            SocketFactory.on.and.callFake((event, callback) => {
-                callback({
-                    artifact_id,
-                    added_artifact_link
+            const socket_factory_on = jest
+                .spyOn(SocketFactory, "on")
+                .mockImplementation((event, callback) => {
+                    callback({
+                        artifact_id,
+                        added_artifact_link
+                    });
                 });
-            });
 
             SocketService.listenToArtifactLinked();
 
-            expect(SocketFactory.on).toHaveBeenCalledWith(
+            expect(socket_factory_on).toHaveBeenCalledWith(
                 "testmanagement_execution:link_artifact",
-                jasmine.any(Function)
+                expect.any(Function)
             );
             expect(ExecutionService.addArtifactLink).toHaveBeenCalledWith(
                 artifact_id,

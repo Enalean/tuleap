@@ -1,7 +1,7 @@
 import angular from "angular";
 
 import ui_router from "angular-ui-router";
-import angular_artifact_modal from "angular-artifact-modal";
+import angular_artifact_modal from "../../../../../../tracker/www/scripts/angular-artifact-modal/index.js";
 import angular_tlp from "angular-tlp";
 
 import "restangular";

@@ -90,7 +90,7 @@ function ExecutionService(
         return getAllRemoteExecutions(campaign_id, limit, offset).then(function(remote_executions) {
             //eslint-disable-next-line you-dont-need-lodash-underscore/select
             var executions_to_remove = _.select(self.executions, function(execution) {
-                return ! remote_executions.some(remote => remote.id === execution.id);
+                return !remote_executions.some(remote => remote.id === execution.id);
             });
             var executions_to_add = remote_executions.filter(function(execution) {
                 //eslint-disable-next-line you-dont-need-lodash-underscore/some
@@ -146,6 +146,9 @@ function ExecutionService(
     }
 
     function groupExecutionsByCategory(campaign_id, executions) {
+        if (self.executions_by_categories_by_campaigns[campaign_id] === undefined) {
+            self.executions_by_categories_by_campaigns[campaign_id] = {};
+        }
         var categories = self.executions_by_categories_by_campaigns[campaign_id];
 
         executions.forEach(function(execution) {
@@ -155,7 +158,7 @@ function ExecutionService(
                 execution.definition._uncategorized = category;
             }
 
-            if (!_.has(executions, execution.id)) {
+            if (!_.has(self.executions, execution.id)) {
                 self.executions[execution.id] = execution;
             }
 
@@ -166,7 +169,11 @@ function ExecutionService(
                 };
             }
 
-            if (!categories[category].executions.some(category_execution => category_execution.id === execution.id)) {
+            if (
+                !categories[category].executions.some(
+                    category_execution => category_execution.id === execution.id
+                )
+            ) {
                 categories[category].executions.push(execution);
             }
         });
@@ -306,7 +313,9 @@ function ExecutionService(
                 execution.viewed_by = [];
             }
 
-            var user_uuid_exists = execution.viewed_by.some(presence => presence.uuid === user.uuid);
+            var user_uuid_exists = execution.viewed_by.some(
+                presence => presence.uuid === user.uuid
+            );
 
             if (!user_uuid_exists) {
                 execution.viewed_by.push(user);

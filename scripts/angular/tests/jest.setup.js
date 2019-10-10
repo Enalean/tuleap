@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const state = {
-    steps: [],
-    empty_step: null,
-    field_id: null,
-    is_dragging: false,
-    drake: null,
-    container: []
-};
+import lodash from "lodash";
+import jquery from "jquery";
 
-export default state;
+//We must provide a global "_" because Restangular depends on it.
+Object.defineProperty(window, "_", { value: lodash });
+//We must provide a global jQuery because Angular's jqLite does not support looking up elements via selectors [jqLite:nosel]
+window.jQuery = jquery;

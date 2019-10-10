@@ -1,23 +1,32 @@
 import testmanagement_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
+import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
-describe("CampaignService - ", () => {
-    let mockBackend, CampaignService, SharedPropertiesService;
+describe("CampaignService", () => {
+    let mockBackend, wrapPromise, CampaignService, SharedPropertiesService;
     const userUUID = "123";
 
     beforeEach(() => {
         angular.mock.module(testmanagement_module);
 
-        angular.mock.inject(function(_CampaignService_, $httpBackend, _SharedPropertiesService_) {
+        let $rootScope;
+        angular.mock.inject(function(
+            _$rootScope_,
+            _CampaignService_,
+            $httpBackend,
+            _SharedPropertiesService_
+        ) {
+            $rootScope = _$rootScope_;
             CampaignService = _CampaignService_;
             mockBackend = $httpBackend;
             SharedPropertiesService = _SharedPropertiesService_;
         });
 
-        spyOn(SharedPropertiesService, "getUUID").and.returnValue(userUUID);
+        jest.spyOn(SharedPropertiesService, "getUUID").mockReturnValue(userUUID);
+        mockBackend.when("GET", "campaign-list.tpl.html").respond(200);
 
-        installPromiseMatchers();
+        wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
     afterEach(() => {
@@ -25,7 +34,7 @@ describe("CampaignService - ", () => {
         mockBackend.verifyNoOutstandingRequest();
     });
 
-    it("createCampaign() - ", function() {
+    it("createCampaign()", async () => {
         var campaign_to_create = {
             label: "Release",
             project_id: 101
@@ -64,12 +73,11 @@ describe("CampaignService - ", () => {
 
         mockBackend.flush();
 
-        promise.then(function(response) {
-            expect(response.data.id).toEqual(17);
-        });
+        const response = await wrapPromise(promise);
+        expect(response.data.id).toEqual(17);
     });
 
-    it("patchCampaign() - ", () => {
+    it("patchCampaign()", async () => {
         const label = "cloiochoanitic";
         const job_configuration = {
             url: "https://example.com/badan/",
@@ -95,12 +103,11 @@ describe("CampaignService - ", () => {
 
         mockBackend.flush();
 
-        promise.then(executions => {
-            expect(executions.length).toEqual(1);
-        });
+        const response = await wrapPromise(promise);
+        expect(response.length).toEqual(1);
     });
 
-    it("patchExecutions() - ", function() {
+    it("patchExecutions()", async () => {
         var definition_ids = [1, 2],
             execution_ids = [4],
             executions = [
@@ -130,9 +137,8 @@ describe("CampaignService - ", () => {
 
         mockBackend.flush();
 
-        promise.then(function(response) {
-            expect(response.results.length).toEqual(2);
-        });
+        const response = await wrapPromise(promise);
+        expect(response.results.length).toEqual(2);
     });
 
     describe("triggerAutomatedTests() -", () => {
@@ -142,8 +148,9 @@ describe("CampaignService - ", () => {
                 .respond(200);
 
             const promise = CampaignService.triggerAutomatedTests(53);
+            mockBackend.flush();
 
-            expect(promise).toBeResolved();
+            return wrapPromise(promise);
         });
 
         it("When the server responds with code 500, then a promise will be rejected ", () => {
@@ -153,11 +160,15 @@ describe("CampaignService - ", () => {
                     error: { message: "Message: The requested URL returned error: 403 Forbidden" }
                 });
 
-            const promise = CampaignService.triggerAutomatedTests(31);
-
-            expect(promise).toBeRejectedWith({
-                message: "Message: The requested URL returned error: 403 Forbidden"
+            expect.assertions(1);
+            // eslint-disable-next-line jest/valid-expect-in-promise
+            const promise = CampaignService.triggerAutomatedTests(31).catch(error => {
+                expect(error.message).toEqual(
+                    "Message: The requested URL returned error: 403 Forbidden"
+                );
             });
+            mockBackend.flush();
+            return wrapPromise(promise);
         });
     });
 });

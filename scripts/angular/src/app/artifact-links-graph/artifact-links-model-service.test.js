@@ -6,7 +6,10 @@ describe("ArtifactLinksModelService", function() {
     var gettextCatalog, ArtifactLinksModelService;
 
     beforeEach(function() {
-        gettextCatalog = jasmine.createSpyObj("gettextCatalog", ["getString", "setStrings"]);
+        gettextCatalog = {
+            getString: jest.fn(),
+            setStrings: () => {}
+        };
 
         angular.mock.module(testmanagement_module, function($provide) {
             $provide.value("gettextCatalog", gettextCatalog);
@@ -18,7 +21,7 @@ describe("ArtifactLinksModelService", function() {
     });
 
     it("Given an artifact structure, when I transform data then an object with nodes, links, errors and title will be return", function() {
-        gettextCatalog.getString.and.returnValue("aString");
+        gettextCatalog.getString.mockReturnValue("aString");
 
         var artifact = {
             links: [
@@ -122,7 +125,7 @@ describe("ArtifactLinksModelService", function() {
     });
 
     it("Given an artifact structure without links, when I transform data then an object with nodes, links, errors and title will be return", function() {
-        gettextCatalog.getString.and.returnValue("aString");
+        gettextCatalog.getString.mockReturnValue("aString");
 
         var artifact = {
             links: [],

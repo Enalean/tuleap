@@ -202,7 +202,9 @@ function CampaignEditCtrl(
             _.forEach($scope.tests_list, function(category) {
                 //eslint-disable-next-line you-dont-need-lodash-underscore/for-each
                 _.forEach(category.tests, function(test) {
-                    test.selected = definitions.some(definition => definition.id === test.definition.id);
+                    test.selected = definitions.some(
+                        definition => definition.id === test.definition.id
+                    );
                 });
             });
         });

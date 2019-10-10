@@ -3,12 +3,7 @@ import angular from "angular";
 import "angular-mocks";
 import BaseController from "./execution-list-header-controller.js";
 
-import {
-    rewire$setSuccess,
-    rewire$setError,
-    rewire$resetError,
-    restore
-} from "../../feedback-state.js";
+import * as feedback_state from "../../feedback-state.js";
 
 describe("ExecutionListHeaderController -", () => {
     let ExecutionListHeaderController,
@@ -44,18 +39,11 @@ describe("ExecutionListHeaderController -", () => {
             ExecutionService
         });
 
-        spyOn(CampaignService, "triggerAutomatedTests").and.returnValue($q.when());
+        jest.spyOn(CampaignService, "triggerAutomatedTests").mockReturnValue($q.when());
 
-        setSuccess = jasmine.createSpy("setSuccess");
-        rewire$setSuccess(setSuccess);
-        setError = jasmine.createSpy("setError");
-        rewire$setError(setError);
-        resetError = jasmine.createSpy("resetError");
-        rewire$resetError(resetError);
-    });
-
-    afterEach(() => {
-        restore();
+        setSuccess = jest.spyOn(feedback_state, "setSuccess");
+        setError = jest.spyOn(feedback_state, "setError");
+        resetError = jest.spyOn(feedback_state, "resetError");
     });
 
     describe("launchAutomatedTests() -", () => {
@@ -63,7 +51,7 @@ describe("ExecutionListHeaderController -", () => {
             ExecutionService.campaign = {
                 id: 42,
                 job_configuration: {
-                    url: "https://wambly.com/doghood/follow?a=menald&b=rebirth#coabode"
+                    url: "https://example.com/doghood/follow?a=menald&b=rebirth#coabode"
                 }
             };
         });
@@ -81,7 +69,7 @@ describe("ExecutionListHeaderController -", () => {
         });
 
         it("When the REST call fails, then the loader will be hidden and an error message will be shown", () => {
-            CampaignService.triggerAutomatedTests.and.returnValue(
+            CampaignService.triggerAutomatedTests.mockReturnValue(
                 $q.reject({
                     message: "Message: The requested URL returned error: 403 Forbidden"
                 })

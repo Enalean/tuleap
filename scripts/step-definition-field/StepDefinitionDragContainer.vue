@@ -40,36 +40,35 @@
 </template>
 
 <script>
-    import StepDefinitionEntry from "./StepDefinitionEntry.vue";
-    import {mapState, mapMutations} from 'vuex';
+import StepDefinitionEntry from "./StepDefinitionEntry.vue";
+import { mapState, mapMutations } from "vuex";
 
-    export default {
-        name: "StepDefinitionDragContainer",
-        components: {StepDefinitionEntry},
-        computed: {
-            ...mapState(["steps", "is_dragging"]),
-        },
-        watch: {
-            is_dragging(new_value) {
-                if (new_value === true) {
-                    window.addEventListener("mousemove", this.replaceDragulaMirror);
-                } else {
-                    window.removeEventListener("mousemove", this.replaceDragulaMirror);
-                }
-            }
-        },
-        mounted() {
-            this.initContainer(this.$refs.dragula_container);
-        },
-        methods: {
-            ...mapMutations(['addStep', 'initContainer']),
-            replaceDragulaMirror(event) {
-                const mirrors = document.getElementsByClassName("gu-mirror");
-                if (mirrors.length > 0) {
-                    mirrors[0].style.top = event.pageY + "px";
-                }
+export default {
+    name: "StepDefinitionDragContainer",
+    components: { StepDefinitionEntry },
+    computed: {
+        ...mapState(["steps", "is_dragging"])
+    },
+    watch: {
+        is_dragging(new_value) {
+            if (new_value === true) {
+                window.addEventListener("mousemove", this.replaceDragulaMirror);
+            } else {
+                window.removeEventListener("mousemove", this.replaceDragulaMirror);
             }
         }
-
+    },
+    mounted() {
+        this.initContainer(this.$refs.dragula_container);
+    },
+    methods: {
+        ...mapMutations(["addStep", "initContainer"]),
+        replaceDragulaMirror(event) {
+            const mirrors = document.getElementsByClassName("gu-mirror");
+            if (mirrors.length > 0) {
+                mirrors[0].style.top = event.pageY + "px";
+            }
+        }
     }
+};
 </script>

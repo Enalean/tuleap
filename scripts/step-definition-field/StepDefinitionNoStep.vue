@@ -40,14 +40,14 @@
 </template>
 
 <script>
-    import {mapState, mapMutations} from 'vuex';
-    export default {
-        name: "StepDefinitionNoStep",
-        computed: {
-            ...mapState(["field_id"]),
-        },
-        methods: {
-            ...mapMutations(['addStep'])
-        }
+import { mapState, mapMutations } from "vuex";
+export default {
+    name: "StepDefinitionNoStep",
+    computed: {
+        ...mapState(["field_id"])
+    },
+    methods: {
+        ...mapMutations(["addStep"])
     }
+};
 </script>

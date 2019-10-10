@@ -2,15 +2,15 @@ import testmanagement_module from "./app.js";
 import angular from "angular";
 import "angular-mocks";
 
-describe("InPropertiesFilter", function() {
+describe("InPropertiesFilter", () => {
     var ngFilter;
 
-    beforeEach(angular.mock.module(testmanagement_module));
-    beforeEach(
+    beforeEach(() => {
+        angular.mock.module(testmanagement_module);
         angular.mock.inject(function($filter) {
             ngFilter = $filter;
-        })
-    );
+        });
+    });
 
     var properties = ["label", "status"],
         list = [
@@ -27,7 +27,7 @@ describe("InPropertiesFilter", function() {
     });
 
     it("it filters on campaign label", function() {
-        expect(ngFilter("InPropertiesFilter")(list, "beta", properties)).toContain({
+        expect(ngFilter("InPropertiesFilter")(list, "beta", properties)).toContainEqual({
             id: 4,
             label: "Valid 8 beta",
             status: "First status"
@@ -35,22 +35,22 @@ describe("InPropertiesFilter", function() {
     });
 
     it("it filters on campaign status", function() {
-        expect(ngFilter("InPropertiesFilter")(list, "First", properties)).toContain({
+        expect(ngFilter("InPropertiesFilter")(list, "First", properties)).toContainEqual({
             id: 1,
             label: "Valid 7.11",
             status: "First status"
         });
-        expect(ngFilter("InPropertiesFilter")(list, "First", properties)).toContain({
+        expect(ngFilter("InPropertiesFilter")(list, "First", properties)).toContainEqual({
             id: 3,
             label: "Valid 8",
             status: "First status"
         });
-        expect(ngFilter("InPropertiesFilter")(list, "First", properties)).toContain({
+        expect(ngFilter("InPropertiesFilter")(list, "First", properties)).toContainEqual({
             id: 4,
             label: "Valid 8 beta",
             status: "First status"
         });
-        expect(ngFilter("InPropertiesFilter")(list, "First", properties)).toContain({
+        expect(ngFilter("InPropertiesFilter")(list, "First", properties)).toContainEqual({
             id: 5,
             label: "Valid status",
             status: "First status"
@@ -58,27 +58,27 @@ describe("InPropertiesFilter", function() {
     });
 
     it("it filters on both status", function() {
-        expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContain({
+        expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContainEqual({
             id: 1,
             label: "Valid 7.11",
             status: "First status"
         });
-        expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContain({
+        expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContainEqual({
             id: 2,
             label: "Valid 7.11",
             status: "Second status"
         });
-        expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContain({
+        expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContainEqual({
             id: 3,
             label: "Valid 8",
             status: "First status"
         });
-        expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContain({
+        expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContainEqual({
             id: 4,
             label: "Valid 8 beta",
             status: "First status"
         });
-        expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContain({
+        expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContainEqual({
             id: 5,
             label: "Valid status",
             status: "First status"

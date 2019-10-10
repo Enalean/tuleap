@@ -85,25 +85,25 @@ describe("ExecutionListFilter", function() {
     it("it filters on category", function() {
         var results = ngFilter("ExecutionListFilter")(list, "soap", {}, null);
         expect(results.length).toEqual(1);
-        expect(results[0]).toEqual(jasmine.objectContaining({ id: 24606 }));
+        expect(results[0]).toEqual(expect.objectContaining({ id: 24606 }));
     });
 
     it("it filters on summary", function() {
         var results = ngFilter("ExecutionListFilter")(list, "workflow", {}, null);
         expect(results.length).toEqual(1);
-        expect(results[0]).toEqual(jasmine.objectContaining({ id: 24605 }));
+        expect(results[0]).toEqual(expect.objectContaining({ id: 24605 }));
     });
 
     it("it filters on test def id", function() {
         var results = ngFilter("ExecutionListFilter")(list, "24601", {}, null);
         expect(results.length).toEqual(1);
-        expect(results[0]).toEqual(jasmine.objectContaining({ id: 24606 }));
+        expect(results[0]).toEqual(expect.objectContaining({ id: 24606 }));
     });
 
     it("it filters on execution status", function() {
         var results = ngFilter("ExecutionListFilter")(list, "", { passed: true }, null);
         expect(results.length).toEqual(2);
-        expect(results[0]).toEqual(jasmine.objectContaining({ id: 24605 }));
+        expect(results[0]).toEqual(expect.objectContaining({ id: 24605 }));
     });
 
     it("it filters on execution multiple status", function() {
@@ -114,9 +114,9 @@ describe("ExecutionListFilter", function() {
             null
         );
         expect(results.length).toEqual(3);
-        expect(results[0]).toEqual(jasmine.objectContaining({ id: 24605 }));
-        expect(results[1]).toEqual(jasmine.objectContaining({ id: 24606 }));
-        expect(results[2]).toEqual(jasmine.objectContaining({ id: 24607 }));
+        expect(results[0]).toEqual(expect.objectContaining({ id: 24605 }));
+        expect(results[1]).toEqual(expect.objectContaining({ id: 24606 }));
+        expect(results[2]).toEqual(expect.objectContaining({ id: 24607 }));
     });
 
     it("it filters on summary and execution status", function() {

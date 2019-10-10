@@ -3,10 +3,12 @@ import angular from "angular";
 import "angular-mocks";
 
 import BaseController from "./execution-link-issue-controller.js";
+import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
-describe("ExecutionLinkIssueController -", () => {
+describe("ExecutionLinkIssueController", () => {
     let $q,
         $scope,
+        wrapPromise,
         ExecutionLinkIssueController,
         ExecutionRestService,
         modal_instance,
@@ -35,11 +37,12 @@ describe("ExecutionLinkIssueController -", () => {
             SharedPropertiesService = _SharedPropertiesService_;
         });
 
+        wrapPromise = createAngularPromiseWrapper($rootScope);
         $scope = $rootScope.$new();
 
         modal_instance = {
             tlp_modal: {
-                hide: jasmine.createSpy("hide")
+                hide: jest.fn()
             }
         };
 
@@ -52,10 +55,10 @@ describe("ExecutionLinkIssueController -", () => {
             }
         };
 
-        modal_callback = jasmine.createSpy("modal_callback");
+        modal_callback = jest.fn();
 
-        spyOn(SharedPropertiesService, "getIssueTrackerId").and.returnValue(issue_tracker_id);
-        spyOn(SharedPropertiesService, "getIssueTrackerConfig").and.returnValue({
+        jest.spyOn(SharedPropertiesService, "getIssueTrackerId").mockReturnValue(issue_tracker_id);
+        jest.spyOn(SharedPropertiesService, "getIssueTrackerConfig").mockReturnValue({
             xref_color: "flamingo_pink"
         });
 
@@ -67,8 +70,6 @@ describe("ExecutionLinkIssueController -", () => {
             modal_callback,
             SharedPropertiesService
         });
-
-        installPromiseMatchers();
     });
 
     describe("validateIssueIsNotAlreadyLinked", () => {
@@ -92,8 +93,10 @@ describe("ExecutionLinkIssueController -", () => {
         });
     });
 
-    describe("validateIssueId() -", () => {
-        it("Given that the linking modal was initialized, when I enter a bug artifact id, then it will be valid and will be attached to the controller", () => {
+    describe("validateIssueId()", () => {
+        it(`Given that the linking modal was initialized,
+            when I enter a bug artifact id,
+            then it will be valid and will be attached to the controller`, async () => {
             const artifact = {
                 id: 52,
                 title: "nonreceipt aroxyl",
@@ -102,11 +105,11 @@ describe("ExecutionLinkIssueController -", () => {
                     id: issue_tracker_id
                 }
             };
-            spyOn(ExecutionRestService, "getArtifactById").and.returnValue($q.when(artifact));
+            jest.spyOn(ExecutionRestService, "getArtifactById").mockReturnValue($q.when(artifact));
 
             var promise = ExecutionLinkIssueController.validateIssueId("", "52");
 
-            expect(promise).toBeResolvedWith(true);
+            expect(await wrapPromise(promise)).toBe(true);
             expect(ExecutionRestService.getArtifactById).toHaveBeenCalledWith("52");
             expect(ExecutionLinkIssueController.issue_artifact).toBe(artifact);
             expect(ExecutionLinkIssueController.issue_artifact.tracker.color_name).toBe(
@@ -114,7 +117,9 @@ describe("ExecutionLinkIssueController -", () => {
             );
         });
 
-        it("Given that the linking modal was initialized, when I enter an artifact id that isn't a bug, then it will not be valid and the promise will be rejected", () => {
+        it(`Given that the linking modal was initialized,
+            when I enter an artifact id that isn't a bug,
+            then it will not be valid and the promise will be rejected`, () => {
             const artifact = {
                 id: 17,
                 title: "nonprejudicial Elodeaceae",
@@ -123,13 +128,16 @@ describe("ExecutionLinkIssueController -", () => {
                     id: 10
                 }
             };
-            spyOn(ExecutionRestService, "getArtifactById").and.returnValue($q.when(artifact));
+            jest.spyOn(ExecutionRestService, "getArtifactById").mockReturnValue($q.when(artifact));
 
-            var promise = ExecutionLinkIssueController.validateIssueId("", "17");
+            expect.assertions(2);
+            // eslint-disable-next-line jest/valid-expect-in-promise
+            var promise = ExecutionLinkIssueController.validateIssueId("", "17").catch(() => {
+                expect(ExecutionRestService.getArtifactById).toHaveBeenCalledWith("17");
+                expect(ExecutionLinkIssueController.issue_artifact).toBe(null);
+            });
 
-            expect(promise).toBeRejected();
-            expect(ExecutionRestService.getArtifactById).toHaveBeenCalledWith("17");
-            expect(ExecutionLinkIssueController.issue_artifact).toBe(null);
+            return wrapPromise(promise);
         });
     });
 
@@ -146,7 +154,7 @@ describe("ExecutionLinkIssueController -", () => {
             };
             ExecutionLinkIssueController.issue_artifact = issue_artifact;
             ExecutionLinkIssueController.issue.id = issue_artifact.id;
-            spyOn(ExecutionRestService, "linkIssue").and.returnValue($q.when());
+            jest.spyOn(ExecutionRestService, "linkIssue").mockReturnValue($q.when());
 
             ExecutionLinkIssueController.linkIssue();
             expect(ExecutionLinkIssueController.linking_in_progress).toBe(true);

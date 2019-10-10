@@ -20,25 +20,31 @@
 import execution_module from "./execution-collection.js";
 import angular from "angular";
 import "angular-mocks";
+import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
-describe("ExecutionRestService - ", () => {
-    let mockBackend, ExecutionRestService, SharedPropertiesService;
+describe("ExecutionRestService", () => {
+    let mockBackend, wrapPromise, ExecutionRestService, SharedPropertiesService;
     const UUID = "123";
 
     beforeEach(() => {
         angular.mock.module(execution_module);
 
+        let $rootScope;
         angular.mock.inject(function(
             $httpBackend,
+            _$rootScope_,
             _ExecutionRestService_,
             _SharedPropertiesService_
         ) {
             mockBackend = $httpBackend;
+            $rootScope = _$rootScope_;
             ExecutionRestService = _ExecutionRestService_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
 
-        spyOn(SharedPropertiesService, "getUUID").and.returnValue(UUID);
+        jest.spyOn(SharedPropertiesService, "getUUID").mockReturnValue(UUID);
+
+        wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
     afterEach(() => {
@@ -46,7 +52,7 @@ describe("ExecutionRestService - ", () => {
         mockBackend.verifyNoOutstandingRequest();
     });
 
-    it("getRemoteExecutions() - ", () => {
+    it("getRemoteExecutions()", async () => {
         const response = [
             {
                 id: 4
@@ -65,12 +71,11 @@ describe("ExecutionRestService - ", () => {
         const promise = ExecutionRestService.getRemoteExecutions(1, 10, 0);
         mockBackend.flush();
 
-        promise.then(executions => {
-            expect(executions.results.length).toEqual(2);
-        });
+        const executions = await wrapPromise(promise);
+        expect(executions.results.length).toEqual(2);
     });
 
-    it("postTestExecution() - ", () => {
+    it("postTestExecution()", async () => {
         const execution = {
             id: 4,
             status: "notrun"
@@ -82,12 +87,11 @@ describe("ExecutionRestService - ", () => {
 
         mockBackend.flush();
 
-        promise.then(execution_updated => {
-            expect(execution_updated.id).toBeDefined();
-        });
+        const execution_updated = await wrapPromise(promise);
+        expect(execution_updated.id).toBeDefined();
     });
 
-    it("putTestExecution() - ", () => {
+    it("putTestExecution()", async () => {
         const execution = {
             id: 4,
             status: "passed",
@@ -105,24 +109,22 @@ describe("ExecutionRestService - ", () => {
 
         mockBackend.flush();
 
-        promise.then(execution_updated => {
-            expect(execution_updated.id).toBeDefined();
-        });
+        const execution_updated = await wrapPromise(promise);
+        expect(execution_updated.id).toBeDefined();
     });
 
-    it("changePresenceOnTestExecution() - ", () => {
+    it("changePresenceOnTestExecution()", async () => {
         mockBackend.expectPATCH("/api/v1/testmanagement_executions/9/presences").respond();
 
         const promise = ExecutionRestService.changePresenceOnTestExecution(9, 4);
 
         mockBackend.flush();
 
-        promise.then(response => {
-            expect(response.status).toEqual(200);
-        });
+        const response = await wrapPromise(promise);
+        expect(response.status).toEqual(200);
     });
 
-    it("linkIssue() - ", () => {
+    it("linkIssue()", async () => {
         const issueId = 400;
         const execution = {
             id: 100,
@@ -161,12 +163,11 @@ describe("ExecutionRestService - ", () => {
 
         mockBackend.flush();
 
-        promise.then(response => {
-            expect(response.status).toEqual(200);
-        });
+        const response = await wrapPromise(promise);
+        expect(response.status).toEqual(200);
     });
 
-    it("getLinkedArtifacts() - ", () => {
+    it("getLinkedArtifacts()", async () => {
         const linked_issues = [
             {
                 id: 219,
@@ -199,15 +200,14 @@ describe("ExecutionRestService - ", () => {
         const promise = ExecutionRestService.getLinkedArtifacts(test_execution, 10, 0);
         mockBackend.flush();
 
-        promise.then(result => {
-            expect(result).toEqual({
-                collection: linked_issues,
-                total: 2
-            });
+        const result = await wrapPromise(promise);
+        expect(result).toEqual({
+            collection: linked_issues,
+            total: 2
         });
     });
 
-    it("getArtifactById() -", () => {
+    it("getArtifactById()", async () => {
         const artifact = {
             id: 61,
             xref: "bug #61",
@@ -219,9 +219,8 @@ describe("ExecutionRestService - ", () => {
         const promise = ExecutionRestService.getArtifactById(61);
         mockBackend.flush();
 
-        promise.then(result => {
-            expect(result).toEqual(artifact);
-        });
+        const result = await wrapPromise(promise);
+        expect(result).toEqual(artifact);
     });
 
     describe("updateStepStatus()", () => {
@@ -242,10 +241,10 @@ describe("ExecutionRestService - ", () => {
             const promise = ExecutionRestService.updateStepStatus(test_execution, step_id, status);
             mockBackend.flush();
 
-            promise.catch(() => fail());
+            return wrapPromise(promise);
         });
 
-        it("Given there is a REST error, then a promise will be rejected with the error message", done => {
+        it("Given there is a REST error, then a promise will be rejected with the error message", () => {
             const test_execution = { id: 21 };
             const step_id = 38;
             const status = "blocked";
@@ -253,16 +252,16 @@ describe("ExecutionRestService - ", () => {
                 error: { message: "This user cannot update the execution" }
             });
 
-            const promise = ExecutionRestService.updateStepStatus(test_execution, step_id, status);
-
-            promise.then(
-                () => fail(),
-                error => {
-                    expect(error).toEqual("This user cannot update the execution");
-                    done();
-                }
-            ).catch(done.fail);
+            // eslint-disable-next-line jest/valid-expect-in-promise
+            const promise = ExecutionRestService.updateStepStatus(
+                test_execution,
+                step_id,
+                status
+            ).catch(error => {
+                expect(error).toEqual("This user cannot update the execution");
+            });
             mockBackend.flush();
+            return wrapPromise(promise);
         });
     });
 });

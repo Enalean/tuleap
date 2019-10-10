@@ -29,15 +29,15 @@
 </template>
 
 <script>
-    import { mapGetters } from "vuex";
-    export default {
-        name: "StepDefinitionDraggableComponent",
-        props: {
-            step: Object,
-            dynamic_rank: Number
-        },
-        computed: {
-            ...mapGetters(['is_text'])
-        }
+import { mapGetters } from "vuex";
+export default {
+    name: "StepDefinitionDraggableComponent",
+    props: {
+        step: Object,
+        dynamic_rank: Number
+    },
+    computed: {
+        ...mapGetters(["is_text"])
     }
+};
 </script>

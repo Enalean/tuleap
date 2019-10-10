@@ -17,8 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { tlp } from "tlp-mocks";
+import * as tlp from "tlp";
 import { getCampaigns, getDefinitions } from "./rest-querier.js";
+
+jest.mock("tlp");
 
 describe("rest querier", () => {
     describe("getCampaigns()", () => {
@@ -35,14 +37,16 @@ describe("rest querier", () => {
                 }
             ];
 
-            tlp.recursiveGet.and.returnValue(Promise.resolve(campaigns));
+            const tlpRecursiveGetSpy = jest
+                .spyOn(tlp, "recursiveGet")
+                .mockReturnValue(Promise.resolve(campaigns));
             const project_id = 101;
             const milestone_id = 26;
             const campaign_status = "open";
 
             const result = await getCampaigns(project_id, milestone_id, campaign_status);
 
-            expect(tlp.recursiveGet).toHaveBeenCalledWith(
+            expect(tlpRecursiveGetSpy).toHaveBeenCalledWith(
                 "/api/v1/projects/101/testmanagement_campaigns",
                 {
                     params: {
@@ -62,13 +66,15 @@ describe("rest querier", () => {
                 { id: 86, summary: "disguisement" }
             ];
 
-            tlp.recursiveGet.and.returnValue(Promise.resolve(definitions));
+            const tlpRecursiveGetSpy = jest
+                .spyOn(tlp, "recursiveGet")
+                .mockReturnValue(Promise.resolve(definitions));
             const project_id = 77;
             const report_id = 53;
 
             const result = await getDefinitions(project_id, report_id);
 
-            expect(tlp.recursiveGet).toHaveBeenCalledWith(
+            expect(tlpRecursiveGetSpy).toHaveBeenCalledWith(
                 "/api/v1/projects/77/testmanagement_definitions",
                 {
                     params: {
@@ -86,12 +92,14 @@ describe("rest querier", () => {
                 { id: 72, summary: "pilastering" }
             ];
 
-            tlp.recursiveGet.and.returnValue(Promise.resolve(definitions));
+            const tlpRecursiveGetSpy = jest
+                .spyOn(tlp, "recursiveGet")
+                .mockReturnValue(Promise.resolve(definitions));
             const project_id = 6;
 
             await getDefinitions(project_id);
 
-            expect(tlp.recursiveGet).toHaveBeenCalledWith(
+            expect(tlpRecursiveGetSpy).toHaveBeenCalledWith(
                 "/api/v1/projects/6/testmanagement_definitions",
                 {
                     params: {

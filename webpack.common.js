@@ -21,25 +21,26 @@ const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 let entry_points = {
-    "flamingparrot": "./themes/FlamingParrot/css/style.scss"
+    flamingparrot: "./themes/FlamingParrot/css/style.scss"
 };
 
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
 for (const color of colors_burning_parrot) {
     entry_points[`burningparrot-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-    entry_points[`burningparrot-${color}-condensed`] = `./themes/BurningParrot/css/style-${color}-condensed.scss`;
+    entry_points[
+        `burningparrot-${color}-condensed`
+    ] = `./themes/BurningParrot/css/style-${color}-condensed.scss`;
 }
 
 module.exports = [
     {
         entry: entry_points,
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(path.resolve(__dirname, "../../src/www/assets/testmanagement/css/")),
+        output: webpack_configurator.configureOutput(
+            path.resolve(__dirname, "../../src/www/assets/testmanagement/css/")
+        ),
         module: {
-            rules: [
-                webpack_configurator.rule_scss_loader,
-                webpack_configurator.rule_css_assets
-            ]
+            rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets]
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),

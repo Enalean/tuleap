@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const state = {
-    steps: [],
-    empty_step: null,
-    field_id: null,
-    is_dragging: false,
-    drake: null,
-    container: []
-};
+import angular from "angular";
 
-export default state;
+export default angular.module("angular-tlp", []).service(
+    "TlpModalService",
+    class {
+        open() {}
+    }
+).name;

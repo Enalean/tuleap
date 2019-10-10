@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2019-present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const state = {
-    steps: [],
-    empty_step: null,
-    field_id: null,
-    is_dragging: false,
-    drake: null,
-    container: []
-};
+const base_config = require("../../../tests/jest/jest.base.config.js");
 
-export default state;
+module.exports = {
+    ...base_config,
+    displayName: "testmanagement",
+    setupFiles: ["./angular/tests/jest.setup.js"],
+    moduleNameMapper: {
+        ...base_config.moduleNameMapper,
+        "^.+\\.html$": "identity-obj-proxy",
+        "^angular$": "<rootDir>/node_modules/angular/index.js",
+        "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js"
+    }
+};

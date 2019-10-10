@@ -59,7 +59,7 @@ describe("ExecutionDetailController -", () => {
 
         $scope = $rootScope.$new();
 
-        spyOn(SharedPropertiesService, "getIssueTrackerConfig").and.returnValue({
+        jest.spyOn(SharedPropertiesService, "getIssueTrackerConfig").mockReturnValue({
             permissions: {
                 create: true,
                 link: true
@@ -67,7 +67,7 @@ describe("ExecutionDetailController -", () => {
             xref_color: "acid-green"
         });
 
-        spyOn(ExecutionService, "loadExecutions");
+        jest.spyOn(ExecutionService, "loadExecutions").mockImplementation(() => {});
 
         $controller(BaseController, {
             $scope,
@@ -101,14 +101,14 @@ describe("ExecutionDetailController -", () => {
             $scope.campaign = {
                 label: "shirtless"
             };
-            spyOn(NewTuleapArtifactModalService, "showCreation").and.callFake(
+            jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(
                 (tracker_id, b, callback) => {
                     callback(artifact.id);
                 }
             );
-            spyOn(ExecutionRestService, "linkIssueWithoutComment").and.returnValue($q.when());
-            spyOn(ExecutionRestService, "getArtifactById").and.returnValue($q.when(artifact));
-            spyOn(ExecutionService, "addArtifactLink");
+            jest.spyOn(ExecutionRestService, "linkIssueWithoutComment").mockReturnValue($q.when());
+            jest.spyOn(ExecutionRestService, "getArtifactById").mockReturnValue($q.when(artifact));
+            jest.spyOn(ExecutionService, "addArtifactLink").mockImplementation(() => {});
 
             $scope.showLinkToNewBugModal();
 
@@ -131,10 +131,10 @@ describe("ExecutionDetailController -", () => {
                 xref: "bugs #70"
             };
             $scope.execution = { id: 26 };
-            spyOn(TlpModalService, "open").and.callFake(({ resolve }) => {
+            jest.spyOn(TlpModalService, "open").mockImplementation(({ resolve }) => {
                 resolve.modal_callback(artifact);
             });
-            spyOn(ExecutionService, "addArtifactLink");
+            jest.spyOn(ExecutionService, "addArtifactLink").mockImplementation(() => {});
 
             $scope.showLinkToExistingBugModal();
 
@@ -159,9 +159,11 @@ describe("ExecutionDetailController -", () => {
         const time = 570;
 
         beforeEach(() => {
-            spyOn(SharedPropertiesService, "getCurrentUser").and.returnValue(user);
-            spyOn(ExecutionService, "updateTestExecution");
-            spyOn(ExecutionRestService, "putTestExecution").and.returnValue($q.when(execution));
+            jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(user);
+            jest.spyOn(ExecutionService, "updateTestExecution").mockImplementation(() => {});
+            jest.spyOn(ExecutionRestService, "putTestExecution").mockReturnValue(
+                $q.when(execution)
+            );
             $scope.execution = execution;
             $scope.timer = { execution_time: time };
         });
@@ -183,8 +185,8 @@ describe("ExecutionDetailController -", () => {
 
             it("When there is a problem with the update, then the error will be shown on the execution", () => {
                 const error = { status: 500 };
-                ExecutionRestService.putTestExecution.and.returnValue($q.reject(error));
-                spyOn(ExecutionService, "displayError");
+                ExecutionRestService.putTestExecution.mockReturnValue($q.reject(error));
+                jest.spyOn(ExecutionService, "displayError").mockImplementation(() => {});
 
                 $scope.pass(execution);
                 $scope.$apply();

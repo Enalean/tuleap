@@ -36,18 +36,17 @@ const webpack_config_for_angular = {
     },
     resolve: {
         alias: webpack_configurator.extendAliases(
+            webpack_configurator.tlp_fetch_alias,
+            webpack_configurator.angular_tlp_alias,
             {
                 // angular-tlp
-                angular$: path.resolve(__dirname, "node_modules/angular"),
-                "angular-sanitize$": path.resolve(__dirname, "node_modules/angular-sanitize"),
-                "angular-mocks$": path.resolve(__dirname, "node_modules/angular-mocks")
-            },
-            webpack_configurator.angular_artifact_modal_aliases
+                angular$: path.resolve(__dirname, "node_modules/angular")
+            }
         )
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_ng_cache_loader,
             webpack_configurator.rule_vue_loader,
             webpack_configurator.rule_angular_mixed_vue_gettext,

@@ -2,7 +2,7 @@ import execution_module from "./execution.js";
 import angular from "angular";
 import "angular-mocks";
 import BaseController from "./execution-list-controller.js";
-import { rewire$setError, restore as restoreFeedback } from "../feedback-state.js";
+import * as feedback_state from "../feedback-state.js";
 
 describe("ExecutionListController -", () => {
     let $ctrl,
@@ -41,26 +41,25 @@ describe("ExecutionListController -", () => {
             ExecutionRestService
         });
 
-        setError = jasmine.createSpy("setError");
-        rewire$setError(setError);
+        setError = jest.spyOn(feedback_state, "setError");
     });
 
-    afterEach(() => {
-        restoreFeedback();
-    });
-
-    describe("loadExecutions() -", () => {
+    describe("loadExecutions()", () => {
         const campaign_id = 32;
         const current_user = 511;
 
         beforeEach(() => {
             $scope.campaign_id = campaign_id;
-            spyOn(ExecutionService, "removeAllViewTestExecution");
-            spyOn(ExecutionService, "displayPresencesForAllExecutions");
-            spyOn(ExecutionService, "addPresenceCampaign");
-            spyOn(ExecutionService, "loadExecutions");
-            spyOn(ExecutionRestService, "changePresenceOnTestExecution");
-            spyOn(SharedPropertiesService, "getCurrentUser").and.returnValue(current_user);
+            jest.spyOn(ExecutionService, "removeAllViewTestExecution").mockImplementation(() => {});
+            jest.spyOn(ExecutionService, "displayPresencesForAllExecutions").mockImplementation(
+                () => {}
+            );
+            jest.spyOn(ExecutionService, "addPresenceCampaign").mockImplementation(() => {});
+            jest.spyOn(ExecutionService, "loadExecutions").mockImplementation(() => {});
+            jest.spyOn(ExecutionRestService, "changePresenceOnTestExecution").mockImplementation(
+                () => {}
+            );
+            jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(current_user);
         });
 
         it("Given we were viewing an execution, then the executions will be loaded, the current execution will be updated and the presences will be updated", () => {
@@ -68,10 +67,10 @@ describe("ExecutionListController -", () => {
 
             const execution_id = 29;
             $scope.execution_id = execution_id;
-            ExecutionService.loadExecutions.and.returnValue($q.when(executions));
-            ExecutionRestService.changePresenceOnTestExecution.and.returnValue($q.when());
-            spyOn(ExecutionService, "removeViewTestExecution");
-            spyOn(ExecutionService, "viewTestExecution");
+            ExecutionService.loadExecutions.mockReturnValue($q.when(executions));
+            ExecutionRestService.changePresenceOnTestExecution.mockReturnValue($q.when());
+            jest.spyOn(ExecutionService, "removeViewTestExecution").mockImplementation(() => {});
+            jest.spyOn(ExecutionService, "viewTestExecution").mockImplementation(() => {});
 
             $ctrl.loadExecutions();
             $scope.$apply();
@@ -95,7 +94,7 @@ describe("ExecutionListController -", () => {
         });
 
         it("Given we were not viewing an execution, then it won't be updated", () => {
-            ExecutionService.loadExecutions.and.returnValue($q.when([]));
+            ExecutionService.loadExecutions.mockReturnValue($q.when([]));
 
             $ctrl.loadExecutions();
             $scope.$apply();
@@ -110,7 +109,7 @@ describe("ExecutionListController -", () => {
         });
 
         it("When there aren't any executions, then an empty state will be shown", () => {
-            ExecutionService.loadExecutions.and.returnValue($q.when([]));
+            ExecutionService.loadExecutions.mockReturnValue($q.when([]));
 
             $ctrl.loadExecutions();
             $scope.$apply();
@@ -119,7 +118,7 @@ describe("ExecutionListController -", () => {
         });
 
         it("When there is a REST error, then it will be shown", () => {
-            ExecutionService.loadExecutions.and.returnValue(
+            ExecutionService.loadExecutions.mockReturnValue(
                 $q.reject({
                     data: {
                         error: {

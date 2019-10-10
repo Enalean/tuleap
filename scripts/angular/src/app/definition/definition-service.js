@@ -18,7 +18,7 @@
  */
 
 import _ from "lodash";
-import {recursiveGet} from 'tlp';
+import { recursiveGet } from "tlp";
 import { UNCATEGORIZED } from "./definition-constants.js";
 
 import { getDefinitions as tlpGetDefinitions } from "../api/rest-querier.js";
@@ -58,11 +58,14 @@ function DefinitionService(Restangular, $q, SharedPropertiesService) {
 
     async function getDefinitionReports() {
         var def_tracker_id = SharedPropertiesService.getDefinitionTrackerId();
-        const response = await recursiveGet("/api/v1/trackers/" + encodeURI(def_tracker_id) + "/tracker_reports",  {
-            params: {
-                limit: 10
+        const response = await recursiveGet(
+            "/api/v1/trackers/" + encodeURI(def_tracker_id) + "/tracker_reports",
+            {
+                params: {
+                    limit: 10
+                }
             }
-        });
+        );
 
         return response;
     }

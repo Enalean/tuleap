@@ -21,9 +21,15 @@ import _ from "lodash";
 import execution_collection_module from "./execution-collection.js";
 import angular from "angular";
 import "angular-mocks";
+import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
-describe("ExecutionService - ", () => {
-    let $q, $rootScope, ExecutionRestService, SharedPropertiesService, ExecutionService;
+describe("ExecutionService", () => {
+    let $q,
+        $rootScope,
+        wrapPromise,
+        ExecutionRestService,
+        SharedPropertiesService,
+        ExecutionService;
 
     beforeEach(() => {
         angular.mock.module(execution_collection_module);
@@ -42,11 +48,13 @@ describe("ExecutionService - ", () => {
             ExecutionService = _ExecutionService_;
         });
 
-        installPromiseMatchers();
+        wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    describe("loadExecutions() -", () => {
-        it("Given a campaign id, then executions are built and sorted by categories and a promise will be resolved with the list of executions", () => {
+    describe("loadExecutions()", () => {
+        it(`Given a campaign id,
+            then executions are built and sorted by categories
+            and a promise will be resolved with the list of executions`, async () => {
             const campaign = {
                 id: "6",
                 label: "Release 1",
@@ -105,16 +113,18 @@ describe("ExecutionService - ", () => {
                 total: 1
             };
 
-            spyOn(ExecutionService, "getAllRemoteExecutions").and.returnValue(
+            jest.spyOn(ExecutionService, "getAllRemoteExecutions").mockReturnValue(
                 $q.when(response.results)
             );
-            spyOn(ExecutionRestService, "getRemoteExecutions").and.returnValue($q.when(response));
+            jest.spyOn(ExecutionRestService, "getRemoteExecutions").mockReturnValue(
+                $q.when(response)
+            );
 
             const promise = ExecutionService.loadExecutions(campaign.id);
 
             expect(ExecutionService.loading[campaign.id]).toBe(true);
 
-            expect(promise).toBeResolvedWith(response.results);
+            expect(await wrapPromise(promise)).toEqual(response.results);
             expect(ExecutionService.categories).toEqual(categories_results);
             expect(ExecutionService.executions).toEqual(execution_results);
             expect(ExecutionService.executions_by_categories_by_campaigns).toEqual(
@@ -125,8 +135,10 @@ describe("ExecutionService - ", () => {
         });
     });
 
-    describe("getAllRemoteExecutions() -", function() {
-        it("Given that I have more remote executions than the given fetching limit, when I get all remote executions, then all the remote executions are fetched", function() {
+    describe("getAllRemoteExecutions()", () => {
+        it(`Given that I have more remote executions than the given fetching limit,
+            when I get all remote executions,
+            then all the remote executions are fetched`, async () => {
             var campaign = {
                 id: "6",
                 label: "Release 1",
@@ -153,20 +165,19 @@ describe("ExecutionService - ", () => {
             };
 
             var get_remote_executions_request = $q.defer();
-            spyOn(ExecutionRestService, "getRemoteExecutions").and.returnValue(
-                get_remote_executions_request.promise
-            );
+            const getRemoteExecutions = jest
+                .spyOn(ExecutionRestService, "getRemoteExecutions")
+                .mockReturnValue(get_remote_executions_request.promise);
 
             var promise = ExecutionService.getAllRemoteExecutions(campaign.id, 1, 0);
             get_remote_executions_request.resolve(response);
 
-            promise.then(function() {
-                expect(ExecutionService.executions.count).toEqual(remote_executions_count);
-            });
+            await wrapPromise(promise);
+            expect(getRemoteExecutions).toHaveBeenCalledTimes(2);
         });
     });
 
-    describe("synchronizeExecutions() -", function() {
+    describe("synchronizeExecutions()", () => {
         var campaign_id = 6,
             execution_1 = { id: 1, definition: { category: "Security" } },
             execution_2 = { id: 2, definition: { category: "NonRegression" } },
@@ -185,7 +196,7 @@ describe("ExecutionService - ", () => {
             get_all_remote_executions.resolve(data);
         };
 
-        beforeEach(function() {
+        beforeEach(() => {
             ExecutionService.campaign_id = campaign_id;
             ExecutionService.executions = {
                 1: execution_1,
@@ -211,30 +222,31 @@ describe("ExecutionService - ", () => {
             };
 
             get_remote_executions = $q.defer();
-            spyOn(ExecutionRestService, "getRemoteExecutions").and.returnValue(
+            jest.spyOn(ExecutionRestService, "getRemoteExecutions").mockReturnValue(
                 get_remote_executions.promise
             );
 
             get_all_remote_executions = $q.defer();
-            spyOn(ExecutionService, "getAllRemoteExecutions").and.returnValue(
+            jest.spyOn(ExecutionService, "getAllRemoteExecutions").mockReturnValue(
                 get_all_remote_executions.promise
             );
         });
 
-        it("Given that I have different sets of loaded and remote executions, when I synchronize them, then the executions not present remotely are unloaded", function() {
+        it(`Given that I have different sets of loaded and remote executions,
+            when I synchronize them,
+            then the executions not present remotely are unloaded`, async () => {
             var remote_executions = [execution_1];
 
-            ExecutionService.synchronizeExecutions(campaign_id).then(function() {
-                expect(service_executions()[2]).toBeUndefined();
-                expect(service_categories().NonRegression.executions.length).toEqual(0);
-            });
-
+            const promise = ExecutionService.synchronizeExecutions(campaign_id);
             resolveExecutions(remote_executions);
-
-            $rootScope.$apply();
+            await wrapPromise(promise);
+            expect(service_executions()[2]).toBeUndefined();
+            expect(service_categories().NonRegression.executions.length).toEqual(0);
         });
 
-        it("Given that I have different sets of loaded and remote executions, when I synchronize them, then the executions not present locally are loaded", function() {
+        it(`Given that I have different sets of loaded and remote executions,
+            when I synchronize them,
+            then the executions not present locally are loaded`, async () => {
             var remote_executions = [execution_1, execution_2];
 
             ExecutionService.executions = { 1: execution_1 };
@@ -242,29 +254,23 @@ describe("ExecutionService - ", () => {
                 Security: { label: "Security", executions: [execution_1] }
             };
 
-            ExecutionService.synchronizeExecutions(campaign_id).then(function() {
-                expect(service_executions()[2]).toEqual(execution_2);
-                expect(service_categories().NonRegression.executions.length).toEqual(1);
-            });
-
+            const promise = ExecutionService.synchronizeExecutions(campaign_id);
             resolveExecutions(remote_executions);
-
-            $rootScope.$apply();
+            await wrapPromise(promise);
+            expect(service_executions()[2]).toEqual(execution_2);
+            expect(service_categories().NonRegression.executions.length).toEqual(1);
         });
 
-        it("Given that I have the same sets of loaded and remote executions, when I synchronize them, then the local executions are not duplicated", function() {
+        it(`Given that I have the same sets of loaded and remote executions, when I synchronize them, then the local executions are not duplicated`, async () => {
             var remote_executions = [execution_1, execution_2];
 
-            ExecutionService.synchronizeExecutions(campaign_id).then(function() {
-                //eslint-disable-next-line you-dont-need-lodash-underscore/size
-                expect(_.size(service_executions())).toEqual(2);
-                expect(service_categories().Security.executions.length).toEqual(1);
-                expect(service_categories().NonRegression.executions.length).toEqual(1);
-            });
-
+            const promise = ExecutionService.synchronizeExecutions(campaign_id);
             resolveExecutions(remote_executions);
-
-            $rootScope.$apply();
+            await wrapPromise(promise);
+            //eslint-disable-next-line you-dont-need-lodash-underscore/size
+            expect(_.size(service_executions())).toEqual(2);
+            expect(service_categories().Security.executions.length).toEqual(1);
+            expect(service_categories().NonRegression.executions.length).toEqual(1);
         });
     });
 
@@ -493,7 +499,7 @@ describe("ExecutionService - ", () => {
                 uri: "users/101",
                 uuid: "uuid-101"
             };
-            spyOn(SharedPropertiesService, "getCurrentUser").and.returnValue(current_user);
+            jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(current_user);
 
             const campaign = {
                 id: "6",

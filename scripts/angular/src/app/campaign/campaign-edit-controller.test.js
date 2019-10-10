@@ -39,12 +39,13 @@ describe("CampaignEditController -", () => {
     beforeEach(() => {
         angular.mock.module(ttm_module);
 
-        let $controller;
+        let $controller, $httpBackend;
 
         angular.mock.inject(function(
             _$controller_,
             $rootScope,
             _$q_,
+            _$httpBackend_,
             _CampaignService_,
             _DefinitionService_,
             _ExecutionService_,
@@ -53,6 +54,7 @@ describe("CampaignEditController -", () => {
         ) {
             $controller = _$controller_;
             $q = _$q_;
+            $httpBackend = _$httpBackend_;
             $scope = $rootScope.$new();
             CampaignService = _CampaignService_;
             ExecutionService = _ExecutionService_;
@@ -61,12 +63,14 @@ describe("CampaignEditController -", () => {
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
         });
 
+        $httpBackend.when("GET", "campaign-list.tpl.html").respond(200);
+
         modal_instance = {};
-        editCampaignCallback = jasmine.createSpy("editCampaignCallback");
+        editCampaignCallback = jest.fn();
 
         project_id = 70;
-        spyOn(SharedPropertiesService, "getProjectId").and.returnValue(project_id);
-        spyOn(CampaignService, "getCampaign").and.returnValue($q.defer().promise);
+        jest.spyOn(SharedPropertiesService, "getProjectId").mockReturnValue(project_id);
+        jest.spyOn(CampaignService, "getCampaign").mockReturnValue($q.defer().promise);
 
         $ctrl = $controller(BaseController, {
             modal_instance,
@@ -84,12 +88,12 @@ describe("CampaignEditController -", () => {
 
     describe("selectReportTests() -", () => {
         beforeEach(() => {
-            spyOn(DefinitionService, "getDefinitions");
+            jest.spyOn(DefinitionService, "getDefinitions").mockImplementation(() => {});
         });
 
         it("Given a selected report, then the definitions of that report will be loaded and set to selected and all other tests will be unselected", () => {
             const definitions = [{ id: 85, summary: "AD test" }, { id: 3, summary: "Git test" }];
-            DefinitionService.getDefinitions.and.returnValue($q.when(definitions));
+            DefinitionService.getDefinitions.mockReturnValue($q.when(definitions));
             $scope.filters = {
                 selected_report: "31"
             };

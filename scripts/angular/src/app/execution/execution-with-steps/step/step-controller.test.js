@@ -22,15 +22,10 @@ import angular from "angular";
 import "angular-mocks";
 import BaseController from "./step-controller.js";
 import * as tlp from "tlp";
-import {
-    rewire$setError,
-    rewire$resetError,
-    restore as restoreFeedback
-} from "../../../feedback-state.js";
-import {
-    rewire$updateStatusWithStepResults,
-    restore as restoreUpdater
-} from "./execution-with-steps-updater.js";
+import * as feedback_state from "../../../feedback-state.js";
+import * as execution_with_steps_updater from "./execution-with-steps-updater.js";
+
+jest.mock("tlp");
 
 describe("StepController", () => {
     let $q,
@@ -39,25 +34,24 @@ describe("StepController", () => {
         ExecutionRestService,
         setError,
         resetError,
-        updateStatusWithStepResults,
-        fake_dropdown_object,
-        mockDropdown;
+        fake_dropdown_object;
 
     const $element = angular.element("<div></div>");
 
     beforeEach(() => {
-        fake_dropdown_object = jasmine.createSpyObj("dropdown", ["hide", "show"]);
-        mockDropdown = jasmine.createSpy("dropdown").and.returnValue(fake_dropdown_object);
+        fake_dropdown_object = {
+            hide: jest.fn(),
+            show: jest.fn()
+        };
 
-        tlp.dropdown = mockDropdown;
+        jest.spyOn(tlp, "dropdown").mockReturnValue(fake_dropdown_object);
 
-        setError = jasmine.createSpy("setError");
-        rewire$setError(setError);
-        resetError = jasmine.createSpy("resetError");
-        rewire$resetError(resetError);
+        setError = jest.spyOn(feedback_state, "setError");
+        resetError = jest.spyOn(feedback_state, "resetError");
 
-        updateStatusWithStepResults = jasmine.createSpy("updateStatusWithStepResults");
-        rewire$updateStatusWithStepResults(updateStatusWithStepResults);
+        jest.spyOn(execution_with_steps_updater, "updateStatusWithStepResults").mockImplementation(
+            () => {}
+        );
 
         angular.mock.module(execution_module);
 
@@ -75,11 +69,6 @@ describe("StepController", () => {
         });
     });
 
-    afterEach(() => {
-        restoreFeedback();
-        restoreUpdater();
-    });
-
     describe("openDropdown()", () => {
         it("Then the dropdown will be shown", () => {
             StepController.dropdown = fake_dropdown_object;
@@ -95,7 +84,7 @@ describe("StepController", () => {
 
         beforeEach(() => {
             execution = { id: 79, steps_results: {} };
-            spyOn(ExecutionRestService, "updateStepStatus").and.returnValue($q.when());
+            jest.spyOn(ExecutionRestService, "updateStepStatus").mockReturnValue($q.when());
             StepController.dropdown = fake_dropdown_object;
             StepController.execution = execution;
         });
@@ -133,7 +122,7 @@ describe("StepController", () => {
             it("Given there is a REST error, then an error message will be displayed", () => {
                 StepController.step = { id: 67 };
                 StepController.step_result = { status: "failed" };
-                ExecutionRestService.updateStepStatus.and.returnValue(
+                ExecutionRestService.updateStepStatus.mockReturnValue(
                     $q.reject("This user cannot update the execution")
                 );
 
