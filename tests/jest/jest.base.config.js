@@ -27,32 +27,16 @@ module.exports = {
     },
     moduleNameMapper: {
         "^.+\\.po$": "identity-obj-proxy",
-        "^.+\\.html$": "identity-obj-proxy",
         "tlp-fetch-mocks-helper-jest": path.resolve(
             __dirname,
             "../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js"
         ),
-        tlp: path.resolve(__dirname, "../../src/www/themes/common/tlp/src/js/index.js"),
-        "tlp-fetch": path.resolve(
-            __dirname,
-            "../../src/www/themes/common/tlp/src/js/fetch-wrapper.js"
-        ),
-        "angular-tlp": path.resolve(
-            __dirname,
-            "../../src/www/themes/common/tlp/angular-tlp/index.js"
-        ),
-        "@tuleap-vue-components/(.*)$": path.resolve(
-            __dirname,
-            "../../src/www/scripts/vue-components/$1"
-        )
+        tlp: path.resolve(__dirname, "../../src/www/themes/common/tlp/src/js/index.js")
     },
     setupFilesAfterEnv: [path.resolve(__dirname, "./fail-console-error-warning.js")],
     globals: {
         "vue-jest": {
             babelConfig: path.resolve(__dirname, "./babel.config.js")
-        },
-        "ts-jest": {
-            tsConfig: path.resolve(__dirname, "./../../tsconfig.json")
         }
     },
     snapshotSerializers: ["jest-serializer-vue"],
@@ -69,25 +53,7 @@ module.exports = {
         "!**/karma*js",
         "!**/gulpfile.js",
         "!**/jest.config.js",
-        "!**/*.d.ts",
-        "!**/bootstrap/**",
-        "!**/datepicker/**",
-        "!**/FlamingParrot/keymaster-sequence/**",
-        "!**/jquery/**",
-        "!**/jscrollpane/**",
-        "!**/jstimezonedetect/**",
-        "!**/lightwindow/**",
-        "!**/lytebox/**",
-        "!**/protocheck/**",
-        "!**/prototype/**",
-        "!**/scriptaculous/**",
-        "!**/select2/**",
-        "!**/tablekit/**",
-        "!**/textboxlist/**",
-        "!**/viewportchecker/**",
-        "!**/phpwiki/**/*.js",
-        "!**/plugins/mediawiki/www/skins/common/ajax.js",
-        "!**/src/www/api/explorer/**"
+        "!**/*.d.ts"
     ],
     resetModules: true,
     restoreMocks: true

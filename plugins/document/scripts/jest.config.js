@@ -17,4 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-module.exports = require("../../../tests/jest/jest.config.js");
+const base_config = require("../../../tests/jest/jest.base.config.js");
+
+module.exports = {
+    ...base_config,
+    displayName: "document",
+    moduleNameMapper: {
+        ...base_config.moduleNameMapper,
+        "@tuleap-vue-components/(.*)$": "<rootDir>/../../../src/www/scripts/vue-components/$1"
+    }
+};

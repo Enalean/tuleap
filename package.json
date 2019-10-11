@@ -97,6 +97,6 @@
     "watch": "gulp watch",
     "prettier": "prettier --config .prettierrc --ignore-path .eslintignore",
     "stylelint": "stylelint --config .stylelintrc.js --syntax scss --ignore-path .stylelintignore",
-    "test": "jest --config tests/jest/jest.config.js --rootDir ."
+    "test": "BABEL_ENV=test jest --config tests/jest/jest.projects.config.js"
   }
 }

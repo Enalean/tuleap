@@ -17,4 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-module.exports = require("../../../../tests/jest/jest.config.js");
+module.exports = {
+    ...require("../../../../tests/jest/jest.base.config.js"),
+    displayName: "git"
+};

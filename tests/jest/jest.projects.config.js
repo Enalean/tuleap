@@ -17,13 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const base_config = require("../../../../tests/jest/jest.base.config.js");
+const path = require("path");
+
+const base_config = require("./jest.base.config.js");
+const tuleap_core_config = require("../../src/www/scripts/jest.config.js");
 
 module.exports = {
-    ...base_config,
-    displayName: "timetracking",
-    moduleNameMapper: {
-        ...base_config.moduleNameMapper,
-        "@tuleap-vue-components/(.*)$": "<rootDir>/../../../../src/www/scripts/vue-components/$1"
-    }
+    rootDir: path.resolve(__dirname, "../../"),
+    projects: ["<rootDir>/plugins/**/jest.config.js", "<rootDir>/src/**/jest.config.js"],
+    collectCoverageFrom: [
+        ...base_config.collectCoverageFrom,
+        ...tuleap_core_config.collectCoverageFrom
+    ]
 };
