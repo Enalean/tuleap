@@ -9,7 +9,7 @@
     "mustache": "^2.3.0",
     "vue": "^2.6.10",
     "vue-dompurify-html": "^2.1.0",
-    "vue-gettext": "^2.1.0"
+    "vue-gettext": "^2.1.5"
   },
   "devDependencies": {
     "concurrently": "^3.5.0"
