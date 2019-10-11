@@ -40,6 +40,7 @@ $vKey->required();
 $vVal = new Valid_String('val');
 $vVal->required();
 if ((!$request->valid($vKey)) ||(!$request->valid($vVal))) {
+    $GLOBALS['Response']->sendStatusCode(400);
     exit_error(
         $GLOBALS['Language']->getText('global', 'error'),
         $GLOBALS['Language']->getText('include_exit', 'missing_param_err')
@@ -102,6 +103,7 @@ if ($ref) {
     }
     $ref->replaceLink($args, $project_name);
 } else {
+    $GLOBALS['Response']->sendStatusCode(404);
     exit_error(
         $GLOBALS['Language']->getText('global', 'error'),
         $GLOBALS['Language']->getText('include_exit', 'missing_param_err')
