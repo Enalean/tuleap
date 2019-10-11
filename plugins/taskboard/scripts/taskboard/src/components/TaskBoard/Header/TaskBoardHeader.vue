@@ -19,22 +19,29 @@
   -->
 
 <template>
-    <div class="taskboard">
-        <taskboard-button-bar/>
-        <task-board-header/>
-        <task-board-body/>
+    <div class="taskboard-head">
+        <div class="taskboard-header taskboard-cell-swimlane-header" v-bind:class="fullscreen_class"></div>
+        <task-board-header-cell v-for="col of columns" v-bind:key="col.id" v-bind:column="col"/>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import { State, namespace } from "vuex-class";
 import { Component } from "vue-property-decorator";
-import TaskBoardHeader from "./Header/TaskBoardHeader.vue";
-import TaskBoardBody from "./Body/TaskBoardBody.vue";
-import TaskboardButtonBar from "./ButtonBar/TaskboardButtonBar.vue";
+import { ColumnDefinition } from "../../../type";
+import TaskBoardHeaderCell from "./TaskBoardHeaderCell.vue";
+
+const fullscreen = namespace("fullscreen");
 
 @Component({
-    components: { TaskBoardBody, TaskBoardHeader, TaskboardButtonBar }
+    components: { TaskBoardHeaderCell }
 })
-export default class TaskBoard extends Vue {}
+export default class TaskBoardHeader extends Vue {
+    @State
+    readonly columns!: Array<ColumnDefinition>;
+
+    @fullscreen.Getter
+    readonly fullscreen_class!: string;
+}
 </script>
