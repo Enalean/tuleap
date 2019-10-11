@@ -37,12 +37,12 @@ export async function loadSwimlanes(
                         card,
                         children_cards: [],
                         is_loading_children_cards: false,
-                        is_collapsed: false
+                        is_collapsed: !card.is_open
                     };
                 });
                 context.commit("addSwimlanes", swimlanes);
                 swimlanes
-                    .filter(swimlane => swimlane.card.has_children)
+                    .filter(swimlane => swimlane.card.has_children && !swimlane.is_collapsed)
                     .map(swimlane_with_children =>
                         context.dispatch("loadChildrenCards", swimlane_with_children)
                     );
@@ -81,5 +81,15 @@ export async function loadChildrenCards(
         await context.dispatch("error/handleModalError", error, { root: true });
     } finally {
         context.commit("endLoadingChildren", swimlane);
+    }
+}
+
+export function expandSwimlane(
+    context: ActionContext<SwimlaneState, RootState>,
+    swimlane: Swimlane
+): void {
+    context.commit("expandSwimlane", swimlane);
+    if (swimlane.card.has_children && swimlane.children_cards.length === 0) {
+        context.dispatch("loadChildrenCards", swimlane);
     }
 }

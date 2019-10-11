@@ -77,11 +77,14 @@ class CardRepresentation
      * @var float|null
      */
     public $initial_effort;
-
     /**
      * @var float|null
      */
     public $remaining_effort;
+    /**
+     * @var bool
+     */
+    public $is_open;
 
     /**
      * @params UserRepresentation[] $assignees
@@ -108,6 +111,7 @@ class CardRepresentation
         $this->mapped_list_value = $mapped_list_value;
         $this->initial_effort    = $this->formatNumeric($initial_effort);
         $this->remaining_effort  = $this->formatNumeric($remaining_effort);
+        $this->is_open           = $artifact->isOpen();
     }
 
     /**

@@ -52,6 +52,6 @@ describe("CollapsedSwimlane", () => {
             propsData: { swimlane }
         });
         wrapper.find(".taskboard-swimlane-toggle").trigger("click");
-        expect($store.commit).toHaveBeenCalledWith("swimlane/expandSwimlane", swimlane);
+        expect($store.dispatch).toHaveBeenCalledWith("swimlane/expandSwimlane", swimlane);
     });
 });
