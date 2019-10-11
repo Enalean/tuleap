@@ -28,14 +28,16 @@ import {
     ERROR_TYPE_UNKNOWN_ERROR,
     ERROR_TYPE_NO_GIT,
     PROJECT_KEY,
-    REPOSITORIES_SORTED_BY_PATH
+    REPOSITORIES_SORTED_BY_PATH,
+    ANONYMOUS_USER_ID
 } from "../constants.js";
 
 export const setDisplayMode = async (context, new_mode) => {
     context.commit("setDisplayMode", new_mode);
 
     const user_id = getUserId();
-    if (!user_id) {
+
+    if (!user_id || user_id === ANONYMOUS_USER_ID) {
         return;
     }
 

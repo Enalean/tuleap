@@ -23,7 +23,8 @@ import {
     ERROR_TYPE_NO_GIT,
     ERROR_TYPE_UNKNOWN_ERROR,
     REPOSITORIES_SORTED_BY_LAST_UPDATE,
-    REPOSITORIES_SORTED_BY_PATH
+    REPOSITORIES_SORTED_BY_PATH,
+    ANONYMOUS_USER_ID
 } from "../constants.js";
 import { setDisplayMode, getAsyncRepositoryList, changeRepositories } from "./actions.js";
 import * as repository_list_presenter from "../repository-list-presenter.js";
@@ -63,7 +64,7 @@ describe("Store actions", () => {
 
         it("does not save user preference if user is anonymous", async () => {
             const getUserId = jest.spyOn(repository_list_presenter, "getUserId");
-            getUserId.mockReturnValue(0);
+            getUserId.mockReturnValue(ANONYMOUS_USER_ID);
 
             const new_mode = REPOSITORIES_SORTED_BY_PATH;
 
