@@ -249,7 +249,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         $previous = $changeset_value->getListValues();
         $next     = $this->getListValues();
 
-        if ($previous == $next) {
+        if ($previous === $next) {
             return false;
         }
 
@@ -295,7 +295,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     private function getChangesSentence(array $previous, array $next, $added, $removed)
     {
         if (empty($next)) {
-            return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'cleared');
+            return ' ' . sprintf(dgettext('tuleap-tracker', 'cleared values: %s'), $removed);
         }
 
         if (empty($previous)) {
