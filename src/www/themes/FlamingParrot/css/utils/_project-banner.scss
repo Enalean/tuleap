@@ -19,6 +19,8 @@
  */
 
 .project-banner {
+    display: flex;
+    align-items: center;
     padding: 20px;
     background-color: $ui-color-warning;
 }
@@ -41,6 +43,17 @@
 .project-banner > p > a {
     color: $white;
     text-decoration: underline;
+}
+
+#project-banner-close {
+    margin-left: 10px;
+    color: $white;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+        opacity: .5;
+    }
 }
 
 .project-banner.project-banner-hidden {

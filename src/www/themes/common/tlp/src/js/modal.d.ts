@@ -17,23 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./js/fetch-wrapper";
-export * from "./js/modal";
-export * from "./js/dropdowns";
-export * from "./js/popovers";
+interface ModalOptions {
+    keyboard?: boolean;
+    destroy_on_hide?: boolean;
+}
+declare class Modal {
+    constructor(element: Element, options?: ModalOptions);
 
-import { OptionData, Select2Plugin } from "select2";
-export function select2(element: Element, options?: OptionData): Select2Plugin;
-
-import flatpickr from "flatpickr";
-import { Options } from "flatpickr/dist/types/options";
-export function datePicker(
-    element: Element,
-    options?: Omit<Options, "enableTime" | "dateFormat"> & {
-        weekNumbers?: true;
-        time_24hr?: true;
-        monthSelectorType?: "static";
-    }
-): flatpickr.Instance;
-
-export as namespace tlp;
+    toggle(): void;
+    show(): void;
+    hide(): void;
+    destroy(): void;
+    addEventListener(type: string, listener: (evt: Event) => void): void;
+    removeEventListener(type: string, listener: (evt: Event) => void): void;
+}
+export function modal(element: Element, options?: ModalOptions): Modal;

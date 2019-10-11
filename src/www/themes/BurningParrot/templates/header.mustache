@@ -56,6 +56,15 @@
                     {{# purified_banner }}
                         <div class="project-banner {{^ project_banner_is_visible }}project-banner-hidden{{/ project_banner_is_visible }}">
                             <p id="current-project-banner-message" class="project-banner-clamped">{{{ purified_banner }}}</p>
+                            {{# user_id }}
+                                <i
+                                        id="project-banner-close"
+                                        class="fa fa-close"
+                                        aria-label="{{# gettext }}Close{{/ gettext }}"
+                                        data-project-id="{{ project_id }}"
+                                        data-user-id="{{ user_id }}"
+                                ></i>
+                            {{/ user_id }}
                         </div>
                     {{/ purified_banner }}
                 {{/ current_project_navbar_info_presenter }}

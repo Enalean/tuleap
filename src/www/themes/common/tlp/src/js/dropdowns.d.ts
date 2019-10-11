@@ -17,23 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./js/fetch-wrapper";
-export * from "./js/modal";
-export * from "./js/dropdowns";
-export * from "./js/popovers";
+interface DropdownOptions {
+    keyboard?: boolean;
+    dropdown_menu?: () => Element;
+}
+declare class Dropdown {
+    constructor(trigger: Element, options?: DropdownOptions);
 
-import { OptionData, Select2Plugin } from "select2";
-export function select2(element: Element, options?: OptionData): Select2Plugin;
-
-import flatpickr from "flatpickr";
-import { Options } from "flatpickr/dist/types/options";
-export function datePicker(
-    element: Element,
-    options?: Omit<Options, "enableTime" | "dateFormat"> & {
-        weekNumbers?: true;
-        time_24hr?: true;
-        monthSelectorType?: "static";
-    }
-): flatpickr.Instance;
-
-export as namespace tlp;
+    toggle(): void;
+    show(): void;
+    hide(): void;
+    addEventListener(type: string, eventHandler: (evt: Event) => void): void;
+    removeEventListener(type: string, eventHandler: (evt: Event) => void): void;
+}
+export function dropdown(trigger: Element, options?: DropdownOptions): Dropdown;

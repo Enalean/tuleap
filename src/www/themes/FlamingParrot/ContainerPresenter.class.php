@@ -34,6 +34,11 @@ class FlamingParrot_ContainerPresenter
     /** @var string */
     private $project_link;
 
+    /**
+     * @var ?int
+     */
+    public $project_id;
+
     /** @var bool */
     public $project_is_public;
 
@@ -78,6 +83,10 @@ class FlamingParrot_ContainerPresenter
      * @var bool
      */
     public $project_banner_is_visible = false;
+    /**
+     * @var int
+     */
+    public $current_user_id;
 
     public function __construct(
         array $breadcrumbs,
@@ -91,13 +100,17 @@ class FlamingParrot_ContainerPresenter
         $version,
         $sidebar_collapsable,
         ?BannerDisplay $banner,
+        PFUser $current_user,
         ?Project $project = null
     ) {
         $this->breadcrumbs         = $breadcrumbs;
         $this->toolbar             = $toolbar;
         $this->project_name        = $project_name;
         $this->project_link        = $project_link;
-        $this->project_is_public   = $project !== null && $project->isPublic();
+        if ($project !== null) {
+            $this->project_is_public = $project->isPublic();
+            $this->project_id        = $project->getID();
+        }
         $this->project_privacy     = $project_privacy;
         $this->project_tabs        = $project_tabs;
         $this->feedback            = $feedback;
@@ -121,6 +134,7 @@ class FlamingParrot_ContainerPresenter
             );
             $this->project_banner_is_visible = $banner->isVisible();
         }
+        $this->current_user_id = $current_user->getId();
     }
 
     public function hasBreadcrumbs()
