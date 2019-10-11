@@ -1252,8 +1252,7 @@ msgstr "Déclenchements"
 
 #, php-format
 msgid ""
-"Type '%s' does not exist. This field is ignored. (Name : '%s', ID: "
-"'%s')."
+"Type '%s' does not exist. This field is ignored. (Name : '%s', ID: '%s')."
 msgstr "Type '%s' inexistant. Ce champ sera ignoré. (Nom : '%s', ID: '%s')."
 
 msgid "URL"
@@ -1435,6 +1434,10 @@ msgstr ""
 
 msgid "cleared"
 msgstr "vidé"
+
+#, php-format
+msgid "cleared values: %s"
+msgstr "valeurs retirées : %s"
 
 msgid "field_ids attribute must not be empty."
 msgstr "L'attribut field_ids ne doit pas être vide."
