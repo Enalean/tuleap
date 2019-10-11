@@ -28,6 +28,7 @@ use Backend;
 use BackendSVN;
 use Tuleap\System\ApacheServiceControl;
 use Tuleap\System\ServiceControl;
+use TuleapCfg\Command\ProcessFactory;
 
 class ApacheConfGenerator
 {
@@ -50,7 +51,7 @@ class ApacheConfGenerator
 
     public static function build()
     {
-        return new self(new ApacheServiceControl(new ServiceControl()), Backend::instance(Backend::SVN));
+        return new self(new ApacheServiceControl(new ServiceControl(), new ProcessFactory()), Backend::instance(Backend::SVN));
     }
 
     public function generate()

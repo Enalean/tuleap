@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,41 +21,39 @@
 
 namespace Tuleap\System;
 
+use TuleapCfg\Command\ProcessFactory;
+
 class ApacheServiceControl
 {
     /**
      * @var ServiceControl
      */
     private $service_control;
+    /**
+     * @var ProcessFactory
+     */
+    private $process_factory;
 
-    private $init_usage = true;
-
-    public function __construct(ServiceControl $service_control)
+    public function __construct(ServiceControl $service_control, ProcessFactory $process_factory)
     {
         $this->service_control = $service_control;
-    }
-
-    public function disableInitUsage()
-    {
-        $this->init_usage = false;
-        return $this;
+        $this->process_factory = $process_factory;
     }
 
     public function reload()
     {
-        if ($this->init_usage) {
-            switch ($this->service_control->getInitMode()) {
-                case ServiceControl::SYSTEMD:
-                    $this->service_control->systemctl('httpd', 'reload');
-                    break;
+        switch ($this->service_control->getInitMode()) {
+            case ServiceControl::SYSTEMD:
+                $this->service_control->systemctl('httpd', 'reload');
+                break;
 
-                case ServiceControl::INITV:
-                    $this->service_control->service('httpd', 'graceful');
-                    break;
-            }
-        } else {
-            // Works on both centos6 & centos7
-            (new \System_Command())->exec('/usr/sbin/httpd -k graceful');
+            case ServiceControl::INITV:
+                $this->service_control->service('httpd', 'graceful');
+                break;
+
+            case ServiceControl::SUPERVISORD:
+                $this->process_factory->getProcess(['/usr/sbin/httpd', '-k', 'graceful'])->mustRun();
+                break;
         }
     }
 }

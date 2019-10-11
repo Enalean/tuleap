@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,8 @@
 
 namespace Tuleap\System;
 
+use ForgeConfig;
+
 /**
  * Abstract service control from system implementation
  *
@@ -28,14 +30,21 @@ namespace Tuleap\System;
  */
 class ServiceControl
 {
-    public const SYSTEMD = 'systemd';
-    public const INITV   = 'initv';
+    public const SYSTEMD     = 'systemd';
+    public const INITV       = 'initv';
+    public const SUPERVISORD = 'supervisord';
+
+    public const FORGECONFIG_INIT_MODE = 'init_mode';
 
     public function getInitMode()
     {
+        if (ForgeConfig::get(self::FORGECONFIG_INIT_MODE) === self::SUPERVISORD) {
+            return self::SUPERVISORD;
+        }
         if (is_executable('/usr/bin/systemctl')) {
             return self::SYSTEMD;
-        } elseif (is_executable('/sbin/service')) {
+        }
+        if (is_executable('/sbin/service')) {
             return self::INITV;
         }
     }
