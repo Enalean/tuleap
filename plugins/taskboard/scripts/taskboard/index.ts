@@ -59,7 +59,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         columns,
         has_content,
         milestone_id,
-        milestone_title
+        milestone_title,
+        are_closed_items_displayed: true
     };
 
     const initial_user_state: UserState = {

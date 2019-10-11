@@ -19,6 +19,7 @@
 
 import { RootState } from "../type";
 import { Store, StoreOptions } from "vuex";
+import * as mutations from "./mutations";
 import error from "./error";
 import swimlane from "./swimlane";
 import fullscreen from "./fullscreen";
@@ -33,6 +34,7 @@ export function createStore(
 
     const store_options: StoreOptions<RootState> = {
         state: initial_root_state,
+        mutations,
         modules: {
             error,
             swimlane,
