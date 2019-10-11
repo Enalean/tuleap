@@ -21,7 +21,8 @@ import {
     PROJECT_BANNER_NAVBAR_ID,
     PROJECT_BANNER_MESSAGE_CLOSE_BUTTON_ID,
     PROJECT_BANNER_HIDDEN_CLASS,
-    allowToHideAndShowProjectBanner
+    allowToHideAndShowProjectBanner,
+    PROJECT_BANNER_VISIBLE_GLOBAL_CLASS
 } from "./project-banner-show-hide";
 
 const USER_ID = "1200";
@@ -42,6 +43,8 @@ describe("Show and hide project banner", () => {
         project_banner_navbar_information: HTMLElement;
     } {
         const local_document = document.implementation.createHTMLDocument();
+
+        local_document.body.classList.add(PROJECT_BANNER_VISIBLE_GLOBAL_CLASS);
 
         const navbar = local_document.createElement("nav");
         const navbar_project_banner_info = local_document.createElement("div");
@@ -105,6 +108,9 @@ describe("Show and hide project banner", () => {
         allowToHideAndShowProjectBanner(local_document.document, tlpPatchSpy);
 
         local_document.close_button.click();
+        expect(local_document.document.body.classList).not.toContain(
+            PROJECT_BANNER_VISIBLE_GLOBAL_CLASS
+        );
         expect(local_document.project_banner.classList).toContain(PROJECT_BANNER_HIDDEN_CLASS);
         expect(local_document.project_banner_navbar_information.classList).toContain(
             PROJECT_BANNER_HIDDEN_CLASS
@@ -117,6 +123,9 @@ describe("Show and hide project banner", () => {
         );
 
         local_document.project_banner_navbar_information.click();
+        expect(local_document.document.body.classList).toContain(
+            PROJECT_BANNER_VISIBLE_GLOBAL_CLASS
+        );
         expect(local_document.project_banner.classList).not.toContain(PROJECT_BANNER_HIDDEN_CLASS);
         expect(local_document.project_banner_navbar_information.classList).not.toContain(
             PROJECT_BANNER_HIDDEN_CLASS

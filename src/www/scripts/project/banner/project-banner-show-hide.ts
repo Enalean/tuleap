@@ -19,6 +19,7 @@
 
 export const PROJECT_BANNER_NAVBAR_ID = "current-project-banner-bullhorn";
 export const PROJECT_BANNER_MESSAGE_CLOSE_BUTTON_ID = "project-banner-close";
+export const PROJECT_BANNER_VISIBLE_GLOBAL_CLASS = "has-visible-project-banner";
 export const PROJECT_BANNER_HIDDEN_CLASS = "project-banner-hidden";
 
 export function allowToHideAndShowProjectBanner(
@@ -44,7 +45,7 @@ export function allowToHideAndShowProjectBanner(
     project_banner_navbar.addEventListener(
         "click",
         (): void => {
-            showProjectBannerMessage(project_banner_navbar, full_project_banner);
+            showProjectBannerMessage(mount_point.body, project_banner_navbar, full_project_banner);
         }
     );
     const project_id = project_banner_message_close_button.dataset.projectId;
@@ -59,6 +60,7 @@ export function allowToHideAndShowProjectBanner(
         async (): Promise<void> => {
             await hideProjectBannerMessage(
                 tlpPatch,
+                mount_point.body,
                 project_banner_navbar,
                 full_project_banner,
                 Number.parseInt(project_id, 10),
@@ -69,20 +71,24 @@ export function allowToHideAndShowProjectBanner(
 }
 
 function showProjectBannerMessage(
+    document_body: HTMLElement,
     project_banner_navbar: HTMLElement,
     full_project_banner: HTMLElement
 ): void {
+    document_body.classList.add(PROJECT_BANNER_VISIBLE_GLOBAL_CLASS);
     project_banner_navbar.classList.remove(PROJECT_BANNER_HIDDEN_CLASS);
     full_project_banner.classList.remove(PROJECT_BANNER_HIDDEN_CLASS);
 }
 
 async function hideProjectBannerMessage(
     tlpPatch: (url: string, init: RequestInit & { method?: "PATCH" }) => Promise<Response>,
+    document_body: HTMLElement,
     project_banner_navbar: HTMLElement,
     full_project_banner: HTMLElement,
     project_id: number,
     user_id: number
 ): Promise<void> {
+    document_body.classList.remove(PROJECT_BANNER_VISIBLE_GLOBAL_CLASS);
     project_banner_navbar.classList.add(PROJECT_BANNER_HIDDEN_CLASS);
     full_project_banner.classList.add(PROJECT_BANNER_HIDDEN_CLASS);
 
