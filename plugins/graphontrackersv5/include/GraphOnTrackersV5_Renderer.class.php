@@ -33,13 +33,19 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
     protected $chart_to_edit;
     protected $plugin;
 
-    public function __construct($id, $report, $name, $description, $rank, $plugin, UserManager $user_manager)
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $form_element_factory;
+
+    public function __construct($id, $report, $name, $description, $rank, $plugin, UserManager $user_manager, Tracker_FormElementFactory $form_element_factory)
     {
         parent::__construct($id, $report, $name, $description, $rank);
         $this->charts        = null;
         $this->chart_to_edit = null;
         $this->plugin        = $plugin;
         $this->user_manager  = $user_manager;
+        $this->form_element_factory  = $form_element_factory;
     }
 
     public function initiateSession()
@@ -302,10 +308,19 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
     public function exportToXml(SimpleXMLElement $root, array $formsMapping)
     {
         parent::exportToXml($root, $formsMapping);
+
         $child = $root->addChild('charts');
         foreach ($this->getChartFactory()->getCharts($this) as $chart) {
-            $grandchild = $child->addChild('chart');
-            $chart->exportToXML($grandchild, $formsMapping);
+            if ($chart instanceof GraphOnTrackersV5_Chart_CumulativeFlow) {
+                if (!$this->form_element_factory->getUsedFormElementById($chart->getFieldId())) {
+                    return;
+                }
+                $grandchild = $child->addChild('chart');
+                $chart->exportToXML($grandchild, $formsMapping);
+            } else {
+                $grandchild = $child->addChild('chart');
+                $chart->exportToXML($grandchild, $formsMapping);
+            }
         }
     }
 

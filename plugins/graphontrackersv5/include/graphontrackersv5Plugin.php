@@ -111,7 +111,8 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
                 $params['row']['description'],
                 $params['row']['rank'],
                 $this,
-                UserManager::instance()
+                UserManager::instance(),
+                Tracker_FormElementFactory::instance()
             );
             if ($params['store_in_session']) {
                 $params['instance']->initiateSession();
@@ -197,7 +198,8 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
                 $params['description'],
                 $params['rank'],
                 $this,
-                UserManager::instance()
+                UserManager::instance(),
+                Tracker_FormElementFactory::instance()
             );
             $params['renderers'][$params['renderer_key']]->initiateSession();
         }
