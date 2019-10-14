@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,7 +30,6 @@ class Git_RemoteServer_GerritServerPresenter
     public $login;
     public $identity_file;
     public $use_gerrit_2_5;
-    public $use_gerrit_2_8;
     public $is_used;
     public $http_password;
     public $replication_password;
@@ -39,7 +38,6 @@ class Git_RemoteServer_GerritServerPresenter
     public $replication_key_ellipsis_value;
     public $edit_title;
     public $delete_title;
-    public $warning_no_possible_go_back;
     public $purified_delete_desc;
 
     public function __construct(Git_RemoteServer_GerritServer $server, bool $is_used)
@@ -53,7 +51,6 @@ class Git_RemoteServer_GerritServerPresenter
         $this->login                          = $server->getLogin();
         $this->identity_file                  = $server->getIdentityFile();
         $this->use_gerrit_2_5                 = $server->getGerritVersion() === Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION;
-        $this->use_gerrit_2_8                 = $server->getGerritVersion() !== Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION;
         $this->is_used                        = $is_used;
         $this->http_password                  = $server->getHTTPPassword();
         $this->replication_password           = $server->getReplicationPassword();
@@ -64,21 +61,10 @@ class Git_RemoteServer_GerritServerPresenter
         $this->edit_title           = sprintf(dgettext('tuleap-git', 'Edit %1$s'), $server->getHost());
         $this->delete_title         = sprintf(dgettext('tuleap-git', 'Delete %1$s'), $server->getHost());
 
-        $this->warning_no_possible_go_back  = dgettext('tuleap-git', 'Once migrated, you will no more able to go back in version 2.5');
         $this->purified_delete_desc = Codendi_HTMLPurifier::instance()->purify(
             sprintf(dgettext('tuleap-git', 'Wow, wait a minute. You are about to delete the <b>%1$s</b> server. Please confirm your action.'), $server->getHost()),
             CODENDI_PURIFIER_LIGHT
         );
-    }
-
-    public function gerrit_version_2_5_checked()
-    {
-        return $this->use_gerrit_2_5 ? 'checked' : '';
-    }
-
-    public function gerrit_version_2_8_checked()
-    {
-        return $this->use_gerrit_2_8 ? 'checked' : '';
     }
 
     public function auth_type_digest_checked()

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -58,8 +58,6 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter
 
     public $gerrit_label_identity_file;
 
-    public $gerrit_label_gerrit_version;
-
     public $gerrit_label_http_password;
 
     public $gerrit_label_replication_password;
@@ -102,7 +100,6 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter
         $this->gerrit_label_use_ssl              = dgettext('tuleap-git', 'Use SSL?');
         $this->gerrit_label_login                = dgettext('tuleap-git', 'Login');
         $this->gerrit_label_identity_file        = dgettext('tuleap-git', 'Identity file');
-        $this->gerrit_label_gerrit_version       = dgettext('tuleap-git', 'Gerrit server version');
         $this->gerrit_label_http_password        = dgettext('tuleap-git', 'HTTP password');
         $this->gerrit_label_replication_password = dgettext('tuleap-git', 'Replication password');
         $this->gerrit_label_auth_type            = dgettext('tuleap-git', 'Authentication type');

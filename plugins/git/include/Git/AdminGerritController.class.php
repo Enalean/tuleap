@@ -242,7 +242,7 @@ class Git_AdminGerritController
             }
 
             if ($this->allGerritServerParamsRequiredExist($request_gerrit_server)) {
-                $gerrit_server = $this->admin_gerrit_builder->buildFromRequestForEdition($request_gerrit_server);
+                $gerrit_server = $this->admin_gerrit_builder->buildFromRequest($request_gerrit_server);
                 if ($gerrit_server['host'] != $server->getHost() ||
                     $gerrit_server['ssh_port'] != $server->getSSHPort() ||
                     $gerrit_server['http_port'] != $server->getHTTPPort() ||

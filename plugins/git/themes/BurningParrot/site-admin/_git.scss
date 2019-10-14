@@ -119,6 +119,10 @@
     margin: 0 ($tlp-spacing / 2) 0 0;
 }
 
+.gerrit-server-deprecated-configuration {
+    margin-right: $tlp-half-spacing;
+}
+
 /* -------------------- WIDGETS ---------------------- */
 
 .widget-last-git-pushes-details {
