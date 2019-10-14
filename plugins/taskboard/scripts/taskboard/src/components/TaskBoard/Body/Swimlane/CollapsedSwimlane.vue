@@ -33,14 +33,15 @@
                 </div>
             </div>
         </swimlane-header>
+        <div class="taskboard-cell taskboard-swimlane-collapsed-cell-placeholder" v-for="col of columns" v-bind:key="col.id"></div>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Swimlane } from "../../../../type";
-import { namespace } from "vuex-class";
+import { Swimlane, ColumnDefinition } from "../../../../type";
+import { namespace, State } from "vuex-class";
 import CardXrefLabel from "./Card/CardXrefLabel.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
 
@@ -55,6 +56,9 @@ export default class CollapsedSwimlane extends Vue {
 
     @swimlane_store.Action
     readonly expandSwimlane!: (swimlane: Swimlane) => void;
+
+    @State
+    readonly columns!: Array<ColumnDefinition>;
 
     get additional_classnames(): string {
         return `taskboard-swimlane-toggle-${this.swimlane.card.color}`;

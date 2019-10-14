@@ -19,14 +19,16 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CollapsedSwimlane from "./CollapsedSwimlane.vue";
-import { Swimlane } from "../../../../type";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import { Swimlane } from "../../../../type";
 
 describe("CollapsedSwimlane", () => {
     it("displays a toggle icon and a card with minimal information", async () => {
+        const $store = createStoreMock({ state: { swimlane: {}, columns: [] } });
         const wrapper = shallowMount(CollapsedSwimlane, {
             localVue: await createTaskboardLocalVue(),
+            mocks: { $store },
             propsData: {
                 swimlane: {
                     card: {
@@ -40,7 +42,7 @@ describe("CollapsedSwimlane", () => {
     });
 
     it("expand the swimlane when user click on the toggle icon", async () => {
-        const $store = createStoreMock({ state: { swimlane: {} } });
+        const $store = createStoreMock({ state: { swimlane: {}, columns: [] } });
         const swimlane: Swimlane = {
             card: {
                 color: "fiesta-red"

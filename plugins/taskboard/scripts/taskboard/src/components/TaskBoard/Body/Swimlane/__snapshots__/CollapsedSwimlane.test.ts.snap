@@ -26,5 +26,6 @@ exports[`CollapsedSwimlane displays a toggle icon and a card with minimal inform
       </div>
     </div>
   </swimlane-header-stub>
+   
 </div>
 `;
