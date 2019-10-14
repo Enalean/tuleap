@@ -37,6 +37,10 @@
     margin: $tlp-spacing 0 0;
 }
 
+.has-visible-project-banner .taskboard-root {
+    height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$project-banner-base-height});
+}
+
 .taskboard-root-title,
 .taskboard-root-tabs {
     flex: 0 0 auto;

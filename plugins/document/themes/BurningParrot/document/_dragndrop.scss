@@ -52,6 +52,11 @@
     }
 }
 
+.has-visible-project-banner .document-upload-to-current-folder {
+    top: $navbar-height + $project-banner-base-height;
+    height: calc(100vh - #{$navbar-height} - #{$project-banner-base-height});
+}
+
 .document-upload-to-current-folder-message {
     position: absolute;
     bottom: 0;
