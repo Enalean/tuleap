@@ -20,7 +20,7 @@
 
 .project-banner {
     display: flex;
-    align-items: center;
+    flex-direction: row;
     padding: 20px;
     background-color: $ui-color-warning;
 }
@@ -46,7 +46,9 @@
 }
 
 #project-banner-close {
-    margin-left: 10px;
+    align-self: center;
+    margin-left: auto;
+    padding-left: 10px;
     color: $white;
     font-weight: 600;
     cursor: pointer;
