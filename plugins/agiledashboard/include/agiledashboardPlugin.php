@@ -32,6 +32,7 @@ use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\FormElement\MessageFetcher;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_DAILY;
 use Tuleap\AgileDashboard\FormElement\SystemEvent\SystemEvent_BURNUP_GENERATE;
+use Tuleap\AgileDashboard\Kanban\KanbanURL;
 use Tuleap\AgileDashboard\Kanban\KanbanXmlImporter;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageBuilder;
 use Tuleap\AgileDashboard\Kanban\RealTime\KanbanArtifactMessageSender;
@@ -693,9 +694,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         );
 
         $variant = $params['variant'];
-        if ($this->isKanbanURL()) {
-            $params['stylesheets'][] = $theme_include_assets->getFileURL('kanban-' . $variant->getName() . '.css');
-        } elseif ($this->isInOverviewTab() || $this->isPlanningV2URL()) {
+        if ($this->isInOverviewTab() || $this->isPlanningV2URL()) {
             $params['stylesheets'][] = $theme_include_assets->getFileURL('scrum-' . $variant->getName() . '.css');
         }
     }
@@ -737,7 +736,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
      */
     private function getJavascriptDependenciesProvider()
     {
-        if ($this->isKanbanURL()) {
+        if (KanbanURL::isKanbanURL(HTTPRequest::instance())) {
             return new KanbanJavascriptDependenciesProvider();
         } elseif ($this->isPlanningV2URL()) {
             return new PlanningJavascriptDependenciesProvider();
@@ -749,13 +748,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     private function isAnAgiledashboardRequest()
     {
         return $this->currentRequestIsForPlugin();
-    }
-
-    private function isKanbanURL()
-    {
-        $request = HTTPRequest::instance();
-
-        return $request->get('action') === 'showKanban';
     }
 
     private function isPlanningV2URL()
@@ -1256,7 +1248,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     {
         $request = HTTPRequest::instance();
         $pane_info_identifier = new AgileDashboard_PaneInfoIdentifier();
-        if ($pane_info_identifier->isPaneAPlanningV2($request->get('pane')) || $this->isKanbanURL()) {
+        if ($pane_info_identifier->isPaneAPlanningV2($request->get('pane')) || KanbanURL::isKanbanURL($request)) {
             $params['use_standard'] = false;
         }
     }
@@ -1283,7 +1275,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
     public function burning_parrot_compatible_page(BurningParrotCompatiblePageEvent $event) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if ($this->isKanbanURL() ||
+        if (KanbanURL::isKanbanURL(HTTPRequest::instance()) ||
             $this->isInOverviewTab() ||
             $this->isPlanningV2URL()
         ) {

@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -100,8 +100,8 @@ class BurningParrotTheme extends BaseLayout
         $header_presenter_builder    = new HeaderPresenterBuilder();
         $main_classes                = isset($params['main_classes']) ? $params['main_classes'] : array();
         $sidebar                     = $this->getSidebarFromParams($params);
-        $body_classes                = $this->getArrayOfClassnamesForBodyTag($params, $sidebar);
         $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($params);
+        $body_classes                = $this->getArrayOfClassnamesForBodyTag($params, $sidebar, $current_project_navbar_info);
 
         $breadcrumb_presenter_builder = new BreadCrumbPresenterBuilder();
 
@@ -149,12 +149,19 @@ class BurningParrotTheme extends BaseLayout
         echo $extra_content;
     }
 
-    private function getArrayOfClassnamesForBodyTag($params, $sidebar)
-    {
+    private function getArrayOfClassnamesForBodyTag(
+        $params,
+        $sidebar,
+        ?CurrentProjectNavbarInfoPresenter $current_project_navbar_info_presenter
+    ): array {
         $body_classes = array();
 
         if (isset($params['body_class'])) {
             $body_classes = $params['body_class'];
+        }
+
+        if ($current_project_navbar_info_presenter !== null && $current_project_navbar_info_presenter->project_banner_is_visible) {
+            $body_classes[] = 'has-visible-project-banner';
         }
 
         if (! $sidebar) {
@@ -268,10 +275,10 @@ class BurningParrotTheme extends BaseLayout
         );
     }
 
-    private function getCurrentProjectNavbarInfo(array $params)
+    private function getCurrentProjectNavbarInfo(array $params): ?CurrentProjectNavbarInfoPresenter
     {
         if (empty($params['group'])) {
-            return false;
+            return null;
         }
 
         $project = $this->project_manager->getProject($params['group']);

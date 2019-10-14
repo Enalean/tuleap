@@ -53,6 +53,10 @@ $kanban-column-footer-height: 50px;
     height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height});
 }
 
+.has-visible-project-banner .kanban {
+    height:  calc(100vh - #{$navbar-height} - #{$breadcrumb-height} - #{$project-banner-base-height});
+}
+
 .kanban-header {
     display: flex;
     flex: 0 0 auto;

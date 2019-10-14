@@ -26,7 +26,10 @@ namespace Tuleap\AgileDashboard;
 use AgileDashboardRouterBuilder;
 use Feedback;
 use HTTPRequest;
+use Tuleap\AgileDashboard\Kanban\KanbanURL;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -60,6 +63,18 @@ class AgileDashboardLegacyController implements DispatchableWithRequest
         if ($project->isDeleted()) {
             $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('include_exit', 'project_status_' . $project->getStatus()));
             $layout->redirect('/');
+        }
+
+        if (KanbanURL::isKanbanURL($request)) {
+            $layout->addCssAsset(
+                new CssAsset(
+                    new IncludeAssets(
+                        __DIR__ . '/../../www/themes/BurningParrot/assets',
+                        '/plugins/agiledashboard/themes/BurningParrot/assets'
+                    ),
+                    'kanban'
+                )
+            );
         }
 
         $router = $this->router_builder->build($request);

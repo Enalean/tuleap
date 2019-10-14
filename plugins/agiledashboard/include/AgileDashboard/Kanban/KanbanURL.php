@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'density';
-@import 'colors/common-colors';
-@import 'colors/blue-colors';
-@import 'colors/computed-colors';
-@import 'margins-condensed';
-@import 'typography';
-@import 'names';
+declare(strict_types=1);
+
+namespace Tuleap\AgileDashboard\Kanban;
+
+use HTTPRequest;
+
+final class KanbanURL
+{
+    public static function isKanbanURL(HTTPRequest $http_request): bool
+    {
+        return $http_request->get('action') === 'showKanban';
+    }
+}

@@ -110,7 +110,7 @@ hr {
 p {
     margin: 0 0 $tlp-spacing;
     font-size: 16px;
-    line-height: 24px;
+    line-height: $tlp-paragraph-line-height;
 
     &:last-child,
     &[class^="text-"] {
@@ -122,7 +122,7 @@ ul,
 ol {
     margin: 0 0 $tlp-spacing;
     padding: 0 0 0 1.5 * $tlp-spacing;
-    line-height: 24px;
+    line-height: $tlp-paragraph-line-height;
 
     &:last-child {
         margin: 0;
