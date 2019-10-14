@@ -19,7 +19,7 @@
 
 .project-banner {
     display: flex;
-    align-items: center;
+    flex-direction: row;
     padding: $tlp-spacing;
     background-color: $tlp-ui-warning;
 }
@@ -45,7 +45,9 @@
 }
 
 #project-banner-close {
-    margin-left: $tlp-half-spacing;
+    align-self: center;
+    margin-left: auto;
+    padding-left: $tlp-half-spacing;
     color: $tlp-ui-white;
     font-weight: 600;
     cursor: pointer;
