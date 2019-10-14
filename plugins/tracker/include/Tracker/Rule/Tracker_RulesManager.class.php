@@ -325,17 +325,6 @@ class Tracker_RulesManager
         return $targets;
     }
 
-    function displayRules($engine, $source_field = false, $target_field = false, $source_value = false, $target_value = false)
-    {
-        $this->tracker->displayAdminItemHeader($engine, 'dependencies');
-        echo '<p>'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies', 'inline_help') .'</p>';
-        echo '<br />';
-        $this->displayEditForm($source_field, $target_field, $source_value, $target_value);
-        echo '<br />';
-        $this->tracker->displayFooter($engine);
-    }
-
-
     //New interface
      /**
      *getDependenciesBySourceTarget .
@@ -417,8 +406,10 @@ class Tracker_RulesManager
     private function displayChooseSourceAndTarget($engine, $request, $current_user, $source_field_id)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        $this->tracker->displayAdminItemHeader($engine, 'dependencies');
-        echo '<h2 class="almost-tlp-title">' . $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_dependencies') . '</h2>';
+        $title = $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_dependencies');
+        $this->tracker->displayAdminItemHeader($engine, 'dependencies', $title);
+
+        echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
         echo '<p>'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies', 'inline_help') .'</p>';
 
         echo '<form action="'.TRACKER_BASE_URL.'/?" method="GET">';
@@ -499,11 +490,12 @@ class Tracker_RulesManager
     function displayDefineDependencies($engine, $request, $current_user, $source_field_id, $target_field_id)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        $this->tracker->displayAdminItemHeader($engine, 'dependencies');
+        $title = $GLOBALS['Language']->getText('plugin_tracker_field_dependencies', 'dependencies_matrix_title');
+        $this->tracker->displayAdminItemHeader($engine, 'dependencies', $title);
         $source_field = $this->form_element_factory->getFieldById($source_field_id);
         $target_field = $this->form_element_factory->getFieldById($target_field_id);
         //Display creation form
-        echo '<h2 class="almost-tlp-title">'.$GLOBALS['Language']->getText('plugin_tracker_field_dependencies', 'dependencies_matrix_title').'</h2>';
+        echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
         echo '<p>'. $GLOBALS['Language']->getText(
             'plugin_tracker_field_dependencies',
             'dependencies_matrix_help',

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -53,19 +53,9 @@ class Tracker_Permission_PermissionController implements Tracker_Dispatchable_In
     private function view(Tracker_IDisplayTrackerLayout $layout)
     {
         $presenter = $this->presenter_builder->getPresenter($this->tracker);
-        $this->displayHeader($layout, $presenter->title());
+        $this->tracker->displayAdminPermsHeader($layout, $presenter->title());
         $this->renderer->renderToPage('admin-perms-tracker', $presenter);
         $this->displayFooter($layout);
-    }
-
-    private function displayHeader(Tracker_IDisplayTrackerLayout $layout, $title)
-    {
-        $items = $this->tracker->getPermsItems();
-        $this->tracker->displayAdminPermsHeader(
-            $layout,
-            $title,
-            array($items['tracker'])
-        );
     }
 
     private function displayFooter(Tracker_IDisplayTrackerLayout $layout)

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ class Tracker_FormElement_View_Admin_UpdateVisitor extends Tracker_FormElement_V
         $label            = $this->element->getLabel();
         $title            = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'upd_label', $label);
         $url              = $this->element->getAdminEditUrl();
-        $breadcrumbsLabel = $label;
-        echo $this->displayForm($tracker_manager, $request, $breadcrumbsLabel, $url, $title, $this->fetchForm());
+
+        echo $this->displayForm($tracker_manager, $request, $url, $title, $this->fetchForm());
     }
 }

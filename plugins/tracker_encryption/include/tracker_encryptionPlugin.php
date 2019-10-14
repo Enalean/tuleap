@@ -131,7 +131,6 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
                     'short_title' => $GLOBALS['Language']->getText('plugin_tracker_encryption', 'descriptor_name'),
                     'title'       => $GLOBALS['Language']->getText('plugin_tracker_encryption', 'descriptor_name'),
                     'description' => $GLOBALS['Language']->getText('plugin_tracker_encryption', 'descriptor_description'),
-                    'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-perms.png'),
                     );
     }
 
@@ -167,10 +166,9 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
     private function displayTrackerKeyForm($tracker_id)
     {
         $tracker = TrackerFactory::instance()->getTrackerById($tracker_id);
-        $title = '';
-        $breadcrumbs = array();
+        $title = $GLOBALS['Language']->getText('plugin_tracker_encryption', 'descriptor_name');
         $layout = new TrackerManager();
-        $tracker->displayAdminHeader($layout, 'Encryption', $title, $breadcrumbs);
+        $tracker->displayAdminHeader($layout, 'Encryption', $title);
         $csrf_token = new CSRFSynchronizerToken('/plugins/tracker_encryption/?tracker='.$tracker_id.'&func=admin-editencryptionkey');
         $renderer   = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/');
         $renderer->renderToPage(

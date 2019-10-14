@@ -73,7 +73,7 @@ class NotificationsAdminSettingsDisplayController implements DispatchableWithReq
             return;
         }
 
-        $tracker->displayAdminItemHeader($this->tracker_manager, 'editnotifications');
+        $tracker->displayAdminItemHeader($this->tracker_manager, 'editnotifications', $GLOBALS['Language']->getText('plugin_tracker_include_type', 'mail_notif'));
         $this->getNotificationsManager($this->user_manager, $tracker)->displayTrackerAdministratorSettings($request, $csrf_token);
         $tracker->displayFooter($this->tracker_manager);
     }

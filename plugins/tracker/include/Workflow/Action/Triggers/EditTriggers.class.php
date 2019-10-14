@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Action_Triggers
 {
 
@@ -55,7 +56,7 @@ class Tracker_Workflow_Action_Triggers_EditTriggers extends Tracker_Workflow_Act
 
     private function displayPane(Tracker_IDisplayTrackerLayout $layout)
     {
-        $this->displayHeader($layout);
+        $this->displayHeader($layout, $GLOBALS['Language']->getText('workflow_admin', 'title_define_triggers'));
 
         $presenter = new Tracker_Workflow_Action_Triggers_TriggersPresenter(
             $this->tracker->getId(),

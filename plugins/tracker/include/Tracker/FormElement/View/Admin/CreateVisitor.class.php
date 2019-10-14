@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,10 +62,10 @@ class Tracker_FormElement_View_Admin_CreateVisitor extends Tracker_FormElement_V
      */
     public function display(TrackerManager $tracker_manager, HTTPRequest $request)
     {
-        $hp               = Codendi_HTMLPurifier::instance();
-        $title            = 'Create a new '. $this->label;
-        $url              = TRACKER_BASE_URL.'/?tracker='. (int)$this->element->getTracker()->getId() .'&amp;func=admin-formElements&amp;create-formElement['.  $hp->purify($this->type, CODENDI_PURIFIER_CONVERT_HTML) .']=1';
-        $breadcrumbsLabel = $title;
-        echo $this->displayForm($tracker_manager, $request, $breadcrumbsLabel, $url, $title, $this->fetchForm());
+        $hp    = Codendi_HTMLPurifier::instance();
+        $title = 'Create a new ' . $this->label;
+        $url   = TRACKER_BASE_URL.'/?tracker='. (int)$this->element->getTracker()->getId() .'&amp;func=admin-formElements&amp;create-formElement['.  $hp->purify($this->type, CODENDI_PURIFIER_CONVERT_HTML) .']=1';
+
+        echo $this->displayForm($tracker_manager, $request, $url, $title, $this->fetchForm());
     }
 }

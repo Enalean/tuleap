@@ -40,9 +40,9 @@ abstract class Tracker_Workflow_Action
         $this->tracker = $tracker;
     }
 
-    protected function displayHeader(Tracker_IDisplayTrackerLayout $engine)
+    protected function displayHeader(Tracker_IDisplayTrackerLayout $engine, string $title)
     {
-        $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
+        $this->tracker->displayAdminItemHeader($engine, 'editworkflow', $title);
 
         echo '<div class="tabbable">';
         echo '<div class="tab-content">';

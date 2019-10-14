@@ -21,8 +21,12 @@
 
 class Tracker_CannedResponseManager
 {
+    /**
+     * @var Tracker
+     */
     protected $tracker;
-    public function __construct($tracker)
+
+    public function __construct(Tracker $tracker)
     {
         $this->tracker = $tracker;
     }
@@ -61,9 +65,11 @@ class Tracker_CannedResponseManager
     protected function displayAdminAllResponses(TrackerManager $tracker_manager, $request, $current_user)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        $this->tracker->displayAdminItemHeader($tracker_manager, 'editcanned');
+        $title = dgettext('tuleap-tracker', 'Canned responses');
 
-        echo '<h2 class="almost-tlp-title">'. dgettext('tuleap-tracker', 'Canned responses'). '</h2>';
+        $this->tracker->displayAdminItemHeader($tracker_manager, 'editcanned', $title);
+
+        echo '<h2 class="almost-tlp-title">'. $title . '</h2>';
 
         //Display existing responses
         $responses = Tracker_CannedResponseFactory::instance()->getCannedResponses($this->tracker);
@@ -126,16 +132,14 @@ class Tracker_CannedResponseManager
     {
         if ($response = Tracker_CannedResponseFactory::instance()->getCannedResponse($this->tracker, (int)$request->get('edit'))) {
             $hp = Codendi_HTMLPurifier::instance();
-            $this->tracker->displayAdminItemHeader($tracker_manager, 'editcanned', array(array(
-                'url'         => TRACKER_BASE_URL.'/?'. http_build_query(array(
-                                                        'tracker' => (int)$this->tracker->id,
-                                                        'func'    => 'admin-canned',
-                                                        'edit'    => (int)$response->id)),
-                'title'       => $response->title,
-                'description' => ''
-            )));
+            $title = $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'modify_cannedresponse');
+            $this->tracker->displayAdminItemHeader(
+                $tracker_manager,
+                'editcanned',
+                $title
+            );
             //Display creation form
-            echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_admin_index', 'modify_cannedresponse').'</h3>';
+            echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
             echo '<p>';
             echo $GLOBALS['Language']->getText('plugin_tracker_include_canned', 'save_time');
             echo '<p>';

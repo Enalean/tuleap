@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -256,7 +256,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         return $this->adminElement;
     }
 
-    protected function displayForm(TrackerManager $tracker_manager, HTTPRequest $request, $breadcrumbsLabel, $url, $title, $formContent)
+    protected function displayForm(TrackerManager $tracker_manager, HTTPRequest $request, $url, $title, $formContent)
     {
         $form  = '<form name="form1" method="POST" action="'. $url .'">';
         $form .= $formContent;
@@ -265,7 +265,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         if ($request->isAjax()) {
             $this->displayAjax($title, $form);
         } else {
-            $this->displayFullPage($tracker_manager, $breadcrumbsLabel, $url, $title, $form);
+            $this->displayFullPage($tracker_manager, $title, $form);
         }
     }
 
@@ -275,17 +275,11 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         echo $form;
     }
 
-    protected function displayFullPage(TrackerManager $tracker_manager, $breadcrumbsLabel, $url, $title, $form)
+    protected function displayFullPage(TrackerManager $tracker_manager, $title, $form)
     {
-        $breadcrumbs = array(
-            array(
-                'title' => $breadcrumbsLabel,
-                'url'   => $url,
-            ),
-        );
-        $this->element->getTracker()->displayAdminFormElementsHeader($tracker_manager, $title, $breadcrumbs);
+        $this->element->getTracker()->displayAdminFormElementsHeader($tracker_manager, $title);
         $purifier = Codendi_HTMLPurifier::instance();
-        echo '<h2>'. $purifier->purify($title) .'</h2>';
+        echo '<h2 class="almost-tlp-title">'. $purifier->purify($title) .'</h2>';
         echo $form;
         $this->element->getTracker()->displayFooter($tracker_manager);
     }
