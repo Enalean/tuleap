@@ -18,13 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\BurningParrotCompatiblePageEvent;
+use FastRoute\RouteCollector;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
@@ -32,6 +31,7 @@ use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\FirstConfigCreator;
+use Tuleap\TestManagement\LegacyRoutingController;
 use Tuleap\TestManagement\Nature\NatureCoveredByOverrider;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 use Tuleap\TestManagement\REST\ResourcesInjector;
@@ -40,7 +40,6 @@ use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\TestManagement\TrackerComesFromLegacyEngineException;
 use Tuleap\TestManagement\TrackerNotCreatedException;
-use Tuleap\TestManagement\UserIsNotAdministratorException;
 use Tuleap\TestManagement\XML\Exporter;
 use Tuleap\TestManagement\XML\XMLImport;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -62,7 +61,7 @@ use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
-class testmanagementPlugin extends PluginWithLegacyInternalRouting
+class testmanagementPlugin extends Plugin
 {
     public function __construct($id)
     {
@@ -75,8 +74,6 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
 
     public function getHooksAndCallbacks()
     {
-        $this->listenToCollectRouteEventWithDefaultController();
-
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::SERVICE_CLASSNAMES);
@@ -84,11 +81,10 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
         $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
-        $this->addHook(BurningParrotCompatiblePageEvent::NAME);
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(ProjectServiceBeforeActivation::NAME);
         $this->addHook(GlyphLocationsCollector::NAME);
+
+        $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -375,44 +371,15 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
         return $this->pluginInfo;
     }
 
-    public function burning_parrot_compatible_page(BurningParrotCompatiblePageEvent $event)
+    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event): void
     {
-        if ($this->currentRequestIsForPlugin()) {
-            $event->setIsInBurningParrotCompatiblePage();
-        }
+        $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
+            $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeViaLegacyRouter'));
+        });
     }
 
-    public function burning_parrot_get_stylesheets(array $params)
+    public function routeViaLegacyRouter(): LegacyRoutingController
     {
-        if ($this->currentRequestIsForPlugin()) {
-            $variant = $params['variant'];
-            $css_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/testmanagement/css/',
-                '/assets/testmanagement/css'
-            );
-            $params['stylesheets'][] = $css_assets->getFileURL('burningparrot-' . $variant->getName() . '.css');
-        }
-    }
-
-    public function burning_parrot_get_javascript_files(array $params)
-    {
-        if ($this->currentRequestIsForPlugin()) {
-            $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
-            $include_assets = new IncludeAssets($assets_path, '/assets');
-            $params['javascript_files'][] = $include_assets->getFileURL('ckeditor.js');
-
-            $test_management_include_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/testmanagement/js/',
-                '/assets/testmanagement/js'
-            );
-
-            $params['javascript_files'][] = $test_management_include_assets->getFileURL('testmanagement.js');
-        }
-    }
-
-    public function process() : void
-    {
-        $request              = HTTPRequest::instance();
         $config               = $this->getConfig();
         $tracker_factory      = TrackerFactory::instance();
         $project_manager      = ProjectManager::instance();
@@ -438,15 +405,21 @@ class testmanagementPlugin extends PluginWithLegacyInternalRouting
             new VisitRecorder(new RecentlyVisitedDao())
         );
 
-        try {
-            $router->route($request);
-        } catch (UserIsNotAdministratorException $e) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-testmanagement', 'Permission denied')
-            );
-            $router->renderIndex($request);
-        }
+        return new LegacyRoutingController(
+            $router,
+            new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/testmanagement/js',
+                '/assets/testmanagement/js'
+            ),
+            new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets',
+                '/assets'
+            ),
+            new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/testmanagement/css',
+                '/assets/testmanagement/css'
+            ),
+        );
     }
 
     private function getTrackerChecker() : TrackerChecker
