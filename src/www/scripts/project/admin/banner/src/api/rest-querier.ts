@@ -17,8 +17,23 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { del } from "tlp";
+import { del, put } from "tlp";
+
+const headers = {
+    "content-type": "application/json"
+};
 
 export async function deleteBannerForProject(project_id: number): Promise<void> {
     await del(`/api/projects/${project_id}/banner`);
+}
+
+export async function saveBannerForProject(project_id: number, new_message: string): Promise<void> {
+    const body = JSON.stringify({
+        message: new_message
+    });
+
+    await put(`/api/projects/${project_id}/banner`, {
+        headers,
+        body
+    });
 }

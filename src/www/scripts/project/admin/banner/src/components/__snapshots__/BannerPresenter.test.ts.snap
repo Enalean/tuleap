@@ -1,9 +1,230 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`BannerPresenter displays the raw banner 1`] = `
-<p
-  class="project-admin-banner-message"
->
-  &lt;b&gt;My banner content&lt;/b&gt;
-</p>
+exports[`BannerPresenter disables the whole form when on loading state 1`] = `
+<div>
+  <div
+    class="tlp-form-element tlp-form-element-disabled"
+  >
+    <label
+      class="tlp-label"
+      data-current-language="en_US"
+      data-msgid="Activate banner"
+      for="toggle"
+    >
+      Activate banner
+    </label>
+     
+    <div
+      class="tlp-switch"
+    >
+      <input
+        class="tlp-switch-checkbox"
+        id="toggle"
+        type="checkbox"
+      />
+       
+      <label
+        aria-hidden=""
+        class="tlp-switch-button"
+        for="toggle"
+      />
+    </div>
+  </div>
+   
+  <div>
+    <div
+      class="tlp-form-element tlp-form-element-disabled"
+    >
+      <label
+        class="tlp-label"
+        data-current-language="en_US"
+        data-msgid="Message"
+        for="description"
+      >
+        Message
+      </label>
+       
+      <textarea
+        class="tlp-textarea"
+        id="description"
+        name="description"
+        placeholder="Choose a banner message"
+        type="text"
+      />
+    </div>
+  </div>
+   
+  <div
+    class="tlp-pane-section-submit"
+  >
+    <button
+      class="tlp-button-primary"
+      disabled="disabled"
+      type="button"
+    >
+      <i
+        class="tlp-button-icon fa fa-fw fa-spin fa-circle fa-circle-o-notch"
+      />
+       
+      <i
+        class="tlp-button-icon fa fa-save"
+      />
+      
+             
+            
+      <span
+        data-current-language="en_US"
+        data-msgid="Save"
+      >
+        Save
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`BannerPresenter displays a default message and an unchecked switch if banner is not set 1`] = `
+<div>
+  <div
+    class="tlp-form-element"
+  >
+    <label
+      class="tlp-label"
+      data-current-language="en_US"
+      data-msgid="Activate banner"
+      for="toggle"
+    >
+      Activate banner
+    </label>
+     
+    <div
+      class="tlp-switch"
+    >
+      <input
+        class="tlp-switch-checkbox"
+        id="toggle"
+        type="checkbox"
+      />
+       
+      <label
+        aria-hidden=""
+        class="tlp-switch-button"
+        for="toggle"
+      />
+    </div>
+  </div>
+   
+  <div>
+    <p
+      data-current-language="en_US"
+      data-msgid="No banner defined"
+    >
+      No banner defined
+    </p>
+  </div>
+   
+  <div
+    class="tlp-pane-section-submit"
+  >
+    <button
+      class="tlp-button-primary"
+      type="button"
+    >
+      <!---->
+       
+      <i
+        class="tlp-button-icon fa fa-save"
+      />
+      
+             
+            
+      <span
+        data-current-language="en_US"
+        data-msgid="Save"
+      >
+        Save
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`BannerPresenter displays the banner and a checked switch if banner is set 1`] = `
+<div>
+  <div
+    class="tlp-form-element"
+  >
+    <label
+      class="tlp-label"
+      data-current-language="en_US"
+      data-msgid="Activate banner"
+      for="toggle"
+    >
+      Activate banner
+    </label>
+     
+    <div
+      class="tlp-switch"
+    >
+      <input
+        class="tlp-switch-checkbox"
+        id="toggle"
+        type="checkbox"
+      />
+       
+      <label
+        aria-hidden=""
+        class="tlp-switch-button"
+        for="toggle"
+      />
+    </div>
+  </div>
+   
+  <div>
+    <div
+      class="tlp-form-element"
+    >
+      <label
+        class="tlp-label"
+        data-current-language="en_US"
+        data-msgid="Message"
+        for="description"
+      >
+        Message
+      </label>
+       
+      <textarea
+        class="tlp-textarea"
+        id="description"
+        name="description"
+        placeholder="Choose a banner message"
+        type="text"
+      />
+    </div>
+  </div>
+   
+  <div
+    class="tlp-pane-section-submit"
+  >
+    <button
+      class="tlp-button-primary"
+      type="button"
+    >
+      <!---->
+       
+      <i
+        class="tlp-button-icon fa fa-save"
+      />
+      
+             
+            
+      <span
+        data-current-language="en_US"
+        data-msgid="Save"
+      >
+        Save
+      </span>
+    </button>
+  </div>
+</div>
 `;

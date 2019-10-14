@@ -23,12 +23,13 @@
         <div v-if="shouldDisplayErrorBanner" class="tlp-alert-danger" v-translate="{ error_message }">
             An error occurred: %{ error_message }
         </div>
-        <div v-if="message === ''" class="project-admin-banner-message">
-            <p v-translate>No banner has been defined</p>
-        </div>
-        <div v-else>
-            <banner-presenter v-bind:message="message"/>
-            <banner-deleter v-on:delete-banner="deleteBanner()"/>
+        <div>
+            <banner-presenter
+                v-bind:message="message"
+                v-bind:loading="banner_presenter_is_loading"
+                v-on:delete-banner="deleteBanner"
+                v-on:save-banner="saveBanner(...arguments)"
+            />
         </div>
     </div>
 </template>
@@ -36,13 +37,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import BannerDeleter from "./BannerDeleter.vue";
 import BannerPresenter from "./BannerPresenter.vue";
-import { deleteBannerForProject } from "../api/rest-querier";
+import { deleteBannerForProject, saveBannerForProject } from "../api/rest-querier";
+import { BannerState } from "../type";
 
 @Component({
     components: {
-        BannerDeleter,
         BannerPresenter
     }
 })
@@ -54,14 +54,38 @@ export default class App extends Vue {
     readonly project_id!: number;
 
     error_message: string | null = null;
+    banner_presenter_is_loading = false;
 
-    public deleteBanner(): void {
+    public saveBanner(bannerState: BannerState): void {
+        this.banner_presenter_is_loading = true;
+
+        if (!bannerState.activated) {
+            this.deleteBanner();
+            return;
+        }
+
+        this.saveBannerMessage(bannerState.message);
+    }
+
+    private saveBannerMessage(message: string): void {
+        saveBannerForProject(this.project_id, message)
+            .then(() => {
+                location.reload();
+            })
+            .catch(error => {
+                this.error_message = error.message;
+                this.banner_presenter_is_loading = false;
+            });
+    }
+
+    private deleteBanner(): void {
         deleteBannerForProject(this.project_id)
             .then(() => {
                 location.reload();
             })
             .catch(error => {
                 this.error_message = error.message;
+                this.banner_presenter_is_loading = false;
             });
     }
 
