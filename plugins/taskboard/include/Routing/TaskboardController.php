@@ -126,7 +126,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
             $milestone->getArtifactTitle() . ' - ' . dgettext('tuleap-taskboard', "Taskboard"),
             $this->bread_crumbs_builder->getBreadcrumbs($user, $project, $milestone),
             [],
-            []
+            ['main_classes' => ['fluid-main']]
         );
         $this->renderer->renderToPage('taskboard', $this->presenter_builder->getPresenter($milestone, $user, $is_ie_11));
         $service->displayFooter();
