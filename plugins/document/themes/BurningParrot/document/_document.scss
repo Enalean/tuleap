@@ -43,3 +43,7 @@
         flex: 0 0 auto;
     }
 }
+
+.has-visible-project-banner .document-app {
+    height: calc(100vh - #{$navbar-height} - #{$project-banner-base-height});
+}
