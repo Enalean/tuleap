@@ -2,7 +2,7 @@
 
 @mixin definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info) {
     .widget_content #tracker_report_table > thead > tr > th {
-        border-bottom-color: #B2B2B2;
+        border-bottom-color: #b2b2b2;
     }
 
     .tracker-report-query {
@@ -25,9 +25,9 @@
 
     #tracker_artifact_followup_comments {
         position: absolute;
-        width: 100%;
-        box-sizing: initial;
         -moz-box-sizing: initial;
+        box-sizing: initial;
+        width: 100%;
     }
 
     .table.tracker_report_table {
@@ -55,8 +55,8 @@
             > table {
                 > thead > tr > th,
                 > thead:first-child > tr:first-child > th {
-                    background: $main-background;
                     border-left-color: darken($main-background, 5%);
+                    background: $main-background;
                 }
 
                 > tbody > tr > td {
@@ -71,13 +71,13 @@
     }
 
     .card-details .avatar {
-        width: 25px;
-        height: 25px;
         display: inline-block;
-        border: none;
         position: relative;
         top: -2px;
         left: 1px;
+        width: 25px;
+        height: 25px;
+        border: none;
     }
 
     .card-details .avatar > img {
@@ -125,7 +125,15 @@
     }
 
     .tracker-admin-permissions-per-field > tbody > tr:first-child:hover > td:first-child {
-        background: #fff;
+        background: #ffffff;
+    }
+
+    .tracker-administration-content {
+        margin: 20px;
+    }
+
+    #tracker-settings {
+        padding: 0 0 150px;
     }
 }
 
@@ -156,5 +164,19 @@ body {
     &.FlamingParrot_Red {
         @import 'variables-red';
         @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
+    }
+
+    &.tracker-administration {
+        background: $main-background;
+
+        .main {
+            #feedback > ul {
+                margin: 0 20px 20px;
+            }
+
+            .content {
+                padding: 0;
+            }
+        }
     }
 }

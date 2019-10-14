@@ -21,7 +21,6 @@
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsSection;
@@ -29,6 +28,7 @@ use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Admin\HeaderPresenter;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
@@ -141,6 +141,11 @@ class Tracker implements Tracker_Dispatchable_Interface
     public $webhooks = [];
 
     private $is_project_allowed_to_use_nature;
+
+    /**
+     * @var TemplateRenderer
+     */
+    private $renderer;
 
     public function __construct(
         $id,
@@ -818,7 +823,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 if ($this->userIsAdmin($current_user)) {
                     $this->displayAdminItemHeaderWithoutTitle($layout, 'hierarchy');
                     $this->getHierarchyController($request)->edit();
-                    $this->displayFooter($layout);
+                    $this->displayAdminFooter($layout);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
@@ -1418,6 +1423,14 @@ class Tracker implements Tracker_Dispatchable_Interface
         }
     }
 
+    public function displayAdminFooter(Tracker_IDisplayTrackerLayout $layout)
+    {
+        if ($project = ProjectManager::instance()->getProject($this->group_id)) {
+            echo '</div>';
+            $layout->displayFooter($project);
+        }
+    }
+
     protected function getAdminItems()
     {
         $items = array(
@@ -1512,35 +1525,66 @@ class Tracker implements Tracker_Dispatchable_Interface
         return $items;
     }
 
-    public function displayAdminHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs, array $params = array())
-    {
-        if ($project = ProjectManager::instance()->getProject($this->group_id)) {
-            $hp = Codendi_HTMLPurifier::instance();
-            $title = ($title ? $title .' - ' : ''). $GLOBALS['Language']->getText('plugin_tracker_include_type', 'administration');
-            $toolbar = $this->getDefaultToolbar();
-            if ($this->userIsAdmin()) {
-                $breadcrumbs = array_merge(
-                    array(
-                        array(
-                                'title' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'administration'),
-                                'url'   => $this->getAdministrationUrl(),
-                        ),
-                    ),
-                    $breadcrumbs
-                );
-                $toolbar = $this->getAdminItems();
-            }
-            $this->displayHeader($layout, $title, $breadcrumbs, $toolbar, $params);
-        }
+    public function displayAdminHeader(
+        Tracker_IDisplayTrackerLayout $layout,
+        string $current_item,
+        $title,
+        $breadcrumbs,
+        array $params = array()
+    ) {
+        $this->buildAndDisplayAdministrationHeader($layout, $title, $breadcrumbs, $params);
+
+        $items = [];
+        $event_parameters = array("items" => &$items, "tracker_id" => $this->id);
+        EventManager::instance()->processEvent(TRACKER_EVENT_FETCH_ADMIN_BUTTONS, $event_parameters);
+
+        $presenter = new HeaderPresenter($this, $current_item, array_values($items));
+        $this->renderer->renderToPage('admin-header', $presenter);
     }
+
+    public function displayAdminHeaderBurningParrot(
+        Tracker_IDisplayTrackerLayout $layout,
+        string $current_item,
+        $title,
+        $breadcrumbs,
+        array $params = array()
+    ) {
+        $this->buildAndDisplayAdministrationHeader($layout, $title, $breadcrumbs, $params);
+
+        $items = [];
+        $event_parameters = array("items" => &$items, "tracker_id" => $this->id);
+        EventManager::instance()->processEvent(TRACKER_EVENT_FETCH_ADMIN_BUTTONS, $event_parameters);
+
+        $presenter = new HeaderPresenter($this, $current_item, array_values($items));
+        $this->renderer->renderToPage('admin-header-bp', $presenter);
+    }
+
+    private function buildAndDisplayAdministrationHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs, array $params): void
+    {
+        $title = ($title ? $title . ' - ' : '') . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'administration');
+        if ($this->userIsAdmin()) {
+            $breadcrumbs = array_merge(
+                array(
+                    array(
+                        'title' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'administration'),
+                        'url' => $this->getAdministrationUrl(),
+                    ),
+                ),
+                $breadcrumbs
+            );
+        }
+
+        $params['body_class'][] = 'tracker-administration';
+        $this->displayHeader($layout, $title, $breadcrumbs, [], $params);
+    }
+
     public function displayAdmin(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
-        $hp = Codendi_HTMLPurifier::instance();
         $title = '';
         $breadcrumbs = array();
-        $this->displayAdminHeader($layout, $title, $breadcrumbs);
+        $this->displayAdminHeader($layout, '', $title, $breadcrumbs);
         echo $this->fetchAdminMenu($this->getAdminItems());
-        $this->displayFooter($layout);
+        $this->displayAdminFooter($layout);
     }
 
     /**
@@ -1599,8 +1643,19 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->displayAdminItemHeaderWithoutTitle($layout, $item, $title, $params);
 
         if ($title !== null) {
-            echo '<h1>'. $title .'</h1>';
+            echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
         }
+    }
+
+    public function displayAdminItemHeaderBurningParrot(
+        Tracker_IDisplayTrackerLayout $layout,
+        string $item,
+        array $params = array()
+    ) {
+        $items        = $this->getAdminItems();
+        $header_title = $items[$item]['title'];
+
+        $this->displayAdminHeaderBurningParrot($layout, $item, $header_title, [], $params);
     }
 
     private function displayAdminItemHeaderWithoutTitle(
@@ -1611,7 +1666,8 @@ class Tracker implements Tracker_Dispatchable_Interface
     ) {
         $items = $this->getAdminItems();
         $title = $title ? $title : $items[$item]['title'];
-        $this->displayAdminHeader($layout, $title, [], $params);
+
+        $this->displayAdminHeader($layout, $item, $title, [], $params);
     }
 
     /**
@@ -1646,12 +1702,12 @@ class Tracker implements Tracker_Dispatchable_Interface
             )
         );
 
-        $this->displayFooter($layout);
+        $this->displayAdminFooter($layout);
     }
 
     public function displayAdminPermsHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs)
     {
-        $this->displayAdminHeader($layout, $title, []);
+        $this->displayAdminHeader($layout, 'editperms', $title, []);
     }
 
     public function getPermsItems()
@@ -1676,9 +1732,9 @@ class Tracker implements Tracker_Dispatchable_Interface
         $title = $items['editperms']['title'];
         $breadcrumbs = array();
         $this->displayAdminPermsHeader($layout, $title, $breadcrumbs);
-        echo '<h2>'. $title .'</h2>';
+        echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
         echo $this->fetchAdminMenu($this->getPermsItems());
-        $this->displayFooter($layout);
+        $this->displayAdminFooter($layout);
     }
 
     public function displayAdminFormElementsHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs)
@@ -1699,18 +1755,17 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('TrackerAdminFields.js'));
 
-        $this->displayAdminHeader($layout, $title, $breadcrumbs);
+        $this->displayAdminHeader($layout, 'editformElements', $title, $breadcrumbs);
     }
 
     public function displayAdminFormElements(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
-        $hp = Codendi_HTMLPurifier::instance();
         $this->displayAdminFormElementsWarnings();
         $items = $this->getAdminItems();
         $title = $items['editformElements']['title'];
         $this->displayAdminFormElementsHeader($layout, $title, array());
 
-        echo '<h2>'. $title .'</h2>';
+        echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
         echo '<form name="form1" method="POST" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&amp;func=admin-formElements">';
 
         echo '  <div class="container-fluid">
@@ -1724,7 +1779,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                   </div>
                 </div>
               </form>';
-        $this->displayFooter($layout);
+        $this->displayAdminFooter($layout);
     }
 
     private function fetchAdminPalette()
@@ -1749,7 +1804,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     public function displayAdminCSVImportHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs)
     {
-        $this->displayAdminHeader($layout, $title, []);
+        $this->displayAdminHeader($layout, 'csvimport', $title, []);
     }
 
     public function displayAdminCSVImport(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
@@ -1759,7 +1814,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $title = $items['csvimport']['title'];
         $this->displayAdminCSVImportHeader($layout, $title, array());
 
-        echo '<h2>'. $title . ' ' . help_button('tracker.html#tracker-artifact-import') . '</h2>';
+        echo '<h2 class="almost-tlp-title">'. $title . ' ' . help_button('tracker.html#tracker-artifact-import') . '</h2>';
         echo '<form name="form1" method="POST" enctype="multipart/form-data" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&amp;func=admin-csvimport">';
         echo '<input type="file" name="csv_filename" size="50">';
         echo '<br>';
@@ -1773,13 +1828,14 @@ class Tracker implements Tracker_Dispatchable_Interface
         echo '<input type="hidden" name="action" value="import_preview">';
         echo '<input type="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_import', 'submit_info').'">';
         echo '</form>';
-        $this->displayFooter($layout);
+        $this->displayAdminFooter($layout);
     }
 
     public function displayAdminClean(Tracker_IDisplayTrackerLayout $layout)
     {
         $token = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?tracker='. (int)$this->id.'&amp;func=admin-delete-artifact-confirm');
         $this->displayAdminItemHeader($layout, 'clean');
+        echo '<h2 class="almost-tlp-title">'.dgettext('tuleap-tracker', 'Delete artifacts').'</h2>';
         echo '<p>'.$GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_info').'</p>';
         echo '<form name="delete_artifact" method="post" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id.'&amp;func=admin-delete-artifact-confirm">';
         echo $token->fetchHTMLInput();
@@ -1787,7 +1843,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         echo '<br>';
         echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'">';
         echo '</form>';
-        $this->displayFooter($layout);
+        $this->displayAdminFooter($layout);
     }
 
     public function displayAdminConfirmDelete(Tracker_IDisplayTrackerLayout $layout, Tracker_Artifact $artifact)
@@ -1808,7 +1864,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         echo '<input type="hidden" name="id" value="'.$artifact->getId().'" />';
         echo '</form>';
         echo '</div>';
-        $this->displayFooter($layout);
+        $this->displayAdminFooter($layout);
     }
 
     public function displayMasschangeForm(Tracker_IDisplayTrackerLayout $layout, $masschange_aids)
@@ -2636,7 +2692,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                         $title = $items['csvimport']['title'];
                         $this->displayAdminCSVImportHeader($layout, $title, array());
 
-                        echo '<h2>'. $title .'</h2>';
+                        echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
                         //body
                         if (count($lines) > 1) {
                             $html_table = '';
@@ -2714,8 +2770,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                             }
                         }
 
-                        //footer
-                        $this->displayFooter($layout);
+                        $this->displayAdminFooter($layout);
                         exit();
                     } else {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'no_data'));

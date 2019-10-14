@@ -3116,6 +3116,10 @@ td.tracker-global-notifications-checkbox-cell {
     display: none;
 }
 
+#tracker-unsubcriber-add {
+    margin: 0 0 20px;
+}
+
 #tracker-unsubscriber-select {
     width: 100%;
 }
@@ -3204,10 +3208,6 @@ td.tracker-unsubscriber-actions {
 
 .tracker-colorpicker {
     display: inline-block;
-}
-
-.tracker-mail-notification-title {
-    margin: 20px 0 0;
 }
 
 .notifications-level-force-usage {

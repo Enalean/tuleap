@@ -414,11 +414,11 @@ class Tracker_RulesManager
         }
     }
 
-
-    function displayChooseSourceAndTarget($engine, $request, $current_user, $source_field_id)
+    private function displayChooseSourceAndTarget($engine, $request, $current_user, $source_field_id)
     {
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($engine, 'dependencies');
+        echo '<h2 class="almost-tlp-title">' . $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_dependencies') . '</h2>';
         echo '<p>'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies', 'inline_help') .'</p>';
 
         echo '<form action="'.TRACKER_BASE_URL.'/?" method="GET">';
@@ -503,7 +503,7 @@ class Tracker_RulesManager
         $source_field = $this->form_element_factory->getFieldById($source_field_id);
         $target_field = $this->form_element_factory->getFieldById($target_field_id);
         //Display creation form
-        echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_field_dependencies', 'dependencies_matrix_title').'</h3>';
+        echo '<h2 class="almost-tlp-title">'.$GLOBALS['Language']->getText('plugin_tracker_field_dependencies', 'dependencies_matrix_title').'</h2>';
         echo '<p>'. $GLOBALS['Language']->getText(
             'plugin_tracker_field_dependencies',
             'dependencies_matrix_help',

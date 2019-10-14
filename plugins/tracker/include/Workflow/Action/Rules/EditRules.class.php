@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  */
 
 require_once __DIR__ . '/../../../../../../src/www/include/html.php';
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Rules
 {
 
@@ -236,7 +238,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     {
         $this->displayHeader($layout);
         echo '<div class="workflow_rules">';
-        echo '<h3>'. $GLOBALS['Language']->getText('workflow_admin', 'title_define_global_date_rules') .'</h3>';
+        echo '<h2 class="almost-tlp-title">'. $GLOBALS['Language']->getText('workflow_admin', 'title_define_global_date_rules') .'</h2>';
         echo '<p class="help">'. $GLOBALS['Language']->getText('workflow_admin', 'hint_date_rules_definition') .'</p>';
         echo '<form method="post" action="'. $this->url_query .'">';
         // CSRF Protection

@@ -25,6 +25,7 @@ use Tuleap\TrackerEncryption\Dao\ValueDao;
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
+//phpcs:ignoreFile
 class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
 {
     public function __construct($id)
@@ -169,7 +170,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         $title = '';
         $breadcrumbs = array();
         $layout = new TrackerManager();
-        $tracker->displayAdminHeader($layout, $title, $breadcrumbs);
+        $tracker->displayAdminHeader($layout, 'Encryption', $title, $breadcrumbs);
         $csrf_token = new CSRFSynchronizerToken('/plugins/tracker_encryption/?tracker='.$tracker_id.'&func=admin-editencryptionkey');
         $renderer   = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/');
         $renderer->renderToPage(

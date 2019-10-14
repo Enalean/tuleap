@@ -461,7 +461,7 @@ class Tracker_DateReminderRenderer
      */
     public function displayDateReminders(HTTPRequest $request, CSRFSynchronizerToken $csrf_token)
     {
-        $output = '<h2>'.$GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_title').'</h2>';
+        $output = '<h2 class="almost-tlp-title">'.$GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_title').'</h2>';
         $output .= '<fieldset>';
         if ($request->get('action') == 'delete_reminder') {
             $output .= $this->displayConfirmDelete($request->get('reminder_id'), $csrf_token);

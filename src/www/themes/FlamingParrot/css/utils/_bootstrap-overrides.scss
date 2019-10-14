@@ -234,6 +234,11 @@ legend {
         border-left: 0;
         background-color: transparent;
         color: $navbar-color;
+
+        > .caret {
+            border-top-color: $navbar-color;
+            border-bottom-color: $navbar-color;
+        }
     }
 
     li.active {
@@ -250,7 +255,7 @@ legend {
     .dropdown-toggle {
         border-color: transparent;
         background-color: transparent;
-        color: $navbar-color;
+        color: #747474;
     }
 
     .dropdown-menu {
@@ -259,8 +264,8 @@ legend {
     }
 
     & > li > .dropdown-toggle > .caret {
-        border-top-color: $navbar-color;
-        border-bottom-color: $navbar-color;
+        border-top-color: #747474;
+        border-bottom-color: #747474;
     }
 
 }
@@ -302,6 +307,15 @@ legend {
                 border-color: transparent;
                 background: #f3f3f3;
                 color: $navbar-color;
+            }
+
+            &.text-error {
+                color: #b94a48;
+
+                &:hover,
+                &:focus {
+                    color: #953b39;
+                }
             }
         }
     }

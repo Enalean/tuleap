@@ -1,15 +1,8 @@
-<div class="tlp-framed-vertically">
-    <h1 class="tlp-framed-horizontally">{{# dgettext }} tuleap-tracker | Workflow {{/ dgettext }}</h1>
-    <nav class="tlp-tabs">
-        {{# tabs_menu }}
-            <a href="{{ url }}" class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active}}">{{ title }}</a>
-        {{/ tabs_menu }}
-    </nav>
-    <div class="tlp-framed-horizontally">
-        <div
-            id="tracker-workflow-transitions"
-            data-tracker-id="{{ tracker_id }}"
-        >
-        </div>
+<h2 class="tlp-framed-horizontally">{{# dgettext }} tuleap-tracker | Transition rules {{/ dgettext }}</h2>
+<div class="tlp-framed-horizontally">
+    <div
+        id="tracker-workflow-transitions"
+        data-tracker-id="{{ tracker_id }}"
+    >
     </div>
 </div>

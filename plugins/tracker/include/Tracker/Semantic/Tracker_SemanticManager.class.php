@@ -51,6 +51,7 @@ class Tracker_SemanticManager
         $this->tracker->displayWarningArtifactByEmailSemantic();
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editsemantic');
 
+        echo '<h2 class="almost-tlp-title">' .$GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_semantic'). '</h2>';
         echo '<p>';
         echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'semantic_intro');
         echo '</p>';

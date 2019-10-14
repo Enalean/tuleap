@@ -1,0 +1,130 @@
+<h1 class="almost-tlp-title administration-title">{{# dgettext }}tuleap-tracker | %s administration | {{ tracker_name }}{{/ dgettext }}</h1>
+<ul class="nav nav-tabs">
+    <li class="dropdown {{# is_fields_tab_active }}active{{/ is_fields_tab_active }}">
+        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-formElements" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+            {{# dgettext }}tuleap-tracker | Fields{{/ dgettext }}
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-formElements">
+                    {{# dgettext }}tuleap-tracker | Manage fields{{/ dgettext }}
+                </a>
+            </li>
+            <li>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-dependencies">
+                    {{# dgettext }}tuleap-tracker | Field dependencies{{/ dgettext }}
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li {{# is_semantics_tab_active }}class="active"{{/ is_semantics_tab_active }}>
+        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-semantic">
+            {{# dgettext }}tuleap-tracker | Semantics{{/ dgettext }}
+        </a>
+    </li>
+    <li class="dropdown {{# is_permissions_tab_active }}active{{/ is_permissions_tab_active }}">
+        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-perms-tracker" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+            {{# dgettext }}tuleap-tracker | Permissions{{/ dgettext }}
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-perms-tracker">
+                    {{# dgettext }}tuleap-tracker | Tracker permissions{{/ dgettext }}
+                </a>
+            </li>
+            <li>
+                <a href="/plugins/tracker/permissions/fields-by-field/{{ tracker_id }}">
+                    {{# dgettext }}tuleap-tracker | Fields permissions{{/ dgettext }}
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="dropdown {{# is_workflow_tab_active }}active{{/ is_workflow_tab_active }}">
+        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-workflow" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+            {{# dgettext }}tuleap-tracker | Workflow{{/ dgettext }}
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-workflow">
+                    {{# dgettext }}tuleap-tracker | Global rules{{/ dgettext }}
+                </a>
+            </li>
+            <li>
+                <a href="/plugins/tracker/workflow/{{ tracker_id }}/transitions">
+                    {{# dgettext }}tuleap-tracker | Transition rules{{/ dgettext }}
+                </a>
+            </li>
+            <li>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-workflow-triggers">
+                    {{# dgettext }}tuleap-tracker | Triggers{{/ dgettext }}
+                </a>
+            </li>
+            <li>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-webhooks">
+                    {{# dgettext }}tuleap-tracker | Webhooks{{/ dgettext }}
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li {{# is_notification_tab_active }}class="active"{{/ is_notification_tab_active }}>
+        <a href="/plugins/tracker/notifications/{{ tracker_id }}/">
+            {{# dgettext }}tuleap-tracker | Notifications{{/ dgettext }}
+        </a>
+    </li>
+    <li class="dropdown {{# is_other_tab_active }}active{{/ is_other_tab_active }}">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{{# dgettext }}tuleap-tracker | Others{{/ dgettext }}">
+            <i class="fa fa-bars"></i>
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-editoptions">
+                    {{# dgettext }}tuleap-tracker | General settings{{/ dgettext }}
+                </a>
+            </li>
+            <li>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-hierarchy">
+                    {{# dgettext }}tuleap-tracker | Tracker hierarchy{{/ dgettext }}
+                </a>
+            </li>
+            <li>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-canned">
+                    {{# dgettext }}tuleap-tracker | Canned responses{{/ dgettext }}
+                </a>
+            </li>
+            {{# additional_items }}
+            <li>
+                <a href="{{ url }}">
+                    {{ title }}
+                </a>
+            </li>
+            {{/ additional_items }}
+
+            <li class="almost-tlp-menu-title">
+                <span>{{# dgettext }}tuleap-tracker | Import / Export{{/ dgettext }}</span>
+            </li>
+            <li>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-csvimport">
+                    {{# dgettext }}tuleap-tracker | CSV import{{/ dgettext }}
+                </a>
+            </li>
+            <li>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-export">
+                    {{# dgettext }}tuleap-tracker | Structure XML export{{/ dgettext }}
+                </a>
+            </li>
+
+            <li class="divider"></li>
+
+            <li>
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-clean" class="text-error">
+                    {{# dgettext }}tuleap-tracker | Delete artifacts {{/ dgettext }}
+                </a>
+            </li>
+        </ul>
+    </li>
+</ul>
+<div class="tracker-administration-content">
