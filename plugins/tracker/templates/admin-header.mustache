@@ -1,22 +1,9 @@
 <h1 class="almost-tlp-title administration-title">{{# dgettext }}tuleap-tracker | %s administration | {{ tracker_name }}{{/ dgettext }}</h1>
 <ul class="nav nav-tabs">
-    <li class="dropdown {{# is_fields_tab_active }}active{{/ is_fields_tab_active }}">
-        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-formElements" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+    <li {{# is_fields_tab_active }}class="active"{{/ is_fields_tab_active }}>
+        <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-formElements">
             {{# dgettext }}tuleap-tracker | Fields{{/ dgettext }}
-            <b class="caret"></b>
         </a>
-        <ul class="dropdown-menu">
-            <li>
-                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-formElements">
-                    {{# dgettext }}tuleap-tracker | Manage fields{{/ dgettext }}
-                </a>
-            </li>
-            <li>
-                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-dependencies">
-                    {{# dgettext }}tuleap-tracker | Field dependencies{{/ dgettext }}
-                </a>
-            </li>
-        </ul>
     </li>
     <li {{# is_semantics_tab_active }}class="active"{{/ is_semantics_tab_active }}>
         <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-semantic">
@@ -48,13 +35,18 @@
         </a>
         <ul class="dropdown-menu">
             <li>
+                <a href="/plugins/tracker/workflow/{{ tracker_id }}/transitions">
+                    {{# dgettext }}tuleap-tracker | Transition rules{{/ dgettext }}
+                </a>
+            </li>
+            <li>
                 <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-workflow">
                     {{# dgettext }}tuleap-tracker | Global rules{{/ dgettext }}
                 </a>
             </li>
             <li>
-                <a href="/plugins/tracker/workflow/{{ tracker_id }}/transitions">
-                    {{# dgettext }}tuleap-tracker | Transition rules{{/ dgettext }}
+                <a href="/plugins/tracker/?tracker={{ tracker_id }}&func=admin-dependencies">
+                {{# dgettext }}tuleap-tracker | Field dependencies{{/ dgettext }}
                 </a>
             </li>
             <li>

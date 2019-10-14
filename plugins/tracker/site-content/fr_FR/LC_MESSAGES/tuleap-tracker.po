@@ -455,9 +455,6 @@ msgstr "Configuration des e-mail"
 msgid "Manage Fields Permissions"
 msgstr "Gérer les permissions des champs"
 
-msgid "Manage fields"
-msgstr "Gérer les champs"
-
 msgid ""
 "Mandatory attribute field_id not found in action with type \"set_field_value"
 "\"."
