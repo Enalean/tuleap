@@ -411,6 +411,10 @@ class UserResource extends AuthenticatedResource
             throw new RestException(403, 'You can only set your own preferences');
         }
 
+        if ($this->user_manager->getCurrentUser()->isAnonymous()) {
+            throw new RestException(404, 'User not found');
+        }
+
         if (! $this->setUserPreference($id, $preference->key, $preference->value)) {
             throw new RestException(500, 'Unable to set the user preference');
         }
