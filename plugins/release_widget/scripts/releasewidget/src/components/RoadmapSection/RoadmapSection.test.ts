@@ -20,9 +20,8 @@
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import RoadmapSection from "./RoadmapSection.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
-import Vue from "vue";
 import { StoreOptions } from "../../type";
-import { initVueGettext } from "../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
 
 const project_id = 102;
 async function getPersonalWidgetInstance(
@@ -30,11 +29,9 @@ async function getPersonalWidgetInstance(
 ): Promise<Wrapper<RoadmapSection>> {
     const store = createStoreMock(store_options);
     const component_options = {
-        mocks: { $store: store }
+        mocks: { $store: store },
+        localVue: await createReleaseWidgetLocalVue()
     };
-    await initVueGettext(Vue, () => {
-        throw new Error("Fallback to default");
-    });
 
     return shallowMount(RoadmapSection, component_options);
 }

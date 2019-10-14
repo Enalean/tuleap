@@ -17,12 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseHeaderRemainingDays from "./ReleaseHeaderRemainingDays.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import { MilestoneData, StoreOptions } from "../../../type";
-import { initVueGettext } from "../../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
 let releaseData: MilestoneData;
 let component_options: ShallowMountOptions<ReleaseHeaderRemainingDays>;
@@ -37,10 +36,7 @@ describe("ReleaseHeaderRemainingDays", () => {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
-
-        await initVueGettext(Vue, () => {
-            throw new Error("Fallback to default");
-        });
+        component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseHeaderRemainingDays, component_options);
     }

@@ -20,10 +20,8 @@
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseDescription from "./ReleaseDescription.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
-import Vue from "vue";
-import VueDOMPurifyHTML from "vue-dompurify-html";
 import { MilestoneData, StoreOptions } from "../../../type";
-import { initVueGettext } from "../../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
 let releaseData: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const component_options: ShallowMountOptions<ReleaseDescription> = {};
@@ -39,11 +37,7 @@ describe("ReleaseDescription", () => {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
-
-        await initVueGettext(Vue, () => {
-            throw new Error("Fallback to default");
-        });
-        Vue.use(VueDOMPurifyHTML);
+        component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseDescription, component_options);
     }

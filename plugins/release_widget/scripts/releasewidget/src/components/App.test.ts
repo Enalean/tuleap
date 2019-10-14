@@ -20,9 +20,8 @@
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import App from "./App.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
-import Vue from "vue";
 import { StoreOptions } from "../type";
-import { initVueGettext } from "../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import { createReleaseWidgetLocalVue } from "../helpers/local-vue-for-test";
 
 const project_id = 102;
 async function getPersonalWidgetInstance(store_options: StoreOptions): Promise<Wrapper<App>> {
@@ -31,12 +30,9 @@ async function getPersonalWidgetInstance(store_options: StoreOptions): Promise<W
         propsData: {
             project_id
         },
-        mocks: { $store: store }
+        mocks: { $store: store },
+        localVue: await createReleaseWidgetLocalVue()
     };
-
-    await initVueGettext(Vue, () => {
-        throw new Error("Fallback to default");
-    });
 
     return shallowMount(App, component_options);
 }
