@@ -24,6 +24,14 @@
     padding: 0 $tlp-spacing;
 }
 
+.taskboard-button-bar-right {
+    display: flex;
+}
+
 .taskboard-button-bar-milestone-title {
     font-size: 26px;
+}
+
+.taskboard-open-closed-switcher {
+    margin: 0 $tlp-half-spacing 0 0;
 }

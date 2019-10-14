@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="taskboard-card" v-bind:class="additional_classnames">
+    <div class="taskboard-card" v-bind:class="additional_classnames" v-if="card.is_open || are_closed_items_displayed">
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card"/>
             <div class="taskboard-card-info">
@@ -34,9 +34,13 @@ import { Component, Mixins } from "vue-property-decorator";
 import CardXrefLabel from "./CardXrefLabel.vue";
 import CardAssignees from "./CardAssignees.vue";
 import CardMixin from "./card-mixin";
+import { State } from "vuex-class";
 
 @Component({
     components: { CardXrefLabel, CardAssignees }
 })
-export default class ChildCard extends Mixins(CardMixin) {}
+export default class ChildCard extends Mixins(CardMixin) {
+    @State
+    readonly are_closed_items_displayed!: boolean;
+}
 </script>

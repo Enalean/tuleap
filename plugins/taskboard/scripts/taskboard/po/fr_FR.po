@@ -27,6 +27,9 @@ msgstr "Étendre"
 msgid "Hello,"
 msgstr "Bonjour,"
 
+msgid "Hide closed items"
+msgstr "Cacher les éléments clos"
+
 msgid "I understand this is under construction"
 msgstr "Je comprends que c'est en cours de construction"
 
@@ -112,6 +115,9 @@ msgstr "Ce tableau des tâches n'est pas prêt à être utilisé"
 
 msgid "Toggle fullscreen mode"
 msgstr "Basculer le mode plein écran"
+
+msgid "View closed items"
+msgstr "Afficher les éléments clos"
 
 msgid "You have to configure the columns mapping"
 msgstr "Vous devez configurer les colonnes"

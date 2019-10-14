@@ -68,6 +68,7 @@ interface RootState {
     columns: Array<ColumnDefinition>;
     milestone_id: number;
     milestone_title: string;
+    are_closed_items_displayed: boolean;
 }
 
 interface User {

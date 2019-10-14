@@ -23,6 +23,7 @@
             <span class="taskboard-button-bar-milestone-title" v-if="is_taskboard_in_fullscreen_mode">{{ milestone_title }}</span>
         </div>
         <div class="taskboard-button-bar-right">
+            <open-closed-switcher/>
             <switch-to-fullscreen/>
         </div>
     </div>
@@ -33,11 +34,12 @@ import { namespace } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { State } from "vuex-class";
 import SwitchToFullscreen from "./SwitchToFullscreen.vue";
+import OpenClosedSwitcher from "./OpenClosedSwitcher.vue";
 
 const fullscreen = namespace("fullscreen");
 
 @Component({
-    components: { SwitchToFullscreen }
+    components: { SwitchToFullscreen, OpenClosedSwitcher }
 })
 export default class TaskboardButtonBar extends Vue {
     @State

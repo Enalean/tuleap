@@ -35,14 +35,16 @@ describe("TaskBoardBody", () => {
                                 {
                                     card: {
                                         id: 43,
-                                        has_children: false
+                                        has_children: false,
+                                        is_open: true
                                     },
                                     is_collapsed: false
                                 } as Swimlane,
                                 {
                                     card: {
                                         id: 44,
-                                        has_children: true
+                                        has_children: true,
+                                        is_open: true
                                     },
                                     is_collapsed: false
                                 } as Swimlane
@@ -65,7 +67,8 @@ describe("TaskBoardBody", () => {
                                 {
                                     card: {
                                         id: 43,
-                                        has_children: false
+                                        has_children: false,
+                                        is_open: true
                                     },
                                     is_collapsed: true
                                 } as Swimlane
@@ -76,6 +79,31 @@ describe("TaskBoardBody", () => {
             }
         });
         expect(wrapper.contains(CollapsedSwimlane)).toBe(true);
+    });
+
+    it("does not display swimlane that are closed if user wants to hide them", () => {
+        const wrapper = shallowMount(TaskBoardBody, {
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        are_closed_items_displayed: false,
+                        swimlane: {
+                            swimlanes: [
+                                {
+                                    card: {
+                                        id: 43,
+                                        has_children: false,
+                                        is_open: false
+                                    },
+                                    is_collapsed: true
+                                } as Swimlane
+                            ]
+                        }
+                    }
+                })
+            }
+        });
+        expect(wrapper.element.children.length).toBe(0);
     });
 
     it("loads all swimlanes as soon as the component is created", () => {
