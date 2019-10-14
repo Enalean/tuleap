@@ -30,9 +30,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .project-release-infos-badges .project-release-info-badge {
-    position: relative;
     margin: 0 $tlp-half-spacing $tlp-half-spacing 0;
-    cursor: default;
 }
 
 .project-release-infos-badges .toggle-sprints {
@@ -44,7 +42,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     content: '';
     position: absolute;
     z-index: 2;
-    top: 5px;
+    top: round(($tlp-half-spacing - 1) / 2);
     left: -31px;
     width: 14px;
     height: 14px;
@@ -56,9 +54,9 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     content: '';
     position: absolute;
     z-index: 2;
-    top: 11px;
-    left: -$tlp-spacing;
-    width: $tlp-spacing;
+    top: round($tlp-half-spacing) + 1;
+    left: -20px;
+    width: 20px;
     height: 2px;
     background: $tlp-theme-color;
 }

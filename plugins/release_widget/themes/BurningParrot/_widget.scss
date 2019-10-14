@@ -52,7 +52,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
         position: absolute;
         z-index: 1;
         top: 0;
-        left: $tlp-half-spacing;
+        left: 10px;
         width: 4px;
         height: 100%;
         background: linear-gradient(to top, $tlp-ui-white 0, $timeline-color $tlp-spacing, transparent $tlp-spacing + 1px),
@@ -74,14 +74,14 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .project-other-releases {
-    position: relative;
+    display: flex;
+    align-items: baseline;
     margin: 0 0 $tlp-spacing;
-    padding: 0 0 0 35px;
+    padding: 0 0 0 5px;
 }
 
 .project-release-roadmap-icon {
     display: flex;
-    position: absolute;
     z-index: 2;
     top: 1px;
     left: 4px;
@@ -102,6 +102,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .releases-link {
+    display: inline-block;
     color: $tlp-theme-color;
     font-size: 16px;
 }
