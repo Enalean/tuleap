@@ -9,7 +9,7 @@
     "luxon": "^0.5.3",
     "vue": "^2.6.10",
     "vue-dompurify-html": "^2.1.0",
-    "vue-gettext": "^2.1.0"
+    "vue-gettext": "^2.1.5"
   },
   "config": {
     "bin": "../../../node_modules/.bin/"
