@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Swimlane } from "../../type";
+import { Card, CardPosition, ColumnDefinition, Direction, Swimlane } from "../../type";
 import * as tlp from "tlp";
-import * as actions from "./swimlane-actions";
 import { RecursiveGetInit } from "tlp";
-import { ActionContext } from "vuex";
-import { SwimlaneState } from "./type";
+import * as actions from "./swimlane-actions";
 import { loadChildrenCards } from "./swimlane-actions";
+import { ActionContext } from "vuex";
+import { ReorderCardsPayload, SwimlaneState } from "./type";
 import { mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
 import { RootState } from "../type";
 
@@ -238,6 +238,67 @@ describe("Swimlane state actions", () => {
                 { key: "plugin_taskboard_collapse_42_69", value: "1" },
                 { root: true }
             );
+        });
+    });
+
+    describe("reorderCardsInCell", () => {
+        const card_to_move = { id: 102, tracker_id: 7, mapped_list_value: { id: 49 } } as Card;
+        const swimlane: Swimlane = {
+            card: { id: 86 },
+            children_cards: [
+                { id: 100, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
+                card_to_move
+            ]
+        } as Swimlane;
+
+        const column: ColumnDefinition = {
+            id: 42
+        } as ColumnDefinition;
+
+        const position: CardPosition = {
+            ids: [card_to_move.id],
+            direction: Direction.BEFORE,
+            compared_to: 100
+        };
+
+        const payload = {
+            swimlane,
+            column,
+            position
+        } as ReorderCardsPayload;
+
+        it("The new position of the card is stored and the cards are reorderd", async () => {
+            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatchMock, {});
+            await actions.reorderCardsInCell(context, payload);
+
+            expect(tlpPatchMock).toHaveBeenCalledWith(`/api/v1/taskboard_cells/86/column/42`, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    order: {
+                        ids: [102],
+                        direction: "before",
+                        compared_to: 100
+                    }
+                })
+            });
+
+            expect(context.commit).toHaveBeenCalledWith("changeCardPosition", payload);
+        });
+
+        it("A modal opens on error", async () => {
+            const error = new Error();
+
+            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            tlpPatchMock.mockRejectedValue(error);
+
+            await actions.reorderCardsInCell(context, payload);
+
+            expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
+                root: true
+            });
         });
     });
 });

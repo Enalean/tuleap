@@ -35,13 +35,38 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
-import { Swimlane } from "../../../type";
+import dragula, { Drake } from "dragula";
+import { Swimlane, ColumnDefinition } from "../../../type";
+import { ReorderCardsPayload } from "../../../store/swimlane/type";
 import CollapsedSwimlane from "./Swimlane/CollapsedSwimlane.vue";
 import CardWithChildren from "./Swimlane/CardWithChildren.vue";
 import SwimlaneSkeleton from "./Swimlane/Skeleton/SwimlaneSkeleton.vue";
 import SoloSwimlane from "./Swimlane/SoloSwimlane.vue";
+import {
+    hasCardBeenDroppedInTheSameCell,
+    getCardFromSwimlane,
+    getColumnAndSwimlaneFromCell
+} from "../../../helpers/html-to-item";
+import { getCardPosition } from "../../../helpers/cards-reordering";
 
 const swimlane = namespace("swimlane");
+
+const canMove = (element: Element, handle: Element): boolean => {
+    return (
+        !element.classList.contains("taskboard-card-collapsed") &&
+        !handle.classList.contains("taskboard-item-no-drag") &&
+        element.classList.contains("taskboard-card")
+    );
+};
+
+const isContainer = (element: Element): boolean => {
+    return (
+        element.classList.contains("taskboard-cell") &&
+        !element.classList.contains("taskboard-cell-swimlane-header") &&
+        !element.classList.contains("taskboard-swimlane-collapsed-cell-placeholder") &&
+        !element.classList.contains("taskboard-card-parent")
+    );
+};
 
 @Component({
     components: { SoloSwimlane, SwimlaneSkeleton, CardWithChildren, CollapsedSwimlane }
@@ -50,17 +75,102 @@ export default class TaskBoardBody extends Vue {
     @State
     readonly are_closed_items_displayed!: boolean;
 
+    @State
+    readonly columns!: Array<ColumnDefinition>;
+
     @swimlane.State
     readonly swimlanes!: Array<Swimlane>;
 
     @swimlane.State
     readonly is_loading_swimlanes!: boolean;
 
+    drake!: Drake;
+
     @swimlane.Action
     loadSwimlanes!: () => void;
 
+    @swimlane.Action
+    reorderCardsInCell!: (payload: ReorderCardsPayload) => void;
+
     created(): void {
         this.loadSwimlanes();
+    }
+
+    beforeDestroy(): void {
+        if (this.drake) {
+            this.drake.destroy();
+        }
+    }
+
+    mounted(): void {
+        this.drake = dragula({
+            isContainer(element?: Element): boolean {
+                if (!element) {
+                    return false;
+                }
+                return isContainer(element);
+            },
+            moves(element?: Element, container?: Element, handle?: Element): boolean {
+                if (!element || !handle) {
+                    return false;
+                }
+
+                return canMove(element, handle);
+            },
+            accepts(element, target, source): boolean {
+                if (
+                    !target ||
+                    !source ||
+                    !(target instanceof HTMLElement) ||
+                    !(source instanceof HTMLElement)
+                ) {
+                    return false;
+                }
+
+                return hasCardBeenDroppedInTheSameCell(target, source);
+            }
+        });
+
+        this.drake.on(
+            "drop",
+            (
+                dropped_card: HTMLElement,
+                target_cell: HTMLElement,
+                source_cell: HTMLElement,
+                sibling_card?: HTMLElement
+            ) => {
+                if (!hasCardBeenDroppedInTheSameCell(target_cell, source_cell)) {
+                    return;
+                }
+
+                const { swimlane, column } = getColumnAndSwimlaneFromCell(
+                    this.swimlanes,
+                    this.columns,
+                    target_cell
+                );
+
+                if (!swimlane || !column) {
+                    return;
+                }
+
+                const card = getCardFromSwimlane(swimlane, dropped_card);
+
+                if (!card) {
+                    return;
+                }
+
+                const sibling = getCardFromSwimlane(swimlane, sibling_card);
+                const position = getCardPosition(card, sibling, swimlane, this.columns, column);
+
+                const payload: ReorderCardsPayload = {
+                    swimlane,
+                    column,
+                    position
+                };
+
+                this.reorderCardsInCell(payload);
+            }
+        );
     }
 }
 </script>

@@ -18,7 +18,12 @@
   -->
 
 <template>
-    <div class="taskboard-card" v-bind:class="additional_classnames" v-if="card.is_open || are_closed_items_displayed">
+    <div
+        class="taskboard-card taskboard-draggable-item"
+        v-bind:class="additional_classnames"
+        v-if="card.is_open || are_closed_items_displayed"
+        v-bind:data-card-id="card.id"
+    >
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card"/>
             <div class="taskboard-card-info">

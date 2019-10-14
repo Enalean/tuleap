@@ -18,9 +18,9 @@
  */
 
 import { Card, Swimlane } from "../../type";
-import { recursiveGet } from "tlp";
+import { recursiveGet, patch } from "tlp";
 import { ActionContext } from "vuex";
-import { SwimlaneState } from "./type";
+import { SwimlaneState, ReorderCardsPayload } from "./type";
 import { RootState } from "../type";
 import { UserPreference, UserPreferenceValue } from "../user/type";
 
@@ -115,4 +115,28 @@ function getPreferenceName(
     swimlane: Swimlane
 ): string {
     return `plugin_taskboard_collapse_${context.rootState.milestone_id}_${swimlane.card.id}`;
+}
+
+export async function reorderCardsInCell(
+    context: ActionContext<SwimlaneState, RootState>,
+    payload: ReorderCardsPayload
+): Promise<void> {
+    const swimlane_id = payload.swimlane.card.id;
+    const column_id = payload.column.id;
+
+    try {
+        await patch(
+            `/api/v1/taskboard_cells/${encodeURIComponent(swimlane_id)}/column/${column_id}`,
+            {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ order: payload.position })
+            }
+        );
+
+        await context.commit("changeCardPosition", payload);
+    } catch (error) {
+        await context.dispatch("error/handleModalError", error, { root: true });
+    }
 }

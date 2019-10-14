@@ -25,6 +25,7 @@
 @import 'includes/error';
 @import 'includes/swimlane-sticky-header';
 @import 'includes/button-bar';
+@import '../scripts/node_modules/dragula/dist/dragula.min.css';
 
 .taskboard-under-construction {
     color: $tlp-ui-dimmed;

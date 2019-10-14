@@ -63,8 +63,19 @@ export interface Card {
     is_collapsed: boolean;
 }
 
-interface User {
+export interface User {
     id: number;
     avatar_url: string;
     display_name: string;
+}
+
+export interface CardPosition {
+    ids: number[];
+    direction: Direction;
+    compared_to: number;
+}
+
+export enum Direction {
+    BEFORE = "before",
+    AFTER = "after"
 }

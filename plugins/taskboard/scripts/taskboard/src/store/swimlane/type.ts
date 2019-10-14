@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Swimlane } from "../../type";
+import { Card, CardPosition, ColumnDefinition, Swimlane } from "../../type";
 
 export interface SwimlaneState {
     swimlanes: Array<Swimlane>;
@@ -27,4 +27,10 @@ export interface SwimlaneState {
 export interface AddChildrenToSwimlanePayload {
     swimlane: Swimlane;
     children_cards: Card[];
+}
+
+export interface ReorderCardsPayload {
+    swimlane: Swimlane;
+    column: ColumnDefinition;
+    position: CardPosition;
 }

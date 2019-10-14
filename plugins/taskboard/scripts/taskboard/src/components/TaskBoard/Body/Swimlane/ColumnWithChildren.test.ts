@@ -102,7 +102,7 @@ describe("ColumnWithChildren", () => {
 
     it(`When the column is collapsed,
         Then the the cell is marked as collapsed`, () => {
-        const wrapper = createWrapper({} as Swimlane, true);
+        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, true);
 
         expect(wrapper.classes("taskboard-cell-collapsed")).toBe(true);
         expect(wrapper.findAll(ChildCard).length).toBe(0);
