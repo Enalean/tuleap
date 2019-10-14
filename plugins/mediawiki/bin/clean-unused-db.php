@@ -1,7 +1,7 @@
 #!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,8 +30,9 @@ Purge mediawiki databases and directory for an healthier system.
 
 By default the tool is in dry-run mode and displays what will be purged
 
-   go      Run the actual purge
-   [id]    Id of a project to force
+   go       Run the actual purge
+   [id]     Id of a project to force
+   go force Run purge for all no template projects
 
 Examples:
 
@@ -53,6 +54,14 @@ Examples:
 
         Purge databases & co and force for projects 273 352 and 412
 
+    $> clean-unused-db.php go force
+
+        Purge databases & co and force for on projects which are not defined as template and have empty MediaWiki
+
+    $> clean-unused-db.php go force 15
+
+        Purge databases & co and force for the first 15 projects which are not defined as template and have empty MediaWiki
+
 EOT;
     exit(1);
 }
@@ -61,16 +70,31 @@ $plugin  = PluginManager::instance()->getPluginByName('mediawiki');
 $logger  = new Log_ConsoleLogger();
 $cleaner = $plugin->getCleanUnused($logger);
 
-$dry_run = true;
-if (isset($argv[1]) && $argv[1] === 'go') {
+$is_go_option = isset($argv[1]) && $argv[1] === 'go';
+$dry_run      = true;
+$force_all    = false;
+$limit        = null;
+if ($is_go_option && !isset($argv[2])) {
     $dry_run = false;
-}
-
-$force = array();
-foreach ($argv as $arg) {
-    if (is_numeric($arg)) {
-        $force[] = (int) $arg;
+} elseif ($is_go_option && $argv[2] === "force") {
+    $dry_run   = false;
+    $force_all = true;
+    if (isset($argv[3]) && is_numeric($argv[3])) {
+        $limit = (int)$argv[3];
+        if ($limit < 0) {
+            echo "limit can't be negative" . PHP_EOL;
+            exit(1);
+        }
     }
 }
 
-$cleaner->purge($dry_run, $force);
+$force = [];
+if (! $force_all) {
+    foreach ($argv as $arg) {
+        if (is_numeric($arg)) {
+            $force[] = (int)$arg;
+        }
+    }
+}
+
+$cleaner->purge($dry_run, $force, $force_all, $limit);

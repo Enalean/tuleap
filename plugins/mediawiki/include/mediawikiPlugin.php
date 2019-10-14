@@ -851,7 +851,8 @@ class MediaWikiPlugin extends Plugin
             ),
             ProjectManager::instance(),
             Backend::instance('System'),
-            $this->getDao()
+            $this->getDao(),
+            new MediawikiDataDir()
         );
     }
 
