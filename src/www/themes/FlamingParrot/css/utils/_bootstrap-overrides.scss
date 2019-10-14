@@ -245,6 +245,11 @@ legend {
         > a {
             border-bottom: 2px solid $navbar-color;
             color: $navbar-color;
+
+            > .caret {
+                border-top-color: $navbar-color;
+                border-bottom-color: $navbar-color;
+            }
         }
     }
 
