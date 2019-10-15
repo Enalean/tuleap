@@ -23,7 +23,6 @@ services:
     depends_on:
     - ldap
     - db
-    - db57
     - realtime
 
   realtime:
@@ -64,14 +63,14 @@ services:
     volumes:
     - jenkins-data:/var/jenkins_home
 
-  db:
+  db55:
     image: mysql:5.5
     env_file:
     - .env
     volumes:
       - db-data:/var/lib/mysql
 
-  db57:
+  db:
     image: mysql:5.7
     env_file:
       - .env

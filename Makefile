@@ -358,7 +358,7 @@ start-all:
 	@$(DOCKER_COMPOSE) up -d
 
 switch-to-mysql57:
-	$(eval DB57 := $(shell $(DOCKER_COMPOSE) ps -q db57))
-	$(DOCKER_COMPOSE) exec db sh -c 'exec mysqldump --all-databases  -uroot -p"$$MYSQL_ROOT_PASSWORD"' | $(DOCKER) exec -i $(DB57) sh -c 'exec mysql -uroot -p"$$MYSQL_ROOT_PASSWORD"'
-	$(DOCKER_COMPOSE) exec db57 sh -c 'mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"'
-	@echo "Data were migrated to mysql 5.7, you now need to update /etc/tuleap/conf/database.inc in web container to set `sys_dbhost` to 'db57'"
+	$(eval DB57 := $(shell $(DOCKER_COMPOSE) ps -q db))
+	$(DOCKER_COMPOSE) exec db55 sh -c 'exec mysqldump --all-databases  -uroot -p"$$MYSQL_ROOT_PASSWORD"' | $(DOCKER) exec -i $(DB57) sh -c 'exec mysql -uroot -p"$$MYSQL_ROOT_PASSWORD"'
+	$(DOCKER_COMPOSE) exec db sh -c 'mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"'
+	@echo "Data were migrated to MySQL 5.7"
