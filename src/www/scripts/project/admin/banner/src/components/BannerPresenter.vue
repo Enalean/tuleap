@@ -26,7 +26,6 @@
                     type="checkbox"
                     id="toggle"
                     class="tlp-switch-checkbox"
-                    v-on:click="switchBannerActivation"
                     v-model="banner_is_activated"
                 >
                 <label
@@ -39,10 +38,11 @@
         <div v-if="!banner_is_activated">
             <p v-translate>No banner defined</p>
         </div>
-        <div v-else>
+        <div v-show="banner_is_activated">
             <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled' : loading }">
                 <label class="tlp-label" for="description" v-translate>Message</label>
-                <textarea type="text" class="tlp-textarea" id="description" name="description" v-model="current_message" v-bind:placeholder="$gettext('Choose a banner message')"></textarea>
+                <textarea type="text" ref="embedded_editor" class="tlp-textarea" id="description" name="description" v-model="current_message" v-bind:placeholder="$gettext('Choose a banner message')"></textarea>
+                <p class="tlp-text-muted" v-translate>Your message will be condensed to one line</p>
             </div>
         </div>
         <div class="tlp-pane-section-submit">
@@ -60,6 +60,8 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { BannerState } from "../type";
+import "ckeditor";
+
 @Component
 export default class BannerPresenter extends Vue {
     @Prop({ required: true, type: String })
@@ -70,9 +72,66 @@ export default class BannerPresenter extends Vue {
 
     banner_is_activated: boolean = this.message !== "";
     current_message: string = this.message;
+    editor: CKEDITOR.editor | null = null;
 
-    public switchBannerActivation(): void {
-        this.banner_is_activated = !this.banner_is_activated;
+    public mounted(): void {
+        this.createEditor();
+    }
+
+    public beforeDestroy(): void {
+        this.destroyEditor();
+    }
+
+    private createEditor(): void {
+        this.destroyEditor();
+
+        const text_area: HTMLTextAreaElement = this.$refs.embedded_editor as HTMLTextAreaElement;
+
+        // eslint-disable-next-line no-undef
+        this.editor = CKEDITOR.replace(text_area, {
+            toolbar: [
+                ["Cut", "Copy", "Paste", "Undo", "Redo", "Link", "Unlink"],
+                ["Bold", "Italic"]
+            ]
+        });
+
+        this.editor.on("instanceReady", this.onInstanceReady);
+    }
+
+    private onInstanceReady(): void {
+        if (this.editor === null) {
+            return;
+        }
+
+        this.editor.on("change", this.onChange);
+
+        this.editor.on("mode", () => {
+            if (this.editor === null) {
+                return;
+            }
+
+            if (this.editor.mode === "source") {
+                const editable = this.editor.editable();
+                editable.attachListener(editable, "input", () => {
+                    this.onChange();
+                });
+            }
+        });
+    }
+
+    private onChange(): void {
+        if (this.editor === null) {
+            return;
+        }
+
+        this.current_message = this.editor.getData();
+    }
+
+    private destroyEditor(): void {
+        if (this.editor !== null) {
+            this.editor.destroy();
+            this.editor = null;
+        }
     }
 
     public save(): void {

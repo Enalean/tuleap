@@ -31,6 +31,8 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
     </div>
   </div>
    
+  <!---->
+   
   <div>
     <div
       class="tlp-form-element tlp-form-element-disabled"
@@ -49,8 +51,17 @@ exports[`BannerPresenter disables the whole form when on loading state 1`] = `
         id="description"
         name="description"
         placeholder="Choose a banner message"
+        style="visibility: hidden;"
         type="text"
       />
+       
+      <p
+        class="tlp-text-muted"
+        data-current-language="en_US"
+        data-msgid="Your message will be condensed to one line"
+      >
+        Your message will be condensed to one line
+      </p>
     </div>
   </div>
    
@@ -124,6 +135,40 @@ exports[`BannerPresenter displays a default message and an unchecked switch if b
   </div>
    
   <div
+    style="display: none;"
+  >
+    <div
+      class="tlp-form-element"
+    >
+      <label
+        class="tlp-label"
+        data-current-language="en_US"
+        data-msgid="Message"
+        for="description"
+      >
+        Message
+      </label>
+       
+      <textarea
+        class="tlp-textarea"
+        id="description"
+        name="description"
+        placeholder="Choose a banner message"
+        style="visibility: hidden;"
+        type="text"
+      />
+       
+      <p
+        class="tlp-text-muted"
+        data-current-language="en_US"
+        data-msgid="Your message will be condensed to one line"
+      >
+        Your message will be condensed to one line
+      </p>
+    </div>
+  </div>
+   
+  <div
     class="tlp-pane-section-submit"
   >
     <button
@@ -180,6 +225,8 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
     </div>
   </div>
    
+  <!---->
+   
   <div>
     <div
       class="tlp-form-element"
@@ -198,8 +245,17 @@ exports[`BannerPresenter displays the banner and a checked switch if banner is s
         id="description"
         name="description"
         placeholder="Choose a banner message"
+        style="visibility: hidden;"
         type="text"
       />
+       
+      <p
+        class="tlp-text-muted"
+        data-current-language="en_US"
+        data-msgid="Your message will be condensed to one line"
+      >
+        Your message will be condensed to one line
+      </p>
     </div>
   </div>
    

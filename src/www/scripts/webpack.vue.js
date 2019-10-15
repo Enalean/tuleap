@@ -33,7 +33,8 @@ module.exports = {
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path, "/assets/"),
     externals: {
-        tlp: "tlp"
+        tlp: "tlp",
+        ckeditor: "CKEDITOR"
     },
     module: {
         rules: [
