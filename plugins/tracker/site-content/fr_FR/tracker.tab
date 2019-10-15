@@ -447,10 +447,7 @@ plugin_tracker_include_type	my	Mes $1
 plugin_tracker_include_type	open	$1 Ouvert
 plugin_tracker_include_type	reporting	Analyse statistique
 plugin_tracker_include_type	admin	Administration
-plugin_tracker_include_type	settings	Options générales
-plugin_tracker_include_type	field_usage	Utilisation des champs
 plugin_tracker_include_type	field_values	Valeurs des champs
-plugin_tracker_include_type	canned_resp	Réponse type
 plugin_tracker_include_type	reports	Rapports
 plugin_tracker_include_type	mail_notif	Options de notification
 plugin_tracker_include_type	pending_removal	Destruction des outils de suivi
@@ -467,15 +464,10 @@ plugin_tracker_include_type	instantiate	Instancier dans les nouveaux projets
 plugin_tracker_include_type	priority_changes	Enregistrer les changements de rang dans les commentaires
 plugin_tracker_include_type	administration	Administration
 plugin_tracker_include_type	mng_field_usage	Gérer l'utilisation des champs
-plugin_tracker_include_type	define_use	Définir les champs utilisés par cet outil de suivi.
 plugin_tracker_include_type	mng_field_values	Gérer les valeurs des champs
 plugin_tracker_include_type	define_values	Définir les valeurs associées aux champs utilisés par cet outil de suivi.
-plugin_tracker_include_type	mng_response	Gérer les réponses type
-plugin_tracker_include_type	add_del_resp	Ajouter, modifier ou détruire les réponses type.
 plugin_tracker_include_type	mng_reports	Gérer les rapports de recherche de l'outil de suivi
 plugin_tracker_include_type	define_reports	Définir les rapports de recherche de cet outil de suivi&nbsp;: quels critères de recherche et quels champs montrer dans les rapports de recherche.
-plugin_tracker_include_type	define_title	Définir le titre, la description, ... de cet outil de suivi.
-plugin_tracker_include_type	define_notif	Définir des règles de notification.
 plugin_tracker_include_type	user	Utilisateur
 plugin_tracker_include_type	perm	Permissions
 plugin_tracker_include_type	del_user	Détruire cet utilisateur ?
@@ -597,16 +589,11 @@ plugin_tracker_include_type	all_by	Tou(te)s les $1 par $2
 plugin_tracker_include_type	submit_mass_change	Valider
 plugin_tracker_include_type	occurrence	Occurrence
 plugin_tracker_include_type	notify_me	Je veux être notifié lorsque&nbsp;:
-plugin_tracker_include_type	permissions	Permissions
-plugin_tracker_include_type	manage_permissions	Gérer les Permissions
 plugin_tracker_include_type	manage_permissions_title	 - Gérer les Permissions
-plugin_tracker_include_type	define_manage_permissions	Définir des permissions sur l'outil de suivi et ses champs
 plugin_tracker_include_type	manage_tracker_permissions	Gérer les permissions de l'outil de suivi
 plugin_tracker_include_type	manage_tracker_permissions_title	 - Gérer les permissions de l'outil de suivi
-plugin_tracker_include_type	define_manage_tracker_permissions	Permet de définir des droits d'accès à l'outil de suivi.
 plugin_tracker_include_type	manage_fields_tracker_permissions	Gérer les permissions des champs
 plugin_tracker_include_type	manage_fields_tracker_permissions_title	 - Gérer les permissions des champs
-plugin_tracker_include_type	define_manage_fields_tracker_permissions	Permet de définir des droits d'accès aux champs de l'outil de suivi.
 plugin_tracker_include_type	edit_field_perm	Editer les permissions du champ
 plugin_tracker_include_type	field_dependencies	Dépendances&nbsp;entre&nbsp;champs
 plugin_tracker_include_type	mng_field_dependencies	Gérer les dépendances entre champs
@@ -1209,32 +1196,18 @@ plugin_tracker_admin	access_denied	Accès refusé. Vous n'avez pas les droits su
 
 plugin_tracker_admin	error_during_creation	Oops. Quelque chose de bizarre c'est produit. Impossible de créer l'outil de suivi. Essayer à nouveau.
 
-plugin_tracker_admin	semantic	Sémantique
 plugin_tracker_admin	manage_semantic	Gérer la sémantique
-plugin_tracker_admin	manage_semantic_desc	Définir la sémantique des champs (titre, état, contributeur, tooltip)
-
-plugin_tracker_admin	workflow	Workflow
-plugin_tracker_admin	manage_workflow	Gérer le Workflow
-plugin_tracker_admin	manage_workflow_desc	Définir le worflow de l'outil de suivi
 
 plugin_tracker_admin	csv_import	Import CSV
-plugin_tracker_admin	csv_import_desc	Importer des artefacts à partir d'un fichier CSV
-
-plugin_tracker_admin	export	Export
-plugin_tracker_admin	export_desc	Exporter la structure du tracker
 
 plugin_tracker_admin	hierarchy	Hiérarchie
-plugin_tracker_admin	hierarchy_desc	Définir la hiérarchie de l'outil de suivi
 plugin_tracker_admin	manage_hierarchy_title	Gérer la hiérarchie du tracker
 
 plugin_tracker_admin	manage_dependencies	Gérer les dépendances entre champs
-plugin_tracker_admin	manage_dependencies_desc	Définir comment les valeurs d'un champ dépendent des valeurs d'un autre champ
 
 plugin_tracker_admin	tracker_not_duplicated	L'outil de suivi $1 n'a pas été copié
 plugin_tracker_admin	successfully_updated	Outil de suivi mis à jour avec succès.
 
-plugin_tracker_admin	clean	Suppression d'artefact
-plugin_tracker_admin	clean_desc	Efface de manière permanente un artifact de ce tracker
 plugin_tracker_admin	clean_info	Cette opération efface de manière irréversible un artefact de la base. Attention : <strong>il n'y a aucune possibilité de restaurer les données</strong>. Cette opération doit rester exceptionnelle.
 plugin_tracker_admin	clean_id	Id de l'artefact à supprimer:
 plugin_tracker_admin	clean_error_noart	L'artefact $1 n'existe pas ou n'appartient pas à ce tracker

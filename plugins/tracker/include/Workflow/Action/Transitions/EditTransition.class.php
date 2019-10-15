@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Workflow_Action_Transitions_EditTransition extends Tracker_Workflow_Action_Transitions
 {
     /** @var TransitionFactory */
@@ -43,7 +43,7 @@ class Tracker_Workflow_Action_Transitions_EditTransition extends Tracker_Workflo
     private function displayTransitionDetails(TrackerManager $engine, Codendi_Request $request, PFUser $current_user, Transition $transition)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        $this->displayHeader($engine);
+        $this->displayHeader($engine, $GLOBALS['Language']->getText('workflow_admin', 'title_define_transitions'));
 
         if ($transition->getFieldValueFrom()) {
             $from_label = $transition->getFieldValueFrom()->getLabel();

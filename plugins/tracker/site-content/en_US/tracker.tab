@@ -454,10 +454,7 @@ plugin_tracker_include_type	my	My $1
 plugin_tracker_include_type	open	Open $1
 plugin_tracker_include_type	reporting	Reporting
 plugin_tracker_include_type	admin	Admin
-plugin_tracker_include_type	settings	General Settings
-plugin_tracker_include_type	field_usage	Field Usage
 plugin_tracker_include_type	field_values	Field Values
-plugin_tracker_include_type	canned_resp	Canned Responses
 plugin_tracker_include_type	reports	Tracker Reports
 plugin_tracker_include_type	mail_notif	Email Notification Settings
 plugin_tracker_include_type	pending_removal	Pending Trackers Removals
@@ -476,15 +473,10 @@ plugin_tracker_include_type	instantiate	Instantiate for new projects
 plugin_tracker_include_type	priority_changes	Log priority changes in follow-up comments
 plugin_tracker_include_type	administration	Administration
 plugin_tracker_include_type	mng_field_usage	Manage Field Usage
-plugin_tracker_include_type	define_use	Define what tracker fields you want to use in this tracker.
 plugin_tracker_include_type	mng_field_values	Manage Field Values
 plugin_tracker_include_type	define_values	Define the set of values associated with the fields of your tracker.
-plugin_tracker_include_type	mng_response	Manage Canned Responses
-plugin_tracker_include_type	add_del_resp	Add, update or delete the canned responses.
 plugin_tracker_include_type	mng_reports	Manage Tracker Reports
 plugin_tracker_include_type	define_reports	Define tracker search reports: what search criteria to use and what tracker fields to show in the tracker search reports.
-plugin_tracker_include_type	define_title	Define the title, the description, etc of this tracker.
-plugin_tracker_include_type	define_notif	Manage email notification rules.
 plugin_tracker_include_type	user	User
 plugin_tracker_include_type	perm	Permissions
 plugin_tracker_include_type	del_user	Delete this user?
@@ -608,16 +600,11 @@ plugin_tracker_include_type	all_by	All $1 By $2
 plugin_tracker_include_type	submit_mass_change	Submit
 plugin_tracker_include_type	occurrence	Occurrence
 plugin_tracker_include_type	notify_me	I want to be notified when:
-plugin_tracker_include_type	permissions	Permissions
-plugin_tracker_include_type	manage_permissions	Manage Permissions
 plugin_tracker_include_type	manage_permissions_title	 - Manage Permissions
-plugin_tracker_include_type	define_manage_permissions	Define permissions for the tracker and its fields
 plugin_tracker_include_type	manage_tracker_permissions	Manage Tracker Permissions
 plugin_tracker_include_type	manage_tracker_permissions_title	 - Manage Tracker Permissions
-plugin_tracker_include_type	define_manage_tracker_permissions	Define permissions on the tracker
 plugin_tracker_include_type	manage_fields_tracker_permissions	Manage Fields Permissions
 plugin_tracker_include_type	manage_fields_tracker_permissions_title	 - Manage Fields Permissions
-plugin_tracker_include_type	define_manage_fields_tracker_permissions	Define permissions on the tracker fields
 plugin_tracker_include_type	edit_field_perm	Edit field permissions
 plugin_tracker_include_type	field_dependencies	Field&nbsp;Dependencies
 plugin_tracker_include_type	mng_field_dependencies	Manage Field Dependencies
@@ -1212,32 +1199,18 @@ plugin_tracker_admin	access_denied	Access denied. You don't have permissions to 
 
 plugin_tracker_admin	error_during_creation	Oops. Something weird occured. Unable to create the tracker. Please try again.
 
-plugin_tracker_admin	semantic	Semantic
 plugin_tracker_admin	manage_semantic	Manage Semantic
-plugin_tracker_admin	manage_semantic_desc	Define semantic of tracker fields (title, status, contributor, tooltip)
-
-plugin_tracker_admin	workflow	Workflow
-plugin_tracker_admin	manage_workflow	Manage Workflow
-plugin_tracker_admin	manage_workflow_desc	Define tracker worflow
 
 plugin_tracker_admin	csv_import	CSV Import
-plugin_tracker_admin	csv_import_desc	Import artifacts in the tracker from a CSV file
-
-plugin_tracker_admin	export	Export
-plugin_tracker_admin	export_desc	Export the tracker structure
 
 plugin_tracker_admin	hierarchy	Hierarchy
-plugin_tracker_admin	hierarchy_desc	Manage tracker hierarchy
 plugin_tracker_admin	manage_hierarchy_title	Manage hierarchy of tracker
 
 plugin_tracker_admin	manage_dependencies	Manage field dependencies
-plugin_tracker_admin	manage_dependencies_desc	Define how values in one field depend upon other field values.
 
 plugin_tracker_admin	tracker_not_duplicated	Tracker $1 not duplicated
 plugin_tracker_admin	successfully_updated	Tracker successfully updated.
 
-plugin_tracker_admin	clean	Delete artifacts
-plugin_tracker_admin	clean_desc	Permanently purge an artifact from the tracker
 plugin_tracker_admin	clean_info	Allow to permanently delete an artifact. Warning: <strong>There is no way to restore the artifact</strong>. This operation should be an exception.
 plugin_tracker_admin	clean_id	Id of the artifact to delete:
 plugin_tracker_admin	clean_error_noart	Artifact $1 doesn't exist or doesn't belong to current tracker

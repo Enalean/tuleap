@@ -607,14 +607,6 @@ class Tracker implements Tracker_Dispatchable_Interface
                 }
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $this->group_id);
                 break;
-            case 'admin':
-                if ($this->userIsAdmin($current_user)) {
-                    $this->displayAdmin($layout, $request, $current_user);
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
-                }
-                break;
             case 'admin-editoptions':
                 if ($this->userIsAdmin($current_user)) {
                     if ($request->get('update')) {
@@ -627,13 +619,6 @@ class Tracker implements Tracker_Dispatchable_Interface
                 }
                 break;
             case 'admin-perms':
-                if ($this->userIsAdmin($current_user)) {
-                    $this->displayAdminPerms($layout, $request, $current_user);
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
-                }
-                break;
             case 'admin-perms-tracker':
                 if ($this->userIsAdmin($current_user)) {
                     $this->getPermissionController()->process($layout, $request, $current_user);
@@ -642,7 +627,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
-
+            case 'admin':
             case 'admin-formElements':
                 if ($this->userIsAdmin($current_user)) {
                     if (is_array($request->get('add-formElement'))) {
@@ -821,7 +806,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 break;
             case 'admin-hierarchy':
                 if ($this->userIsAdmin($current_user)) {
-                    $this->displayAdminItemHeaderWithoutTitle($layout, 'hierarchy');
+                    $this->displayAdminHeader($layout, 'hierarchy', $GLOBALS['Language']->getText('plugin_tracker_admin', 'hierarchy'));
                     $this->getHierarchyController($request)->edit();
                     $this->displayAdminFooter($layout);
                 } else {
@@ -1431,108 +1416,13 @@ class Tracker implements Tracker_Dispatchable_Interface
         }
     }
 
-    protected function getAdminItems()
-    {
-        $items = array(
-                'editoptions' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-editoptions',
-                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'settings'),
-                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'settings'),
-                        'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'define_title'),
-                        'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-general.png'),
-                ),
-                'editperms' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-perms',
-                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'permissions'),
-                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'manage_permissions'),
-                        'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'define_manage_permissions'),
-                        'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-perms.png'),
-                ),
-                'editformElements' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-formElements',
-                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'field_usage'),
-                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'mng_field_usage'),
-                        'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'define_use'),
-                        'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-form.png'),
-                ),
-                'dependencies' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-dependencies',
-                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_dependencies'),
-                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_dependencies'),
-                        'description' => $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_dependencies_desc'),
-                        'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-fdependencies.png'),
-                ),
-                'editsemantic' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-semantic',
-                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin', 'semantic'),
-                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_semantic'),
-                        'description' => $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_semantic_desc'),
-                        'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-semantic.png'),
-                ),
-                'editworkflow' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func='. Workflow::FUNC_ADMIN_RULES,
-                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin', 'workflow'),
-                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_workflow'),
-                        'description' => $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_workflow_desc'),
-                        'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-workflow.png'),
-                ),
-                'editcanned' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-canned',
-                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'canned_resp'),
-                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'mng_response'),
-                        'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'add_del_resp'),
-                        'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-canned.png'),
-                ),
-                'editnotifications' => array(
-                        'url'         => TRACKER_BASE_URL.'/notifications/' . urlencode($this->id) . '/',
-                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'mail_notif'),
-                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'mail_notif'),
-                        'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'define_notif'),
-                        'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-notifs.png'),
-                ),
-                'csvimport' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-csvimport',
-                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin', 'csv_import'),
-                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin', 'csv_import'),
-                        'description' => $GLOBALS['Language']->getText('plugin_tracker_admin', 'csv_import_desc'),
-                        'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-import.png'),
-                ),
-                'export' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-export',
-                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin', 'export'),
-                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin', 'export'),
-                        'description' => $GLOBALS['Language']->getText('plugin_tracker_admin', 'export_desc'),
-                        'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-export.png'),
-                ),
-                'hierarchy' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-hierarchy',
-                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin', 'hierarchy'),
-                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin', 'hierarchy'),
-                        'description' => $GLOBALS['Language']->getText('plugin_tracker_admin', 'hierarchy_desc'),
-                        'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-hierarchy.png'),
-                ),
-                'clean' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&func=admin-clean',
-                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean'),
-                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean'),
-                        'description' => $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_desc'),
-                        'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-delete.png'),
-                ),
-        );
-        $params = array("items" => &$items, "tracker_id" => $this->id);
-        EventManager::instance()->processEvent(TRACKER_EVENT_FETCH_ADMIN_BUTTONS, $params);
-
-        return $items;
-    }
-
     public function displayAdminHeader(
         Tracker_IDisplayTrackerLayout $layout,
         string $current_item,
         $title,
-        $breadcrumbs,
         array $params = array()
     ) {
-        $this->buildAndDisplayAdministrationHeader($layout, $title, $breadcrumbs, $params);
+        $this->buildAndDisplayAdministrationHeader($layout, $title, [], $params);
 
         $items = [];
         $event_parameters = array("items" => &$items, "tracker_id" => $this->id);
@@ -1578,96 +1468,18 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->displayHeader($layout, $title, $breadcrumbs, [], $params);
     }
 
-    public function displayAdmin(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
+    public function displayAdminItemHeader(Tracker_IDisplayTrackerLayout $layout, $item, string $title, array $params = array())
     {
-        $title = '';
-        $breadcrumbs = array();
-        $this->displayAdminHeader($layout, '', $title, $breadcrumbs);
-        echo $this->fetchAdminMenu($this->getAdminItems());
-        $this->displayAdminFooter($layout);
-    }
-
-    /**
-     * Display the items of the menu and their description
-     *
-     * @param array $items the items, each item is ['url', 'title', 'description'].
-     *                     Only name is mandatory (else the item is not displayed.
-     *
-     * @return string html
-     */
-    protected function fetchAdminMenu($items)
-    {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
-        $cleaned_items = $items;
-        foreach ($cleaned_items as $key => $item) {
-            if (!isset($item['title'])) {
-                unset($cleaned_items[$key]);
-            }
-        }
-
-        if ($cleaned_items) {
-            $html .= '<table id="tracker_admin_menu">';
-            $chunks = array_chunk($cleaned_items, 2);
-            foreach ($chunks as $row) {
-                $html .= '<tr valign="top">';
-                foreach ($row as $item) {
-                    $html .= '<td width="450">';
-                    $html .= '<H3>';
-                    $title =  $hp->purify($item['title'], CODENDI_PURIFIER_CONVERT_HTML) ;
-                    if (isset($item['url'])) {
-                        $html .= '<a href="'.$item['url'].'">';
-                        if (isset($item['img']) && $item['img']) {
-                            $html .= '<img src="'. $item['img'] .'" style="float: left;" />';
-                        }
-                        $html .= $title;
-                        $html .= '</a>';
-                    } else {
-                        $html .= $title;
-                    }
-                    $html .= '</h3>';
-                    if (isset($item['description'])) {
-                        $html .= '<div>'. $hp->purify($item['description'], CODENDI_PURIFIER_BASIC, $this->getGroupId()) .'</div>';
-                    }
-                    $html .= '</td>';
-                }
-                $html .= '</tr>';
-            }
-            $html .= '</table>';
-        }
-        return $html;
-    }
-
-    public function displayAdminItemHeader(Tracker_IDisplayTrackerLayout $layout, $item, $title = null, array $params = array())
-    {
-        $this->displayAdminItemHeaderWithoutTitle($layout, $item, $title, $params);
-
-        if ($title !== null) {
-            echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
-        }
+        $this->displayAdminHeader($layout, $item, $title, $params);
     }
 
     public function displayAdminItemHeaderBurningParrot(
         Tracker_IDisplayTrackerLayout $layout,
         string $item,
+        string $header_title,
         array $params = array()
     ) {
-        $items        = $this->getAdminItems();
-        $header_title = $items[$item]['title'];
-
         $this->displayAdminHeaderBurningParrot($layout, $item, $header_title, [], $params);
-    }
-
-    private function displayAdminItemHeaderWithoutTitle(
-        Tracker_IDisplayTrackerLayout $layout,
-        $item,
-        $title = null,
-        array $params = array()
-    ) {
-        $items = $this->getAdminItems();
-        $title = $title ? $title : $items[$item]['title'];
-
-        $this->displayAdminHeader($layout, $item, $title, [], $params);
     }
 
     /**
@@ -1686,7 +1498,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     protected function displayAdminOptions(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         $this->displayWarningGeneralsettings();
-        $this->displayAdminItemHeader($layout, 'editoptions');
+        $this->displayAdminItemHeader($layout, 'editoptions', dgettext('tuleap-tracker', 'General settings'));
         $cannot_configure_instantiate_for_new_projects = false;
         $params = array('cannot_configure_instantiate_for_new_projects' => &$cannot_configure_instantiate_for_new_projects, 'tracker'=>$this);
         EventManager::instance()->processEvent(TRACKER_EVENT_GENERAL_SETTINGS, $params);
@@ -1705,39 +1517,12 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->displayAdminFooter($layout);
     }
 
-    public function displayAdminPermsHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs)
+    public function displayAdminPermsHeader(Tracker_IDisplayTrackerLayout $layout, $title)
     {
-        $this->displayAdminHeader($layout, 'editperms', $title, []);
+        $this->displayAdminHeader($layout, 'editperms', $title);
     }
 
-    public function getPermsItems()
-    {
-        return array(
-                'tracker' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='.(int)$this->getId().'&func=admin-perms-tracker',
-                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'manage_tracker_permissions'),
-                        'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'define_manage_tracker_permissions')
-                ),
-                'fields' => array(
-                        'url'         => \Tuleap\Tracker\Permission\Fields\ByField\ByFieldController::getUrl($this),
-                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'manage_fields_tracker_permissions'),
-                        'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'define_manage_fields_tracker_permissions')
-                )
-        );
-    }
-
-    public function displayAdminPerms(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
-    {
-        $items = $this->getAdminItems();
-        $title = $items['editperms']['title'];
-        $breadcrumbs = array();
-        $this->displayAdminPermsHeader($layout, $title, $breadcrumbs);
-        echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
-        echo $this->fetchAdminMenu($this->getPermsItems());
-        $this->displayAdminFooter($layout);
-    }
-
-    public function displayAdminFormElementsHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs)
+    public function displayAdminFormElementsHeader(Tracker_IDisplayTrackerLayout $layout, $title)
     {
         $include_assets = new \Tuleap\Layout\IncludeAssets(
             __DIR__ . '/../../www/assets',
@@ -1755,15 +1540,14 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('TrackerAdminFields.js'));
 
-        $this->displayAdminHeader($layout, 'editformElements', $title, $breadcrumbs);
+        $this->displayAdminHeader($layout, 'editformElements', $title);
     }
 
     public function displayAdminFormElements(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         $this->displayAdminFormElementsWarnings();
-        $items = $this->getAdminItems();
-        $title = $items['editformElements']['title'];
-        $this->displayAdminFormElementsHeader($layout, $title, array());
+        $title = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'mng_field_usage');
+        $this->displayAdminFormElementsHeader($layout, $title);
 
         echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
         echo '<form name="form1" method="POST" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&amp;func=admin-formElements">';
@@ -1802,17 +1586,15 @@ class Tracker implements Tracker_Dispatchable_Interface
         echo '</div>';
     }
 
-    public function displayAdminCSVImportHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs)
+    public function displayAdminCSVImportHeader(Tracker_IDisplayTrackerLayout $layout, $title)
     {
-        $this->displayAdminHeader($layout, 'csvimport', $title, []);
+        $this->displayAdminHeader($layout, 'csvimport', $title);
     }
 
     public function displayAdminCSVImport(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        $items = $this->getAdminItems();
-        $title = $items['csvimport']['title'];
-        $this->displayAdminCSVImportHeader($layout, $title, array());
+        $title = $GLOBALS['Language']->getText('plugin_tracker_admin', 'csv_import');
+        $this->displayAdminCSVImportHeader($layout, $title);
 
         echo '<h2 class="almost-tlp-title">'. $title . ' ' . help_button('tracker.html#tracker-artifact-import') . '</h2>';
         echo '<form name="form1" method="POST" enctype="multipart/form-data" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&amp;func=admin-csvimport">';
@@ -1834,8 +1616,9 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function displayAdminClean(Tracker_IDisplayTrackerLayout $layout)
     {
         $token = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?tracker='. (int)$this->id.'&amp;func=admin-delete-artifact-confirm');
-        $this->displayAdminItemHeader($layout, 'clean');
-        echo '<h2 class="almost-tlp-title">'.dgettext('tuleap-tracker', 'Delete artifacts').'</h2>';
+        $title = dgettext('tuleap-tracker', 'Delete artifacts');
+        $this->displayAdminItemHeader($layout, 'clean', $title);
+        echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
         echo '<p>'.$GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_info').'</p>';
         echo '<form name="delete_artifact" method="post" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id.'&amp;func=admin-delete-artifact-confirm">';
         echo $token->fetchHTMLInput();
@@ -1849,7 +1632,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function displayAdminConfirmDelete(Tracker_IDisplayTrackerLayout $layout, Tracker_Artifact $artifact)
     {
         $token = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?tracker='. (int)$this->id.'&amp;func=admin-delete-artifact');
-        $this->displayAdminItemHeader($layout, 'clean');
+        $this->displayAdminItemHeader($layout, 'clean', dgettext('tuleap-tracker', 'Delete artifacts'));
         echo '<div class="tracker_confirm_delete">';
         echo $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_confirm_text', array($artifact->getXRefAndTitle()));
         echo '<div class="tracker_confirm_delete_preview">';
@@ -2687,10 +2470,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                     if (count($lines) >= 2) {
                         $is_valid = $this->isValidCSV($lines, $separator);
 
-                        //header
-                        $items = $this->getAdminItems();
-                        $title = $items['csvimport']['title'];
-                        $this->displayAdminCSVImportHeader($layout, $title, array());
+                        $title = $GLOBALS['Language']->getText('plugin_tracker_admin', 'csv_import');
+                        $this->displayAdminCSVImportHeader($layout, $title);
 
                         echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
                         //body

@@ -97,12 +97,9 @@ class ByFieldController implements DispatchableWithRequest
 
         $tracker_manager = new \TrackerManager();
 
-        $items = $tracker->getPermsItems();
-        $title = $items['fields']['title'];
-        $breadcrumbs = array(
-            $items['fields']
-        );
-        $tracker->displayAdminPermsHeader($tracker_manager, $title, $breadcrumbs);
+        $title = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'manage_fields_tracker_permissions');
+
+        $tracker->displayAdminPermsHeader($tracker_manager, $title);
 
         $this->renderer->renderToPage(
             'groups-by-field',

@@ -236,9 +236,11 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private function displayPane(Tracker_IDisplayTrackerLayout $layout)
     {
-        $this->displayHeader($layout);
+        $title = $GLOBALS['Language']->getText('workflow_admin', 'title_define_global_date_rules');
+
+        $this->displayHeader($layout, $title);
         echo '<div class="workflow_rules">';
-        echo '<h2 class="almost-tlp-title">'. $GLOBALS['Language']->getText('workflow_admin', 'title_define_global_date_rules') .'</h2>';
+        echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
         echo '<p class="help">'. $GLOBALS['Language']->getText('workflow_admin', 'hint_date_rules_definition') .'</p>';
         echo '<form method="post" action="'. $this->url_query .'">';
         // CSRF Protection

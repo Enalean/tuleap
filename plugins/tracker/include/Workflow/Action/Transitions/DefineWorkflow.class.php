@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,7 +38,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow extends Tracker_Workflo
     {
         $hp = Codendi_HTMLPurifier::instance();
         $workflow = $this->workflow_factory->getWorkflowByTrackerId($this->tracker->id);
-        $this->displayHeader($layout);
+        $this->displayHeader($layout, $GLOBALS['Language']->getText('workflow_admin', 'title_define_transitions'));
 
         if ($workflow !== null) {
             $this->displayLegacy($workflow);

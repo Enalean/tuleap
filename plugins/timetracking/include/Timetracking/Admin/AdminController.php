@@ -111,7 +111,8 @@ class AdminController
 
         $tracker->displayAdminItemHeader(
             $this->tracker_manager,
-            'timetracking'
+            'timetracking',
+            dgettext('tuleap-timetracking', 'Time tracking')
         );
 
         $renderer->renderToPage(

@@ -47,11 +47,11 @@ class Tracker_SemanticManager
 
     public function displayAdminSemantic(TrackerManager $tracker_manager, $request, $current_user)
     {
-        $hp = Codendi_HTMLPurifier::instance();
+        $title = $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_semantic');
         $this->tracker->displayWarningArtifactByEmailSemantic();
-        $this->tracker->displayAdminItemHeader($tracker_manager, 'editsemantic');
+        $this->tracker->displayAdminItemHeader($tracker_manager, 'editsemantic', $title);
 
-        echo '<h2 class="almost-tlp-title">' .$GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_semantic'). '</h2>';
+        echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
         echo '<p>';
         echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'semantic_intro');
         echo '</p>';
@@ -72,11 +72,14 @@ class Tracker_SemanticManager
 
     public function displaySemanticHeader(Tracker_Semantic $semantic, TrackerManager $tracker_manager)
     {
+        $title = $semantic->getLabel();
         $this->tracker->displayAdminItemHeader(
             $tracker_manager,
             'editsemantic',
-            $semantic->getLabel()
+            $title
         );
+
+        echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
     }
 
     public function displaySemanticFooter(Tracker_Semantic $semantic, TrackerManager $tracker_manager)
