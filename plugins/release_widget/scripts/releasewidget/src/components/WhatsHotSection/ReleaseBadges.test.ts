@@ -20,9 +20,8 @@
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseBadges from "./ReleaseBadges.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
-import Vue from "vue";
 import { MilestoneData, StoreOptions } from "../../type";
-import { initVueGettext } from "../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
 
 let releaseData: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const total_sprint = 10;
@@ -41,10 +40,7 @@ describe("ReleaseBadges", () => {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
-
-        await initVueGettext(Vue, () => {
-            throw new Error("Fallback to default");
-        });
+        component_options.localVue = await createReleaseWidgetLocalVue();
 
         return shallowMount(ReleaseBadges, component_options);
     }

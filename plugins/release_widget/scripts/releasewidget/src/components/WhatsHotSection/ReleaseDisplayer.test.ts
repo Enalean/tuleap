@@ -17,14 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseDisplayer from "./ReleaseDisplayer.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
 import { MilestoneData, StoreOptions } from "../../type";
 import { DefaultData } from "vue/types/options";
-import { initVueGettext } from "../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
 
 let releaseData: MilestoneData;
 let component_options: ShallowMountOptions<ReleaseDisplayer>;
@@ -39,10 +38,8 @@ describe("ReleaseDisplayer", () => {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
+        component_options.localVue = await createReleaseWidgetLocalVue();
 
-        await initVueGettext(Vue, () => {
-            throw new Error("Fallback to default");
-        });
         return shallowMount(ReleaseDisplayer, component_options);
     }
 

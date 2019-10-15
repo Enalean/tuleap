@@ -20,9 +20,8 @@
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import WhatsHotSection from "./WhatsHotSection.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
-import Vue from "vue";
 import { MilestoneData, StoreOptions } from "../../type";
-import { initVueGettext } from "../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
 
 const project_id = 102;
 
@@ -34,11 +33,9 @@ async function getPersonalWidgetInstance(
         propsData: {
             project_id
         },
-        mocks: { $store: store }
+        mocks: { $store: store },
+        localVue: await createReleaseWidgetLocalVue()
     };
-    await initVueGettext(Vue, () => {
-        throw new Error("Fallback to default");
-    });
 
     return shallowMount(WhatsHotSection, component_options);
 }
