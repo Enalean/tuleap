@@ -46,6 +46,10 @@ class ArtifactNotificationActionButtonPresenterBuilder
 
     public function getNotificationButton(PFUser $user, Tracker_Artifact $artifact)
     {
+        if ($user->isAnonymous()) {
+            return;
+        }
+
         if ($this->unsubscribers_DAO->doesUserIDHaveUnsubscribedFromTrackerNotifications($user->getId(), $artifact->getTrackerId())) {
             return;
         }

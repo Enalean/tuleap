@@ -69,7 +69,7 @@ class ArtifactActionButtonPresenterBuilder
         $notification         = $this->notification_button_builder->getNotificationButton($user, $artifact);
         $move_artifact_button = $this->move_button_builder->getMoveArtifactButton($user, $artifact);
         $move_artifact_modal  = $this->move_button_builder->getMoveArtifactModal($artifact);
-        $additional_buttons   = $this->additional_buttons_builder->build($artifact);
+        $additional_buttons   = $this->additional_buttons_builder->build($artifact, $user);
 
         return new GlobalButtonsActionPresenter(
             $additional_buttons,

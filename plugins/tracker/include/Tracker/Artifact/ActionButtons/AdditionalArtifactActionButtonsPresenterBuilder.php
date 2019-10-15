@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,8 @@
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
 use EventManager;
+use PFUser;
+use Tracker_Artifact;
 
 class AdditionalArtifactActionButtonsPresenterBuilder
 {
@@ -34,9 +36,9 @@ class AdditionalArtifactActionButtonsPresenterBuilder
         $this->event_manager = $event_manager;
     }
 
-    public function build(\Tracker_Artifact $artifact)
+    public function build(Tracker_Artifact $artifact, PFUser $user)
     {
-        $action_buttons_fetcher = new AdditionalArtifactActionButtonsFetcher($artifact);
+        $action_buttons_fetcher = new AdditionalArtifactActionButtonsFetcher($artifact, $user);
 
         $this->event_manager->processEvent(
             $action_buttons_fetcher

@@ -86,7 +86,8 @@ class GlobalButtonsActionPresenter
         $this->has_at_least_one_action = $artifact_move_button_presenter !== null ||
             $artifact_copy_button_presenter !== null ||
             $artifact_original_email_button_presenter !== null ||
-            $artifact_notifications_button_presenter !== null;
+            $artifact_notifications_button_presenter !== null ||
+            count($additional_buttons) > 0;
 
         $this->additional_buttons = $additional_buttons;
     }
