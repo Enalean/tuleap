@@ -233,6 +233,10 @@ class testmanagementPlugin extends Plugin
             return;
         }
 
+        if ($event->getUser()->isAnonymous()) {
+            return;
+        }
+
         $link_label = dgettext('tuleap-testmanagement', 'See graph of dependencies');
 
         $url = $this->getPluginPath() . '/?'
