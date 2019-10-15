@@ -27,6 +27,7 @@ use Tuleap\CVS\DiskUsage\FullHistoryDao;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../../../src/www/project/export/project_export_utils.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 if ($argc !== 4) {
     fwrite(STDERR, "Usage: {$argv[0]} start_date end_date output". PHP_EOL);
