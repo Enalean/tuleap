@@ -42,6 +42,8 @@ use Tuleap\Queue\TaskWorker\TaskWorkerProcessCommand;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyRevoker;
 use TuleapCfg\Command\ProcessFactory;
+use Tuleap\Mail\AutomaticMailsSender;
+use Tuleap\User\IdleUsersDao;
 
 (static function () {
     require_once __DIR__ . '/../vendor/autoload.php';
@@ -167,6 +169,15 @@ $CLI_command_collector->addCommand(
                 new ConditionalTuleapCronEnvExecutionDelayer(
                     new ExecutionDelayerRandomizedSleep(1799)
                 )
+            ),
+            new AutomaticMailsSender(
+                new MailPresenterFactory(),
+                TemplateRendererFactory::build()->getRenderer(__DIR__ .'/../templates/mail/'),
+                'mail-suspension-alert',
+                new Codendi_Mail,
+                new IdleUsersDao(),
+                $user_manager,
+                new BaseLanguageFactory()
             )
         );
     }

@@ -38,6 +38,10 @@ msgid "%s (opens in a new tab)"
 msgstr "%s (s'ouvre dans un nouvel onglet)"
 
 #, php-format
+msgid "%s - Account suspension notification"
+msgstr "%s - Notification de suspension de compte"
+
+#, php-format
 msgid "%s full project listing"
 msgstr "Liste complète des projets %s"
 
@@ -255,6 +259,9 @@ msgstr "Demander à rejoindre ce projet"
 msgid "Banner"
 msgstr "Bannière"
 
+msgid "Best Regards."
+msgstr "Cordialement."
+
 msgid "Beyond 3 columns, each column<br>will have the same size."
 msgstr "Au-delà de 3 colonnes, chaque colonne<br>aura la même taille."
 
@@ -458,6 +465,9 @@ msgstr "Date"
 msgid "Day"
 msgstr "Jour"
 
+msgid "Dear   {{ tuleap_server_name}} user,"
+msgstr "Cher utilisateur {{tuleap_server_name}},"
+
 msgid "Default project visibility"
 msgstr "Visibilité du projet par défaut"
 
@@ -503,6 +513,9 @@ msgstr "Afficher les news du site sur la page d'accueil."
 
 msgid "Displays the 30 last updated or created items in the project."
 msgstr "Affiche les 30 derniers éléments modifiés ou créés dans le projet."
+
+msgid "Do not reply to this mail."
+msgstr "Ne répondez pas à ce courriel."
 
 msgid "Documents"
 msgstr "Documents"
@@ -975,6 +988,16 @@ msgstr ""
 "Veuillez éviter les espaces et les signes de ponctuation dans les noms de "
 "groupe."
 
+msgid ""
+"Please be aware that, in order to comply with {{ organization_name }} "
+"policies, all user accounts are subjected to a periodic renewal process. "
+"Inactive accounts are considered no longer used and will be suspended."
+msgstr ""
+"Veuillez noter qu’afin de respecter les règles de {{ organization_name }}, "
+"tous les comptes d'utilisateurs passent par une procédure de renouvellement  "
+"automatique. Les comptes inactifs sont considérés comme non utilisés et "
+"seront désactivés."
+
 msgid "Please choose a valid text file"
 msgstr "Veuillez choisir un fichier texte valide"
 
@@ -1267,6 +1290,17 @@ msgstr "La description courte ne doit pas dépasser 255 caractères."
 msgid "Shortcut list"
 msgstr "Liste des raccourcis"
 
+msgid ""
+"Should you still need this account, please connect once to "
+"{{ tuleap_server_name}} web interface, this will automatically renew your "
+"access. Moreover we strongly advise you to take this opportunity to update "
+"your password."
+msgstr ""
+"Si vous voulez garder ce compte, connectez-vous au moins une fois à "
+"'interface web de {{ tuleap_server_name}} pour réactiver votre compte "
+"automatiquement. Par ailleurs, nous recommandons de profiter cette "
+"occasion pour mettre à jour votre mot de passe."
+
 msgid "Sidebar (project)"
 msgstr "Barre de service (projet)"
 
@@ -1419,6 +1453,9 @@ msgstr "Le widget a correctement été ajouté"
 msgid "The widget is already used"
 msgstr "Le widget est déjà utilisé"
 
+msgid "The {{tuleap_server_name}} team."
+msgstr "L'équipe de {{tuleap_server_name}}."
+
 msgid "There are no items <br> you can see"
 msgstr "Il n'y a aucun élément <br> visible"
 
@@ -1497,6 +1534,11 @@ msgstr "Ceci est un service système, vous ne pouvez pas le supprimer."
 
 msgid "This label is used in the project"
 msgstr "Ce label est utilisé dans le projet"
+
+msgid ""
+"This mail has been automatically sent from {{tuleap_server_name}} application"
+msgstr ""
+"Cet e-mail a été envoyé automatiquement par l'application {{tuleap_server_name}}"
 
 msgid ""
 "This option displays special patterns on colored cards in Agiledashboard and "
@@ -1774,6 +1816,9 @@ msgstr "Widgets"
 msgid "Wiki"
 msgstr "Wiki"
 
+msgid "Without any action from you,"
+msgstr "Si vous n'intervenez pas,"
+
 msgid ""
 "Wow, wait a minute. You are about to remove the parent. Please confirm your "
 "action."
@@ -1984,6 +2029,13 @@ msgstr ""
 "Vous devez fournir un fichier simple, contenant pour chaque ligne l'adresse "
 "email ou le nom de l'utilisateur à importer."
 
+msgid ""
+"You receive this mail because you have not accessed the "
+"{{ tuleap_server_name }} application since {{last_access_date }}."
+msgstr ""
+"Vous recevez ce courriel car vous n'avez pas accédé à l'application "
+"{{ tuleap_server_name }} depuis {{last_access_date }}."
+
 #, php-format
 msgid ""
 "You should not browse the platform with this user, you may experience "
@@ -2062,6 +2114,9 @@ msgstr "permissions"
 
 msgid "suspended"
 msgstr "suspendu"
+
+msgid "your account will be automatically suspended on {{suspension_date}}."
+msgstr "votre compte sera désactivé automatiquement le {{suspension_date}}."
 
 msgid "{{ nb_members }} members"
 msgstr "{{ nb_members }} membres"

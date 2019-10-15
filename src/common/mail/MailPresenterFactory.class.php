@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Mail\MailAccountSuspensionAlertPresenter;
+
 class MailPresenterFactory
 {
 
@@ -273,5 +275,23 @@ class MailPresenterFactory
         $defaultThemeVariant = $theme_variant->getDefault();
         $color_logo          = FlamingParrot_Theme::getColorOfCurrentTheme($defaultThemeVariant);
         $color_button        = $color_logo;
+    }
+
+    /**
+     * Creates a presenter for the account suspension notification email
+     *
+     * @param int          $last_access_date Unix timestamp of the last acces date of the idle user
+     * @param int          $suspension_date  Unix timestamp of the suspension forecasted day
+     * @param BaseLanguage $language         Email language
+     *
+     * @return MailAccountSuspensionAlertPresenter
+     */
+    public function createMailAccountSuspensionAlertPresenter(int $last_access_date, int $suspension_date, BaseLanguage $language) : MailAccountSuspensionAlertPresenter
+    {
+        $color_logo = "#000";
+        $this->setColorTheme($color_logo);
+        $logo_retriever = new LogoRetriever();
+        $logo_url = $logo_retriever->getUrl();
+        return new MailAccountSuspensionAlertPresenter($logo_url, $color_logo, $last_access_date, $suspension_date, $language);
     }
 }
