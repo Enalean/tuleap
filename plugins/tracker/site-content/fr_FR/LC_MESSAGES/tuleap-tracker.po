@@ -416,6 +416,9 @@ msgid "Go to the administration of the cross-tracker triggers."
 msgstr ""
 "Se rendre dans l'administration des règles globales sur les déclencheurs."
 
+msgid "Got it"
+msgstr "J'ai compris"
+
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
@@ -500,6 +503,9 @@ msgstr "Mes notifications"
 #, php-format
 msgid "New %s"
 msgstr "Ajouter un(e) %s"
+
+msgid "New tracker administration"
+msgstr "Nouvelle administration des outils de suivi"
 
 msgid "No element selected."
 msgstr "Aucun élément sélectionné."
@@ -1011,6 +1017,9 @@ msgstr ""
 "Le champ liste '%s' ne peut pas être comparé à une chaîne vide avec "
 "l'opérateur NOT IN()."
 
+msgid "The navigation is now done with the tabs at the top of the page."
+msgstr "La navigation est maintenant faite avec des onglets en haut de page."
+
 msgid "The notification could not be deleted."
 msgstr "La notification n’a pas pu être supprimée."
 
@@ -1364,6 +1373,16 @@ msgstr[1] ""
 "fait référence. Merci de vous référer à la documentation pour les "
 "comparaisons autorisées."
 
+msgid "We hope this change will be smooth enough!"
+msgstr "Nous espérons que ce changement vous plaira !"
+
+msgid ""
+"We redesigned the tracker administration navigation to improve efficiency "
+"with most commonly used features highlighted."
+msgstr ""
+"Nous avons repensé la navigation dans l'administration des outils de suivi pour améliorer son "
+"efficacité avec les fonctionnalités les plus utilisées mises en avant."
+
 msgid "Webhook sucessfully created"
 msgstr "Le webhook a été créé"
 
@@ -1375,6 +1394,9 @@ msgstr "Le webhook a été mis à jour"
 
 msgid "Webhooks"
 msgstr "Webhooks"
+
+msgid "Welcome to the new tracker administration menu."
+msgstr "Bienvenue dans le nouveau menu d'administration des outils de suivi."
 
 msgid "Workflow"
 msgstr "Workflow"
