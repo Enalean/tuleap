@@ -8,9 +8,17 @@
     overflow: hidden;
 }
 
+.has-visible-project-banner .test-campaign {
+    height: calc(100vh - #{$navbar-height} - 75px - #{$project-banner-base-height});
+}
+
 $toolbar-height: 46px;
-.toolbar + #testmanagement-app .test-campaign {
+.toolbar ~ #testmanagement-app .test-campaign {
     height: calc(100vh - #{$navbar-height} - 75px - #{$toolbar-height});
+}
+
+.has-visible-project-banner .toolbar ~ #testmanagement-app .test-campaign {
+    height: calc(100vh - #{$navbar-height} - 75px - #{$toolbar-height} - #{$project-banner-base-height});
 }
 
 .test-campaign-header {
