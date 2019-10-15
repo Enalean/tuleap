@@ -53,7 +53,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
         releaseData = {
             label: "mile",
             id: 2,
-            start_date: new Date("2017-01-22T13:42:08+02:00"),
+            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
             capacity: 10,
             number_of_artifact_by_trackers: []
         };
@@ -82,23 +82,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-
-            const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
-            const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
-            const remaining_point_value = wrapper.find(
-                "[data-test=display-remaining-points-value]"
-            );
-
-            expect(tooltip.attributes("data-tlp-tooltip")).toEqual("110.00%");
-            expect(tooltip.classes()).not.toContain("release-remaining-value-success");
-            expect(remaining_point_text.classes()).not.toContain(
-                "release-remaining-value-disabled"
-            );
-            expect(remaining_point_value.classes()).not.toContain(
-                "release-remaining-progress-value-disabled"
-            );
-
-            expect(remaining_point_text.text()).toEqual("-1");
+            expect(wrapper.element).toMatchSnapshot();
         });
 
         it("When there isn't remaining effort points, Then 0 is displayed and message in tooltip", async () => {
@@ -118,19 +102,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-
-            const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
-            const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
-            const remaining_point_value = wrapper.find(
-                "[data-test=display-remaining-points-value]"
-            );
-
-            expect(tooltip.attributes("data-tlp-tooltip")).toEqual("No remaining effort defined.");
-            expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
-            expect(remaining_point_value.classes()).toContain(
-                "release-remaining-progress-value-disabled"
-            );
-            expect(remaining_point_text.text()).toEqual("0");
+            expect(wrapper.element).toMatchSnapshot();
         });
 
         it("When there is remaining effort point and is null, Then 0 is displayed and message in tooltip", async () => {
@@ -151,19 +123,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-
-            const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
-            const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
-            const remaining_point_value = wrapper.find(
-                "[data-test=display-remaining-points-value]"
-            );
-
-            expect(tooltip.attributes("data-tlp-tooltip")).toEqual("No remaining effort defined.");
-            expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
-            expect(remaining_point_value.classes()).toContain(
-                "release-remaining-progress-value-disabled"
-            );
-            expect(remaining_point_text.text()).toEqual("0");
+            expect(wrapper.element).toMatchSnapshot();
         });
 
         it("When there is remaining effort point, not null and greater than 0, Then it's displayed and percent in tooltip", async () => {
@@ -184,19 +144,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-
-            const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
-            const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
-            const remaining_point_value = wrapper.find(
-                "[data-test=display-remaining-points-value]"
-            );
-
-            expect(tooltip.attributes("data-tlp-tooltip")).toEqual("50.00%");
-            expect(remaining_point_text.classes()).toContain("release-remaining-value-success");
-            expect(remaining_point_value.classes()).toContain(
-                "release-remaining-progress-value-success"
-            );
-            expect(remaining_point_text.text()).toEqual("5");
+            expect(wrapper.element).toMatchSnapshot();
         });
 
         it("When there is remaining effort point, equal at 0, Then it's displayed and percent in tooltip", async () => {
@@ -217,25 +165,10 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-
-            const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
-            const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
-            const remaining_point_value = wrapper.find(
-                "[data-test=display-remaining-points-value]"
-            );
-
-            expect(tooltip.attributes("data-tlp-tooltip")).toEqual("100.00%");
-            expect(remaining_point_text.classes()).not.toContain("release-remaining-value-success");
-            expect(remaining_point_text.classes()).not.toContain(
-                "release-remaining-value-disabled"
-            );
-            expect(remaining_point_value.classes()).not.toContain(
-                "release-remaining-progress-value-disabled"
-            );
-            expect(remaining_point_text.text()).toEqual("0");
+            expect(wrapper.element).toMatchSnapshot();
         });
 
-        it("When there isn't initial effort point, Then 0 is displayed and message in tooltip", async () => {
+        it("When there isn't initial effort point, Then remaining effort is displayed and message in tooltip", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -252,22 +185,10 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-
-            const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
-            const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
-            const remaining_point_value = wrapper.find(
-                "[data-test=display-remaining-points-value]"
-            );
-
-            expect(tooltip.attributes("data-tlp-tooltip")).toEqual("No initial effort defined.");
-            expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
-            expect(remaining_point_value.classes()).toContain(
-                "release-remaining-progress-value-disabled"
-            );
-            expect(remaining_point_text.text()).toEqual("5");
+            expect(wrapper.element).toMatchSnapshot();
         });
 
-        it("When there is initial effort point but null, Then 0 is displayed and message in tooltip", async () => {
+        it("When there is initial effort point but null, Then remaining effort is displayed and message in tooltip", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -285,22 +206,10 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-
-            const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
-            const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
-            const remaining_point_value = wrapper.find(
-                "[data-test=display-remaining-points-value]"
-            );
-
-            expect(tooltip.attributes("data-tlp-tooltip")).toEqual("No initial effort defined.");
-            expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
-            expect(remaining_point_value.classes()).toContain(
-                "release-remaining-progress-value-disabled"
-            );
-            expect(remaining_point_text.text()).toEqual("5");
+            expect(wrapper.element).toMatchSnapshot();
         });
 
-        it("When there is initial effort point but equal at 0, Then 0 is displayed and message in tooltip", async () => {
+        it("When there is initial effort point but equal at 0, Then remaining effort is displayed and message in tooltip", async () => {
             releaseData = {
                 label: "mile",
                 id: 2,
@@ -318,19 +227,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-
-            const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
-            const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
-            const remaining_point_value = wrapper.find(
-                "[data-test=display-remaining-points-value]"
-            );
-
-            expect(tooltip.attributes("data-tlp-tooltip")).toEqual("Initial effort equal at 0.");
-            expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
-            expect(remaining_point_value.classes()).toContain(
-                "release-remaining-progress-value-disabled"
-            );
-            expect(remaining_point_text.text()).toEqual("5");
+            expect(wrapper.element).toMatchSnapshot();
         });
 
         it("When remaining effort > initial effort, Then remaining effort is displayed and message in tooltip", async () => {
@@ -351,21 +248,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-
-            const tooltip = wrapper.find("[data-test=display-remaining-points-tooltip]");
-            const remaining_point_text = wrapper.find("[data-test=display-remaining-points-text]");
-            const remaining_point_value = wrapper.find(
-                "[data-test=display-remaining-points-value]"
-            );
-
-            expect(tooltip.attributes("data-tlp-tooltip")).toEqual(
-                "Initial effort (10) should be bigger or equal to remaining effort (100)."
-            );
-            expect(remaining_point_text.classes()).toContain("release-remaining-value-disabled");
-            expect(remaining_point_value.classes()).toContain(
-                "release-remaining-progress-value-disabled"
-            );
-            expect(remaining_point_text.text()).toEqual("100");
+            expect(wrapper.element).toMatchSnapshot();
         });
     });
 });

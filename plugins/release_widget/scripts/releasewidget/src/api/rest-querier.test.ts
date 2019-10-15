@@ -108,7 +108,7 @@ describe("getProject() -", () => {
         const milestones: MilestoneData[] = [
             {
                 id: 1,
-                start_date: new Date(),
+                start_date: new Date().toDateString(),
                 number_of_artifact_by_trackers: []
             }
         ];

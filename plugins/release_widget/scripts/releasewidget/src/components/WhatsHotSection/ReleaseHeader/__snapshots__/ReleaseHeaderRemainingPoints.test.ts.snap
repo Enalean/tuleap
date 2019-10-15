@@ -1,0 +1,380 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReleaseHeaderRemainingEffort Display remaining points When remaining effort > initial effort, Then remaining effort is displayed and message in tooltip 1`] = `
+<div
+  class="release-remaining tlp-tooltip tlp-tooltip-left"
+  data-tlp-tooltip="Initial effort (10) should be bigger or equal to remaining effort (100)."
+>
+  <div
+    class="release-remaining-header"
+  >
+    <i
+      class="release-remaining-icon fa fa-flag-checkered"
+    />
+     
+    <span
+      class="release-remaining-value release-remaining-value-disabled"
+    >
+      
+            100
+        
+    </span>
+     
+    <translate-stub
+      class="release-remaining-text"
+      tag="span"
+      translaten="100"
+      translateplural="pts to go"
+    >
+      
+            pt to go
+        
+    </translate-stub>
+  </div>
+   
+  <div
+    class="release-remaining-progress"
+  >
+    <div
+      class="release-remaining-progress-value release-remaining-progress-value-disabled"
+    />
+  </div>
+</div>
+`;
+
+exports[`ReleaseHeaderRemainingEffort Display remaining points When there is initial effort point but equal at 0, Then remaining effort is displayed and message in tooltip 1`] = `
+<div
+  class="release-remaining tlp-tooltip tlp-tooltip-left"
+  data-tlp-tooltip="Initial effort equal at 0."
+>
+  <div
+    class="release-remaining-header"
+  >
+    <i
+      class="release-remaining-icon fa fa-flag-checkered"
+    />
+     
+    <span
+      class="release-remaining-value release-remaining-value-disabled"
+    >
+      
+            5
+        
+    </span>
+     
+    <translate-stub
+      class="release-remaining-text"
+      tag="span"
+      translaten="5"
+      translateplural="pts to go"
+    >
+      
+            pt to go
+        
+    </translate-stub>
+  </div>
+   
+  <div
+    class="release-remaining-progress"
+  >
+    <div
+      class="release-remaining-progress-value release-remaining-progress-value-disabled"
+    />
+  </div>
+</div>
+`;
+
+exports[`ReleaseHeaderRemainingEffort Display remaining points When there is initial effort point but null, Then remaining effort is displayed and message in tooltip 1`] = `
+<div
+  class="release-remaining tlp-tooltip tlp-tooltip-left"
+  data-tlp-tooltip="No initial effort defined."
+>
+  <div
+    class="release-remaining-header"
+  >
+    <i
+      class="release-remaining-icon fa fa-flag-checkered"
+    />
+     
+    <span
+      class="release-remaining-value release-remaining-value-disabled"
+    >
+      
+            5
+        
+    </span>
+     
+    <translate-stub
+      class="release-remaining-text"
+      tag="span"
+      translaten="5"
+      translateplural="pts to go"
+    >
+      
+            pt to go
+        
+    </translate-stub>
+  </div>
+   
+  <div
+    class="release-remaining-progress"
+  >
+    <div
+      class="release-remaining-progress-value release-remaining-progress-value-disabled"
+    />
+  </div>
+</div>
+`;
+
+exports[`ReleaseHeaderRemainingEffort Display remaining points When there is negative remaining points, Then it displays and percent in tooltip 1`] = `
+<div
+  class="release-remaining tlp-tooltip tlp-tooltip-left"
+  data-tlp-tooltip="110.00%"
+>
+  <div
+    class="release-remaining-header"
+  >
+    <i
+      class="release-remaining-icon fa fa-flag-checkered"
+    />
+     
+    <span
+      class="release-remaining-value"
+    >
+      
+            -1
+        
+    </span>
+     
+    <translate-stub
+      class="release-remaining-text"
+      tag="span"
+      translaten="-1"
+      translateplural="pts to go"
+    >
+      
+            pt to go
+        
+    </translate-stub>
+  </div>
+   
+  <div
+    class="release-remaining-progress"
+  >
+    <div
+      class="release-remaining-progress-value"
+      style="width: 110.00%;"
+    />
+  </div>
+</div>
+`;
+
+exports[`ReleaseHeaderRemainingEffort Display remaining points When there is remaining effort point and is null, Then 0 is displayed and message in tooltip 1`] = `
+<div
+  class="release-remaining tlp-tooltip tlp-tooltip-left"
+  data-tlp-tooltip="No remaining effort defined."
+>
+  <div
+    class="release-remaining-header"
+  >
+    <i
+      class="release-remaining-icon fa fa-flag-checkered"
+    />
+     
+    <span
+      class="release-remaining-value release-remaining-value-disabled"
+    >
+      
+            0
+        
+    </span>
+     
+    <translate-stub
+      class="release-remaining-text"
+      tag="span"
+      translateplural="pts to go"
+    >
+      
+            pt to go
+        
+    </translate-stub>
+  </div>
+   
+  <div
+    class="release-remaining-progress"
+  >
+    <div
+      class="release-remaining-progress-value release-remaining-progress-value-disabled"
+    />
+  </div>
+</div>
+`;
+
+exports[`ReleaseHeaderRemainingEffort Display remaining points When there is remaining effort point, equal at 0, Then it's displayed and percent in tooltip 1`] = `
+<div
+  class="release-remaining tlp-tooltip tlp-tooltip-left"
+  data-tlp-tooltip="100.00%"
+>
+  <div
+    class="release-remaining-header"
+  >
+    <i
+      class="release-remaining-icon fa fa-flag-checkered"
+    />
+     
+    <span
+      class="release-remaining-value"
+    >
+      
+            0
+        
+    </span>
+     
+    <translate-stub
+      class="release-remaining-text"
+      tag="span"
+      translaten="0"
+      translateplural="pts to go"
+    >
+      
+            pt to go
+        
+    </translate-stub>
+  </div>
+   
+  <div
+    class="release-remaining-progress"
+  >
+    <div
+      class="release-remaining-progress-value"
+      style="width: 100.00%;"
+    />
+  </div>
+</div>
+`;
+
+exports[`ReleaseHeaderRemainingEffort Display remaining points When there is remaining effort point, not null and greater than 0, Then it's displayed and percent in tooltip 1`] = `
+<div
+  class="release-remaining tlp-tooltip tlp-tooltip-left"
+  data-tlp-tooltip="50.00%"
+>
+  <div
+    class="release-remaining-header"
+  >
+    <i
+      class="release-remaining-icon fa fa-flag-checkered"
+    />
+     
+    <span
+      class="release-remaining-value release-remaining-value-success"
+    >
+      
+            5
+        
+    </span>
+     
+    <translate-stub
+      class="release-remaining-text"
+      tag="span"
+      translaten="5"
+      translateplural="pts to go"
+    >
+      
+            pt to go
+        
+    </translate-stub>
+  </div>
+   
+  <div
+    class="release-remaining-progress"
+  >
+    <div
+      class="release-remaining-progress-value release-remaining-progress-value-success"
+      style="width: 50.00%;"
+    />
+  </div>
+</div>
+`;
+
+exports[`ReleaseHeaderRemainingEffort Display remaining points When there isn't initial effort point, Then remaining effort is displayed and message in tooltip 1`] = `
+<div
+  class="release-remaining tlp-tooltip tlp-tooltip-left"
+  data-tlp-tooltip="No initial effort defined."
+>
+  <div
+    class="release-remaining-header"
+  >
+    <i
+      class="release-remaining-icon fa fa-flag-checkered"
+    />
+     
+    <span
+      class="release-remaining-value release-remaining-value-disabled"
+    >
+      
+            5
+        
+    </span>
+     
+    <translate-stub
+      class="release-remaining-text"
+      tag="span"
+      translaten="5"
+      translateplural="pts to go"
+    >
+      
+            pt to go
+        
+    </translate-stub>
+  </div>
+   
+  <div
+    class="release-remaining-progress"
+  >
+    <div
+      class="release-remaining-progress-value release-remaining-progress-value-disabled"
+    />
+  </div>
+</div>
+`;
+
+exports[`ReleaseHeaderRemainingEffort Display remaining points When there isn't remaining effort points, Then 0 is displayed and message in tooltip 1`] = `
+<div
+  class="release-remaining tlp-tooltip tlp-tooltip-left"
+  data-tlp-tooltip="No remaining effort defined."
+>
+  <div
+    class="release-remaining-header"
+  >
+    <i
+      class="release-remaining-icon fa fa-flag-checkered"
+    />
+     
+    <span
+      class="release-remaining-value release-remaining-value-disabled"
+    >
+      
+            0
+        
+    </span>
+     
+    <translate-stub
+      class="release-remaining-text"
+      tag="span"
+      translateplural="pts to go"
+    >
+      
+            pt to go
+        
+    </translate-stub>
+  </div>
+   
+  <div
+    class="release-remaining-progress"
+  >
+    <div
+      class="release-remaining-progress-value release-remaining-progress-value-disabled"
+    />
+  </div>
+</div>
+`;

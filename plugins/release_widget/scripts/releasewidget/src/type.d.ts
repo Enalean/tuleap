@@ -21,7 +21,8 @@ export interface MilestoneData {
     label?: string;
     id: number;
     capacity?: number | null;
-    start_date?: Date | null;
+    start_date?: string | null;
+    end_date?: string | null;
     planning?: {
         id: string;
     };

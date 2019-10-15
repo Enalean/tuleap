@@ -23,6 +23,7 @@ import ReleaseHeader from "./ReleaseHeader.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import { MilestoneData, StoreOptions } from "../../../type";
 import { initVueGettext } from "../../../../../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import { setUserLocale } from "../../../helpers/user-locale-helper";
 
 let releaseData: MilestoneData;
 let component_options: ShallowMountOptions<ReleaseHeader>;
@@ -53,8 +54,8 @@ describe("ReleaseHeader", () => {
         releaseData = {
             label: "mile",
             id: 2,
-            start_date: new Date("2017-01-22T13:42:08+02:00"),
-            capacity: 10,
+            start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
+            end_date: new Date("2019-10-05T13:42:08+02:00").toDateString(),
             number_of_artifact_by_trackers: []
         };
 
@@ -66,10 +67,11 @@ describe("ReleaseHeader", () => {
     });
 
     describe("Display arrow between dates", () => {
-        it("When there is a start date of a release, Then an arrow is displayed", async () => {
-            const wrapper = await getPersonalWidgetInstance(store_options);
+        it("When there are a start date and end date, Then an arrow is displayed", async () => {
+            setUserLocale("en-US");
 
-            expect(wrapper.contains("[data-test=display-arrow]")).toBeTruthy();
+            const wrapper = await getPersonalWidgetInstance(store_options);
+            expect(wrapper.element).toMatchSnapshot();
         });
 
         it("When there isn't a start date of a release, Then there isn't an arrow", async () => {
@@ -85,25 +87,7 @@ describe("ReleaseHeader", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-
-            expect(wrapper.contains("[data-test=display-arrow]")).toBeFalsy();
+            expect(wrapper.element).toMatchSnapshot();
         });
-    });
-
-    it("When the widget is rendered, Then the component ReleaseHeaderRemainingEffort is displayed", async () => {
-        releaseData = {
-            label: "mile",
-            id: 2,
-            number_of_artifact_by_trackers: []
-        };
-
-        component_options.propsData = {
-            releaseData
-        };
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
-
-        expect(wrapper.contains("[data-test=display-remaining-days]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=display-remaining-points]")).toBeTruthy();
     });
 });
