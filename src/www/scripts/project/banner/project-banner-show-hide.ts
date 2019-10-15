@@ -44,8 +44,13 @@ export function allowToHideAndShowProjectBanner(
 
     project_banner_navbar.addEventListener(
         "click",
-        (): void => {
-            showProjectBannerMessage(mount_point.body, project_banner_navbar, full_project_banner);
+        (event: Event): void => {
+            showProjectBannerMessage(
+                event,
+                mount_point.body,
+                project_banner_navbar,
+                full_project_banner
+            );
         }
     );
     const project_id = project_banner_message_close_button.dataset.projectId;
@@ -71,10 +76,13 @@ export function allowToHideAndShowProjectBanner(
 }
 
 function showProjectBannerMessage(
+    event: Event,
     document_body: HTMLElement,
     project_banner_navbar: HTMLElement,
     full_project_banner: HTMLElement
 ): void {
+    event.preventDefault();
+    window.scrollTo(0, 0);
     document_body.classList.add(PROJECT_BANNER_VISIBLE_GLOBAL_CLASS);
     project_banner_navbar.classList.remove(PROJECT_BANNER_HIDDEN_CLASS);
     full_project_banner.classList.remove(PROJECT_BANNER_HIDDEN_CLASS);

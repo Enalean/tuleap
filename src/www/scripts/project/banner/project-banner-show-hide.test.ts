@@ -102,6 +102,7 @@ describe("Show and hide project banner", () => {
     });
 
     it("Can hide and show the project banner", () => {
+        const windowScrollToSpy = jest.spyOn(window, "scrollTo").mockImplementation(() => {});
         const local_document = getLocalDocumentWithProjectBannerAndNavbarInformation();
         const tlpPatchSpy = getTlpPatchSpy();
 
@@ -122,6 +123,14 @@ describe("Show and hide project banner", () => {
             })
         );
 
+        let click_event: Event | undefined;
+        local_document.project_banner_navbar_information.addEventListener(
+            "click",
+            (event: Event) => {
+                click_event = event;
+            }
+        );
+
         local_document.project_banner_navbar_information.click();
         expect(local_document.document.body.classList).toContain(
             PROJECT_BANNER_VISIBLE_GLOBAL_CLASS
@@ -130,5 +139,10 @@ describe("Show and hide project banner", () => {
         expect(local_document.project_banner_navbar_information.classList).not.toContain(
             PROJECT_BANNER_HIDDEN_CLASS
         );
+        expect(windowScrollToSpy).toHaveBeenCalledTimes(1);
+        expect(click_event).toBeDefined();
+        if (click_event !== undefined) {
+            expect(click_event.defaultPrevented).toBe(true);
+        }
     });
 });
