@@ -173,6 +173,8 @@ document.observe("dom:loaded", function() {
             });
         });
 
+        jQuery("#tracker-admin-new-layout").modal("show"); // eslint-disable-line no-undef
+
         $$(".tracker-admin-field-controls a.edit-field").each(function(a) {
             var selected_element, element;
             var rtes = [];

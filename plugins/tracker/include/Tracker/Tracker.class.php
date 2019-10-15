@@ -29,6 +29,7 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Admin\HeaderPresenter;
+use Tuleap\Tracker\Admin\NewLayoutDao;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
@@ -1549,6 +1550,8 @@ class Tracker implements Tracker_Dispatchable_Interface
         $title = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'mng_field_usage');
         $this->displayAdminFormElementsHeader($layout, $title);
 
+        $this->displayAdminFormElementsNewLayoutModal($current_user);
+
         echo '<h2 class="almost-tlp-title">'. $title .'</h2>';
         echo '<form name="form1" method="POST" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&amp;func=admin-formElements">';
 
@@ -1564,6 +1567,24 @@ class Tracker implements Tracker_Dispatchable_Interface
                 </div>
               </form>';
         $this->displayAdminFooter($layout);
+    }
+
+    private function displayAdminFormElementsNewLayoutModal(PFUser $current_user): void
+    {
+        $layout_dao = new NewLayoutDao();
+        $user_id    = (int) $current_user->getId();
+
+        $user_must_see_the_modal = $layout_dao->mustUserSeeTheModal($user_id);
+        if ($user_must_see_the_modal === false) {
+            return;
+        }
+
+        $layout_dao->removeUserFromList($user_id);
+
+        $this->renderer->renderToPage(
+            'admin-new-layout-modal',
+            []
+        );
     }
 
     private function fetchAdminPalette()
