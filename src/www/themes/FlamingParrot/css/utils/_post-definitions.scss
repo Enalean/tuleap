@@ -26,11 +26,11 @@
 
     &.project-administration {
         background: $main-background;
-        .main {
-            padding: 20px 0 0;
-        }
         .content {
             padding: 0;
+        }
+        .administration-title {
+            padding: 20px 20px 0;
         }
     }
 
