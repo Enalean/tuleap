@@ -39,14 +39,12 @@ class RecentlyVisitedDao extends DataAccessObject
         $artifact_id = $this->da->escapeInt($artifact_id);
         $created_on  = $this->da->escapeInt($created_on);
 
-        $this->startTransaction();
         $sql_update     = "INSERT INTO plugin_tracker_recently_visited(user_id, artifact_id, created_on)
                 VALUES ($user_id, $artifact_id, $created_on)
                 ON DUPLICATE KEY UPDATE created_on=$created_on";
         $has_been_saved = $this->update($sql_update);
         if (! $has_been_saved) {
-            $this->rollBack();
-            return false;
+            throw new \RuntimeException('Recently updated was to saved');
         }
 
         $sql_clean_history     = "DELETE FROM plugin_tracker_recently_visited WHERE user_id = $user_id AND created_on <= (
@@ -57,11 +55,9 @@ class RecentlyVisitedDao extends DataAccessObject
         $has_history_been_cleaned = $this->update($sql_clean_history);
 
         if (! $has_history_been_cleaned) {
-            $this->rollBack();
-            return false;
+            throw new \RuntimeException('Recently updated was not cleaned');
         }
 
-        $this->commit();
         return true;
     }
 

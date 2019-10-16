@@ -23,6 +23,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
@@ -372,7 +374,7 @@ class Tracker_ArtifactFactory
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
             $logger
         );
-        $creator = new Tracker_ArtifactCreator($this, $fields_validator, $changeset_creator, $visit_recorder, $logger);
+        $creator = new Tracker_ArtifactCreator($this, $fields_validator, $changeset_creator, $visit_recorder, $logger, new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()));
 
         if ($user->isAnonymous()) {
             $user->setEmail($email);

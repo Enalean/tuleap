@@ -206,7 +206,8 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
             \Mockery::spy(\EventManager::class),
             $reference_manager,
             \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder::class),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($factory)
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($factory),
+            new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
         );
 
         $creator->create(
@@ -276,6 +277,7 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         stub($hierarchy_factory)->getChildren()->returns(array());
 
         $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact->setTransactionExecutorForTests(new \Tuleap\Test\DB\DBTransactionExecutorPassthrough());
         $artifact->shouldReceive('getChangesetDao')->andReturns($dao);
         $artifact->shouldReceive('getChangesetCommentDao')->andReturns($comment_dao);
         $artifact->shouldReceive('getFormElementFactory')->andReturns($factory);
@@ -386,6 +388,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
         stub($hierarchy_factory)->getChildren()->returns(array());
 
         $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact->setTransactionExecutorForTests(new \Tuleap\Test\DB\DBTransactionExecutorPassthrough());
         $artifact->shouldReceive('getChangesetDao')->andReturns($dao);
         $artifact->shouldReceive('getChangesetCommentDao')->andReturns($comment_dao);
         $artifact->shouldReceive('getFormElementFactory')->andReturns($factory);
@@ -506,6 +509,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
 
         $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         assert($artifact instanceof Tracker_Artifact);
+        $artifact->setTransactionExecutorForTests(new \Tuleap\Test\DB\DBTransactionExecutorPassthrough());
         $artifact->shouldReceive('getChangesetDao')->andReturns($dao);
         $artifact->shouldReceive('getChangesetCommentDao')->andReturns($comment_dao);
         $artifact->shouldReceive('getFormElementFactory')->andReturns($factory);
@@ -634,6 +638,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest
         stub($hierarchy_factory)->getChildren()->returns(array());
 
         $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact->setTransactionExecutorForTests(new \Tuleap\Test\DB\DBTransactionExecutorPassthrough());
         $artifact->shouldReceive('getChangesetDao')->andReturns($dao);
         $artifact->shouldReceive('getChangesetCommentDao')->andReturns($comment_dao);
         $artifact->shouldReceive('getFormElementFactory')->andReturns($factory);
@@ -828,7 +833,8 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase
             \Mockery::spy(\EventManager::class),
             \Mockery::spy(\ReferenceManager::class),
             \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder::class),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($factory)
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($factory),
+            new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
         );
     }
 

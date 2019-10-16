@@ -25,6 +25,7 @@
 
 require_once __DIR__ .'/../../constants.php';
 
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
@@ -150,6 +151,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     /** @var array */
     private $authorized_ugroups;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
 
     /**
      * Constructor
@@ -2100,7 +2105,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $this->getEventManager(),
             $this->getReferenceManager(),
             $this->getSourceOfAssociationCollectionBuilder(),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory())
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory()),
+            $this->getTransactionExecutor(),
         );
 
         return $creator;
@@ -2117,6 +2123,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             ),
             $this->getFormElementFactory()
         );
+    }
+
+    private function getTransactionExecutor(): DBTransactionExecutor
+    {
+        if ($this->transaction_executor) {
+            return $this->transaction_executor;
+        }
+        return new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection());
+    }
+
+    public function setTransactionExecutorForTests(DBTransactionExecutor $transaction_executor)
+    {
+        $this->transaction_executor = $transaction_executor;
     }
 
     private function getNoNatureForLink($linked_artifact_id)

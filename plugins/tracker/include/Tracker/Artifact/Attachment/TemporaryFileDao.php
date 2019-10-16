@@ -30,8 +30,6 @@ class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObje
         $timestamp   = $this->da->escapeInt($timestamp);
         $tempname    = $this->da->quoteSmart($tempname);
 
-        $this->startTransaction();
-
         $sql = "INSERT INTO tracker_fileinfo
                     (submitted_by, description, filename, filetype)
                 VALUES ($user_id, $description, $name, $mimetype)";
@@ -39,7 +37,6 @@ class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObje
         $file_id = $this->updateAndGetLastId($sql);
 
         if (! $file_id) {
-            $this->rollBack();
             return false;
         }
 
@@ -48,11 +45,9 @@ class Tracker_Artifact_Attachment_TemporaryFileManagerDao extends DataAccessObje
                 VALUES ($file_id, $timestamp, $timestamp, $tempname)";
 
         if (! $this->update($sql)) {
-            $this->rollBack();
             return false;
         }
 
-        $this->commit();
         return $file_id;
     }
 

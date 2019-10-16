@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,9 @@ use PFUser;
 
 class SourceOfAssociationCollection implements \Countable
 {
-
+    /**
+     * @var Tracker_Artifact[]
+     */
     private $artifacts = array();
 
     public function add(Tracker_Artifact $artifact)

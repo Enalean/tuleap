@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,7 @@ use Tracker_Artifact;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImport;
 use Tracker_XML_Exporter_ArtifactXMLExporter;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
@@ -66,6 +67,10 @@ class MoveArtifact
      * @var BeforeMoveArtifact
      */
     private $before_move_artifact;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
 
     public function __construct(
         ArtifactsDeletionManager $artifacts_deletion_manager,
@@ -73,7 +78,8 @@ class MoveArtifact
         MoveChangesetXMLUpdater $xml_updater,
         Tracker_Artifact_XMLImport $xml_import,
         Tracker_Artifact_PriorityManager $artifact_priority_manager,
-        BeforeMoveArtifact $before_move_artifact
+        BeforeMoveArtifact $before_move_artifact,
+        DBTransactionExecutor $transaction_executor
     ) {
         $this->artifacts_deletion_manager = $artifacts_deletion_manager;
         $this->xml_exporter               = $xml_exporter;
@@ -81,6 +87,7 @@ class MoveArtifact
         $this->xml_import                 = $xml_import;
         $this->artifact_priority_manager  = $artifact_priority_manager;
         $this->before_move_artifact       = $before_move_artifact;
+        $this->transaction_executor       = $transaction_executor;
     }
 
     /**
@@ -118,22 +125,20 @@ class MoveArtifact
             throw new MoveArtifactTargetProjectNotActiveException();
         }
 
-        $this->artifact_priority_manager->startTransaction();
+        return $this->transaction_executor->execute(function () use ($artifact, $target_tracker, $user, $feedback_field_collector) {
+            $this->checkMoveIsPossible($artifact, $target_tracker, $user, $feedback_field_collector);
 
-        $this->checkMoveIsPossible($artifact, $target_tracker, $user, $feedback_field_collector);
+            $xml_artifacts = $this->getUpdatedXML($artifact, $target_tracker, $user, $feedback_field_collector);
 
-        $xml_artifacts = $this->getUpdatedXML($artifact, $target_tracker, $user, $feedback_field_collector);
+            $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
+            $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user);
 
-        $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
-        $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user);
+            if (! $this->processMove($xml_artifacts->artifact, $target_tracker, $global_rank)) {
+                throw new MoveArtifactNotDoneException();
+            }
 
-        if (! $this->processMove($xml_artifacts->artifact, $target_tracker, $global_rank)) {
-            $this->artifact_priority_manager->rollback();
-            throw new MoveArtifactNotDoneException();
-        }
-
-        $this->artifact_priority_manager->commit();
-        return $limit;
+            return $limit;
+        });
     }
 
     /**

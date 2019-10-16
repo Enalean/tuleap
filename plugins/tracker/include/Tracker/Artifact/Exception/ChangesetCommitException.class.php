@@ -21,8 +21,8 @@
 class Tracker_ChangesetCommitException extends Tracker_Exception
 {
 
-    public function __construct()
+    public function __construct(Throwable $throwable)
     {
-        parent::__construct('Error while commiting all the changes');
+        parent::__construct('Error ('.get_class($throwable).') while commiting all the changes: '.$throwable->getMessage());
     }
 }

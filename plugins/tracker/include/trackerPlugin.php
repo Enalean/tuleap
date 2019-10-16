@@ -290,13 +290,14 @@ class trackerPlugin extends Plugin
     /**
      * @see Event::PROCCESS_SYSTEM_CHECK
      */
-    public function proccess_system_check(array $params)
+    public function proccess_system_check(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $file_manager = new Tracker_Artifact_Attachment_TemporaryFileManager(
             $this->getUserManager(),
             new Tracker_Artifact_Attachment_TemporaryFileManagerDao(),
             new System_Command(),
-            ForgeConfig::get('sys_file_deletion_delay')
+            ForgeConfig::get('sys_file_deletion_delay'),
+            new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection())
         );
 
         $file_manager->purgeOldTemporaryFiles();

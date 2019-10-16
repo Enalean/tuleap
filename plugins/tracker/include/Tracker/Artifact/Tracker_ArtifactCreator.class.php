@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -46,13 +49,18 @@ class Tracker_ArtifactCreator //phpcs:ignore
      * @var Logger
      */
     private $logger;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $db_transaction_executor;
 
     public function __construct(
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         Tracker_Artifact_Changeset_InitialChangesetCreatorBase $changeset_creator,
         VisitRecorder $visit_recorder,
-        Logger $logger
+        Logger $logger,
+        DBTransactionExecutor $db_transaction_executor
     ) {
         $this->artifact_dao      = $artifact_factory->getDao();
         $this->artifact_factory  = $artifact_factory;
@@ -60,6 +68,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
         $this->changeset_creator = $changeset_creator;
         $this->visit_recorder    = $visit_recorder;
         $this->logger            = $logger;
+        $this->db_transaction_executor = $db_transaction_executor;
     }
 
     /**
@@ -117,7 +126,9 @@ class Tracker_ArtifactCreator //phpcs:ignore
         $send_notification,
         CreatedFileURLMapping $url_mapping
     ) {
-        $changeset_id = $this->changeset_creator->create($artifact, $fields_data, $user, (int) $submitted_on, $url_mapping);
+        $changeset_id = $this->db_transaction_executor->execute(function () use ($artifact, $fields_data, $user, $submitted_on, $url_mapping) {
+            return $this->changeset_creator->create($artifact, $fields_data, $user, (int) $submitted_on, $url_mapping);
+        });
         if (! $changeset_id) {
             return;
         }

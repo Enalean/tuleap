@@ -23,6 +23,8 @@
  */
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
@@ -185,7 +187,8 @@ class Tracker_Migration_MigrationManager
                 $this->logger
             ),
             new VisitRecorder(new RecentlyVisitedDao()),
-            $this->logger
+            $this->logger,
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
         );
     }
 
@@ -210,7 +213,8 @@ class Tracker_Migration_MigrationManager
                 ),
                 Tracker_FormElementFactory::instance()
             ),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->form_element_factory)
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->form_element_factory),
+            new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
         );
     }
 

@@ -235,12 +235,12 @@ class Header
         self::sendHeader(self::X_RATELIMIT_REMAINING, $remaining_calls);
     }
 
-    public function sendQuotaHeader($quota)
+    public static function sendQuotaHeader($quota)
     {
         self::sendHeader(self::X_QUOTA, $quota);
     }
 
-    public function sendDiskUsage($disk_usage)
+    public static function sendDiskUsage($disk_usage)
     {
         self::sendHeader(self::X_DISK_USAGE, $disk_usage);
     }

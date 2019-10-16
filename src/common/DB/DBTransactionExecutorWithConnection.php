@@ -35,8 +35,13 @@ final class DBTransactionExecutorWithConnection implements DBTransactionExecutor
         $this->db_connection = $db_connection;
     }
 
-    public function execute(callable $atomic_operations) : void
+    /**
+     * @param callable $atomic_operations
+     * @throws \Throwable
+     * @return mixed
+     */
+    public function execute(callable $atomic_operations)
     {
-        $this->db_connection->getDB()->tryFlatTransaction($atomic_operations);
+        return $this->db_connection->getDB()->tryFlatTransaction($atomic_operations);
     }
 }

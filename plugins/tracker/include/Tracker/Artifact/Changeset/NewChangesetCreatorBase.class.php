@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
@@ -44,6 +45,10 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
      * @var ReferenceManager
      */
     private $reference_manager;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
 
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
@@ -54,7 +59,8 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         EventManager $event_manager,
         ReferenceManager $reference_manager,
         SourceOfAssociationCollectionBuilder $source_of_association_collection_builder,
-        Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator
+        Tracker_Artifact_Changeset_ChangesetDataInitializator $field_initializator,
+        DBTransactionExecutor $transaction_executor
     ) {
         parent::__construct(
             $fields_validator,
@@ -68,6 +74,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $this->changeset_comment_dao                    = $changeset_comment_dao;
         $this->reference_manager                        = $reference_manager;
         $this->source_of_association_collection_builder = $source_of_association_collection_builder;
+        $this->transaction_executor                     = $transaction_executor;
     }
 
     /**
@@ -91,115 +98,113 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
     ): ?Tracker_Artifact_Changeset {
         $comment = trim($comment);
 
-        $this->changeset_dao->startTransaction();
-
         $email = null;
         if ($submitter->isAnonymous()) {
             $email = $submitter->getEmail();
         }
 
         try {
-            $this->validateNewChangeset($artifact, $fields_data, $comment, $submitter, $email);
+            $new_changeset = $this->transaction_executor->execute(function () use ($artifact, $fields_data, $comment, $comment_format, $submitter, $submitted_on, $email, $url_mapping) {
+                try {
+                    $this->validateNewChangeset($artifact, $fields_data, $comment, $submitter, $email);
 
-            $previous_changeset = $artifact->getLastChangeset();
+                    $previous_changeset = $artifact->getLastChangeset();
 
-            /*
-             * Post actions were run by validateNewChangeset but they modified a
-             * different set of $fields_data in the case of massChange;
-             * we run them again for the current $fields_data
-             */
-            $artifact->getWorkflow()->before($fields_data, $submitter, $artifact);
+                    /*
+                     * Post actions were run by validateNewChangeset but they modified a
+                     * different set of $fields_data in the case of massChange;
+                     * we run them again for the current $fields_data
+                     */
+                    $artifact->getWorkflow()->before($fields_data, $submitter, $artifact);
 
-            $changeset_id = $this->changeset_dao->create(
-                $artifact->getId(),
-                $submitter->getId(),
-                $email,
-                $submitted_on
-            );
-            if (! $changeset_id) {
-                $GLOBALS['Response']->addFeedback(
-                    'error',
-                    $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update')
-                );
-                $this->changeset_dao->rollBack();
-                throw new Tracker_ChangesetNotCreatedException();
-            }
+                    $changeset_id = $this->changeset_dao->create(
+                        $artifact->getId(),
+                        $submitter->getId(),
+                        $email,
+                        $submitted_on
+                    );
+                    if (! $changeset_id) {
+                        $GLOBALS['Response']->addFeedback(
+                            'error',
+                            $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update')
+                        );
+                        throw new Tracker_ChangesetNotCreatedException();
+                    }
 
-            $this->storeFieldsValues(
-                $artifact,
-                $previous_changeset,
-                $fields_data,
-                $submitter,
-                $changeset_id,
-                $url_mapping
-            );
+                    $this->storeFieldsValues(
+                        $artifact,
+                        $previous_changeset,
+                        $fields_data,
+                        $submitter,
+                        $changeset_id,
+                        $url_mapping
+                    );
 
-            if (! $this->storeComment(
-                $artifact,
-                $comment,
-                $submitter,
-                $submitted_on,
-                $comment_format,
-                $changeset_id,
-                $url_mapping
-            )) {
-                $this->changeset_dao->rollBack();
-                throw new Tracker_CommentNotStoredException();
-            }
+                    if (! $this->storeComment(
+                        $artifact,
+                        $comment,
+                        $submitter,
+                        $submitted_on,
+                        $comment_format,
+                        $changeset_id,
+                        $url_mapping
+                    )) {
+                        throw new Tracker_CommentNotStoredException();
+                    }
 
-            $new_changeset = new Tracker_Artifact_Changeset(
-                $changeset_id,
-                $artifact,
-                $submitter->getId(),
-                $submitted_on,
-                $email
-            );
-            $artifact->addChangeset($new_changeset);
+                    $new_changeset = new Tracker_Artifact_Changeset(
+                        $changeset_id,
+                        $artifact,
+                        $submitter->getId(),
+                        $submitted_on,
+                        $email
+                    );
+                    $artifact->addChangeset($new_changeset);
 
-            $save_after_ok = $this->saveArtifactAfterNewChangeset(
-                $artifact,
-                $fields_data,
-                $submitter,
-                $new_changeset,
-                $previous_changeset
-            );
+                    $save_after_ok = $this->saveArtifactAfterNewChangeset(
+                        $artifact,
+                        $fields_data,
+                        $submitter,
+                        $new_changeset,
+                        $previous_changeset
+                    );
 
-            if (! $save_after_ok) {
-                $this->changeset_dao->rollBack();
-                throw new Tracker_AfterSaveException();
-            }
-            ArtifactInstrumentation::increment(ArtifactInstrumentation::TYPE_UPDATED);
-        } catch (Tracker_NoChangeException $exception) {
-            $collection = $this->source_of_association_collection_builder->getSourceOfAssociationCollection(
-                $artifact,
-                $fields_data
-            );
-            if (count($collection) > 0) {
-                $collection->linkToArtifact($artifact, $submitter);
+                    if (! $save_after_ok) {
+                        throw new Tracker_AfterSaveException();
+                    }
+                    ArtifactInstrumentation::increment(ArtifactInstrumentation::TYPE_UPDATED);
+                    return $new_changeset;
+                } catch (Tracker_NoChangeException $exception) {
+                    $collection = $this->source_of_association_collection_builder->getSourceOfAssociationCollection(
+                        $artifact,
+                        $fields_data
+                    );
+                    if (count($collection) > 0) {
+                        $collection->linkToArtifact($artifact, $submitter);
 
+                        return null;
+                    }
+                    throw $exception;
+                } catch (Tracker_Exception $exception) {
+                    throw $exception;
+                }
+            });
+
+
+            if (! $new_changeset) {
                 return null;
-            } else {
-                $this->changeset_dao->rollBack();
-                throw $exception;
             }
-        } catch (Tracker_Exception $exception) {
-            $this->changeset_dao->rollBack();
-            throw $exception;
+
+            if ($send_notification) {
+                $artifact->getChangeset($new_changeset->getId())->executePostCreationActions();
+            }
+
+            $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, ['artifact' => $artifact]);
+
+            return $new_changeset;
+        } catch (PDOException $exception) {
+            throw new Tracker_ChangesetCommitException($exception);
         }
-
-        try {
-            $this->changeset_dao->commit();
-        } catch (Exception $exception) {
-            throw new Tracker_ChangesetCommitException();
-        }
-
-        if ($send_notification) {
-            $artifact->getChangeset($changeset_id)->executePostCreationActions();
-        }
-
-        $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, ['artifact' => $artifact]);
-
-        return $new_changeset;
     }
 
     abstract protected function saveNewChangesetForField(
@@ -233,7 +238,6 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
                 $changeset_id,
                 $url_mapping
             )) {
-                $this->changeset_dao->rollBack();
                 $purifier = Codendi_HTMLPurifier::instance();
                 throw new Tracker_FieldValueNotStoredException(
                     $GLOBALS['Language']->getText(
