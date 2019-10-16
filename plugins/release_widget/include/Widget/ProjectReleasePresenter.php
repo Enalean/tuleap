@@ -30,9 +30,14 @@ class ProjectReleasePresenter
      * @var int
      */
     public $project_id;
+    /**
+     * @var bool
+     */
+    public $is_IE11;
 
-    public function __construct(Project $project)
+    public function __construct(Project $project, bool $is_IE11)
     {
         $this->project_id = $project->getID();
+        $this->is_IE11 = $is_IE11;
     }
 }

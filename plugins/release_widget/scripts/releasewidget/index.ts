@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const project_id_dataset = vue_mount_point.dataset.projectId;
+    const is_IE11_dataset = vue_mount_point.dataset.isIe11;
 
     if (!project_id_dataset) {
         throw new Error("Project Id is missing.");
@@ -57,7 +58,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     new AppComponent({
         store,
         propsData: {
-            projectId: project_id
+            projectId: project_id,
+            isBrowserIE11: is_IE11_dataset
         }
     }).$mount(vue_mount_point);
 });
