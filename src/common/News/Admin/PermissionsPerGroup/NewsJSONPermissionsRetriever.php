@@ -25,7 +25,7 @@
 namespace Tuleap\News\Admin\PermissionsPerGroup;
 
 use Project;
-use Tuleap\TestManagement\Service;
+use Service;
 
 class NewsJSONPermissionsRetriever
 {
