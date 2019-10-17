@@ -22,6 +22,8 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use BackendLogger;
 use EventManager;
+use Http\Client\Common\Plugin\CookiePlugin;
+use Http\Message\CookieJar;
 use Jenkins_Client;
 use Jenkins_ClientUnableToLaunchBuildException;
 use Luracast\Restler\RestException;
@@ -280,7 +282,7 @@ class CampaignsResource
             $artifact_message_sender
         );
 
-        $http_client          = HttpClientFactory::createClient();
+        $http_client          = HttpClientFactory::createClient(new CookiePlugin(new CookieJar()));
         $http_request_factory = HTTPFactoryBuilder::requestFactory();
 
         $this->automated_triggerer = new AutomatedTestsTriggerer(
