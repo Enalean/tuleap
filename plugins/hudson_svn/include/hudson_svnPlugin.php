@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,8 @@ require_once __DIR__ . '/../../svn/include/svnPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
+use Http\Client\Common\Plugin\CookiePlugin;
+use Http\Message\CookieJar;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\HudsonSvn\BuildParams;
@@ -234,7 +236,7 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
 
     public function process_post_commit($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $http_client                  = HttpClientFactory::createClient();
+        $http_client                  = HttpClientFactory::createClient(new CookiePlugin(new CookieJar()));
         $http_request_factory         = HTTPFactoryBuilder::requestFactory();
         $jenkins_csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever($http_client, $http_request_factory);
         $launcher                     = new Launcher(

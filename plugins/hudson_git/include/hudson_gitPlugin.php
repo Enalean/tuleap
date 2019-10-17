@@ -23,6 +23,8 @@ require_once __DIR__ . '/../../git/include/gitPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
+use Http\Client\Common\Plugin\CookiePlugin;
+use Http\Message\CookieJar;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\HudsonGit\Plugin\PluginInfo;
@@ -115,7 +117,7 @@ class hudson_gitPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PS
     public function git_hook_post_receive_ref_update($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isAllowed($params['repository']->getProjectId())) {
-            $http_client     = HttpClientFactory::createClient();
+            $http_client     = HttpClientFactory::createClient(new CookiePlugin(new CookieJar()));
             $request_factory = HTTPFactoryBuilder::requestFactory();
             $controller      = new Hook\HookTriggerController(
                 new Hook\HookDao(),

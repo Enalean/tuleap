@@ -23,6 +23,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Http\Client\Common\Plugin\CookiePlugin;
+use Http\Message\CookieJar;
 use Tuleap\Git\Webhook\GitWebhookStatusLogger;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -61,7 +63,7 @@ if ($user_name === false) {
     $user_name         = $user_informations['name'];
 }
 
-$http_client          = HttpClientFactory::createClient();
+$http_client          = HttpClientFactory::createClient(new CookiePlugin(new CookieJar()));
 $http_request_factory = HTTPFactoryBuilder::requestFactory();
 
 $mail_builder = new MailBuilder(

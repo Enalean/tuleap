@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Http;
 
+use Http\Client\Common\Plugin;
 use Http\Client\Common\Plugin\RedirectPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Adapter\Guzzle6\Client;
@@ -30,24 +31,14 @@ class HttpClientFactory
 {
     private const TIMEOUT = 5;
 
-    public static function createClient() : \Psr\Http\Client\ClientInterface
+    public static function createClient(Plugin ...$plugins) : \Psr\Http\Client\ClientInterface
     {
-        return self::createClientWithStandardConfig();
+        return self::createClientWithStandardConfig(...$plugins);
     }
 
-    public static function createAsyncClient() : \Http\Client\HttpAsyncClient
+    public static function createAsyncClient(Plugin ...$plugins) : \Http\Client\HttpAsyncClient
     {
-        return self::createClientWithStandardConfig();
-    }
-
-    /**
-     * This client should only be used for Tuleap internal use to
-     * query internal resources. Queries requested by users (e.g. webhooks)
-     * MUST NOT use it.
-     */
-    public static function createClientForInternalTuleapUse() : \Psr\Http\Client\ClientInterface
-    {
-        return self::createClientWithConfigForInternalTuleapUse();
+        return self::createClientWithStandardConfig(...$plugins);
     }
 
     /**
@@ -55,42 +46,53 @@ class HttpClientFactory
      * query internal resources. Queries requested by users (e.g. webhooks)
      * MUST NOT use it.
      */
-    public static function createAsyncClientForInternalTuleapUse() : \Http\Client\HttpAsyncClient
+    public static function createClientForInternalTuleapUse(Plugin ...$plugins) : \Psr\Http\Client\ClientInterface
     {
-        return self::createClientWithConfigForInternalTuleapUse();
+        return self::createClientWithConfigForInternalTuleapUse(...$plugins);
     }
 
     /**
-     * @return \Http\Client\HttpAsyncClient|\Psr\Http\Client\ClientInterface
+     * This client should only be used for Tuleap internal use to
+     * query internal resources. Queries requested by users (e.g. webhooks)
+     * MUST NOT use it.
      */
-    private static function createClientWithStandardConfig()
+    public static function createAsyncClientForInternalTuleapUse(Plugin ...$plugins) : \Http\Client\HttpAsyncClient
     {
-        return self::createClientWithConfig([
-            'timeout' => self::TIMEOUT,
-            'proxy'   => \ForgeConfig::get('sys_proxy')
-        ]);
+        return self::createClientWithConfigForInternalTuleapUse(...$plugins);
     }
 
     /**
-     * @return \Http\Client\HttpAsyncClient|\Psr\Http\Client\ClientInterface
+     * @return \Http\Client\HttpAsyncClient&\Psr\Http\Client\ClientInterface
      */
-    private static function createClientWithConfigForInternalTuleapUse()
+    private static function createClientWithStandardConfig(Plugin ...$plugins)
     {
-        return self::createClientWithConfig(['timeout' => self::TIMEOUT]);
+        return self::createClientWithConfig(
+            [
+                'timeout' => self::TIMEOUT,
+                'proxy'   => \ForgeConfig::get('sys_proxy')
+            ],
+            ...$plugins
+        );
     }
 
     /**
-     * @return \Psr\Http\Client\ClientInterface|\Http\Client\HttpAsyncClient
+     * @return \Http\Client\HttpAsyncClient&\Psr\Http\Client\ClientInterface
      */
-    private static function createClientWithConfig(array $config)
+    private static function createClientWithConfigForInternalTuleapUse(Plugin ...$plugins)
+    {
+        return self::createClientWithConfig(['timeout' => self::TIMEOUT], ...$plugins);
+    }
+
+    /**
+     * @return \Psr\Http\Client\ClientInterface&\Http\Client\HttpAsyncClient
+     */
+    private static function createClientWithConfig(array $config, Plugin ...$plugins)
     {
         $client = Client::createWithConfig($config);
 
         return new PluginClient(
             $client,
-            [
-                new RedirectPlugin()
-            ]
+            array_merge([new RedirectPlugin()], $plugins)
         );
     }
 }

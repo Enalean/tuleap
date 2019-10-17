@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Http\Client\Common\Plugin\CookiePlugin;
+use Http\Message\CookieJar;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 
 require_once TRACKER_BASE_DIR .'/Workflow/PostAction/PostActionSubFactory.class.php';
 
-/**
- * Loads and saves CIBuild post actions
- */
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MissingNamespace
 class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFactory
 {
 
@@ -142,7 +142,7 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     {
         $id                           = (int)$row['id'];
         $job_url                      = (string)$row['job_url'];
-        $http_client                  = HttpClientFactory::createClient();
+        $http_client                  = HttpClientFactory::createClient(new CookiePlugin(new CookieJar()));
         $http_request_factory         = HTTPFactoryBuilder::requestFactory();
         $jenkins_csrf_crumb_retriever = new JenkinsCSRFCrumbRetriever($http_client, $http_request_factory);
         $ci_client                    = new Jenkins_Client(
