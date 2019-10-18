@@ -34,7 +34,7 @@ import {
 } from "../api/rest-querier.js";
 import { create, createList } from "../support/factories.js";
 
-jest.mock("tlp_fetch");
+jest.mock("tlp-fetch");
 
 describe("Rest queries:", () => {
     const json_headers = {

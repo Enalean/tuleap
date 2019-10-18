@@ -31,7 +31,11 @@ module.exports = {
             __dirname,
             "../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js"
         ),
-        tlp: path.resolve(__dirname, "../../src/www/themes/common/tlp/src/js/index.js")
+        "^tlp$": path.resolve(__dirname, "../../src/www/themes/common/tlp/src/js/index.js"),
+        "^tlp-fetch$": path.resolve(
+            __dirname,
+            "../../src/www/themes/common/tlp/src/js/fetch-wrapper.js"
+        )
     },
     setupFilesAfterEnv: [path.resolve(__dirname, "./fail-console-error-warning.js")],
     globals: {
