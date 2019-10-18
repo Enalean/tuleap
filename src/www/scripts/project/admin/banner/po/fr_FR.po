@@ -27,3 +27,6 @@ msgstr "Aucune bannière définie"
 
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Your message will be condensed to one line"
+msgstr "Votre message sera condensé en une ligne"

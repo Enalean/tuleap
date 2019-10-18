@@ -81,6 +81,7 @@ final class BannerAdministrationController implements DispatchableWithRequest, D
             throw new ForbiddenException();
         }
 
+        $layout->includeFooterJavascriptFile($this->banner_assets->getFileURL('ckeditor.js'));
         $layout->includeFooterJavascriptFile($this->banner_assets->getFileURL('project-admin-banner.js'));
         $this->navigation_displayer->displayBurningParrotNavigation(
             _('Project banner'),
