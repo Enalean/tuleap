@@ -342,8 +342,7 @@ class trackerPlugin extends Plugin
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath().'/config.php') === 0 ||
-            $this->isInDashboard() ||
-            $this->isInTrackerGlobalAdmin()
+            $this->isInDashboard()
         ) {
             $event->setIsInBurningParrotCompatiblePage();
         }
@@ -384,8 +383,7 @@ class trackerPlugin extends Plugin
         EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, array('include_tracker_css_file' => &$include_tracker_css_file));
 
         if ($include_tracker_css_file ||
-            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-            $this->isInTrackerGlobalAdmin()
+            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0
         ) {
             $theme_include_assets    = new IncludeAssets(
                 __DIR__ . '/../www/themes/BurningParrot/assets',
@@ -411,10 +409,6 @@ class trackerPlugin extends Plugin
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
             $params['javascript_files'][] = $this->getPluginPath() .'/scripts/admin-nature.js';
             $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
-        }
-
-        if ($this->isInTrackerGlobalAdmin()) {
-            $params['javascript_files'][] = $this->getPluginPath() .'/scripts/global-admin.js';
         }
     }
 
@@ -1587,11 +1581,6 @@ class trackerPlugin extends Plugin
         $current_page = new CurrentPage();
 
         return $current_page->isDashboard();
-    }
-
-    private function isInTrackerGlobalAdmin()
-    {
-        return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/?func=global-admin') === 0;
     }
 
     public function workerEvent(WorkerEvent $event)
