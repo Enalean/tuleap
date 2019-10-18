@@ -120,6 +120,7 @@ seed_data() {
     load_project /usr/share/tuleap/tests/e2e/_fixtures/kanban_project
     load_project /usr/share/tuleap/tests/e2e/_fixtures/tracker_project
     load_project /usr/share/tuleap/tests/e2e/_fixtures/taskboard_project
+    load_project /usr/share/tuleap/tests/e2e/_fixtures/agile_dashboard
 
     chown -R codendiadm:codendiadm /var/log/tuleap
 }
