@@ -13,7 +13,8 @@ plugin_agiledashboard	cannot_create_planning_in_scrum_v2	Vous ne pouvez pas cré
 plugin_agiledashboard	cannot_import_planning_in_scrum_v2	Vous ne pouvez pas importer plus d'un planning en utilisant scrum V2, merci de vérifier votre XML.
 plugin_agiledashboard	planning_count_different_from_one	La configuration est incorrecte, plus d'un planning a été défini.
 plugin_agiledashboard	cannot_create_planning_hierarchy	ou alors tous les trackers "planning" potentiels ($1) sont déjà utilisés par une configuration (ci-dessous).
-plugin_agiledashboard	cannot_create_planning_config	Les trackers "planning" potentiels sont déterminés à partir de la configuration de $1 et de sa <a href="$2">hiérarchie</a>.
+plugin_agiledashboard	cannot_create_planning_config	Les trackers "planning" potentiels sont déterminés à partir de la configuration de $1 et de sa hiérarchie.
+plugin_agiledashboard	cannot_create_planning_popover_title	Impossible de créer un nouveau planning
 plugin_agiledashboard	planning_out_of_hierarchy	Ce planning n'appartient pas à la hierarchie du planning racine ($1). Cette configuration n'est pas supportée. Vous devriez supprimer ce planning.
 plugin_agiledashboard	planning_destination_help	Utiliser la flèche gauche d'un élément pour le déplacer dans le backlog ou les flèches haut/bas pour prioriser les éléments entre eux.
 plugin_agiledashboard	planning_title	Plannings
@@ -116,7 +117,7 @@ plugin_agiledashboard_admin_semantic	bad_field_initial_effort	Le champ soumis n'
 plugin_agiledashboard_admin_semantic	unable_save_initial_effort	Impossible de sauvegarder la sémantique <em>effort estimé</em>
 plugin_agiledashboard_admin_semantic	deleted_initial_effort	La sémantique effort estimé a été réinitialisée
 
-plugin_agiledashboard	config_title	Configuration
+plugin_agiledashboard	config_title	Administration de l'Agile Dashboard
 plugin_agiledashboard	invalid_request	La requête n'est pas valide.
 plugin_agiledashboard	no_service_selected	Un service doit obligatoirement être selectionné.
 plugin_agiledashboard	config_submit_label	Sauvegarder
@@ -126,8 +127,6 @@ plugin_agiledashboard	title_kanban_help	Titre affiché sur la page d'accueil du 
 
 plugin_agiledashboard	activate_kanban_label	Activer Kanban
 plugin_agiledashboard	activate_scrum_label	Activer Scrum
-plugin_agiledashboard	scrum_activated_label	Scrum est actuellement actif.
-plugin_agiledashboard	scrum_not_activated_label	Scrum n'est actuellement pas actif.
 plugin_agiledashboard	kanban_activated_label	Kanban est actuellement actif.
 plugin_agiledashboard	kanban_not_activated_label	Kanban n'est actuellement pas actif.
 plugin_agiledashboard	first_kanban_will_be_created	Une première instance de Kanban sera créée lors de l'activation. Ceci peut prendre quelques secondes.

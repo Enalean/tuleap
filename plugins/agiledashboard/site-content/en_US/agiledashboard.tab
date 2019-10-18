@@ -13,7 +13,8 @@ plugin_agiledashboard	cannot_create_planning_in_scrum_v2	You cannot create more 
 plugin_agiledashboard	cannot_import_planning_in_scrum_v2	You cannot import more than one planning in scrum V2, please check your XML.
 plugin_agiledashboard	planning_count_different_from_one	Configuration is incorrect, more than one planning is defined.
 plugin_agiledashboard	cannot_create_planning_hierarchy	all potential planning trackers ($1) are already used by a planning configuration (see below).
-plugin_agiledashboard	cannot_create_planning_config	The potential planning trackers are computed out of $1 configuration and its <a href="$2">hierarchy</a>.
+plugin_agiledashboard	cannot_create_planning_config	The potential planning trackers are computed out of $1 configuration and its hierarchy.
+plugin_agiledashboard	cannot_create_planning_popover_title	Can't create new planning
 plugin_agiledashboard	planning_out_of_hierarchy	This planning doesn't belong to root planning ($1) hierarchy. This configuration is not supported. You should remove this planning.
 plugin_agiledashboard	planning_destination_help	Use left arrow on item to move it on backlog or bottom/up arrow to rank items.
 plugin_agiledashboard	planning_title	Plannings
@@ -115,7 +116,7 @@ plugin_agiledashboard_admin_semantic	bad_field_initial_effort	The field you subm
 plugin_agiledashboard_admin_semantic	unable_save_initial_effort	Unable to save the <em>initial effort</em>
 plugin_agiledashboard_admin_semantic	deleted_initial_effort	Initial effort semantic has been unset
 
-plugin_agiledashboard	config_title	Configuration
+plugin_agiledashboard	config_title	Agile Dashboard administration
 plugin_agiledashboard	invalid_request	The request is invalid.
 plugin_agiledashboard	no_service_selected	At least one service must be selected.
 plugin_agiledashboard	config_submit_label	Save
@@ -125,8 +126,6 @@ plugin_agiledashboard	title_kanban_help	This will be used to identify the Kanban
 
 plugin_agiledashboard	activate_kanban_label	Activate Kanban
 plugin_agiledashboard	activate_scrum_label	Activate Scrum
-plugin_agiledashboard	scrum_activated_label	Scrum is currently active.
-plugin_agiledashboard	scrum_not_activated_label	Scrum is not currently active.
 plugin_agiledashboard	kanban_activated_label	Kanban is currently active.
 plugin_agiledashboard	kanban_not_activated_label	Kanban is not currently active.
 plugin_agiledashboard	first_kanban_will_be_created	A first Kanban will be created during the activation. This operation can take a few seconds.

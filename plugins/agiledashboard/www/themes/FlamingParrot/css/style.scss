@@ -2,10 +2,6 @@
 @import "../../../../../../src/www/themes/common/css/utils/colors";
 
 @mixin definitions($main) {
-    .agiledashboard-admin-kanban .agiledashboard-admin-section section .plannings > thead > tr > th {
-        border-bottom-color: $main;
-    }
-
     div.milestones > fieldset.milestone {
         legend {
             border-bottom-color: $main;

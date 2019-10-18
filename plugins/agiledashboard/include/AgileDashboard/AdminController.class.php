@@ -76,6 +76,7 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
@@ -186,6 +187,12 @@ class AdminController extends BaseController
 
     public function adminScrum()
     {
+        $include_assets = new IncludeAssets(
+            AGILEDASHBOARD_BASE_DIR . '/../www/assets',
+            AGILEDASHBOARD_BASE_URL . '/assets'
+        );
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('administration.js'));
+
         return $this->renderToString(
             'admin-scrum',
             $this->getAdminScrumPresenter(
