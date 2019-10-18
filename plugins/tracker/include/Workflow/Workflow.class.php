@@ -271,13 +271,6 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         }
     }
 
-    public function getTransitionIdFromTo($field_value_from, $field_value_to)
-    {
-        $res = WorkflowFactory::instance()->getTransitionIdFromTo($this->workflow_id, $field_value_from, $field_value_to);
-        $row = $res->getRow();
-        return $row['transition_id'];
-    }
-
     public function hasTransitions()
     {
         if ($this->getTransitions() === array()) {

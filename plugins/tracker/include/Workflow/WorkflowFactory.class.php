@@ -238,22 +238,6 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     }
 
     /**
-     * Add a transition
-     *
-     * @param int $workflow_id The workflow id
-     * @param string $transition the transition to insert
-     *
-     * @return int the id of the transition. False if error
-     */
-    public function addTransition($workflow_id, $transition)
-    {
-        $values = explode("_", $transition);
-        $from = $values[0];
-        $to = $values[1];
-        return $this->getTransitionDao()->addTransition($workflow_id, $from, $to);
-    }
-
-    /**
      * Get a transition id
      *
      * @param int $workflow_id The workflow id
@@ -267,34 +251,6 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         $from = $values[0];
         $to = $values[1];
         return $this->getTransitionDao()->searchTransitionId($workflow_id, $from, $to);
-    }
-
-    /**
-     * Get a workflow id
-     *
-     * @param int transition_id
-     *
-     * @return int the id of the workflow. False if error
-     */
-    public function getWorkflowId($transition_id)
-    {
-        return $this->getTransitionDao()->getWorkflowId($transition_id);
-    }
-
-    /**
-     * Delete a transition
-     *
-     * @param int $workflow_id The workflow id
-     * @param string $from the transition to insert
-     * @param string $to the transition to insert
-     */
-    public function deleteTransition($workflow_id, $from, $to)
-    {
-        if ($from == null) {
-            return $this->getTransitionDao()->deleteTransition($workflow_id, null, $to->getId());
-        } else {
-            return $this->getTransitionDao()->deleteTransition($workflow_id, $from->getId(), $to->getId());
-        }
     }
 
     protected $cache_workflowfield;
@@ -352,18 +308,6 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
             return $field->getId() == $workflow->getFieldId();
         }
         return false;
-    }
-
-    /**
-     *Get the transition_id
-     * @param int the id of the field_value_from
-     * @param int the id of the field_value_to
-     *
-     * @return int the transition_id
-     */
-    public function getTransitionIdFromTo($workflow_id, $field_value_from, $field_value_to)
-    {
-        return $this->getTransitionDao()->getTransitionId($workflow_id, $field_value_from, $field_value_to);
     }
 
     /**

@@ -1401,7 +1401,6 @@ plugin_tracker_search_index	artifact_title	Artifact Title
 # Script: SF/common/workflow/WorkflowManager.class.php
 #
 workflow_admin	title	Workflow Administration
-workflow_admin	transitions_deactivated	Transition rules don't apply yet
 workflow_admin	same_field	The two fields must be different
 workflow_admin	deleted_rules	Rule(s) successfully deleted
 workflow_admin	updated_rules	Rule(s) successfully updated
@@ -1414,7 +1413,6 @@ workflow_admin	hint_date_rules_definition	Those rules will be applied on each cr
 workflow_admin	hint_triggers_definition	The triggers will be applied on each creation/update of artifacts.
 workflow_admin	add_new_rule	Add a new rule
 workflow_admin	add_new_trigger	Add a new trigger
-workflow_admin	title_define_transitions	Define the transitions
 workflow_admin	tab_global_rules	Global Rules
 workflow_admin	tab_triggers	Triggers
 workflow_admin	tab_triggers_cancel	cancel
@@ -1432,24 +1430,12 @@ workflow_admin	tab_triggers_no_children	There are no child trackers defined for 
 workflow_admin	field	Field on which the transitions will be based:
 workflow_admin	enabled	Enforce transition rules
 workflow_admin	delete	Delete all transitions
-workflow_admin	choose_field	Choose the field on which applies the workflow:
 workflow_admin	updated	Transitions updated
 workflow_admin	not_updated	Nothing to update
-workflow_admin	created	Created
-workflow_admin	deleted	Deleted
-workflow_admin	workflow_enabled	Starting from now, transitions <strong>will be</strong> applied.
-workflow_admin	workflow_disabled	Starting from now, transitions will <strong>not</strong> be applied.
-workflow_admin	delete_workflow	Are you sure you want to delete all transitions?
-workflow_admin	title_define_transition_details	Define rules on transition: from <em>$1</em> to <em>$2</em>
 workflow_admin	label_define_transition_permissions	Groups that may make the transition:
 workflow_admin	label_define_transition_required_field	Field that must not be empty
 workflow_admin	label_define_transition_required_comment	Comment must not be empty.
-workflow_admin	permissions_not_updated	Permissions on transition have not been updated.
-workflow_admin	permissions_updated	Permissions on transition have been updated.
-workflow_admin	empty_fields_not_updated	Empty fields on transition have not been updated.
-workflow_admin	empty_fields_updated	Empty fields on transition have been updated.
 workflow_admin	permissions_transition	Can make the transition
-workflow_admin	new_artifact	New artifact
 workflow_admin	change_value_date_field_to	The date field $1 is set to $2
 workflow_admin	change_value_int_field_to	The integer field $1 is set to $2
 workflow_admin	change_value_float_field_to	The float field $1 is set to $2
@@ -1463,8 +1449,6 @@ workflow_admin	ci_build_help_trigger_field_value	triggerFieldValue: Value (strin
 workflow_admin	post_action_change_value_date_field	Change the value of a date field
 workflow_admin	post_action_change_value_int_field	Change the value of an int field
 workflow_admin	post_action_change_value_float_field	Change the value of a float field
-workflow_admin	under_the_following_condition	Under the following condition:
-workflow_admin	following_action_performed	The following action will be automatically performed:
 workflow_admin	add_new_action	Add a new action:
 workflow_admin	remove_postaction	Remove the action
 workflow_admin	postaction_on_field_already_exist	An action on the field '$1' already exists.

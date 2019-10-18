@@ -37,9 +37,6 @@
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/AdminController.class.php">
-    <TooManyArguments occurrences="1"/>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/AdminScrumPresenter.class.php">
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;cannot_create_planning_in_scrum_v2</code>
@@ -403,11 +400,6 @@
     <PossiblyNullReference occurrences="1">
       <code>userCanView</code>
     </PossiblyNullReference>
-    <UndefinedClass occurrences="3">
-      <code>IdsFromBodyAreNotUniqueException</code>
-      <code>IdsFromBodyAreNotUniqueException</code>
-      <code>IdsFromBodyAreNotUniqueException</code>
-    </UndefinedClass>
     <UndefinedDocblockClass occurrences="11">
       <code>AgileDashboard_KankanColumnFactory</code>
       <code>Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation</code>
@@ -448,15 +440,6 @@
     <InvalidReturnType occurrences="1">
       <code>\Tuleap\Tracker\REST\Artifact\BurndownRepresentation</code>
     </InvalidReturnType>
-    <PossiblyNullArgument occurrences="1">
-      <code>$artifact_added</code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference occurrences="1">
-      <code>getTrackerId</code>
-    </PossiblyNullReference>
-    <TooManyArguments occurrences="1">
-      <code>checkFormat</code>
-    </TooManyArguments>
     <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation</code>
     </UndefinedDocblockClass>
@@ -7585,9 +7568,8 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Selectbox.class.php">
-    <PossiblyUndefinedVariable occurrences="2">
+    <PossiblyUndefinedVariable occurrences="1">
       <code>$submitted_values_array</code>
-      <code>$transition</code>
     </PossiblyUndefinedVariable>
     <UndefinedDocblockClass occurrences="4">
       <code>the</code>
@@ -7595,9 +7577,6 @@
       <code>the</code>
       <code>the</code>
     </UndefinedDocblockClass>
-    <UndefinedMethod occurrences="1">
-      <code>getBind</code>
-    </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php">
     <InvalidNullableReturnType occurrences="1">
@@ -9581,12 +9560,6 @@
       <code>null</code>
     </NullArgument>
   </file>
-  <file src="plugins/tracker/include/Tracker/Workflow/WorkflowLegacyController.php">
-    <InvalidScalarArgument occurrences="2">
-      <code>$tracker-&gt;getId()</code>
-      <code>$tracker-&gt;getId()</code>
-    </InvalidScalarArgument>
-  </file>
   <file src="plugins/tracker/include/Tracker/Workflow/WorkflowMenuTabPresenterBuilder.php">
     <InvalidScalarArgument occurrences="1">
       <code>$tracker-&gt;getId()</code>
@@ -9862,52 +9835,6 @@
       <code>$this-&gt;token</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/tracker/include/Workflow/Action/Transitions/CreateMatrix.class.php">
-    <ImplicitToStringCast occurrences="2">
-      <code>$field_value_from</code>
-      <code>$field_value_to</code>
-    </ImplicitToStringCast>
-    <PossiblyNullArgument occurrences="1">
-      <code>$workflow</code>
-    </PossiblyNullArgument>
-    <UndefinedMethod occurrences="1">
-      <code>getBind</code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Workflow/Action/Transitions/DefineWorkflow.class.php">
-    <ArgumentTypeCoercion occurrences="1">
-      <code>$layout</code>
-    </ArgumentTypeCoercion>
-    <PossiblyNullPropertyFetch occurrences="1">
-      <code>$workflow-&gt;field_id</code>
-    </PossiblyNullPropertyFetch>
-    <PossiblyNullReference occurrences="1">
-      <code>hasTransitions</code>
-    </PossiblyNullReference>
-    <TooManyArguments occurrences="1">
-      <code>getTransitions</code>
-    </TooManyArguments>
-    <UndefinedMethod occurrences="2">
-      <code>displayTransitionsMatrix</code>
-      <code>displayTransitionsMatrix</code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Workflow/Action/Transitions/Details.class.php">
-    <PossiblyNullArgument occurrences="1">
-      <code>$transition</code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference occurrences="1">
-      <code>getGroupId</code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Workflow/Action/Transitions/EditTransition.class.php">
-    <ArgumentTypeCoercion occurrences="1">
-      <code>$layout</code>
-    </ArgumentTypeCoercion>
-    <PossiblyNullArgument occurrences="1">
-      <code>$transition</code>
-    </PossiblyNullArgument>
-  </file>
   <file src="plugins/tracker/include/Workflow/Action/Triggers/DeleteTrigger.class.php">
     <UndefinedMethod occurrences="1">
       <code>isPost</code>
@@ -10150,17 +10077,6 @@
       <code>$this-&gt;table_name</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/tracker/include/Workflow/Transition/ConditionManager.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>Workflow_Transition_ConditionFactory::build()</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Transition_PostActionFactory</code>
-    </InvalidReturnType>
-    <UndefinedMethod occurrences="1">
-      <code>addCondition</code>
-    </UndefinedMethod>
-  </file>
   <file src="plugins/tracker/include/Workflow/Transition/ConditionsCollection.class.php">
     <InvalidReturnType occurrences="1">
       <code>true</code>
@@ -10266,9 +10182,6 @@
     </InvalidReturnType>
   </file>
   <file src="plugins/tracker/include/Workflow/Workflow.class.php">
-    <InvalidMethodCall occurrences="1">
-      <code>getRow</code>
-    </InvalidMethodCall>
     <InvalidScalarArgument occurrences="1">
       <code>$this-&gt;getFieldId()</code>
     </InvalidScalarArgument>
@@ -10291,11 +10204,6 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>UserManager::instance()-&gt;getUserById(Tracker_Workflow_WorkflowUser::ID)</code>
     </ArgumentTypeCoercion>
-    <InvalidMethodCall occurrences="3">
-      <code>getId</code>
-      <code>getId</code>
-      <code>getId</code>
-    </InvalidMethodCall>
     <PossiblyNullArgument occurrences="2">
       <code>UserManager::instance()-&gt;getUserById(Tracker_Workflow_WorkflowUser::ID)</code>
       <code>$workflow</code>
@@ -10306,9 +10214,6 @@
     <PossiblyNullReference occurrences="1">
       <code>getId</code>
     </PossiblyNullReference>
-    <UndefinedMethod occurrences="1">
-      <code>getTransitionId</code>
-    </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Workflow/Workflow_Dao.class.php">
     <UndefinedThisPropertyAssignment occurrences="1">

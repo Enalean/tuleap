@@ -1394,7 +1394,6 @@ plugin_tracker_search_index	artifact_title	Titre de l'artefact
 # Script: SF/common/workflow/WorkflowManager.class.php
 #
 workflow_admin	title	Gestion du Workflow
-workflow_admin	transitions_deactivated	Les règles de transition ne s'appliquent pas pour l'instant
 workflow_admin	same_field	Les deux champs doivent être différents
 workflow_admin	deleted_rules	Règle(s) supprimée(s) avec succès
 workflow_admin	updated_rules	Règle(s) mise(s) à jour avec succès
@@ -1407,7 +1406,6 @@ workflow_admin	hint_date_rules_definition	Ces règles s'appliqueront à chaque c
 workflow_admin	hint_triggers_definition	Ces déclencheurs s'appliqueront à chaque création/ modification d'artéfacts
 workflow_admin	add_new_rule	Ajouter une nouvelle règle
 workflow_admin	add_new_trigger	Ajouter un nouveau déclencheur
-workflow_admin	title_define_transitions	Definir les transitions
 workflow_admin	tab_global_rules	Règles Globales
 workflow_admin	tab_triggers	Déclenchements
 workflow_admin	tab_triggers_cancel	annuler
@@ -1425,24 +1423,12 @@ workflow_admin	tab_triggers_no_children	Ce tracker n'a pas de trackers enfants
 workflow_admin	field	Champ sur lequel les transitions seront basées :
 workflow_admin	enabled	Appliquer les règles sur les transitions.
 workflow_admin	delete	Supprimer toutes les transitions
-workflow_admin	choose_field	Choisir le champ sur lequel appliquer le workflow :
 workflow_admin	updated	Transitions mises à jour
 workflow_admin	not_updated	Aucune mise à jour effectuée
-workflow_admin	created	Crée
-workflow_admin	deleted	Supprimé
-workflow_admin	workflow_enabled	À partir de maintenant, les transitions <strong>seront</strong> appliquées.
-workflow_admin	workflow_disabled	À partir de maintenant, les transitions ne seront <strong>pas</strong> appliquées.
-workflow_admin	delete_workflow	Etes-vous sûr de vouloir supprimer toutes les transitions ?
-workflow_admin	title_define_transition_details	Définir  les règles à appliquer sur une transition : de <em>$1</em> à <em>$2</em>
 workflow_admin	label_define_transition_permissions	Groupes autorisés à effectuer la transition :
 workflow_admin	label_define_transition_required_field	Champ qui doit être rempli :
 workflow_admin	label_define_transition_required_comment	Le commentaire doit être rempli.
-workflow_admin	permissions_not_updated	Les permissions n'ont pas été prises en compte.
-workflow_admin	permissions_updated	Les permissions ont été prises en compte.
-workflow_admin	empty_fields_not_updated	Les champs obligatoires n'ont pas été pris en compte.
-workflow_admin	empty_fields_updated	Les champs obligatoires ont été pris en compte.
 workflow_admin	permissions_transition	Peut effectuer la transition
-workflow_admin	new_artifact	Nouvel artefact
 workflow_admin	change_value_date_field_to	Le champ date $1 prend pour valeur $2
 workflow_admin	change_value_int_field_to	Le champ entier $1 prend pour valeur $2
 workflow_admin	change_value_float_field_to	Le champ flottant $1 prend pour valeur $2
@@ -1459,8 +1445,6 @@ workflow_admin	post_action_change_value_float_field	Mettre à jour la valeur d'u
 workflow_admin	the_field	Le champ
 workflow_admin	field_not_empty	doit être rempli
 
-workflow_admin	under_the_following_condition	Sous les conditions suivantes :
-workflow_admin	following_action_performed	Les actions ci-dessous seront executées :
 workflow_admin	add_new_action	Ajouter une nouvelle action :
 workflow_admin	remove_postaction	Supprimer cette action
 workflow_admin	postaction_on_field_already_exist	Une action sur le champ '$1' existe déjà.
