@@ -60,7 +60,7 @@ class ProjectReleaseWidget extends Widget
 
         $renderer = $this->getRenderer(__DIR__ . '/../../templates');
 
-        return $renderer->renderToString('releasewidget', new ProjectReleasePresenter($request->getProject()));
+        return $renderer->renderToString('releasewidget', new ProjectReleasePresenter($request->getProject(), $this->isIE11()));
     }
 
     private function getRenderer(string $template_path) : TemplateRenderer
@@ -92,5 +92,12 @@ class ProjectReleaseWidget extends Widget
     public function getCategory()
     {
         return dgettext('tuleap-release_widget', 'Agile dashboard');
+    }
+
+    private function isIE11(): bool
+    {
+        return preg_match('~MSIE|Internet Explorer~i', $_SERVER['HTTP_USER_AGENT'])
+            || (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0;') !== false
+                && strpos($_SERVER['HTTP_USER_AGENT'], 'rv:11.0') !== false);
     }
 }

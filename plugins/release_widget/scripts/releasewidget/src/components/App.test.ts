@@ -17,22 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import App from "./App.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import { StoreOptions } from "../type";
 import { createReleaseWidgetLocalVue } from "../helpers/local-vue-for-test";
 
 const project_id = 102;
+const component_options: ShallowMountOptions<App> = {};
+
 async function getPersonalWidgetInstance(store_options: StoreOptions): Promise<Wrapper<App>> {
     const store = createStoreMock(store_options);
-    const component_options = {
-        propsData: {
-            project_id
-        },
-        mocks: { $store: store },
-        localVue: await createReleaseWidgetLocalVue()
-    };
+
+    component_options.mocks = { $store: store };
+    component_options.localVue = await createReleaseWidgetLocalVue();
 
     return shallowMount(App, component_options);
 }
@@ -40,6 +38,11 @@ async function getPersonalWidgetInstance(store_options: StoreOptions): Promise<W
 describe("Given a release widget", () => {
     let store_options: StoreOptions & Required<Pick<StoreOptions, "getters">>;
     beforeEach(() => {
+        component_options.propsData = {
+            project_id,
+            isBrowserIE11: false
+        };
+
         store_options = {
             state: {
                 is_loading: false
@@ -52,28 +55,20 @@ describe("Given a release widget", () => {
 
     it("When there are no errors, then the widget content will be displayed", async () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
-
-        expect(wrapper.contains("[data-test=widget-content]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=show-error-message]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=is-loading]")).toBeFalsy();
+        expect(wrapper.element).toMatchSnapshot();
     });
 
     it("When there is an error, then the widget content will not be displayed", async () => {
+        store_options.state.error_message = "404 Error";
         store_options.getters.has_rest_error = true;
         const wrapper = await getPersonalWidgetInstance(store_options);
-
-        expect(wrapper.contains("[data-test=show-error-message]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=widget-content]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=is-loading]")).toBeFalsy();
+        expect(wrapper.element).toMatchSnapshot();
     });
 
     it("When it is loading rest data, then a loader will be displayed", async () => {
         store_options.state.is_loading = true;
         const wrapper = await getPersonalWidgetInstance(store_options);
-
-        expect(wrapper.contains("[data-test=is-loading]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=widget-content]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=show-error-message]")).toBeFalsy();
+        expect(wrapper.element).toMatchSnapshot();
     });
 
     it("When there is a rest error and it is empty, Then another message is displayed", async () => {
@@ -81,8 +76,13 @@ describe("Given a release widget", () => {
         store_options.getters.has_rest_error = true;
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.find("[data-test=show-error-message]").text()).toEqual(
-            "Oops, an error occurred!"
-        );
+        expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("When the browser is IE11, Then an error message is displayed instead of the content ", async () => {
+        component_options.propsData = { isBrowserIE11: true };
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.element).toMatchSnapshot();
     });
 });

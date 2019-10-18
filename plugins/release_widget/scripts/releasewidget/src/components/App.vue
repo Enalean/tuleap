@@ -20,12 +20,15 @@
 
 <template>
     <section>
-        <div v-if="has_rest_error" class="tlp-alert-danger" data-test="show-error-message">
+        <div v-if="isBrowserIE11" class="tlp-alert-danger" v-translate>
+            The plugin "Release Widget" is not supported under IE11. Please use a more recent browser.
+        </div>
+        <div v-else-if="has_rest_error" class="tlp-alert-danger">
             {{ error }}
         </div>
-        <div v-else-if="is_loading" class="release-loader" data-test="is-loading"></div>
+        <div v-else-if="is_loading" class="release-loader"></div>
         <div v-else>
-            <div class="project-release-widget-content" data-test="widget-content">
+            <div class="project-release-widget-content">
                 <roadmap-section/>
                 <whats-hot-section/>
             </div>
@@ -46,6 +49,8 @@ import { Action, Getter, Mutation, State } from "vuex-class";
 export default class App extends Vue {
     @Prop()
     readonly projectId!: number;
+    @Prop()
+    readonly isBrowserIE11!: boolean;
     @State
     readonly is_loading!: boolean;
     @State

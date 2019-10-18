@@ -64,6 +64,13 @@ msgstr "Oups, une erreur s'est produite !"
 msgid "Release %{release_label}"
 msgstr "Version %{release_label}"
 
+msgid ""
+"The plugin \"Release Widget\" is not supported under IE11. Please use a more "
+"recent browser."
+msgstr ""
+"Le plugin \"Release Widget\" n'est pas supporté pour IE11. Merci d'utiliser "
+"un navigateur plus récent."
+
 msgid "What's hot"
 msgstr "En cours"
 
