@@ -49,7 +49,7 @@ class RepositoryDisplayPresenter
         $this->is_repository_created = $repository->isRepositoryCreated();
 
         $this->help_message           = $GLOBALS['Language']->getText('svn_intro', 'command_intro');
-        $this->repository_not_created = $GLOBALS['Language']->getText('plugin_svn', 'repository_not_created');
+        $this->repository_not_created = dgettext('tuleap-svn', 'The repository is in queue for creation. Please check back here in a few minutes');
         $this->settings_button        = dgettext('tuleap-svn', 'Settings');
     }
 

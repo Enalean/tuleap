@@ -56,12 +56,12 @@ class ExplorerPresenter
         $this->group_id                   = $project->getID();
         $this->csrf_token                 = $csrf;
         $this->repository_name            = $repository_name;
-        $this->title_list_repositories    = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'title_list_repositories');
-        $this->label_repository_name      = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'label_name');
-        $this->no_repositories            = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'no_repositories');
-        $this->help_repository_name       = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'name_repository_length');
-        $this->table_head_list_repository = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'table_head_list_repository');
-        $this->create_repository          = $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'create_repository');
+        $this->title_list_repositories    = dgettext('tuleap-svn', 'Project SVN repositories');
+        $this->label_repository_name      = dgettext('tuleap-svn', 'Repository name');
+        $this->no_repositories            = dgettext('tuleap-svn', 'No repository found');
+        $this->help_repository_name       = dgettext('tuleap-svn', 'Must start by a letter, have a length of 3 characters minimum, only - _ . specials characters are allowed.');
+        $this->table_head_list_repository = dgettext('tuleap-svn', 'Repository');
+        $this->create_repository          = dgettext('tuleap-svn', 'Create repository');
         $this->last_commit                = dgettext('tuleap-svn', 'Last commit');
 
         $this->validate_name = RuleName::PATTERN_REPOSITORY_NAME;

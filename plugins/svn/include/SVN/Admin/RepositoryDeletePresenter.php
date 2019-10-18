@@ -63,15 +63,15 @@ class RepositoryDeletePresenter extends BaseAdminPresenter
         $this->repository_delete_active = true;
         $this->token                    = $token->fetchHTMLInput();
 
-        $this->cannot_delete            = $GLOBALS['Language']->getText('plugin_svn_admin_repository_delete', 'cannot_delete');
-        $this->subtitle                 = $GLOBALS['Language']->getText('plugin_svn_admin_repository_delete', 'subtitle');
-        $this->comment                  = $GLOBALS['Language']->getText('plugin_svn_admin_repository_delete', 'comment');
-        $this->comment_undone           = $GLOBALS['Language']->getText('plugin_svn_admin_repository_delete', 'comment_undone');
-        $this->button                   = $GLOBALS['Language']->getText('plugin_svn_admin_repository_delete', 'button_delete');
+        $this->cannot_delete            = dgettext('tuleap-svn', 'You can\'t delete.');
+        $this->subtitle                 = dgettext('tuleap-svn', 'Delete this repository');
+        $this->comment                  = dgettext('tuleap-svn', 'You are about to permanently delete the repository:');
+        $this->comment_undone           = dgettext('tuleap-svn', 'This action cannot be undone.');
+        $this->button                   = dgettext('tuleap-svn', 'Delete this repository');
 
-        $this->modal_title         = $GLOBALS['Language']->getText('plugin_svn_admin_modal_repository_delete', 'title');
-        $this->modal_content       = $GLOBALS['Language']->getText('plugin_svn_admin_modal_repository_delete', 'content');
-        $this->modal_button_delete = $GLOBALS['Language']->getText('plugin_svn_admin_modal_repository_delete', 'button_delete');
+        $this->modal_title         = dgettext('tuleap-svn', 'Wait a minute...');
+        $this->modal_content       = dgettext('tuleap-svn', 'This deletion can\'t be undone. Please confirm the repository deletion.');
+        $this->modal_button_delete = dgettext('tuleap-svn', 'Delete the repository');
         $this->modal_button_cancel = $GLOBALS['Language']->getText('global', 'btn_cancel');
 
         $this->sections = new SectionsPresenter($repository);

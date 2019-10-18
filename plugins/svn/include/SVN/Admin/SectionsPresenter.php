@@ -34,11 +34,11 @@ class SectionsPresenter
 
     public function __construct(Repository $repository)
     {
-        $this->notifications     = $GLOBALS['Language']->getText('plugin_svn', 'notifications');
-        $this->access_control    = $GLOBALS['Language']->getText('plugin_svn', 'access_control');
-        $this->immutable_tag     = $GLOBALS['Language']->getText('plugin_svn', 'immutable_tag');
-        $this->hooks_config      = $GLOBALS['Language']->getText('plugin_svn', 'hooks_config');
-        $this->repository_delete = $GLOBALS['Language']->getText('plugin_svn', 'repository_delete');
+        $this->notifications     = dgettext('tuleap-svn', 'Notifications');
+        $this->access_control    = dgettext('tuleap-svn', 'Access control');
+        $this->immutable_tag     = dgettext('tuleap-svn', 'Immutable tags');
+        $this->hooks_config      = dgettext('tuleap-svn', 'Commit rules');
+        $this->repository_delete = dgettext('tuleap-svn', 'Delete');
 
         $this->notifications_url = SVN_BASE_URL .'/?'. http_build_query(array(
             'group_id' => $repository->getProject()->getId(),

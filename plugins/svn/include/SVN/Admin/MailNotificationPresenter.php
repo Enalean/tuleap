@@ -82,17 +82,17 @@ class MailNotificationPresenter extends BaseAdminPresenter
         $this->notifications        = $notifications;
         $this->has_notifications    = (count($notifications) > 0);
 
-        $this->notification_subtitle      = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'notification_subtitle');
-        $this->comment                    = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'comment');
-        $this->label_subject_header       = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'label_subject_header');
-        $this->save_subject               = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'save_subject');
-        $this->label_path                 = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'label_path');
-        $this->label_mail_to              = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'label_mail_to');
-        $this->label_notification_aviable = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'available_notifications');
-        $this->monitored_path             = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'monitored_path');
-        $this->notified_mails             = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'notified_mails');
-        $this->no_notifications_message   = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'no_notifications_message');
-        $this->add_notification           = $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'add_notification');
+        $this->notification_subtitle      = dgettext('tuleap-svn', 'Email notifications on commits');
+        $this->comment                    = dgettext('tuleap-svn', 'Each commit event can also be notified via email to specific recipients or mailing lists. A specific subject header for the email message can also be specified. Please note that you can use the star operator: /folder/to/notify and /folder/*/notify will be notified the same way.');
+        $this->label_subject_header       = dgettext('tuleap-svn', 'Subject header');
+        $this->save_subject               = dgettext('tuleap-svn', 'Save the subject');
+        $this->label_path                 = dgettext('tuleap-svn', 'Path');
+        $this->label_mail_to              = dgettext('tuleap-svn', 'Mail to specific recipients or mailing lists (comma separated)');
+        $this->label_notification_aviable = dgettext('tuleap-svn', 'Active notifications list');
+        $this->monitored_path             = dgettext('tuleap-svn', 'Monitored path');
+        $this->notified_mails             = dgettext('tuleap-svn', 'Notification list');
+        $this->no_notifications_message   = dgettext('tuleap-svn', 'There is no notification');
+        $this->add_notification           = dgettext('tuleap-svn', 'Add notification');
 
         $this->remove_notification_title    = dgettext('tuleap-svn', 'Wait a minute...');
         $this->remove_notification_desc     = dgettext('tuleap-svn', 'You are about to remove the notification. Please confirm your action.');

@@ -38,7 +38,7 @@ class ServiceUsageCollector
     {
         $formatter->buildDatas(
             $this->dao->searchWriteOperationsByProject($start_date, $end_date),
-            $GLOBALS['Language']->getText('plugin_svn_statistics', 'service_usage_activities')
+            dgettext('tuleap-svn', 'SVN with multiple repositories activities')
         );
     }
 }

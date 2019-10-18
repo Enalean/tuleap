@@ -57,7 +57,7 @@ class GlobalAdminController
         $selected_ugroups = $this->getSelectedUGroups($project, $ugroups);
 
         $this->permissions_manager->save($project, $selected_ugroups);
-        $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_svn_admin', 'update_successful'));
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-svn', 'Update successful'));
 
         $this->showAdminGroups($service, $request);
     }

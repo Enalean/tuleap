@@ -57,6 +57,6 @@ class RuleName extends Rule
 
     private function getErrorRepositoryExists()
     {
-        return $GLOBALS['Language']->getText('plugin_svn', 'already_used');
+        return dgettext('tuleap-svn', 'Repository name is already used in this project.');
     }
 }

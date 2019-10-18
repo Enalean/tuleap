@@ -69,7 +69,7 @@ class CommitInfoEnhancer
             $transaction_path = $this->svn_look->getTransactionPath($repository, $revision);
             $this->commit_info->setTransactionPath($transaction_path);
         } else {
-            throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn', 'find_error'));
+            throw new CannotFindRepositoryException(dgettext('tuleap-svn', 'Repository not found'));
         }
     }
 
@@ -81,7 +81,7 @@ class CommitInfoEnhancer
             $this->commit_info->setDate($info_commit[1]);
             $this->commit_info->setCommitMessage(implode("\n", array_slice($info_commit, 2)));
         } else {
-            throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn', 'find_error'));
+            throw new CannotFindRepositoryException(dgettext('tuleap-svn', 'Repository not found'));
         }
     }
 
@@ -117,7 +117,7 @@ class CommitInfoEnhancer
                 );
             }
         } else {
-            throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn', 'find_error'));
+            throw new CannotFindRepositoryException(dgettext('tuleap-svn', 'Repository not found'));
         }
     }
 
@@ -133,7 +133,7 @@ class CommitInfoEnhancer
                 );
             }
         } else {
-            throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn', 'find_error'));
+            throw new CannotFindRepositoryException(dgettext('tuleap-svn', 'Repository not found'));
         }
     }
 

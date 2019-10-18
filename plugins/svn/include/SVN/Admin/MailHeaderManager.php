@@ -37,7 +37,7 @@ class MailHeaderManager
     public function create(MailHeader $mail_header)
     {
         if (! $this->dao->create($mail_header)) {
-            throw new CannotCreateMailHeaderException($GLOBALS['Language']->getText('plugin_svn', 'update_error'));
+            throw new CannotCreateMailHeaderException(dgettext('tuleap-svn', 'Unable to update Repository data'));
         }
     }
 

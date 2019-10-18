@@ -34,9 +34,9 @@ class QueryBuilder extends DataAccessObject
         $date                 = $this->da->escapeInt($this->formatSpanDate($span));
         $user_where_condition = $this->exportUserCondition($project, $who);
 
-        $read_label   = $this->da->quoteSmart($GLOBALS['Language']->getText('plugin_svn', 'log_read_label'));
-        $write_label  = $this->da->quoteSmart($GLOBALS['Language']->getText('plugin_svn', 'log_write_label'));
-        $browse_label = $this->da->quoteSmart($GLOBALS['Language']->getText('plugin_svn', 'log_browse_label'));
+        $read_label   = $this->da->quoteSmart(dgettext('tuleap-svn', 'Read'));
+        $write_label  = $this->da->quoteSmart(dgettext('tuleap-svn', 'Write'));
+        $browse_label = $this->da->quoteSmart(dgettext('tuleap-svn', 'Browse'));
         $na_label     = $this->da->quoteSmart(self::NA_LABEL);
 
         $query = "SELECT

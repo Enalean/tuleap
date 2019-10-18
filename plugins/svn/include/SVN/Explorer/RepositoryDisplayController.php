@@ -78,7 +78,7 @@ class RepositoryDisplayController
 
             $service->renderInPageWithBodyClass(
                 $request,
-                $GLOBALS['Language']->getText('plugin_svn', 'descriptor_name'),
+                dgettext('tuleap-svn', 'SVN with multiple repositories'),
                 'explorer/repository_display',
                 new RepositoryDisplayPresenter(
                     $repository,
@@ -90,7 +90,7 @@ class RepositoryDisplayController
                 $this->proxy->getBodyClass()
             );
         } catch (CannotFindRepositoryException $e) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn', 'repository_not_found'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-svn', 'Repository not found.'));
             $GLOBALS['Response']->redirect(
                 SVN_BASE_URL.'/?'. http_build_query(array('group_id' => $request->getProject()->getID()))
             );

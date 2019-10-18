@@ -74,29 +74,21 @@ class AccessControlPresenter extends BaseAdminPresenter
         $this->title                    = $title;
         $this->access_control_active    = true;
 
-        $this->edit_access_file_title   = $GLOBALS['Language']->getText('plugin_svn_admin', 'edit_access_file_title');
-        $this->default_text             = $GLOBALS['Language']->getText('plugin_svn_admin', 'default_text', $GLOBALS['sys_name']);
-        $this->permissions_warning      = $GLOBALS['Language']->getText('plugin_svn_admin', 'permissions_warning');
-        $this->button_new_version_label = $GLOBALS['Language']->getText('plugin_svn_admin', 'button_new_version_label');
-        $this->select_version           = $GLOBALS['Language']->getText('plugin_svn_admin', 'select_version');
-        $this->saved_on                 = $GLOBALS['Language']->getText('plugin_svn_admin', 'saved_on');
-        $this->use_version              = $GLOBALS['Language']->getText('plugin_svn_admin', 'use_version');
-        $this->saved_versions           = $GLOBALS['Language']->getText('plugin_svn_admin', 'saved_versions');
+        $this->edit_access_file_title   = dgettext('tuleap-svn', 'Edit access control file');
+        $this->default_text             = sprintf(dgettext('tuleap-svn', 'The default policy is to allow read-write access to all project members on the entire repository and read-only access to all other %1$s users. You can tune or even redefine the access permissions below to suit your needs.'), $GLOBALS['sys_name']);
+        $this->permissions_warning      = dgettext('tuleap-svn', 'It is recommended to always define permissions on a user group. Applying permissions to a manually defined group or to a specific user could cause security issues.');
+        $this->button_new_version_label = dgettext('tuleap-svn', 'Save a new version');
+        $this->select_version           = dgettext('tuleap-svn', 'Select a version');
+        $this->saved_on                 = dgettext('tuleap-svn', 'saved on');
+        $this->use_version              = dgettext('tuleap-svn', 'Use this selected version');
+        $this->saved_versions           = dgettext('tuleap-svn', 'Saved versions:');
 
         $this->sections = new SectionsPresenter($repository);
 
-        $this->current_version_title = $GLOBALS['Language']->getText(
-            'plugin_svn_admin',
-            'last_version',
-            $current_version_number
-        );
+        $this->current_version_title = sprintf(dgettext('tuleap-svn', 'You are using the last version (#%1$s):'), $current_version_number);
 
         if ($current_version_number !== $last_version_number) {
-            $this->current_version_title = $GLOBALS['Language']->getText(
-                'plugin_svn_admin',
-                'previous_version',
-                $current_version_number
-            );
+            $this->current_version_title = sprintf(dgettext('tuleap-svn', 'You are using a previous version (#%1$s):'), $current_version_number);
         }
     }
 }
