@@ -7,10 +7,6 @@ plugin_tracker	cannot_delete_tracker	Ce tracker ne peut pas être supprimé car 
 plugin_tracker	service_lbl_key	Suivi
 plugin_tracker	service_desc_key	Outils de suivi du projet
 
-plugin_tracker_homenav	list	Liste des outils de suivi
-plugin_tracker_homenav	search	Recherche
-
-
 plugin_tracker	submit_no_anonymous	Vous devez être identifié pour créer des artefacts
 plugin_tracker	submit_at_least_one_field	Vous ne pouvez pas soumettre d'artefacts car vous devez avoir le droit de soumettre tous les champs requis.
 
