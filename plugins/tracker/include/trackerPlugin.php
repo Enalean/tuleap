@@ -693,6 +693,7 @@ class trackerPlugin extends Plugin
                                 //TODO: manage permissions related to field "permission on artifact"
                                 $this->_cached_permission_user_allowed_to_change[$type][$object_id] = $a->getTracker()->userIsAdmin();
                             }
+                            break;
                         case 'workflow transition':
                             if ($transition = TransitionFactory::instance()->getTransition($object_id)) {
                                 $this->_cached_permission_user_allowed_to_change[$type][$object_id] = $transition->getWorkflow()->getTracker()->userIsAdmin();
