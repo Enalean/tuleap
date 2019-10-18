@@ -25,9 +25,9 @@ import {
     MaxSizeUploadExceededError,
     UploadError
 } from "./file-upload-handler-factory.js";
-import * as tlp from "tlp";
+import * as tlp_fetch from "tlp-fetch";
 
-jest.mock("tlp");
+jest.mock("tlp-fetch");
 jest.mock("tus-js-client");
 
 describe(`file-upload-handler-factory`, () => {
@@ -74,7 +74,7 @@ describe(`file-upload-handler-factory`, () => {
     describe(`buildFileUploadHandler() - when a fileUploadRequest event is dispatched`, () => {
         describe(`component is initialized`, () => {
             beforeEach(async () => {
-                mockFetchSuccess(jest.spyOn(tlp, "post"), {
+                mockFetchSuccess(jest.spyOn(tlp_fetch, "post"), {
                     return_json: {
                         id: 71,
                         download_href: "https://example.com/extenuator"
@@ -130,7 +130,7 @@ describe(`file-upload-handler-factory`, () => {
                 loader.fileName = "pulpitism.png";
                 loader.uploadUrl = "https://example.com/upload_url";
                 loader.file.type = "image/png";
-                const tlpPost = jest.spyOn(tlp, "post");
+                const tlpPost = jest.spyOn(tlp_fetch, "post");
                 mockFetchSuccess(tlpPost, {
                     return_json: {
                         id: 25,
@@ -153,7 +153,7 @@ describe(`file-upload-handler-factory`, () => {
 
             describe(`when the POST endpoint returns an error`, () => {
                 it(`will call the Error callback with an UploadError`, async () => {
-                    jest.spyOn(tlp, "post").mockReturnValue(Promise.reject({}));
+                    jest.spyOn(tlp_fetch, "post").mockReturnValue(Promise.reject({}));
 
                     expect.assertions(4);
                     const handler = handlerFactory();
@@ -176,7 +176,7 @@ describe(`file-upload-handler-factory`, () => {
                 });
 
                 it(`when the error is translated, then it will show the translated error`, async () => {
-                    mockFetchError(jest.spyOn(tlp, "post"), {
+                    mockFetchError(jest.spyOn(tlp_fetch, "post"), {
                         error_json: {
                             error: {
                                 i18n_error_message: "Problème durant le téléversement"
@@ -195,7 +195,7 @@ describe(`file-upload-handler-factory`, () => {
                 });
 
                 it(`when the error is not translated, then it will show its message`, async () => {
-                    mockFetchError(jest.spyOn(tlp, "post"), {
+                    mockFetchError(jest.spyOn(tlp_fetch, "post"), {
                         error_json: {
                             error: {
                                 message: "Untranslated error message"
@@ -216,7 +216,7 @@ describe(`file-upload-handler-factory`, () => {
 
             describe(`when the POST endpoint does not return an upload_href`, () => {
                 beforeEach(() => {
-                    mockFetchSuccess(jest.spyOn(tlp, "post"), {
+                    mockFetchSuccess(jest.spyOn(tlp_fetch, "post"), {
                         return_json: {
                             id: 71,
                             download_href: "https://example.com/download_url"
@@ -259,7 +259,7 @@ describe(`file-upload-handler-factory`, () => {
 
             describe(`when the POST endpoint returns an upload_href`, () => {
                 beforeEach(() => {
-                    mockFetchSuccess(jest.spyOn(tlp, "post"), {
+                    mockFetchSuccess(jest.spyOn(tlp_fetch, "post"), {
                         return_json: {
                             id: 23,
                             download_href: "https://example.com/download_url",
