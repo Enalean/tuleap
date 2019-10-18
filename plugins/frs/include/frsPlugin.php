@@ -213,13 +213,13 @@ class frsPlugin extends \Plugin //phpcs:ignore
 
             if ($artifact_id !== '') {
                 if (! ctype_digit($artifact_id)) {
-                    $params['error'] = $GLOBALS['Language']->getText('plugin_frs', 'artifact_id_not_int');
+                    $params['error'] = dgettext('tuleap-frs', 'The provided artifact id is not an integer. Linked artifact not updated.');
                     return;
                 }
 
                 $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
                 if (! $artifact) {
-                    $params['error'] = $GLOBALS['Language']->getText('plugin_frs', 'artifact_does_not_exist', $artifact_id);
+                    $params['error'] = sprintf(dgettext('tuleap-frs', 'Artifact #%1$s does not exist.'), $artifact_id);
                     return;
                 }
             }
@@ -228,7 +228,7 @@ class frsPlugin extends \Plugin //phpcs:ignore
             $saved   = $updater->updateLink($release_id, $artifact_id);
 
             if (! $saved) {
-                $params['error'] = $GLOBALS['Language']->getText('plugin_frs', 'db_error');
+                $params['error'] = dgettext('tuleap-frs', 'An error occured while saving new linked artifact id.');
             }
         }
     }

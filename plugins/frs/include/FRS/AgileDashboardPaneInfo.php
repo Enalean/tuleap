@@ -47,7 +47,7 @@ class AgileDashboardPaneInfo extends PaneInfo
     /** @see PaneInfo::getTitle */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_frs', 'File_release');
+        return dgettext('tuleap-frs', 'File release');
     }
 
     public function getUri()

@@ -1,8 +1,0 @@
-plugin_frs	descriptor_name	File release system
-plugin_frs	descriptor_description	Extends file release system included into the Tuleap core with new features
-
-plugin_frs	artifact_id_title	Artifact id:
-plugin_frs	artifact_id_not_int	The provided artifact id is not an integer. Linked artifact not updated.
-plugin_frs	db_error	An error occured while saving new linked artifact id.
-plugin_frs	artifact_does_not_exist	Artifact #$1 does not exist.
-plugin_frs	File_release	File release
