@@ -37,6 +37,7 @@
                 type="button"
                 v-on:click="addNewPostAction()"
                 v-bind:disabled="is_modal_save_running"
+                data-test="add-post-action"
             >
                 <i class="fa fa-plus tlp-button-icon"></i>
                 <translate>Add another action</translate>

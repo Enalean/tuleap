@@ -21,6 +21,7 @@
     <button
         type="button"
         class="tlp-button-primary tlp-button-small tracker-workflow-transition-column-button"
+        data-test="configure-state"
         v-bind:class="{ 'tlp-button-success': transition.updated }"
         v-on:click="openModal()"
         v-translate

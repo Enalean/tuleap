@@ -93,3 +93,8 @@ Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", () => {
 
     cy.userLogout();
 });
+
+Cypress.Commands.add("getProjectId", project_shortname => {
+    cy.visit(`/projects/${project_shortname}/`);
+    return cy.get("[data-test=project-sidebar]").should("have.attr", "data-project-id");
+});

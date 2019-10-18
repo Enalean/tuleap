@@ -41,7 +41,7 @@ describe("FirstConfigurationSections", () => {
 
     afterEach(() => store.reset());
 
-    const create_workflow_selector = '[data-test-action="create-workflow"]';
+    const create_workflow_selector = '[data-test="create-workflow"]';
 
     describe("When an operation is running", () => {
         beforeEach(() => {

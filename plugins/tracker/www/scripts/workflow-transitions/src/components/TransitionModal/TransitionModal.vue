@@ -23,6 +23,7 @@
         role="dialog"
         aria-labelledby="configure-modal-title"
         v-on:submit.prevent="saveTransition"
+        data-test="transition-modal"
     >
         <div class="tlp-modal-header">
             <transition-modal-title/>
@@ -41,6 +42,7 @@
                 type="reset"
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
+                data-test="cancel-button"
                 v-translate
                 v-bind:disabled="is_modal_save_running"
             >
@@ -50,10 +52,12 @@
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
                 v-bind:disabled="is_modal_save_running"
+                data-test="save-button"
             >
                 <i
                     class="tlp-button-icon fa fa-fw fa-spin fa-circle-o-notch"
                     v-if="is_modal_save_running"
+                    data-test="save-button-spinner"
                 ></i>
                 <i class="tlp-button-icon fa fa-fw fa-save" v-else></i>
                 <span v-translate>

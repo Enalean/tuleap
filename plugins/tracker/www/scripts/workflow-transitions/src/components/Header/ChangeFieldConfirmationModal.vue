@@ -22,18 +22,21 @@
         class="tlp-modal tlp-modal-danger"
         role="dialog"
         aria-labelledby="modal-confirm-change-field-label"
+        data-test="change-field-confirmation-modal"
         ref="modal"
     >
         <div class="tlp-modal-header">
-            <h1
-                class="tlp-modal-title"
-                id="modal-confirm-change-field-label"
-                v-translate
-            >Change or remove field</h1>
-            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
+            <h1 class="tlp-modal-title" id="modal-confirm-change-field-label" v-translate>
+                Change or remove field
+            </h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                &times;
+            </div>
         </div>
         <div class="tlp-modal-body">
-            <p v-translate>Are you sure you want to change the field used to define the transitions?</p>
+            <p v-translate>
+                Are you sure you want to change the field used to define the transitions?
+            </p>
             <p v-translate>This action will delete all transition rules! It is irreversible.</p>
         </div>
         <div class="tlp-modal-footer">
@@ -42,14 +45,21 @@
                 class="tlp-button-danger tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
                 v-translate
-            >Cancel</button>
+            >
+                Cancel
+            </button>
             <button
                 type="button"
                 class="tlp-button-danger tlp-modal-action"
                 v-on:click="props.confirm()"
                 v-bind:disabled="props.is_operation_running"
+                data-test="confirm-button"
             >
-                <i v-if="props.is_operation_running" class="tlp-button-icon fa fa-circle-o-notch fa-spin"></i>
+                <i
+                    v-if="props.is_operation_running"
+                    class="tlp-button-icon fa fa-circle-o-notch fa-spin"
+                    data-test="confirm-button-spinner"
+                ></i>
                 <translate>Confirm</translate>
             </button>
         </div>

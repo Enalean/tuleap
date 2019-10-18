@@ -20,9 +20,13 @@
 
 <template>
     <post-action v-bind:post_action="post_action">
-        <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
+        <div
+            class="tracker-workflow-transition-modal-action-details-element tlp-form-element"
+            data-test="frozen-fields-form-element"
+        >
             <label for="workflow-transition-modal-frozen-fields" class="tlp-label">
-                <translate>Fields that will be frozen</translate> <i class="fa fa-asterisk"></i>
+                <translate>Fields that will be frozen</translate>
+                <i class="fa fa-asterisk"></i>
             </label>
             <multi-select
                 id="workflow-transition-modal-frozen-fields"
@@ -30,10 +34,11 @@
                 required
                 v-bind:configuration="{
                     width: '100%',
-                    placeholder: frozen_field_select_placeholder
+                    placeholder: $gettext('Choose a field')
                 }"
                 v-model="frozen_field_ids"
                 v-bind:disabled="is_modal_save_running"
+                data-test="frozen-fields-selector"
             >
                 <option
                     v-for="field in writable_fields"
@@ -80,9 +85,6 @@ export default {
                     .sort((field1, field2) => compare(field1.label, field2.label));
             }
         }),
-        frozen_field_select_placeholder() {
-            return this.$gettext("Choose a field");
-        },
         frozen_field_ids: {
             get() {
                 return this.post_action.field_ids;

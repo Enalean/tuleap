@@ -80,10 +80,16 @@ describe("FrozenFieldsAction", () => {
             create("post_action", { type: "frozen_fields" })
         ];
 
-        expect(wrapper.find("[data-test=freeze_fields").attributes().disabled).toBeTruthy();
+        expect(wrapper.find("[data-test=freeze_fields]").attributes().disabled).toBeTruthy();
     });
 
     it("should not show the status field as available", () => {
         expect(wrapper.find(`[data-test=field_${status_field_id}]`).exists()).toBeFalsy();
+    });
+
+    it(`when the modal is saving, it will disable the fields select`, () => {
+        store.state.transitionModal.is_modal_save_running = true;
+        const fields_select = wrapper.find("[data-test=frozen-fields-selector]");
+        expect(fields_select.attributes("disabled")).toBeTruthy();
     });
 });
