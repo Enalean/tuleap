@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,19 +25,19 @@ class AdditionalInformationPresenter
 {
 
     public $linked_artifact_id;
+    /**
+     * @var bool
+     */
+    public $has_a_linked_artifact;
+    /**
+     * @var string
+     */
+    public $artifact_id_title;
 
     public function __construct($linked_artifact_id)
     {
-        $this->linked_artifact_id = $linked_artifact_id;
-    }
-
-    public function has_a_linked_artifact()
-    {
-        return $this->linked_artifact_id != null;
-    }
-
-    public function artifact_id_title()
-    {
-        return $GLOBALS['Language']->getText('plugin_frs', 'artifact_id_title');
+        $this->linked_artifact_id    = $linked_artifact_id;
+        $this->has_a_linked_artifact = $this->linked_artifact_id != null;
+        $this->artifact_id_title     = dgettext('tuleap-frs', 'Artifact id:');
     }
 }

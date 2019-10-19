@@ -12,13 +12,42 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
+msgid "An error occured while saving new linked artifact id."
+msgstr ""
+"Une erreur est survenue lors de la mise à jour de l'identifiant d'artéfact."
+
 msgid "An error occurred while deleting the file"
 msgstr "Une erreur est survenue lors de la suppression du fichier"
+
+#, php-format
+msgid "Artifact #%1$s does not exist."
+msgstr "L'artéfact #%1$s n'existe pas."
+
+msgid "Artifact id:"
+msgstr "Identifiant de l'artéfact :"
 
 msgid "Artifact linked to a Files release cannot be moved"
 msgstr ""
 "Les artéfacts liés à une version du service Fichiers ne peuvent pas être "
 "déplacés"
 
+msgid ""
+"Extends file release system included into the Tuleap core with new features"
+msgstr ""
+"Étend les possibilités du gestionnaire de livrable inclus dans le cœur de "
+"Tuleap"
+
+msgid "File release"
+msgstr "Version"
+
+msgid "File release system"
+msgstr "Gestionnaire de livrable"
+
 msgid "The parent release cannot be found."
 msgstr "La version n'existe pas."
+
+msgid ""
+"The provided artifact id is not an integer. Linked artifact not updated."
+msgstr ""
+"L'identifiant d'artéfact fournit n'est pas un chiffre. Cette information n'a "
+"pas été mise à jour."

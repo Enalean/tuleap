@@ -42,7 +42,7 @@ class ArtifactView extends Tracker_Artifact_View_View
     /** @see Tracker_Artifact_View_View::getTitle() */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_frs', 'File_release')
+        return dgettext('tuleap-frs', 'File release')
         . ' <i class="fa fa-external-link"></i>';
     }
 
