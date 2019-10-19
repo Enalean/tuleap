@@ -558,7 +558,17 @@ class Tracker implements Tracker_Dispatchable_Interface
                 break;
             case 'delete':
                 if ($this->userCanDeleteTracker($current_user)) {
-                    if ($this->getTrackerFactory()->markAsDeleted($this->id)) {
+                    $service_usage_for_tracker = $this->getInformationsFromOtherServicesAboutUsage();
+                    if ($service_usage_for_tracker['can_be_deleted'] === false) {
+                        $GLOBALS['Response']->addFeedback(
+                            Feedback::ERROR,
+                            $GLOBALS['Language']->getText(
+                                'plugin_tracker',
+                                'cannot_delete_tracker',
+                                [$service_usage_for_tracker['message']]
+                            )
+                        );
+                    } elseif ($this->getTrackerFactory()->markAsDeleted($this->id)) {
                         $event_manager = EventManager::instance();
                         $event_manager->processEvent(TRACKER_EVENT_DELETE_TRACKER, array(
                                           'tracker_id' => $this->getId()));
