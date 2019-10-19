@@ -95,44 +95,6 @@ div.tracker-cant-delete {
     margin: 30px 0 20px;
 }
 
-#tracker-home-nav {
-    padding: 5px 1em 3px;
-    margin: 0;
-    border-bottom: 1px solid #999;
-    border-left: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    background-color: #f5f7f7;
-}
-
-#tracker-home-nav {
-    margin-top: 1em;
-    background-color: white;
-    border-left: none;
-    border-right: none;
-}
-
-#tracker-home-nav li {
-    list-style: none;
-    margin: 0;
-    display: inline;
-}
-
-#tracker-home-nav li a {
-    padding: 4px 0.5em;
-    padding-left: 24px;
-    margin-right: 3px;
-    border: 1px solid #999;
-    border-bottom: none;
-    background: #e0e0e0;
-    text-decoration: none;
-    background-position: 5px 5px;
-    background-repeat: no-repeat;
-}
-
-#tracker-home-nav li a {
-    padding-left: 0.5em;
-}
-
 .tracker_report_renderer {
     background-color: white;
     padding: 1em;
@@ -1958,13 +1920,6 @@ td.first-column {
     white-space: nowrap;
     height: 100%;
     border: none;
-}
-
-.tracker-cross-search-result-actions {
-    margin: 0;
-    padding: .5em 1em;
-    border-left: 1px solid silver;
-    border-right: 1px solid silver;
 }
 
 .node-indent {

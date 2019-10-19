@@ -711,14 +711,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         return '<input type="radio" name="create_mode" value="'. $create_mode .'" '. $checked .' />';
     }
 
-    public function displayTrackerHomeNav(Project $project)
-    {
-        $presenter = new Tracker_HomeNavPresenter($project);
-        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../templates');
-
-        $renderer->renderToPage('tracker-home-nav', $presenter);
-    }
-
     /**
      * Display all trackers of project $project that $user is able to see
      *
@@ -757,8 +749,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             }
 
             $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar, $params);
-            /* $this->displayTrackerHomeNav($project); */ // DEPRECATED: Waiting for user feedback before removing
-                                                          // the Cross Tracker Search feature completely
             $html .= '<p>';
             if (count($trackers)) {
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_index', 'choose_tracker');
