@@ -90,7 +90,7 @@ class ServiceSvn extends Service
                 'url'   => SVN_BASE_URL . "/?group_id=" . $request->getProject()->getId() .
                            "&action=admin-groups");
         }
-        $title       = $title.' - '.$GLOBALS['Language']->getText('plugin_svn', 'service_lbl_key');
+        $title       = $title.' - '.dgettext('tuleap-svn', 'SVN');
         $breadcrumbs = array(
             array(
                 'title' => "Repository List",
@@ -113,5 +113,27 @@ class ServiceSvn extends Service
             'is_in_iframe' => 0,
             'server_id'    => 0,
         );
+    }
+
+    public function getInternationalizedName(): string
+    {
+        $label = $this->getLabel();
+
+        if ($label === 'plugin_svn:service_lbl_key') {
+            return dgettext('tuleap-svn', 'SVN');
+        }
+
+        return $label;
+    }
+
+    public function getInternationalizedDescription(): string
+    {
+        $description = $this->getDescription();
+
+        if ($description === 'plugin_svn:service_desc_key') {
+            return dgettext('tuleap-svn', 'SVN plugin to manage multiple SVN repositories');
+        }
+
+        return $description;
     }
 }

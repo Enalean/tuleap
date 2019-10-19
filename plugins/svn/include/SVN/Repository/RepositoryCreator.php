@@ -233,7 +233,7 @@ class RepositoryCreator
         $this->checkRepositoryName($svn_repository);
         $id = $this->dao->create($svn_repository);
         if (! $id) {
-            throw new CannotCreateRepositoryException($GLOBALS['Language']->getText('plugin_svn', 'update_error'));
+            throw new CannotCreateRepositoryException(dgettext('tuleap-svn', 'Unable to update Repository data'));
         }
 
         $svn_repository->setId($id);

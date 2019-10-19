@@ -45,10 +45,10 @@ class BaseGlobalAdminPresenter
 
         $this->admin_groups_active = false;
         $this->admin_groups_url    = "?group_id=". urlencode($project->getId()) . "&action=admin-groups";
-        $this->admin_groups        = $this->text('plugin_svn_admin', 'admin_groups');
+        $this->admin_groups        = dgettext('tuleap-svn', 'Admin Groups');
 
         $this->csrf_input          = $token->fetchHTMLInput();
-        $this->title               = $this->text('plugin_svn_admin', 'title');
-        $this->submit              = $this->text('plugin_svn_admin', 'save');
+        $this->title               = dgettext('tuleap-svn', 'SVN Administration');
+        $this->submit              = dgettext('tuleap-svn', 'Save');
     }
 }

@@ -40,7 +40,7 @@ class SCMUsageCollector
     public function collect(Statistics_Formatter $formatter)
     {
         $formatter->addEmptyLine();
-        $formatter->addHeader($GLOBALS['Language']->getText('plugin_svn', 'descriptor_name'));
+        $formatter->addHeader(dgettext('tuleap-svn', 'SVN with multiple repositories'));
         $this->collectAccessesByMonth($formatter);
         $formatter->addEmptyLine();
         $this->collectTopUser($formatter);
@@ -62,14 +62,14 @@ class SCMUsageCollector
             $formatter->groupId
         );
 
-        $accesses_by_month['month'][]            = $GLOBALS['Language']->getText('plugin_svn_statistics', 'month');
-        $accesses_by_month['nb_browse'][]        = $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_browse');
-        $accesses_by_month['nb_read'] []         = $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_read');
-        $accesses_by_month['nb_write'] []        = $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_write');
-        $accesses_by_month['nb_project_read'] [] = $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_project_read');
-        $accesses_by_month['nb_user_read'] []    = $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_user_read');
-        $accesses_by_month['nb_project_write'][] = $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_project_write');
-        $accesses_by_month['nb_user_write'] []   = $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_user_write');
+        $accesses_by_month['month'][]            = dgettext('tuleap-svn', 'Month');
+        $accesses_by_month['nb_browse'][]        = dgettext('tuleap-svn', 'Total number of SVN browse operations');
+        $accesses_by_month['nb_read'] []         = dgettext('tuleap-svn', 'Total number of SVN read operations');
+        $accesses_by_month['nb_write'] []        = dgettext('tuleap-svn', 'Total number of SVN write operations');
+        $accesses_by_month['nb_project_read'] [] = dgettext('tuleap-svn', 'Total number of projects with SVN read operations');
+        $accesses_by_month['nb_user_read'] []    = dgettext('tuleap-svn', 'Total number of users with SVN read operations');
+        $accesses_by_month['nb_project_write'][] = dgettext('tuleap-svn', 'Total number of projects with SVN write operations');
+        $accesses_by_month['nb_user_write'] []   = dgettext('tuleap-svn', 'Total number of users with SVN write operations');
 
         foreach ($global_accesses as $access) {
             $month_key                                         = $access['month'] . ' ' . $access['year'];
@@ -115,11 +115,11 @@ class SCMUsageCollector
         $top_users = $this->dao->searchTopUser($formatter->startDate, $formatter->endDate, $formatter->groupId);
         foreach ($top_users as $top_user) {
             $formatter->addLine(
-                array($GLOBALS['Language']->getText('plugin_svn_statistics', 'top_user'), $top_user['user'])
+                array(dgettext('tuleap-svn', 'Top user'), $top_user['user'])
             );
             $formatter->addLine(
                 array(
-                    $GLOBALS['Language']->getText('plugin_svn_statistics', 'top_user_operation'),
+                    dgettext('tuleap-svn', 'Top user (number of write operations)'),
                     $top_user['nb_write']
                 )
             );
@@ -131,11 +131,11 @@ class SCMUsageCollector
         $top_projects = $this->dao->searchTopProject($formatter->startDate, $formatter->endDate, $formatter->groupId);
         foreach ($top_projects as $top_project) {
             $formatter->addLine(
-                array($GLOBALS['Language']->getText('plugin_svn_statistics', 'top_project'), $top_project['project'])
+                array(dgettext('tuleap-svn', 'Top project'), $top_project['project'])
             );
             $formatter->addLine(
                 array(
-                    $GLOBALS['Language']->getText('plugin_svn_statistics', 'top_project_operation'),
+                    dgettext('tuleap-svn', 'Top project (number of write operations)'),
                     $top_project['nb_write'])
             );
         }

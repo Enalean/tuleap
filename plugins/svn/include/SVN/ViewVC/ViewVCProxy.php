@@ -194,7 +194,7 @@ class ViewVCProxy
     {
         $user = $request->getCurrentUser();
         if ($user->isAnonymous()) {
-            return $GLOBALS['Language']->getText('plugin_svn', 'anonymous_browse_access_denied');
+            return dgettext('tuleap-svn', 'You can not browse the repository without being logged.');
         }
 
         $project = $this->project_manager->getProject($request->get('group_id'));

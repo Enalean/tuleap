@@ -149,12 +149,12 @@ class AdminController
             $mail_header = new MailHeader($repository, $repo_name);
             try {
                 $this->mail_header_manager->create($mail_header);
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_header_success'));
+                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-svn', 'Header updated successfully'));
             } catch (CannotCreateMailHeaderException $e) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_header_fail'));
+                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-svn', 'Header update failed.'));
             }
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_header_fail'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-svn', 'Header update failed.'));
         }
 
         $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(
@@ -228,12 +228,12 @@ class AdminController
                 $this->mail_notification_manager->createWithHistory($mail_notification);
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
-                    $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_success')
+                    dgettext('tuleap-svn', 'Email Notification updated successfully')
                 );
             } catch (CannotCreateMailHeaderException $e) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,
-                    $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_error')
+                    dgettext('tuleap-svn', 'Unable to save Notification')
                 );
             } catch (CannotAddUsersNotificationException $e) {
                 $this->addFeedbackUsersNotAdded($e->getUsersNotAdded());
@@ -243,7 +243,7 @@ class AdminController
         } else {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_error')
+                dgettext('tuleap-svn', 'Unable to save Notification')
             );
         }
 
@@ -320,12 +320,12 @@ class AdminController
 
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_success')
+                dgettext('tuleap-svn', 'Email Notification updated successfully')
             );
         } catch (CannotCreateMailHeaderException $e) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'upd_email_error')
+                dgettext('tuleap-svn', 'Unable to save Notification')
             );
         }
 
@@ -359,7 +359,7 @@ class AdminController
             } catch (CannotDeleteMailNotificationException $e) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,
-                    $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'delete_error')
+                    dgettext('tuleap-svn', 'Unable to delete notification list')
                 );
             }
         }
@@ -444,30 +444,15 @@ class AdminController
 
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
-                    $GLOBALS['Language']->getText(
-                        'plugin_svn',
-                        'actions_delete_process',
-                        array($repository->getFullName())
-                    )
+                    sprintf(dgettext('tuleap-svn', 'Repository \'%1$s\' will be removed in a few seconds'), $repository->getFullName())
                 );
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
-                    $GLOBALS['Language']->getText(
-                        'plugin_svn',
-                        'actions_delete_backup',
-                        array(
-                            $repository->getFullName(),
-                            $repository->getSystemBackupPath()
-                        )
-                    )
+                    sprintf(dgettext('tuleap-svn', 'A repository backup of \'%1$s\' will be available in the backup directory %2$s'), $repository->getFullName(), $repository->getSystemBackupPath())
                 );
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
-                    $GLOBALS['Language']->getText(
-                        'plugin_svn',
-                        'feedback_event_delete',
-                        array($repository->getFullName())
-                    )
+                    sprintf(dgettext('tuleap-svn', 'There is an event in queue for repository \'%1$s\' deletion, it will be processed in one minute or two. Please be patient!'), $repository->getFullName())
                 );
             } else {
                 $this->redirect($project_id);
@@ -477,7 +462,7 @@ class AdminController
         } else {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_svn', 'actions_repo_not_found')
+                dgettext('tuleap-svn', 'The repository does not exist')
             );
         }
         $this->redirect($project_id);
@@ -568,7 +553,7 @@ class AdminController
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
-            $GLOBALS['Language']->getText('plugin_svn_admin_notification', 'update_path_error')
+            dgettext('tuleap-svn', 'The given path is not valid')
         );
     }
 }

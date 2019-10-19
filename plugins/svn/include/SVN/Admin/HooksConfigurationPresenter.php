@@ -64,11 +64,11 @@ class HooksConfigurationPresenter extends BaseAdminPresenter
         $this->pre_commit_must_contain_reference = $pre_commit_must_contain_reference;
         $this->allow_commit_message_changes      = $allow_commit_message_changes;
 
-        $this->hooks_config_subtitle                   = $GLOBALS['Language']->getText('plugin_svn_admin_hooks', 'subtitle');
-        $this->comment                                 = $GLOBALS['Language']->getText('plugin_svn_admin_hooks', 'comment');
-        $this->label_pre_commit_must_contain_reference = $GLOBALS['Language']->getText('plugin_svn_admin_hooks', 'label_pre_commit_must_contain_reference');
-        $this->label_allow_commit_message_changes      = $GLOBALS['Language']->getText('plugin_svn_admin_hooks', 'label_allow_commit_message_changes');
-        $this->submit                                  = $GLOBALS['Language']->getText('plugin_svn_admin_hooks', 'submit');
+        $this->hooks_config_subtitle                   = dgettext('tuleap-svn', 'Rules on commit');
+        $this->comment                                 = dgettext('tuleap-svn', 'When committing, it is possible to enforce some rules. Check the rules you want to apply:');
+        $this->label_pre_commit_must_contain_reference = dgettext('tuleap-svn', 'Force every commit to include a reference.');
+        $this->label_allow_commit_message_changes      = dgettext('tuleap-svn', 'Allow commit message changes (svn propset --revprop -r X svn:log)');
+        $this->submit                                  = dgettext('tuleap-svn', 'Save the rules');
 
         $this->sections = new SectionsPresenter($repository);
     }

@@ -62,9 +62,8 @@ class Statistics_Services_UsageFormatter
     /**
      * Build CVS datas from SQL queries results to export them in a file
      * @param array|DataAccessResult $query_result
-     * @param type $title
      */
-    public function buildDatas($query_result, $title)
+    public function buildDatas($query_result, string $title)
     {
         $this->initiateDatas($query_result);
         $this->title[] = $title;

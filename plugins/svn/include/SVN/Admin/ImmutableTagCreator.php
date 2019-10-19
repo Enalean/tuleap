@@ -80,7 +80,7 @@ class ImmutableTagCreator
             $this->cleanImmutableTag($immutable_tags_whitelist)
         )) {
             throw new CannotCreateImmuableTagException(
-                $GLOBALS['Language']->getText('plugin_svn', 'create_immutable_tag_error')
+                dgettext('tuleap-svn', 'Unable to save immutable tags.')
             );
         }
     }

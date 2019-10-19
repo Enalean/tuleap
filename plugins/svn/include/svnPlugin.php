@@ -760,8 +760,8 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
              $params['logs'][] = array(
                 'sql'   => $query,
-                'field' => $GLOBALS['Language']->getText('plugin_svn', 'logsdaily_field'),
-                'title' => $GLOBALS['Language']->getText('plugin_svn', 'logsdaily_title')
+                'field' => dgettext('tuleap-svn', 'Repository name'),
+                'title' => dgettext('tuleap-svn', 'SVN')
              );
         }
     }

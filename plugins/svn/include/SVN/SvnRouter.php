@@ -233,7 +233,7 @@ class SvnRouter implements DispatchableWithRequest
                     break;
             }
         } catch (CannotFindRepositoryException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_svn', 'find_error'));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-svn', 'Repository not found'));
             $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?group_id=' . $request->get('group_id'));
         } catch (UserCannotAdministrateRepositoryException $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('global', 'perm_denied'));
@@ -284,7 +284,7 @@ class SvnRouter implements DispatchableWithRequest
         if ($service === null) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_svn', 'url_can_not_be_processed')
+                dgettext('tuleap-svn', 'The requested action can not be understood, you have been redirected to the homepage')
             );
             $GLOBALS['Response']->redirect('/');
         }
@@ -335,7 +335,7 @@ class SvnRouter implements DispatchableWithRequest
         if (! $this->plugin->isAllowed($project_id)) {
             $layout->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_svn_manage_repository', 'plugin_not_activated')
+                dgettext('tuleap-svn', 'SVN multi-repositories is disabled for the project.')
             );
             $layout->redirect('/projects/' . $project->getUnixNameMixedCase() . '/');
         }

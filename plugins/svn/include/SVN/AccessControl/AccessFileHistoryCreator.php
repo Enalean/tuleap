@@ -172,7 +172,7 @@ class AccessFileHistoryCreator
         );
         if (!$this->dao->create($file_history)) {
             throw new CannotCreateAccessFileHistoryException(
-                $GLOBALS['Language']->getText('plugin_svn', 'update_access_history_file_error')
+                dgettext('tuleap-svn', 'Unable to update Access Control File.')
             );
         }
 
@@ -210,7 +210,7 @@ class AccessFileHistoryCreator
     {
         if (!$this->dao->useAVersion($repository->getId(), $version_id)) {
             throw new CannotCreateAccessFileHistoryException(
-                $GLOBALS['Language']->getText('plugin_svn', 'update_access_history_file_error')
+                dgettext('tuleap-svn', 'Unable to update Access Control File.')
             );
         }
     }
@@ -222,12 +222,12 @@ class AccessFileHistoryCreator
     {
         if ($access_file->isErrorFile()) {
             throw new CannotCreateAccessFileHistoryException(
-                $GLOBALS['Language']->getText('plugin_svn_admin', 'file_error', $repository->getSystemPath())
+                sprintf(dgettext('tuleap-svn', 'Unable to read file %1$s'), $repository->getSystemPath())
             );
         }
 
         throw new CannotCreateAccessFileHistoryException(
-            $GLOBALS['Language']->getText('plugin_svn_admin', 'write_error', $repository->getSystemPath())
+            sprintf(dgettext('tuleap-svn', 'Unable to write into file %1$s'), $repository->getSystemPath())
         );
     }
 }

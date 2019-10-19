@@ -37,13 +37,13 @@ class RestorePresenter
         array $repositories,
         $project_id
     ) {
-        $this->title             = $GLOBALS['Language']->getText('plugin_svn', 'archived_repositories');
+        $this->title             = dgettext('tuleap-svn', 'Deleted svn repositories');
         $this->repositories      = $repositories;
         $this->project_id        = $project_id;
         $this->csrf_token        = $csrf_token;
-        $this->restore_not_found = $GLOBALS['Language']->getText('plugin_svn', 'restore_no_repo_found');
-        $this->restore_confirm   = $GLOBALS['Language']->getText('plugin_svn', 'restore_confirmation');
-        $this->repository_name   = $GLOBALS['Language']->getText('plugin_svn', 'repository_name');
-        $this->deleted_date      = $GLOBALS['Language']->getText('plugin_svn', 'deleted_date');
+        $this->restore_not_found = dgettext('tuleap-svn', 'No restorable svn repositories found.');
+        $this->restore_confirm   = dgettext('tuleap-svn', 'Confirm restore of the svn repository');
+        $this->repository_name   = dgettext('tuleap-svn', 'Repository name');
+        $this->deleted_date      = dgettext('tuleap-svn', 'Deleted date');
     }
 }

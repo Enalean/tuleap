@@ -194,7 +194,7 @@ class RepositoryManager
     public function getRepositoryFromSystemPath($path)
     {
         if (! preg_match('/\/(\d+)\/('.RuleName::PATTERN_REPOSITORY_NAME.')$/', $path, $matches)) {
-            throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn', 'find_error'));
+            throw new CannotFindRepositoryException(dgettext('tuleap-svn', 'Repository not found'));
         }
 
         $project = $this->project_manager->getProject($matches[1]);
@@ -229,7 +229,7 @@ class RepositoryManager
     private function getRepositoryIfProjectIsValid(Project $project, $repository_name)
     {
         if (!$project instanceof Project || $project->getID() == null || $project->isError()) {
-            throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn', 'find_error'));
+            throw new CannotFindRepositoryException(dgettext('tuleap-svn', 'Repository not found'));
         }
 
         return $this->getRepositoryByName($project, $repository_name);

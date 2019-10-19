@@ -39,8 +39,8 @@ class AdminGroupsPresenter extends BaseGlobalAdminPresenter
         parent::__construct($project, $token);
 
         $this->admin_groups_active      = true;
-        $this->admin_groups_description = $this->text("plugin_svn_admin", "admin_groups_description");
-        $this->admin_groups_label       = $this->text("plugin_svn_admin", "admin_groups_label");
+        $this->admin_groups_description = dgettext('tuleap-svn', 'Select the groups which are allowed to access the SVN administration in addition to the project administrators.');
+        $this->admin_groups_label       = dgettext('tuleap-svn', 'Groups:');
         $this->ugroups                  = $ugroups;
     }
 }

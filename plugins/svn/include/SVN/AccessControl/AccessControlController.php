@@ -133,7 +133,7 @@ class AccessControlController
             }
             $GLOBALS['Response']->redirect($this->getUrl($repository));
         } catch (CannotCreateAccessFileHistoryException $exception) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_svn_admin', 'update_fail'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-svn', 'Error during new revision file creation'));
             $GLOBALS['Response']->addFeedback('error', $exception->getMessage());
             $this->displayAuthFile($service, $request);
         }

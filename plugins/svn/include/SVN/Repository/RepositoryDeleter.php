@@ -91,7 +91,7 @@ class RepositoryDeleter
             );
         } else {
             throw new CannotDeleteRepositoryException(
-                $GLOBALS['Language']->getText('plugin_svn', 'delete_repository_exception')
+                dgettext('tuleap-svn', 'An error occured when deleting repository.')
             );
         }
     }
