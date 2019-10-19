@@ -35,9 +35,11 @@ class WebhookDao extends DataAccessObject
 
     public function deleteByRepositoryIdAndWebhookId($repository_id, $webhook_id)
     {
-        $sql = 'DELETE FROM plugin_git_webhook_url
-                WHERE repository_id = ?
-                  AND id = ?';
+        $sql = 'DELETE plugin_git_webhook_url, plugin_git_webhook_log
+                FROM plugin_git_webhook_url
+                INNER JOIN plugin_git_webhook_log ON (plugin_git_webhook_url.id = plugin_git_webhook_log.webhook_id)
+                WHERE plugin_git_webhook_url.repository_id = ?
+                  AND plugin_git_webhook_url.id = ?';
 
         try {
             $this->getDB()->run($sql, $repository_id, $webhook_id);
