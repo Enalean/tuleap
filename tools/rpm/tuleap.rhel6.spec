@@ -564,6 +564,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/git/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/graphontrackersv5/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_svn/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
@@ -1233,6 +1234,7 @@ fi
 %files plugin-hudson-svn
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/hudson_svn
+%{APP_DIR}/src/www/assets/hudson_svn
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_hudson_svn
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_hudson_svn
 
