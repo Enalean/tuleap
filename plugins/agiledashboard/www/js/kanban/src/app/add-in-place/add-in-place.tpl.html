@@ -2,8 +2,7 @@
     ng-class="{open: addInPlace.isOpen(), 'tlp-button-primary': ! addInPlace.isOpen()}"
     esc-key="addInPlace.close()"
 >
-    <i class="fa fa-plus column-content-addinplace-icon"
-       ng-click="addInPlace.open()"></i>
+    <i class="fa fa-plus column-content-addinplace-icon" ng-click="addInPlace.open()" data-test="add-in-place-button"></i>
     <form ng-submit="addInPlace.submit()"
           ng-if="addInPlace.isOpen()"
           class="column-content-addinplace-icon-form tlp-form-element tlp-form-element-append"
@@ -11,9 +10,11 @@
         <input type="text"
                class="tlp-input column-content-addinplace-icon-form-input"
                ng-model="addInPlace.summary"
-               placeholder="{{ 'Card summary' | translate }}">
+               placeholder="{{ 'Card summary' | translate }}"
+               data-test="add-in-place-label-input">
         <button type="submit"
                 class="tlp-append tlp-button-primary column-content-addinplace-icon-form-save"
+                data-test="add-in-place-submit"
         >
             <i class="fa fa-fw fa-check"></i>
         </button>
