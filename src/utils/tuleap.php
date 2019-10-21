@@ -44,6 +44,7 @@ use Tuleap\User\AccessKey\AccessKeyRevoker;
 use TuleapCfg\Command\ProcessFactory;
 use Tuleap\Mail\AutomaticMailsSender;
 use Tuleap\User\IdleUsersDao;
+use Tuleap\Mail\AutomaticMailsLogger;
 
 (static function () {
     require_once __DIR__ . '/../vendor/autoload.php';
@@ -177,7 +178,8 @@ $CLI_command_collector->addCommand(
                 new Codendi_Mail,
                 new IdleUsersDao(),
                 $user_manager,
-                new BaseLanguageFactory()
+                new BaseLanguageFactory(),
+                new AutomaticMailsLogger()
             )
         );
     }
