@@ -328,7 +328,8 @@ class AgileDashboardRouterBuilder
         return new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
             $item_factory,
             $this->getBacklogItemCollectionFactory(),
-            $this->getBacklogFactory()
+            $this->getBacklogFactory(),
+            new \Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao()
         );
     }
 

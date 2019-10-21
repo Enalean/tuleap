@@ -1944,7 +1944,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         return new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
             $item_factory,
             $this->getBacklogItemCollectionFactory(),
-            $this->getBacklogFactory()
+            $this->getBacklogFactory(),
+            new \Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao()
         );
     }
 
