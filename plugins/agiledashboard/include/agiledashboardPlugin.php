@@ -756,7 +756,10 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     {
         $request = HTTPRequest::instance();
 
-        return $request->get('action') === 'admin' && $request->get('pane') !== 'kanban' && $request->get('pane') !== 'charts';
+        return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 &&
+            $request->get('action') === 'admin' &&
+            $request->get('pane') !== 'kanban' &&
+            $request->get('pane') !== 'charts';
     }
 
     private function isPlanningV2URL()
