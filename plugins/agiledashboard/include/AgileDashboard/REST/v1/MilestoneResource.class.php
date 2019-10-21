@@ -37,6 +37,7 @@ use Planning_Milestone;
 use Planning_MilestoneFactory;
 use PlanningFactory;
 use PlanningPermissionsManager;
+use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
@@ -56,6 +57,7 @@ use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
 use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
+use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementAdder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -970,22 +972,21 @@ class MilestoneResource extends AuthenticatedResource
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
+        if (! $milestone) {
+            throw new RestException(404, "Milestone not found");
+        }
+
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
             $milestone->getProject()
         );
 
         $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $user);
 
-        $to_add = array();
+        $to_add = [];
         try {
             if ($add) {
-                $this->resources_patcher->startTransaction();
-                $to_add = $this->resources_patcher->removeArtifactFromSource($user, $add);
-                if (count($to_add)) {
-                    $valid_to_add = $this->milestone_validator->validateArtifactIdsCanBeAddedToBacklog($to_add, $milestone, $user);
-                    $this->addMissingElementsToBacklog($milestone, $user, $valid_to_add);
-                }
-                $this->resources_patcher->commit();
+                $adder = new MilestoneElementAdder($this->resources_patcher, $this->milestone_validator, $this->artifactlink_updater);
+                $to_add = $adder->addElementToMilestone($user, $add, $milestone);
             }
         } catch (Tracker_NoChangeException $exception) {
             // nothing to do
@@ -995,7 +996,7 @@ class MilestoneResource extends AuthenticatedResource
 
         try {
             if ($order) {
-                $order->checkFormat($order);
+                $order->checkFormat();
                 $this->milestone_validator->validateArtifactIdsAreInUnplannedMilestone(
                     $this->filterOutAddedElements($order, $to_add),
                     $milestone,
@@ -1012,19 +1013,6 @@ class MilestoneResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         } catch (\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
-        }
-    }
-
-    private function addMissingElementsToBacklog(Planning_Milestone $milestone, PFUser $user, array $to_add)
-    {
-        if (count($to_add) > 0) {
-            $this->artifactlink_updater->updateArtifactLinks(
-                $user,
-                $milestone->getArtifact(),
-                $to_add,
-                array(),
-                Tracker_FormElement_Field_ArtifactLink::NO_NATURE
-            );
         }
     }
 
