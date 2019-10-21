@@ -43,7 +43,7 @@ class DeleteFailedException extends Exception
         return new self(
             "missing permission on a sub item",
             dgettext(
-                'plugin-docman',
+                'tuleap-docman',
                 "Cannot delete this item because it contains items you are not allowed to modify (no 'Write' access, you may even not be able to read them). Please contact your document manager administrator."
             )
         );
@@ -55,7 +55,7 @@ class DeleteFailedException extends Exception
             "Missing permission to delete " . $item->getTitle(),
             sprintf(
                 dgettext(
-                    'plugin-docman',
+                    'tuleap-docman',
                     'You do not have sufficient access rights to delete %s.'
                 ),
                 $item->getTitle()
@@ -67,7 +67,7 @@ class DeleteFailedException extends Exception
     {
         return new self(
             "Can't delete wiki page",
-            dgettext('plugin-docman', 'Error while trying to delete the wiki page from wiki service.')
+            dgettext('tuleap-docman', 'Error while trying to delete the wiki page from wiki service.')
         );
     }
 
@@ -77,7 +77,7 @@ class DeleteFailedException extends Exception
             "Missing permission to delete " . $item->getTitle(),
             sprintf(
                 dgettext(
-                    'plugin-docman',
+                    'tuleap-docman',
                     'You do not have sufficient access rights to delete %s.'
                 ),
                 $item->getTitle()
@@ -91,7 +91,7 @@ class DeleteFailedException extends Exception
             "Folder is not empty: " . $item->getTitle(),
             sprintf(
                 dgettext(
-                    'plugin-docman',
+                    'tuleap-docman',
                     'Can\'t delete folder %s because it is not empty.'
                 ),
                 $item->getTitle()

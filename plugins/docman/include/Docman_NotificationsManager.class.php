@@ -293,7 +293,7 @@ class Docman_NotificationsManager
             case self::MESSAGE_NEWVERSION:
                 $msg .=
                     sprintf(
-                        dgettext('plugin-docman', '%s has been modified by %s.'),
+                        dgettext('tuleap-docman', '%s has been modified by %s.'),
                         $params['path']->get($params['item']),
                         $user->getRealName()
                     ) ."\n";
@@ -301,14 +301,14 @@ class Docman_NotificationsManager
                 break;
             case self::MESSAGE_WIKI_NEWVERSION:
                 $msg .= sprintf(
-                    dgettext('plugin-docman', "New version of %s wiki page was created by %s."),
+                    dgettext('tuleap-docman', "New version of %s wiki page was created by %s."),
                     $params['wiki_page'],
                     $user->getRealName()
                 ) ."\n";
                 $msg .= $this->getMessageLink($message_type, $params) . "\n";
                 break;
             default:
-                $msg .= dgettext('plugin-docman', 'Something happen!');
+                $msg .= dgettext('tuleap-docman', 'Something happen!');
                 break;
         }
         $monitoredItem = $this->_getMonitoredItemForUser($user, $params['item']);
@@ -405,12 +405,12 @@ class Docman_NotificationsManager
     {
         $message = "\n\n--------------------------------------------------------------------\n";
         $message .= dgettext(
-            'plugin-docman',
+            'tuleap-docman',
             "You are receiving this message because you are monitoring this item."
         );
         $message .= "\n";
         $message .= dgettext(
-            'plugin-docman',
+            'tuleap-docman',
             "To stop monitoring, please visit:"
         );
         $message .= "\n";

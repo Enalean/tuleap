@@ -59,13 +59,13 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager
                 $monitoredItem = $this->_getMonitoredItemForUser($user, $params['parent']);
 
                 $msg = sprintf(
-                    dgettext('plugin-docman', "%s has been modified by %s."),
+                    dgettext('tuleap-docman', "%s has been modified by %s."),
                     $params['path']->get($params['parent']),
                     $user->getRealName()
                 ) ."\n";
 
                 $msg .=$this->getMessageLink($message_type, $params) . "\n\n";
-                $msg .= dgettext('plugin-docman', "Added:");
+                $msg .= dgettext('tuleap-docman', "Added:");
                 $msg .= "\n" . $params['item']->getTitle();
 
                 $msg           .= $this->getMonitoringInformation($monitoredItem);
