@@ -120,7 +120,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
                 )."\n";
                 $msg .= $itemUrl;
                 $msg .= $separator;
-                $msg .= dgettext('plugin-docman', 'To stop monitoring, please visit:')."\n";
+                $msg .= dgettext('tuleap-docman', 'To stop monitoring, please visit:')."\n";
                 break;
             case self::MESSAGE_REMOVED:
                 $msg .= dgettext(

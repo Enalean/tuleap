@@ -275,6 +275,9 @@ msgstr ""
 "Cette limite empêche un utilisateur de téléverser plus de x fichiers à la "
 "fois."
 
+msgid "To restore monitoring, please visit:"
+msgstr "Pour restaurer le monitoring, veuillez visiter :"
+
 msgid "To stop monitoring, please visit:"
 msgstr "Pour arrêter le monitoring, veuillez visiter :"
 
@@ -297,12 +300,16 @@ msgstr "Vous recevez cette notification car vous monitorez cet item."
 msgid ""
 "You are receiving this message because you were added to the monitoring list "
 "of this item:"
-msgstr "Vous recevez cette notification car vous avez été rajouté à la liste des utilisateurs qui monitorent cet item:"
+msgstr ""
+"Vous recevez cette notification car vous avez été rajouté à la liste des "
+"utilisateurs qui monitorent cet item:"
 
 msgid ""
 "You are receiving this message because you were removed from the monitoring "
 "list of this item:"
-msgstr "Vous recevez cette notification car vous avez été enlevé de la liste des utilisateurs qui monitorent cet item:"
+msgstr ""
+"Vous recevez cette notification car vous avez été enlevé de la liste des "
+"utilisateurs qui monitorent cet item:"
 
 msgid "You cannot delete the root folder."
 msgstr "Vous ne pouvez pas supprimer le dossier racine."

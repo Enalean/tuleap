@@ -108,8 +108,8 @@ class AfterItemCreationVisitor implements ItemVisitor
 
         $this->docman_link_version_factory->create(
             $item,
-            dgettext('plugin_docman', 'Initial version'),
-            dgettext('plugin_docman', 'Initial version'),
+            dgettext('tuleap-docman', 'Initial version'),
+            dgettext('tuleap-docman', 'Initial version'),
             $creation_time->getTimestamp()
         );
         $this->instantiatePermissions($item, $params['permissions_for_groups']);
@@ -140,7 +140,7 @@ class AfterItemCreationVisitor implements ItemVisitor
             'number'    => $initial_version_number,
             'user_id'   => $params['user']->getId(),
             'label'     => '',
-            'changelog' => dgettext('plugin_docman', 'Initial version'),
+            'changelog' => dgettext('tuleap-docman', 'Initial version'),
             'date'      => $item->getCreateDate(),
             'filename'  => basename($created_file_path),
             'filesize'  => filesize($created_file_path),
