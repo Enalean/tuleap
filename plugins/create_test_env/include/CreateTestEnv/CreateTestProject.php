@@ -69,15 +69,20 @@ class CreateTestProject
      */
     private function getXMLBasedOnTemplate()
     {
-        $engine = new \Mustache_Engine();
-        $xml_str = $engine->render(
-            file_get_contents($this->getProjectXMLFilePath()),
-            new CreateTestProjectPresenter(
+        $xml_str = str_replace(
+            [
+                '{{ project_unix_name }}',
+                '{{ project_full_name }}',
+                '{{ username }}',
+                '{{ current_date }}',
+            ],
+            [
                 $this->getProjectUnixName(),
                 $this->getProjectFullName(),
                 $this->user_name,
-                date('c')
-            )
+                date('c'),
+            ],
+            file_get_contents($this->getProjectXMLFilePath())
         );
         return simplexml_load_string($xml_str);
     }
