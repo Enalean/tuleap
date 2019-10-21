@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReleaseDescription Given user display widget, Then a good link to top planning of the release is rendered 1`] = `
+<div
+  class="release-content-description"
+>
+  <release-description-badges-tracker-stub
+    release-data="[object Object]"
+    releasedata="[object Object]"
+  />
+   
+  <div
+    class="release-description-row"
+  >
+    <div
+      class="release-description"
+    />
+     
+    <a
+      data-test="overview-link"
+      href="/plugins/agiledashboard/?group_id=102&planning_id=100&action=show&aid=2&pane=details"
+    >
+      <i
+        class="release-description-link-icon fa fa-long-arrow-right"
+      />
+       
+      <translate-stub
+        tag="span"
+      >
+         Go to release overview 
+      </translate-stub>
+    </a>
+  </div>
+   
+  <div
+    class="release-chart-burndown-row"
+  >
+    <h2
+      class="tlp-pane-subtitle"
+      data-current-language="en_US"
+      data-msgid="Burndown"
+    >
+      Burndown
+    </h2>
+     
+    <p
+      class="empty-pane-text"
+      data-current-language="en_US"
+      data-msgid="There is nothing here!"
+    >
+      There is nothing here!
+    </p>
+  </div>
+</div>
+`;

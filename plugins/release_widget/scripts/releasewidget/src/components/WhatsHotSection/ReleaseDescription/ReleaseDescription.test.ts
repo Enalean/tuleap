@@ -64,15 +64,6 @@ describe("ReleaseDescription", () => {
         store_options.state.project_id = project_id;
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-
-        expect(wrapper.find("[data-test=overview-link]").attributes("href")).toEqual(
-            "/plugins/agiledashboard/?group_id=" +
-                encodeURIComponent(project_id) +
-                "&planning_id=" +
-                encodeURIComponent(releaseData.planning.id) +
-                "&action=show&aid=" +
-                encodeURIComponent(releaseData.id) +
-                "&pane=details"
-        );
+        expect(wrapper.element).toMatchSnapshot();
     });
 });
