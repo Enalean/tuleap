@@ -132,6 +132,18 @@ CREATE TABLE plugin_agiledashboard_kanban_recently_visited (
     INDEX idx_user_visit_time(user_id, created_on)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_agiledashboard_planning_explicit_backlog_usage;
+CREATE TABLE plugin_agiledashboard_planning_explicit_backlog_usage (
+   project_id INT(11) NOT NULL PRIMARY KEY
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS plugin_agiledashboard_planning_artifacts_explicit_backlog;
+CREATE TABLE plugin_agiledashboard_planning_artifacts_explicit_backlog (
+   project_id INT(11) NOT NULL,
+   artifact_id INT(11) NOT NULL,
+   PRIMARY KEY(project_id, artifact_id)
+) ENGINE=InnoDB;
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
        VALUES      ( 100, 'plugin_agiledashboard:service_lbl_key', 'plugin_agiledashboard:service_desc_key', 'plugin_agiledashboard', '/plugins/agiledashboard/?group_id=$group_id', 1, 0, 'system', 152);
