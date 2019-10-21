@@ -39,7 +39,11 @@
             >
                 Cancel
             </button>
-            <button class="tlp-button-primary writing-mode-actions-search" v-on:click="search">
+            <button
+                class="tlp-button-primary writing-mode-actions-search"
+                v-on:click="search"
+                data-test="search-report-button"
+            >
                 <i class="fa fa-search tlp-button-icon"></i>
                 <translate>Search</translate>
             </button>

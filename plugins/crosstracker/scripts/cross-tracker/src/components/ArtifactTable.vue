@@ -38,14 +38,14 @@
                     <td colspan="6"><div class="cross-tracker-loader"></div></td>
                 </tr>
             </tbody>
-            <tbody v-if="is_table_empty">
+            <tbody v-if="is_table_empty" data-test="cross-tracker-no-results">
                 <tr>
                     <td colspan="6" class="tlp-table-cell-empty" v-translate>
                         No matching artifacts found
                     </td>
                 </tr>
             </tbody>
-            <tbody v-else>
+            <tbody v-else data-test="cross-tracker-results">
                 <artifact-table-row
                     v-for="artifact of artifacts"
                     v-bind:artifact="artifact"

@@ -20,6 +20,7 @@
                                     {{# is_minimized }}dashboard-widget-minimized{{/is_minimized}}
                                  "
                                  data-widget-id="{{ widget_id }}"
+                                 data-test="dashboard-widget-{{ widget_name }}"
                         >
                             {{# csrf_token }}
                                 {{> csrf_token_input }}

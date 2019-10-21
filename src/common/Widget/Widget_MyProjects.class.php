@@ -89,7 +89,7 @@ class Widget_MyProjects extends Widget
             $html .= '<p class="empty-pane-text">' . $GLOBALS['Language']->getText('my_index', 'not_member') . '</p>';
             $html .= '</div>';
         } else {
-            $html .= '<table cellspacing="0" class="tlp-table widget_my_projects">';
+            $html .= '<table cellspacing="0" class="tlp-table widget_my_projects" data-test="dashboard-my-projects">';
             $i     = 0;
             $prevIsPublic = false;
             $disable_contact = (bool) ForgeConfig::get(self::CONFIG_DISABLE_CONTACT);

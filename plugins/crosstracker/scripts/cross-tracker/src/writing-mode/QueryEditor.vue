@@ -29,6 +29,7 @@
                 id="expert-query-textarea"
                 v-bind:placeholder="placeholder"
                 v-model="writingCrossTrackerReport.expert_query"
+                data-test="expert-query-textarea"
             ></textarea>
             <p class="tlp-text-info">
                 <i class="fa fa-info-circle"></i>

@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018 - present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -33,6 +33,7 @@
                 name="project"
                 v-bind:disabled="is_project_select_disabled"
                 v-model="selected_project"
+                data-test="cross-tracker-selector-project"
             >
                 <option v-for="project of projects" v-bind:value="project" v-bind:key="project.id">
                     {{ project.label }}
@@ -54,9 +55,14 @@
                     name="tracker"
                     v-bind:disabled="is_tracker_select_disabled"
                     v-model="selected_tracker"
+                    data-test="cross-tracker-selector-tracker"
                 >
-                    <option v-bind:value="null" class="cross-tracker-please-choose-option">
-                        {{ please_choose_label }}
+                    <option
+                        v-bind:value="null"
+                        class="cross-tracker-please-choose-option"
+                        v-translate
+                    >
+                        Please choose...
                     </option>
                     <option
                         v-for="tracker of tracker_options"
@@ -72,6 +78,7 @@
                     class="tlp-append tlp-button-primary tlp-button-outline"
                     v-bind:disabled="is_add_button_disabled"
                     v-on:click="addTrackerToSelection"
+                    data-test="cross-tracker-selector-tracker-button"
                 >
                     <i
                         v-if="is_loader_shown"
@@ -103,9 +110,6 @@ export default {
         };
     },
     computed: {
-        please_choose_label() {
-            return this.$gettext("Please choose...");
-        },
         is_project_select_disabled() {
             return this.projects.length === 0;
         },

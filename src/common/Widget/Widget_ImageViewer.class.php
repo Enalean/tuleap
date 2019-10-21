@@ -27,16 +27,16 @@ require_once('Widget.class.php');
 * Display an image
 *
 */
-class Widget_ImageViewer extends Widget
+class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public $image_title;
     public $image_url;
-    function __construct($id, $owner_id, $owner_type)
+    public function __construct($id, $owner_id, $owner_type)
     {
         parent::__construct($id);
         $this->setOwner($owner_id, $owner_type);
     }
-    function getTitle()
+    public function getTitle()
     {
         return $this->image_title ?: 'Image';
     }
@@ -115,6 +115,7 @@ class Widget_ImageViewer extends Widget
                        pattern="https?://.*"
                        title="'. $purifier->purify(_('Please, enter a http:// or https:// link')) .'"
                        required
+                       data-test="dashboard-widget-image-input-url"
                        placeholder="https://example.com/image.png">
             </div>
             ';
@@ -143,7 +144,7 @@ class Widget_ImageViewer extends Widget
         return db_insertid($res);
     }
 
-    function loadContent($id)
+    public function loadContent($id)
     {
         $sql = "SELECT * FROM widget_image WHERE owner_id = ". db_ei($this->owner_id) ." AND owner_type = '". db_es($this->owner_type) ."' AND id = ". db_ei($id);
         $res = db_query($sql);
@@ -154,7 +155,7 @@ class Widget_ImageViewer extends Widget
             $this->content_id = $id;
         }
     }
-    function create(Codendi_Request $request)
+    public function create(Codendi_Request $request)
     {
         $content_id = false;
         $vUrl = new Valid_HTTPURI('url');
@@ -173,7 +174,7 @@ class Widget_ImageViewer extends Widget
         }
         return $content_id;
     }
-    function updatePreferences(Codendi_Request $request)
+    public function updatePreferences(Codendi_Request $request)
     {
         $done = false;
         $vContentId = new Valid_UInt('content_id');
@@ -201,12 +202,12 @@ class Widget_ImageViewer extends Widget
         }
         return $done;
     }
-    function destroy($id)
+    public function destroy($id)
     {
         $sql = 'DELETE FROM widget_image WHERE id = '. db_ei($id) .' AND owner_id = '. db_ei($this->owner_id) ." AND owner_type = '". db_es($this->owner_type) ."'";
         db_query($sql);
     }
-    function isUnique()
+    public function isUnique()
     {
         return false;
     }
