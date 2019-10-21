@@ -39,6 +39,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     display: flex;
     align-items: baseline;
     padding: $tlp-half-spacing $tlp-spacing $tlp-half-spacing 0;
+    overflow: hidden;
     background: linear-gradient(to right, #ffffff 0%, #fafafa 50%);
     cursor: pointer;
 }
