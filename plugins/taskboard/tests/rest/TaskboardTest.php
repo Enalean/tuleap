@@ -75,7 +75,7 @@ class TaskboardTest extends RestBase
             $this->assertEquals('/plugins/tracker/?aid='. $cards[$key]['id'], $cards[$key]['artifact_html_uri']);
             $expected_background_color = $label === 'US2' ? 'fiesta-red' : '';
             $this->assertEquals($expected_background_color, $cards[$key]['background_color']);
-            $expected_has_children = $label === 'US6';
+            $expected_has_children = in_array($label, ['US2', 'US6'], true);
             $this->assertEquals($expected_has_children, $cards[$key]['has_children']);
             $this->assertArrayHasKey('initial_effort', $cards[$key]);
             $this->assertArrayHasKey('assignees', $cards[$key]);

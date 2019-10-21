@@ -1042,6 +1042,93 @@
             </field_change>
           </changeset>
         </artifact>
+        <artifact id="2317">
+          <changeset>
+              <submitted_by format="username">rest_api_tester_1</submitted_by>
+              <submitted_on format="ISO8601">2018-01-10T14:05:56+01:00</submitted_on>
+              <comments/>
+              <field_change field_name="title" type="string">
+                  <value><![CDATA[Task1]]></value>
+              </field_change>
+              <field_change field_name="type" type="list" bind="static">
+                  <value format="id">10518</value>
+              </field_change>
+              <field_change field_name="details" type="text">
+                  <value format="text"><![CDATA[]]></value>
+              </field_change>
+              <field_change field_name="assigned_to" type="list" bind="users">
+                  <value format="username">None</value>
+              </field_change>
+              <field_change field_name="status" type="list" bind="static">
+                  <value format="id">10522</value>
+              </field_change>
+              <field_change field_name="remaining_effort" type="float">
+                  <value></value>
+              </field_change>
+              <field_change field_name="links" type="art_link"/>
+              <field_change field_name="intial_effort_1" type="computed">
+                  <manual_value><![CDATA[5]]></manual_value>
+              </field_change>
+          </changeset>
+        </artifact>
+          <artifact id="2318">
+              <changeset>
+                  <submitted_by format="username">rest_api_tester_1</submitted_by>
+                  <submitted_on format="ISO8601">2018-01-10T14:05:57+01:00</submitted_on>
+                  <comments/>
+                  <field_change field_name="title" type="string">
+                      <value><![CDATA[Task2]]></value>
+                  </field_change>
+                  <field_change field_name="type" type="list" bind="static">
+                      <value format="id">10518</value>
+                  </field_change>
+                  <field_change field_name="details" type="text">
+                      <value format="text"><![CDATA[]]></value>
+                  </field_change>
+                  <field_change field_name="assigned_to" type="list" bind="users">
+                      <value format="username">None</value>
+                  </field_change>
+                  <field_change field_name="status" type="list" bind="static">
+                      <value format="id">10522</value>
+                  </field_change>
+                  <field_change field_name="remaining_effort" type="float">
+                      <value></value>
+                  </field_change>
+                  <field_change field_name="links" type="art_link"/>
+                  <field_change field_name="intial_effort_1" type="computed">
+                      <manual_value><![CDATA[1]]></manual_value>
+                  </field_change>
+              </changeset>
+          </artifact>
+        <artifact id="2319">
+            <changeset>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601">2018-01-10T14:05:58+01:00</submitted_on>
+                <comments/>
+                <field_change field_name="title" type="string">
+                    <value><![CDATA[Task3]]></value>
+                </field_change>
+                <field_change field_name="type" type="list" bind="static">
+                    <value format="id">10518</value>
+                </field_change>
+                <field_change field_name="details" type="text">
+                    <value format="text"><![CDATA[]]></value>
+                </field_change>
+                <field_change field_name="assigned_to" type="list" bind="users">
+                    <value format="username">None</value>
+                </field_change>
+                <field_change field_name="status" type="list" bind="static">
+                    <value format="id">10522</value>
+                </field_change>
+                <field_change field_name="remaining_effort" type="float">
+                    <value></value>
+                </field_change>
+                <field_change field_name="links" type="art_link"/>
+                <field_change field_name="intial_effort_1" type="computed">
+                    <manual_value><![CDATA[3]]></manual_value>
+                </field_change>
+            </changeset>
+        </artifact>
       </artifacts>
     </tracker>
     <tracker id="T1503" instantiate_for_new_projects="1" stop_notification="1">
@@ -1717,6 +1804,11 @@
             <field_change field_name="status" type="list" bind="static">
               <value format="id">10530</value>
             </field_change>
+              <field_change field_name="links" type="art_link">
+                  <value nature="_is_child">2317</value>
+                  <value nature="_is_child">2318</value>
+                  <value nature="_is_child">2319</value>
+              </field_change>
           </changeset>
         </artifact>
         <artifact id="2237">

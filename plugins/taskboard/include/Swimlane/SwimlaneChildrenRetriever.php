@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Taskboard\REST;
+namespace Tuleap\Taskboard\Swimlane;
 
-use Luracast\Restler\Restler;
-
-class ResourcesInjector
+class SwimlaneChildrenRetriever
 {
-    public function populate(Restler $restler): void
+    /**
+     * @return int[] array of Tracker_Artifact ids
+     */
+    public function getSwimlaneArtifactIds(\Tracker_Artifact $swimlane_artifact, \PFUser $current_user): array
     {
-        $restler->addAPIClass(v1\TaskboardResource::class, 'taskboard');
-        $restler->addAPIClass(v1\TaskboardCardResource::class, 'taskboard_cards');
-        $restler->addAPIClass(v1\TaskboardCellResource::class, 'taskboard_cells');
+        $swimlane_children = $swimlane_artifact->getLinkedArtifacts($current_user);
+        return array_map(
+            function (\Tracker_Artifact $child) {
+                return $child->getId();
+            },
+            $swimlane_children
+        );
     }
 }

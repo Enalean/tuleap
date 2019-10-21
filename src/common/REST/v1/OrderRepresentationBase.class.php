@@ -28,7 +28,7 @@ class OrderRepresentationBase
     public const BEFORE = 'before';
 
     /**
-     * @var {@type array}
+     * @var array {@type int}
      */
     public $ids;
 
