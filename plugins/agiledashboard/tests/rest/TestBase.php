@@ -28,6 +28,8 @@ class TestBase extends RestBase
     protected $kanban_artifact_ids = array();
     protected $tracker_report_id   = null;
 
+    protected $explicit_backlog_project_id;
+
     public function setUp() : void
     {
         parent::setUp();
@@ -35,6 +37,8 @@ class TestBase extends RestBase
         $this->getKanbanArtifactIds();
 
         $this->tracker_report_id = $this->getTrackerReportId();
+
+        $this->explicit_backlog_project_id = $this->getProjectId(DataBuilder::EXPLICIT_BACKLOG_PROJECT_SHORTNAME);
     }
 
     private function getKanbanArtifactIds()

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 
 class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
@@ -32,15 +33,22 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
     /** @var AgileDashboard_Milestone_Backlog_BacklogFactory */
     private $backlog_factory;
 
+    /**
+     * @var ExplicitBacklogDao
+     */
+    private $explicit_backlog_dao;
+
 
     public function __construct(
         BacklogItemRepresentationFactory $backlog_item_representation_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory,
-        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory
+        AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
+        ExplicitBacklogDao $explicit_backlog_dao
     ) {
         $this->backlog_item_representation_factory = $backlog_item_representation_factory;
         $this->backlog_item_collection_factory     = $backlog_item_collection_factory;
         $this->backlog_factory                     = $backlog_factory;
+        $this->explicit_backlog_dao = $explicit_backlog_dao;
     }
 
     /**
@@ -63,7 +71,7 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
         return $this->getBacklogItemsRepresentations($user, $top_milestone, $backlog);
     }
 
-    private function getBacklogItemsRepresentations(PFUser $user, Planning_Milestone $milestone, $backlog)
+    private function getBacklogItemsRepresentations(PFUser $user, Planning_Milestone $milestone, $backlog): AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations
     {
         $backlog_items                 = $this->getMilestoneBacklogItems($user, $milestone, $backlog);
         $backlog_items_representations = array();
@@ -75,8 +83,17 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
         return new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations($backlog_items_representations, $backlog_items->getTotalAvaialableSize());
     }
 
-    private function getMilestoneBacklogItems(PFUser $user, $milestone, $backlog)
-    {
+    private function getMilestoneBacklogItems(
+        PFUser $user,
+        Planning_Milestone $milestone,
+        AgileDashboard_Milestone_Backlog_Backlog $backlog
+    ) {
+        if ($milestone instanceof Planning_VirtualTopMilestone &&
+            $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $milestone->getGroupId())
+        ) {
+            return new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
+        }
+
         return $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $milestone, $backlog, false);
     }
 }

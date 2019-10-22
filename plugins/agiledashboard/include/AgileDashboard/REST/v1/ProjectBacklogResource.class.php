@@ -190,7 +190,8 @@ class ProjectBacklogResource
         $this->paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
             $item_factory,
             $this->backlog_item_collection_factory,
-            $this->backlog_factory
+            $this->backlog_factory,
+            new \Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao()
         );
     }
 

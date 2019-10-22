@@ -861,7 +861,8 @@ class MilestoneResource extends AuthenticatedResource
         $paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
             $this->getBacklogItemRepresentationFactory(),
             $this->backlog_item_collection_factory,
-            $this->backlog_factory
+            $this->backlog_factory,
+            new \Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao()
         );
 
         $paginated_backlog_items_representations = $paginated_backlog_item_representation_builder->getPaginatedBacklogItemsRepresentationsForMilestone($user, $milestone, $limit, $offset);
