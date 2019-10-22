@@ -89,19 +89,24 @@ class CleanUnusedDao extends DataAccessObject
         return $this->getServicesQuery(0);
     }
 
-    public function getMediawikiDatabasesInUsedServices()
+    public function getMediawikiDatabasesInUsedServices(?int $limit = null)
     {
-        return $this->getServicesQuery(1);
+        return $this->getServicesQuery(1, $limit);
     }
 
-    private function getServicesQuery($is_used)
+    private function getServicesQuery($is_used, ?int $limit = null)
     {
         $is_used = $this->da->escapeInt($is_used);
         $sql = "SELECT plugin_mediawiki_database.*
                 FROM service
                   JOIN plugin_mediawiki_database ON (project_id = group_id)
                 WHERE short_name = 'plugin_mediawiki'
-                  AND is_used = $is_used";
+                AND is_used = $is_used";
+
+        if ($limit !== null) {
+            $sql .= " LIMIT $limit";
+        }
+
         return $this->retrieve($sql);
     }
 

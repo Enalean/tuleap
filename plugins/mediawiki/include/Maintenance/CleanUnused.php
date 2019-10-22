@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -57,14 +57,19 @@ class CleanUnused
      * @var MediawikiDao
      */
     private $mediawiki_dao;
+    /**
+     * @var MediawikiDataDir
+     */
+    private $data_dir;
 
-    public function __construct(Logger $logger, CleanUnusedDao $dao, ProjectManager $project_manager, Backend $backend, MediawikiDao $mediawiki_dao)
+    public function __construct(Logger $logger, CleanUnusedDao $dao, ProjectManager $project_manager, Backend $backend, MediawikiDao $mediawiki_dao, MediawikiDataDir $data_dir)
     {
         $this->logger          = new WrapperLogger($logger, 'MW Purge');
         $this->dao             = $dao;
         $this->project_manager = $project_manager;
         $this->backend         = $backend;
         $this->mediawiki_dao   = $mediawiki_dao;
+        $this->data_dir        = $data_dir;
 
         $this->dao->setLogger($this->logger);
     }
@@ -87,12 +92,18 @@ class CleanUnused
         $this->logger->info("Purge Completed");
     }
 
-    public function purge($dry_run, array $force)
+    public function purge($dry_run, array $projects_forced, bool $force_all, ?int $limit)
     {
         $this->logger->info("Start purge");
-        $this->purgeDeletedProjects($dry_run);
-        $this->purgeUnusedService($dry_run, $force);
-        $this->purgeUsedServicesEmptyWiki($dry_run, $force);
+
+        if (! empty($projects_forced) && ! $force_all) {
+            $this->purgeUsedServicesEmptyWiki($dry_run, $projects_forced);
+        } elseif ($force_all) {
+            $this->purgeUsedServicesEmptyWikiForAllProjectsExceptTemplate($dry_run, $limit);
+        } else {
+            $this->purgeDeletedProjects($dry_run);
+            $this->purgeUnusedService($dry_run, $projects_forced);
+        }
         $this->purgeOrphanDatabases($dry_run);
         $this->logger->info("Purge completed");
         $this->logger->info("{$this->dao->getDeletedDatabasesCount()} database(s) deleted");
@@ -112,12 +123,12 @@ class CleanUnused
         $this->logger->info("Purge of deleted projects completed");
     }
 
-    private function purgeUnusedService($dry_run, array $force)
+    private function purgeUnusedService($dry_run, array $projects_forced)
     {
         $this->logger->info("Start purge of unused services");
         foreach ($this->dao->getMediawikiDatabaseInUnusedServices() as $row) {
             $project = $this->project_manager->getProject($row['project_id']);
-            if ($project && ($this->isEmpty($project) || $this->isForced($project, $force))) {
+            if ($project && ($this->isEmpty($project) || $this->isForced($project, $projects_forced))) {
                 $this->purgeOneProject($project, $row, $dry_run);
             } else {
                 $this->logger->warn("Project {$project->getUnixName()} ({$project->getID()}) has mediawiki content but service is desactivated. You should check with project admins");
@@ -126,13 +137,13 @@ class CleanUnused
         $this->logger->info("Purge of unused services completed");
     }
 
-    private function purgeUsedServicesEmptyWiki($dry_run, array $force)
+    private function purgeUsedServicesEmptyWiki($dry_run, array $projects_forced)
     {
         $this->logger->info("Start purge of used but empty mediawiki");
         foreach ($this->dao->getMediawikiDatabasesInUsedServices() as $row) {
             $project = $this->project_manager->getProject($row['project_id']);
             if ($project && $this->isEmpty($project)) {
-                if ($this->isForced($project, $force)) {
+                if ($this->isForced($project, $projects_forced)) {
                     $this->purgeOneProject($project, $row, $dry_run);
                     $this->dao->desactivateService($project->getID(), $dry_run);
                 } else {
@@ -141,6 +152,27 @@ class CleanUnused
             }
         }
         $this->logger->info("End of purge of used but empty mediawiki");
+    }
+
+    private function purgeUsedServicesEmptyWikiForAllProjectsExceptTemplate(bool $dry_run, ?int $limit) : void
+    {
+        if ($limit !== null) {
+            $this->logger->info("Start purge of $limit used but empty mediawiki on projects which are not defined as template");
+        } else {
+            $this->logger->info("Start purge of used but empty mediawiki on projects which are not defined as template");
+        }
+        foreach ($this->dao->getMediawikiDatabasesInUsedServices($limit) as $row) {
+            $project = $this->project_manager->getProject($row['project_id']);
+            if ($project && $this->isEmpty($project)) {
+                if (! $project->isTemplate()) {
+                    $this->purgeOneProject($project, $row, $dry_run);
+                    $this->dao->desactivateService($project->getID(), $dry_run);
+                } else {
+                    $this->logger->warn("Project {$project->getUnixName()} ({$project->getID()}) is a template. Skipped.");
+                }
+            }
+        }
+        $this->logger->info("End of purge of used but empty mediawiki on projects which are not defined as template");
     }
 
     private function isEmpty(Project $project)
@@ -152,9 +184,9 @@ class CleanUnused
         throw new \Exception("Unable to get wiki page count in {$project->getID()}");
     }
 
-    private function isForced(Project $project, array $force)
+    private function isForced(Project $project, array $projects_forced)
     {
-         return in_array((int) $project->getID(), $force, true);
+         return in_array((int) $project->getID(), $projects_forced, true);
     }
 
     private function purgeOneProject(Project $project, array $row, $dry_run)
@@ -167,8 +199,7 @@ class CleanUnused
     private function deleteDirectory(Project $project, $dry_run)
     {
         $this->logger->info("Delete data dir");
-        $data_dir = new MediawikiDataDir();
-        $path = $data_dir->getMediawikiDir($project);
+        $path = $this->data_dir->getMediawikiDir($project);
         if (is_dir($path)) {
             $this->logger->info("Data dir found $path, remove it");
             if (! $dry_run) {
