@@ -24,27 +24,37 @@ declare(strict_types = 1);
 namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
 use Mockery;
+use ParagonIE\EasyDB\EasyDB;
 use PHPUnit\Framework\TestCase;
-use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\AgileDashboard\REST\v1\MilestoneResourceValidator;
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
-use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
+use Tuleap\DB\DBConnection;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 
 class MilestoneElementAdderTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DBConnection
+     */
+    private $db_connection;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DBTransactionExecutorWithConnection
+     */
+    private $transaction_executor;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
+     */
+    private $artifacts_in_explicit_backlog_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
+     */
+    private $explicit_backlog_dao;
+    /**
      * @var MilestoneElementAdder
      */
     private $adder;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactLinkUpdater
-     */
-    private $artifact_link_updater;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|MilestoneResourceValidator
-     */
-    private $milestone_validator;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ResourcesPatcher
@@ -55,56 +65,56 @@ class MilestoneElementAdderTest extends TestCase
     {
         parent::setUp();
 
-        $this->resources_patcher     = Mockery::mock(ResourcesPatcher::class);
-        $this->milestone_validator   = Mockery::mock(MilestoneResourceValidator::class);
-        $this->artifact_link_updater = Mockery::mock(ArtifactLinkUpdater::class);
+        $this->resources_patcher                 = Mockery::mock(ResourcesPatcher::class);
+        $this->explicit_backlog_dao              = Mockery::mock(ExplicitBacklogDao::class);
+        $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
+        $this->db_connection                     = Mockery::mock(DBConnection::class);
+
+        $this->transaction_executor = new DBTransactionExecutorWithConnection($this->db_connection);
 
         $this->adder = new MilestoneElementAdder(
+            $this->explicit_backlog_dao,
+            $this->artifacts_in_explicit_backlog_dao,
             $this->resources_patcher,
-            $this->milestone_validator,
-            $this->artifact_link_updater
+            $this->transaction_executor
         );
     }
 
-    public function testItAddsElementToMilestone(): void
+    public function testItAddsElementToMilestoneInExplicitMode(): void
     {
-        $user         = Mockery::mock(\PFUser::class);
-        $milestone    = Mockery::mock(\Planning_Milestone::class);
-        $add          = ["id" => 112];
-        $valid_to_add = [112];
+        $user    = Mockery::mock(\PFUser::class);
+        $add     = [["id" => 112]];
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('getGroupId')->once()->andReturn(102);
 
-        $expected_result = $valid_to_add;
+        $db = Mockery::mock(EasyDB::class);
+        $this->db_connection->shouldReceive('getDb')->once()->andReturn($db);
+        $db->shouldReceive('tryFlatTransaction')->once();
 
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+            ->once()
+            ->withArgs([102])
+            ->andReturnTrue();
 
-        $this->resources_patcher->shouldReceive('startTransaction')->once();
+        $this->adder->addElementToBacklog($project, $add, $user);
+    }
+
+    public function testItAddsElementToMilestoneInStandardMode(): void
+    {
+        $user    = Mockery::mock(\PFUser::class);
+        $add     = [["id" => 112]];
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('getGroupId')->once()->andReturn(102);
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+            ->once()
+            ->withArgs([102])
+            ->andReturnFalse();
+
         $this->resources_patcher->shouldReceive('removeArtifactFromSource')
-            ->withArgs([$user, $add])
             ->once()
-            ->andReturn($valid_to_add);
+            ->withArgs([$user, $add]);
 
-        $this->milestone_validator->shouldReceive('validateArtifactIdsCanBeAddedToBacklog')
-            ->once()
-            ->andReturn($valid_to_add);
-
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
-        $milestone->shouldReceive('getArtifact')
-            ->twice()
-            ->andReturn($artifact);
-
-        $this->artifact_link_updater->shouldReceive('updateArtifactLinks')
-            ->withArgs(
-                [
-                    $user,
-                    $milestone->getArtifact(),
-                    $valid_to_add,
-                    [],
-                    Tracker_FormElement_Field_ArtifactLink::NO_NATURE
-                ]
-            )->once();
-        $this->resources_patcher->shouldReceive('commit')->once();
-
-        $result = $this->adder->addElementToMilestone($user, $add, $milestone);
-
-        $this->assertEquals($expected_result, $result);
+        $this->adder->addElementToBacklog($project, $add, $user);
     }
 }

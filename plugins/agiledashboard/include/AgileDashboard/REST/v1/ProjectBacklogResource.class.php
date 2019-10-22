@@ -34,6 +34,7 @@ use Planning_MilestoneFactory;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
+use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
@@ -41,13 +42,18 @@ use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use TrackerFactory;
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
+use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementAdder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\Header;
 use Tuleap\REST\v1\OrderRepresentationBase;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -244,20 +250,33 @@ class ProjectBacklogResource
         $this->sendAllowHeaders();
     }
 
+    /**
+     * Action called when an artifact is added to backlog
+     *
+     * Explicit backlog
+     *  => create new entry in db
+     *
+     * Standard backlog
+     *  => reorder item to save it as first element of backlog
+     *
+     * @throws RestException
+     * @throws \Throwable
+     */
     public function patch(PFUser $user, Project $project, ?OrderRepresentationBase $order = null, ?array $add = null)
     {
         $this->checkIfUserCanChangePrioritiesInMilestone($user, $project);
-
         if ($add) {
-            try {
-                $this->resources_patcher->removeArtifactFromSource($user, $add);
-            } catch (\Exception $exception) {
-                throw new RestException(400, $exception->getMessage());
-            }
+            $adder = new MilestoneElementAdder(
+                new ExplicitBacklogDao(),
+                new ArtifactsInExplicitBacklogDao(),
+                $this->resources_patcher,
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+            );
+            $adder->addElementToBacklog($project, $add, $user);
         }
 
         if ($order) {
-            $order->checkFormat($order);
+            $order->checkFormat();
 
             $all_ids = array_merge(array($order->compared_to), $order->ids);
             $this->validateArtifactIdsAreInUnassignedTopBacklog($all_ids, $user, $project);

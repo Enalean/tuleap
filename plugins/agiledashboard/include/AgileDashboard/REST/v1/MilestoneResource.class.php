@@ -57,7 +57,7 @@ use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
 use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
-use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementAdder;
+use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementMover;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -986,8 +986,8 @@ class MilestoneResource extends AuthenticatedResource
         $to_add = [];
         try {
             if ($add) {
-                $adder = new MilestoneElementAdder($this->resources_patcher, $this->milestone_validator, $this->artifactlink_updater);
-                $to_add = $adder->addElementToMilestone($user, $add, $milestone);
+                $adder = new MilestoneElementMover($this->resources_patcher, $this->milestone_validator, $this->artifactlink_updater);
+                $to_add = $adder->moveElement($user, $add, $milestone);
             }
         } catch (Tracker_NoChangeException $exception) {
             // nothing to do
