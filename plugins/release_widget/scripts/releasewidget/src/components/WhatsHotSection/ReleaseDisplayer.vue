@@ -30,7 +30,7 @@
         />
         <div v-if="is_open" data-test="toggle-open" class="release-toggle">
             <div v-if="has_error" class="tlp-alert-danger">
-                {{ error }}
+                {{ error_message }}
             </div>
             <div v-else>
                 <release-badges v-bind:release-data="displayed_release"/>
@@ -48,6 +48,7 @@ import Vue from "vue";
 import { MilestoneData } from "../../type";
 import { Component, Prop } from "vue-property-decorator";
 import { Action } from "vuex-class";
+import { FetchWrapperError } from "tlp";
 
 @Component({
     components: {
@@ -75,20 +76,26 @@ export default class ReleaseDisplayer extends Vue {
         return this.release_data_enhanced ? this.release_data_enhanced : this.releaseData;
     }
 
-    get error(): string {
-        return this.error_message === "" || this.error_message === null
-            ? this.$gettext("Oops, an error occurred!")
-            : this.error_message;
-    }
-
     async created(): Promise<void> {
         try {
             this.release_data_enhanced = await this.getEnhancedMilestones(this.releaseData);
         } catch (rest_error) {
-            const { error } = await rest_error.response.json();
-            this.error_message = error.code + " " + error.message;
+            await this.handle_error(rest_error);
         } finally {
             this.is_loading = false;
+        }
+    }
+
+    async handle_error(rest_error: FetchWrapperError): Promise<void> {
+        if (rest_error.response === undefined) {
+            this.error_message = this.$gettext("Oops, an error occurred!");
+            throw rest_error;
+        }
+        try {
+            const { error } = await rest_error.response.json();
+            this.error_message = error.code + " " + error.message;
+        } catch (error) {
+            this.error_message = this.$gettext("Oops, an error occurred!");
         }
     }
 
