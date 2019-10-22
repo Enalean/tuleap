@@ -559,7 +559,8 @@ CREATE TABLE plugin_tracker_artifact_pending_removal LIKE tracker_artifact;
 DROP TABLE IF EXISTS tracker_artifact_priority_rank;
 CREATE TABLE tracker_artifact_priority_rank(
     artifact_id INT(11) PRIMARY KEY,
-    rank INT(11) UNSIGNED NOT NULL
+    rank INT(11) UNSIGNED NOT NULL,
+    INDEX idx_rank(rank)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_artifact_priority_history;
