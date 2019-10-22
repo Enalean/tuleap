@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReleaseDisplayer When the milestone is loading, Then the class is disabled and a tooltip say why 1`] = `
+<div
+  class="project-release project-release-toggle-closed tlp-tooltip tlp-tooltip-top"
+  data-tlp-tooltip="Loading data..."
+>
+  <release-header-stub
+    class="project-release-toggle-closed disabled"
+    isloading="true"
+    releasedata="[object Object]"
+  />
+   
+  <!---->
+</div>
+`;
+
+exports[`ReleaseDisplayer When the widget is rendered and the toggle opened, Then there are no errors and components called 1`] = `
+<div
+  class="project-release"
+  data-tlp-tooltip="Loading data..."
+>
+  <release-header-stub
+    class=""
+    releasedata="[object Object]"
+  />
+   
+  <div
+    class="release-toggle"
+    data-test="toggle-open"
+  >
+    <div>
+      <release-badges-stub
+        releasedata="[object Object]"
+      />
+       
+      <release-description-stub
+        releasedata="[object Object]"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ReleaseDisplayer When the widget is rendered, Then toggle is closed 1`] = `
+<div
+  class="project-release project-release-toggle-closed"
+  data-tlp-tooltip="Loading data..."
+>
+  <release-header-stub
+    class="project-release-toggle-closed"
+    releasedata="[object Object]"
+  />
+   
+  <!---->
+</div>
+`;
+
+exports[`ReleaseDisplayer When there is a rest error, Then it displays 1`] = `
+<div
+  class="project-release"
+  data-tlp-tooltip="Loading data..."
+>
+  <release-header-stub
+    class=""
+    releasedata="[object Object]"
+  />
+   
+  <div
+    class="release-toggle"
+    data-test="toggle-open"
+  >
+    <div
+      class="tlp-alert-danger"
+    >
+      
+            404
+        
+    </div>
+  </div>
+</div>
+`;

@@ -85,4 +85,21 @@ describe("ReleaseHeader", () => {
             expect(wrapper.element).toMatchSnapshot();
         });
     });
+
+    it("When the widget is loading, Then there is a skeleton instead of points", async () => {
+        releaseData = {
+            label: "mile",
+            id: 2,
+            start_date: null,
+            number_of_artifact_by_trackers: []
+        };
+
+        component_options.propsData = {
+            releaseData,
+            disabled: true
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.element).toMatchSnapshot();
+    });
 });

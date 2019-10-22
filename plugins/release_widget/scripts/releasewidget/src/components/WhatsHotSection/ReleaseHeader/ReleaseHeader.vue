@@ -31,7 +31,8 @@
             {{ formatDate(releaseData.end_date) }}
         </span>
         <div class="release-spacer"></div>
-        <div class="release-remaining-effort-badges">
+        <div v-if="isLoading" class="tlp-skeleton-text release-remaining-disabled"></div>
+        <div v-else class="release-remaining-effort-badges">
             <release-header-remaining-days v-bind:release-data="releaseData"/>
             <release-header-remaining-points v-bind:release-data="releaseData"/>
         </div>
@@ -52,6 +53,8 @@ import { Component, Prop } from "vue-property-decorator";
 export default class ReleaseHeader extends Vue {
     @Prop()
     readonly releaseData!: MilestoneData;
+    @Prop()
+    readonly isLoading!: boolean;
 
     formatDate = (date: string): string => formatDateYearMonthDay(date);
 

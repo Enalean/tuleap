@@ -46,6 +46,9 @@ msgstr "Effort estimé : %{initialEffort}"
 msgid "Initial effort: N/A"
 msgstr "Effort estimé : N/A"
 
+msgid "Loading data..."
+msgstr "Chargement des données ..."
+
 msgid "No end date defined."
 msgstr "Aucune date de fin définie."
 
