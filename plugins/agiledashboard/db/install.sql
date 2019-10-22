@@ -141,7 +141,8 @@ DROP TABLE IF EXISTS plugin_agiledashboard_planning_artifacts_explicit_backlog;
 CREATE TABLE plugin_agiledashboard_planning_artifacts_explicit_backlog (
    project_id INT(11) NOT NULL,
    artifact_id INT(11) NOT NULL,
-   PRIMARY KEY(project_id, artifact_id)
+   PRIMARY KEY(project_id, artifact_id),
+   INDEX idx_project_id(project_id)
 ) ENGINE=InnoDB;
 
 -- Enable service for project 100

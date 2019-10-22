@@ -38,6 +38,7 @@ use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use TrackerFactory;
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
@@ -133,7 +134,8 @@ class ProjectBacklogResource
             new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
             new RemainingEffortValueRetriever(
                 $tracker_form_element_factory
-            )
+            ),
+            new ArtifactsInExplicitBacklogDao()
         );
 
         $this->parent_tracker_retriever = new ParentTrackerRetriever($this->planning_factory);

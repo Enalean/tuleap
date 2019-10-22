@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\Tracker\TrackerColor;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
@@ -87,7 +88,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
                 $this->milestone_factory,
                 $this->planning_factory,
                 $this->backlog_item_builder,
-                $this->remaining_effort_value_retriever
+                $this->remaining_effort_value_retriever,
+                Mockery::mock(ArtifactsInExplicitBacklogDao::class)
             )
         );
         stub($this->factory)->userCanReadBacklogTitleField()->returns(true);
@@ -235,7 +237,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends 
                 $this->milestone_factory,
                 $this->planning_factory,
                 $this->backlog_item_builder,
-                $this->remaining_effort_value_retriever
+                $this->remaining_effort_value_retriever,
+                Mockery::mock(ArtifactsInExplicitBacklogDao::class)
             )
         );
 

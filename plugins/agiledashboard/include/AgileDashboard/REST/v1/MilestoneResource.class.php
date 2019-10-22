@@ -48,6 +48,7 @@ use Tracker_FormElementFactory;
 use Tracker_NoArtifactLinkFieldException;
 use Tracker_NoChangeException;
 use TrackerFactory;
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
@@ -173,7 +174,8 @@ class MilestoneResource extends AuthenticatedResource
             new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
             new RemainingEffortValueRetriever(
                 $this->tracker_form_element_factory
-            )
+            ),
+            new ArtifactsInExplicitBacklogDao()
         );
 
         $this->milestone_validator = new MilestoneResourceValidator(

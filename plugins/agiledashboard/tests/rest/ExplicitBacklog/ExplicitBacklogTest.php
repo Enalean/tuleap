@@ -26,7 +26,7 @@ require_once dirname(__FILE__).'/../bootstrap.php';
 
 class ExplicitBacklogTest extends TestBase
 {
-    public function testTopBacklogInExplicitBacklogContextIsAlwaysEmpty(): void
+    public function testTopBacklogInExplicitBacklogContextIsEmptyWhileNoArtifactExplicitlyAdded(): void
     {
         $response          = $this->getResponse($this->client->get('projects/'. urlencode((string) $this->explicit_backlog_project_id) . '/backlog'));
         $top_backlog_items = $response->json();
