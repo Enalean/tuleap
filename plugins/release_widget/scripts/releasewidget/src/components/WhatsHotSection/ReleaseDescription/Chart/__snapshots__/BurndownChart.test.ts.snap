@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BurndownChart When duration is null and it is under calculation, Then BurndownChartError component is rendered 1`] = `
+<div>
+  <burndown-chart-error-stub
+    has_error_duration="true"
+    is_under_calculation="true"
+    message_error_duration="'duration' field is empty or invalid."
+    message_error_start_date="'start date' field is empty or invalid."
+    message_error_under_calculation="Burndown is under calculation. It will be available in a few minutes."
+  />
+</div>
+`;
+
+exports[`BurndownChart When duration is null and there isn't start date, Then BurndownChartError component is rendered 1`] = `
+<div>
+  <burndown-chart-error-stub
+    has_error_duration="true"
+    has_error_start_date="true"
+    message_error_duration="'duration' field is empty or invalid."
+    message_error_start_date="'start date' field is empty or invalid."
+    message_error_under_calculation="Burndown is under calculation. It will be available in a few minutes."
+  />
+</div>
+`;
+
+exports[`BurndownChart When duration is null, Then BurndownChartError component is rendered 1`] = `
+<div>
+  <burndown-chart-error-stub
+    has_error_duration="true"
+    message_error_duration="'duration' field is empty or invalid."
+    message_error_start_date="'start date' field is empty or invalid."
+    message_error_under_calculation="Burndown is under calculation. It will be available in a few minutes."
+  />
+</div>
+`;
+
+exports[`BurndownChart When the burndown can be create, Then there is just a message 1`] = `
+<div>
+  <p
+    class="empty-pane-text"
+    data-current-language="en_US"
+    data-msgid="There is nothing here!"
+  >
+    There is nothing here!
+  </p>
+</div>
+`;
+
+exports[`BurndownChart When the burndown doesn't yet exist, Then there is a spinner 1`] = `
+<div>
+  <div
+    class="release-loader"
+  />
+</div>
+`;
+
+exports[`BurndownChart When the burndown is recorvering, Then the message 'There is nothing here yet' is displayed 1`] = `
+<div>
+  <p
+    class="empty-pane-text"
+    data-current-language="en_US"
+    data-msgid="There is nothing here!"
+  >
+    There is nothing here!
+  </p>
+</div>
+`;
+
+exports[`BurndownChart When the burndown is under calculation, Then BurndownChartError component is rendered 1`] = `
+<div>
+  <burndown-chart-error-stub
+    is_under_calculation="true"
+    message_error_duration="'duration' field is empty or invalid."
+    message_error_start_date="'start date' field is empty or invalid."
+    message_error_under_calculation="Burndown is under calculation. It will be available in a few minutes."
+  />
+</div>
+`;
+
+exports[`BurndownChart When there isn't duration, Then BurndownChartError component is rendered 1`] = `
+<div>
+  <burndown-chart-error-stub
+    has_error_duration="true"
+    message_error_duration="'duration' field is empty or invalid."
+    message_error_start_date="'start date' field is empty or invalid."
+    message_error_under_calculation="Burndown is under calculation. It will be available in a few minutes."
+  />
+</div>
+`;
+
+exports[`BurndownChart When there isn't start date, Then BurndownChartError component is rendered 1`] = `
+<div>
+  <burndown-chart-error-stub
+    has_error_start_date="true"
+    message_error_duration="'duration' field is empty or invalid."
+    message_error_start_date="'start date' field is empty or invalid."
+    message_error_under_calculation="Burndown is under calculation. It will be available in a few minutes."
+  />
+</div>
+`;

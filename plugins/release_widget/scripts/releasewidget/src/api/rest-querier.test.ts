@@ -17,11 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getCurrentMilestones, getNbOfSprints, getMilestonesContent } from "./rest-querier";
+import {
+    getCurrentMilestones,
+    getNbOfSprints,
+    getMilestonesContent,
+    getBurndownData
+} from "./rest-querier";
 
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
-import { MilestoneContent, MilestoneData } from "../type";
+import { BurndownData, MilestoneContent, MilestoneData } from "../type";
 
 jest.mock("tlp");
 
@@ -133,5 +138,44 @@ describe("getProject() -", () => {
         );
 
         expect(result).toEqual(user_stories);
+    });
+
+    it("the REST API will be queried and the burndown_data of milestone returned", async () => {
+        const burndown_data: BurndownData = {
+            start_date: "",
+            is_under_calculation: false,
+            duration: 2,
+            capacity: 10,
+            points: [],
+            opening_days: [],
+            points_with_date: []
+        };
+
+        const tlpGetMock = jest.spyOn(tlp, "get");
+
+        mockFetchSuccess(tlpGetMock, {
+            headers: {
+                // X-PAGINATION-SIZE
+                get: (): number => 2
+            },
+            return_json: burndown_data
+        });
+
+        const result = await getBurndownData(milestone_id, {
+            limit,
+            offset
+        });
+
+        expect(tlpGetMock).toHaveBeenCalledWith(
+            `/api/v1/milestones/` + encodeURIComponent(milestone_id) + `/burndown`,
+            {
+                params: {
+                    limit,
+                    offset
+                }
+            }
+        );
+
+        expect(result).toEqual(burndown_data);
     });
 });

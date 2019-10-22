@@ -31,6 +31,7 @@ export interface MilestoneData {
     remaining_effort?: number | null;
     initial_effort?: number | null;
     total_sprint?: number | null;
+    burndown_data?: BurndownData | null;
     description?: string | null;
     resources?: {
         content: {
@@ -102,4 +103,19 @@ interface ParametersRequestWithId {
 interface ParametersRequestWithoutId {
     limit: number;
     offset: number;
+}
+
+export interface BurndownData {
+    start_date: string;
+    duration: number | null;
+    capacity: number | null;
+    points: Array<number>;
+    is_under_calculation: boolean;
+    opening_days: Array<number>;
+    points_with_date: Array<PointsWithDate>;
+}
+
+export interface PointsWithDate {
+    date: string;
+    remaining_effort: number | null;
 }
