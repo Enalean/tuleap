@@ -37,6 +37,7 @@ use Planning_Milestone;
 use Planning_MilestoneFactory;
 use PlanningFactory;
 use PlanningPermissionsManager;
+use Project;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
@@ -61,6 +62,8 @@ use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementMover;
 use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -746,21 +749,23 @@ class MilestoneResource extends AuthenticatedResource
 
         $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $user);
 
+        $db_transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
         try {
             if ($add) {
-                $this->resources_patcher->startTransaction();
-                $to_add = $this->resources_patcher->removeArtifactFromSource($user, $add);
-                if (count($to_add)) {
-                    $this->artifactlink_updater->updateArtifactLinks(
-                        $user,
-                        $milestone->getArtifact(),
-                        $this->getFilteredArtifactIdsToAdd($milestone, $to_add),
-                        array(),
-                        Tracker_FormElement_Field_ArtifactLink::NO_NATURE
-                    );
-                    $this->linkToMilestoneParent($milestone, $user, $to_add);
-                }
-                $this->resources_patcher->commit();
+                $db_transaction_executor->execute(function () use ($user, $add, $milestone) {
+                    $to_add = $this->resources_patcher->removeArtifactFromSource($user, $add);
+                    if (count($to_add)) {
+                        $this->artifactlink_updater->updateArtifactLinks(
+                            $user,
+                            $milestone->getArtifact(),
+                            $this->getFilteredArtifactIdsToAdd($milestone, $to_add),
+                            array(),
+                            Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+                        );
+                        $this->linkToMilestoneParent($milestone, $user, $to_add);
+                        $this->removeItemsFromExplicitBacklog($milestone->getProject(), $to_add);
+                    }
+                });
             }
         } catch (ArtifactDoesNotExistException $exception) {
             throw new RestException(404, $exception->getMessage());
@@ -1298,5 +1303,14 @@ class MilestoneResource extends AuthenticatedResource
     private function sendAllowHeaderForSiblings()
     {
         Header::allowOptionsGet();
+    }
+
+    private function removeItemsFromExplicitBacklog(Project $project, array $to_add)
+    {
+        $dao = new ArtifactsInExplicitBacklogDao();
+        $dao->removeItemsFromExplicitBacklogOfProject(
+            (int) $project->getID(),
+            $to_add
+        );
     }
 }

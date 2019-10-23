@@ -23,6 +23,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
 class ArtifactsInExplicitBacklogDao extends DataAccessObject
@@ -56,6 +57,18 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
                 WHERE artifact_id = ?';
 
         $this->getDB()->run($sql, $artifact_id);
+    }
+
+    public function removeItemsFromExplicitBacklogOfProject(int $project_id, array $to_add): void
+    {
+        $artifact_ids_in_condition = EasyStatement::open()->in('?*', $to_add);
+
+        $sql = "DELETE FROM plugin_agiledashboard_planning_artifacts_explicit_backlog
+                WHERE project_id = ?
+                AND artifact_id IN ($artifact_ids_in_condition)";
+
+        $parameters = array_merge([$project_id], $artifact_ids_in_condition->values());
+        $this->getDB()->safeQuery($sql, $parameters);
     }
 
     public function removeExplicitBacklogOfProject(int $project_id): void
