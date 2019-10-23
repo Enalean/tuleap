@@ -157,7 +157,8 @@ class ProjectBacklogResource
             new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
             new RemainingEffortValueRetriever(
                 $tracker_form_element_factory
-            )
+            ),
+            new ArtifactsInExplicitBacklogDao()
         );
 
         $this->milestone_validator = new MilestoneResourceValidator(

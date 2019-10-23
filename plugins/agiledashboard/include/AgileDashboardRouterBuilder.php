@@ -21,6 +21,7 @@
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
@@ -234,7 +235,8 @@ class AgileDashboardRouterBuilder
             new AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder(),
             new RemainingEffortValueRetriever(
                 $form_element_factory
-            )
+            ),
+            new ArtifactsInExplicitBacklogDao()
         );
     }
 
@@ -346,7 +348,8 @@ class AgileDashboardRouterBuilder
             new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
             new RemainingEffortValueRetriever(
                 $form_element_factory
-            )
+            ),
+            new ArtifactsInExplicitBacklogDao()
         );
     }
 
