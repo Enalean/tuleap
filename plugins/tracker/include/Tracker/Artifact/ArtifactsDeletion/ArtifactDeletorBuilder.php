@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use BackendLogger;
+use EventManager;
 use ProjectHistoryDao;
 use Tracker_ArtifactDao;
 use WrapperLogger;
@@ -44,7 +45,8 @@ class ArtifactDeletorBuilder
             new Tracker_ArtifactDao(),
             new ProjectHistoryDao(),
             new PendingArtifactRemovalDao(),
-            $async_artifact_archive_runner
+            $async_artifact_archive_runner,
+            EventManager::instance()
         );
     }
 }

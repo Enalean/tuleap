@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
+use EventManager;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -40,12 +41,14 @@ class ArtifactDeletorTest extends TestCase
         $project_history_dao          = Mockery::mock(ProjectHistoryDao::class);
         $pending_artifact_removal_dao = Mockery::mock(PendingArtifactRemovalDao::class);
         $artifact_runnner             = Mockery::mock(AsynchronousArtifactsDeletionActionsRunner::class);
+        $event_manager                = Mockery::mock(EventManager::class);
 
         $artifact_deletor = new ArtifactDeletor(
             $dao,
             $project_history_dao,
             $pending_artifact_removal_dao,
-            $artifact_runnner
+            $artifact_runnner,
+            $event_manager
         );
 
         $tracker = Mockery::mock(\Tracker::class);
@@ -68,6 +71,8 @@ class ArtifactDeletorTest extends TestCase
         $artifact_runnner->shouldReceive("executeArchiveAndArtifactDeletion")->withArgs([$artifact, $user]);
 
         $project_history_dao->shouldReceive("groupAddHistory");
+
+        $event_manager->shouldReceive('processEvent')->once();
 
         $artifact_deletor->delete($artifact, $user);
     }

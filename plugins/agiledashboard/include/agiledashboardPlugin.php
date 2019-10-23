@@ -1786,6 +1786,9 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $artifact         = $params['artifact'];
 
         $burnup_cache_dao->deleteArtifactCacheValue($artifact->getId());
+
+        $artifact_explicit_backlog_dao = new ArtifactsInExplicitBacklogDao();
+        $artifact_explicit_backlog_dao->removeArtifactFromExplicitBacklog((int) $artifact->getId());
     }
 
     private function doesSemanticDoneUsesSemanticStatus(Tracker $tracker)
