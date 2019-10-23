@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,34 +16,30 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Tuleap\FRS\PermissionsPerGroup;
 
-use Project;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPanePresenter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupLoadAllButtonPresenter;
-use UGroupManager;
 
-class PermissionPerGroupFRSPackagesPresenterBuilder
+class GlobalPresenter
 {
     /**
-     * @var UGroupManager
+     * @var PermissionPerGroupPanePresenter
      */
-    private $ugroup_manager;
+    public $service_presenter;
+    /**
+     * @var PermissionPerGroupLoadAllButtonPresenter
+     */
+    public $package_load_all_presenter;
 
     public function __construct(
-        UGroupManager $ugroup_manager
+        PermissionPerGroupPanePresenter $service_presenter,
+        PermissionPerGroupLoadAllButtonPresenter $package_load_all_presenter
     ) {
-        $this->ugroup_manager = $ugroup_manager;
-    }
-
-    public function getPanePresenter(Project $project, $selected_ugroup_id)
-    {
-        $ugroup = $this->ugroup_manager->getUGroup($project, $selected_ugroup_id);
-
-        return new PermissionPerGroupLoadAllButtonPresenter(
-            $project,
-            $ugroup
-        );
+        $this->service_presenter          = $service_presenter;
+        $this->package_load_all_presenter = $package_load_all_presenter;
     }
 }
