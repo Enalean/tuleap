@@ -23,16 +23,28 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\LicenseAgreement;
 
+use ForgeConfig;
+
 class LicenseAgreementDisplay
 {
     /**
      * @var \Codendi_HTMLPurifier
      */
     private $purifier;
+    /**
+     * @var \TemplateRenderer
+     */
+    private $renderer;
 
-    public function __construct(\Codendi_HTMLPurifier $purifier)
+    public function __construct(\Codendi_HTMLPurifier $purifier, \TemplateRendererFactory $renderer_factory)
     {
         $this->purifier = $purifier;
+        $this->renderer = $renderer_factory->getRenderer(__DIR__ . '/template');
+    }
+
+    public function getModal(): string
+    {
+        return $this->renderer->renderToString('license-modal', ['organisation_name' => ForgeConfig::get('sys_org_name'), 'exchange_policy_url' => ForgeConfig::get('sys_exchange_policy_url'), 'contact_email' => ForgeConfig::get('sys_email_contact')]);
     }
 
     public function show(\FRSPackage $package, int $file_id, string $fname): string
@@ -40,6 +52,6 @@ class LicenseAgreementDisplay
         if (($package->getApproveLicense() == 0) && (isset($GLOBALS['sys_frs_license_mandatory']) && ! $GLOBALS['sys_frs_license_mandatory'])) {
             return '<A HREF="/file/download/' . urlencode((string) $file_id) . '" title="' . $this->purifier->purify($file_id) . " - " . $this->purifier->purify($fname) . '">' . $this->purifier->purify($fname) . '</A>';
         }
-        return '<A HREF="javascript:showConfirmDownload(' . $package->getGroupID() . ',' . $file_id . ')" title="' . $file_id . " - " . $this->purifier->purify($fname) . '">' . $this->purifier->purify($fname) . '</A>';
+        return '<a href="#" data-file-id="' . urlencode((string) $file_id) . '" class="frs-license-agreement-modal-link">'.$this->purifier->purify($fname).'</a>';
     }
 }
