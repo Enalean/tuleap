@@ -75,3 +75,8 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     margin: 0 5px 0 0;
     font-size: 12px;
 }
+
+.release-description-row {
+    flex: 1 1 100%;
+    margin: 0 $tlp-spacing $tlp-spacing 0;
+}

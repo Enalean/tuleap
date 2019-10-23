@@ -27,6 +27,10 @@
                 <translate> Go to release overview </translate>
             </a>
         </div>
+        <div class="release-chart-burndown-row">
+            <h2 class="tlp-pane-subtitle" v-translate>Burndown</h2>
+            <p class="empty-pane-text" v-translate>There is nothing here!</p>
+        </div>
     </div>
 </template>
 
