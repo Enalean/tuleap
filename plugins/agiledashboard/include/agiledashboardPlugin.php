@@ -212,6 +212,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(TrackerCrumbInContext::NAME);
             $this->addHook(HistoryQuickLinkCollection::NAME);
             $this->addHook(StatisticsCollectionCollector::NAME);
+            $this->addHook('project_is_deleted');
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2028,5 +2029,13 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     private function getMilestoneDao(): AgileDashboard_Milestone_MilestoneDao
     {
         return new AgileDashboard_Milestone_MilestoneDao();
+    }
+
+    public function project_is_deleted($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    {
+        if (! empty($params['group_id'])) {
+            $artifact_explicit_backlog_dao = new ArtifactsInExplicitBacklogDao();
+            $artifact_explicit_backlog_dao->removeExplicitBacklogOfProject((int) $params['group_id']);
+        }
     }
 }
