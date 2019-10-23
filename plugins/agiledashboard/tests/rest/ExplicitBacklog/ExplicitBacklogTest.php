@@ -28,9 +28,23 @@ class ExplicitBacklogTest extends TestBase
 {
     public function testTopBacklogInExplicitBacklogContextIsAlwaysEmpty(): void
     {
-        $response          = $this->getResponse($this->client->get('projects/'. $this->explicit_backlog_project_id. '/backlog'));
+        $response          = $this->getResponse($this->client->get('projects/'. urlencode((string) $this->explicit_backlog_project_id) . '/backlog'));
         $top_backlog_items = $response->json();
 
         $this->assertEmpty($top_backlog_items);
+    }
+
+    public function testPatchATopBacklogInExplicitContextDoesNotFail(): void
+    {
+        $response_patch = $this->getResponseByName(
+            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->patch(
+                'projects/'. urlencode((string) $this->explicit_backlog_project_id). '/backlog',
+                null,
+                json_encode("add: [{id: 142}]")
+            )
+        );
+
+        $this->assertEquals(200, $response_patch->getStatusCode());
     }
 }

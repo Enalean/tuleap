@@ -23,77 +23,85 @@ declare(strict_types = 1);
 
 namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
-use PFUser;
-use Planning_Milestone;
-use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\AgileDashboard\REST\v1\MilestoneResourceValidator;
+use Luracast\Restler\RestException;
+use Project;
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
-use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 
 class MilestoneElementAdder
 {
+    /**
+     * @var ExplicitBacklogDao
+     */
+    private $explicit_backlog_dao;
+    /**
+     * @var ArtifactsInExplicitBacklogDao
+     */
+    private $artifacts_in_explicit_backlog_dao;
     /**
      * @var ResourcesPatcher
      */
     private $resources_patcher;
     /**
-     * @var MilestoneResourceValidator
+     * @var DBTransactionExecutorWithConnection
      */
-    private $milestone_validator;
-    /**
-     * @var ArtifactLinkUpdater
-     */
-    private $artifact_link_updater;
+    private $db_transaction_executor;
 
     public function __construct(
+        ExplicitBacklogDao $explicit_backlog_dao,
+        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         ResourcesPatcher $resources_patcher,
-        MilestoneResourceValidator $milestone_validator,
-        ArtifactLinkUpdater $artifact_link_updater
+        DBTransactionExecutorWithConnection $db_transaction_executor
     ) {
-        $this->resources_patcher     = $resources_patcher;
-        $this->milestone_validator   = $milestone_validator;
-        $this->artifact_link_updater = $artifact_link_updater;
+        $this->explicit_backlog_dao              = $explicit_backlog_dao;
+        $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
+        $this->resources_patcher                 = $resources_patcher;
+        $this->db_transaction_executor           = $db_transaction_executor;
+    }
+
+
+    /**
+     * @throws RestException
+     * @throws \Throwable
+     */
+    public function addElementToBacklog(Project $project, array $add, \PFUser $user): void
+    {
+        $project_id = (int) $project->getGroupId();
+        if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id)) {
+            $this->addElementInExplicitBacklog($add, $project_id);
+        } else {
+            $this->moveArtifactsForStandardBacklog($add, $user);
+        }
     }
 
     /**
-     * @throws \Luracast\Restler\RestException
-     * @throws \Tracker_NoArtifactLinkFieldException
-     * @throws \Tuleap\AgileDashboard\REST\v1\ArtifactCannotBeInBacklogOfException
-     * @throws \Tuleap\AgileDashboard\REST\v1\IdsFromBodyAreNotUniqueException
+     * @throws \Throwable
      */
-    public function addElementToMilestone(PFUser $user, array $add, Planning_Milestone $milestone): array
+    private function addElementInExplicitBacklog(array $add, int $project_id): void
     {
-        $this->resources_patcher->startTransaction();
-
-        $to_add = $this->resources_patcher->removeArtifactFromSource($user, $add);
-        if (count($to_add)) {
-            $valid_to_add = $this->milestone_validator->validateArtifactIdsCanBeAddedToBacklog(
-                $to_add,
-                $milestone,
-                $user
-            );
-            $this->addMissingElementsToBacklog($milestone, $user, $valid_to_add);
-        }
-        $this->resources_patcher->commit();
-
-        return $to_add;
-    }
-
-    /**
-     * @throws \Tracker_NoArtifactLinkFieldException
-     */
-    private function addMissingElementsToBacklog(Planning_Milestone $milestone, PFUser $user, array $to_add): void
-    {
-        if (count($to_add) === 0) {
-            return;
-        }
-
-        $this->artifact_link_updater->updateArtifactLinks(
-            $user,
-            $milestone->getArtifact(),
-            $to_add,
-            [],
-            Tracker_FormElement_Field_ArtifactLink::NO_NATURE
+        $this->db_transaction_executor->execute(
+            function () use ($add, $project_id) {
+                foreach ($add as $added_artifact) {
+                    $this->artifacts_in_explicit_backlog_dao->addArtifactToProjectBacklog(
+                        $project_id,
+                        (int) $added_artifact['id']
+                    );
+                }
+            }
         );
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function moveArtifactsForStandardBacklog(array $add, \PFUser $user): void
+    {
+        try {
+            $this->resources_patcher->removeArtifactFromSource($user, $add);
+        } catch (\Exception $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
     }
 }
