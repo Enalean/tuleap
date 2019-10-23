@@ -102,7 +102,7 @@ describe("PermissionsUpdateModal", () => {
     });
 
     it("When the modal is first opened but the project user groups can not be loaded a global error is generated", async () => {
-        const handleErrors = jest.spyOn(handle_errors, "handleErrors");
+        const handleErrors = jest.spyOn(handle_errors, "handleErrors").mockImplementation(() => {});
 
         store.dispatch.mockImplementation(() => {
             return Promise.reject({});

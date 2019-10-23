@@ -74,7 +74,7 @@ export const pasteItem = async (context, [destination_folder, current_folder, gl
         );
     } catch (exception) {
         context.commit("pastingHasFailed");
-        handleErrors(global_context, exception);
+        await handleErrors(global_context, exception);
     }
 };
 

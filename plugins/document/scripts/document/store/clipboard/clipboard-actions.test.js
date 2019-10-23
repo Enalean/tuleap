@@ -62,10 +62,13 @@ describe("Clipboard actions", () => {
             "adjustItemToContentAfterItemCreationInAFolder"
         );
 
-        await pasteItem(context, [{}, {}, global_context]);
-
-        expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
-        expect(adjustItemToContentAfterItemCreationInAFolder).not.toHaveBeenCalled();
+        expect.assertions(2);
+        try {
+            await pasteItem(context, [{}, {}, global_context]);
+        } catch (e) {
+            expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+            expect(adjustItemToContentAfterItemCreationInAFolder).not.toHaveBeenCalled();
+        }
     });
 
     describe("Cut item", () => {
@@ -167,10 +170,13 @@ describe("Clipboard actions", () => {
                 commit: jest.fn()
             };
 
-            await pasteItem(context, [{}, {}, global_context]);
-
-            expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
-            expect(adjustItemToContentAfterItemCreationInAFolder).not.toHaveBeenCalled();
+            expect.assertions(2);
+            try {
+                await pasteItem(context, [{}, {}, global_context]);
+            } catch (e) {
+                expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+                expect(adjustItemToContentAfterItemCreationInAFolder).not.toHaveBeenCalled();
+            }
         });
 
         it(`When an error is raised when pasting an item
@@ -291,10 +297,13 @@ describe("Clipboard actions", () => {
                 commit: jest.fn()
             };
 
-            await pasteItem(context, [{}, {}, global_context]);
-
-            expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
-            expect(adjustItemToContentAfterItemCreationInAFolder).not.toHaveBeenCalled();
+            expect.assertions(2);
+            try {
+                await pasteItem(context, [{}, {}, global_context]);
+            } catch (e) {
+                expect(context.commit).toHaveBeenCalledWith("emptyClipboard");
+                expect(adjustItemToContentAfterItemCreationInAFolder).not.toHaveBeenCalled();
+            }
         });
 
         it(`When an error is raised when pasting an item

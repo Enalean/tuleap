@@ -21,7 +21,7 @@ export async function handleErrors(context, exception) {
     const message = "Internal server error";
     if (exception.response === undefined) {
         context.commit("error/setFolderLoadingError", message);
-        return;
+        throw exception;
     }
 
     const status = exception.response.status;
@@ -44,6 +44,7 @@ export async function handleErrorsForLock(context, exception) {
         context.commit("error/setLockError", getErrorMessage(json));
     } catch (error) {
         context.commit("error/setLockError", "Internal server error");
+        throw exception;
     }
 }
 
@@ -51,7 +52,7 @@ export async function handleErrorsForDocument(context, exception) {
     const message = "Internal server error";
     if (exception.response === undefined) {
         context.commit("error/setItemLoadingError", message);
-        return;
+        throw exception;
     }
 
     const status = exception.response.status;
@@ -72,7 +73,7 @@ export async function handleErrorsForModal(context, exception) {
     const message = "Internal server error";
     if (exception.response === undefined) {
         context.commit("error/setModalError", message);
-        return;
+        throw exception;
     }
     try {
         const json = await exception.response.json();
@@ -86,7 +87,7 @@ export async function handleErrorsForDeletionModal(context, exception, item) {
     const message = "Internal server error";
     if (exception.response === undefined) {
         context.commit("error/setModalError", message);
-        return;
+        throw exception;
     }
     try {
         const json = await exception.response.json();

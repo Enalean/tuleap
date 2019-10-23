@@ -60,9 +60,8 @@ import * as load_ascendant_hierarchy from "./actions-helpers/load-ascendant-hier
 import * as load_folder_content from "./actions-helpers/load-folder-content.js";
 import * as rest_querier from "../api/rest-querier.js";
 import * as upload_file from "./actions-helpers/upload-file.js";
-import * as handle_error from "./actions-helpers/handle-errors.js";
+import * as error_handler from "./actions-helpers/handle-errors.js";
 import * as permissions_groups from "../helpers/permissions/ugroups.js";
-import { handleErrorsForDocument } from "./actions-helpers/handle-errors.js";
 
 describe("Store actions", () => {
     let context;
@@ -98,12 +97,15 @@ describe("Store actions", () => {
             jest.spyOn(rest_querier, "getDocumentManagerServiceInformation").mockReturnValue(
                 service
             );
+            jest.spyOn(rest_querier, "getFolderContent").mockReturnValue(root_item);
+            const handle_error = jest.spyOn(error_handler, "handleErrors");
 
             await loadRootFolder(context);
 
             expect(context.commit).toHaveBeenCalledWith("beginLoading");
             expect(context.commit).toHaveBeenCalledWith("setCurrentFolder", root_item);
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
+            expect(handle_error).not.toHaveBeenCalled();
             expect(loadFolderContent).toHaveBeenCalled();
             expect(
                 await loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
@@ -172,8 +174,12 @@ describe("Store actions", () => {
 
         beforeEach(() => {
             getItem = jest.spyOn(rest_querier, "getItem");
-            loadFolderContent = jest.spyOn(load_folder_content, "loadFolderContent");
-            loadAscendantHierarchy = jest.spyOn(load_ascendant_hierarchy, "loadAscendantHierarchy");
+            loadFolderContent = jest
+                .spyOn(load_folder_content, "loadFolderContent")
+                .mockImplementation(() => {});
+            loadAscendantHierarchy = jest
+                .spyOn(load_ascendant_hierarchy, "loadAscendantHierarchy")
+                .mockImplementation(() => {});
         });
 
         it("loads ascendant hierarchy and content for stored current folder", async () => {
@@ -194,6 +200,7 @@ describe("Store actions", () => {
             expect(getItem).not.toHaveBeenCalled();
             expect(loadFolderContent).toHaveBeenCalled();
             expect(loadAscendantHierarchy).toHaveBeenCalled();
+
             expect(
                 await loadFolderContent.mock.calls[loadFolderContent.mock.calls.length - 1][2]
             ).toEqual(current_folder);
@@ -931,16 +938,22 @@ describe("Store actions", () => {
             const version_title = "My new version";
             const version_changelog = "Changed the version because...";
 
-            await createNewFileVersionFromModal(context, [
-                item,
-                update_fail,
-                version_title,
-                version_changelog
-            ]);
-
-            expect(createNewVersion).toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("error/setModalError", expect.anything());
-            expect(uploadVersion).not.toHaveBeenCalled();
+            expect.assertions(3);
+            try {
+                await createNewFileVersionFromModal(context, [
+                    item,
+                    update_fail,
+                    version_title,
+                    version_changelog
+                ]);
+            } catch (e) {
+                expect(createNewVersion).toHaveBeenCalled();
+                expect(context.commit).toHaveBeenCalledWith(
+                    "error/setModalError",
+                    expect.anything()
+                );
+                expect(uploadVersion).not.toHaveBeenCalled();
+            }
         });
 
         it("throws an error when there is an error 400 with the version creation", async () => {
@@ -975,7 +988,9 @@ describe("Store actions", () => {
         let postEmbeddedFile;
 
         beforeEach(() => {
-            postEmbeddedFile = jest.spyOn(rest_querier, "postEmbeddedFile");
+            postEmbeddedFile = jest
+                .spyOn(rest_querier, "postEmbeddedFile")
+                .mockImplementation(() => {});
         });
 
         it("updates an embedded file", async () => {
@@ -1010,16 +1025,22 @@ describe("Store actions", () => {
                 throw new Error("nope");
             });
 
-            await createNewEmbeddedFileVersionFromModal(context, [
-                item,
-                new_html_content,
-                version_title,
-                version_changelog,
-                is_version_locked
-            ]);
-
-            expect(postEmbeddedFile).toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("error/setModalError", expect.anything());
+            expect.assertions(2);
+            try {
+                await createNewEmbeddedFileVersionFromModal(context, [
+                    item,
+                    new_html_content,
+                    version_title,
+                    version_changelog,
+                    is_version_locked
+                ]);
+            } catch (e) {
+                expect(postEmbeddedFile).toHaveBeenCalled();
+                expect(context.commit).toHaveBeenCalledWith(
+                    "error/setModalError",
+                    expect.anything()
+                );
+            }
         });
     });
 
@@ -1027,7 +1048,7 @@ describe("Store actions", () => {
         let postWiki;
 
         beforeEach(() => {
-            postWiki = jest.spyOn(rest_querier, "postWiki");
+            postWiki = jest.spyOn(rest_querier, "postWiki").mockImplementation(() => {});
         });
 
         it("updates a wiki page name", async () => {
@@ -1062,16 +1083,22 @@ describe("Store actions", () => {
                 throw new Error("nope");
             });
 
-            await createNewWikiVersionFromModal(context, [
-                item,
-                page_name,
-                version_title,
-                version_changelog,
-                is_version_locked
-            ]);
-
-            expect(postWiki).toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("error/setModalError", expect.anything());
+            expect.assertions(2);
+            try {
+                await createNewWikiVersionFromModal(context, [
+                    item,
+                    page_name,
+                    version_title,
+                    version_changelog,
+                    is_version_locked
+                ]);
+            } catch (e) {
+                expect(postWiki).toHaveBeenCalled();
+                expect(context.commit).toHaveBeenCalledWith(
+                    "error/setModalError",
+                    expect.anything()
+                );
+            }
         });
     });
 
@@ -1079,7 +1106,9 @@ describe("Store actions", () => {
         let postLinkVersion;
 
         beforeEach(() => {
-            postLinkVersion = jest.spyOn(rest_querier, "postLinkVersion");
+            postLinkVersion = jest
+                .spyOn(rest_querier, "postLinkVersion")
+                .mockImplementation(() => {});
         });
 
         it("updates a link url", async () => {
@@ -1114,16 +1143,22 @@ describe("Store actions", () => {
                 throw new Error("nope");
             });
 
-            await createNewLinkVersionFromModal(context, [
-                item,
-                new_link_url,
-                version_title,
-                version_changelog,
-                is_version_locked
-            ]);
-
-            expect(postLinkVersion).toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("error/setModalError", expect.anything());
+            expect.assertions(2);
+            try {
+                await createNewLinkVersionFromModal(context, [
+                    item,
+                    new_link_url,
+                    version_title,
+                    version_changelog,
+                    is_version_locked
+                ]);
+            } catch (e) {
+                expect(postLinkVersion).toHaveBeenCalled();
+                expect(context.commit).toHaveBeenCalledWith(
+                    "error/setModalError",
+                    expect.anything()
+                );
+            }
         });
     });
 
@@ -1225,13 +1260,17 @@ describe("Store actions", () => {
                 throw new Error("nope");
             });
 
-            await loadDocumentWithAscendentHierarchy(context, 42);
-            expect(loadAscendantHierarchy).not.toHaveBeenCalled();
+            expect.assertions(2);
+            try {
+                await loadDocumentWithAscendentHierarchy(context, 42);
+            } catch (e) {
+                expect(loadAscendantHierarchy).not.toHaveBeenCalled();
 
-            expect(context.commit).toHaveBeenCalledWith(
-                "error/setItemLoadingError",
-                "Internal server error"
-            );
+                expect(context.commit).toHaveBeenCalledWith(
+                    "error/setItemLoadingError",
+                    "Internal server error"
+                );
+            }
         });
 
         it("throw error permission error if user does not have enough permissions", async () => {
@@ -1669,12 +1708,15 @@ describe("Store actions", () => {
                 status: 400
             });
 
-            await lockDocument(context, item_to_lock);
-
-            expect(context.commit).toHaveBeenCalledWith(
-                "error/setLockError",
-                "Internal server error"
-            );
+            expect.assertions(1);
+            try {
+                await lockDocument(context, item_to_lock);
+            } catch (e) {
+                expect(context.commit).toHaveBeenCalledWith(
+                    "error/setLockError",
+                    "Internal server error"
+                );
+            }
         });
 
         it("it should lock an embedded file and then update its information", async () => {
@@ -2424,7 +2466,7 @@ describe("Store actions", () => {
             mockFetchError(putEmptyDocumentPermissions, {
                 status: 500
             });
-            const handleErrorsModal = jest.spyOn(handle_error, "handleErrorsForModal");
+            const handleErrorsModal = jest.spyOn(error_handler, "handleErrorsForModal");
 
             const getItem = jest.spyOn(rest_querier, "getItem").mockReturnValue(Promise.resolve());
 
@@ -2534,7 +2576,7 @@ describe("Store actions", () => {
                 .spyOn(rest_querier, "postNewEmbeddedFileVersionFromEmpty")
                 .mockReturnValue(Promise.resolve());
             postNewFileVersionFromEmpty = jest.spyOn(rest_querier, "postNewFileVersionFromEmpty");
-            handleErrorsForModal = jest.spyOn(handle_error, "handleErrorsForModal");
+            handleErrorsForModal = jest.spyOn(error_handler, "handleErrorsForModal");
         });
 
         it("should update the empty document to link document", async () => {
@@ -2685,24 +2727,27 @@ describe("Store actions", () => {
                 throw new Error("Failed to update");
             });
 
-            await createNewVersionFromEmpty(context, [TYPE_LINK, item, item_to_update]);
+            expect.assertions(6);
+            try {
+                await createNewVersionFromEmpty(context, [TYPE_LINK, item, item_to_update]);
+            } catch (e) {
+                expect(postNewLinkVersionFromEmpty).toHaveBeenCalled();
+                expect(handleErrorsForModal).toHaveBeenCalled();
+                expect(getItem).not.toHaveBeenCalled();
+                expect(context.commit).not.toHaveBeenCalledWith(
+                    "removeItemFromFolderContent",
+                    updated_item
+                );
+                expect(context.commit).not.toHaveBeenCalledWith(
+                    "addJustCreatedItemToFolderContent",
+                    updated_item
+                );
 
-            expect(postNewLinkVersionFromEmpty).toHaveBeenCalled();
-            expect(handleErrorsForModal).toHaveBeenCalled();
-            expect(getItem).not.toHaveBeenCalled();
-            expect(context.commit).not.toHaveBeenCalledWith(
-                "removeItemFromFolderContent",
-                updated_item
-            );
-            expect(context.commit).not.toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
-                updated_item
-            );
-
-            expect(context.commit).not.toHaveBeenCalledWith(
-                "updateCurrentItemForQuickLokDisplay",
-                updated_item
-            );
+                expect(context.commit).not.toHaveBeenCalledWith(
+                    "updateCurrentItemForQuickLokDisplay",
+                    updated_item
+                );
+            }
         });
     });
 
@@ -2744,10 +2789,12 @@ describe("Store actions", () => {
 
             getItem = jest.spyOn(rest_querier, "getItem").mockReturnValue(Promise.reject("error"));
 
-            await loadDocument(context, 3);
-
-            expect(getItem).toHaveBeenCalled();
-            handleErrorsForDocument;
+            expect.assertions(1);
+            try {
+                await loadDocument(context, 3);
+            } catch (e) {
+                expect(getItem).toHaveBeenCalled();
+            }
         });
     });
 });
