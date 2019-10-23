@@ -25,10 +25,14 @@ use RestBase;
 
 class TestBase extends RestBase
 {
+    private const EXPLICIT_BACKLOG_STORY_TRACKER_SHORTNAME = 'story';
+
     protected $kanban_artifact_ids = array();
     protected $tracker_report_id   = null;
 
     protected $explicit_backlog_project_id;
+    protected $explicit_backlog_story_tracker_id;
+    protected $explicit_backlog_artifact_story_ids = [];
 
     public function setUp() : void
     {
@@ -38,7 +42,13 @@ class TestBase extends RestBase
 
         $this->tracker_report_id = $this->getTrackerReportId();
 
-        $this->explicit_backlog_project_id = $this->getProjectId(DataBuilder::EXPLICIT_BACKLOG_PROJECT_SHORTNAME);
+        $this->explicit_backlog_project_id       = $this->getProjectId(DataBuilder::EXPLICIT_BACKLOG_PROJECT_SHORTNAME);
+        $this->explicit_backlog_story_tracker_id = $this->tracker_ids[$this->explicit_backlog_project_id][self::EXPLICIT_BACKLOG_STORY_TRACKER_SHORTNAME];
+
+        $this->getArtifactIds(
+            $this->explicit_backlog_story_tracker_id,
+            $this->explicit_backlog_artifact_story_ids
+        );
     }
 
     private function getKanbanArtifactIds()
