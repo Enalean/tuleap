@@ -31,20 +31,48 @@ class ExplicitBacklogTest extends TestBase
         $response          = $this->getResponse($this->client->get('projects/'. urlencode((string) $this->explicit_backlog_project_id) . '/backlog'));
         $top_backlog_items = $response->json();
 
+        $this->assertEquals(200, $response->getStatusCode());
+
         $this->assertEmpty($top_backlog_items);
     }
 
     public function testPatchATopBacklogInExplicitContextDoesNotFail(): void
     {
+        $artifact_id_to_add = $this->getFirstStoryArtifactId();
+        $patch_body = json_encode([
+            'add' => [
+                ['id' => $artifact_id_to_add],
+            ]
+        ]);
+
         $response_patch = $this->getResponseByName(
             \REST_TestDataBuilder::TEST_USER_1_NAME,
             $this->client->patch(
                 'projects/'. urlencode((string) $this->explicit_backlog_project_id). '/backlog',
                 null,
-                json_encode("add: [{id: 142}]")
+                $patch_body
             )
         );
 
         $this->assertEquals(200, $response_patch->getStatusCode());
+    }
+
+    /**
+     * @depends testPatchATopBacklogInExplicitContextDoesNotFail
+     */
+    public function testTopBacklogInExplicitBacklogContextContainsTheBacklogItemsAfterBeingAdded(): void
+    {
+        $response          = $this->getResponse($this->client->get('projects/'. urlencode((string) $this->explicit_backlog_project_id) . '/backlog'));
+        $top_backlog_items = $response->json();
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertCount(1, $top_backlog_items);
+        $this->assertSame($top_backlog_items[0]['id'], $this->getFirstStoryArtifactId());
+    }
+
+    private function getFirstStoryArtifactId(): int
+    {
+        return (int) $this->explicit_backlog_artifact_story_ids[1];
     }
 }
