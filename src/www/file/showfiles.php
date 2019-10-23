@@ -365,6 +365,8 @@ foreach ($packages as $package_id => $package_for_display) {
                             $html .= ' <col class="frs_user_col">';
                             $html .= '</colgroup>';
 
+                            $license_agreement_display = new \Tuleap\FRS\LicenseAgreement\LicenseAgreementDisplay($hp);
+
                             // now iterate and show the files in this release....
                             foreach ($res_file as $file_release) {
                                 $filename = $file_release['filename'];
@@ -376,19 +378,8 @@ foreach ($packages as $package_id => $package_for_display) {
 
                                 $javascript_files_array[] = "'f_" . $file_release['file_id'] . "'";
 
-                                if (($package->getApproveLicense(
-                                ) == 0) && (isset($GLOBALS['sys_frs_license_mandatory']) && ! $GLOBALS['sys_frs_license_mandatory'])) {
-                                    // Allow direct download
-                                    $html .= '<A HREF="/file/download/' . urlencode($file_release['file_id']) .
-                                        '" title="' . $hp->purify($file_release['file_id']) . " - " . $hp->purify(
-                                            $fname
-                                        ) . '">' . $hp->purify($fname) . '</A>';
-                                } else {
-                                    // Display popup
-                                    $html .= '<A HREF="javascript:showConfirmDownload(' . $group_id . ',' . $file_release['file_id'] . ')" title="' . $file_release['file_id'] . " - " . $hp->purify(
-                                        $fname
-                                    ) . '">' . $hp->purify($fname) . '</A>';
-                                }
+                                $html .= $license_agreement_display->show($package, (int) $file_release['file_id'], $fname);
+
                                 $size_precision = 0;
                                 if ($file_release['file_size'] < 1024) {
                                     $size_precision = 2;
