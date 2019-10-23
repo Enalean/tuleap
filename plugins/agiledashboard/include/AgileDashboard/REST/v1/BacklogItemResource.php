@@ -26,7 +26,6 @@ use EventManager;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_Artifact;
-use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
@@ -39,6 +38,7 @@ use Tracker_SemanticCollection;
 use Tracker_SemanticManager;
 use TrackerFactory;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
+use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
 use Tuleap\AgileDashboard\REST\v1\Scrum\BacklogItem\InitialEffortSemanticUpdater;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
@@ -89,15 +89,14 @@ class BacklogItemResource extends AuthenticatedResource
             $this->artifact_factory
         );
 
-        $this->tracker_factory      = TrackerFactory::instance();
-        $this->artifactlink_updater = new ArtifactLinkUpdater($priority_manager);
-        $this->resources_patcher    = new ResourcesPatcher(
+        $this->tracker_factory                  = TrackerFactory::instance();
+        $this->artifactlink_updater             = new ArtifactLinkUpdater($priority_manager);
+        $this->resources_patcher                = new ResourcesPatcher(
             $this->artifactlink_updater,
             $this->artifact_factory,
-            $priority_manager,
-            \EventManager::instance()
+            $priority_manager
         );
-        $this->form_element_factory = Tracker_FormElementFactory::instance();
+        $this->form_element_factory             = Tracker_FormElementFactory::instance();
         $this->remaining_effort_value_retriever = new RemainingEffortValueRetriever(
             $this->form_element_factory
         );
@@ -312,10 +311,9 @@ class BacklogItemResource extends AuthenticatedResource
 
         $artifact = $this->getArtifact($id);
         $user     = $this->getCurrentUser();
+        $project  = $artifact->getTracker()->getProject();
 
-        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
-            $artifact->getTracker()->getProject()
-        );
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
         try {
             $indexed_children_ids = $this->getChildrenArtifactIds($user, $artifact);
@@ -347,11 +345,12 @@ class BacklogItemResource extends AuthenticatedResource
             }
 
             if ($order) {
-                $order->checkFormat($order);
+                $order->checkFormat();
                 $order_validator = new OrderValidator($indexed_children_ids);
                 $order_validator->validate($order);
 
-                $this->resources_patcher->updateArtifactPriorities($order, $id, null);
+                $orderer = ArtifactsRankOrderer::build();
+                $orderer->reorder($order, $id, $project);
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());
@@ -359,8 +358,6 @@ class BacklogItemResource extends AuthenticatedResource
             throw new RestException(409, $exception->getMessage());
         } catch (ArtifactCannotBeChildrenOfException $exception) {
             throw new RestException(409, $exception->getMessage());
-        } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
-            throw new RestException(400, $exception->getMessage());
         } catch (\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         }

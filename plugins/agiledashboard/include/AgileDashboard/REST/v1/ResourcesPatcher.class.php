@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,10 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use EventManager;
-use Tuleap\REST\v1\OrderRepresentationBase;
 use Luracast\Restler\RestException;
-use Tracker_ArtifactFactory;
-use Tracker_Artifact_PriorityManager;
 use PFUser;
-use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
+use Tracker_Artifact_PriorityManager;
+use Tracker_ArtifactFactory;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 
 class ResourcesPatcher
@@ -46,21 +43,15 @@ class ResourcesPatcher
      * @var ArtifactLinkUpdater
      */
     private $artifactlink_updater;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
 
     public function __construct(
         ArtifactLinkUpdater $artifactlink_updater,
         Tracker_ArtifactFactory $artifact_factory,
-        Tracker_Artifact_PriorityManager $priority_manager,
-        EventManager $event_manager
+        Tracker_Artifact_PriorityManager $priority_manager
     ) {
         $this->artifactlink_updater = $artifactlink_updater;
         $this->artifact_factory     = $artifact_factory;
         $this->priority_manager     = $priority_manager;
-        $this->event_manager        = $event_manager;
         $this->priority_manager->enableExceptionsOnError();
     }
 
@@ -77,17 +68,6 @@ class ResourcesPatcher
     public function rollback()
     {
         $this->priority_manager->rollback();
-    }
-
-    public function updateArtifactPriorities(OrderRepresentationBase $order, $context, $project_id)
-    {
-        if ($order->direction === OrderRepresentationBase::BEFORE) {
-            $this->priority_manager->moveListOfArtifactsBefore($order->ids, $order->compared_to, $context, $project_id);
-        } else {
-            $this->priority_manager->moveListOfArtifactsAfter($order->ids, $order->compared_to, $context, $project_id);
-        }
-
-        $this->event_manager->processEvent(new ArtifactsReordered($order->ids));
     }
 
     public function removeArtifactFromSource(PFUser $user, array $add)

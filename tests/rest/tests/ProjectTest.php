@@ -898,7 +898,7 @@ class ProjectTest extends ProjectBase
             $request_body
         ));
 
-        $this->assertEquals($response_patch->getStatusCode(), 200);
+        $this->assertEquals(200, $response_patch->getStatusCode());
 
         // assert that the two items are in a different order
         $modified_backlog_items = $this->getResponse($this->client->get($uri))->json();
@@ -918,7 +918,7 @@ class ProjectTest extends ProjectBase
                 'compared_to' => $second_modified['id']
             )
         ))));
-        $this->assertEquals($reinvert_patch->getStatusCode(), 200);
+        $this->assertEquals(200, $reinvert_patch->getStatusCode());
 
         // assert that the two tasks are in the order
         $reverted_backlog_items = $this->getResponse($this->client->get($uri))->json();
@@ -961,7 +961,7 @@ class ProjectTest extends ProjectBase
                 )
             )
         ))));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertEquals(
             array(
@@ -986,7 +986,7 @@ class ProjectTest extends ProjectBase
                 )
             )
         ))));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
 
         // Assert Everything is equal to the beginning of the test
         $this->assertEquals(

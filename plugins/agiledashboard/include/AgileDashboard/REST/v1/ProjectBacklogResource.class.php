@@ -51,6 +51,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementAdder;
+use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -182,8 +183,7 @@ class ProjectBacklogResource
         $this->resources_patcher         = new ResourcesPatcher(
             $this->artifactlink_updater,
             $tracker_artifact_factory,
-            $priority_manager,
-            $event_manager
+            $priority_manager
         );
 
         $color_builder = new BackgroundColorBuilder(new BindDecoratorRetriever());
@@ -281,11 +281,8 @@ class ProjectBacklogResource
             $all_ids = array_merge(array($order->compared_to), $order->ids);
             $this->validateArtifactIdsAreInUnassignedTopBacklog($all_ids, $user, $project);
 
-            try {
-                $this->resources_patcher->updateArtifactPriorities($order, self::TOP_BACKLOG_IDENTIFIER, $project->getId());
-            } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
-                throw new RestException(400, $exception->getMessage());
-            }
+            $orderer = ArtifactsRankOrderer::build();
+            $orderer->reorder($order, self::TOP_BACKLOG_IDENTIFIER, $project);
         }
     }
 
