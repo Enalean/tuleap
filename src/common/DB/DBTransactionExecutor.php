@@ -30,6 +30,7 @@ interface DBTransactionExecutor
      * Execute given callable within a transaction.
      *
      * @throws Throwable
+     * @return mixed
      */
-    public function execute(callable $atomic_operations) : void;
+    public function execute(callable $atomic_operations);
 }

@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Artifact\Attachment\QuotaExceededException;
 use Tuleap\Tracker\Artifact\Attachment\PaginatedTemporaryFiles;
 
@@ -47,17 +48,23 @@ class Tracker_Artifact_Attachment_TemporaryFileManager
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
 
     public function __construct(
         UserManager $user_manager,
         Tracker_Artifact_Attachment_TemporaryFileManagerDao $dao,
         System_Command $system,
-        $retention_delay
+        $retention_delay,
+        DBTransactionExecutor $transaction_executor
     ) {
         $this->dao                     = $dao;
         $this->system                  = $system;
         $this->retention_delay_in_days = $retention_delay;
         $this->user_manager            = $user_manager;
+        $this->transaction_executor    = $transaction_executor;
     }
 
     public function purgeOldTemporaryFiles()
@@ -116,30 +123,29 @@ class Tracker_Artifact_Attachment_TemporaryFileManager
         $chunk_size = 0;
         $this->checkThatChunkSizeIsNotOverTheQuota($user, $chunk_size);
 
-        $user_id   = $user->getId();
         $tempname  = $this->getUniqueFileName($user);
-        $timestamp = $_SERVER['REQUEST_TIME'];
 
-        $id = $this->dao->create($user_id, $name, $description, $mimetype, $timestamp, $tempname);
+        $temporary_file = $this->transaction_executor->execute(function () use ($user, $name, $description, $mimetype, $tempname) {
+            $timestamp = $_SERVER['REQUEST_TIME'];
+            $id = $this->dao->create($user->getId(), $name, $description, $mimetype, $timestamp, $tempname);
+            if (! $id) {
+                throw new Tracker_Artifact_Attachment_CannotCreateException();
+            }
 
-        if (!$id) {
-            throw new Tracker_Artifact_Attachment_CannotCreateException();
-        }
+            return new Tracker_Artifact_Attachment_TemporaryFile(
+                $id,
+                $name,
+                $tempname,
+                $description,
+                $timestamp,
+                0,
+                $user->getId(),
+                0,
+                $mimetype
+            );
+        });
 
-        $number_of_chunks = 0;
-        $filesize = 0;
-
-        return new Tracker_Artifact_Attachment_TemporaryFile(
-            $id,
-            $name,
-            $tempname,
-            $description,
-            $timestamp,
-            $number_of_chunks,
-            $user->getId(),
-            $filesize,
-            $mimetype
-        );
+        return $temporary_file;
     }
 
     /**
@@ -199,10 +205,7 @@ class Tracker_Artifact_Attachment_TemporaryFileManager
         return $bytes_written && $this->dao->updateFileInfo($file->getId(), $offset, $_SERVER['REQUEST_TIME'], $size);
     }
 
-    /**
-     * @return Tracker_Artifact_Attachment_TemporaryFile[]
-     */
-    public function getPaginatedUserTemporaryFiles(PFUser $user, $offset, $limit)
+    public function getPaginatedUserTemporaryFiles(PFUser $user, $offset, $limit): PaginatedTemporaryFiles
     {
         $files = $this->dao
             ->searchPaginatedUserTemporaryFiles($user->getId(), $offset, $limit)

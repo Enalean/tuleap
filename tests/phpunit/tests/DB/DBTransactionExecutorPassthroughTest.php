@@ -48,4 +48,16 @@ final class DBTransactionExecutorPassthroughTest extends TestCase
 
         $this->assertEquals(1, $callable->getNumberOfCalls());
     }
+
+    public function testReturnCallableReturn(): void
+    {
+        $transaction_executor = new DBTransactionExecutorPassthrough();
+
+        $this->assertEquals(
+            42,
+            $transaction_executor->execute(function () {
+                return 42;
+            })
+        );
+    }
 }

@@ -19,6 +19,8 @@
  */
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
@@ -60,7 +62,8 @@ class Tracker_Artifact_XMLImportBuilder
                 $logger
             ),
             $visit_recorder,
-            $logger
+            $logger,
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
         );
 
         $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
@@ -80,7 +83,8 @@ class Tracker_Artifact_XMLImportBuilder
                 ),
                 Tracker_FormElementFactory::instance()
             ),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory)
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($formelement_factory),
+            new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
         );
 
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,16 +16,35 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-require_once __DIR__.'/../bootstrap.php';
+namespace Tuleap\Tracker\Artifact;
 
-class Tracker_ArtifactCreator_createTest extends TuleapTestCase
+use Log_NoopLogger;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tracker;
+use Tracker_Artifact;
+use Tracker_Artifact_Changeset_InitialChangesetCreator;
+use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
+use Tracker_ArtifactCreator;
+use Tracker_ArtifactDao;
+use Tracker_ArtifactFactory;
+use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\TrackerColor;
+
+class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
 {
-    /** @var Tracker_Artifact_Changeset_InitialChangesetCreatorBase */
+    use MockeryPHPUnitIntegration;
+
+    /** @var \Tracker_Artifact_Changeset_InitialChangesetCreatorBase */
     private $changeset_creator;
 
-    /** @var Tracker_Artifact_Changeset_FieldsValidator */
+    /** @var \Tracker_Artifact_Changeset_FieldsValidator */
     private $fields_validator;
 
     /** @var Tracker_ArtifactFactory */
@@ -34,10 +53,10 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase
     /** @var Tracker_ArtifactCreator */
     private $creator;
 
-    /** @var Tracker */
+    /** @var \Tracker */
     private $tracker;
 
-    /** @var PFUser */
+    /** @var \PFUser */
     private $user;
 
     /** @var Tracker_ArtifactDao */
@@ -46,47 +65,67 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase
     /** @var Tracker_Artifact */
     private $bare_artifact;
     /**
-     * @var Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder
+     * @var \Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder
      */
     private $visit_recorder;
 
     private $fields_data       = array();
     private $submitted_on      = 1234567890;
     private $send_notification = true;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DBTransactionExecutor
+     */
+    private $db_transaction_executor;
 
-    public function setUp()
+    public function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
         Tracker_ArtifactFactory::clearInstance();
         $this->artifact_factory  = Tracker_ArtifactFactory::instance();
-        $this->changeset_creator = \Mockery::spy(\Tracker_Artifact_Changeset_InitialChangesetCreator::class);
-        $this->fields_validator  = \Mockery::spy(\Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::class);
-        $this->dao               = \Mockery::spy(\Tracker_ArtifactDao::class);
-        $this->visit_recorder    = \Mockery::spy(\Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder::class);
+        $this->changeset_creator = \Mockery::spy(Tracker_Artifact_Changeset_InitialChangesetCreator::class);
+        $this->fields_validator  = \Mockery::spy(Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::class);
+        $this->dao               = \Mockery::spy(Tracker_ArtifactDao::class);
+        $this->visit_recorder    = \Mockery::spy(VisitRecorder::class);
 
         $this->artifact_factory->setDao($this->dao);
 
-        $this->tracker       = aTracker()->withId(123)->build();
-        $this->user          = aUser()->withId(101)->build();
+        $this->tracker       = new Tracker(
+            123,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            TrackerColor::default(),
+            null
+        );
+        $this->user          = new \PFUser(['user_id' => 101, 'language_id' => 'en_US']);
         $this->bare_artifact = new Tracker_Artifact(0, 123, 101, 1234567890, 0);
+
+        $this->db_transaction_executor = new DBTransactionExecutorPassthrough();
 
         $this->creator = new Tracker_ArtifactCreator(
             $this->artifact_factory,
             $this->fields_validator,
             $this->changeset_creator,
             $this->visit_recorder,
-            new Log_NoopLogger()
+            new Log_NoopLogger(),
+            $this->db_transaction_executor
         );
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Tracker_ArtifactFactory::clearInstance();
-        parent::tearDown();
     }
 
-    public function itValidateFields()
+    public function testItValidateFields()
     {
         $this->fields_validator->shouldReceive('validate')
             ->with(
@@ -109,12 +148,12 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase
         );
     }
 
-    public function itReturnsFalseIfFIeldsAreNotValid()
+    public function testItReturnsFalseIfFIeldsAreNotValid()
     {
-        stub($this->fields_validator)->validate()->returns(false);
+        $this->fields_validator->shouldReceive('validate')->andReturns(false);
 
-        expect($this->dao)->create()->never();
-        expect($this->changeset_creator)->create()->never();
+        $this->dao->shouldNotReceive('create');
+        $this->changeset_creator->shouldNotReceive('create');
 
         $result = $this->creator->create(
             $this->tracker,
@@ -127,11 +166,11 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase
         $this->assertFalse($result);
     }
 
-    public function itCreateArtifactsInDbIfFieldsAreValid()
+    public function testItCreateArtifactsInDbIfFieldsAreValid()
     {
-        stub($this->fields_validator)->validate()->returns(true);
+        $this->fields_validator->shouldReceive('validate')->andReturns(true);
 
-        expect($this->dao)->create(123, 101, 1234567890, 0)->once();
+        $this->dao->shouldReceive('create')->with(123, 101, 1234567890, 0)->once();
 
         $this->creator->create(
             $this->tracker,
@@ -142,12 +181,12 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase
         );
     }
 
-    public function itReturnsFalseIfCreateArtifactsInDbFails()
+    public function testItReturnsFalseIfCreateArtifactsInDbFails()
     {
-        stub($this->fields_validator)->validate()->returns(true);
-        stub($this->dao)->create()->returns(false);
+        $this->fields_validator->shouldReceive('validate')->andReturns(true);
+        $this->dao->shouldReceive('create')->andReturn(false);
 
-        expect($this->changeset_creator)->create()->never();
+        $this->changeset_creator->shouldNotReceive('create');
 
         $result = $this->creator->create(
             $this->tracker,
@@ -160,10 +199,11 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase
         $this->assertFalse($result);
     }
 
-    public function itCreateChangesetIfCreateArtifactsInDbSucceeds()
+    public function testItCreateChangesetIfCreateArtifactsInDbSucceeds()
     {
-        stub($this->fields_validator)->validate()->returns(true);
-        stub($this->dao)->create()->returns(1001);
+        $this->send_notification = false;
+        $this->fields_validator->shouldReceive('validate')->andReturns(true);
+        $this->dao->shouldReceive('create')->andReturn(1001);
 
         $this->bare_artifact->setId(1001);
 
@@ -190,17 +230,16 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase
         );
     }
 
-    public function itMarksTheArtifactAsVisitedWhenSuccessfullyCreated()
+    public function testItMarksTheArtifactAsVisitedWhenSuccessfullyCreated()
     {
-        stub($this->fields_validator)->validate()->returns(true);
-        stub($this->dao)->create()->returns(1001);
-        stub($this->changeset_creator)->create()->returns(1);
+        $this->fields_validator->shouldReceive('validate')->andReturns(true);
+        $this->dao->shouldReceive('create')->andReturn(1001);
+        $this->changeset_creator->shouldReceive('create')->andReturn(1);
 
         $this->send_notification = false;
         $this->bare_artifact->setId(1001);
 
-        expect($this->visit_recorder)->record()->once();
-
+        $this->visit_recorder->shouldReceive('record')->once();
 
         $this->creator->create(
             $this->tracker,

@@ -26,8 +26,8 @@ use Tuleap\DB\DBTransactionExecutor;
 
 final class DBTransactionExecutorPassthrough implements DBTransactionExecutor
 {
-    public function execute(callable $atomic_operations) : void
+    public function execute(callable $atomic_operations)
     {
-        $atomic_operations();
+        return $atomic_operations();
     }
 }

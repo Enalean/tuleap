@@ -51,6 +51,8 @@ use Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter;
 use Tracker_XML_Exporter_NullChildrenCollector;
 use TrackerFactory;
 use TransitionFactory;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
@@ -1105,7 +1107,8 @@ class ArtifactsResource extends AuthenticatedResource
                 $description_semantic_checker,
                 $status_semantic_checker,
                 $contributor_semantic_checker
-            )
+            ),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
         );
     }
 

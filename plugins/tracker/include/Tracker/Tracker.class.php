@@ -20,6 +20,8 @@
  */
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkWithIcon;
@@ -3361,7 +3363,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $logger
             ),
             $this->getVisitRecorder(),
-            $logger
+            $logger,
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
         );
 
         $new_changeset_creator = new Tracker_Artifact_Changeset_NewChangesetAtGivenDateCreator(
@@ -3381,7 +3384,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                 ),
                 Tracker_FormElementFactory::instance()
             ),
-            new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory())
+            new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->getFormElementFactory()),
+            new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection()),
         );
 
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();

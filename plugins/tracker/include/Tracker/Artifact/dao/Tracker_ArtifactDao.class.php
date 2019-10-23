@@ -427,26 +427,22 @@ class Tracker_ArtifactDao extends DataAccessObject
 
     public function create($tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)
     {
+        $transaction_executor = new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection());
         for ($tentative = 0; $tentative < self::MAX_RETRY_CREATION; $tentative++) {
-            $this->startTransaction();
+            $artifact_id = $transaction_executor->execute(function () use ($tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions) {
+                $id_sharing  = new TrackerIdSharingDao();
+                $artifact_id = $id_sharing->generateArtifactId();
 
-            $id_sharing  = new TrackerIdSharingDao();
-            $artifact_id = $id_sharing->generateArtifactId();
-
-            try {
-                $artifact_id = $this->createWithId(
+                return $this->createWithId(
                     $artifact_id,
                     $tracker_id,
                     $submitted_by,
                     $submitted_on,
                     $use_artifact_permissions
                 );
-
-                $this->commit();
+            });
+            if ($artifact_id !== null) {
                 return $artifact_id;
-            } catch (DataAccessException $exception) {
-                $this->rollBack();
-                continue;
             }
         }
 

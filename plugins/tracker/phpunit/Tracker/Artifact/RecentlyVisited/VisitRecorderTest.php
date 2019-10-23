@@ -24,6 +24,8 @@ namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class VisitRecorderTest extends TestCase
 {
@@ -41,7 +43,7 @@ final class VisitRecorderTest extends TestCase
     public function setUp() : void
     {
         $this->dao            = \Mockery::mock(RecentlyVisitedDao::class);
-        $this->visit_recorder = new VisitRecorder($this->dao);
+        $this->visit_recorder = new VisitRecorder($this->dao, new DBTransactionExecutorPassthrough());
     }
 
     public function testVisitOfAnAuthenticatedUserIsSaved() : void

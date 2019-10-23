@@ -52,7 +52,7 @@ class ArtifactTemporaryFilesResource
     /** @var PFUser */
     private $user;
 
-    /** @var Tracker_Artifact_Attachment_TemporaryFileManager */
+    /** @var \Tracker_Artifact_Attachment_TemporaryFileManager */
     private $file_manager;
 
     public function __construct()
@@ -63,7 +63,8 @@ class ArtifactTemporaryFilesResource
             UserManager::instance(),
             new FileManagerDao(),
             new System_Command(),
-            ForgeConfig::get('sys_file_deletion_delay')
+            ForgeConfig::get('sys_file_deletion_delay'),
+            new \Tuleap\DB\DBTransactionExecutorWithConnection(\Tuleap\DB\DBFactory::getMainTuleapDBConnection())
         );
     }
 

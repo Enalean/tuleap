@@ -435,7 +435,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         ));
 
         $response    = $this->getResponse($this->client->put('artifacts/'.$artifact_id, null, $put_resource));
-        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals(200, $response->getStatusCode());
         $this->assertNotNull($response->getHeader('Last-Modified'));
         $this->assertNotNull($response->getHeader('Etag'));
 
