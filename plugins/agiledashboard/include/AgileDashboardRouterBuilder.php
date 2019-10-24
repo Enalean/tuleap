@@ -39,6 +39,8 @@ use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -153,7 +155,9 @@ class AgileDashboardRouterBuilder
             new TimeframeChecker(
                 Tracker_FormElementFactory::instance()
             ),
-            new CountElementsModeChecker(new ProjectsCountModeDao())
+            new CountElementsModeChecker(new ProjectsCountModeDao()),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            new ArtifactsInExplicitBacklogDao()
         );
     }
 

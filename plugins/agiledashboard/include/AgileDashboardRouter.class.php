@@ -22,6 +22,7 @@ use Tuleap\AgileDashboard\AdminController;
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
 use Tuleap\AgileDashboard\FormElement\FormElementController;
@@ -32,6 +33,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 
 /**
@@ -128,6 +130,14 @@ class AgileDashboardRouter
      * @var CountElementsModeChecker
      */
     private $count_elements_mode_checker;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
+    /**
+     * @var ArtifactsInExplicitBacklogDao
+     */
+    private $explicit_backlog_dao;
 
     public function __construct(
         Plugin $plugin,
@@ -147,7 +157,9 @@ class AgileDashboardRouter
         AgileDashboardCrumbBuilder $service_crumb_builder,
         AdministrationCrumbBuilder $admin_crumb_builder,
         TimeframeChecker $timeframe_checker,
-        CountElementsModeChecker $count_elements_mode_checker
+        CountElementsModeChecker $count_elements_mode_checker,
+        DBTransactionExecutor $transaction_executor,
+        ArtifactsInExplicitBacklogDao $explicit_backlog_dao
     ) {
         $this->plugin                       = $plugin;
         $this->milestone_factory            = $milestone_factory;
@@ -167,6 +179,8 @@ class AgileDashboardRouter
         $this->admin_crumb_builder          = $admin_crumb_builder;
         $this->timeframe_checker            = $timeframe_checker;
         $this->count_elements_mode_checker  = $count_elements_mode_checker;
+        $this->transaction_executor = $transaction_executor;
+        $this->explicit_backlog_dao = $explicit_backlog_dao;
     }
 
     /**
@@ -389,14 +403,7 @@ class AgileDashboardRouter
         $this->getService($request)->displayFooter();
     }
 
-    /**
-     * Builds a new Planning_Controller instance.
-     *
-     * @param Codendi_Request $request
-     *
-     * @return Planning_Controller
-     */
-    protected function buildPlanningController(Codendi_Request $request)
+    protected function buildPlanningController(Codendi_Request $request): Planning_Controller
     {
         return new Planning_Controller(
             $request,
@@ -404,20 +411,19 @@ class AgileDashboardRouter
             $this->milestone_factory,
             $this->project_manager,
             $this->xml_exporter,
-            $this->plugin->getThemePath(),
             $this->plugin->getPluginPath(),
             $this->kanban_manager,
             $this->config_manager,
             $this->kanban_factory,
             $this->planning_permissions_manager,
-            $this->hierarchy_checker,
             $this->scrum_mono_milestone_checker,
             $this->planning_filter,
-            TrackerFactory::instance(),
             Tracker_FormElementFactory::instance(),
             $this->service_crumb_builder,
             $this->admin_crumb_builder,
-            $this->timeframe_checker
+            $this->timeframe_checker,
+            $this->transaction_executor,
+            $this->explicit_backlog_dao
         );
     }
 
