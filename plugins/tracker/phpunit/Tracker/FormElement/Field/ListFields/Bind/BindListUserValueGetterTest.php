@@ -387,7 +387,7 @@ class BindListUserValueGetterTest extends TestCase
             ]
         );
 
-        $this->getter->shouldReceive('getMemberOfStaticGroup')->withArgs(
+        $this->getter->shouldReceive('getAllMembersOfStaticGroup')->withArgs(
             [
                 $keyword,
                 $bindvalue_ids,
@@ -408,6 +408,59 @@ class BindListUserValueGetterTest extends TestCase
             ),
         ];
 
-        $this->assertEquals($expected, $this->getter->getUsersValueByKeywordAndIds($ugroups, $keyword, $bindvalue_ids, $field));
+        $this->assertEquals(
+            $expected,
+            $this->getter->getUsersValueByKeywordAndIds($ugroups, $keyword, $bindvalue_ids, $field)
+        );
+    }
+
+
+    public function testItExtractActiveUserListForStaticUGroup(): void
+    {
+        $ugroups       = ['ugroup_109'];
+
+        $field   = Mockery::mock(Tracker_FormElement_Field::class);
+        $tracker = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(1);
+        $tracker->shouldReceive('getGroupId')->andReturn(101);
+        $field->shouldReceive('getTracker')->andReturn($tracker);
+
+        $da = Mockery::mock(DataAccessObject::class);
+        $da->shouldReceive('escapeIntImplode');
+        $da->shouldReceive('escapeInt');
+
+        $this->user_helper->shouldReceive('getDisplayNameSQLOrder')->once()->andReturn('user.user_name');
+
+        $this->default_dao->shouldReceive('getDa')->once()->andReturn($da);
+
+        $this->default_dao->shouldReceive('retrieve')->once()->andReturn(
+            [
+                ['user_id' => 101, 'user_name' => 'user 1', 'full_name' => 'user 1 full name'],
+                ['user_id' => 102, 'user_name' => 'user 2', 'full_name' => 'user 2 full name']
+            ]
+        );
+
+        $this->user_helper->shouldReceive('getDisplayNameSQLQuery')->once();
+        $this->user_helper->shouldReceive('getDisplayNameSQLOrder')->andReturn('user.user_name');
+
+        $this->getter->shouldReceive('getAllMembersOfStaticGroup')->never();
+
+        $expected = [
+            101 => new Tracker_FormElement_Field_List_Bind_UsersValue(
+                101,
+                'user 1',
+                'user 1 full name'
+            ),
+            102 => new Tracker_FormElement_Field_List_Bind_UsersValue(
+                102,
+                'user 2',
+                'user 2 full name'
+            ),
+        ];
+
+        $this->assertEquals(
+            $expected,
+            $this->getter->getActiveUsersValue($ugroups, $field)
+        );
     }
 }

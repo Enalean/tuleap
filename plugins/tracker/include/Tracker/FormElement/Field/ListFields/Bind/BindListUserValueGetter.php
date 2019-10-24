@@ -56,6 +56,41 @@ class BindListUserValueGetter
         array $bindvalue_ids,
         \Tracker_FormElement_Field $field
     ): array {
+        return $this->getUsersValueByKeywordAndIdsAccordingUserStatus(
+            $ugroups,
+            $keyword,
+            $bindvalue_ids,
+            $field,
+            false
+        );
+    }
+
+    /**
+     * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
+     */
+    public function getActiveUsersValue(
+        array $ugroups,
+        \Tracker_FormElement_Field $field
+    ): array {
+        return $this->getUsersValueByKeywordAndIdsAccordingUserStatus(
+            $ugroups,
+            null,
+            [],
+            $field,
+            true
+        );
+    }
+
+    /**
+     * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
+     */
+    private function getUsersValueByKeywordAndIdsAccordingUserStatus(
+        array $ugroups,
+        $keyword,
+        array $bindvalue_ids,
+        \Tracker_FormElement_Field $field,
+        bool $filter_on_active_user
+    ): array {
         $da = $this->bind_defaultvalue_dao->getDa();
 
         $tracker = $field->getTracker();
@@ -136,11 +171,11 @@ class BindListUserValueGetter
                 default:
                     if (preg_match('/ugroup_([0-9]+)/', $ugroup, $matches)) {
                         if (strlen($matches[1]) > 2) {
-                            $sql[] = $this->getMemberOfStaticGroup(
-                                $keyword,
-                                $bindvalue_ids,
-                                $matches
-                            );
+                            if ($filter_on_active_user) {
+                                $sql[] = $this->getActiveMembersOfStaticGroup($matches);
+                            } else {
+                                $sql[] = $this->getAllMembersOfStaticGroup($keyword, $bindvalue_ids, $matches);
+                            }
                         } else {
                             $show_suspended = false;
                             $sql[]          = $this->getUGroupUtilsDynamicMembers(
@@ -165,7 +200,7 @@ class BindListUserValueGetter
         $query = $this->getUsersSorted($sql, $order_by_sql);
         $rows  = $this->bind_defaultvalue_dao->retrieve($query);
 
-        if (! $rows) {
+        if (!$rows) {
             return [];
         }
 
@@ -214,7 +249,23 @@ class BindListUserValueGetter
     /**
      * protected for testing purpose
      */
-    protected function getMemberOfStaticGroup($keyword, array $bindvalue_ids, array $matches): string
+    private function getActiveMembersOfStaticGroup(array $matches): string
+    {
+        $sql_display_name  = $this->user_helper->getDisplayNameSQLQuery();
+        $sql_order_by_name = $this->user_helper->getDisplayNameSQLOrder();
+
+        return "(SELECT user.user_id, $sql_display_name, user.realname, user.user_name, user.email, user.status
+                 FROM ugroup_user, user
+                 WHERE user.user_id = ugroup_user.user_id
+                 AND ugroup_user.ugroup_id = $matches[1]
+                 AND (status='A' OR status='R')
+                 ORDER BY $sql_order_by_name)";
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function getAllMembersOfStaticGroup($keyword, array $bindvalue_ids, array $matches): string
     {
         return ugroup_db_get_members(
             $matches[1],

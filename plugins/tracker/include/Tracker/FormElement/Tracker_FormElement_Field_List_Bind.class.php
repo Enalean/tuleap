@@ -100,6 +100,11 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     /**
      * @return Tracker_FormElement_Field_List_BindValue[]
      */
+    abstract public function getAllValuesWithActiveUsersOnly(): array;
+
+    /**
+     * @return Tracker_FormElement_Field_List_BindValue[]
+     */
     public function getAllVisibleValues()
     {
         $values = $this->getAllValues();
