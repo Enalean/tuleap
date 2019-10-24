@@ -672,7 +672,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         int $limit,
         int $offset
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
-        $rows = $this->artifacts_in_explicit_backlog_dao->getTopBacklogItemsForProject(
+        $rows = $this->artifacts_in_explicit_backlog_dao->getTopBacklogItemsForProjectSortedByRank(
             (int) $milestone->getGroupId(),
             $limit,
             $offset

@@ -36,11 +36,14 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
         $this->getDB()->run($sql, $project_id, $artifact_id, $project_id, $artifact_id);
     }
 
-    public function getTopBacklogItemsForProject(int $project_id, int $limit, int $offset)
+    public function getTopBacklogItemsForProjectSortedByRank(int $project_id, int $limit, int $offset)
     {
-        $sql = "SELECT SQL_CALC_FOUND_ROWS artifact_id
+        $sql = "SELECT SQL_CALC_FOUND_ROWS plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id
                 FROM plugin_agiledashboard_planning_artifacts_explicit_backlog
+                INNER JOIN tracker_artifact_priority_rank
+                    ON plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id = tracker_artifact_priority_rank.artifact_id
                 WHERE project_id = ?
+                ORDER BY tracker_artifact_priority_rank.rank
                 LIMIT ?
                 OFFSET ?";
 
