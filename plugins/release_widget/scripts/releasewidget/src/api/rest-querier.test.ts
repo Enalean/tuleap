@@ -17,13 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    getNbOfBacklogItems,
-    getNbOfUpcomingReleases,
-    getCurrentMilestones,
-    getNbOfSprints,
-    getMilestonesContent
-} from "./rest-querier";
+import { getCurrentMilestones, getNbOfSprints, getMilestonesContent } from "./rest-querier";
 
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
@@ -36,73 +30,6 @@ describe("getProject() -", () => {
         offset = 0,
         project_id = 102,
         milestone_id = 102;
-
-    it("the REST API will be queried and the project's backlog returned", async () => {
-        const tlpGetMock = jest.spyOn(tlp, "get");
-
-        mockFetchSuccess(tlpGetMock, {
-            headers: {
-                // X-PAGINATION-SIZE
-                get: (): number => 2
-            }
-        });
-
-        const result = await getNbOfBacklogItems({
-            project_id,
-            limit,
-            offset
-        });
-        expect(tlpGetMock).toHaveBeenCalledWith("/api/v1/projects/" + project_id + "/backlog", {
-            params: { limit, offset }
-        });
-
-        expect(result).toEqual(2);
-    });
-
-    it("the REST API will be queried and the milestones planned returned", async () => {
-        const milestones = [
-            [
-                {
-                    start_date: {},
-                    end_date: {},
-                    project: {}
-                }
-            ],
-            [
-                {
-                    start_date: {},
-                    end_date: {},
-                    project: {}
-                }
-            ]
-        ];
-
-        const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
-        tlpRecursiveGetMock.mockReturnValue(Promise.resolve(milestones));
-
-        const result = await getNbOfUpcomingReleases({
-            project_id,
-            limit,
-            offset
-        });
-
-        const query = JSON.stringify({
-            period: "future"
-        });
-
-        expect(tlpRecursiveGetMock).toHaveBeenCalledWith(
-            "/api/v1/projects/" + project_id + "/milestones",
-            {
-                params: {
-                    limit,
-                    offset,
-                    query
-                }
-            }
-        );
-
-        expect(result).toEqual(2);
-    });
 
     it("the REST API will be queried and the current milestones returned", async () => {
         const milestones: MilestoneData[] = [

@@ -51,6 +51,10 @@ export default class App extends Vue {
     readonly projectId!: number;
     @Prop()
     readonly isBrowserIE11!: boolean;
+    @Prop()
+    readonly nbUpcomingReleases!: number;
+    @Prop()
+    readonly nbBacklogItems!: number;
     @State
     readonly is_loading!: boolean;
     @State
@@ -59,11 +63,17 @@ export default class App extends Vue {
     has_rest_error!: boolean;
     @Mutation
     setProjectId!: (projectId: number) => void;
+    @Mutation
+    setNbUpcomingReleases!: (nbUpcomingReleases: number) => void;
+    @Mutation
+    setNbBacklogItem!: (nbBacklogItems: number) => void;
     @Action
     getMilestones!: () => void;
 
     created(): void {
         this.setProjectId(this.projectId);
+        this.setNbUpcomingReleases(this.nbUpcomingReleases);
+        this.setNbBacklogItem(this.nbBacklogItems);
         this.getMilestones();
     }
 

@@ -34,10 +34,20 @@ class ProjectReleasePresenter
      * @var bool
      */
     public $is_IE11;
+    /**
+     * @var int
+     */
+    public $nb_upcoming_releases;
+    /**
+     * @var int
+     */
+    public $nb_backlog_items;
 
-    public function __construct(Project $project, bool $is_IE11)
+    public function __construct(Project $project, bool $is_IE11, int $nb_upcoming_releases, int $nb_backlog_items)
     {
         $this->project_id = $project->getID();
         $this->is_IE11 = $is_IE11;
+        $this->nb_upcoming_releases = $nb_upcoming_releases;
+        $this->nb_backlog_items = $nb_backlog_items;
     }
 }
