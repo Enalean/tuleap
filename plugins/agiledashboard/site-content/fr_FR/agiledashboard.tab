@@ -63,7 +63,6 @@ plugin_agiledashboard	planning_section	Gestion des plannings
 plugin_agiledashboard	import_export_section	Import/Export
 plugin_agiledashboard	general_settings_section	Options générales
 plugin_agiledashboard	edit_action_label	Editer
-plugin_agiledashboard	delete_action_label	Supprimer
 
 plugin_agiledashboard	home_user_helper_done	Les jalons terminés ont leur statut défini à 'fermé' tel que précisé dans la sémantique.
 plugin_agiledashboard	home_user_helper_others	Les jalons en cours et à venir ont leur statut défini à 'ouvert' tel que précisé dans la sémantique. De plus, ils sont classés en fonction de leur champs de type date (start_date et duration).

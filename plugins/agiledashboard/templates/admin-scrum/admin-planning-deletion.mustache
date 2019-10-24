@@ -1,0 +1,35 @@
+{{^ is_planning_removal_dangerous }}
+    <a href="{{ delete_url }}" class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline">
+        <i class="fa fa-trash-o tlp-button-icon"></i> {{# dgettext }} tuleap-agiledashboard | Delete {{/ dgettext }}
+    </a>
+{{/ is_planning_removal_dangerous }}
+{{# is_planning_removal_dangerous }}
+    <a class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline"
+       id="agiledashboard-administration-remove-planning-button"
+       data-target-modal-id="agiledashboard-drop-root-planning"
+    >
+        <i class="fa fa-trash-o tlp-button-icon"></i> {{# dgettext }} tuleap-agiledashboard | Delete {{/ dgettext }}
+    </a>
+
+    <div id="agiledashboard-drop-root-planning" class="tlp-modal tlp-modal-danger" role="dialog" aria-labelledby="scrum-admin-drop-root-planning">
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="scrum-admin-drop-root-planning">
+                <i class="fa fa-trash-o tlp-button-icon"></i> {{# dgettext }} tuleap-agiledashboard | Planning deletion {{/ dgettext }}
+            </h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                ×
+            </div>
+        </div>
+        <div class="tlp-modal-body">
+            <p>{{# dgettext }} tuleap-agiledashboard | You are going to remove the top backlog planning permanently (no possible rollback). Top backlog will be empty after the deletion of the top level planning. Please confirm your action. {{/ dgettext }}</p>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                {{# dgettext }} tuleap-agiledashboard | Cancel {{/ dgettext }}
+            </button>
+            <a class="tlp-button-danger tlp-modal-action" href="{{ delete_url }}">
+                <i class="fa fa-trash-o tlp-button-icon"></i> {{# dgettext }} tuleap-agiledashboard | Continue {{/ dgettext }}
+            </a>
+        </div>
+    </div>
+{{/ is_planning_removal_dangerous }}

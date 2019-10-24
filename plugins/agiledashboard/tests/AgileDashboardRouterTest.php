@@ -21,6 +21,7 @@
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -56,7 +57,6 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase
             mock('AgileDashboard_ConfigurationManager'),
             mock('AgileDashboard_KanbanFactory'),
             mock('PlanningPermissionsManager'),
-            mock('AgileDashboard_HierarchyChecker'),
             mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
             mock('Tuleap\AgileDashboard\Planning\ScrumPlanningFilter'),
             mock('Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever'),
@@ -65,7 +65,8 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase
             Mockery::mock(\Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker::class),
             Mockery::mock(CountElementsModeChecker::class),
             Mockery::mock(DBTransactionExecutor::class),
-            Mockery::mock(ArtifactsInExplicitBacklogDao::class)
+            Mockery::mock(ArtifactsInExplicitBacklogDao::class),
+            Mockery::mock(ScrumPresenterBuilder::class)
         );
 
         stub($this->router)->buildPlanningController()->returns($this->planning_controller);

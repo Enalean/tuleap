@@ -63,7 +63,6 @@ plugin_agiledashboard	planning_section	Planning management
 plugin_agiledashboard	import_export_section	Import/Export
 plugin_agiledashboard	general_settings_section	General settings
 plugin_agiledashboard	edit_action_label	Edit
-plugin_agiledashboard	delete_action_label	Delete
 
 plugin_agiledashboard	home_user_helper_done	Milestones are "Done" when they have their status set to 'closed' as defined in their tracker's semantic.
 plugin_agiledashboard	home_user_helper_others	All milestones that have a status set to 'open' (as defined in their tracker's semantic) are either "Current" or "Next". The existence and values of their date fields (start_date and duration) decide in which tab(s) they appear.
