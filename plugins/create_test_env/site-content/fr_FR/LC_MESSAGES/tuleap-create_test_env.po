@@ -12,34 +12,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.8\n"
 
-#, php-format
-msgid "%s (%s - %s) wants to be called back on %s."
-msgstr "%s (%s - %s) souhaite être rappelé le %s."
-
-#, php-format
-msgid "%s wants to be called back"
-msgstr "%s souhaite être rappelé"
-
-msgid "An error occurred during the update of the email"
-msgstr "Une erreur est survenue lors de la mise à jour de l’email"
-
-msgid "An error occurred during the update of the messages"
-msgstr "Une erreur est survenue lors de la mise à jour des messages"
-
 msgid "Automate creation of test users and environments"
 msgstr "Automatise la création d'utilisateurs et d'environments de test"
 
 msgid "Bot list"
 msgstr "Liste des bots"
-
-msgid "Call me back"
-msgstr "Rappelle-moi"
-
-msgid "Call me back configuration"
-msgstr "Configuration de Rappelle-moi"
-
-msgid "Call me back configuration updated"
-msgstr "La configuration de Rappelle-moi a été mise à jour"
 
 msgid ""
 "Configure a mattermost bot that will receive notification about people tests."
@@ -59,20 +36,8 @@ msgstr "Notification mattermost ajoutée"
 msgid "Mattermost notifications removed"
 msgstr "Notification mattermost supprimée"
 
-msgid "Message"
-msgstr "Message"
-
-msgid "Notification bot"
-msgstr "Bot de notification"
-
 msgid "Save"
 msgstr "Enregistrer"
 
-msgid "This is my message"
-msgstr "Ceci est mon message"
-
 msgid "You should be site administrator to access this page"
 msgstr "Vous devez être administrateur site pour accèder à cette page"
-
-msgid "jdoe@example.com"
-msgstr "jdoe@example.com"
