@@ -69,13 +69,16 @@ use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\KanbanCumulativeFlowDiagramDao;
 use Tuleap\AgileDashboard\KanbanRightsPresenter;
+use Tuleap\AgileDashboard\REST\v1\IdsFromBodyAreNotUniqueException;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\DiagramRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\OrderedColumnRepresentationsBuilder;
 use Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram\TooManyPointsException;
 use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\FilteredDiagramRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\Kanban\TrackerReport\FilteredItemCollectionRepresentationBuilder;
+use Tuleap\AgileDashboard\REST\v1\OrderIdOutOfBoundException;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\OrderValidator;
+use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Http\HttpClientFactory;
@@ -198,8 +201,7 @@ class KanbanResource extends AuthenticatedResource
         $this->resources_patcher = new ResourcesPatcher(
             $artifactlink_updater,
             $this->artifact_factory,
-            $priority_manager,
-            EventManager::instance()
+            $priority_manager
         );
 
         $this->form_element_factory = Tracker_FormElementFactory::instance();
@@ -615,9 +617,8 @@ class KanbanResource extends AuthenticatedResource
             throw new RestException(403);
         }
 
-        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
-            $this->getKanbanProject($kanban)
-        );
+        $project = $this->getKanbanProject($kanban);
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
         if ($add) {
             $add->checkFormat();
@@ -650,11 +651,8 @@ class KanbanResource extends AuthenticatedResource
                 throw new RestException(500, $exception->getMessage());
             }
 
-            $this->resources_patcher->updateArtifactPriorities(
-                $order,
-                Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
-                $this->getProjectIdForKanban($kanban)
-            );
+            $orderer = ArtifactsRankOrderer::build();
+            $orderer->reorder($order, Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT, $project);
         }
 
         if ($add || $order) {
@@ -864,9 +862,8 @@ class KanbanResource extends AuthenticatedResource
             throw new RestException(403);
         }
 
-        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
-            $this->getKanbanProject($kanban)
-        );
+        $project = $this->getKanbanProject($kanban);
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
         if ($add) {
             $add->checkFormat();
@@ -899,11 +896,8 @@ class KanbanResource extends AuthenticatedResource
                 throw new RestException(500, $exception->getMessage());
             }
 
-            $this->resources_patcher->updateArtifactPriorities(
-                $order,
-                Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
-                $this->getProjectIdForKanban($kanban)
-            );
+            $orderer = ArtifactsRankOrderer::build();
+            $orderer->reorder($order, Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT, $project);
         }
 
         if ($add || $order) {
@@ -1059,9 +1053,8 @@ class KanbanResource extends AuthenticatedResource
             throw new RestException(403);
         }
 
-        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
-            $this->getKanbanProject($kanban)
-        );
+        $project = $this->getKanbanProject($kanban);
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
         if (! $this->columnIsInTracker($kanban, $current_user, $column_id)) {
             throw new RestException(404);
@@ -1107,11 +1100,8 @@ class KanbanResource extends AuthenticatedResource
                 throw new RestException(500, $exception->getMessage());
             }
 
-            $this->resources_patcher->updateArtifactPriorities(
-                $order,
-                Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT,
-                $this->getProjectIdForKanban($kanban)
-            );
+            $orderer = ArtifactsRankOrderer::build();
+            $orderer->reorder($order, Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT, $project);
         }
 
         if ($add || $order) {

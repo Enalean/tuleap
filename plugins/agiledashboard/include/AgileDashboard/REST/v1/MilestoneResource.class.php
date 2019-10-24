@@ -59,6 +59,7 @@ use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\MalformedQueryParameterException;
 use Tuleap\AgileDashboard\REST\QueryToCriterionStatusConverter;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementMover;
+use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -202,8 +203,7 @@ class MilestoneResource extends AuthenticatedResource
         $this->resources_patcher         = new ResourcesPatcher(
             $this->artifactlink_updater,
             $this->tracker_artifact_factory,
-            $priority_manager,
-            $this->event_manager
+            $priority_manager
         );
 
         $parent_tracker_retriever = new ParentTrackerRetriever($planning_factory);
@@ -740,10 +740,9 @@ class MilestoneResource extends AuthenticatedResource
     {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
+        $project   = $milestone->getProject();
 
-        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
-            $milestone->getProject()
-        );
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
         $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $user);
 
@@ -769,8 +768,6 @@ class MilestoneResource extends AuthenticatedResource
             throw new RestException(404, $exception->getMessage());
         } catch (ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (IdsFromBodyAreNotUniqueException $exception) {
-            throw new RestException(400, $exception->getMessage());
         } catch (Tracker_NoChangeException $exception) {
             //Do nothing
         } catch (Tracker_NoArtifactLinkFieldException $exception) {
@@ -782,16 +779,15 @@ class MilestoneResource extends AuthenticatedResource
 
         try {
             if ($order) {
-                $order->checkFormat($order);
+                $order->checkFormat();
                 $this->milestone_validator->canOrderContent($user, $milestone, $order);
-                $this->resources_patcher->updateArtifactPriorities($order, $id, $milestone->getProject()->getId());
+                $orderer = ArtifactsRankOrderer::build();
+                $orderer->reorder($order, (string) $id, $project);
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());
         } catch (OrderIdOutOfBoundException $exception) {
             throw new RestException(409, $exception->getMessage());
-        } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
-            throw new RestException(400, $exception->getMessage());
         } catch (\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         }
@@ -974,14 +970,13 @@ class MilestoneResource extends AuthenticatedResource
     {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
+        $project   = $milestone->getProject();
 
         if (! $milestone) {
             throw new RestException(404, "Milestone not found");
         }
 
-        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
-            $milestone->getProject()
-        );
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
         $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $user);
 
@@ -1006,14 +1001,13 @@ class MilestoneResource extends AuthenticatedResource
                     $user
                 );
 
-                $this->resources_patcher->updateArtifactPriorities($order, $id, $milestone->getProject()->getId());
+                $orderer = ArtifactsRankOrderer::build();
+                $orderer->reorder($order, (string) $id, $project);
             }
         } catch (IdsFromBodyAreNotUniqueException $exception) {
             throw new RestException(409, $exception->getMessage());
         } catch (ArtifactIsNotInUnplannedBacklogItemsException $exception) {
             throw new RestException(409, $exception->getMessage());
-        } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
-            throw new RestException(400, $exception->getMessage());
         } catch (\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         }

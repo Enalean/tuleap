@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean SAS 2015 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -98,6 +100,9 @@ class Tracker_Artifact_PriorityManager
         }
     }
 
+    /**
+     * @throws Tracker_Artifact_Exception_CannotRankWithMyself
+     */
     public function moveListOfArtifactsBefore(array $list_of_artifact_ids, $successor_id, $context_id, $project_id)
     {
         $ranks_before_move = $this->getGlobalRanks($list_of_artifact_ids);
