@@ -241,7 +241,7 @@ class AgileDashboardRouter
                         $this->renderAction($this->buildController($request), 'adminScrum', $request);
                     }
                 } else {
-                    $this->renderAction($planning_controller, 'index', $request);
+                    $GLOBALS['Response']->redirect(AGILEDASHBOARD_BASE_URL .'/?group_id='. urlencode($request->get('group_id')));
                 }
                 break;
             case 'export':
