@@ -47,7 +47,7 @@ export default class SwimlaneHeader extends Vue {
     @fullscreen.Getter
     readonly fullscreen_class!: string;
 
-    @swimlane_store.Mutation
+    @swimlane_store.Action
     readonly collapseSwimlane!: (swimlane: Swimlane) => void;
 
     get additional_classnames(): string {

@@ -18,7 +18,7 @@
  */
 
 import { Module } from "vuex";
-import { RootState } from "../../type";
+import { RootState } from "../type";
 import { UserState } from "./type";
 
 export function createUserModule(initial_user_state: UserState): Module<UserState, RootState> {

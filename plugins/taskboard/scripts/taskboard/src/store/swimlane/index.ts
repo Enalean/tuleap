@@ -21,7 +21,7 @@ import * as actions from "./swimlane-actions";
 import * as mutations from "./swimlane-mutations";
 import { SwimlaneState } from "./type";
 import { Module } from "vuex";
-import { RootState } from "../../type";
+import { RootState } from "../type";
 
 const swimlane_module_default: Module<SwimlaneState, RootState> = {
     namespaced: true,

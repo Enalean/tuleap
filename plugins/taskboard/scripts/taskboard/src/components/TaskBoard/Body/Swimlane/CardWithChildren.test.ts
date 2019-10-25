@@ -52,8 +52,7 @@ describe("CardWithChildren", () => {
         const swimlane: Swimlane = {
             card: { id: 43 } as Card,
             children_cards: [],
-            is_loading_children_cards: true,
-            is_collapsed: false
+            is_loading_children_cards: true
         };
         const wrapper = createWrapper(swimlane);
 

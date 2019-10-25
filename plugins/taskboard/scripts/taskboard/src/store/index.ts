@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { RootState } from "../type";
 import { Store, StoreOptions } from "vuex";
 import * as mutations from "./mutations";
 import error from "./error";
@@ -25,6 +24,7 @@ import swimlane from "./swimlane";
 import fullscreen from "./fullscreen";
 import { UserState } from "./user/type";
 import { createUserModule } from "./user";
+import { RootState } from "./type";
 
 export function createStore(
     initial_root_state: RootState,

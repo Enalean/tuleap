@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, RootState, Swimlane } from "../../type";
-import { recursiveGet } from "tlp";
+import { Card, Swimlane } from "../../type";
+import { del, patch, recursiveGet } from "tlp";
 import { ActionContext } from "vuex";
 import { SwimlaneState } from "./type";
+import { RootState } from "../type";
 
 export async function loadSwimlanes(
     context: ActionContext<SwimlaneState, RootState>
@@ -36,13 +37,12 @@ export async function loadSwimlanes(
                     return {
                         card,
                         children_cards: [],
-                        is_loading_children_cards: false,
-                        is_collapsed: !card.is_open
+                        is_loading_children_cards: false
                     };
                 });
                 context.commit("addSwimlanes", swimlanes);
                 swimlanes
-                    .filter(swimlane => swimlane.card.has_children && !swimlane.is_collapsed)
+                    .filter(swimlane => swimlane.card.has_children)
                     .map(swimlane_with_children =>
                         context.dispatch("loadChildrenCards", swimlane_with_children)
                     );
@@ -84,12 +84,51 @@ export async function loadChildrenCards(
     }
 }
 
-export function expandSwimlane(
+export async function expandSwimlane(
     context: ActionContext<SwimlaneState, RootState>,
     swimlane: Swimlane
-): void {
+): Promise<void> {
     context.commit("expandSwimlane", swimlane);
-    if (swimlane.card.has_children && swimlane.children_cards.length === 0) {
-        context.dispatch("loadChildrenCards", swimlane);
+
+    const user_id = context.rootState.user.user_id;
+    try {
+        await del(
+            `/api/v1/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(
+                getPreferenceName(context, swimlane)
+            )}`
+        );
+    } catch (e) {
+        // no display of error
+        // we don't need to stop the flow of the users just because a user pref has not been saved
     }
+}
+
+export async function collapseSwimlane(
+    context: ActionContext<SwimlaneState, RootState>,
+    swimlane: Swimlane
+): Promise<void> {
+    context.commit("collapseSwimlane", swimlane);
+
+    const user_id = context.rootState.user.user_id;
+    try {
+        await patch(`/api/v1/users/${encodeURIComponent(user_id)}/preferences`, {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                key: getPreferenceName(context, swimlane),
+                value: 1
+            })
+        });
+    } catch (e) {
+        // no display of error
+        // we don't need to stop the flow of the users just because a user pref has not been saved
+    }
+}
+
+function getPreferenceName(
+    context: ActionContext<SwimlaneState, RootState>,
+    swimlane: Swimlane
+): string {
+    return `plugin_taskboard_collapse_${context.rootState.milestone_id}_${swimlane.card.id}`;
 }

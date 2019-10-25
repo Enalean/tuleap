@@ -23,9 +23,10 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createStore } from "./src/store";
 import App from "./src/components/App.vue";
 import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
-import { ColumnDefinition, RootState } from "./src/type";
+import { ColumnDefinition } from "./src/type";
 import Vuex from "vuex";
 import { UserState } from "./src/store/user/type";
+import { RootState } from "./src/store/type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("taskboard");
@@ -61,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         milestone_id,
         milestone_title,
         are_closed_items_displayed: true
-    };
+    } as RootState;
 
     const initial_user_state: UserState = {
         user_is_admin,

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\REST\v1;
 
+use PFUser;
 use Tracker_Artifact;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\REST\JsonCast;
@@ -85,6 +86,10 @@ class CardRepresentation
      * @var bool
      */
     public $is_open;
+    /**
+     * @var bool
+     */
+    public $is_collapsed;
 
     /**
      * @params UserRepresentation[] $assignees
@@ -96,7 +101,8 @@ class CardRepresentation
         array $assignees,
         ?MappedListValueRepresentation $mapped_list_value,
         $initial_effort,
-        $remaining_effort
+        $remaining_effort,
+        bool $is_collapsed
     ): void {
         $this->id                = JsonCast::toInt($artifact->getId());
         $this->tracker_id        = JsonCast::toInt($artifact->getTrackerId());
@@ -112,6 +118,7 @@ class CardRepresentation
         $this->initial_effort    = $this->formatNumeric($initial_effort);
         $this->remaining_effort  = $this->formatNumeric($remaining_effort);
         $this->is_open           = $artifact->isOpen();
+        $this->is_collapsed      = $is_collapsed;
     }
 
     /**
