@@ -28,12 +28,7 @@ class ExplicitBacklogTest extends TestBase
 {
     public function testTopBacklogInExplicitBacklogContextIsEmptyWhileNoArtifactExplicitlyAdded(): void
     {
-        $response          = $this->getResponse($this->client->get('projects/'. urlencode((string) $this->explicit_backlog_project_id) . '/backlog'));
-        $top_backlog_items = $response->json();
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $this->assertEmpty($top_backlog_items);
+        $this->assertTopBacklogIsEmpty();
     }
 
     public function testPatchATopBacklogInExplicitContextDoesNotFail(): void
@@ -62,13 +57,8 @@ class ExplicitBacklogTest extends TestBase
      */
     public function testTopBacklogInExplicitBacklogContextContainsTheBacklogItemsAfterBeingAdded(): void
     {
-        $response          = $this->getResponse($this->client->get('projects/'. urlencode((string) $this->explicit_backlog_project_id) . '/backlog'));
-        $top_backlog_items = $response->json();
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $this->assertCount(1, $top_backlog_items);
-        $this->assertSame($top_backlog_items[0]['id'], $this->getFirstStoryArtifactId());
+        $this->assertTopBacklogContainsTheFirstStory();
+        $this->assertReleaseIsEmpty();
     }
 
     /**
@@ -78,12 +68,19 @@ class ExplicitBacklogTest extends TestBase
     {
         $this->moveStoryToRelease();
 
-        $response          = $this->getResponse($this->client->get('projects/'. urlencode((string) $this->explicit_backlog_project_id) . '/backlog'));
-        $top_backlog_items = $response->json();
+        $this->assertTopBacklogIsEmpty();
+        $this->assertReleaseIsNotEmpty();
+    }
 
-        $this->assertEquals(200, $response->getStatusCode());
+    /**
+     * @depends testTopBacklogInExplicitBacklogContextDoesNotContainTheBacklogItemsMovedToTheRelease
+     */
+    public function testTopBacklogInExplicitBacklogContextContainsTheBacklogItemsMovedFromTheRelease(): void
+    {
+        $this->moveStoryFromReleaseToTopBacklog();
 
-        $this->assertEmpty($top_backlog_items);
+        $this->assertTopBacklogContainsTheFirstStory();
+        $this->assertReleaseIsEmpty();
     }
 
     private function moveStoryToRelease()
@@ -107,6 +104,30 @@ class ExplicitBacklogTest extends TestBase
         $this->assertEquals(200, $response_patch->getStatusCode());
     }
 
+    private function moveStoryFromReleaseToTopBacklog()
+    {
+        $artifact_id_to_add  = $this->getFirstStoryArtifactId();
+        $release_artifact_id = $this->getFirstReleaseArtifactId();
+        $patch_body          = json_encode([
+            'add' => [
+                [
+                    'id'          => $artifact_id_to_add,
+                    'remove_from' => $release_artifact_id
+                ],
+            ]
+        ]);
+
+        $response_patch = $this->getResponse(
+            $this->client->patch(
+                'projects/'. urlencode((string) $this->explicit_backlog_project_id). '/backlog',
+                null,
+                $patch_body
+            )
+        );
+
+        $this->assertEquals(200, $response_patch->getStatusCode());
+    }
+
     private function getFirstStoryArtifactId(): int
     {
         return (int) $this->explicit_backlog_artifact_story_ids[1];
@@ -115,5 +136,51 @@ class ExplicitBacklogTest extends TestBase
     private function getFirstReleaseArtifactId(): int
     {
         return (int) $this->explicit_backlog_artifact_release_ids[1];
+    }
+
+    private function assertTopBacklogContainsTheFirstStory(): void
+    {
+        $response          = $this->getResponse($this->client->get('projects/' . urlencode((string)$this->explicit_backlog_project_id) . '/backlog'));
+        $top_backlog_items = $response->json();
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertCount(1, $top_backlog_items);
+        $this->assertSame($top_backlog_items[0]['id'], $this->getFirstStoryArtifactId());
+    }
+
+    private function assertTopBacklogIsEmpty(): void
+    {
+        $response          = $this->getResponse($this->client->get('projects/' . urlencode((string)$this->explicit_backlog_project_id) . '/backlog'));
+        $top_backlog_items = $response->json();
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertEmpty($top_backlog_items);
+    }
+
+    private function assertReleaseIsNotEmpty(): void
+    {
+        $release_artifact_id = $this->getFirstReleaseArtifactId();
+
+        $response      = $this->getResponse($this->client->get('milestones/' . urlencode((string)$release_artifact_id) . '/content'));
+        $release_items = $response->json();
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertCount(1, $release_items);
+        $this->assertSame($release_items[0]['id'], $this->getFirstStoryArtifactId());
+    }
+
+    private function assertReleaseIsEmpty(): void
+    {
+        $release_artifact_id = $this->getFirstReleaseArtifactId();
+
+        $response      = $this->getResponse($this->client->get('milestones/' . urlencode((string)$release_artifact_id) . '/content'));
+        $release_items = $response->json();
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertEmpty($release_items);
     }
 }

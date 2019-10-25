@@ -34,7 +34,6 @@ use Planning_MilestoneFactory;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
-use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
@@ -310,10 +309,15 @@ class ProjectBacklogResource
         }
     }
 
-    private function validateArtifactIdsAreInUnassignedTopBacklog($ids, $user, $project)
+    private function validateArtifactIdsAreInUnassignedTopBacklog(array $ids, PFUser $user, Project $project)
     {
         try {
-            $this->milestone_validator->validateArtifactIdsAreInUnassignedTopBacklog($ids, $user, $project);
+            $explicit_backlog_dao = new ExplicitBacklogDao();
+            if ($explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getID()) === true) {
+                $this->milestone_validator->validateIdsAreUnique($ids);
+            } else {
+                $this->milestone_validator->validateArtifactIdsAreInUnassignedTopBacklog($ids, $user, $project);
+            }
         } catch (ArtifactIsNotInUnassignedTopBacklogItemsException $exception) {
             throw new RestException(409, $exception->getMessage());
         } catch (IdsFromBodyAreNotUniqueException $exception) {

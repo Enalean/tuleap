@@ -31,6 +31,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use Tuleap\DB\DBConnection;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class MilestoneElementAdderTest extends TestCase
 {
@@ -70,7 +71,7 @@ class MilestoneElementAdderTest extends TestCase
         $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
         $this->db_connection                     = Mockery::mock(DBConnection::class);
 
-        $this->transaction_executor = new DBTransactionExecutorWithConnection($this->db_connection);
+        $this->transaction_executor = new DBTransactionExecutorPassthrough();
 
         $this->adder = new MilestoneElementAdder(
             $this->explicit_backlog_dao,
@@ -87,9 +88,8 @@ class MilestoneElementAdderTest extends TestCase
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getGroupId')->once()->andReturn(102);
 
-        $db = Mockery::mock(EasyDB::class);
-        $this->db_connection->shouldReceive('getDb')->once()->andReturn($db);
-        $db->shouldReceive('tryFlatTransaction')->once();
+        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')->once();
+        $this->resources_patcher->shouldReceive('removeArtifactFromSource')->once();
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()

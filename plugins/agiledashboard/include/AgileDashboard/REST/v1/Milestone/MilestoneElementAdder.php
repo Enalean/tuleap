@@ -24,11 +24,12 @@ declare(strict_types = 1);
 namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
 use Luracast\Restler\RestException;
+use PFUser;
 use Project;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\DB\DBTransactionExecutor;
 
 class MilestoneElementAdder
 {
@@ -44,8 +45,9 @@ class MilestoneElementAdder
      * @var ResourcesPatcher
      */
     private $resources_patcher;
+
     /**
-     * @var DBTransactionExecutorWithConnection
+     * @var DBTransactionExecutor
      */
     private $db_transaction_executor;
 
@@ -53,7 +55,7 @@ class MilestoneElementAdder
         ExplicitBacklogDao $explicit_backlog_dao,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         ResourcesPatcher $resources_patcher,
-        DBTransactionExecutorWithConnection $db_transaction_executor
+        DBTransactionExecutor $db_transaction_executor
     ) {
         $this->explicit_backlog_dao              = $explicit_backlog_dao;
         $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
@@ -70,7 +72,7 @@ class MilestoneElementAdder
     {
         $project_id = (int) $project->getGroupId();
         if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id)) {
-            $this->addElementInExplicitBacklog($add, $project_id);
+            $this->addElementInExplicitBacklog($user, $add, $project_id);
         } else {
             $this->moveArtifactsForStandardBacklog($add, $user);
         }
@@ -79,16 +81,17 @@ class MilestoneElementAdder
     /**
      * @throws \Throwable
      */
-    private function addElementInExplicitBacklog(array $add, int $project_id): void
+    private function addElementInExplicitBacklog(PFUser $user, array $add, int $project_id): void
     {
         $this->db_transaction_executor->execute(
-            function () use ($add, $project_id) {
+            function () use ($user, $add, $project_id) {
                 foreach ($add as $added_artifact) {
                     $this->artifacts_in_explicit_backlog_dao->addArtifactToProjectBacklog(
                         $project_id,
                         (int) $added_artifact['id']
                     );
                 }
+                $this->resources_patcher->removeArtifactFromSource($user, $add);
             }
         );
     }
