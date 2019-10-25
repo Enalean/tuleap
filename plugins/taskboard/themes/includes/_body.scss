@@ -54,8 +54,8 @@
     flex: 1;
     min-width: 200px;
     padding: $tlp-half-spacing;
-    border: 1px solid $tlp-ui-border-normal;
-    border-bottom-width: 3px;
+    border-right: 1px solid $tlp-ui-border-normal;
+    border-bottom: 3px solid $tlp-ui-border-normal;
     vertical-align: top;
 
     &:first-child {
