@@ -1011,6 +1011,17 @@ class ProjectResource extends AuthenticatedResource
      * </pre>
      *
      * <br>
+     * Remove example (only available for project using explicit backlog management):
+     * <pre>
+     * "Remove": [
+     *   {
+     *     "id": 34
+     *   },
+     *   ...
+     * ]
+     * </pre>
+     *
+     * <br>
      * Will remove element id 34 from milestone 56 backlog
      *
      * @url    PATCH {id}/backlog
@@ -1019,12 +1030,13 @@ class ProjectResource extends AuthenticatedResource
      * @param int                                     $id    Id of the project
      * @param \Tuleap\REST\v1\OrderRepresentationBase $order Order of the children {@from body}
      * @param array                                   $add   Add (move) item to the backlog {@from body}
+     * @param array                                   $remove   Remove item to the backlog {@from body}
      *
      * @throws RestException 500
      * @throws RestException 409
      * @throws RestException 400
      */
-    public function patchBacklog($id, ?OrderRepresentationBase $order = null, ?array $add = null)
+    public function patchBacklog($id, ?OrderRepresentationBase $order = null, ?array $add = null, ?array $remove = null)
     {
         $this->checkAccess();
 
@@ -1042,6 +1054,7 @@ class ProjectResource extends AuthenticatedResource
                 'project' => $project,
                 'order'   => $order,
                 'add'     => $add,
+                'remove'  => $remove,
                 'result'  => &$result,
             ]
         );

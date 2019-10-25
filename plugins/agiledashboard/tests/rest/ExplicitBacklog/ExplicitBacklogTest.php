@@ -83,6 +83,17 @@ class ExplicitBacklogTest extends TestBase
         $this->assertReleaseIsEmpty();
     }
 
+    /**
+     * @depends testTopBacklogInExplicitBacklogContextContainsTheBacklogItemsMovedFromTheRelease
+     */
+    public function testTopBacklogInExplicitBacklogIsEmptyAfterRemovingTheStory(): void
+    {
+        $this->removeStoryFromTopBacklog();
+
+        $this->assertTopBacklogIsEmpty();
+        $this->assertReleaseIsEmpty();
+    }
+
     private function moveStoryToRelease()
     {
         $artifact_id_to_add  = $this->getFirstStoryArtifactId();
@@ -113,6 +124,28 @@ class ExplicitBacklogTest extends TestBase
                 [
                     'id'          => $artifact_id_to_add,
                     'remove_from' => $release_artifact_id
+                ],
+            ]
+        ]);
+
+        $response_patch = $this->getResponse(
+            $this->client->patch(
+                'projects/'. urlencode((string) $this->explicit_backlog_project_id). '/backlog',
+                null,
+                $patch_body
+            )
+        );
+
+        $this->assertEquals(200, $response_patch->getStatusCode());
+    }
+
+    private function removeStoryFromTopBacklog()
+    {
+        $artifact_id_to_add  = $this->getFirstStoryArtifactId();
+        $patch_body          = json_encode([
+            'remove' => [
+                [
+                    'id' => $artifact_id_to_add
                 ],
             ]
         ]);

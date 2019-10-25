@@ -59,9 +59,9 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
         $this->getDB()->run($sql, $artifact_id);
     }
 
-    public function removeItemsFromExplicitBacklogOfProject(int $project_id, array $to_add): void
+    public function removeItemsFromExplicitBacklogOfProject(int $project_id, array $to_remove_ids): void
     {
-        $artifact_ids_in_condition = EasyStatement::open()->in('?*', $to_add);
+        $artifact_ids_in_condition = EasyStatement::open()->in('?*', $to_remove_ids);
 
         $sql = "DELETE FROM plugin_agiledashboard_planning_artifacts_explicit_backlog
                 WHERE project_id = ?
@@ -108,5 +108,17 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
                 WHERE $where_condition";
 
         $this->getDB()->safeQuery($sql, array_merge($where_condition->values(), [$project_id]));
+    }
+
+    public function isArtifactInTopBacklogOfProject(int $artifact_id, int $project_id): bool
+    {
+        $sql = "SELECT NULL
+                FROM plugin_agiledashboard_planning_artifacts_explicit_backlog
+                WHERE artifact_id = ?
+                    AND project_id = ?";
+
+        $rows = $this->getDB()->run($sql, $artifact_id, $project_id);
+
+        return count($rows) > 0;
     }
 }

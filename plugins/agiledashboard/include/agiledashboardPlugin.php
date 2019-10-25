@@ -1126,7 +1126,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $user,
             $params['project'],
             $params['order'],
-            $params['add']
+            $params['add'],
+            $params['remove'],
         );
     }
 

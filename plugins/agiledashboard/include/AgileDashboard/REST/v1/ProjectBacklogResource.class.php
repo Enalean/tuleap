@@ -50,6 +50,9 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementAdder;
+use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementRemover;
+use Tuleap\AgileDashboard\REST\v1\Milestone\ProvidedRemoveIdIsNotInExplicitBacklogException;
+use Tuleap\AgileDashboard\REST\v1\Milestone\RemoveNotAvailableInClassicBacklogModeException;
 use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
@@ -262,8 +265,13 @@ class ProjectBacklogResource
      * @throws RestException
      * @throws \Throwable
      */
-    public function patch(PFUser $user, Project $project, ?OrderRepresentationBase $order = null, ?array $add = null)
-    {
+    public function patch(
+        PFUser $user,
+        Project $project,
+        ?OrderRepresentationBase $order = null,
+        ?array $add = null,
+        ?array $remove = null
+    ) {
         $this->checkIfUserCanChangePrioritiesInMilestone($user, $project);
         if ($add) {
             $adder = new MilestoneElementAdder(
@@ -283,6 +291,20 @@ class ProjectBacklogResource
 
             $orderer = ArtifactsRankOrderer::build();
             $orderer->reorder($order, self::TOP_BACKLOG_IDENTIFIER, $project);
+        }
+
+        if ($remove) {
+            try {
+                $adder = new MilestoneElementRemover(
+                    new ExplicitBacklogDao(),
+                    new ArtifactsInExplicitBacklogDao()
+                );
+                $adder->removeElementsFromBacklog($project, $remove);
+            } catch (RemoveNotAvailableInClassicBacklogModeException $exception) {
+                throw new RestException(400, $exception->getMessage());
+            } catch (ProvidedRemoveIdIsNotInExplicitBacklogException $exception) {
+                throw new RestException(400, $exception->getMessage());
+            }
         }
     }
 
