@@ -2,8 +2,7 @@
   "name": "tuleap/plugin-create-test-env",
   "autoload": {
     "psr-4": {
-      "Tuleap\\CreateTestEnv\\": "include/CreateTestEnv/",
-      "Tuleap\\CallMeBack\\": "include/CallMeBack/"
+      "Tuleap\\CreateTestEnv\\": "include/CreateTestEnv/"
     }
   }
 }

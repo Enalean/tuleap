@@ -22,18 +22,12 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Tuleap\CreateTestEnv\ActivityLogger\ActivityLoggerDao;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
-use Tuleap\CallMeBack\CallMeBackEmailDao;
-use Tuleap\CallMeBack\CallMeBackMessageDao;
-use Tuleap\CallMeBack\CallMeBackAdminController;
-use Tuleap\CallMeBack\CallMeBackAdminSaveController;
 use Tuleap\CreateTestEnv\NotificationBotDao;
 use Tuleap\CreateTestEnv\NotificationBotIndexController;
 use Tuleap\CreateTestEnv\NotificationBotSaveController;
 use Tuleap\CreateTestEnv\REST\ResourcesInjector as CreateTestEnvResourcesInjector;
-use Tuleap\CallMeBack\REST\ResourcesInjector as CallMeBackResourcesInjector;
 use Tuleap\CreateTestEnv\Plugin\PluginInfo;
 use Tuleap\Project\ServiceAccessEvent;
 use Tuleap\Request\CollectRoutesEvent;
@@ -73,8 +67,6 @@ class create_test_envPlugin extends Plugin
 
     public function getHooksAndCallbacks()
     {
-        $this->addHook('cssfile');
-        $this->addHook('javascript_file');
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
@@ -89,9 +81,6 @@ class create_test_envPlugin extends Plugin
 
         $this->addHook('codendi_daily_start');
 
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
-
         return parent::getHooksAndCallbacks();
     }
 
@@ -99,9 +88,6 @@ class create_test_envPlugin extends Plugin
     {
         $create_test_env_injector = new CreateTestEnvResourcesInjector();
         $create_test_env_injector->populate($params['restler']);
-
-        $call_me_back_injector = new CallMeBackResourcesInjector();
-        $call_me_back_injector->populate($params['restler']);
     }
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
@@ -132,31 +118,11 @@ class create_test_envPlugin extends Plugin
         );
     }
 
-    public function routeGetCallMeBack(): CallMeBackAdminController
-    {
-        return new CallMeBackAdminController(
-            new CallMeBackEmailDao(),
-            new CallMeBackMessageDao(),
-            new AdminPageRenderer()
-        );
-    }
-
-    public function routePostCallMeBack(): CallMeBackAdminSaveController
-    {
-        return new CallMeBackAdminSaveController(
-            new CallMeBackEmailDao(),
-            new CallMeBackMessageDao()
-        );
-    }
-
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
             $r->get('/notification-bot', $this->getRouteHandler('routeGetNotificationBot'));
             $r->post('/notification-bot', $this->getRouteHandler('routePostNotificationBot'));
-
-            $r->get('/call-me-back', $this->getRouteHandler('routeGetCallMeBack'));
-            $r->post('/call-me-back', $this->getRouteHandler('routePostCallMeBack'));
         });
     }
 
@@ -293,71 +259,5 @@ class create_test_envPlugin extends Plugin
     {
         $str_value = $this->getPluginInfo()->getPropertyValueForName('create_test_env_daily_snapshot_email');
         return array_filter(array_map('trim', explode(',', $str_value)));
-    }
-
-    public function cssfile($params)
-    {
-        if ($this->shouldCallMeBackButtonBeDisplayed()) {
-            $assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/create_test_env/themes',
-                '/assets/create_test_env/themes'
-            );
-            $css_file_url = $assets->getFileURL('flamingparrot-style.css');
-            echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
-        }
-    }
-
-    // @codingStandardsIgnoreLine
-    public function javascript_file()
-    {
-        if ($this->shouldCallMeBackButtonBeDisplayed()) {
-            $assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/create_test_env/scripts',
-                '/assets/create_test_env/scripts'
-            );
-
-            echo $assets->getHTMLSnippet('call-me-back-flaming-parrot.js') . PHP_EOL;
-        }
-    }
-
-
-    public function burningParrotGetStylesheets(array $params)
-    {
-        $assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/create_test_env/themes',
-            '/assets/create_test_env/themes'
-        );
-
-        $variant = $params['variant'];
-        $params['stylesheets'][] = $assets->getFileURL('burningparrot-style-' . $variant->getName() . '.css');
-    }
-
-    public function burningParrotGetJavascriptFiles(array $params)
-    {
-        $assets = new IncludeAssets(
-            __DIR__ . '/../../../src/www/assets/create_test_env/scripts',
-            '/assets/create_test_env/scripts'
-        );
-
-        if ($this->shouldCallMeBackButtonBeDisplayed()) {
-            $params['javascript_files'][] = $assets->getFileURL('call-me-back-burning-parrot.js');
-        }
-
-        if (strpos($_SERVER['REQUEST_URI'], '/plugins/create_test_env/call-me-back') === 0) {
-            $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
-            $include_assets = new IncludeAssets($assets_path, '/assets');
-
-            $params['javascript_files'][] = $include_assets->getFileURL('ckeditor.js');
-            $params['javascript_files'][] = '/scripts/tuleap/tuleap-ckeditor-toolbar.js';
-            $params['javascript_files'][] = $assets->getFileURL('call-me-back-admin.js');
-        }
-    }
-
-    private function shouldCallMeBackButtonBeDisplayed()
-    {
-        $current_user = UserManager::instance()->getCurrentUser();
-
-        return $current_user->isLoggedIn()
-            && $current_user->getPreference('plugin_call_me_back_asked_to_be_called_back') !== '1';
     }
 }

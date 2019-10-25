@@ -2,9 +2,3 @@ Create test environment
 =======================
 
 Exposes a REST end point to create test environment for users
-
-
-Call me back
-============
-
-Show a button with a form on every page allowing the user to ask to be called back

@@ -1,39 +1,32 @@
-<div class="tlp-framed-vertically">
-    <h1 class="tlp-framed-horizontally">{{# dgettext }}tuleap-create_test_env | Create test environment{{/ dgettext }}</h1>
+<div class="tlp-framed">
+    <h1>{{# dgettext }}tuleap-create_test_env | Create test environment{{/ dgettext }}</h1>
 
-    <nav class="tlp-tabs">
-        <a class="tlp-tab tlp-tab-active" href="/plugins/create_test_env/notification-bot">{{# dgettext }}tuleap-create_test_env | Notification bot{{/ dgettext }}</a>
-        <a class="tlp-tab " href="/plugins/create_test_env/call-me-back">{{# dgettext }}tuleap-create_test_env | Call me back{{/ dgettext }}</a>
-    </nav>
-
-    <div class="tlp-framed-horizontally">
-        <section class="tlp-pane">
-            <div class="tlp-pane-container">
-                <div class="tlp-pane-header">
-                    <h1 class="tlp-pane-title">{{# dgettext }}tuleap-create_test_env | Mattermost{{/ dgettext }}</h1>
-                </div>
-                <section class="tlp-pane-section">
-                    <p>{{# dgettext }}tuleap-create_test_env | Configure a mattermost bot that will receive notification about people tests.{{/ dgettext }}</p>
-
-                    <form class="tlp-form-element" method="post">
-                        <div class="tlp-form-element">
-                            <label class="tlp-label" for="bot-list">{{# dgettext }}tuleap-create_test_env | Bot list{{/ dgettext }}</label>
-                            <select class="tlp-select tlp-select-adjusted" id="bot-list" name="bot">
-                                <option value=""></option>
-                                {{# bot_list }}
-                                    <option value="{{ id }}" {{# is_selected}}selected{{/ is_selected }}>{{ name }}</option>
-                                {{/ bot_list }}
-                            </select>
-                        </div>
-
-                        <div class="tlp-pane-section-submit">
-                            <button type="submit" class="tlp-button-primary">
-                                {{# dgettext }}tuleap-create_test_env | Save{{/ dgettext }}
-                            </button>
-                        </div>
-                    </form>
-                </section>
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{# dgettext }}tuleap-create_test_env | Mattermost{{/ dgettext }}</h1>
             </div>
-        </section>
-    </div>
+            <section class="tlp-pane-section">
+                <p>{{# dgettext }}tuleap-create_test_env | Configure a mattermost bot that will receive notification about people tests.{{/ dgettext }}</p>
+
+                <form class="tlp-form-element" method="post">
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="bot-list">{{# dgettext }}tuleap-create_test_env | Bot list{{/ dgettext }}</label>
+                        <select class="tlp-select tlp-select-adjusted" id="bot-list" name="bot">
+                            <option value=""></option>
+                            {{# bot_list }}
+                                <option value="{{ id }}" {{# is_selected}}selected{{/ is_selected }}>{{ name }}</option>
+                            {{/ bot_list }}
+                        </select>
+                    </div>
+
+                    <div class="tlp-pane-section-submit">
+                        <button type="submit" class="tlp-button-primary">
+                            {{# dgettext }}tuleap-create_test_env | Save{{/ dgettext }}
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </section>
 </div>

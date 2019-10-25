@@ -556,8 +556,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/bugzilla_reference/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/captcha/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/cardwall/themes/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/create_test_env/scripts/
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/create_test_env/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/docman/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/forumml/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/frs/themes/
@@ -1353,7 +1351,6 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/create_test_env
 %attr(00400,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_create_test_env
-%{APP_DIR}/src/www/assets/create_test_env
 
 %files api-explorer
 %defattr(-,%{APP_USER},%{APP_USER},-)
