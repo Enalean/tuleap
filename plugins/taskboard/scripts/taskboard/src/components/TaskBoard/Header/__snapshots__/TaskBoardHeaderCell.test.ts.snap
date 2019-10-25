@@ -4,6 +4,14 @@ exports[`TaskBoardHeaderCell displays a cell with color 1`] = `
 <div
   class="taskboard-header taskboard-header-fiesta-red"
 >
+  <expand-button-stub
+    column="[object Object]"
+  />
+   
+  <collapse-button-stub
+    column="[object Object]"
+  />
+   
   <span
     class="taskboard-header-label"
   >
@@ -18,6 +26,14 @@ exports[`TaskBoardHeaderCell displays a cell with default color 1`] = `
 <div
   class="taskboard-header"
 >
+  <expand-button-stub
+    column="[object Object]"
+  />
+   
+  <collapse-button-stub
+    column="[object Object]"
+  />
+   
   <span
     class="taskboard-header-label"
   >
@@ -32,6 +48,14 @@ exports[`TaskBoardHeaderCell displays a cell with legacy color to admin users 1`
 <div
   class="taskboard-header"
 >
+  <expand-button-stub
+    column="[object Object]"
+  />
+   
+  <collapse-button-stub
+    column="[object Object]"
+  />
+   
   <span
     class="taskboard-header-label"
   >
@@ -48,6 +72,14 @@ exports[`TaskBoardHeaderCell displays a cell with legacy color to regular users 
 <div
   class="taskboard-header"
 >
+  <expand-button-stub
+    column="[object Object]"
+  />
+   
+  <collapse-button-stub
+    column="[object Object]"
+  />
+   
   <span
     class="taskboard-header-label"
   >
@@ -62,11 +94,37 @@ exports[`TaskBoardHeaderCell displays a cell without color 1`] = `
 <div
   class="taskboard-header"
 >
+  <expand-button-stub
+    column="[object Object]"
+  />
+   
+  <collapse-button-stub
+    column="[object Object]"
+  />
+   
   <span
     class="taskboard-header-label"
   >
     To do
   </span>
+   
+  <!---->
+</div>
+`;
+
+exports[`TaskBoardHeaderCell does not display wrong color popover nor label if column is collapsed 1`] = `
+<div
+  class="taskboard-header taskboard-header-collapsed"
+>
+  <expand-button-stub
+    column="[object Object]"
+  />
+   
+  <collapse-button-stub
+    column="[object Object]"
+  />
+   
+  <!---->
    
   <!---->
 </div>

@@ -19,8 +19,10 @@
   -->
 <template>
     <div class="taskboard-header" v-bind:class="classes">
-        <span class="taskboard-header-label">{{ column.label }}</span>
-        <wrong-color-popover v-if="should_popover_be_displayed" v-bind:color="this.column.color"/>
+        <expand-button v-bind:column="column"/>
+        <collapse-button v-bind:column="column"/>
+        <span class="taskboard-header-label" v-if="!column.is_collapsed">{{ column.label }}</span>
+        <wrong-color-popover v-if="should_popover_be_displayed" v-bind:color="column.color"/>
     </div>
 </template>
 <script lang="ts">
@@ -29,13 +31,15 @@ import { Component, Prop } from "vue-property-decorator";
 import { ColumnDefinition } from "../../../type";
 import WrongColorPopover from "./WrongColorPopover.vue";
 import { namespace } from "vuex-class";
+import CollapseButton from "./CollapseButton.vue";
+import ExpandButton from "./ExpandButton.vue";
 
 const user = namespace("user");
 
 const DEFAULT_COLOR = "#F8F8F8";
 
 @Component({
-    components: { WrongColorPopover }
+    components: { ExpandButton, CollapseButton, WrongColorPopover }
 })
 export default class TaskBoardHeaderCell extends Vue {
     @Prop({ required: true })
@@ -45,11 +49,17 @@ export default class TaskBoardHeaderCell extends Vue {
     readonly user_is_admin!: boolean;
 
     get classes(): string {
-        if (this.is_rgb_color) {
-            return "";
+        const classes = [];
+
+        if (this.column.is_collapsed) {
+            classes.push("taskboard-header-collapsed");
         }
 
-        return this.column.color ? "taskboard-header-" + this.column.color : "";
+        if (!this.is_rgb_color && this.column.color) {
+            classes.push("taskboard-header-" + this.column.color);
+        }
+
+        return classes.join(" ");
     }
 
     get is_rgb_color(): boolean {
@@ -61,7 +71,12 @@ export default class TaskBoardHeaderCell extends Vue {
     }
 
     get should_popover_be_displayed(): boolean {
-        return this.user_is_admin && this.is_rgb_color && !this.is_default_color;
+        return (
+            this.user_is_admin &&
+            this.is_rgb_color &&
+            !this.is_default_color &&
+            !this.column.is_collapsed
+        );
     }
 }
 </script>

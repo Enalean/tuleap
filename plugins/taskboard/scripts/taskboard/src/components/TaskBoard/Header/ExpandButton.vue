@@ -15,27 +15,42 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
   -->
 
 <template>
-    <div class="taskboard-cell-solo-card">
-        <parent-card v-bind:card="card"/>
-        <parent-card-remaining-effort v-bind:card="card"/>
-    </div>
+    <span class="tlp-tooltip tlp-tooltip-bottom taskboard-header-expand-column"
+          v-if="column.is_collapsed"
+          v-bind:data-tlp-tooltip="title"
+    >
+        <i class="fa fa-plus-square"
+           role="button"
+           tabindex="0"
+           v-bind:aria-label="title"
+           v-on:click="expandColumn(column)"
+           data-test="button"
+        ></i>
+    </span>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Card } from "../../../../type";
-import ParentCard from "./Card/ParentCard.vue";
-import ParentCardRemainingEffort from "./Card/ParentCardRemainingEffort.vue";
+import { ColumnDefinition } from "../../../type";
+import { Action } from "vuex-class";
 
-@Component({
-    components: { ParentCard, ParentCardRemainingEffort }
-})
-export default class SoloCardCell extends Vue {
+@Component
+export default class ExpandButton extends Vue {
     @Prop({ required: true })
-    readonly card!: Card;
+    readonly column!: ColumnDefinition;
+
+    @Action
+    readonly expandColumn!: (column: ColumnDefinition) => void;
+
+    get title(): string {
+        return this.$gettextInterpolate(this.$gettext('Expand "%{ label }" column'), {
+            label: this.column.label
+        });
+    }
 }
 </script>

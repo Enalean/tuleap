@@ -18,11 +18,17 @@ msgstr "Fermer"
 msgid "Collapse"
 msgstr "Réduire"
 
+msgid "Collapse \"%{ label }\" column"
+msgstr "Réduire la colonne \"%{ label }\""
+
 msgid "Define columns"
 msgstr "Définir les colonnes"
 
 msgid "Expand"
 msgstr "Étendre"
+
+msgid "Expand \"%{ label }\" column"
+msgstr "Agrandir la colonne \"%{ label }\""
 
 msgid "Hello,"
 msgstr "Bonjour,"

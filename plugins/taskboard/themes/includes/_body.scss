@@ -47,8 +47,6 @@
 
 }
 
-
-
 .taskboard-cell {
     position: relative;
     flex: 1;
@@ -78,6 +76,14 @@
         border-left: unset;
         background: mix($tlp-theme-background-color, $tlp-ui-white, 60%);
     }
+}
+
+.taskboard-cell-collapsed {
+    flex: 0 0 auto;
+    width: 50px;
+    min-width: unset;
+    overflow: hidden;
+    background: $tlp-ui-white;
 }
 
 .taskboard-swimlane-toggle {

@@ -46,12 +46,34 @@
         border-right: 0;
     }
 
+    &:hover  > .taskboard-header-collapse-column {
+        opacity: 1;
+    }
+
     @each $color-name, $colors in $tlp-swatch-color-map {
         &.taskboard-header-#{$color-name} {
             box-shadow: inset 0 2px 0 0 map-get($colors, 'primary'), inset 0 -1px 0 $tlp-ui-border-normal;
             color: map-get($colors, 'text');
         }
     }
+}
+
+.taskboard-header-collapsed {
+    flex: 0 0 auto;
+    width: 50px;
+    min-width: unset;
+}
+
+.taskboard-header-expand-column,
+.taskboard-header-collapse-column {
+    font-size: 14px;
+    text-transform: none;
+    cursor: pointer;
+}
+
+.taskboard-header-collapse-column {
+    transition: opacity ease-in-out 100ms;
+    opacity: 0;
 }
 
 .taskboard-header-label {

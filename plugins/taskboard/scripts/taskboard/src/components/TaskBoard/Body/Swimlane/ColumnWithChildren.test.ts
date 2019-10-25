@@ -24,17 +24,19 @@ import ChildCard from "./Card/ChildCard.vue";
 import CardSkeleton from "./Skeleton/CardSkeleton.vue";
 import ColumnWithChildren from "./ColumnWithChildren.vue";
 
-function createWrapper(swimlane: Swimlane): Wrapper<ColumnWithChildren> {
+function createWrapper(swimlane: Swimlane, is_collapsed: boolean): Wrapper<ColumnWithChildren> {
     const todo: ColumnDefinition = {
         id: 2,
         label: "To do",
-        mappings: [{ tracker_id: 7, accepts: [{ id: 49 }] }]
+        mappings: [{ tracker_id: 7, accepts: [{ id: 49 }] }],
+        is_collapsed
     } as ColumnDefinition;
 
     const done: ColumnDefinition = {
         id: 3,
         label: "Done",
-        mappings: [{ tracker_id: 7, accepts: [{ id: 50 }] }]
+        mappings: [{ tracker_id: 7, accepts: [{ id: 50 }] }],
+        is_collapsed
     } as ColumnDefinition;
 
     return shallowMount(ColumnWithChildren, {
@@ -58,7 +60,7 @@ describe("ColumnWithChildren", () => {
             children_cards: [{ id: 104, tracker_id: 7, mapped_list_value: { id: 50 } } as Card],
             is_loading_children_cards: true
         } as Swimlane;
-        const wrapper = createWrapper(swimlane);
+        const wrapper = createWrapper(swimlane, false);
 
         expect(wrapper.findAll(ChildCard).length).toBe(0);
         expect(wrapper.findAll(CardSkeleton).length).toBe(4);
@@ -75,7 +77,7 @@ describe("ColumnWithChildren", () => {
             ],
             is_loading_children_cards: true
         } as Swimlane;
-        const wrapper = createWrapper(swimlane);
+        const wrapper = createWrapper(swimlane, false);
 
         expect(wrapper.findAll(ChildCard).length).toBe(2);
         expect(wrapper.findAll(CardSkeleton).length).toBe(1);
@@ -92,9 +94,18 @@ describe("ColumnWithChildren", () => {
             ],
             is_loading_children_cards: false
         } as Swimlane;
-        const wrapper = createWrapper(swimlane);
+        const wrapper = createWrapper(swimlane, false);
 
         expect(wrapper.findAll(ChildCard).length).toBe(2);
+        expect(wrapper.findAll(CardSkeleton).length).toBe(0);
+    });
+
+    it(`When the column is collapsed,
+        Then the the cell is marked as collapsed`, () => {
+        const wrapper = createWrapper({} as Swimlane, true);
+
+        expect(wrapper.classes("taskboard-cell-collapsed")).toBe(true);
+        expect(wrapper.findAll(ChildCard).length).toBe(0);
         expect(wrapper.findAll(CardSkeleton).length).toBe(0);
     });
 });

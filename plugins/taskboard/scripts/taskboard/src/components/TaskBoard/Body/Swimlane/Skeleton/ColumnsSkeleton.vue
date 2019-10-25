@@ -19,18 +19,28 @@
   -->
 
 <template>
-    <div class="taskboard-cell">
-        <card-skeleton v-for="i in nb_skeletons" v-bind:key="i"/>
+    <div class="taskboard-cell" v-bind:class="classes">
+        <template v-if="!column.is_collapsed">
+            <card-skeleton v-for="i in nb_skeletons" v-bind:key="i"/>
+        </template>
     </div>
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from "vue-property-decorator";
+import { Component, Mixins, Prop } from "vue-property-decorator";
 import SkeletonMixin from "./skeleton-mixin";
 import CardSkeleton from "./CardSkeleton.vue";
+import { ColumnDefinition } from "../../../../../type";
 
 @Component({
     components: { CardSkeleton }
 })
-export default class ColumnsSkeleton extends Mixins(SkeletonMixin) {}
+export default class ColumnsSkeleton extends Mixins(SkeletonMixin) {
+    @Prop({ required: true })
+    readonly column!: ColumnDefinition;
+
+    get classes(): string {
+        return this.column.is_collapsed ? "taskboard-cell-collapsed" : "";
+    }
+}
 </script>
