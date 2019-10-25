@@ -346,8 +346,7 @@ class AdminController extends BaseController
                     TrackerXmlImport::build(new XMLImportHelper(UserManager::instance())),
                     $this->kanban_factory,
                     new TrackerReportUpdater(new TrackerReportDao()),
-                    Tracker_ReportFactory::instance(),
-                    TrackerXmlImport::build(new XMLImportHelper($user_manager))
+                    Tracker_ReportFactory::instance()
                 )
             );
         } elseif ($this->request->exist("burnup-count-mode")) {

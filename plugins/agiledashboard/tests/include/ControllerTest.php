@@ -21,8 +21,10 @@
 use Tuleap\AgileDashboard\AdminController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 
 require_once(dirname(__FILE__).'/../../../tracker/tests/builders/all.php');
@@ -57,20 +59,19 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase
             mock('Planning_MilestoneFactory'),
             mock('ProjectManager'),
             mock('AgileDashboard_XMLFullStructureExporter'),
-            '/path/to/theme',
             '/path/to/plugin',
             mock('AgileDashboard_KanbanManager'),
             mock('AgileDashboard_ConfigurationManager'),
             mock('AgileDashboard_KanbanFactory'),
             mock('PlanningPermissionsManager'),
-            mock('AgileDashboard_HierarchyChecker'),
             $this->mono_milestone_checker,
             $this->scrum_planning_filter,
-            mock('TrackerFactory'),
             mock('Tracker_FormElementFactory'),
             $service_crumb_builder,
             $admin_crumb_builder,
-            Mockery::mock(TimeframeChecker::class)
+            Mockery::mock(TimeframeChecker::class),
+            Mockery::mock(DBTransactionExecutor::class),
+            Mockery::mock(ArtifactsInExplicitBacklogDao::class)
         );
 
         $configuration_manager = mock('AgileDashboard_ConfigurationManager');
@@ -198,7 +199,6 @@ class Planning_ControllerNewTest extends TuleapTestCase
         $this->request                = aRequest()->withProjectManager($project_manager)->with('group_id', "$this->group_id")->build();
         $this->planning_factory       = mock('PlanningFactory');
         $this->tracker_factory        = mock('TrackerFactory');
-        $hierarchy_checker            = mock('AgileDashboard_HierarchyChecker');
         $scrum_mono_milestone_checker = mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker');
 
         $kanban_factory = stub('AgileDashboard_KanbanFactory')->getKanbanTrackerIds()->returns(array());
@@ -209,20 +209,19 @@ class Planning_ControllerNewTest extends TuleapTestCase
             mock('Planning_MilestoneFactory'),
             mock('ProjectManager'),
             mock('AgileDashboard_XMLFullStructureExporter'),
-            '/path/to/theme',
             '/path/to/plugin',
             mock('AgileDashboard_KanbanManager'),
             mock('AgileDashboard_ConfigurationManager'),
             $kanban_factory,
             mock('PlanningPermissionsManager'),
-            $hierarchy_checker,
             $scrum_mono_milestone_checker,
             new ScrumPlanningFilter($scrum_mono_milestone_checker, $this->planning_factory),
-            mock('TrackerFactory'),
             mock('Tracker_FormElementFactory'),
             mock(AgileDashboardCrumbBuilder::class),
             mock(AdministrationCrumbBuilder::class),
-            Mockery::mock(TimeframeChecker::class)
+            Mockery::mock(TimeframeChecker::class),
+            Mockery::mock(DBTransactionExecutor::class),
+            Mockery::mock(ArtifactsInExplicitBacklogDao::class)
         );
 
         stub($GLOBALS['Language'])->getText()->returns('');
@@ -382,20 +381,19 @@ class Planning_Controller_EditTest extends Planning_Controller_BaseTest
                 mock('Planning_MilestoneFactory'),
                 mock('ProjectManager'),
                 mock('AgileDashboard_XMLFullStructureExporter'),
-                '/path/to/theme',
                 '/path/to/plugin',
                 mock('AgileDashboard_KanbanManager'),
                 mock('AgileDashboard_ConfigurationManager'),
                 $kanban_factory,
                 mock('PlanningPermissionsManager'),
-                mock('AgileDashboard_HierarchyChecker'),
                 mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
                 $planning_filter,
-                mock('TrackerFactory'),
                 mock('Tracker_FormElementFactory'),
                 mock(AgileDashboardCrumbBuilder::class),
                 mock(AdministrationCrumbBuilder::class),
-                Mockery::mock(TimeframeChecker::class)
+                Mockery::mock(TimeframeChecker::class),
+                Mockery::mock(DBTransactionExecutor::class),
+                Mockery::mock(ArtifactsInExplicitBacklogDao::class)
             )
         );
 
@@ -477,27 +475,5 @@ class Planning_Controller_InvalidUpdateTest extends Planning_Controller_Update_B
     {
         $this->expectFeedback('error', '*');
         $this->planning_controller->update();
-    }
-}
-
-class Planning_ControllerDeleteTest extends Planning_Controller_BaseTest
-{
-
-    protected $planning_id = '12';
-
-    public function itDeletesThePlanningAndRedirectsToTheIndex()
-    {
-        $this->userIsAdmin();
-        $this->request->set('planning_id', $this->planning_id);
-
-        stub($this->planning_factory)->deletePlanning($this->planning_id)->once();
-        $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=admin');
-        $this->planning_controller->delete();
-    }
-
-    public function itDoesntDeleteAnythingIfTheUserIsNotAdmin()
-    {
-        $this->assertThatPlanningFactoryActionIsNotCalledWhenUserIsNotAdmin('deletePlanning');
-        $this->planning_controller->delete();
     }
 }

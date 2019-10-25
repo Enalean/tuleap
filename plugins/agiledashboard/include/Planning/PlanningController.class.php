@@ -21,6 +21,7 @@
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
@@ -33,6 +34,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardSaver;
 use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\UploadedLinksDao;
@@ -69,9 +71,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     /** @var Planning_MilestoneFactory */
     private $milestone_factory;
 
-    /** @var String */
-    private $plugin_theme_path;
-
     /** @var ProjectManager */
     private $project_manager;
 
@@ -93,9 +92,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     /** @var PlanningPermissionsManager */
     private $planning_permissions_manager;
 
-    /** @var AgileDashboard_HierarchyChecker */
-    private $hierarchy_checker;
-
     /**
      * @var ScrumForMonoMilestoneChecker
      */
@@ -105,11 +101,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      * @var ScrumPlanningFilter
      */
     private $scrum_planning_filter;
-
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
 
     /**
      * @var Tracker_FormElementFactory
@@ -131,6 +122,14 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      * @var TimeframeChecker
      */
     private $timeframe_checker;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
+    /**
+     * @var ArtifactsInExplicitBacklogDao
+     */
+    private $explicit_backlog_dao;
 
     public function __construct(
         Codendi_Request $request,
@@ -138,20 +137,19 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         Planning_MilestoneFactory $milestone_factory,
         ProjectManager $project_manager,
         AgileDashboard_XMLFullStructureExporter $xml_exporter,
-        $plugin_theme_path,
         $plugin_path,
         AgileDashboard_KanbanManager $kanban_manager,
         AgileDashboard_ConfigurationManager $config_manager,
         AgileDashboard_KanbanFactory $kanban_factory,
         PlanningPermissionsManager $planning_permissions_manager,
-        AgileDashboard_HierarchyChecker $hierarchy_checker,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ScrumPlanningFilter $scrum_planning_filter,
-        TrackerFactory $tracker_factory,
         Tracker_FormElementFactory $tracker_form_element_factory,
         AgileDashboardCrumbBuilder $service_crumb_builder,
         AdministrationCrumbBuilder $admin_crumb_builder,
-        TimeframeChecker $timeframe_checker
+        TimeframeChecker $timeframe_checker,
+        DBTransactionExecutor $transaction_executor,
+        ArtifactsInExplicitBacklogDao $explicit_backlog_dao
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -161,20 +159,19 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $this->milestone_factory            = $milestone_factory;
         $this->project_manager              = $project_manager;
         $this->xml_exporter                 = $xml_exporter;
-        $this->plugin_theme_path            = $plugin_theme_path;
         $this->plugin_path                  = $plugin_path;
         $this->kanban_manager               = $kanban_manager;
         $this->config_manager               = $config_manager;
         $this->kanban_factory               = $kanban_factory;
         $this->planning_permissions_manager = $planning_permissions_manager;
-        $this->hierarchy_checker            = $hierarchy_checker;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
         $this->scrum_planning_filter        = $scrum_planning_filter;
-        $this->tracker_factory              = $tracker_factory;
         $this->tracker_form_element_factory = $tracker_form_element_factory;
         $this->service_crumb_builder        = $service_crumb_builder;
         $this->admin_crumb_builder          = $admin_crumb_builder;
         $this->timeframe_checker            = $timeframe_checker;
+        $this->transaction_executor = $transaction_executor;
+        $this->explicit_backlog_dao = $explicit_backlog_dao;
     }
 
     public function index()
@@ -758,11 +755,29 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         );
     }
 
+    /**
+     * @throws Exception
+     * @throws Throwable
+     */
     public function delete()
     {
         $this->checkUserIsAdmin();
-        $this->planning_factory->deletePlanning($this->request->get('planning_id'));
-        return $this->redirect(array('group_id' => $this->group_id, 'action' => 'admin'));
+
+        $planning_id = $this->request->get('planning_id');
+        $user    = $this->request->getCurrentUser();
+        $project = $this->request->getProject();
+
+        $this->transaction_executor->execute(
+            function () use ($user, $planning_id, $project) {
+                $root_planning = $this->planning_factory->getRootPlanning($user, $project->getID());
+                if ($root_planning && (int) $root_planning->getId() === (int) $planning_id) {
+                    $this->explicit_backlog_dao->removeExplicitBacklogOfPlanning((int) $planning_id);
+                }
+                $this->planning_factory->deletePlanning($planning_id);
+            }
+        );
+
+        return $this->redirect(['group_id' => $this->group_id, 'action' => 'admin']);
     }
 
     /**
