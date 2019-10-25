@@ -17,18 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Module } from "vuex";
-import { RootState } from "../type";
-import { FullscreenState } from "./type";
-import * as mutations from "./fullscreen-mutations";
-import * as getters from "./fullscreen-getters";
+import { UserState } from "./user/type";
+import { ColumnDefinition } from "../type";
+import { ErrorState } from "./error/type";
+import { FullscreenState } from "./fullscreen/type";
+import { SwimlaneState } from "./swimlane/type";
 
-const fullscreen_module_default: Module<FullscreenState, RootState> = {
-    namespaced: true,
-    state: {
-        is_taskboard_in_fullscreen_mode: false
-    },
-    mutations,
-    getters
-};
-export default fullscreen_module_default;
+interface State {
+    admin_url: string;
+    has_content: boolean;
+    columns: Array<ColumnDefinition>;
+    milestone_id: number;
+    milestone_title: string;
+    are_closed_items_displayed: boolean;
+}
+
+interface RootState extends State {
+    readonly error: ErrorState;
+    readonly fullscreen: FullscreenState;
+    readonly swimlane: SwimlaneState;
+    readonly user: UserState;
+}

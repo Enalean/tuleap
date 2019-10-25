@@ -72,7 +72,7 @@ describe("SwimlaneHeader", () => {
         const wrapper = await createWrapper(false);
 
         wrapper.find(".taskboard-swimlane-toggle").trigger("click");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
             "swimlane/collapseSwimlane",
             swimlane
         );

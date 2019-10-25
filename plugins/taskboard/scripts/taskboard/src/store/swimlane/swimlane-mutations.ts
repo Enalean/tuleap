@@ -67,9 +67,9 @@ export function endLoadingChildren(state: SwimlaneState, swimlane: Swimlane): vo
 }
 
 export function collapseSwimlane(state: SwimlaneState, swimlane: Swimlane): void {
-    swimlane.is_collapsed = true;
+    swimlane.card.is_collapsed = true;
 }
 
 export function expandSwimlane(state: SwimlaneState, swimlane: Swimlane): void {
-    swimlane.is_collapsed = false;
+    swimlane.card.is_collapsed = false;
 }

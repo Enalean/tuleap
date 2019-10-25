@@ -38,7 +38,6 @@ export interface Swimlane {
     card: Card;
     children_cards: Array<Card>;
     is_loading_children_cards: boolean;
-    is_collapsed: boolean;
 }
 
 export interface MappedListValue extends ListValue {
@@ -60,15 +59,7 @@ export interface Card {
     initial_effort: number | null;
     remaining_effort: number | null;
     is_open: boolean;
-}
-
-interface RootState {
-    admin_url: string;
-    has_content: boolean;
-    columns: Array<ColumnDefinition>;
-    milestone_id: number;
-    milestone_title: string;
-    are_closed_items_displayed: boolean;
+    is_collapsed: boolean;
 }
 
 interface User {

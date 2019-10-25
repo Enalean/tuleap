@@ -162,27 +162,27 @@ describe(`Swimlane state mutations`, () => {
 
     describe("collapseSwimlane", () => {
         it("collapses swimlane", () => {
-            const swimlane: Swimlane = { is_collapsed: false } as Swimlane;
+            const swimlane: Swimlane = { card: { is_collapsed: false } } as Swimlane;
 
             const state: SwimlaneState = {
                 swimlanes: [swimlane]
             } as SwimlaneState;
 
             mutations.collapseSwimlane(state, swimlane);
-            expect(state.swimlanes[0].is_collapsed).toBe(true);
+            expect(state.swimlanes[0].card.is_collapsed).toBe(true);
         });
     });
 
     describe("expandSwimlane", () => {
         it("expands swimlane", () => {
-            const swimlane: Swimlane = { is_collapsed: true } as Swimlane;
+            const swimlane: Swimlane = { card: { is_collapsed: true } } as Swimlane;
 
             const state: SwimlaneState = {
                 swimlanes: [swimlane]
             } as SwimlaneState;
 
             mutations.expandSwimlane(state, swimlane);
-            expect(state.swimlanes[0].is_collapsed).toBe(false);
+            expect(state.swimlanes[0].card.is_collapsed).toBe(false);
         });
     });
 });

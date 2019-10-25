@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { RootState } from "../../type";
+import { RootState } from "../type";
 import { FetchWrapperError } from "tlp";
 import { ActionContext } from "vuex";
 import { ErrorState } from "./type";

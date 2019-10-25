@@ -22,7 +22,7 @@
     <div class="taskboard-body">
         <template v-for="swimlane of swimlanes">
             <template v-if="swimlane.card.is_open || are_closed_items_displayed">
-                <collapsed-swimlane v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-if="swimlane.is_collapsed"/>
+                <collapsed-swimlane v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-if="swimlane.card.is_collapsed"/>
                 <card-with-children v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-else-if="swimlane.card.has_children"/>
                 <solo-card v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-else/>
             </template>

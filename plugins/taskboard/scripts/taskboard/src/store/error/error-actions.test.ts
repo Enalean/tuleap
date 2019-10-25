@@ -18,7 +18,7 @@
  */
 
 import { ActionContext } from "vuex";
-import { RootState } from "../../type";
+import { RootState } from "../type";
 import { FetchWrapperError } from "tlp";
 import * as actions from "./error-actions";
 import { ErrorState } from "./type";

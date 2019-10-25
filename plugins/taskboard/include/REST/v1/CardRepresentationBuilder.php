@@ -80,7 +80,8 @@ class CardRepresentationBuilder
             $assignees,
             $mapped_list_value,
             $initial_effort,
-            $remaining_effort
+            $remaining_effort,
+            $this->isCollapsed($user, $artifact, $milestone)
         );
 
         return $representation;
@@ -164,5 +165,12 @@ class CardRepresentationBuilder
             ),
             new RemainingEffortValueRetriever($form_element_factory)
         );
+    }
+
+    private function isCollapsed(PFUser $user, Tracker_Artifact $artifact, \Planning_ArtifactMilestone $milestone): bool
+    {
+        $preference_name = 'plugin_taskboard_collapse_' . $milestone->getArtifactId() . '_' . $artifact->getId();
+
+        return !empty($user->getPreference($preference_name));
     }
 }

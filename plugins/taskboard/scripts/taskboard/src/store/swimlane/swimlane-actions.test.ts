@@ -17,13 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, RootState, Swimlane } from "../../type";
+import { Card, Swimlane } from "../../type";
 import * as tlp from "tlp";
 import * as actions from "./swimlane-actions";
 import { RecursiveGetInit } from "tlp";
 import { ActionContext } from "vuex";
 import { SwimlaneState } from "./type";
 import { loadChildrenCards } from "./swimlane-actions";
+import { mockFetchError, mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
+import { RootState } from "../type";
 
 jest.mock("tlp");
 
@@ -36,7 +38,10 @@ describe("Swimlane state actions", () => {
             commit: jest.fn(),
             dispatch: jest.fn(),
             rootState: {
-                milestone_id: 42
+                milestone_id: 42,
+                user: {
+                    user_id: 101
+                }
             } as RootState
         } as unknown) as ActionContext<SwimlaneState, RootState>;
         tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
@@ -61,57 +66,38 @@ describe("Swimlane state actions", () => {
                     }
 
                     return Promise.resolve(
-                        init.getCollectionCallback([
-                            { id: 43, is_open: true } as Card,
-                            { id: 44, is_open: true } as Card
-                        ])
+                        init.getCollectionCallback([{ id: 43 } as Card, { id: 44 } as Card])
                     );
                 }
             );
             await actions.loadSwimlanes(context);
             expect(context.commit).toHaveBeenCalledWith("addSwimlanes", [
                 {
-                    card: { id: 43, is_open: true },
+                    card: { id: 43 },
                     children_cards: [],
-                    is_loading_children_cards: false,
-                    is_collapsed: false
+                    is_loading_children_cards: false
                 },
                 {
-                    card: { id: 44, is_open: true },
+                    card: { id: 44 },
                     children_cards: [],
-                    is_loading_children_cards: false,
-                    is_collapsed: false
-                }
-            ]);
-        });
-
-        it("Collapses the new swimlanes when the card is closed", async () => {
-            tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet").mockImplementation(
-                <T>(url: string, init?: RecursiveGetInit<Card[], T>): Promise<T[]> => {
-                    if (!init || !init.getCollectionCallback) {
-                        throw new Error();
-                    }
-
-                    return Promise.resolve(
-                        init.getCollectionCallback([{ id: 43, is_open: false } as Card])
-                    );
-                }
-            );
-            await actions.loadSwimlanes(context);
-            expect(context.commit).toHaveBeenCalledWith("addSwimlanes", [
-                {
-                    card: { id: 43, is_open: false },
-                    children_cards: [],
-                    is_loading_children_cards: false,
-                    is_collapsed: true
+                    is_loading_children_cards: false
                 }
             ]);
         });
 
         it(`when top-level cards have children, it will load their children`, async () => {
-            const card_with_children = { id: 43, is_open: true, has_children: true } as Card;
-            const other_card_with_children = { id: 44, is_open: true, has_children: true } as Card;
-            const card_without_children = { id: 45, is_open: true, has_children: false } as Card;
+            const card_with_children = {
+                id: 43,
+                has_children: true
+            } as Card;
+            const other_card_with_children = {
+                id: 44,
+                has_children: true
+            } as Card;
+            const card_without_children = {
+                id: 45,
+                has_children: false
+            } as Card;
             tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet").mockImplementation(
                 <T>(url: string, init?: RecursiveGetInit<Card[], T>): Promise<T[]> => {
                     if (!init || !init.getCollectionCallback) {
@@ -148,26 +134,6 @@ describe("Swimlane state actions", () => {
             );
         });
 
-        it(`when top-level card is closed and has children, it will NOT load its children`, async () => {
-            const card_with_children = { id: 43, is_open: false, has_children: true } as Card;
-            tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet").mockImplementation(
-                <T>(url: string, init?: RecursiveGetInit<Card[], T>): Promise<T[]> => {
-                    if (!init || !init.getCollectionCallback) {
-                        throw new Error();
-                    }
-
-                    return Promise.resolve(init.getCollectionCallback([card_with_children]));
-                }
-            );
-            await actions.loadSwimlanes(context);
-            expect(context.dispatch).not.toHaveBeenCalledWith(
-                "loadChildrenCards",
-                expect.objectContaining({
-                    card: card_with_children
-                })
-            );
-        });
-
         it(`When there is a REST error, it will stop the loading flag and will show a global error`, async () => {
             const error = new Error();
             tlpRecursiveGetMock.mockRejectedValue(error);
@@ -184,10 +150,9 @@ describe("Swimlane state actions", () => {
         let swimlane: Swimlane;
         beforeEach(() => {
             swimlane = {
-                card: { id: 197, is_open: true } as Card,
+                card: { id: 197 } as Card,
                 children_cards: [],
-                is_loading_children_cards: false,
-                is_collapsed: false
+                is_loading_children_cards: false
             };
         });
 
@@ -239,36 +204,78 @@ describe("Swimlane state actions", () => {
     });
 
     describe("expandSwimlane", () => {
-        it(`When the swimlane card does NOT have children
-            Then the children are not automatically loaded`, () => {
+        it(`When the swimlane is expanded, the user pref is stored`, () => {
             const swimlane: Swimlane = {
-                card: { has_children: false } as Card
+                card: { id: 69 } as Card
             } as Swimlane;
+
+            const tlpDeleteMock = jest.spyOn(tlp, "del");
+            mockFetchSuccess(tlpDeleteMock, {});
+
             actions.expandSwimlane(context, swimlane);
-            expect(context.dispatch).not.toHaveBeenCalledWith("loadChildrenCards", swimlane);
             expect(context.commit).toHaveBeenCalledWith("expandSwimlane", swimlane);
+            expect(tlpDeleteMock).toHaveBeenCalledWith(
+                `/api/v1/users/101/preferences?key=plugin_taskboard_collapse_42_69`
+            );
         });
 
-        it(`When the swimlane card has children and they have NOT already been loaded
-            Then the children are automatically loaded`, () => {
+        it(`ignores error on save`, () => {
             const swimlane: Swimlane = {
-                card: { has_children: true } as Card,
-                children_cards: [] as Card[]
+                card: { id: 69 } as Card
             } as Swimlane;
+
+            const tlpDeleteMock = jest.spyOn(tlp, "del");
+            mockFetchError(tlpDeleteMock, {});
+
             actions.expandSwimlane(context, swimlane);
-            expect(context.dispatch).toHaveBeenCalledWith("loadChildrenCards", swimlane);
             expect(context.commit).toHaveBeenCalledWith("expandSwimlane", swimlane);
+            expect(tlpDeleteMock).toHaveBeenCalledWith(
+                `/api/v1/users/101/preferences?key=plugin_taskboard_collapse_42_69`
+            );
+        });
+    });
+
+    describe("collapseSwimlane", () => {
+        it(`When the swimlane is collapsed, the user pref is stored`, () => {
+            const swimlane: Swimlane = {
+                card: { id: 69 } as Card
+            } as Swimlane;
+
+            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatchMock, {});
+
+            actions.collapseSwimlane(context, swimlane);
+            expect(context.commit).toHaveBeenCalledWith("collapseSwimlane", swimlane);
+            expect(tlpPatchMock).toHaveBeenCalledWith(`/api/v1/users/101/preferences`, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    key: "plugin_taskboard_collapse_42_69",
+                    value: 1
+                })
+            });
         });
 
-        it(`When the swimlane card has children and they have already been loaded
-            Then the children are not automatically loaded`, () => {
+        it(`ignores error on save`, () => {
             const swimlane: Swimlane = {
-                card: { has_children: true } as Card,
-                children_cards: [{ id: 123 } as Card]
+                card: { id: 69 } as Card
             } as Swimlane;
-            actions.expandSwimlane(context, swimlane);
-            expect(context.dispatch).not.toHaveBeenCalledWith("loadChildrenCards", swimlane);
-            expect(context.commit).toHaveBeenCalledWith("expandSwimlane", swimlane);
+
+            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            mockFetchError(tlpPatchMock, {});
+
+            actions.collapseSwimlane(context, swimlane);
+            expect(context.commit).toHaveBeenCalledWith("collapseSwimlane", swimlane);
+            expect(tlpPatchMock).toHaveBeenCalledWith(`/api/v1/users/101/preferences`, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    key: "plugin_taskboard_collapse_42_69",
+                    value: 1
+                })
+            });
         });
     });
 });

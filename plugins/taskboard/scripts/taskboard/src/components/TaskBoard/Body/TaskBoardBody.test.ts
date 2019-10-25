@@ -36,17 +36,17 @@ describe("TaskBoardBody", () => {
                                     card: {
                                         id: 43,
                                         has_children: false,
-                                        is_open: true
-                                    },
-                                    is_collapsed: false
+                                        is_open: true,
+                                        is_collapsed: false
+                                    }
                                 } as Swimlane,
                                 {
                                     card: {
                                         id: 44,
                                         has_children: true,
-                                        is_open: true
-                                    },
-                                    is_collapsed: false
+                                        is_open: true,
+                                        is_collapsed: false
+                                    }
                                 } as Swimlane
                             ]
                         }
@@ -68,9 +68,9 @@ describe("TaskBoardBody", () => {
                                     card: {
                                         id: 43,
                                         has_children: false,
-                                        is_open: true
-                                    },
-                                    is_collapsed: true
+                                        is_open: true,
+                                        is_collapsed: true
+                                    }
                                 } as Swimlane
                             ]
                         }
@@ -93,9 +93,9 @@ describe("TaskBoardBody", () => {
                                     card: {
                                         id: 43,
                                         has_children: false,
-                                        is_open: false
-                                    },
-                                    is_collapsed: true
+                                        is_open: false,
+                                        is_collapsed: true
+                                    }
                                 } as Swimlane
                             ]
                         }

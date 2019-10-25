@@ -80,6 +80,7 @@ class TaskboardTest extends RestBase
             $this->assertArrayHasKey('initial_effort', $cards[$key]);
             $this->assertArrayHasKey('assignees', $cards[$key]);
             $this->assertArrayHasKey('remaining_effort', $cards[$key]);
+            $this->assertFalse($cards[$key]['is_collapsed']);
 
             $is_open = in_array($label, ['US2', 'US4', 'US5', 'US6'], true);
             $this->assertEquals($is_open, $cards[$key]['is_open'], $label);
