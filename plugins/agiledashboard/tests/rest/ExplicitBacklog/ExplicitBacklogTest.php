@@ -71,8 +71,49 @@ class ExplicitBacklogTest extends TestBase
         $this->assertSame($top_backlog_items[0]['id'], $this->getFirstStoryArtifactId());
     }
 
+    /**
+     * @depends testTopBacklogInExplicitBacklogContextContainsTheBacklogItemsAfterBeingAdded
+     */
+    public function testTopBacklogInExplicitBacklogContextDoesNotContainTheBacklogItemsMovedToTheRelease(): void
+    {
+        $this->moveStoryToRelease();
+
+        $response          = $this->getResponse($this->client->get('projects/'. urlencode((string) $this->explicit_backlog_project_id) . '/backlog'));
+        $top_backlog_items = $response->json();
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertEmpty($top_backlog_items);
+    }
+
+    private function moveStoryToRelease()
+    {
+        $artifact_id_to_add  = $this->getFirstStoryArtifactId();
+        $release_artifact_id = $this->getFirstReleaseArtifactId();
+        $patch_body          = json_encode([
+            'add' => [
+                ['id' => $artifact_id_to_add],
+            ]
+        ]);
+
+        $response_patch = $this->getResponse(
+            $this->client->patch(
+                'milestones/'. urlencode((string) $release_artifact_id). '/content',
+                null,
+                $patch_body
+            )
+        );
+
+        $this->assertEquals(200, $response_patch->getStatusCode());
+    }
+
     private function getFirstStoryArtifactId(): int
     {
         return (int) $this->explicit_backlog_artifact_story_ids[1];
+    }
+
+    private function getFirstReleaseArtifactId(): int
+    {
+        return (int) $this->explicit_backlog_artifact_release_ids[1];
     }
 }
