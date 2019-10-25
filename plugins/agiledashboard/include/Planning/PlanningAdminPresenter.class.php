@@ -20,10 +20,15 @@
 class Planning_PlanningAdminPresenter
 {
     private $planning;
+    /**
+     * @var bool
+     */
+    public $is_planning_removal_dangerous;
 
-    public function __construct(Planning $planning)
+    public function __construct(Planning $planning, bool $is_planning_removal_dangerous)
     {
-        $this->planning = $planning;
+        $this->planning                      = $planning;
+        $this->is_planning_removal_dangerous = $is_planning_removal_dangerous;
     }
 
     public function edit_url()

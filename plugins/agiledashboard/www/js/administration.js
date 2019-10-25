@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createPopover } from "tlp";
+import { createPopover, modal as createModal } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
     const trigger = document.getElementById(
@@ -29,5 +29,14 @@ document.addEventListener("DOMContentLoaded", () => {
             trigger,
             document.getElementById("agiledashboard-administration-cannot-create-planning-popover")
         );
+    }
+
+    const button = document.getElementById("agiledashboard-administration-remove-planning-button");
+    if (button) {
+        const modal = createModal(document.getElementById(button.dataset.targetModalId));
+
+        button.addEventListener("click", () => {
+            modal.show();
+        });
     }
 });

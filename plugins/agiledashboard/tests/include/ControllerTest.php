@@ -25,6 +25,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 
 require_once(dirname(__FILE__).'/../../../tracker/tests/builders/all.php');
@@ -91,11 +92,11 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase
             mock('AgileDashboard_KanbanFactory'),
             $configuration_manager,
             mock('TrackerFactory'),
-            $this->mono_milestone_checker,
             $this->event_manager,
             $service_crumb_builder,
             $admin_crumb_builder,
-            $count_element_mode_checker
+            $count_element_mode_checker,
+            Mockery::mock(ScrumPresenterBuilder::class)
         );
 
         $count_element_mode_checker->shouldReceive('burnupMustUseCountElementsMode')->andReturnFalse();
@@ -139,48 +140,6 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase
         stub($GLOBALS['Response'])->redirect()->once();
         stub($GLOBALS['Response'])->addFeedback('error', '*')->once();
         $this->expectException();
-    }
-}
-
-abstract class Planning_ControllerAdminTest extends Planning_Controller_BaseTest
-{
-
-    protected function renderAdminScrum()
-    {
-        $this->planning_factory->expectOnce('getPlannings', array($this->current_user, $this->group_id));
-        $this->planning_factory->setReturnValue('getPlannings', $this->plannings);
-
-        stub($this->planning_factory)->getRootPlanning()->returns(aPlanning()->withPlanningTracker(aMockTracker()->build())->build());
-
-        $this->output = $this->controller->adminScrum();
-    }
-
-    public function itHasALinkToCreateANewPlanning()
-    {
-        $this->assertPattern('/action=new/', $this->output);
-    }
-}
-
-class Planning_ControllerNonEmptyAdminTest extends Planning_ControllerAdminTest
-{
-    function setUp()
-    {
-        parent::setUp();
-
-        $this->plannings = array(
-            aPlanning()->withId(1)->withName('Release Planning')->build(),
-            aPlanning()->withId(2)->withName('Sprint Planning')->build(),
-        );
-
-        $this->renderAdminScrum();
-    }
-
-    public function itListsExistingPlannings()
-    {
-        foreach ($this->plannings as $planning) {
-            $this->assertPattern('/'.$planning->getName().'/', $this->output);
-            $this->assertPattern('/href=".*?planning_id='.$planning->getId().'.*"/', $this->output);
-        }
     }
 }
 

@@ -178,11 +178,6 @@ class AdminScrumPresenter
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_action_label');
     }
 
-    public function delete_action_label()
-    {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'delete_action_label');
-    }
-
     public function config_title()
     {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'config_title');

@@ -22,6 +22,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
 use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
@@ -38,6 +39,7 @@ use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
+use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -78,12 +80,7 @@ class AgileDashboardRouterBuilder
         $this->all_bread_crumbs_for_milestone_builder = $all_bread_crumbs_for_milestone_builder;
     }
 
-    /**
-     * @param Codendi_Request $request
-     *
-     * @return AgileDashboardRouter
-     */
-    public function build(Codendi_Request $request)
+    public function build(Codendi_Request $request) : AgileDashboardRouter
     {
         $plugin = $this->plugin_factory->getPluginByName(
             AgileDashboardPlugin::PLUGIN_NAME
@@ -120,6 +117,8 @@ class AgileDashboardRouterBuilder
         $mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);
 
         $ugroup_manager = new UGroupManager();
+        $event_manager  = EventManager::instance();
+
         return new AgileDashboardRouter(
             $plugin,
             $milestone_factory,
@@ -127,14 +126,13 @@ class AgileDashboardRouterBuilder
             $milestone_controller_factory,
             ProjectManager::instance(),
             new AgileDashboard_XMLFullStructureExporter(
-                EventManager::instance(),
+                $event_manager,
                 $this
             ),
             $this->getKanbanManager(),
             $this->getConfigurationManager(),
             $this->getKanbanFactory(),
             new PlanningPermissionsManager(),
-            $this->getHierarchyChecker(),
             $mono_milestone_checker,
             new ScrumPlanningFilter($mono_milestone_checker, $planning_factory),
             new AgileDashboardJSONPermissionsRetriever(
@@ -157,7 +155,14 @@ class AgileDashboardRouterBuilder
             ),
             new CountElementsModeChecker(new ProjectsCountModeDao()),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            new ArtifactsInExplicitBacklogDao()
+            new ArtifactsInExplicitBacklogDao(),
+            new ScrumPresenterBuilder(
+                $this->getConfigurationManager(),
+                $mono_milestone_checker,
+                $event_manager,
+                $this->getPlanningFactory(),
+                new ExplicitBacklogDao()
+            )
         );
     }
 

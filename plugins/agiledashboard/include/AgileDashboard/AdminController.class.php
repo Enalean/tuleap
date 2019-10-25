@@ -21,7 +21,6 @@
 namespace Tuleap\AgileDashboard;
 
 use AdminKanbanPresenter;
-use AdminScrumPresenter;
 use AgileDashboard_ConfigurationManager;
 use AgileDashboard_FirstKanbanCreator;
 use AgileDashboard_FirstScrumCreator;
@@ -35,11 +34,8 @@ use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
-use ForgeConfig;
 use FRSLog;
 use PFUser;
-use Planning_PlanningAdminPresenter;
-use Planning_PlanningOutOfHierarchyAdminPresenter;
 use PlanningFactory;
 use Project;
 use ProjectCreator;
@@ -54,8 +50,6 @@ use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
-use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminPaneContent;
-use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeUpdater;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
@@ -65,6 +59,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
+use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
@@ -76,8 +71,8 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
@@ -117,9 +112,6 @@ class AdminController extends BaseController
     /** @var TrackerFactory */
     private $tracker_factory;
 
-    /** @var ScrumForMonoMilestoneChecker */
-    private $scrum_mono_milestone_checker;
-
     /** @var EventManager */
     private $event_manager;
 
@@ -136,6 +128,10 @@ class AdminController extends BaseController
      * @var CountElementsModeChecker
      */
     private $count_elements_mode_checker;
+    /**
+     * @var ScrumPresenterBuilder
+     */
+    private $scrum_presenter_builder;
 
     public function __construct(
         Codendi_Request $request,
@@ -144,26 +140,26 @@ class AdminController extends BaseController
         AgileDashboard_KanbanFactory $kanban_factory,
         AgileDashboard_ConfigurationManager $config_manager,
         TrackerFactory $tracker_factory,
-        ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         EventManager $event_manager,
         AgileDashboardCrumbBuilder $service_crumb_builder,
         AdministrationCrumbBuilder $admin_crumb_builder,
-        CountElementsModeChecker $count_elements_mode_checker
+        CountElementsModeChecker $count_elements_mode_checker,
+        ScrumPresenterBuilder $scrum_presenter_builder
     ) {
         parent::__construct('agiledashboard', $request);
 
-        $this->group_id                     = (int) $this->request->get('group_id');
-        $this->project                      = $this->request->getProject();
-        $this->planning_factory             = $planning_factory;
-        $this->kanban_manager               = $kanban_manager;
-        $this->kanban_factory               = $kanban_factory;
-        $this->config_manager               = $config_manager;
-        $this->tracker_factory              = $tracker_factory;
-        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
-        $this->event_manager                = $event_manager;
-        $this->service_crumb_builder        = $service_crumb_builder;
-        $this->admin_crumb_builder          = $admin_crumb_builder;
-        $this->count_elements_mode_checker  = $count_elements_mode_checker;
+        $this->group_id                    = (int) $this->request->get('group_id');
+        $this->project                     = $this->request->getProject();
+        $this->planning_factory            = $planning_factory;
+        $this->kanban_manager              = $kanban_manager;
+        $this->kanban_factory              = $kanban_factory;
+        $this->config_manager              = $config_manager;
+        $this->tracker_factory             = $tracker_factory;
+        $this->event_manager               = $event_manager;
+        $this->service_crumb_builder       = $service_crumb_builder;
+        $this->admin_crumb_builder         = $admin_crumb_builder;
+        $this->count_elements_mode_checker = $count_elements_mode_checker;
+        $this->scrum_presenter_builder     = $scrum_presenter_builder;
     }
 
     /**
@@ -185,7 +181,7 @@ class AdminController extends BaseController
         return $breadcrumbs;
     }
 
-    public function adminScrum()
+    public function adminScrum(): string
     {
         $include_assets = new IncludeAssets(
             AGILEDASHBOARD_BASE_DIR . '/../www/assets',
@@ -195,7 +191,7 @@ class AdminController extends BaseController
 
         return $this->renderToString(
             'admin-scrum',
-            $this->getAdminScrumPresenter(
+            $this->scrum_presenter_builder->getAdminScrumPresenter(
                 $this->getCurrentUser(),
                 $this->project
             )
@@ -223,58 +219,6 @@ class AdminController extends BaseController
         );
     }
 
-    private function getAdminScrumPresenter(PFUser $user, Project $project)
-    {
-        $group_id                    = $project->getID();
-        $can_create_planning         = true;
-        $tracker_uri                 = '';
-        $root_planning_name          = '';
-        $potential_planning_trackers = [];
-        $root_planning               = $this->planning_factory->getRootPlanning($user, $group_id);
-        $scrum_activated             = $this->config_manager->scrumIsActivatedForProject($group_id);
-
-        if ($root_planning) {
-            $can_create_planning = count($this->planning_factory->getAvailablePlanningTrackers($user, $group_id)) > 0;
-
-            $tracker_uri                 = $root_planning->getPlanningTracker()->getUri();
-            $root_planning_name          = $root_planning->getName();
-            $potential_planning_trackers = $this->planning_factory->getPotentialPlanningTrackers($user, $group_id);
-        }
-
-        return new AdminScrumPresenter(
-            $this->getPlanningAdminPresenterList($user, $group_id, $root_planning_name),
-            $group_id,
-            $can_create_planning,
-            $tracker_uri,
-            $root_planning_name,
-            $potential_planning_trackers,
-            $scrum_activated,
-            $this->config_manager->getScrumTitle($group_id),
-            $this->scrum_mono_milestone_checker->isScrumMonoMilestoneAvailable($user, $group_id),
-            \ForgeConfig::get('use_burnup_count_elements'),
-            $this->isScrumMonoMilestoneEnable($group_id),
-            $this->doesConfigurationAllowsPlanningCreation($user, $group_id, $can_create_planning),
-            $this->getAdditionalContent()
-        );
-    }
-
-    private function doesConfigurationAllowsPlanningCreation(PFUser $user, $project_id, $can_create_planning)
-    {
-        if ($this->isScrumMonoMilestoneEnable($project_id) === false) {
-            return $can_create_planning;
-        }
-
-        return $this->scrum_mono_milestone_checker->doesScrumMonoMilestoneConfigurationAllowsPlanningCreation(
-            $user,
-            $project_id
-        );
-    }
-
-    private function isScrumMonoMilestoneEnable($project_id)
-    {
-        return $this->scrum_mono_milestone_checker->isMonoMilestoneEnabled($project_id);
-    }
-
     private function getAdminKanbanPresenter(PFUser $user, $project_id)
     {
         $has_kanban = count($this->kanban_factory->getListOfKanbansForProject($user, $project_id)) > 0;
@@ -286,32 +230,6 @@ class AdminController extends BaseController
             $has_kanban,
             \ForgeConfig::get('use_burnup_count_elements')
         );
-    }
-
-    public function getAdditionalContent()
-    {
-        $event = new GetAdditionalScrumAdminPaneContent();
-        $this->event_manager->processEvent($event);
-
-        return $event->getAdditionalContent();
-    }
-
-    private function getPlanningAdminPresenterList(PFUser $user, $group_id, $root_planning_name)
-    {
-        $plannings                 = [];
-        $planning_out_of_hierarchy = [];
-        foreach ($this->planning_factory->getPlanningsOutOfRootPlanningHierarchy($user, $group_id) as $planning) {
-            $planning_out_of_hierarchy[$planning->getId()] = true;
-        }
-        foreach ($this->planning_factory->getPlannings($user, $group_id) as $planning) {
-            if (isset($planning_out_of_hierarchy[$planning->getId()])) {
-                $plannings[] = new Planning_PlanningOutOfHierarchyAdminPresenter($planning, $root_planning_name);
-            } else {
-                $plannings[] = new Planning_PlanningAdminPresenter($planning);
-            }
-        }
-
-        return $plannings;
     }
 
     public function updateConfiguration()

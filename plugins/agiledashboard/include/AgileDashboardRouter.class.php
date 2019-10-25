@@ -30,9 +30,9 @@ use Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder;
 use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\AgileDashboard\Kanban\ShowKanbanController;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
+use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 
@@ -138,6 +138,10 @@ class AgileDashboardRouter
      * @var ArtifactsInExplicitBacklogDao
      */
     private $explicit_backlog_dao;
+    /**
+     * @var ScrumPresenterBuilder
+     */
+    private $scrum_presenter_builder;
 
     public function __construct(
         Plugin $plugin,
@@ -150,7 +154,6 @@ class AgileDashboardRouter
         AgileDashboard_ConfigurationManager $config_manager,
         AgileDashboard_KanbanFactory $kanban_factory,
         PlanningPermissionsManager $planning_permissions_manager,
-        AgileDashboard_HierarchyChecker $hierarchy_checker,
         ScrumForMonoMilestoneChecker $scrum_mono_milestone_checker,
         ScrumPlanningFilter $planning_filter,
         AgileDashboardJSONPermissionsRetriever $permissions_retriever,
@@ -159,7 +162,8 @@ class AgileDashboardRouter
         TimeframeChecker $timeframe_checker,
         CountElementsModeChecker $count_elements_mode_checker,
         DBTransactionExecutor $transaction_executor,
-        ArtifactsInExplicitBacklogDao $explicit_backlog_dao
+        ArtifactsInExplicitBacklogDao $explicit_backlog_dao,
+        ScrumPresenterBuilder $scrum_presenter_builder
     ) {
         $this->plugin                       = $plugin;
         $this->milestone_factory            = $milestone_factory;
@@ -171,7 +175,6 @@ class AgileDashboardRouter
         $this->config_manager               = $config_manager;
         $this->kanban_factory               = $kanban_factory;
         $this->planning_permissions_manager = $planning_permissions_manager;
-        $this->hierarchy_checker            = $hierarchy_checker;
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
         $this->planning_filter              = $planning_filter;
         $this->permissions_retriever        = $permissions_retriever;
@@ -179,8 +182,9 @@ class AgileDashboardRouter
         $this->admin_crumb_builder          = $admin_crumb_builder;
         $this->timeframe_checker            = $timeframe_checker;
         $this->count_elements_mode_checker  = $count_elements_mode_checker;
-        $this->transaction_executor = $transaction_executor;
-        $this->explicit_backlog_dao = $explicit_backlog_dao;
+        $this->transaction_executor         = $transaction_executor;
+        $this->explicit_backlog_dao         = $explicit_backlog_dao;
+        $this->scrum_presenter_builder      = $scrum_presenter_builder;
     }
 
     /**
@@ -436,11 +440,11 @@ class AgileDashboardRouter
             $this->kanban_factory,
             $this->config_manager,
             TrackerFactory::instance(),
-            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $this->planning_factory),
             EventManager::instance(),
             $this->service_crumb_builder,
             $this->admin_crumb_builder,
-            $this->count_elements_mode_checker
+            $this->count_elements_mode_checker,
+            $this->scrum_presenter_builder
         );
     }
 
