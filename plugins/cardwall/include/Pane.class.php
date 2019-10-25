@@ -215,14 +215,14 @@ class Cardwall_Pane extends AgileDashboard_Pane
         $backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->artifact_factory,
-            $this->tracker_form_element_factory,
             $this->milestone_factory,
             $this->planning_factory,
             new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
             new RemainingEffortValueRetriever(
                 $this->tracker_form_element_factory
             ),
-            new ArtifactsInExplicitBacklogDao()
+            new ArtifactsInExplicitBacklogDao(),
+            new Tracker_Artifact_PriorityDao()
         );
 
         $mono_milestone_items_finder = new MonoMilestoneItemsFinder(

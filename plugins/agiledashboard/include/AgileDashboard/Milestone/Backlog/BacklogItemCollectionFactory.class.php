@@ -36,9 +36,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
 
-    /** @var Tracker_FormElementFactory */
-    private $form_element_factory;
-
     /** @var AgileDashboard_Milestone_Backlog_IBacklogItemCollection[] */
     private $open_and_closed_collection;
 
@@ -79,25 +76,29 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
      * @var ArtifactsInExplicitBacklogDao
      */
     private $artifacts_in_explicit_backlog_dao;
+    /**
+     * @var Tracker_Artifact_PriorityDao
+     */
+    private $artifact_priority_dao;
 
     public function __construct(
         AgileDashboard_BacklogItemDao $dao,
         Tracker_ArtifactFactory $artifact_factory,
-        Tracker_FormElementFactory $form_element_factory,
         Planning_MilestoneFactory $milestone_factory,
         PlanningFactory $planning_factory,
         AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection $backlog_item_builder,
         RemainingEffortValueRetriever $remaining_effort_value_retriever,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao
+        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        Tracker_Artifact_PriorityDao $artifact_priority_dao
     ) {
         $this->dao                               = $dao;
         $this->artifact_factory                  = $artifact_factory;
-        $this->form_element_factory              = $form_element_factory;
         $this->milestone_factory                 = $milestone_factory;
         $this->planning_factory                  = $planning_factory;
         $this->backlog_item_builder              = $backlog_item_builder;
         $this->remaining_effort_value_retriever  = $remaining_effort_value_retriever;
         $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
+        $this->artifact_priority_dao             = $artifact_priority_dao;
 
         $this->open_and_closed_collection              = array();
         $this->open_closed_and_inconsistent_collection = array();
@@ -422,6 +423,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         return $field->getComputedValue($user, $artifact);
     }
 
+    /**
+     * protected for testing purpose
+     */
     protected function userCanReadBacklogTitleField(PFUser $user, Tracker $tracker)
     {
         if (! isset($this->cache_read_title[$tracker->getId()])) {
@@ -435,6 +439,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         return $this->cache_read_title[$tracker->getId()];
     }
 
+    /**
+     * protected for testing purpose
+     */
     protected function userCanReadBacklogStatusField(PFUser $user, Tracker $tracker)
     {
         if (! isset($this->cache_read_status[$tracker->getId()])) {
@@ -447,6 +454,9 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         return $this->cache_read_status[$tracker->getId()];
     }
 
+    /**
+     * protected for testing purpose
+     */
     protected function userCanReadInitialEffortField(PFUser $user, Tracker $tracker)
     {
         if (! isset($this->cache_initial_effort[$tracker->getId()])) {
@@ -639,7 +649,6 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
     {
         $order_artifacts   = array();
         $indexed_rank      = array();
-        $artifact_priority = new Tracker_Artifact_PriorityDao();
         $sort_collection   = $this->backlog_item_builder->getCollection();
 
         $item_ids = $this->open_closed_and_inconsistent_collection[$milestone->getArtifactId()]->getItemIds();
@@ -647,7 +656,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
             return $sort_collection;
         }
 
-        $ranks = $artifact_priority->getGlobalRanks($item_ids);
+        $ranks = $this->artifact_priority_dao->getGlobalRanks($item_ids);
         foreach ($ranks as $rank) {
             $indexed_rank[$rank['artifact_id']] = $rank['rank'];
         }

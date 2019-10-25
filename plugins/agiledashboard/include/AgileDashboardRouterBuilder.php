@@ -184,7 +184,10 @@ class AgileDashboardRouterBuilder
     {
         return new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
             $this->getBacklogFactory(),
-            $this->getBacklogItemPresenterCollectionFactory($milestone_factory),
+            $this->getBacklogItemCollectionFactory(
+                $milestone_factory,
+                new AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder()
+            ),
             new BurnupFieldRetriever(Tracker_FormElementFactory::instance()),
             EventManager::instance()
         );
@@ -226,21 +229,23 @@ class AgileDashboardRouterBuilder
         );
     }
 
-    private function getBacklogItemPresenterCollectionFactory($milestone_factory)
-    {
+    private function getBacklogItemCollectionFactory(
+        $milestone_factory,
+        AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection $presenter_builder
+    ): AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
         $form_element_factory = Tracker_FormElementFactory::instance();
 
         return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
-            $form_element_factory,
             $milestone_factory,
             $this->getPlanningFactory(),
-            new AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder(),
+            $presenter_builder,
             new RemainingEffortValueRetriever(
                 $form_element_factory
             ),
-            new ArtifactsInExplicitBacklogDao()
+            new ArtifactsInExplicitBacklogDao(),
+            new Tracker_Artifact_PriorityDao()
         );
     }
 
@@ -322,7 +327,7 @@ class AgileDashboardRouterBuilder
         );
     }
 
-    private function getPaginatedBacklogItemsRepresentationsBuilder()
+    private function getPaginatedBacklogItemsRepresentationsBuilder(): AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
     {
         $color_builder = new BackgroundColorBuilder(new BindDecoratorRetriever());
         $item_factory  = new BacklogItemRepresentationFactory(
@@ -333,27 +338,12 @@ class AgileDashboardRouterBuilder
 
         return new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
             $item_factory,
-            $this->getBacklogItemCollectionFactory(),
+            $this->getBacklogItemCollectionFactory(
+                $this->getMilestoneFactory(),
+                new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+            ),
             $this->getBacklogFactory(),
             new \Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao()
-        );
-    }
-
-    private function getBacklogItemCollectionFactory()
-    {
-        $form_element_factory = Tracker_FormElementFactory::instance();
-
-        return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
-            new AgileDashboard_BacklogItemDao(),
-            $this->getArtifactFactory(),
-            $form_element_factory,
-            $this->getMilestoneFactory(),
-            $this->getPlanningFactory(),
-            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
-            new RemainingEffortValueRetriever(
-                $form_element_factory
-            ),
-            new ArtifactsInExplicitBacklogDao()
         );
     }
 
