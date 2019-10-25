@@ -189,6 +189,10 @@ export async function handleErrorMessage(
     context: Context,
     rest_error: FetchWrapperError
 ): Promise<void> {
+    if (rest_error.response === undefined) {
+        context.commit("setErrorMessage", "");
+        throw rest_error;
+    }
     try {
         const { error } = await rest_error.response.json();
         context.commit("setErrorMessage", error.code + " " + error.message);
