@@ -37,7 +37,6 @@ use Planning_Milestone;
 use Planning_MilestoneFactory;
 use PlanningFactory;
 use PlanningPermissionsManager;
-use Project;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
@@ -112,9 +111,6 @@ class MilestoneResource extends AuthenticatedResource
 
     /** @var AgileDashboard_Milestone_MilestoneRepresentationBuilder */
     private $milestone_representation_builder;
-
-    /** @var MilestoneParentLinker */
-    private $milestone_parent_linker;
 
     /** @var QueryToCriterionStatusConverter */
     private $query_to_criterion_converter;
@@ -216,11 +212,6 @@ class MilestoneResource extends AuthenticatedResource
             $this->event_manager,
             $scrum_for_mono_milestone_checker,
             $parent_tracker_retriever
-        );
-
-        $this->milestone_parent_linker = new MilestoneParentLinker(
-            $this->milestone_factory,
-            $this->backlog_factory
         );
 
         $this->query_to_criterion_converter = new QueryToCriterionStatusConverter();
@@ -740,31 +731,24 @@ class MilestoneResource extends AuthenticatedResource
      */
     protected function patchContent($id, ?OrderRepresentation $order = null, ?array $add = null)
     {
-        $user      = $this->getCurrentUser();
+        $user = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
-        $project   = $milestone->getProject();
+        if (! $milestone) {
+            throw new RestException(404, "Milestone not found");
+        }
 
+        $project = $milestone->getProject();
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
         $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $user);
 
-        $db_transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
         try {
             if ($add) {
-                $db_transaction_executor->execute(function () use ($user, $add, $milestone) {
-                    $to_add = $this->resources_patcher->removeArtifactFromSource($user, $add);
-                    if (count($to_add)) {
-                        $this->artifactlink_updater->updateArtifactLinks(
-                            $user,
-                            $milestone->getArtifact(),
-                            $this->getFilteredArtifactIdsToAdd($milestone, $to_add),
-                            array(),
-                            Tracker_FormElement_Field_ArtifactLink::NO_NATURE
-                        );
-                        $this->linkToMilestoneParent($milestone, $user, $to_add);
-                        $this->removeItemsFromExplicitBacklog($milestone->getProject(), $to_add);
-                    }
-                });
+                $this->getMilestoneElementMover()->moveElementToMilestoneContent(
+                    $milestone,
+                    $user,
+                    $add
+                );
             }
         } catch (ArtifactDoesNotExistException $exception) {
             throw new RestException(404, $exception->getMessage());
@@ -778,7 +762,6 @@ class MilestoneResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         } catch (\Exception $exception) {
             throw new RestException(400, $exception->getMessage());
-            return;
         }
 
         try {
@@ -796,25 +779,6 @@ class MilestoneResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         }
         $this->sendAllowHeaderForContent();
-    }
-
-    /**
-     * @return array
-     */
-    private function getFilteredArtifactIdsToAdd(Planning_Milestone $milestone, array $to_add)
-    {
-        $backlog_tracker_ids   = $milestone->getPlanning()->getBacklogTrackersIds();
-        $filtered_artifact_ids = [];
-
-        foreach ($to_add as $artifact_id) {
-            $artifact = $this->tracker_artifact_factory->getArtifactById($artifact_id);
-
-            if (in_array($artifact->getTrackerId(), $backlog_tracker_ids)) {
-                $filtered_artifact_ids[] = $artifact_id;
-            }
-        }
-
-        return array_unique($filtered_artifact_ids);
     }
 
     /**
@@ -987,8 +951,7 @@ class MilestoneResource extends AuthenticatedResource
         $to_add = [];
         try {
             if ($add) {
-                $adder = new MilestoneElementMover($this->resources_patcher, $this->milestone_validator, $this->artifactlink_updater);
-                $to_add = $adder->moveElement($user, $add, $milestone);
+                $to_add = $this->getMilestoneElementMover()->moveElement($user, $add, $milestone);
             }
         } catch (Tracker_NoChangeException $exception) {
             // nothing to do
@@ -1024,15 +987,6 @@ class MilestoneResource extends AuthenticatedResource
             return array_diff($ids_to_validate, $to_add);
         } else {
             return $ids_to_validate;
-        }
-    }
-
-    private function linkToMilestoneParent(Planning_Milestone $milestone, PFUser $user, array $to_add)
-    {
-        foreach ($to_add as $artifact_id_to_add) {
-            $artifact_added = $this->tracker_artifact_factory->getArtifactById($artifact_id_to_add);
-
-            $this->milestone_parent_linker->linkToMilestoneParent($milestone, $user, $artifact_added);
         }
     }
 
@@ -1304,12 +1258,26 @@ class MilestoneResource extends AuthenticatedResource
         Header::allowOptionsGet();
     }
 
-    private function removeItemsFromExplicitBacklog(Project $project, array $to_add)
+    /**
+     * @return MilestoneElementMover
+     */
+    private function getMilestoneElementMover(): MilestoneElementMover
     {
-        $dao = new ArtifactsInExplicitBacklogDao();
-        $dao->removeItemsFromExplicitBacklogOfProject(
-            (int) $project->getID(),
-            $to_add
+        $db_transaction_executor = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+
+        $milestone_parent_linker = new MilestoneParentLinker(
+            $this->milestone_factory,
+            $this->backlog_factory
+        );
+
+        return new MilestoneElementMover(
+            $this->resources_patcher,
+            $this->milestone_validator,
+            $this->artifactlink_updater,
+            $db_transaction_executor,
+            $this->tracker_artifact_factory,
+            $milestone_parent_linker,
+            new ArtifactsInExplicitBacklogDao()
         );
     }
 }
