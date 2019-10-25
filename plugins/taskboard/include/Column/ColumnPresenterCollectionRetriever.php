@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column;
 
 use Cardwall_OnTop_ColumnDao;
+use Tuleap\Cardwall\Column\ColumnColorRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenterBuilder;
 
 class ColumnPresenterCollectionRetriever
@@ -56,27 +57,11 @@ class ColumnPresenterCollectionRetriever
             $collection[] = new ColumnPresenter(
                 $column_id,
                 $row['label'],
-                $this->getColor($row),
+                ColumnColorRetriever::getHeaderColorNameOrHex($row),
                 $mappings
             );
         }
 
         return $collection;
-    }
-
-    private function getColor(array $row): string
-    {
-        if ($row['tlp_color_name']) {
-            return $row['tlp_color_name'];
-        }
-
-        $r = $row['bg_red'];
-        $g = $row['bg_green'];
-        $b = $row['bg_blue'];
-        if ($r !== null && $g !== null && $b !== null) {
-            return \ColorHelper::RGBToHexa($r, $g, $b);
-        }
-
-        return '';
     }
 }

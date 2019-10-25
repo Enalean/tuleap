@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__). '/../../constants.php';
+use Tuleap\Cardwall\Column\ColumnColorRetriever;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Cardwall_OnTop_Config_ColumnFactory
 {
 
@@ -114,7 +115,7 @@ class Cardwall_OnTop_Config_ColumnFactory
     {
         $columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
         foreach ($this->dao->searchColumnsByTrackerId($tracker->getId()) as $row) {
-            $header_color = $this->getColumnHeaderColorFromRow($row);
+            $header_color = ColumnColorRetriever::getHeaderColorNameOrRGB($row);
             $columns[]    = new Cardwall_Column($row['id'], $row['label'], $header_color);
         }
         return $columns;
@@ -127,24 +128,6 @@ class Cardwall_OnTop_Config_ColumnFactory
 
         if (isset($decorators[$id])) {
             $header_color = $decorators[$id]->getCurrentColor();
-        }
-
-        return $header_color;
-    }
-
-    private function getColumnHeaderColorFromRow(array $row)
-    {
-        $header_color = self::DEFAULT_HEADER_COLOR;
-
-        $r              = $row['bg_red'];
-        $g              = $row['bg_green'];
-        $b              = $row['bg_blue'];
-        $tlp_color_name = $row['tlp_color_name'];
-
-        if ($tlp_color_name) {
-            $header_color = $tlp_color_name;
-        } elseif ($r !== null && $g !== null && $b !== null) {
-            $header_color = "rgb($r, $g, $b)";
         }
 
         return $header_color;

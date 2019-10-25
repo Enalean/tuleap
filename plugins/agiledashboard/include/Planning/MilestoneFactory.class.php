@@ -21,8 +21,11 @@
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusAll;
 use Tuleap\AgileDashboard\Milestone\Criterion\Status\StatusOpen;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
+use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 /**
@@ -110,6 +113,34 @@ class Planning_MilestoneFactory
         $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
         $this->timeframe_builder            = $timeframe_builder;
         $this->burndown_field_checker       = $burndown_field_checker;
+    }
+
+    public static function build(): self
+    {
+        $artifact_factory     = \Tracker_ArtifactFactory::instance();
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $planning_factory     = \PlanningFactory::build();
+
+        return new Planning_MilestoneFactory(
+            $planning_factory,
+            $artifact_factory,
+            $form_element_factory,
+            TrackerFactory::instance(),
+            new AgileDashboard_Milestone_MilestoneStatusCounter(
+                new AgileDashboard_BacklogItemDao(),
+                new Tracker_ArtifactDao(),
+                $artifact_factory
+            ),
+            new PlanningPermissionsManager(),
+            new AgileDashboard_Milestone_MilestoneDao(),
+            new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory),
+            new TimeframeBuilder(
+                $form_element_factory,
+                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
+                new BackendLogger()
+            ),
+            new MilestoneBurndownFieldChecker($form_element_factory)
+        );
     }
 
     /**

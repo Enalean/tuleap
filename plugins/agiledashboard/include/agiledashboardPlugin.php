@@ -49,7 +49,6 @@ use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
-use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
@@ -99,7 +98,6 @@ use Tuleap\Tracker\Semantic\SemanticStatusFieldCanBeUpdated;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
-use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 use Tuleap\Tracker\TrackerCrumbInContext;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryQuickLink;
@@ -795,24 +793,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
      */
     public function getMilestoneFactory()
     {
-        $form_element_factory = $this->getFormElementFactory();
-
-        return new Planning_MilestoneFactory(
-            $this->getPlanningFactory(),
-            $this->getArtifactFactory(),
-            $form_element_factory,
-            $this->getTrackerFactory(),
-            $this->getStatusCounter(),
-            new PlanningPermissionsManager(),
-            $this->getMilestoneDao(),
-            $this->getMonoMilestoneChecker(),
-            new TimeframeBuilder(
-                $form_element_factory,
-                new SemanticTimeframeBuilder(new SemanticTimeframeDao(), $form_element_factory),
-                $this->getLogger()
-            ),
-            new MilestoneBurndownFieldChecker($this->getFormElementFactory())
-        );
+        return Planning_MilestoneFactory::build();
     }
 
     private function getArtifactFactory()
