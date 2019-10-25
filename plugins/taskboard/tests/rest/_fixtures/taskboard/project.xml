@@ -242,13 +242,6 @@
                 <field REF="F26567"/>
               </columns>
             </renderer>
-            <renderer type="plugin_cardwall" rank="1">
-              <name>CardWall</name>
-            </renderer>
-            <renderer type="plugin_graphontrackersv5" rank="2">
-              <name>Graph</name>
-              <charts/>
-            </renderer>
           </renderers>
         </report>
       </reports>
@@ -906,47 +899,6 @@
                 <field REF="F26613"/>
               </columns>
             </renderer>
-            <renderer type="plugin_cardwall" rank="1">
-              <name>Cardwall</name>
-            </renderer>
-            <renderer type="plugin_graphontrackersv5" rank="2">
-              <name>Graph</name>
-              <charts/>
-            </renderer>
-          </renderers>
-        </report>
-        <report is_default="0">
-          <name>Tasks</name>
-          <description>Tasks Report</description>
-          <criterias>
-            <criteria rank="0">
-              <field REF="F26602"/>
-            </criteria>
-          </criterias>
-          <renderers>
-            <renderer type="table" rank="0" chunksz="15">
-              <name>Results</name>
-              <columns/>
-            </renderer>
-            <renderer type="plugin_cardwall" rank="1">
-              <name>Kanban</name>
-            </renderer>
-            <renderer type="plugin_graphontrackersv5" rank="2">
-              <name>Gantt</name>
-              <charts>
-                <chart type="gantt" width="0" height="0" rank="0" scale="day" as_of_date="2012-06-02" summary="F26602">
-                  <title>Gantt</title>
-                </chart>
-              </charts>
-            </renderer>
-            <renderer type="plugin_graphontrackersv5" rank="3">
-              <name>Tasks by priority</name>
-              <charts>
-                <chart type="pie" width="400" height="200" rank="0">
-                  <title>Tasks by priority</title>
-                </chart>
-              </charts>
-            </renderer>
           </renderers>
         </report>
       </reports>
@@ -1358,17 +1310,6 @@
                 <field REF="F26646"/>
                 <field REF="F26634"/>
               </columns>
-            </renderer>
-            <renderer type="plugin_cardwall" rank="1">
-              <name>Cardwall</name>
-            </renderer>
-            <renderer type="plugin_graphontrackersv5" rank="2">
-              <name>Graph</name>
-              <charts>
-                <chart type="cumulative_flow" width="600" height="400" rank="0" start_date="1485903600" scale="1">
-                  <title>Status - cumulative_flow</title>
-                </chart>
-              </charts>
             </renderer>
           </renderers>
         </report>
@@ -2056,10 +1997,10 @@
     <trackers>
       <tracker id="T1500">
         <columns>
-          <column label="Todo" id="C797" bg_red="248" bg_green="248" bg_blue="248"/>
-          <column label="On Going" id="C798" bg_red="248" bg_green="248" bg_blue="248"/>
-          <column label="Review" id="C799" bg_red="248" bg_green="248" bg_blue="248"/>
-          <column label="Done" id="C800" bg_red="248" bg_green="248" bg_blue="248"/>
+          <column label="Todo" id="C797" bg_red="128" bg_green="128" bg_blue="128"/>
+          <column label="On Going" id="C798" tlp_color_name="clockwork-orange"/>
+          <column label="Review" id="C799" tlp_color_name="daphne-blue"/>
+          <column label="Done" id="C800" tlp_color_name="acid-green"/>
         </columns>
         <mappings>
           <mapping tracker_id="T1502" field_id="F26609">

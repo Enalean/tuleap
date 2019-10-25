@@ -23,18 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\REST\v1;
 
 use AgileDashboard_BacklogItemDao;
-use AgileDashboardPlugin;
-use Cardwall_OnTop_Dao;
 use Luracast\Restler\RestException;
 use PFUser;
 use Planning_ArtifactMilestone;
-use PluginManager;
-use RuntimeException;
 use Tracker_ArtifactFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
+use Tuleap\Taskboard\REST\v1\Columns\ColumnsGetter;
 use UserManager;
 
 class TaskboardResource extends AuthenticatedResource
@@ -53,37 +50,12 @@ class TaskboardResource extends AuthenticatedResource
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
-    /**
-     * @var \Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-    /**
-     * @var MilestoneIsAllowedChecker
-     */
-    private $milestone_checker;
 
     public function __construct()
     {
         $this->user_manager        = UserManager::instance();
         $this->backlog_item_dao    = new AgileDashboard_BacklogItemDao();
         $this->artifact_factory    = Tracker_ArtifactFactory::instance();
-
-        $plugin_manager        = PluginManager::instance();
-        $agiledashboard_plugin = $plugin_manager->getPluginByName('agiledashboard');
-        if (! $agiledashboard_plugin instanceof AgileDashboardPlugin) {
-            throw new RuntimeException('Cannot instantiate Agiledashboard plugin');
-        }
-        $this->milestone_factory = $agiledashboard_plugin->getMilestoneFactory();
-
-        $taskboard_plugin = $plugin_manager->getPluginByName('taskboard');
-        if (! $taskboard_plugin instanceof \taskboardPlugin) {
-            throw new RuntimeException('Cannot instantiate taskboard plugin');
-        }
-        $this->milestone_checker = new MilestoneIsAllowedChecker(
-            new Cardwall_OnTop_Dao(),
-            $plugin_manager,
-            $taskboard_plugin
-        );
     }
 
     /**
@@ -140,7 +112,44 @@ class TaskboardResource extends AuthenticatedResource
         return $collection;
     }
 
+    /**
+     * @url OPTIONS {id}/columns
+     */
+    public function optionsColumns(int $id): void
+    {
+        $this->sendColumnsAllowHeaders();
+    }
+
+    /**
+     * Get columns
+     *
+     * Get taskboard columns.
+     *
+     * @url    GET {id}/columns
+     * @access hybrid
+     *
+     * @param int $id Id of the taskboard
+     *
+     * @return array {@type \Tuleap\Taskboard\REST\v1\Columns\ColumnRepresentation}
+     *
+     * @throws RestException 401
+     * @throws RestException 404
+     */
+    public function getColumns(int $id): array
+    {
+        $this->sendColumnsAllowHeaders();
+        $this->checkAccess();
+
+        $columns_getter = ColumnsGetter::build();
+        return $columns_getter->getColumns($id);
+    }
+
     private function sendCardsAllowHeaders(): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    private function sendColumnsAllowHeaders(): void
     {
         Header::allowOptionsGet();
     }
@@ -150,13 +159,15 @@ class TaskboardResource extends AuthenticatedResource
      */
     private function getMilestone(PFUser $user, int $id): Planning_ArtifactMilestone
     {
-        $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($user, $id);
+        $milestone_factory = \Planning_MilestoneFactory::build();
+        $milestone         = $milestone_factory->getBareMilestoneByArtifactId($user, $id);
         if (! $milestone instanceof Planning_ArtifactMilestone) {
             throw new RestException(404);
         }
 
         try {
-            $this->milestone_checker->checkMilestoneIsAllowed($milestone);
+            $milestone_checker = MilestoneIsAllowedChecker::build();
+            $milestone_checker->checkMilestoneIsAllowed($milestone);
             return $milestone;
         } catch (MilestoneIsNotAllowedException $exception) {
             throw new RestException(404);

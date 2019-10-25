@@ -103,6 +103,54 @@ class TaskboardTest extends RestBase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
+    /**
+     * @dataProvider getUserName
+     */
+    public function testOPTIONSColumns(string $user_name): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('taskboard/' . self::$milestone_id . '/columns'),
+            $user_name
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    /**
+     * @dataProvider getUserName
+     */
+    public function testGETColumns(string $user_name): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('taskboard/' . self::$milestone_id . '/columns'),
+            $user_name
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $columns = $response->json();
+        $this->assertCount(4, $columns);
+        foreach (['Todo', 'On Going', 'Review', 'Done'] as $key => $label) {
+            $this->assertNotEmpty($columns[$key]['id']);
+            $this->assertEquals($label, $columns[$key]['label']);
+        }
+        $this->assertSame('#808080', $columns[0]['header_color']);
+        $this->assertSame('clockwork-orange', $columns[1]['header_color']);
+        $this->assertSame('daphne-blue', $columns[2]['header_color']);
+        $this->assertSame('acid-green', $columns[3]['header_color']);
+    }
+
+    /**
+     * @dataProvider getUserName
+     */
+    public function testGETColumnsThrows404WhenNoMilestone(string $user_name): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('taskboard/0/columns'),
+            $user_name
+        );
+        $this->assertEquals(404, $response->getStatusCode());
+    }
+
     public function getUserName(): array
     {
         return [

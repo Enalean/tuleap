@@ -51,6 +51,16 @@ class MilestoneIsAllowedChecker
         $this->taskboard_plugin = $taskboard_plugin;
     }
 
+    public static function build(): self
+    {
+        $plugin_manager   = PluginManager::instance();
+        $taskboard_plugin = $plugin_manager->getPluginByName('taskboard');
+        if (! $taskboard_plugin instanceof \taskboardPlugin) {
+            throw new \RuntimeException('Cannot instantiate taskboard plugin');
+        }
+        return new self(new Cardwall_OnTop_Dao(), $plugin_manager, $taskboard_plugin);
+    }
+
     /**
      * @throws MilestoneIsNotAllowedException
      */
