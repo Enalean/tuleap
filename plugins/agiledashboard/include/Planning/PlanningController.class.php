@@ -126,10 +126,11 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      * @var DBTransactionExecutor
      */
     private $transaction_executor;
+
     /**
      * @var ArtifactsInExplicitBacklogDao
      */
-    private $explicit_backlog_dao;
+    private $artifacts_in_explicit_backlog_dao;
 
     public function __construct(
         Codendi_Request $request,
@@ -149,7 +150,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         AdministrationCrumbBuilder $admin_crumb_builder,
         TimeframeChecker $timeframe_checker,
         DBTransactionExecutor $transaction_executor,
-        ArtifactsInExplicitBacklogDao $explicit_backlog_dao
+        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -170,8 +171,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $this->service_crumb_builder        = $service_crumb_builder;
         $this->admin_crumb_builder          = $admin_crumb_builder;
         $this->timeframe_checker            = $timeframe_checker;
-        $this->transaction_executor = $transaction_executor;
-        $this->explicit_backlog_dao = $explicit_backlog_dao;
+        $this->transaction_executor         = $transaction_executor;
+        $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
     }
 
     public function index()
@@ -721,11 +722,23 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                 $this->request->get('planning')
             );
 
+            $updated_planning_id = (int) $this->request->get('planning_id');
             $this->planning_factory->updatePlanning(
-                $this->request->get('planning_id'),
+                $updated_planning_id,
                 $this->group_id,
                 $planning_parameter
             );
+
+            $root_planning = $this->planning_factory->getRootPlanning(
+                $this->request->getCurrentUser(),
+                $this->project->getID()
+            );
+            if ($root_planning && (int) $root_planning->getId() === $updated_planning_id) {
+                $this->artifacts_in_explicit_backlog_dao->removeNoMoreSelectableItemsFromExplicitBacklogOfProject(
+                    $planning_parameter->backlog_tracker_ids,
+                    (int) $this->project->getID()
+                );
+            }
 
             $this->addFeedback(
                 Feedback::INFO,
@@ -771,7 +784,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             function () use ($user, $planning_id, $project) {
                 $root_planning = $this->planning_factory->getRootPlanning($user, $project->getID());
                 if ($root_planning && (int) $root_planning->getId() === (int) $planning_id) {
-                    $this->explicit_backlog_dao->removeExplicitBacklogOfPlanning((int) $planning_id);
+                    $this->artifacts_in_explicit_backlog_dao->removeExplicitBacklogOfPlanning((int) $planning_id);
                 }
                 $this->planning_factory->deletePlanning($planning_id);
             }
