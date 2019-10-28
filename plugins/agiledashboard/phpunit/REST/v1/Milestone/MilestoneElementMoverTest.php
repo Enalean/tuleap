@@ -23,16 +23,38 @@ declare(strict_types = 1);
 
 namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
+use MilestoneParentLinker;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Project;
+use Tracker_Artifact;
+use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\MilestoneResourceValidator;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 
 class MilestoneElementMoverTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    /**
+     * @var DBTransactionExecutorPassthrough
+     */
+    private $db_transaction_executor;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
+     */
+    private $tracker_artifact_factory;
+    /**
+     * @var MilestoneParentLinker|Mockery\LegacyMockInterface|Mockery\MockInterface
+     */
+    private $milestone_parent_linker;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
+     */
+    private $explicit_backlog_dao;
     /**
      * @var MilestoneElementMover
      */
@@ -55,14 +77,22 @@ class MilestoneElementMoverTest extends TestCase
     {
         parent::setUp();
 
-        $this->resources_patcher     = Mockery::mock(ResourcesPatcher::class);
-        $this->milestone_validator   = Mockery::mock(MilestoneResourceValidator::class);
-        $this->artifact_link_updater = Mockery::mock(ArtifactLinkUpdater::class);
+        $this->resources_patcher        = Mockery::mock(ResourcesPatcher::class);
+        $this->milestone_validator      = Mockery::mock(MilestoneResourceValidator::class);
+        $this->artifact_link_updater    = Mockery::mock(ArtifactLinkUpdater::class);
+        $this->db_transaction_executor  = new DBTransactionExecutorPassthrough();
+        $this->tracker_artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->milestone_parent_linker  = Mockery::mock(MilestoneParentLinker::class);
+        $this->explicit_backlog_dao     = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
 
         $this->mover = new MilestoneElementMover(
             $this->resources_patcher,
             $this->milestone_validator,
-            $this->artifact_link_updater
+            $this->artifact_link_updater,
+            $this->db_transaction_executor,
+            $this->tracker_artifact_factory,
+            $this->milestone_parent_linker,
+            $this->explicit_backlog_dao
         );
     }
 
@@ -106,5 +136,32 @@ class MilestoneElementMoverTest extends TestCase
         $result = $this->mover->moveElement($user, $add, $milestone);
 
         $this->assertEquals($expected_result, $result);
+    }
+
+    public function testItMovesElementFromTopBacklogToARelease(): void
+    {
+        $user      = Mockery::mock(\PFUser::class);
+        $milestone = Mockery::mock(\Planning_Milestone::class);
+        $add       = ["id" => 112];
+
+        $this->resources_patcher->shouldReceive('removeArtifactFromSource')->once()->andReturn([$add]);
+
+        $milestone->shouldReceive('getArtifact')->once()->andReturn(Mockery::mock(Tracker_Artifact::class));
+        $planning_milestone = Mockery::mock(\Planning_Milestone::class);
+        $planning_milestone->shouldReceive('getBacklogTrackersIds')->once()->andReturn([10, 11]);
+        $milestone->shouldReceive('getPlanning')->once()->andReturn($planning_milestone);
+        $project = Mockery::mock(Project::class);
+        $project->shouldReceive('getID')->once()->andReturn(101);
+        $milestone->shouldReceive('getProject')->once()->andReturn($project);
+
+        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact->shouldReceive('getTrackerId')->once()->andReturn(10);
+        $this->tracker_artifact_factory->shouldReceive('getArtifactById')->twice()->withArgs([$add])->andReturn($artifact);
+
+        $this->artifact_link_updater->shouldReceive('updateArtifactLinks')->once();
+        $this->milestone_parent_linker->shouldReceive('linkToMilestoneParent')->once();
+        $this->explicit_backlog_dao->shouldReceive('removeItemsFromExplicitBacklogOfProject')->once();
+
+        $this->mover->moveElementToMilestoneContent($milestone, $user, $add);
     }
 }
