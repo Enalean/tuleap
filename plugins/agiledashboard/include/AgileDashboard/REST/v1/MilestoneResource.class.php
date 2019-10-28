@@ -172,14 +172,14 @@ class MilestoneResource extends AuthenticatedResource
         $this->backlog_item_collection_factory = new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->tracker_artifact_factory,
-            $this->tracker_form_element_factory,
             $this->milestone_factory,
             $planning_factory,
             new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
             new RemainingEffortValueRetriever(
                 $this->tracker_form_element_factory
             ),
-            new ArtifactsInExplicitBacklogDao()
+            new ArtifactsInExplicitBacklogDao(),
+            new Tracker_Artifact_PriorityDao()
         );
 
         $this->milestone_validator = new MilestoneResourceValidator(

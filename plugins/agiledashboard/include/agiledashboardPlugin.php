@@ -371,7 +371,10 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(
                 new Tracker_ArtifactDao(),
                 $this->getBacklogFactory(),
-                $this->getBacklogItemCollectionFactory(),
+                $this->getBacklogItemCollectionFactory(
+                    $this->getMilestoneFactory(),
+                    new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+                ),
                 $this->getPlanningFactory()
             );
 
@@ -1217,27 +1220,14 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         if (! $this->sequence_id_manager) {
             $this->sequence_id_manager = new AgileDashboard_SequenceIdManager(
                 $this->getBacklogFactory(),
-                $this->getBacklogItemCollectionFactory()
+                $this->getBacklogItemCollectionFactory(
+                    $this->getMilestoneFactory(),
+                    new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+                )
             );
         }
 
         return $this->sequence_id_manager;
-    }
-
-    private function getBacklogItemCollectionFactory()
-    {
-        return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
-            new AgileDashboard_BacklogItemDao(),
-            $this->getArtifactFactory(),
-            $this->getFormElementFactory(),
-            $this->getMilestoneFactory(),
-            $this->getPlanningFactory(),
-            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
-            new RemainingEffortValueRetriever(
-                $this->getFormElementFactory()
-            ),
-            new ArtifactsInExplicitBacklogDao()
-        );
     }
 
     public function cardwall_event_use_standard_javascript($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -1366,14 +1356,20 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     {
         $milestone_factory               = $this->getMilestoneFactory();
         $backlog_factory                 = $this->getBacklogFactory();
-        $backlog_item_collection_factory = $this->getBacklogItemCollectionFactory();
+        $backlog_item_collection_factory = $this->getBacklogItemCollectionFactory(
+            $milestone_factory,
+            new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+        );
 
-        $user          = $event->getUser();
-        $milestone_id  = $event->getMilestoneId();
-        $milestone     = $milestone_factory->getValidatedBareMilestoneByArtifactId($user, $milestone_id);
+        $user         = $event->getUser();
+        $milestone_id = $event->getMilestoneId();
+        $milestone    = $milestone_factory->getValidatedBareMilestoneByArtifactId($user, $milestone_id);
+        if (! $milestone) {
+            return;
+        }
         $backlog       = $backlog_factory->getSelfBacklog($milestone);
         $backlog_items = $backlog_item_collection_factory->getOpenAndClosedCollection($user, $milestone, $backlog, '');
-        $items_ids     = array();
+        $items_ids     = [];
 
         foreach ($backlog_items as $item) {
             $items_ids[] = $item->id();
@@ -1883,29 +1879,31 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $pane_factory = $this->getMilestonePaneFactory();
 
         foreach ($pane_factory->getListOfPaneInfo($milestone) as $pane) {
-            $collection->add(new HistoryQuickLink(
-                $pane->getTitle(),
-                $pane->getUri(),
-                $pane->getIconName()
-            ));
+            $collection->add(
+                new HistoryQuickLink(
+                    $pane->getTitle(),
+                    $pane->getUri(),
+                    $pane->getIconName()
+                )
+            );
         }
     }
 
-    private function getBacklogItemPresenterCollectionFactory($milestone_factory): AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
-    {
+    private function getBacklogItemCollectionFactory(
+        Planning_MilestoneFactory $milestone_factory,
+        AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection $presenter_builder
+    ): AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory {
         $form_element_factory = Tracker_FormElementFactory::instance();
 
         return new AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory(
             new AgileDashboard_BacklogItemDao(),
             $this->getArtifactFactory(),
-            $form_element_factory,
             $milestone_factory,
             $this->getPlanningFactory(),
-            new AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder(),
-            new RemainingEffortValueRetriever(
-                $form_element_factory
-            ),
-            new ArtifactsInExplicitBacklogDao()
+            $presenter_builder,
+            new RemainingEffortValueRetriever($form_element_factory),
+            new ArtifactsInExplicitBacklogDao(),
+            new Tracker_Artifact_PriorityDao()
         );
     }
 
@@ -1931,7 +1929,10 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
         return new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
             $item_factory,
-            $this->getBacklogItemCollectionFactory(),
+            $this->getBacklogItemCollectionFactory(
+                $this->getMilestoneFactory(),
+                new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
+            ),
             $this->getBacklogFactory(),
             new \Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao()
         );
@@ -1966,7 +1967,10 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $milestone_factory,
             new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
                 $this->getBacklogFactory(),
-                $this->getBacklogItemPresenterCollectionFactory($this->getMilestoneFactory()),
+                $this->getBacklogItemCollectionFactory(
+                    $this->getMilestoneFactory(),
+                    new AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder()
+                ),
                 new BurnupFieldRetriever(Tracker_FormElementFactory::instance()),
                 EventManager::instance()
             ),
