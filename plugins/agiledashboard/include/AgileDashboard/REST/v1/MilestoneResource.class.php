@@ -38,7 +38,6 @@ use Planning_MilestoneFactory;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
-use Tracker_Artifact_Exception_CannotRankWithMyself;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
@@ -732,7 +731,7 @@ class MilestoneResource extends AuthenticatedResource
      *
      * @param int $id Id of the milestone
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
-     * @param array $add Ids to add/move to milestone content  {@from body}
+     * @param array $add Ids to add/move to milestone content  {@from body} {@type \Tuleap\REST\v1\BacklogAddRepresentation}
      *
      * @throws RestException 400
      * @throws RestException 403
@@ -964,7 +963,7 @@ class MilestoneResource extends AuthenticatedResource
      *
      * @param int                                                $id    Id of the milestone Item
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
-     * @param array                                              $add    Ids to add/move to milestone backlog {@from body}
+     * @param array                                              $add    Ids to add/move to milestone backlog {@from body} {@type \Tuleap\REST\v1\BacklogAddRepresentation}
      *
      * @throws RestException 400
      * @throws RestException 403

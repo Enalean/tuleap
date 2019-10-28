@@ -1029,8 +1029,8 @@ class ProjectResource extends AuthenticatedResource
      *
      * @param int                                     $id    Id of the project
      * @param \Tuleap\REST\v1\OrderRepresentationBase $order Order of the children {@from body}
-     * @param array                                   $add   Add (move) item to the backlog {@from body}
-     * @param array                                   $remove   Remove item to the backlog {@from body}
+     * @param array                                   $add   Add (move) item to the backlog {@from body} {@type \Tuleap\REST\v1\BacklogAddRepresentation}
+     * @param array                                   $remove   Remove item to the backlog {@from body} {@type \Tuleap\REST\v1\BacklogRemoveRepresentation}
      *
      * @throws RestException 500
      * @throws RestException 409
