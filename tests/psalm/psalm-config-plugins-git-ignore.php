@@ -32,6 +32,7 @@ $psalm_command_launcher = new PsalmCommandLauncherWithIgnoreDirectory(
     new PsalmIgnoreGitExcludedTuleapPlugins(new System_Command()),
     new ShellPassthroughUsingPassthruFunction()
 );
-$exit_code = $psalm_command_launcher->execute(...$argv);
+
+$exit_code = $psalm_command_launcher->execute($_SERVER['_'], ...$argv);
 
 exit($exit_code);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.5.1@deb36e8b273d4b25601f1991482a69d412e3169f">
+<files psalm-version="3.5.3@c3e781c4a06cbb17dc32068eb5d6de075f6babdc">
   <file src="plugins/admindelegation/include/AdminDelegationBuilder.php">
     <PossiblyNullReference occurrences="1">
       <code>getId</code>
@@ -50,11 +50,6 @@
       <code>$res</code>
     </PossiblyUndefinedVariable>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/BacklogItem/RemainingEffortValueRetriever.php">
-    <UndefinedInterfaceMethod occurrences="1">
-      <code>getArtifact</code>
-    </UndefinedInterfaceMethod>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/BacklogItem/SubBacklogItemProvider.class.php">
     <ArgumentTypeCoercion occurrences="1">
       <code>$milestone</code>
@@ -86,7 +81,7 @@
     </NullArgument>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup.php">
-    <InvalidReturnType occurrences="20">
+    <InvalidReturnType occurrences="19">
       <code>fetchArtifactValue</code>
       <code>fetchCSVChangesetValue</code>
       <code>fetchChangesetValue</code>
@@ -98,7 +93,6 @@
       <code>fetchSubmitValue</code>
       <code>fetchSubmitValueMasschange</code>
       <code>fetchTooltipValue</code>
-      <code>getCriteriaDao</code>
       <code>getCriteriaFrom</code>
       <code>getCriteriaWhere</code>
       <code>getDao</code>
@@ -259,9 +253,6 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$planning_factory</code>
     </InvalidPropertyAssignmentValue>
-    <InvalidScalarArgument occurrences="1">
-      <code>$ordered_plannings</code>
-    </InvalidScalarArgument>
     <UndefinedDocblockClass occurrences="2">
       <code>PlanninqFactory</code>
       <code>$this-&gt;planning_factory</code>
@@ -284,23 +275,17 @@
       <code>JsonCast::toFloat($backlog_item-&gt;getRemainingEffort())</code>
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
-    <UndefinedInterfaceMethod occurrences="7">
+    <UndefinedInterfaceMethod occurrences="4">
       <code>title</code>
       <code>type</code>
       <code>short_type</code>
       <code>color</code>
-      <code>getArtifact</code>
-      <code>getArtifact</code>
-      <code>getArtifact</code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/BacklogItemRepresentationFactory.class.php">
     <PossiblyNullArgument occurrences="1">
       <code>$artifact-&gt;getLastChangeset()</code>
     </PossiblyNullArgument>
-    <UndefinedInterfaceMethod occurrences="1">
-      <code>getArtifact</code>
-    </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/BacklogItemResource.php">
     <InvalidArgument occurrences="1">
@@ -469,14 +454,9 @@
     <PossiblyNullReference occurrences="1">
       <code>getTrackerId</code>
     </PossiblyNullReference>
-    <TooManyArguments occurrences="2">
-      <code>checkFormat</code>
+    <TooManyArguments occurrences="1">
       <code>checkFormat</code>
     </TooManyArguments>
-    <UndefinedClass occurrences="2">
-      <code>Tracker_Artifact_Exception_CannotRankWithMyself</code>
-      <code>Tracker_Artifact_Exception_CannotRankWithMyself</code>
-    </UndefinedClass>
     <UndefinedDocblockClass occurrences="1">
       <code>Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation</code>
     </UndefinedDocblockClass>
@@ -511,12 +491,6 @@
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/ProjectBacklogResource.class.php">
-    <TooManyArguments occurrences="1">
-      <code>checkFormat</code>
-    </TooManyArguments>
-    <UndefinedClass occurrences="1">
-      <code>Tracker_Artifact_Exception_CannotRankWithMyself</code>
-    </UndefinedClass>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;milestone_content_updater</code>
     </UndefinedThisPropertyAssignment>
@@ -529,15 +503,12 @@
     <UndefinedClass occurrences="1">
       <code>BacklogItemParentReference</code>
     </UndefinedClass>
-    <UndefinedInterfaceMethod occurrences="8">
+    <UndefinedInterfaceMethod occurrences="5">
       <code>title</code>
       <code>status</code>
       <code>type</code>
       <code>short_type</code>
       <code>color</code>
-      <code>getArtifact</code>
-      <code>getArtifact</code>
-      <code>getArtifact</code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Semantic/Dao/SemanticDoneDao.php">
@@ -633,12 +604,6 @@
     </InvalidNullableReturnType>
   </file>
   <file src="plugins/agiledashboard/include/Planning/ArtifactMilestone.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$this-&gt;getArtifact()-&gt;getLastUpdateDate()</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>int</code>
-    </InvalidReturnType>
     <PossiblyNullPropertyAssignmentValue occurrences="3">
       <code>$planned_artifacts</code>
       <code>null</code>
@@ -881,11 +846,6 @@
       <code>\Tuleap\TestManagement\Event\GetItemsFromMilestone</code>
     </UndefinedClass>
   </file>
-  <file src="plugins/artifactsfolders/include/Folder/ArtifactPresenter.php">
-    <InvalidOperand occurrences="1">
-      <code>$artifact-&gt;getLastUpdateDate()</code>
-    </InvalidOperand>
-  </file>
   <file src="plugins/artifactsfolders/include/Folder/Dao.php">
     <PossiblyFalseArgument occurrences="1">
       <code>$this-&gt;retrieve($sql)</code>
@@ -987,9 +947,6 @@
     </PossiblyFalseIterator>
   </file>
   <file src="plugins/cardwall/include/OnTop/Config.class.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>Cardwall_OnTop_Config_TrackerMapping</code>
-    </InvalidNullableReturnType>
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>$this-&gt;cached_mappings</code>
     </InvalidPropertyAssignmentValue>
@@ -999,12 +956,6 @@
     <InvalidReturnType occurrences="1">
       <code>Cardwall_OnTop_Config_TrackerMapping[]</code>
     </InvalidReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>isset($mappings[$mapping_tracker-&gt;getId()]) ? $mappings[$mapping_tracker-&gt;getId()] : null</code>
-    </NullableReturnStatement>
-    <UndefinedMethod occurrences="1">
-      <code>getFirstValueFor</code>
-    </UndefinedMethod>
   </file>
   <file src="plugins/cardwall/include/OnTop/Config/ColumnFactory.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -1192,9 +1143,6 @@
       <code>$card_fields</code>
       <code>$background_color_builder</code>
     </InvalidPropertyAssignmentValue>
-    <PossiblyUndefinedVariable occurrences="1">
-      <code>$status_fields</code>
-    </PossiblyUndefinedVariable>
     <UndefinedMethod occurrences="1">
       <code>build</code>
     </UndefinedMethod>
@@ -1277,11 +1225,6 @@
       <code>CrossTrackerArtifactRepresentationFactory</code>
       <code>$this-&gt;representation_factory</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/CSVRepresentationBuilder.php">
-    <InvalidArgument occurrences="1">
-      <code>$artifact-&gt;getLastUpdateDate()</code>
-    </InvalidArgument>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/Format/BindToValueVisitor.php">
     <ArgumentTypeCoercion occurrences="3">
@@ -1834,13 +1777,6 @@
     <PossiblyNullArgument occurrences="1">
       <code>$srcItem</code>
     </PossiblyNullArgument>
-    <UndefinedDocblockClass occurrences="5">
-      <code>Integer</code>
-      <code>Boolean</code>
-      <code>Integer</code>
-      <code>Integer</code>
-      <code>Integer</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/docman/include/Docman_PermissionsManagerDao.class.php">
     <FalsableReturnStatement occurrences="1">
@@ -1852,9 +1788,8 @@
     <PossiblyFalseReference occurrences="1">
       <code>isError</code>
     </PossiblyFalseReference>
-    <UndefinedDocblockClass occurrences="2">
+    <UndefinedDocblockClass occurrences="1">
       <code>$row</code>
-      <code>Integer</code>
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/docman/include/Docman_ReportColumn.class.php">
@@ -2027,9 +1962,6 @@
     </NullArgument>
   </file>
   <file src="plugins/docman/include/soap.php">
-    <InvalidArgument occurrences="1">
-      <code>$group_id</code>
-    </InvalidArgument>
     <InvalidScalarArgument occurrences="1">
       <code>PLUGIN_DOCMAN_ITEM_TYPE_FOLDER</code>
     </InvalidScalarArgument>
@@ -4789,46 +4721,6 @@
       <code>$this-&gt;data_export_tab_label</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="plugins/statistics/include/CSV/CSVBuilder.php">
-    <InvalidArgument occurrences="36">
-      <code>"Project ID"</code>
-      <code>"Project Name"</code>
-      <code>"Project Short Name"</code>
-      <code>"Public Project"</code>
-      <code>"Description"</code>
-      <code>"Creation date"</code>
-      <code>"Organization"</code>
-      <code>"Created by"</code>
-      <code>"Created by (Real name)"</code>
-      <code>"Created by (Email)"</code>
-      <code>"Template ID used for creation"</code>
-      <code>"Template name used for creation"</code>
-      <code>"Users added"</code>
-      <code>"CVS activities"</code>
-      <code>"SVN activities"</code>
-      <code>"GIT write"</code>
-      <code>"GIT read"</code>
-      <code>"Files published"</code>
-      <code>"Distinct files published"</code>
-      <code>"Downloaded files (before end date)"</code>
-      <code>"Downloaded files (between start date and end date)"</code>
-      <code>"Active mailing lists"</code>
-      <code>"Inactive mailing lists"</code>
-      <code>"Active forums"</code>
-      <code>"Inactive forums"</code>
-      <code>"Forums activities"</code>
-      <code>"Wiki documents"</code>
-      <code>"Modified wiki pages"</code>
-      <code>"Distinct wiki pages"</code>
-      <code>"Open artifacts"</code>
-      <code>"Closed artifacts"</code>
-      <code>"Added documents"</code>
-      <code>"Deleted documents"</code>
-      <code>"News"</code>
-      <code>"Continuous integration activated"</code>
-      <code>"Continuous integration jobs"</code>
-    </InvalidArgument>
-  </file>
   <file src="plugins/statistics/include/DataExportPresenter.php">
     <UndefinedThisPropertyAssignment occurrences="3">
       <code>$this-&gt;services_usage_label</code>
@@ -5117,11 +5009,6 @@
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
   </file>
-  <file src="plugins/statistics/include/Statistics_Services_UsageFormatter.class.php">
-    <UndefinedDocblockClass occurrences="1">
-      <code>type</code>
-    </UndefinedDocblockClass>
-  </file>
   <file src="plugins/statistics/include/Statistics_Widget_ProjectStatistics.class.php">
     <InvalidReturnStatement occurrences="1">
       <code>$duHtml-&gt;getTotalProjectSize($group_id)</code>
@@ -5144,9 +5031,6 @@
     </PossiblyNullArgument>
   </file>
   <file src="plugins/svn/include/REST/v1/RepositoryResource.php">
-    <ArgumentTypeCoercion occurrences="1">
-      <code>$backend_svn</code>
-    </ArgumentTypeCoercion>
     <NoInterfaceProperties occurrences="4">
       <code>$settings-&gt;commit_rules</code>
       <code>$settings-&gt;immutable_tags</code>
@@ -5261,16 +5145,6 @@
     <UndefinedMethod occurrences="1">
       <code>injectDependencies</code>
     </UndefinedMethod>
-  </file>
-  <file src="plugins/svn/include/SVN/Repository/HookDao.php">
-    <InvalidArgument occurrences="6">
-      <code>$cols</code>
-      <code>", "</code>
-      <code>$vals</code>
-      <code>", "</code>
-      <code>$update</code>
-      <code>", "</code>
-    </InvalidArgument>
   </file>
   <file src="plugins/svn/include/SVN/Repository/ProjectHistoryFormatter.php">
     <InvalidReturnType occurrences="1">
@@ -5608,30 +5482,11 @@
     </UndefinedClass>
   </file>
   <file src="plugins/tracker/include/REST/v1/ArtifactTemporaryFilesResource.class.php">
-    <InvalidPropertyAssignmentValue occurrences="1"/>
-    <InvalidStaticInvocation occurrences="1">
-      <code>Header::sendQuotaHeader($this-&gt;file_manager-&gt;getQuota())</code>
-    </InvalidStaticInvocation>
     <UndefinedClass occurrences="1">
       <code>Tracker_FormElement_InvalidFieldException</code>
     </UndefinedClass>
-    <UndefinedDocblockClass occurrences="10">
-      <code>Tracker_Artifact_Attachment_TemporaryFileManager</code>
-      <code>$this-&gt;file_manager</code>
-      <code>$this-&gt;file_manager</code>
-      <code>$this-&gt;file_manager</code>
-      <code>$this-&gt;file_manager</code>
-      <code>$this-&gt;file_manager</code>
-      <code>$this-&gt;file_manager</code>
-      <code>$this-&gt;file_manager</code>
-      <code>$this-&gt;file_manager</code>
-      <code>$this-&gt;file_manager</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/REST/v1/ArtifactsResource.class.php">
-    <InvalidArgument occurrences="1">
-      <code>$artifact-&gt;getLastUpdateDate()</code>
-    </InvalidArgument>
     <InvalidParamDefault occurrences="1">
       <code>string</code>
     </InvalidParamDefault>
@@ -5733,20 +5588,6 @@
     <InvalidFalsableReturnType occurrences="1">
       <code>int</code>
     </InvalidFalsableReturnType>
-  </file>
-  <file src="plugins/tracker/include/REST/v1/Workflow/TransitionPOSTHandler.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>WorkflowTransitionPOSTRepresentation</code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>$representation</code>
-    </NullableReturnStatement>
-  </file>
-  <file src="plugins/tracker/include/REST/v1/Workflow/TransitionValidator.php">
-    <InvalidArgument occurrences="2">
-      <code>$from_id</code>
-      <code>$to_id</code>
-    </InvalidArgument>
   </file>
   <file src="plugins/tracker/include/SystemEventManager.class.php">
     <InvalidArgument occurrences="1">
@@ -5859,12 +5700,6 @@
     </PossiblyFalseReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Attachment/TemporaryFileManager.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>new PaginatedTemporaryFiles($files, $this-&gt;dao-&gt;foundRows())</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Tracker_Artifact_Attachment_TemporaryFile[]</code>
-    </InvalidReturnType>
     <PossiblyNullArgument occurrences="3">
       <code>$user</code>
       <code>$user</code>
@@ -6010,8 +5845,7 @@
     </TooManyArguments>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact.class.php">
-    <InvalidNullableReturnType occurrences="5">
-      <code>string</code>
+    <InvalidNullableReturnType occurrences="4">
       <code>Tracker_Artifact_Changeset</code>
       <code>bool</code>
       <code>Tracker_Artifact</code>
@@ -6020,17 +5854,12 @@
     <InvalidPropertyAssignmentValue occurrences="1">
       <code>self::NO_PARENT</code>
     </InvalidPropertyAssignmentValue>
-    <InvalidReturnStatement occurrences="4">
-      <code>$artifact &amp;&amp; $this-&gt;id == $artifact-&gt;getId()</code>
+    <InvalidReturnStatement occurrences="1">
       <code>$assigned_users</code>
-      <code>$last_changeset-&gt;getSubmittedOn()</code>
-      <code>-1</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="4">
-      <code>Boolean</code>
+    <InvalidReturnType occurrences="2">
       <code>bool</code>
       <code>PFUser[]</code>
-      <code>Integer</code>
     </InvalidReturnType>
     <InvalidScalarArgument occurrences="1">
       <code>$linked_artifact_ids</code>
@@ -6047,12 +5876,7 @@
     <MoreSpecificReturnType occurrences="1">
       <code>MustacheRenderer</code>
     </MoreSpecificReturnType>
-    <NullableReturnStatement occurrences="9">
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
+    <NullableReturnStatement occurrences="4">
       <code>null</code>
       <code>$previous</code>
       <code>$this-&gt;getHierarchyFactory()-&gt;getParentArtifact($user, $this)</code>
@@ -6072,12 +5896,6 @@
     <TooManyArguments occurrences="1">
       <code>getChildNaturePresenterCollection</code>
     </TooManyArguments>
-    <UndefinedDocblockClass occurrences="4">
-      <code>Boolean</code>
-      <code>Tracker_Artifact_Changeset|Boolean</code>
-      <code>Integer</code>
-      <code>Integer</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="4">
       <code>getContentAsText</code>
       <code>getText</code>
@@ -6765,11 +6583,6 @@
       <code>$ids[$artifact_link_tracker_id]['last_changeset_id']</code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/ArtifactInNatureTablePresenter.php">
-    <InvalidArgument occurrences="1">
-      <code>$artifact-&gt;getLastUpdateDate()</code>
-    </InvalidArgument>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Nature/CustomColumn/CSVOutputStrategy.php">
     <InvalidReturnStatement occurrences="1">
       <code>$artifact_link_info-&gt;getArtifactId()</code>
@@ -6947,13 +6760,12 @@
     <InvalidFalsableReturnType occurrences="1">
       <code>string</code>
     </InvalidFalsableReturnType>
-    <InvalidNullableReturnType occurrences="7">
+    <InvalidNullableReturnType occurrences="6">
       <code>Tracker_FormElement_Field</code>
       <code>Tracker_FormElement_IComputeValues</code>
       <code>Tracker_FormElement_Field</code>
       <code>Tracker_FormElement_Field_Shareable</code>
       <code>Tracker_FormElement_Field_ArtifactLink</code>
-      <code>Tracker_FormElement</code>
       <code>Tracker_FormElement</code>
     </InvalidNullableReturnType>
     <InvalidReturnStatement occurrences="1"/>
@@ -7142,7 +6954,7 @@
     <InvalidFalsableReturnType occurrences="1">
       <code>process</code>
     </InvalidFalsableReturnType>
-    <InvalidReturnType occurrences="14">
+    <InvalidReturnType occurrences="13">
       <code>getCriteriaFrom</code>
       <code>getCriteriaWhere</code>
       <code>getQuerySelect</code>
@@ -7154,7 +6966,6 @@
       <code>fetchFollowUp</code>
       <code>fetchRawValueFromChangeset</code>
       <code>keepValue</code>
-      <code>getCriteriaDao</code>
       <code>fetchSubmitValue</code>
       <code>fetchSubmitValueMasschange</code>
     </InvalidReturnType>
@@ -7177,9 +6988,6 @@
     </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_Computed.class.php">
-    <ImplementedParamTypeMismatch occurrences="1">
-      <code>$value</code>
-    </ImplementedParamTypeMismatch>
     <InvalidReturnStatement occurrences="2">
       <code>($value !== null) ? $value : "-"</code>
       <code>($value !== null) ? $value : "-"</code>
@@ -7382,9 +7190,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_LastUpdateDate.class.php">
-    <InvalidArgument occurrences="1">
-      <code>$changeset-&gt;getArtifact()-&gt;getLastUpdateDate()</code>
-    </InvalidArgument>
     <InvalidNullableReturnType occurrences="1">
       <code>int</code>
     </InvalidNullableReturnType>
@@ -7617,12 +7422,6 @@
       <code>void</code>
       <code>true</code>
     </InvalidReturnType>
-    <PossiblyNullPropertyFetch occurrences="4">
-      <code>$tracker-&gt;id</code>
-      <code>$tracker-&gt;group_id</code>
-      <code>$tracker-&gt;group_id</code>
-      <code>$tracker-&gt;group_id</code>
-    </PossiblyNullPropertyFetch>
     <UndefinedDocblockClass occurrences="1">
       <code>Field</code>
     </UndefinedDocblockClass>
@@ -8128,8 +7927,7 @@
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;table_name</code>
     </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;table_name</code>
+    <UndefinedThisPropertyFetch occurrences="1">
       <code>$this-&gt;table_name</code>
     </UndefinedThisPropertyFetch>
   </file>
@@ -9419,8 +9217,7 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/Rule/Tracker_RulesManager.class.php">
-    <UndefinedMethod occurrences="3">
-      <code>displayEditForm</code>
+    <UndefinedMethod occurrences="2">
       <code>getVisibleValuesPlusNoneIfAny</code>
       <code>getVisibleValuesPlusNoneIfAny</code>
     </UndefinedMethod>
@@ -9616,17 +9413,13 @@
       <code>PFUser</code>
       <code>PFUser</code>
     </InvalidParamDefault>
-    <InvalidReturnStatement occurrences="5">
-      <code>preg_match("/^[a-zA-Z0-9_]+$/i",$item_name)</code>
-      <code>$this-&gt;deletion_date != ''</code>
+    <InvalidReturnStatement occurrences="3">
       <code>Tracker_CannedResponseFactory::instance()</code>
       <code>is_array($this-&gt;cache_permissions)</code>
       <code>true</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="7">
+    <InvalidReturnType occurrences="5">
       <code>int</code>
-      <code>boolean</code>
-      <code>Boolean</code>
       <code>Tracker_CannedResponseFactory</code>
       <code>void</code>
       <code>String</code>
@@ -9665,19 +9458,9 @@
       <code>$line === false</code>
       <code>count($error_nature) &gt;0</code>
     </TypeDoesNotContainType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>Boolean</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>getFieldDataFromCSVValue</code>
     </UndefinedMethod>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;renderer</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;renderer</code>
-      <code>$this-&gt;renderer</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/TrackerFactory.class.php">
     <InvalidArgument occurrences="1">
@@ -10046,18 +9829,12 @@
       <code>'parent_id'</code>
       <code>'id'</code>
     </InvalidArgument>
-    <InvalidReturnStatement occurrences="2">
-      <code>$tracker_list</code>
+    <InvalidReturnStatement occurrences="1">
       <code>$created_trackers_mapping</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>array</code>
+    <InvalidReturnType occurrences="1">
       <code>Tracker[]|void</code>
     </InvalidReturnType>
-    <PossiblyInvalidArrayOffset occurrences="2">
-      <code>$mapper[$xml_parent_id]</code>
-      <code>$mapper[$this-&gt;getXmlTrackerAttribute($xml_tracker, 'id')]</code>
-    </PossiblyInvalidArrayOffset>
     <UndefinedDocblockClass occurrences="6">
       <code>type</code>
       <code>type</code>
@@ -10136,18 +9913,7 @@
       <code>isPost</code>
     </UndefinedMethod>
   </file>
-  <file src="plugins/tracker/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.class.php">
-    <UndefinedDocblockClass occurrences="1">
-      <code>Integer</code>
-    </UndefinedDocblockClass>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;ci_client</code>
-    </UndefinedThisPropertyFetch>
-  </file>
   <file src="plugins/tracker/include/Workflow/PostAction/CIBuild/Transition_PostAction_CIBuildFactory.class.php">
-    <InvalidArgument occurrences="1">
-      <code>$id</code>
-    </InvalidArgument>
     <PossiblyNullArrayAccess occurrences="1">
       <code>$postaction_attributes['job_url']</code>
     </PossiblyNullArrayAccess>
@@ -10335,10 +10101,6 @@
       <code>null</code>
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
-    <UndefinedDocblockClass occurrences="2">
-      <code>Integer</code>
-      <code>Integer</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Workflow/Transition/Condition/FieldNotEmpty.class.php">
     <InvalidArgument occurrences="1">
@@ -10408,12 +10170,6 @@
     <AssignmentToVoid occurrences="1">
       <code>$new_transition_id</code>
     </AssignmentToVoid>
-    <InvalidArgument occurrences="4">
-      <code>$transition_id</code>
-      <code>$workflow-&gt;getId()</code>
-      <code>0</code>
-      <code>0</code>
-    </InvalidArgument>
     <InvalidReturnStatement occurrences="1">
       <code>$this-&gt;getDao()-&gt;addTransition($workflow_id, $from_id, $to_id)</code>
     </InvalidReturnStatement>
@@ -10510,25 +10266,9 @@
     </InvalidReturnType>
   </file>
   <file src="plugins/tracker/include/Workflow/Workflow.class.php">
-    <FalsableReturnStatement occurrences="2">
-      <code>false</code>
-      <code>false</code>
-    </FalsableReturnStatement>
-    <InvalidArgument occurrences="3">
-      <code>0</code>
-      <code>$from</code>
-      <code>$to</code>
-    </InvalidArgument>
     <InvalidMethodCall occurrences="1">
       <code>getRow</code>
     </InvalidMethodCall>
-    <InvalidReturnStatement occurrences="2">
-      <code>true</code>
-      <code>true</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Boolean</code>
-    </InvalidReturnType>
     <InvalidScalarArgument occurrences="1">
       <code>$this-&gt;getFieldId()</code>
     </InvalidScalarArgument>
@@ -10543,11 +10283,6 @@
     <TooManyArguments occurrences="1">
       <code>getTransitions</code>
     </TooManyArguments>
-    <UndefinedDocblockClass occurrences="3">
-      <code>Integer</code>
-      <code>Integer</code>
-      <code>Boolean</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>getBind</code>
     </UndefinedMethod>
@@ -10662,9 +10397,6 @@
     <ImplementedParamTypeMismatch occurrences="1">
       <code>$artifact</code>
     </ImplementedParamTypeMismatch>
-    <InvalidReturnType occurrences="1">
-      <code>getCriteriaDao</code>
-    </InvalidReturnType>
     <UndefinedDocblockClass occurrences="7">
       <code>the</code>
       <code>the</code>
@@ -11233,16 +10965,9 @@
     </PossiblyNullReference>
   </file>
   <file src="src/common/Error/Error_PermissionDenied.class.php">
-    <InvalidArgument occurrences="2">
-      <code>$project-&gt;getId()</code>
-      <code>$project-&gt;getID()</code>
-    </InvalidArgument>
     <PossiblyNullReference occurrences="1">
       <code>getID</code>
     </PossiblyNullReference>
-    <UndefinedDocblockClass occurrences="1">
-      <code>$res</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Error/PermissionDeniedMailSender.php">
     <InvalidReturnType occurrences="1">
@@ -11254,15 +10979,282 @@
       <code>$project</code>
     </PossiblyNullArgument>
   </file>
-  <file src="src/common/Error/PlaceHolderBuilder.php">
-    <InvalidArgument occurrences="1">
-      <code>$project-&gt;getID()</code>
-    </InvalidArgument>
-  </file>
   <file src="src/common/Error/ProjectAccessSuspendedErrorPresenter.php">
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;custom_message</code>
     </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="src/common/FRS/FRSFile.class.php">
+    <LessSpecificReturnStatement occurrences="1">
+      <code>$this-&gt;group</code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType occurrences="1">
+      <code>Project</code>
+    </MoreSpecificReturnType>
+    <PossiblyNullPropertyAssignmentValue occurrences="15">
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+    </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference occurrences="3">
+      <code>getPackageID</code>
+      <code>getPackageID</code>
+      <code>getName</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/common/FRS/FRSFileFactory.class.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>$backend</code>
+    </ArgumentTypeCoercion>
+    <ForbiddenCode occurrences="1">
+      <code>shell_exec("/usr/bin/find ". $src_dir ." -maxdepth 1 -type f -printf \"%f\\n\"")</code>
+    </ForbiddenCode>
+    <NullArgument occurrences="1">
+      <code>$ret_val</code>
+    </NullArgument>
+    <PossiblyNullArgument occurrences="2">
+      <code>$filelist</code>
+      <code>$user</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference occurrences="4">
+      <code>getGroup</code>
+      <code>getFilePath</code>
+      <code>getGroup</code>
+      <code>getGroup</code>
+    </PossiblyNullReference>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;release_factory</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="src/common/FRS/FRSLog.class.php">
+    <PossiblyUndefinedVariable occurrences="3">
+      <code>$actionID</code>
+      <code>$actionID</code>
+      <code>$actionID</code>
+    </PossiblyUndefinedVariable>
+  </file>
+  <file src="src/common/FRS/FRSPackage.class.php">
+    <PossiblyNullPropertyAssignmentValue occurrences="6">
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+    </PossiblyNullPropertyAssignmentValue>
+  </file>
+  <file src="src/common/FRS/FRSPackageController.php">
+    <InvalidArgument occurrences="1">
+      <code>FRSPackage::PERM_READ</code>
+    </InvalidArgument>
+  </file>
+  <file src="src/common/FRS/FRSPackageFactory.class.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>PFUser</code>
+    </InvalidNullableReturnType>
+    <InvalidParamDefault occurrences="1">
+      <code>int</code>
+    </InvalidParamDefault>
+    <NullableReturnStatement occurrences="1">
+      <code>$user</code>
+    </NullableReturnStatement>
+    <PossiblyNullArgument occurrences="1">
+      <code>$user</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference occurrences="1">
+      <code>getGroupID</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/common/FRS/FRSPackagePermissionPresenter.php">
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;permission_information</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="src/common/FRS/FRSPackageRouter.php">
+    <PossiblyUndefinedVariable occurrences="3">
+      <code>$package</code>
+      <code>$package</code>
+      <code>$package</code>
+    </PossiblyUndefinedVariable>
+  </file>
+  <file src="src/common/FRS/FRSRelease.class.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>FRSPackage</code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;_getFRSPackageFactory()-&gt;getFRSPackageFromDb($this-&gt;getPackageID())</code>
+    </NullableReturnStatement>
+    <PossiblyNullPropertyAssignmentValue occurrences="9">
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+      <code>null</code>
+    </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference occurrences="2">
+      <code>getGroupID</code>
+      <code>getName</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/common/FRS/FRSReleaseFactory.class.php">
+    <FalsableReturnStatement occurrences="1">
+      <code>false</code>
+    </FalsableReturnStatement>
+    <InvalidArgument occurrences="1">
+      <code>$release_exists</code>
+    </InvalidArgument>
+    <InvalidNullableReturnType occurrences="1">
+      <code>Array</code>
+    </InvalidNullableReturnType>
+    <InvalidParamDefault occurrences="2">
+      <code>int</code>
+      <code>int</code>
+    </InvalidParamDefault>
+    <InvalidReturnStatement occurrences="1">
+      <code>true</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>int</code>
+    </InvalidReturnType>
+    <InvalidScalarArgument occurrences="1">
+      <code>$release-&gt;getReleaseID()</code>
+    </InvalidScalarArgument>
+    <PossiblyNullArgument occurrences="2">
+      <code>$user</code>
+      <code>$package</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference occurrences="4">
+      <code>getGroupID</code>
+      <code>getGroupID</code>
+      <code>getGroupID</code>
+      <code>getID</code>
+    </PossiblyNullReference>
+    <UndefinedThisPropertyAssignment occurrences="2">
+      <code>$this-&gt;package_factory</code>
+      <code>$this-&gt;file_factory</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="src/common/FRS/FRSReleasePermissionPresenter.php">
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;permission_information</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="src/common/FRS/FRSReleaseRouter.php">
+    <PossiblyNullArgument occurrences="1">
+      <code>$package</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference occurrences="1">
+      <code>getPackageID</code>
+    </PossiblyNullReference>
+    <PossiblyUndefinedVariable occurrences="4">
+      <code>$release</code>
+      <code>$release</code>
+      <code>$release</code>
+      <code>$release</code>
+    </PossiblyUndefinedVariable>
+  </file>
+  <file src="src/common/FRS/FRSValidator.php">
+    <InvalidArgument occurrences="2">
+      <code>$release_exists</code>
+      <code>$res2</code>
+    </InvalidArgument>
+  </file>
+  <file src="src/common/FRS/FRSXMLImporter.class.php">
+    <PossiblyNullArrayAccess occurrences="7">
+      <code>$attrs['name']</code>
+      <code>$attrs['src']</code>
+      <code>$attrs['release-time']</code>
+      <code>$attrs['post-date']</code>
+      <code>$attrs['url']</code>
+      <code>$attrs['name']</code>
+      <code>$attrs['release-time']</code>
+    </PossiblyNullArrayAccess>
+    <PossiblyNullPropertyAssignmentValue occurrences="3">
+      <code>$filetype_dao</code>
+      <code>$processor_dao</code>
+      <code>$permission_manager</code>
+    </PossiblyNullPropertyAssignmentValue>
+    <UndefinedMethod occurrences="1">
+      <code>UGroupManager::instance()</code>
+    </UndefinedMethod>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;xml_import_helper</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="src/common/FRS/FileModuleMonitorFactory.class.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>bool</code>
+    </InvalidNullableReturnType>
+    <InvalidReturnType occurrences="3">
+      <code>String</code>
+      <code>String</code>
+      <code>String</code>
+    </InvalidReturnType>
+    <InvalidScalarArgument occurrences="2">
+      <code>$groupId</code>
+      <code>$fileModuleId</code>
+    </InvalidScalarArgument>
+    <PossiblyNullArgument occurrences="2">
+      <code>$package</code>
+      <code>$package</code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference occurrences="2">
+      <code>getName</code>
+      <code>getName</code>
+    </PossiblyNullReference>
+    <TypeDoesNotContainType occurrences="1">
+      <code>$user</code>
+    </TypeDoesNotContainType>
+    <UndefinedVariable occurrences="1">
+      <code>$userName</code>
+    </UndefinedVariable>
+  </file>
+  <file src="src/common/FRS/PermissionController.php">
+    <InvalidPropertyAssignmentValue occurrences="1">
+      <code>$ugroup_factory</code>
+    </InvalidPropertyAssignmentValue>
+    <UndefinedDocblockClass occurrences="2">
+      <code>UGr</code>
+      <code>$this-&gt;ugroup_factory</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/common/FRS/PermissionsPerGroup/PermissionPerTypeExtractor.php">
+    <InvalidReturnType occurrences="1">
+      <code>array</code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/common/FRS/ServiceFile.class.php">
+    <PossiblyUndefinedVariable occurrences="3">
+      <code>$package_displayed</code>
+      <code>$toolbar</code>
+      <code>$toolbar</code>
+    </PossiblyUndefinedVariable>
+  </file>
+  <file src="src/common/FRS/ToolbarPresenter.php">
+    <InvalidPropertyAssignmentValue occurrences="1">
+      <code>array()</code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="src/common/FRS/UploadedLinksRetriever.php">
+    <PossiblyNullArgument occurrences="1">
+      <code>$this-&gt;user_manager-&gt;getUserById($row['owner_id'])</code>
+    </PossiblyNullArgument>
   </file>
   <file src="src/common/ForgeAccess/AdminController.php">
     <TypeDoesNotContainType occurrences="2">
@@ -11295,20 +11287,6 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$this-&gt;request</code>
     </ArgumentTypeCoercion>
-  </file>
-  <file src="src/common/Http/HttpClientFactory.php">
-    <InvalidReturnStatement occurrences="4">
-      <code>self::createClientWithStandardConfig()</code>
-      <code>self::createClientWithStandardConfig()</code>
-      <code>self::createClientWithConfigForInternalTuleapUse()</code>
-      <code>self::createClientWithConfigForInternalTuleapUse()</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="4">
-      <code>\Psr\Http\Client\ClientInterface</code>
-      <code>\Http\Client\HttpAsyncClient</code>
-      <code>\Psr\Http\Client\ClientInterface</code>
-      <code>\Http\Client\HttpAsyncClient</code>
-    </InvalidReturnType>
   </file>
   <file src="src/common/JWT/REST/v1/JWTResource.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -11351,11 +11329,6 @@
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;no_news</code>
     </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/common/News/Admin/PermissionsPerGroup/NewsJSONPermissionsRetriever.php">
-    <UndefinedClass occurrences="1">
-      <code>Service</code>
-    </UndefinedClass>
   </file>
   <file src="src/common/Project/Admin/Categories/TroveSetNodeFacade.php">
     <UndefinedFunction occurrences="1">
@@ -11618,9 +11591,7 @@
     </InvalidScalarArgument>
   </file>
   <file src="src/common/Project/ProjectManager.class.php">
-    <FalsableReturnStatement occurrences="3">
-      <code>false</code>
-      <code>false</code>
+    <FalsableReturnStatement occurrences="1">
       <code>false</code>
     </FalsableReturnStatement>
     <InvalidArgument occurrences="1">
@@ -11632,61 +11603,16 @@
     <InvalidNullableReturnType occurrences="1">
       <code>Project</code>
     </InvalidNullableReturnType>
-    <InvalidParamDefault occurrences="6">
-      <code>Boolean</code>
-      <code>Boolean</code>
-      <code>Boolean</code>
-      <code>Boolean</code>
+    <InvalidParamDefault occurrences="2">
       <code>String</code>
       <code>String</code>
     </InvalidParamDefault>
-    <InvalidReturnStatement occurrences="4">
-      <code>true</code>
-      <code>$dao-&gt;removeProjectMembers($project-&gt;getID())</code>
-      <code>$result</code>
-      <code>$result</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="5">
+    <InvalidReturnType occurrences="1">
       <code>ProjectManager</code>
-      <code>Boolean</code>
-      <code>Boolean</code>
-      <code>Boolean</code>
-      <code>Boolean</code>
     </InvalidReturnType>
     <NullableReturnStatement occurrences="1">
       <code>$p</code>
     </NullableReturnStatement>
-    <UndefinedDocblockClass occurrences="29">
-      <code>Integer</code>
-      <code>Integer</code>
-      <code>Boolean</code>
-      <code>Boolean</code>
-      <code>Boolean</code>
-      <code>Boolean</code>
-      <code>Boolean</code>
-      <code>Integer</code>
-      <code>Boolean</code>
-      <code>Integer</code>
-      <code>Boolean</code>
-      <code>Integer</code>
-      <code>DataAceesResult</code>
-      <code>Integer</code>
-      <code>Boolean</code>
-      <code>Integer</code>
-      <code>Integer</code>
-      <code>Integer</code>
-      <code>Data</code>
-      <code>Boolean</code>
-      <code>Integer</code>
-      <code>Integer</code>
-      <code>Boolean</code>
-      <code>Integer</code>
-      <code>Boolean</code>
-      <code>Integer</code>
-      <code>Integer</code>
-      <code>Boolean</code>
-      <code>Boolean</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/common/Project/ProjectXMLImporter.class.php">
     <InvalidScalarArgument occurrences="1">
@@ -11862,11 +11788,6 @@
     <ForbiddenCode occurrences="1">
       <code>`mktemp -d -p $tmp_dir $template`</code>
     </ForbiddenCode>
-  </file>
-  <file src="src/common/Queue/Worker.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>$id</code>
-    </InvalidScalarArgument>
   </file>
   <file src="src/common/REST/AuthenticatedResource.class.php">
     <InvalidReturnType occurrences="1">
@@ -12233,24 +12154,14 @@
     </UndefinedDocblockClass>
   </file>
   <file src="src/common/User/UserManager.class.php">
-    <FalsableReturnStatement occurrences="2">
-      <code>false</code>
-      <code>false</code>
-    </FalsableReturnStatement>
-    <InvalidArgument occurrences="2">
-      <code>$midnightTime</code>
-      <code>$midnightTime</code>
-    </InvalidArgument>
     <InvalidNullableReturnType occurrences="1">
       <code>PFUser</code>
     </InvalidNullableReturnType>
-    <InvalidReturnStatement occurrences="2">
-      <code>true</code>
+    <InvalidReturnStatement occurrences="1">
       <code>0</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="3">
+    <InvalidReturnType occurrences="2">
       <code>type</code>
-      <code>Boolean</code>
       <code>PFUser</code>
     </InvalidReturnType>
     <InvalidScalarArgument occurrences="6">
@@ -12276,15 +12187,8 @@
     <UndefinedConstant occurrences="1">
       <code>IS_SCRIPT</code>
     </UndefinedConstant>
-    <UndefinedDocblockClass occurrences="8">
+    <UndefinedDocblockClass occurrences="1">
       <code>type</code>
-      <code>Boolean</code>
-      <code>Integer</code>
-      <code>Boolean</code>
-      <code>Integer</code>
-      <code>Boolean</code>
-      <code>Boolean</code>
-      <code>Boolean</code>
     </UndefinedDocblockClass>
   </file>
   <file src="src/common/User/User_SSHKeyDumper.class.php">
@@ -12476,12 +12380,6 @@
     <UndefinedThisPropertyFetch occurrences="1">
       <code>$this-&gt;pending_news_count</code>
     </UndefinedThisPropertyFetch>
-  </file>
-  <file src="src/common/admin/AdminSidebarPresenterBuilder.php">
-    <InvalidArgument occurrences="2">
-      <code>0</code>
-      <code>0</code>
-    </InvalidArgument>
   </file>
   <file src="src/common/admin/Admin_UserListExporter.class.php">
     <InvalidArgument occurrences="1">
@@ -13411,18 +13309,9 @@
       <code>DataAccessResult</code>
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
-    <InvalidReturnStatement occurrences="1">
-      <code>$this-&gt;retrieve($sql)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Data</code>
-    </InvalidReturnType>
     <PossiblyFalseReference occurrences="1">
       <code>getRow</code>
     </PossiblyFalseReference>
-    <UndefinedDocblockClass occurrences="1">
-      <code>Data</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/common/dao/UserPreferencesDao.class.php">
     <FalsableReturnStatement occurrences="1">
@@ -13506,281 +13395,6 @@
     <UndefinedDocblockClass occurrences="1">
       <code>\ITimeInterval</code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="src/common/frs/FRSFile.class.php">
-    <LessSpecificReturnStatement occurrences="1">
-      <code>$this-&gt;group</code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType occurrences="1">
-      <code>Project</code>
-    </MoreSpecificReturnType>
-    <PossiblyNullPropertyAssignmentValue occurrences="15">
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-    </PossiblyNullPropertyAssignmentValue>
-    <PossiblyNullReference occurrences="3">
-      <code>getPackageID</code>
-      <code>getPackageID</code>
-      <code>getName</code>
-    </PossiblyNullReference>
-    <UndefinedFunction occurrences="1">
-      <code>file_utils_get_size($file_location)</code>
-    </UndefinedFunction>
-  </file>
-  <file src="src/common/frs/FRSFileFactory.class.php">
-    <ArgumentTypeCoercion occurrences="1">
-      <code>$backend</code>
-    </ArgumentTypeCoercion>
-    <ForbiddenCode occurrences="1">
-      <code>shell_exec("/usr/bin/find ". $src_dir ." -maxdepth 1 -type f -printf \"%f\\n\"")</code>
-    </ForbiddenCode>
-    <NullArgument occurrences="1">
-      <code>$ret_val</code>
-    </NullArgument>
-    <PossiblyNullArgument occurrences="2">
-      <code>$filelist</code>
-      <code>$user</code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference occurrences="4">
-      <code>getGroup</code>
-      <code>getFilePath</code>
-      <code>getGroup</code>
-      <code>getGroup</code>
-    </PossiblyNullReference>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;release_factory</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/common/frs/FRSLog.class.php">
-    <PossiblyUndefinedVariable occurrences="3">
-      <code>$actionID</code>
-      <code>$actionID</code>
-      <code>$actionID</code>
-    </PossiblyUndefinedVariable>
-  </file>
-  <file src="src/common/frs/FRSPackage.class.php">
-    <PossiblyNullPropertyAssignmentValue occurrences="6">
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-    </PossiblyNullPropertyAssignmentValue>
-  </file>
-  <file src="src/common/frs/FRSPackageController.php">
-    <InvalidArgument occurrences="1">
-      <code>FRSPackage::PERM_READ</code>
-    </InvalidArgument>
-  </file>
-  <file src="src/common/frs/FRSPackageFactory.class.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>PFUser</code>
-    </InvalidNullableReturnType>
-    <InvalidParamDefault occurrences="1">
-      <code>int</code>
-    </InvalidParamDefault>
-    <NullableReturnStatement occurrences="1">
-      <code>$user</code>
-    </NullableReturnStatement>
-    <PossiblyNullArgument occurrences="1">
-      <code>$user</code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference occurrences="1">
-      <code>getGroupID</code>
-    </PossiblyNullReference>
-  </file>
-  <file src="src/common/frs/FRSPackagePermissionPresenter.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;permission_information</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/common/frs/FRSPackageRouter.php">
-    <PossiblyUndefinedVariable occurrences="3">
-      <code>$package</code>
-      <code>$package</code>
-      <code>$package</code>
-    </PossiblyUndefinedVariable>
-  </file>
-  <file src="src/common/frs/FRSRelease.class.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>FRSPackage</code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>$this-&gt;_getFRSPackageFactory()-&gt;getFRSPackageFromDb($this-&gt;getPackageID())</code>
-    </NullableReturnStatement>
-    <PossiblyNullPropertyAssignmentValue occurrences="9">
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-      <code>null</code>
-    </PossiblyNullPropertyAssignmentValue>
-    <PossiblyNullReference occurrences="2">
-      <code>getGroupID</code>
-      <code>getName</code>
-    </PossiblyNullReference>
-  </file>
-  <file src="src/common/frs/FRSReleaseFactory.class.php">
-    <FalsableReturnStatement occurrences="1">
-      <code>false</code>
-    </FalsableReturnStatement>
-    <InvalidArgument occurrences="1">
-      <code>$release_exists</code>
-    </InvalidArgument>
-    <InvalidNullableReturnType occurrences="1">
-      <code>Array</code>
-    </InvalidNullableReturnType>
-    <InvalidParamDefault occurrences="2">
-      <code>int</code>
-      <code>int</code>
-    </InvalidParamDefault>
-    <InvalidReturnStatement occurrences="1">
-      <code>true</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>int</code>
-    </InvalidReturnType>
-    <InvalidScalarArgument occurrences="1">
-      <code>$release-&gt;getReleaseID()</code>
-    </InvalidScalarArgument>
-    <PossiblyNullArgument occurrences="2">
-      <code>$user</code>
-      <code>$package</code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference occurrences="4">
-      <code>getGroupID</code>
-      <code>getGroupID</code>
-      <code>getGroupID</code>
-      <code>getID</code>
-    </PossiblyNullReference>
-    <UndefinedThisPropertyAssignment occurrences="2">
-      <code>$this-&gt;package_factory</code>
-      <code>$this-&gt;file_factory</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/common/frs/FRSReleasePermissionPresenter.php">
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;permission_information</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/common/frs/FRSReleaseRouter.php">
-    <PossiblyNullArgument occurrences="1">
-      <code>$package</code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference occurrences="1">
-      <code>getPackageID</code>
-    </PossiblyNullReference>
-    <PossiblyUndefinedVariable occurrences="4">
-      <code>$release</code>
-      <code>$release</code>
-      <code>$release</code>
-      <code>$release</code>
-    </PossiblyUndefinedVariable>
-  </file>
-  <file src="src/common/frs/FRSValidator.php">
-    <InvalidArgument occurrences="2">
-      <code>$release_exists</code>
-      <code>$res2</code>
-    </InvalidArgument>
-  </file>
-  <file src="src/common/frs/FRSXMLImporter.class.php">
-    <PossiblyNullArrayAccess occurrences="7">
-      <code>$attrs['name']</code>
-      <code>$attrs['src']</code>
-      <code>$attrs['release-time']</code>
-      <code>$attrs['post-date']</code>
-      <code>$attrs['url']</code>
-      <code>$attrs['name']</code>
-      <code>$attrs['release-time']</code>
-    </PossiblyNullArrayAccess>
-    <PossiblyNullPropertyAssignmentValue occurrences="3">
-      <code>$filetype_dao</code>
-      <code>$processor_dao</code>
-      <code>$permission_manager</code>
-    </PossiblyNullPropertyAssignmentValue>
-    <UndefinedMethod occurrences="1">
-      <code>UGroupManager::instance()</code>
-    </UndefinedMethod>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;xml_import_helper</code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/common/frs/FileModuleMonitorFactory.class.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>bool</code>
-    </InvalidNullableReturnType>
-    <InvalidReturnType occurrences="3">
-      <code>String</code>
-      <code>String</code>
-      <code>String</code>
-    </InvalidReturnType>
-    <InvalidScalarArgument occurrences="2">
-      <code>$groupId</code>
-      <code>$fileModuleId</code>
-    </InvalidScalarArgument>
-    <PossiblyNullArgument occurrences="2">
-      <code>$package</code>
-      <code>$package</code>
-    </PossiblyNullArgument>
-    <PossiblyNullReference occurrences="2">
-      <code>getName</code>
-      <code>getName</code>
-    </PossiblyNullReference>
-    <TypeDoesNotContainType occurrences="1">
-      <code>$user</code>
-    </TypeDoesNotContainType>
-    <UndefinedVariable occurrences="1">
-      <code>$userName</code>
-    </UndefinedVariable>
-  </file>
-  <file src="src/common/frs/PermissionController.php">
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>$ugroup_factory</code>
-    </InvalidPropertyAssignmentValue>
-    <UndefinedDocblockClass occurrences="2">
-      <code>UGr</code>
-      <code>$this-&gt;ugroup_factory</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="src/common/frs/PermissionsPerGroup/PermissionPerTypeExtractor.php">
-    <InvalidReturnType occurrences="1">
-      <code>array</code>
-    </InvalidReturnType>
-  </file>
-  <file src="src/common/frs/ServiceFile.class.php">
-    <PossiblyUndefinedVariable occurrences="3">
-      <code>$package_displayed</code>
-      <code>$toolbar</code>
-      <code>$toolbar</code>
-    </PossiblyUndefinedVariable>
-  </file>
-  <file src="src/common/frs/ToolbarPresenter.php">
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>array()</code>
-    </InvalidPropertyAssignmentValue>
-  </file>
-  <file src="src/common/frs/UploadedLinksRetriever.php">
-    <PossiblyNullArgument occurrences="1">
-      <code>$this-&gt;user_manager-&gt;getUserById($row['owner_id'])</code>
-    </PossiblyNullArgument>
   </file>
   <file src="src/common/html/HTML_Element_Input_Hidden.class.php">
     <TooManyArguments occurrences="1">
@@ -13915,9 +13529,6 @@
     <PossiblyFalseOperand occurrences="1">
       <code>$localInc</code>
     </PossiblyFalseOperand>
-    <PossiblyNullArgument occurrences="1">
-      <code>$filePath</code>
-    </PossiblyNullArgument>
   </file>
   <file src="src/common/include/HTTPRequest.class.php">
     <InvalidReturnStatement occurrences="1">
@@ -14534,11 +14145,6 @@
       <code>$this-&gt;not_started_yet</code>
     </UndefinedThisPropertyAssignment>
   </file>
-  <file src="src/common/system_event/SystemEventProcessor.class.php">
-    <TooManyArguments occurrences="1">
-      <code>info</code>
-    </TooManyArguments>
-  </file>
   <file src="src/common/system_event/SystemEventProcessor_Factory.php">
     <ArgumentTypeCoercion occurrences="4">
       <code>Backend::instance('Aliases')</code>
@@ -14644,17 +14250,6 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$this-&gt;getBackend('System')</code>
     </ArgumentTypeCoercion>
-    <InvalidArgument occurrences="1">
-      <code>$groupId</code>
-    </InvalidArgument>
-    <InvalidReturnStatement occurrences="2">
-      <code>$pm-&gt;removeProjectMembers($project)</code>
-      <code>$pm-&gt;deleteMembershipRequestNotificationEntries($groupId)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>bool</code>
-      <code>bool</code>
-    </InvalidReturnType>
     <TooManyArguments occurrences="2">
       <code>getIdFromParam</code>
       <code>getIdFromParam</code>
@@ -14682,12 +14277,6 @@
     </UndefinedMethod>
   </file>
   <file src="src/common/system_event/include/SystemEvent_PROJECT_RENAME.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$pm-&gt;renameProject($project, $new_name)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>bool</code>
-    </InvalidReturnType>
     <UndefinedMethod occurrences="14">
       <code>repositoryExists</code>
       <code>isNameAvailable</code>
@@ -14765,12 +14354,6 @@
     </UndefinedMethod>
   </file>
   <file src="src/common/system_event/include/SystemEvent_USER_RENAME.class.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$um-&gt;renameUser($user, $new_name)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>bool</code>
-    </InvalidReturnType>
     <UndefinedMethod occurrences="7">
       <code>userHomeExists</code>
       <code>isUserNameAvailable</code>
@@ -14796,27 +14379,9 @@
     <FalsableReturnStatement occurrences="1">
       <code>false</code>
     </FalsableReturnStatement>
-    <InvalidOperand occurrences="3">
-      <code>$this-&gt;showCCList($group_id, $group_artifact_id, true)</code>
-      <code>$this-&gt;showDependencies($group_id, $group_artifact_id, true)</code>
-      <code>$this-&gt;showAttachedFiles($group_id, $group_artifact_id, true)</code>
-    </InvalidOperand>
     <InvalidParamDefault occurrences="1">
       <code>array</code>
     </InvalidParamDefault>
-    <InvalidReturnStatement occurrences="6">
-      <code>$out</code>
-      <code>$out</code>
-      <code>$out</code>
-      <code>$out</code>
-      <code>$out</code>
-      <code>$out</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="3">
-      <code>void</code>
-      <code>void</code>
-      <code>void</code>
-    </InvalidReturnType>
     <NullArgument occurrences="1">
       <code>null</code>
     </NullArgument>
@@ -15193,19 +14758,10 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/tracker/HTML/ArtifactHtml.class.php">
-    <InvalidOperand occurrences="4">
-      <code>$this-&gt;showCCList($group_id,$group_artifact_id, false, $pv)</code>
-      <code>$this-&gt;showAttachedFiles($group_id,$group_artifact_id, false, $pv)</code>
-      <code>$this-&gt;showDependencies($group_id,$group_artifact_id, false, $pv)</code>
-      <code>$this-&gt;showInverseDependencies($group_id,$group_artifact_id)</code>
-    </InvalidOperand>
-    <InvalidReturnStatement occurrences="3">
+    <InvalidReturnStatement occurrences="1">
       <code>$html</code>
-      <code>$out</code>
-      <code>$out</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>void</code>
+    <InvalidReturnType occurrences="1">
       <code>void</code>
     </InvalidReturnType>
   </file>
@@ -15299,9 +14855,6 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="src/common/valid/Rule.class.php">
-    <ImplementedReturnTypeMismatch occurrences="1">
-      <code>String</code>
-    </ImplementedReturnTypeMismatch>
     <InvalidReturnType occurrences="2">
       <code>isValid</code>
       <code>isValid</code>
@@ -16145,10 +15698,6 @@
     </InvalidScalarArgument>
   </file>
   <file src="src/www/soap/common/group.php">
-    <InvalidArgument occurrences="2">
-      <code>$unix_group_name</code>
-      <code>$group_id</code>
-    </InvalidArgument>
     <InvalidReturnStatement occurrences="6">
       <code>new SoapFault(invalid_session_fault, 'Invalid Session ', 'getMyProjects')</code>
       <code>new SoapVar($soap_group, SOAP_ENC_OBJECT)</code>
@@ -16199,24 +15748,6 @@
     </UndefinedGlobalVariable>
   </file>
   <file src="src/www/soap/frs/frs.php">
-    <InvalidArgument occurrences="16">
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-    </InvalidArgument>
     <InvalidNullableReturnType occurrences="2">
       <code>array</code>
       <code>array</code>
@@ -16369,38 +15900,11 @@
     </UndefinedPropertyFetch>
   </file>
   <file src="src/www/soap/tracker/tracker.php">
-    <InvalidArgument occurrences="31">
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
+    <InvalidArgument occurrences="4">
       <code>$artifact</code>
       <code>$artifact</code>
       <code>$artifact</code>
       <code>$artifact</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
     </InvalidArgument>
     <InvalidArrayAccess occurrences="2">
       <code>$artifact['id']</code>

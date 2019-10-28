@@ -166,7 +166,7 @@ if ($request->isAjax()) {
             }
             break;
         case 'svn':
-            require_once('www/svn/svn_data.php');
+            require_once __DIR__.'/../www/svn/svn_data.php';
             $group_id = $request->get('group_id');
             $rev_id = $request->get('val');
             $result = svn_data_get_revision_detail($group_id, 0, $rev_id);
@@ -188,7 +188,7 @@ if ($request->isAjax()) {
             echo '</table>';
             break;
         case 'cvs':
-            require_once('www/cvs/commit_utils.php');
+            require_once __DIR__.'/../www/cvs/commit_utils.php';
             $commit_id = $request->get('val');
             $result =  cvs_get_revision_detail($commit_id);
             if (db_numrows($result) < 1) {
@@ -209,8 +209,6 @@ if ($request->isAjax()) {
             }
             break;
         case 'file':
-            require_once('common/frs/FRSReleaseFactory.class.php');
-            require_once('common/frs/FRSPackageFactory.class.php');
             $group_id = $request->get('group_id');
             switch ($ref->getNature()) {
                 case ReferenceManager::REFERENCE_NATURE_RELEASE:
@@ -223,7 +221,6 @@ if ($request->isAjax()) {
                     }
                     break;
                 case ReferenceManager::REFERENCE_NATURE_FILE:
-                    require_once('common/frs/FRSFileFactory.class.php');
                     $ff = new FRSFileFactory();
                     $file_id = $request->get('val');
                     $file = $ff->getFRSFileFromDb($file_id);

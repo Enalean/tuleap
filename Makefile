@@ -202,7 +202,7 @@ psalm-baseline-update: ## Update the baseline used by Psalm (PHP static analysis
 	git checkout-index -a --prefix="$(TMPPSALM)/"
 	$(MAKE) -C "$(TMPPSALM)/" composer npm-build
 	pushd "$(TMPPSALM)"; \
-	./src/vendor/bin/psalm -c=./tests/psalm/psalm.xml --update-baseline; \
+	$(PHP) ./src/vendor/bin/psalm -c=./tests/psalm/psalm.xml --update-baseline; \
 	popd
 	cp -f "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml ./tests/psalm/tuleap-baseline.xml
 	rm -rf "$(TMPPSALM)"
@@ -213,7 +213,7 @@ psalm-baseline-create-from-scratch: ## Recreate the Psalm baseline from scratch,
 	rm "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml
 	$(MAKE) -C "$(TMPPSALM)/" composer npm-build
 	pushd "$(TMPPSALM)"; \
-	php -d display_errors=1 -d display_startup_errors=1 -d memory_limit=-1 \
+	$(PHP) -d display_errors=1 -d display_startup_errors=1 -d memory_limit=-1 \
 	    ./src/vendor/bin/psalm --no-cache --use-ini-defaults --set-baseline=./tests/psalm/tuleap-baseline.xml -c=./tests/psalm/psalm.xml; \
 	popd
 	cp -f "$(TMPPSALM)"/tests/psalm/tuleap-baseline.xml ./tests/psalm/tuleap-baseline.xml

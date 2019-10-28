@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,37 +16,22 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Tuleap\FRS\PermissionsPerGroup;
 
-class FrsGlobalAdminPermissionCollection
+use Project;
+
+class FRSPermissionPerGroupURLBuilder
 {
-    /**
-     * @var array
-     */
-    private $permissions;
-
-    public function __construct()
+    public function getGlobalAdminLink(Project $project)
     {
-        $this->permissions = array();
-    }
-
-    /**
-     * @return array
-     */
-    public function getPermissions()
-    {
-        $unique_permissions = array_values($this->permissions);
-
-        return $unique_permissions;
-    }
-
-    /**
-     * @param array $permission
-     */
-    public function addPermission($id, array $permission)
-    {
-        $this->permissions[$id] = $permission;
+        return '/file/admin/?' . http_build_query(
+            [
+                "group_id" => $project->getID(),
+                "action"   => "edit-permissions"
+            ]
+        );
     }
 }

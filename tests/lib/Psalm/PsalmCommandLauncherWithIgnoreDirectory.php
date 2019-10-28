@@ -47,13 +47,17 @@ final class PsalmCommandLauncherWithIgnoreDirectory
         $this->shell_passthrough   = $shell_passthrough;
     }
 
-    public function execute(string ...$argv) : int
+    public function execute(string $launch_command, string ...$argv) : int
     {
         $init_script = array_shift($argv);
 
         if (count($argv) < 2) {
             echo "Usage: $init_script config_path ./src/vendor/bin/psalm-command <psalm-parameters>.\n{config_path} will replaced by the rewritten config.\n";
             return 1;
+        }
+        $php_interpreter = '';
+        if ($launch_command !== $init_script) {
+            $php_interpreter = $launch_command.' ';
         }
 
         foreach ($argv as $parameter) {
@@ -87,7 +91,7 @@ final class PsalmCommandLauncherWithIgnoreDirectory
             $parameters[] = str_replace('{config_path}', escapeshellarg($temporary_config_path), $parameter);
         }
 
-        $exit_code = ($this->shell_passthrough)(__DIR__ . "/../../../$command " . implode(' ', $parameters));
+        $exit_code = ($this->shell_passthrough)($php_interpreter . __DIR__ . "/../../../$command " . implode(' ', $parameters));
         @unlink($temporary_config_path);
         return $exit_code;
     }
