@@ -22,6 +22,7 @@
         <expand-button v-bind:column="column"/>
         <collapse-button v-bind:column="column"/>
         <span class="taskboard-header-label" v-if="!column.is_collapsed">{{ column.label }}</span>
+        <cards-in-column-count v-bind:column="column"/>
         <wrong-color-popover v-if="should_popover_be_displayed" v-bind:color="column.color"/>
     </div>
 </template>
@@ -33,13 +34,14 @@ import WrongColorPopover from "./WrongColorPopover.vue";
 import { namespace } from "vuex-class";
 import CollapseButton from "./CollapseButton.vue";
 import ExpandButton from "./ExpandButton.vue";
+import CardsInColumnCount from "./CardsInColumnCount.vue";
 
 const user = namespace("user");
 
 const DEFAULT_COLOR = "#F8F8F8";
 
 @Component({
-    components: { ExpandButton, CollapseButton, WrongColorPopover }
+    components: { CardsInColumnCount, ExpandButton, CollapseButton, WrongColorPopover }
 })
 export default class TaskBoardHeaderCell extends Vue {
     @Prop({ required: true })

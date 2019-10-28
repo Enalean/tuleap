@@ -29,7 +29,7 @@ export function getColumnOfCard(
     return columns.find(column => isStatusAcceptedByColumn(card, column));
 }
 
-function isStatusAcceptedByColumn(card: Card, column: ColumnDefinition): boolean {
+export function isStatusAcceptedByColumn(card: Card, column: ColumnDefinition): boolean {
     return column.mappings.some(mapping => isStatusPartOfMapping(card, mapping));
 }
 
