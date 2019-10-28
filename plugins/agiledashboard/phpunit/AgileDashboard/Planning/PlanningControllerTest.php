@@ -28,6 +28,7 @@ use AgileDashboard_KanbanFactory;
 use AgileDashboard_KanbanManager;
 use AgileDashboard_XMLFullStructureExporter;
 use Codendi_Request;
+use EventManager;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -60,6 +61,18 @@ class PlanningControllerTest extends TestCase
      */
     public $explicit_backlog_dao;
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningUpdater
+     */
+    private $planning_updater;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Planning_RequestValidator
+     */
+    private $planning_request_validator;
+    /**
+     * @var EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
+     */
+    private $event_manager;
+    /**
      * @var Codendi_Request|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $request;
@@ -83,12 +96,15 @@ class PlanningControllerTest extends TestCase
         $this->request->shouldReceive('getProject')->andReturn($project);
         $project->shouldReceive('getID')->andReturn(101);
 
-        $GLOBALS['Response']       = Mockery::mock(BaseLayout::class);
+        $GLOBALS['Response'] = Mockery::mock(BaseLayout::class);
 
         $this->planning_factory     = Mockery::mock(PlanningFactory::class);
         $this->explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
 
-        $this->planning_controller = new Planning_Controller(
+        $this->event_manager              = Mockery::mock(EventManager::class);
+        $this->planning_request_validator = Mockery::mock(\Planning_RequestValidator::class);
+        $this->planning_updater           = Mockery::mock(PlanningUpdater::class);
+        $this->planning_controller        = new Planning_Controller(
             $this->request,
             $this->planning_factory,
             Mockery::mock(Planning_MilestoneFactory::class),
@@ -107,6 +123,9 @@ class PlanningControllerTest extends TestCase
             Mockery::mock(TimeframeChecker::class),
             new DBTransactionExecutorPassthrough(),
             $this->explicit_backlog_dao,
+            $this->planning_updater,
+            $this->event_manager,
+            $this->planning_request_validator
         );
     }
 
@@ -168,5 +187,56 @@ class PlanningControllerTest extends TestCase
 
         $this->expectException(\Exception::class);
         $this->planning_controller->delete();
+    }
+
+    public function testItOnlyUpdateCardWallConfigWhenRequestIsInvalid(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+
+        $this->request->shouldReceive('getCurrentUser')->once()->andReturn($user);
+        $this->request->shouldReceive('get')->withArgs(['planning_id'])->andReturn(1);
+
+        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
+
+        $this->event_manager->shouldReceive('processEvent')->once();
+
+        $planning = Mockery::mock(\Planning::class);
+        $planning->shouldReceive('getPlanningTracker')->once();
+        $this->planning_factory->shouldReceive('getPlanning')->once()->andReturn($planning);
+
+        $this->planning_request_validator->shouldReceive('isValid')->andReturnFalse();
+
+        $GLOBALS['Response']->shouldReceive('redirect')->once();
+
+        $this->planning_controller->update();
+    }
+
+    public function testItUpdatesThePlanning(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+
+        $this->request->shouldReceive('getCurrentUser')->twice()->andReturn($user);
+        $this->request->shouldReceive('get')->withArgs(['planning_id'])->andReturn(1);
+
+        $planning_parameters = [];
+        $this->request->shouldReceive('get')->withArgs(['planning'])->andReturn($planning_parameters);
+
+        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
+
+        $this->event_manager->shouldReceive('processEvent')->once();
+
+        $planning = Mockery::mock(\Planning::class);
+        $planning->shouldReceive('getPlanningTracker')->once();
+        $this->planning_factory->shouldReceive('getPlanning')->once()->andReturn($planning);
+
+        $this->planning_request_validator->shouldReceive('isValid')->andReturnTrue();
+
+        $this->planning_updater->shouldReceive('update')->once();
+
+        $GLOBALS['Response']->shouldReceive('redirect')->once();
+
+        $this->planning_controller->update();
     }
 }

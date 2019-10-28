@@ -25,6 +25,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetriever;
+use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\Presenters\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
@@ -131,6 +132,18 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      * @var ArtifactsInExplicitBacklogDao
      */
     private $artifacts_in_explicit_backlog_dao;
+    /**
+     * @var PlanningUpdater
+     */
+    private $planning_updater;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+    /**
+     * @var Planning_RequestValidator
+     */
+    private $planning_request_validator;
 
     public function __construct(
         Codendi_Request $request,
@@ -150,29 +163,35 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         AdministrationCrumbBuilder $admin_crumb_builder,
         TimeframeChecker $timeframe_checker,
         DBTransactionExecutor $transaction_executor,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao
+        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        PlanningUpdater $planning_updater,
+        EventManager $event_manager,
+        Planning_RequestValidator $planning_request_validator
     ) {
         parent::__construct('agiledashboard', $request);
 
-        $this->project                      = $this->request->getProject();
-        $this->group_id                     = $this->project->getID();
-        $this->planning_factory             = $planning_factory;
-        $this->milestone_factory            = $milestone_factory;
-        $this->project_manager              = $project_manager;
-        $this->xml_exporter                 = $xml_exporter;
-        $this->plugin_path                  = $plugin_path;
-        $this->kanban_manager               = $kanban_manager;
-        $this->config_manager               = $config_manager;
-        $this->kanban_factory               = $kanban_factory;
-        $this->planning_permissions_manager = $planning_permissions_manager;
-        $this->scrum_mono_milestone_checker = $scrum_mono_milestone_checker;
-        $this->scrum_planning_filter        = $scrum_planning_filter;
-        $this->tracker_form_element_factory = $tracker_form_element_factory;
-        $this->service_crumb_builder        = $service_crumb_builder;
-        $this->admin_crumb_builder          = $admin_crumb_builder;
-        $this->timeframe_checker            = $timeframe_checker;
-        $this->transaction_executor         = $transaction_executor;
+        $this->project                           = $this->request->getProject();
+        $this->group_id                          = $this->project->getID();
+        $this->planning_factory                  = $planning_factory;
+        $this->milestone_factory                 = $milestone_factory;
+        $this->project_manager                   = $project_manager;
+        $this->xml_exporter                      = $xml_exporter;
+        $this->plugin_path                       = $plugin_path;
+        $this->kanban_manager                    = $kanban_manager;
+        $this->config_manager                    = $config_manager;
+        $this->kanban_factory                    = $kanban_factory;
+        $this->planning_permissions_manager      = $planning_permissions_manager;
+        $this->scrum_mono_milestone_checker      = $scrum_mono_milestone_checker;
+        $this->scrum_planning_filter             = $scrum_planning_filter;
+        $this->tracker_form_element_factory      = $tracker_form_element_factory;
+        $this->service_crumb_builder             = $service_crumb_builder;
+        $this->admin_crumb_builder               = $admin_crumb_builder;
+        $this->timeframe_checker                 = $timeframe_checker;
+        $this->transaction_executor              = $transaction_executor;
         $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
+        $this->planning_updater                  = $planning_updater;
+        $this->event_manager                     = $event_manager;
+        $this->planning_request_validator        = $planning_request_validator;
     }
 
     public function index()
@@ -451,7 +470,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     {
         $ugroup_user_dao   = new UGroupUserDao();
         $ugroup_manager    = new UGroupManager();
-        $event_manager     = EventManager::instance();
+        $event_manager     = $this->event_manager;
         $ugroup_binding    = new UGroupBinding($ugroup_user_dao, $ugroup_manager);
         $ugroup_duplicator = new UgroupDuplicator(
             new UGroupDao(),
@@ -602,9 +621,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $this->redirect(array('group_id' => $this->group_id, 'action' => 'new'));
         }
 
-        $validator = new Planning_RequestValidator($this->planning_factory);
-
-        if ($validator->isValid($this->request)) {
+        if ($this->planning_request_validator->isValid($this->request)) {
             $this->planning_factory->createPlanning(
                 $this->group_id,
                 PlanningParameters::fromArray(
@@ -685,12 +702,12 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $tracker = $planning->getPlanningTracker();
         $enabled = false;
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_IS_CARDWALL_ENABLED,
-            array(
+            [
                 'tracker' => $tracker,
-                'enabled'    => &$enabled,
-            )
+                'enabled' => &$enabled,
+            ]
         );
 
         return $enabled;
@@ -701,12 +718,12 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $tracker  = $planning->getPlanningTracker();
         $view     = null;
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_PLANNING_CONFIG,
-            array(
+            [
                 'tracker' => $tracker,
                 'view'    => &$view,
-            )
+            ]
         );
 
         return $view;
@@ -715,56 +732,49 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     public function update()
     {
         $this->checkUserIsAdmin();
-        $validator = new Planning_RequestValidator($this->planning_factory);
 
-        if ($validator->isValid($this->request)) {
+        if ($this->planning_request_validator->isValid($this->request)) {
             $planning_parameter = PlanningParameters::fromArray(
                 $this->request->get('planning')
             );
 
             $updated_planning_id = (int) $this->request->get('planning_id');
-            $this->planning_factory->updatePlanning(
-                $updated_planning_id,
-                $this->group_id,
-                $planning_parameter
-            );
+            $user                = $this->request->getCurrentUser();
 
-            $root_planning = $this->planning_factory->getRootPlanning(
-                $this->request->getCurrentUser(),
-                $this->project->getID()
-            );
-            if ($root_planning && (int) $root_planning->getId() === $updated_planning_id) {
-                $this->artifacts_in_explicit_backlog_dao->removeNoMoreSelectableItemsFromExplicitBacklogOfProject(
-                    $planning_parameter->backlog_tracker_ids,
-                    (int) $this->project->getID()
-                );
-            }
+            $this->planning_updater->update($user, $this->project, $updated_planning_id, $planning_parameter);
 
             $this->addFeedback(
                 Feedback::INFO,
                 dgettext('tuleap-agiledashboard', 'Planning succesfully updated.')
             );
         } else {
-            $this->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory'));
+            $this->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory')
+            );
         }
 
         $this->updateCardwallConfig();
 
-        $this->redirect(array('group_id'    => $this->group_id,
-                              'planning_id' => $this->request->get('planning_id'),
-                              'action'      => 'edit'));
+        $this->redirect(
+            [
+                'group_id'    => $this->group_id,
+                'planning_id' => $this->request->get('planning_id'),
+                'action'      => 'edit'
+            ]
+        );
     }
 
     private function updateCardwallConfig()
     {
         $tracker = $this->getPlanning()->getPlanningTracker();
 
-        EventManager::instance()->processEvent(
+        $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE,
-            array(
+            [
                 'request' => $this->request,
                 'tracker' => $tracker,
-            )
+            ]
         );
     }
 
@@ -841,7 +851,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     private function addOtherWarnings(array &$warning_list, Tracker $planning_tracker)
     {
         $event = new AdditionalPlanningConfigurationWarningsRetriever($planning_tracker);
-        EventManager::instance()->processEvent($event);
+        $this->event_manager->processEvent($event);
 
         foreach ($event->getAllWarnings() as $warning) {
             $warning_list[] = $warning;

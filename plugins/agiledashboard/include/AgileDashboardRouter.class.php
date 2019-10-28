@@ -31,6 +31,7 @@ use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\AgileDashboard\Kanban\ShowKanbanController;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
+use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
@@ -48,6 +49,10 @@ class AgileDashboardRouter
 {
     private const PANE_KANBAN = 'kanban';
     private const PANE_CHARTS = 'charts';
+    /**
+     * @var Planning_RequestValidator
+     */
+    private $planning_request_validator;
 
     /**
      * @var Plugin
@@ -142,6 +147,14 @@ class AgileDashboardRouter
      * @var ScrumPresenterBuilder
      */
     private $scrum_presenter_builder;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+    /**
+     * @var PlanningUpdater
+     */
+    private $planning_updater;
 
     public function __construct(
         Plugin $plugin,
@@ -163,7 +176,10 @@ class AgileDashboardRouter
         CountElementsModeChecker $count_elements_mode_checker,
         DBTransactionExecutor $transaction_executor,
         ArtifactsInExplicitBacklogDao $explicit_backlog_dao,
-        ScrumPresenterBuilder $scrum_presenter_builder
+        ScrumPresenterBuilder $scrum_presenter_builder,
+        EventManager $event_manager,
+        PlanningUpdater $planning_updater,
+        Planning_RequestValidator $planning_request_validator
     ) {
         $this->plugin                       = $plugin;
         $this->milestone_factory            = $milestone_factory;
@@ -185,6 +201,9 @@ class AgileDashboardRouter
         $this->transaction_executor         = $transaction_executor;
         $this->explicit_backlog_dao         = $explicit_backlog_dao;
         $this->scrum_presenter_builder      = $scrum_presenter_builder;
+        $this->event_manager                = $event_manager;
+        $this->planning_updater             = $planning_updater;
+        $this->planning_request_validator   = $planning_request_validator;
     }
 
     /**
@@ -427,7 +446,10 @@ class AgileDashboardRouter
             $this->admin_crumb_builder,
             $this->timeframe_checker,
             $this->transaction_executor,
-            $this->explicit_backlog_dao
+            $this->explicit_backlog_dao,
+            $this->planning_updater,
+            $this->event_manager,
+            $this->planning_request_validator
         );
     }
 
