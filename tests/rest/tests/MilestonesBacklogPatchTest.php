@@ -308,7 +308,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
         $inconsistent_story['id'] = $this->stories['Created in sprint'];
         $sprint_id = $this->sprints['Sprint 9001'];
 
-        $response = $this->getResponse($this->client->patch($this->uri, null, json_encode(array(
+        $patch_body = json_encode(array(
             'order'  => array(
                 'ids'         => array($inconsistent_story['id'], $this->story_div['id'], $this->story_sub['id']),
                 'direction'   => 'after',
@@ -320,8 +320,10 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
                     'remove_from' => $sprint_id,
                 )
             ),
-        ))));
-        $this->assertEquals($response->getStatusCode(), 200);
+        ));
+
+        $response = $this->getResponse($this->client->patch($this->uri, null, $patch_body));
+        $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertEquals(
             array(

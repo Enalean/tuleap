@@ -74,20 +74,16 @@ class ResourcesPatcher
     {
         $to_add = array();
         foreach ($add as $move) {
-            if (! isset($move['id']) || ! is_int($move['id'])) {
-                throw new RestException(400, "invalid value specified for `id`. Expected: integer");
-            }
-            if (isset($move['remove_from']) && ! is_int($move['remove_from'])) {
-                throw new RestException(400, "invalid value specified for `remove_from`. Expected: integer");
-            }
-            $to_add[] = $move['id'];
-            if (isset($move['remove_from'])) {
-                $from_artifact = $this->getArtifact($move['remove_from']);
+            $added_id = $move->id;
+            $to_add[] = $added_id;
+            $remove_from = $move->remove_from;
+            if ($remove_from !== null) {
+                $from_artifact = $this->getArtifact($remove_from);
                 $this->artifactlink_updater->updateArtifactLinks(
                     $user,
                     $from_artifact,
                     array(),
-                    array($move['id']),
+                    array($added_id),
                     \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
                 );
             }

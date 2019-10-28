@@ -88,7 +88,7 @@ class MilestoneElementAdder
                 foreach ($add as $added_artifact) {
                     $this->artifacts_in_explicit_backlog_dao->addArtifactToProjectBacklog(
                         $project_id,
-                        (int) $added_artifact['id']
+                        (int) $added_artifact->id
                     );
                 }
                 $this->resources_patcher->removeArtifactFromSource($user, $add);

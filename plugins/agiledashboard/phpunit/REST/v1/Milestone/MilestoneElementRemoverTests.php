@@ -23,14 +23,13 @@ declare(strict_types = 1);
 
 namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
-use Luracast\Restler\RestException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\REST\v1\BacklogRemoveRepresentation;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
@@ -58,6 +57,11 @@ final class MilestoneElementRemoverTests extends TestCase
      */
     private $artifacts_in_explicit_backlog_dao;
 
+    /**
+     * @var BacklogRemoveRepresentation
+     */
+    private $backlog_remove_representation;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -72,6 +76,9 @@ final class MilestoneElementRemoverTests extends TestCase
             $this->explicit_backlog_dao,
             $this->artifacts_in_explicit_backlog_dao
         );
+
+        $this->backlog_remove_representation = new BacklogRemoveRepresentation();
+        $this->backlog_remove_representation->id = 124;
     }
 
     public function testItThrowsAnExceptionIfRemoveIsCalledIntoClassicBacklogContext(): void
@@ -89,30 +96,7 @@ final class MilestoneElementRemoverTests extends TestCase
         $this->remover->removeElementsFromBacklog(
             $this->project,
             [
-                ["id" => 124]
-            ]
-        );
-    }
-
-    public function testItThrowsAnExceptionIfAtLeastOneRemovedIdIsNotWellFormed(): void
-    {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
-            ->with(101)
-            ->andReturnTrue();
-
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('isArtifactInTopBacklogOfProject')
-            ->never();
-
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('removeItemsFromExplicitBacklogOfProject')
-            ->never();
-
-        $this->expectException(RestException::class);
-
-        $this->remover->removeElementsFromBacklog(
-            $this->project,
-            [
-                ["124"]
+                $this->backlog_remove_representation
             ]
         );
     }
@@ -137,7 +121,7 @@ final class MilestoneElementRemoverTests extends TestCase
         $this->remover->removeElementsFromBacklog(
             $this->project,
             [
-                ["id" => 124]
+                $this->backlog_remove_representation
             ]
         );
     }
@@ -161,7 +145,7 @@ final class MilestoneElementRemoverTests extends TestCase
         $this->remover->removeElementsFromBacklog(
             $this->project,
             [
-                ["id" => 124]
+                $this->backlog_remove_representation
             ]
         );
     }

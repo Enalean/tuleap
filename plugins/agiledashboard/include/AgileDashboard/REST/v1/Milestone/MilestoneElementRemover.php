@@ -51,7 +51,6 @@ class MilestoneElementRemover
     /**
      * @throws RemoveNotAvailableInClassicBacklogModeException
      * @throws ProvidedRemoveIdIsNotInExplicitBacklogException
-     * @throws RestException
      */
     public function removeElementsFromBacklog(Project $project, array $removed): void
     {
@@ -70,18 +69,11 @@ class MilestoneElementRemover
         );
     }
 
-    /**
-     * @throws RestException
-     */
     private function getArtifactIdsFromRemoved(array $removed_items): array
     {
         $ids = [];
         foreach ($removed_items as $removed_item) {
-            if (! isset($removed_item['id']) || ! is_int($removed_item['id'])) {
-                throw new RestException(400, "invalid value specified for `id`. Expected: integer");
-            }
-
-            $ids[] = (int)$removed_item['id'];
+            $ids[] = (int)$removed_item->id;
         }
 
         return $ids;

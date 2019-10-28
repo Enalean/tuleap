@@ -31,6 +31,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use Tuleap\DB\DBConnection;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\REST\v1\BacklogAddRepresentation;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 class MilestoneElementAdderTest extends TestCase
@@ -62,6 +63,11 @@ class MilestoneElementAdderTest extends TestCase
      */
     private $resources_patcher;
 
+    /**
+     * @var BacklogAddRepresentation
+     */
+    private $backlog_add_representation;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -79,12 +85,15 @@ class MilestoneElementAdderTest extends TestCase
             $this->resources_patcher,
             $this->transaction_executor
         );
+
+        $this->backlog_add_representation = new BacklogAddRepresentation();
+        $this->backlog_add_representation->id = 112;
     }
 
     public function testItAddsElementToMilestoneInExplicitMode(): void
     {
         $user    = Mockery::mock(\PFUser::class);
-        $add     = [["id" => 112]];
+        $add     = [$this->backlog_add_representation];
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getGroupId')->once()->andReturn(102);
 
@@ -102,7 +111,7 @@ class MilestoneElementAdderTest extends TestCase
     public function testItAddsElementToMilestoneInStandardMode(): void
     {
         $user    = Mockery::mock(\PFUser::class);
-        $add     = [["id" => 112]];
+        $add     = [$this->backlog_add_representation];
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getGroupId')->once()->andReturn(102);
 
