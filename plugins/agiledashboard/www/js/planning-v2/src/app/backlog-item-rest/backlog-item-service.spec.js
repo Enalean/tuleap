@@ -81,4 +81,23 @@ describe("BacklogItemService", function() {
             expect(value.total).toEqual("2");
         });
     });
+
+    describe("removeItemFromExplicitBacklog() -", function() {
+        it("Given a project id and an item id, then the PATCH route is called to remove the item id from explicit backlog", function() {
+            const project_id = 101;
+            const backlog_item = { id: 5 };
+            mockBackend
+                .expectPATCH("/api/v1/projects/" + project_id + "/backlog", {
+                    remove: [{ id: backlog_item.id }]
+                })
+                .respond(200);
+
+            var promise = BacklogItemService.removeItemFromExplicitBacklog(project_id, [
+                backlog_item
+            ]);
+            mockBackend.flush();
+
+            expect(promise).toBeResolved();
+        });
+    });
 });

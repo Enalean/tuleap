@@ -25,7 +25,6 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
-use Tuleap\AgileDashboard\FormElement\BurnupFieldRetriever;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
@@ -92,11 +91,8 @@ class AgileDashboardRouterBuilder
         $milestone_representation_builder                = $this->getMilestoneRepresentationBuilder();
         $paginated_backlog_items_representations_builder = $this->getPaginatedBacklogItemsRepresentationsBuilder();
 
-        $pane_presenter_builder_factory = $this->getPanePresenterBuilderFactory($milestone_factory);
-
         $top_milestone_pane_factory = $this->getTopMilestonePaneFactory(
             $request,
-            $pane_presenter_builder_factory,
             $plugin,
             $milestone_representation_builder,
             $paginated_backlog_items_representations_builder
@@ -175,30 +171,16 @@ class AgileDashboardRouterBuilder
      */
     private function getTopMilestonePaneFactory(
         $request,
-        $pane_presenter_builder_factory,
         Plugin $plugin,
         AgileDashboard_Milestone_MilestoneRepresentationBuilder $milestone_representation_builder,
         AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder $paginated_backlog_items_representations_builder
     ) {
         return new Planning_VirtualTopMilestonePaneFactory(
             $request,
-            $pane_presenter_builder_factory,
             $plugin->getThemePath(),
             $milestone_representation_builder,
-            $paginated_backlog_items_representations_builder
-        );
-    }
-
-    private function getPanePresenterBuilderFactory($milestone_factory)
-    {
-        return new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
-            $this->getBacklogFactory(),
-            $this->getBacklogItemCollectionFactory(
-                $milestone_factory,
-                new AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder()
-            ),
-            new BurnupFieldRetriever(Tracker_FormElementFactory::instance()),
-            EventManager::instance()
+            $paginated_backlog_items_representations_builder,
+            new ExplicitBacklogDao()
         );
     }
 

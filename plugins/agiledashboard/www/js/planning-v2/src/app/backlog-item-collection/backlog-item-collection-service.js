@@ -30,7 +30,8 @@ function BacklogItemCollectionService(BacklogItemService, ItemAnimatorService) {
         items: {},
         refreshBacklogItem,
         removeBacklogItemsFromCollection,
-        addOrReorderBacklogItemsInCollection
+        addOrReorderBacklogItemsInCollection,
+        removeExplicitBacklogElement
     });
 
     function refreshBacklogItem(backlog_item_id) {
@@ -96,5 +97,9 @@ function BacklogItemCollectionService(BacklogItemService, ItemAnimatorService) {
 
         var args = [index, 0].concat(backlog_items_to_add_or_reorder);
         Array.prototype.splice.apply(backlog_items_collection, args);
+    }
+
+    function removeExplicitBacklogElement(backlog_item) {
+        BacklogItemService.removeItemFromExplicitBacklog(backlog_item.project.id, [backlog_item]);
     }
 }

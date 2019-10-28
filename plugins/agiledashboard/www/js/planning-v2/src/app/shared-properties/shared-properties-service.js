@@ -6,7 +6,8 @@ export default function SharedPropertiesService() {
         milestone_id: undefined,
         milestone: undefined,
         initial_backlog_items: undefined,
-        initial_milestones: undefined
+        initial_milestones: undefined,
+        is_in_explicit_top_backlog: undefined
     };
 
     return {
@@ -23,7 +24,9 @@ export default function SharedPropertiesService() {
         getInitialBacklogItems: getInitialBacklogItems,
         setInitialBacklogItems: setInitialBacklogItems,
         getInitialMilestones: getInitialMilestones,
-        setInitialMilestones: setInitialMilestones
+        setInitialMilestones: setInitialMilestones,
+        isInExplicitTopBacklogManagement: isInExplicitTopBacklogManagement,
+        setIsInExplicitTopBacklogManagement: setIsInExplicitTopBacklogManagement
     };
 
     function getUserId() {
@@ -80,5 +83,13 @@ export default function SharedPropertiesService() {
 
     function setInitialMilestones(initial_milestones) {
         property.initial_milestones = initial_milestones;
+    }
+
+    function isInExplicitTopBacklogManagement() {
+        return property.is_in_explicit_top_backlog;
+    }
+
+    function setIsInExplicitTopBacklogManagement(is_in_explicit_top_backlog) {
+        property.is_in_explicit_top_backlog = is_in_explicit_top_backlog;
     }
 }

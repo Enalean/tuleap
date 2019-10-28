@@ -16,7 +16,8 @@ function BacklogItemService(Restangular, BacklogItemFactory) {
         getBacklogItemChildren: getBacklogItemChildren,
         reorderBacklogItemChildren: reorderBacklogItemChildren,
         removeAddReorderBacklogItemChildren: removeAddReorderBacklogItemChildren,
-        removeAddBacklogItemChildren: removeAddBacklogItemChildren
+        removeAddBacklogItemChildren: removeAddBacklogItemChildren,
+        removeItemFromExplicitBacklog: removeItemFromExplicitBacklog
     });
 
     function getBacklogItem(backlog_item_id) {
@@ -153,6 +154,17 @@ function BacklogItemService(Restangular, BacklogItemFactory) {
                 add: dropped_item_ids.map(dropped_item_id => ({
                     id: dropped_item_id,
                     remove_from: source_backlog_item_id
+                }))
+            });
+    }
+
+    function removeItemFromExplicitBacklog(project_id, backlog_items) {
+        return rest
+            .one("projects", project_id)
+            .all("backlog")
+            .patch({
+                remove: backlog_items.map(backlog_item => ({
+                    id: backlog_item.id
                 }))
             });
     }
