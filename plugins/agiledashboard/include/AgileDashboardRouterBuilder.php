@@ -36,6 +36,7 @@ use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetri
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardPermissionsRepresentationBuilder;
 use Tuleap\AgileDashboard\PermissionsPerGroup\PlanningPermissionsRepresentationBuilder;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
+use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
@@ -162,7 +163,10 @@ class AgileDashboardRouterBuilder
                 $event_manager,
                 $this->getPlanningFactory(),
                 new ExplicitBacklogDao()
-            )
+            ),
+            $event_manager,
+            new PlanningUpdater($planning_factory, new ArtifactsInExplicitBacklogDao()),
+            new Planning_RequestValidator($planning_factory)
         );
     }
 
