@@ -20,10 +20,12 @@
 import { Module } from "vuex";
 import { RootState } from "../type";
 import { UserState } from "./type";
+import * as actions from "./user-actions";
 
 export function createUserModule(initial_user_state: UserState): Module<UserState, RootState> {
     return {
         namespaced: true,
+        actions,
         state: initial_user_state
     };
 }

@@ -18,10 +18,11 @@
  */
 
 import { Card, Swimlane } from "../../type";
-import { del, patch, recursiveGet } from "tlp";
+import { recursiveGet } from "tlp";
 import { ActionContext } from "vuex";
 import { SwimlaneState } from "./type";
 import { RootState } from "../type";
+import { UserPreference, UserPreferenceValue } from "../user/type";
 
 export async function loadSwimlanes(
     context: ActionContext<SwimlaneState, RootState>
@@ -84,46 +85,29 @@ export async function loadChildrenCards(
     }
 }
 
-export async function expandSwimlane(
+export function expandSwimlane(
     context: ActionContext<SwimlaneState, RootState>,
     swimlane: Swimlane
 ): Promise<void> {
     context.commit("expandSwimlane", swimlane);
+    const payload: UserPreference = {
+        key: getPreferenceName(context, swimlane)
+    };
 
-    const user_id = context.rootState.user.user_id;
-    try {
-        await del(
-            `/api/v1/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(
-                getPreferenceName(context, swimlane)
-            )}`
-        );
-    } catch (e) {
-        // no display of error
-        // we don't need to stop the flow of the users just because a user pref has not been saved
-    }
+    return context.dispatch("user/deletePreference", payload, { root: true });
 }
 
-export async function collapseSwimlane(
+export function collapseSwimlane(
     context: ActionContext<SwimlaneState, RootState>,
     swimlane: Swimlane
 ): Promise<void> {
     context.commit("collapseSwimlane", swimlane);
+    const payload: UserPreferenceValue = {
+        key: getPreferenceName(context, swimlane),
+        value: "1"
+    };
 
-    const user_id = context.rootState.user.user_id;
-    try {
-        await patch(`/api/v1/users/${encodeURIComponent(user_id)}/preferences`, {
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                key: getPreferenceName(context, swimlane),
-                value: 1
-            })
-        });
-    } catch (e) {
-        // no display of error
-        // we don't need to stop the flow of the users just because a user pref has not been saved
-    }
+    return context.dispatch("user/setPreference", payload, { root: true });
 }
 
 function getPreferenceName(

@@ -19,9 +19,7 @@
 
 import { ActionContext } from "vuex";
 import { RootState, State } from "./type";
-import * as tlp from "tlp";
 import { ColumnDefinition } from "../type";
-import { mockFetchError, mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
 import * as actions from "./actions";
 
 jest.mock("tlp");
@@ -43,78 +41,34 @@ describe("State actions", () => {
     });
 
     describe("expandColumn", () => {
-        it(`When the column is expanded, the user pref is stored`, () => {
+        it(`When the column is expanded, the user pref is stored`, async () => {
             const column: ColumnDefinition = {
                 id: 69
             } as ColumnDefinition;
 
-            const tlpDeleteMock = jest.spyOn(tlp, "del");
-            mockFetchSuccess(tlpDeleteMock, {});
-
-            actions.expandColumn(context, column);
+            await actions.expandColumn(context, column);
             expect(context.commit).toHaveBeenCalledWith("expandColumn", column);
-            expect(tlpDeleteMock).toHaveBeenCalledWith(
-                `/api/v1/users/101/preferences?key=plugin_taskboard_collapse_column_42_69`
-            );
-        });
-
-        it(`ignores error on save`, () => {
-            const column: ColumnDefinition = {
-                id: 69
-            } as ColumnDefinition;
-
-            const tlpDeleteMock = jest.spyOn(tlp, "del");
-            mockFetchError(tlpDeleteMock, {});
-
-            actions.expandColumn(context, column);
-            expect(context.commit).toHaveBeenCalledWith("expandColumn", column);
-            expect(tlpDeleteMock).toHaveBeenCalledWith(
-                `/api/v1/users/101/preferences?key=plugin_taskboard_collapse_column_42_69`
+            expect(context.dispatch).toHaveBeenCalledWith(
+                "user/deletePreference",
+                { key: "plugin_taskboard_collapse_column_42_69" },
+                { root: true }
             );
         });
     });
 
     describe("collapseColumn", () => {
-        it(`When the column is collapsed, the user pref is stored`, () => {
+        it(`When the column is collapsed, the user pref is stored`, async () => {
             const column: ColumnDefinition = {
                 id: 69
             } as ColumnDefinition;
 
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
-            mockFetchSuccess(tlpPatchMock, {});
-
-            actions.collapseColumn(context, column);
+            await actions.collapseColumn(context, column);
             expect(context.commit).toHaveBeenCalledWith("collapseColumn", column);
-            expect(tlpPatchMock).toHaveBeenCalledWith(`/api/v1/users/101/preferences`, {
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    key: "plugin_taskboard_collapse_column_42_69",
-                    value: 1
-                })
-            });
-        });
-
-        it(`ignores error on save`, () => {
-            const column: ColumnDefinition = {
-                id: 69
-            } as ColumnDefinition;
-
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
-            mockFetchError(tlpPatchMock, {});
-
-            actions.collapseColumn(context, column);
-            expect(context.commit).toHaveBeenCalledWith("collapseColumn", column);
-            expect(tlpPatchMock).toHaveBeenCalledWith(`/api/v1/users/101/preferences`, {
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    key: "plugin_taskboard_collapse_column_42_69",
-                    value: 1
-                })
-            });
+            expect(context.dispatch).toHaveBeenCalledWith(
+                "user/setPreference",
+                { key: "plugin_taskboard_collapse_column_42_69", value: "1" },
+                { root: true }
+            );
         });
     });
 });
