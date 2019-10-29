@@ -42,15 +42,21 @@ class ColumnPresenter
     public $color;
 
     /**
+     * @var bool
+     */
+    public $is_collapsed;
+
+    /**
      * @var TrackerMappingPresenter[]
      */
     public $mappings = [];
 
-    public function __construct(int $id, string $label, string $color, array $mappings)
+    public function __construct(int $id, string $label, string $color, bool $is_collapsed, array $mappings)
     {
-        $this->id       = $id;
-        $this->label    = $label;
-        $this->color    = $color;
-        $this->mappings = $mappings;
+        $this->id           = $id;
+        $this->label        = $label;
+        $this->color        = $color;
+        $this->mappings     = $mappings;
+        $this->is_collapsed = $is_collapsed;
     }
 }

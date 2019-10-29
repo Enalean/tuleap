@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column;
 
 use Cardwall_OnTop_ColumnDao;
+use PFUser;
+use Planning;
 use Tuleap\Cardwall\Column\ColumnColorRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenterBuilder;
 
@@ -48,9 +50,10 @@ class ColumnPresenterCollectionRetriever
     /**
      * @return ColumnPresenter[]
      */
-    public function getColumns(\Planning $planning): array
+    public function getColumns(PFUser $user, \Planning_Milestone $milestone): array
     {
         $collection = [];
+        $planning   = $milestone->getPlanning();
         foreach ($this->column_dao->searchColumnsByTrackerId($planning->getPlanningTrackerId()) as $row) {
             $column_id    = (int) $row['id'];
             $mappings     = $this->tracker_mapping_builder->buildMappings($column_id, $planning);
@@ -58,10 +61,18 @@ class ColumnPresenterCollectionRetriever
                 $column_id,
                 $row['label'],
                 ColumnColorRetriever::getHeaderColorNameOrHex($row),
+                $this->isCollapsed($user, $milestone, $column_id),
                 $mappings
             );
         }
 
         return $collection;
+    }
+
+    private function isCollapsed(PFUser $user, \Planning_Milestone $milestone, int $column_id): bool
+    {
+        $preference_name = 'plugin_taskboard_collapse_column_' . $milestone->getArtifactId() . '_' . $column_id;
+
+        return !empty($user->getPreference($preference_name));
     }
 }

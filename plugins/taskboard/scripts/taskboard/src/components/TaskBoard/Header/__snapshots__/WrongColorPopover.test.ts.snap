@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WrongColorPopover initiates a popover to inform user that the chosen color is wrong 1`] = `
-<div>
+<div
+  class="taskboard-header-wrong-color-container"
+>
   <span
     class="taskboard-header-wrong-color"
     data-placement="bottom"

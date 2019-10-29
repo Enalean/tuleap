@@ -19,12 +19,14 @@
   -->
 
 <template>
-    <div class="taskboard-cell">
-        <template v-for="card of cards">
-            <child-card v-bind:key="card.id" v-bind:card="card"/>
-        </template>
-        <template v-if="swimlane.is_loading_children_cards">
-            <card-skeleton v-for="i in nb_skeletons_to_display" v-bind:key="i"/>
+    <div class="taskboard-cell" v-bind:class="classes">
+        <template v-if="!column.is_collapsed">
+            <template v-for="card of cards">
+                <child-card v-bind:key="card.id" v-bind:card="card"/>
+            </template>
+            <template v-if="swimlane.is_loading_children_cards">
+                <card-skeleton v-for="i in nb_skeletons_to_display" v-bind:key="i"/>
+            </template>
         </template>
     </div>
 </template>
@@ -72,6 +74,10 @@ export default class ColumnWithChildren extends Mixins(SkeletonMixin) {
         }
 
         return this.nb_skeletons;
+    }
+
+    get classes(): string {
+        return this.column.is_collapsed ? "taskboard-cell-collapsed" : "";
     }
 }
 </script>

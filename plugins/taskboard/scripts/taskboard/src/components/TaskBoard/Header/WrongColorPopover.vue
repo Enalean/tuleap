@@ -18,7 +18,7 @@
   -
   -->
 <template>
-    <div>
+    <div class="taskboard-header-wrong-color-container">
         <span class="taskboard-header-wrong-color" ref="trigger" data-placement="bottom" data-trigger="click">
             <i class="fa fa-warning"></i>
         </span>

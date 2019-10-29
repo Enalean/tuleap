@@ -32,6 +32,7 @@ export interface ColumnDefinition {
     label: string;
     color: string;
     mappings: Array<Mapping>;
+    is_collapsed: boolean;
 }
 
 export interface Swimlane {

@@ -19,30 +19,21 @@
   -->
 
 <template>
-    <div class="taskboard-swimlane">
-        <div class="taskboard-cell">
-            <div class="tlp-card tlp-skeleton-card taskboard-card-parent taskboard-card-skeleton"></div>
-        </div>
-        <columns-skeleton
-            v-for="(col, index) of columns"
-            v-bind:key="col.id"
-            v-bind:column_index="index"
-            v-bind:column="col"/>
-    </div>
+    <div class="taskboard-cell" v-bind:class="classes"><slot v-if="!column.is_collapsed"></slot></div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { ColumnDefinition } from "../../../../../type";
-import { State } from "vuex-class";
-import ColumnsSkeleton from "./ColumnsSkeleton.vue";
+import { Component, Prop } from "vue-property-decorator";
+import { ColumnDefinition } from "../../../../type";
 
-@Component({
-    components: { ColumnsSkeleton }
-})
-export default class SwimlaneSkeleton extends Vue {
-    @State
-    readonly columns!: Array<ColumnDefinition>;
+@Component
+export default class CellForSoloCard extends Vue {
+    @Prop({ required: true })
+    readonly column!: ColumnDefinition;
+
+    get classes(): string {
+        return this.column.is_collapsed ? "taskboard-cell-collapsed" : "";
+    }
 }
 </script>

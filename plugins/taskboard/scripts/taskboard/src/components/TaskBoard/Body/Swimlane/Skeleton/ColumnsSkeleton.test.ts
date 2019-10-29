@@ -20,20 +20,63 @@
 import { shallowMount } from "@vue/test-utils";
 import ColumnsSkeleton from "./ColumnsSkeleton.vue";
 import CardSkeleton from "./CardSkeleton.vue";
+import { ColumnDefinition } from "../../../../../type";
 
 describe("ColumnsSkeleton", () => {
     it("displays a fixed amount of skeletons depending on column index", () => {
         [
-            { column_index: 0, expected_number_of_skeletons: 4 },
-            { column_index: 1, expected_number_of_skeletons: 1 },
-            { column_index: 2, expected_number_of_skeletons: 2 },
-            { column_index: 3, expected_number_of_skeletons: 3 },
-            { column_index: 4, expected_number_of_skeletons: 1 },
-            { column_index: 5, expected_number_of_skeletons: 4 },
-            { column_index: 6, expected_number_of_skeletons: 1 }
-        ].forEach(({ column_index, expected_number_of_skeletons }) => {
-            const wrapper = shallowMount(ColumnsSkeleton, { propsData: { column_index } });
+            {
+                column_index: 0,
+                column: { is_collapsed: false } as ColumnDefinition,
+                expected_number_of_skeletons: 4
+            },
+            {
+                column_index: 1,
+                column: { is_collapsed: false } as ColumnDefinition,
+                expected_number_of_skeletons: 1
+            },
+            {
+                column_index: 2,
+                column: { is_collapsed: false } as ColumnDefinition,
+                expected_number_of_skeletons: 2
+            },
+            {
+                column_index: 3,
+                column: { is_collapsed: false } as ColumnDefinition,
+                expected_number_of_skeletons: 3
+            },
+            {
+                column_index: 4,
+                column: { is_collapsed: false } as ColumnDefinition,
+                expected_number_of_skeletons: 1
+            },
+            {
+                column_index: 5,
+                column: { is_collapsed: false } as ColumnDefinition,
+                expected_number_of_skeletons: 4
+            },
+            {
+                column_index: 6,
+                column: { is_collapsed: false } as ColumnDefinition,
+                expected_number_of_skeletons: 1
+            }
+        ].forEach(({ column_index, column, expected_number_of_skeletons }) => {
+            const wrapper = shallowMount(ColumnsSkeleton, { propsData: { column_index, column } });
+
+            expect(wrapper.classes("taskboard-cell-collapsed")).toBe(false);
             expect(wrapper.findAll(CardSkeleton).length).toBe(expected_number_of_skeletons);
         });
+    });
+
+    it("Given a column is collapsed, no skeleton is displayed in it", () => {
+        const wrapper = shallowMount(ColumnsSkeleton, {
+            propsData: {
+                column_index: 0,
+                column: { is_collapsed: true } as ColumnDefinition
+            }
+        });
+
+        expect(wrapper.classes("taskboard-cell-collapsed")).toBe(true);
+        expect(wrapper.findAll(CardSkeleton).length).toBe(0);
     });
 });

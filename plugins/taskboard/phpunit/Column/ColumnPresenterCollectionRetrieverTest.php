@@ -45,8 +45,13 @@ class ColumnPresenterCollectionRetrieverTest extends TestCase
         $planning = Mockery::mock(\Planning::class);
         $planning->shouldReceive('getPlanningTrackerId')->once()->andReturn(101);
 
+        $user = Mockery::mock(\PFUser::class);
+
+        $milestone = Mockery::mock(\Planning_Milestone::class);
+        $milestone->shouldReceive('getPlanning')->once()->andReturn($planning);
+
         $retriever  = new ColumnPresenterCollectionRetriever($dao, $mappings_builder);
-        $collection = $retriever->getColumns($planning);
+        $collection = $retriever->getColumns($user, $milestone);
 
         $this->assertEmpty($collection);
     }
@@ -66,6 +71,24 @@ class ColumnPresenterCollectionRetrieverTest extends TestCase
         $planning = Mockery::mock(\Planning::class);
         $planning->shouldReceive('getPlanningTrackerId')->once()->andReturn(101);
 
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getPreference')
+             ->with('plugin_taskboard_collapse_column_42_2')
+             ->once()
+             ->andReturn(false);
+        $user->shouldReceive('getPreference')
+             ->with('plugin_taskboard_collapse_column_42_4')
+             ->once()
+             ->andReturn(false);
+        $user->shouldReceive('getPreference')
+             ->with('plugin_taskboard_collapse_column_42_6')
+             ->once()
+             ->andReturn('1');
+
+        $milestone = Mockery::mock(\Planning_Milestone::class);
+        $milestone->shouldReceive('getPlanning')->once()->andReturn($planning);
+        $milestone->shouldReceive('getArtifactId')->andReturn(42);
+
         $mappings_builder = Mockery::mock(TrackerMappingPresenterBuilder::class);
         $mappings_builder->shouldReceive('buildMappings')->withArgs(
             function (int $column_id, \Planning $planning) {
@@ -74,14 +97,17 @@ class ColumnPresenterCollectionRetrieverTest extends TestCase
         )->andReturn([]);
 
         $retriever  = new ColumnPresenterCollectionRetriever($dao, $mappings_builder);
-        $collection = $retriever->getColumns($planning);
+        $collection = $retriever->getColumns($user, $milestone);
 
         $this->assertCount(3, $collection);
         $this->assertEquals('To do', $collection[0]->label);
         $this->assertEquals('fiesta_red', $collection[0]->color);
+        $this->assertFalse($collection[0]->is_collapsed);
         $this->assertEquals('On going', $collection[1]->label);
         $this->assertEquals('', $collection[1]->color);
+        $this->assertFalse($collection[1]->is_collapsed);
         $this->assertEquals('Done', $collection[2]->label);
         $this->assertEquals('#87DBEF', $collection[2]->color);
+        $this->assertTrue($collection[2]->is_collapsed);
     }
 }
