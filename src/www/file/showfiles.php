@@ -155,10 +155,11 @@ $package_permission_manager = new PackagePermissionManager($permission_manager, 
 $release_permission_manager = new ReleasePermissionManager($permission_manager, $frsrf);
 $license_agreement_display  = new \Tuleap\FRS\LicenseAgreement\LicenseAgreementDisplay(
     $hp,
-    TemplateRendererFactory::build()
+    TemplateRendererFactory::build(),
+    new \Tuleap\FRS\LicenseAgreement\LicenseAgreementDao(),
 );
 
-$html .= $license_agreement_display->getModal();
+$html .= $license_agreement_display->getModals($project);
 
 // Iterate and show the packages
 foreach ($packages as $package_id => $package_for_display) {
@@ -511,12 +512,14 @@ function toggle_image(image_id) {
 (function($) {
     $('.frs-license-agreement-modal-link').click(function () {
         var file_id = $(this).data('file-id');
-        $('#frs-license-agreement-accept').data('download-file-id', file_id);
-        $('#frs-license-agreement-modal').modal('show');
+        var agreement_id = $(this).data('agreement-id');
+        $('#frs-license-agreement-accept_'+agreement_id).data('download-file-id', file_id);
+        $('#frs-license-agreement-modal_'+agreement_id).modal('show');
     });
-    $('#frs-license-agreement-accept').click(function () {
-        var file_id = $('#frs-license-agreement-accept').data('download-file-id');
-        $('#frs-license-agreement-modal').modal('hide');
+    $('.frs-license-agreement-accept').click(function () {
+        var file_id = $(this).data('download-file-id');
+        var agreement_id = $(this).data('agreement-id');
+        $('#frs-license-agreement-modal_'+agreement_id).modal('hide');
         window.open('/file/download/'+file_id);
     });
 })(jQuery);
