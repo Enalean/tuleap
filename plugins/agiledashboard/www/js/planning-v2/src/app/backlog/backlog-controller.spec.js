@@ -1,8 +1,8 @@
+import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
 import _ from "lodash";
 
-import backlog_module from "./backlog.js";
 import BaseBacklogController from "./backlog-controller.js";
 import BacklogFilterValue from "../backlog-filter-terms.js";
 
@@ -47,7 +47,7 @@ describe("BacklogController - ", () => {
         };
 
     beforeEach(() => {
-        angular.mock.module(backlog_module);
+        angular.mock.module(planning_module);
 
         angular.mock.inject(function(
             _$q_,

@@ -1,11 +1,10 @@
+import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
 
-import rest_module from "./backlog-item-rest.js";
-
 describe("BacklogItemFactory", function() {
     beforeEach(function() {
-        angular.mock.module(rest_module);
+        angular.mock.module(planning_module);
     });
 
     describe("augment", function() {

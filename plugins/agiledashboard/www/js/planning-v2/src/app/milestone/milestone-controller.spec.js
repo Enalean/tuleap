@@ -1,7 +1,7 @@
+import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
 
-import milestone_module from "./milestone.js";
 import BaseMilestoneController from "./milestone-controller.js";
 
 describe("MilestoneController -", function() {
@@ -17,7 +17,7 @@ describe("MilestoneController -", function() {
         BacklogItemSelectedService;
 
     beforeEach(function() {
-        angular.mock.module(milestone_module);
+        angular.mock.module(planning_module);
 
         angular.mock.inject(function(
             _$q_,

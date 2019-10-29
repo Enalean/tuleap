@@ -22,6 +22,7 @@ import "../../../scrum-header.js";
 import angular from "angular";
 import ngAnimate from "angular-animate";
 import ngSanitize from "angular-sanitize";
+import dragular from "dragular";
 import angular_artifact_modal_module from "angular-artifact-modal";
 
 import "angular-moment";
@@ -30,16 +31,7 @@ import "angular-gettext";
 import "restangular";
 import translations from "../../po/fr.po";
 
-import backlog from "./backlog/backlog.js";
-import backlog_item_rest from "./backlog-item-rest/backlog-item-rest.js";
-import backlog_item_selected from "./backlog-item-selected/backlog-item-selected.js";
-import edit_item from "./edit-item/edit-item.js";
-import in_properties from "./in-properties/in-properties.js";
-import milestone from "./milestone/milestone.js";
-import shared_properties from "./shared-properties/shared-properties.js";
-import user_preferences from "./user-preferences/user-preferences.js";
-import rest_error from "./rest-error/rest-error.js";
-import animator_module from "./animator/animator.js";
+import card_fields from "card-fields/index.js";
 
 import MainController from "./main-controller.js";
 import PlanningConfig from "./app-config.js";
@@ -47,24 +39,40 @@ import PlanningDirective from "./planning-directive.js";
 import OpenTlpDropdownDirective from "./open-tlp-dropdown-directive.js";
 import SuccessMessageComponent from "./success-message-component.js";
 import ItemProgressComponent from "./item-progress/item-progress-component.js";
+import BacklogItemService from "./backlog-item-rest/backlog-item-service.js";
+import BacklogItemCollectionService from "./backlog-item-collection/backlog-item-collection-service.js";
+import MilestoneCollectionService from "./milestone-collection/milestone-collection-service.js";
+import MilestoneDirective from "./milestone/milestone-directive.js";
+import MilestoneService from "./milestone-rest/milestone-service.js";
+import RestErrorService from "./rest-error/rest-error-service.js";
+import BacklogItemSelectDirective from "./backlog-item-selected/backlog-item-select-directive.js";
+import BacklogItemSelectedBarDirective from "./backlog-item-selected/backlog-item-selected-bar-directive.js";
+import BacklogItemSelectedService from "./backlog-item-selected/backlog-item-selected-service.js";
+import BacklogItemDetailsDirective from "./backlog-item/backlog-item-details/backlog-item-details-directive.js";
+import SharedPropertiesService from "./shared-properties/shared-properties-service.js";
+import UserPreferencesService from "./user-preferences/user-preferences-service.js";
+import DroppedService from "./drop/dropped-service.js";
+import ProjectService from "./project/project-service.js";
+import infiniteScrollDirective from "./infinite-scroll/infinite-scroll-directive.js";
+import InPropertiesFilter from "./in-properties/in-properties-filter.js";
+import EditItemService from "./edit-item/edit-item-service.js";
+import ItemAnimatorService from "./animator/item-animator-service.js";
+import BacklogDirective from "./backlog/backlog-directive.js";
+import BacklogItemDirective from "./backlog-item/backlog-item-directive.js";
+
+import BacklogService from "./backlog-rest/backlog-service.js";
+import BacklogItemFactory from "./backlog-item-rest/backlog-item-factory.js";
 
 export default angular
     .module("planning", [
         "angularMoment",
         "gettext",
+        "restangular",
         angular_artifact_modal_module,
         ngAnimate,
         ngSanitize,
-        animator_module,
-        backlog,
-        backlog_item_rest,
-        backlog_item_selected,
-        edit_item,
-        in_properties,
-        milestone,
-        rest_error,
-        shared_properties,
-        user_preferences
+        dragular,
+        card_fields
     ])
     .config(PlanningConfig)
     .run([
@@ -77,6 +85,30 @@ export default angular
     ])
     .controller("MainController", MainController)
     .directive("planning", PlanningDirective)
+    .directive("backlog", BacklogDirective)
+    .directive("backlogItem", BacklogItemDirective)
     .directive("openTlpDropdown", OpenTlpDropdownDirective)
+    .directive("milestone", MilestoneDirective)
+    .directive("backlogItemSelect", BacklogItemSelectDirective)
+    .directive("backlogItemSelectedBar", BacklogItemSelectedBarDirective)
+    .directive("backlogItemDetails", BacklogItemDetailsDirective)
+    .directive("infiniteScroll", infiniteScrollDirective)
+    .service("BacklogItemService", BacklogItemService)
+    .service("MilestoneCollectionService", MilestoneCollectionService)
+    .service("BacklogItemCollectionService", BacklogItemCollectionService)
+    .service("MilestoneService", MilestoneService)
+    .service("RestErrorService", RestErrorService)
+    .service("BacklogItemSelectedService", BacklogItemSelectedService)
+    .service("SharedPropertiesService", SharedPropertiesService)
+    .service("UserPreferencesService", UserPreferencesService)
+    .service("DroppedService", DroppedService)
+    .service("ProjectService", ProjectService)
+    .service("EditItemService", EditItemService)
+    .service("ItemAnimatorService", ItemAnimatorService)
+    .service("BacklogService", BacklogService)
+    .service("BacklogItemService", BacklogItemService)
+    .service("MilestoneService", MilestoneService)
+    .factory("BacklogItemFactory", BacklogItemFactory)
     .component("successMessage", SuccessMessageComponent)
-    .component("itemProgress", ItemProgressComponent).name;
+    .component("itemProgress", ItemProgressComponent)
+    .filter("InPropertiesFilter", InPropertiesFilter).name;

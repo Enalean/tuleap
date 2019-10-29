@@ -1,8 +1,7 @@
+import planning_module from "../app.js";
 import _ from "lodash";
 import angular from "angular";
 import "angular-mocks";
-
-import drop_module from "./drop.js";
 
 describe("DroppedService -", function() {
     var $q,
@@ -14,7 +13,7 @@ describe("DroppedService -", function() {
         rest_error;
 
     beforeEach(function() {
-        angular.mock.module(drop_module);
+        angular.mock.module(planning_module);
 
         angular.mock.inject(function(
             _$q_,
