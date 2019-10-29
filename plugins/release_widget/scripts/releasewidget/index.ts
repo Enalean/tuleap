@@ -45,12 +45,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const project_id_dataset = vue_mount_point.dataset.projectId;
     const is_IE11_dataset = vue_mount_point.dataset.isIe11;
+    const nb_upcoming_releases_dataset = vue_mount_point.dataset.nbUpcomingReleases;
+    const nb_backlog_items_dataset = vue_mount_point.dataset.nbBacklogItems;
 
     if (!project_id_dataset) {
         throw new Error("Project Id is missing.");
     }
 
+    if (!nb_upcoming_releases_dataset) {
+        throw new Error("Number Upcoming Releases is missing.");
+    }
+
+    if (!nb_backlog_items_dataset) {
+        throw new Error("Number Backlog Items is missing.");
+    }
+
     const project_id = Number.parseInt(project_id_dataset, 10);
+    const nb_upcoming_releases = Number.parseInt(nb_upcoming_releases_dataset, 10);
+    const nb_backlog_items = Number.parseInt(nb_backlog_items_dataset, 10);
 
     const AppComponent = Vue.extend(App);
     const store = createStore();
@@ -59,7 +71,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         store,
         propsData: {
             projectId: project_id,
-            isBrowserIE11: is_IE11_dataset
+            isBrowserIE11: is_IE11_dataset,
+            nbUpcomingReleases: nb_upcoming_releases,
+            nbBacklogItems: nb_backlog_items
         }
     }).$mount(vue_mount_point);
 });

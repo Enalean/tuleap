@@ -111,10 +111,6 @@ describe("Store actions", () => {
                 jest.spyOn(rest_querier, "getTrackersProject").mockReturnValue(
                     Promise.resolve(trackers)
                 );
-                jest.spyOn(rest_querier, "getNbOfUpcomingReleases").mockReturnValue(
-                    Promise.resolve(1)
-                );
-                jest.spyOn(rest_querier, "getNbOfBacklogItems").mockReturnValue(Promise.resolve(2));
                 jest.spyOn(rest_querier, "getCurrentMilestones").mockReturnValue(
                     Promise.resolve(milestones)
                 );
@@ -122,8 +118,6 @@ describe("Store actions", () => {
                 await actions.getMilestones(context);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
                 expect(context.commit).toHaveBeenCalledWith("setTrackers", trackers);
-                expect(context.commit).toHaveBeenCalledWith("setNbUpcomingReleases", 1);
-                expect(context.commit).toHaveBeenCalledWith("setNbBacklogItem", 2);
                 expect(context.commit).toHaveBeenCalledWith("setCurrentMilestones", milestones);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
             });

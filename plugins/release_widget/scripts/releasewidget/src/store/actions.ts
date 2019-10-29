@@ -20,9 +20,7 @@
 import {
     getCurrentMilestones as getAllCurrentMilestones,
     getMilestonesContent as getContent,
-    getNbOfBacklogItems as getBacklogs,
     getNbOfSprints,
-    getNbOfUpcomingReleases as getReleases,
     getTrackersProject as getTrackers
 } from "../api/rest-querier";
 
@@ -34,34 +32,6 @@ import {
     TrackerProject
 } from "../type";
 import { FetchWrapperError } from "tlp";
-
-async function getNumberOfBacklogItems(context: Context): Promise<void> {
-    context.commit("resetErrorMessage");
-    let total = 0;
-    const project_id = context.state.project_id;
-    if (project_id !== null) {
-        total = await getBacklogs({
-            project_id,
-            limit: context.state.limit,
-            offset: context.state.offset
-        });
-    }
-    return context.commit("setNbBacklogItem", total);
-}
-
-async function getNumberOfUpcomingReleases(context: Context): Promise<void> {
-    context.commit("resetErrorMessage");
-    let total = 0;
-    const project_id = context.state.project_id;
-    if (project_id !== null) {
-        total = await getReleases({
-            project_id,
-            limit: context.state.limit,
-            offset: context.state.offset
-        });
-    }
-    return context.commit("setNbUpcomingReleases", total);
-}
 
 async function getCurrentMilestones(context: Context): Promise<void> {
     context.commit("resetErrorMessage");
@@ -96,8 +66,6 @@ export async function getMilestones(context: Context): Promise<void> {
         context.commit("setIsLoading", true);
 
         await getTrackersProject(context);
-        await getNumberOfUpcomingReleases(context);
-        await getNumberOfBacklogItems(context);
         await getCurrentMilestones(context);
     } catch (error) {
         await handleErrorMessage(context, error);

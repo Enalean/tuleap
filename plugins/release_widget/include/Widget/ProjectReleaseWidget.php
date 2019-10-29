@@ -28,7 +28,6 @@ use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 use Widget;
-use HTTPRequest;
 
 class ProjectReleaseWidget extends Widget
 {
@@ -56,11 +55,14 @@ class ProjectReleaseWidget extends Widget
 
     public function getContent() : string
     {
-        $request = HTTPRequest::instance();
+        $builder = ProjectReleasePresenterBuilder::build();
 
         $renderer = $this->getRenderer(__DIR__ . '/../../templates');
 
-        return $renderer->renderToString('releasewidget', new ProjectReleasePresenter($request->getProject(), $this->isIE11()));
+        return $renderer->renderToString(
+            'releasewidget',
+            $builder->getProjectReleasePresenter($this->isIE11())
+        );
     }
 
     private function getRenderer(string $template_path) : TemplateRenderer

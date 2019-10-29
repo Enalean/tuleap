@@ -26,14 +26,7 @@ import {
     ParametersRequestWithoutId
 } from "../type";
 
-export {
-    getNbOfBacklogItems,
-    getNbOfUpcomingReleases,
-    getCurrentMilestones,
-    getNbOfSprints,
-    getMilestonesContent,
-    getTrackersProject
-};
+export { getCurrentMilestones, getNbOfSprints, getMilestonesContent, getTrackersProject };
 
 function recursiveGetProjectMilestonesWithQuery(
     project_id: number,
@@ -50,20 +43,6 @@ function recursiveGetProjectMilestonesWithQuery(
     });
 }
 
-async function getNbOfUpcomingReleases({
-    project_id,
-    limit,
-    offset
-}: ParametersRequestWithId): Promise<number> {
-    const query = JSON.stringify({
-        period: "future"
-    });
-
-    const response = await recursiveGetProjectMilestonesWithQuery(project_id, query, limit, offset);
-
-    return response.length;
-}
-
 function getCurrentMilestones({
     project_id,
     limit,
@@ -74,21 +53,6 @@ function getCurrentMilestones({
     });
 
     return recursiveGetProjectMilestonesWithQuery(project_id, query, limit, offset);
-}
-
-async function getNbOfBacklogItems({
-    project_id,
-    limit,
-    offset
-}: ParametersRequestWithId): Promise<number> {
-    const response = await get(`/api/v1/projects/${encodeURIComponent(project_id)}/backlog`, {
-        params: {
-            limit,
-            offset
-        }
-    });
-
-    return getPaginationSizeFromHeader(response.headers);
 }
 
 async function getNbOfSprints(
