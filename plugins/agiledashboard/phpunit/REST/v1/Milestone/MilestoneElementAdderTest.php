@@ -26,6 +26,10 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 use Mockery;
 use ParagonIE\EasyDB\EasyDB;
 use PHPUnit\Framework\TestCase;
+use Planning;
+use PlanningFactory;
+use Tracker_Artifact;
+use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
@@ -68,6 +72,21 @@ class MilestoneElementAdderTest extends TestCase
      */
     private $backlog_add_representation;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
+     */
+    private $planning_factory;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning
+     */
+    private $root_planning;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact
+     */
+    private $artifact;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -76,6 +95,8 @@ class MilestoneElementAdderTest extends TestCase
         $this->explicit_backlog_dao              = Mockery::mock(ExplicitBacklogDao::class);
         $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
         $this->db_connection                     = Mockery::mock(DBConnection::class);
+        $this->planning_factory                  = Mockery::mock(PlanningFactory::class);
+        $artifact_factory                        = Mockery::mock(Tracker_ArtifactFactory::class);
 
         $this->transaction_executor = new DBTransactionExecutorPassthrough();
 
@@ -83,11 +104,21 @@ class MilestoneElementAdderTest extends TestCase
             $this->explicit_backlog_dao,
             $this->artifacts_in_explicit_backlog_dao,
             $this->resources_patcher,
+            $this->planning_factory,
+            $artifact_factory,
             $this->transaction_executor
         );
 
         $this->backlog_add_representation = new BacklogAddRepresentation();
         $this->backlog_add_representation->id = 112;
+
+        $this->root_planning = Mockery::mock(Planning::class);
+        $this->root_planning->shouldReceive('getBacklogTrackersIds')->andReturn([101, 104]);
+
+        $this->artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact_factory->shouldReceive('getArtifactById')
+            ->with(112)
+            ->andReturn($this->artifact);
     }
 
     public function testItAddsElementToMilestoneInExplicitMode(): void
@@ -95,7 +126,14 @@ class MilestoneElementAdderTest extends TestCase
         $user    = Mockery::mock(\PFUser::class);
         $add     = [$this->backlog_add_representation];
         $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getGroupId')->once()->andReturn(102);
+        $project->shouldReceive('getID')->andReturn(102);
+
+        $this->artifact->shouldReceive('getTrackerId')->andReturn(101);
+
+        $this->planning_factory->shouldReceive('getRootPlanning')
+            ->once()
+            ->with($user, 102)
+            ->andReturn($this->root_planning);
 
         $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')->once();
         $this->resources_patcher->shouldReceive('removeArtifactFromSource')->once();
@@ -113,7 +151,14 @@ class MilestoneElementAdderTest extends TestCase
         $user    = Mockery::mock(\PFUser::class);
         $add     = [$this->backlog_add_representation];
         $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getGroupId')->once()->andReturn(102);
+        $project->shouldReceive('getID')->andReturn(102);
+
+        $this->artifact->shouldReceive('getTrackerId')->andReturn(101);
+
+        $this->planning_factory->shouldReceive('getRootPlanning')
+            ->once()
+            ->with($user, 102)
+            ->andReturn($this->root_planning);
 
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
             ->once()
@@ -123,6 +168,52 @@ class MilestoneElementAdderTest extends TestCase
         $this->resources_patcher->shouldReceive('removeArtifactFromSource')
             ->once()
             ->withArgs([$user, $add]);
+
+        $this->adder->addElementToBacklog($project, $add, $user);
+    }
+
+    public function testItDoesNotAddElementToMilestoneIfAtLeastOneArtifactIsNotInTopBacklogTracker(): void
+    {
+        $user    = Mockery::mock(\PFUser::class);
+        $add     = [$this->backlog_add_representation];
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('getID')->andReturn(102);
+
+        $this->artifact->shouldReceive('getTrackerId')->andReturn(199);
+
+        $this->planning_factory->shouldReceive('getRootPlanning')
+            ->once()
+            ->with($user, 102)
+            ->andReturn($this->root_planning);
+
+        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')->never();
+        $this->resources_patcher->shouldReceive('removeArtifactFromSource')->never();
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->never();
+
+        $this->expectException(ProvidedAddedIdIsNotInPartOfTopBacklogException::class);
+
+        $this->adder->addElementToBacklog($project, $add, $user);
+    }
+
+    public function testItDoesNotAddElementToMilestoneIfNoRootPlanning(): void
+    {
+        $user    = Mockery::mock(\PFUser::class);
+        $add     = [$this->backlog_add_representation];
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('getID')->andReturn(102);
+
+        $this->artifact->shouldReceive('getTrackerId')->andReturn(199);
+
+        $this->planning_factory->shouldReceive('getRootPlanning')
+            ->once()
+            ->with($user, 102)
+            ->andReturnFalse();
+
+        $this->artifacts_in_explicit_backlog_dao->shouldReceive('addArtifactToProjectBacklog')->never();
+        $this->resources_patcher->shouldReceive('removeArtifactFromSource')->never();
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->never();
+
+        $this->expectException(NoRootPlanningException::class);
 
         $this->adder->addElementToBacklog($project, $add, $user);
     }

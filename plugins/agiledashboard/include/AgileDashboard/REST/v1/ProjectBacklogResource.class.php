@@ -51,6 +51,8 @@ use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementAdder;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementRemover;
+use Tuleap\AgileDashboard\REST\v1\Milestone\NoRootPlanningException;
+use Tuleap\AgileDashboard\REST\v1\Milestone\ProvidedAddedIdIsNotInPartOfTopBacklogException;
 use Tuleap\AgileDashboard\REST\v1\Milestone\ProvidedRemoveIdIsNotInExplicitBacklogException;
 use Tuleap\AgileDashboard\REST\v1\Milestone\RemoveNotAvailableInClassicBacklogModeException;
 use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
@@ -274,13 +276,21 @@ class ProjectBacklogResource
     ) {
         $this->checkIfUserCanChangePrioritiesInMilestone($user, $project);
         if ($add) {
-            $adder = new MilestoneElementAdder(
-                new ExplicitBacklogDao(),
-                new ArtifactsInExplicitBacklogDao(),
-                $this->resources_patcher,
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
-            );
-            $adder->addElementToBacklog($project, $add, $user);
+            try {
+                $adder = new MilestoneElementAdder(
+                    new ExplicitBacklogDao(),
+                    new ArtifactsInExplicitBacklogDao(),
+                    $this->resources_patcher,
+                    $this->planning_factory,
+                    Tracker_ArtifactFactory::instance(),
+                    new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+                );
+                $adder->addElementToBacklog($project, $add, $user);
+            } catch (ProvidedAddedIdIsNotInPartOfTopBacklogException $exception) {
+                throw new RestException(400, $exception->getMessage());
+            } catch (NoRootPlanningException $exception) {
+                throw new RestException(404, $exception->getMessage());
+            }
         }
 
         if ($order) {

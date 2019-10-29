@@ -25,7 +25,9 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
 use Luracast\Restler\RestException;
 use PFUser;
+use PlanningFactory;
 use Project;
+use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
@@ -51,30 +53,77 @@ class MilestoneElementAdder
      */
     private $db_transaction_executor;
 
+    /**
+     * @var PlanningFactory
+     */
+    private $planning_factory;
+
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         ResourcesPatcher $resources_patcher,
+        PlanningFactory $planning_factory,
+        Tracker_ArtifactFactory $artifact_factory,
         DBTransactionExecutor $db_transaction_executor
     ) {
         $this->explicit_backlog_dao              = $explicit_backlog_dao;
         $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
         $this->resources_patcher                 = $resources_patcher;
         $this->db_transaction_executor           = $db_transaction_executor;
+        $this->planning_factory                  = $planning_factory;
+        $this->artifact_factory                  = $artifact_factory;
     }
 
 
     /**
      * @throws RestException
+     * @throws ProvidedAddedIdIsNotInPartOfTopBacklogException
+     * @throws NoRootPlanningException
      * @throws \Throwable
      */
     public function addElementToBacklog(Project $project, array $add, \PFUser $user): void
     {
-        $project_id = (int) $project->getGroupId();
+        $project_id = (int) $project->getID();
+
+        $this->checkAddedIdsBelongToTheProjectTopBacklogTrackers($project, $user, $add);
+
         if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id)) {
             $this->addElementInExplicitBacklog($user, $add, $project_id);
         } else {
             $this->moveArtifactsForStandardBacklog($add, $user);
+        }
+    }
+
+    /**
+     * @throws NoRootPlanningException
+     * @throws ProvidedAddedIdIsNotInPartOfTopBacklogException
+     */
+    private function checkAddedIdsBelongToTheProjectTopBacklogTrackers(Project $project, PFUser $user, array $add)
+    {
+        $root_planning = $this->planning_factory->getRootPlanning($user, (int) $project->getID());
+        if (! $root_planning) {
+            throw new NoRootPlanningException();
+        }
+
+        $ids_in_error  = [];
+        foreach ($add as $added_artifact) {
+            $added_artifact_id = (int) $added_artifact->id;
+            $artifact          = $this->artifact_factory->getArtifactById($added_artifact_id);
+
+            if ($artifact !== null &&
+                ! in_array($artifact->getTrackerId(), $root_planning->getBacklogTrackersIds())
+            ) {
+                $ids_in_error[] = $added_artifact_id;
+            }
+        }
+
+        if (count($ids_in_error) > 0) {
+            throw new ProvidedAddedIdIsNotInPartOfTopBacklogException($ids_in_error);
         }
     }
 
