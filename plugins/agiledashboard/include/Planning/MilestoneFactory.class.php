@@ -579,7 +579,7 @@ class Planning_MilestoneFactory
         $paginated_top_milestones = $this->getPaginatedTopMilestonesWithStatusCriterion(
             $user,
             $project,
-            new StatusAll(),
+            new StatusOpen(),
             $limit,
             $offset,
             $order
