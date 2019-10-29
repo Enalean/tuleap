@@ -28,7 +28,7 @@ const state: State = {
     limit: 50,
     is_loading: false,
     current_milestones: [],
-    trackers: []
+    trackers_agile_dashboard: []
 };
 
 export default state;

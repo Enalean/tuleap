@@ -42,6 +42,7 @@ import RoadmapSection from "./RoadmapSection/RoadmapSection.vue";
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Action, Getter, Mutation, State } from "vuex-class";
+import { TrackerAgileDashboard } from "../type";
 
 @Component({
     components: { WhatsHotSection, RoadmapSection }
@@ -55,6 +56,8 @@ export default class App extends Vue {
     readonly nbUpcomingReleases!: number;
     @Prop()
     readonly nbBacklogItems!: number;
+    @Prop()
+    readonly trackersAgileDashboard!: TrackerAgileDashboard[];
     @State
     readonly is_loading!: boolean;
     @State
@@ -67,6 +70,8 @@ export default class App extends Vue {
     setNbUpcomingReleases!: (nbUpcomingReleases: number) => void;
     @Mutation
     setNbBacklogItem!: (nbBacklogItems: number) => void;
+    @Mutation
+    setTrackers!: (trackers_id: TrackerAgileDashboard[]) => void;
     @Action
     getMilestones!: () => void;
 
@@ -74,6 +79,7 @@ export default class App extends Vue {
         this.setProjectId(this.projectId);
         this.setNbUpcomingReleases(this.nbUpcomingReleases);
         this.setNbBacklogItem(this.nbBacklogItems);
+        this.setTrackers(this.trackersAgileDashboard);
         this.getMilestones();
     }
 

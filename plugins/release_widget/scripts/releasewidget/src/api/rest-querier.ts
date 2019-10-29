@@ -19,7 +19,6 @@
 
 import { get, recursiveGet } from "tlp";
 import {
-    TrackerProject,
     MilestoneContent,
     MilestoneData,
     ParametersRequestWithId,
@@ -27,13 +26,7 @@ import {
     BurndownData
 } from "../type";
 
-export {
-    getCurrentMilestones,
-    getNbOfSprints,
-    getMilestonesContent,
-    getTrackersProject,
-    getBurndownData
-};
+export { getCurrentMilestones, getNbOfSprints, getMilestonesContent, getBurndownData };
 
 function recursiveGetProjectMilestonesWithQuery(
     project_id: number,
@@ -84,19 +77,6 @@ function getMilestonesContent(
     { limit, offset }: ParametersRequestWithoutId
 ): Promise<MilestoneContent[]> {
     return recursiveGet(`/api/v1/milestones/${encodeURIComponent(id_release)}/content`, {
-        params: {
-            limit,
-            offset
-        }
-    });
-}
-
-function getTrackersProject({
-    project_id,
-    limit,
-    offset
-}: ParametersRequestWithId): Promise<TrackerProject[]> {
-    return recursiveGet(`/api/v1/projects/${encodeURIComponent(project_id)}/trackers`, {
         params: {
             limit,
             offset

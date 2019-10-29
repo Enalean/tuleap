@@ -20,17 +20,10 @@
 import {
     getCurrentMilestones as getAllCurrentMilestones,
     getMilestonesContent as getContent,
-    getNbOfSprints,
-    getTrackersProject as getTrackers
+    getNbOfSprints
 } from "../api/rest-querier";
 
-import {
-    Context,
-    MilestoneContent,
-    MilestoneData,
-    TrackerNumberArtifacts,
-    TrackerProject
-} from "../type";
+import { Context, MilestoneContent, MilestoneData, TrackerNumberArtifacts } from "../type";
 import { FetchWrapperError } from "tlp";
 
 async function getCurrentMilestones(context: Context): Promise<void> {
@@ -64,28 +57,12 @@ export function getEnhancedMilestones(
 export async function getMilestones(context: Context): Promise<void> {
     try {
         context.commit("setIsLoading", true);
-
-        await getTrackersProject(context);
         await getCurrentMilestones(context);
     } catch (error) {
         await handleErrorMessage(context, error);
     } finally {
         context.commit("setIsLoading", false);
     }
-}
-
-async function getTrackersProject(context: Context): Promise<void> {
-    context.commit("resetErrorMessage");
-    let trackers: TrackerProject[] = [];
-    const project_id = context.state.project_id;
-    if (project_id !== null) {
-        trackers = await getTrackers({
-            project_id,
-            limit: context.state.limit,
-            offset: context.state.offset
-        });
-    }
-    return context.commit("setTrackers", trackers);
 }
 
 async function getInitialEffortAndNumberArtifactsInTrackers(
@@ -118,26 +95,12 @@ function getNumberArtifactsInTrackerOfAgileDashboard(
     milestone: MilestoneData,
     milestone_contents: MilestoneContent[]
 ): void {
-    if (!milestone.resources) {
-        return;
-    }
-
     const trackers_with_number_artifacts: TrackerNumberArtifacts[] = [];
 
-    milestone.resources.content.accept.trackers.forEach(agiledashboard_tracker => {
-        const tracker_with_color = context.state.trackers.find(
-            tracker => tracker.id === agiledashboard_tracker.id
-        );
-
-        let color = null;
-        if (tracker_with_color) {
-            color = tracker_with_color.color_name;
-        }
+    context.state.trackers_agile_dashboard.forEach(tracker => {
         trackers_with_number_artifacts.push({
-            id: agiledashboard_tracker.id,
-            label: agiledashboard_tracker.label,
-            total_artifact: 0,
-            color_name: color
+            ...tracker,
+            total_artifact: 0
         });
     });
 
@@ -145,6 +108,7 @@ function getNumberArtifactsInTrackerOfAgileDashboard(
         const tracker_with_number_artifacts = trackers_with_number_artifacts.find(
             tracker => tracker.id === content.artifact.tracker.id
         );
+
         if (tracker_with_number_artifacts) {
             tracker_with_number_artifacts.total_artifact++;
         }

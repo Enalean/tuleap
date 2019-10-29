@@ -19,7 +19,7 @@
 
 import * as actions from "./actions";
 import { mockFetchError } from "tlp-fetch-mocks-helper-jest";
-import { TrackerProject, Context } from "../type";
+import { TrackerAgileDashboard, Context, MilestoneData } from "../type";
 import * as rest_querier from "../api/rest-querier";
 
 describe("Store actions", () => {
@@ -37,7 +37,7 @@ describe("Store actions", () => {
                 current_milestones: [],
                 error_message: null,
                 is_loading: false,
-                trackers: []
+                trackers_agile_dashboard: []
             }
         };
     });
@@ -45,7 +45,7 @@ describe("Store actions", () => {
     describe("getMilestones - rest", () => {
         describe("getMilestones - rest errors", () => {
             it("Given a rest error, When a json error message is received, Then the error message is set.", async () => {
-                mockFetchError(jest.spyOn(rest_querier, "getTrackersProject"), {
+                mockFetchError(jest.spyOn(rest_querier, "getCurrentMilestones"), {
                     error_json: {
                         error: {
                             code: 403,
@@ -63,7 +63,7 @@ describe("Store actions", () => {
         });
         describe("getMilestones - success", () => {
             it("Given a success response, When totals of backlog and upcoming releases are received, Then no message error is received", async () => {
-                const trackers: TrackerProject[] = [
+                const trackers: TrackerAgileDashboard[] = [
                     {
                         id: 1,
                         label: "one",
@@ -85,10 +85,10 @@ describe("Store actions", () => {
                     current_milestones: [],
                     offset: 0,
                     limit: 50,
-                    trackers
+                    trackers_agile_dashboard: trackers
                 };
 
-                const milestones = [
+                const milestones: MilestoneData[] = [
                     {
                         id: 1,
                         resources: {
@@ -97,8 +97,7 @@ describe("Store actions", () => {
                                     trackers: [
                                         {
                                             id: 1,
-                                            label: "one",
-                                            color_name: "red_fiesta"
+                                            label: "one"
                                         }
                                     ]
                                 }
@@ -108,16 +107,12 @@ describe("Store actions", () => {
                     }
                 ];
 
-                jest.spyOn(rest_querier, "getTrackersProject").mockReturnValue(
-                    Promise.resolve(trackers)
-                );
                 jest.spyOn(rest_querier, "getCurrentMilestones").mockReturnValue(
                     Promise.resolve(milestones)
                 );
 
                 await actions.getMilestones(context);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
-                expect(context.commit).toHaveBeenCalledWith("setTrackers", trackers);
                 expect(context.commit).toHaveBeenCalledWith("setCurrentMilestones", milestones);
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
             });
@@ -126,7 +121,7 @@ describe("Store actions", () => {
 
     describe("getEnhancedMilestones()", () => {
         it("When there is no error in API, Then enriched milestone returned", async () => {
-            const trackers: TrackerProject[] = [
+            const trackers: TrackerAgileDashboard[] = [
                 {
                     id: 1,
                     label: "one",
@@ -148,10 +143,10 @@ describe("Store actions", () => {
                 current_milestones: [],
                 offset: 0,
                 limit: 50,
-                trackers
+                trackers_agile_dashboard: trackers
             };
 
-            const milestone = {
+            const milestone: MilestoneData = {
                 id: 1,
                 resources: {
                     content: {
@@ -159,8 +154,11 @@ describe("Store actions", () => {
                             trackers: [
                                 {
                                     id: 1,
-                                    label: "one",
-                                    color_name: "red_fiesta"
+                                    label: "one"
+                                },
+                                {
+                                    id: 2,
+                                    label: "two"
                                 }
                             ]
                         }
@@ -175,8 +173,14 @@ describe("Store actions", () => {
                     {
                         id: 1,
                         label: "one",
-                        total_artifact: 3,
+                        total_artifact: 2,
                         color_name: "red_fiesta"
+                    },
+                    {
+                        id: 2,
+                        label: "two",
+                        total_artifact: 1,
+                        color_name: "lake_placid_blue"
                     }
                 ],
                 initial_effort: 15,
@@ -196,7 +200,7 @@ describe("Store actions", () => {
                     initial_effort: 10,
                     artifact: {
                         tracker: {
-                            id: 1
+                            id: 2
                         }
                     }
                 },
