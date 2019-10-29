@@ -19,6 +19,8 @@
 
 .taskboard-button-bar {
     display: flex;
+    position: sticky;
+    left: 0;
     justify-content: space-between;
     margin: 0 0 $tlp-spacing;
     padding: 0 $tlp-spacing;
@@ -26,6 +28,27 @@
 
 .taskboard-button-bar-right {
     display: flex;
+    position: sticky;
+    right: $tlp-spacing;
+}
+
+.taskboard-button-bar-left {
+    position: sticky;
+    left: calc(#{$sidebar-expanded-width} + #{$tlp-spacing});
+
+    &.taskboard-fullscreen {
+        left: 0;
+    }
+}
+
+.sidebar-collapsed {
+    .taskboard-button-bar-left {
+        left: calc(#{$sidebar-collapsed-width} + #{$tlp-spacing});
+
+        &.taskboard-fullscreen {
+            left: 0;
+        }
+    }
 }
 
 .taskboard-button-bar-milestone-title {
