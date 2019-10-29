@@ -57,6 +57,16 @@ class AdminScrumPresenter
     private $can_create_planning;
     private $additional_content;
 
+    /**
+     * @var bool
+     */
+    public $explicit_top_backlog_enabled;
+
+    /**
+     * @var bool
+     */
+    public $user_lab_feature;
+
     public function __construct(
         array $plannings,
         $group_id,
@@ -70,7 +80,9 @@ class AdminScrumPresenter
         bool $can_burnup_be_configured,
         $use_mono_milestone,
         $does_configuration_allows_planning_creation,
-        $additional_content
+        $additional_content,
+        bool $explicit_top_backlog_enabled,
+        bool $user_lab_feature
     ) {
         $this->plannings                                   = $plannings;
         $this->group_id                                    = $group_id;
@@ -93,6 +105,9 @@ class AdminScrumPresenter
         foreach ($hierarchy as $tracker) {
             $this->planning_hierarchy[] = $tracker->getName();
         }
+
+        $this->explicit_top_backlog_enabled = $explicit_top_backlog_enabled;
+        $this->user_lab_feature             = $user_lab_feature;
     }
 
     public function has_plannings()

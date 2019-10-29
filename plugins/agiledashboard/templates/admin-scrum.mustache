@@ -83,6 +83,29 @@
                                 <i class="fa fa-info-circle"></i> {{ title_label_help }}
                             </p>
                         </div>
+
+                        {{# user_lab_feature }}
+                            <input type="hidden" name="use-explicit-top-backlog" value="0">
+                            <div class="tlp-form-element">
+                                <label class="tlp-label" for="use-explicit-top-backlog">
+                                    <i class="fa fa-flask"></i> {{# dgettext }}tuleap-agiledashboard | Explicit top backlog{{/ dgettext }}
+                                </label>
+                                <div class="tlp-switch">
+                                    <input type="checkbox"
+                                           id="use-explicit-top-backlog"
+                                           class="tlp-switch-checkbox"
+                                           name="use-explicit-top-backlog"
+                                           value="1"
+                                        {{# explicit_top_backlog_enabled }} checked disabled {{/ explicit_top_backlog_enabled }}
+                                    >
+                                    <label for="use-explicit-top-backlog" class="tlp-switch-button" aria-hidden></label>
+                                </div>
+                                <p class="tlp-text-warning">
+                                    <i class="fa fa-warning"></i> {{# dgettext }}tuleap-agiledashboard | This is an experimental feature. It's explained <a href="https://tuleap.net/plugins/tracker/?aid=13997">here</a>. Once activated, you will start with an empty top backlog.{{/ dgettext }}
+                                </p>
+                            </div>
+                        {{/ user_lab_feature }}
+
                     </section>
 
                     <section class="tlp-pane-section tlp-pane-section-submit">

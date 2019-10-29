@@ -103,7 +103,9 @@ class ScrumPresenterBuilder
             (bool) \ForgeConfig::get('use_burnup_count_elements'),
             $this->isScrumMonoMilestoneEnable($group_id),
             $this->doesConfigurationAllowsPlanningCreation($user, $group_id, $can_create_planning),
-            $this->getAdditionalContent()
+            $this->getAdditionalContent(),
+            $this->doesProjectUseExplicitBacklog($project),
+            (bool) $user->useLabFeatures()
         );
     }
 
