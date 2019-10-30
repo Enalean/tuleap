@@ -18,14 +18,34 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import TaskBoardHeaderCell from "./TaskBoardHeaderCell.vue";
+import ExpandedHeaderCell from "./ExpandedHeaderCell.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
-import { UserState } from "../../../store/user/type";
-import { ColumnDefinition } from "../../../type";
+import { UserState } from "../../../../store/user/type";
+import { ColumnDefinition } from "../../../../type";
+import WrongColorPopover from "./WrongColorPopover.vue";
 
-describe("TaskBoardHeaderCell", () => {
+describe("ExpandedHeaderCell", () => {
+    it("displays a cell with the column label", () => {
+        const wrapper = shallowMount(ExpandedHeaderCell, {
+            mocks: {
+                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } })
+            },
+            propsData: {
+                column: {
+                    id: 2,
+                    label: "To do",
+                    color: ""
+                } as ColumnDefinition
+            }
+        });
+
+        const label = wrapper.find("[data-test=label]");
+        expect(label.classes("taskboard-header-label")).toBe(true);
+        expect(label.text()).toBe("To do");
+    });
+
     it("displays a cell without color", () => {
-        const wrapper = shallowMount(TaskBoardHeaderCell, {
+        const wrapper = shallowMount(ExpandedHeaderCell, {
             mocks: {
                 $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } })
             },
@@ -33,15 +53,16 @@ describe("TaskBoardHeaderCell", () => {
                 column: {
                     id: 2,
                     label: "To do",
-                    color: "",
-                    is_collapsed: false
+                    color: ""
                 } as ColumnDefinition
             }
         });
-        expect(wrapper.element).toMatchSnapshot();
+
+        expect(wrapper.classes("taskboard-header-fiesta-red")).toBe(false);
     });
+
     it("displays a cell with color", () => {
-        const wrapper = shallowMount(TaskBoardHeaderCell, {
+        const wrapper = shallowMount(ExpandedHeaderCell, {
             mocks: {
                 $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } })
             },
@@ -49,15 +70,16 @@ describe("TaskBoardHeaderCell", () => {
                 column: {
                     id: 2,
                     label: "To do",
-                    color: "fiesta-red",
-                    is_collapsed: false
+                    color: "fiesta-red"
                 } as ColumnDefinition
             }
         });
-        expect(wrapper.element).toMatchSnapshot();
+
+        expect(wrapper.classes("taskboard-header-fiesta-red")).toBe(true);
     });
+
     it("displays a cell with default color", () => {
-        const wrapper = shallowMount(TaskBoardHeaderCell, {
+        const wrapper = shallowMount(ExpandedHeaderCell, {
             mocks: {
                 $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } })
             },
@@ -65,15 +87,16 @@ describe("TaskBoardHeaderCell", () => {
                 column: {
                     id: 2,
                     label: "To do",
-                    color: "#F8F8F8",
-                    is_collapsed: false
+                    color: "#F8F8F8"
                 } as ColumnDefinition
             }
         });
-        expect(wrapper.element).toMatchSnapshot();
+
+        expect(wrapper.classes("taskboard-header-fiesta-red")).toBe(false);
     });
+
     it("displays a cell with legacy color to regular users", () => {
-        const wrapper = shallowMount(TaskBoardHeaderCell, {
+        const wrapper = shallowMount(ExpandedHeaderCell, {
             mocks: {
                 $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } })
             },
@@ -81,15 +104,17 @@ describe("TaskBoardHeaderCell", () => {
                 column: {
                     id: 2,
                     label: "To do",
-                    color: "#87DBEF",
-                    is_collapsed: false
+                    color: "#87DBEF"
                 } as ColumnDefinition
             }
         });
-        expect(wrapper.element).toMatchSnapshot();
+
+        expect(wrapper.classes("taskboard-header-fiesta-red")).toBe(false);
+        expect(wrapper.contains(WrongColorPopover)).toBe(false);
     });
+
     it("displays a cell with legacy color to admin users", () => {
-        const wrapper = shallowMount(TaskBoardHeaderCell, {
+        const wrapper = shallowMount(ExpandedHeaderCell, {
             mocks: {
                 $store: createStoreMock({ state: { user: { user_is_admin: true } as UserState } })
             },
@@ -97,27 +122,12 @@ describe("TaskBoardHeaderCell", () => {
                 column: {
                     id: 2,
                     label: "To do",
-                    color: "#87DBEF",
-                    is_collapsed: false
+                    color: "#87DBEF"
                 } as ColumnDefinition
             }
         });
-        expect(wrapper.element).toMatchSnapshot();
-    });
-    it("does not display wrong color popover nor label if column is collapsed", () => {
-        const wrapper = shallowMount(TaskBoardHeaderCell, {
-            mocks: {
-                $store: createStoreMock({ state: { user: { user_is_admin: true } as UserState } })
-            },
-            propsData: {
-                column: {
-                    id: 2,
-                    label: "To do",
-                    color: "#87DBEF",
-                    is_collapsed: true
-                } as ColumnDefinition
-            }
-        });
-        expect(wrapper.element).toMatchSnapshot();
+
+        expect(wrapper.classes("taskboard-header-fiesta-red")).toBe(false);
+        expect(wrapper.contains(WrongColorPopover)).toBe(true);
     });
 });

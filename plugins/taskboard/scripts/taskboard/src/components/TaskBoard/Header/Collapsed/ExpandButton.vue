@@ -20,7 +20,6 @@
 
 <template>
     <span class="tlp-tooltip tlp-tooltip-bottom taskboard-header-expand-column"
-          v-if="column.is_collapsed"
           v-bind:data-tlp-tooltip="title"
     >
         <i class="fa fa-plus-square"
@@ -36,7 +35,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { ColumnDefinition } from "../../../type";
+import { ColumnDefinition } from "../../../../type";
 import { Action } from "vuex-class";
 
 @Component

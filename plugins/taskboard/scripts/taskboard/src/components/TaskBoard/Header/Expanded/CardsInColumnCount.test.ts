@@ -19,24 +19,14 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CardsInColumnCount from "./CardsInColumnCount.vue";
-import { ColumnDefinition } from "../../../type";
+import { ColumnDefinition } from "../../../../type";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 
 describe("CardsInColumnCount", () => {
-    it("Does not display anything if column is collapsed", () => {
-        const wrapper = shallowMount(CardsInColumnCount, {
-            propsData: {
-                column: { is_collapsed: true } as ColumnDefinition
-            }
-        });
-
-        expect(wrapper.isEmpty()).toBe(true);
-    });
-
     it("Displays the number of cards in the given column", () => {
         const wrapper = shallowMount(CardsInColumnCount, {
             propsData: {
-                column: { is_collapsed: false } as ColumnDefinition
+                column: {} as ColumnDefinition
             },
             mocks: {
                 $store: createStoreMock({
@@ -59,7 +49,7 @@ describe("CardsInColumnCount", () => {
     it("Add loading class if we are still counting elements", () => {
         const wrapper = shallowMount(CardsInColumnCount, {
             propsData: {
-                column: { is_collapsed: false } as ColumnDefinition
+                column: {} as ColumnDefinition
             },
             mocks: {
                 $store: createStoreMock({

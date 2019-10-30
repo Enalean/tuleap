@@ -18,24 +18,14 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createTaskboardLocalVue } from "../../../helpers/local-vue-for-test";
+import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import ExpandButton from "./ExpandButton.vue";
-import { ColumnDefinition } from "../../../type";
+import { ColumnDefinition } from "../../../../type";
 
 describe("ExpandButton", () => {
-    it("Given the column is expanded, then the button is not displayed", async () => {
-        const column: ColumnDefinition = { is_collapsed: false, label: "Done" } as ColumnDefinition;
-        const wrapper = shallowMount(ExpandButton, {
-            localVue: await createTaskboardLocalVue(),
-            propsData: { column }
-        });
-
-        expect(wrapper.isEmpty()).toBe(true);
-    });
-
-    it("Given the column is collapsed, it displays its label as a TLP tooltip", async () => {
-        const column: ColumnDefinition = { is_collapsed: true, label: "Done" } as ColumnDefinition;
+    it("Displays column label as a TLP tooltip", async () => {
+        const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
         const wrapper = shallowMount(ExpandButton, {
             localVue: await createTaskboardLocalVue(),
             propsData: { column }
@@ -45,8 +35,8 @@ describe("ExpandButton", () => {
         expect(wrapper.classes("tlp-tooltip-bottom")).toBe(true);
     });
 
-    it("Given the column is collapsed, it displays a focusable button", async () => {
-        const column: ColumnDefinition = { is_collapsed: true, label: "Done" } as ColumnDefinition;
+    it("Displays a focusable button", async () => {
+        const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
         const wrapper = shallowMount(ExpandButton, {
             localVue: await createTaskboardLocalVue(),
             propsData: { column }
@@ -59,8 +49,8 @@ describe("ExpandButton", () => {
         expect(button.attributes("aria-label")).toBe('Expand "Done" column');
     });
 
-    it("Given the column is collapsed, when user clicks on the button, the column is expanded", async () => {
-        const column: ColumnDefinition = { is_collapsed: true, label: "Done" } as ColumnDefinition;
+    it("When user clicks on the button, the column is expanded", async () => {
+        const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
         const wrapper = shallowMount(ExpandButton, {
             localVue: await createTaskboardLocalVue(),
             mocks: {
