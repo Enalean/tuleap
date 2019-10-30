@@ -1,7 +1,7 @@
+import planning_module from "../../app.js";
 import angular from "angular";
 import "angular-mocks";
 
-import details_module from "./backlog-item-details.js";
 import BaseBacklogItemDetailsController from "./backlog-item-details-controller.js";
 
 describe("BacklogItemDetailsController -", function() {
@@ -13,7 +13,7 @@ describe("BacklogItemDetailsController -", function() {
         BacklogItemService;
 
     beforeEach(function() {
-        angular.mock.module(details_module);
+        angular.mock.module(planning_module);
 
         angular.mock.inject(function(
             _$q_,

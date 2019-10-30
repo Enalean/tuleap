@@ -1,7 +1,7 @@
+import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
 
-import item_module from "./backlog-item.js";
 import BaseBacklogItemController from "./backlog-item-controller.js";
 
 describe("BacklogItemController -", function() {
@@ -20,7 +20,7 @@ describe("BacklogItemController -", function() {
         dragularService;
 
     beforeEach(function() {
-        angular.mock.module(item_module);
+        angular.mock.module(planning_module);
 
         angular.mock.inject(function(
             _$q_,

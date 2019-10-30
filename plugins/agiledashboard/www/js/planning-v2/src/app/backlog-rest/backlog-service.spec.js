@@ -1,13 +1,12 @@
+import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
-
-import backlog_module from "./backlog-rest.js";
 
 describe("BacklogService -", function() {
     var $q, $scope, $filter, BacklogService, BacklogItemFactory, ProjectService;
 
     beforeEach(function() {
-        angular.mock.module(backlog_module, function($provide) {
+        angular.mock.module(planning_module, function($provide) {
             $provide.decorator("BacklogItemFactory", function($delegate) {
                 spyOn($delegate, "augment");
 

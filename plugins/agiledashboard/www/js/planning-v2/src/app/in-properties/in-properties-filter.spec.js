@@ -1,8 +1,8 @@
+import planning_module from "../app.js";
+
 import angular from "angular";
 import "angular-mocks";
 import moment from "moment";
-
-import filter_module from "./in-properties.js";
 
 describe("InPropertiesItemFilter", () => {
     var in_properties_filter,
@@ -41,7 +41,7 @@ describe("InPropertiesItemFilter", () => {
         ];
 
     beforeEach(() => {
-        angular.mock.module(filter_module);
+        angular.mock.module(planning_module);
 
         var $filter;
         angular.mock.inject(function(_$filter_) {

@@ -1,13 +1,12 @@
+import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
-
-import milestone_collection_module from "./milestone-collection.js";
 
 describe("MilestoneCollectionService -", function() {
     var MilestoneCollectionService;
 
     beforeEach(function() {
-        angular.mock.module(milestone_collection_module);
+        angular.mock.module(planning_module);
 
         angular.mock.inject(function(_MilestoneCollectionService_) {
             MilestoneCollectionService = _MilestoneCollectionService_;

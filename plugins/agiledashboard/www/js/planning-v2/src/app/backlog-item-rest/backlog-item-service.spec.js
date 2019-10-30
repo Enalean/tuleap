@@ -1,7 +1,6 @@
+import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
-
-import rest_module from "./backlog-item-rest.js";
 
 describe("BacklogItemService", function() {
     var mockBackend, BacklogItemService, BacklogItemFactory;
@@ -9,7 +8,7 @@ describe("BacklogItemService", function() {
     beforeEach(function() {
         BacklogItemFactory = jasmine.createSpyObj("BacklogItemFactory", ["augment"]);
 
-        angular.mock.module(rest_module, function($provide) {
+        angular.mock.module(planning_module, function($provide) {
             $provide.value("BacklogItemFactory", BacklogItemFactory);
         });
 

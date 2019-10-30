@@ -1,13 +1,12 @@
+import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
-
-import collection_module from "./backlog-item-collection.js";
 
 describe("BacklogItemCollectionService -", () => {
     let $q, BacklogItemCollectionService, BacklogItemService;
 
     beforeEach(() => {
-        angular.mock.module(collection_module);
+        angular.mock.module(planning_module);
 
         angular.mock.inject(function(
             _$q_,
