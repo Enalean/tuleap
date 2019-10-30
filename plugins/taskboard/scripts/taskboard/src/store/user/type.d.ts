@@ -22,3 +22,11 @@ export interface UserState {
     user_id: number;
     user_has_accessibility_mode: boolean;
 }
+
+export interface UserPreference {
+    key: string;
+}
+
+export interface UserPreferenceValue extends UserPreference {
+    value: string;
+}

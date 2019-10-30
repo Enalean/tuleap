@@ -19,49 +19,32 @@
 
 import { ActionContext } from "vuex";
 import { RootState, State } from "./type";
-import { del, patch } from "tlp";
 import { ColumnDefinition } from "../type";
+import { UserPreference, UserPreferenceValue } from "./user/type";
 
-export async function expandColumn(
+export function expandColumn(
     context: ActionContext<State, RootState>,
     column: ColumnDefinition
 ): Promise<void> {
     context.commit("expandColumn", column);
+    const payload: UserPreference = {
+        key: getPreferenceName(context, column)
+    };
 
-    const user_id = context.rootState.user.user_id;
-    try {
-        await del(
-            `/api/v1/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(
-                getPreferenceName(context, column)
-            )}`
-        );
-    } catch (e) {
-        // no display of error
-        // we don't need to stop the flow of the users just because a user pref has not been saved
-    }
+    return context.dispatch("user/deletePreference", payload, { root: true });
 }
 
-export async function collapseColumn(
+export function collapseColumn(
     context: ActionContext<State, RootState>,
     column: ColumnDefinition
 ): Promise<void> {
     context.commit("collapseColumn", column);
+    const payload: UserPreferenceValue = {
+        key: getPreferenceName(context, column),
+        value: "1"
+    };
 
-    const user_id = context.rootState.user.user_id;
-    try {
-        await patch(`/api/v1/users/${encodeURIComponent(user_id)}/preferences`, {
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                key: getPreferenceName(context, column),
-                value: 1
-            })
-        });
-    } catch (e) {
-        // no display of error
-        // we don't need to stop the flow of the users just because a user pref has not been saved
-    }
+    return context.dispatch("user/setPreference", payload, { root: true });
 }
 
 function getPreferenceName(

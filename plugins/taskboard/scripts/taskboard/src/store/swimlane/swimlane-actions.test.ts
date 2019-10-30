@@ -24,7 +24,7 @@ import { RecursiveGetInit } from "tlp";
 import { ActionContext } from "vuex";
 import { SwimlaneState } from "./type";
 import { loadChildrenCards } from "./swimlane-actions";
-import { mockFetchError, mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
+import { mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
 import { RootState } from "../type";
 
 jest.mock("tlp");
@@ -204,7 +204,7 @@ describe("Swimlane state actions", () => {
     });
 
     describe("expandSwimlane", () => {
-        it(`When the swimlane is expanded, the user pref is stored`, () => {
+        it(`When the swimlane is expanded, the user pref is stored`, async () => {
             const swimlane: Swimlane = {
                 card: { id: 69 } as Card
             } as Swimlane;
@@ -212,31 +212,18 @@ describe("Swimlane state actions", () => {
             const tlpDeleteMock = jest.spyOn(tlp, "del");
             mockFetchSuccess(tlpDeleteMock, {});
 
-            actions.expandSwimlane(context, swimlane);
+            await actions.expandSwimlane(context, swimlane);
             expect(context.commit).toHaveBeenCalledWith("expandSwimlane", swimlane);
-            expect(tlpDeleteMock).toHaveBeenCalledWith(
-                `/api/v1/users/101/preferences?key=plugin_taskboard_collapse_42_69`
-            );
-        });
-
-        it(`ignores error on save`, () => {
-            const swimlane: Swimlane = {
-                card: { id: 69 } as Card
-            } as Swimlane;
-
-            const tlpDeleteMock = jest.spyOn(tlp, "del");
-            mockFetchError(tlpDeleteMock, {});
-
-            actions.expandSwimlane(context, swimlane);
-            expect(context.commit).toHaveBeenCalledWith("expandSwimlane", swimlane);
-            expect(tlpDeleteMock).toHaveBeenCalledWith(
-                `/api/v1/users/101/preferences?key=plugin_taskboard_collapse_42_69`
+            expect(context.dispatch).toHaveBeenCalledWith(
+                "user/deletePreference",
+                { key: "plugin_taskboard_collapse_42_69" },
+                { root: true }
             );
         });
     });
 
     describe("collapseSwimlane", () => {
-        it(`When the swimlane is collapsed, the user pref is stored`, () => {
+        it(`When the swimlane is collapsed, the user pref is stored`, async () => {
             const swimlane: Swimlane = {
                 card: { id: 69 } as Card
             } as Swimlane;
@@ -244,38 +231,13 @@ describe("Swimlane state actions", () => {
             const tlpPatchMock = jest.spyOn(tlp, "patch");
             mockFetchSuccess(tlpPatchMock, {});
 
-            actions.collapseSwimlane(context, swimlane);
+            await actions.collapseSwimlane(context, swimlane);
             expect(context.commit).toHaveBeenCalledWith("collapseSwimlane", swimlane);
-            expect(tlpPatchMock).toHaveBeenCalledWith(`/api/v1/users/101/preferences`, {
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    key: "plugin_taskboard_collapse_42_69",
-                    value: 1
-                })
-            });
-        });
-
-        it(`ignores error on save`, () => {
-            const swimlane: Swimlane = {
-                card: { id: 69 } as Card
-            } as Swimlane;
-
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
-            mockFetchError(tlpPatchMock, {});
-
-            actions.collapseSwimlane(context, swimlane);
-            expect(context.commit).toHaveBeenCalledWith("collapseSwimlane", swimlane);
-            expect(tlpPatchMock).toHaveBeenCalledWith(`/api/v1/users/101/preferences`, {
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    key: "plugin_taskboard_collapse_42_69",
-                    value: 1
-                })
-            });
+            expect(context.dispatch).toHaveBeenCalledWith(
+                "user/setPreference",
+                { key: "plugin_taskboard_collapse_42_69", value: "1" },
+                { root: true }
+            );
         });
     });
 });
