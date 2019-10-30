@@ -35,6 +35,7 @@ import FrsConfig from "./app-config.js";
 import FileDownloadDirective from "./file-download/file-download-directive.js";
 
 import LicenseModalController from "./file-download/license-modal/license-modal-controller.js";
+import CustomLicenseModalController from "./file-download/custom-license-modal/custom-license-modal-controller";
 
 import ReleaseDirective from "./release/release-directive.js";
 import ReleaseRestService from "./release/release-rest-service.js";
@@ -56,6 +57,7 @@ export default angular
     ])
     .controller("AppController", AppController)
     .controller("LicenseModalController", LicenseModalController)
+    .controller("CustomLicenseModalController", CustomLicenseModalController)
 
     .service("RestErrorService", RestErrorService)
     .service("SharedPropertiesService", SharedPropertiesService)

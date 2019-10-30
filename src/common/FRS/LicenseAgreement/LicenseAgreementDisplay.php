@@ -74,7 +74,7 @@ class LicenseAgreementDisplay
         if ($package->getApproveLicense() == 0 && ! ForgeConfig::get('sys_frs_license_mandatory')) {
             return '<a href="/file/download/' . urlencode((string) $file_id) . '" title="' . $this->purifier->purify($file_id) . " - " . $display_filename . '">' . $display_filename . '</a>';
         }
-        $agreement_id = $this->dao->getLicenseAgreementForPackage($package);
+        $agreement_id = $this->dao->getLicenseAgreementIdForPackage($package);
         if ($agreement_id === false) {
             $agreement_id = '0';
         }

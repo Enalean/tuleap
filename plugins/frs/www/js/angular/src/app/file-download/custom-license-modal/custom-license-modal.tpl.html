@@ -1,0 +1,26 @@
+<div class="modal-header">
+    <button
+        type="button"
+        class="close"
+        aria-hidden="true"
+        ng-click="$ctrl.decline()"
+    >&times;</button>
+    <h3>{{ $ctrl.title }}</h3>
+</div>
+<div class="modal-body">
+    <ng-bind-html ng-bind-html="$ctrl.content"></ng-bind-html>
+</div>
+<div class="modal-footer">
+
+    <a
+        class="btn btn-large btn-primary"
+        ng-click="$ctrl.accept()"
+        translate
+    >I accept</a>
+
+    <a
+        class="btn btn-large btn-danger"
+        ng-click="$ctrl.decline()"
+        translate
+    >I decline</a>
+</div>

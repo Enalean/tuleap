@@ -41,7 +41,7 @@ final class LicenseAgreementDao extends DataAccessObject
         );
     }
 
-    public function getLicenseAgreementForPackage(\FRSPackage $package)
+    public function getLicenseAgreementIdForPackage(\FRSPackage $package)
     {
         return $this->getDB()->single(
             <<<EOT
@@ -50,6 +50,19 @@ final class LicenseAgreementDao extends DataAccessObject
             WHERE package_id = ?
             EOT,
             [$package->getPackageID()]
+        );
+    }
+
+    public function getLicenseAgreementForPackage(\FRSPackage $package)
+    {
+        return $this->getDB()->row(
+            <<<EOT
+            SELECT a.*
+            FROM frs_download_agreement AS a
+                INNER JOIN frs_package_download_agreement a_p ON (a_p.agreement_id = a.id)
+            WHERE a_p.package_id = ?
+            EOT,
+            $package->getPackageID()
         );
     }
 }

@@ -18,6 +18,7 @@
  */
 
 import "./license-modal/license-modal.tpl.html";
+import "./custom-license-modal/custom-license-modal.tpl.html";
 
 export default FileDownloadController;
 
@@ -51,7 +52,15 @@ function FileDownloadController($modal, $window) {
             return;
         }
 
-        openLicenseModal().result.then(openDownloadWindow);
+        let licenseModal = openLicenseModal;
+        if (
+            self.custom_license_agreement &&
+            Object.prototype.hasOwnProperty.call(self.custom_license_agreement, "title")
+        ) {
+            licenseModal = openCustomLicenseModal;
+        }
+
+        licenseModal().result.then(openDownloadWindow);
     }
 
     function openDownloadWindow() {
@@ -65,6 +74,16 @@ function FileDownloadController($modal, $window) {
             templateUrl: "license-modal.tpl.html",
             controller: "LicenseModalController as $ctrl",
             windowClass: "license-modal"
+        });
+    }
+
+    function openCustomLicenseModal() {
+        return $modal.open({
+            backdrop: "static",
+            keyboard: true,
+            templateUrl: "custom-license-modal.tpl.html",
+            controller: "CustomLicenseModalController as $ctrl",
+            windowClass: "custom-license-modal"
         });
     }
 }

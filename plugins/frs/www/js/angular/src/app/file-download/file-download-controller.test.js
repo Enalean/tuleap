@@ -89,10 +89,39 @@ describe("FileDownloadController -", function() {
             var file_download_url = "hsinfonie/mislayer?a=podatus&b=isocheim#psilosopher";
             FileDownloadController.file_download_url = file_download_url;
             FileDownloadController.license_approval_mandatory = true;
+            FileDownloadController.custom_license_agreement = {};
 
             FileDownloadController.downloadFile();
 
-            expect($modal.open).toHaveBeenCalled();
+            expect($modal.open).toHaveBeenCalledWith({
+                backdrop: "static",
+                keyboard: true,
+                templateUrl: "license-modal.tpl.html",
+                controller: "LicenseModalController as $ctrl",
+                windowClass: "license-modal"
+            });
+            $rootScope.$apply();
+            expect($window.open).toHaveBeenCalledWith(file_download_url);
+        });
+
+        it("Given a file had been bound to the controller and a custom license approval was mandatory, when I download the file, then the license modal will be opened with the custom text and when it is accepted a new window will be opened with the computed file_download_url", function() {
+            var file_download_url = "hsinfonie/mislayer?a=podatus&b=isocheim#psilosopher";
+            FileDownloadController.file_download_url = file_download_url;
+            FileDownloadController.license_approval_mandatory = true;
+            FileDownloadController.custom_license_agreement = {
+                title: "A fine license agreement",
+                content: "A fine text"
+            };
+
+            FileDownloadController.downloadFile();
+
+            expect($modal.open).toHaveBeenCalledWith({
+                backdrop: "static",
+                keyboard: true,
+                templateUrl: "custom-license-modal.tpl.html",
+                controller: "CustomLicenseModalController as $ctrl",
+                windowClass: "custom-license-modal"
+            });
             $rootScope.$apply();
             expect($window.open).toHaveBeenCalledWith(file_download_url);
         });

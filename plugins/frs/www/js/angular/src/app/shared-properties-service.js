@@ -4,7 +4,8 @@ function SharedPropertiesService() {
     var property = {
         project_id: null,
         release: null,
-        platform_license_info: null
+        platform_license_info: null,
+        custom_license_agreement: null
     };
 
     return {
@@ -13,7 +14,9 @@ function SharedPropertiesService() {
         getRelease: getRelease,
         setRelease: setRelease,
         getPlatformLicenseInfo: getPlatformLicenseInfo,
-        setPlatformLicenseInfo: setPlatformLicenseInfo
+        setPlatformLicenseInfo: setPlatformLicenseInfo,
+        setCustomLicenseAgreement: setCustomLicenseAgreement,
+        getCustomLicenseAgreement: getCustomLicenseAgreement
     };
 
     function getProjectId() {
@@ -39,6 +42,14 @@ function SharedPropertiesService() {
 
     function getPlatformLicenseInfo() {
         return property.platform_license_info;
+    }
+
+    function setCustomLicenseAgreement(custom_license_agreement) {
+        property.custom_license_agreement = custom_license_agreement;
+    }
+
+    function getCustomLicenseAgreement() {
+        return property.custom_license_agreement;
     }
 
     function formatLinks() {
