@@ -246,5 +246,42 @@ describe("ReleaseHeaderRemainingEffort", () => {
             const wrapper = await getPersonalWidgetInstance(store_options);
             expect(wrapper.element).toMatchSnapshot();
         });
+
+        it("When remaining effort == initial effort, Then remaining effort is displayed and marked as success", async () => {
+            releaseData = {
+                label: "mile",
+                id: 2,
+                planning: {
+                    id: "100"
+                },
+                start_date: null,
+                remaining_effort: 100,
+                initial_effort: 100,
+                number_of_artifact_by_trackers: []
+            };
+
+            component_options.propsData = {
+                releaseData
+            };
+
+            const wrapper = await getPersonalWidgetInstance(store_options);
+            const points_remaining_value = wrapper.find("[data-test=points-remaining-value]");
+            const points_remaining_progress = wrapper.find("[data-test=points-progress-value]");
+
+            expect(points_remaining_value.classes("release-remaining-value-success")).toBe(true);
+            expect(points_remaining_value.classes("release-remaining-value-disabled")).toBe(false);
+
+            expect(
+                points_remaining_progress.classes("release-remaining-progress-value-success")
+            ).toBe(true);
+            expect(
+                points_remaining_progress.classes("release-remaining-progress-value-disabled")
+            ).toBe(false);
+
+            expect(wrapper.attributes("data-tlp-tooltip")).toBe("0.00%");
+
+            expect(points_remaining_value.text()).toBe("100");
+            expect(points_remaining_progress.attributes("style")).toBe("width: 0.00%;");
+        });
     });
 });

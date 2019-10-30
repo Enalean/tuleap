@@ -14,6 +14,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When remaining ef
      
     <span
       class="release-remaining-value release-remaining-value-disabled"
+      data-test="points-remaining-value"
     >
       
             100
@@ -37,6 +38,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When remaining ef
   >
     <div
       class="release-remaining-progress-value release-remaining-progress-value-disabled"
+      data-test="points-progress-value"
     />
   </div>
 </div>
@@ -56,6 +58,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there is ini
      
     <span
       class="release-remaining-value release-remaining-value-disabled"
+      data-test="points-remaining-value"
     >
       
             5
@@ -79,6 +82,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there is ini
   >
     <div
       class="release-remaining-progress-value release-remaining-progress-value-disabled"
+      data-test="points-progress-value"
     />
   </div>
 </div>
@@ -98,6 +102,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there is ini
      
     <span
       class="release-remaining-value release-remaining-value-disabled"
+      data-test="points-remaining-value"
     >
       
             5
@@ -121,6 +126,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there is ini
   >
     <div
       class="release-remaining-progress-value release-remaining-progress-value-disabled"
+      data-test="points-progress-value"
     />
   </div>
 </div>
@@ -140,6 +146,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there is neg
      
     <span
       class="release-remaining-value"
+      data-test="points-remaining-value"
     >
       
             -1
@@ -163,6 +170,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there is neg
   >
     <div
       class="release-remaining-progress-value"
+      data-test="points-progress-value"
       style="width: 110.00%;"
     />
   </div>
@@ -183,6 +191,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there is rem
      
     <span
       class="release-remaining-value release-remaining-value-disabled"
+      data-test="points-remaining-value"
     >
       
             0
@@ -205,6 +214,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there is rem
   >
     <div
       class="release-remaining-progress-value release-remaining-progress-value-disabled"
+      data-test="points-progress-value"
     />
   </div>
 </div>
@@ -224,6 +234,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there is rem
      
     <span
       class="release-remaining-value"
+      data-test="points-remaining-value"
     >
       
             0
@@ -247,6 +258,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there is rem
   >
     <div
       class="release-remaining-progress-value"
+      data-test="points-progress-value"
       style="width: 100.00%;"
     />
   </div>
@@ -267,6 +279,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there is rem
      
     <span
       class="release-remaining-value release-remaining-value-success"
+      data-test="points-remaining-value"
     >
       
             5
@@ -290,6 +303,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there is rem
   >
     <div
       class="release-remaining-progress-value release-remaining-progress-value-success"
+      data-test="points-progress-value"
       style="width: 50.00%;"
     />
   </div>
@@ -310,6 +324,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there isn't 
      
     <span
       class="release-remaining-value release-remaining-value-disabled"
+      data-test="points-remaining-value"
     >
       
             5
@@ -333,6 +348,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there isn't 
   >
     <div
       class="release-remaining-progress-value release-remaining-progress-value-disabled"
+      data-test="points-progress-value"
     />
   </div>
 </div>
@@ -352,6 +368,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there isn't 
      
     <span
       class="release-remaining-value release-remaining-value-disabled"
+      data-test="points-remaining-value"
     >
       
             0
@@ -374,6 +391,7 @@ exports[`ReleaseHeaderRemainingEffort Display remaining points When there isn't 
   >
     <div
       class="release-remaining-progress-value release-remaining-progress-value-disabled"
+      data-test="points-progress-value"
     />
   </div>
 </div>
