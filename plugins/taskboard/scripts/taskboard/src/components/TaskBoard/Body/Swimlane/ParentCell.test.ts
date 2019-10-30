@@ -19,10 +19,10 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ParentCell from "./ParentCell.vue";
-import ParentCard from "./Card/ParentCard.vue";
 import NoMappingMessage from "./Header/NoMappingMessage.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import { Swimlane } from "../../../../type";
+import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
 
 describe("ParentCell", () => {
     it("displays the parent card in its own cell", () => {
@@ -49,7 +49,7 @@ describe("ParentCell", () => {
             }
         });
 
-        expect(wrapper.contains(ParentCard)).toBe(true);
+        expect(wrapper.contains(CardWithRemainingEffort)).toBe(true);
         expect(wrapper.contains(NoMappingMessage)).toBe(false);
     });
 
@@ -77,7 +77,7 @@ describe("ParentCell", () => {
             }
         });
 
-        expect(wrapper.contains(ParentCard)).toBe(true);
+        expect(wrapper.contains(CardWithRemainingEffort)).toBe(true);
         expect(wrapper.contains(NoMappingMessage)).toBe(true);
     });
 });

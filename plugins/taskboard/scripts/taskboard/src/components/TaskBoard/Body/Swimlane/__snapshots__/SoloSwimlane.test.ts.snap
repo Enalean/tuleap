@@ -16,8 +16,9 @@ exports[`SoloSwimlane displays the parent card in Done column when status maps t
   <cell-for-solo-card-stub
     column="[object Object]"
   >
-    <solo-card-stub
+    <card-with-remaining-effort-stub
       card="[object Object]"
+      class="taskboard-cell-solo-card"
     />
   </cell-for-solo-card-stub>
 </div>

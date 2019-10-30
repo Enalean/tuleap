@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="taskboard-cell-solo-card">
+    <div>
         <parent-card v-bind:card="card"/>
         <parent-card-remaining-effort v-bind:card="card"/>
     </div>
@@ -27,14 +27,14 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Card } from "../../../../type";
-import ParentCard from "./Card/ParentCard.vue";
-import ParentCardRemainingEffort from "./Card/ParentCardRemainingEffort.vue";
+import { Card } from "../../../../../type";
+import ParentCard from "./ParentCard.vue";
+import ParentCardRemainingEffort from "./ParentCardRemainingEffort.vue";
 
 @Component({
     components: { ParentCard, ParentCardRemainingEffort }
 })
-export default class SoloCard extends Vue {
+export default class CardWithRemainingEffort extends Vue {
     @Prop({ required: true })
     readonly card!: Card;
 }

@@ -20,10 +20,7 @@
 
 <template>
     <swimlane-header v-bind:swimlane="swimlane">
-        <div class="taskboard-cell-parent-card">
-            <parent-card v-bind:card="swimlane.card"/>
-            <parent-card-remaining-effort v-bind:card="swimlane.card"/>
-        </div>
+        <card-with-remaining-effort class="taskboard-cell-parent-card" v-bind:card="swimlane.card"/>
         <no-mapping-message v-if="should_no_mapping_message_be_displayed" v-bind:card="swimlane.card"/>
     </swimlane-header>
 </template>
@@ -36,9 +33,16 @@ import ParentCard from "./Card/ParentCard.vue";
 import NoMappingMessage from "./Header/NoMappingMessage.vue";
 import ParentCardRemainingEffort from "./Card/ParentCardRemainingEffort.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
+import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
 
 @Component({
-    components: { NoMappingMessage, ParentCard, ParentCardRemainingEffort, SwimlaneHeader }
+    components: {
+        CardWithRemainingEffort,
+        NoMappingMessage,
+        ParentCard,
+        ParentCardRemainingEffort,
+        SwimlaneHeader
+    }
 })
 export default class ParentCell extends Vue {
     @Prop({ required: true })

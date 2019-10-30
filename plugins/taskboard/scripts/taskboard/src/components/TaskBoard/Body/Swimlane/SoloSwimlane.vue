@@ -27,7 +27,10 @@
         <template v-else>
             <swimlane-header v-bind:swimlane="swimlane"/>
             <cell-for-solo-card v-for="col of columns" v-bind:key="col.id" v-bind:column="col">
-                <solo-card v-if="target_column.id === col.id" v-bind:card="swimlane.card"/>
+                <card-with-remaining-effort
+                    v-if="target_column.id === col.id"
+                    v-bind:card="swimlane.card"
+                    class="taskboard-cell-solo-card"/>
             </cell-for-solo-card>
         </template>
     </div>
@@ -38,7 +41,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { ColumnDefinition, Swimlane } from "../../../../type";
 import ParentCell from "./ParentCell.vue";
-import SoloCard from "./SoloCard.vue";
+import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
 import { getColumnOfCard } from "../../../../helpers/list-value-to-column-mapper";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
 
@@ -47,9 +50,9 @@ import CellForSoloCard from "./CellForSoloCard.vue";
 
 @Component({
     components: {
+        CardWithRemainingEffort,
         CellForSoloCard,
         ParentCell,
-        SoloCard,
         SwimlaneHeader
     }
 })
