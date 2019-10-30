@@ -71,4 +71,28 @@ describe("State actions", () => {
             );
         });
     });
+
+    describe("displayClosedItems", () => {
+        it(`When the closed item are displayed, the user pref is stored`, async () => {
+            await actions.displayClosedItems(context);
+            expect(context.commit).toHaveBeenCalledWith("displayClosedItems");
+            expect(context.dispatch).toHaveBeenCalledWith(
+                "user/deletePreference",
+                { key: "plugin_taskboard_hide_closed_items_42" },
+                { root: true }
+            );
+        });
+    });
+
+    describe("hideClosedItems", () => {
+        it(`When the closed item are hidden, the user pref is stored`, async () => {
+            await actions.hideClosedItems(context);
+            expect(context.commit).toHaveBeenCalledWith("hideClosedItems");
+            expect(context.dispatch).toHaveBeenCalledWith(
+                "user/setPreference",
+                { key: "plugin_taskboard_hide_closed_items_42", value: "1" },
+                { root: true }
+            );
+        });
+    });
 });
