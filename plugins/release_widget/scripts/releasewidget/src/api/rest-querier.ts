@@ -23,10 +23,17 @@ import {
     MilestoneContent,
     MilestoneData,
     ParametersRequestWithId,
-    ParametersRequestWithoutId
+    ParametersRequestWithoutId,
+    BurndownData
 } from "../type";
 
-export { getCurrentMilestones, getNbOfSprints, getMilestonesContent, getTrackersProject };
+export {
+    getCurrentMilestones,
+    getNbOfSprints,
+    getMilestonesContent,
+    getTrackersProject,
+    getBurndownData
+};
 
 function recursiveGetProjectMilestonesWithQuery(
     project_id: number,
@@ -103,4 +110,21 @@ function getPaginationSizeFromHeader(header: Headers): number {
         return 0;
     }
     return Number.parseInt(pagination_size_header, 10);
+}
+
+async function getBurndownData(
+    milestone_id: number,
+    { limit, offset }: ParametersRequestWithoutId
+): Promise<BurndownData> {
+    const burndown_data = await get(
+        `/api/v1/milestones/${encodeURIComponent(milestone_id)}/burndown`,
+        {
+            params: {
+                limit,
+                offset
+            }
+        }
+    );
+
+    return burndown_data.json();
 }

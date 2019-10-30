@@ -43,13 +43,9 @@ exports[`ReleaseDescription Given user display widget, Then a good link to top p
       Burndown
     </h2>
      
-    <p
-      class="empty-pane-text"
-      data-current-language="en_US"
-      data-msgid="There is nothing here!"
-    >
-      There is nothing here!
-    </p>
+    <burndown-chart-stub
+      releasedata="[object Object]"
+    />
   </div>
 </div>
 `;

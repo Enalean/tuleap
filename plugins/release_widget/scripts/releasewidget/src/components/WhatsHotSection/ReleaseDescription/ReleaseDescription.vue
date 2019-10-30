@@ -29,7 +29,7 @@
         </div>
         <div class="release-chart-burndown-row">
             <h2 class="tlp-pane-subtitle" v-translate>Burndown</h2>
-            <p class="empty-pane-text" v-translate>There is nothing here!</p>
+            <burndown-chart v-bind:release-data="releaseData"/>
         </div>
     </div>
 </template>
@@ -40,9 +40,10 @@ import { Component, Prop } from "vue-property-decorator";
 import { MilestoneData } from "../../../type";
 import { State } from "vuex-class";
 import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
+import BurndownChart from "./Chart/BurndownChart.vue";
 
 @Component({
-    components: { ReleaseDescriptionBadgesTracker }
+    components: { ReleaseDescriptionBadgesTracker, BurndownChart }
 })
 export default class ReleaseDescription extends Vue {
     @Prop()
