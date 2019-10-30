@@ -19,6 +19,7 @@
 
 import * as actions from "./swimlane-actions";
 import * as mutations from "./swimlane-mutations";
+import * as getters from "./swimlane-getters";
 import { SwimlaneState } from "./type";
 import { Module } from "vuex";
 import { RootState } from "../type";
@@ -27,6 +28,7 @@ const swimlane_module_default: Module<SwimlaneState, RootState> = {
     namespaced: true,
     actions,
     mutations,
+    getters,
     state: {
         swimlanes: [],
         is_loading_swimlanes: false

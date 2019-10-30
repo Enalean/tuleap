@@ -18,6 +18,10 @@ exports[`TaskBoardHeaderCell displays a cell with color 1`] = `
     To do
   </span>
    
+  <cards-in-column-count-stub
+    column="[object Object]"
+  />
+   
   <!---->
 </div>
 `;
@@ -40,6 +44,10 @@ exports[`TaskBoardHeaderCell displays a cell with default color 1`] = `
     To do
   </span>
    
+  <cards-in-column-count-stub
+    column="[object Object]"
+  />
+   
   <!---->
 </div>
 `;
@@ -61,6 +69,10 @@ exports[`TaskBoardHeaderCell displays a cell with legacy color to admin users 1`
   >
     To do
   </span>
+   
+  <cards-in-column-count-stub
+    column="[object Object]"
+  />
    
   <wrong-color-popover-stub
     color="#87DBEF"
@@ -86,6 +98,10 @@ exports[`TaskBoardHeaderCell displays a cell with legacy color to regular users 
     To do
   </span>
    
+  <cards-in-column-count-stub
+    column="[object Object]"
+  />
+   
   <!---->
 </div>
 `;
@@ -108,6 +124,10 @@ exports[`TaskBoardHeaderCell displays a cell without color 1`] = `
     To do
   </span>
    
+  <cards-in-column-count-stub
+    column="[object Object]"
+  />
+   
   <!---->
 </div>
 `;
@@ -125,6 +145,10 @@ exports[`TaskBoardHeaderCell does not display wrong color popover nor label if c
   />
    
   <!---->
+   
+  <cards-in-column-count-stub
+    column="[object Object]"
+  />
    
   <!---->
 </div>

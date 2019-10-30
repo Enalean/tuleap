@@ -81,6 +81,10 @@
     text-align: center;
 }
 
+.taskboard-header-wrong-color-container {
+    margin: 0 0 0 5px;
+}
+
 .taskboard-header-wrong-color {
     color: $tlp-ui-warning;
     cursor: pointer;
@@ -105,4 +109,27 @@
 .taskboard-header-wrong-color-body {
     color: $tlp-typo-default-text-color;
     text-transform: none;
+}
+
+.taskboard-header-count {
+    position: relative;
+    top: -1px;
+    animation: none;
+    opacity: .4;
+    font-size: 28px;
+    font-weight: 300;
+
+    &.taskboard-header-count-loading {
+        animation: 250ms linear 0s infinite alternate loading-items;
+    }
+}
+
+@keyframes loading-items {
+    0% {
+        opacity: .4;
+    }
+
+    100% {
+        opacity: .05;
+    }
 }
