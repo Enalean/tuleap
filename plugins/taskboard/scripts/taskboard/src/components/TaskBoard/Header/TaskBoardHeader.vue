@@ -21,7 +21,10 @@
 <template>
     <div class="taskboard-head">
         <div class="taskboard-header taskboard-cell-swimlane-header" v-bind:class="fullscreen_class"></div>
-        <task-board-header-cell v-for="col of columns" v-bind:key="col.id" v-bind:column="col"/>
+        <template v-for="column of columns">
+            <collapsed-header-cell v-bind:key="column.id" v-if="column.is_collapsed" v-bind:column="column"/>
+            <expanded-header-cell v-bind:key="column.id" v-else v-bind:column="column"/>
+        </template>
     </div>
 </template>
 
@@ -30,12 +33,13 @@ import Vue from "vue";
 import { State, namespace } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { ColumnDefinition } from "../../../type";
-import TaskBoardHeaderCell from "./TaskBoardHeaderCell.vue";
+import ExpandedHeaderCell from "./Expanded/ExpandedHeaderCell.vue";
+import CollapsedHeaderCell from "./Collapsed/CollapsedHeaderCell.vue";
 
 const fullscreen = namespace("fullscreen");
 
 @Component({
-    components: { TaskBoardHeaderCell }
+    components: { CollapsedHeaderCell, ExpandedHeaderCell }
 })
 export default class TaskBoardHeader extends Vue {
     @State

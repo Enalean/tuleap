@@ -20,14 +20,33 @@
 import { shallowMount } from "@vue/test-utils";
 import TaskBoardHeader from "./TaskBoardHeader.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import { ColumnDefinition } from "../../../type";
+import ExpandedHeaderCell from "./Expanded/ExpandedHeaderCell.vue";
+import CollapsedHeaderCell from "./Collapsed/CollapsedHeaderCell.vue";
 
 describe("TaskBoardHeader", () => {
     it("displays a header with many columns", () => {
+        const todo: ColumnDefinition = {
+            id: 2,
+            label: "To do",
+            is_collapsed: false
+        } as ColumnDefinition;
+        const ongoing: ColumnDefinition = {
+            id: 3,
+            label: "Ongoing",
+            is_collapsed: false
+        } as ColumnDefinition;
+        const done: ColumnDefinition = {
+            id: 4,
+            label: "Done",
+            is_collapsed: true
+        } as ColumnDefinition;
+
         const wrapper = shallowMount(TaskBoardHeader, {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }],
+                        columns: [todo, ongoing, done],
                         fullscreen: {
                             is_taskboard_in_fullscreen_mode: false
                         }
@@ -38,7 +57,18 @@ describe("TaskBoardHeader", () => {
                 })
             }
         });
-        expect(wrapper.element).toMatchSnapshot();
+
+        const children = wrapper.findAll("*");
+        expect(children.at(1).is(".taskboard-cell-swimlane-header")).toBe(true);
+
+        expect(children.at(2).is(ExpandedHeaderCell)).toBe(true);
+        expect(children.at(2).props("column")).toStrictEqual(todo);
+
+        expect(children.at(3).is(ExpandedHeaderCell)).toBe(true);
+        expect(children.at(3).props("column")).toStrictEqual(ongoing);
+
+        expect(children.at(4).is(CollapsedHeaderCell)).toBe(true);
+        expect(children.at(4).props("column")).toStrictEqual(done);
     });
 
     it("toggles the fullscreen class if taskboard is in fullscreen mode", () => {

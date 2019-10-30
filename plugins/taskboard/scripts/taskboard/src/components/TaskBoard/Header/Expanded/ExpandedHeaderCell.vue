@@ -19,66 +19,37 @@
   -->
 <template>
     <div class="taskboard-header" v-bind:class="classes">
-        <expand-button v-bind:column="column"/>
         <collapse-button v-bind:column="column"/>
-        <span class="taskboard-header-label" v-if="!column.is_collapsed">{{ column.label }}</span>
+        <span class="taskboard-header-label" data-test="label">{{ column.label }}</span>
         <cards-in-column-count v-bind:column="column"/>
         <wrong-color-popover v-if="should_popover_be_displayed" v-bind:color="column.color"/>
     </div>
 </template>
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { ColumnDefinition } from "../../../type";
+import { Component, Mixins } from "vue-property-decorator";
 import WrongColorPopover from "./WrongColorPopover.vue";
 import { namespace } from "vuex-class";
 import CollapseButton from "./CollapseButton.vue";
-import ExpandButton from "./ExpandButton.vue";
 import CardsInColumnCount from "./CardsInColumnCount.vue";
+import HeaderCellMixin from "../header-cell-mixin";
 
 const user = namespace("user");
 
 const DEFAULT_COLOR = "#F8F8F8";
 
 @Component({
-    components: { CardsInColumnCount, ExpandButton, CollapseButton, WrongColorPopover }
+    components: { CardsInColumnCount, CollapseButton, WrongColorPopover }
 })
-export default class TaskBoardHeaderCell extends Vue {
-    @Prop({ required: true })
-    readonly column!: ColumnDefinition;
-
+export default class ExpandedHeaderCell extends Mixins(HeaderCellMixin) {
     @user.State
     readonly user_is_admin!: boolean;
-
-    get classes(): string {
-        const classes = [];
-
-        if (this.column.is_collapsed) {
-            classes.push("taskboard-header-collapsed");
-        }
-
-        if (!this.is_rgb_color && this.column.color) {
-            classes.push("taskboard-header-" + this.column.color);
-        }
-
-        return classes.join(" ");
-    }
-
-    get is_rgb_color(): boolean {
-        return this.column.color.charAt(0) === "#";
-    }
 
     get is_default_color(): boolean {
         return this.column.color === DEFAULT_COLOR;
     }
 
     get should_popover_be_displayed(): boolean {
-        return (
-            this.user_is_admin &&
-            this.is_rgb_color &&
-            !this.is_default_color &&
-            !this.column.is_collapsed
-        );
+        return this.user_is_admin && this.is_rgb_color && !this.is_default_color;
     }
 }
 </script>

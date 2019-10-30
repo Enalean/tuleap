@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import WrongColorPopover from "./WrongColorPopover.vue";
-import { createTaskboardLocalVue } from "../../../helpers/local-vue-for-test";
+import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
 import * as tlp from "tlp";
 
 jest.mock("tlp");

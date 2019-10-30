@@ -19,13 +19,13 @@
   -->
 
 <template>
-    <span class="taskboard-header-count" v-if="!column.is_collapsed" v-bind:class="classes">{{ nb_cards_in_column(column) }}</span>
+    <span class="taskboard-header-count" v-bind:class="classes">{{ nb_cards_in_column(column) }}</span>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { ColumnDefinition } from "../../../type";
+import { ColumnDefinition } from "../../../../type";
 import { namespace } from "vuex-class";
 
 const swimlane = namespace("swimlane");
