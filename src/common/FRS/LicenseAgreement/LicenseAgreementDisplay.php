@@ -44,13 +44,21 @@ class LicenseAgreementDisplay
 
     public function getModal(): string
     {
-        return $this->renderer->renderToString('license-modal', ['organisation_name' => ForgeConfig::get('sys_org_name'), 'exchange_policy_url' => ForgeConfig::get('sys_exchange_policy_url'), 'contact_email' => ForgeConfig::get('sys_email_contact')]);
+        return $this->renderer->renderToString(
+            'license-modal',
+            [
+                'organisation_name'   => ForgeConfig::get('sys_org_name'),
+                'exchange_policy_url' => ForgeConfig::get('sys_exchange_policy_url'),
+                'contact_email'       => ForgeConfig::get('sys_email_contact'),
+            ]
+        );
     }
 
     public function show(\FRSPackage $package, int $file_id, string $fname): string
     {
-        if (($package->getApproveLicense() == 0) && (isset($GLOBALS['sys_frs_license_mandatory']) && ! $GLOBALS['sys_frs_license_mandatory'])) {
-            return '<A HREF="/file/download/' . urlencode((string) $file_id) . '" title="' . $this->purifier->purify($file_id) . " - " . $this->purifier->purify($fname) . '">' . $this->purifier->purify($fname) . '</A>';
+        $display_filename = $this->purifier->purify($fname);
+        if ($package->getApproveLicense() == 0 && ! ForgeConfig::get('sys_frs_license_mandatory')) {
+            return '<a href="/file/download/' . urlencode((string) $file_id) . '" title="' . $this->purifier->purify($file_id) . " - " . $display_filename . '">' . $display_filename . '</a>';
         }
         return '<a href="#" data-file-id="' . urlencode((string) $file_id) . '" class="frs-license-agreement-modal-link">'.$this->purifier->purify($fname).'</a>';
     }

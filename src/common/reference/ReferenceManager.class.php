@@ -497,17 +497,32 @@ class ReferenceManager
             $refid=$row['id'];
         }
 
-        $reference = new Reference(
-            $refid,
-            $row['keyword'],
-            $row['description'],
-            $row['link'],
-            $row['scope'],
-            $row['service_short_name'],
-            $row['nature'],
-            $row['is_active'],
-            $row['group_id']
-        );
+        if ($row['nature'] === 'file') {
+            $reference = new \Tuleap\FRS\FileReference(
+                $refid,
+                $row['keyword'],
+                $row['description'],
+                $row['link'],
+                $row['scope'],
+                $row['service_short_name'],
+                $row['nature'],
+                $row['is_active'],
+                $row['group_id'],
+                $val
+            );
+        } else {
+            $reference = new Reference(
+                $refid,
+                $row['keyword'],
+                $row['description'],
+                $row['link'],
+                $row['scope'],
+                $row['service_short_name'],
+                $row['nature'],
+                $row['is_active'],
+                $row['group_id']
+            );
+        }
 
         if ($this->isAnArtifactKeyword($row['keyword'])) {
             if (! $this->getGroupIdFromArtifactId($val)) {

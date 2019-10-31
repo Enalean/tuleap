@@ -490,7 +490,7 @@ INSERT INTO reference SET \
     id='15',        \
     keyword='file', \
     description='reference_file_desc_key', \
-    link='/file/confirm_download.php?group_id=$group_id&file_id=$1', \
+    link='', \
     scope='S', \
     service_short_name='file', \
     nature='file';
