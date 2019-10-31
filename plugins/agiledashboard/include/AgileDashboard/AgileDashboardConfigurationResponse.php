@@ -43,6 +43,11 @@ class AgileDashboardConfigurationResponse
         $this->notifyErrorAndRedirectToAdmin('scrum');
     }
 
+    public function deactivateExplicitTopBacklogNotAllowed()
+    {
+        $this->notifyErrorAndRedirectToAdmin('scrum');
+    }
+
     public function kanbanConfigurationUpdated()
     {
         if ($this->redirect_to_home_on_success) {

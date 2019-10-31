@@ -87,6 +87,7 @@ class ScrumPresenterBuilderTest extends TestCase
     public function testItBuildsPresenterWhenNoRootPlanning(): void
     {
         $user    = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('useLabFeatures')->andReturn('0');
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->atLeast(1)->andReturn(101);
 
@@ -106,7 +107,7 @@ class ScrumPresenterBuilderTest extends TestCase
 
         $this->event_manager->shouldReceive('processEvent')->once();
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->once()->andReturnFalse();
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturnFalse();
 
         $expected_presenter = new AdminScrumPresenter(
             [new Planning_PlanningAdminPresenter($planning, false)],
@@ -121,7 +122,9 @@ class ScrumPresenterBuilderTest extends TestCase
             false,
             false,
             true,
-            ""
+            "",
+            false,
+            false
         );
 
         $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project);
@@ -132,6 +135,7 @@ class ScrumPresenterBuilderTest extends TestCase
     public function testItBuildsPresenterInMonoMilestoneContextWhenMonoMilestoneAreDisabled(): void
     {
         $user    = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('useLabFeatures')->andReturn('0');
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->atLeast(1)->andReturn(101);
 
@@ -157,7 +161,7 @@ class ScrumPresenterBuilderTest extends TestCase
         $this->scrum_mono_milestone_checker->shouldReceive('isScrumMonoMilestoneAvailable')->once()->andReturnTrue();
         $this->scrum_mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->andReturnFalse();
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->once()->andReturnFalse();
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturnFalse();
 
         $this->planning_factory->shouldReceive('getPotentialPlanningTrackers')->once()->andReturn([]);
 
@@ -174,7 +178,9 @@ class ScrumPresenterBuilderTest extends TestCase
             false,
             false,
             false,
-            ""
+            "",
+            false,
+            false
         );
 
         $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project);
@@ -185,6 +191,7 @@ class ScrumPresenterBuilderTest extends TestCase
     public function testItBuildsPresenterInMonoMilestoneContextWhenMonoMilestoneAreEnabled(): void
     {
         $user    = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('useLabFeatures')->andReturn('0');
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->atLeast(1)->andReturn(101);
 
@@ -213,7 +220,7 @@ class ScrumPresenterBuilderTest extends TestCase
             'doesScrumMonoMilestoneConfigurationAllowsPlanningCreation'
         )->andReturnTrue();
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->once()->andReturnFalse();
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturnFalse();
 
         $this->planning_factory->shouldReceive('getPotentialPlanningTrackers')->once()->andReturn([]);
 
@@ -230,7 +237,9 @@ class ScrumPresenterBuilderTest extends TestCase
             false,
             true,
             true,
-            ""
+            "",
+            false,
+            false
         );
 
         $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project);
@@ -241,6 +250,7 @@ class ScrumPresenterBuilderTest extends TestCase
     public function testItBuildsPresenterInExplicitBacklogContext(): void
     {
         $user    = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('useLabFeatures')->andReturn('0');
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->atLeast(1)->andReturn(101);
 
@@ -266,7 +276,7 @@ class ScrumPresenterBuilderTest extends TestCase
         $this->scrum_mono_milestone_checker->shouldReceive('isScrumMonoMilestoneAvailable')->once()->andReturnFalse();
         $this->scrum_mono_milestone_checker->shouldReceive('isMonoMilestoneEnabled')->atLeast(1)->andReturnFalse();
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->once()->andReturnTrue();
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturnTrue();
 
         $this->planning_factory->shouldReceive('getPotentialPlanningTrackers')->once()->andReturn([]);
 
@@ -283,7 +293,9 @@ class ScrumPresenterBuilderTest extends TestCase
             false,
             false,
             false,
-            ""
+            "",
+            true,
+            false
         );
 
         $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project);

@@ -50,6 +50,7 @@ use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeUpdater;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
@@ -376,7 +377,8 @@ class AdminController extends BaseController
                 ),
                 new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),
                 new ScrumForMonoMilestoneDisabler($scrum_mono_milestone_dao),
-                new ScrumForMonoMilestoneChecker($scrum_mono_milestone_dao, $this->planning_factory)
+                new ScrumForMonoMilestoneChecker($scrum_mono_milestone_dao, $this->planning_factory),
+                new ExplicitBacklogDao()
             );
         }
 

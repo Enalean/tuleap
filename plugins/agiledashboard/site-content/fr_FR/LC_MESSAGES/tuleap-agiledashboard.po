@@ -128,6 +128,9 @@ msgstr "Les valeurs finies ont été supprimées avec succès."
 msgid "Done values successfully updated."
 msgstr "Les valeurs finies ont été mises à jour avec succès."
 
+msgid "Explicit top backlog"
+msgstr "Planification générale explicite"
+
 msgid "Filter:"
 msgstr "Filtre :"
 
@@ -244,6 +247,15 @@ msgstr "Il n’y a aucun élément <br> visible"
 
 msgid "There is no item yet"
 msgstr "Il n’y a aucun élément pour l'instant"
+
+msgid ""
+"This is an experimental feature. It's explained <a href=\"https://tuleap.net/"
+"plugins/tracker/?aid=13997\">here</a>. Once activated, you will start with "
+"an empty top backlog."
+msgstr ""
+"Cette fonctionnalité est expérimentale. Elle est expliquée <a href=\"https://"
+"tuleap.net/plugins/tracker/?aid=13997\">ici</a>. Une fois activée, la "
+"planification générale sera vide."
 
 msgid ""
 "This option will display all the burnup charts in the project with elements "
