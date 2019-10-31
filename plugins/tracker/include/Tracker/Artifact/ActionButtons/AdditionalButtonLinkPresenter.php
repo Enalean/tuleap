@@ -37,18 +37,18 @@ class AdditionalButtonLinkPresenter
     /**
      * @var string
      */
-    public $glyph;
+    public $icon;
 
     /**
      * @var bool
      */
     public $disabled;
 
-    public function __construct(string $link_label, string $url, ?Glyph $glyph = null, bool $disabled = false)
+    public function __construct(string $link_label, string $url, ?string $icon = null, bool $disabled = false)
     {
         $this->link_label = $link_label;
         $this->url        = $url;
-        $this->glyph      = $glyph ? $glyph->getInlineString(): '';
+        $this->icon       = $icon ? $icon : '';
         $this->disabled   = $disabled;
     }
 }

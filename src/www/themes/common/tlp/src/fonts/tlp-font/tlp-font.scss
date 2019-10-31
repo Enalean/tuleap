@@ -42,7 +42,9 @@ $tlp-fontawesome-icons: (
     versioning-git: '\f012',
     wiki: '\f013',
     mediawiki: '\f014',
-    folder-globe: '\f015'
+    folder-globe: '\f015',
+    add-to-backlog: '\f016',
+    dependencies-graph: '\f017'
 );
 
 @each $label, $unicode in $tlp-fontawesome-icons {

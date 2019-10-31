@@ -1593,7 +1593,7 @@ plugin_tracker_modal_artifact	submit_error	L'artifact n'a pu être créé à cau
 plugin_tracker_modal_artifact	parent_artifact	Artéfact parent :
 
 plugin_tracker	Description:	Description :
-plugin_tracker	copy_this_artifact	Copier cet artefact
+plugin_tracker	copy_this_artifact	Dupliquer cet artefact
 plugin_tracker	error_create_copy	Une erreur est survenue empechant la copie de l'artefact #$1
 plugin_tracker	copy_of	Copie de $1
 

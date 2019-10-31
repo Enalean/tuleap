@@ -100,7 +100,7 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
         );
 
         $expected_presenter = new ArtifactMoveButtonPresenter(
-            dgettext('plugin-tracker', "Move artifact"),
+            dgettext('plugin-tracker', "Move this artifact"),
             ["Deletion of artifacts is not allowed"]
         );
 
@@ -121,7 +121,7 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
         );
 
         $expected_presenter = new ArtifactMoveButtonPresenter(
-            dgettext('plugin-tracker', "Move artifact"),
+            dgettext('plugin-tracker', "Move this artifact"),
             ["The limit of artifacts deletions has been reached for the previous 24 hours."]
         );
 
@@ -144,7 +144,7 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
         $this->deletion_limit_retriever->shouldReceive('getNumberOfArtifactsAllowedToDelete')->andReturn(10);
 
         $expected_presenter = new ArtifactMoveButtonPresenter(
-            dgettext('plugin-tracker', "Move artifact"),
+            dgettext('plugin-tracker', "Move this artifact"),
             ["No semantic defined in this tracker."]
         );
 
@@ -163,7 +163,7 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
         $this->deletion_limit_retriever->shouldReceive('getNumberOfArtifactsAllowedToDelete')->andReturn(10);
 
         $expected_presenter = new ArtifactMoveButtonPresenter(
-            dgettext('plugin-tracker', "Move artifact"),
+            dgettext('plugin-tracker', "Move this artifact"),
             ["Artifacts with artifact links can not be moved."]
         );
 
@@ -182,7 +182,7 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
         $this->deletion_limit_retriever->shouldReceive('getNumberOfArtifactsAllowedToDelete')->andReturn(10);
 
         $expected_presenter = new ArtifactMoveButtonPresenter(
-            dgettext('plugin-tracker', "Move artifact"),
+            dgettext('plugin-tracker', "Move this artifact"),
             []
         );
 
