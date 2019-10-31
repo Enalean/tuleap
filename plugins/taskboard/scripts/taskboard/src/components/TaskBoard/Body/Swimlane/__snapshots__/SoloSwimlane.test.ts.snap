@@ -23,37 +23,3 @@ exports[`SoloSwimlane displays the parent card in Done column when status maps t
   </cell-for-solo-card-stub>
 </div>
 `;
-
-exports[`SoloSwimlane displays the parent card in its own cell when status is null 1`] = `
-<div
-  class="taskboard-swimlane"
->
-  <parent-cell-stub
-    swimlane="[object Object]"
-  />
-   
-  <cell-for-solo-card-stub
-    column="[object Object]"
-  />
-  <cell-for-solo-card-stub
-    column="[object Object]"
-  />
-</div>
-`;
-
-exports[`SoloSwimlane displays the parent card in its own cell when tracker id is not part of columns mapping 1`] = `
-<div
-  class="taskboard-swimlane"
->
-  <parent-cell-stub
-    swimlane="[object Object]"
-  />
-   
-  <cell-for-solo-card-stub
-    column="[object Object]"
-  />
-  <cell-for-solo-card-stub
-    column="[object Object]"
-  />
-</div>
-`;

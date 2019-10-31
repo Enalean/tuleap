@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+  - Copyright (c) Enalean, 2019-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -15,50 +15,33 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-  -
   -->
 
 <template>
-    <div class="taskboard-swimlane" v-if="should_solo_card_be_displayed">
-        <swimlane-header v-bind:swimlane="swimlane"/>
-        <cell-for-solo-card v-for="col of columns" v-bind:key="col.id" v-bind:column="col">
-            <card-with-remaining-effort
-                v-if="column.id === col.id"
-                v-bind:card="swimlane.card"
-                class="taskboard-cell-solo-card"
-            />
-        </cell-for-solo-card>
+    <div class="taskboard-swimlane">
+        <parent-cell v-bind:swimlane="swimlane"/>
+        <cell-for-solo-card v-for="col of columns" v-bind:key="col.id" v-bind:column="col"/>
     </div>
 </template>
-
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
-import { ColumnDefinition, Swimlane } from "../../../../type";
-import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
-import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
 import CellForSoloCard from "./CellForSoloCard.vue";
+import ParentCell from "./ParentCell.vue";
+import { ColumnDefinition, Swimlane } from "../../../../type";
 
 @Component({
     components: {
-        CardWithRemainingEffort,
-        CellForSoloCard,
-        SwimlaneHeader
+        ParentCell,
+        CellForSoloCard
     }
 })
-export default class SoloSwimlane extends Vue {
+export default class InvalidMappingSwimlane extends Vue {
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
 
-    @Prop({ required: true })
-    readonly column!: ColumnDefinition;
-
     @State
     readonly columns!: Array<ColumnDefinition>;
-
-    get should_solo_card_be_displayed(): boolean {
-        return !this.column.is_collapsed;
-    }
 }
 </script>
