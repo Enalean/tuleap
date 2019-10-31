@@ -22,13 +22,32 @@ import { RootState, State } from "./type";
 import { ColumnDefinition } from "../type";
 import { UserPreference, UserPreferenceValue } from "./user/type";
 
+export function displayClosedItems(context: ActionContext<State, RootState>): Promise<void> {
+    context.commit("displayClosedItems");
+    const payload: UserPreference = {
+        key: getHideClosedPreferenceName(context)
+    };
+
+    return context.dispatch("user/deletePreference", payload, { root: true });
+}
+
+export function hideClosedItems(context: ActionContext<State, RootState>): Promise<void> {
+    context.commit("hideClosedItems");
+    const payload: UserPreferenceValue = {
+        key: getHideClosedPreferenceName(context),
+        value: "1"
+    };
+
+    return context.dispatch("user/setPreference", payload, { root: true });
+}
+
 export function expandColumn(
     context: ActionContext<State, RootState>,
     column: ColumnDefinition
 ): Promise<void> {
     context.commit("expandColumn", column);
     const payload: UserPreference = {
-        key: getPreferenceName(context, column)
+        key: getCollapsePreferenceName(context, column)
     };
 
     return context.dispatch("user/deletePreference", payload, { root: true });
@@ -40,16 +59,20 @@ export function collapseColumn(
 ): Promise<void> {
     context.commit("collapseColumn", column);
     const payload: UserPreferenceValue = {
-        key: getPreferenceName(context, column),
+        key: getCollapsePreferenceName(context, column),
         value: "1"
     };
 
     return context.dispatch("user/setPreference", payload, { root: true });
 }
 
-function getPreferenceName(
+function getCollapsePreferenceName(
     context: ActionContext<State, RootState>,
     column: ColumnDefinition
 ): string {
     return `plugin_taskboard_collapse_column_${context.rootState.milestone_id}_${column.id}`;
+}
+
+function getHideClosedPreferenceName(context: ActionContext<State, RootState>): string {
+    return `plugin_taskboard_hide_closed_items_${context.rootState.milestone_id}`;
 }

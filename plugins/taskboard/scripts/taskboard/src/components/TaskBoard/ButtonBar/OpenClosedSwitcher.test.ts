@@ -75,7 +75,7 @@ describe("OpenClosedSwitcher", () => {
             }
         });
         wrapper.find("#button-bar-show-closed").setChecked();
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
             "displayClosedItems",
             expect.anything()
         );
@@ -93,6 +93,9 @@ describe("OpenClosedSwitcher", () => {
             }
         });
         wrapper.find("#button-bar-hide-closed").setChecked();
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("hideClosedItems", expect.anything());
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
+            "hideClosedItems",
+            expect.anything()
+        );
     });
 });

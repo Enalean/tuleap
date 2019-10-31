@@ -52,18 +52,18 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { Mutation, State } from "vuex-class";
+import { Action, State } from "vuex-class";
 
 @Component
 export default class OpenClosedSwitcher extends Vue {
     @State
     readonly are_closed_items_displayed!: boolean;
 
-    @Mutation
-    readonly displayClosedItems!: () => void;
+    @Action
+    readonly displayClosedItems!: () => Promise<void>;
 
-    @Mutation
-    readonly hideClosedItems!: () => void;
+    @Action
+    readonly hideClosedItems!: () => Promise<void>;
 
     get view_closed_items_title(): string {
         return this.$gettext("View closed items");

@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const has_content = Boolean(vue_mount_point.dataset.hasContent);
     const milestone_id = Number.parseInt(vue_mount_point.dataset.milestoneId || "0", 10);
     const user_has_accessibility_mode = Boolean(document.body.dataset.userHasAccessibilityMode);
+    const are_closed_items_displayed = Boolean(vue_mount_point.dataset.areClosedItemsDisplayed);
 
     await initVueGettext(Vue, (locale: string) =>
         import(/* webpackChunkName: "taskboard-po-" */ `./po/${locale}.po`)
@@ -61,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         has_content,
         milestone_id,
         milestone_title,
-        are_closed_items_displayed: true
+        are_closed_items_displayed
     } as RootState;
 
     const initial_user_state: UserState = {
