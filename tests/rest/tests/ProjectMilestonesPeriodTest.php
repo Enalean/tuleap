@@ -44,7 +44,7 @@ class ProjectMilestonesPeriodTest extends ProjectBase
         $this->assertCount(3, $milestones);
     }
 
-    public function testGETmilestonesWithPeriodCurrentQuery(): void
+    public function testGETonlyOpenedMilestonesWithPeriodCurrentQuery(): void
     {
         $query    = urlencode(json_encode(["period" => "current"]));
         $response = $this->getResponse(
@@ -57,6 +57,10 @@ class ProjectMilestonesPeriodTest extends ProjectBase
 
         $milestones = $response->json();
         $this->assertCount(4, $milestones);
+        $this->assertEquals('open', $milestones[0]['semantic_status']);
+        $this->assertEquals('open', $milestones[1]['semantic_status']);
+        $this->assertEquals('open', $milestones[2]['semantic_status']);
+        $this->assertEquals('open', $milestones[3]['semantic_status']);
     }
 
     public function testGETmilestonesWithPeriodCurrentQueryWithRESTReadOnlyUser(): void
