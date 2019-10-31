@@ -24,6 +24,8 @@ import { SwimlaneState, ReorderCardsPayload } from "./type";
 import { RootState } from "../type";
 import { UserPreference, UserPreferenceValue } from "../user/type";
 
+export * from "./drag-drop-actions";
+
 export async function loadSwimlanes(
     context: ActionContext<SwimlaneState, RootState>
 ): Promise<void> {
