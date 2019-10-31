@@ -27,6 +27,10 @@ export async function setPreference(
     preference: UserPreferenceValue
 ): Promise<void> {
     const user_id = context.state.user_id;
+    if (!user_id) {
+        return;
+    }
+
     await patch(`/api/v1/users/${encodeURIComponent(user_id)}/preferences`, {
         headers: {
             "Content-Type": "application/json"
@@ -43,6 +47,10 @@ export async function deletePreference(
     preference: UserPreference
 ): Promise<void> {
     const user_id = context.state.user_id;
+    if (!user_id) {
+        return;
+    }
+
     await del(
         `/api/v1/users/${encodeURIComponent(user_id)}/preferences?key=${encodeURIComponent(
             preference.key
