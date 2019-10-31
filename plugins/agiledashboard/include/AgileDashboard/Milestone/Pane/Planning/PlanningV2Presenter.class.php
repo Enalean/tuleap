@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2014 - present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -21,6 +21,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
+use Tuleap\REST\JsonCast;
 
 class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
 {
@@ -51,6 +54,10 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
 
     /** @var string */
     public $user_accessibility_mode;
+    /**
+     * @var bool
+     */
+    public $is_in_explicit_top_backlog;
 
     public function __construct(
         PFUser $current_user,
@@ -58,7 +65,8 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         $milestone_id,
         $milestone_representation,
         $paginated_backlog_items_representations,
-        $paginated_milestones_representations
+        $paginated_milestones_representations,
+        bool $is_in_explicit_top_backlog
     ) {
         $this->user_id                                 = $current_user->getId();
         $this->lang                                    = $this->getLanguageAbbreviation($current_user);
@@ -69,6 +77,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         $this->paginated_backlog_items_representations = json_encode($paginated_backlog_items_representations);
         $this->paginated_milestones_representations    = json_encode($paginated_milestones_representations);
         $this->user_accessibility_mode                 = json_encode((bool) $current_user->getPreference(PFUser::ACCESSIBILITY_MODE));
+        $this->is_in_explicit_top_backlog              = $is_in_explicit_top_backlog;
     }
 
     private function getLanguageAbbreviation(PFUser $current_user)

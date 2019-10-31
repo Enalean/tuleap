@@ -113,6 +113,9 @@ msgstr ""
 "Appuyez sur <span class=\\\"tlp-badge-primary\\\">Échap</span> pour annuler "
 "la sélection, seuls les éléments frères peuvent être multi-sélectionnés."
 
+msgid "Remove from top backlog"
+msgstr "Supprimer de la planification générale "
+
 msgid "Show closed backlog items"
 msgstr "Afficher les éléments du backlog fermés"
 

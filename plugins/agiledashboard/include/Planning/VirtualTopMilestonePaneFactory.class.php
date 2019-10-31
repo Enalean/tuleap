@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
@@ -48,10 +49,6 @@ class Planning_VirtualTopMilestonePaneFactory
     /** @var Codendi_Request */
     private $request;
 
-
-    /** @var AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory */
-    private $pane_presenter_builder_factory;
-
     /** @var string */
     private $theme_path;
 
@@ -60,19 +57,23 @@ class Planning_VirtualTopMilestonePaneFactory
 
     /** @var AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder */
     private $paginated_backlog_items_representations_builder;
+    /**
+     * @var ExplicitBacklogDao
+     */
+    private $explicit_backlog_dao;
 
     public function __construct(
         Codendi_Request $request,
-        AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory $pane_presenter_builder_factory,
         $theme_path,
         AgileDashboard_Milestone_MilestoneRepresentationBuilder $milestone_representation_builder,
-        AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder $paginated_backlog_items_representations_builder
+        AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder $paginated_backlog_items_representations_builder,
+        ExplicitBacklogDao $explicit_backlog_dao
     ) {
         $this->request                                         = $request;
-        $this->pane_presenter_builder_factory                  = $pane_presenter_builder_factory;
         $this->theme_path                                      = $theme_path;
         $this->milestone_representation_builder                = $milestone_representation_builder;
         $this->paginated_backlog_items_representations_builder = $paginated_backlog_items_representations_builder;
+        $this->explicit_backlog_dao                            = $explicit_backlog_dao;
     }
 
     /** @return PanePresenterData */
@@ -148,15 +149,18 @@ class Planning_VirtualTopMilestonePaneFactory
 
         $pane_info = new TopPlanningV2PaneInfo($milestone, $this->theme_path, $milestone_tracker);
         $pane_info->setActive(true);
+        $project                                   = $this->request->getProject();
+        $user                                      = $this->request->getCurrentUser();
         $this->active_pane[$milestone_artifact_id] = new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
             $pane_info,
             new AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter(
-                $this->request->getCurrentUser(),
-                $this->request->getProject(),
+                $user,
+                $project,
                 $milestone_artifact_id,
                 null,
-                $this->getPaginatedBacklogItemsRepresentationsForTopMilestone($milestone, $this->request->getCurrentUser()),
-                $this->getPaginatedTopMilestonesRepresentations($this->request->getProject(), $this->request->getCurrentUser())
+                $this->getPaginatedBacklogItemsRepresentationsForTopMilestone($milestone, $user),
+                $this->getPaginatedTopMilestonesRepresentations($project, $user),
+                $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getID())
             )
         );
 

@@ -25,6 +25,8 @@ function MainController($element, SharedPropertiesService, amMoment, gettextCata
         SharedPropertiesService.setInitialMilestones(initial_milestones);
         const view_mode = planning_init_data.viewMode;
         SharedPropertiesService.setViewMode(view_mode);
+        const is_in_explicit_top_backlog = planning_init_data.isInExplicitTopBacklog;
+        SharedPropertiesService.setIsInExplicitTopBacklogManagement(is_in_explicit_top_backlog);
         setAccessibilityMode(JSON.parse(planning_init_data.userAccessibilityMode));
 
         const language = planning_init_data.language;

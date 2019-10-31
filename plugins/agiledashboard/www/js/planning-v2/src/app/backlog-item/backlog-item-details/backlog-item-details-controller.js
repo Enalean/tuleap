@@ -6,6 +6,7 @@ export default BacklogItemDetailsController;
 
 BacklogItemDetailsController.$inject = [
     "gettextCatalog",
+    "SharedPropertiesService",
     "EditItemService",
     "BacklogItemService",
     "BacklogItemCollectionService",
@@ -15,6 +16,7 @@ BacklogItemDetailsController.$inject = [
 
 function BacklogItemDetailsController(
     gettextCatalog,
+    SharedPropertiesService,
     EditItemService,
     BacklogItemService,
     BacklogItemCollectionService,
@@ -24,8 +26,10 @@ function BacklogItemDetailsController(
     const self = this;
     Object.assign(self, {
         user_has_accessibility_mode: getAccessibilityMode(),
+        is_in_explicit_top_backlog: SharedPropertiesService.isInExplicitTopBacklogManagement(),
         backlog_filter: BacklogFilterValue,
         showEditModal: EditItemService.showEditModal,
+        removeElementFromExplicitBacklog: EditItemService.removeElementFromExplicitBacklog,
         showAddChildModal,
         canBeAddedToChildren,
         getCardColorName
