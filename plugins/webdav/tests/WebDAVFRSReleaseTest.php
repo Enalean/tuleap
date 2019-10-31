@@ -24,7 +24,6 @@ require_once 'bootstrap.php';
 Mock::generate('BaseLanguage');
 Mock::generate('PFUser');
 Mock::generate('Project');
-Mock::generate('FRSPackage');
 Mock::generate('WebDAVFRSPackage');
 Mock::generate('FRSReleaseFactory');
 Mock::generate('FRSFile');
@@ -591,7 +590,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
         $frsrf = new MockFRSReleaseFactory();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('getReleaseFactory', $frsrf);
-        $package = new MockFRSPackage();
+        $package = new FRSPackage();
         $webDAVFRSRelease->setReturnValue('getPackage', $package);
         $webDAVFRSRelease->setReturnValue('getUtils', $utils);
         $project = new MockProject();
@@ -613,7 +612,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
         $frsrf->setReturnValue('isReleaseNameExist', true);
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('getReleaseFactory', $frsrf);
-        $package = new MockFRSPackage();
+        $package = new FRSPackage();
         $webDAVFRSRelease->setReturnValue('getPackage', $package);
         $webDAVFRSRelease->setReturnValue('getUtils', $utils);
         $project = new MockProject();
@@ -635,7 +634,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
         $frsrf->setReturnValue('isReleaseNameExist', false);
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('getReleaseFactory', $frsrf);
-        $package = new MockFRSPackage();
+        $package = new FRSPackage();
         $webDAVFRSRelease->setReturnValue('getPackage', $package);
         $webDAVFRSRelease->setReturnValue('getUtils', $utils);
         $project = new MockProject();
@@ -660,7 +659,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', true);
-        $package = new MockFRSPackage();
+        $package = new FRSPackage();
         $destination->setReturnValue('getPackage', $package);
 
         $this->expectException('Sabre_DAV_Exception_Forbidden');
@@ -682,7 +681,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', false);
-        $package = new MockFRSPackage();
+        $package = new FRSPackage();
         $destination->setReturnValue('getPackage', $package);
 
         $this->expectException('Sabre_DAV_Exception_Forbidden');
@@ -704,7 +703,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', false);
-        $package = new MockFRSPackage();
+        $package = new FRSPackage();
         $destination->setReturnValue('getPackage', $package);
 
         $this->expectException('Sabre_DAV_Exception_Forbidden');
@@ -727,7 +726,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', true);
-        $package = new MockFRSPackage();
+        $package = new FRSPackage();
         $destination->setReturnValue('getPackage', $package);
 
         $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
@@ -751,8 +750,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', true);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isHidden', true);
+        $package = new FRSPackage(['status_id' => FRSPackage::STATUS_HIDDEN]);
         $destination->setReturnValue('getPackage', $package);
 
         $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
@@ -776,8 +774,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', true);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isHidden', true);
+        $package = new FRSPackage(['status_id' => FRSPackage::STATUS_HIDDEN]);
         $destination->setReturnValue('getPackage', $package);
 
         $source->move($destination);
@@ -799,8 +796,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', true);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isHidden', false);
+        $package = new FRSPackage(['status_id' => FRSPackage::STATUS_ACTIVE]);
         $destination->setReturnValue('getPackage', $package);
 
         $source->move($destination);
@@ -822,8 +818,7 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
         $source->setReturnValue('getRelease', $release);
         $destination = new MockWebDAVFRSPackage();
         $destination->setReturnValue('userCanWrite', true);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isHidden', false);
+        $package = new FRSPackage(['status_id' => FRSPackage::STATUS_ACTIVE]);
         $destination->setReturnValue('getPackage', $package);
 
         $source->move($destination);

@@ -59,7 +59,7 @@ class FRSPackage
     /**
      * @var bool $approve_license true if the license has been approved, false otherwise
      */
-    var $approve_license;
+    private $approve_license;
 
     function __construct($data_array = null)
     {
@@ -68,7 +68,6 @@ class FRSPackage
         $this->name             = null;
         $this->status_id        = null;
         $this->rank             = null;
-        $this->approve_license  = null;
 
         if ($data_array) {
             $this->initFromArray($data_array);
@@ -115,13 +114,18 @@ class FRSPackage
     {
         $this->rank = $rank;
     }
-    function getApproveLicense()
+
+    public function getApproveLicense(): bool
     {
         return $this->approve_license;
     }
-    function setApproveLicense($approve_license)
+
+    /**
+     * @param bool|string $approve_license
+     */
+    public function setApproveLicense($approve_license): void
     {
-        $this->approve_license = $approve_license;
+        $this->approve_license = (bool) $approve_license;
     }
 
     /**
@@ -154,7 +158,7 @@ class FRSPackage
         return $this->getStatusID() == $frsrf->STATUS_DELETED;
     }
 
-    function initFromArray($array)
+    private function initFromArray(array $array): void
     {
         if (isset($array['package_id'])) {
             $this->setPackageID($array['package_id']);
@@ -176,7 +180,7 @@ class FRSPackage
         }
     }
 
-    function toArray()
+    public function toArray(): array
     {
         $array = array();
         $array['package_id']      = $this->getPackageID();
@@ -184,7 +188,7 @@ class FRSPackage
         $array['name']            = $this->getName();
         $array['status_id']       = $this->getStatusID();
         $array['rank']            = $this->getRank();
-        $array['approve_license'] = $this->getApproveLicense();
+        $array['approve_license'] = (string) $this->getApproveLicense();
         return $array;
     }
 

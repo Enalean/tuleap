@@ -75,7 +75,6 @@ class Group
             //$param can be:
             // - a row from the groups table -> use it
             // - a group_id -> retrieve row from table
-            global $Language;
         if (is_array($param)) {
             $this->group_id=$param['group_id'];
             $this->data_array=$param;
@@ -84,7 +83,7 @@ class Group
             $this->db_result=db_query("SELECT * FROM groups WHERE group_id=".$this->group_id);
             if (db_numrows($this->db_result) < 1) {
              //function in class we extended
-                $this->setError($Language->getText('include_group', 'g_not_found'));
+                $this->setError($GLOBALS['Language']->getText('include_group', 'g_not_found'));
                 $this->data_array=array();
             } else {
              //set up an associative array for use by other functions

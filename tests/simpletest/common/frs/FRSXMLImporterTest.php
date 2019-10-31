@@ -27,6 +27,10 @@ class FRSPackageFactoryMock extends FRSPackageFactory
     function setDefaultPermissions(FRSPackage $package)
     {
     }
+
+    protected function setLicenseAgreementAtPackageCreation(FRSPackage $package, ?int $original_approval_license)
+    {
+    }
 }
 
 class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory
@@ -457,6 +461,6 @@ XML;
             'name' => $name,
             'status_id' => FRSPackage::STATUS_ACTIVE,
             'rank' => 'end',
-            'approve_license' => true);
+            'approve_license' => '1');
     }
 }

@@ -23,18 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\LicenseAgreement;
 
-/**
- * @psalm-immutable
- */
-interface LicenseAgreementInterface
+class InvalidLicenseAgreementException extends \RuntimeException
 {
-    public function getAsJson(): string;
 
-    public function getId(): int;
-
-    public function getTitle(): string;
-
-    public function getContent(): string;
-
-    public function getLicenseOptionPresenter(LicenseAgreementInterface $selected_agreement): LicenseOptionPresenter;
 }

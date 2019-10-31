@@ -71,21 +71,33 @@ class LicenseAgreementDisplay
     public function getDownloadLink(\FRSPackage $package, int $file_id, string $fname): string
     {
         $display_filename = $this->purifier->purify($fname);
-        if ($package->getApproveLicense() == 0 && ! ForgeConfig::get('sys_frs_license_mandatory')) {
+        if (! $package->getApproveLicense() && ! ForgeConfig::get('sys_frs_license_mandatory')) {
             return '<a href="/file/download/' . urlencode((string) $file_id) . '" title="' . $this->purifier->purify($file_id) . " - " . $display_filename . '">' . $display_filename . '</a>';
         }
         $license_agreement = $this->factory->getLicenseAgreementForPackage($package);
         return sprintf('<a href="#" class="frs-license-agreement-modal-link" data-file-id="%d" data-agreement-id="%d">%s</a>', $file_id, $license_agreement->getId(), $this->purifier->purify($fname));
     }
 
-    public function getPackageEditSelector(\FRSPackage $package): string
+    public function getPackageEditSelector(\FRSPackage $package, \Project $project): string
     {
+        $all_custom_agreements = $this->factory->getProjectLicenseAgreements($project);
+        $package_agreement     = $this->factory->getLicenseAgreementForPackage($package);
+        $license_selector      = [];
+        if (ForgeConfig::get('sys_frs_license_mandatory') == 1) {
+            if (count($all_custom_agreements) === 0) {
+                return '<input type="hidden" name="package[approve_license]" value="1">';
+            }
+        } else {
+            $license_selector []= (new NoLicenseToApprove())->getLicenseOptionPresenter($package_agreement);
+        }
+
+        $license_selector []= (new DefaultLicenseAgreement())->getLicenseOptionPresenter($package_agreement);
+        foreach ($all_custom_agreements as $agreement) {
+            $license_selector []= $agreement->getLicenseOptionPresenter($package_agreement);
+        }
         return $this->renderer->renderToString(
-            'edit-package',
-            [
-                'is_agreement_mandatory' => ForgeConfig::get('sys_frs_license_mandatory'),
-                'yes_selected'           => $package->getApproveLicense() === '1',
-            ]
+            EditPackagePresenter::TEMPLATE,
+            $license_selector,
         );
     }
 }

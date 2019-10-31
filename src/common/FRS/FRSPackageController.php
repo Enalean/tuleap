@@ -32,6 +32,7 @@ use PFUser;
 use Project;
 use ProjectUGroup;
 use TemplateRendererFactory;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use User_ForgeUserGroupFactory;
 use User_UGroup;
 use Valid_UInt;
@@ -50,16 +51,21 @@ class FRSPackageController
     /** @var PermissionsManager */
     private $permission_manager;
 
+    /** @var LicenseAgreementFactory */
+    private $license_agreement_factory;
+
     public function __construct(
         FRSPackageFactory $package_factory,
         FRSReleaseFactory $release_factory,
         User_ForgeUserGroupFactory $ugroup_factory,
-        PermissionsManager $permission_manager
+        PermissionsManager $permission_manager,
+        LicenseAgreementFactory $license_agreement_factory
     ) {
         $this->release_factory           = $release_factory;
         $this->package_factory           = $package_factory;
         $this->ugroup_factory            = $ugroup_factory;
         $this->permission_manager        = $permission_manager;
+        $this->license_agreement_factory = $license_agreement_factory;
     }
 
     public function delete(HTTPRequest $request, FRSPackage $package, Project $project)
@@ -141,7 +147,7 @@ class FRSPackageController
         $package->setName($package_data['name']);
         $package->setRank($package_data['rank']);
         $package->setStatusId($package_data['status_id']);
-        $package->setApproveLicense($package_data['approve_license']);
+        $this->license_agreement_factory->updateLicenseAgreementForPackage($project, $package, (int) $package_data['approve_license']);
         $this->package_factory->update($package);
 
         $ugroups = array();

@@ -21,6 +21,8 @@
 use Tuleap\FRS\FRSPackageController;
 use Tuleap\FRS\FRSReleaseController;
 use Tuleap\FRS\FRSValidator;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\JSONHeader;
 
 require_once __DIR__ . '/../../include/pre.php';
@@ -46,7 +48,10 @@ if ($action == 'permissions_frs_package') {
             FRSPackageFactory::instance(),
             FRSReleaseFactory::instance(),
             new User_ForgeUserGroupFactory(new UserGroupDao()),
-            PermissionsManager::instance()
+            PermissionsManager::instance(),
+            new LicenseAgreementFactory(
+                new LicenseAgreementDao()
+            ),
         );
 
         $package_controller->displayUserGroups($project, FRSPackage::PERM_READ, $object_id);

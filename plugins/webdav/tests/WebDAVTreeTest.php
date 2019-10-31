@@ -134,7 +134,7 @@ class WebDAVTreeTest extends TuleapTestCase
 
         $this->user            = mock('PFUser');
         $this->project         = stub('Project')->getID()->returns(101);
-        $this->package         = mock('FRSPackage');
+        $this->package         = new FRSPackage();
         $this->release         = \Mockery::spy(FRSRelease::class);
         $this->file            = mock('FRSFile');
         $this->docman_folder   = mock('Docman_Folder');
