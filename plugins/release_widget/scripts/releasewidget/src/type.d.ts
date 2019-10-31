@@ -124,3 +124,10 @@ export interface PointsWithDate {
     date: string;
     remaining_effort: number | null;
 }
+
+export interface XYMinMaxCoordinates {
+    x_coordinate_minimum: number;
+    y_coordinate_minimum: number;
+    x_coordinate_maximum: number;
+    y_coordinate_maximum: number;
+}

@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,29 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.release-chart-burndown-row {
-    flex: 1 0 auto;
-    width: 220px + $tlp-spacing;
-    margin: 0 $tlp-spacing 0 0;
-    padding: 0 0 0 $tlp-half-spacing;
-}
+import { DaysDisplayingBurndownData } from "./type";
 
-.release-chart-burndown-container {
-    position: relative;
-    padding-top: 45%;
-}
-
-.release-chart-burndown {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.release-line-scale,
-.release-chart-burndown .ideal-line > path {
-    stroke-width: 2px;
-    stroke: $tlp-ui-border-normal;
-    fill: transparent;
-}
+export function getDaysToDisplay({
+    opening_days,
+    duration,
+    points_with_date,
+    start_date
+}: DaysDisplayingBurndownData): string[] | [];

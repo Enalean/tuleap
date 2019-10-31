@@ -25,6 +25,7 @@ import { createReleaseWidgetLocalVue } from "../../../../helpers/local-vue-for-t
 import { DefaultData } from "vue/types/options";
 import * as rest_querier from "../../../../api/rest-querier";
 import BurndownChartError from "./BurndownChartError.vue";
+import BurndownChartDisplayer from "./BurndownChartDisplayer.vue";
 
 let release_data: MilestoneData;
 const component_options: ShallowMountOptions<BurndownChart> = {};
@@ -252,7 +253,7 @@ describe("BurndownChart", () => {
         expect(burndown_error.attributes("has_error_rest")).toBeFalsy();
     });
 
-    it("When the burndown can be create, Then there is just a message", async () => {
+    it("When the burndown can be created, Then component BurndownChartDisplayer is rendered", async () => {
         store_options.state.project_id = project_id;
         release_data = {
             id: 2,
@@ -278,13 +279,10 @@ describe("BurndownChart", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=display-burndown-chart]")).toBe(true);
-        expect(wrapper.find("[data-test=display-burndown-chart]").text()).toEqual(
-            "There is nothing here!"
-        );
+        expect(wrapper.contains(BurndownChartDisplayer)).toBe(true);
     });
 
-    it("When the burndown is recorvering, Then the message 'There is nothing here!' is displayed", async () => {
+    it("When the burndown is recovering, Then component BurndownChartDisplayer is rendered", async () => {
         const burndown_data = {
             start_date: new Date().toString(),
             duration: 10,
@@ -322,10 +320,7 @@ describe("BurndownChart", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=display-burndown-chart]")).toBe(true);
-        expect(wrapper.find("[data-test=display-burndown-chart]").text()).toEqual(
-            "There is nothing here!"
-        );
+        expect(wrapper.contains(BurndownChartDisplayer)).toBe(true);
     });
 
     it("When the burndown doesn't yet exist, Then there is a spinner", async () => {

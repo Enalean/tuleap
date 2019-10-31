@@ -31,7 +31,7 @@
             v-bind:is_under_calculation="is_under_calculation"
             v-bind:message_error_under_calculation="$gettext('Burndown is under calculation. It will be available in a few minutes.')"
         />
-        <p v-else class="empty-pane-text" data-test="display-burndown-chart" v-translate>There is nothing here!</p>
+        <burndown-chart-displayer v-else v-bind:release_data="release_data"/>
     </div>
 </template>
 
@@ -40,10 +40,11 @@ import { Component, Prop } from "vue-property-decorator";
 import { MilestoneData } from "../../../../type";
 import Vue from "vue";
 import BurndownChartError from "./BurndownChartError.vue";
+import BurndownChartDisplayer from "./BurndownChartDisplayer.vue";
 import { FetchWrapperError } from "tlp";
 import { getBurndownData } from "../../../../api/rest-querier";
 @Component({
-    components: { BurndownChartError }
+    components: { BurndownChartError, BurndownChartDisplayer }
 })
 export default class BurndownChart extends Vue {
     @Prop()
