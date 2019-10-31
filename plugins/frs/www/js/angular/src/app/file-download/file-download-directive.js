@@ -9,7 +9,8 @@ function fileDownloadDirective() {
         restrict: "A",
         scope: {
             file: "=fileDownload",
-            license_approval_mandatory: "=licenseApprovalMandatory"
+            license_approval_mandatory: "=licenseApprovalMandatory",
+            custom_license_agreement: "=customLicenseAgreement"
         },
         templateUrl: "file-download.tpl.html",
         controller: FileDownloadController,

@@ -20,6 +20,9 @@ function AppController($element, gettextCatalog, SharedPropertiesService) {
         const platform_license_info = fromJson(frs_init_data.platformLicenseInfo);
         SharedPropertiesService.setPlatformLicenseInfo(platform_license_info);
 
+        const custom_license_agreement = fromJson(frs_init_data.customLicenseAgreement);
+        SharedPropertiesService.setCustomLicenseAgreement(custom_license_agreement);
+
         const language = frs_init_data.language;
         initLocale(language);
     }

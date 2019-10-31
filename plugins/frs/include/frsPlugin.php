@@ -27,6 +27,8 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\FRS\AdditionalInformationPresenter;
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\Link\Dao;
 use Tuleap\FRS\Link\Retriever;
 use Tuleap\FRS\Link\Updater;
@@ -282,14 +284,19 @@ class frsPlugin extends \Plugin //phpcs:ignore
     public function frs_release_view($params) //phpcs:ignore
     {
         $release = $params['release'];
+        assert($release instanceof FRSRelease);
         $user    = $params['user'];
+        assert($user instanceof PFUser);
 
         $renderer       = $this->getTemplateRenderer();
         $representation = new ReleaseRepresentation();
         $representation->build($release, $this->getLinkRetriever(), $user, $this->getUploadedLinkRetriever(), $this->getReleasePermissionsForGroupsBuilder());
+        $license_agreement_factory = new LicenseAgreementFactory(new LicenseAgreementDao());
+        $license_agreement = $license_agreement_factory->getLicenseAgreementForPackage($release->getPackage());
         $presenter = new ReleasePresenter(
             $representation,
-            $user->getShortLocale()
+            $user->getShortLocale(),
+            $license_agreement
         );
 
         $params['view'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
