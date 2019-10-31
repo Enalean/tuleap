@@ -18,12 +18,13 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import SoloCard from "./SoloCard.vue";
-import ParentCardRemainingEffort from "./Card/ParentCardRemainingEffort.vue";
+import CardWithRemainingEffort from "./CardWithRemainingEffort.vue";
+import ParentCardRemainingEffort from "./ParentCardRemainingEffort.vue";
+import ParentCard from "./ParentCard.vue";
 
-describe("SoloCard", () => {
+describe("CardWithRemainingEffort", () => {
     it("displays the solo card in its own cell", () => {
-        const wrapper = shallowMount(SoloCard, {
+        const wrapper = shallowMount(CardWithRemainingEffort, {
             propsData: {
                 card: {
                     id: 43,
@@ -32,7 +33,7 @@ describe("SoloCard", () => {
             }
         });
 
-        expect(wrapper.contains(SoloCard)).toBe(true);
+        expect(wrapper.contains(ParentCard)).toBe(true);
         expect(wrapper.contains(ParentCardRemainingEffort)).toBe(true);
     });
 });
