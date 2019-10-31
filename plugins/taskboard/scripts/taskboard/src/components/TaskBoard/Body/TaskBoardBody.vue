@@ -24,7 +24,13 @@
             <template v-if="swimlane.card.is_open || are_closed_items_displayed">
                 <collapsed-swimlane v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-if="swimlane.card.is_collapsed"/>
                 <card-with-children v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-else-if="swimlane.card.has_children"/>
-                <solo-swimlane v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-else/>
+                <invalid-mapping-swimlane v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-else-if="hasInvalidMapping(swimlane)"/>
+                <solo-swimlane
+                    v-bind:key="swimlane.card.id"
+                    v-bind:swimlane="swimlane"
+                    v-bind:column="getColumnOfSoloCard(swimlane)"
+                    v-else
+                />
             </template>
         </template>
         <swimlane-skeleton v-if="is_loading_swimlanes"/>
@@ -36,18 +42,20 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
 import dragula, { Drake } from "dragula";
-import { Swimlane, ColumnDefinition } from "../../../type";
 import { ReorderCardsPayload } from "../../../store/swimlane/type";
+import { ColumnDefinition, Swimlane } from "../../../type";
 import CollapsedSwimlane from "./Swimlane/CollapsedSwimlane.vue";
 import CardWithChildren from "./Swimlane/CardWithChildren.vue";
 import SwimlaneSkeleton from "./Swimlane/Skeleton/SwimlaneSkeleton.vue";
 import SoloSwimlane from "./Swimlane/SoloSwimlane.vue";
+import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
 import {
     hasCardBeenDroppedInTheSameCell,
     getCardFromSwimlane,
     getColumnAndSwimlaneFromCell
 } from "../../../helpers/html-to-item";
 import { getCardPosition } from "../../../helpers/cards-reordering";
+import { getColumnOfCard } from "../../../helpers/list-value-to-column-mapper";
 
 const swimlane = namespace("swimlane");
 
@@ -69,7 +77,13 @@ const isContainer = (element: Element): boolean => {
 };
 
 @Component({
-    components: { SoloSwimlane, SwimlaneSkeleton, CardWithChildren, CollapsedSwimlane }
+    components: {
+        InvalidMappingSwimlane,
+        SoloSwimlane,
+        SwimlaneSkeleton,
+        CardWithChildren,
+        CollapsedSwimlane
+    }
 })
 export default class TaskBoardBody extends Vue {
     @State
@@ -171,6 +185,18 @@ export default class TaskBoardBody extends Vue {
                 this.reorderCardsInCell(payload);
             }
         );
+    }
+
+    getColumnOfSoloCard(swimlane: Swimlane): ColumnDefinition {
+        const column = getColumnOfCard(this.columns, swimlane.card);
+        if (column === undefined) {
+            throw new Error("Solo card must have a mapping");
+        }
+        return column;
+    }
+
+    hasInvalidMapping(swimlane: Swimlane): boolean {
+        return getColumnOfCard(this.columns, swimlane.card) === undefined;
     }
 }
 </script>
