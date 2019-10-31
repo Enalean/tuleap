@@ -17,12 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    hasCardBeenDroppedInTheSameCell,
-    getCardFromSwimlane,
-    getColumnAndSwimlaneFromCell
-} from "./html-to-item";
-import { Card, ColumnDefinition, Swimlane } from "../type";
+import { hasCardBeenDroppedInTheSameCell, getCardFromSwimlane } from "./html-to-item";
+import { Card, Swimlane } from "../type";
 
 describe("html-to-item helper", () => {
     describe("hasCardBeenDroppedInTheSameCell", () => {
@@ -133,55 +129,6 @@ describe("html-to-item helper", () => {
             const card = getCardFromSwimlane(swimlane, card_element);
 
             expect(card).toBeNull();
-        });
-    });
-
-    describe("getColumnAndSwimlaneFromCell", () => {
-        it("shoud return the column and the swimlane referenced by the cell", () => {
-            const { target_cell } = getSourceAndTargetCellsAndCard();
-
-            target_cell.setAttribute("data-swimlane-id", "100");
-            target_cell.setAttribute("data-column-id", "15");
-
-            const column_to_find = { id: 15, label: "Todo" } as ColumnDefinition;
-            const swimlane_to_find = {
-                card: { id: 100 } as Card
-            } as Swimlane;
-
-            const swimlanes = [swimlane_to_find];
-            const columns = [column_to_find];
-
-            const { swimlane, column } = getColumnAndSwimlaneFromCell(
-                swimlanes,
-                columns,
-                target_cell
-            );
-
-            if (!swimlane || !column) {
-                throw new Error("swimlane or column have not been found");
-            }
-
-            expect(swimlane.card.id).toEqual(100);
-            expect(column.label).toEqual("Todo");
-        });
-
-        it("should return an undefined swimlane or column if one or the other have not been found", () => {
-            const { target_cell } = getSourceAndTargetCellsAndCard();
-
-            target_cell.setAttribute("data-swimlane-id", "100");
-            target_cell.setAttribute("data-column-id", "15");
-
-            const swimlanes: Swimlane[] = [];
-            const columns: ColumnDefinition[] = [];
-
-            const { swimlane, column } = getColumnAndSwimlaneFromCell(
-                swimlanes,
-                columns,
-                target_cell
-            );
-
-            expect(swimlane).toBeUndefined();
-            expect(column).toBeUndefined();
         });
     });
 });

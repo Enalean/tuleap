@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, ColumnDefinition, Swimlane } from "../type";
+import { Card, Swimlane } from "../type";
 
 export function hasCardBeenDroppedInTheSameCell(
     target_cell: HTMLElement,
@@ -39,23 +39,4 @@ export function getCardFromSwimlane(swimlane: Swimlane, card_element?: HTMLEleme
     );
 
     return card || null;
-}
-
-export function getColumnAndSwimlaneFromCell(
-    swimlanes: Swimlane[],
-    columns: ColumnDefinition[],
-    cell: HTMLElement
-): {
-    swimlane?: Swimlane;
-    column?: ColumnDefinition;
-} {
-    const swimlane = swimlanes.find(
-        swimlane => swimlane.card.id === Number(cell.dataset.swimlaneId)
-    );
-    const column = columns.find(column => column.id === Number(cell.dataset.columnId));
-
-    return {
-        swimlane,
-        column
-    };
 }
