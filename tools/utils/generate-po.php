@@ -104,7 +104,10 @@ info("[core] Generating .pot file for .mustache files");
 $mustache_template = "$basedir/site-content/tuleap-core.mustache.pot";
 $gettext_in_mustache_extractor->extract(
     'tuleap-core',
-    "$basedir/src/templates",
+    [
+        "$basedir/src/templates",
+        "$basedir/src/common/FRS",
+    ],
     $mustache_template
 );
 
@@ -189,7 +192,7 @@ function gettextPHP($path, string $translated_plugin, DomainExtractor $gettext_i
     info("[$translated_plugin] Generating .pot file for .mustache files");
     $gettext_in_mustache_extractor->extract(
         "tuleap-$translated_plugin",
-        "$path/templates",
+        ["$path/templates"],
         "$path/site-content/tuleap-$translated_plugin-mustache.pot"
     );
 

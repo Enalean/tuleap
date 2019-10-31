@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -42,16 +42,18 @@ class DomainExtractor
         $this->extractor       = $extractor;
     }
 
-    public function extract($domain, $sources, $destination_template)
+    public function extract(string $domain, array $sources, string $destination_template): void
     {
         $collection = new POTEntryCollection($domain);
 
-        $this->fillCollection($sources, $collection);
+        foreach ($sources as $source_path) {
+            $this->fillCollection($source_path, $collection);
+        }
 
         $this->pot_file_dumper->dump($collection, $destination_template);
     }
 
-    private function fillCollection($sources, $collection)
+    private function fillCollection(string $sources, POTEntryCollection $collection): void
     {
         if (! file_exists($sources)) {
             return;

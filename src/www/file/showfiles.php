@@ -153,6 +153,12 @@ if (!$pv && $permission_manager->isAdmin($project, $user)) {
 
 $package_permission_manager = new PackagePermissionManager($permission_manager, $frspf);
 $release_permission_manager = new ReleasePermissionManager($permission_manager, $frsrf);
+$license_agreement_display  = new \Tuleap\FRS\LicenseAgreement\LicenseAgreementDisplay(
+    $hp,
+    TemplateRendererFactory::build()
+);
+
+$html .= $license_agreement_display->getModal();
 
 // Iterate and show the packages
 foreach ($packages as $package_id => $package_for_display) {
@@ -365,8 +371,6 @@ foreach ($packages as $package_id => $package_for_display) {
                             $html .= ' <col class="frs_user_col">';
                             $html .= '</colgroup>';
 
-                            $license_agreement_display = new \Tuleap\FRS\LicenseAgreement\LicenseAgreementDisplay($hp);
-
                             // now iterate and show the files in this release....
                             foreach ($res_file as $file_release) {
                                 $filename = $file_release['filename'];
@@ -448,23 +452,31 @@ foreach ($packages as $package_id => $package_for_display) {
     }
 }
 
+echo $html;
+
+if (!$pv) {
+    $javascript_array = 'var packages = {';
+    $javascript_array .= implode(",", $javascript_packages_array);
+    $javascript_array .= '}';
+    print '<script language="javascript">'.$javascript_array.'</script>';
+}
+// project totals (statistics)
+if (isset($proj_stats['size'])) {
+    $total_size = FRSFile::convertBytesToKbytes($proj_stats['size']);
+
+    print '<p>';
+    print '<b>' . $Language->getText('file_showfiles', 'proj_total') . ': </b>';
+    print $proj_stats['releases'].' '.$Language->getText('file_showfiles', 'stat_total_nb_releases').', ';
+    print $proj_stats['files'].' '.$Language->getText('file_showfiles', 'stat_total_nb_files').', ';
+    print $total_size.' '.$Language->getText('file_showfiles', 'stat_total_size').', ';
+    print $proj_stats['downloads'].' '.$Language->getText('file_showfiles', 'stat_total_nb_downloads').'.';
+    print '</p>';
+}
 
 ?>
 
-<SCRIPT language="JavaScript">
+<script language="javascript">
 <!--
-function showConfirmDownload(group_id,file_id) {
-    url = "/file/confirm_download.php?popup=1&group_id=" + group_id + "&file_id=" + file_id;
-    wConfirm = window.open(url,"confirm","width=520,height=450,resizable=1,scrollbars=1");
-    wConfirm.focus();
-}
-
-function download(file_id) {
-    url = "/file/download/" + file_id;
-    wConfirm.close();
-    self.location = url;
-
-}
 
 function toggle_package(package_id) {
     var element = document.getElementById(package_id);
@@ -496,28 +508,23 @@ function toggle_image(image_id) {
     }
 }
 
+(function($) {
+    $('.frs-license-agreement-modal-link').click(function () {
+        var file_id = $(this).data('file-id');
+        $('#frs-license-agreement-accept').data('download-file-id', file_id);
+        $('#frs-license-agreement-modal').modal('show');
+    });
+    $('#frs-license-agreement-accept').click(function () {
+        var file_id = $('#frs-license-agreement-accept').data('download-file-id');
+        $('#frs-license-agreement-modal').modal('hide');
+        window.open('/file/download/'+file_id);
+    });
+})(jQuery);
+
 -->
 
-</SCRIPT>
-<?php
-echo $html;
-if (!$pv) {
-    $javascript_array = 'var packages = {';
-    $javascript_array .= implode(",", $javascript_packages_array);
-    $javascript_array .= '}';
-    print '<script language="javascript">'.$javascript_array.'</script>';
-}
-// project totals (statistics)
-if (isset($proj_stats['size'])) {
-    $total_size = FRSFile::convertBytesToKbytes($proj_stats['size']);
+</script>
 
-    print '<p>';
-    print '<b>' . $Language->getText('file_showfiles', 'proj_total') . ': </b>';
-    print $proj_stats['releases'].' '.$Language->getText('file_showfiles', 'stat_total_nb_releases').', ';
-    print $proj_stats['files'].' '.$Language->getText('file_showfiles', 'stat_total_nb_files').', ';
-    print $total_size.' '.$Language->getText('file_showfiles', 'stat_total_size').', ';
-    print $proj_stats['downloads'].' '.$Language->getText('file_showfiles', 'stat_total_nb_downloads').'.';
-    print '</p>';
-}
+<?php
 
 file_utils_footer($params);
