@@ -19,7 +19,6 @@
  */
 
 use FastRoute\RouteCollector;
-use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
@@ -82,7 +81,6 @@ class testmanagementPlugin extends Plugin
         $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
         $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
         $this->addHook(ProjectServiceBeforeActivation::NAME);
-        $this->addHook(GlyphLocationsCollector::NAME);
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
@@ -244,24 +242,15 @@ class testmanagementPlugin extends Plugin
             . '#!/graph/'
             .urlencode($event->getArtifact()->getId());
 
-        $glyph_finder = new GlyphFinder(EventManager::instance());
-        $glyph = $glyph_finder->get('dependencies-graph');
+        $icon = 'fa-tlp-dependencies-graph';
 
         $link = new AdditionalButtonLinkPresenter(
             $link_label,
             $url,
-            $glyph
+            $icon
         );
 
         $event->addLinkPresenter($link);
-    }
-
-    public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector)
-    {
-        $glyph_locations_collector->addLocation(
-            'dependencies-graph',
-            new GlyphLocation(__DIR__. '../../glyphs')
-        );
     }
 
     /**
