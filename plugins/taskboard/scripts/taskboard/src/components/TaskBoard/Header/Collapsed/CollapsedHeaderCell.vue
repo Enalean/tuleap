@@ -20,15 +20,30 @@
 <template>
     <div class="taskboard-header taskboard-header-collapsed" v-bind:class="classes">
         <expand-button v-bind:column="column"/>
+        <div class="taskboard-header-collapsed-label">
+            <cards-in-column-count v-bind:column="column"/>
+            <span class="taskboard-header-label" data-test="label">{{ column.label }}</span>
+        </div>
     </div>
 </template>
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
 import ExpandButton from "./ExpandButton.vue";
 import HeaderCellMixin from "../header-cell-mixin";
+import CardsInColumnCount from "../Expanded/CardsInColumnCount.vue";
 
 @Component({
-    components: { ExpandButton }
+    components: { CardsInColumnCount, ExpandButton }
 })
-export default class CollapsedHeaderCell extends Mixins(HeaderCellMixin) {}
+export default class CollapsedHeaderCell extends Mixins(HeaderCellMixin) {
+    get classes(): string {
+        const classes = [...this.classes_as_array];
+
+        if (this.column.has_hover) {
+            classes.push("taskboard-header-collapsed-show-label");
+        }
+
+        return classes.join(" ");
+    }
+}
 </script>

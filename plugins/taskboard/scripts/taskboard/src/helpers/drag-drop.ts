@@ -25,7 +25,6 @@ export function isContainer(element?: Element): boolean {
     return (
         element.classList.contains("taskboard-cell") &&
         !element.classList.contains("taskboard-cell-swimlane-header") &&
-        !element.classList.contains("taskboard-swimlane-collapsed-cell-placeholder") &&
         !element.classList.contains("taskboard-card-parent")
     );
 }

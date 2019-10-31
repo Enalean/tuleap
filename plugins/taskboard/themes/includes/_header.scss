@@ -64,6 +64,13 @@
     min-width: unset;
 }
 
+.taskboard-header-collapsed-show-label,
+.taskboard-header-collapsed:hover {
+    > .taskboard-header-collapsed-label {
+        opacity: 1;
+    }
+}
+
 .taskboard-header-expand-column,
 .taskboard-header-collapse-column {
     font-size: 14px;
@@ -74,6 +81,25 @@
 .taskboard-header-collapse-column {
     transition: opacity ease-in-out 100ms;
     opacity: 0;
+}
+
+.taskboard-header-collapsed-label {
+    display: flex;
+    position: absolute;
+    align-items: center;
+    height: 48px;
+    padding: 10px 12px 10px 50px;
+    transform: translateX(-50%) rotate(-90deg) translateX(-25px);
+    transform-origin: center right;
+    transition: opacity ease-in-out 100ms;
+    opacity: 0;
+    background: linear-gradient(-90deg, transparent, rgba(255, 255, 255, .75) 3px, rgba(255, 255, 255, .75) 75%, transparent);
+    white-space: nowrap;
+    direction: rtl;
+
+    > .taskboard-header-label {
+        margin: 0 $tlp-half-spacing 0 0;
+    }
 }
 
 .taskboard-header-label {

@@ -47,4 +47,29 @@ describe(`Column module mutations`, () => {
             expect(state.columns[0].is_collapsed).toBe(false);
         });
     });
+    describe("mouseEntersColumn", () => {
+        it("marks the column with hovering state", () => {
+            const column: ColumnDefinition = { has_hover: false } as ColumnDefinition;
+
+            const state: ColumnState = {
+                columns: [column]
+            };
+
+            mutations.mouseEntersColumn(state, column);
+            expect(state.columns[0].has_hover).toBe(true);
+        });
+    });
+
+    describe("mouseLeavesColumn", () => {
+        it("removes the hovering state", () => {
+            const column: ColumnDefinition = { has_hover: true } as ColumnDefinition;
+
+            const state: ColumnState = {
+                columns: [column]
+            };
+
+            mutations.mouseLeavesColumn(state, column);
+            expect(state.columns[0].has_hover).toBe(false);
+        });
+    });
 });

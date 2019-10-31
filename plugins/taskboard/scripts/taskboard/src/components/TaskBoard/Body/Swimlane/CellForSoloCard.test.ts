@@ -17,18 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, Slots, Wrapper } from "@vue/test-utils";
 import CellForSoloCard from "./CellForSoloCard.vue";
 import { ColumnDefinition } from "../../../../type";
+import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import { RootState } from "../../../../store/type";
+
+function getWrapper(column: ColumnDefinition, slots: Slots = {}): Wrapper<CellForSoloCard> {
+    return shallowMount(CellForSoloCard, {
+        propsData: { column },
+        mocks: { $store: createStoreMock({ state: { column: {} } as RootState }) },
+        slots
+    });
+}
 
 describe("CellForSoloCard", () => {
     it(`Given the column is expanded, it displays the content of the cell`, () => {
         const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
-        const wrapper = shallowMount(CellForSoloCard, {
-            propsData: { column },
-            slots: {
-                default: '<div class="my-slot-content"></div>'
-            }
+        const wrapper = getWrapper(column, {
+            default: '<div class="my-slot-content"></div>'
         });
 
         expect(wrapper.classes("taskboard-cell-collapsed")).toBe(false);
@@ -37,14 +44,49 @@ describe("CellForSoloCard", () => {
 
     it(`Given the column is collapsed, it does not display the content of the cell`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
-        const wrapper = shallowMount(CellForSoloCard, {
-            propsData: { column },
-            slots: {
-                default: '<div class="my-slot-content"></div>'
-            }
+        const wrapper = getWrapper(column, {
+            default: '<div class="my-slot-content"></div>'
         });
 
         expect(wrapper.classes("taskboard-cell-collapsed")).toBe(true);
         expect(wrapper.contains(".my-slot-content")).toBe(false);
+    });
+
+    it(`It informs the mouseenter when the column is collapsed`, () => {
+        const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
+        const wrapper = getWrapper(column);
+
+        wrapper.trigger("mouseenter");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseEntersColumn", column);
+    });
+
+    it(`It does not inform the mouseenter when the column is expanded`, () => {
+        const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
+        const wrapper = getWrapper(column);
+
+        wrapper.trigger("mouseenter");
+        expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
+            "column/mouseEntersColumn",
+            column
+        );
+    });
+
+    it(`It informs the mouseout when the column is collapsed`, () => {
+        const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
+        const wrapper = getWrapper(column);
+
+        wrapper.trigger("mouseout");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseLeavesColumn", column);
+    });
+
+    it(`It does not inform the mouseout when the column is expanded`, () => {
+        const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
+        const wrapper = getWrapper(column);
+
+        wrapper.trigger("mouseout");
+        expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
+            "column/mouseLeavesColumn",
+            column
+        );
     });
 });

@@ -42,7 +42,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const milestone_title = vue_mount_point.dataset.milestoneTitle || "";
     const columns: Array<ColumnDefinition> =
         typeof vue_mount_point.dataset.columns !== "undefined"
-            ? JSON.parse(vue_mount_point.dataset.columns)
+            ? JSON.parse(vue_mount_point.dataset.columns).map(
+                  (column: ColumnDefinition): ColumnDefinition => {
+                      return { has_hover: false, ...column };
+                  }
+              )
             : [];
     const has_content = Boolean(vue_mount_point.dataset.hasContent);
     const milestone_id = Number.parseInt(vue_mount_point.dataset.milestoneId || "0", 10);

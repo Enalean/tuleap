@@ -17,30 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import { ColumnDefinition } from "../../../type";
+import { Component, Prop } from "vue-property-decorator";
+import { namespace } from "vuex-class";
+import { ColumnDefinition } from "../../../../type";
 
-@Component
-export default class HeaderCellMixin extends Vue {
+const column_store = namespace("column");
+
+@Component({})
+export default class HoveringStateForCollapsedColumnMixin extends Vue {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
 
-    get classes(): string {
-        return this.classes_as_array.join(" ");
-    }
+    @column_store.Mutation
+    readonly mouseEntersColumn!: (column: ColumnDefinition) => void;
 
-    get classes_as_array(): string[] {
-        const classes = [];
+    @column_store.Mutation
+    readonly mouseLeavesColumn!: (column: ColumnDefinition) => void;
 
-        if (!this.is_rgb_color && this.column.color) {
-            classes.push("taskboard-header-" + this.column.color);
+    mouseEntersCollapsedColumn(): void {
+        if (this.column.is_collapsed) {
+            this.mouseEntersColumn(this.column);
         }
-
-        return classes;
     }
 
-    get is_rgb_color(): boolean {
-        return this.column.color.charAt(0) === "#";
+    mouseLeavesCollapsedColumn(): void {
+        if (this.column.is_collapsed) {
+            this.mouseLeavesColumn(this.column);
+        }
     }
 }
