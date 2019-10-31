@@ -19,7 +19,8 @@
 
 import * as getters from "./swimlane-getters";
 import { SwimlaneState } from "./type";
-import { ColumnDefinition, Swimlane } from "../../type";
+import { Card, ColumnDefinition, Swimlane } from "../../type";
+import { RootState } from "../type";
 
 jest.mock("tlp");
 
@@ -216,4 +217,106 @@ describe("Swimlane state getters", () => {
             expect(getters.nb_cards_in_column(state)(column)).toBe(1);
         });
     });
+
+    describe("cards_in_cell", () => {
+        let swimlane_state: SwimlaneState;
+        let root_state: RootState;
+        let column_todo: ColumnDefinition;
+
+        beforeEach(() => {
+            column_todo = {
+                id: 2,
+                label: "To do",
+                mappings: [{ tracker_id: 7, accepts: [{ id: 49 }] }]
+            } as ColumnDefinition;
+
+            swimlane_state = {} as SwimlaneState;
+
+            root_state = {
+                columns: [column_todo]
+            } as RootState;
+        });
+
+        it("Should return the cards of the column", () => {
+            const swimlane: Swimlane = {
+                card: { id: 43 } as Card,
+                children_cards: [
+                    { id: 95, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
+                    { id: 102, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
+                    { id: 104, tracker_id: 7, mapped_list_value: { id: 50 } } as Card
+                ],
+                is_loading_children_cards: false
+            } as Swimlane;
+
+            expect(
+                getters.cards_in_cell(swimlane_state, [], root_state)(swimlane, column_todo)
+            ).toEqual([
+                { id: 95, tracker_id: 7, mapped_list_value: { id: 49 } },
+                { id: 102, tracker_id: 7, mapped_list_value: { id: 49 } }
+            ]);
+        });
+    });
+
+    describe("column_and_swimlane_of_cell", () => {
+        let swimlane_state: SwimlaneState;
+        let root_state: RootState;
+        let swimlane_to_find: Swimlane;
+        let column_to_find: ColumnDefinition;
+
+        beforeEach(() => {
+            swimlane_to_find = { card: { id: 100 } as Card } as Swimlane;
+            column_to_find = { id: 15, label: "Todo" } as ColumnDefinition;
+
+            swimlane_state = {
+                swimlanes: [swimlane_to_find]
+            } as SwimlaneState;
+
+            root_state = {
+                columns: [column_to_find]
+            } as RootState;
+        });
+
+        it("shoud return the column and the swimlane referenced by the cell", () => {
+            const target_cell = getCellElement(
+                swimlane_to_find.card.id.toString(),
+                column_to_find.id.toString()
+            );
+
+            const { swimlane, column } = getters.column_and_swimlane_of_cell(
+                swimlane_state,
+                [],
+                root_state
+            )(target_cell);
+
+            if (!swimlane || !column) {
+                throw new Error("swimlane or column have not been found");
+            }
+
+            expect(swimlane.card.id).toEqual(100);
+            expect(column.label).toEqual("Todo");
+        });
+
+        it("should return an undefined swimlane or column if one or the other have not been found", () => {
+            const target_cell = getCellElement("300", "200");
+
+            const { swimlane, column } = getters.column_and_swimlane_of_cell(
+                swimlane_state,
+                [],
+                root_state
+            )(target_cell);
+
+            expect(swimlane).toBeUndefined();
+            expect(column).toBeUndefined();
+        });
+    });
 });
+
+function getCellElement(swimlane_id: string, column_id: string): HTMLElement {
+    const local_document = document.implementation.createHTMLDocument();
+    const target_cell = local_document.createElement("div");
+
+    target_cell.setAttribute("data-swimlane-id", swimlane_id);
+    target_cell.setAttribute("data-column-id", column_id);
+
+    return target_cell;
+}

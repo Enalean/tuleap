@@ -20,6 +20,44 @@
 import { SwimlaneState } from "./type";
 import { Card, ColumnDefinition, Swimlane } from "../../type";
 import { isStatusAcceptedByColumn } from "../../helpers/list-value-to-column-mapper";
+import { getColumnOfCard } from "../../helpers/list-value-to-column-mapper";
+import { RootState } from "../type";
+
+export const cards_in_cell = (state: SwimlaneState, getters: [], root_state: RootState) => (
+    current_swimlane: Swimlane,
+    current_column: ColumnDefinition
+): Card[] => {
+    return current_swimlane.children_cards.filter((card: Card) => {
+        const column_of_card = getColumnOfCard(root_state.columns, card);
+
+        if (!column_of_card) {
+            return false;
+        }
+
+        return column_of_card.id === current_column.id;
+    });
+};
+
+export const column_and_swimlane_of_cell = (
+    state: SwimlaneState,
+    getters: [],
+    root_state: RootState
+) => (
+    cell: HTMLElement
+): {
+    swimlane?: Swimlane;
+    column?: ColumnDefinition;
+} => {
+    const swimlane = state.swimlanes.find(
+        swimlane => swimlane.card.id === Number(cell.dataset.swimlaneId)
+    );
+    const column = root_state.columns.find(column => column.id === Number(cell.dataset.columnId));
+
+    return {
+        swimlane,
+        column
+    };
+};
 
 export const is_loading_cards = (state: SwimlaneState): boolean => {
     return (

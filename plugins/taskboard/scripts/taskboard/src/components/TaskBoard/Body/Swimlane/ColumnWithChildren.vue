@@ -34,11 +34,12 @@
 <script lang="ts">
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import { Card, ColumnDefinition, Swimlane } from "../../../../type";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
 import ChildCard from "./Card/ChildCard.vue";
 import CardSkeleton from "./Skeleton/CardSkeleton.vue";
-import { getCardsInColumn } from "../../../../helpers/column-cards";
 import SkeletonMixin from "./Skeleton/skeleton-mixin";
+
+const swimlane = namespace("swimlane");
 
 @Component({
     components: { ChildCard, CardSkeleton }
@@ -50,11 +51,14 @@ export default class ColumnWithChildren extends Mixins(SkeletonMixin) {
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
 
-    @State
-    readonly columns!: Array<ColumnDefinition>;
+    @swimlane.Getter
+    readonly cards_in_cell!: (
+        current_swimlane: Swimlane,
+        current_column: ColumnDefinition
+    ) => Card[];
 
     get cards(): Card[] {
-        return getCardsInColumn(this.swimlane, this.column, this.columns);
+        return this.cards_in_cell(this.swimlane, this.column);
     }
 
     get nb_skeletons_to_display(): number {

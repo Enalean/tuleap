@@ -23,7 +23,7 @@ import { ErrorState } from "./error/type";
 import { FullscreenState } from "./fullscreen/type";
 import { SwimlaneState } from "./swimlane/type";
 
-interface State {
+export interface State {
     admin_url: string;
     has_content: boolean;
     columns: Array<ColumnDefinition>;
@@ -32,7 +32,7 @@ interface State {
     are_closed_items_displayed: boolean;
 }
 
-interface RootState extends State {
+export interface RootState extends State {
     readonly error: ErrorState;
     readonly fullscreen: FullscreenState;
     readonly swimlane: SwimlaneState;

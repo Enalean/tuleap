@@ -42,8 +42,8 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
 import dragula, { Drake } from "dragula";
+import { Swimlane, ColumnDefinition, Card } from "../../../type";
 import { ReorderCardsPayload } from "../../../store/swimlane/type";
-import { ColumnDefinition, Swimlane } from "../../../type";
 import CollapsedSwimlane from "./Swimlane/CollapsedSwimlane.vue";
 import CardWithChildren from "./Swimlane/CardWithChildren.vue";
 import SwimlaneSkeleton from "./Swimlane/Skeleton/SwimlaneSkeleton.vue";
@@ -51,8 +51,7 @@ import SoloSwimlane from "./Swimlane/SoloSwimlane.vue";
 import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
 import {
     hasCardBeenDroppedInTheSameCell,
-    getCardFromSwimlane,
-    getColumnAndSwimlaneFromCell
+    getCardFromSwimlane
 } from "../../../helpers/html-to-item";
 import { getCardPosition } from "../../../helpers/cards-reordering";
 import { getColumnOfCard } from "../../../helpers/list-value-to-column-mapper";
@@ -98,13 +97,27 @@ export default class TaskBoardBody extends Vue {
     @swimlane.State
     readonly is_loading_swimlanes!: boolean;
 
-    drake!: Drake;
+    @swimlane.Getter
+    readonly cards_in_cell!: (
+        current_swimlane: Swimlane,
+        current_column: ColumnDefinition
+    ) => Card[];
+
+    @swimlane.Getter
+    readonly column_and_swimlane_of_cell!: (
+        cell: HTMLElement
+    ) => {
+        swimlane?: Swimlane;
+        column?: ColumnDefinition;
+    };
 
     @swimlane.Action
     loadSwimlanes!: () => void;
 
     @swimlane.Action
     reorderCardsInCell!: (payload: ReorderCardsPayload) => void;
+
+    drake!: Drake;
 
     created(): void {
         this.loadSwimlanes();
@@ -157,11 +170,7 @@ export default class TaskBoardBody extends Vue {
                     return;
                 }
 
-                const { swimlane, column } = getColumnAndSwimlaneFromCell(
-                    this.swimlanes,
-                    this.columns,
-                    target_cell
-                );
+                const { swimlane, column } = this.column_and_swimlane_of_cell(target_cell);
 
                 if (!swimlane || !column) {
                     return;
@@ -174,7 +183,11 @@ export default class TaskBoardBody extends Vue {
                 }
 
                 const sibling = getCardFromSwimlane(swimlane, sibling_card);
-                const position = getCardPosition(card, sibling, swimlane, this.columns, column);
+                const position = getCardPosition(
+                    card,
+                    sibling,
+                    this.cards_in_cell(swimlane, column)
+                );
 
                 const payload: ReorderCardsPayload = {
                     swimlane,
