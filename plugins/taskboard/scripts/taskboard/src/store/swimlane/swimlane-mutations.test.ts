@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Swimlane } from "../../type";
+import { Card, ColumnDefinition, Direction, Swimlane } from "../../type";
 import * as mutations from "./swimlane-mutations";
 import { SwimlaneState } from "./type";
 import { findSwimlane, findSwimlaneIndex } from "./swimlane-helpers";
@@ -183,6 +183,38 @@ describe(`Swimlane state mutations`, () => {
 
             mutations.expandSwimlane(state, swimlane);
             expect(state.swimlanes[0].card.is_collapsed).toBe(false);
+        });
+    });
+
+    describe("changeCardPosition", () => {
+        let state: SwimlaneState;
+        const card_to_move = { id: 102, tracker_id: 7, mapped_list_value: { id: 49 } } as Card;
+        const swimlane = {
+            card: { id: 86 },
+            children_cards: [
+                { id: 100, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
+                { id: 101, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
+                card_to_move,
+                { id: 103, tracker_id: 7, mapped_list_value: { id: 49 } } as Card
+            ]
+        } as Swimlane;
+
+        beforeEach(() => {
+            state = { is_loading_swimlanes: false, swimlanes: [swimlane] };
+        });
+
+        it("changes the position of the card", () => {
+            mutations.changeCardPosition(state, {
+                swimlane,
+                column: { id: 10 } as ColumnDefinition,
+                position: {
+                    ids: [card_to_move.id],
+                    direction: Direction.BEFORE, // Card is moved to the top
+                    compared_to: 100
+                }
+            });
+
+            expect(swimlane.children_cards[0]).toEqual(card_to_move);
         });
     });
 });

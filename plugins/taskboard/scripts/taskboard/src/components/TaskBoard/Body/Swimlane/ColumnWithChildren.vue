@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="taskboard-cell" v-bind:class="classes">
+    <div class="taskboard-cell" v-bind:class="classes" v-bind:data-swimlane-id="swimlane.card.id" v-bind:data-column-id="column.id">
         <template v-if="!column.is_collapsed">
             <template v-for="card of cards">
                 <child-card v-bind:key="card.id" v-bind:card="card"/>
@@ -37,7 +37,7 @@ import { Card, ColumnDefinition, Swimlane } from "../../../../type";
 import { State } from "vuex-class";
 import ChildCard from "./Card/ChildCard.vue";
 import CardSkeleton from "./Skeleton/CardSkeleton.vue";
-import { getColumnOfCard } from "../../../../helpers/list-value-to-column-mapper";
+import { getCardsInColumn } from "../../../../helpers/column-cards";
 import SkeletonMixin from "./Skeleton/skeleton-mixin";
 
 @Component({
@@ -54,18 +54,7 @@ export default class ColumnWithChildren extends Mixins(SkeletonMixin) {
     readonly columns!: Array<ColumnDefinition>;
 
     get cards(): Card[] {
-        return this.swimlane.children_cards.filter(card => {
-            const column_of_card = this.getColumnOfCard(card);
-            if (!column_of_card) {
-                return false;
-            }
-
-            return column_of_card.id === this.column.id;
-        });
-    }
-
-    getColumnOfCard(card: Card): ColumnDefinition | undefined {
-        return getColumnOfCard(this.columns, card);
+        return getCardsInColumn(this.swimlane, this.column, this.columns);
     }
 
     get nb_skeletons_to_display(): number {

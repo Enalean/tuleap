@@ -7,7 +7,7 @@
         }
     },
     "components": [
-        "themes/",
-        "scripts/"
+        "scripts/",
+        "themes/"
     ]
 }

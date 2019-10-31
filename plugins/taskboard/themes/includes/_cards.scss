@@ -41,6 +41,7 @@
         > .taskboard-card-info {
             margin: 0 5px 0 0;
         }
+
     }
 
     &.taskboard-card-parent {
@@ -97,6 +98,10 @@
             }
         }
     }
+}
+
+.taskboard-draggable-item {
+    cursor: move;
 }
 
 .taskboard-cell-parent-card,

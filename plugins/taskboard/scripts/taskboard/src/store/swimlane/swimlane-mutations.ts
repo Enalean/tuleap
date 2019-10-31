@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Swimlane } from "../../type";
-import { AddChildrenToSwimlanePayload, SwimlaneState } from "./type";
+import { Card, Direction, Swimlane } from "../../type";
+import { AddChildrenToSwimlanePayload, SwimlaneState, ReorderCardsPayload } from "./type";
 import { findSwimlane, replaceSwimlane } from "./swimlane-helpers";
 
 function sortCardsByRank(a: Card, b: Card): number {
@@ -72,4 +72,24 @@ export function collapseSwimlane(state: SwimlaneState, swimlane: Swimlane): void
 
 export function expandSwimlane(state: SwimlaneState, swimlane: Swimlane): void {
     swimlane.card.is_collapsed = false;
+}
+
+export function changeCardPosition(state: SwimlaneState, payload: ReorderCardsPayload): void {
+    const card_id = payload.position.ids[0];
+    const card_index = payload.swimlane.children_cards.findIndex(child => child.id === card_id);
+    const state_swimlane = findSwimlane(state, payload.swimlane);
+    const card_to_move = state_swimlane.children_cards[card_index];
+
+    state_swimlane.children_cards.splice(card_index, 1);
+
+    const sibling_index = payload.swimlane.children_cards.findIndex(
+        child => child.id === payload.position.compared_to
+    );
+
+    if (card_index === -1 || sibling_index === -1) {
+        return;
+    }
+
+    const offset = payload.position.direction === Direction.AFTER ? 1 : 0;
+    state_swimlane.children_cards.splice(sibling_index + offset, 0, card_to_move);
 }
