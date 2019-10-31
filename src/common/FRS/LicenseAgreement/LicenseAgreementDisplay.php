@@ -36,25 +36,25 @@ class LicenseAgreementDisplay
      */
     private $renderer;
     /**
-     * @var LicenseAgreementDao
+     * @var LicenseAgreementFactory
      */
-    private $dao;
+    private $factory;
 
-    public function __construct(\Codendi_HTMLPurifier $purifier, \TemplateRendererFactory $renderer_factory, LicenseAgreementDao $dao)
+    public function __construct(\Codendi_HTMLPurifier $purifier, \TemplateRendererFactory $renderer_factory, LicenseAgreementFactory $factory)
     {
         $this->purifier = $purifier;
         $this->renderer = $renderer_factory->getRenderer(__DIR__ . '/template');
-        $this->dao      = $dao;
+        $this->factory = $factory;
     }
 
     public function getModals(\Project $project): string
     {
         $custom_agreements = [];
-        foreach ($this->dao->getProjectLicenseAgreements($project) as $row) {
+        foreach ($this->factory->getProjectLicenseAgreements($project) as $license_agreement) {
             $custom_agreements[] = [
-                'id'      => $row['id'],
-                'title'   => $row['title'],
-                'content' => $this->purifier->purify($row['content'], CODENDI_PURIFIER_FULL),
+                'id'      => $license_agreement->getId(),
+                'title'   => $license_agreement->getTitle(),
+                'content' => $this->purifier->purify($license_agreement->getContent(), CODENDI_PURIFIER_FULL),
             ];
         }
         return $this->renderer->renderToString(
@@ -68,16 +68,13 @@ class LicenseAgreementDisplay
         );
     }
 
-    public function show(\FRSPackage $package, int $file_id, string $fname): string
+    public function getDownloadLink(\FRSPackage $package, int $file_id, string $fname): string
     {
         $display_filename = $this->purifier->purify($fname);
         if ($package->getApproveLicense() == 0 && ! ForgeConfig::get('sys_frs_license_mandatory')) {
             return '<a href="/file/download/' . urlencode((string) $file_id) . '" title="' . $this->purifier->purify($file_id) . " - " . $display_filename . '">' . $display_filename . '</a>';
         }
-        $agreement_id = $this->dao->getLicenseAgreementIdForPackage($package);
-        if ($agreement_id === false) {
-            $agreement_id = '0';
-        }
-        return sprintf('<a href="#" class="frs-license-agreement-modal-link" data-file-id="%d" data-agreement-id="%d">%s</a>', $file_id, $agreement_id, $this->purifier->purify($fname));
+        $license_agreement = $this->factory->getLicenseAgreementForPackage($package);
+        return sprintf('<a href="#" class="frs-license-agreement-modal-link" data-file-id="%d" data-agreement-id="%d">%s</a>', $file_id, $license_agreement->getId(), $this->purifier->purify($fname));
     }
 }
