@@ -39,13 +39,11 @@ async function getWrapper(column: ColumnDefinition): Promise<Wrapper<ExpandButto
 }
 
 describe("ExpandButton", () => {
-    it("Displays column label as a TLP tooltip", async () => {
+    it("Displays column label as a title", async () => {
         const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
         const wrapper = await getWrapper(column);
 
-        expect(wrapper.attributes("data-tlp-tooltip")).toBe('Expand "Done" column');
-        expect(wrapper.classes("tlp-tooltip")).toBe(true);
-        expect(wrapper.classes("tlp-tooltip-bottom")).toBe(true);
+        expect(wrapper.attributes("title")).toBe('Expand "Done" column');
     });
 
     it("Displays a focusable button", async () => {
