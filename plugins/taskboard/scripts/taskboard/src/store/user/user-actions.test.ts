@@ -26,15 +26,15 @@ import { UserPreference, UserPreferenceValue, UserState } from "./type";
 
 jest.mock("tlp");
 
-describe("User state actions", () => {
-    let context: ActionContext<UserState, RootState>;
+function getContext(user_id: number): ActionContext<UserState, RootState> {
+    return {
+        state: { user_id } as UserState
+    } as ActionContext<UserState, RootState>;
+}
 
+describe("User state actions", () => {
     beforeEach(() => {
-        context = {
-            state: {
-                user_id: 101
-            } as UserState
-        } as ActionContext<UserState, RootState>;
+        jest.clearAllMocks();
     });
 
     describe("deletePreference", () => {
@@ -42,7 +42,7 @@ describe("User state actions", () => {
             const tlpDeleteMock = jest.spyOn(tlp, "del");
             mockFetchSuccess(tlpDeleteMock, {});
 
-            await actions.deletePreference(context, { key: "my-key" } as UserPreference);
+            await actions.deletePreference(getContext(101), { key: "my-key" } as UserPreference);
             expect(tlpDeleteMock).toHaveBeenCalledWith(`/api/v1/users/101/preferences?key=my-key`);
         });
 
@@ -50,7 +50,15 @@ describe("User state actions", () => {
             const tlpDeleteMock = jest.spyOn(tlp, "del");
             mockFetchError(tlpDeleteMock, {});
 
-            await actions.deletePreference(context, { key: "my-key" } as UserPreference);
+            await actions.deletePreference(getContext(101), { key: "my-key" } as UserPreference);
+        });
+
+        it("Does not call REST API to delete the preference for anonymous user", async () => {
+            const tlpDeleteMock = jest.spyOn(tlp, "del");
+
+            await actions.deletePreference(getContext(0), { key: "my-key" } as UserPreference);
+
+            expect(tlpDeleteMock).not.toHaveBeenCalled();
         });
     });
 
@@ -59,7 +67,7 @@ describe("User state actions", () => {
             const tlpPatchMock = jest.spyOn(tlp, "patch");
             mockFetchSuccess(tlpPatchMock, {});
 
-            await actions.setPreference(context, {
+            await actions.setPreference(getContext(101), {
                 key: "my-key",
                 value: "my-value"
             } as UserPreferenceValue);
@@ -78,10 +86,21 @@ describe("User state actions", () => {
             const tlpPatchMock = jest.spyOn(tlp, "patch");
             mockFetchError(tlpPatchMock, {});
 
-            await actions.setPreference(context, {
+            await actions.setPreference(getContext(101), {
                 key: "my-key",
                 value: "my-value"
             } as UserPreferenceValue);
+        });
+
+        it("Does not call REST API to delete the preference for anonymous user", async () => {
+            const tlpPatchMock = jest.spyOn(tlp, "patch");
+
+            await actions.setPreference(getContext(0), {
+                key: "my-key",
+                value: "my-value"
+            } as UserPreferenceValue);
+
+            expect(tlpPatchMock).not.toHaveBeenCalled();
         });
     });
 });
