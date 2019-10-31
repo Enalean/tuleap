@@ -105,7 +105,7 @@ final class MembersPresenterBuilderTest extends TestCase
             \ProjectUGroup::class,
             ['isBound' => false, 'getId' => 98, 'isStatic' => false, 'getProject' => Mockery::mock(\Project::class)]
         );
-        $ugroup->shouldReceive('getMembersIncludingSuspended')
+        $ugroup->shouldReceive('getMembersIncludingSuspendedAndDeleted')
             ->andReturn([]);
 
         $result = $this->builder->build($ugroup);
@@ -176,7 +176,7 @@ final class MembersPresenterBuilderTest extends TestCase
                 'getStatus'   => 'A'
             ]
         );
-        $ugroup->shouldReceive('getMembersIncludingSuspended')
+        $ugroup->shouldReceive('getMembersIncludingSuspendedAndDeleted')
             ->andReturn([$first_member]);
         $this->user_helper
             ->shouldReceive('getDisplayName')
@@ -218,7 +218,7 @@ final class MembersPresenterBuilderTest extends TestCase
                 'getStatus'   => 'A'
             ]
         );
-        $ugroup->shouldReceive('getMembersIncludingSuspended')
+        $ugroup->shouldReceive('getMembersIncludingSuspendedAndDeleted')
             ->andReturn([$first_member]);
 
         $this->event_manager
@@ -265,7 +265,7 @@ final class MembersPresenterBuilderTest extends TestCase
         $first_member->shouldReceive('isMember')
             ->with(180, 'N2')
             ->andReturnTrue();
-        $ugroup->shouldReceive('getMembersIncludingSuspended')
+        $ugroup->shouldReceive('getMembersIncludingSuspendedAndDeleted')
             ->andReturn([$first_member]);
         $this->user_helper->shouldReceive('getDisplayName');
 
@@ -281,7 +281,7 @@ final class MembersPresenterBuilderTest extends TestCase
             \ProjectUGroup::class,
             ['isBound' => true, 'getId' => 98, 'isStatic' => true, 'getProject' => Mockery::mock(\Project::class)]
         );
-        $ugroup->shouldReceive('getMembersIncludingSuspended')
+        $ugroup->shouldReceive('getMembersIncludingSuspendedAndDeleted')
             ->andReturn([]);
         return $ugroup;
     }
@@ -292,7 +292,7 @@ final class MembersPresenterBuilderTest extends TestCase
             \ProjectUGroup::class,
             ['isBound' => false, 'getId' => 98, 'isStatic' => true, 'getProject' => Mockery::mock(\Project::class)]
         );
-        $ugroup->shouldReceive('getMembersIncludingSuspended')
+        $ugroup->shouldReceive('getMembersIncludingSuspendedAndDeleted')
             ->andReturn([]);
         return $ugroup;
     }
