@@ -321,6 +321,22 @@ CREATE TABLE frs_package (
   KEY idx_package_group_id (group_id)
 );
 
+CREATE TABLE frs_download_agreement (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    project_id int(11) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT,
+    PRIMARY KEY  (id),
+    INDEX idx_project_id(project_id, id)
+);
+
+CREATE TABLE frs_package_download_agreement (
+    package_id INT(11) NOT NULL,
+    agreement_id INT(11) NOT NULL,
+    PRIMARY KEY (package_id, agreement_id),
+    INDEX idx_reverse(agreement_id, package_id)
+);
+
 #
 # Table structure for table 'frs_processor'
 #
