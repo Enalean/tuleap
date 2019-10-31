@@ -79,7 +79,16 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.element).toMatchSnapshot();
+
+            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+
+            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("0.00%");
+            expect(remaining_day_text.classes()).toContain("release-remaining-value-danger");
+            expect(remaining_day_value.classes()).toContain(
+                "release-remaining-progress-value-danger"
+            );
+            expect(remaining_day_text.text()).toEqual("10");
         });
 
         it("When there isn't number of start days, Then 0 is displayed and a message in tooltip", async () => {
@@ -97,7 +106,16 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.element).toMatchSnapshot();
+
+            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+
+            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("No start date defined.");
+            expect(remaining_day_text.classes()).toContain("release-remaining-value-disabled");
+            expect(remaining_day_value.classes()).toContain(
+                "release-remaining-progress-value-disabled"
+            );
+            expect(remaining_day_text.text()).toEqual("0");
         });
 
         it("When there is negative number of start days, Then 0 is displayed and 0.00% in tooltip", async () => {
@@ -117,7 +135,17 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.element).toMatchSnapshot();
+
+            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+
+            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("0.00%");
+            expect(wrapper.classes()).not.toContain("release-remaining-value-disabled");
+            expect(remaining_day_text.classes()).not.toContain("release-remaining-value-danger");
+            expect(remaining_day_value.classes()).not.toContain(
+                "release-remaining-progress-value-danger"
+            );
+            expect(remaining_day_text.text()).toEqual("0");
         });
 
         it("When there is negative remaining days, Then 0 is displayed and 100% in tooltip", async () => {
@@ -138,7 +166,17 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.element).toMatchSnapshot();
+
+            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+
+            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("100.00%");
+            expect(wrapper.classes()).not.toContain("release-remaining-value-disabled");
+            expect(remaining_day_text.classes()).not.toContain("release-remaining-value-danger");
+            expect(remaining_day_value.classes()).not.toContain(
+                "release-remaining-progress-value-danger"
+            );
+            expect(remaining_day_text.text()).toEqual("0");
         });
 
         it("When there isn't remaining days, Then 0 is displayed and there is a message in tooltip", async () => {
@@ -157,7 +195,16 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.element).toMatchSnapshot();
+
+            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+
+            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("No start date defined.");
+            expect(remaining_day_text.classes()).toContain("release-remaining-value-disabled");
+            expect(remaining_day_value.classes()).toContain(
+                "release-remaining-progress-value-disabled"
+            );
+            expect(remaining_day_text.text()).toEqual("0");
         });
 
         it("When there is remaining days but equal at 0, Then remaining days is displayed and percent in tooltip", async () => {
@@ -178,7 +225,16 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.element).toMatchSnapshot();
+
+            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+
+            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("100.00%");
+            expect(wrapper.classes()).not.toContain("release-remaining-value-danger");
+            expect(remaining_day_value.classes()).not.toContain(
+                "release-remaining-progress-value-danger"
+            );
+            expect(remaining_day_text.text()).toEqual("0");
         });
 
         it("When there is remaining days and is null, Then 0 is displayed and there is a message in tooltip", async () => {
@@ -199,7 +255,16 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.element).toMatchSnapshot();
+
+            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+
+            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("No end date defined.");
+            expect(remaining_day_text.classes()).toContain("release-remaining-value-disabled");
+            expect(remaining_day_value.classes()).toContain(
+                "release-remaining-progress-value-disabled"
+            );
+            expect(remaining_day_text.text()).toEqual("0");
         });
 
         it("When there is remaining days, not null and greater than 0, Then remaining days is displayed and percent in tooltip", async () => {
@@ -220,7 +285,16 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.element).toMatchSnapshot();
+
+            const remaining_day_text = wrapper.find("[data-test=display-remaining-day-text]");
+            const remaining_day_value = wrapper.find("[data-test=display-remaining-day-value]");
+
+            expect(wrapper.attributes("data-tlp-tooltip")).toEqual("50.00%");
+            expect(remaining_day_text.classes()).toContain("release-remaining-value-danger");
+            expect(remaining_day_value.classes()).toContain(
+                "release-remaining-progress-value-danger"
+            );
+            expect(remaining_day_text.text()).toEqual("5");
         });
     });
 });

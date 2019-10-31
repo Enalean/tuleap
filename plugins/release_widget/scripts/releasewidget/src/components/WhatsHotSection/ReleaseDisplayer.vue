@@ -29,10 +29,10 @@
             v-bind:class="{ 'project-release-toggle-closed': !is_open, 'disabled': is_loading}"
         />
         <div v-if="is_open" data-test="toggle-open" class="release-toggle">
-            <div v-if="has_error" class="tlp-alert-danger">
+            <div v-if="has_error" class="tlp-alert-danger" data-test="show-error-message">
                 {{ error_message }}
             </div>
-            <div v-else>
+            <div v-else data-test="display-release-data">
                 <release-badges v-bind:release-data="displayed_release"/>
                 <release-description v-bind:release-data="displayed_release"/>
             </div>

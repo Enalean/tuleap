@@ -19,7 +19,7 @@
 
 <template>
     <div>
-        <div v-if="is_loading" class="release-loader"></div>
+        <div v-if="is_loading" class="release-loader" data-test="loading-data"></div>
         <burndown-chart-error
             v-else-if="has_error_rest || has_error_duration || has_error_start_date || is_under_calculation"
             v-bind:has_error_rest="has_error_rest"
@@ -31,7 +31,7 @@
             v-bind:is_under_calculation="is_under_calculation"
             v-bind:message_error_under_calculation="$gettext('Burndown is under calculation. It will be available in a few minutes.')"
         />
-        <p v-else class="empty-pane-text" v-translate>There is nothing here!</p>
+        <p v-else class="empty-pane-text" data-test="display-burndown-chart" v-translate>There is nothing here!</p>
     </div>
 </template>
 

@@ -81,7 +81,7 @@ describe("ReleaseDisplayer", () => {
             };
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.contains("[data-test=show-error-message]")).toBe(true);
     });
 
     it("When the widget is rendered, Then toggle is closed", async () => {
@@ -94,7 +94,7 @@ describe("ReleaseDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.contains("[data-test=toggle-open]")).toBe(false);
     });
 
     it("When the toggle is opened and the user want close it, Then an event is emit", async () => {
@@ -107,10 +107,10 @@ describe("ReleaseDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains("[data-test=toggle-open]")).toBeTruthy();
+        expect(wrapper.contains("[data-test=toggle-open]")).toBe(true);
 
         wrapper.find(ReleaseHeader).vm.$emit("toggleReleaseDetails");
-        expect(wrapper.contains("[data-test=toggle-open]")).toBeFalsy();
+        expect(wrapper.contains("[data-test=toggle-open]")).toBe(false);
     });
 
     it("When the milestone is loading, Then the class is disabled and a tooltip say why", async () => {
@@ -124,7 +124,7 @@ describe("ReleaseDisplayer", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         wrapper.setData({ is_loading: true });
-        expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.attributes("data-tlp-tooltip")).toEqual("Loading data...");
     });
 
     it("When the widget is rendered and the toggle opened, Then there are no errors and components called", async () => {
@@ -137,6 +137,6 @@ describe("ReleaseDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.contains("[data-test=display-release-data]")).toBe(true);
     });
 });

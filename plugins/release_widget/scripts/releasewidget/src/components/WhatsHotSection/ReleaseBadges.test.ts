@@ -85,8 +85,8 @@ describe("ReleaseBadges", () => {
         it("When there is an initial effort, Then the points of initial effort are displayed", async () => {
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBeTruthy();
-            expect(wrapper.contains("[data-test=initial-effort-empty]")).toBeFalsy();
+            expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBe(true);
+            expect(wrapper.contains("[data-test=initial-effort-empty]")).toBe(false);
         });
 
         it("When there is initial effort but null, Then the points of initial effort are 'N/A'", async () => {
@@ -105,8 +105,8 @@ describe("ReleaseBadges", () => {
             component_options.propsData = { releaseData };
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=initial-effort-empty]")).toBeTruthy();
+            expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBe(false);
+            expect(wrapper.contains("[data-test=initial-effort-empty]")).toBe(true);
         });
 
         it("When there isn't initial effort, Then the points of initial effort are 'N/A'", async () => {
@@ -126,8 +126,8 @@ describe("ReleaseBadges", () => {
             };
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=initial-effort-empty]")).toBeTruthy();
+            expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBe(false);
+            expect(wrapper.contains("[data-test=initial-effort-empty]")).toBe(true);
         });
     });
 
@@ -135,8 +135,8 @@ describe("ReleaseBadges", () => {
         it("When there are points of capacity, Then the points of capacity are displayed", async () => {
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=capacity-not-empty]")).toBeTruthy();
-            expect(wrapper.contains("[data-test=capacity-empty]")).toBeFalsy();
+            expect(wrapper.contains("[data-test=capacity-not-empty]")).toBe(true);
+            expect(wrapper.contains("[data-test=capacity-empty]")).toBe(false);
         });
 
         it("When there are points of capacity but null, Then the points of capacity are 'N/A'", async () => {
@@ -158,8 +158,8 @@ describe("ReleaseBadges", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=capacity-not-empty]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=capacity-empty]")).toBeTruthy();
+            expect(wrapper.contains("[data-test=capacity-not-empty]")).toBe(false);
+            expect(wrapper.contains("[data-test=capacity-empty]")).toBe(true);
         });
 
         it("When there aren't points of capacity, Then the points of capacity are 'N/A'", async () => {
@@ -180,8 +180,8 @@ describe("ReleaseBadges", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=capacity-not-empty]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=capacity-empty]")).toBeTruthy();
+            expect(wrapper.contains("[data-test=capacity-not-empty]")).toBe(false);
+            expect(wrapper.contains("[data-test=capacity-empty]")).toBe(true);
         });
     });
 });
