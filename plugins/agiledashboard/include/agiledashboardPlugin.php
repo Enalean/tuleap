@@ -18,10 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\Artifact\AdditionalArtifactActionLinkBuilder;
+use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
@@ -78,6 +81,8 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\RealTime\NodeJSClient;
+use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
+use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
@@ -211,6 +216,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(HistoryQuickLinkCollection::NAME);
             $this->addHook(StatisticsCollectionCollector::NAME);
             $this->addHook('project_is_deleted');
+            $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1935,7 +1941,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                 new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
             ),
             $this->getBacklogFactory(),
-            new \Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao()
+            new ExplicitBacklogDao()
         );
     }
 
@@ -2022,6 +2028,26 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         if (! empty($params['group_id'])) {
             $artifact_explicit_backlog_dao = new ArtifactsInExplicitBacklogDao();
             $artifact_explicit_backlog_dao->removeExplicitBacklogOfProject((int) $params['group_id']);
+        }
+    }
+
+    public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event): void
+    {
+        $artifact = $event->getArtifact();
+        $user     = $event->getUser();
+
+        $builder = new AdditionalArtifactActionLinkBuilder(
+            new ExplicitBacklogDao(),
+            $this->getPlanningFactory(),
+            $this->getPlanningPermissionsManager(),
+            new ArtifactsInExplicitBacklogDao(),
+            new PlannedArtifactDao()
+        );
+
+        $link = $builder->buildArtifactActionLink($artifact, $user);
+
+        if ($link !== null) {
+            $event->addLinkPresenter($link);
         }
     }
 }

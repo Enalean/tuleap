@@ -1,5 +1,8 @@
     <li>
-        <a class="btn tracker-action-button" href="{{ url }}">
+        <a class="btn tracker-action-button"
+           {{# url }} href="{{ url }}"{{/ url }}
+           {{# disabled }} disabled{{/ disabled }}
+        >
             {{{ glyph }}}
             {{ link_label }}
         </a>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,15 +33,22 @@ class AdditionalButtonLinkPresenter
      * @var string
      */
     public $url;
+
     /**
      * @var string
      */
     public $glyph;
 
-    public function __construct($link_label, $url, ?Glyph $glyph = null)
+    /**
+     * @var bool
+     */
+    public $disabled;
+
+    public function __construct(string $link_label, string $url, ?Glyph $glyph = null, bool $disabled = false)
     {
         $this->link_label = $link_label;
         $this->url        = $url;
         $this->glyph      = $glyph ? $glyph->getInlineString(): '';
+        $this->disabled   = $disabled;
     }
 }
