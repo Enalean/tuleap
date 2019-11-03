@@ -65,7 +65,7 @@ class PostActionCollection implements PostActionVisitor
      */
     private $hidden_fieldsets_actions = [];
 
-    public function __construct(PostAction... $actions)
+    public function __construct(PostAction ...$actions)
     {
         foreach ($actions as $action) {
             $action->accept($this);

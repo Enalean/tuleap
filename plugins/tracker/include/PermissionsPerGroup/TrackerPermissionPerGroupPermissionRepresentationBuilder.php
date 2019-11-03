@@ -133,7 +133,7 @@ class TrackerPermissionPerGroupPermissionRepresentationBuilder
     /**
      * "Please note that project administrators and tracker administrators are granted full access to the tracker."
      */
-    private function appendTrackerVIPs(Project $project, array & $indexed_permissions)
+    private function appendTrackerVIPs(Project $project, array &$indexed_permissions)
     {
         if (! array_key_exists(Tracker::PERMISSION_FULL, $indexed_permissions)) {
             $indexed_permissions[Tracker::PERMISSION_FULL] = [];
