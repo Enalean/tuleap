@@ -42,4 +42,14 @@ final class MappedValues implements MappedValuesInterface
     {
         return $this->value_ids;
     }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->value_ids);
+    }
+
+    public function getFirstValue(): int
+    {
+        return reset($this->value_ids);
+    }
 }

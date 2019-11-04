@@ -3,19 +3,27 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2.4\n"
+
+#, php-format
+msgid "Artifact to add %d must be a child of swimlane %d."
+msgstr "L'artéfact à ajouter %d doit être enfant de la swimlane %d."
+
+#, php-format
+msgid "Could not find artifact to add with id %d."
+msgstr "L'artéfact à ajouter d'id %d n'a pas été trouvé."
 
 msgid "Milestone not found."
 msgstr "Le jalon n'a pas été trouvé."
 
-msgid "Please specify 'order' in the payload."
-msgstr "Veuillez fournir 'order' dans la requête."
+msgid "Please specify 'add' and/or 'order' in the payload."
+msgstr "Veuillez fournir 'add' et/ou 'order' dans la requête."
 
 msgid "Taskboard"
 msgstr "Tableau des tâches"
@@ -25,10 +33,25 @@ msgid "Taskboard is not activated in project %s."
 msgstr "Le tableau des tâches n'est pas activé pour le projet %s."
 
 msgid "Taskboard not found."
-msgstr "Le tableau des tâches n'a pas été trouvé. "
+msgstr "Le tableau des tâches n'a pas été trouvé."
 
 msgid "The artifact does not have a remaining effort numeric field"
 msgstr "L'artéfact n'a pas de champs numérique pour l'effort restant"
+
+#, php-format
+msgid ""
+"Tracker %s has no list field mapped to column %s, please check its "
+"configuration."
+msgstr ""
+"L'outil de suivi %s n'a pas de champ liste associé à la colonne %s, veuillez "
+"vérifier sa configuration."
+
+#, php-format
+msgid ""
+"Tracker %s has no value mapped to column %s, please check its configuration."
+msgstr ""
+"L'outil de suivi %s n'a pas de valeur associée à la colonne %s, veuillez "
+"vérifier sa configuration."
 
 msgid ""
 "Visually keep track of things that need to get done in a task board, used in "
@@ -36,6 +59,10 @@ msgid ""
 msgstr ""
 "Gardez une trace visuelle des tâches à effectuer dans un tableau, utilisé "
 "dans Agile Dashboard."
+
+#, php-format
+msgid "You don't have permission to update the %s field."
+msgstr "Vous n'avez pas la permission de mettre à jour le champ %s."
 
 msgid "Your browser is not compatible with Taskboard application"
 msgstr ""

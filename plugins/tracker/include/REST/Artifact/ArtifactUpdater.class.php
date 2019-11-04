@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_REST_Artifact_ArtifactUpdater
 {
 
@@ -27,6 +28,11 @@ class Tracker_REST_Artifact_ArtifactUpdater
     public function __construct(Tracker_REST_Artifact_ArtifactValidator $artifact_validator)
     {
         $this->artifact_validator = $artifact_validator;
+    }
+
+    public static function build(): self
+    {
+        return new self(new Tracker_REST_Artifact_ArtifactValidator(Tracker_FormElementFactory::instance()));
     }
 
     public function update(PFUser $user, Tracker_Artifact $artifact, array $values, ?Tuleap\Tracker\REST\ChangesetCommentRepresentation $comment = null)

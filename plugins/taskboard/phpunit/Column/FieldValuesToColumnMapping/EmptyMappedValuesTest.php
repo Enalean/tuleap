@@ -22,23 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
-final class EmptyMappedValues implements MappedValuesInterface
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+final class EmptyMappedValuesTest extends TestCase
 {
-    /**
-     * @return int[]
-     */
-    public function getValueIds(): array
+    use MockeryPHPUnitIntegration;
+
+    /** @var EmptyMappedValues */
+    private $empty_mapped_values;
+
+    protected function setUp(): void
     {
-        return [];
+        $this->empty_mapped_values = new EmptyMappedValues();
     }
 
-    public function isEmpty(): bool
+    public function testGetValueIdsReturnsEmptyArray(): void
     {
-        return true;
+        $this->assertSame(0, count($this->empty_mapped_values->getValueIds()));
     }
 
-    public function getFirstValue(): int
+    public function testIsEmptyReturnsTrue(): void
     {
-        throw new \RuntimeException();
+        $this->assertTrue($this->empty_mapped_values->isEmpty());
+    }
+
+    public function testGetFirstValueThrowsRuntimeException(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->empty_mapped_values->getFirstValue();
     }
 }

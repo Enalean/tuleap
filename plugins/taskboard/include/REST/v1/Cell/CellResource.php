@@ -43,24 +43,38 @@ class CellResource extends AuthenticatedResource
     /**
      * Patch Taskboard cell
      *
-     * Reorder cards in a taskboard cell.
-     *
-     * <pre>
-     * /!\ This REST route is under construction and subject to changes /!\
-     * </pre>
+     * Move cards to a taskboard cell and/or reorder cards in a cell.
      *
      * <br>
-     * Example:
+     * Move a child card to a cell (changing its status):
      * <pre>
-     * "order": {
+     * swimlane_id = 30, column_id = 7, payload = {"add": 123}
+     * </pre>
+     * Given that the card of id 123 is a child of the swimlane of id 30,
+     * this will move it to the column of id 7, changing its status to the
+     * corresponding mapping. For example if the column of id 7 is "On Going",
+     * this will set the card's status field to "On Going".
+     *
+     * <br><br>
+     * Move a solo card to a cell (changing its status):
+     * <pre>
+     * swimlane_id = 30, column_id = 7, payload = {"add": 30}
+     * </pre>
+     * When the swimlane of id 30 has no children (solo card), this will move it to
+     * the column of id 7. "add" and "swimlane_id" must be the same for solo cards.
+     *
+     * <br><br>
+     * Reorder a card in the column:
+     * <pre>
+     * payload = {"order": {
      *   "ids": [123, 789, 1001],
      *   "direction": "before",
      *   "compared_to": 456
-     * }
+     * }}
      * </pre>
-     *
-     * <br>
      * The resulting order will be: <pre>[…, 123, 789, 1001, 456, …]</pre>
+     *
+     * You can change a card status and reorder it at the same time.
      *
      * @url    PATCH {swimlane_id}/column/{column_id}
      * @access protected
@@ -75,6 +89,6 @@ class CellResource extends AuthenticatedResource
     {
         $this->checkAccess();
         $patcher = CellPatcher::build();
-        $patcher->patchCell($swimlane_id, $payload);
+        $patcher->patchCell($swimlane_id, $column_id, $payload);
     }
 }

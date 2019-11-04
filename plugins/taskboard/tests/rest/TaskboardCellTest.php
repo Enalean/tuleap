@@ -86,6 +86,54 @@ final class TaskboardCellTest extends \RestBase
         $this->assertEquals('Task1', $cards[2]['label']);
     }
 
+    public function testPATCHCellChangesSoloCardStatus(): void
+    {
+        $US4_swimlane_id  = self::$swimlane_ids['US5'];
+        $review_column_id = self::$column_ids['Review'];
+        $patch_payload    = [
+            'add' => $US4_swimlane_id
+        ];
+        $response         = $this->getResponse(
+            $this->client->patch(
+                'taskboard_cells/' . $US4_swimlane_id . '/column/' . $review_column_id,
+                null,
+                json_encode($patch_payload)
+            ),
+            REST_TestDataBuilder::TEST_USER_1_NAME
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+        // Assert the status has changed
+        $response = $this->getResponse($this->client->get('artifacts/' . $US4_swimlane_id));
+        $this->assertEquals(200, $response->getStatusCode());
+        $status_value = $this->searchStatusValue($response->json()["values"]);
+        $this->assertSame('Review', $status_value);
+    }
+
+    public function testPATCHCellChangesChildCardStatusAndReorders(): void
+    {
+        $US2_swimlane_id  = self::$swimlane_ids['US2'];
+        $review_column_id = self::$column_ids['Review'];
+        $task_ids         = $this->getChildrenIdsOfSwimlane($US2_swimlane_id);
+        $task1_id         = $task_ids['Task1'];
+        $task4_id         = $task_ids['Task4'];
+        $patch_payload    = [
+            'add'         => $task1_id,
+            'ids'         => [$task1_id],
+            'direction'   => 'after',
+            'compared_to' => $task4_id
+        ];
+        $response         = $this->getResponse(
+            $this->client->patch(
+                'taskboard_cells/' . $US2_swimlane_id . '/column/' . $review_column_id,
+                null,
+                json_encode($patch_payload)
+            )
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
     /**
      * @return array<string, int>
      */
@@ -155,5 +203,22 @@ final class TaskboardCellTest extends \RestBase
         $this->assertCount(1, $milestones);
 
         return (int) $milestones[0]['id'];
+    }
+
+    private function searchStatusValue(array $field_values): string
+    {
+        return array_reduce(
+            $field_values,
+            function (string $accumulator, array $field_value) {
+                if ($accumulator !== '') {
+                    return $accumulator;
+                }
+                if ($field_value['label'] === 'Status') {
+                    return $field_value['values'][0]['label'];
+                }
+                return '';
+            },
+            ''
+        );
     }
 }

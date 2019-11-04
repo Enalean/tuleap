@@ -70,7 +70,7 @@ class MappedValuesRetriever
         }
         foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
             if ($column->getLabel() === $value->getLabel()) {
-                return new MappedValues([$value->getId()]);
+                return new MappedValues([(int) $value->getId()]);
             }
         }
         return new EmptyMappedValues();
