@@ -17,18 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as mutations from "./mutations";
-import { State } from "./type";
-import { ColumnDefinition } from "../type";
+import { ColumnDefinition } from "../../type";
+import * as mutations from "./column-mutations";
+import { ColumnState } from "./type";
 
-describe(`State mutations`, () => {
+describe(`Column module mutations`, () => {
     describe("collapseColumn", () => {
         it("collapses column", () => {
             const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
 
-            const state: State = {
+            const state: ColumnState = {
                 columns: [column]
-            } as State;
+            };
 
             mutations.collapseColumn(state, column);
             expect(state.columns[0].is_collapsed).toBe(true);
@@ -39,9 +39,9 @@ describe(`State mutations`, () => {
         it("expands column", () => {
             const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
 
-            const state: State = {
+            const state: ColumnState = {
                 columns: [column]
-            } as State;
+            };
 
             mutations.expandColumn(state, column);
             expect(state.columns[0].is_collapsed).toBe(false);

@@ -29,9 +29,11 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { ColumnDefinition, Swimlane } from "../../../../type";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
 import ParentCell from "./ParentCell.vue";
 import ColumnWithChildren from "./ColumnWithChildren.vue";
+
+const column = namespace("column");
 
 @Component({
     components: { ColumnWithChildren, ParentCell }
@@ -40,7 +42,7 @@ export default class CardWithChildren extends Vue {
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
 
-    @State
+    @column.State
     readonly columns!: Array<ColumnDefinition>;
 }
 </script>

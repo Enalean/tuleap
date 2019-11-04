@@ -30,19 +30,20 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { State, namespace } from "vuex-class";
+import { namespace } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import { ColumnDefinition } from "../../../type";
 import ExpandedHeaderCell from "./Expanded/ExpandedHeaderCell.vue";
 import CollapsedHeaderCell from "./Collapsed/CollapsedHeaderCell.vue";
 
+const column = namespace("column");
 const fullscreen = namespace("fullscreen");
 
 @Component({
     components: { CollapsedHeaderCell, ExpandedHeaderCell }
 })
 export default class TaskBoardHeader extends Vue {
-    @State
+    @column.State
     readonly columns!: Array<ColumnDefinition>;
 
     @fullscreen.Getter

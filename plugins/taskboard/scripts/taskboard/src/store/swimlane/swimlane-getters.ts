@@ -28,7 +28,7 @@ export const cards_in_cell = (state: SwimlaneState, getters: [], root_state: Roo
     current_column: ColumnDefinition
 ): Card[] => {
     return current_swimlane.children_cards.filter((card: Card) => {
-        const column_of_card = getColumnOfCard(root_state.columns, card);
+        const column_of_card = getColumnOfCard(root_state.column.columns, card);
 
         if (!column_of_card) {
             return false;
@@ -51,7 +51,9 @@ export const column_and_swimlane_of_cell = (
     const swimlane = state.swimlanes.find(
         swimlane => swimlane.card.id === Number(cell.dataset.swimlaneId)
     );
-    const column = root_state.columns.find(column => column.id === Number(cell.dataset.columnId));
+    const column = root_state.column.columns.find(
+        column => column.id === Number(cell.dataset.columnId)
+    );
 
     return {
         swimlane,

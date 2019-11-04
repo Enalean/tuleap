@@ -22,6 +22,7 @@ import App from "./App.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import { ColumnDefinition } from "../type";
 import ErrorModal from "./GlobalError/ErrorModal.vue";
+import { RootState } from "../store/type";
 
 describe("App", () => {
     function getStore(
@@ -32,13 +33,15 @@ describe("App", () => {
     ): unknown {
         return createStoreMock({
             state: {
-                columns: columns,
                 has_content: has_content,
                 error: {
                     has_global_error,
                     has_modal_error
+                },
+                column: {
+                    columns
                 }
-            }
+            } as RootState
         });
     }
 

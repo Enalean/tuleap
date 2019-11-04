@@ -22,6 +22,7 @@ import SoloSwimlane from "./SoloSwimlane.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import { ColumnDefinition, Swimlane } from "../../../../type";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
+import { RootState } from "../../../../store/type";
 
 async function createWrapper(
     columns: ColumnDefinition[],
@@ -30,7 +31,7 @@ async function createWrapper(
 ): Promise<Wrapper<SoloSwimlane>> {
     return shallowMount(SoloSwimlane, {
         localVue: await createTaskboardLocalVue(),
-        mocks: { $store: createStoreMock({ state: { columns } }) },
+        mocks: { $store: createStoreMock({ state: { column: { columns } } as RootState }) },
         propsData: { swimlane, column: target_column }
     });
 }

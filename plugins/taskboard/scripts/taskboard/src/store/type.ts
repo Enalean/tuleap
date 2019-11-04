@@ -18,15 +18,14 @@
  */
 
 import { UserState } from "./user/type";
-import { ColumnDefinition } from "../type";
 import { ErrorState } from "./error/type";
 import { FullscreenState } from "./fullscreen/type";
 import { SwimlaneState } from "./swimlane/type";
+import { ColumnState } from "./column/type";
 
 export interface State {
     admin_url: string;
     has_content: boolean;
-    columns: Array<ColumnDefinition>;
     milestone_id: number;
     milestone_title: string;
     are_closed_items_displayed: boolean;
@@ -37,4 +36,5 @@ export interface RootState extends State {
     readonly fullscreen: FullscreenState;
     readonly swimlane: SwimlaneState;
     readonly user: UserState;
+    readonly column: ColumnState;
 }

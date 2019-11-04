@@ -36,14 +36,16 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { ColumnDefinition } from "../../../../type";
-import { Action } from "vuex-class";
+import { namespace } from "vuex-class";
+
+const column_store = namespace("column");
 
 @Component
 export default class CollapseButton extends Vue {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
 
-    @Action
+    @column_store.Action
     readonly collapseColumn!: (column: ColumnDefinition) => void;
 
     get title(): string {

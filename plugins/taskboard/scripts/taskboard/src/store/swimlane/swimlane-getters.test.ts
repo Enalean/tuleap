@@ -233,7 +233,9 @@ describe("Swimlane state getters", () => {
             swimlane_state = {} as SwimlaneState;
 
             root_state = {
-                columns: [column_todo]
+                column: {
+                    columns: [column_todo]
+                }
             } as RootState;
         });
 
@@ -272,7 +274,9 @@ describe("Swimlane state getters", () => {
             } as SwimlaneState;
 
             root_state = {
-                columns: [column_to_find]
+                column: {
+                    columns: [column_to_find]
+                }
             } as RootState;
         });
 

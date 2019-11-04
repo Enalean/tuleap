@@ -27,6 +27,7 @@ import { ColumnDefinition } from "./src/type";
 import Vuex from "vuex";
 import { UserState } from "./src/store/user/type";
 import { RootState } from "./src/store/type";
+import { ColumnState } from "./src/store/column/type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("taskboard");
@@ -58,7 +59,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const initial_root_state: RootState = {
         admin_url,
-        columns,
         has_content,
         milestone_id,
         milestone_title,
@@ -71,7 +71,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         user_has_accessibility_mode
     };
 
+    const initial_column_state: ColumnState = {
+        columns
+    };
+
     new AppComponent({
-        store: createStore(initial_root_state, initial_user_state)
+        store: createStore(initial_root_state, initial_user_state, initial_column_state)
     }).$mount(vue_mount_point);
 });

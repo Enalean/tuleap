@@ -34,11 +34,13 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
 import { ColumnDefinition, Swimlane } from "../../../../type";
 import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
 import CellForSoloCard from "./CellForSoloCard.vue";
+
+const column_store = namespace("column");
 
 @Component({
     components: {
@@ -54,7 +56,7 @@ export default class SoloSwimlane extends Vue {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
 
-    @State
+    @column_store.State
     readonly columns!: Array<ColumnDefinition>;
 
     get should_solo_card_be_displayed(): boolean {

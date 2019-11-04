@@ -26,6 +26,7 @@ import { ColumnDefinition, Swimlane } from "../../../type";
 import { createTaskboardLocalVue } from "../../../helpers/local-vue-for-test";
 import * as mapper from "../../../helpers/list-value-to-column-mapper";
 import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
+import { RootState } from "../../../store/type";
 
 async function createWrapper(
     swimlanes: Swimlane[],
@@ -37,8 +38,9 @@ async function createWrapper(
             $store: createStoreMock({
                 state: {
                     are_closed_items_displayed,
-                    swimlane: { swimlanes }
-                }
+                    swimlane: { swimlanes },
+                    column: {}
+                } as RootState
             })
         }
     });

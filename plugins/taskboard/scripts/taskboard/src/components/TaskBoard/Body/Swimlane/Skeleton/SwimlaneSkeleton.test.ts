@@ -21,6 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import SwimlaneSkeleton from "./SwimlaneSkeleton.vue";
 import ColumnsSkeleton from "./ColumnsSkeleton.vue";
+import { RootState } from "../../../../../store/type";
 
 describe("SwimlaneSkeleton", () => {
     it("displays a fixed amount of skeletons in each column", () => {
@@ -28,17 +29,19 @@ describe("SwimlaneSkeleton", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        columns: [
-                            { label: "Eeny" },
-                            { label: "Meeny" },
-                            { label: "Miny" },
-                            { label: "Moe" },
-                            { label: "Catch a tiger" },
-                            { label: "By the toe" },
-                            { label: "If he hollers" },
-                            { label: "Let him go" }
-                        ]
-                    }
+                        column: {
+                            columns: [
+                                { label: "Eeny" },
+                                { label: "Meeny" },
+                                { label: "Miny" },
+                                { label: "Moe" },
+                                { label: "Catch a tiger" },
+                                { label: "By the toe" },
+                                { label: "If he hollers" },
+                                { label: "Let him go" }
+                            ]
+                        }
+                    } as RootState
                 })
             }
         });

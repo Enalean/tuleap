@@ -21,25 +21,28 @@ import { shallowMount, Wrapper } from "@vue/test-utils";
 import CardWithChildren from "./CardWithChildren.vue";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import { Card, ColumnDefinition, Swimlane } from "../../../../type";
+import { RootState } from "../../../../store/type";
 
 function createWrapper(swimlane: Swimlane): Wrapper<CardWithChildren> {
     return shallowMount(CardWithChildren, {
         mocks: {
             $store: createStoreMock({
                 state: {
-                    columns: [
-                        {
-                            id: 2,
-                            label: "To do",
-                            mappings: [{ tracker_id: 7, accepts: [{ id: 49 }] }]
-                        } as ColumnDefinition,
-                        {
-                            id: 3,
-                            label: "Done",
-                            mappings: [{ tracker_id: 7, accepts: [{ id: 50 }] }]
-                        } as ColumnDefinition
-                    ]
-                }
+                    column: {
+                        columns: [
+                            {
+                                id: 2,
+                                label: "To do",
+                                mappings: [{ tracker_id: 7, accepts: [{ id: 49 }] }]
+                            } as ColumnDefinition,
+                            {
+                                id: 3,
+                                label: "Done",
+                                mappings: [{ tracker_id: 7, accepts: [{ id: 50 }] }]
+                            } as ColumnDefinition
+                        ]
+                    }
+                } as RootState
             })
         },
         propsData: { swimlane }
