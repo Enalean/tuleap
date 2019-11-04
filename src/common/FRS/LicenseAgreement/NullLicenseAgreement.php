@@ -29,4 +29,19 @@ class NullLicenseAgreement implements LicenseAgreementInterface
     {
         return '{}';
     }
+
+    public function getId(): int
+    {
+        return 0;
+    }
+
+    public function getTitle(): string
+    {
+        return '';
+    }
+
+    public function getContent(): string
+    {
+        return '';
+    }
 }

@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\LicenseAgreement;
 
+/**
+ * @psalm-immutable
+ */
 class LicenseAgreement implements LicenseAgreementInterface
 {
     /**
@@ -48,5 +51,20 @@ class LicenseAgreement implements LicenseAgreementInterface
     public function getAsJson(): string
     {
         return \json_encode(['id' => $this->id, 'title' => $this->title, 'content' => $this->content]);
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getContent(): string
+    {
+        return $this->content;
     }
 }

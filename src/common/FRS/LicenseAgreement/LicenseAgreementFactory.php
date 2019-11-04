@@ -43,4 +43,16 @@ class LicenseAgreementFactory
         }
         return new LicenseAgreement($row['id'], $row['title'], $row['content']);
     }
+
+    /**
+     * @return LicenseAgreementInterface[]
+     */
+    public function getProjectLicenseAgreements(\Project $project): array
+    {
+        $agreements = [];
+        foreach ($this->dao->getProjectLicenseAgreements($project) as $row) {
+            $agreements []= new LicenseAgreement($row['id'], $row['title'], $row['content']);
+        }
+        return $agreements;
+    }
 }

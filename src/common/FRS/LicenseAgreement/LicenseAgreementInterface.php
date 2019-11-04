@@ -26,4 +26,10 @@ namespace Tuleap\FRS\LicenseAgreement;
 interface LicenseAgreementInterface
 {
     public function getAsJson(): string;
+
+    public function getId(): int;
+
+    public function getTitle(): string;
+
+    public function getContent(): string;
 }

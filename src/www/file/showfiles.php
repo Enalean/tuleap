@@ -28,6 +28,9 @@ define("FRS_COLLAPSED_ICON", util_get_image_theme("ic/toggle_plus.png"));
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDisplay;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\PackagePermissionManager;
 use Tuleap\FRS\ReleasePermissionManager;
 use Tuleap\FRS\UploadedLinkPresentersBuilder;
@@ -153,10 +156,12 @@ if (!$pv && $permission_manager->isAdmin($project, $user)) {
 
 $package_permission_manager = new PackagePermissionManager($permission_manager, $frspf);
 $release_permission_manager = new ReleasePermissionManager($permission_manager, $frsrf);
-$license_agreement_display  = new \Tuleap\FRS\LicenseAgreement\LicenseAgreementDisplay(
+$license_agreement_display  = new LicenseAgreementDisplay(
     $hp,
     TemplateRendererFactory::build(),
-    new \Tuleap\FRS\LicenseAgreement\LicenseAgreementDao(),
+    new LicenseAgreementFactory(
+        new LicenseAgreementDao()
+    ),
 );
 
 $html .= $license_agreement_display->getModals($project);
@@ -383,7 +388,7 @@ foreach ($packages as $package_id => $package_for_display) {
 
                                 $javascript_files_array[] = "'f_" . $file_release['file_id'] . "'";
 
-                                $html .= $license_agreement_display->show($package, (int) $file_release['file_id'], $fname);
+                                $html .= $license_agreement_display->getDownloadLink($package, (int) $file_release['file_id'], $fname);
 
                                 $size_precision = 0;
                                 if ($file_release['file_size'] < 1024) {
