@@ -34,7 +34,7 @@ class ArtifactLinksToRenderForPerNatureTable
      */
     private $artifact_links;
 
-    public function __construct(NaturePresenter $nature_presenter, Tracker_ArtifactLinkInfo... $artifact_links)
+    public function __construct(NaturePresenter $nature_presenter, Tracker_ArtifactLinkInfo ...$artifact_links)
     {
         $this->nature_presenter = $nature_presenter;
         $this->artifact_links   = $artifact_links;

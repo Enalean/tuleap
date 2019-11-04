@@ -39,7 +39,7 @@ class ArtifactLinksToRender
         \TrackerFactory $tracker_factory,
         \Tracker_ReportFactory $report_factory,
         NaturePresenterFactory $nature_presenter_factory,
-        Tracker_ArtifactLinkInfo... $link_infos
+        Tracker_ArtifactLinkInfo ...$link_infos
     ) {
         if (empty($link_infos)) {
             $this->has_artifact_to_display = false;
@@ -69,7 +69,7 @@ class ArtifactLinksToRender
         \PFUser $current_user,
         \Tracker_FormElement_Field_ArtifactLink $field,
         NaturePresenterFactory $nature_presenter_factory,
-        Tracker_ArtifactLinkInfo... $link_infos
+        Tracker_ArtifactLinkInfo...$link_infos
     ) {
         $tracker = $field->getTracker();
         if ($tracker === null) {
@@ -158,7 +158,7 @@ class ArtifactLinksToRender
         \Tracker_FormElement_Field_ArtifactLink $field,
         \PFUser $current_user,
         NaturePresenterFactory $nature_presenter_factory,
-        Tracker_ArtifactLinkInfo... $link_infos
+        Tracker_ArtifactLinkInfo ...$link_infos
     ) {
         $tracker = $field->getTracker();
         if ($tracker === null || ! $tracker->isProjectAllowedToUseNature()) {

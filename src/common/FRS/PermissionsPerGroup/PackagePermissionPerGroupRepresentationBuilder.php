@@ -139,7 +139,7 @@ class PackagePermissionPerGroupRepresentationBuilder
     }
 
     private function addPermissionWhenNoFilterIsSelected(
-        array & $permissions,
+        array &$permissions,
         $selected_ugroup_id,
         PackagePermissionPerGroupRepresentation $package_permission_representation
     ) {
@@ -149,7 +149,7 @@ class PackagePermissionPerGroupRepresentationBuilder
     }
 
     private function addPermissionWhenFilterIsDefinedAndPermissionMatchesPackageOrRelease(
-        array & $permissions,
+        array &$permissions,
         $selected_ugroup_id,
         array $package_permissions_ids,
         array $release_permissions_ids,

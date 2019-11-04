@@ -185,7 +185,7 @@ class BatchSuccessfulResponseBuilder
         return $response_objects;
     }
 
-    private function checkProjectQuota(\Project $project, LFSObject... $request_objects)
+    private function checkProjectQuota(\Project $project, LFSObject ...$request_objects)
     {
         $wanted_size = 0;
 

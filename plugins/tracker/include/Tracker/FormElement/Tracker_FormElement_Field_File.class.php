@@ -1121,8 +1121,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      *
      * @return FileInfoForTusUploadedFileReadyToBeAttachedProvider
      */
-    protected function getFileInfoForTusUploadedFileReadyToBeAttachedProvider(FileOngoingUploadDao $ongoing_upload_dao
-    ): FileInfoForTusUploadedFileReadyToBeAttachedProvider
+    protected function getFileInfoForTusUploadedFileReadyToBeAttachedProvider(FileOngoingUploadDao $ongoing_upload_dao): FileInfoForTusUploadedFileReadyToBeAttachedProvider
     {
         return new FileInfoForTusUploadedFileReadyToBeAttachedProvider(
             new FileBeingUploadedInformationProvider(

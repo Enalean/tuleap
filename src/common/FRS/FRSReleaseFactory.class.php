@@ -58,7 +58,7 @@ class FRSReleaseFactory
         self::$instance = null;
     }
 
-    function getFRSReleaseFromArray(& $array)
+    function getFRSReleaseFromArray(&$array)
     {
         $frs_release = new FRSRelease($array);
         return $frs_release;
