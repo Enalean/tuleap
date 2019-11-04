@@ -224,6 +224,34 @@ a.taskboard-card-xref {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 
+    &.taskboard-card-remaining-effort-editable {
+        cursor: pointer;
+
+        &::before {
+            content: '\f040'; // fa-pencil
+            display: flex;
+            position: absolute;
+            top: 0;
+            left: -$tlp-spacing;
+            align-items: center;
+            width: 20px;
+            height: 26px;
+            transition: opacity ease-in-out 100ms;
+            opacity: 0;
+            font-family: FontAwesome;
+            font-size: 14px;
+            font-weight: 300;
+        }
+    }
+
+    &.taskboard-card-remaining-effort-edit-mode,
+    &:hover {
+        &::before {
+            opacity: 1;
+        }
+    }
+
+
     @each $color-name, $colors in $tlp-swatch-color-map {
         &.taskboard-card-remaining-effort-#{$color-name}::after {
             content: '';
@@ -236,6 +264,36 @@ a.taskboard-card-xref {
             border-style: solid;
             border-color: transparent transparent transparent map-get($colors, 'primary');
         }
+
+        &.taskboard-card-remaining-effort-editable {
+            &.tlp-badge-#{$color-name}::before {
+                color: darken(map-get($colors, 'primary'), 5%);
+            }
+
+            &.taskboard-card-remaining-effort-edit-mode,
+            &:focus,
+            &:hover {
+                &.taskboard-card-remaining-effort-#{$color-name}::after {
+                    border-color: transparent transparent transparent darken(map-get($colors, 'primary'), 5%);
+                }
+
+                &.tlp-badge-#{$color-name} {
+                    border: 1px solid darken(map-get($colors, 'primary'), 5%);
+                    background: darken(map-get($colors, 'primary'), 5%);
+                }
+            }
+        }
+    }
+}
+
+@each $color-name, $colors in $tlp-swatch-color-map {
+    .taskboard-card-remaining-effort-input-#{$color-name} {
+        width: 20px;
+        border: 0;
+        background: map-get($colors, 'secondary');
+        color: map-get($colors, 'text');
+        font-size: 10px;
+        line-height: 10px;
     }
 }
 

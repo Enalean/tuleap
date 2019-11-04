@@ -25,6 +25,7 @@ import { RootState } from "../type";
 import { UserPreference, UserPreferenceValue } from "../user/type";
 
 export * from "./drag-drop-actions";
+export * from "./card/card-actions";
 
 export async function loadSwimlanes(
     context: ActionContext<SwimlaneState, RootState>
@@ -36,11 +37,20 @@ export async function loadSwimlanes(
                 limit: 100
             },
             getCollectionCallback: (collection: Card[]): Swimlane[] => {
+                const is_loading_children_cards = false;
+                const children_cards: Card[] = [];
+
                 const swimlanes = collection.map(card => {
+                    const { remaining_effort } = card;
+                    if (remaining_effort) {
+                        remaining_effort.is_being_saved = false;
+                        remaining_effort.is_in_edit_mode = false;
+                    }
+
                     return {
-                        card,
-                        children_cards: [],
-                        is_loading_children_cards: false
+                        card: { ...card, remaining_effort },
+                        children_cards,
+                        is_loading_children_cards
                     };
                 });
                 context.commit("addSwimlanes", swimlanes);
@@ -73,6 +83,12 @@ export async function loadChildrenCards(
                 limit: 100
             },
             getCollectionCallback: (collection: Card[]): Card[] => {
+                collection.forEach(card => {
+                    if (card.remaining_effort) {
+                        card.remaining_effort.is_being_saved = false;
+                        card.remaining_effort.is_in_edit_mode = false;
+                    }
+                });
                 context.commit("addChildrenToSwimlane", {
                     swimlane,
                     children_cards: collection

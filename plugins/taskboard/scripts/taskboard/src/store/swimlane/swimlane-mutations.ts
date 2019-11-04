@@ -21,6 +21,8 @@ import { Card, Direction, Swimlane } from "../../type";
 import { AddChildrenToSwimlanePayload, SwimlaneState, ReorderCardsPayload } from "./type";
 import { findSwimlane, replaceSwimlane } from "./swimlane-helpers";
 
+export * from "./card/card-mutations";
+
 function sortCardsByRank(a: Card, b: Card): number {
     return Math.sign(a.rank - b.rank);
 }

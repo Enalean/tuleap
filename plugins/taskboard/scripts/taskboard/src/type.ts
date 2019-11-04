@@ -49,6 +49,8 @@ export interface MappedListValue extends ListValue {
 export interface RemainingEffort {
     value: number | null;
     can_update: boolean;
+    is_in_edit_mode: boolean;
+    is_being_saved: boolean;
 }
 
 export interface Card {

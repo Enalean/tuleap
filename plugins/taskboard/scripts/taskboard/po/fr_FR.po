@@ -60,6 +60,9 @@ msgid "It seems an action you tried to perform can't be done"
 msgstr ""
 "Il semble que l'action que vous venez de tenter ne peut pas être réalisée"
 
+msgid "New remaining effort"
+msgstr "Nouvel effort restant"
+
 msgid "Only colors from the new palette can be used."
 msgstr "Seules les couleurs de la nouvelle palette peuvent être utilisées."
 
@@ -78,6 +81,9 @@ msgstr ""
 
 msgid "Reload the page"
 msgstr "Recharger la page"
+
+msgid "Remaining effort"
+msgstr "Effort restant"
 
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
