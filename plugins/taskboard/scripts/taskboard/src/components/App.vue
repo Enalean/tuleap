@@ -41,6 +41,7 @@ import TaskBoard from "./TaskBoard/TaskBoard.vue";
 import NoContentEmptyState from "./EmptyState/NoContentEmptyState.vue";
 import ErrorModal from "./GlobalError/ErrorModal.vue";
 
+const column = namespace("column");
 const error = namespace("error");
 
 @Component({
@@ -54,7 +55,7 @@ const error = namespace("error");
     }
 })
 export default class App extends Vue {
-    @State
+    @column.State
     readonly columns!: Array<ColumnDefinition>;
 
     @State

@@ -26,12 +26,16 @@ import fullscreen from "./fullscreen";
 import { UserState } from "./user/type";
 import { createUserModule } from "./user";
 import { RootState } from "./type";
+import { ColumnState } from "./column/type";
+import { createColumnModule } from "./column";
 
 export function createStore(
     initial_root_state: RootState,
-    initial_user_state: UserState
+    initial_user_state: UserState,
+    initial_column_state: ColumnState
 ): Store<RootState> {
     const user = createUserModule(initial_user_state);
+    const column = createColumnModule(initial_column_state);
 
     const store_options: StoreOptions<RootState> = {
         state: initial_root_state,
@@ -41,7 +45,8 @@ export function createStore(
             error,
             swimlane,
             user,
-            fullscreen
+            fullscreen,
+            column
         }
     };
 

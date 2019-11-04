@@ -17,19 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, Wrapper } from "@vue/test-utils";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import ExpandButton from "./ExpandButton.vue";
 import { ColumnDefinition } from "../../../../type";
+import { RootState } from "../../../../store/type";
+
+async function getWrapper(column: ColumnDefinition): Promise<Wrapper<ExpandButton>> {
+    return shallowMount(ExpandButton, {
+        localVue: await createTaskboardLocalVue(),
+        mocks: {
+            $store: createStoreMock({
+                state: {
+                    column: {}
+                } as RootState
+            })
+        },
+        propsData: { column }
+    });
+}
 
 describe("ExpandButton", () => {
     it("Displays column label as a TLP tooltip", async () => {
         const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
-        const wrapper = shallowMount(ExpandButton, {
-            localVue: await createTaskboardLocalVue(),
-            propsData: { column }
-        });
+        const wrapper = await getWrapper(column);
+
         expect(wrapper.attributes("data-tlp-tooltip")).toBe('Expand "Done" column');
         expect(wrapper.classes("tlp-tooltip")).toBe(true);
         expect(wrapper.classes("tlp-tooltip-bottom")).toBe(true);
@@ -37,10 +50,7 @@ describe("ExpandButton", () => {
 
     it("Displays a focusable button", async () => {
         const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
-        const wrapper = shallowMount(ExpandButton, {
-            localVue: await createTaskboardLocalVue(),
-            propsData: { column }
-        });
+        const wrapper = await getWrapper(column);
 
         const button = wrapper.find("[data-test=button]");
         expect(button.classes("fa-plus-square")).toBe(true);
@@ -51,16 +61,10 @@ describe("ExpandButton", () => {
 
     it("When user clicks on the button, the column is expanded", async () => {
         const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
-        const wrapper = shallowMount(ExpandButton, {
-            localVue: await createTaskboardLocalVue(),
-            mocks: {
-                $store: createStoreMock({})
-            },
-            propsData: { column }
-        });
+        const wrapper = await getWrapper(column);
 
         const button = wrapper.find("[data-test=button]");
         button.trigger("click");
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("expandColumn", column);
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("column/expandColumn", column);
     });
 });

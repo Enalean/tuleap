@@ -17,19 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, Wrapper } from "@vue/test-utils";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import CollapseButton from "./CollapseButton.vue";
 import { ColumnDefinition } from "../../../../type";
+import { RootState } from "../../../../store/type";
+
+async function getWrapper(column: ColumnDefinition): Promise<Wrapper<CollapseButton>> {
+    return shallowMount(CollapseButton, {
+        localVue: await createTaskboardLocalVue(),
+        mocks: {
+            $store: createStoreMock({
+                state: {
+                    column: {}
+                } as RootState
+            })
+        },
+        propsData: { column }
+    });
+}
 
 describe("CollapseButton", () => {
     it("Displays its label as a TLP tooltip", async () => {
         const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
-        const wrapper = shallowMount(CollapseButton, {
-            localVue: await createTaskboardLocalVue(),
-            propsData: { column }
-        });
+        const wrapper = await getWrapper(column);
+
         expect(wrapper.attributes("data-tlp-tooltip")).toBe('Collapse "Done" column');
         expect(wrapper.classes("tlp-tooltip")).toBe(true);
         expect(wrapper.classes("tlp-tooltip-bottom")).toBe(true);
@@ -37,10 +50,7 @@ describe("CollapseButton", () => {
 
     it("Displays a focusable button", async () => {
         const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
-        const wrapper = shallowMount(CollapseButton, {
-            localVue: await createTaskboardLocalVue(),
-            propsData: { column }
-        });
+        const wrapper = await getWrapper(column);
 
         const button = wrapper.find("[data-test=button]");
         expect(button.classes("fa-minus-square")).toBe(true);
@@ -51,16 +61,10 @@ describe("CollapseButton", () => {
 
     it("When user clicks on the button, the column is collapsed", async () => {
         const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
-        const wrapper = shallowMount(CollapseButton, {
-            localVue: await createTaskboardLocalVue(),
-            mocks: {
-                $store: createStoreMock({})
-            },
-            propsData: { column }
-        });
+        const wrapper = await getWrapper(column);
 
         const button = wrapper.find("[data-test=button]");
         button.trigger("click");
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("collapseColumn", column);
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("column/collapseColumn", column);
     });
 });

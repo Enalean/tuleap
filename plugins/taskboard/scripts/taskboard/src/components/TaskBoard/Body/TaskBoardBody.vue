@@ -52,6 +52,7 @@ import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
 import { getColumnOfCard } from "../../../helpers/list-value-to-column-mapper";
 import { isContainer, canMove, accepts } from "../../../helpers/drag-drop";
 
+const column = namespace("column");
 const swimlane = namespace("swimlane");
 
 @Component({
@@ -67,7 +68,7 @@ export default class TaskBoardBody extends Vue {
     @State
     readonly are_closed_items_displayed!: boolean;
 
-    @State
+    @column.State
     readonly columns!: Array<ColumnDefinition>;
 
     @swimlane.State

@@ -35,14 +35,16 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { ColumnDefinition } from "../../../../../type";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
 import ColumnsSkeleton from "./ColumnsSkeleton.vue";
+
+const column = namespace("column");
 
 @Component({
     components: { ColumnsSkeleton }
 })
 export default class SwimlaneSkeleton extends Vue {
-    @State
+    @column.State
     readonly columns!: Array<ColumnDefinition>;
 }
 </script>

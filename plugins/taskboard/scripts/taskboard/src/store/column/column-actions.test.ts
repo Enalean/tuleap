@@ -18,13 +18,15 @@
  */
 
 import { ActionContext } from "vuex";
-import { RootState, State } from "./type";
-import * as actions from "./actions";
+import { RootState } from "../type";
+import { ColumnDefinition } from "../../type";
+import * as actions from "./column-actions";
+import { ColumnState } from "./type";
 
 jest.mock("tlp");
 
-describe("State actions", () => {
-    let context: ActionContext<State, RootState>;
+describe("Column module actions", () => {
+    let context: ActionContext<ColumnState, RootState>;
 
     beforeEach(() => {
         context = ({
@@ -36,28 +38,36 @@ describe("State actions", () => {
                     user_id: 101
                 }
             } as RootState
-        } as unknown) as ActionContext<State, RootState>;
+        } as unknown) as ActionContext<ColumnState, RootState>;
     });
 
-    describe("displayClosedItems", () => {
-        it(`When the closed item are displayed, the user pref is stored`, async () => {
-            await actions.displayClosedItems(context);
-            expect(context.commit).toHaveBeenCalledWith("displayClosedItems");
+    describe("expandColumn", () => {
+        it(`When the column is expanded, the user pref is stored`, async () => {
+            const column: ColumnDefinition = {
+                id: 69
+            } as ColumnDefinition;
+
+            await actions.expandColumn(context, column);
+            expect(context.commit).toHaveBeenCalledWith("expandColumn", column);
             expect(context.dispatch).toHaveBeenCalledWith(
                 "user/deletePreference",
-                { key: "plugin_taskboard_hide_closed_items_42" },
+                { key: "plugin_taskboard_collapse_column_42_69" },
                 { root: true }
             );
         });
     });
 
-    describe("hideClosedItems", () => {
-        it(`When the closed item are hidden, the user pref is stored`, async () => {
-            await actions.hideClosedItems(context);
-            expect(context.commit).toHaveBeenCalledWith("hideClosedItems");
+    describe("collapseColumn", () => {
+        it(`When the column is collapsed, the user pref is stored`, async () => {
+            const column: ColumnDefinition = {
+                id: 69
+            } as ColumnDefinition;
+
+            await actions.collapseColumn(context, column);
+            expect(context.commit).toHaveBeenCalledWith("collapseColumn", column);
             expect(context.dispatch).toHaveBeenCalledWith(
                 "user/setPreference",
-                { key: "plugin_taskboard_hide_closed_items_42", value: "1" },
+                { key: "plugin_taskboard_collapse_column_42_69", value: "1" },
                 { root: true }
             );
         });

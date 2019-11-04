@@ -17,12 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { State } from "./type";
+import { ColumnDefinition } from "../../type";
+import { ColumnState } from "./type";
 
-export function hideClosedItems(state: State): void {
-    state.are_closed_items_displayed = false;
+export function collapseColumn(state: ColumnState, column: ColumnDefinition): void {
+    findColumn(state, column).is_collapsed = true;
+}
+export function expandColumn(state: ColumnState, column: ColumnDefinition): void {
+    findColumn(state, column).is_collapsed = false;
 }
 
-export function displayClosedItems(state: State): void {
-    state.are_closed_items_displayed = true;
+function findColumn(state: ColumnState, column: ColumnDefinition): ColumnDefinition {
+    const column_state: ColumnDefinition | undefined = state.columns.find(
+        col => col.id === column.id
+    );
+    if (!column_state) {
+        throw new Error("Could not find column with id=" + column.id);
+    }
+
+    return column_state;
 }

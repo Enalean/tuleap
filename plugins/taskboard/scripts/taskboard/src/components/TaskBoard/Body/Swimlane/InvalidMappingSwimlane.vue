@@ -26,10 +26,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { State } from "vuex-class";
+import { namespace } from "vuex-class";
 import CellForSoloCard from "./CellForSoloCard.vue";
 import ParentCell from "./ParentCell.vue";
 import { ColumnDefinition, Swimlane } from "../../../../type";
+
+const column = namespace("column");
 
 @Component({
     components: {
@@ -41,7 +43,7 @@ export default class InvalidMappingSwimlane extends Vue {
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
 
-    @State
+    @column.State
     readonly columns!: Array<ColumnDefinition>;
 }
 </script>

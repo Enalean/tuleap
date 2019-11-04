@@ -41,10 +41,11 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Swimlane, ColumnDefinition } from "../../../../type";
-import { namespace, State } from "vuex-class";
+import { namespace } from "vuex-class";
 import CardXrefLabel from "./Card/CardXrefLabel.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
 
+const column_store = namespace("column");
 const swimlane_store = namespace("swimlane");
 
 @Component({
@@ -57,7 +58,7 @@ export default class CollapsedSwimlane extends Vue {
     @swimlane_store.Action
     readonly expandSwimlane!: (swimlane: Swimlane) => void;
 
-    @State
+    @column_store.State
     readonly columns!: Array<ColumnDefinition>;
 
     get additional_classnames(): string {

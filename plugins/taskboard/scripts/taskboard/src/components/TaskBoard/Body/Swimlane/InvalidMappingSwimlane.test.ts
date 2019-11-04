@@ -24,6 +24,7 @@ import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test"
 import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import CellForSoloCard from "./CellForSoloCard.vue";
 import ParentCell from "./ParentCell.vue";
+import { RootState } from "../../../../store/type";
 
 async function createWrapper(
     columns: ColumnDefinition[],
@@ -31,7 +32,7 @@ async function createWrapper(
 ): Promise<Wrapper<InvalidMappingSwimlane>> {
     return shallowMount(InvalidMappingSwimlane, {
         localVue: await createTaskboardLocalVue(),
-        mocks: { $store: createStoreMock({ state: { columns } }) },
+        mocks: { $store: createStoreMock({ state: { column: { columns } } as RootState }) },
         propsData: { swimlane }
     });
 }

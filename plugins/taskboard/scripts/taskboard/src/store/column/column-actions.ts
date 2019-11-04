@@ -18,28 +18,39 @@
  */
 
 import { ActionContext } from "vuex";
-import { RootState, State } from "./type";
-import { UserPreference, UserPreferenceValue } from "./user/type";
+import { RootState } from "../type";
+import { ColumnDefinition } from "../../type";
+import { UserPreference, UserPreferenceValue } from "../user/type";
+import { ColumnState } from "./type";
 
-export function displayClosedItems(context: ActionContext<State, RootState>): Promise<void> {
-    context.commit("displayClosedItems");
+export function expandColumn(
+    context: ActionContext<ColumnState, RootState>,
+    column: ColumnDefinition
+): Promise<void> {
+    context.commit("expandColumn", column);
     const payload: UserPreference = {
-        key: getHideClosedPreferenceName(context)
+        key: getCollapsePreferenceName(context, column)
     };
 
     return context.dispatch("user/deletePreference", payload, { root: true });
 }
 
-export function hideClosedItems(context: ActionContext<State, RootState>): Promise<void> {
-    context.commit("hideClosedItems");
+export function collapseColumn(
+    context: ActionContext<ColumnState, RootState>,
+    column: ColumnDefinition
+): Promise<void> {
+    context.commit("collapseColumn", column);
     const payload: UserPreferenceValue = {
-        key: getHideClosedPreferenceName(context),
+        key: getCollapsePreferenceName(context, column),
         value: "1"
     };
 
     return context.dispatch("user/setPreference", payload, { root: true });
 }
 
-function getHideClosedPreferenceName(context: ActionContext<State, RootState>): string {
-    return `plugin_taskboard_hide_closed_items_${context.rootState.milestone_id}`;
+function getCollapsePreferenceName(
+    context: ActionContext<ColumnState, RootState>,
+    column: ColumnDefinition
+): string {
+    return `plugin_taskboard_collapse_column_${context.rootState.milestone_id}_${column.id}`;
 }
