@@ -35,8 +35,8 @@ class UsersArtifactsResource extends AuthenticatedResource
      * Get user's artifacts
      *
      * There are 2 types of "user's artifact":
-     * * The artifact the user submitted (query={submitted_by: true})
-     * * The artifact the user is assigned to (query={assigned_to: true})
+     * * The artifact the user submitted (query={"submitted_by": true})
+     * * The artifact the user is assigned to (query={"assigned_to": true})
      * And you can combine both.
      *
      * @url GET {id}/artifacts
