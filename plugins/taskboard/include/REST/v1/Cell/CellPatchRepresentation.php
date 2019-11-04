@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Taskboard\REST;
+namespace Tuleap\Taskboard\REST\v1\Cell;
 
-use Luracast\Restler\Restler;
+use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
+use Tuleap\REST\I18NRestException;
 
-class ResourcesInjector
+final class CellPatchRepresentation
 {
-    public function populate(Restler $restler): void
+    /**
+     * @var OrderRepresentation | null $order {@type \Tuleap\AgileDashboard\REST\v1\OrderRepresentation} {@required false}
+     */
+    public $order;
+
+    /**
+     * @throws I18NRestException 400
+     */
+    public function checkIsValid(): void
     {
-        $restler->addAPIClass(v1\TaskboardResource::class, 'taskboard');
-        $restler->addAPIClass(v1\TaskboardCardResource::class, 'taskboard_cards');
-        $restler->addAPIClass(v1\Cell\CellResource::class, 'taskboard_cells');
+        if ($this->order === null) {
+            throw new I18NRestException(
+                400,
+                dgettext('tuleap-taskboard', "Please specify 'order' in the payload.")
+            );
+        }
     }
 }
