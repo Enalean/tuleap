@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,28 +21,41 @@
 
 namespace Tuleap\CreateTestEnv;
 
+use Rule_ProjectFullName;
+use Rule_ProjectName;
+use SimpleXMLElement;
 use Tuleap\CreateTestEnv\XMLDateUpdater\DateUpdater;
 
 class CreateTestProject
 {
-    public const DEFAULT_ARCHIVE = 'sample-project';
+    /**
+     * @var Rule_ProjectName
+     */
+    private $rule_project_name;
+    /**
+     * @var Rule_ProjectFullName
+     */
+    private $rule_project_full_name;
 
     private $user_name;
-    private $user_realname;
-
     private $full_name;
     private $unix_name;
     private $archive_base_dir;
 
-    public function __construct($user_name, $user_realname, $archive_base_dir)
-    {
-        $this->user_name        = $user_name;
-        $this->user_realname    = $user_realname;
-        $this->archive_base_dir = $archive_base_dir;
+    public function __construct(
+        string $user_name,
+        string $archive_base_dir,
+        Rule_ProjectName $rule_project_name,
+        Rule_ProjectFullName $rule_project_full_name
+    ) {
+        $this->user_name              = $user_name;
+        $this->archive_base_dir       = $archive_base_dir;
+        $this->rule_project_name      = $rule_project_name;
+        $this->rule_project_full_name = $rule_project_full_name;
     }
 
     /**
-     * @return \SimpleXMLElement
+     * @return SimpleXMLElement
      * @throws Exception\InvalidProjectFullNameException
      * @throws Exception\InvalidProjectUnixNameException
      */
@@ -63,11 +76,10 @@ class CreateTestProject
     }
 
     /**
-     * @return \SimpleXMLElement
      * @throws Exception\InvalidProjectFullNameException
      * @throws Exception\InvalidProjectUnixNameException
      */
-    private function getXMLBasedOnTemplate()
+    private function getXMLBasedOnTemplate(): SimpleXMLElement
     {
         $xml_str = str_replace(
             [
@@ -77,10 +89,10 @@ class CreateTestProject
                 '{{ current_date }}',
             ],
             [
-                $this->getProjectUnixName(),
-                $this->getProjectFullName(),
-                $this->user_name,
-                date('c'),
+                htmlentities($this->getProjectUnixName(), ENT_XML1, 'UTF-8'),
+                htmlentities($this->getProjectFullName(), ENT_XML1, 'UTF-8'),
+                htmlentities($this->user_name, ENT_XML1, 'UTF-8'),
+                htmlentities(date('c'), ENT_XML1, 'UTF-8'),
             ],
             file_get_contents($this->getProjectXMLFilePath())
         );
@@ -100,9 +112,8 @@ class CreateTestProject
     {
         if ($this->full_name === null) {
             $full_name = $this->generateProjectFullName();
-            $rule = new \Rule_ProjectFullName();
-            if (! $rule->isValid($full_name)) {
-                throw new Exception\InvalidProjectFullNameException($rule->getErrorMessage());
+            if (! $this->rule_project_full_name->isValid($full_name)) {
+                throw new Exception\InvalidProjectFullNameException($this->rule_project_full_name->getErrorMessage());
             }
             $this->full_name = $full_name;
         }
@@ -122,9 +133,8 @@ class CreateTestProject
     {
         if ($this->unix_name === null) {
             $unix_name = $this->generateProjectUnixName();
-            $rule = new \Rule_ProjectName();
-            if (! $rule->isValid($unix_name)) {
-                throw new Exception\InvalidProjectUnixNameException($rule->getErrorMessage());
+            if (! $this->rule_project_name->isValid($unix_name)) {
+                throw new Exception\InvalidProjectUnixNameException($this->rule_project_name->getErrorMessage());
             }
             $this->unix_name = $unix_name;
         }

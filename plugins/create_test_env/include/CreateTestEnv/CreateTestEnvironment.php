@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -80,7 +80,12 @@ class CreateTestEnvironment
         $create_test_user = new CreateTestUser($firstname, $lastname, $email, $login);
         $this->serializeXmlIntoFile($create_test_user->generateXML(), 'users.xml');
 
-        $create_test_project = new CreateTestProject($create_test_user->getUserName(), $create_test_user->getRealName(), $archive_base_dir);
+        $create_test_project = new CreateTestProject(
+            $create_test_user->getUserName(),
+            $archive_base_dir,
+            new \Rule_ProjectName(),
+            new \Rule_ProjectFullName()
+        );
         $this->serializeXmlIntoFile($create_test_project->generateXML(), 'project.xml');
 
         $this->copyExtraFiles($archive_base_dir);
