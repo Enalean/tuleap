@@ -146,8 +146,8 @@ class PermissionController extends BaseFrsPresenter
     {
         $project = $service->getProject();
 
-        $title             = $GLOBALS['Language']->getText('file_admin_index', 'file_manager_admin');
-        $toolbar_presenter = new ToolbarPresenter($project, $title);
+        $title = _('Files Administration');
+        $toolbar_presenter = new ToolbarPresenter($project);
 
         $toolbar_presenter->setPermissionIsActive();
         $toolbar_presenter->displaySectionNavigation();

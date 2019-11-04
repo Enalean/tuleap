@@ -22,6 +22,7 @@
 namespace Tuleap\FRS;
 
 use Project;
+use Tuleap\FRS\LicenseAgreement\Admin\ListLicenseAgreementsController;
 
 class SectionsPresenter
 {
@@ -30,12 +31,13 @@ class SectionsPresenter
     public $processors;
     public $permissions_url;
     public $processors_url;
+    public $license_agreements_url;
 
     public function __construct(Project $project)
     {
-        $this->project_id    = $project->getID();
-        $this->permissions = $GLOBALS['Language']->getText('file_file_utils', 'permissions');
-        $this->processors  = $GLOBALS['Language']->getText('file_file_utils', 'manage_proc');
+        $this->project_id  = $project->getID();
+        $this->permissions = _('Access controls');
+        $this->processors  = _('Processors');
 
         $this->permissions_url = '/file/admin/?'. http_build_query(array(
             'group_id' => $this->project_id,
@@ -44,5 +46,6 @@ class SectionsPresenter
         $this->processors_url = '/file/admin/manageprocessors.php?'. http_build_query(array(
             'group_id' => $this->project_id
         ));
+        $this->license_agreements_url = ListLicenseAgreementsController::getUrl($project);
     }
 }

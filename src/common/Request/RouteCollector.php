@@ -56,6 +56,8 @@ use Tuleap\Error\PermissionDeniedRestrictedMemberMailSender;
 use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\FRS\FRSFileDownloadController;
 use Tuleap\FRS\FRSFileDownloadOldURLRedirectionController;
+use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\LicenseAgreement\Admin\ListLicenseAgreementsController;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
@@ -340,6 +342,15 @@ class RouteCollector
         );
     }
 
+    public static function getFileDownloadAgreementAdminList(): DispatchableWithRequest
+    {
+        return new ListLicenseAgreementsController(
+            ProjectManager::instance(),
+            \TemplateRendererFactory::build(),
+            FRSPermissionManager::build(),
+        );
+    }
+
     public static function getRssLatestProjects()
     {
         return new LatestProjectController(new LatestProjectDao(), \ProjectManager::instance(), Codendi_HTMLPurifier::instance());
@@ -589,8 +600,12 @@ class RouteCollector
 
         $r->get('/svn/viewvc.php[/{path:.*}]', [self::class, 'getSvnViewVC']);
         $r->get('/cvs/viewvc.php[/{path:.*}]', [self::class, 'getCVSViewVC']);
-        $r->get('/file/download.php/{group_id:\d+}/{file_id:\d+}[/{filename:.*}]', [self::class, 'getOldFileDownloadURLRedirection']);
-        $r->get('/file/download/{file_id:\d+}', [self::class, 'getFileDownload']);
+
+        $r->addGroup('/file', function (FastRoute\RouteCollector $r) {
+            $r->get('/download.php/{group_id:\d+}/{file_id:\d+}[/{filename:.*}]', [self::class, 'getOldFileDownloadURLRedirection']);
+            $r->get('/download/{file_id:\d+}', [self::class, 'getFileDownload']);
+            $r->get('/{id:\d+}/admin/license-agreements', [self::class, 'getFileDownloadAgreementAdminList']);
+        });
 
         $r->get('/export/rss_sfprojects.php', [self::class, 'getRssLatestProjects']);
         $r->get('/export/rss_sfnews.php', [self::class, 'getRssLatestNews']);

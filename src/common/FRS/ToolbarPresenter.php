@@ -31,19 +31,16 @@ class ToolbarPresenter extends BaseFrsPresenter
     /** @var Project */
     private $project;
 
-    private $title;
-
     public $title_frs_administration;
 
-    public function __construct(Project $project, $title)
+    public function __construct(Project $project)
     {
         parent::__construct();
 
         $this->project  = $project;
-        $this->title    = $title;
         $this->sections = array();
 
-        $this->title_frs_administration = $GLOBALS['Language']->getText('file_file_utils', 'title_frs_administration');
+        $this->title_frs_administration = _('Files Administration');
     }
 
     public function setPermissionIsActive()
@@ -54,6 +51,11 @@ class ToolbarPresenter extends BaseFrsPresenter
     public function setProcessorsIsActive()
     {
         $this->processors_active = true;
+    }
+
+    public function setLicenseAgreementIsActive()
+    {
+        $this->license_agreements_active = true;
     }
 
     public function displaySectionNavigation()
