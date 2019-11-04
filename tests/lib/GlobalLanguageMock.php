@@ -26,6 +26,8 @@ use Mockery;
 
 trait GlobalLanguageMock
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @before
      */

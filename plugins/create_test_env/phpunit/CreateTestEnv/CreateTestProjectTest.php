@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,54 +21,66 @@
 
 namespace Tuleap\CreateTestEnv;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\GlobalLanguageMock;
 
-class CreateTestProjectTest extends TestCase
+final class CreateTestProjectTest extends TestCase
 {
-
-    public function setUp() : void
-    {
-        \ForgeConfig::store();
-        \ForgeConfig::set('sys_custompluginsroot', __DIR__.'/_fixtures');
-    }
-
-    public function tearDown() : void
-    {
-        \ForgeConfig::restore();
-    }
+    use MockeryPHPUnitIntegration, GlobalLanguageMock;
 
     /**
      * @dataProvider userNameProvider
      */
-    public function testUnixNameIsValid($realname, $username, $expected_result)
+    public function testUnixNameIsValid(string $username, string $expected_result): void
     {
-        $create = new CreateTestProject($username, $realname, CreateTestProject::DEFAULT_ARCHIVE);
+        $create = new CreateTestProject(
+            $username,
+            '/archive/path',
+            \Mockery::mock(\Rule_ProjectName::class),
+            \Mockery::mock(\Rule_ProjectFullName::class)
+        );
         $this->assertEquals($expected_result, $create->generateProjectUnixName());
     }
 
     public function userNameProvider()
     {
         return [
-            [ '', 'joperesr', 'test-for-joperesr' ],
-            [ '', 'jope_resr', 'test-for-jope-resr' ],
-            [ '', 'jope.resr', 'test-for-jope-resr' ],
+            ['joperesr', 'test-for-joperesr' ],
+            ['jope_resr', 'test-for-jope-resr' ],
+            ['jope.resr', 'test-for-jope-resr' ],
         ];
     }
 
     /**
      * @dataProvider fullNameProvider
      */
-    public function testFullNameIsValid($realname, $username, $expected_result)
+    public function testFullNameIsValid(string $username, string $expected_result): void
     {
-        $create = new CreateTestProject($username, $realname, CreateTestProject::DEFAULT_ARCHIVE);
+        $create = new CreateTestProject(
+            $username,
+            '/archive/path',
+            \Mockery::mock(\Rule_ProjectName::class),
+            \Mockery::mock(\Rule_ProjectFullName::class)
+        );
         $this->assertEquals($expected_result, $create->generateProjectFullName());
     }
 
     public function fullNameProvider()
     {
         return [
-            [ '', 'joperesr', 'Test project for joperesr' ],
-            [ '', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'Test project for aaaaaaaaaaaaaaaaaaaaaaa' ],
+            ['joperesr', 'Test project for joperesr' ],
+            ['aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'Test project for aaaaaaaaaaaaaaaaaaaaaaa' ],
         ];
+    }
+
+    public function testTemplatedValuesAreEscaped(): void
+    {
+        $rule_project_name = \Mockery::mock(\Rule_ProjectName::class);
+        $rule_project_name->shouldReceive('isValid')->once()->andReturn(true);
+        $rule_project_full_name = \Mockery::mock(\Rule_ProjectFullName::class);
+        $rule_project_full_name->shouldReceive('isValid')->once()->andReturn(true);
+        $create = new CreateTestProject('</member><foo>', __DIR__.'/../../resources/sample-project', $rule_project_name, $rule_project_full_name);
+        $create->generateXML();
     }
 }
