@@ -333,7 +333,7 @@ function gettextTS($translated_plugin, $path, $manifest_json)
         $po       = escapeshellarg("$path/${gettext['po']}");
         $template = escapeshellarg("$path/${gettext['po']}/template.pot");
 
-        executeCommandAndExitIfStderrNotEmpty("tools/utils/scripts/typescript-gettext-extractor-cli.js \
+        executeCommandAndExitIfStderrNotEmpty("tools/utils/scripts/vue-typescript-gettext-extractor-cli.js \
         $(find $src \
             -not \( -name '*.test.ts' -o -name '*.d.ts' \) \
             -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) \

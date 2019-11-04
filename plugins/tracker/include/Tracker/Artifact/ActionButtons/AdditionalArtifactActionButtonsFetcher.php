@@ -39,6 +39,11 @@ class AdditionalArtifactActionButtonsFetcher implements Dispatchable
     private $additional_links = [];
 
     /**
+     * @var AdditionalButtonAction[]
+     */
+    private $additional_actions = [];
+
+    /**
      * @var PFUser
      */
     private $user;
@@ -49,12 +54,12 @@ class AdditionalArtifactActionButtonsFetcher implements Dispatchable
         $this->user = $user;
     }
 
-    public function getArtifact()
+    public function getArtifact(): Tracker_Artifact
     {
         return $this->artifact;
     }
 
-    public function addLinkPresenter(AdditionalButtonLinkPresenter $link)
+    public function addLinkPresenter(AdditionalButtonLinkPresenter $link): void
     {
         $this->additional_links[] = $link;
     }
@@ -62,7 +67,7 @@ class AdditionalArtifactActionButtonsFetcher implements Dispatchable
     /**
      * @returns AdditionalButtonLinkPresenter[]
      */
-    public function getAdditionalLinks()
+    public function getAdditionalLinks(): array
     {
         return $this->additional_links;
     }
@@ -73,5 +78,18 @@ class AdditionalArtifactActionButtonsFetcher implements Dispatchable
     public function getUser(): PFUser
     {
         return $this->user;
+    }
+
+    public function addAction(AdditionalButtonAction $action): void
+    {
+        $this->additional_actions[] = $action;
+    }
+
+    /**
+     * @return AdditionalButtonAction[]
+     */
+    public function getAdditionalActions(): array
+    {
+        return $this->additional_actions;
     }
 }
