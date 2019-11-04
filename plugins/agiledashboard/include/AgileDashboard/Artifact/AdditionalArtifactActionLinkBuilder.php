@@ -106,14 +106,17 @@ class AdditionalArtifactActionLinkBuilder
         }
 
         $link_label = dgettext('tuleap-agiledashboard', 'Add to top backlog');
+        $icon       = 'fa-tlp-add-to-backlog';
+
         if ($this->artifacts_in_explicit_backlog_dao->isArtifactInTopBacklogOfProject($artifact_id, $project_id)) {
             $link_label = dgettext('tuleap-agiledashboard', 'Remove from top backlog');
+            $icon       = 'fa-tlp-add-to-backlog';
         }
 
         return new AdditionalButtonLinkPresenter(
             $link_label,
             '',
-            null,
+            $icon,
             true
         );
     }

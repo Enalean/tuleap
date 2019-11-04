@@ -11,12 +11,16 @@
             {{> action-buttons/copy-artifact }}
             {{> action-buttons/move-artifact-button }}
 
+            {{# has_at_least_one_additional_action }}
+                <li class="divider"></li>
+            {{/ has_at_least_one_additional_action }}
+
             {{# additional_buttons }}
                 {{> action-buttons/additional-action-button }}
             {{/ additional_buttons }}
 
             {{# divider }}
-                <li class="divider" id="tracker-move-artifact-divider"></li>
+                <li class="divider"></li>
             {{/ divider }}
             {{> action-buttons/mail-notifications }}
         </ul>

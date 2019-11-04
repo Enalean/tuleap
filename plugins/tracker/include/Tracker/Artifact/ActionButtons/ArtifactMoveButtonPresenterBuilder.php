@@ -77,7 +77,7 @@ class ArtifactMoveButtonPresenterBuilder
         }
 
         return new ArtifactMoveButtonPresenter(
-            dgettext('tuleap-tracker', "Move artifact"),
+            dgettext('tuleap-tracker', "Move this artifact"),
             $errors
         );
     }

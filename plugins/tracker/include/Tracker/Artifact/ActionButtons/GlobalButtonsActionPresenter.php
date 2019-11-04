@@ -51,6 +51,10 @@ class GlobalButtonsActionPresenter
      */
     public $should_load_modal;
     /**
+     * @var bool
+     */
+    public $has_at_least_one_additional_action;
+    /**
      * @var ArtifactMoveModalPresenter
      */
     public $artifact_move_modal_presenter;
@@ -83,11 +87,13 @@ class GlobalButtonsActionPresenter
         )
         && $artifact_notifications_button_presenter !== null;
 
+        $this->has_at_least_one_additional_action = count($additional_buttons) > 0;
+
         $this->has_at_least_one_action = $artifact_move_button_presenter !== null ||
             $artifact_copy_button_presenter !== null ||
             $artifact_original_email_button_presenter !== null ||
             $artifact_notifications_button_presenter !== null ||
-            count($additional_buttons) > 0;
+            $this->has_at_least_one_additional_action;
 
         $this->additional_buttons = $additional_buttons;
     }

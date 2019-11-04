@@ -30,10 +30,15 @@ class ArtifactNotificationsButtonPresenter
      * @var string
      */
     public $title;
+    /**
+     * @var string
+     */
+    public $icon;
 
-    public function __construct($label, $title)
+    public function __construct(string $label, string $title, string $icon)
     {
         $this->label = $label;
         $this->title = $title;
+        $this->icon  = $icon;
     }
 }
