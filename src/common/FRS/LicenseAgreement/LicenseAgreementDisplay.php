@@ -77,4 +77,15 @@ class LicenseAgreementDisplay
         $license_agreement = $this->factory->getLicenseAgreementForPackage($package);
         return sprintf('<a href="#" class="frs-license-agreement-modal-link" data-file-id="%d" data-agreement-id="%d">%s</a>', $file_id, $license_agreement->getId(), $this->purifier->purify($fname));
     }
+
+    public function getPackageEditSelector(\FRSPackage $package): string
+    {
+        return $this->renderer->renderToString(
+            'edit-package',
+            [
+                'is_agreement_mandatory' => ForgeConfig::get('sys_frs_license_mandatory'),
+                'yes_selected'           => $package->getApproveLicense() === '1',
+            ]
+        );
+    }
 }

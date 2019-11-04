@@ -755,6 +755,9 @@ msgstr "Utilisée pour la dernière fois par"
 msgid "Last used on"
 msgstr "Utilisée pour la dernière fois le"
 
+msgid "License Approval:"
+msgstr "Approbation licence :"
+
 msgid "Link"
 msgstr "Lien"
 
@@ -878,6 +881,9 @@ msgstr "Annonces"
 
 msgid "News {{ user_group_name }} can see"
 msgstr "Annonces que {{ user_group_name }} peuvent voir"
+
+msgid "No"
+msgstr "Non"
 
 msgid "No API access keys"
 msgstr "Aucune clé d'accès à l'API"
@@ -1865,6 +1871,9 @@ msgstr ""
 
 msgid "Year"
 msgstr "Année"
+
+msgid "Yes"
+msgstr "Oui"
 
 msgid "Yesterday"
 msgstr "Hier"

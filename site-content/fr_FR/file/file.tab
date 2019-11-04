@@ -30,7 +30,6 @@ file_admin_editpackages	rank_on_screen	Rang à l'écran
 file_admin_editpackages	update	Valider
 file_admin_editpackages	releases	Versions
 file_admin_editpackages	perms	Permissions
-file_admin_editpackages	license	Approbation licence
 file_admin_editpackages	edit_releases	Modifier une version
 file_admin_editpackages	add_releases	Créer une version
 file_admin_editpackages	edit	Modifier
@@ -148,7 +147,7 @@ file_admin_editreleases	edit_this_release	Modifier cette version
 file_admin_editreleases	edit_this_p	Modifier ce paquet
 file_admin_editreleases	warn	** ATTENTION !! ** Voulez-vous vraiment détruire cette version, tous ses fichiers attachés, les logs d'accès correspondants, les liens ainsi que les fichiers qui ont été supprimés antérieurement (Il sera impossible de les restaurer) ?
 file_admin_editreleases	new_release_name	Nom de la nouvelle version
-file_admin_editreleases	belongs_to_p	appartient au paquet 
+file_admin_editreleases	belongs_to_p	appartient au paquet
 file_admin_editreleases	create_this_release	Créer cette version
 file_admin_editreleases	rel_del	Version détruite
 file_admin_editreleases	of_this_package	dans ce paquet
@@ -173,7 +172,7 @@ file_admin_editreleases	add_change_log	Ajouter des modifications
 file_admin_editreleases	view_change	[voir/modifier]
 file_admin_editreleases	default_permissions	Les même permissions que celles du package parent.
 file_admin_editreleases	delete_col	Supprimer
-file_admin_editreleases	release_perm	Les permissions associées à cette version sont :  
+file_admin_editreleases	release_perm	Les permissions associées à cette version sont :
 file_admin_editreleases	upload_file_deleted	Vous avez récemment supprimez le fichier $1, vous pourrez à nouveau le télécharger dans moins de deux heures.
 file_admin_editreleases	create_new_release	Créer une nouvelle version
 file_admin_editreleases	create_canceled	Création de la version annulée

@@ -21,6 +21,9 @@
 
 use Tuleap\FRS\FRSPackageController;
 use Tuleap\FRS\FRSValidator;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDisplay;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksInvalidFormException;
 use Tuleap\FRS\UploadedLinksRequestFormatter;
@@ -313,6 +316,14 @@ function file_utils_delete_proc($pid)
 function frs_display_package_form(FRSPackage $package, $title, $url, $siblings)
 {
     $hp = Codendi_HTMLPurifier::instance();
+    $project = ProjectManager::instance()->getProject($package->getGroupID());
+    $license_agreement_display  = new LicenseAgreementDisplay(
+        $hp,
+        TemplateRendererFactory::build(),
+        new LicenseAgreementFactory(
+            new LicenseAgreementDao(),
+        ),
+    );
 
     file_utils_header(array('title'=>$title, 'help' => 'frs.html#delivery-manager-administration'));
     echo '<h3>'. $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML) .'</h3>
@@ -337,19 +348,12 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings)
     echo '</td></tr>';
     //}}}
     echo '<tr><th>'.$GLOBALS['Language']->getText('global', 'status').':</th>  <td>'. frs_show_status_popup('package[status_id]', $package->getStatusID()) .'</td></tr>';
-    if (isset($GLOBALS['sys_frs_license_mandatory']) && !$GLOBALS['sys_frs_license_mandatory']) {
-        $approve_license = $package->getApproveLicense();
-        echo '<tr><th>'.$GLOBALS['Language']->getText('file_admin_editpackages', 'license').':</th>  <td><SELECT name="package[approve_license]">
-                        <OPTION VALUE="1"'.(($approve_license == '1') ? ' SELECTED':'').'>'.$GLOBALS['Language']->getText('global', 'yes').'</OPTION>
-                        <OPTION VALUE="0"'.(($approve_license == '0') ? ' SELECTED':'').'>'.$GLOBALS['Language']->getText('global', 'no').'</OPTION></SELECT></td></tr>';
-    } else {
-        echo '<INPUT TYPE="HIDDEN" NAME="package[approve_license]" VALUE="1">';
-    }
+
+    echo $license_agreement_display->getPackageEditSelector($package);
 
      //We cannot set permission on creation for now
     if ($package->getPackageID()) {
         echo '<tr style="vertical-align:top"><th>' .'Permissions'. ':</th><td>';
-        $project            = ProjectManager::instance()->getProject($package->getGroupID());
         $package_controller = new FRSPackageController(
             FRSPackageFactory::instance(),
             FRSReleaseFactory::instance(),
