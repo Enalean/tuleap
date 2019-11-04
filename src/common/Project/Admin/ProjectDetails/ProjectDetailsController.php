@@ -188,9 +188,15 @@ class ProjectDetailsController
                 $are_trove_categories_used,
                 $project_trove_categories,
                 $this->getProjectsCreatedFromTemplate($project),
-                $this->csrf_token
+                $this->csrf_token,
+                $this->isDescriptionMandatory()
             )
         );
+    }
+
+    private function isDescriptionMandatory(): bool
+    {
+        return ! ForgeConfig::get('enable_not_mandatory_description');
     }
 
     public function update(HTTPRequest $request)
@@ -234,7 +240,13 @@ class ProjectDetailsController
         $form_group_name = trim($request->get('form_group_name'));
         $form_shortdesc  = $request->get('form_shortdesc');
 
-        if (! $form_group_name || ! $form_shortdesc) {
+        if (! $form_group_name) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Missing Information. PLEASE fill in all required information.'));
+
+            return false;
+        }
+
+        if ($this->isDescriptionMandatory() && ! $form_shortdesc) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Missing Information. PLEASE fill in all required information.'));
 
             return false;

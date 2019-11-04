@@ -45,7 +45,8 @@
 
                         <div class="tlp-form-element">
                             <label for="form_shortdesc" class="tlp-label">
-                                {{ short_description_label }} <i class="fa fa-asterisk"></i>
+                                {{ short_description_label }}
+                                {{# is_description_mandatory }} <i class="fa fa-asterisk"></i>{{/ is_description_mandatory }}
                             </label>
                             <textarea
                                 class="tlp-textarea"
@@ -53,7 +54,7 @@
                                 maxlength="255"
                                 id="form_shortdesc"
                                 name="form_shortdesc"
-                                required
+                                {{# is_description_mandatory }}required{{/ is_description_mandatory }}
                                 data-test="project-details-short-description-input"
                             >{{ project_short_description }}</textarea>
                             <p class="tlp-text-info">{{ short_description_info }}</p>

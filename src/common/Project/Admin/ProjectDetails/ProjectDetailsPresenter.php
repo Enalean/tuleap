@@ -70,6 +70,11 @@ class ProjectDetailsPresenter
      */
     public $projects_created_from_this_template;
 
+    /**
+     * @var bool
+     */
+    public $is_description_mandatory;
+
     public function __construct(
         Project $project,
         Project $template_project,
@@ -80,7 +85,8 @@ class ProjectDetailsPresenter
         $are_project_categories_used,
         array $project_trove_categories,
         array $projects_created_from_this_template,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
+        bool $is_description_mandatory
     ) {
         $this->group_id                            = $project->getID();
         $this->group_info                          = $group_info;
@@ -95,6 +101,7 @@ class ProjectDetailsPresenter
         $this->is_template                         = $project->isTemplate();
         $this->projects_created_from_this_template = $projects_created_from_this_template;
         $this->has_projects                        = count($projects_created_from_this_template) > 0;
+        $this->is_description_mandatory            = $is_description_mandatory;
 
         $this->project_type = $this->getLocalizedType($project->getType());
 
