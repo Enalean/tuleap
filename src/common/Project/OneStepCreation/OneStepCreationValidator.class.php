@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2013 - 2018. All rights reserved
+  * Copyright (c) Enalean, 2013 - present. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -21,8 +21,12 @@
 /**
  * Validates the request
  */
-class Project_OneStepCreation_OneStepCreationValidator
+class Project_OneStepCreation_OneStepCreationValidator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    /**
+     * @var bool
+     */
+    private $is_valid;
 
     /** @var Project_OneStepCreation_OneStepCreationRequest */
     private $creation_request;
@@ -32,15 +36,33 @@ class Project_OneStepCreation_OneStepCreationValidator
 
     /** @var TroveCat[] */
     private $trove_cats;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+    /**
+     * @var Rule_ProjectFullName
+     */
+    private $rule_project_full_name;
+    /**
+     * @var Rule_ProjectName
+     */
+    private $rule_project_name;
 
     public function __construct(
         Project_OneStepCreation_OneStepCreationRequest $creation_request,
         array $required_custom_descriptions,
-        array $trove_cats
+        array $trove_cats,
+        ProjectManager $project_manager,
+        Rule_ProjectFullName $rule_project_full_name,
+        Rule_ProjectName $rule_project_name
     ) {
         $this->creation_request             = $creation_request;
         $this->required_custom_descriptions = $required_custom_descriptions;
         $this->trove_cats                   = $trove_cats;
+        $this->project_manager              = $project_manager;
+        $this->rule_project_full_name       = $rule_project_full_name;
+        $this->rule_project_name            = $rule_project_name;
     }
 
     /**
@@ -57,7 +79,8 @@ class Project_OneStepCreation_OneStepCreationValidator
             ->validateShortDescription()
             ->validateTosApproval()
             ->validateCustomDescriptions()
-            ->validateTroveCats();
+            ->validateTroveCats()
+        ;
 
         return $this->is_valid;
     }
@@ -74,10 +97,9 @@ class Project_OneStepCreation_OneStepCreationValidator
             return $this;
         }
 
-        $rule = new Rule_ProjectFullName();
-        if (!$rule->isValid($this->creation_request->getFullName())) {
+        if (! $this->rule_project_full_name->isValid($this->creation_request->getFullName())) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license', 'invalid_full_name'));
-            $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
+            $GLOBALS['Response']->addFeedback('error', $this->rule_project_full_name->getErrorMessage());
             $this->setIsNotValid();
         }
 
@@ -110,11 +132,10 @@ class Project_OneStepCreation_OneStepCreationValidator
             return $this;
         }
 
-        //check for valid group name
-        $rule = new Rule_ProjectName();
-        if (!$rule->isValid($this->creation_request->getUnixName())) {
+        // check for valid group name
+        if (! $this->rule_project_name->isValid($this->creation_request->getUnixName())) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license', 'invalid_short_name'));
-            $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
+            $GLOBALS['Response']->addFeedback('error', $this->rule_project_name->getErrorMessage());
             $this->setIsNotValid();
         }
 
@@ -133,8 +154,7 @@ class Project_OneStepCreation_OneStepCreationValidator
             return $this;
         }
 
-        $project_manager = ProjectManager::instance();
-        $project = $project_manager->getProject($this->creation_request->getTemplateId());
+        $project = $this->project_manager->getProject($this->creation_request->getTemplateId());
 
         if (! $project->isActive() && ! $project->isTemplate()) {
             $GLOBALS['Response']->addFeedback(
