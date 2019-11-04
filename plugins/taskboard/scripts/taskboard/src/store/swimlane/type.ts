@@ -34,3 +34,10 @@ export interface ReorderCardsPayload {
     column: ColumnDefinition;
     position: CardPosition;
 }
+
+export interface HandleDropPayload {
+    dropped_card: HTMLElement;
+    target_cell: HTMLElement;
+    source_cell: HTMLElement;
+    sibling_card?: HTMLElement;
+}
