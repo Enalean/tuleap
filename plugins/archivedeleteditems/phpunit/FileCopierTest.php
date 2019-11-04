@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -82,9 +82,6 @@ class FileCopierTest extends TestCase
 
     public function testItCopiesAFile() : void
     {
-        if (PHP_VERSION_ID >= 70400) {
-            $this->markTestSkipped('Skip until PHP 7.4 RC2 is released, see https://bugs.php.net/bug.php?id=78575');
-        }
         $content = random_bytes(64);
         file_put_contents($this->source_file, $content);
 
