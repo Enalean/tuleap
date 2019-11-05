@@ -20,15 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Taskboard\REST\v1;
+namespace Tuleap\Taskboard\REST\v1\Cell;
 
 use Luracast\Restler\RestException;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Rest_Exception_InvalidTokenException;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
+use Tuleap\REST\I18NRestException;
 use Tuleap\REST\UserManager;
 use Tuleap\Taskboard\Swimlane\SwimlaneChildrenRetriever;
 
@@ -78,7 +78,7 @@ final class CellPatcherTest extends TestCase
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
-        $this->patcher->patchCell(45, null);
+        $this->patcher->patchCell(45, new CellPatchRepresentation());
     }
 
     public function testPatchCellThrowsWhenCurrentUserCantSeeSwimlane(): void
@@ -88,7 +88,7 @@ final class CellPatcherTest extends TestCase
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(404);
-        $this->patcher->patchCell(45, null);
+        $this->patcher->patchCell(45, new CellPatchRepresentation());
     }
 
     public function testPatchCellThrowsWhenProjectIsSuspended(): void
@@ -98,27 +98,41 @@ final class CellPatcherTest extends TestCase
         $project           = M::mock(\Project::class)->shouldReceive(['isSuspended' => true])->getMock();
         $tracker           = M::mock(\Tracker::class)->shouldReceive(['getProject' => $project])->getMock();
         $swimlane_artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $this->rank_orderer->shouldNotReceive('reorder');
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(403);
-        $this->patcher->patchCell(45, null);
+        $this->rank_orderer->shouldNotReceive('reorder');
+        $this->patcher->patchCell(45, new CellPatchRepresentation());
+    }
+
+    public function testPatchCellThrowsWhenPatchPayloadIsInvalid(): void
+    {
+        $current_user = $this->mockCurrentUser();
+        $this->mockSwimlaneArtifactWithValidProject($current_user);
+        $payload = new CellPatchRepresentation();
+
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
+        $this->rank_orderer->shouldNotReceive('reorder');
+        $this->patcher->patchCell(45, $payload);
     }
 
     public function testPatchCellThrowsWhenOrderRepresentationIsInvalid(): void
     {
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
         $current_user = $this->mockCurrentUser();
         $this->mockSwimlaneArtifactWithValidProject($current_user);
-        $this->rank_orderer->shouldNotReceive('reorder');
 
         $order              = new OrderRepresentation();
         $order->compared_to = 123;
         $order->direction   = "invalid";
         $order->ids         = [456];
+        $payload            = new CellPatchRepresentation();
+        $payload->order     = $order;
 
-        $this->patcher->patchCell(45, $order);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $this->rank_orderer->shouldNotReceive('reorder');
+        $this->patcher->patchCell(45, $payload);
     }
 
     public function testPatchCellThrowsWhenOrderRepresentationDoesNotHaveUniqueIds(): void
@@ -130,16 +144,17 @@ final class CellPatcherTest extends TestCase
         $order->compared_to = 123;
         $order->direction   = OrderRepresentation::BEFORE;
         $order->ids         = [456, 456];
+        $payload            = new CellPatchRepresentation();
+        $payload->order     = $order;
         $this->children_retriever->shouldReceive('getSwimlaneArtifactIds')
             ->with($swimlane_artifact, $current_user)
             ->once()
             ->andReturn([123, 456]);
-        $this->rank_orderer->shouldNotReceive('reorder');
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
-
-        $this->patcher->patchCell(45, $order);
+        $this->rank_orderer->shouldNotReceive('reorder');
+        $this->patcher->patchCell(45, $payload);
     }
 
     public function testPatchCellReordersChildrenOfSwimlane(): void
@@ -151,6 +166,8 @@ final class CellPatcherTest extends TestCase
         $order->compared_to = 123;
         $order->direction   = OrderRepresentation::BEFORE;
         $order->ids         = [456];
+        $payload            = new CellPatchRepresentation();
+        $payload->order     = $order;
         $this->children_retriever->shouldReceive('getSwimlaneArtifactIds')
             ->with($swimlane_artifact, $current_user)
             ->once()
@@ -159,7 +176,7 @@ final class CellPatcherTest extends TestCase
             ->with($order, \Tracker_Artifact_PriorityHistoryChange::NO_CONTEXT, M::any())
             ->once();
 
-        $this->patcher->patchCell(45, $order);
+        $this->patcher->patchCell(45, $payload);
     }
 
     /**

@@ -54,12 +54,14 @@ final class TaskboardCellTest extends \RestBase
         $first_task_id   = $task_ids['Task1'];
         $other_task_ids  = [$task_ids['Task2'], $task_ids['Task3']];
         $patch_payload   = [
-            "ids"         => $other_task_ids,
-            "direction"   => "before",
-            "compared_to" => $first_task_id
+            'order' => [
+                'ids'         => $other_task_ids,
+                'direction'   => 'before',
+                'compared_to' => $first_task_id
+            ]
         ];
 
-        $response = $this->getResponse(
+        $response           = $this->getResponse(
             $this->client->patch(
                 'taskboard_cells/' . $US2_swimlane_id . '/column/' . $todo_column_id,
                 null,
@@ -67,7 +69,21 @@ final class TaskboardCellTest extends \RestBase
             ),
             $user_name
         );
-        $this->assertEquals($expected_status_code, $response->getStatusCode());
+        $actual_status_code = $response->getStatusCode();
+        $this->assertEquals($expected_status_code, $actual_status_code);
+        if (! $actual_status_code === 200) {
+            return;
+        }
+        // Assert the order has changed
+        $response = $this->getResponse(
+            $this->client->get('taskboard_cards/' . $US2_swimlane_id . '/children?milestone_id=' . self::$milestone_id),
+            $user_name
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $cards = $response->json();
+        $this->assertEquals('Task2', $cards[0]['label']);
+        $this->assertEquals('Task3', $cards[1]['label']);
+        $this->assertEquals('Task1', $cards[2]['label']);
     }
 
     /**

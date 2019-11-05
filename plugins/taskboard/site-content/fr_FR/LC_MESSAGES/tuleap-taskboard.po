@@ -14,6 +14,9 @@ msgstr ""
 msgid "Milestone not found."
 msgstr "Le jalon n'a pas été trouvé."
 
+msgid "Please specify 'order' in the payload."
+msgstr "Veuillez fournir 'order' dans la requête."
+
 msgid "Taskboard"
 msgstr "Tableau des tâches"
 

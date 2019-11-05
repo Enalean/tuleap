@@ -20,18 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Taskboard\REST\v1;
+namespace Tuleap\Taskboard\REST\v1\Cell;
 
 use Luracast\Restler\RestException;
-use PFUser;
-use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
-use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\REST\UserManager;
 
-class TaskboardCellResource extends AuthenticatedResource
+class CellResource extends AuthenticatedResource
 {
     /**
      * @url OPTIONS {swimlane_id}/column/{column_id}
@@ -69,15 +65,16 @@ class TaskboardCellResource extends AuthenticatedResource
      * @url    PATCH {swimlane_id}/column/{column_id}
      * @access protected
      *
-     * @param int                                                $swimlane_id Artifact Id of the swimlane containing the cell
-     * @param int                                                $column_id   Id of the cell's column
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order       Order of the cards in the cell
+     * @param int                     $swimlane_id Artifact Id of the swimlane containing the cell
+     * @param int                     $column_id   Id of the cell's column
+     * @param CellPatchRepresentation $payload     {@from body}
      * @throws RestException 404
+     * @throws I18NRestException 400
      */
-    public function patch(int $swimlane_id, int $column_id, ?OrderRepresentation $order = null): void
+    public function patch(int $swimlane_id, int $column_id, CellPatchRepresentation $payload): void
     {
         $this->checkAccess();
         $patcher = CellPatcher::build();
-        $patcher->patchCell($swimlane_id, $order);
+        $patcher->patchCell($swimlane_id, $payload);
     }
 }

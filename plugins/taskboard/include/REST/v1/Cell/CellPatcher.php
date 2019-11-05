@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Taskboard\REST\v1;
+namespace Tuleap\Taskboard\REST\v1\Cell;
 
 use Luracast\Restler\RestException;
 use PFUser;
@@ -72,13 +72,16 @@ class CellPatcher
      * @throws I18NRestException
      * @throws RestException
      */
-    public function patchCell(int $swimlane_id, ?OrderRepresentation $order = null): void
+    public function patchCell(int $swimlane_id, CellPatchRepresentation $payload): void
     {
         $current_user      = $this->user_manager->getCurrentUser();
         $swimlane_artifact = $this->getSwimlaneArtifact($current_user, $swimlane_id);
         $project           = $swimlane_artifact->getTracker()->getProject();
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
+        $payload->checkIsValid();
+
+        $order = $payload->order;
         if ($order !== null) {
             $order->checkFormat();
             $this->validateOrder($order, $current_user, $swimlane_artifact);
