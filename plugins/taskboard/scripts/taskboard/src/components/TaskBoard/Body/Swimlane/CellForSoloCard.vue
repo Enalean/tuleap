@@ -23,6 +23,7 @@
          v-bind:class="classes"
          v-on:mouseenter="mouseEntersCollapsedColumn"
          v-on:mouseout="mouseLeavesCollapsedColumn"
+         v-on:click="expandCollapsedColumn"
     ><slot v-if="!column.is_collapsed"></slot></div>
 </template>
 
@@ -30,14 +31,16 @@
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import { ColumnDefinition } from "../../../../type";
 import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
+import ExpandCollapsedColumnMixin from "./expand-collapsed-column-mixin";
+import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
 
 @Component
-export default class CellForSoloCard extends Mixins(HoveringStateForCollapsedColumnMixin) {
+export default class CellForSoloCard extends Mixins(
+    HoveringStateForCollapsedColumnMixin,
+    ExpandCollapsedColumnMixin,
+    ClassesForCollapsedColumnMixin
+) {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
-
-    get classes(): string {
-        return this.column.is_collapsed ? "taskboard-cell-collapsed" : "";
-    }
 }
 </script>

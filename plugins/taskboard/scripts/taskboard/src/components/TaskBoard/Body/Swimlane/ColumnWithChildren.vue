@@ -25,6 +25,7 @@
          v-bind:data-column-id="column.id"
          v-on:mouseenter="mouseEntersCollapsedColumn"
          v-on:mouseout="mouseLeavesCollapsedColumn"
+         v-on:click="expandCollapsedColumn"
     >
         <template v-if="!column.is_collapsed">
             <template v-for="card of cards">
@@ -45,6 +46,8 @@ import ChildCard from "./Card/ChildCard.vue";
 import CardSkeleton from "./Skeleton/CardSkeleton.vue";
 import SkeletonMixin from "./Skeleton/skeleton-mixin";
 import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
+import ExpandCollapsedColumnMixin from "./expand-collapsed-column-mixin";
+import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
 
 const swimlane = namespace("swimlane");
 
@@ -53,7 +56,9 @@ const swimlane = namespace("swimlane");
 })
 export default class ColumnWithChildren extends Mixins(
     SkeletonMixin,
-    HoveringStateForCollapsedColumnMixin
+    HoveringStateForCollapsedColumnMixin,
+    ExpandCollapsedColumnMixin,
+    ClassesForCollapsedColumnMixin
 ) {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
@@ -77,10 +82,6 @@ export default class ColumnWithChildren extends Mixins(
         }
 
         return this.nb_skeletons;
-    }
-
-    get classes(): string {
-        return this.column.is_collapsed ? "taskboard-cell-collapsed" : "";
     }
 }
 </script>

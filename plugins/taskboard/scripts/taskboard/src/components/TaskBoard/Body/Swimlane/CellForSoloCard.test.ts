@@ -65,10 +65,7 @@ describe("CellForSoloCard", () => {
         const wrapper = getWrapper(column);
 
         wrapper.trigger("mouseenter");
-        expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
-            "column/mouseEntersColumn",
-            column
-        );
+        expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
     });
 
     it(`It informs the mouseout when the column is collapsed`, () => {
@@ -84,9 +81,22 @@ describe("CellForSoloCard", () => {
         const wrapper = getWrapper(column);
 
         wrapper.trigger("mouseout");
-        expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
-            "column/mouseLeavesColumn",
-            column
-        );
+        expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
+    });
+
+    it(`it expands the column when user clicks on the collapsed column cell`, () => {
+        const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
+        const wrapper = getWrapper(column);
+
+        wrapper.trigger("click");
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("column/expandColumn", column);
+    });
+
+    it(`it does not expand the column when user clicks on the expanded column cell`, () => {
+        const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
+        const wrapper = getWrapper(column);
+
+        wrapper.trigger("click");
+        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
     });
 });
