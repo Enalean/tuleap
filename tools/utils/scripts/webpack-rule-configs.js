@@ -41,7 +41,12 @@ const babel_preset_env_chrome_config = [
     BabelPresetEnv,
     {
         targets: {
-            browsers: ["last 2 Chrome versions"]
+            browsers: [
+                "last 2 Chrome versions",
+                "last 2 Firefox versions",
+                "Firefox ESR",
+                "last 2 Edge versions"
+            ]
         },
         modules: false,
         useBuiltIns: "usage",
@@ -65,7 +70,11 @@ const babel_options_karma = {
         production: babel_options_ie11,
         test: {
             presets: [babel_preset_env_chrome_config],
-            plugins: [BabelPluginSyntaxDynamicImport, BabelPluginRewireExports]
+            plugins: [
+                BabelPluginSyntaxDynamicImport,
+                BabelPluginRewireExports,
+                "@babel/plugin-transform-modules-amd"
+            ]
         },
         coverage: {
             presets: [babel_preset_env_chrome_config],
@@ -77,7 +86,8 @@ const babel_options_karma = {
                     {
                         exclude: ["**/*.spec.js", "**/*.spec.ts"]
                     }
-                ]
+                ],
+                "@babel/plugin-transform-modules-amd"
             ]
         }
     }
