@@ -134,7 +134,10 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         $validator = new Project_OneStepCreation_OneStepCreationValidator(
             $this->creation_request,
             $this->required_custom_descriptions,
-            $this->trove_cats
+            $this->trove_cats,
+            $this->project_manager,
+            new Rule_ProjectFullName(),
+            new Rule_ProjectName()
         );
 
         if (! $validator->validateAndGenerateErrors()) {
