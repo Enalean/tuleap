@@ -1,17 +1,6 @@
 version: "2"
 
 services:
-  test:
-    image: tuleap-run-e2e-tests-v2
-    build:
-      context: ./tests/e2e/DockerImage
-    volumes:
-      - .:/tuleap
-      - ${TEST_RESULT_OUTPUT}:/output
-    networks:
-      - tuleap
-      - external-connectivity
-
   tuleap:
     image: enalean/tuleap-aio
     command: /usr/share/tuleap/tests/e2e/full/tuleap/setup.sh
@@ -23,4 +12,3 @@ services:
 networks:
   tuleap:
     internal: true
-  external-connectivity:

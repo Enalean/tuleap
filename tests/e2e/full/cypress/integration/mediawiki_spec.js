@@ -18,6 +18,10 @@
  */
 
 describe("Mediawiki", function() {
+    before(() => {
+        cy.clearCookie("__Host-TULEAP_session_hash");
+    });
+
     it("project is imported", function() {
         cy.ProjectAdministratorLogin();
 
