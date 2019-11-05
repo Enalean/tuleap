@@ -21,26 +21,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\FRS\LicenseAgreement\Admin;
+namespace Tuleap\Request;
 
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
+use Project;
 
-class ListLicenseAgreementsPresenter
+trait GetProjectTrait
 {
     /**
-     * @readonly
-     * @var int
+     * @var \ProjectManager
      */
-    public $project_id;
-    /**
-     * @readonly
-     * @var LicenseAgreementInterface[]
-     */
-    public $license_agreements;
+    private $project_manager;
 
-    public function __construct(int $project_id, array $license_agreements)
+    public function getProject(array $variables): Project
     {
-        $this->project_id = $project_id;
-        $this->license_agreements = $license_agreements;
+        $project = $this->project_manager->getProject($variables['project_id']);
+        if ($project && ! $project->isError()) {
+            return $project;
+        }
+        throw new NotFoundException();
     }
 }

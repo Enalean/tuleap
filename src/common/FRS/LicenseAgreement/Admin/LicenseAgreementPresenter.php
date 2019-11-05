@@ -47,11 +47,11 @@ class LicenseAgreementPresenter
      */
     public $can_edit;
 
-    public function __construct(LicenseAgreementInterface $license_agreement)
+    public function __construct(\Project $project, LicenseAgreementInterface $license_agreement)
     {
         $this->id    = $license_agreement->getId();
         $this->title = $license_agreement->getTitle();
-        $this->url   = '/';
+        $this->url   = EditLicenseAgreementController::getUrl($project, $license_agreement);
         $this->can_edit = $license_agreement->isModifiable();
     }
 }

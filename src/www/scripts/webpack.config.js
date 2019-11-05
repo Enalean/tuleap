@@ -177,10 +177,26 @@ const webpack_config_for_project_banner = {
     }
 };
 
+const webpack_config_for_frs_admin = {
+    entry: {
+        "frs-admin-license-agreement": "./frs/admin/license-agreement.js"
+    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
+    externals: {
+        tuleap: "tuleap",
+        ckeditor: "CKEDITOR"
+    },
+    module: {
+        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)]
+    }
+};
+
 const configs_with_manifest = [
     webpack_config_for_vue_components,
     webpack_config_for_rich_text_editor,
-    webpack_config_for_project_banner
+    webpack_config_for_project_banner,
+    webpack_config_for_frs_admin
 ].map(config =>
     merge(config, {
         plugins: [manifest_plugin]

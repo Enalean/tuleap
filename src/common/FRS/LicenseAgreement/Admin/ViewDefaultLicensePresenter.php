@@ -23,24 +23,36 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
+use ForgeConfig;
 
-class ListLicenseAgreementsPresenter
+class ViewDefaultLicensePresenter
 {
     /**
      * @readonly
-     * @var int
+     * @var string
      */
-    public $project_id;
+    public $organisation_name;
     /**
      * @readonly
-     * @var LicenseAgreementInterface[]
+     * @var string
      */
-    public $license_agreements;
+    public $exchange_policy_url;
+    /**
+     * @readonly
+     * @var string
+     */
+    public $contact_email;
+    /**
+     * @readonly
+     * @var string
+     */
+    public $list_url;
 
-    public function __construct(int $project_id, array $license_agreements)
+    public function __construct(\Project $project)
     {
-        $this->project_id = $project_id;
-        $this->license_agreements = $license_agreements;
+        $this->organisation_name    = ForgeConfig::get('sys_org_name');
+        $this->exchange_policy_url  = ForgeConfig::get('sys_exchange_policy_url');
+        $this->contact_email        = ForgeConfig::get('sys_email_contact');
+        $this->list_url = ListLicenseAgreementsController::getUrl($project);
     }
 }

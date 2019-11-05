@@ -25,22 +25,38 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 
-class ListLicenseAgreementsPresenter
+/**
+ * @psalm-immutable
+ */
+class EditLicenseAgreementPresenter
 {
     /**
-     * @readonly
-     * @var int
+     * @var string
      */
-    public $project_id;
+    public $save_url;
     /**
-     * @readonly
-     * @var LicenseAgreementInterface[]
+     * @var string
      */
-    public $license_agreements;
+    public $list_url;
+    /**
+     * @var string
+     */
+    public $title;
+    /**
+     * @var string
+     */
+    public $content;
+    /**
+     * @var \CSRFSynchronizerToken
+     */
+    public $csrf_token;
 
-    public function __construct(int $project_id, array $license_agreements)
+    public function __construct(\Project $project, LicenseAgreementInterface $license_agreement, \CSRFSynchronizerToken $csrf_token)
     {
-        $this->project_id = $project_id;
-        $this->license_agreements = $license_agreements;
+        $this->title = $license_agreement->getTitle();
+        $this->content = $license_agreement->getContent();
+        $this->list_url = ListLicenseAgreementsController::getUrl($project);
+        $this->save_url = SaveLicenseAgreementController::getUrl($project, $license_agreement);
+        $this->csrf_token = $csrf_token;
     }
 }

@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,28 +18,9 @@
  *
  */
 
-declare(strict_types=1);
+import CKEDITOR from "ckeditor";
+import tuleap from "tuleap";
 
-namespace Tuleap\FRS\LicenseAgreement\Admin;
-
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
-
-class ListLicenseAgreementsPresenter
-{
-    /**
-     * @readonly
-     * @var int
-     */
-    public $project_id;
-    /**
-     * @readonly
-     * @var LicenseAgreementInterface[]
-     */
-    public $license_agreements;
-
-    public function __construct(int $project_id, array $license_agreements)
-    {
-        $this->project_id = $project_id;
-        $this->license_agreements = $license_agreements;
-    }
-}
+CKEDITOR.replace("license-agreement-content", {
+    toolbar: tuleap.ckeditor.toolbar
+});
