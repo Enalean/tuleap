@@ -27,6 +27,7 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
+use Tuleap\Project\ProjectDescriptionUsageRetriever;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
@@ -90,7 +91,8 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
             $this->required_custom_descriptions,
             $project_manager,
             $this->trove_cats,
-            $csrf_token->fetchHTMLInput()
+            $csrf_token->fetchHTMLInput(),
+            ProjectDescriptionUsageRetriever::isDescriptionMandatory()
         );
 
         $this->default_project_visibility_retriever = $default_project_visibility_retriever;
@@ -196,6 +198,8 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
             new LabelDao(),
             $this->default_project_visibility_retriever,
             new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
+            new \Rule_ProjectName(),
+            new \Rule_ProjectFullName(),
             $force_activation
         );
 

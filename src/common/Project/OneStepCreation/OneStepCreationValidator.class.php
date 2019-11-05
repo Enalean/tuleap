@@ -18,6 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
+use Tuleap\Project\ProjectDescriptionUsageRetriever;
+
 /**
  * Validates the request
  */
@@ -106,14 +108,13 @@ class Project_OneStepCreation_OneStepCreationValidator //phpcs:ignore PSR1.Class
         return $this;
     }
 
-    /**
-     *
-     * @return \Project_OneStepCreation_OneStepCreationValidator
-     */
-    private function validateShortDescription()
+    private function validateShortDescription(): self
     {
-        if ($this->creation_request->getShortDescription() == null) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
+        if (ProjectDescriptionUsageRetriever::isDescriptionMandatory() && $this->creation_request->getShortDescription() === null) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $GLOBALS['Language']->getText('register_projectname', 'info_missed')
+            );
             $this->setIsNotValid();
         }
 

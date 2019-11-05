@@ -522,6 +522,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             new LabelDao(),
             new DefaultProjectVisibilityRetriever(),
             new SynchronizedProjectMembershipDuplicator($synchronized_project_membership_dao),
+            new \Rule_ProjectName(),
+            new \Rule_ProjectFullName(),
             $force_activation
         );
 

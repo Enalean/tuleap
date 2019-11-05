@@ -278,6 +278,8 @@ class ImportProjectXMLCommand extends Command
                 new LabelDao(),
                 new DefaultProjectVisibilityRetriever(),
                 new SynchronizedProjectMembershipDuplicator($synchronized_project_membership_dao),
+                new \Rule_ProjectName(),
+                new \Rule_ProjectFullName(),
                 $force_activation
             );
 

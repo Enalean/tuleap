@@ -32,10 +32,11 @@ use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\Label\LabelDao;
+use Tuleap\Project\ProjectDescriptionMandatoryException;
+use Tuleap\Project\ProjectDescriptionUsageRetriever;
 use Tuleap\Project\ProjectInvalidTemplateException;
 use Tuleap\Project\ProjectRegistrationDisabledException;
 use Tuleap\Project\UgroupDuplicator;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Service\ServiceCreator;
 
@@ -138,14 +139,16 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         LabelDao $label_dao,
         DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
         SynchronizedProjectMembershipDuplicator $synchronized_project_membership_duplicator,
+        Rule_ProjectName $rule_short_name,
+        Rule_ProjectFullName $rule_full_name,
         $force_activation = false
     ) {
         $this->send_notifications                   = $send_notifications;
         $this->force_activation                     = $force_activation;
         $this->reference_manager                    = $reference_manager;
         $this->user_manager                         = $user_manager;
-        $this->rule_short_name                      = new Rule_ProjectName();
-        $this->rule_full_name                       = new Rule_ProjectFullName();
+        $this->rule_short_name                      = $rule_short_name;
+        $this->rule_full_name                       = $rule_full_name;
         $this->project_manager                      = $projectManager;
         $this->frs_permissions_creator              = $frs_permissions_creator;
         $this->ugroup_duplicator                    = $ugroup_duplicator;
@@ -160,14 +163,16 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * Build a new project
      *
      * @param ProjectCreationData $data project data
+     *
      * @return Project created
      * @throws ProjectInvalidTemplateException
      * @throws ProjectRegistrationDisabledException
      * @throws Project_Creation_Exception
      * @throws Project_InvalidFullName_Exception
      * @throws Project_InvalidShortName_Exception
+     * @throws ProjectDescriptionMandatoryException
      */
-    public function build(ProjectCreationData $data)
+    public function build(ProjectCreationData $data): Project
     {
         if (! \ForgeConfig::get('sys_use_project_registration') && ! $this->user_manager->getCurrentUser()->isSuperUser()) {
             throw new ProjectRegistrationDisabledException();
@@ -210,8 +215,9 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * @throws Project_InvalidFullName_Exception
      * @throws Project_InvalidShortName_Exception
      * @throws ProjectInvalidTemplateException
+     * @throws ProjectDescriptionMandatoryException
      */
-    public function createFromRest($short_name, $public_name, array $data)
+    public function createFromRest($short_name, $public_name, array $data): Project
     {
         $creation_data = $this->getProjectCreationData($short_name, $public_name, $data);
 
@@ -735,9 +741,11 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
     /**
      * @param ProjectCreationData $data
+     *
      * @throws Project_InvalidFullName_Exception
      * @throws Project_InvalidShortName_Exception
      * @throws ProjectInvalidTemplateException
+     * @throws ProjectDescriptionMandatoryException
      */
     private function checkProjectCreationData(ProjectCreationData $data) : void
     {
@@ -754,14 +762,21 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         if ($template_project->isError()) {
             throw new ProjectInvalidTemplateException($template_id);
         }
+
+        $description = $data->getShortDescription();
+        if (($description === null || $description === '') && ProjectDescriptionUsageRetriever::isDescriptionMandatory()) {
+            throw new ProjectDescriptionMandatoryException();
+        }
     }
 
     /**
      * @param ProjectCreationData $data
      * @return Project
      * @throws Project_Creation_Exception
+     *
+     * protected for testing purpose
      */
-    private function processProjectCreation(ProjectCreationData $data)
+    protected function processProjectCreation(ProjectCreationData $data): Project
     {
         $id = $this->createProject($data);
         if (!$id) {

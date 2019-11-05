@@ -135,12 +135,14 @@ class ProjectCreationTest extends TestCase
             new LabelDao(),
             new DefaultProjectVisibilityRetriever(),
             new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
+            new \Rule_ProjectName(),
+            new \Rule_ProjectFullName(),
             $force_activation
         );
 
         $projectCreator->create('short-name', 'Long name', array(
             'project' => array(
-                'form_short_description' => '',
+                'form_short_description' => 'description',
                 'is_test'                => false,
                 'is_public'              => false,
                 'services'               => array(),

@@ -21,7 +21,7 @@
 /**
  * Presenter for one step creation project
  */
-class Project_OneStepCreation_OneStepCreationPresenter
+class Project_OneStepCreation_OneStepCreationPresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     public const DEFAULT_TEMPLATE_ID = 100;
@@ -77,13 +77,18 @@ class Project_OneStepCreation_OneStepCreationPresenter
      * @var string
      */
     private $csrf_token;
+    /**
+     * @var bool
+     */
+    public $is_description_mandatory;
 
     public function __construct(
         Project_OneStepCreation_OneStepCreationRequest $creation_request,
         array $required_custom_descriptions,
         ProjectManager $project_manager,
         array $trove_cats,
-        $csrf_token_field
+        $csrf_token_field,
+        bool $is_description_mandatory
     ) {
         $this->creation_request                       = $creation_request;
         $this->project_manager                        = $project_manager;
@@ -91,6 +96,7 @@ class Project_OneStepCreation_OneStepCreationPresenter
         $this->trove_cats                             = array_values($trove_cats);
         $this->csrf_token                             = $csrf_token_field;
         $this->has_project_without_restricted         = ForgeConfig::areRestrictedUsersAllowed();
+        $this->is_description_mandatory               = $is_description_mandatory;
     }
 
     public function hasTroveCats()
@@ -330,12 +336,12 @@ class Project_OneStepCreation_OneStepCreationPresenter
         return $GLOBALS['Language']->getText('register_project_one_step', 'about_to_create_optional');
     }
 
-    public function trove_cat_legend()
+    public function trove_cat_legend() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('register_project_one_step', 'trove_cat_legend');
     }
 
-    public function none_selected()
+    public function none_selected() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $GLOBALS['Language']->getText('include_trove', 'none_selected');
     }
@@ -398,7 +404,7 @@ class Project_OneStepCreation_OneStepCreationPresenter
         return $templates;
     }
 
-    public function csrf_token()
+    public function csrf_token() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->csrf_token;
     }
