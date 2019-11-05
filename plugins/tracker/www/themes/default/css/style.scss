@@ -1594,12 +1594,10 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     display: none;
 }
 
-#tracker_workflow_matrix .pc_check_unchecked,
 #tracker_field_dependencies_matrix .pc_check_unchecked {
     background-image: url(../images/ic/bullet_grey.png);
 }
 
-#tracker_workflow_matrix .pc_check_checked,
 #tracker_field_dependencies_matrix .pc_check_checked {
     background-image: url(../images/ic/arrow-turn-090-left.png);
 }
@@ -1612,7 +1610,6 @@ div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     background-image: url(/themes/common/images/ic/bin.png);
 }
 
-.workflow_transitions,
 .workflow_rules {
     display: inline-block;
 }

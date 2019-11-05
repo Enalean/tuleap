@@ -135,7 +135,6 @@ use Tuleap\Tracker\Webhook\Actions\WebhookEditController;
 use Tuleap\Tracker\Webhook\Actions\WebhookURLValidator;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
-use Tuleap\Tracker\Workflow\WorkflowLegacyController;
 use Tuleap\Tracker\Workflow\WorkflowMenuTabPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowTransitionController;
 use Tuleap\Tracker\XMLTemplatesController;
@@ -1761,14 +1760,6 @@ class trackerPlugin extends Plugin
         );
     }
 
-    public function routePostWorkflowLegacyTransitions(): WorkflowLegacyController
-    {
-        return new WorkflowLegacyController(
-            $this->getTrackerFactory(),
-            new Workflow_Dao()
-        );
-    }
-
     public function routePostInvertCommentsOrder(): InvertCommentsController
     {
         return new InvertCommentsController();
@@ -1884,8 +1875,6 @@ class trackerPlugin extends Plugin
             $r->post('/webhooks/edit', $this->getRouteHandler('routePostWebhooksEdit'));
 
             $r->get('/workflow/{tracker_id:\d+}/transitions', $this->getRouteHandler('routeGetWorkflowTransitions'));
-
-            $r->post('/workflow/{tracker_id:\d+}/legacy_transitions', $this->getRouteHandler('routePostWorkflowLegacyTransitions'));
 
             $r->get('/attachments/{id:\d+}-{filename}', $this->getRouteHandler('routeAttachments'));
             $r->get('/attachments/{preview:preview}/{id:\d+}-{filename}', $this->getRouteHandler('routeAttachments'));

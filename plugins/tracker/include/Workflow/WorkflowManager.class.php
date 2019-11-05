@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class WorkflowManager
 {
     protected $tracker;
@@ -61,19 +62,11 @@ class WorkflowManager
             $action = new Tracker_Workflow_Action_Triggers_AddTrigger($this->tracker, Tracker_FormElementFactory::instance(), $workflow_factory->getTriggerRulesManager());
         } elseif ($request->get('func') == Workflow::FUNC_ADMIN_DELETE_TRIGGER) {
             $action = new Tracker_Workflow_Action_Triggers_DeleteTrigger($this->tracker, $workflow_factory->getTriggerRulesManager());
-        } elseif ($request->get('create')) {
-            $action = new Tracker_Workflow_Action_Transitions_Create($this->tracker, $workflow_factory);
-        } elseif ($request->get('edit_transition')) {
-            $action = new Tracker_Workflow_Action_Transitions_EditTransition($this->tracker, TransitionFactory::instance(), new Transition_PostActionFactory());
-        } elseif ($request->get('delete')) {
-            $action = new Tracker_Workflow_Action_Transitions_Delete($this->tracker, $workflow_factory);
-        } elseif ($request->get('transitions')) {
-            $action = new Tracker_Workflow_Action_Transitions_CreateMatrix($this->tracker, $workflow_factory, Tracker_FormElementFactory::instance());
-        } elseif ($request->get('workflow_details') && $request->isPost()) {
-            $action     = new Tracker_Workflow_Action_Transitions_Details($this->tracker, TransitionFactory::instance());
         } else {
-            $action = new Tracker_Workflow_Action_Transitions_DefineWorkflow($this->tracker, WorkflowFactory::instance(), Tracker_FormElementFactory::instance());
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL. '/workflow/' .$this->tracker->id. '/transitions');
+            return;
         }
+
         $action->process($engine, $request, $current_user);
     }
 }

@@ -27,11 +27,6 @@ use Tuleap\Tracker\Workflow\FeatureFlag;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Tracker_Workflow_Action
 {
-    public const PANE_RULES                  = 'rules';
-    public const PANE_TRANSITIONS            = 'transitions';
-    public const PANE_CROSS_TRACKER_TRIGGERS = 'triggers';
-    public const PANE_WEBHOOKS               = 'webhooks';
-
     /** @var Tracker */
     protected $tracker;
 
@@ -54,11 +49,6 @@ abstract class Tracker_Workflow_Action
         echo '</div>';
         $this->tracker->displayFooter($engine);
     }
-
-    /**
-     * @return string eg: rules, transitions
-     */
-    abstract protected function getPaneIdentifier();
 
     /**
      * Process the request

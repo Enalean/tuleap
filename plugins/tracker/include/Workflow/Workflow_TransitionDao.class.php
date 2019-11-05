@@ -145,14 +145,6 @@ class Workflow_TransitionDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function getWorkflowId($transition_id)
-    {
-        $transition_id = $this->da->escapeInt($transition_id);
-        $sql = "SELECT workflow_id FROM tracker_workflow_transition
-                WHERE transition_id=$transition_id";
-        return $this->retrieve($sql);
-    }
-
     public function searchById($transition_id)
     {
         $transition_id = $this->da->escapeInt($transition_id);
