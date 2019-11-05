@@ -528,6 +528,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/project_ownership
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/taskboard
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/releasewidget
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/label
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/crosstracker
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/document
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/project_ownership
