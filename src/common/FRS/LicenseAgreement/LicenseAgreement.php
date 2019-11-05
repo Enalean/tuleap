@@ -72,4 +72,9 @@ class LicenseAgreement implements LicenseAgreementInterface
     {
         return new LicenseOptionPresenter($this->getId(), $this->getTitle(), $selected_agreement->getId() === $this->getId());
     }
+
+    public function isModifiable(): bool
+    {
+        return true;
+    }
 }

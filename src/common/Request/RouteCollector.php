@@ -58,6 +58,8 @@ use Tuleap\FRS\FRSFileDownloadController;
 use Tuleap\FRS\FRSFileDownloadOldURLRedirectionController;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\Admin\ListLicenseAgreementsController;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
@@ -353,6 +355,9 @@ class RouteCollector
             ProjectManager::instance(),
             \TemplateRendererFactory::build(),
             FRSPermissionManager::build(),
+            new LicenseAgreementFactory(
+                new LicenseAgreementDao()
+            ),
         );
     }
 
@@ -609,7 +614,7 @@ class RouteCollector
         $r->addGroup('/file', function (FastRoute\RouteCollector $r) {
             $r->get('/download.php/{group_id:\d+}/{file_id:\d+}[/{filename:.*}]', [self::class, 'getOldFileDownloadURLRedirection']);
             $r->get('/download/{file_id:\d+}', [self::class, 'getFileDownload']);
-            $r->get('/{id:\d+}/admin/license-agreements', [self::class, 'getFileDownloadAgreementAdminList']);
+            $r->get('/{project_id:\d+}/admin/license-agreements', [self::class, 'getFileDownloadAgreementAdminList']);
         });
 
         $r->get('/export/rss_sfprojects.php', [self::class, 'getRssLatestProjects']);

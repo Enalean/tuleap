@@ -21,42 +21,37 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\FRS\LicenseAgreement;
+namespace Tuleap\FRS\LicenseAgreement\Admin;
+
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 
 /**
  * @psalm-immutable
  */
-class DefaultLicenseAgreement implements LicenseAgreementInterface
+class LicenseAgreementPresenter
 {
-    public const ID = 0;
+    /**
+     * @var int
+     */
+    public $id;
+    /**
+     * @var string
+     */
+    public $title;
+    /**
+     * @var string
+     */
+    public $url;
+    /**
+     * @var bool
+     */
+    public $can_edit;
 
-    public function getAsJson(): string
+    public function __construct(LicenseAgreementInterface $license_agreement)
     {
-        return '{}';
-    }
-
-    public function getId(): int
-    {
-        return self::ID;
-    }
-
-    public function getTitle(): string
-    {
-        return 'Code eXchange Corporate Policy';
-    }
-
-    public function getContent(): string
-    {
-        return '';
-    }
-
-    public function getLicenseOptionPresenter(LicenseAgreementInterface $selected_agreement): LicenseOptionPresenter
-    {
-        return new LicenseOptionPresenter($this->getId(), $this->getTitle(), $selected_agreement->getId() === $this->getId());
-    }
-
-    public function isModifiable(): bool
-    {
-        return false;
+        $this->id    = $license_agreement->getId();
+        $this->title = $license_agreement->getTitle();
+        $this->url   = '/';
+        $this->can_edit = $license_agreement->isModifiable();
     }
 }
