@@ -23,6 +23,7 @@
         v-bind:class="additional_classnames"
         v-if="card.is_open || are_closed_items_displayed"
         v-bind:data-card-id="card.id"
+        v-bind:data-tracker-id="card.tracker_id"
     >
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card"/>

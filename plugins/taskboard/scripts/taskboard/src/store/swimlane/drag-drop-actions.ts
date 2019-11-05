@@ -19,39 +19,89 @@
 
 import { ActionContext } from "vuex";
 import { RootState } from "../type";
-import { SwimlaneState, HandleDropPayload, ReorderCardsPayload } from "./type";
-import { hasCardBeenDroppedInTheSameCell, getCardFromSwimlane } from "../../helpers/html-to-item";
+import { SwimlaneState, HandleDropPayload, ReorderCardsPayload, MoveCardsPayload } from "./type";
+import {
+    hasCardBeenDroppedInTheSameCell,
+    hasCardBeenDroppedInAnotherSwimlane,
+    getCardFromSwimlane
+} from "../../helpers/html-to-item";
 import { getCardPosition } from "../../helpers/cards-reordering";
+import { ColumnDefinition, Swimlane, Card } from "../../type";
 
-export async function handleDrop(
+export function handleDrop(
     context: ActionContext<SwimlaneState, RootState>,
     payload: HandleDropPayload
 ): Promise<void> {
-    if (!hasCardBeenDroppedInTheSameCell(payload.target_cell, payload.source_cell)) {
-        return;
+    context.commit("removeHighlightOnLastHoveredDropZone");
+
+    if (hasCardBeenDroppedInAnotherSwimlane(payload.target_cell, payload.source_cell)) {
+        return Promise.resolve();
     }
 
     const { swimlane, column } = context.getters.column_and_swimlane_of_cell(payload.target_cell);
     if (!swimlane || !column) {
-        return;
+        return Promise.resolve();
     }
 
-    const card = getCardFromSwimlane(swimlane, payload.dropped_card);
+    const is_solo_card = swimlane.card.has_children === false;
+    const card = is_solo_card ? swimlane.card : getCardFromSwimlane(swimlane, payload.dropped_card);
+
     if (!card) {
-        return;
+        return Promise.resolve();
     }
 
     const sibling = getCardFromSwimlane(swimlane, payload.sibling_card);
-    const position = getCardPosition(
-        card,
-        sibling,
-        context.getters.cards_in_cell(swimlane, column)
-    );
+    const cards_in_cell = context.getters.cards_in_cell(swimlane, column);
+
+    if (hasCardBeenDroppedInTheSameCell(payload.target_cell, payload.source_cell)) {
+        const reoder_payload = getReorderCardsPayload(
+            card,
+            sibling,
+            cards_in_cell,
+            swimlane,
+            column
+        );
+        return context.dispatch("reorderCardsInCell", reoder_payload);
+    }
+
+    const move_payload = getMoveCardsPayload(card, sibling, cards_in_cell, swimlane, column);
+    return context.dispatch("moveCardToCell", move_payload);
+}
+
+function getReorderCardsPayload(
+    card: Card,
+    sibling: Card | null,
+    cards_in_cell: Card[],
+    swimlane: Swimlane,
+    column: ColumnDefinition
+): ReorderCardsPayload {
+    const position = getCardPosition(card, sibling, cards_in_cell);
 
     const reoder_payload: ReorderCardsPayload = {
         swimlane,
         column,
         position
     };
-    await context.dispatch("reorderCardsInCell", reoder_payload);
+    return reoder_payload;
+}
+
+function getMoveCardsPayload(
+    card: Card,
+    sibling: Card | null,
+    cards_in_cell: Card[],
+    swimlane: Swimlane,
+    column: ColumnDefinition
+): MoveCardsPayload {
+    let position;
+
+    if (cards_in_cell.length > 0) {
+        position = getCardPosition(card, sibling, cards_in_cell);
+    }
+
+    return {
+        card,
+        column,
+        swimlane,
+        position
+    };
 }

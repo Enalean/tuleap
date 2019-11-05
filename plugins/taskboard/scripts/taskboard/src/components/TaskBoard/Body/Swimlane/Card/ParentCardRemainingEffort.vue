@@ -20,7 +20,7 @@
 
 <template>
     <span v-if="has_remaining_effort"
-          class="taskboard-card-remaining-effort"
+          class="taskboard-card-remaining-effort taskboard-no-text-selection taskboard-item-no-drag"
           v-bind:class="additional_classes"
           v-on:click="editRemainingEffort"
           v-bind:tabindex="tabindex"
@@ -31,8 +31,8 @@
         <edit-remaining-effort v-if="is_in_edit_mode"
                                v-bind:card="card"/>
         <template v-else>{{ card.remaining_effort.value }}</template>
-        <i class="fa fa-long-arrow-right"></i>
-        <i class="fa" v-bind:class="icon"></i>
+        <i class="taskboard-item-no-drag fa fa-long-arrow-right"></i>
+        <i class="taskboard-item-no-drag fa" v-bind:class="icon"></i>
     </span>
 </template>
 

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, ColumnDefinition, Direction, Swimlane } from "../../type";
+import { Card, ColumnDefinition, Direction, Mapping, Swimlane } from "../../type";
 import * as mutations from "./swimlane-mutations";
 import { SwimlaneState } from "./type";
 import { findSwimlane, findSwimlaneIndex } from "./swimlane-helpers";
@@ -215,6 +215,181 @@ describe(`Swimlane state mutations`, () => {
             });
 
             expect(swimlane.children_cards[0]).toEqual(card_to_move);
+        });
+    });
+
+    describe("moveCardToColumn", () => {
+        let state: SwimlaneState;
+        let card_to_move: Card;
+        let swimlane: Swimlane;
+
+        beforeEach(() => {
+            card_to_move = {
+                id: 102,
+                tracker_id: 7,
+                mapped_list_value: { id: 48 },
+                has_been_dropped: false,
+                has_children: false
+            } as Card;
+            swimlane = {
+                card: card_to_move,
+                children_cards: [] as Card[]
+            } as Swimlane;
+            state = { is_loading_swimlanes: false, swimlanes: [swimlane] };
+        });
+
+        it(`When I move the card in an empty column
+            It will not try to reorder the cards`, () => {
+            const column = {
+                id: 10,
+                label: "Ongoing",
+                mappings: [{ field_id: 1234, tracker_id: 7, accepts: [{ id: 50 }] } as Mapping]
+            } as ColumnDefinition;
+
+            jest.spyOn(mutations, "changeCardPosition");
+
+            mutations.moveCardToColumn(state, {
+                card: card_to_move,
+                swimlane,
+                column
+            });
+
+            expect(mutations.changeCardPosition).not.toHaveBeenCalled();
+            expect(card_to_move.mapped_list_value).toEqual({ id: 50, label: "Ongoing" });
+        });
+
+        it(`When I move a card at the top of another column containing some cards,
+            It will move the card in the column and reorder the cards`, () => {
+            const column = {
+                id: 10,
+                label: "Ongoing",
+                mappings: [{ field_id: 1234, tracker_id: 7, accepts: [{ id: 50 }] } as Mapping]
+            } as ColumnDefinition;
+
+            swimlane.children_cards = [
+                { id: 100, tracker_id: 7, mapped_list_value: { id: 49, label: "Todo" } } as Card,
+                card_to_move,
+                { id: 101, tracker_id: 7, mapped_list_value: { id: 49, label: "Todo" } } as Card,
+                { id: 103, tracker_id: 7, mapped_list_value: { id: 50, label: "Ongoing" } } as Card
+            ];
+
+            const position = {
+                ids: [card_to_move.id],
+                direction: Direction.BEFORE, // Card is moved to the top
+                compared_to: 103
+            };
+
+            mutations.moveCardToColumn(state, {
+                card: card_to_move,
+                swimlane,
+                column,
+                position
+            });
+
+            expect(swimlane.card.mapped_list_value).toEqual({ id: 50, label: "Ongoing" });
+
+            expect(swimlane.children_cards).toEqual([
+                { id: 100, tracker_id: 7, mapped_list_value: { id: 49, label: "Todo" } } as Card,
+                { id: 101, tracker_id: 7, mapped_list_value: { id: 49, label: "Todo" } } as Card,
+                card_to_move,
+                { id: 103, tracker_id: 7, mapped_list_value: { id: 50, label: "Ongoing" } } as Card
+            ]);
+        });
+    });
+
+    describe("setColumnOfCard", () => {
+        let state: SwimlaneState,
+            card: Card,
+            swimlane: Swimlane,
+            solo_card_swimlane: Swimlane,
+            solo_card: Card;
+
+        beforeEach(() => {
+            card = {
+                id: 2,
+                tracker_id: 45,
+                mapped_list_value: { id: 9999 },
+                has_children: true
+            } as Card;
+            solo_card = {
+                id: 3,
+                tracker_id: 45,
+                mapped_list_value: { id: 6666 },
+                has_children: false
+            } as Card;
+
+            swimlane = {
+                card: {
+                    id: 1
+                },
+                children_cards: [card]
+            } as Swimlane;
+
+            solo_card_swimlane = {
+                card: solo_card,
+                children_cards: [] as Card[]
+            } as Swimlane;
+
+            state = {
+                swimlanes: [swimlane, solo_card_swimlane]
+            } as SwimlaneState;
+        });
+
+        it("Given a card and a column, then it should change the card's mapped_list_value", () => {
+            const column = {
+                mappings: [
+                    { tracker_id: 45, accepts: [{ id: 5398 }] },
+                    { tracker_id: 46, accepts: [{ id: 4366 }] }
+                ]
+            } as ColumnDefinition;
+
+            mutations.setColumnOfCard(state, { card, column, swimlane });
+
+            const card_in_state = swimlane.children_cards[0];
+            expect(card_in_state.mapped_list_value).toEqual({ id: 5398 });
+        });
+
+        it("Given a solo card and a column, then it should change the card's mapped_list_value", () => {
+            const column = {
+                mappings: [
+                    { tracker_id: 45, accepts: [{ id: 5398 }] },
+                    { tracker_id: 46, accepts: [{ id: 4366 }] }
+                ]
+            } as ColumnDefinition;
+
+            mutations.setColumnOfCard(state, {
+                card: solo_card,
+                column,
+                swimlane: solo_card_swimlane
+            });
+
+            expect(solo_card_swimlane.card.mapped_list_value).toEqual({ id: 5398 });
+        });
+
+        it("When no mapping exist with the card's tracker, then it should do nothing", () => {
+            const column = {
+                mappings: [
+                    { tracker_id: 46, accepts: [{ id: 5398 }] },
+                    { tracker_id: 47, accepts: [{ id: 4366 }] }
+                ]
+            } as ColumnDefinition;
+
+            mutations.setColumnOfCard(state, { card, column, swimlane });
+
+            expect(card.mapped_list_value).toEqual({ id: 9999 });
+        });
+
+        it("When the column do not accept any value for the card's tracker, then it should do nothing", () => {
+            const column = {
+                mappings: [
+                    { tracker_id: 45, accepts: [] },
+                    { tracker_id: 47, accepts: [{ id: 4366 }] }
+                ]
+            } as ColumnDefinition;
+
+            mutations.setColumnOfCard(state, { card, column, swimlane });
+
+            expect(card.mapped_list_value).toEqual({ id: 9999 });
         });
     });
 });

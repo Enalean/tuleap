@@ -17,9 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Direction, Swimlane } from "../../type";
-import { AddChildrenToSwimlanePayload, SwimlaneState, ReorderCardsPayload } from "./type";
-import { findSwimlane, replaceSwimlane } from "./swimlane-helpers";
+import { Card, Direction, Swimlane, Mapping } from "../../type";
+import {
+    AddChildrenToSwimlanePayload,
+    SwimlaneState,
+    MoveCardsPayload,
+    ReorderCardsPayload
+} from "./type";
+import { findSwimlane, replaceSwimlane, findDroppedCard } from "./swimlane-helpers";
 
 export * from "./card/card-mutations";
 
@@ -78,8 +83,8 @@ export function expandSwimlane(state: SwimlaneState, swimlane: Swimlane): void {
 
 export function changeCardPosition(state: SwimlaneState, payload: ReorderCardsPayload): void {
     const card_id = payload.position.ids[0];
-    const card_index = payload.swimlane.children_cards.findIndex(child => child.id === card_id);
     const state_swimlane = findSwimlane(state, payload.swimlane);
+    const card_index = state_swimlane.children_cards.findIndex(child => child.id === card_id);
     const card_to_move = state_swimlane.children_cards[card_index];
 
     state_swimlane.children_cards.splice(card_index, 1);
@@ -94,4 +99,58 @@ export function changeCardPosition(state: SwimlaneState, payload: ReorderCardsPa
 
     const offset = payload.position.direction === Direction.AFTER ? 1 : 0;
     state_swimlane.children_cards.splice(sibling_index + offset, 0, card_to_move);
+}
+
+export function moveCardToColumn(state: SwimlaneState, payload: MoveCardsPayload): void {
+    payload.card.has_been_dropped = true;
+
+    setColumnOfCard(state, payload);
+
+    if (payload.position) {
+        const reorder_payload: ReorderCardsPayload = {
+            swimlane: payload.swimlane,
+            column: payload.column,
+            position: payload.position
+        };
+
+        changeCardPosition(state, reorder_payload);
+    }
+}
+
+export function setColumnOfCard(state: SwimlaneState, payload: MoveCardsPayload): void {
+    const mapping = payload.column.mappings.find(mapping => {
+        return mapping.tracker_id === payload.card.tracker_id;
+    });
+
+    if (!mapping || mapping.accepts.length === 0) {
+        return;
+    }
+
+    const id = getFirstListValueId(mapping);
+    const card_state = findDroppedCard(state, payload);
+
+    card_state.mapped_list_value = {
+        id,
+        label: payload.column.label
+    };
+}
+
+function getFirstListValueId(mapping: Mapping): number {
+    return mapping.accepts[0].id;
+}
+
+export function removeHighlightOnLastHoveredDropZone(state: SwimlaneState): void {
+    if (state.last_hovered_drop_zone) {
+        state.last_hovered_drop_zone.classList.remove("taskboard-drop-not-accepted");
+    }
+}
+
+export function setHighlightOnLastHoveredDropZone(state: SwimlaneState): void {
+    if (state.last_hovered_drop_zone) {
+        state.last_hovered_drop_zone.classList.add("taskboard-drop-not-accepted");
+    }
+}
+
+export function setLastHoveredDropZone(state: SwimlaneState, target: HTMLElement): void {
+    state.last_hovered_drop_zone = target;
 }

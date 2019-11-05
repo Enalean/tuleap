@@ -21,11 +21,20 @@
 <template>
     <div class="taskboard-swimlane" v-if="should_solo_card_be_displayed">
         <swimlane-header v-bind:swimlane="swimlane"/>
-        <cell-for-solo-card v-for="col of columns" v-bind:key="col.id" v-bind:column="col">
+        <cell-for-solo-card
+            v-for="col of columns"
+            v-bind:key="col.id"
+            v-bind:column="col"
+            v-bind:data-swimlane-id="swimlane.card.id"
+            v-bind:data-column-id="col.id"
+            v-bind:data-accepted-trackers-ids="accepted_trackers_ids(col)"
+        >
             <card-with-remaining-effort
                 v-if="column.id === col.id"
                 v-bind:card="swimlane.card"
-                class="taskboard-cell-solo-card"
+                class="taskboard-cell-solo-card taskboard-draggable-item"
+                v-bind:data-card-id="swimlane.card.id"
+                v-bind:data-tracker-id="swimlane.card.tracker_id"
             />
         </cell-for-solo-card>
     </div>
@@ -58,6 +67,9 @@ export default class SoloSwimlane extends Vue {
 
     @column_store.State
     readonly columns!: Array<ColumnDefinition>;
+
+    @column_store.Getter
+    readonly accepted_trackers_ids!: (column: ColumnDefinition) => number[];
 
     get should_solo_card_be_displayed(): boolean {
         return !this.column.is_collapsed;

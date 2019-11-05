@@ -24,7 +24,10 @@
          v-on:mouseenter="mouseEntersCollapsedColumn"
          v-on:mouseout="mouseLeavesCollapsedColumn"
          v-on:click="expandCollapsedColumn"
-    ><slot v-if="!column.is_collapsed"></slot></div>
+    >
+        <slot v-if="!column.is_collapsed"></slot>
+        <cell-disallows-drop-overlay/>
+    </div>
 </template>
 
 <script lang="ts">
@@ -33,8 +36,10 @@ import { ColumnDefinition } from "../../../../type";
 import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
 import ExpandCollapsedColumnMixin from "./expand-collapsed-column-mixin";
 import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
-
-@Component
+import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
+@Component({
+    components: { CellDisallowsDropOverlay }
+})
 export default class CellForSoloCard extends Mixins(
     HoveringStateForCollapsedColumnMixin,
     ExpandCollapsedColumnMixin,

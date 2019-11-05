@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { hasCardBeenDroppedInTheSameCell, getCardFromSwimlane } from "./html-to-item";
+import {
+    hasCardBeenDroppedInTheSameCell,
+    getCardFromSwimlane,
+    hasCardBeenDroppedInAnotherSwimlane
+} from "./html-to-item";
 import { Card, Swimlane } from "../type";
 
 describe("html-to-item helper", () => {
@@ -129,6 +133,32 @@ describe("html-to-item helper", () => {
             const card = getCardFromSwimlane(swimlane, card_element);
 
             expect(card).toBeNull();
+        });
+    });
+
+    describe("hasCardBeenDroppedInAnotherSwimlane", () => {
+        it("returns false if the swimlane is the same in source and target", (): void => {
+            const { target_cell, source_cell } = getSourceAndTargetCellsAndCard();
+
+            target_cell.setAttribute("data-swimlane-id", "100");
+            target_cell.setAttribute("data-column-id", "15");
+
+            source_cell.setAttribute("data-swimlane-id", "100");
+            source_cell.setAttribute("data-column-id", "16");
+
+            expect(hasCardBeenDroppedInAnotherSwimlane(target_cell, source_cell)).toBe(false);
+        });
+
+        it("returns true if the swimlame is different in source and target", (): void => {
+            const { target_cell, source_cell } = getSourceAndTargetCellsAndCard();
+
+            target_cell.setAttribute("data-swimlane-id", "100");
+            target_cell.setAttribute("data-column-id", "15");
+
+            source_cell.setAttribute("data-swimlane-id", "101");
+            source_cell.setAttribute("data-column-id", "15");
+
+            expect(hasCardBeenDroppedInAnotherSwimlane(target_cell, source_cell)).toBe(true);
         });
     });
 });

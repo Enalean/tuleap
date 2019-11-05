@@ -29,6 +29,13 @@ export function hasCardBeenDroppedInTheSameCell(
     );
 }
 
+export function hasCardBeenDroppedInAnotherSwimlane(
+    target_cell: HTMLElement,
+    source_cell: HTMLElement
+): boolean {
+    return target_cell.dataset.swimlaneId !== source_cell.dataset.swimlaneId;
+}
+
 export function getCardFromSwimlane(swimlane: Swimlane, card_element?: HTMLElement): Card | null {
     if (!card_element) {
         return null;
