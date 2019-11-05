@@ -36,7 +36,7 @@ export interface MilestoneData {
     resources?: {
         content: {
             accept: {
-                trackers: TrackerProject[];
+                trackers: TrackerProjectWithoutColor[];
             };
         };
     };
@@ -50,7 +50,12 @@ export interface TrackerNumberArtifacts {
     color_name: string | null;
 }
 
-export interface TrackerProject {
+export interface TrackerProjectWithoutColor {
+    id: number;
+    label: string;
+}
+
+export interface TrackerAgileDashboard {
     id: number;
     color_name: string;
     label: string;
@@ -86,7 +91,7 @@ export interface State {
     limit: number;
     is_loading: boolean;
     current_milestones: MilestoneData[];
-    trackers: TrackerProject[];
+    trackers_agile_dashboard: TrackerAgileDashboard[];
 }
 
 export interface Context {

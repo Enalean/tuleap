@@ -37,6 +37,8 @@ use Planning_MilestoneFactory;
 use Planning_VirtualTopMilestone;
 use PlanningFactory;
 use Project;
+use TrackerFactory;
+use Tuleap\Tracker\TrackerColor;
 
 class ProjectReleasePresenterBuilderTest extends TestCase
 {
@@ -86,6 +88,10 @@ class ProjectReleasePresenterBuilderTest extends TestCase
      * @var AgileDashboard_Milestone_Backlog_Backlog|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $agiledashboard_milestone_backlog;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
+     */
+    private $tracker_factory;
 
     public function setUp(): void
     {
@@ -100,26 +106,33 @@ class ProjectReleasePresenterBuilderTest extends TestCase
         $this->agiledashboard_milestone_backlog_item_collection_factory = Mockery::mock(AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class);
         $this->agiledashboard_milestone_backlog_factory                 = Mockery::mock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
         $this->agiledashboard_milestone_backlog                         = Mockery::mock(AgileDashboard_Milestone_Backlog_Backlog::class);
+        $this->tracker_factory                                          = Mockery::mock(TrackerFactory::class);
 
         $this->http_request->shouldReceive('getProject')->andReturn($this->project);
         $this->http_request->shouldReceive('getCurrentUser')->andReturn($this->john_doe);
+
+        $this->planning_milestone_factory
+            ->shouldReceive('getVirtualTopMilestone')
+            ->once()
+            ->withArgs([$this->john_doe, $this->project])
+            ->andReturn($this->planning_virtual_top_milestone);
 
         $this->builder = new ProjectReleasePresenterBuilder(
             $this->http_request,
             $this->planning_factory,
             $this->agiledashboard_milestone_backlog_factory,
             $this->agiledashboard_milestone_backlog_item_collection_factory,
-            $this->planning_milestone_factory
+            $this->planning_milestone_factory,
+            $this->tracker_factory
         );
     }
 
     public function testGetZeroUpcomingReleaseWhenThereAreNoFutureMilestone(): void
     {
-        $this->planning_milestone_factory
-            ->shouldReceive('getVirtualTopMilestone')
+        $this->planning_virtual_top_milestone
+            ->shouldReceive('getPlanning')
             ->once()
-            ->withArgs([$this->john_doe, $this->project])
-            ->andReturn($this->planning_virtual_top_milestone);
+            ->andReturn(Mockery::mock(Planning::class, ['getBacklogTrackersIds' => []]));
 
         $this->agiledashboard_milestone_backlog_factory
             ->shouldReceive('getSelfBacklog')
@@ -146,11 +159,10 @@ class ProjectReleasePresenterBuilderTest extends TestCase
 
     public function testGetZeroUpcomingReleasesIfThereIsNotRootPlanning(): void
     {
-        $this->planning_milestone_factory
-            ->shouldReceive('getVirtualTopMilestone')
+        $this->planning_virtual_top_milestone
+            ->shouldReceive('getPlanning')
             ->once()
-            ->withArgs([$this->john_doe, $this->project])
-            ->andReturn($this->planning_virtual_top_milestone);
+            ->andReturn(Mockery::mock(Planning::class, ['getBacklogTrackersIds' => []]));
 
         $this->agiledashboard_milestone_backlog_factory
             ->shouldReceive('getSelfBacklog')
@@ -175,11 +187,10 @@ class ProjectReleasePresenterBuilderTest extends TestCase
 
     public function testGetUpcomingReleasesWhenThereAreFutureMilestones(): void
     {
-        $this->planning_milestone_factory
-            ->shouldReceive('getVirtualTopMilestone')
+        $this->planning_virtual_top_milestone
+            ->shouldReceive('getPlanning')
             ->once()
-            ->withArgs([$this->john_doe, $this->project])
-            ->andReturn($this->planning_virtual_top_milestone);
+            ->andReturn(Mockery::mock(Planning::class, ['getBacklogTrackersIds' => []]));
 
         $this->agiledashboard_milestone_backlog_factory
             ->shouldReceive('getSelfBacklog')
@@ -209,11 +220,11 @@ class ProjectReleasePresenterBuilderTest extends TestCase
 
     public function testGetNumberBacklogItem(): void
     {
-        $this->planning_milestone_factory
-            ->shouldReceive('getVirtualTopMilestone')
+        $this->planning_virtual_top_milestone
+            ->shouldReceive('getPlanning')
             ->once()
-            ->withArgs([$this->john_doe, $this->project])
-            ->andReturn($this->planning_virtual_top_milestone);
+            ->andReturn(Mockery::mock(Planning::class, ['getBacklogTrackersIds' => []]));
+
         $this->agiledashboard_milestone_backlog_factory
             ->shouldReceive('getSelfBacklog')
             ->withArgs([$this->planning_virtual_top_milestone])
@@ -242,11 +253,10 @@ class ProjectReleasePresenterBuilderTest extends TestCase
 
     public function testIsIE11(): void
     {
-        $this->planning_milestone_factory
-            ->shouldReceive('getVirtualTopMilestone')
+        $this->planning_virtual_top_milestone
+            ->shouldReceive('getPlanning')
             ->once()
-            ->withArgs([$this->john_doe, $this->project])
-            ->andReturn($this->planning_virtual_top_milestone);
+            ->andReturn(Mockery::mock(Planning::class, ['getBacklogTrackersIds' => []]));
 
         $this->agiledashboard_milestone_backlog_factory
             ->shouldReceive('getSelfBacklog')
@@ -272,5 +282,49 @@ class ProjectReleasePresenterBuilderTest extends TestCase
         $built_presenter = $this->builder->getProjectReleasePresenter(true);
 
         $this->assertTrue($built_presenter->is_IE11);
+    }
+
+    public function testGetTrackersId(): void
+    {
+        $this->planning_virtual_top_milestone
+            ->shouldReceive('getPlanning')
+            ->once()
+            ->andReturn(Mockery::mock(Planning::class, ['getBacklogTrackersIds' => [122, 124]]));
+
+        $this->tracker_factory->shouldReceive('getTrackerById')->once()->withArgs([122])->andReturn($this->mockAnArtifact('Bug', 'fiesta-red'));
+        $this->tracker_factory->shouldReceive('getTrackerById')->once()->withArgs([124])->andReturn($this->mockAnArtifact('Story', 'deep-blue'));
+
+        $this->agiledashboard_milestone_backlog_factory
+            ->shouldReceive('getSelfBacklog')
+            ->withArgs([$this->planning_virtual_top_milestone])
+            ->andReturn($this->agiledashboard_milestone_backlog)
+            ->once();
+
+        $this->agiledashboard_milestone_backlog_item_collection_factory
+            ->shouldReceive('getUnassignedOpenCollection')
+            ->withArgs([$this->john_doe, $this->planning_virtual_top_milestone, $this->agiledashboard_milestone_backlog, false])
+            ->andReturn($this->agileDashboard_milestone_backlog_item_collection)
+            ->once();
+
+        $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturnFalse();
+
+        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+
+        $this->planning_milestone_factory
+            ->shouldReceive('getAllFutureMilestones')
+            ->never();
+
+        $built_presenter = $this->builder->getProjectReleasePresenter(false);
+        $tracker_json = '[{"id":122,"color_name":"fiesta-red","label":"Bug"},{"id":124,"color_name":"deep-blue","label":"Story"}]';
+
+        $this->assertEqualsCanonicalizing($tracker_json, $built_presenter->json_trackers_agile_dashboard);
+    }
+
+    private function mockAnArtifact(string $name, string $color)
+    {
+        $artifact = Mockery::mock(\Artifact::class);
+        $artifact->shouldReceive('getName')->once()->andReturn($name);
+        $artifact->shouldReceive('getColor')->once()->andReturn(Mockery::mock(TrackerColor::fromName($color)));
+        return $artifact;
     }
 }

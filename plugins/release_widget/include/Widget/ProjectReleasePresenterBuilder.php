@@ -71,19 +71,35 @@ class ProjectReleasePresenterBuilder
      * @var Planning_MilestoneFactory
      */
     private $planning_milestone_factory;
+    /**
+     * @var \Planning_VirtualTopMilestone
+     */
+    private $planning_virtual_top_milestone;
+    /**
+     * @var \PFUser
+     */
+    private $current_user;
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
 
     public function __construct(
         HTTPRequest $request,
         PlanningFactory $planning_factory,
         AgileDashboard_Milestone_Backlog_BacklogFactory $agile_dashboard_milestone_backlog_backlog_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $agile_dashboard_milestone_backlog_backlog_item_collection_factory,
-        Planning_MilestoneFactory $planning_milestone_factory
+        Planning_MilestoneFactory $planning_milestone_factory,
+        TrackerFactory $tracker_factory
     ) {
         $this->request                                                           = $request;
         $this->planning_factory                                                  = $planning_factory;
         $this->agile_dashboard_milestone_backlog_backlog_factory                 = $agile_dashboard_milestone_backlog_backlog_factory;
         $this->agile_dashboard_milestone_backlog_backlog_item_collection_factory = $agile_dashboard_milestone_backlog_backlog_item_collection_factory;
         $this->planning_milestone_factory                                        = $planning_milestone_factory;
+        $this->current_user                                                      = $this->request->getCurrentUser();
+        $this->planning_virtual_top_milestone                                    = $this->planning_milestone_factory->getVirtualTopMilestone($this->current_user, $this->request->getProject());
+        $this->tracker_factory                                                   = $tracker_factory;
     }
 
     public static function build(): ProjectReleasePresenterBuilder
@@ -137,7 +153,8 @@ class ProjectReleasePresenterBuilder
                 new ArtifactsInExplicitBacklogDao(),
                 new Tracker_Artifact_PriorityDao()
             ),
-            $milestone_factory
+            $milestone_factory,
+            TrackerFactory::instance()
         );
     }
 
@@ -147,16 +164,16 @@ class ProjectReleasePresenterBuilder
             $this->request->getProject(),
             $is_IE11,
             $this->getNumberUpcomingReleases(),
-            $this->getNumberBacklogItems()
+            $this->getNumberBacklogItems(),
+            $this->getTrackersIdAgileDashboard()
         );
     }
 
     private function getNumberUpcomingReleases(): int
     {
-        $user = $this->request->getCurrentUser();
 
         $root_planning = $this->planning_factory->getRootPlanning(
-            $user,
+            $this->current_user,
             $this->request->getProject()->getID()
         );
 
@@ -164,19 +181,40 @@ class ProjectReleasePresenterBuilder
             return 0;
         }
 
-        $futures_milestones = $this->planning_milestone_factory->getAllFutureMilestones($user, $root_planning);
+        $futures_milestones = $this->planning_milestone_factory->getAllFutureMilestones($this->current_user, $root_planning);
 
         return count($futures_milestones);
     }
 
     private function getNumberBacklogItems(): int
     {
-        $user = $this->request->getCurrentUser();
-
-        $planning_virtual_top_milestone = $this->planning_milestone_factory->getVirtualTopMilestone($user, $this->request->getProject());
-
-        $backlog = $this->agile_dashboard_milestone_backlog_backlog_item_collection_factory->getUnassignedOpenCollection($user, $planning_virtual_top_milestone, $this->agile_dashboard_milestone_backlog_backlog_factory->getSelfBacklog($planning_virtual_top_milestone), false);
+        $backlog = $this->agile_dashboard_milestone_backlog_backlog_item_collection_factory
+            ->getUnassignedOpenCollection(
+                $this->current_user,
+                $this->planning_virtual_top_milestone,
+                $this->agile_dashboard_milestone_backlog_backlog_factory->getSelfBacklog($this->planning_virtual_top_milestone),
+                false
+            );
 
         return $backlog->count();
+    }
+
+    private function getTrackersIdAgileDashboard(): array
+    {
+        $trackers_agile_dashboard    = [];
+        $trackers_id_agile_dashboard = $this->planning_virtual_top_milestone->getPlanning()->getBacklogTrackersIds();
+
+        foreach ($trackers_id_agile_dashboard as $tracker_id) {
+            $tracker                 = $this->tracker_factory->getTrackerById($tracker_id);
+            $tracker_agile_dashboard = [
+                'id' => (int)$tracker_id,
+                'color_name' => $tracker->getColor()->getName(),
+                'label' => $tracker->getName()
+            ];
+
+            $trackers_agile_dashboard[] = $tracker_agile_dashboard;
+        }
+
+        return $trackers_agile_dashboard;
     }
 }

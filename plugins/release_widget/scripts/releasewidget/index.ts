@@ -24,6 +24,7 @@ import App from "./src/components/App.vue";
 import { createStore } from "./src/store";
 import { setUserLocale } from "./src/helpers/user-locale-helper";
 import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
+import { TrackerAgileDashboard } from "./src/type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     Vue.use(VueDOMPurifyHTML);
@@ -47,6 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const is_IE11_dataset = vue_mount_point.dataset.isIe11;
     const nb_upcoming_releases_dataset = vue_mount_point.dataset.nbUpcomingReleases;
     const nb_backlog_items_dataset = vue_mount_point.dataset.nbBacklogItems;
+    const trackers_agile_dashboard_dataset = vue_mount_point.dataset.jsonTrackersAgileDashboard;
 
     if (!project_id_dataset) {
         throw new Error("Project Id is missing.");
@@ -60,9 +62,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         throw new Error("Number Backlog Items is missing.");
     }
 
+    if (!trackers_agile_dashboard_dataset) {
+        throw new Error("Trackers Agile Dashboard is missing.");
+    }
+
     const project_id = Number.parseInt(project_id_dataset, 10);
     const nb_upcoming_releases = Number.parseInt(nb_upcoming_releases_dataset, 10);
     const nb_backlog_items = Number.parseInt(nb_backlog_items_dataset, 10);
+    const trackers_agile_dashboard: TrackerAgileDashboard[] = JSON.parse(
+        trackers_agile_dashboard_dataset
+    );
 
     const AppComponent = Vue.extend(App);
     const store = createStore();
@@ -73,7 +82,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             projectId: project_id,
             isBrowserIE11: is_IE11_dataset,
             nbUpcomingReleases: nb_upcoming_releases,
-            nbBacklogItems: nb_backlog_items
+            nbBacklogItems: nb_backlog_items,
+            trackersAgileDashboard: trackers_agile_dashboard
         }
     }).$mount(vue_mount_point);
 });

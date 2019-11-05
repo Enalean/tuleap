@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TrackerProject, MilestoneData, State } from "../type";
+import { TrackerAgileDashboard, MilestoneData, State } from "../type";
 
 export default {
     setProjectId(state: State, project_id: number): void {
@@ -48,7 +48,7 @@ export default {
         state.current_milestones = milestones;
     },
 
-    setTrackers(state: State, trackers: TrackerProject[]): void {
-        state.trackers = trackers;
+    setTrackers(state: State, trackers: TrackerAgileDashboard[]): void {
+        state.trackers_agile_dashboard = trackers;
     }
 };
