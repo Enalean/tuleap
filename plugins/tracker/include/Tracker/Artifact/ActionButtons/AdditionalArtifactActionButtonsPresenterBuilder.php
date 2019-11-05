@@ -20,30 +20,10 @@
 
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
-use EventManager;
-use PFUser;
-use Tracker_Artifact;
-
 class AdditionalArtifactActionButtonsPresenterBuilder
 {
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
-    public function __construct(EventManager $event_manager)
+    public function build(AdditionalArtifactActionButtonsFetcher $action_buttons_fetcher)
     {
-        $this->event_manager = $event_manager;
-    }
-
-    public function build(Tracker_Artifact $artifact, PFUser $user)
-    {
-        $action_buttons_fetcher = new AdditionalArtifactActionButtonsFetcher($artifact, $user);
-
-        $this->event_manager->processEvent(
-            $action_buttons_fetcher
-        );
-
         return $action_buttons_fetcher->getAdditionalLinks();
     }
 }

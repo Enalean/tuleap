@@ -31,6 +31,7 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
+use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactActionButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactCopyButtonPresenterBuilder;
@@ -471,16 +472,20 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 ),
                 $event_manager
             ),
-            new AdditionalArtifactActionButtonsPresenterBuilder($event_manager)
+            new AdditionalArtifactActionButtonsPresenterBuilder()
         );
 
-        $action_buttons_presenters = $builder->build($this->getCurrentUser(), $this);
+        $user = $this->getCurrentUser();
+
+        $action_buttons_fetcher = new AdditionalArtifactActionButtonsFetcher($this, $user);
+        $event_manager->processEvent($action_buttons_fetcher);
+
+        $action_buttons_presenters = $builder->build($this->getCurrentUser(), $this, $action_buttons_fetcher);
 
         $include_assets = new \Tuleap\Layout\IncludeAssets(
             __DIR__ . '/../../../www/assets',
             TRACKER_BASE_URL . '/assets'
         );
-
 
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('MoveArtifactModal.js'));
 
