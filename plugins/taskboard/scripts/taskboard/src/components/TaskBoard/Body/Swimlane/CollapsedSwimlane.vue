@@ -33,7 +33,6 @@
                 </div>
             </div>
         </swimlane-header>
-        <div class="taskboard-cell taskboard-swimlane-collapsed-cell-placeholder" v-for="col of columns" v-bind:key="col.id"></div>
     </div>
 </template>
 

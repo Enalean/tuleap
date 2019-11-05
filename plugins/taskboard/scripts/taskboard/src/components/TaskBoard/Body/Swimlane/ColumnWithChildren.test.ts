@@ -23,6 +23,7 @@ import { Card, ColumnDefinition, Swimlane } from "../../../../type";
 import ChildCard from "./Card/ChildCard.vue";
 import CardSkeleton from "./Skeleton/CardSkeleton.vue";
 import ColumnWithChildren from "./ColumnWithChildren.vue";
+import { RootState } from "../../../../store/type";
 
 function createWrapper(
     swimlane: Swimlane,
@@ -47,9 +48,9 @@ function createWrapper(
         mocks: {
             $store: createStoreMock({
                 state: {
-                    columns: [todo, done],
+                    column: { columns: [todo, done] },
                     swimlane: {}
-                },
+                } as RootState,
                 getters: {
                     "swimlane/cards_in_cell": (): Card[] => cards_in_cell
                 }
@@ -115,5 +116,43 @@ describe("ColumnWithChildren", () => {
         expect(wrapper.classes("taskboard-cell-collapsed")).toBe(true);
         expect(wrapper.findAll(ChildCard).length).toBe(0);
         expect(wrapper.findAll(CardSkeleton).length).toBe(0);
+    });
+
+    it(`It informs the mouseenter when the column is collapsed`, () => {
+        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, true, []);
+        const column = wrapper.vm.$store.state.column.columns[0];
+
+        wrapper.trigger("mouseenter");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseEntersColumn", column);
+    });
+
+    it(`It does not inform the mouseenter when the column is expanded`, () => {
+        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false, []);
+        const column = wrapper.vm.$store.state.column.columns[0];
+
+        wrapper.trigger("mouseenter");
+        expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
+            "column/mouseEntersColumn",
+            column
+        );
+    });
+
+    it(`It informs the mouseout when the column is collapsed`, () => {
+        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, true, []);
+        const column = wrapper.vm.$store.state.column.columns[0];
+
+        wrapper.trigger("mouseout");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseLeavesColumn", column);
+    });
+
+    it(`It does not inform the mouseout when the column is expanded`, () => {
+        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false, []);
+        const column = wrapper.vm.$store.state.column.columns[0];
+
+        wrapper.trigger("mouseout");
+        expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
+            "column/mouseLeavesColumn",
+            column
+        );
     });
 });

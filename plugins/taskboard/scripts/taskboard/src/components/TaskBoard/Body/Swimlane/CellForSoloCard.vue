@@ -19,16 +19,20 @@
   -->
 
 <template>
-    <div class="taskboard-cell" v-bind:class="classes"><slot v-if="!column.is_collapsed"></slot></div>
+    <div class="taskboard-cell"
+         v-bind:class="classes"
+         v-on:mouseenter="mouseEntersCollapsedColumn"
+         v-on:mouseout="mouseLeavesCollapsedColumn"
+    ><slot v-if="!column.is_collapsed"></slot></div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { Component, Mixins, Prop } from "vue-property-decorator";
 import { ColumnDefinition } from "../../../../type";
+import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
 
 @Component
-export default class CellForSoloCard extends Vue {
+export default class CellForSoloCard extends Mixins(HoveringStateForCollapsedColumnMixin) {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
 

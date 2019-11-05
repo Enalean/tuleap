@@ -51,14 +51,6 @@ describe(`drag-drop helper`, () => {
             expect(drag_drop.isContainer(element)).toBe(false);
         });
 
-        it(`Given a collapsed swimlane cell, it will return false`, () => {
-            const element = createElement(
-                "taskboard-cell",
-                "taskboard-swimlane-collapsed-cell-placeholder"
-            );
-            expect(drag_drop.isContainer(element)).toBe(false);
-        });
-
         it(`Given a parent card, it will return false`, () => {
             const element = createElement("taskboard-cell", "taskboard-card-parent");
             expect(drag_drop.isContainer(element)).toBe(false);

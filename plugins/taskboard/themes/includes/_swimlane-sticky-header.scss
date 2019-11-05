@@ -19,8 +19,9 @@
 
 .taskboard-cell-swimlane-header {
     position: sticky;
-    z-index: 2;
+    z-index: 9;
     left: $sidebar-expanded-width;
+    max-width: calc(100vw - #{$sidebar-expanded-width});
 
     &.taskboard-fullscreen {
         left: 0;
@@ -30,6 +31,7 @@
 .sidebar-collapsed {
     .taskboard-cell-swimlane-header {
         left: $sidebar-collapsed-width;
+        max-width: calc(100vw - #{$sidebar-collapsed-width});
 
         &.taskboard-fullscreen {
             left: 0;

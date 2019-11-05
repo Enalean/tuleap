@@ -30,7 +30,7 @@ describe("CollapsedHeaderCell", () => {
                     id: 2,
                     label: "To do",
                     color: "",
-                    is_collapsed: false
+                    has_hover: false
                 } as ColumnDefinition
             }
         });
@@ -47,11 +47,41 @@ describe("CollapsedHeaderCell", () => {
                     id: 2,
                     label: "To do",
                     color: "fiesta-red",
-                    is_collapsed: false
+                    has_hover: false
                 } as ColumnDefinition
             }
         });
 
         expect(wrapper.classes("taskboard-header-fiesta-red")).toBe(true);
+    });
+
+    it(`Given the column has hover, then it shows its label`, () => {
+        const wrapper = shallowMount(CollapsedHeaderCell, {
+            propsData: {
+                column: {
+                    id: 2,
+                    label: "To do",
+                    color: "fiesta-red",
+                    has_hover: true
+                } as ColumnDefinition
+            }
+        });
+
+        expect(wrapper.classes("taskboard-header-collapsed-show-label")).toBe(true);
+    });
+
+    it(`Given the column does not have hover, then it does not shows its label`, () => {
+        const wrapper = shallowMount(CollapsedHeaderCell, {
+            propsData: {
+                column: {
+                    id: 2,
+                    label: "To do",
+                    color: "fiesta-red",
+                    has_hover: false
+                } as ColumnDefinition
+            }
+        });
+
+        expect(wrapper.classes("taskboard-header-collapsed-show-label")).toBe(false);
     });
 });

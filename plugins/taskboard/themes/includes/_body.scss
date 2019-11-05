@@ -68,14 +68,6 @@
     &:last-child {
         border-right: 0;
     }
-
-
-    &.taskboard-swimlane-collapsed-cell-placeholder {
-        padding: $tlp-half-spacing;
-        border-right: unset;
-        border-left: unset;
-        background: mix($tlp-theme-background-color, $tlp-ui-white, 60%);
-    }
 }
 
 .taskboard-cell-collapsed {

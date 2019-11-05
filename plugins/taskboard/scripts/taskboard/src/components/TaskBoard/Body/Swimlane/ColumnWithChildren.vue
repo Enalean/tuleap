@@ -19,7 +19,13 @@
   -->
 
 <template>
-    <div class="taskboard-cell" v-bind:class="classes" v-bind:data-swimlane-id="swimlane.card.id" v-bind:data-column-id="column.id">
+    <div class="taskboard-cell"
+         v-bind:class="classes"
+         v-bind:data-swimlane-id="swimlane.card.id"
+         v-bind:data-column-id="column.id"
+         v-on:mouseenter="mouseEntersCollapsedColumn"
+         v-on:mouseout="mouseLeavesCollapsedColumn"
+    >
         <template v-if="!column.is_collapsed">
             <template v-for="card of cards">
                 <child-card v-bind:key="card.id" v-bind:card="card"/>
@@ -38,13 +44,17 @@ import { namespace } from "vuex-class";
 import ChildCard from "./Card/ChildCard.vue";
 import CardSkeleton from "./Skeleton/CardSkeleton.vue";
 import SkeletonMixin from "./Skeleton/skeleton-mixin";
+import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
 
 const swimlane = namespace("swimlane");
 
 @Component({
     components: { ChildCard, CardSkeleton }
 })
-export default class ColumnWithChildren extends Mixins(SkeletonMixin) {
+export default class ColumnWithChildren extends Mixins(
+    SkeletonMixin,
+    HoveringStateForCollapsedColumnMixin
+) {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
 
