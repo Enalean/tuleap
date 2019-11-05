@@ -54,6 +54,7 @@ use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\Project\PaginatedProjects;
+use Tuleap\Project\ProjectDescriptionMandatoryException;
 use Tuleap\Project\ProjectInvalidTemplateException;
 use Tuleap\Project\ProjectStatusMapper;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
@@ -203,6 +204,8 @@ class ProjectResource extends AuthenticatedResource
             $label_dao,
             new DefaultProjectVisibilityRetriever(),
             new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
+            new \Rule_ProjectName(),
+            new \Rule_ProjectFullName(),
             $force_activation
         );
 
@@ -225,12 +228,12 @@ class ProjectResource extends AuthenticatedResource
      * @url    POST
      * @status 201
      *
-     * @param string      $shortname        Name of the project
-     * @param string      $description      Full description of the project
-     * @param string      $label            A short description of the project
-     * @param bool        $is_public        Define the visibility of the project
-     * @param bool | null $allow_restricted Define if the project should accept restricted users {@required false}
-     * @param int         $template_id      Template for this project.
+     * @param string            $shortname        Name of the project
+     * @param string | null     $description      Full description of the project {@required false}
+     * @param string            $label            A short description of the project
+     * @param bool              $is_public        Define the visibility of the project
+     * @param bool | null       $allow_restricted Define if the project should accept restricted users {@required false}
+     * @param int               $template_id      Template for this project.
      *
      *
      * @return ProjectRepresentation
@@ -238,7 +241,7 @@ class ProjectResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 429
      */
-    protected function post($shortname, $description, $label, $is_public, ?bool $allow_restricted, $template_id)
+    protected function post($shortname, ?string $description, $label, $is_public, ?bool $allow_restricted, $template_id)
     {
         $this->checkAccess();
 
@@ -272,6 +275,8 @@ class ProjectResource extends AuthenticatedResource
         } catch (Project_InvalidFullName_Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (ProjectInvalidTemplateException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (ProjectDescriptionMandatoryException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 

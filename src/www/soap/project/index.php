@@ -104,6 +104,8 @@ if ($request->exist('wsdl')) {
         new LabelDao(),
         new DefaultProjectVisibilityRetriever(),
         new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
+        new \Rule_ProjectName(),
+        new \Rule_ProjectFullName(),
         $force_activation
     );
 

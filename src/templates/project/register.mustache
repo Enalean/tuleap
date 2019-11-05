@@ -25,7 +25,7 @@
         <h1>{{getTitle}}</h1>
 
         <p>{{getPageDescriptionBeg}} {{getSysName}} {{getPageDescriptionEnd}}</p>
-        
+
         {{#isProjectApprovalEnabled}}
             <p><span class="label label-warning">{{getWarning}}</span> {{getWarningMessage}}</p>
         {{/isProjectApprovalEnabled}}
@@ -61,7 +61,9 @@
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">{{getDescriptionContainerShortDescription}} <span class="mandatory_field">*</span></label>
+            <label class="control-label">{{getDescriptionContainerShortDescription}}
+                {{# is_description_mandatory }} <span class="mandatory_field">*</span>{{/ is_description_mandatory }}
+            </label>
             <div class="controls">
                 <textarea
                     name="{{short_description_label}}"
@@ -69,7 +71,7 @@
                     cols="40"
                     rows="3"
                     data-test="project_short_description"
-                    required>{{getShortDescription}}</textarea>
+                    {{# is_description_mandatory }}required{{/ is_description_mandatory }}>{{getShortDescription}}</textarea>
                     <div class="help">{{getDescriptionContainerShortDescriptionHelp}}</div>
             </div>
         </div>

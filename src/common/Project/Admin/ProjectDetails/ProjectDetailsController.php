@@ -47,6 +47,7 @@ use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
 use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
 use Tuleap\Project\Admin\ServicesUsingTruncatedMailRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\ProjectDescriptionUsageRetriever;
 use Tuleap\TroveCat\TroveCatLinkDao;
 use UGroupBinding;
 
@@ -189,14 +190,9 @@ class ProjectDetailsController
                 $project_trove_categories,
                 $this->getProjectsCreatedFromTemplate($project),
                 $this->csrf_token,
-                $this->isDescriptionMandatory()
+                ProjectDescriptionUsageRetriever::isDescriptionMandatory()
             )
         );
-    }
-
-    private function isDescriptionMandatory(): bool
-    {
-        return ! ForgeConfig::get('enable_not_mandatory_description');
     }
 
     public function update(HTTPRequest $request)
@@ -246,7 +242,7 @@ class ProjectDetailsController
             return false;
         }
 
-        if ($this->isDescriptionMandatory() && ! $form_shortdesc) {
+        if (ProjectDescriptionUsageRetriever::isDescriptionMandatory()  && ! $form_shortdesc) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Missing Information. PLEASE fill in all required information.'));
 
             return false;

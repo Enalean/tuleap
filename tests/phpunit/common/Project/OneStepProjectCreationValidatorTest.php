@@ -20,12 +20,13 @@
  */
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 
 class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock, ForgeConfigSandbox;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Rule_ProjectName
@@ -195,7 +196,7 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
         $validator->validateAndGenerateErrors();
     }
 
-    public function testValidateAndGenerateErrorsValidatesDescription(): void
+    public function testValidateAndGenerateErrorsValidatesNotSetDescription(): void
     {
         $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
         $request->shouldReceive('getTemplateId')->twice()->andReturn(10);
@@ -208,6 +209,64 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
         $this->generateAValidTemplateId();
 
         $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs([Feedback::ERROR, Mockery::any()])->once();
+
+        $required_custom_descriptions = [];
+        $trove_cats                   = [];
+        $validator                    = $this->getValidator($request, $required_custom_descriptions, $trove_cats);
+
+        $this->rule_project_name->shouldReceive('isValid')->once()->andReturnTrue();
+        $this->rule_project_name->shouldReceive('getErrorMessage')->never();
+
+        $this->rule_project_full_name->shouldReceive('isValid')->once()->andReturnTrue();
+        $this->rule_project_full_name->shouldReceive('getErrorMessage')->never();
+
+        $validator->validateAndGenerateErrors();
+    }
+
+    public function testValidateAndGenerateErrorsValidatesRequiredAndEmptyDescription(): void
+    {
+        ForgeConfig::set('enable_not_mandatory_description', false);
+
+        $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
+        $request->shouldReceive('getTemplateId')->twice()->andReturn(10);
+        $request->shouldReceive('getUnixName')->twice()->andReturn('project-name');
+        $request->shouldReceive('isPublic')->once()->andReturnFalse();
+        $request->shouldReceive('getFullName')->twice()->andReturn('invalid');
+        $request->shouldReceive('getShortDescription')->once()->andReturn(null);
+        $request->shouldReceive('getTosApproval')->once()->andReturnTrue();
+
+        $this->generateAValidTemplateId();
+
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs([Feedback::ERROR, Mockery::any()])->once();
+
+        $required_custom_descriptions = [];
+        $trove_cats                   = [];
+        $validator                    = $this->getValidator($request, $required_custom_descriptions, $trove_cats);
+
+        $this->rule_project_name->shouldReceive('isValid')->once()->andReturnTrue();
+        $this->rule_project_name->shouldReceive('getErrorMessage')->never();
+
+        $this->rule_project_full_name->shouldReceive('isValid')->once()->andReturnTrue();
+        $this->rule_project_full_name->shouldReceive('getErrorMessage')->never();
+
+        $validator->validateAndGenerateErrors();
+    }
+
+    public function testValidateAndGenerateErrorsValidatesNotMandatoryDescription(): void
+    {
+        ForgeConfig::set('enable_not_mandatory_description', true);
+
+        $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
+        $request->shouldReceive('getTemplateId')->twice()->andReturn(10);
+        $request->shouldReceive('getUnixName')->twice()->andReturn('project-name');
+        $request->shouldReceive('isPublic')->once()->andReturnFalse();
+        $request->shouldReceive('getFullName')->twice()->andReturn('invalid');
+        $request->shouldReceive('getShortDescription')->never();
+        $request->shouldReceive('getTosApproval')->once()->andReturnTrue();
+
+        $this->generateAValidTemplateId();
+
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs([Feedback::ERROR, Mockery::any()])->never();
 
         $required_custom_descriptions = [];
         $trove_cats                   = [];

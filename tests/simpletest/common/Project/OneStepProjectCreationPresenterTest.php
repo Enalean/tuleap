@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - Present. All rights reserved
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -11,16 +11,17 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
-class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase
+class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     protected function aOneStepProjectCreationForm($request_data)
     {
@@ -37,7 +38,8 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase
             array(),
             $project_manager,
             array(),
-            ''
+            '',
+            true
         );
     }
 
