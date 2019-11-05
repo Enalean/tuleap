@@ -83,6 +83,8 @@ use Tuleap\Project\Banner\BannerAdministrationController;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\Home;
+use Tuleap\Project\Registration\ProjectRegistrationController;
+use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Service\AddController;
 use Tuleap\Project\Service\DeleteController;
 use Tuleap\Project\Service\EditController;
@@ -522,6 +524,16 @@ class RouteCollector
         return new LegacyRoutesController($path);
     }
 
+    public function getProjectRegistrationController(): ProjectRegistrationController
+    {
+        return new ProjectRegistrationController(
+            \TemplateRendererFactory::build(),
+            new ProjectRegistrationUserPermissionChecker(
+                ProjectManager::instance()
+            )
+        );
+    }
+
     private function getLegacyControllerHandler(string $path) : array
     {
         return [
@@ -616,6 +628,8 @@ class RouteCollector
         $r->get('/export/rss_sfnews.php', [self::class, 'getRssLatestNews']);
 
         $r->get('/news/permissions-per-group', [self::class, 'getNewsPermissionsPerGroup']);
+
+        $r->get('/project/new', [self::class, 'getProjectRegistrationController']);
 
         $collect_routes = new CollectRoutesEvent($r);
         $this->event_manager->processEvent($collect_routes);

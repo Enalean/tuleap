@@ -1,0 +1,68 @@
+/*!
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ *
+ *  This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+$illustration-width: 319px;
+$illustration-spacing: (2 * $tlp-double-spacing);
+$title-margin-left: $illustration-width + $illustration-spacing;
+
+.project-registration {
+    padding: $tlp-double-spacing;
+    background: linear-gradient(180deg, $tlp-ui-white 0, $tlp-theme-background-color 400px);
+}
+
+.register-new-project-box-spacing {
+    min-width: $illustration-width;
+}
+
+.project-registration-title {
+    margin: $tlp-spacing 0 ($tlp-spacing + $tlp-half-spacing) $title-margin-left;
+}
+
+.register-new-project-section {
+    display: flex;
+}
+
+.register-new-project-list {
+    margin: 0 0 0 $illustration-spacing;
+}
+
+.register-new-project-section-badge {
+    margin: 0 $tlp-half-spacing 0 0;
+}
+
+@media screen and (max-width: 1200px) {
+    .register-new-project-section {
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+    }
+
+    .project-registration-title {
+        margin: $tlp-spacing 0;
+    }
+
+    .register-new-project-box-spacing {
+        margin: $tlp-spacing 0;
+    }
+
+    .register-new-project-list {
+        margin: 0;
+    }
+}
