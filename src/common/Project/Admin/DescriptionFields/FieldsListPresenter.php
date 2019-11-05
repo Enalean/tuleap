@@ -39,7 +39,6 @@ class FieldsListPresenter
     public $type_header;
     public $rank_header;
     public $rank_tooltip;
-    public $no_description_fields;
     /**
      * @var \CSRFSynchronizerToken
      */
@@ -55,9 +54,8 @@ class FieldsListPresenter
         $this->title              = $title;
         $this->description_fields = $description_fields;
 
-        $this->description_fields_header                = $GLOBALS['Language']->getText('admin_desc_fields', 'description_fields_header');
+        $this->description_fields_header                = _('Project fields');
         $this->btn_add_field                            = $GLOBALS['Language']->getText('admin_desc_fields', 'header_add');
-        $this->no_description_fields                    = $GLOBALS['Language']->getText('admin_desc_fields', 'no_description_fields');
         $this->name_header                              = $GLOBALS['Language']->getText('admin_desc_fields', 'desc_name');
         $this->description_header                       = $GLOBALS['Language']->getText('admin_desc_fields', 'desc_description');
         $this->require_header                           = $GLOBALS['Language']->getText('admin_desc_fields', 'desc_required');

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,6 +31,15 @@ use Tuleap\Request\NotFoundException;
 
 class ProjectFieldsUpdateController implements DispatchableWithRequest
 {
+    /**
+     * @var ProjectsFieldDescriptionUpdater
+     */
+    private $description_updater;
+
+    public function __construct(ProjectsFieldDescriptionUpdater $description_updater)
+    {
+        $this->description_updater = $description_updater;
+    }
 
     /**
      * Is able to process a request routed by FrontRouter
@@ -74,29 +83,7 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
 
         $make_required_desc_id   = $request->get('make_required_desc_id');
         $remove_required_desc_id = $request->get('remove_required_desc_id');
-        if ($make_required_desc_id) {
-            $sql    = "UPDATE group_desc SET desc_required='1' where group_desc_id='" . db_ei($make_required_desc_id) . "'";
-            $result = db_query($sql);
-            if (!$result) {
-                $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('admin_desc_fields', 'update_required_desc_field_fail'));
-            } else {
-                $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('admin_desc_fields', 'update_success'));
-            }
-
-            $layout->redirect('/admin/project-creation/fields');
-        }
-
-        if ($remove_required_desc_id) {
-            $sql    = "UPDATE group_desc SET desc_required='0' where group_desc_id='" . db_ei($remove_required_desc_id) . "'";
-            $result = db_query($sql);
-            if (!$result) {
-                $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('admin_desc_fields', 'update_required_desc_field_fail'));
-            } else {
-                $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('admin_desc_fields', 'update_success'));
-            }
-
-            $layout->redirect('/admin/project-creation/fields');
-        }
+        $this->description_updater->updateDescription($make_required_desc_id, $remove_required_desc_id, $layout);
 
         $update           = $request->get('update_desc');
         $add_desc         = $request->get('add_desc');

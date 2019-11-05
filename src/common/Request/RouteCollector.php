@@ -26,7 +26,6 @@ use Codendi_HTMLPurifier;
 use ConfigDao;
 use EventManager;
 use FastRoute;
-use ForgeConfig;
 use FRSFileFactory;
 use ProjectHistoryDao;
 use ProjectManager;
@@ -37,6 +36,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectCreation\ProjectCategoriesDisplayController;
 use Tuleap\Admin\ProjectCreation\ProjectFieldsDisplayController;
 use Tuleap\Admin\ProjectCreation\ProjectFieldsUpdateController;
+use Tuleap\Admin\ProjectCreation\ProjectsFieldDescriptionUpdater;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigDisplayController;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigUpdateController;
@@ -204,9 +204,14 @@ class RouteCollector
         return new ProjectFieldsDisplayController();
     }
 
-    public static function postProjectCreationFields()
+    public static function postProjectCreationFields(): ProjectFieldsUpdateController
     {
-        return new ProjectFieldsUpdateController();
+        return new ProjectFieldsUpdateController(
+            new ProjectsFieldDescriptionUpdater(
+                new \Project_CustomDescription_CustomDescriptionDao(),
+                new ConfigDao()
+            )
+        );
     }
 
     public static function getProjectCreationCategories()

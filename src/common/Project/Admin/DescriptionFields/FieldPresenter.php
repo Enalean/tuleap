@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,6 +34,10 @@ class FieldPresenter
     public $rank_on_screen;
     public $edit_btn;
     public $delete_btn;
+    /**
+     * @var bool
+     */
+    public $is_system;
 
     public function __construct(
         $id,
@@ -43,7 +47,8 @@ class FieldPresenter
         $required_label,
         $type_value,
         $type_label,
-        $rank_on_screen
+        $rank_on_screen,
+        bool $is_system
     ) {
         $this->id                   = $id;
         $this->name                 = $name;
@@ -53,6 +58,7 @@ class FieldPresenter
         $this->type_is_line         = $type_value === 'line';
         $this->type_label           = $type_label;
         $this->rank_on_screen       = $rank_on_screen;
+        $this->is_system            = $is_system;
 
         $this->edit_btn   = $GLOBALS['Language']->getText('admin_desc_fields', 'edit_btn');
         $this->delete_btn = $GLOBALS['Language']->getText('admin_desc_fields', 'delete_btn');

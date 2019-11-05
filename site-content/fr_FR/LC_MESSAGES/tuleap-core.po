@@ -1098,6 +1098,12 @@ msgstr "Paramètres de création de projets"
 msgid "Project does not exist"
 msgstr "Le projet n'existe pas"
 
+msgid "Project field has been successfully updated."
+msgstr "Le champ de projet a correctement été modifié."
+
+msgid "Project fields"
+msgstr "Champs de projet"
+
 msgid "Project flag"
 msgid_plural "Project flags"
 msgstr[0] "Marqueur de projet"
@@ -1825,6 +1831,9 @@ msgstr "Message de bienvenue et informations générales pour les utilisateurs"
 
 msgid "Welcome, %s."
 msgstr "Bienvenue, %s"
+
+msgid "What is the purpose of your project?"
+msgstr "Quel est le but de ce projet?"
 
 msgid "What's this access key for?"
 msgstr "À quel usage cette clé d'accès est destiné ?"
