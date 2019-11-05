@@ -26,16 +26,12 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-final class MappedFieldValueRetrieverTest extends TestCase
+final class ArtifactMappedFieldValueRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var MappedFieldValueRetriever */
+    /** @var ArtifactMappedFieldValueRetriever */
     private $retriever;
-    /**
-     * @var \Cardwall_OnTop_ConfigFactory|M\LegacyMockInterface|M\MockInterface
-     */
-    private $config_factory;
     /**
      * @var M\LegacyMockInterface|M\MockInterface|MappedFieldRetriever
      */
@@ -59,14 +55,10 @@ final class MappedFieldValueRetrieverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->config_factory = M::mock(\Cardwall_OnTop_ConfigFactory::class);
         $this->mapped_field_retriever = M::mock(MappedFieldRetriever::class);
-        $this->retriever = new MappedFieldValueRetriever(
-            $this->config_factory,
-            $this->mapped_field_retriever
-        );
-        $this->release_tracker = M::mock(\Tracker::class);
-        $release_artifact = M::mock(\Tracker_Artifact::class);
+        $this->retriever              = new ArtifactMappedFieldValueRetriever($this->mapped_field_retriever);
+        $this->release_tracker        = M::mock(\Tracker::class);
+        $release_artifact             = M::mock(\Tracker_Artifact::class);
         $release_artifact->shouldReceive('getTracker')
             ->andReturn($this->release_tracker);
         $this->milestone = M::mock(\Planning_Milestone::class);
@@ -76,29 +68,14 @@ final class MappedFieldValueRetrieverTest extends TestCase
         $this->user = M::mock(\PFUser::class);
     }
 
-    public function testReturnsNullWhenNoCardwallConfig(): void
-    {
-        $this->config_factory->shouldReceive('getOnTopConfig')
-            ->with($this->release_tracker)
-            ->once()
-            ->andReturnNull();
-
-        $this->assertNull($this->retriever->getValueAtLastChangeset($this->milestone, $this->artifact, $this->user));
-    }
-
     public function testReturnsNullWhenNoMappedField(): void
     {
         $tracker = M::mock(\Tracker::class);
         $this->artifact->shouldReceive('getTracker')
             ->once()
             ->andReturn($tracker);
-        $config = M::mock(\Cardwall_OnTop_Config::class);
-        $this->config_factory->shouldReceive('getOnTopConfig')
-            ->with($this->release_tracker)
-            ->once()
-            ->andReturn($config);
         $this->mapped_field_retriever->shouldReceive('getField')
-            ->with($config, $tracker)
+            ->with($this->release_tracker, $tracker)
             ->once()
             ->andReturnNull();
 
@@ -118,7 +95,7 @@ final class MappedFieldValueRetrieverTest extends TestCase
 
     public function testReturnsNullWhenNoLastChangeset(): void
     {
-        $mapped_field = $this->mockFieldUserCanRead();
+        $this->mockFieldUserCanRead();
         $this->artifact->shouldReceive('getLastChangeset')
             ->once()
             ->andReturnNull();
@@ -198,15 +175,10 @@ final class MappedFieldValueRetrieverTest extends TestCase
         $this->artifact->shouldReceive('getTracker')
             ->once()
             ->andReturn($tracker);
-        $config = M::mock(\Cardwall_OnTop_Config::class);
-        $this->config_factory->shouldReceive('getOnTopConfig')
-            ->with($this->release_tracker)
-            ->once()
-            ->andReturn($config);
 
         $mapped_field = M::mock(\Tracker_FormElement_Field_Selectbox::class);
         $this->mapped_field_retriever->shouldReceive('getField')
-            ->with($config, $tracker)
+            ->with($this->release_tracker, $tracker)
             ->once()
             ->andReturn($mapped_field);
 

@@ -70,6 +70,17 @@ class Cardwall_OnTop_Config_ColumnFactory
         return $columns;
     }
 
+    public function getColumnById(int $column_id): ?Cardwall_Column
+    {
+        $dar = $this->dao->searchByColumnId($column_id);
+        if (! $dar) {
+            return null;
+        }
+        $row = $dar->getRow();
+        $header_color = ColumnColorRetriever::getHeaderColorNameOrRGB($row);
+        return new Cardwall_Column($column_id, $row['label'], $header_color);
+    }
+
     private function fillColumnsFor(
         Cardwall_OnTop_Config_ColumnCollection&$columns,
         Tracker_FormElement_Field_List $field,
@@ -82,9 +93,6 @@ class Cardwall_OnTop_Config_ColumnFactory
         }
     }
 
-    /**
-     * @return Tracker_FormElement_Field_List_Bind[]
-     */
     private function getFieldBindValues(
         Tracker_FormElement_Field_List $field,
         array $filter

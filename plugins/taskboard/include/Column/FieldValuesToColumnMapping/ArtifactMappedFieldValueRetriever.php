@@ -24,23 +24,21 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use Tracker_FormElement_Field_List_BindValue;
 
-class MappedFieldValueRetriever
+class ArtifactMappedFieldValueRetriever
 {
-    /**
-     * @var \Cardwall_OnTop_ConfigFactory
-     */
-    private $config_factory;
     /**
      * @var MappedFieldRetriever
      */
     private $mapped_field_retriever;
 
-    public function __construct(
-        \Cardwall_OnTop_ConfigFactory $config_factory,
-        MappedFieldRetriever $mapped_field_retriever
-    ) {
-        $this->config_factory         = $config_factory;
+    public function __construct(MappedFieldRetriever $mapped_field_retriever)
+    {
         $this->mapped_field_retriever = $mapped_field_retriever;
+    }
+
+    public static function build(): self
+    {
+        return new self(MappedFieldRetriever::build());
     }
 
     public function getValueAtLastChangeset(
@@ -48,12 +46,10 @@ class MappedFieldValueRetriever
         \Tracker_Artifact $artifact,
         \PFUser $user
     ): ?Tracker_FormElement_Field_List_BindValue {
-        $config  = $this->config_factory->getOnTopConfig($milestone->getArtifact()->getTracker());
-        if (! $config) {
-            return null;
-        }
-
-        $mapped_field = $this->mapped_field_retriever->getField($config, $artifact->getTracker());
+        $mapped_field = $this->mapped_field_retriever->getField(
+            $milestone->getArtifact()->getTracker(),
+            $artifact->getTracker()
+        );
         if (! $mapped_field) {
             return null;
         }

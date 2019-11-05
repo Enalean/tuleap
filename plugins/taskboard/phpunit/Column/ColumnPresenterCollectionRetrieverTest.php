@@ -22,56 +22,69 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column;
 
-use Cardwall_OnTop_ColumnDao;
-use Mockery;
+use Cardwall_Column;
+use Cardwall_OnTop_Config_ColumnFactory;
+use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
+use Planning;
+use Planning_Milestone;
+use Tracker;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenterBuilder;
 
 class ColumnPresenterCollectionRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testEmptyCollection()
+    /** @var ColumnPresenterCollectionRetriever */
+    private $collection_retriever;
+    /** @var Cardwall_OnTop_Config_ColumnFactory|M\LegacyMockInterface|M\MockInterface */
+    private $column_factory;
+    /** @var M\LegacyMockInterface|M\MockInterface|TrackerMappingPresenterBuilder */
+    private $mappings_builder;
+
+    protected function setUp(): void
     {
-        $dao = Mockery::mock(Cardwall_OnTop_ColumnDao::class);
-        $dao->shouldReceive('searchColumnsByTrackerId')
-            ->with(101)
+        $this->column_factory       = M::mock(Cardwall_OnTop_Config_ColumnFactory::class);
+        $this->mappings_builder     = M::mock(TrackerMappingPresenterBuilder::class);
+        $this->collection_retriever = new ColumnPresenterCollectionRetriever(
+            $this->column_factory,
+            $this->mappings_builder
+        );
+    }
+
+    public function testEmptyCollection(): void
+    {
+        $milestone_tracker = M::mock(Tracker::class);
+        $milestone         = $this->mockMilestone($milestone_tracker);
+        $this->column_factory->shouldReceive('getDashboardColumns')
+            ->with($milestone_tracker)
             ->once()
             ->andReturn([]);
+        $user = M::mock(PFUser::class);
 
-        $mappings_builder = Mockery::mock(TrackerMappingPresenterBuilder::class);
-
-        $planning = Mockery::mock(\Planning::class);
-        $planning->shouldReceive('getPlanningTrackerId')->once()->andReturn(101);
-
-        $user = Mockery::mock(\PFUser::class);
-
-        $milestone = Mockery::mock(\Planning_Milestone::class);
-        $milestone->shouldReceive('getPlanning')->once()->andReturn($planning);
-
-        $retriever  = new ColumnPresenterCollectionRetriever($dao, $mappings_builder);
-        $collection = $retriever->getColumns($user, $milestone);
+        $collection = $this->collection_retriever->getColumns($user, $milestone);
 
         $this->assertEmpty($collection);
     }
 
-    public function testCollection()
+    public function testCollection(): void
     {
-        $dao = Mockery::mock(Cardwall_OnTop_ColumnDao::class);
-        $dao->shouldReceive('searchColumnsByTrackerId')
-            ->with(101)
+        $milestone_tracker = M::mock(Tracker::class);
+        $milestone         = $this->mockMilestone($milestone_tracker);
+        $milestone->shouldReceive('getArtifactId')
+            ->atLeast()->once()
+            ->andReturn(42);
+        $todo_column       = new Cardwall_Column(2, 'To do', 'fiesta-red');
+        $ongoing_column    = new Cardwall_Column(4, 'On going', '');
+        $done_column       = new Cardwall_Column(6, 'Done', 'rgb(135,219,239)');
+        $this->column_factory->shouldReceive('getDashboardColumns')
+            ->with($milestone_tracker)
             ->once()
-            ->andReturn([
-                ['id' => 2, 'label' => 'To do', 'bg_red' => null, 'bg_green' => null, 'bg_blue' => null, 'tlp_color_name' => 'fiesta_red'],
-                ['id' => 4, 'label' => 'On going', 'bg_red' => null, 'bg_green' => null, 'bg_blue' => null, 'tlp_color_name' => ''],
-                ['id' => 6, 'label' => 'Done', 'bg_red' => 135, 'bg_green' => 219, 'bg_blue' => 239, 'tlp_color_name' => '']
-            ]);
+            ->andReturn([$todo_column, $ongoing_column, $done_column]);
 
-        $planning = Mockery::mock(\Planning::class);
-        $planning->shouldReceive('getPlanningTrackerId')->once()->andReturn(101);
-
-        $user = Mockery::mock(\PFUser::class);
+        $user = M::mock(PFUser::class);
         $user->shouldReceive('getPreference')
              ->with('plugin_taskboard_collapse_column_42_2')
              ->once()
@@ -85,29 +98,30 @@ class ColumnPresenterCollectionRetrieverTest extends TestCase
              ->once()
              ->andReturn('1');
 
-        $milestone = Mockery::mock(\Planning_Milestone::class);
-        $milestone->shouldReceive('getPlanning')->once()->andReturn($planning);
-        $milestone->shouldReceive('getArtifactId')->andReturn(42);
-
-        $mappings_builder = Mockery::mock(TrackerMappingPresenterBuilder::class);
-        $mappings_builder->shouldReceive('buildMappings')->withArgs(
-            function (int $column_id, \Planning $planning) {
+        $this->mappings_builder->shouldReceive('buildMappings')->withArgs(
+            function (Planning_Milestone $milestone, Cardwall_Column $column) {
+                $column_id = $column->getId();
                 return $column_id === 2 || $column_id === 4 || $column_id === 6;
             }
         )->andReturn([]);
 
-        $retriever  = new ColumnPresenterCollectionRetriever($dao, $mappings_builder);
-        $collection = $retriever->getColumns($user, $milestone);
+        $collection = $this->collection_retriever->getColumns($user, $milestone);
 
         $this->assertCount(3, $collection);
-        $this->assertEquals('To do', $collection[0]->label);
-        $this->assertEquals('fiesta_red', $collection[0]->color);
         $this->assertFalse($collection[0]->is_collapsed);
-        $this->assertEquals('On going', $collection[1]->label);
-        $this->assertEquals('', $collection[1]->color);
         $this->assertFalse($collection[1]->is_collapsed);
-        $this->assertEquals('Done', $collection[2]->label);
-        $this->assertEquals('#87DBEF', $collection[2]->color);
         $this->assertTrue($collection[2]->is_collapsed);
+    }
+
+    /**
+     * @return M\LegacyMockInterface|M\MockInterface|Planning_Milestone
+     */
+    private function mockMilestone(Tracker $milestone_tracker)
+    {
+        $planning = M::mock(Planning::class);
+        $planning->shouldReceive('getPlanningTracker')->once()->andReturn($milestone_tracker);
+        $milestone = M::mock(Planning_Milestone::class);
+        $milestone->shouldReceive('getPlanning')->once()->andReturn($planning);
+        return $milestone;
     }
 }

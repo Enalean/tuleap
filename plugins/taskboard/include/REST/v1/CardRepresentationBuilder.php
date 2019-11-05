@@ -28,8 +28,7 @@ use Tracker_Artifact;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldValueRetriever;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\ArtifactMappedFieldValueRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\User\REST\UserRepresentation;
 
@@ -40,7 +39,7 @@ class CardRepresentationBuilder
      */
     private $background_color_builder;
     /**
-     * @var MappedFieldValueRetriever
+     * @var ArtifactMappedFieldValueRetriever
      */
     private $mapped_field_value_retriever;
     /**
@@ -50,7 +49,7 @@ class CardRepresentationBuilder
 
     public function __construct(
         BackgroundColorBuilder $background_color_builder,
-        MappedFieldValueRetriever $mapped_field_value_retriever,
+        ArtifactMappedFieldValueRetriever $mapped_field_value_retriever,
         RemainingEffortRepresentationBuilder $remaining_effort_representation_builder
     ) {
         $this->background_color_builder                = $background_color_builder;
@@ -155,13 +154,7 @@ class CardRepresentationBuilder
 
         return new CardRepresentationBuilder(
             new BackgroundColorBuilder(new BindDecoratorRetriever()),
-            new MappedFieldValueRetriever(
-                new \Cardwall_OnTop_ConfigFactory(
-                    \TrackerFactory::instance(),
-                    $form_element_factory
-                ),
-                new MappedFieldRetriever(new \Cardwall_FieldProviders_SemanticStatusFieldRetriever()),
-            ),
+            ArtifactMappedFieldValueRetriever::build(),
             new RemainingEffortRepresentationBuilder(
                 new RemainingEffortValueRetriever($form_element_factory),
                 $form_element_factory

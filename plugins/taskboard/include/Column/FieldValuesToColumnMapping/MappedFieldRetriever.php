@@ -22,29 +22,42 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
+use Cardwall_FieldProviders_SemanticStatusFieldRetriever;
+use Tracker;
+use Tracker_FormElement_Field_Selectbox;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingFactory;
+
 class MappedFieldRetriever
 {
     /**
-     * @var \Cardwall_FieldProviders_SemanticStatusFieldRetriever
+     * @var Cardwall_FieldProviders_SemanticStatusFieldRetriever
      */
     private $semantic_status_provider;
+    /** @var FreestyleMappingFactory */
+    private $freestyle_mapping_factory;
 
-    public function __construct(\Cardwall_FieldProviders_SemanticStatusFieldRetriever $semantic_status_provider)
-    {
+    public function __construct(
+        Cardwall_FieldProviders_SemanticStatusFieldRetriever $semantic_status_provider,
+        FreestyleMappingFactory $freestyle_mapping_factory
+    ) {
         $this->semantic_status_provider = $semantic_status_provider;
+        $this->freestyle_mapping_factory = $freestyle_mapping_factory;
     }
 
-    public function getField(
-        \Cardwall_OnTop_Config $cardwall_config,
-        \Tracker $tracker
-    ): ?\Tracker_FormElement_Field_List {
-        $mapping = $cardwall_config->getMappingFor($tracker);
-        if ($mapping) {
-            $mapped_field = $mapping->getField();
-            if ($mapped_field instanceof \Tracker_FormElement_Field_List) {
-                return $mapped_field;
-            }
-            return null;
+    public static function build(): self
+    {
+        return new self(
+            new Cardwall_FieldProviders_SemanticStatusFieldRetriever(),
+            new FreestyleMappingFactory(new FreestyleMappingDao(), \Tracker_FormElementFactory::instance())
+        );
+    }
+
+    public function getField(Tracker $milestone_tracker, Tracker $tracker): ?Tracker_FormElement_Field_Selectbox
+    {
+        $mapped_field = $this->freestyle_mapping_factory->getMappedField($milestone_tracker, $tracker);
+        if ($mapped_field) {
+            return $mapped_field;
         }
         return $this->semantic_status_provider->getField($tracker);
     }

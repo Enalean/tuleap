@@ -79,8 +79,6 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TestCase
 
     public function testItBuildsColumnsFromTheDataStorage(): void
     {
-        $this->tracker->shouldReceive('getStatusField')
-            ->andReturn($this->status_field);
         $this->dao->shouldReceive('searchColumnsByTrackerId')
             ->with(42)
             ->once()
@@ -116,18 +114,16 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TestCase
 
         $this->assertInstanceOf(Cardwall_OnTop_Config_ColumnFreestyleCollection::class, $columns);
         $this->assertSame(3, count($columns));
-        $this->assertSame("On Going", $columns[1]->getLabel());
-        $this->assertSame("rgb(123, 12, 10)", $columns[0]->getHeadercolor());
-        $this->assertSame("rgb(248,248,248)", $columns[1]->getHeadercolor());
+        $this->assertSame('On Going', $columns[1]->getLabel());
+        $this->assertSame('rgb(123, 12, 10)', $columns[0]->getHeadercolor());
+        $this->assertSame('rgb(248,248,248)', $columns[1]->getHeadercolor());
 
-        $this->assertSame("Review", $columns[2]->getLabel());
-        $this->assertSame("peggy-pink", $columns[2]->getHeadercolor());
+        $this->assertSame('Review', $columns[2]->getLabel());
+        $this->assertSame('peggy-pink', $columns[2]->getHeadercolor());
     }
 
     public function testItBuildsAnEmptyFreestyleCollection(): void
     {
-        $this->tracker->shouldReceive('getStatusField')
-            ->andReturnNull();
         $this->dao->shouldReceive('searchColumnsByTrackerId')
             ->with(42)
             ->andReturn([]);
@@ -135,5 +131,36 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TestCase
 
         $this->assertInstanceOf(Cardwall_OnTop_Config_ColumnFreestyleCollection::class, $columns);
         $this->assertSame(0, count($columns));
+    }
+
+    public function testGetColumnByIdReturnsNullWhenColumnCantBeFound(): void
+    {
+        $this->dao->shouldReceive('searchByColumnId')
+            ->with(79)
+            ->once()
+            ->andReturnFalse();
+        $this->assertNull($this->factory->getColumnById(79));
+    }
+
+    public function testGetColumnByIdBuildsASingleColumn(): void
+    {
+        $column_row = [
+            'id' => 79,
+            'label' => 'Review',
+            'bg_red' => null,
+            'bg_green' => null,
+            'bg_blue' => null,
+            'tlp_color_name' => 'acid-green'
+        ];
+        $dar        = M::mock(DataAccessResult::class)
+            ->shouldReceive(['getRow' => $column_row])
+            ->getMock();
+        $this->dao->shouldReceive('searchByColumnId')
+            ->with(79)
+            ->once()
+            ->andReturn($dar);
+        $column = $this->factory->getColumnById(79);
+        $this->assertSame('Review', $column->getLabel());
+        $this->assertSame('acid-green', $column->getHeadercolor());
     }
 }

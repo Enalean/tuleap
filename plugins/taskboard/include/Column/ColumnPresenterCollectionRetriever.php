@@ -22,29 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column;
 
+use Cardwall_Column;
 use Cardwall_OnTop_ColumnDao;
+use Cardwall_OnTop_Config_ColumnFactory;
+use Cardwall_OnTop_Dao;
 use PFUser;
-use Planning;
-use Tuleap\Cardwall\Column\ColumnColorRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenterBuilder;
 
 class ColumnPresenterCollectionRetriever
 {
-    /**
-     * @var Cardwall_OnTop_ColumnDao
-     */
-    private $column_dao;
-    /**
-     * @var TrackerMappingPresenterBuilder
-     */
+    /** @var Cardwall_OnTop_Config_ColumnFactory */
+    private $column_factory;
+    /** @var TrackerMappingPresenterBuilder */
     private $tracker_mapping_builder;
 
     public function __construct(
-        Cardwall_OnTop_ColumnDao $column_dao,
+        Cardwall_OnTop_Config_ColumnFactory $column_factory,
         TrackerMappingPresenterBuilder $tracker_mapping_builder
     ) {
-        $this->column_dao              = $column_dao;
+        $this->column_factory          = $column_factory;
         $this->tracker_mapping_builder = $tracker_mapping_builder;
+    }
+
+    public static function build(): self
+    {
+        return new self(
+            new Cardwall_OnTop_Config_ColumnFactory(new Cardwall_OnTop_ColumnDao(), new Cardwall_OnTop_Dao()),
+            TrackerMappingPresenterBuilder::build()
+        );
     }
 
     /**
@@ -54,24 +59,22 @@ class ColumnPresenterCollectionRetriever
     {
         $collection = [];
         $planning   = $milestone->getPlanning();
-        foreach ($this->column_dao->searchColumnsByTrackerId($planning->getPlanningTrackerId()) as $row) {
-            $column_id    = (int) $row['id'];
-            $mappings     = $this->tracker_mapping_builder->buildMappings($column_id, $planning);
+        $columns    = $this->column_factory->getDashboardColumns($planning->getPlanningTracker());
+        /** @var Cardwall_Column $column */
+        foreach ($columns as $column) {
+            $mappings = $this->tracker_mapping_builder->buildMappings($milestone, $column);
             $collection[] = new ColumnPresenter(
-                $column_id,
-                $row['label'],
-                ColumnColorRetriever::getHeaderColorNameOrHex($row),
-                $this->isCollapsed($user, $milestone, $column_id),
+                $column,
+                $this->isCollapsed($user, $milestone, $column),
                 $mappings
             );
         }
-
         return $collection;
     }
 
-    private function isCollapsed(PFUser $user, \Planning_Milestone $milestone, int $column_id): bool
+    private function isCollapsed(PFUser $user, \Planning_Milestone $milestone, Cardwall_Column $column): bool
     {
-        $preference_name = 'plugin_taskboard_collapse_column_' . $milestone->getArtifactId() . '_' . $column_id;
+        $preference_name = 'plugin_taskboard_collapse_column_' . $milestone->getArtifactId() . '_' . $column->getId();
 
         return !empty($user->getPreference($preference_name));
     }

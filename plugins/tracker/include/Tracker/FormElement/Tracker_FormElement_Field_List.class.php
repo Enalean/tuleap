@@ -810,7 +810,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     /**
-     * @return array of BindValues that are not hidden + none value if any
+     * @return Tracker_FormElement_Field_List_BindValue[] array of BindValues that are not hidden + none value if any
      */
     public function getVisibleValuesPlusNoneIfAny()
     {
@@ -827,7 +827,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     /**
-     * @return Tracker_FormElement_Field_List_Value or null if not found
+     * @return Tracker_FormElement_Field_List_Value|null null if not found
      */
     public function getListValueById($value_id)
     {

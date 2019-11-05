@@ -25,6 +25,7 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingFactory;
 
 final class MappedFieldRetrieverTest extends TestCase
 {
@@ -38,67 +39,49 @@ final class MappedFieldRetrieverTest extends TestCase
      * @var \Cardwall_FieldProviders_SemanticStatusFieldRetriever|M\LegacyMockInterface|M\MockInterface
      */
     private $status_retriever;
+    /** @var M\LegacyMockInterface|M\MockInterface|FreestyleMappingFactory */
+    private $freestyle_mapping_factory;
 
     protected function setUp(): void
     {
-        $this->status_retriever       = M::mock(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
-        $this->mapped_field_retriever = new MappedFieldRetriever($this->status_retriever);
+        $this->status_retriever = M::mock(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
+        $this->freestyle_mapping_factory = M::mock(FreestyleMappingFactory::class);
+        $this->mapped_field_retriever = new MappedFieldRetriever(
+            $this->status_retriever,
+            $this->freestyle_mapping_factory
+        );
     }
 
-    public function testReturnsFieldMappedInConfig(): void
+    public function testReturnsFreestyleMappedField(): void
     {
-        $tracker      = M::mock(\Tracker::class);
-        $mapped_field = M::mock(\Tracker_FormElement_Field_Selectbox::class);
-        $mapping      = M::mock(\Cardwall_OnTop_Config_TrackerMapping::class);
-        $mapping->shouldReceive('getField')
+        $milestone_tracker = M::mock(\Tracker::class);
+        $tracker           = M::mock(\Tracker::class);
+        $field             = M::mock(\Tracker_FormElement_Field_Selectbox::class);
+        $this->freestyle_mapping_factory->shouldReceive('getMappedField')
+            ->with($milestone_tracker, $tracker)
             ->once()
-            ->andReturn($mapped_field);
-        $config = M::mock(\Cardwall_OnTop_Config::class);
-        $config->shouldReceive('getMappingFor')
-            ->with($tracker)
-            ->once()
-            ->andReturn($mapping);
+            ->andReturn($field);
 
-        $result = $this->mapped_field_retriever->getField($config, $tracker);
-
-        $this->assertSame($mapped_field, $result);
-    }
-
-    public function testReturnsNullWhenMappedFieldIsNotList(): void
-    {
-        $tracker      = M::mock(\Tracker::class);
-        $mapped_field = M::mock(\Tracker_FormElement_Field_Integer::class);
-        $mapping      = M::mock(\Cardwall_OnTop_Config_TrackerMapping::class);
-        $mapping->shouldReceive('getField')
-            ->once()
-            ->andReturn($mapped_field);
-        $config = M::mock(\Cardwall_OnTop_Config::class);
-        $config->shouldReceive('getMappingFor')
-            ->with($tracker)
-            ->once()
-            ->andReturn($mapping);
-
-        $result = $this->mapped_field_retriever->getField($config, $tracker);
-
-        $this->assertNull($result);
+        $result = $this->mapped_field_retriever->getField($milestone_tracker, $tracker);
+        $this->assertSame($field, $result);
     }
 
     public function testReturnsStatusSemanticWhenNoMapping(): void
     {
-        $tracker      = M::mock(\Tracker::class);
-        $mapped_field = M::mock(\Tracker_FormElement_Field_Selectbox::class);
-        $config       = M::mock(\Cardwall_OnTop_Config::class);
-        $config->shouldReceive('getMappingFor')
-            ->with($tracker)
+        $milestone_tracker = M::mock(\Tracker::class);
+        $tracker           = M::mock(\Tracker::class);
+        $field             = M::mock(\Tracker_FormElement_Field_Selectbox::class);
+        $this->freestyle_mapping_factory->shouldReceive('getMappedField')
+            ->with($milestone_tracker, $tracker)
             ->once()
             ->andReturnNull();
         $this->status_retriever->shouldReceive('getField')
             ->with($tracker)
             ->once()
-            ->andReturn($mapped_field);
+            ->andReturn($field);
 
-        $result = $this->mapped_field_retriever->getField($config, $tracker);
+        $result = $this->mapped_field_retriever->getField($milestone_tracker, $tracker);
 
-        $this->assertSame($mapped_field, $result);
+        $this->assertSame($field, $result);
     }
 }
