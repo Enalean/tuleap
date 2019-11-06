@@ -26,50 +26,32 @@ namespace Tuleap\FRS\LicenseAgreement;
 /**
  * @psalm-immutable
  */
-class LicenseAgreement implements LicenseAgreementInterface
+class NoLicenseToApprove implements LicenseAgreementInterface
 {
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var string
-     */
-    private $title;
-    /**
-     * @var string
-     */
-    private $content;
-
-    public function __construct(int $id, string $title, string $content)
-    {
-        $this->id = $id;
-        $this->title = $title;
-        $this->content = $content;
-    }
+    public const ID = -1;
 
     public function getAsJson(): string
     {
-        return \json_encode(['id' => $this->id, 'title' => $this->title, 'content' => $this->content]);
+        return '{}';
     }
 
     public function getId(): int
     {
-        return $this->id;
+        return self::ID;
     }
 
     public function getTitle(): string
     {
-        return $this->title;
+        return '';
     }
 
     public function getContent(): string
     {
-        return $this->content;
+        return '';
     }
 
     public function getLicenseOptionPresenter(LicenseAgreementInterface $selected_agreement): LicenseOptionPresenter
     {
-        return new LicenseOptionPresenter($this->getId(), $this->getTitle(), $selected_agreement->getId() === $this->getId());
+        return new LicenseOptionPresenter($this->getId(), _('No'), $selected_agreement->getId() === $this->getId());
     }
 }

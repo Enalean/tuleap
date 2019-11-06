@@ -26,15 +26,20 @@ namespace Tuleap\FRS\LicenseAgreement;
 /**
  * @psalm-immutable
  */
-interface LicenseAgreementInterface
+class EditPackagePresenter
 {
-    public function getAsJson(): string;
+    public const TEMPLATE = 'edit-package';
 
-    public function getId(): int;
+    /**
+     * @var LicenseOptionPresenter[]
+     */
+    public $license_selector;
 
-    public function getTitle(): string;
-
-    public function getContent(): string;
-
-    public function getLicenseOptionPresenter(LicenseAgreementInterface $selected_agreement): LicenseOptionPresenter;
+    /**
+     * @param LicenseOptionPresenter[] $license_selector
+     */
+    public function __construct(array $license_selector)
+    {
+        $this->license_selector = $license_selector;
+    }
 }

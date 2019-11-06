@@ -26,15 +26,27 @@ namespace Tuleap\FRS\LicenseAgreement;
 /**
  * @psalm-immutable
  */
-interface LicenseAgreementInterface
+class LicenseOptionPresenter
 {
-    public function getAsJson(): string;
+    /**
+     * @var string
+     */
+    public $label;
 
-    public function getId(): int;
+    /**
+     * @var int
+     */
+    public $value;
 
-    public function getTitle(): string;
+    /**
+     * @var bool
+     */
+    public $is_selected;
 
-    public function getContent(): string;
-
-    public function getLicenseOptionPresenter(LicenseAgreementInterface $selected_agreement): LicenseOptionPresenter;
+    public function __construct(int $value, string $label, bool $is_selected)
+    {
+        $this->value = $value;
+        $this->label = $label;
+        $this->is_selected = $is_selected;
+    }
 }

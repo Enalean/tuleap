@@ -23,8 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\LicenseAgreement;
 
-class NullLicenseAgreement implements LicenseAgreementInterface
+/**
+ * @psalm-immutable
+ */
+class DefaultLicenseAgreement implements LicenseAgreementInterface
 {
+    public const ID = 0;
+
     public function getAsJson(): string
     {
         return '{}';
@@ -32,16 +37,21 @@ class NullLicenseAgreement implements LicenseAgreementInterface
 
     public function getId(): int
     {
-        return 0;
+        return self::ID;
     }
 
     public function getTitle(): string
     {
-        return '';
+        return 'Code eXchange Corporate Policy';
     }
 
     public function getContent(): string
     {
         return '';
+    }
+
+    public function getLicenseOptionPresenter(LicenseAgreementInterface $selected_agreement): LicenseOptionPresenter
+    {
+        return new LicenseOptionPresenter($this->getId(), $this->getTitle(), $selected_agreement->getId() === $this->getId());
     }
 }

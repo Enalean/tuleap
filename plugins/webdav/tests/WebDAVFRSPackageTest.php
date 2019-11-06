@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once 'bootstrap.php';
@@ -25,7 +26,6 @@ Mock::generate('FRSPackageFactory');
 Mock::generate('FRSReleaseFactory');
 Mock::generate('PFUser');
 Mock::generate('Project');
-Mock::generate('FRSPackage');
 Mock::generate('WebDAVFRSRelease');
 Mock::generate('PermissionsManager');
 Mock::generate('WebDAVUtils');
@@ -159,10 +159,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase
     {
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isActive', false);
-        $package->setReturnValue('userCanRead', false);
-        $package->setReturnValue('isHidden', false);
+        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => false, 'isHidden' => false]);
         $webDAVFRSPackage->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
@@ -178,10 +175,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase
     {
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isActive', true);
-        $package->setReturnValue('userCanRead', false);
-        $package->setReturnValue('isHidden', false);
+        $package = Mockery::mock(FRSPackage::class, ['isActive' => true, 'userCanRead' => false, 'isHidden' => false]);
         $webDAVFRSPackage->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
@@ -197,10 +191,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase
     {
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isActive', false);
-        $package->setReturnValue('userCanRead', true);
-        $package->setReturnValue('isHidden', false);
+        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => true, 'isHidden' => false]);
         $webDAVFRSPackage->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
@@ -216,10 +207,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase
     {
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isActive', true);
-        $package->setReturnValue('userCanRead', true);
-        $package->setReturnValue('isHidden', false);
+        $package = Mockery::mock(FRSPackage::class, ['isActive' => true, 'userCanRead' => true, 'isHidden' => false]);
         $webDAVFRSPackage->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
@@ -235,10 +223,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase
     {
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isActive', false);
-        $package->setReturnValue('userCanRead', false);
-        $package->setReturnValue('isHidden', true);
+        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => false, 'isHidden' => true]);
         $webDAVFRSPackage->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
@@ -254,10 +239,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase
     {
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isActive', false);
-        $package->setReturnValue('userCanRead', true);
-        $package->setReturnValue('isHidden', true);
+        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => true, 'isHidden' => true]);
         $webDAVFRSPackage->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
@@ -273,10 +255,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase
     {
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isActive', false);
-        $package->setReturnValue('userCanRead', false);
-        $package->setReturnValue('isHidden', false);
+        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => false, 'isHidden' => false]);
         $webDAVFRSPackage->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
@@ -293,10 +272,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase
     {
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isActive', true);
-        $package->setReturnValue('userCanRead', false);
-        $package->setReturnValue('isHidden', false);
+        $package = Mockery::mock(FRSPackage::class, ['isActive' => true, 'userCanRead' => false, 'isHidden' => false]);
         $webDAVFRSPackage->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
@@ -312,10 +288,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase
     {
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isActive', false);
-        $package->setReturnValue('userCanRead', true);
-        $package->setReturnValue('isHidden', false);
+        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => true, 'isHidden' => false]);
         $webDAVFRSPackage->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
@@ -331,10 +304,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase
     {
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isActive', true);
-        $package->setReturnValue('userCanRead', true);
-        $package->setReturnValue('isHidden', false);
+        $package = Mockery::mock(FRSPackage::class, ['isActive' => true, 'userCanRead' => true, 'isHidden' => false]);
         $webDAVFRSPackage->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
@@ -350,10 +320,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase
     {
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isActive', false);
-        $package->setReturnValue('userCanRead', false);
-        $package->setReturnValue('isHidden', true);
+        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => false, 'isHidden' => true]);
         $webDAVFRSPackage->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
@@ -369,10 +336,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase
     {
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
-        $package = new MockFRSPackage();
-        $package->setReturnValue('isActive', false);
-        $package->setReturnValue('userCanRead', true);
-        $package->setReturnValue('isHidden', true);
+        $package = Mockery::mock(FRSPackage::class, ['isActive' => false, 'userCanRead' => true, 'isHidden' => true]);
         $webDAVFRSPackage->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
@@ -505,7 +469,7 @@ class WebDAVFRSPackageTest extends TuleapTestCase
         $webDAVFRSPackage->setReturnValue('getUtils', $utils);
         $project = new MockProject();
         $webDAVFRSPackage->setReturnValue('getProject', $project);
-        $package = new MockFRSPackage();
+        $package = new FRSPackage();
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
 
         $webDAVFRSPackage->setName('newName');

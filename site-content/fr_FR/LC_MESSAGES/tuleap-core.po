@@ -1400,6 +1400,9 @@ msgstr "Le fichier '%s' est déjà en cours d'upload"
 msgid "The file cannot be found"
 msgstr "Le fichier ne peut pas être trouvé"
 
+msgid "The given license agreement is not valid for this project"
+msgstr "La license associée au fichier n'est pas valide pour ce projet"
+
 msgid ""
 "The given parent project does not exist or you are not its administrator."
 msgstr ""
@@ -1448,6 +1451,10 @@ msgstr ""
 
 msgid "The password policy has been successfully updated."
 msgstr "La politique des mots de passe a correctement été mise à jour."
+
+msgid "The platform mandates a license agreement, none given"
+msgstr ""
+"La plateforme impose la selection d'une license, aucune n'a été fournit"
 
 #, php-format
 msgid ""
@@ -1871,9 +1878,6 @@ msgstr ""
 
 msgid "Year"
 msgstr "Année"
-
-msgid "Yes"
-msgstr "Oui"
 
 msgid "Yesterday"
 msgstr "Hier"

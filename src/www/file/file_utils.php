@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -349,7 +349,7 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings)
     //}}}
     echo '<tr><th>'.$GLOBALS['Language']->getText('global', 'status').':</th>  <td>'. frs_show_status_popup('package[status_id]', $package->getStatusID()) .'</td></tr>';
 
-    echo $license_agreement_display->getPackageEditSelector($package);
+    echo $license_agreement_display->getPackageEditSelector($package, $project);
 
      //We cannot set permission on creation for now
     if ($package->getPackageID()) {
@@ -358,7 +358,10 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings)
             FRSPackageFactory::instance(),
             FRSReleaseFactory::instance(),
             new User_ForgeUserGroupFactory(new UserGroupDao()),
-            PermissionsManager::instance()
+            PermissionsManager::instance(),
+            new LicenseAgreementFactory(
+                new LicenseAgreementDao()
+            ),
         );
 
         $package_controller->displayUserGroups($project, FRSPackage::PERM_READ, $package->getPackageID());
@@ -735,7 +738,10 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                                                 FRSPackageFactory::instance(),
                                                 FRSReleaseFactory::instance(),
                                                 new User_ForgeUserGroupFactory(new UserGroupDao()),
-                                                PermissionsManager::instance()
+                                                PermissionsManager::instance(),
+                                                new LicenseAgreementFactory(
+                                                    new LicenseAgreementDao()
+                                                ),
                                             );
 
                                             $release_controller->displayUserGroups($project, FRSRelease::PERM_READ, $release->getReleaseID());
@@ -744,7 +750,10 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                                                 FRSPackageFactory::instance(),
                                                 FRSReleaseFactory::instance(),
                                                 new User_ForgeUserGroupFactory(new UserGroupDao()),
-                                                PermissionsManager::instance()
+                                                PermissionsManager::instance(),
+                                                new LicenseAgreementFactory(
+                                                    new LicenseAgreementDao()
+                                                ),
                                             );
 
                                             $package_controller->displayUserGroups($project, FRSPackage::PERM_READ, $release->getPackageID());

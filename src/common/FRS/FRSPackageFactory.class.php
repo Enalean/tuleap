@@ -24,6 +24,8 @@ use Tuleap\FRS\FRSPackagePaginatedCollection;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 
 class FRSPackageFactory
 {
@@ -248,14 +250,19 @@ class FRSPackageFactory
         return false;
     }
 
-
-    function create($data_array)
+    public function create(array $data_array)
     {
+        $original_approval_license = null;
+        if (isset($data_array['approve_license'])) {
+            $original_approval_license = $data_array['approve_license'];
+            $data_array['approve_license'] = LicenseAgreementFactory::convertLicenseAgreementIdToPackageApprovalLicense((int) $data_array['approve_license']) ? '1' : '0';
+        }
         $dao = $this->_getFRSPackageDao();
         $id = $dao->createFromArray($data_array);
         if ($id) {
             $data_array['package_id'] = $id;
             $package = new FRSPackage($data_array);
+            $this->setLicenseAgreementAtPackageCreation($package, $original_approval_license);
             $this->setDefaultPermissions($package);
             $this->getEventManager()->processEvent(
                 'frs_create_package',
@@ -264,6 +271,22 @@ class FRSPackageFactory
             );
         }
         return $id;
+    }
+
+    protected function setLicenseAgreementAtPackageCreation(FRSPackage $package, ?int $original_approval_license)
+    {
+        if ($original_approval_license === null) {
+            return;
+        }
+        $project = $this->getProjectManager()->getProject($package->getGroupID());
+        if (! $project) {
+            return;
+        }
+        (new LicenseAgreementFactory(new LicenseAgreementDao()))->updateLicenseAgreementForPackage(
+            $project,
+            $package,
+            $original_approval_license
+        );
     }
 
     function _delete($package_id)

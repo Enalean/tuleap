@@ -25,34 +25,40 @@ namespace Tuleap\FRS\LicenseAgreement;
 
 use Tuleap\DB\DataAccessObject;
 
-final class LicenseAgreementDao extends DataAccessObject
+class LicenseAgreementDao extends DataAccessObject
 {
-    public function getProjectLicenseAgreements(\Project $project): array
+    /**
+     * @return mixed
+     */
+    public function getProjectLicenseAgreements(\Project $project)
     {
         return $this->getDB()->run(
             <<<EOT
-            SELECT a.*
-            FROM frs_package AS p
-                INNER JOIN frs_package_download_agreement AS a_p ON (a_p.package_id = p.package_id)
-                INNER JOIN frs_download_agreement AS a ON (a.id = a_p.agreement_id)
-            WHERE p.group_id = ?
+            SELECT *
+            FROM frs_download_agreement
+            WHERE project_id = ?
             EOT,
             $project->getID()
         );
     }
 
-    public function getLicenseAgreementIdForPackage(\FRSPackage $package)
+    public function isLicenseAgreementValidForProject(\Project $project, int $agreement_id): bool
     {
-        return $this->getDB()->single(
+        $row = $this->getDB()->single(
             <<<EOT
-            SELECT agreement_id
-            FROM frs_package_download_agreement
-            WHERE package_id = ?
+            SELECT 1
+            FROM frs_download_agreement
+            WHERE project_id = ?
+            AND id = ?
             EOT,
-            [$package->getPackageID()]
+            [$project->getID(), $agreement_id]
         );
+        return $row !== null;
     }
 
+    /**
+     * @return mixed
+     */
     public function getLicenseAgreementForPackage(\FRSPackage $package)
     {
         return $this->getDB()->row(
@@ -64,5 +70,22 @@ final class LicenseAgreementDao extends DataAccessObject
             EOT,
             $package->getPackageID()
         );
+    }
+
+    public function saveLicenseAgreementForPackage(\FRSPackage $package, int $license_agreement_id): void
+    {
+        $this->getDB()->run(
+            <<<EOT
+            REPLACE INTO frs_package_download_agreement(agreement_id, package_id)
+            VALUES (?, ?)
+            EOT,
+            $license_agreement_id,
+            $package->getPackageID(),
+        );
+    }
+
+    public function resetLicenseAgreementForPackage(\FRSPackage $package): void
+    {
+        $this->getDB()->run('DELETE FROM frs_package_download_agreement WHERE package_id = ?', $package->getPackageID());
     }
 }
