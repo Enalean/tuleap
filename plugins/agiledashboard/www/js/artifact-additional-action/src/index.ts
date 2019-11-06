@@ -17,11 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { POFile } from "./vue-gettext-init";
-import GetText from "node-gettext";
+import { initArtifactAdditionalAction } from "./artifact-additional-action";
 
-export function initGettext(
-    locale: string,
-    domain: string,
-    load_translations_callback: (locale: string) => Promise<POFile>
-): Promise<GetText>;
+document.addEventListener("DOMContentLoaded", () => {
+    initArtifactAdditionalAction(document);
+});
