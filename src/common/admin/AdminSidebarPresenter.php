@@ -59,6 +59,10 @@ class AdminSidebarPresenter
 
     public $plugins_section_title;
     public $plugins_manage_all;
+    /**
+     * @var string
+     */
+    public $configuration_nav_project_fields;
 
     public function __construct(
         $all_users_count,
@@ -97,7 +101,7 @@ class AdminSidebarPresenter
         $this->configuration_nav_global_access_rights  = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_global_access_rights');
         $this->configuration_nav_homepage              = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_homepage');
         $this->configuration_nav_categories            = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_categories');
-        $this->configuration_nav_project_fields        = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_project_fields');
+        $this->configuration_nav_project_fields        =  _('Project fields');
         $this->configuration_nav_predefined_references = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_predefined_references');
         $this->configuration_nav_tracker_restore       = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_tracker_restore');
         $this->configuration_nav_svn                   = $GLOBALS['Language']->getText('admin_sidebar', 'configuration_nav_svn');

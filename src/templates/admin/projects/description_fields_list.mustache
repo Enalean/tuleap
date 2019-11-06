@@ -62,35 +62,30 @@
                                         </div>
                                     </form>
                                 </td>
-                                <td class="siteadmin-description-fields-type-column">{{ type_label }}</td>
-                                <td class="tlp-table-cell-numeric">{{ rank_on_screen }}</td>
+                                <td class="siteadmin-description-fields-type-column">{{^ is_system }}{{ type_label }}{{/ is_system }}</td>
+                                <td class="tlp-table-cell-numeric">{{^ is_system }}{{ rank_on_screen }}{{/ is_system }}</td>
                                 <td class="tlp-table-cell-actions">
-                                    <button
-                                        type="button"
-                                        class="tlp-button-primary tlp-button-small tlp-button-outline tlp-table-cell-actions-button edit-description-field-button"
-                                        data-modal-id="edit-description-field-modal-{{ id }}"
-                                    >
-                                        <i class="tlp-button-icon fa fa-pencil"></i> {{ edit_btn }}
-                                    </button>
-                                    <button
-                                        type="button"
-                                        class="tlp-button-danger tlp-button-small tlp-button-outline tlp-table-cell-actions-button delete-description-field-button"
-                                        data-modal-id="delete-description-field-modal-{{ id }}"
-                                    >
-                                        <i class="tlp-button-icon fa fa-trash-o"></i> {{ delete_btn }}
-                                    </button>
+                                {{^ is_system }}
+                                        <button
+                                            type="button"
+                                            class="tlp-button-primary tlp-button-small tlp-button-outline tlp-table-cell-actions-button edit-description-field-button"
+                                            data-modal-id="edit-description-field-modal-{{ id }}"
+                                        >
+                                            <i class="tlp-button-icon fa fa-pencil"></i> {{ edit_btn }}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="tlp-button-danger tlp-button-small tlp-button-outline tlp-table-cell-actions-button delete-description-field-button"
+                                            data-modal-id="delete-description-field-modal-{{ id }}"
+                                        >
+                                            <i class="tlp-button-icon fa fa-trash-o"></i> {{ delete_btn }}
+                                        </button>
 
-                                    {{> edit_description_field_modal }}
-                                    {{> delete_description_field_modal }}
+                                        {{> edit_description_field_modal }}
+                                        {{> delete_description_field_modal }}
+                                {{/ is_system }}
                                 </td>
                             </tr>
-                            {{/ description_fields }}
-                            {{^ description_fields }}
-                                <tr>
-                                    <td colspan="6" class="tlp-table-cell-empty">
-                                        {{ no_description_fields }}
-                                    </td>
-                                </tr>
                             {{/ description_fields }}
                         </tbody>
                     </table>

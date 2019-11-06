@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
  *
  */
 
-class Project_CustomDescription_CustomDescriptionDao extends DataAccessObject
+class Project_CustomDescription_CustomDescriptionDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     /**
@@ -63,5 +63,17 @@ class Project_CustomDescription_CustomDescriptionDao extends DataAccessObject
                 ORDER BY desc_rank';
 
         return $this->retrieve($sql);
+    }
+
+    /**
+     * @throws DataAccessQueryException
+     */
+    public function updateRequiredCustomDescription(bool $required, int $id): void
+    {
+        $required = $this->da->escapeInt($required);
+        $id = $this->da->escapeInt($id);
+
+        $sql    = "UPDATE group_desc SET desc_required=$required where group_desc_id=$id";
+        $this->update($sql);
     }
 }

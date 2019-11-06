@@ -21,13 +21,32 @@
 namespace Tuleap\Project\Admin\DescriptionFields;
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
+use Tuleap\Project\ProjectDescriptionUsageRetriever;
 
 class DescriptionFieldAdminPresenterBuilder
 {
+    public const SHORT_DESCRIPTION_FIELD_ID = 'short_description';
+
+    /**
+     * @return FieldPresenter[]
+     */
     public function build(
         LegacyDataAccessResultInterface $description_fields_infos
-    ) {
-        $field_presenters = array();
+    ): array {
+        $field_presenters = [];
+
+        $field_presenters[] = new FieldPresenter(
+            self::SHORT_DESCRIPTION_FIELD_ID,
+            _('Short description'),
+            _('What is the purpose of your project?'),
+            ProjectDescriptionUsageRetriever::isDescriptionMandatory(),
+            $this->getTranslatedRequiredLabel(true),
+            "",
+            "",
+            0,
+            true
+        );
+
         foreach ($description_fields_infos as $field) {
             $field_presenters[] = new FieldPresenter(
                 $field['group_desc_id'],
@@ -37,7 +56,8 @@ class DescriptionFieldAdminPresenterBuilder
                 $this->getTranslatedRequiredLabel($field['desc_required']),
                 $field['desc_type'],
                 $this->getTranslatedTypeLabel($field['desc_type']),
-                $field['desc_rank']
+                $field['desc_rank'],
+                false
             );
         }
 

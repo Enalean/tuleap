@@ -63,7 +63,7 @@ class ProjectFieldsDisplayController implements DispatchableWithRequest
         $field_builder    = new DescriptionFieldAdminPresenterBuilder();
         $field_presenters = $field_builder->build($description_fields_infos);
 
-        $title = $GLOBALS['Language']->getText('admin_desc_fields', 'title');
+        $title = _('Project fields');
 
         $custom_project_fields_list_presenter = new FieldsListPresenter(
             new ProjectCreationNavBarPresenter('fields'),
@@ -74,7 +74,7 @@ class ProjectFieldsDisplayController implements DispatchableWithRequest
 
         $admin_page = new AdminPageRenderer();
         $admin_page->renderANoFramedPresenter(
-            $GLOBALS['Language']->getText('admin_desc_fields', 'title'),
+            $title,
             ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects',
             FieldsListPresenter::TEMPLATE,
             $custom_project_fields_list_presenter
