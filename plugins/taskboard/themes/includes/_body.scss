@@ -76,6 +76,12 @@
     min-width: unset;
     overflow: hidden;
     background: $tlp-ui-white;
+    cursor: pointer;
+
+    &.taskboard-cell-collapsed-hover,
+    &:hover {
+        background: darken($tlp-ui-white, 2%);
+    }
 }
 
 .taskboard-swimlane-toggle {

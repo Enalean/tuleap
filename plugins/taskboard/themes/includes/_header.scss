@@ -93,9 +93,10 @@
     transform-origin: center right;
     transition: opacity ease-in-out 100ms;
     opacity: 0;
-    background: linear-gradient(-90deg, transparent, rgba(255, 255, 255, .75) 3px, rgba(255, 255, 255, .75) 75%, transparent);
+    background: linear-gradient(-90deg, transparent, darken(rgba(255, 255, 255, .75), 2%) 3px, darken(rgba(255, 255, 255, .75), 2%) 75%, transparent);
     white-space: nowrap;
     direction: rtl;
+    cursor: pointer;
 
     > .taskboard-header-label {
         margin: 0 $tlp-half-spacing 0 0;
