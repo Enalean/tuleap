@@ -46,6 +46,11 @@ export interface MappedListValue extends ListValue {
     label: string;
 }
 
+export interface RemainingEffort {
+    value: number | null;
+    can_update: boolean;
+}
+
 export interface Card {
     id: number;
     tracker_id: number;
@@ -59,7 +64,7 @@ export interface Card {
     has_children: boolean;
     mapped_list_value: MappedListValue | null;
     initial_effort: number | null;
-    remaining_effort: number | null;
+    remaining_effort: RemainingEffort | null;
     is_open: boolean;
     is_collapsed: boolean;
 }

@@ -17,19 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { RemainingEffort } from "../type";
+
 export function getWidthPercentage(
     initial_effort: number | null,
-    remaining_effort: number | null
+    remaining_effort: RemainingEffort | null
 ): number {
-    if (initial_effort === null || remaining_effort === null || initial_effort <= 0) {
+    if (
+        initial_effort === null ||
+        remaining_effort === null ||
+        remaining_effort.value === null ||
+        initial_effort <= 0
+    ) {
         return 0;
     }
 
-    if (remaining_effort <= 0) {
+    if (remaining_effort.value <= 0) {
         return 100;
     }
 
-    const progress = initial_effort - remaining_effort;
+    const progress = initial_effort - remaining_effort.value;
     const clamped_progress = clamp(progress, 0, initial_effort);
     return (clamped_progress / initial_effort) * 100;
 }

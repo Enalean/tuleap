@@ -43,20 +43,19 @@ class CardRepresentationBuilder
      * @var MappedFieldValueRetriever
      */
     private $mapped_field_value_retriever;
-
     /**
-     * @var RemainingEffortValueRetriever
+     * @var RemainingEffortRepresentationBuilder
      */
-    private $remaining_effort_value_retriever;
+    private $remaining_effort_representation_builder;
 
     public function __construct(
         BackgroundColorBuilder $background_color_builder,
         MappedFieldValueRetriever $mapped_field_value_retriever,
-        RemainingEffortValueRetriever $remaining_effort_value_retriever
+        RemainingEffortRepresentationBuilder $remaining_effort_representation_builder
     ) {
-        $this->background_color_builder         = $background_color_builder;
-        $this->mapped_field_value_retriever     = $mapped_field_value_retriever;
-        $this->remaining_effort_value_retriever = $remaining_effort_value_retriever;
+        $this->background_color_builder                = $background_color_builder;
+        $this->mapped_field_value_retriever            = $mapped_field_value_retriever;
+        $this->remaining_effort_representation_builder = $remaining_effort_representation_builder;
     }
 
     public function build(
@@ -70,7 +69,7 @@ class CardRepresentationBuilder
         $assignees            = $this->getAssignees($artifact, $user);
         $mapped_list_value    = $this->getMappedListValue($milestone, $artifact, $user);
         $initial_effort       = $this->getInitialEffort($artifact, $user);
-        $remaining_effort     = $this->remaining_effort_value_retriever->getRemainingEffortValue($user, $artifact);
+        $remaining_effort     = $this->remaining_effort_representation_builder->getRemainingEffort($user, $artifact);
 
         $representation = new CardRepresentation();
         $representation->build(
@@ -163,7 +162,10 @@ class CardRepresentationBuilder
                 ),
                 new MappedFieldRetriever(new \Cardwall_FieldProviders_SemanticStatusFieldRetriever()),
             ),
-            new RemainingEffortValueRetriever($form_element_factory)
+            new RemainingEffortRepresentationBuilder(
+                new RemainingEffortValueRetriever($form_element_factory),
+                $form_element_factory
+            )
         );
     }
 
@@ -171,6 +173,6 @@ class CardRepresentationBuilder
     {
         $preference_name = 'plugin_taskboard_collapse_' . $milestone->getArtifactId() . '_' . $artifact->getId();
 
-        return !empty($user->getPreference($preference_name));
+        return ! empty($user->getPreference($preference_name));
     }
 }

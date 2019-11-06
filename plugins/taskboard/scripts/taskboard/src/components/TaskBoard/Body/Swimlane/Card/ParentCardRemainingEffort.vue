@@ -20,7 +20,7 @@
 
 <template>
     <span v-if="has_remaining_effort" class="taskboard-card-remaining-effort" v-bind:class="additional_classes">
-        {{ card.remaining_effort }}
+        {{ card.remaining_effort.value }}
         <i class="fa fa-long-arrow-right"></i>
         <i class="fa fa-flag-checkered"></i>
     </span>
@@ -37,7 +37,7 @@ export default class ParentCardRemainingEffort extends Vue {
     readonly card!: Card;
 
     get has_remaining_effort(): boolean {
-        return this.card.remaining_effort !== null;
+        return this.card.remaining_effort !== null && this.card.remaining_effort.value !== null;
     }
 
     get additional_classes(): string {
