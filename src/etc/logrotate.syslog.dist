@@ -32,3 +32,11 @@
     rotate 4
     create 640 %APP_USER% %APP_USER%
 }
+
+/var/log/%PROJECT_NAME%/usersuspension_syslog {
+    missingok
+    weekly
+    rotate 4
+    dateext
+    create 640 %APP_USER% %APP_USER%
+}

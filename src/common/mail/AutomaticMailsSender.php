@@ -75,6 +75,11 @@ class AutomaticMailsSender
     private $lang_factory;
 
     /**
+     * @var AutomaticMailsLogger
+     */
+    private $logger;
+
+    /**
      * Constructor
      *
      * @param MailPresenterFactory $mail_presenter_factory
@@ -92,7 +97,8 @@ class AutomaticMailsSender
         Codendi_Mail $mail,
         IdleUsersDao $dao,
         UserManager $user_manager,
-        BaseLanguageFactory $lang_factory
+        BaseLanguageFactory $lang_factory,
+        AutomaticMailsLogger $logger
     ) {
         $this->mail_presenter_factory = $mail_presenter_factory;
         $this->renderer = $renderer;
@@ -101,6 +107,7 @@ class AutomaticMailsSender
         $this->dao = $dao;
         $this->user_manager = $user_manager->instance();
         $this->lang_factory = $lang_factory;
+        $this->logger = $logger;
     }
 
     /**
@@ -113,14 +120,37 @@ class AutomaticMailsSender
         $inactive_delay = (int)ForgeConfig::get(self::CONFIG_INACTIVE_DELAY);
         $notification_delay = (int)ForgeConfig::get(self::CONFIG_NOTIFICATION_DELAY);
         $result = true;
+
         if (($notification_delay > 0) && ($inactive_delay > 0)) {
             $idle_users = $this->getIdleAccounts($notification_delay, $inactive_delay);
+
+            $users = array_column($idle_users, 'user_id');
+            $this->logger->info(
+                "Sending the suspension notification to the following users (ID): " .
+                 implode(", ", $users)
+            );
+
             foreach ($idle_users as $idle_user) {
                 $user = $this->user_manager->getUserbyId($idle_user['user_id']);
                 if ($user) {
                     $suspension_date = $this->getSuspensionDate($notification_delay, $inactive_delay);
                     $language = $this->lang_factory->getBaseLanguage(ForgeConfig::get('sys_lang'));
-                    $result = $result && $this->sendNotificationMail($user, $idle_user['last_access_date'], $suspension_date, $language);
+                    $status = $this->sendNotificationMail($user, $idle_user['last_access_date'], $suspension_date, $language);
+                    if ($status) {
+                        $this->logger->info(
+                            "Suspension notification is sent to user: ID=" .
+                            $user->getId() . " username=" . $user->getUserName() .
+                            " email=" . $user->getEmail() . " last_access_date=" .
+                            date('Y-m-d\TH:i:sO', $idle_user['last_access_date'])
+                        );
+                    } else {
+                        $this->logger->error(
+                            "Unable to send suspension notification to user: ID=" .
+                            $user->getId() . " username=" . $user->getUserName() .
+                            " email=" .$user->getEmail()
+                        );
+                    }
+                    $result = $result && $status;
                 }
             }
         }
@@ -160,6 +190,10 @@ class AutomaticMailsSender
     {
         $start_date = $this->getLastAccessDate($notification_delay, $inactive_delay);
         $end_date = $start_date->modify('+23hours 59 minutes 59 seconds');
+        $this->logger->info(
+            "Querying users that last accessed " . ForgeConfig::get('sys_name') .
+            " between " . $start_date->format('Y-m-d\TH:i:sO') . " and " . $end_date->format('Y-m-d\TH:i:sO')
+        );
         return $this->dao->getIdleAccounts($start_date->getTimestamp(), $end_date->getTimestamp());
     }
 

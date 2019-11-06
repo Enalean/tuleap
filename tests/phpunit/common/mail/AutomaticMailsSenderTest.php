@@ -42,6 +42,8 @@ class AutomaticMailsSenderTest extends TestCase
     protected $pf_user;
     protected $user_manager;
     protected $mail_account_suspension_alert_presenter;
+    protected $automatic_mails_logger;
+    protected $user_info;
 
 
     public function setUp() : void
@@ -52,6 +54,7 @@ class AutomaticMailsSenderTest extends TestCase
         ForgeConfig::set(AutomaticMailsSender::CONFIG_NOTIFICATION_DELAY, '30');
         $this->query = array(array('user_id' => 102, 'last_access_date' => 1557742551));
         $this->email = "jane.doe@domain.com";
+        $this->user_info = array('user_id'=>102, 'user_name'=>'janedoe');
 
         $this->mail_account_suspension_alert_presenter = Mockery::mock(\Tuleap\Mail\MailAccountSuspensionAlertPresenter::class);
         $this->mail_presenter_factory = Mockery::mock(\MailPresenterFactory::class);
@@ -63,6 +66,7 @@ class AutomaticMailsSenderTest extends TestCase
         $this->pf_user = Mockery::mock(\PFUser::class);
         $this->user_manager = Mockery::mock(\UserManager::class);
         $this->user_manager->shouldReceive('instance')->andReturn($this->user_manager);
+        $this->automatic_mails_logger = Mockery::mock(\Tuleap\Mail\AutomaticMailsLogger::class);
 
         $this->auto_mail_sender = new AutomaticMailsSender(
             $this->mail_presenter_factory,
@@ -71,7 +75,8 @@ class AutomaticMailsSenderTest extends TestCase
             $this->mail,
             $this->dao,
             $this->user_manager,
-            $this->lang_factory
+            $this->lang_factory,
+            $this->automatic_mails_logger
         );
     }
 
@@ -94,7 +99,11 @@ class AutomaticMailsSenderTest extends TestCase
         $this->template_renderer->shouldReceive('renderToString')->andReturn('Rendered_Email');
         $this->lang_factory->shouldReceive('getBaseLanguage')->with(ForgeConfig::get('sys_lang'))->andReturn($this->language);
         $this->pf_user->shouldReceive('getEmail')->andReturn($this->email);
+        $this->pf_user->shouldReceive('getId')->andReturn($this->user_info['user_id']);
+        $this->pf_user->shouldReceive('getUserName')->andReturn($this->user_info['user_name']);
         $this->user_manager->shouldReceive('getUserbyId')->andReturn($this->pf_user);
+        $this->automatic_mails_logger->shouldReceive('info');
+        $this->automatic_mails_logger->shouldReceive('error');
 
         $this->assertEquals(true, $this->auto_mail_sender->sendNotificationMailToIdleAccounts());
     }
