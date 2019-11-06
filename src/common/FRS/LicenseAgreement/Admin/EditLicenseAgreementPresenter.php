@@ -24,12 +24,17 @@ declare(strict_types=1);
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
+use Tuleap\FRS\LicenseAgreement\NewLicenseAgreement;
 
 /**
  * @psalm-immutable
  */
 class EditLicenseAgreementPresenter
 {
+    /**
+     * @var int
+     */
+    public $id;
     /**
      * @var string
      */
@@ -50,13 +55,21 @@ class EditLicenseAgreementPresenter
      * @var \CSRFSynchronizerToken
      */
     public $csrf_token;
+    /**
+     * @var bool
+     */
+    public $is_update = true;
 
     public function __construct(\Project $project, LicenseAgreementInterface $license_agreement, \CSRFSynchronizerToken $csrf_token)
     {
-        $this->title = $license_agreement->getTitle();
-        $this->content = $license_agreement->getContent();
+        $this->id       = $license_agreement->getId();
+        $this->title    = $license_agreement->getTitle();
+        $this->content  = $license_agreement->getContent();
         $this->list_url = ListLicenseAgreementsController::getUrl($project);
-        $this->save_url = SaveLicenseAgreementController::getUrl($project, $license_agreement);
+        $this->save_url = SaveLicenseAgreementController::getUrl($project);
         $this->csrf_token = $csrf_token;
+        if ($license_agreement instanceof NewLicenseAgreement) {
+            $this->is_update = false;
+        }
     }
 }

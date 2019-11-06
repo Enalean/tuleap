@@ -31,6 +31,7 @@ use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -99,6 +100,7 @@ class SaveLicenseAgreementControllerTest extends TestCase
 
         $this->controller = new SaveLicenseAgreementController(
             $this->project_manager,
+            Mockery::mock(TemplateRendererFactory::class),
             $this->permissions_manager,
             $this->factory,
             $this->csrf_token,
@@ -107,6 +109,7 @@ class SaveLicenseAgreementControllerTest extends TestCase
 
     public function testItSavesExistingLicenseAgreement(): void
     {
+        $this->request->set('id', '1');
         $this->request->set('title', 'updated title');
         $this->request->set('content', 'updated content');
 
@@ -114,7 +117,7 @@ class SaveLicenseAgreementControllerTest extends TestCase
 
         $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 1)->andReturn(new LicenseAgreement(1, 'some title', 'some content'));
 
-        $this->factory->shouldReceive('save')->with(Mockery::on(function (LicenseAgreement $agreement) {
+        $this->factory->shouldReceive('save')->with($this->project, Mockery::on(function (LicenseAgreement $agreement) {
             return $agreement->getId() === 1 &&
                 $agreement->getTitle() === 'updated title' &&
                 $agreement->getContent() === 'updated content';
@@ -123,11 +126,31 @@ class SaveLicenseAgreementControllerTest extends TestCase
         $layout = Mockery::mock(BaseLayout::class);
         $layout->shouldReceive('redirect')->once();
 
-        $this->controller->process($this->request, $layout, ['project_id' => '101', 'id' => '1']);
+        $this->controller->process($this->request, $layout, ['project_id' => '101']);
     }
+
+    public function testItSavesNewLicenseAgreement(): void
+    {
+        $this->request->set('title', 'updated title');
+        $this->request->set('content', 'updated content');
+
+        $this->csrf_token->shouldReceive('check')->once();
+
+        $this->factory->shouldReceive('save')->with($this->project, Mockery::on(function (LicenseAgreementInterface $agreement) {
+            return $agreement->getTitle() === 'updated title' &&
+                $agreement->getContent() === 'updated content';
+        }))->once();
+
+        $layout = Mockery::mock(BaseLayout::class);
+        $layout->shouldReceive('redirect')->once();
+
+        $this->controller->process($this->request, $layout, ['project_id' => '101']);
+    }
+
 
     public function testItAbortsWhenGivenLicenseIdIsNotValid(): void
     {
+        $this->request->set('id', '1');
         $this->request->set('title', 'updated title');
         $this->request->set('content', 'updated content');
 
@@ -139,11 +162,12 @@ class SaveLicenseAgreementControllerTest extends TestCase
 
         $this->expectException(NotFoundException::class);
 
-        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101', 'id' => '1']);
+        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101']);
     }
 
     public function testItAbortsWhenLicenseIsSiteDefault(): void
     {
+        $this->request->set('id', '0');
         $this->request->set('title', 'updated title');
         $this->request->set('content', 'updated content');
 
@@ -155,28 +179,36 @@ class SaveLicenseAgreementControllerTest extends TestCase
 
         $this->expectException(ForbiddenException::class);
 
-        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101', 'id' => '0']);
+        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101']);
     }
 
     public function testItThrowsAndExceptionWhenServiceIsNotAvailable(): void
     {
+        $this->request->set('id', '1');
+        $this->request->set('title', 'updated title');
+        $this->request->set('content', 'updated content');
+
         $this->csrf_token->shouldReceive('check')->once();
 
         $this->project->shouldReceive('getFileService')->andReturnNull();
 
         $this->expectException(NotFoundException::class);
 
-        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101', 'id' => '1']);
+        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101']);
     }
 
     public function testItThrowsAnExceptionWhenUserIsNotFileAdministrator(): void
     {
+        $this->request->set('id', '1');
+        $this->request->set('title', 'updated title');
+        $this->request->set('content', 'updated content');
+
         $this->csrf_token->shouldReceive('check')->once();
 
         $this->permissions_manager->shouldReceive('isAdmin')->with($this->project, $this->current_user)->andReturnFalse();
 
         $this->expectException(ForbiddenException::class);
 
-        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101', 'id' => '1']);
+        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101']);
     }
 }

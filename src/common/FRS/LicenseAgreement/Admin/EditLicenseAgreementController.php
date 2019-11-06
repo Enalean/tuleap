@@ -29,7 +29,6 @@ use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
-use Tuleap\FRS\ToolbarPresenter;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithProject;
@@ -63,8 +62,14 @@ class EditLicenseAgreementController implements DispatchableWithRequest, Dispatc
      */
     private $assets;
 
-    public function __construct(\ProjectManager $project_manager, \TemplateRendererFactory $renderer_factory, FRSPermissionManager $permission_manager, LicenseAgreementFactory $factory, \CSRFSynchronizerToken $csrf_token, IncludeAssets $assets)
-    {
+    public function __construct(
+        \ProjectManager $project_manager,
+        \TemplateRendererFactory $renderer_factory,
+        FRSPermissionManager $permission_manager,
+        LicenseAgreementFactory $factory,
+        \CSRFSynchronizerToken $csrf_token,
+        IncludeAssets $assets
+    ) {
         $this->project_manager    = $project_manager;
         $this->permission_manager = $permission_manager;
         $this->renderer_factory   = $renderer_factory;
@@ -87,31 +92,19 @@ class EditLicenseAgreementController implements DispatchableWithRequest, Dispatc
     {
         $project = $this->getProject($variables);
 
-        if (! $this->permission_manager->isAdmin($project, $request->getCurrentUser())) {
-            throw new ForbiddenException('Only for files administrators');
-        }
-
-        $file_service = $project->getFileService();
-        if (! $file_service) {
-            throw new NotFoundException('Service is not active for this project');
-        }
+        $helper = new LicenseAgreementControllersHelper($this->permission_manager, $this->renderer_factory);
+        $helper->assertCanAccess($project, $request->getCurrentUser());
 
         $license = $this->factory->getLicenseAgreementById($project, (int) $variables['id']);
         if (! $license) {
             throw new NotFoundException('Invalid license id');
         }
 
-        $toolbar_presenter = new ToolbarPresenter($project);
-        $toolbar_presenter->setLicenseAgreementIsActive();
-        $toolbar_presenter->displaySectionNavigation();
-
-        $header_renderer  = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../templates/frs');
         $content_renderer = $this->renderer_factory->getRenderer(__DIR__ . '/templates');
 
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('frs-admin-license-agreement.js'));
 
-        $file_service->displayFRSHeader($project, _('Files Administration'));
-        $header_renderer->renderToPage('toolbar-presenter', $toolbar_presenter);
+        $helper->renderHeader($project);
         if ($license instanceof DefaultLicenseAgreement) {
             $content_renderer->renderToPage('view-default-license-agreement', new ViewDefaultLicensePresenter($project));
         } else {

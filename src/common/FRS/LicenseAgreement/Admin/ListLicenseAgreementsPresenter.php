@@ -37,10 +37,16 @@ class ListLicenseAgreementsPresenter
      * @var LicenseAgreementInterface[]
      */
     public $license_agreements;
+    /**
+     * @readonly
+     * @var string
+     */
+    public $create_url;
 
-    public function __construct(int $project_id, array $license_agreements)
+    public function __construct(\Project $project, array $license_agreements)
     {
-        $this->project_id = $project_id;
+        $this->project_id = (int) $project->getID();
         $this->license_agreements = $license_agreements;
+        $this->create_url = AddLicenseAgreementController::getUrl($project);
     }
 }

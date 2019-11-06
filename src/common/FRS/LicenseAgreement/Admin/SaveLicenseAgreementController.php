@@ -28,7 +28,7 @@ use Project;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
+use Tuleap\FRS\LicenseAgreement\NewLicenseAgreement;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -54,12 +54,17 @@ class SaveLicenseAgreementController implements DispatchableWithRequest, Dispatc
      * @var \CSRFSynchronizerToken
      */
     private $csrf_token;
+    /**
+     * @var \TemplateRendererFactory
+     */
+    private $renderer_factory;
 
-    public function __construct(\ProjectManager $project_manager, FRSPermissionManager $permission_manager, LicenseAgreementFactory $factory, \CSRFSynchronizerToken $csrf_token)
+    public function __construct(\ProjectManager $project_manager, \TemplateRendererFactory $renderer_factory, FRSPermissionManager $permission_manager, LicenseAgreementFactory $factory, \CSRFSynchronizerToken $csrf_token)
     {
         $this->project_manager    = $project_manager;
         $this->permission_manager = $permission_manager;
         $this->factory            = $factory;
+        $this->renderer_factory   = $renderer_factory;
         $this->csrf_token         = $csrf_token;
     }
 
@@ -69,37 +74,38 @@ class SaveLicenseAgreementController implements DispatchableWithRequest, Dispatc
 
         $this->csrf_token->check(ListLicenseAgreementsController::getUrl($project));
 
-        if (! $this->permission_manager->isAdmin($project, $request->getCurrentUser())) {
-            throw new ForbiddenException('Only for files administrators');
+        $helper = new LicenseAgreementControllersHelper($this->permission_manager, $this->renderer_factory);
+        $helper->assertCanAccess($project, $request->getCurrentUser());
+
+        if ($request->existAndNonEmpty('id')) {
+            $license = $this->factory->getLicenseAgreementById($project, (int) $request->get('id'));
+            if (! $license) {
+                throw new NotFoundException('Invalid license id');
+            }
+            if (! $license instanceof LicenseAgreement) {
+                throw new ForbiddenException('You cannot modify this license');
+            }
+
+            $new_license = new LicenseAgreement(
+                $license->getId(),
+                (string) $request->getValidated('title', 'string', ''),
+                (string) $request->getValidated('content', 'text', ''),
+            );
+        } else {
+            $new_license = new NewLicenseAgreement(
+                (string) $request->getValidated('title', 'string', ''),
+                (string) $request->getValidated('content', 'text', ''),
+            );
         }
 
-        $file_service = $project->getFileService();
-        if (! $file_service) {
-            throw new NotFoundException('Service is not active for this project');
-        }
-
-        $license = $this->factory->getLicenseAgreementById($project, (int) $variables['id']);
-        if (! $license) {
-            throw new NotFoundException('Invalid license id');
-        }
-        if (! $license instanceof LicenseAgreement) {
-            throw new ForbiddenException('You cannot modify this license');
-        }
-
-        $new_license = new LicenseAgreement(
-            $license->getId(),
-            (string) $request->getValidated('title', 'string', ''),
-            (string) $request->getValidated('content', 'text', ''),
-        );
-
-        $this->factory->save($new_license);
+        $this->factory->save($project, $new_license);
 
         $layout->redirect(ListLicenseAgreementsController::getUrl($project));
     }
 
-    public static function getUrl(Project $project, LicenseAgreementInterface $agreement): string
+    public static function getUrl(Project $project): string
     {
-        return sprintf('/file/%d/admin/license-agreements/%d', $project->getID(), $agreement->getId());
+        return sprintf('/file/%d/admin/license-agreements', $project->getID());
     }
 
     public static function getCSRFTokenSynchronizer()
