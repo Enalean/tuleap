@@ -32,14 +32,15 @@ use Tracker;
 use Tracker_Artifact;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
-use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 
-final class AdditionalArtifactActionLinkBuilderTest extends TestCase
+final class AdditionalArtifactActionBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var AdditionalArtifactActionLinkBuilder
+     * @var AdditionalArtifactActionBuilder
      */
     private $builder;
 
@@ -83,6 +84,11 @@ final class AdditionalArtifactActionLinkBuilderTest extends TestCase
      */
     private $planned_artifact_dao;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IncludeAssets
+     */
+    private $include_assets;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -92,13 +98,15 @@ final class AdditionalArtifactActionLinkBuilderTest extends TestCase
         $this->planning_permissions_manager   = Mockery::mock(PlanningPermissionsManager::class);
         $this->artifacts_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
         $this->planned_artifact_dao           = Mockery::mock(PlannedArtifactDao::class);
+        $this->include_assets                 = Mockery::mock(IncludeAssets::class);
 
-        $this->builder = new AdditionalArtifactActionLinkBuilder(
+        $this->builder = new AdditionalArtifactActionBuilder(
             $this->explicit_backlog_dao,
             $this->planning_factory,
             $this->planning_permissions_manager,
             $this->artifacts_explicit_backlog_dao,
-            $this->planned_artifact_dao
+            $this->planned_artifact_dao,
+            $this->include_assets
         );
 
         $project = Mockery::mock(Project::class);
@@ -126,7 +134,7 @@ final class AdditionalArtifactActionLinkBuilderTest extends TestCase
             ->with(101)
             ->andReturnFalse();
 
-        $this->assertNull($this->builder->buildArtifactActionLink($this->artifact, $this->user));
+        $this->assertNull($this->builder->buildArtifactAction($this->artifact, $this->user));
     }
 
     public function testItReturnsNullIfProjectDoesNotHaveARootPlanning(): void
@@ -141,7 +149,7 @@ final class AdditionalArtifactActionLinkBuilderTest extends TestCase
             ->with($this->user, 101)
             ->andReturnNull();
 
-        $this->assertNull($this->builder->buildArtifactActionLink($this->artifact, $this->user));
+        $this->assertNull($this->builder->buildArtifactAction($this->artifact, $this->user));
     }
 
     public function testItReturnsNullIfArtifactNotInBacklogTrackerOfRootPlanning(): void
@@ -160,7 +168,7 @@ final class AdditionalArtifactActionLinkBuilderTest extends TestCase
             ->once()
             ->andReturn([149]);
 
-        $this->assertNull($this->builder->buildArtifactActionLink($this->artifact, $this->user));
+        $this->assertNull($this->builder->buildArtifactAction($this->artifact, $this->user));
     }
 
     public function testItReturnsNullIfUserCannotChangePriorityOnTopLevelPlanning(): void
@@ -184,7 +192,7 @@ final class AdditionalArtifactActionLinkBuilderTest extends TestCase
             ->with('1', '101', $this->user, 'PLUGIN_AGILEDASHBOARD_PLANNING_PRIORITY_CHANGE')
             ->andReturnFalse();
 
-        $this->assertNull($this->builder->buildArtifactActionLink($this->artifact, $this->user));
+        $this->assertNull($this->builder->buildArtifactAction($this->artifact, $this->user));
     }
 
     public function testItReturnsNullIfArtifactIsPlannedInASubMilestone(): void
@@ -213,7 +221,7 @@ final class AdditionalArtifactActionLinkBuilderTest extends TestCase
             ->with(205, 101)
             ->andReturnTrue();
 
-        $this->assertNull($this->builder->buildArtifactActionLink($this->artifact, $this->user));
+        $this->assertNull($this->builder->buildArtifactAction($this->artifact, $this->user));
     }
 
     public function testItReturnsTheLinkToAddOrRemoveInTopBacklog(): void
@@ -245,9 +253,11 @@ final class AdditionalArtifactActionLinkBuilderTest extends TestCase
         $this->artifacts_explicit_backlog_dao->shouldReceive('isArtifactInTopBacklogOfProject')
             ->once();
 
+        $this->include_assets->shouldReceive('getFileURL')->once()->andReturn('url_of_file.js');
+
         $this->assertInstanceOf(
-            AdditionalButtonLinkPresenter::class,
-            $this->builder->buildArtifactActionLink($this->artifact, $this->user)
+            AdditionalButtonAction::class,
+            $this->builder->buildArtifactAction($this->artifact, $this->user)
         );
     }
 }

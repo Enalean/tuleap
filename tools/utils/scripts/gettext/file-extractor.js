@@ -55,9 +55,17 @@ function extractFileSync(file_path, gettext_extractor) {
 
 function createParser(gettext_extractor) {
     return gettext_extractor.createJsParser([
-        JsExtractors.callExpression(["[this].$gettext", "$gettext", "gettext_provider.$gettext"], {
-            arguments: { text: 0 }
-        }),
+        JsExtractors.callExpression(
+            [
+                "[this].$gettext",
+                "$gettext",
+                "gettext_provider.$gettext",
+                "gettext_provider.gettext"
+            ],
+            {
+                arguments: { text: 0 }
+            }
+        ),
         JsExtractors.callExpression(
             ["[this].$ngettext", "$ngettext", "gettext_provider.$ngettext"],
             {

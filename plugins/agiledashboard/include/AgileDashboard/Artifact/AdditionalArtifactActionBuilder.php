@@ -26,9 +26,11 @@ use PlanningPermissionsManager;
 use Tracker_Artifact;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 
-class AdditionalArtifactActionLinkBuilder
+class AdditionalArtifactActionBuilder
 {
     /**
      * @var ExplicitBacklogDao
@@ -55,21 +57,28 @@ class AdditionalArtifactActionLinkBuilder
      */
     private $planned_artifact_dao;
 
+    /**
+     * @var IncludeAssets
+     */
+    private $include_assets;
+
     public function __construct(
         ExplicitBacklogDao $explicit_backlog_dao,
         PlanningFactory $planning_factory,
         PlanningPermissionsManager $planning_permissions_manager,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        PlannedArtifactDao $planned_artifact_dao
+        PlannedArtifactDao $planned_artifact_dao,
+        IncludeAssets $include_assets
     ) {
         $this->explicit_backlog_dao              = $explicit_backlog_dao;
         $this->planning_factory                  = $planning_factory;
         $this->planning_permissions_manager      = $planning_permissions_manager;
         $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
         $this->planned_artifact_dao              = $planned_artifact_dao;
+        $this->include_assets                    = $include_assets;
     }
 
-    public function buildArtifactActionLink(Tracker_Artifact $artifact, PFUser $user): ?AdditionalButtonLinkPresenter
+    public function buildArtifactAction(Tracker_Artifact $artifact, PFUser $user): ?AdditionalButtonAction
     {
         $tracker  = $artifact->getTracker();
         $project  = $tracker->getProject();
@@ -107,17 +116,39 @@ class AdditionalArtifactActionLinkBuilder
 
         $link_label = dgettext('tuleap-agiledashboard', 'Add to top backlog');
         $icon       = 'fa-tlp-add-to-backlog';
+        $id         = 'artifact-explicit-backlog-action';
+        $action     = 'add';
 
         if ($this->artifacts_in_explicit_backlog_dao->isArtifactInTopBacklogOfProject($artifact_id, $project_id)) {
             $link_label = dgettext('tuleap-agiledashboard', 'Remove from top backlog');
             $icon       = 'fa-tlp-add-to-backlog';
+            $action     = 'remove';
         }
 
-        return new AdditionalButtonLinkPresenter(
+        $link = new AdditionalButtonLinkPresenter(
             $link_label,
             '',
             $icon,
-            true
+            $id,
+            [
+                [
+                    'name'  => 'project-id',
+                    'value' => $project_id
+                ],
+                [
+                    'name'  => 'artifact-id',
+                    'value' => $artifact_id
+                ],
+                [
+                    'name'  => 'action',
+                    'value' => $action
+                ]
+            ]
+        );
+
+        return new AdditionalButtonAction(
+            $link,
+            $this->include_assets->getFileURL('artifact-additional-action.js')
         );
     }
 }

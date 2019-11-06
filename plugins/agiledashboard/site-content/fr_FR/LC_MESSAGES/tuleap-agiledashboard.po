@@ -36,7 +36,7 @@ msgid "Add to project dashboard"
 msgstr "Ajouter au tableau de bord du projet"
 
 msgid "Add to top backlog"
-msgstr "Ajouter au top backlog"
+msgstr "Ajouter à la planification générale"
 
 msgid "Agile Dashboard"
 msgstr "Agile Dashboard"
@@ -183,7 +183,7 @@ msgid "Planning succesfully updated."
 msgstr "Le planning a été mis à jour."
 
 msgid "Remove from top backlog"
-msgstr "Supprimer du top backlog"
+msgstr "Supprimer de la planification générale"
 
 msgid "Save"
 msgstr "Sauvegarder"

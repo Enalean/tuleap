@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Artifact\ActionButtons;
+import { POFile } from "./vue-gettext-init";
+import GetText = require("node-gettext");
 
-class AdditionalArtifactActionButtonsPresenterBuilder
-{
-    public function build(AdditionalArtifactActionButtonsFetcher $action_buttons_fetcher)
-    {
-        $links = $action_buttons_fetcher->getAdditionalLinks();
-        foreach ($action_buttons_fetcher->getAdditionalActions() as $additional_action) {
-            $links[] = $additional_action->getLinkPresenter();
-        }
-
-        return $links;
-    }
-}
+export function initGettext(
+    locale: string,
+    domain: string,
+    load_translations_callback: (locale: string) => Promise<POFile>
+): GetText;

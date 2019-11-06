@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\Artifact\AdditionalArtifactActionLinkBuilder;
+use Tuleap\AgileDashboard\Artifact\AdditionalArtifactActionBuilder;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
@@ -82,7 +82,6 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
-use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
@@ -2036,18 +2035,19 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $artifact = $event->getArtifact();
         $user     = $event->getUser();
 
-        $builder = new AdditionalArtifactActionLinkBuilder(
+        $builder = new AdditionalArtifactActionBuilder(
             new ExplicitBacklogDao(),
             $this->getPlanningFactory(),
             $this->getPlanningPermissionsManager(),
             new ArtifactsInExplicitBacklogDao(),
-            new PlannedArtifactDao()
+            new PlannedArtifactDao(),
+            $this->getIncludeAssets()
         );
 
-        $link = $builder->buildArtifactActionLink($artifact, $user);
+        $action = $builder->buildArtifactAction($artifact, $user);
 
-        if ($link !== null) {
-            $event->addLinkPresenter($link);
+        if ($action !== null) {
+            $event->addAction($action);
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,41 +18,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
-class AdditionalButtonLinkPresenter
+class AdditionalButtonAction
 {
     /**
-     * @var string
+     * @var AdditionalButtonLinkPresenter
      */
-    public $link_label;
+    private $link_presenter;
 
     /**
      * @var string
      */
-    public $url;
+    private $asset_link;
 
-    /**
-     * @var string
-     */
-    public $icon;
-
-    /**
-     * @var string
-     */
-    public $id;
-
-    /**
-     * @var array
-     */
-    public $data;
-
-    public function __construct(string $link_label, string $url, ?string $icon = null, ?string $id = null, ?array $data = null)
+    public function __construct(AdditionalButtonLinkPresenter $link_presenter, string $asset_link)
     {
-        $this->link_label = $link_label;
-        $this->url        = $url;
-        $this->icon       = $icon ? $icon : '';
-        $this->id         = $id ? $id : '';
-        $this->data       = $data ? $data : [];
+        $this->link_presenter = $link_presenter;
+        $this->asset_link     = $asset_link;
+    }
+
+    /**
+     * @return AdditionalButtonLinkPresenter
+     */
+    public function getLinkPresenter(): AdditionalButtonLinkPresenter
+    {
+        return $this->link_presenter;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAssetLink(): string
+    {
+        return $this->asset_link;
     }
 }

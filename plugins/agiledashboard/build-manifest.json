@@ -89,6 +89,12 @@
             "po": "www/js/burnup-chart/po"
         }
     },
+    "gettext-ts": {
+        "artifact-additional-action": {
+            "src": "www/js/artifact-additional-action/src",
+            "po": "www/js/artifact-additional-action/po"
+        }
+    },
     "gettext-angularjs": {
         "planning-v2": {
             "src": "www/js/planning-v2/src/app",

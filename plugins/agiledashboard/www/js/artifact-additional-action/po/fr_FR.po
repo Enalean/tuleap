@@ -1,0 +1,8 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Add to top backlog"
+msgstr "Ajouter à la planification générale"
+
+msgid "Remove from top backlog"
+msgstr "Supprimer de la planification générale"
