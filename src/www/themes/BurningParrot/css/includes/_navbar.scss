@@ -323,6 +323,31 @@
     }
 }
 
+#current-project-banner-bullhorn.bullhorn-to-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    // Both pseudo-elements are needed to workaround a FF rendering issue
+    &::before, &::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        width: 0;
+        height: 0;
+        transform: rotate(-45deg);
+        border-width: 8px;
+        border-style: solid;
+        border-color: transparent transparent $tlp-ui-white $tlp-ui-white;
+        box-shadow: -2px 2px 2px 0 rgba(0, 0, 0, .1);
+        margin-left: $tlp-half-spacing;
+    }
+
+    &::after {
+        box-shadow: none;
+    }
+}
+
 .join-tuleap-community {
     width: 36px;
     height: 100%;
