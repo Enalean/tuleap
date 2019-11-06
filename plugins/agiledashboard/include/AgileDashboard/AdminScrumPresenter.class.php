@@ -65,7 +65,7 @@ class AdminScrumPresenter
     /**
      * @var bool
      */
-    public $user_lab_feature;
+    public $must_display_explicit_top_backlog_switch;
 
     public function __construct(
         array $plannings,
@@ -106,8 +106,8 @@ class AdminScrumPresenter
             $this->planning_hierarchy[] = $tracker->getName();
         }
 
-        $this->explicit_top_backlog_enabled = $explicit_top_backlog_enabled;
-        $this->user_lab_feature             = $user_lab_feature;
+        $this->explicit_top_backlog_enabled              = $explicit_top_backlog_enabled;
+        $this->must_display_explicit_top_backlog_switch  = (bool) $explicit_top_backlog_enabled || $user_lab_feature;
     }
 
     public function has_plannings()
