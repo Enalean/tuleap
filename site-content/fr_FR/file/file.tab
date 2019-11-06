@@ -190,7 +190,6 @@ file_admin_editreleases	notes_in_markdown	Les notes et modifications sont interp
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php
 #
-file_admin_index	file_manager_admin	Administration du gestionnaire de fichiers
 file_admin_index	edit_release_files	Création/modification de versions
 file_admin_index	manage_explain	Créer ou modifier des paquets et versions, leur statut et les permissions d'accès.
 file_admin_index	quick_add	Création de version rapide
@@ -274,7 +273,6 @@ file_filemodule_monitor	delete_monitor_mail	Votre suivi a été supprimé du paq
 file_file_utils	admin	Administration
 file_file_utils	must_choose_one	Choisir...
 file_file_utils	g_id_err	ERREUR - Identifiant de projet (group_id) obligatoire
-file_file_utils	manage_proc	Processeurs
 file_file_utils	proc_id	ID du processeur
 file_file_utils	proc_name	Nom
 file_file_utils	proc_rank	Rang
@@ -289,11 +287,9 @@ file_file_utils	update_proc_fail	Modification non effectuée.
 file_file_utils	delete_proc_success	Processeur effacé.
 file_file_utils	delete_proc_fail	Suppression non effectuée.
 file_file_utils	del_proc	Effacer ce processeur ?
-file_file_utils	permissions	Droits d'accès
 file_file_utils	administrators_title	Administrateurs du service Fichier
 file_file_utils	readers_title	Lecteurs
 file_file_utils	permission_read_title	Lecture
-file_file_utils	title_frs_administration	Administration des fichiers
 file_file_utils	access_control_intro	Cette section permet de définir les groupes d'utilisateurs qui peuvent lire et/ou écrire du contenu dans le service Fichier.
 file_file_utils	administrator_info	Les administrateurs de projet ainsi que les groupes d'utilisateurs ayant le droit d'écriture peuvent administrer ce service.
 file_file_utils	readers_info	Les groupes d'utilisateurs suivant ont accès au service. L'accès a un paquet peut être restreint via les permissions du paquet (bien que la sélection de groupes d'utilisateurs pour les paquets ne peut être plus large que ci-dessous)

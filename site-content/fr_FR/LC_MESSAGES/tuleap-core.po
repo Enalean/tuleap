@@ -101,6 +101,9 @@ msgstr "Accès"
 msgid "Access Logs"
 msgstr "Journal des accès"
 
+msgid "Access controls"
+msgstr "Droits d'accès"
+
 msgid "Access key description"
 msgstr "Description de la clé d'accès"
 
@@ -597,6 +600,9 @@ msgstr "Champs personnalisés"
 msgid "Files"
 msgstr "Fichiers"
 
+msgid "Files Administration"
+msgstr "Administration du gestionnaire de fichiers"
+
 msgid "Files service is disabled for this project."
 msgstr "Le service fichiers est désactivé pour ce projet."
 
@@ -754,6 +760,9 @@ msgstr "Utilisée pour la dernière fois par"
 
 msgid "Last used on"
 msgstr "Utilisée pour la dernière fois le"
+
+msgid "License Agreements"
+msgstr "Licences"
 
 msgid "License Approval:"
 msgstr "Approbation licence :"
@@ -1051,6 +1060,9 @@ msgstr "Privé"
 
 msgid "Private incl. restricted"
 msgstr "Privé incl. les utilisateurs restreints"
+
+msgid "Processors"
+msgstr "Processeurs"
 
 msgid "Project"
 msgstr "Projet"

@@ -232,6 +232,12 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->cache_active_services;
     }
 
+    public function getFileService(): ?ServiceFile
+    {
+        $this->cacheServices();
+        return $this->usesService(Service::FILE) ? $this->services[Service::FILE] : null;
+    }
+
     public function usesHomePage()
     {
         return $this->usesService(Service::HOMEPAGE);

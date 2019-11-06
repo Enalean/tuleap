@@ -58,12 +58,11 @@ if ($request->valid($vMode) && $request->existAndNonEmpty('mode')) {
 }
 
 $renderer  = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') .'/src/templates/frs');
-$title     = $GLOBALS['Language']->getText('file_admin_index', 'file_manager_admin');
-$presenter = new ToolbarPresenter($project, $title);
+$presenter = new ToolbarPresenter($project);
 $presenter->setProcessorsIsActive();
 $presenter->displaySectionNavigation();
 
-$project->getService(Service::FILE)->displayFRSHeader($project, $title);
+$project->getService(Service::FILE)->displayFRSHeader($project, _('Files Administration'));
 $renderer->renderToPage('toolbar-presenter', $presenter);
 
 $vAdd      = new Valid_String('add');

@@ -25,10 +25,12 @@ class BaseFrsPresenter
 {
     public $permissions_active;
     public $processors_active;
+    public $license_agreements_active;
 
     public function __construct()
     {
-        $this->permissions_active = false;
-        $this->processors_active  = false;
+        $this->permissions_active        = false;
+        $this->processors_active         = false;
+        $this->license_agreements_active = false;
     }
 }
