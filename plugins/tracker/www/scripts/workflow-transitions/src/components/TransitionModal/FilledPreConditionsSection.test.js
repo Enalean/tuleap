@@ -171,4 +171,29 @@ describe("FilledPreConditionsSection", () => {
             });
         });
     });
+
+    describe(`when the modal is saving`, () => {
+        beforeEach(() => {
+            store.state.transitionModal.is_modal_save_running = true;
+        });
+
+        it(`will disable the "Authorized ugroups" selectbox`, () => {
+            const authorized_ugroups_selectbox = wrapper.find(
+                "[data-test=authorized-ugroups-select]"
+            );
+            expect(authorized_ugroups_selectbox.attributes("disabled")).toBeTruthy();
+        });
+
+        it(`will disable the "Not empty fields" select`, () => {
+            const not_empty_field_select = wrapper.find("[data-test=not-empty-field-select]");
+            expect(not_empty_field_select.attributes("disabled")).toBeTruthy();
+        });
+
+        it(`will disable the "Not empty comment" checkbox`, () => {
+            const not_empty_comment_checkbox = wrapper.find(
+                "[data-test=not-empty-comment-checkbox]"
+            );
+            expect(not_empty_comment_checkbox.attributes("disabled")).toBeTruthy();
+        });
+    });
 });

@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <form v-on:submit.prevent="createWorkflowTransitions()">
+    <form v-on:submit.prevent="createWorkflowTransitions()" data-test="tracker-workflow-first-configuration">
         <section class="tlp-pane-section">
             <p v-translate>
                 In order to configure transitions rules on this tracker, your first need to choose a list field. Once chosen, you will be able to configure transition using the configuration matrix.
@@ -29,7 +29,7 @@
                     <span v-translate>Field</span>
                     <span
                         class="tlp-tooltip tlp-tooltip-top"
-                        v-bind:data-tlp-tooltip="field_tooltip"
+                        v-bind:data-tlp-tooltip="$gettext(`Transitions based field`)"
                     >
                         <i class="fa fa-question-circle"></i>
                     </span>
@@ -42,6 +42,7 @@
                     v-model="selected_field"
                     required
                     v-bind:disabled="is_operation_running"
+                    data-test="list-fields"
                 >
                     <option value disabled></option>
                     <option
@@ -57,7 +58,7 @@
                 class="tlp-button-primary"
                 type="submit"
                 v-bind:disabled="is_operation_running"
-                data-test-action="create-workflow"
+                data-test="create-workflow"
             >
                 <i
                     class="tlp-button-icon fa"
@@ -86,10 +87,7 @@ export default {
 
     computed: {
         ...mapState(["is_operation_running"]),
-        ...mapGetters(["selectbox_fields"]),
-        field_tooltip() {
-            return this.$gettext("Transitions based field");
-        }
+        ...mapGetters(["selectbox_fields"])
     },
 
     methods: {

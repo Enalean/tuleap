@@ -21,10 +21,7 @@ describe("Permissions", function() {
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");
         cy.projectMemberLogin();
-        cy.visit("/projects/permissions-project-01/");
-        cy.get("[data-test=project-sidebar]")
-            .should("have.attr", "data-project-id")
-            .as("permission_project_id");
+        cy.getProjectId("permissions-project-01").as("permission_project_id");
     });
 
     beforeEach(() => {

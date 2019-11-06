@@ -31,6 +31,7 @@
                 multiple
                 v-bind:disabled="is_modal_save_running"
                 v-model="authorized_user_group_ids"
+                data-test="authorized-ugroups-select"
                 required
             >
                 <option
@@ -51,10 +52,11 @@
                 class="tlp-select"
                 v-bind:configuration="{
                     width: '100%',
-                    placeholder: not_empty_field_select_placeholder
+                    placeholder: $gettext('Choose a field')
                 }"
                 v-model="not_empty_field_ids"
                 v-bind:disabled="is_modal_save_running"
+                data-test="not-empty-field-select"
             >
                 <option
                     v-for="field in writable_fields"
@@ -76,6 +78,7 @@
                 name="transition-comment-not-empty"
                 v-model="transition_comment_not_empty"
                 v-bind:disabled="is_modal_save_running"
+                data-test="not-empty-comment-checkbox"
             >
             <translate>Comment must not be empty</translate>
         </label>
@@ -115,9 +118,6 @@ export default {
                     .sort((field1, field2) => compare(field1.label, field2.label));
             }
         }),
-        not_empty_field_select_placeholder() {
-            return this.$gettext("Choose a field");
-        },
         authorized_user_group_ids: {
             get() {
                 if (!this.current_transition) {

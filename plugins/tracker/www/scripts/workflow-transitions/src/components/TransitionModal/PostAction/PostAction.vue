@@ -25,7 +25,7 @@
                 class="tlp-select"
                 v-model="post_action_type"
                 v-bind:disabled="is_modal_save_running"
-                ref="select"
+                data-test="post-action-type-select"
             >
                 <optgroup v-bind:label="unique_actions_title">
                     <option v-bind:value="POST_ACTION_TYPE.FROZEN_FIELDS" data-test="freeze_fields" v-bind:disabled="! frozen_fields_information.valid" v-bind:title="frozen_fields_information.title">{{ frozen_fields_information.option }}</option>

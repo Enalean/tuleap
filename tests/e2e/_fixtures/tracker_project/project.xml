@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+<project access="public" description="" full-name="Tracker project" unix-name="tracker-project">
+    <long-description/>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">ProjectAdministrator</member>
+                <member format="username">ProjectMember</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">ProjectAdministrator</member>
+            </members>
+        </ugroup>
+    </ugroups>
+    <trackers use-natures="true">
+        <tracker id="T1" parent_id="0" instantiate_for_new_projects="1">
+            <name><![CDATA[Workflow]]></name>
+            <item_name>workflow</item_name>
+            <description><![CDATA[workflow]]></description>
+            <color>inca-silver</color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="string" ID="F11974" rank="2" required="1">
+                    <name>title</name>
+                    <label><![CDATA[Title]]></label>
+                    <properties size="30"/>
+                </formElement>
+                <formElement type="sb" ID="F11975" rank="62388">
+                    <name>status</name>
+                    <label><![CDATA[Status]]></label>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="V9526" label="Todo" is_hidden="0"/>
+                            <item ID="V9527" label="On Going" is_hidden="0"/>
+                            <item ID="V9528" label="Review" is_hidden="0"/>
+                            <item ID="V9529" label="Done" is_hidden="0"/>
+                        </items>
+                        <decorators>
+                            <decorator REF="V9526" tlp_color_name="daphne-blue"/>
+                            <decorator REF="V9527" tlp_color_name="lake-placid-blue"/>
+                            <decorator REF="V9528" tlp_color_name="deep-blue"/>
+                            <decorator REF="V9529" tlp_color_name="neon-green"/>
+                        </decorators>
+                        <default_values>
+                            <value REF="V9526"/>
+                        </default_values>
+                    </bind>
+                </formElement>
+                <formElement type="float" ID="F11976" rank="62389">
+                    <name>initial_effort</name>
+                    <label><![CDATA[Initial Effort]]></label>
+                    <properties size="5"/>
+                </formElement>
+                <formElement type="float" ID="F11977" rank="62390">
+                    <name>remaining_effort</name>
+                    <label><![CDATA[Remaining Effort]]></label>
+                    <properties size="5"/>
+                </formElement>
+            </formElements>
+            <semantics>
+                <semantic type="title">
+                    <shortname>title</shortname>
+                    <label>Title</label>
+                    <description>Define the title of an artifact</description>
+                    <field REF="F11974"/>
+                </semantic>
+                <semantic type="status">
+                    <shortname>status</shortname>
+                    <label>Status</label>
+                    <description>Define the status of an artifact</description>
+                    <field REF="F11975"/>
+                    <open_values>
+                        <open_value REF="V9526"/>
+                        <open_value REF="V9527"/>
+                        <open_value REF="V9528"/>
+                    </open_values>
+                </semantic>
+                <semantic type="done">
+                    <shortname>done</shortname>
+                    <label>Done</label>
+                    <description>Define the closed status that are considered Done</description>
+                    <closed_values>
+                        <closed_value REF="V9529"/>
+                    </closed_values>
+                </semantic>
+                <semantic type="tooltip"/>
+                <semantic type="plugin_cardwall_card_fields"/>
+                <semantic type="initial_effort">
+                    <shortname>initial_effort</shortname>
+                    <label>Initial Effort</label>
+                    <description>Define the initial effort of an artifact.</description>
+                    <field REF="F11976"/>
+                </semantic>
+            </semantics>
+            <rules>
+                <date_rules/>
+                <list_rules/>
+            </rules>
+            <reports>
+                <report is_default="0">
+                    <name>Default</name>
+                    <description>The system default artifact report</description>
+                    <criterias/>
+                    <renderers>
+                        <renderer type="table" rank="0" chunksz="15">
+                            <name>Results</name>
+                            <columns/>
+                        </renderer>
+                    </renderers>
+                </report>
+            </reports>
+            <permissions>
+                <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                <permission scope="field" REF="F11974" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F11974" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F11974" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F11975" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F11975" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F11975" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F11976" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F11976" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F11976" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F11977" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F11977" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F11977" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+            </permissions>
+        </tracker>
+        <triggers/>
+    </trackers>
+    <services>
+        <service shortname="summary" enabled="1"/>
+        <service shortname="plugin_tracker" enabled="1"/>
+    </services>
+</project>

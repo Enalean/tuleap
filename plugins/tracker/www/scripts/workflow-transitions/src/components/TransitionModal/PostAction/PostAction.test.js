@@ -126,4 +126,10 @@ describe("PostAction", () => {
             expect(wrapper.vm.set_field_value_is_valid).toBe(true);
         });
     });
+
+    it(`when the modal is saving, it will disable the post-action type selectbox`, () => {
+        store.state.transitionModal.is_modal_save_running = true;
+        const post_action_type_select = wrapper.find("[data-test=post-action-type-select]");
+        expect(post_action_type_select.attributes("disabled")).toBeTruthy();
+    });
 });

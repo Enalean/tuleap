@@ -15,7 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 import { shallowMount } from "@vue/test-utils";
@@ -32,7 +31,8 @@ describe("PostActionsSection", () => {
         const store_options = {
             state: {
                 transitionModal: {
-                    is_loading_modal: false
+                    is_loading_modal: false,
+                    is_modal_save_running: false
                 }
             },
             getters: {
@@ -91,5 +91,17 @@ describe("PostActionsSection", () => {
                 expect(wrapper.findAll(post_action_selector).length).toBe(2);
             });
         });
+    });
+
+    it(`when the modal is saving, it will disable the "Add another action" button`, () => {
+        store.state.transitionModal.is_modal_save_running = true;
+        const add_action_button = wrapper.find("[data-test=add-post-action]");
+        expect(add_action_button.attributes("disabled")).toBeTruthy();
+    });
+
+    it(`when I click on the "Add another action" button, it will commit a mutation to create a new post action`, () => {
+        const add_action_button = wrapper.find("[data-test=add-post-action]");
+        add_action_button.trigger("click");
+        expect(store.commit).toHaveBeenCalledWith("transitionModal/addPostAction");
     });
 });

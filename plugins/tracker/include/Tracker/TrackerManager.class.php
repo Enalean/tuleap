@@ -784,7 +784,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                         }
                     }
                     $html .= '<div class="tracker_homepage_info">';
-                    $html .= '<a class="link-to-tracker" href="'.TRACKER_BASE_URL.'/?tracker='. $tracker->id .'">';
+                    $html .= '<a class="link-to-tracker" href="'.TRACKER_BASE_URL.'/?tracker='. $tracker->id .'" data-test="tracker-link-' . $tracker->getItemName() . '" data-test-tracker-id="'. $tracker->getId().'">';
                     $html .= '<i class="fa fa-circle tracker_color_info '. $hp->purify($tracker->getColor()->getName()) .'"></i>';
                     $html .= $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML);
                     $html .= '</a>';

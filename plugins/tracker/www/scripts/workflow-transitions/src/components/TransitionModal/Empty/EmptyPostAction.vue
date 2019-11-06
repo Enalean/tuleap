@@ -27,6 +27,7 @@
             class="tlp-button-primary tlp-button-outline"
             type="button"
             v-on:click="addNewPostAction()"
+            data-test="add-post-action"
         >
             <i class="fa fa-plus tlp-button-icon"></i>
             <translate>Add action</translate>

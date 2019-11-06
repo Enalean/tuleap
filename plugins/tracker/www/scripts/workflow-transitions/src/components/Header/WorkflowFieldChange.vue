@@ -25,7 +25,7 @@
         >
             <label class="tlp-label">
                 <span v-translate>Field</span>
-                <span class="tlp-tooltip tlp-tooltip-top" v-bind:data-tlp-tooltip="field_tooltip">
+                <span class="tlp-tooltip tlp-tooltip-top" v-bind:data-tlp-tooltip="$gettext('Transitions based field')">
                     <i class="fa fa-question-circle"></i>
                 </span>
             </label>
@@ -36,6 +36,7 @@
                     data-target="modal-confirm-change-field"
                     v-on:click="showModal()"
                     v-bind:disabled="is_operation_running"
+                    data-test="change-or-remove-button"
                 >
                     <i class="fa fa-refresh tlp-button-icon"></i>
                     <span v-translate>Change or remove</span>
@@ -63,10 +64,7 @@ export default {
     },
     computed: {
         ...mapState(["is_operation_running"]),
-        ...mapGetters(["workflow_field_label", "current_tracker_id"]),
-        field_tooltip() {
-            return this.$gettext("Transitions based field");
-        }
+        ...mapGetters(["workflow_field_label", "current_tracker_id"])
     },
     mounted() {
         this.modal = createModal(this.$refs.modal);

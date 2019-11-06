@@ -25,7 +25,7 @@
         <div class="tlp-form-element">
             <slot name="authorized-ugroups"></slot>
         </div>
-        <div class="tlp-form-element">
+        <div class="tlp-form-element" data-test="not-empty-field-form-element">
             <slot name="fields-not-empty"></slot>
         </div>
         <div class="tlp-form-element" v-if="!props.is_transition_from_new_artifact">

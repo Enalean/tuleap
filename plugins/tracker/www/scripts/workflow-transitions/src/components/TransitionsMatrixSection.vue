@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <section class="tlp-pane-section">
+    <section class="tlp-pane-section" data-test="tracker-workflow-matrix">
         <table v-if="has_field_values" class="tlp-table tracker-workflow-transition-table">
             <thead>
                 <tr>
@@ -31,7 +31,7 @@
                 </tr>
             </thead>
             <tbody class="tracker-workflow-transition-tbody">
-                <tr v-for="from in all_source_values" v-bind:key="from.id">
+                <tr v-for="from in all_source_values" v-bind:key="from.id" data-test="matrix-row">
                     <td class="tracker-workflow-transition-row-label">
                         {{ from.label }}
                     </td>
