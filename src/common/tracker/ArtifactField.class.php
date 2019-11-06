@@ -594,7 +594,7 @@ class ArtifactField
     /**
      *  Return display size field attribute value
      *
-     * @return string
+     * @return string[]
      */
     function getGlobalDisplaySize($by_field_id = false)
     {

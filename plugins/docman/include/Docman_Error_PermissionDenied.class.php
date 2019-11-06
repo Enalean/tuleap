@@ -154,7 +154,10 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
         }
 
         $pm = $this->_getPermissionManagerInstance($project->getId());
-        $adminList = $pm->getDocmanManagerUsers($query['id'], $project);
+        $adminList = [];
+        if (isset($query['id'])) {
+            $adminList = $pm->getDocmanManagerUsers($query['id'], $project);
+        }
         if (empty($adminList)) {
             $adminList = $pm->getDocmanAdminUsers($project);
         }
