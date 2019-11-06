@@ -19,6 +19,7 @@
 
 import { patch } from "../../../../../../src/www/themes/common/tlp/src/js/fetch-wrapper";
 import { initGettext } from "../../../../../../src/www/scripts/tuleap/gettext/gettext-init";
+import { addFeedback, clearAllFeedbacks } from "../../../../../../src/www/scripts/tuleap/feedback";
 
 document.addEventListener("DOMContentLoaded", () => {
     const action_button = document.getElementById("artifact-explicit-backlog-action");
@@ -52,14 +53,31 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             if (action === "add") {
-                await patch(`/api/v1/projects/${encodeURIComponent(project_id)}/backlog`, {
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        add: [{ id: Number.parseInt(artifact_id, 10) }]
-                    })
-                });
+                clearAllFeedbacks();
+                try {
+                    await patch(`/api/v1/projects/${encodeURIComponent(project_id)}/backlog`, {
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            add: [{ id: Number.parseInt(artifact_id, 10) }]
+                        })
+                    });
+                } catch (e) {
+                    addFeedback(
+                        "error",
+                        gettext_provider.gettext(
+                            "An error occured while adding this artifact to top backlog."
+                        )
+                    );
+
+                    return;
+                }
+
+                addFeedback(
+                    "info",
+                    gettext_provider.gettext("This artifact has been added to top backlog.")
+                );
                 const title = action_button.getElementsByClassName(
                     "additional-artifact-action-title"
                 )[0];
@@ -67,14 +85,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 // eslint-disable-next-line require-atomic-updates
                 action = "remove";
             } else if (action === "remove") {
-                await patch(`/api/v1/projects/${encodeURIComponent(project_id)}/backlog`, {
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        remove: [{ id: Number.parseInt(artifact_id, 10) }]
-                    })
-                });
+                clearAllFeedbacks();
+                try {
+                    await patch(`/api/v1/projects/${encodeURIComponent(project_id)}/backlog`, {
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            remove: [{ id: Number.parseInt(artifact_id, 10) }]
+                        })
+                    });
+                } catch (e) {
+                    addFeedback(
+                        "error",
+                        gettext_provider.gettext(
+                            "An error occured while removing this artifact from top backlog."
+                        )
+                    );
+
+                    return;
+                }
+                addFeedback(
+                    "info",
+                    gettext_provider.gettext("This artifact has been removed from top backlog.")
+                );
                 const title = action_button.getElementsByClassName(
                     "additional-artifact-action-title"
                 )[0];
