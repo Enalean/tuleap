@@ -19,27 +19,40 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ParentCardRemainingEffort from "./ParentCardRemainingEffort.vue";
+import { Card } from "../../../../../type";
 
 describe("ParentCardRemainingEffort", () => {
     it("displays the remaining effort of the parent card in a badge", () => {
         const wrapper = shallowMount(ParentCardRemainingEffort, {
             propsData: {
                 card: {
-                    remaining_effort: 666,
+                    remaining_effort: { value: 666 },
                     color: "lake-placid-blue"
-                }
+                } as Card
             }
         });
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("displays nothing if the parent card has no remaining effort", () => {
+    it("displays nothing if the parent card has no remaining effort field", () => {
         const wrapper = shallowMount(ParentCardRemainingEffort, {
             propsData: {
                 card: {
                     remaining_effort: null,
                     color: "lake-placid-blue"
-                }
+                } as Card
+            }
+        });
+        expect(wrapper.isEmpty()).toBe(true);
+    });
+
+    it("displays nothing if the parent card has no remaining effort value", () => {
+        const wrapper = shallowMount(ParentCardRemainingEffort, {
+            propsData: {
+                card: {
+                    remaining_effort: { value: null },
+                    color: "lake-placid-blue"
+                } as Card
             }
         });
         expect(wrapper.isEmpty()).toBe(true);

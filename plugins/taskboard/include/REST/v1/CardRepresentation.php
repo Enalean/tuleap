@@ -79,7 +79,7 @@ class CardRepresentation
      */
     public $initial_effort;
     /**
-     * @var float|null
+     * @var RemainingEffortRepresentation|null
      */
     public $remaining_effort;
     /**
@@ -101,7 +101,7 @@ class CardRepresentation
         array $assignees,
         ?MappedListValueRepresentation $mapped_list_value,
         $initial_effort,
-        $remaining_effort,
+        ?RemainingEffortRepresentation $remaining_effort,
         bool $is_collapsed
     ): void {
         $this->id                = JsonCast::toInt($artifact->getId());
@@ -116,7 +116,7 @@ class CardRepresentation
         $this->has_children      = JsonCast::toBoolean($artifact->hasChildren());
         $this->mapped_list_value = $mapped_list_value;
         $this->initial_effort    = $this->formatNumeric($initial_effort);
-        $this->remaining_effort  = $this->formatNumeric($remaining_effort);
+        $this->remaining_effort  = $remaining_effort;
         $this->is_open           = $artifact->isOpen();
         $this->is_collapsed      = $is_collapsed;
     }

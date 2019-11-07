@@ -82,6 +82,16 @@ class TaskboardTest extends RestBase
             $this->assertArrayHasKey('remaining_effort', $cards[$key]);
             $this->assertFalse($cards[$key]['is_collapsed']);
 
+            $expected_remaining_effort = null;
+            if ($label === 'US1') {
+                $expected_remaining_effort = 5;
+            }
+            $this->assertEquals(
+                ['value' => $expected_remaining_effort, 'can_update' => true],
+                $cards[$key]['remaining_effort'],
+                var_export($cards[$key], true)
+            );
+
             $is_open = in_array($label, ['US2', 'US4', 'US5', 'US6'], true);
             $this->assertEquals($is_open, $cards[$key]['is_open'], $label);
 

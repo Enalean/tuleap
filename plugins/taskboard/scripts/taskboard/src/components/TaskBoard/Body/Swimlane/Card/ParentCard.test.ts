@@ -36,7 +36,7 @@ describe("ParentCard", () => {
                     background_color: "fiesta-red",
                     assignees: [],
                     initial_effort: 666,
-                    remaining_effort: 333
+                    remaining_effort: { value: 333 }
                 }
             }
         });
@@ -55,7 +55,7 @@ describe("ParentCard", () => {
                     background_color: "",
                     assignees: [],
                     initial_effort: 666,
-                    remaining_effort: 333
+                    remaining_effort: { value: 333 }
                 }
             }
         });
@@ -74,7 +74,7 @@ describe("ParentCard", () => {
                     background_color: "fiesta-red",
                     assignees: [],
                     initial_effort: 666,
-                    remaining_effort: 333
+                    remaining_effort: { value: 333 }
                 }
             }
         });
@@ -94,7 +94,7 @@ describe("ParentCard", () => {
                     background_color: "",
                     assignees: [],
                     initial_effort: 666,
-                    remaining_effort: 222
+                    remaining_effort: { value: 222 }
                 }
             }
         });
@@ -114,7 +114,7 @@ describe("ParentCard", () => {
                     background_color: "fiesta-red",
                     assignees: [],
                     initial_effort: 666,
-                    remaining_effort: 333
+                    remaining_effort: { value: 333 }
                 }
             }
         });
