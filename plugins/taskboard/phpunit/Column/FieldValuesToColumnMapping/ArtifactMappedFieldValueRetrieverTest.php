@@ -25,6 +25,7 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Taskboard\TaskboardTracker;
 
 final class ArtifactMappedFieldValueRetrieverTest extends TestCase
 {
@@ -75,7 +76,11 @@ final class ArtifactMappedFieldValueRetrieverTest extends TestCase
             ->once()
             ->andReturn($tracker);
         $this->mapped_field_retriever->shouldReceive('getField')
-            ->with($this->release_tracker, $tracker)
+            ->withArgs(
+                function (TaskboardTracker $taskboard_tracker) use ($tracker) {
+                    return $taskboard_tracker->getTracker() === $tracker;
+                }
+            )
             ->once()
             ->andReturnNull();
 
@@ -178,7 +183,11 @@ final class ArtifactMappedFieldValueRetrieverTest extends TestCase
 
         $mapped_field = M::mock(\Tracker_FormElement_Field_Selectbox::class);
         $this->mapped_field_retriever->shouldReceive('getField')
-            ->with($this->release_tracker, $tracker)
+            ->withArgs(
+                function (TaskboardTracker $taskboard_tracker) use ($tracker) {
+                    return $taskboard_tracker->getTracker() === $tracker;
+                }
+            )
             ->once()
             ->andReturn($mapped_field);
 

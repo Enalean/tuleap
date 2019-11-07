@@ -27,6 +27,7 @@ use Cardwall_FieldProviders_SemanticStatusFieldRetriever;
 use Tracker;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingFactory;
+use Tuleap\Taskboard\TaskboardTracker;
 
 class MappedValuesRetriever
 {
@@ -52,14 +53,13 @@ class MappedValuesRetriever
     }
 
     public function getValuesMappedToColumn(
-        Tracker $milestone_tracker,
-        Tracker $tracker,
+        TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column
     ): MappedValuesInterface {
-        if ($this->freestyle_mapping_factory->doesFreestyleMappingExist($milestone_tracker, $tracker)) {
-            return $this->freestyle_mapping_factory->getValuesMappedToColumn($milestone_tracker, $tracker, $column);
+        if ($this->freestyle_mapping_factory->doesFreestyleMappingExist($taskboard_tracker)) {
+            return $this->freestyle_mapping_factory->getValuesMappedToColumn($taskboard_tracker, $column);
         }
-        return $this->matchStatusValuesByDuckTyping($tracker, $column);
+        return $this->matchStatusValuesByDuckTyping($taskboard_tracker->getTracker(), $column);
     }
 
     private function matchStatusValuesByDuckTyping(Tracker $tracker, Cardwall_Column $column): MappedValuesInterface

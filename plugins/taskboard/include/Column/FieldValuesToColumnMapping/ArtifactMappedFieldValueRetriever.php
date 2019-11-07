@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use Tracker_FormElement_Field_List_BindValue;
+use Tuleap\Taskboard\TaskboardTracker;
 
 class ArtifactMappedFieldValueRetriever
 {
@@ -46,10 +47,8 @@ class ArtifactMappedFieldValueRetriever
         \Tracker_Artifact $artifact,
         \PFUser $user
     ): ?Tracker_FormElement_Field_List_BindValue {
-        $mapped_field = $this->mapped_field_retriever->getField(
-            $milestone->getArtifact()->getTracker(),
-            $artifact->getTracker()
-        );
+        $taskboard_tracker = new TaskboardTracker($milestone->getArtifact()->getTracker(), $artifact->getTracker());
+        $mapped_field = $this->mapped_field_retriever->getField($taskboard_tracker);
         if (! $mapped_field) {
             return null;
         }

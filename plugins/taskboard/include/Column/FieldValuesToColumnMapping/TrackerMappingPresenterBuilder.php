@@ -25,9 +25,9 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 use Cardwall_Column;
 use Cardwall_OnTop_ConfigFactory;
 use Planning_Milestone;
-use Tracker;
 use Tracker_FormElementFactory;
 use TrackerFactory;
+use Tuleap\Taskboard\TaskboardTracker;
 
 class TrackerMappingPresenterBuilder
 {
@@ -69,26 +69,21 @@ class TrackerMappingPresenterBuilder
         $mappings = [];
         if ($config) {
             foreach ($config->getTrackers() as $tracker) {
-                $mappings[] = $this->buildMappingForATracker(
-                    $milestone->getArtifact()->getTracker(),
-                    $tracker,
-                    $column
-                );
+                $taskboard_tracker = new TaskboardTracker($milestone->getArtifact()->getTracker(), $tracker);
+                $mappings[]        = $this->buildMappingForATracker($taskboard_tracker, $column);
             }
         }
         return $mappings;
     }
 
     private function buildMappingForATracker(
-        Tracker $milestone_tracker,
-        Tracker $tracker,
+        TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column
     ): TrackerMappingPresenter {
         $value_mapping_presenters = [];
-        $field                    = $this->mapped_field_retriever->getField($milestone_tracker, $tracker);
+        $field                    = $this->mapped_field_retriever->getField($taskboard_tracker);
         $mapped_values            = $this->mapped_values_retriever->getValuesMappedToColumn(
-            $milestone_tracker,
-            $tracker,
+            $taskboard_tracker,
             $column
         );
         foreach ($mapped_values->getValueIds() as $value_id) {
@@ -96,6 +91,6 @@ class TrackerMappingPresenterBuilder
         }
         $field_id = $field !== null ? (int) $field->getId() : null;
 
-        return new TrackerMappingPresenter((int) $tracker->getId(), $field_id, $value_mapping_presenters);
+        return new TrackerMappingPresenter($taskboard_tracker->getTrackerId(), $field_id, $value_mapping_presenters);
     }
 }

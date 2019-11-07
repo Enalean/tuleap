@@ -25,7 +25,9 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tracker;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingFactory;
+use Tuleap\Taskboard\TaskboardTracker;
 
 final class MappedFieldRetrieverTest extends TestCase
 {
@@ -54,25 +56,24 @@ final class MappedFieldRetrieverTest extends TestCase
 
     public function testReturnsFreestyleMappedField(): void
     {
-        $milestone_tracker = M::mock(\Tracker::class);
-        $tracker           = M::mock(\Tracker::class);
+        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), M::mock(Tracker::class));
         $field             = M::mock(\Tracker_FormElement_Field_Selectbox::class);
         $this->freestyle_mapping_factory->shouldReceive('getMappedField')
-            ->with($milestone_tracker, $tracker)
+            ->with($taskboard_tracker)
             ->once()
             ->andReturn($field);
 
-        $result = $this->mapped_field_retriever->getField($milestone_tracker, $tracker);
+        $result = $this->mapped_field_retriever->getField($taskboard_tracker);
         $this->assertSame($field, $result);
     }
 
     public function testReturnsStatusSemanticWhenNoMapping(): void
     {
-        $milestone_tracker = M::mock(\Tracker::class);
-        $tracker           = M::mock(\Tracker::class);
+        $tracker           = M::mock(Tracker::class);
+        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), $tracker);
         $field             = M::mock(\Tracker_FormElement_Field_Selectbox::class);
         $this->freestyle_mapping_factory->shouldReceive('getMappedField')
-            ->with($milestone_tracker, $tracker)
+            ->with($taskboard_tracker)
             ->once()
             ->andReturnNull();
         $this->status_retriever->shouldReceive('getField')
@@ -80,7 +81,7 @@ final class MappedFieldRetrieverTest extends TestCase
             ->once()
             ->andReturn($field);
 
-        $result = $this->mapped_field_retriever->getField($milestone_tracker, $tracker);
+        $result = $this->mapped_field_retriever->getField($taskboard_tracker);
 
         $this->assertSame($field, $result);
     }
