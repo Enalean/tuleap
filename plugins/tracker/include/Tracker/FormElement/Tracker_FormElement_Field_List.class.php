@@ -778,7 +778,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     protected function getSelectedValue($selected_values)
     {
         if ($this->getBind()) {
-            foreach ($this->getBind()->getAllValues() as $id => $value) {
+            foreach ($this->getBind()->getAllValuesWithActiveUsersOnly() as $id => $value) {
                 if (isset($selected_values[$id])) {
                     $from = $value;
                     return $from;
@@ -928,7 +928,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $required = '';
         if ($this->isMultiple()) {
             $multiple = 'multiple="multiple"';
-            $size     = 'size="'. min($this->getMaxSize(), count($this->getBind()->getAllValues()) + 2) .'"';
+            $size     = 'size="'. min($this->getMaxSize(), count($this->getBind()->getAllValuesWithActiveUsersOnly()) + 2) .'"';
         }
         if ($this->isRequired()) {
             $required = 'required';

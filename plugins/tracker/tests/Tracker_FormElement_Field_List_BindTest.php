@@ -149,6 +149,11 @@ class Tracker_FormElement_Field_List_Bind4Tests extends Tracker_FormElement_Fiel
     {
     }
 
+    public function getAllValuesWithActiveUsersOnly() : array
+    {
+        return [];
+    }
+
     public function getBindValues($bindvalue_ids = null)
     {
     }

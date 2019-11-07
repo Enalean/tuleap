@@ -794,4 +794,12 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
         return $this->getValueFromRow($row);
     }
+
+    /**
+     * @return Tracker_FormElement_Field_List_BindValue[]
+     */
+    public function getAllValuesWithActiveUsersOnly(): array
+    {
+        return [];
+    }
 }

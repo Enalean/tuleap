@@ -335,4 +335,12 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     {
         return new Tracker_FormElement_Field_List_Bind_StaticValue_None();
     }
+
+    /**
+     * @return Tracker_FormElement_Field_List_BindValue[]
+     */
+    public function getAllValuesWithActiveUsersOnly(): array
+    {
+        return [];
+    }
 }

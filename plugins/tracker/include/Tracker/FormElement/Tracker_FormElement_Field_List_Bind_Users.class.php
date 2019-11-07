@@ -261,7 +261,12 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     {
         if ($this->values === null) {
             $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance());
-            $this->values = $value_getter->getUsersValueByKeywordAndIds($ugroups, $keyword, [], $this->field);
+            $this->values = $value_getter->getUsersValueByKeywordAndIds(
+                $ugroups,
+                $keyword,
+                [],
+                $this->field
+            );
         }
 
         return $this->values;
@@ -284,7 +289,12 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         }
 
         $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance());
-        return $value_getter->getUsersValueByKeywordAndIds($this->value_function, null, $bindvalue_ids, $this->field);
+        return $value_getter->getUsersValueByKeywordAndIds(
+            $this->value_function,
+            null,
+            $bindvalue_ids,
+            $this->field
+        );
     }
 
     /**
@@ -297,6 +307,22 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function getAllValues($keyword = null)
     {
         return $this->getAllValuesByUGroupList($this->value_function, $keyword = null);
+    }
+
+    /**
+     * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
+     */
+    public function getAllValuesWithActiveUsersOnly(): array
+    {
+        if ($this->values === null) {
+            $value_getter = new BindListUserValueGetter($this->getDefaultValueDao(), UserHelper::instance());
+            $this->values = $value_getter->getActiveUsersValue(
+                $this->value_function,
+                $this->field
+            );
+        }
+
+        return $this->values;
     }
 
     /**
@@ -736,7 +762,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function getBindValues($bindvalue_ids = null)
     {
-        $values = $this->getAllValues();
+        $values = $this->getAllValuesWithActiveUsersOnly();
         if ($bindvalue_ids === null) {
             return $values;
         } else {
