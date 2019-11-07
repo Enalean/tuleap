@@ -19,8 +19,8 @@
   -->
 
 <template>
-    <span class="tlp-tooltip tlp-tooltip-bottom taskboard-header-expand-column"
-          v-bind:data-tlp-tooltip="title"
+    <span class="taskboard-header-expand-column"
+          v-bind:title="title"
     >
         <i class="fa fa-plus-square"
            role="button"
