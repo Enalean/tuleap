@@ -60,6 +60,7 @@ use Tuleap\Project\UserRemoverDao;
 use Tuleap\Project\XML\Import;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\Import\ImportNotValidException;
+use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 use UGroupDao;
@@ -148,7 +149,7 @@ class ImportProjectXMLCommand extends Command
                 "           create:A    Create account with status Active\n".
                 "           create:S    Create account with status Suspended\n\n\n";
             if (strpos($automap_arg, ',') !== false) {
-                list($automap_strategy, $default_action) = explode(',', $automap_arg);
+                [$automap_strategy, $default_action] = explode(',', $automap_arg);
                 if (! in_array($automap_strategy, self::AUTHORIZED_CONFIGURATION_AUTOMAP, true)) {
                     throw new \RuntimeException($exception . "Unsupported automap strategy, eg : --automap no-email,create:A");
                 }
@@ -316,7 +317,8 @@ class ImportProjectXMLCommand extends Command
                     $broker_log,
                     $event_manager
                 ),
-                $synchronized_project_membership_dao
+                $synchronized_project_membership_dao,
+                new XMLFileContentRetriever()
             );
 
             if (empty($project_id)) {
