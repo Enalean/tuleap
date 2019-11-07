@@ -20,6 +20,10 @@
 import Vue from "vue";
 import { initVueGettext } from "../../tuleap/gettext/vue-gettext-init";
 import App from "./src/components/App.vue";
+import { TemplateData } from "./src/type";
+import { createStore } from "./src/store";
+import { State } from "./src/store/type";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("project-registration");
@@ -31,6 +35,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         import(/* webpackChunkName: "project-registration-po-" */ `./po/${locale}.po`)
     );
 
+    const tuleap_templates_json = vue_mount_point.dataset.availableTuleapTemplates;
+    if (!tuleap_templates_json) {
+        return;
+    }
+
+    const tuleap_templates: TemplateData[] = JSON.parse(tuleap_templates_json);
+
+    const root_state: State = {
+        tuleap_templates
+    } as State;
+
+    Vue.use(VueDOMPurifyHTML);
+
     const AppComponent = Vue.extend(App);
-    new AppComponent().$mount(vue_mount_point);
+    const store = createStore(root_state);
+    new AppComponent({
+        store
+    }).$mount(vue_mount_point);
 });

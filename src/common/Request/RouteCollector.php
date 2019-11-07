@@ -91,6 +91,7 @@ use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\Home;
 use Tuleap\Project\Registration\ProjectRegistrationController;
+use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Service\AddController;
 use Tuleap\Project\Service\DeleteController;
@@ -606,7 +607,8 @@ class RouteCollector
             new IncludeAssets(__DIR__ . '/../../www/assets/', '/assets'),
             new ProjectRegistrationUserPermissionChecker(
                 ProjectManager::instance()
-            )
+            ),
+            new ProjectRegistrationPresenterBuilder(EventManager::instance())
         );
     }
 

@@ -28,13 +28,17 @@
         <div class="tlp-alert-warning" v-translate>
             This space is under construction. You can still use the current registration process in the meantime.
         </div>
+        <tuleap-template-list/>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+import TuleapTemplateList from "./TuleapTemplates/TuleapTemplateList.vue";
 
-@Component
+@Component({
+    components: { TuleapTemplateList }
+})
 export default class ProjectList extends Vue {}
 </script>

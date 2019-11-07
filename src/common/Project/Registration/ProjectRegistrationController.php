@@ -33,6 +33,10 @@ use Tuleap\Request\DispatchableWithRequest;
 final class ProjectRegistrationController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     /**
+     * @var ProjectRegistrationPresenterBuilder
+     */
+    private $presenter_builder;
+    /**
      * @var TemplateRendererFactory
      */
     private $template_renderer_factory;
@@ -48,9 +52,11 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
     public function __construct(
         TemplateRendererFactory $template_renderer_factory,
         IncludeAssets $registration_assets,
-        ProjectRegistrationUserPermissionChecker $permission_checker
+        ProjectRegistrationUserPermissionChecker $permission_checker,
+        ProjectRegistrationPresenterBuilder $presenter_builder
     ) {
         $this->template_renderer_factory = $template_renderer_factory;
+        $this->presenter_builder         = $presenter_builder;
         $this->permission_checker        = $permission_checker;
         $this->registration_assets       = $registration_assets;
     }
@@ -72,11 +78,12 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
                 'tlp'
             )
         );
+
         $layout->header(["title" => _("Project Registration")]);
 
         $this->template_renderer_factory
             ->getRenderer(__DIR__ . '/../../../templates/project/registration/')
-            ->renderToPage('project-registration', []);
+            ->renderToPage('project-registration', $this->presenter_builder->buildPresenter());
         $layout->footer(["without_content" => true]);
     }
 }
