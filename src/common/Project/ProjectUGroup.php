@@ -25,10 +25,6 @@ use Tuleap\Project\UGroups\Membership\DynamicUGroups\DynamicUGroupMembersUpdater
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
-use Tuleap\Project\UGroups\Membership\MembershipUpdateVerifier;
-use Tuleap\Project\UGroups\Membership\StaticUGroups\StaticMemberAdder;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\User\UserGroup\NameTranslator;
 
@@ -260,10 +256,10 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         return $this->members;
     }
 
-    public function getMembersIncludingSuspended()
+    public function getMembersIncludingSuspendedAndDeleted()
     {
         if (! $this->members) {
-            $this->members = $this->getStaticOrDynamicMembersInludingSuspended($this->group_id);
+            $this->members = $this->getStaticOrDynamicMembersIncludingSuspendedAndDeleted($this->group_id);
         }
         return $this->members;
     }
@@ -313,13 +309,13 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         return $users;
     }
 
-    private function getStaticOrDynamicMembersInludingSuspended($group_id)
+    private function getStaticOrDynamicMembersIncludingSuspendedAndDeleted($group_id)
     {
         if ($this->is_dynamic) {
-            $dar = $this->getUGroupUserDao()->searchUserByDynamicUGroupIdIncludingSuspended($this->id, $group_id);
+            $dar = $this->getUGroupUserDao()->searchUserByDynamicUGroupIdIncludingSuspendedAndDeleted($this->id, $group_id);
             return $dar->instanciateWith(array($this, 'newUserFromIncompleteRow'));
         }
-        $dar   = $this->getUGroupUserDao()->searchUserByStaticUGroupIdIncludingSuspended($this->id);
+        $dar   = $this->getUGroupUserDao()->searchUserByStaticUGroupIdIncludingSuspendedAndDeleted($this->id);
         $users = [];
         foreach ($dar as $row) {
             $users[] = $this->newUser($row);

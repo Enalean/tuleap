@@ -48,7 +48,7 @@ class ProjectUGroupMemberUpdatable implements Dispatchable
     {
         $this->group   = $group;
         $this->members_indexed_by_id = [];
-        foreach ($group->getMembersIncludingSuspended() as $member) {
+        foreach ($group->getMembersIncludingSuspendedAndDeleted() as $member) {
             $this->members_indexed_by_id[$member->getId()] = $member;
         }
         $this->is_last_project_admin = (int) $group->getId() === ProjectUGroup::PROJECT_ADMIN &&

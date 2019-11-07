@@ -55,14 +55,14 @@ class UGroupUserDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchUserByStaticUGroupIdIncludingSuspended($ugroup_id)
+    public function searchUserByStaticUGroupIdIncludingSuspendedAndDeleted($ugroup_id)
     {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
 
         $sql = "SELECT *
                 FROM ugroup_user INNER JOIN user USING(user_id)
                 WHERE ugroup_id = $ugroup_id
-                AND user.status IN ('A', 'R', 'S')
+                AND user.status IN ('A', 'R', 'S', 'D')
                 ORDER BY user_name";
 
         return $this->retrieve($sql);
@@ -156,9 +156,9 @@ class UGroupUserDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function searchUserByDynamicUGroupIdIncludingSuspended($ugroupId, $groupId)
+    public function searchUserByDynamicUGroupIdIncludingSuspendedAndDeleted($ugroupId, $groupId)
     {
-        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, false, null, true);
+        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId, false, null, true, true);
 
         if (! $sql) {
             return new DataAccessResultEmpty();

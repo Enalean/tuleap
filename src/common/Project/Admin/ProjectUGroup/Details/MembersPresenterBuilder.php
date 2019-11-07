@@ -80,7 +80,7 @@ class MembersPresenterBuilder
         $ugroup_members_updatable = new ProjectUGroupMemberUpdatable($ugroup);
         $this->event_manager->processEvent($ugroup_members_updatable);
 
-        $members = $ugroup->getMembersIncludingSuspended();
+        $members = $ugroup->getMembersIncludingSuspendedAndDeleted();
 
         foreach ($members as $member) {
             $ugroup_members[] = new MemberPresenter($this->user_helper, $member, $ugroup, $ugroup_members_updatable);

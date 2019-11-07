@@ -567,7 +567,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     {
         $members = array();
 
-        foreach ($user_group->getMembersIncludingSuspended() as $member) {
+        foreach ($user_group->getMembersIncludingSuspendedAndDeleted() as $member) {
             $members[] = $member;
         }
 
