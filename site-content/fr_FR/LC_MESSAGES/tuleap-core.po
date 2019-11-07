@@ -130,6 +130,9 @@ msgstr ""
 msgid "Account status"
 msgstr "Statut du compte utilisateur"
 
+msgid "Actions"
+msgstr "Actions"
+
 msgid "Activate synchronized project membership management"
 msgstr "Activer la gestion synchronisée de l'appartenance au projet"
 
@@ -2167,6 +2170,9 @@ msgstr "[%s] Confirmation de changement d'e-mail"
 msgid "back to home page"
 msgstr "Retour à la page d'accueil"
 
+msgid "edit"
+msgstr "éditer"
+
 msgid "last<br>month"
 msgstr "le mois<br>dernier"
 
@@ -2186,6 +2192,9 @@ msgstr "permissions"
 
 msgid "suspended"
 msgstr "suspendu"
+
+msgid "view"
+msgstr "consulter"
 
 msgid "your account will be automatically suspended on {{suspension_date}}."
 msgstr "votre compte sera désactivé automatiquement le {{suspension_date}}."

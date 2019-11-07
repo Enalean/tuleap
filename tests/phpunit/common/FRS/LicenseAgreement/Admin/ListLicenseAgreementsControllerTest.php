@@ -28,6 +28,7 @@ use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use TemplateRendererFactory;
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -69,33 +70,56 @@ class ListLicenseAgreementsControllerTest extends TestCase
      * @var \PFUser
      */
     private $current_user;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LicenseAgreementFactory
+     */
+    private $factory;
 
     protected function setUp(): void
     {
         $this->current_user = new \PFUser(['language_id' => 'en_US']);
+
         $this->request = new \HTTPRequest();
         $this->request->setCurrentUser($this->current_user);
+
         $this->project_manager = Mockery::mock(ProjectManager::class);
         $this->service_file = Mockery::mock(\ServiceFile::class, ['displayFRSHeader' => 'foo']);
         $this->project = Mockery::mock(\Project::class, ['isError' => false, 'getID' => '101']);
         $this->project->shouldReceive('getFileService')->andReturn($this->service_file)->byDefault();
         $this->project_manager->shouldReceive('getProject')->with('101')->andReturns($this->project);
+
         $this->renderer_factory = Mockery::mock(TemplateRendererFactory::class);
+
         $this->permissions_manager = Mockery::mock(FRSPermissionManager::class);
         $this->permissions_manager->shouldReceive('isAdmin')->with($this->project, $this->current_user)->andReturnTrue()->byDefault();
-        $this->controller = new ListLicenseAgreementsController($this->project_manager, $this->renderer_factory, $this->permissions_manager);
+
+        $this->factory = Mockery::mock(LicenseAgreementFactory::class);
+
+        $this->controller = new ListLicenseAgreementsController(
+            $this->project_manager,
+            $this->renderer_factory,
+            $this->permissions_manager,
+            $this->factory,
+        );
     }
 
     public function testItRendersThePageHeader(): void
     {
         $header_renderer = Mockery::mock(MustacheEngine::class);
         $header_renderer->shouldReceive('renderToPage')->with('toolbar-presenter', Mockery::any())->once();
-
         $this->renderer_factory->shouldReceive('getRenderer')->with(Mockery::on(static function (string $path) {
             return realpath($path) === realpath(__DIR__ . '/../../../../../../src/templates/frs');
         }))->andReturn($header_renderer);
 
-        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['id' => '101']);
+        $content_renderer = Mockery::mock(MustacheEngine::class);
+        $content_renderer->shouldReceive('renderToPage')->with('license-agreements-list', Mockery::any())->once();
+        $this->renderer_factory->shouldReceive('getRenderer')->with(Mockery::on(static function (string $path) {
+            return realpath($path) === realpath(__DIR__ . '/../../../../../../src/common/FRS/LicenseAgreement/Admin/templates');
+        }))->andReturn($content_renderer);
+
+        $this->factory->shouldReceive('getProjectLicenseAgreements')->with($this->project)->andReturn([]);
+
+        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101']);
     }
 
     public function testItThrowsAndExceptionWhenServiceIsNotAvailable(): void
@@ -104,7 +128,7 @@ class ListLicenseAgreementsControllerTest extends TestCase
 
         $this->expectException(NotFoundException::class);
 
-        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['id' => '101']);
+        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101']);
     }
 
     public function testItThrowsAnExceptionWhenUserIsNotFileAdministrator(): void
@@ -113,6 +137,6 @@ class ListLicenseAgreementsControllerTest extends TestCase
 
         $this->expectException(ForbiddenException::class);
 
-        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['id' => '101']);
+        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101']);
     }
 }
