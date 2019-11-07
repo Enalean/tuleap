@@ -30,6 +30,22 @@ class LicenseAgreementDao extends DataAccessObject
     /**
      * @return mixed
      */
+    public function getById(\Project $project, int $id)
+    {
+        return $this->getDB()->row(
+            <<<EOT
+            SELECT *
+            FROM frs_download_agreement
+            WHERE project_id = ? AND id = ?
+            EOT,
+            $project->getID(),
+            $id
+        );
+    }
+
+    /**
+     * @return mixed
+     */
     public function getProjectLicenseAgreements(\Project $project)
     {
         return $this->getDB()->run(
@@ -87,5 +103,19 @@ class LicenseAgreementDao extends DataAccessObject
     public function resetLicenseAgreementForPackage(\FRSPackage $package): void
     {
         $this->getDB()->run('DELETE FROM frs_package_download_agreement WHERE package_id = ?', $package->getPackageID());
+    }
+
+    public function save(LicenseAgreementInterface $license): void
+    {
+        $this->getDB()->run(
+            <<<EOT
+            UPDATE frs_download_agreement
+            SET title = ?, content = ?
+            WHERE id = ?
+            EOT,
+            $license->getTitle(),
+            $license->getContent(),
+            $license->getId(),
+        );
     }
 }

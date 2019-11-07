@@ -91,4 +91,21 @@ class LicenseAgreementFactory
     {
         return $license_approval_id !== NoLicenseToApprove::ID;
     }
+
+    public function getLicenseAgreementById(Project $project, int $id): ?LicenseAgreementInterface
+    {
+        if ($id === DefaultLicenseAgreement::ID) {
+            return new DefaultLicenseAgreement();
+        }
+        $row = $this->dao->getById($project, $id);
+        if ($row) {
+            return new LicenseAgreement($row['id'], $row['title'], $row['content']);
+        }
+        return null;
+    }
+
+    public function save(LicenseAgreementInterface $license): void
+    {
+        $this->dao->save($license);
+    }
 }

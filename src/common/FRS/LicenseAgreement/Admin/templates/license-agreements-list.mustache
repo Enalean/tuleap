@@ -12,10 +12,10 @@
                 <tr>
                     <td>{{ title }}</td>
                     {{# can_edit }}
-                        <td><a href="/file/{{ project_id }}/admin/license-agreement/{{ id }}" class="fa fa-pencil-square-o">{{# gettext }}edit{{/ gettext }}</a></td>
+                        <td><a href="{{ url }}" class="fa fa-pencil-square-o">{{# gettext }}edit{{/ gettext }}</a></td>
                     {{/ can_edit }}
                     {{^ can_edit }}
-                        <td><a href="/file/{{ project_id }}/admin/license-agreement/{{ id }}" class="fa fa-eye">{{# gettext }}view{{/ gettext }}</a></td>
+                        <td><a href="{{ url }}" class="fa fa-eye">{{# gettext }}view{{/ gettext }}</a></td>
                     {{/ can_edit }}
                 </tr>
             {{/ license_agreements }}

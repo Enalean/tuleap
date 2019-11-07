@@ -23,13 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
-use CSRFSynchronizerToken;
 use HTTPRequest;
 use Project;
 use Tuleap\FRS\FRSPermissionManager;
-use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
-use Tuleap\FRS\ToolbarPresenter;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -37,14 +36,12 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\GetProjectTrait;
 use Tuleap\Request\NotFoundException;
 
-class ListLicenseAgreementsController implements DispatchableWithRequest, DispatchableWithProject
+class SaveLicenseAgreementController implements DispatchableWithRequest, DispatchableWithProject
 {
     use GetProjectTrait;
 
-    /**
-     * @var \TemplateRendererFactory
-     */
-    private $renderer_factory;
+    private const CSRF_TOKEN = 'frs_edit_license_agreement';
+
     /**
      * @var FRSPermissionManager
      */
@@ -54,31 +51,23 @@ class ListLicenseAgreementsController implements DispatchableWithRequest, Dispat
      */
     private $factory;
     /**
-     * @var CSRFSynchronizerToken
+     * @var \CSRFSynchronizerToken
      */
     private $csrf_token;
 
-    public function __construct(\ProjectManager $project_manager, \TemplateRendererFactory $renderer_factory, FRSPermissionManager $permission_manager, LicenseAgreementFactory $factory)
+    public function __construct(\ProjectManager $project_manager, FRSPermissionManager $permission_manager, LicenseAgreementFactory $factory, \CSRFSynchronizerToken $csrf_token)
     {
         $this->project_manager    = $project_manager;
-        $this->renderer_factory   = $renderer_factory;
         $this->permission_manager = $permission_manager;
         $this->factory            = $factory;
+        $this->csrf_token         = $csrf_token;
     }
 
-    /**
-     * Is able to process a request routed by FrontRouter
-     *
-     * @param HTTPRequest $request
-     * @param BaseLayout  $layout
-     * @param array       $variables
-     * @return void
-     * @throws ForbiddenException
-     * @throws NotFoundException
-     */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
+
+        $this->csrf_token->check(ListLicenseAgreementsController::getUrl($project));
 
         if (! $this->permission_manager->isAdmin($project, $request->getCurrentUser())) {
             throw new ForbiddenException('Only for files administrators');
@@ -89,28 +78,32 @@ class ListLicenseAgreementsController implements DispatchableWithRequest, Dispat
             throw new NotFoundException('Service is not active for this project');
         }
 
-        $header_renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../templates/frs');
-        $content_renderer = $this->renderer_factory->getRenderer(__DIR__ . '/templates');
-
-        $toolbar_presenter = new ToolbarPresenter($project);
-        $toolbar_presenter->setLicenseAgreementIsActive();
-        $toolbar_presenter->displaySectionNavigation();
-
-        $license_agreements = [
-            new LicenseAgreementPresenter($project, new DefaultLicenseAgreement()),
-        ];
-        foreach ($this->factory->getProjectLicenseAgreements($project) as $license_agreement) {
-            $license_agreements []= new LicenseAgreementPresenter($project, $license_agreement);
+        $license = $this->factory->getLicenseAgreementById($project, (int) $variables['id']);
+        if (! $license) {
+            throw new NotFoundException('Invalid license id');
+        }
+        if (! $license instanceof LicenseAgreement) {
+            throw new ForbiddenException('You cannot modify this license');
         }
 
-        $file_service->displayFRSHeader($project, _('Files Administration'));
-        $header_renderer->renderToPage('toolbar-presenter', $toolbar_presenter);
-        $content_renderer->renderToPage('license-agreements-list', new ListLicenseAgreementsPresenter((int) $project->getID(), $license_agreements));
-        $layout->footer([]);
+        $new_license = new LicenseAgreement(
+            $license->getId(),
+            (string) $request->getValidated('title', 'string', ''),
+            (string) $request->getValidated('content', 'text', ''),
+        );
+
+        $this->factory->save($new_license);
+
+        $layout->redirect(ListLicenseAgreementsController::getUrl($project));
     }
 
-    public static function getUrl(Project $project): string
+    public static function getUrl(Project $project, LicenseAgreementInterface $agreement): string
     {
-        return sprintf('/file/%d/admin/license-agreements', $project->getID());
+        return sprintf('/file/%d/admin/license-agreements/%d', $project->getID(), $agreement->getId());
+    }
+
+    public static function getCSRFTokenSynchronizer()
+    {
+        return new \CSRFSynchronizerToken(self::CSRF_TOKEN);
     }
 }

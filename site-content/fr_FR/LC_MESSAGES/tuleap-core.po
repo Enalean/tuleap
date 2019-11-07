@@ -262,6 +262,9 @@ msgstr "Demander à rejoindre"
 msgid "Ask to join this project"
 msgstr "Demander à rejoindre ce projet"
 
+msgid "Back"
+msgstr "Retour"
+
 msgid "Banner"
 msgstr "Bannière"
 
@@ -482,6 +485,9 @@ msgstr "Jour"
 msgid "Dear   {{ tuleap_server_name}} user,"
 msgstr "Cher utilisateur {{tuleap_server_name}},"
 
+msgid "Default license agreement"
+msgstr "Licence par défaut"
+
 msgid "Default project visibility"
 msgstr "Visibilité du projet par défaut"
 
@@ -551,6 +557,9 @@ msgstr "Éditer %s"
 
 msgid "Edit dashboard"
 msgstr "Éditer le tableau de bord"
+
+msgid "Edit license agreement"
+msgstr "Editer la licence"
 
 msgid "Edit settings"
 msgstr "Éditer les paramètres"
@@ -1279,6 +1288,9 @@ msgstr "SVN"
 
 msgid "SVN Commits"
 msgstr "Commits SVN"
+
+msgid "Save"
+msgstr "Enregistrer"
 
 msgid "Save categories"
 msgstr "Sauvegarder les catégories"

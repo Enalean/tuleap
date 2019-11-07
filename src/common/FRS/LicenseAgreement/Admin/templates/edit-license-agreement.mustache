@@ -1,0 +1,16 @@
+<h2>{{# gettext }}Edit license agreement{{/ gettext }}</h2>
+<div class="row-fluid">
+    <div class="span6">
+        <form action="{{ save_url }}" method="post">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <label for="license-agreement-title">{{# gettext }}Title{{/ gettext }}</label>
+            <input id="license-agreement-title" type="text" name="title" value="{{ title }}" />
+            <label for="license-agreement-content">{{# gettext }}Content{{/ gettext }}</label>
+            <textarea id="license-agreement-content" name="content">{{ content }}</textarea>
+            <button type="submit" class="btn btn-primary">{{# gettext }}Save{{/ gettext }}</button>
+            <a href="{{ list_url }}" class="btn">{{# gettext }}Cancel{{/ gettext }}</a>
+        </form>
+    </div>
+</div>
