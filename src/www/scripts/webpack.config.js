@@ -168,7 +168,8 @@ const webpack_config_for_project_banner = {
         rules: [
             ...webpack_configurator.configureTypescriptRules(
                 webpack_configurator.babel_options_ie11
-            )
+            ),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)
         ]
     },
     plugins: [webpack_configurator.getTypescriptCheckerPlugin(false)],
