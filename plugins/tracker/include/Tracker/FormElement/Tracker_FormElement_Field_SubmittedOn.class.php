@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -237,6 +237,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
         if (!$value) {
             $value = new Tracker_Artifact_ChangesetValue_Date(null, $artifact->getFirstChangeset(), $this, false, $artifact->getSubmittedOn());
         }
+        assert($value instanceof Tracker_Artifact_ChangesetValue_Date);
         $timestamp = $value->getTimestamp();
         $value     = $timestamp ? $this->formatDateForDisplay($timestamp) : '';
         $html .= $value;
@@ -316,6 +317,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
         if (empty($value)) {
             $value = new Tracker_Artifact_ChangesetValue_Date(null, $artifact->getFirstChangeset(), $this, false, $artifact->getSubmittedOn());
         }
+        assert($value instanceof Tracker_Artifact_ChangesetValue_Date);
         $output = '';
         switch ($format) {
             case 'html':

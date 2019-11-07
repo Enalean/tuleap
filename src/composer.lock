@@ -1694,16 +1694,16 @@
         },
         {
             "name": "psr/log",
-            "version": "1.1.0",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd"
+                "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
-                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/446d54b4cb6bf489fc9d75f55843658e6f25d801",
+                "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801",
                 "shasum": ""
             },
             "require": {
@@ -1712,7 +1712,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
@@ -1737,7 +1737,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2018-11-20T15:27:04+00:00"
+            "time": "2019-11-01T11:05:21+00:00"
         },
         {
             "name": "psr/simple-cache",
@@ -2940,16 +2940,16 @@
     "packages-dev": [
         {
             "name": "amphp/amp",
-            "version": "v2.2.1",
+            "version": "v2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/amp.git",
-                "reference": "49a0bf693d5e60e578e5518d87fe7025244f9db5"
+                "reference": "9fa04aa6f87a8200fc0961de6bcc5465785c0c6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/amp/zipball/49a0bf693d5e60e578e5518d87fe7025244f9db5",
-                "reference": "49a0bf693d5e60e578e5518d87fe7025244f9db5",
+                "url": "https://api.github.com/repos/amphp/amp/zipball/9fa04aa6f87a8200fc0961de6bcc5465785c0c6f",
+                "reference": "9fa04aa6f87a8200fc0961de6bcc5465785c0c6f",
                 "shasum": ""
             },
             "require": {
@@ -3013,20 +3013,20 @@
                 "non-blocking",
                 "promise"
             ],
-            "time": "2019-09-21T21:29:37+00:00"
+            "time": "2019-10-26T14:31:57+00:00"
         },
         {
             "name": "amphp/byte-stream",
-            "version": "v1.6.1",
+            "version": "v1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/byte-stream.git",
-                "reference": "47908f8e8bb2da8af4e59028200758477bc927ea"
+                "reference": "9d8205686a004948475dc43f8a88d2fa5e75a113"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/byte-stream/zipball/47908f8e8bb2da8af4e59028200758477bc927ea",
-                "reference": "47908f8e8bb2da8af4e59028200758477bc927ea",
+                "url": "https://api.github.com/repos/amphp/byte-stream/zipball/9d8205686a004948475dc43f8a88d2fa5e75a113",
+                "reference": "9d8205686a004948475dc43f8a88d2fa5e75a113",
                 "shasum": ""
             },
             "require": {
@@ -3072,28 +3072,28 @@
                 "non-blocking",
                 "stream"
             ],
-            "time": "2019-07-26T21:22:49+00:00"
+            "time": "2019-10-27T14:33:41+00:00"
         },
         {
             "name": "composer/xdebug-handler",
-            "version": "1.3.3",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/xdebug-handler.git",
-                "reference": "46867cbf8ca9fb8d60c506895449eb799db1184f"
+                "reference": "cbe23383749496fe0f373345208b79568e4bc248"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/46867cbf8ca9fb8d60c506895449eb799db1184f",
-                "reference": "46867cbf8ca9fb8d60c506895449eb799db1184f",
+                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/cbe23383749496fe0f373345208b79568e4bc248",
+                "reference": "cbe23383749496fe0f373345208b79568e4bc248",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.3.2 || ^7.0",
+                "php": "^5.3.2 || ^7.0 || ^8.0",
                 "psr/log": "^1.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5"
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || 6.5 - 8"
             },
             "type": "library",
             "autoload": {
@@ -3111,12 +3111,12 @@
                     "email": "john-stevenson@blueyonder.co.uk"
                 }
             ],
-            "description": "Restarts a process without xdebug.",
+            "description": "Restarts a process without Xdebug.",
             "keywords": [
                 "Xdebug",
                 "performance"
             ],
-            "time": "2019-05-27T17:52:04+00:00"
+            "time": "2019-11-06T16:40:04+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -3573,16 +3573,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.2.4",
+            "version": "v4.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "97e59c7a16464196a8b9c77c47df68e4a39a45c4"
+                "reference": "b76bbc3c51f22c570648de48e8c2d941ed5e2cf2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/97e59c7a16464196a8b9c77c47df68e4a39a45c4",
-                "reference": "97e59c7a16464196a8b9c77c47df68e4a39a45c4",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/b76bbc3c51f22c570648de48e8c2d941ed5e2cf2",
+                "reference": "b76bbc3c51f22c570648de48e8c2d941ed5e2cf2",
                 "shasum": ""
             },
             "require": {
@@ -3590,6 +3590,7 @@
                 "php": ">=7.0"
             },
             "require-dev": {
+                "ircmaxell/php-yacc": "0.0.4",
                 "phpunit/phpunit": "^6.5 || ^7.0 || ^8.0"
             },
             "bin": [
@@ -3620,7 +3621,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2019-09-01T07:51:21+00:00"
+            "time": "2019-10-25T18:33:07+00:00"
         },
         {
             "name": "ocramius/package-versions",
@@ -5401,7 +5402,7 @@
             ],
             "support": {
                 "issues": "https://github.com/simpletest/simpletest/issues",
-                "source": "https://github.com/Enalean/simpletest/tree/20190916"
+                "source": "https://github.com/Enalean/simpletest/tree/master-tuleap"
             },
             "time": "2019-09-14T14:51:34+00:00"
         },
@@ -5587,8 +5588,8 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "role": "Developer",
-                    "email": "arne@blankerts.de"
+                    "email": "arne@blankerts.de",
+                    "role": "Developer"
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
@@ -5596,16 +5597,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "3.5.3",
+            "version": "3.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "c3e781c4a06cbb17dc32068eb5d6de075f6babdc"
+                "reference": "3e98c800ec72e06eed7546956823ff395fc30c75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/c3e781c4a06cbb17dc32068eb5d6de075f6babdc",
-                "reference": "c3e781c4a06cbb17dc32068eb5d6de075f6babdc",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/3e98c800ec72e06eed7546956823ff395fc30c75",
+                "reference": "3e98c800ec72e06eed7546956823ff395fc30c75",
                 "shasum": ""
             },
             "require": {
@@ -5680,7 +5681,7 @@
                 "inspection",
                 "php"
             ],
-            "time": "2019-09-27T13:22:06+00:00"
+            "time": "2019-11-06T18:13:02+00:00"
         },
         {
             "name": "webmozart/assert",

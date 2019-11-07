@@ -1104,6 +1104,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 foreach ($first_result as $row) { //id, f1, f2
                     //merge the row with the other results
                     foreach ($results as $result) {
+                        if ($result === false) {
+                            continue;
+                        }
                         //[id, f1, f2] + [id, f3, f4]
                         $row = array_merge($row, $result->getRow());
                         //row == id, f1, f2, f3, f4...
@@ -1114,6 +1117,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         $display_extracolumn = true;
                         $checked   = '';
                         $classname = 'tracker_report_table_';
+                        $name      = '';
                         if ($extracolumn === self::EXTRACOLUMN_MASSCHANGE && $this->report->getTracker()->userIsAdmin($current_user)) {
                             $classname .= 'masschange';
                             $name       = 'masschange_aids';
@@ -2153,6 +2157,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             foreach ($first_result as $row) { //id, f1, f2
                 //merge the row with the other results
                 foreach ($results as $result) {
+                    if ($result === false) {
+                        continue;
+                    }
                     //[id, f1, f2] + [id, f3, f4]
                     $row = array_merge($row, $result->getRow());
                     //row == id, f1, f2, f3, f4...
