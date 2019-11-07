@@ -27,6 +27,9 @@ msgstr "Le tableau des tâches n'est pas activé pour le projet %s."
 msgid "Taskboard not found."
 msgstr "Le tableau des tâches n'a pas été trouvé. "
 
+msgid "The artifact does not have a remaining effort numeric field"
+msgstr "L'artéfact n'a pas de champs numérique pour l'effort restant"
+
 msgid ""
 "Visually keep track of things that need to get done in a task board, used in "
 "Agile Dashboard."
