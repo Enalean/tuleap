@@ -51,7 +51,7 @@ class TaskboardCardTest extends RestBase
     public function testOPTIONSChildren(string $user_name): void
     {
         $response = $this->getResponse(
-            $this->client->options('taskboard/' . self::$user_story_6_id . '/cards'),
+            $this->client->options('taskboard_cards/' . self::$user_story_6_id . '/children'),
             $user_name
         );
         $this->assertEquals(200, $response->getStatusCode());

@@ -92,7 +92,7 @@ class TaskboardCardResource extends AuthenticatedResource
     }
 
     /**
-     * @url OPTIONS {id}/cards
+     * @url OPTIONS {id}/children
      */
     public function optionsChildren(int $id): void
     {
