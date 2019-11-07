@@ -81,7 +81,11 @@ class LicenseAgreementDisplay
     public function getPackageEditSelector(\FRSPackage $package, \Project $project): string
     {
         $all_custom_agreements = $this->factory->getProjectLicenseAgreements($project);
-        $package_agreement     = $this->factory->getLicenseAgreementForPackage($package);
+        if ($package->getPackageID() === null) {
+            $package_agreement = $this->factory->getDefaultLicenseAgreementForProject($project);
+        } else {
+            $package_agreement = $this->factory->getLicenseAgreementForPackage($package);
+        }
         $license_selector      = [];
         if (ForgeConfig::get('sys_frs_license_mandatory') == 1) {
             if (count($all_custom_agreements) === 0) {

@@ -73,7 +73,7 @@ class LicenseAgreementDisplayTest extends TestCase
         $this->factory->shouldReceive('getLicenseAgreementForPackage')->once()->andReturns(new DefaultLicenseAgreement());
         $this->factory->shouldReceive('getProjectLicenseAgreements')->once()->with($this->project)->andReturns([]);
 
-        $package = new \FRSPackage();
+        $package = new \FRSPackage(['package_id' => '470']);
         $this->assertEquals('<input type="hidden" name="package[approve_license]" value="1">', $this->display->getPackageEditSelector($package, $this->project));
     }
 
@@ -89,7 +89,7 @@ class LicenseAgreementDisplayTest extends TestCase
             ]
         )->once()->andReturn('foobar');
 
-        $package = new \FRSPackage();
+        $package = new \FRSPackage(['package_id' => '470']);
         $package->setApproveLicense(true);
         $this->factory->shouldReceive('getLicenseAgreementForPackage')->once()->andReturns(new DefaultLicenseAgreement());
         $this->factory->shouldReceive('getProjectLicenseAgreements')->once()->with($this->project)->andReturns([
@@ -109,7 +109,7 @@ class LicenseAgreementDisplayTest extends TestCase
             ]
         )->once()->andReturn('foobar');
 
-        $package = new \FRSPackage();
+        $package = new \FRSPackage(['package_id' => '470']);
         $package->setApproveLicense(false);
         $this->factory->shouldReceive('getLicenseAgreementForPackage')->once()->andReturns(new NoLicenseToApprove());
         $this->factory->shouldReceive('getProjectLicenseAgreements')->once()->with($this->project)->andReturns([]);
@@ -128,7 +128,7 @@ class LicenseAgreementDisplayTest extends TestCase
             ]
         )->once()->andReturn('foobar');
 
-        $package = new \FRSPackage();
+        $package = new \FRSPackage(['package_id' => '470']);
         $package->setApproveLicense(true);
         $this->factory->shouldReceive('getProjectLicenseAgreements')->once()->with($this->project)->andReturns([
             new LicenseAgreement(5, 'Some custom stuff', 'bla')
@@ -149,7 +149,7 @@ class LicenseAgreementDisplayTest extends TestCase
             ]
         )->once()->andReturn('foobar');
 
-        $package = new \FRSPackage();
+        $package = new \FRSPackage(['package_id' => '470']);
         $package->setApproveLicense(true);
         $this->factory->shouldReceive('getProjectLicenseAgreements')->once()->with($this->project)->andReturns([
             new LicenseAgreement(5, 'Some custom stuff', 'bla')
@@ -170,13 +170,33 @@ class LicenseAgreementDisplayTest extends TestCase
             ]
         )->once()->andReturn('foobar');
 
-        $package = new \FRSPackage();
+        $package = new \FRSPackage(['package_id' => '470']);
         $package->setApproveLicense(true);
         $custom_agreement = new LicenseAgreement(5, 'Some custom stuff', 'bla');
         $this->factory->shouldReceive('getProjectLicenseAgreements')->once()->with($this->project)->andReturns([
             $custom_agreement,
         ]);
         $this->factory->shouldReceive('getLicenseAgreementForPackage')->once()->andReturns($custom_agreement);
+        $this->assertSame('foobar', $this->display->getPackageEditSelector($package, $this->project));
+    }
+
+    public function testItUsesTheSelectedDefaultAtPackageCreation(): void
+    {
+        $this->renderer->shouldReceive('renderToString')->with(
+            'edit-package',
+            [
+                new LicenseOptionPresenter(-1, 'No', false),
+                new LicenseOptionPresenter(0, 'Code eXchange Corporate Policy', false),
+                new LicenseOptionPresenter(5, 'Some custom stuff', true),
+            ]
+        )->once()->andReturn('foobar');
+
+        $package = new \FRSPackage();
+        $custom_agreement = new LicenseAgreement(5, 'Some custom stuff', 'bla');
+        $this->factory->shouldReceive('getProjectLicenseAgreements')->once()->with($this->project)->andReturns([
+            $custom_agreement,
+        ]);
+        $this->factory->shouldReceive('getDefaultLicenseAgreementForProject')->andReturns($custom_agreement);
         $this->assertSame('foobar', $this->display->getPackageEditSelector($package, $this->project));
     }
 }

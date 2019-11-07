@@ -29,6 +29,7 @@ use Project;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
+use Tuleap\FRS\LicenseAgreement\NoLicenseToApprove;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -82,11 +83,14 @@ class ListLicenseAgreementsController implements DispatchableWithRequest, Dispat
         $helper = new LicenseAgreementControllersHelper($this->permission_manager, $this->renderer_factory);
         $helper->assertCanAccess($project, $request->getCurrentUser());
 
+        $license_agreement_default = $this->factory->getDefaultLicenseAgreementForProject($project);
+
         $license_agreements = [
-            new LicenseAgreementPresenter($project, new DefaultLicenseAgreement()),
+            new LicenseAgreementPresenter($project, new NoLicenseToApprove(), $license_agreement_default),
+            new LicenseAgreementPresenter($project, new DefaultLicenseAgreement(), $license_agreement_default),
         ];
         foreach ($this->factory->getProjectLicenseAgreements($project) as $license_agreement) {
-            $license_agreements []= new LicenseAgreementPresenter($project, $license_agreement);
+            $license_agreements []= new LicenseAgreementPresenter($project, $license_agreement, $license_agreement_default);
         }
 
         $helper->renderHeader($project);

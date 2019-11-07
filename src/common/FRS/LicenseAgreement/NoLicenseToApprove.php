@@ -42,7 +42,7 @@ class NoLicenseToApprove implements LicenseAgreementInterface
 
     public function getTitle(): string
     {
-        return '';
+        return _('No license to approve');
     }
 
     public function getContent(): string
@@ -56,6 +56,11 @@ class NoLicenseToApprove implements LicenseAgreementInterface
     }
 
     public function isModifiable(): bool
+    {
+        return false;
+    }
+
+    public function isViewable(): bool
     {
         return false;
     }

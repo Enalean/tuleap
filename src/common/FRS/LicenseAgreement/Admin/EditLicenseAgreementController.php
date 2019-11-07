@@ -29,6 +29,7 @@ use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
+use Tuleap\FRS\LicenseAgreement\NoLicenseToApprove;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithProject;
@@ -96,7 +97,7 @@ class EditLicenseAgreementController implements DispatchableWithRequest, Dispatc
         $helper->assertCanAccess($project, $request->getCurrentUser());
 
         $license = $this->factory->getLicenseAgreementById($project, (int) $variables['id']);
-        if (! $license) {
+        if (! $license || ! $license->isViewable()) {
             throw new NotFoundException('Invalid license id');
         }
 
@@ -105,10 +106,10 @@ class EditLicenseAgreementController implements DispatchableWithRequest, Dispatc
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('frs-admin-license-agreement.js'));
 
         $helper->renderHeader($project);
-        if ($license instanceof DefaultLicenseAgreement) {
-            $content_renderer->renderToPage('view-default-license-agreement', new ViewDefaultLicensePresenter($project));
-        } else {
+        if ($license->isModifiable()) {
             $content_renderer->renderToPage('edit-license-agreement', new EditLicenseAgreementPresenter($project, $license, $this->csrf_token));
+        } else {
+            $content_renderer->renderToPage('view-default-license-agreement', new ViewDefaultLicensePresenter($project));
         }
         $layout->footer([]);
     }

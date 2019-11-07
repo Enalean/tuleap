@@ -21,34 +21,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\FRS\LicenseAgreement\Admin;
-
-class ListLicenseAgreementsPresenter
+class b201911071703_add_default_frs_agreement_table extends ForgeUpgrade_Bucket // phpcs:ignore
 {
-    /**
-     * @readonly
-     * @var int
-     */
-    public $project_id;
-    /**
-     * @readonly
-     * @var LicenseAgreementPresenter[]
-     */
-    public $license_agreements;
-    /**
-     * @readonly
-     * @var string
-     */
-    public $create_url;
-
-    /**
-     * @param \Project $project
-     * @param LicenseAgreementPresenter[] $license_agreements
-     */
-    public function __construct(\Project $project, array $license_agreements)
+    public function description(): string
     {
-        $this->project_id = (int) $project->getID();
-        $this->license_agreements = $license_agreements;
-        $this->create_url = AddLicenseAgreementController::getUrl($project);
+        return 'Add tables for frs download agreement default';
+    }
+
+    public function preUp(): void
+    {
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
+    }
+
+    public function up(): void
+    {
+        $sql = "CREATE TABLE frs_download_agreement_default (
+            project_id int(11) NOT NULL,
+            agreement_id INT(11) NOT NULL,
+            PRIMARY KEY (project_id)
+        )";
+        $this->db->createTable('frs_download_agreement_default', $sql);
     }
 }

@@ -745,6 +745,9 @@ msgstr ""
 "Le nom du groupe %s est invalide. Merci d'utiliser uniquement des caractères "
 "alphanumériques."
 
+msgid "Is default ?"
+msgstr "Par défaut ?"
+
 msgid "Is used?"
 msgstr "Utilisé ?"
 
@@ -923,6 +926,9 @@ msgstr "Aucun éléments dans ce projet ne peux utiliser les labels."
 
 msgid "No labels defined in this project"
 msgstr "Il n'y a pas de label défini dans ce projet"
+
+msgid "No license to approve"
+msgstr "Pas de licence à approuver"
 
 msgid "No matching labels"
 msgstr "Il n'y a aucun label correspondant"

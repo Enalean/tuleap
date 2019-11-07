@@ -59,4 +59,9 @@ class DefaultLicenseAgreement implements LicenseAgreementInterface
     {
         return false;
     }
+
+    public function isViewable(): bool
+    {
+        return true;
+    }
 }

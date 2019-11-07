@@ -39,4 +39,6 @@ interface LicenseAgreementInterface
     public function getLicenseOptionPresenter(LicenseAgreementInterface $selected_agreement): LicenseOptionPresenter;
 
     public function isModifiable(): bool;
+
+    public function isViewable(): bool;
 }

@@ -337,6 +337,12 @@ CREATE TABLE frs_package_download_agreement (
     INDEX idx_reverse(agreement_id, package_id)
 );
 
+CREATE TABLE frs_download_agreement_default (
+    project_id int(11) NOT NULL,
+    agreement_id INT(11) NOT NULL,
+    PRIMARY KEY (project_id)
+);
+
 #
 # Table structure for table 'frs_processor'
 #
