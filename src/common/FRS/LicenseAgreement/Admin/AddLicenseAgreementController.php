@@ -25,7 +25,6 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use HTTPRequest;
 use Project;
-use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\NewLicenseAgreement;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
@@ -38,10 +37,6 @@ class AddLicenseAgreementController implements DispatchableWithRequest, Dispatch
     use GetProjectTrait;
 
     /**
-     * @var FRSPermissionManager
-     */
-    private $permission_manager;
-    /**
      * @var \TemplateRendererFactory
      */
     private $renderer_factory;
@@ -53,33 +48,36 @@ class AddLicenseAgreementController implements DispatchableWithRequest, Dispatch
      * @var IncludeAssets
      */
     private $assets;
+    /**
+     * @var LicenseAgreementControllersHelper
+     */
+    private $helper;
 
     public function __construct(
         \ProjectManager $project_manager,
+        LicenseAgreementControllersHelper $helper,
         \TemplateRendererFactory $renderer_factory,
-        FRSPermissionManager $permission_manager,
         \CSRFSynchronizerToken $csrf_token,
         IncludeAssets $assets
     ) {
-        $this->project_manager    = $project_manager;
-        $this->permission_manager = $permission_manager;
-        $this->renderer_factory   = $renderer_factory;
-        $this->csrf_token         = $csrf_token;
-        $this->assets = $assets;
+        $this->project_manager  = $project_manager;
+        $this->helper           = $helper;
+        $this->renderer_factory = $renderer_factory;
+        $this->csrf_token       = $csrf_token;
+        $this->assets           = $assets;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $project = $this->getProject($variables);
 
-        $helper = new LicenseAgreementControllersHelper($this->permission_manager, $this->renderer_factory);
-        $helper->assertCanAccess($project, $request->getCurrentUser());
+        $this->helper->assertCanAccess($project, $request->getCurrentUser());
 
         $content_renderer = $this->renderer_factory->getRenderer(__DIR__ . '/templates');
 
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('frs-admin-license-agreement.js'));
 
-        $helper->renderHeader($project);
+        $this->helper->renderHeader($project);
         $content_renderer->renderToPage(
             'edit-license-agreement',
             new EditLicenseAgreementPresenter(

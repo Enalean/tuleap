@@ -26,7 +26,7 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 use CSRFSynchronizerToken;
 use HTTPRequest;
 use Project;
-use Tuleap\FRS\FRSPermissionManager;
+use TemplateRendererFactory;
 use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\NoLicenseToApprove;
@@ -42,13 +42,9 @@ class ListLicenseAgreementsController implements DispatchableWithRequest, Dispat
     use GetProjectTrait;
 
     /**
-     * @var \TemplateRendererFactory
+     * @var TemplateRendererFactory
      */
     private $renderer_factory;
-    /**
-     * @var FRSPermissionManager
-     */
-    private $permission_manager;
     /**
      * @var LicenseAgreementFactory
      */
@@ -57,14 +53,18 @@ class ListLicenseAgreementsController implements DispatchableWithRequest, Dispat
      * @var CSRFSynchronizerToken
      */
     private $csrf_token;
+    /**
+     * @var LicenseAgreementControllersHelper
+     */
+    private $helper;
 
-    public function __construct(\ProjectManager $project_manager, \TemplateRendererFactory $renderer_factory, FRSPermissionManager $permission_manager, LicenseAgreementFactory $factory, CSRFSynchronizerToken $csrf_token)
+    public function __construct(\ProjectManager $project_manager, LicenseAgreementControllersHelper $helper, TemplateRendererFactory $renderer_factory, LicenseAgreementFactory $factory, CSRFSynchronizerToken $csrf_token)
     {
-        $this->project_manager    = $project_manager;
-        $this->renderer_factory   = $renderer_factory;
-        $this->permission_manager = $permission_manager;
-        $this->factory            = $factory;
-        $this->csrf_token         = $csrf_token;
+        $this->project_manager  = $project_manager;
+        $this->helper           = $helper;
+        $this->renderer_factory = $renderer_factory;
+        $this->factory          = $factory;
+        $this->csrf_token       = $csrf_token;
     }
 
     /**
@@ -81,8 +81,7 @@ class ListLicenseAgreementsController implements DispatchableWithRequest, Dispat
     {
         $project = $this->getProject($variables);
 
-        $helper = new LicenseAgreementControllersHelper($this->permission_manager, $this->renderer_factory);
-        $helper->assertCanAccess($project, $request->getCurrentUser());
+        $this->helper->assertCanAccess($project, $request->getCurrentUser());
 
         $license_agreement_default = $this->factory->getDefaultLicenseAgreementForProject($project);
 
@@ -94,7 +93,7 @@ class ListLicenseAgreementsController implements DispatchableWithRequest, Dispat
             $license_agreements []= new LicenseAgreementPresenter($project, $license_agreement, $license_agreement_default);
         }
 
-        $helper->renderHeader($project);
+        $this->helper->renderHeader($project);
         $content_renderer = $this->renderer_factory->getRenderer(__DIR__ . '/templates');
         $content_renderer->renderToPage('list-license-agreements', new ListLicenseAgreementsPresenter($project, $this->csrf_token, ...$license_agreements));
         $layout->footer([]);

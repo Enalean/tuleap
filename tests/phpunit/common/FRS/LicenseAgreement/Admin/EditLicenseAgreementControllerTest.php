@@ -62,10 +62,6 @@ class EditLicenseAgreementControllerTest extends TestCase
      */
     private $renderer_factory;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FRSPermissionManager
-     */
-    private $permissions_manager;
-    /**
      * @var \HTTPRequest
      */
     private $request;
@@ -81,6 +77,10 @@ class EditLicenseAgreementControllerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BaseLayout
      */
     private $layout;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LicenseAgreementControllersHelper
+     */
+    private $helper;
 
     protected function setUp(): void
     {
@@ -92,22 +92,22 @@ class EditLicenseAgreementControllerTest extends TestCase
         $this->request->setCurrentUser($this->current_user);
 
         $this->project_manager = Mockery::mock(ProjectManager::class);
-        $this->service_file = Mockery::mock(\ServiceFile::class, ['displayFRSHeader' => 'foo']);
         $this->project = Mockery::mock(\Project::class, ['isError' => false, 'getID' => '101']);
         $this->project->shouldReceive('getFileService')->andReturn($this->service_file)->byDefault();
         $this->project_manager->shouldReceive('getProject')->with('101')->andReturns($this->project);
 
         $this->renderer_factory = Mockery::mock(TemplateRendererFactory::class);
 
-        $this->permissions_manager = Mockery::mock(FRSPermissionManager::class);
-        $this->permissions_manager->shouldReceive('isAdmin')->with($this->project, $this->current_user)->andReturnTrue()->byDefault();
+        $this->helper = Mockery::mock(LicenseAgreementControllersHelper::class);
+        $this->helper->shouldReceive('assertCanAccess')->with($this->project, $this->current_user);
+        $this->helper->shouldReceive('renderHeader')->with($this->project);
 
         $this->factory = Mockery::mock(LicenseAgreementFactory::class);
 
         $this->controller = new EditLicenseAgreementController(
             $this->project_manager,
+            $this->helper,
             $this->renderer_factory,
-            $this->permissions_manager,
             $this->factory,
             Mockery::mock(\CSRFSynchronizerToken::class),
             Mockery::spy(IncludeAssets::class),
@@ -116,12 +116,6 @@ class EditLicenseAgreementControllerTest extends TestCase
 
     public function testItRendersThePageWithCustomLicenseAgreement(): void
     {
-        $header_renderer = Mockery::mock(MustacheEngine::class);
-        $header_renderer->shouldReceive('renderToPage')->with('toolbar-presenter', Mockery::any())->once();
-        $this->renderer_factory->shouldReceive('getRenderer')->with(Mockery::on(static function (string $path) {
-            return realpath($path) === realpath(__DIR__ . '/../../../../../../src/templates/frs');
-        }))->andReturn($header_renderer);
-
         $content_renderer = Mockery::mock(MustacheEngine::class);
         $content_renderer->shouldReceive('renderToPage')->with('edit-license-agreement', Mockery::any())->once();
         $this->renderer_factory->shouldReceive('getRenderer')->with(Mockery::on(static function (string $path) {
@@ -140,12 +134,6 @@ class EditLicenseAgreementControllerTest extends TestCase
 
     public function testItRendersTheDefaultSiteAgreementInReadOnly(): void
     {
-        $header_renderer = Mockery::mock(MustacheEngine::class);
-        $header_renderer->shouldReceive('renderToPage')->with('toolbar-presenter', Mockery::any())->once();
-        $this->renderer_factory->shouldReceive('getRenderer')->with(Mockery::on(static function (string $path) {
-            return realpath($path) === realpath(__DIR__ . '/../../../../../../src/templates/frs');
-        }))->andReturn($header_renderer);
-
         $content_renderer = Mockery::mock(MustacheEngine::class);
         $content_renderer->shouldReceive('renderToPage')->with('view-default-license-agreement', Mockery::any())->once();
         $this->renderer_factory->shouldReceive('getRenderer')->with(Mockery::on(static function (string $path) {
@@ -165,24 +153,6 @@ class EditLicenseAgreementControllerTest extends TestCase
         $this->expectException(NotFoundException::class);
 
         $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 1)->andReturnNull();
-
-        $this->controller->process($this->request, $this->layout, ['project_id' => '101', 'id' => '1']);
-    }
-
-    public function testItThrowsAndExceptionWhenServiceIsNotAvailable(): void
-    {
-        $this->project->shouldReceive('getFileService')->andReturnNull();
-
-        $this->expectException(NotFoundException::class);
-
-        $this->controller->process($this->request, $this->layout, ['project_id' => '101', 'id' => '1']);
-    }
-
-    public function testItThrowsAnExceptionWhenUserIsNotFileAdministrator(): void
-    {
-        $this->permissions_manager->shouldReceive('isAdmin')->with($this->project, $this->current_user)->andReturnFalse();
-
-        $this->expectException(ForbiddenException::class);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101', 'id' => '1']);
     }
