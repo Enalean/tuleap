@@ -131,4 +131,9 @@ class LicenseAgreementFactory
             $this->dao->save($license);
         }
     }
+
+    public function setProjectDefault(Project $project, LicenseAgreementInterface $license)
+    {
+        $this->dao->setProjectDefault($project, $license);
+    }
 }

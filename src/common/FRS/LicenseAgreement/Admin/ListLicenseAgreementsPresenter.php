@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\LicenseAgreement\Admin;
 
+use CSRFSynchronizerToken;
+
 class ListLicenseAgreementsPresenter
 {
     /**
@@ -40,15 +42,24 @@ class ListLicenseAgreementsPresenter
      * @var string
      */
     public $create_url;
+    /**
+     * @readonly
+     * @var string
+     */
+    public $set_default_agreement_url;
 
     /**
-     * @param \Project $project
-     * @param LicenseAgreementPresenter[] $license_agreements
+     * @readonly
+     * @var CSRFSynchronizerToken
      */
-    public function __construct(\Project $project, array $license_agreements)
+    public $csrf_token;
+
+    public function __construct(\Project $project, CSRFSynchronizerToken $csrf_token, LicenseAgreementPresenter ...$license_agreements)
     {
         $this->project_id = (int) $project->getID();
         $this->license_agreements = $license_agreements;
         $this->create_url = AddLicenseAgreementController::getUrl($project);
+        $this->set_default_agreement_url = SetDefaultLicenseAgreementController::getUrl($project);
+        $this->csrf_token = $csrf_token;
     }
 }

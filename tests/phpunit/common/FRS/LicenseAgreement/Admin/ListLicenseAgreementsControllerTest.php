@@ -106,6 +106,7 @@ class ListLicenseAgreementsControllerTest extends TestCase
             $this->renderer_factory,
             $this->permissions_manager,
             $this->factory,
+            Mockery::mock(\CSRFSynchronizerToken::class),
         );
     }
 
@@ -118,7 +119,7 @@ class ListLicenseAgreementsControllerTest extends TestCase
         }))->andReturn($header_renderer);
 
         $content_renderer = Mockery::mock(MustacheEngine::class);
-        $content_renderer->shouldReceive('renderToPage')->with('license-agreements-list', Mockery::any())->once();
+        $content_renderer->shouldReceive('renderToPage')->with('list-license-agreements', Mockery::any())->once();
         $this->renderer_factory->shouldReceive('getRenderer')->with(Mockery::on(static function (string $path) {
             return realpath($path) === realpath(__DIR__ . '/../../../../../../src/common/FRS/LicenseAgreement/Admin/templates');
         }))->andReturn($content_renderer);

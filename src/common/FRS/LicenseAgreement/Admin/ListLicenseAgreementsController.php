@@ -58,12 +58,13 @@ class ListLicenseAgreementsController implements DispatchableWithRequest, Dispat
      */
     private $csrf_token;
 
-    public function __construct(\ProjectManager $project_manager, \TemplateRendererFactory $renderer_factory, FRSPermissionManager $permission_manager, LicenseAgreementFactory $factory)
+    public function __construct(\ProjectManager $project_manager, \TemplateRendererFactory $renderer_factory, FRSPermissionManager $permission_manager, LicenseAgreementFactory $factory, CSRFSynchronizerToken $csrf_token)
     {
         $this->project_manager    = $project_manager;
         $this->renderer_factory   = $renderer_factory;
         $this->permission_manager = $permission_manager;
         $this->factory            = $factory;
+        $this->csrf_token         = $csrf_token;
     }
 
     /**
@@ -95,7 +96,7 @@ class ListLicenseAgreementsController implements DispatchableWithRequest, Dispat
 
         $helper->renderHeader($project);
         $content_renderer = $this->renderer_factory->getRenderer(__DIR__ . '/templates');
-        $content_renderer->renderToPage('license-agreements-list', new ListLicenseAgreementsPresenter($project, $license_agreements));
+        $content_renderer->renderToPage('list-license-agreements', new ListLicenseAgreementsPresenter($project, $this->csrf_token, ...$license_agreements));
         $layout->footer([]);
     }
 

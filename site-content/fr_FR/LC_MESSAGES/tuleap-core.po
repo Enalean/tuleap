@@ -745,7 +745,7 @@ msgstr ""
 "Le nom du groupe %s est invalide. Merci d'utiliser uniquement des caractères "
 "alphanumériques."
 
-msgid "Is default ?"
+msgid "Is default?"
 msgstr "Par défaut ?"
 
 msgid "Is used?"
@@ -1342,6 +1342,9 @@ msgstr "Permissions des services"
 
 msgid "Services"
 msgstr "Services"
+
+msgid "Set default"
+msgstr "Enregistrer la valeur par défaut"
 
 msgid "Settings saved"
 msgstr "Paramètres enregistrés"
