@@ -10,6 +10,7 @@
     Insertion:readonly
     Effect:readonly
     Position:readonly
+    tuleap:readonly
 */
 
 if (!com) {
@@ -994,7 +995,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                         // Search item title
                         var title = $("docman_item_title_link_" + this.item_id).firstChild
                             .nodeValue;
-                        li.innerHTML =
+                        li.textContent =
                             '"' + title + '" ' + this.docman.options.language.feedback_cut;
 
                         // Hide previous feedback
@@ -1061,7 +1062,10 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                         var title = $("docman_item_title_link_" + this.item_id).firstChild
                             .nodeValue;
                         li.innerHTML =
-                            '"' + title + '" ' + this.docman.options.language.feedback_copy;
+                            '"' +
+                            tuleap.escaper.html(title) +
+                            '" ' +
+                            this.docman.options.language.feedback_copy;
 
                         // Hide previous feedback
                         if ($("item_copied")) {
