@@ -140,4 +140,13 @@ class LicenseAgreementDao extends DataAccessObject
     {
         return $this->getDB()->single('SELECT agreement_id FROM frs_download_agreement_default WHERE project_id = ?', [$project->getID()]);
     }
+
+    public function setProjectDefault(Project $project, LicenseAgreementInterface $license)
+    {
+        $this->getDB()->run(
+            'REPLACE INTO frs_download_agreement_default(project_id, agreement_id) VALUES (?, ?)',
+            $project->getID(),
+            $license->getId()
+        );
+    }
 }

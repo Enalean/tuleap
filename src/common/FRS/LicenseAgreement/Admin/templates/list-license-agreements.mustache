@@ -1,0 +1,43 @@
+<h2>{{# gettext }}License Agreements{{/ gettext }}</h2>
+
+<div class="row-fluid">
+    <div class="span6">
+        <p><a href="{{ create_url }}" class="btn btn-primary">{{# gettext }}Create new License Agreement{{/ gettext }}</a></p>
+        <form action="{{ set_default_agreement_url }}" method="post">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <table class="table">
+                <thead>
+                <th>{{# gettext }}Title{{/ gettext }}</th>
+                <th>{{# gettext }}Is default?{{/ gettext }}</th>
+                <th>{{# gettext }}Actions{{/ gettext }}</th>
+                </thead>
+                <tbody>
+                {{# license_agreements }}
+                    <tr>
+                        <td>{{ title }}</td>
+                        <td>
+                            <input type="radio"  name="default_agreement" value="{{ id }}" {{# is_default }}checked{{/ is_default }}/>
+                        </td>
+                        {{# can_edit }}
+                            <td>
+                                <a href="{{ url }}" class="fa fa-pencil-square-o">{{# gettext }}edit{{/ gettext }}</a>
+                            </td>
+                        {{/ can_edit }}
+                        {{# can_view_only }}
+                            <td>
+                                <a href="{{ url }}" class="fa fa-eye">{{# gettext }}view{{/ gettext }}</a>
+                            </td>
+                        {{/ can_view_only }}
+                        {{# no_actions }}
+                            <td></td>
+                        {{/ no_actions }}
+                    </tr>
+                {{/ license_agreements }}
+                </tbody>
+            </table>
+            <button type="submit" class="btn">{{# gettext }}Set default{{/ gettext }}</button>
+        </form>
+    </div>
+</div>

@@ -26,6 +26,7 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 use HTTPRequest;
 use Project;
 use Tuleap\FRS\FRSPermissionManager;
+use Tuleap\FRS\LicenseAgreement\InvalidLicenseAgreementException;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\NewLicenseAgreement;
@@ -36,11 +37,11 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\GetProjectTrait;
 use Tuleap\Request\NotFoundException;
 
-class SaveLicenseAgreementController implements DispatchableWithRequest, DispatchableWithProject
+class SetDefaultLicenseAgreementController implements DispatchableWithRequest, DispatchableWithProject
 {
     use GetProjectTrait;
 
-    private const CSRF_TOKEN = 'frs_edit_license_agreement';
+    private const CSRF_TOKEN = 'frs_set_default_license_agreement';
 
     /**
      * @var FRSPermissionManager
@@ -58,14 +59,17 @@ class SaveLicenseAgreementController implements DispatchableWithRequest, Dispatc
      * @var \TemplateRendererFactory
      */
     private $renderer_factory;
+    /**
+     * @var LicenseAgreementControllersHelper
+     */
+    private $helper;
 
-    public function __construct(\ProjectManager $project_manager, \TemplateRendererFactory $renderer_factory, FRSPermissionManager $permission_manager, LicenseAgreementFactory $factory, \CSRFSynchronizerToken $csrf_token)
+    public function __construct(\ProjectManager $project_manager, LicenseAgreementControllersHelper $helper, LicenseAgreementFactory $factory, \CSRFSynchronizerToken $csrf_token)
     {
-        $this->project_manager    = $project_manager;
-        $this->permission_manager = $permission_manager;
-        $this->factory            = $factory;
-        $this->renderer_factory   = $renderer_factory;
-        $this->csrf_token         = $csrf_token;
+        $this->project_manager = $project_manager;
+        $this->helper          = $helper;
+        $this->factory         = $factory;
+        $this->csrf_token      = $csrf_token;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -73,39 +77,25 @@ class SaveLicenseAgreementController implements DispatchableWithRequest, Dispatc
         $project = $this->getProject($variables);
 
         $this->csrf_token->check(ListLicenseAgreementsController::getUrl($project));
+        $this->helper->assertCanAccess($project, $request->getCurrentUser());
 
-        $helper = new LicenseAgreementControllersHelper($this->permission_manager, $this->renderer_factory);
-        $helper->assertCanAccess($project, $request->getCurrentUser());
-
-        if ($request->existAndNonEmpty('id')) {
-            $license = $this->factory->getLicenseAgreementById($project, (int) $request->get('id'));
-            if (! $license) {
-                throw new NotFoundException('Invalid license id');
-            }
-            if (! $license->isModifiable()) {
-                throw new ForbiddenException('You cannot modify this license');
-            }
-
-            $new_license = new LicenseAgreement(
-                $license->getId(),
-                (string) $request->getValidated('title', 'string', ''),
-                (string) $request->getValidated('content', 'text', ''),
-            );
-        } else {
-            $new_license = new NewLicenseAgreement(
-                (string) $request->getValidated('title', 'string', ''),
-                (string) $request->getValidated('content', 'text', ''),
-            );
+        if (! $request->existAndNonEmpty('default_agreement')) {
+            throw new InvalidLicenseAgreementException('Agreement id is missing');
+        }
+        $agreement_id = (int) $request->getValidated('default_agreement', 'int');
+        $license = $this->factory->getLicenseAgreementById($project, $agreement_id);
+        if (! $license) {
+            throw new InvalidLicenseAgreementException('Invalid license agreement for project');
         }
 
-        $this->factory->save($project, $new_license);
+        $this->factory->setProjectDefault($project, $license);
 
         $layout->redirect(ListLicenseAgreementsController::getUrl($project));
     }
 
     public static function getUrl(Project $project): string
     {
-        return sprintf('/file/%d/admin/license-agreements/save', $project->getID());
+        return sprintf('/file/%d/admin/license-agreements/set-default', $project->getID());
     }
 
     public static function getCSRFTokenSynchronizer()

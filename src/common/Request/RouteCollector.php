@@ -58,9 +58,11 @@ use Tuleap\FRS\FRSFileDownloadController;
 use Tuleap\FRS\FRSFileDownloadOldURLRedirectionController;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\Admin\AddLicenseAgreementController;
+use Tuleap\FRS\LicenseAgreement\Admin\LicenseAgreementControllersHelper;
 use Tuleap\FRS\LicenseAgreement\Admin\ListLicenseAgreementsController;
 use Tuleap\FRS\LicenseAgreement\Admin\EditLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\Admin\SaveLicenseAgreementController;
+use Tuleap\FRS\LicenseAgreement\Admin\SetDefaultLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -363,6 +365,7 @@ class RouteCollector
             new LicenseAgreementFactory(
                 new LicenseAgreementDao()
             ),
+            SetDefaultLicenseAgreementController::getCSRFTokenSynchronizer(),
         );
     }
 
@@ -401,6 +404,21 @@ class RouteCollector
                 new LicenseAgreementDao()
             ),
             SaveLicenseAgreementController::getCSRFTokenSynchronizer(),
+        );
+    }
+
+    public static function getFileDownloadAgreementAdminSetDefault(): DispatchableWithRequest
+    {
+        return new SetDefaultLicenseAgreementController(
+            ProjectManager::instance(),
+            new LicenseAgreementControllersHelper(
+                FRSPermissionManager::build(),
+                \TemplateRendererFactory::build(),
+            ),
+            new LicenseAgreementFactory(
+                new LicenseAgreementDao()
+            ),
+            SetDefaultLicenseAgreementController::getCSRFTokenSynchronizer(),
         );
     }
 
@@ -670,7 +688,8 @@ class RouteCollector
             $r->get('/{project_id:\d+}/admin/license-agreements', [self::class, 'getFileDownloadAgreementAdminList']);
             $r->get('/{project_id:\d+}/admin/license-agreements/add', [self::class, 'getFileDownloadAgreementAdminAdd']);
             $r->get('/{project_id:\d+}/admin/license-agreements/{id:\d+}', [self::class, 'getFileDownloadAgreementAdminEdit']);
-            $r->post('/{project_id:\d+}/admin/license-agreements', [self::class, 'getFileDownloadAgreementAdminSave']);
+            $r->post('/{project_id:\d+}/admin/license-agreements/save', [self::class, 'getFileDownloadAgreementAdminSave']);
+            $r->post('/{project_id:\d+}/admin/license-agreements/set-default', [self::class, 'getFileDownloadAgreementAdminSetDefault']);
         });
 
         $r->get('/export/rss_sfprojects.php', [self::class, 'getRssLatestProjects']);

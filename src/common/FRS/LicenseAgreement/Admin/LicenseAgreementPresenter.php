@@ -53,7 +53,7 @@ class LicenseAgreementPresenter
     /**
      * @var bool
      */
-    public $no_options = false;
+    public $no_actions = false;
     /**
      * @var bool
      */
@@ -67,7 +67,7 @@ class LicenseAgreementPresenter
         $this->can_edit      = $license_agreement->isModifiable();
         if (! $this->can_edit) {
             $this->can_view_only = $license_agreement->isViewable();
-            $this->no_options    = ! $license_agreement->isViewable();
+            $this->no_actions    = ! $license_agreement->isViewable();
         }
         $this->is_default = $license_agreement->getId() === $default_license_agreement->getId();
     }
