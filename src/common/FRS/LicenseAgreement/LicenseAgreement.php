@@ -82,4 +82,9 @@ class LicenseAgreement implements LicenseAgreementInterface
     {
         return true;
     }
+
+    public function canBeDeleted(): bool
+    {
+        return true;
+    }
 }

@@ -59,8 +59,20 @@ class EditLicenseAgreementPresenter
      * @var bool
      */
     public $is_update = true;
+    /**
+     * @var bool
+     */
+    public $can_be_deleted;
+    /**
+     * @var bool
+     */
+    public $is_used_by;
+    /**
+     * @var UsedByPresenter[]
+     */
+    public $used_by;
 
-    public function __construct(\Project $project, LicenseAgreementInterface $license_agreement, \CSRFSynchronizerToken $csrf_token)
+    public function __construct(\Project $project, LicenseAgreementInterface $license_agreement, \CSRFSynchronizerToken $csrf_token, bool $can_be_deleted, UsedByPresenter ...$used_by)
     {
         $this->id       = $license_agreement->getId();
         $this->title    = $license_agreement->getTitle();
@@ -71,5 +83,8 @@ class EditLicenseAgreementPresenter
         if ($license_agreement instanceof NewLicenseAgreement) {
             $this->is_update = false;
         }
+        $this->can_be_deleted = $can_be_deleted;
+        $this->used_by = $used_by;
+        $this->is_used_by = count($used_by) > 0;
     }
 }

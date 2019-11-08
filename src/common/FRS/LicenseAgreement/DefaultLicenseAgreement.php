@@ -64,4 +64,9 @@ class DefaultLicenseAgreement implements LicenseAgreementInterface
     {
         return true;
     }
+
+    public function canBeDeleted(): bool
+    {
+        return false;
+    }
 }

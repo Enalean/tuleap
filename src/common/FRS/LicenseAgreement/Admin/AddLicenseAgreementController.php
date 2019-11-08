@@ -88,7 +88,8 @@ class AddLicenseAgreementController implements DispatchableWithRequest, Dispatch
                     '',
                     ''
                 ),
-                $this->csrf_token
+                $this->csrf_token,
+                false
             )
         );
         $layout->footer([]);

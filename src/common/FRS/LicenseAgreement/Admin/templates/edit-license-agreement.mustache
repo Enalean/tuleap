@@ -12,8 +12,21 @@
             <input id="license-agreement-title" type="text" name="title" value="{{ title }}" />
             <label for="license-agreement-content">{{# gettext }}Content{{/ gettext }}</label>
             <textarea id="license-agreement-content" name="content">{{ content }}</textarea>
-            <button type="submit" class="btn btn-primary">{{# gettext }}Save{{/ gettext }}</button>
+            <button type="submit" class="btn btn-primary" name="save">{{# gettext }}Save{{/ gettext }}</button>
+            {{# can_be_deleted }}
+            <button type="submit" class="btn btn-danger" name="delete">{{# gettext }}Delete{{/ gettext }}</button>
+            {{/ can_be_deleted }}
             <a href="{{ list_url }}" class="btn">{{# gettext }}Cancel{{/ gettext }}</a>
         </form>
     </div>
+    {{# is_used_by }}
+        <div class="span6">
+            <p>{{# gettext }}This license agreement cannot be deleted because it's used by following packages: {{/ gettext }}</p>
+            <ul>
+                {{# used_by }}
+                    <li><a href="{{ url }}">{{ name }}</a></li>
+                {{/ used_by }}
+            </ul>
+        </div>
+    {{/ is_used_by }}
 </div>

@@ -32,6 +32,7 @@ use Tuleap\FRS\LicenseAgreement\DefaultLicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
+use Tuleap\FRS\LicenseAgreement\NoLicenseToApprove;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -77,9 +78,19 @@ class SaveLicenseAgreementControllerTest extends TestCase
      * @var \CSRFSynchronizerToken|Mockery\LegacyMockInterface|Mockery\MockInterface
      */
     private $csrf_token;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LicenseAgreementControllersHelper
+     */
+    private $helper;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BaseLayout
+     */
+    private $layout;
 
     protected function setUp(): void
     {
+        $this->layout = Mockery::mock(BaseLayout::class);
+
         $this->current_user = new \PFUser(['language_id' => 'en_US']);
 
         $this->request = new \HTTPRequest();
@@ -97,11 +108,14 @@ class SaveLicenseAgreementControllerTest extends TestCase
         $this->factory = Mockery::mock(LicenseAgreementFactory::class);
 
         $this->csrf_token = Mockery::mock(\CSRFSynchronizerToken::class);
+        $this->csrf_token->shouldReceive('check');
+
+        $this->helper = Mockery::mock(LicenseAgreementControllersHelper::class);
+        $this->helper->shouldReceive('assertCanAccess')->with($this->project, $this->current_user);
 
         $this->controller = new SaveLicenseAgreementController(
             $this->project_manager,
-            Mockery::mock(TemplateRendererFactory::class),
-            $this->permissions_manager,
+            $this->helper,
             $this->factory,
             $this->csrf_token,
         );
@@ -112,8 +126,7 @@ class SaveLicenseAgreementControllerTest extends TestCase
         $this->request->set('id', '1');
         $this->request->set('title', 'updated title');
         $this->request->set('content', 'updated content');
-
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->request->set('save', '');
 
         $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 1)->andReturn(new LicenseAgreement(1, 'some title', 'some content'));
 
@@ -123,28 +136,25 @@ class SaveLicenseAgreementControllerTest extends TestCase
                 $agreement->getContent() === 'updated content';
         }))->once();
 
-        $layout = Mockery::mock(BaseLayout::class);
-        $layout->shouldReceive('redirect')->once();
+        $this->layout->shouldReceive('redirect')->once();
 
-        $this->controller->process($this->request, $layout, ['project_id' => '101']);
+        $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
 
     public function testItSavesNewLicenseAgreement(): void
     {
         $this->request->set('title', 'updated title');
         $this->request->set('content', 'updated content');
-
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->request->set('save', '');
 
         $this->factory->shouldReceive('save')->with($this->project, Mockery::on(function (LicenseAgreementInterface $agreement) {
             return $agreement->getTitle() === 'updated title' &&
                 $agreement->getContent() === 'updated content';
         }))->once();
 
-        $layout = Mockery::mock(BaseLayout::class);
-        $layout->shouldReceive('redirect')->once();
+        $this->layout->shouldReceive('redirect')->once();
 
-        $this->controller->process($this->request, $layout, ['project_id' => '101']);
+        $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
 
 
@@ -153,8 +163,7 @@ class SaveLicenseAgreementControllerTest extends TestCase
         $this->request->set('id', '1');
         $this->request->set('title', 'updated title');
         $this->request->set('content', 'updated content');
-
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->request->set('save', '');
 
         $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 1)->andReturnNull();
 
@@ -170,8 +179,7 @@ class SaveLicenseAgreementControllerTest extends TestCase
         $this->request->set('id', '0');
         $this->request->set('title', 'updated title');
         $this->request->set('content', 'updated content');
-
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->request->set('save', '');
 
         $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 0)->andReturn(new DefaultLicenseAgreement());
 
@@ -182,33 +190,42 @@ class SaveLicenseAgreementControllerTest extends TestCase
         $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101']);
     }
 
-    public function testItThrowsAndExceptionWhenServiceIsNotAvailable(): void
+    public function testItDeletesAnUnusedCustomLicenseAgreement(): void
     {
         $this->request->set('id', '1');
-        $this->request->set('title', 'updated title');
-        $this->request->set('content', 'updated content');
+        $this->request->set('delete', '');
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $license = new LicenseAgreement(1, 'title', 'content');
+        $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 1)->andReturn($license);
+        $this->factory->shouldReceive('delete')->with($this->project, $license)->once();
 
-        $this->project->shouldReceive('getFileService')->andReturnNull();
+        $this->layout->shouldReceive('redirect')->once();
+        $this->layout->shouldReceive('addFeedback')->once();
+
+        $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
+    }
+
+
+    public function testItRaisesAnExceptionWhenTryingToDeleteUnknownCustomLicense(): void
+    {
+        $this->request->set('id', '1');
+        $this->request->set('delete', '');
+
+        $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 1)->andReturnNull();
 
         $this->expectException(NotFoundException::class);
 
-        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101']);
+        $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
 
-    public function testItThrowsAnExceptionWhenUserIsNotFileAdministrator(): void
+
+    public function testItRaisesAnExceptionWhenTryingToDeleteWithoutId(): void
     {
-        $this->request->set('id', '1');
-        $this->request->set('title', 'updated title');
-        $this->request->set('content', 'updated content');
+        $this->request->set('id', '');
+        $this->request->set('delete', '');
 
-        $this->csrf_token->shouldReceive('check')->once();
+        $this->expectException(NotFoundException::class);
 
-        $this->permissions_manager->shouldReceive('isAdmin')->with($this->project, $this->current_user)->andReturnFalse();
-
-        $this->expectException(ForbiddenException::class);
-
-        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['project_id' => '101']);
+        $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
 }

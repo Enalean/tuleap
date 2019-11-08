@@ -64,4 +64,9 @@ class NoLicenseToApprove implements LicenseAgreementInterface
     {
         return false;
     }
+
+    public function canBeDeleted(): bool
+    {
+        return false;
+    }
 }

@@ -21,26 +21,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\FRS\LicenseAgreement;
+namespace Tuleap\FRS\LicenseAgreement\Admin;
 
-/**
- * @psalm-immutable
- */
-interface LicenseAgreementInterface
+class UsedByPresenter
 {
-    public function getAsJson(): string;
+    /**
+     * @var string
+     */
+    public $url;
+    /**
+     * @var string|null
+     */
+    public $name;
 
-    public function getId(): int;
-
-    public function getTitle(): string;
-
-    public function getContent(): string;
-
-    public function getLicenseOptionPresenter(LicenseAgreementInterface $selected_agreement): LicenseOptionPresenter;
-
-    public function isModifiable(): bool;
-
-    public function isViewable(): bool;
-
-    public function canBeDeleted(): bool;
+    public function __construct(\Project $project, \FRSPackage $package)
+    {
+        $this->url  = sprintf('/file/admin/package.php?func=edit&group_id=%d&id=%d', $project->getID(), $package->getPackageID());
+        $this->name = $package->getName();
+    }
 }

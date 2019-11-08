@@ -114,7 +114,7 @@ class EditLicenseAgreementControllerTest extends TestCase
         );
     }
 
-    public function testItRendersThePageHeader(): void
+    public function testItRendersThePageWithCustomLicenseAgreement(): void
     {
         $header_renderer = Mockery::mock(MustacheEngine::class);
         $header_renderer->shouldReceive('renderToPage')->with('toolbar-presenter', Mockery::any())->once();
@@ -131,7 +131,9 @@ class EditLicenseAgreementControllerTest extends TestCase
         $this->layout->shouldReceive('includeFooterJavascriptFile');
         $this->layout->shouldReceive('footer');
 
-        $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 1)->andReturn(new LicenseAgreement(1, 'some title', 'some content'));
+        $license = new LicenseAgreement(1, 'some title', 'some content');
+        $this->factory->shouldReceive('getLicenseAgreementById')->with($this->project, 1)->andReturn($license);
+        $this->factory->shouldReceive('canBeDeleted')->with($this->project, $license)->andReturn(true)->once();
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101', 'id' => '1']);
     }

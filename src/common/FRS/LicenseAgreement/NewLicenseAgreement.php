@@ -80,4 +80,9 @@ class NewLicenseAgreement implements LicenseAgreementInterface
     {
         return true;
     }
+
+    public function canBeDeleted(): bool
+    {
+        return false;
+    }
 }

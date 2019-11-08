@@ -132,8 +132,39 @@ class LicenseAgreementFactory
         }
     }
 
-    public function setProjectDefault(Project $project, LicenseAgreementInterface $license)
+    public function setProjectDefault(Project $project, LicenseAgreementInterface $license): void
     {
         $this->dao->setProjectDefault($project, $license);
+    }
+
+    public function canBeDeleted(Project $project, LicenseAgreementInterface $license): bool
+    {
+        if (! $license->isModifiable()) {
+            throw new InvalidLicenseAgreementException('Cannot delete a license agreement that cannot be modified');
+        }
+        return $this->dao->canBeDeleted($project, $license);
+    }
+
+    /**
+     * @return FRSPackage[]
+     */
+    public function getListOfPackagesForLicenseAgreement(LicenseAgreementInterface $license): array
+    {
+        $packages = [];
+        foreach ($this->dao->getListOfPackagesForLicenseAgreement($license) as $package_row) {
+            $packages []= new FRSPackage($package_row);
+        }
+        return $packages;
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function delete(Project $project, LicenseAgreementInterface $license): void
+    {
+        if (! $this->canBeDeleted($project, $license)) {
+            throw new InvalidLicenseAgreementException('Cannot delete a license agreement that is still used');
+        }
+        $this->dao->delete($license);
     }
 }

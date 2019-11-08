@@ -779,6 +779,10 @@ msgstr "Utilisée pour la dernière fois par"
 msgid "Last used on"
 msgstr "Utilisée pour la dernière fois le"
 
+#, php-format
+msgid "License \"%s\" was successfully deleted"
+msgstr "La licence \"%s\" a été supprimée avec succès"
+
 msgid "License Agreements"
 msgstr "Licences"
 
@@ -1624,6 +1628,13 @@ msgstr "Ceci est un service système, vous ne pouvez pas le supprimer."
 
 msgid "This label is used in the project"
 msgstr "Ce label est utilisé dans le projet"
+
+msgid ""
+"This license agreement cannot be deleted because it's used by following "
+"packages:"
+msgstr ""
+"Ce texte de licence ne peut être supprimé car il est utilisé par les paquets "
+"suivants :"
 
 msgid ""
 "This mail has been automatically sent from {{tuleap_server_name}} application"
