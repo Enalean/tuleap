@@ -848,8 +848,8 @@ class LdapPlugin extends Plugin
             $collector->setCssAsset(
                 new \Tuleap\Layout\CssAsset(
                     new IncludeAssets(
-                        $this->getFilesystemPath() . '/www/themes/BurningParrot/assets',
-                        $this->getThemePath() . '/assets'
+                        __DIR__ . '/../../../src/www/assets/ldap/themes',
+                        '/assets/ldap/themes'
                     ),
                     'style'
                 )
@@ -873,8 +873,8 @@ class LdapPlugin extends Plugin
     {
         if ($this->currentRequestIsForProjectUgroupAdmin()) {
             $theme_include_assets = new IncludeAssets(
-                $this->getFilesystemPath() . '/www/themes/BurningParrot/assets',
-                $this->getThemePath() . '/assets'
+                __DIR__ . '/../../../src/www/assets/ldap/themes',
+                '/assets/ldap/themes'
             );
 
             $variant                 = $params['variant'];

@@ -564,6 +564,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/graphontrackersv5/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_svn/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/ldap/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
@@ -1222,6 +1223,7 @@ fi
 %files plugin-ldap
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/ldap
+%{APP_DIR}/src/www/assets/ldap
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_ldap
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_ldap
 
