@@ -105,7 +105,7 @@ class LicenseAgreementDao extends DataAccessObject
         $this->getDB()->run('DELETE FROM frs_package_download_agreement WHERE package_id = ?', $package->getPackageID());
     }
 
-    public function save(LicenseAgreementInterface $license): void
+    public function save(LicenseAgreement $license): void
     {
         $this->getDB()->run(
             <<<EOT
@@ -116,6 +116,19 @@ class LicenseAgreementDao extends DataAccessObject
             $license->getTitle(),
             $license->getContent(),
             $license->getId(),
+        );
+    }
+
+    public function create(\Project $project, NewLicenseAgreement $license)
+    {
+        $this->getDB()->run(
+            <<<EOT
+            INSERT INTO frs_download_agreement (project_id, title, content)
+            VALUES (?, ?, ?)
+            EOT,
+            $project->getID(),
+            $license->getTitle(),
+            $license->getContent(),
         );
     }
 }

@@ -446,6 +446,9 @@ msgstr "Créer à partir de"
 msgid "Create label"
 msgstr "Créer le label"
 
+msgid "Create new License Agreement"
+msgstr "Créer une nouvelle licence"
+
 msgid "Create user group"
 msgstr "Ajouter un groupe utilisateur"
 

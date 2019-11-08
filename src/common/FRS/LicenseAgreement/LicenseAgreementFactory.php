@@ -104,8 +104,12 @@ class LicenseAgreementFactory
         return null;
     }
 
-    public function save(LicenseAgreementInterface $license): void
+    public function save(Project $project, LicenseAgreementInterface $license): void
     {
-        $this->dao->save($license);
+        if ($license instanceof NewLicenseAgreement) {
+            $this->dao->create($project, $license);
+        } elseif ($license instanceof LicenseAgreement) {
+            $this->dao->save($license);
+        }
     }
 }

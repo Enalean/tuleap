@@ -5,6 +5,9 @@
             {{# csrf_token }}
                 {{> csrf_token_input }}
             {{/ csrf_token }}
+            {{# is_update }}
+                <input type="hidden" name="id" value="{{ id }}" />
+            {{/ is_update }}
             <label for="license-agreement-title">{{# gettext }}Title{{/ gettext }}</label>
             <input id="license-agreement-title" type="text" name="title" value="{{ title }}" />
             <label for="license-agreement-content">{{# gettext }}Content{{/ gettext }}</label>
