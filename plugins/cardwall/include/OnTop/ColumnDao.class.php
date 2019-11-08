@@ -31,6 +31,18 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    /**
+     * @return DataAccessResult|false
+     */
+    public function searchByColumnId(int $column_id)
+    {
+        $column_id = $this->da->escapeInt($column_id);
+        $sql = "SELECT *
+            FROM plugin_cardwall_on_top_column
+            WHERE id = $column_id";
+        return $this->retrieve($sql);
+    }
+
     public function createWithcolor($tracker_id, $label, $red, $green, $blue)
     {
         $tracker_id = $this->da->escapeInt($tracker_id);

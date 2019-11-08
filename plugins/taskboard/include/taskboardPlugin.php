@@ -30,7 +30,6 @@ use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfoBuilder;
 use Tuleap\Taskboard\Board\BoardPresenterBuilder;
 use Tuleap\Taskboard\Column\ColumnPresenterCollectionRetriever;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenterBuilder;
 use Tuleap\Taskboard\REST\ResourcesInjector;
 use Tuleap\Taskboard\Routing\MilestoneExtractor;
@@ -92,9 +91,6 @@ class taskboardPlugin extends Plugin
             throw new RuntimeException('Cannot instantiate Agiledashboard plugin');
         }
 
-        $dao        = new Cardwall_OnTop_Dao();
-        $column_dao = new Cardwall_OnTop_ColumnDao();
-
         return new \Tuleap\Taskboard\Routing\TaskboardController(
             new MilestoneExtractor(
                 $agiledashboard_plugin->getMilestoneFactory(),
@@ -104,16 +100,7 @@ class taskboardPlugin extends Plugin
             $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
             new BoardPresenterBuilder(
                 $agiledashboard_plugin->getMilestonePaneFactory(),
-                new ColumnPresenterCollectionRetriever(
-                    $column_dao,
-                    new TrackerMappingPresenterBuilder(
-                        new Cardwall_OnTop_ConfigFactory(
-                            TrackerFactory::instance(),
-                            Tracker_FormElementFactory::instance()
-                        ),
-                        new MappedFieldRetriever(new Cardwall_FieldProviders_SemanticStatusFieldRetriever())
-                    )
-                ),
+                ColumnPresenterCollectionRetriever::build(),
                 new AgileDashboard_BacklogItemDao()
             ),
             $agiledashboard_plugin->getIncludeAssets(),

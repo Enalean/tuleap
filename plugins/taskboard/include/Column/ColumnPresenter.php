@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column;
 
+use Cardwall_Column;
+use ColorHelper;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenter;
 
-class ColumnPresenter
+final class ColumnPresenter
 {
     /**
      * @var int
@@ -51,11 +53,13 @@ class ColumnPresenter
      */
     public $mappings = [];
 
-    public function __construct(int $id, string $label, string $color, bool $is_collapsed, array $mappings)
+    public function __construct(Cardwall_Column $column, bool $is_collapsed, array $mappings)
     {
-        $this->id           = $id;
-        $this->label        = $label;
-        $this->color        = $color;
+        $this->id           = (int) $column->getId();
+        $this->label        = $column->getLabel();
+        $this->color        = ($column->isHeaderATLPColor())
+            ? $column->getHeadercolor()
+            : ColorHelper::CssRGBToHexa($column->getHeadercolor());
         $this->mappings     = $mappings;
         $this->is_collapsed = $is_collapsed;
     }
