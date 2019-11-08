@@ -1091,6 +1091,9 @@ msgstr "Export des données"
 msgid "Project History"
 msgstr "Historique du projet"
 
+msgid "Project Registration"
+msgstr "Enregistrement d'un projet"
+
 msgid "Project Team"
 msgstr "Équipe du projet"
 
@@ -1375,6 +1378,9 @@ msgstr "News du site"
 msgid "Source code management"
 msgstr "Gestion de code source"
 
+msgid "Start a new project"
+msgstr "Démarrer un nouveau projet"
+
 msgid "Start by choosing a widget"
 msgstr "Commencez par choisir un widget"
 
@@ -1499,6 +1505,15 @@ msgid ""
 msgstr ""
 "Le projet %s n'est pas dans un état valide et ne peut pas être affiché dans "
 "la liste. Veuillez faire le nécessaire."
+
+msgid ""
+"The project template you will select provides some services. Don’t worry, "
+"you can always modify your project workspace after your project has been "
+"created."
+msgstr ""
+"Le template de projet que vous allez sélectionner va instancier quelques "
+"services. Ne vous inquiétez pas, vous pourrez toujours modifier votre espace "
+"projet, une fois que celui-ci aura été créé."
 
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."
@@ -1658,6 +1673,13 @@ msgstr "Cette icône de service n'est pas autorisée."
 
 msgid "This service is a system service, it cannot be deleted."
 msgstr "Ce service est un service système, il ne peut pas être supprimé."
+
+msgid ""
+"This space is under construction. You can still use the current registration "
+"process in the mean time."
+msgstr ""
+"Cet espace est en cours de construction. Vous pouvez toujours utiliser le "
+"processus courant d'enregistrement de projet pendant ce temps."
 
 msgid ""
 "This user has the global REST read only administration permission and should "
@@ -1871,6 +1893,9 @@ msgstr "Bienvenue, %s"
 
 msgid "What is the purpose of your project?"
 msgstr "Quel est le but de ce projet?"
+
+msgid "What kind of project is it?"
+msgstr "Quel type de projet est-ce ?"
 
 msgid "What's this access key for?"
 msgstr "À quel usage cette clé d'accès est destiné ?"
@@ -2223,3 +2248,10 @@ msgstr ""
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"
+
+#~ msgid ""
+#~ "You don't have the necessary permissions to register a new project on "
+#~ "this platform."
+#~ msgstr ""
+#~ "Vous n'avez pas les permissions nécessaires pour pouvoir enregistrer un "
+#~ "nouveau projet sur cette plateforme."

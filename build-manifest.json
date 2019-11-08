@@ -43,7 +43,8 @@
     "components": [
         "src/www/themes/common/tlp/",
         "src/www/themes/FlamingParrot/",
-        "src/www/scripts/"
+        "src/www/scripts/",
+        "src/www/themes/BurningParrot/css/project-registration/"
     ],
     "gettext-js": {
         "chart-builders": {

@@ -458,6 +458,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/taskboard
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/tuleap_synchro
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/project-registration
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/autoload
