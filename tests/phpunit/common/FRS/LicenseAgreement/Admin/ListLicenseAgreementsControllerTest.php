@@ -29,6 +29,7 @@ use ProjectManager;
 use TemplateRendererFactory;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
+use Tuleap\FRS\LicenseAgreement\NoLicenseToApprove;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -124,6 +125,7 @@ class ListLicenseAgreementsControllerTest extends TestCase
 
         $this->layout->shouldReceive('footer');
 
+        $this->factory->shouldReceive('getDefaultLicenseAgreementForProject')->andReturns(new NoLicenseToApprove());
         $this->factory->shouldReceive('getProjectLicenseAgreements')->with($this->project)->andReturn([]);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);

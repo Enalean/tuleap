@@ -46,12 +46,29 @@ class LicenseAgreementPresenter
      * @var bool
      */
     public $can_edit;
+    /**
+     * @var bool
+     */
+    public $can_view_only = false;
+    /**
+     * @var bool
+     */
+    public $no_options = false;
+    /**
+     * @var bool
+     */
+    public $is_default;
 
-    public function __construct(\Project $project, LicenseAgreementInterface $license_agreement)
+    public function __construct(\Project $project, LicenseAgreementInterface $license_agreement, LicenseAgreementInterface $default_license_agreement)
     {
-        $this->id    = $license_agreement->getId();
-        $this->title = $license_agreement->getTitle();
-        $this->url   = EditLicenseAgreementController::getUrl($project, $license_agreement);
-        $this->can_edit = $license_agreement->isModifiable();
+        $this->id            = $license_agreement->getId();
+        $this->title         = $license_agreement->getTitle();
+        $this->url           = EditLicenseAgreementController::getUrl($project, $license_agreement);
+        $this->can_edit      = $license_agreement->isModifiable();
+        if (! $this->can_edit) {
+            $this->can_view_only = $license_agreement->isViewable();
+            $this->no_options    = ! $license_agreement->isViewable();
+        }
+        $this->is_default = $license_agreement->getId() === $default_license_agreement->getId();
     }
 }

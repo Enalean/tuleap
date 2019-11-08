@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\LicenseAgreement;
 
+use Project;
 use Tuleap\DB\DataAccessObject;
 
 class LicenseAgreementDao extends DataAccessObject
@@ -30,7 +31,7 @@ class LicenseAgreementDao extends DataAccessObject
     /**
      * @return mixed
      */
-    public function getById(\Project $project, int $id)
+    public function getById(Project $project, int $id)
     {
         return $this->getDB()->row(
             <<<EOT
@@ -46,7 +47,7 @@ class LicenseAgreementDao extends DataAccessObject
     /**
      * @return mixed
      */
-    public function getProjectLicenseAgreements(\Project $project)
+    public function getProjectLicenseAgreements(Project $project)
     {
         return $this->getDB()->run(
             <<<EOT
@@ -58,7 +59,7 @@ class LicenseAgreementDao extends DataAccessObject
         );
     }
 
-    public function isLicenseAgreementValidForProject(\Project $project, int $agreement_id): bool
+    public function isLicenseAgreementValidForProject(Project $project, int $agreement_id): bool
     {
         $row = $this->getDB()->single(
             <<<EOT
@@ -119,7 +120,7 @@ class LicenseAgreementDao extends DataAccessObject
         );
     }
 
-    public function create(\Project $project, NewLicenseAgreement $license)
+    public function create(Project $project, NewLicenseAgreement $license)
     {
         $this->getDB()->run(
             <<<EOT
@@ -130,5 +131,13 @@ class LicenseAgreementDao extends DataAccessObject
             $license->getTitle(),
             $license->getContent(),
         );
+    }
+
+    /**
+     * @return int|false
+     */
+    public function getDefaultLicenseIdForProject(Project $project)
+    {
+        return $this->getDB()->single('SELECT agreement_id FROM frs_download_agreement_default WHERE project_id = ?', [$project->getID()]);
     }
 }

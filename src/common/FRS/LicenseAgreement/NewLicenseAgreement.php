@@ -75,4 +75,9 @@ class NewLicenseAgreement implements LicenseAgreementInterface
     {
         return true;
     }
+
+    public function isViewable(): bool
+    {
+        return true;
+    }
 }

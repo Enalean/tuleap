@@ -50,24 +50,17 @@ class LicenseAgreementFactoryTest extends TestCase
     {
         $this->dao = \Mockery::mock(LicenseAgreementDao::class);
         $this->project = new \Project(['group_id' => '101']);
-        $this->package = new \FRSPackage([]);
+        $this->package = new \FRSPackage(['package_id' => '470']);
         $this->factory = new LicenseAgreementFactory($this->dao);
     }
 
-
-    public function testAtPackageCreationWhenLicenseIsNotMandataoryNoDefaultLicense()
+    public function testGetLicenseAgreementOnNonExistingPackageShouldRaiseAnException()
     {
-        ForgeConfig::set('sys_frs_license_mandatory', false);
+        $this->expectException(InvalidLicenseAgreementException::class);
 
-        $this->assertInstanceOf(NoLicenseToApprove::class, $this->factory->getLicenseAgreementForPackage($this->package));
+        $this->factory->getLicenseAgreementForPackage(new \FRSPackage([]));
     }
 
-    public function testAtPackageCreationWhenLicenseIsMandataoryDefaultLicenseIsGiven()
-    {
-        ForgeConfig::set('sys_frs_license_mandatory', true);
-
-        $this->assertInstanceOf(DefaultLicenseAgreement::class, $this->factory->getLicenseAgreementForPackage($this->package));
-    }
 
     public function testItUpdatePackageWithNoLicenseAgreement(): void
     {
@@ -110,5 +103,69 @@ class LicenseAgreementFactoryTest extends TestCase
         $this->expectException(InvalidLicenseAgreementException::class);
 
         $this->factory->updateLicenseAgreementForPackage($this->project, $this->package, 5);
+    }
+
+    public function testItReturnsSiteDefaultAgreementWhenAgreementMandatoryAndNoDefaultSet()
+    {
+        ForgeConfig::set('sys_frs_license_mandatory', true);
+
+        $this->dao->shouldReceive('getDefaultLicenseIdForProject')->once()->with($this->project)->andReturnFalse();
+
+        $license = $this->factory->getDefaultLicenseAgreementForProject($this->project);
+        $this->assertEquals(new DefaultLicenseAgreement(), $license);
+    }
+
+    public function testItReturnsNoLicenseAgreementWhenAgreementNotMandatoryAndNoDefaultSet()
+    {
+        ForgeConfig::set('sys_frs_license_mandatory', false);
+
+        $this->dao->shouldReceive('getDefaultLicenseIdForProject')->once()->with($this->project)->andReturnFalse();
+
+        $license = $this->factory->getDefaultLicenseAgreementForProject($this->project);
+        $this->assertEquals(new NoLicenseToApprove(), $license);
+    }
+
+    public function testItReturnsCustomLicenseAsDefault()
+    {
+        $this->dao->shouldReceive('getById')->andReturn(['id' => 5, 'title' => 'foo', 'content' => 'bar']);
+        $this->dao->shouldReceive('getDefaultLicenseIdForProject')->once()->with($this->project)->andReturns(5);
+
+        $license = $this->factory->getDefaultLicenseAgreementForProject($this->project);
+        $this->assertEquals(new LicenseAgreement(5, 'foo', 'bar'), $license);
+    }
+
+    public function testItReturnsDefaultLicenseAgreementIfALicenseWasSetButInvalid()
+    {
+        $this->dao->shouldReceive('getById')->andReturnFalse();
+        $this->dao->shouldReceive('getDefaultLicenseIdForProject')->once()->with($this->project)->andReturns(5);
+
+        $license = $this->factory->getDefaultLicenseAgreementForProject($this->project);
+        $this->assertEquals(new DefaultLicenseAgreement(), $license);
+    }
+
+    public function testItReturnsNoLicenseToApproveWhenItsTheSelectedDefault()
+    {
+        $this->dao->shouldReceive('getDefaultLicenseIdForProject')->once()->with($this->project)->andReturns(NoLicenseToApprove::ID);
+
+        $license = $this->factory->getDefaultLicenseAgreementForProject($this->project);
+        $this->assertEquals(new NoLicenseToApprove(), $license);
+    }
+
+    public function testItReturnsDefaultLicenseWhenItsTheSelectedDefault()
+    {
+        $this->dao->shouldReceive('getDefaultLicenseIdForProject')->once()->with($this->project)->andReturns(DefaultLicenseAgreement::ID);
+
+        $license = $this->factory->getDefaultLicenseAgreementForProject($this->project);
+        $this->assertEquals(new DefaultLicenseAgreement(), $license);
+    }
+
+    public function testItReturnsDefaultLicenseWhenTheSelectedDefaultIsNoLicenseButLicenseMandatory()
+    {
+        ForgeConfig::set('sys_frs_license_mandatory', true);
+
+        $this->dao->shouldReceive('getDefaultLicenseIdForProject')->once()->with($this->project)->andReturns(NoLicenseToApprove::ID);
+
+        $license = $this->factory->getDefaultLicenseAgreementForProject($this->project);
+        $this->assertEquals(new DefaultLicenseAgreement(), $license);
     }
 }

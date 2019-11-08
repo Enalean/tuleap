@@ -42,10 +42,7 @@ class LicenseAgreementFactory
     public function getLicenseAgreementForPackage(FRSPackage $package): LicenseAgreementInterface
     {
         if ($package->getPackageID() === null) {
-            if (! ForgeConfig::get('sys_frs_license_mandatory')) {
-                return new NoLicenseToApprove();
-            }
-            return new DefaultLicenseAgreement();
+            throw new InvalidLicenseAgreementException('Package doesnt exist yet');
         }
         if (! $package->getApproveLicense()) {
             return new NoLicenseToApprove();
@@ -60,7 +57,7 @@ class LicenseAgreementFactory
     /**
      * @return LicenseAgreementInterface[]
      */
-    public function getProjectLicenseAgreements(\Project $project): array
+    public function getProjectLicenseAgreements(Project $project): array
     {
         $agreements = [];
         foreach ($this->dao->getProjectLicenseAgreements($project) as $row) {
@@ -69,9 +66,28 @@ class LicenseAgreementFactory
         return $agreements;
     }
 
+    public function getDefaultLicenseAgreementForProject(Project $project): LicenseAgreementInterface
+    {
+        $id = $this->dao->getDefaultLicenseIdForProject($project);
+        if ($id === false) {
+            if (ForgeConfig::get('sys_frs_license_mandatory')) {
+                return new DefaultLicenseAgreement();
+            }
+            return new NoLicenseToApprove();
+        }
+        if ($id === NoLicenseToApprove::ID && ForgeConfig::get('sys_frs_license_mandatory')) {
+            return new DefaultLicenseAgreement();
+        }
+        $license = $this->getLicenseAgreementById($project, $id);
+        if ($license) {
+            return $license;
+        }
+        return new DefaultLicenseAgreement();
+    }
+
     public function updateLicenseAgreementForPackage(Project $project, FRSPackage $package, int $license_approval_id): void
     {
-        if ($license_approval_id === NoLicenseToApprove::ID && \ForgeConfig::get('sys_frs_license_mandatory')) {
+        if ($license_approval_id === NoLicenseToApprove::ID && ForgeConfig::get('sys_frs_license_mandatory')) {
             throw new InvalidLicenseAgreementException(_('The platform mandates a license agreement, none given'));
         }
 
@@ -96,6 +112,9 @@ class LicenseAgreementFactory
     {
         if ($id === DefaultLicenseAgreement::ID) {
             return new DefaultLicenseAgreement();
+        }
+        if ($id === NoLicenseToApprove::ID) {
+            return new NoLicenseToApprove();
         }
         $row = $this->dao->getById($project, $id);
         if ($row) {

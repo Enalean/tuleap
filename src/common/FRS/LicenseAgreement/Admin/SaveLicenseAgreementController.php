@@ -82,7 +82,7 @@ class SaveLicenseAgreementController implements DispatchableWithRequest, Dispatc
             if (! $license) {
                 throw new NotFoundException('Invalid license id');
             }
-            if (! $license instanceof LicenseAgreement) {
+            if (! $license->isModifiable()) {
                 throw new ForbiddenException('You cannot modify this license');
             }
 
