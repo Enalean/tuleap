@@ -50,7 +50,7 @@ class Git_RemoteServer_GerritServerPresenter
         $this->use_ssl                        = $server->usesSSL();
         $this->login                          = $server->getLogin();
         $this->identity_file                  = $server->getIdentityFile();
-        $this->use_gerrit_2_5                 = $server->getGerritVersion() === Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION;
+        $this->use_gerrit_2_5                 = $server->getGerritVersion() === Git_RemoteServer_GerritServer::GERRIT_VERSION_2_5;
         $this->is_used                        = $is_used;
         $this->http_password                  = $server->getHTTPPassword();
         $this->replication_password           = $server->getReplicationPassword();

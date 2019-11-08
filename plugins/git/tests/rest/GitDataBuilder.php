@@ -62,7 +62,7 @@ class GitDataBuilder extends REST_TestDataBuilder
             '',
             '',
             false,
-            Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION,
+            Git_RemoteServer_GerritServer::GERRIT_VERSION_2_5,
             '',
             '',
             'Digest'
@@ -77,7 +77,7 @@ class GitDataBuilder extends REST_TestDataBuilder
             '',
             '',
             false,
-            Git_RemoteServer_GerritServer::DEFAULT_GERRIT_VERSION,
+            Git_RemoteServer_GerritServer::GERRIT_VERSION_2_5,
             '',
             '',
             'Digest'
