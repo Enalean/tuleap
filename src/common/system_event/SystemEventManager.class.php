@@ -274,22 +274,28 @@ class SystemEventManager
                 );
                 break;
             case 'project_admin_ugroup_edition':
-                $this->createEvent(
-                    SystemEvent::TYPE_UGROUP_MODIFY,
-                    $this->concatParameters($params, array('group_id', 'ugroup_id', 'ugroup_name', 'ugroup_old_name')),
-                    SystemEvent::PRIORITY_MEDIUM
-                );
+                $parameters = $this->concatParameters($params, array('group_id', 'ugroup_id', 'ugroup_name', 'ugroup_old_name'));
+                if (!$this->areThereMultipleEventsQueuedMatchingFirstParameter(Event::UGROUP_MODIFY, $parameters)) {
+                    $this->createEvent(
+                        SystemEvent::TYPE_UGROUP_MODIFY,
+                        $parameters,
+                        SystemEvent::PRIORITY_MEDIUM
+                    );
+                }
                 break;
             case 'project_admin_ugroup_creation':
             case 'project_admin_ugroup_remove_user':
             case 'project_admin_ugroup_add_user':
             case 'project_admin_ugroup_deletion':
             case 'project_admin_ugroup_bind_modified':
-                $this->createEvent(
-                    SystemEvent::TYPE_UGROUP_MODIFY,
-                    $this->concatParameters($params, array('group_id', 'ugroup_id')),
-                    SystemEvent::PRIORITY_MEDIUM
-                );
+                $parameters = $this->concatParameters($params, array('group_id', 'ugroup_id'));
+                if (!$this->areThereMultipleEventsQueuedMatchingFirstParameter(Event::UGROUP_MODIFY, $parameters)) {
+                    $this->createEvent(
+                        SystemEvent::TYPE_UGROUP_MODIFY,
+                        $parameters,
+                        SystemEvent::PRIORITY_MEDIUM
+                    );
+                }
                 break;
             case 'project_admin_remove_user_from_project_ugroups':
                 // multiple ugroups
@@ -298,11 +304,14 @@ class SystemEventManager
                 //(TODO: cache information to avoid multiple file edition? Or consume all other UGROUP_MODIFY events?)
                 foreach ($params['ugroups'] as $ugroup_id) {
                     $params['ugroup_id'] = $ugroup_id;
-                    $this->createEvent(
-                        SystemEvent::TYPE_UGROUP_MODIFY,
-                        $this->concatParameters($params, array('group_id', 'ugroup_id')),
-                        SystemEvent::PRIORITY_MEDIUM
-                    );
+                    $parameters          = $this->concatParameters($params, array('group_id', 'ugroup_id'));
+                    if (!$this->areThereMultipleEventsQueuedMatchingFirstParameter(Event::UGROUP_MODIFY, $parameters)) {
+                        $this->createEvent(
+                            SystemEvent::TYPE_UGROUP_MODIFY,
+                            $parameters,
+                            SystemEvent::PRIORITY_MEDIUM
+                        );
+                    }
                 }
                 break;
             case 'mail_list_create':
