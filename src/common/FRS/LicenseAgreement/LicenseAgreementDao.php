@@ -123,7 +123,7 @@ class LicenseAgreementDao extends DataAccessObject
         );
     }
 
-    public function create(Project $project, NewLicenseAgreement $license)
+    public function create(Project $project, NewLicenseAgreement $license): int
     {
         $this->getDB()->run(
             <<<EOT
@@ -134,6 +134,7 @@ class LicenseAgreementDao extends DataAccessObject
             $license->getTitle(),
             $license->getContent(),
         );
+        return (int) $this->getDB()->lastInsertId();
     }
 
     /**

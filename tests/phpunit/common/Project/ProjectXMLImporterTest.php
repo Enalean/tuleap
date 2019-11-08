@@ -101,6 +101,7 @@ class ProjectXMLImporterTest extends TestCase
             $this->ugroup_duplicator,
             false,
             $frs_permissions_creator,
+            M::spy(\Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory::class),
             M::spy(\Tuleap\Dashboard\Project\ProjectDashboardDuplicator::class),
             M::spy(\Tuleap\Service\ServiceCreator::class),
             M::spy(\Tuleap\Project\Label\LabelDao::class),

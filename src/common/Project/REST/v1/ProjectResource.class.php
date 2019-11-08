@@ -40,6 +40,8 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
@@ -199,6 +201,7 @@ class ProjectResource extends AuthenticatedResource
             $ugroup_duplicator,
             $send_notifications,
             new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao(), new ProjectHistoryDao()),
+            new LicenseAgreementFactory(new LicenseAgreementDao()),
             $duplicator,
             new ServiceCreator(new \ServiceDao()),
             $label_dao,

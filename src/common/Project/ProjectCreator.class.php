@@ -126,6 +126,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * @var SynchronizedProjectMembershipDuplicator
      */
     private $synchronized_project_membership_duplicator;
+    /**
+     * @var \Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory
+     */
+    private $frs_license_agreement_factory;
 
     public function __construct(
         ProjectManager $projectManager,
@@ -134,6 +138,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         UgroupDuplicator $ugroup_duplicator,
         $send_notifications,
         FRSPermissionCreator $frs_permissions_creator,
+        \Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory $frs_license_agreement_factory,
         ProjectDashboardDuplicator $dashboard_duplicator,
         ServiceCreator $service_creator,
         LabelDao $label_dao,
@@ -157,6 +162,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->label_dao                            = $label_dao;
         $this->default_project_visibility_retriever = $default_project_visibility_retriever;
         $this->synchronized_project_membership_duplicator  = $synchronized_project_membership_duplicator;
+        $this->frs_license_agreement_factory = $frs_license_agreement_factory;
     }
 
     /**
@@ -316,7 +322,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $ugroup_mapping = array();
         $this->ugroup_duplicator->duplicateOnProjectCreation($template_group, $group_id, $ugroup_mapping);
 
-        $this->initFRSModuleFromTemplate($group, $template_id, $ugroup_mapping);
+        $this->initFRSModuleFromTemplate($group, $template_group, $ugroup_mapping);
 
         if ($data->projectShouldInheritFromTemplate() && $legacy[Service::TRACKERV3]) {
             list($tracker_mapping, $report_mapping) =
@@ -605,7 +611,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
     }
 
-    private function initFRSModuleFromTemplate(Project $project, $template_id, $ugroup_mapping)
+    private function initFRSModuleFromTemplate(Project $project, Project $template_project, $ugroup_mapping)
     {
         $sql_ugroup_mapping = ' ugroup_id ';
         if (is_array($ugroup_mapping) && count($ugroup_mapping)) {
@@ -616,7 +622,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $sql_ugroup_mapping .= ' ELSE ugroup_id END ';
         }
         //Copy packages from template project
-        $sql  = "SELECT package_id, name, status_id, rank, approve_license FROM frs_package WHERE group_id = $template_id";
+        $packages_mapping = [];
+        $sql  = "SELECT package_id, name, status_id, rank, approve_license FROM frs_package WHERE group_id = ".db_ei($template_project->getID());
         if ($result = db_query($sql)) {
             while ($p_data = db_fetch_array($result)) {
                 $template_package_id = $p_data['package_id'];
@@ -631,6 +638,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 $rid = db_query($sql);
                 if ($rid) {
                     $package_id = db_insertid($rid);
+                    $packages_mapping[(int) $template_package_id] = (int) $package_id;
                     $sql = "INSERT INTO permissions(permission_type, object_id, ugroup_id)
                       SELECT permission_type, $package_id, $sql_ugroup_mapping
                       FROM permissions
@@ -641,7 +649,14 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             }
         }
 
-        $this->frs_permissions_creator->duplicate($project, $template_id);
+        $this->frs_permissions_creator->duplicate($project, $template_project->getID());
+
+        $this->frs_license_agreement_factory->duplicate(
+            FRSPackageFactory::instance(),
+            $project,
+            $template_project,
+            $packages_mapping
+        );
     }
 
     // Generic Trackers Creation
