@@ -29,22 +29,14 @@ use AgileDashboard_KanbanManager;
 use AgileDashboardConfigurationResponse;
 use AgileDashboardKanbanConfigurationUpdater;
 use AgileDashboardScrumConfigurationUpdater;
-use ArtifactTypeFactory;
 use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
 use Feedback;
-use FRSLog;
 use PFUser;
 use PlanningFactory;
 use Project;
-use ProjectCreator;
-use ProjectHistoryDao;
-use ProjectManager;
 use ProjectXMLImporter;
-use ProjectXMLImporterLogger;
-use ReferenceManager;
-use ServiceManager;
 use Tracker_ReportFactory;
 use TrackerFactory;
 use TrackerXmlImport;
@@ -61,41 +53,9 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDisabler;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneEnabler;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
-use Tuleap\Dashboard\Project\ProjectDashboardDao;
-use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
-use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
-use Tuleap\Dashboard\Project\ProjectDashboardSaver;
-use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
-use Tuleap\FRS\FRSPermissionCreator;
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
-use Tuleap\FRS\UploadedLinksDao;
-use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Project\DefaultProjectVisibilityRetriever;
-use Tuleap\Project\Label\LabelDao;
-use Tuleap\Project\UgroupDuplicator;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
-use Tuleap\Project\UGroups\Membership\MemberAdder;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
-use Tuleap\Project\UserRemover;
-use Tuleap\Project\UserRemoverDao;
-use Tuleap\Project\XML\XMLFileContentRetriever;
-use Tuleap\Service\ServiceCreator;
-use Tuleap\Widget\WidgetFactory;
-use UGroupBinding;
-use UGroupDao;
-use UGroupManager;
-use UGroupUserDao;
-use User_ForgeUserGroupPermissionsDao;
-use User_ForgeUserGroupPermissionsManager;
 use UserManager;
-use XML_RNGValidator;
 use XMLImportHelper;
 
 class AdminController extends BaseController
@@ -255,7 +215,6 @@ class AdminController extends BaseController
             $this->request->exist('home-ease-onboarding')
         );
 
-        $user_manager = UserManager::instance();
         if ($this->request->exist('activate-kanban')) {
             $updater = new AgileDashboardKanbanConfigurationUpdater(
                 $this->request,
@@ -279,66 +238,7 @@ class AdminController extends BaseController
                 )
             );
         } else {
-            $ugroup_user_dao   = new UGroupUserDao();
-            $ugroup_manager    = new UGroupManager();
-            $ugroup_binding    = new UGroupBinding($ugroup_user_dao, $ugroup_manager);
-            $ugroup_duplicator = new UgroupDuplicator(
-                new UGroupDao(),
-                $ugroup_manager,
-                $ugroup_binding,
-                MemberAdder::build(ProjectMemberAdderWithoutStatusCheckAndNotifications::build()),
-                $this->event_manager
-            );
-
-            $send_notifications = false;
-            $force_activation   = true;
-
-            $frs_permissions_creator = new FRSPermissionCreator(
-                new FRSPermissionDao(),
-                new UGroupDao(),
-                new ProjectHistoryDao()
-            );
-
-            $widget_factory = new WidgetFactory(
-                $user_manager,
-                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                $this->event_manager
-            );
-
-            $widget_dao        = new DashboardWidgetDao($widget_factory);
-            $project_dao       = new ProjectDashboardDao($widget_dao);
-            $project_retriever = new ProjectDashboardRetriever($project_dao);
-            $widget_retriever  = new DashboardWidgetRetriever($widget_dao);
-            $duplicator        = new ProjectDashboardDuplicator(
-                $project_dao,
-                $project_retriever,
-                $widget_dao,
-                $widget_retriever,
-                $widget_factory
-            );
-
-            $synchronized_project_membership_dao = new SynchronizedProjectMembershipDao();
-
-            $project_creator = new ProjectCreator(
-                ProjectManager::instance(),
-                ReferenceManager::instance(),
-                $user_manager,
-                $ugroup_duplicator,
-                $send_notifications,
-                $frs_permissions_creator,
-                new LicenseAgreementFactory(new LicenseAgreementDao()),
-                $duplicator,
-                new ServiceCreator(new \ServiceDao()),
-                new LabelDao(),
-                new DefaultProjectVisibilityRetriever(),
-                new SynchronizedProjectMembershipDuplicator($synchronized_project_membership_dao),
-                new \Rule_ProjectName(),
-                new \Rule_ProjectFullName(),
-                $force_activation
-            );
-
             $scrum_mono_milestone_dao = new ScrumForMonoMilestoneDao();
-            $logger                   = new ProjectXMLImporterLogger();
             $updater                  = new AgileDashboardScrumConfigurationUpdater(
                 $this->request,
                 $this->config_manager,
@@ -347,39 +247,8 @@ class AdminController extends BaseController
                     $this->request->getProject(),
                     $this->planning_factory,
                     $this->tracker_factory,
-                    new ProjectXMLImporter(
-                        $this->event_manager,
-                        ProjectManager::instance(),
-                        $user_manager,
-                        new XML_RNGValidator(),
-                        $ugroup_manager,
-                        new XMLImportHelper($user_manager),
-                        ServiceManager::instance(),
-                        $logger,
-                        $frs_permissions_creator,
-                        new UserRemover(
-                            ProjectManager::instance(),
-                            $this->event_manager,
-                            new ArtifactTypeFactory(false),
-                            new UserRemoverDao(),
-                            $user_manager,
-                            new ProjectHistoryDao(),
-                            new UGroupManager()
-                        ),
-                        ProjectMemberAdderWithoutStatusCheckAndNotifications::build(),
-                        $project_creator,
-                        new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance()),
-                        new ProjectDashboardXMLImporter(
-                            new ProjectDashboardSaver(
-                                $project_dao
-                            ),
-                            $widget_factory,
-                            $widget_dao,
-                            $logger,
-                            $this->event_manager
-                        ),
-                        $synchronized_project_membership_dao,
-                        new XMLFileContentRetriever()
+                    ProjectXMLImporter::build(
+                        new XMLImportHelper(UserManager::instance())
                     )
                 ),
                 new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),

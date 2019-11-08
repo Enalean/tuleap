@@ -28,20 +28,9 @@ use Project;
 use Project_InvalidFullName_Exception;
 use Project_InvalidShortName_Exception;
 use ProjectCreator;
-use ProjectHistoryDao;
 use ProjectManager;
 use ProjectUGroup;
-use ReferenceManager;
 use ServiceManager;
-use Tuleap\Dashboard\Project\ProjectDashboardDao;
-use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
-use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
-use Tuleap\FRS\FRSPermissionCreator;
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
@@ -50,7 +39,6 @@ use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerPermissionsChecker;
 use Tuleap\Project\Banner\BannerRemover;
 use Tuleap\Project\Banner\BannerRetriever;
-use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\Label\LabelDao;
@@ -62,11 +50,6 @@ use Tuleap\Project\ProjectStatusMapper;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
-use Tuleap\Project\UgroupDuplicator;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
-use Tuleap\Project\UGroups\Membership\MemberAdder;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
@@ -81,14 +64,9 @@ use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 use Tuleap\REST\v1\MilestoneRepresentationBase;
 use Tuleap\REST\v1\OrderRepresentationBase;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
-use Tuleap\Service\ServiceCreator;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\Widget\Event\GetProjectsWithCriteria;
-use Tuleap\Widget\WidgetFactory;
-use UGroupBinding;
-use UGroupDao;
 use UGroupManager;
-use UGroupUserDao;
 use URLVerification;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
@@ -115,12 +93,6 @@ class ProjectResource extends AuthenticatedResource
 
     /** @var UGroupManager */
     private $ugroup_manager;
-
-    /** @var ProjectCreator */
-    private $project_creator;
-
-    /** @var ReferenceManager */
-    private $reference_manager;
 
     /** @var EventManager */
     private $event_manager;
@@ -154,63 +126,15 @@ class ProjectResource extends AuthenticatedResource
     {
         $this->user_manager      = UserManager::instance();
         $this->project_manager   = ProjectManager::instance();
-        $this->reference_manager = ReferenceManager::instance();
         $this->ugroup_manager    = new UGroupManager();
         $this->json_decoder      = new JsonDecoder();
-        $ugroup_user_dao         = new UGroupUserDao();
         $this->event_manager     = EventManager::instance();
 
         $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
         );
 
-        $widget_factory = new WidgetFactory(
-            $this->user_manager,
-            $this->forge_ugroup_permissions_manager,
-            $this->event_manager
-        );
-
-        $widget_dao        = new DashboardWidgetDao($widget_factory);
-        $project_dao       = new ProjectDashboardDao($widget_dao);
-        $project_retriever = new ProjectDashboardRetriever($project_dao);
-        $widget_retriever  = new DashboardWidgetRetriever($widget_dao);
-        $duplicator        = new ProjectDashboardDuplicator(
-            $project_dao,
-            $project_retriever,
-            $widget_dao,
-            $widget_retriever,
-            $widget_factory
-        );
-
-        $ugroup_binding = new UGroupBinding($ugroup_user_dao, $this->ugroup_manager);
-        $ugroup_duplicator = new UgroupDuplicator(
-            new UGroupDao(),
-            $this->ugroup_manager,
-            $ugroup_binding,
-            MemberAdder::build(ProjectMemberAdderWithoutStatusCheckAndNotifications::build()),
-            EventManager::instance()
-        );
-        $send_notifications      = true;
-        $force_activation        = false;
         $label_dao               = new LabelDao();
-
-        $this->project_creator = new ProjectCreator(
-            $this->project_manager,
-            $this->reference_manager,
-            $this->user_manager,
-            $ugroup_duplicator,
-            $send_notifications,
-            new FRSPermissionCreator(new FRSPermissionDao(), new UGroupDao(), new ProjectHistoryDao()),
-            new LicenseAgreementFactory(new LicenseAgreementDao()),
-            $duplicator,
-            new ServiceCreator(new \ServiceDao()),
-            $label_dao,
-            new DefaultProjectVisibilityRetriever(),
-            new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
-            new \Rule_ProjectName(),
-            new \Rule_ProjectFullName(),
-            $force_activation
-        );
 
         $this->labels_retriever = new LabelsCurlyCoatedRetriever(
             new PaginatedCollectionsOfLabelsBuilder(),
@@ -272,7 +196,8 @@ class ProjectResource extends AuthenticatedResource
         }
 
         try {
-            $project = $this->project_creator->createFromRest($shortname, $label, $data);
+            $project_creator    = ProjectCreator::buildSelfRegularValidation();
+            $project            = $project_creator->createFromRest($shortname, $label, $data);
         } catch (Project_InvalidShortName_Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Project_InvalidFullName_Exception $exception) {

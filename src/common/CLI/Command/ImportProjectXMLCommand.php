@@ -20,45 +20,16 @@
 
 namespace Tuleap\CLI\Command;
 
-use ArtifactTypeFactory;
 use BrokerLogger;
-use FRSLog;
-use Log_ConsoleLogger;
-use ProjectCreator;
-use ProjectHistoryDao;
-use ProjectManager;
 use ProjectXMLImporter;
 use ProjectXMLImporterLogger;
-use ReferenceManager;
-use ServiceManager;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use SystemEventProcessor_Factory;
 use Tuleap\CLI\ConsoleLogger;
-use Tuleap\Dashboard\Project\ProjectDashboardDao;
-use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
-use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
-use Tuleap\Dashboard\Project\ProjectDashboardSaver;
-use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
-use Tuleap\FRS\FRSPermissionCreator;
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
-use Tuleap\FRS\UploadedLinksDao;
-use Tuleap\FRS\UploadedLinksUpdater;
-use Tuleap\Project\DefaultProjectVisibilityRetriever;
-use Tuleap\Project\Label\LabelDao;
-use Tuleap\Project\UgroupDuplicator;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
-use Tuleap\Project\UGroups\Membership\MemberAdder;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
-use Tuleap\Project\UserRemover;
-use Tuleap\Project\UserRemoverDao;
 use Tuleap\Project\XML\Import;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\Import\ImportNotValidException;
@@ -71,7 +42,6 @@ use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
 use XML_RNGValidator;
 use XML_Security;
-use Symfony\Component\Console\Exception\InvalidArgumentException;
 
 class ImportProjectXMLCommand extends Command
 {
@@ -228,104 +198,10 @@ class ImportProjectXMLCommand extends Command
             $users_collection->process($user_manager, $broker_log);
 
             $user_finder = new \User\XML\Import\Mapping($user_manager, $users_collection, $broker_log);
-
-            $ugroup_user_dao   = new \UGroupUserDao();
-            $ugroup_manager    = new \UGroupManager();
-            $ugroup_binding    = new \UGroupBinding($ugroup_user_dao, $ugroup_manager);
-            $ugroup_duplicator = new UgroupDuplicator(
-                new UGroupDao(),
-                $ugroup_manager,
-                $ugroup_binding,
-                MemberAdder::build(ProjectMemberAdderWithoutStatusCheckAndNotifications::build()),
-                $event_manager
-            );
-
-            $send_notifications = false;
-            $force_activation   = true;
-
-            $frs_permissions_creator = new FRSPermissionCreator(
-                new FRSPermissionDao(),
-                new UGroupDao(),
-                new ProjectHistoryDao()
-            );
-
-            $widget_factory = new WidgetFactory(
-                $user_manager,
-                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                $event_manager
-            );
-
-            $widget_dao        = new DashboardWidgetDao($widget_factory);
-            $project_dao       = new ProjectDashboardDao($widget_dao);
-            $project_retriever = new ProjectDashboardRetriever($project_dao);
-            $widget_retriever  = new DashboardWidgetRetriever($widget_dao);
-            $duplicator        = new ProjectDashboardDuplicator(
-                $project_dao,
-                $project_retriever,
-                $widget_dao,
-                $widget_retriever,
-                $widget_factory
-            );
-
-            $synchronized_project_membership_dao = new SynchronizedProjectMembershipDao();
-
-            $project_creator = new ProjectCreator(
-                ProjectManager::instance(),
-                ReferenceManager::instance(),
-                $user_manager,
-                $ugroup_duplicator,
-                $send_notifications,
-                $frs_permissions_creator,
-                new LicenseAgreementFactory(new LicenseAgreementDao()),
-                $duplicator,
-                new ServiceCreator(new \ServiceDao()),
-                new LabelDao(),
-                new DefaultProjectVisibilityRetriever(),
-                new SynchronizedProjectMembershipDuplicator($synchronized_project_membership_dao),
-                new \Rule_ProjectName(),
-                new \Rule_ProjectFullName(),
-                $force_activation
-            );
-
-            $xml_importer  = new ProjectXMLImporter(
-                $event_manager,
-                ProjectManager::instance(),
-                $user_manager,
-                $xml_validator,
-                new UGroupManager(),
-                $user_finder,
-                ServiceManager::instance(),
-                $broker_log,
-                $frs_permissions_creator,
-                new UserRemover(
-                    ProjectManager::instance(),
-                    $event_manager,
-                    new ArtifactTypeFactory(false),
-                    new UserRemoverDao(),
-                    $user_manager,
-                    new ProjectHistoryDao(),
-                    new UGroupManager()
-                ),
-                ProjectMemberAdderWithoutStatusCheckAndNotifications::build(),
-                $project_creator,
-                new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance()),
-                new ProjectDashboardXMLImporter(
-                    new ProjectDashboardSaver(
-                        new ProjectDashboardDao(
-                            $widget_dao
-                        )
-                    ),
-                    $widget_factory,
-                    $widget_dao,
-                    $broker_log,
-                    $event_manager
-                ),
-                $synchronized_project_membership_dao,
-                new XMLFileContentRetriever()
-            );
+            $xml_importer = ProjectXMLImporter::build($user_finder);
 
             if (empty($project_id)) {
-                $factory = new SystemEventProcessor_Factory(
+                $factory             = new SystemEventProcessor_Factory(
                     $broker_log,
                     \SystemEventManager::instance(),
                     $event_manager
