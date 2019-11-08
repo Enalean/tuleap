@@ -111,7 +111,7 @@ class LDAP
     function connect()
     {
         if (!$this->ds) {
-            foreach (explode('[,;]', $this->ldapParams['server']) as $ldap_server) {
+            foreach (preg_split('/[,;]/', $this->ldapParams['server']) as $ldap_server) {
                 $this->ds = ldap_connect($ldap_server);
                 if ($this->ds) {
                     // Force protocol to LDAPv3 (for AD & recent version of OpenLDAP)
