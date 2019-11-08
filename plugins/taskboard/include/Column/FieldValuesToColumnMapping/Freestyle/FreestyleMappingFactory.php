@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
 use Cardwall_Column;
-use Tracker;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\EmptyMappedValues;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValues;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesInterface;
+use Tuleap\Taskboard\TaskboardTracker;
 
 class FreestyleMappingFactory
 {
@@ -43,30 +43,29 @@ class FreestyleMappingFactory
         $this->form_element_factory = $form_element_factory;
     }
 
-    public function getMappedField(Tracker $milestone_tracker, Tracker $tracker): ?Tracker_FormElement_Field_Selectbox
+    public function getMappedField(TaskboardTracker $taskboard_tracker): ?Tracker_FormElement_Field_Selectbox
     {
-        $field_id = $this->dao->searchMappedField($milestone_tracker, $tracker);
+        $field_id = $this->dao->searchMappedField($taskboard_tracker);
         if ($field_id === null) {
             return null;
         }
-        $field = $this->form_element_factory->getUsedListFieldById($tracker, $field_id);
+        $field = $this->form_element_factory->getUsedListFieldById($taskboard_tracker->getTracker(), $field_id);
         if ($field instanceof \Tracker_FormElement_Field_Selectbox) {
             return $field;
         }
         return null;
     }
 
-    public function doesFreestyleMappingExist(Tracker $milestone_tracker, Tracker $tracker): bool
+    public function doesFreestyleMappingExist(TaskboardTracker $taskboard_tracker): bool
     {
-        return $this->dao->doesFreestyleMappingExist($milestone_tracker, $tracker);
+        return $this->dao->doesFreestyleMappingExist($taskboard_tracker);
     }
 
     public function getValuesMappedToColumn(
-        Tracker $milestone_tracker,
-        Tracker $tracker,
+        TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column
     ): MappedValuesInterface {
-        $rows            = $this->dao->searchMappedFieldValuesForColumn($milestone_tracker, $tracker, $column);
+        $rows = $this->dao->searchMappedFieldValuesForColumn($taskboard_tracker, $column);
         if (empty($rows)) {
             return new EmptyMappedValues();
         }

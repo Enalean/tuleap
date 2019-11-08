@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use Cardwall_FieldProviders_SemanticStatusFieldRetriever;
-use Tracker;
 use Tracker_FormElement_Field_Selectbox;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingFactory;
+use Tuleap\Taskboard\TaskboardTracker;
 
 class MappedFieldRetriever
 {
@@ -53,12 +53,12 @@ class MappedFieldRetriever
         );
     }
 
-    public function getField(Tracker $milestone_tracker, Tracker $tracker): ?Tracker_FormElement_Field_Selectbox
+    public function getField(TaskboardTracker $taskboard_tracker): ?Tracker_FormElement_Field_Selectbox
     {
-        $mapped_field = $this->freestyle_mapping_factory->getMappedField($milestone_tracker, $tracker);
+        $mapped_field = $this->freestyle_mapping_factory->getMappedField($taskboard_tracker);
         if ($mapped_field) {
             return $mapped_field;
         }
-        return $this->semantic_status_provider->getField($tracker);
+        return $this->semantic_status_provider->getField($taskboard_tracker->getTracker());
     }
 }

@@ -29,6 +29,7 @@ use Tracker;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingFactory;
+use Tuleap\Taskboard\TaskboardTracker;
 
 final class MappedValuesRetrieverTest extends TestCase
 {
@@ -53,33 +54,28 @@ final class MappedValuesRetrieverTest extends TestCase
 
     public function testGetValuesMappedToColumnReturnsFreestyleMappingWhenItExists(): void
     {
-        $milestone_tracker = M::mock(Tracker::class);
-        $tracker           = M::mock(Tracker::class);
+        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), M::mock(Tracker::class));
         $ongoing_column    = new \Cardwall_Column(7, 'On Going', 'clockwork-orange');
         $this->freestyle_mapping_factory->shouldReceive('doesFreestyleMappingExist')
-            ->with($milestone_tracker, $tracker)
+            ->with($taskboard_tracker)
             ->once()
             ->andReturnTrue();
         $this->freestyle_mapping_factory->shouldReceive('getValuesMappedToColumn')
-            ->with($milestone_tracker, $tracker, $ongoing_column)
+            ->with($taskboard_tracker, $ongoing_column)
             ->once()
             ->andReturn(new MappedValues([231, 856]));
 
-        $result = $this->mapped_values_retriever->getValuesMappedToColumn(
-            $milestone_tracker,
-            $tracker,
-            $ongoing_column
-        );
+        $result = $this->mapped_values_retriever->getValuesMappedToColumn($taskboard_tracker, $ongoing_column);
         $this->assertSame([231, 856], $result->getValueIds());
     }
 
     public function testGetValuesMappedToColumnReturnsEmptyWhenNoStatusSemantic(): void
     {
-        $milestone_tracker = M::mock(Tracker::class);
         $tracker           = M::mock(Tracker::class);
+        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), $tracker);
         $ongoing_column    = new \Cardwall_Column(7, 'On Going', 'clockwork-orange');
         $this->freestyle_mapping_factory->shouldReceive('doesFreestyleMappingExist')
-            ->with($milestone_tracker, $tracker)
+            ->with($taskboard_tracker)
             ->once()
             ->andReturnFalse();
         $this->status_retriever->shouldReceive('getField')
@@ -87,21 +83,17 @@ final class MappedValuesRetrieverTest extends TestCase
             ->once()
             ->andReturnNull();
 
-        $result = $this->mapped_values_retriever->getValuesMappedToColumn(
-            $milestone_tracker,
-            $tracker,
-            $ongoing_column
-        );
+        $result = $this->mapped_values_retriever->getValuesMappedToColumn($taskboard_tracker, $ongoing_column);
         $this->assertSame(0, count($result->getValueIds()));
     }
 
     public function testGetValuesMappedToColumnReturnsEmptyWhenStatusHasNoVisibleValues(): void
     {
-        $milestone_tracker = M::mock(Tracker::class);
         $tracker           = M::mock(Tracker::class);
+        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), $tracker);
         $ongoing_column    = new \Cardwall_Column(7, 'On Going', 'clockwork-orange');
         $this->freestyle_mapping_factory->shouldReceive('doesFreestyleMappingExist')
-            ->with($milestone_tracker, $tracker)
+            ->with($taskboard_tracker)
             ->once()
             ->andReturnFalse();
         $status_field = M::mock(Tracker_FormElement_Field_Selectbox::class);
@@ -113,21 +105,17 @@ final class MappedValuesRetrieverTest extends TestCase
             ->once()
             ->andReturn($status_field);
 
-        $result = $this->mapped_values_retriever->getValuesMappedToColumn(
-            $milestone_tracker,
-            $tracker,
-            $ongoing_column
-        );
+        $result = $this->mapped_values_retriever->getValuesMappedToColumn($taskboard_tracker, $ongoing_column);
         $this->assertSame(0, count($result->getValueIds()));
     }
 
     public function testGetValuesMappedToColumnReturnsTheStatusValueWithTheSameLabelAsTheGivenColumn(): void
     {
-        $milestone_tracker = M::mock(Tracker::class);
         $tracker           = M::mock(Tracker::class);
+        $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), $tracker);
         $ongoing_column    = new \Cardwall_Column(7, 'On Going', 'clockwork-orange');
         $this->freestyle_mapping_factory->shouldReceive('doesFreestyleMappingExist')
-            ->with($milestone_tracker, $tracker)
+            ->with($taskboard_tracker)
             ->once()
             ->andReturnFalse();
         $todo_list_value     = new Tracker_FormElement_Field_List_Bind_StaticValue(564, 'Todo', '', 1, false);
@@ -141,11 +129,7 @@ final class MappedValuesRetrieverTest extends TestCase
             ->once()
             ->andReturn($status_field);
 
-        $result = $this->mapped_values_retriever->getValuesMappedToColumn(
-            $milestone_tracker,
-            $tracker,
-            $ongoing_column
-        );
+        $result = $this->mapped_values_retriever->getValuesMappedToColumn($taskboard_tracker, $ongoing_column);
         $this->assertSame([756], $result->getValueIds());
     }
 }

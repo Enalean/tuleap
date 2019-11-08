@@ -23,31 +23,41 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
 use Cardwall_Column;
-use Tracker;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Taskboard\TaskboardTracker;
 
 class FreestyleMappingDao extends DataAccessObject
 {
-    public function searchMappedField(Tracker $milestone_tracker, Tracker $tracker): ?int
+    public function searchMappedField(TaskboardTracker $taskboard_tracker): ?int
     {
         $sql = "SELECT field_id
             FROM plugin_cardwall_on_top_column_mapping_field
             WHERE cardwall_tracker_id = ?
                   AND tracker_id = ?";
-        return $this->getDB()->cell($sql, $milestone_tracker->getId(), $tracker->getId()) ?: null;
+        return $this->getDB()->cell(
+            $sql,
+            $taskboard_tracker->getMilestoneTrackerId(),
+            $taskboard_tracker->getTrackerId()
+        ) ?: null;
     }
 
-    public function doesFreestyleMappingExist(Tracker $milestone_tracker, Tracker $tracker): bool
+    public function doesFreestyleMappingExist(TaskboardTracker $taskboard_tracker): bool
     {
         $sql = "SELECT 1
             FROM plugin_cardwall_on_top_column_mapping_field
             WHERE cardwall_tracker_id = ?
                 AND tracker_id = ?";
-        return $this->getDB()->exists($sql, $milestone_tracker->getId(), $tracker->getId());
+        return $this->getDB()->exists(
+            $sql,
+            $taskboard_tracker->getMilestoneTrackerId(),
+            $taskboard_tracker->getTrackerId()
+        );
     }
 
-    public function searchMappedFieldValuesForColumn(Tracker $milestone_tracker, Tracker $tracker, Cardwall_Column $column): array
-    {
+    public function searchMappedFieldValuesForColumn(
+        TaskboardTracker $taskboard_tracker,
+        Cardwall_Column $column
+    ): array {
         $sql = "SELECT mapped_value.value_id
             FROM plugin_cardwall_on_top_column_mapping_field AS mapping_field
                  INNER JOIN plugin_cardwall_on_top_column_mapping_field_value AS mapped_value
@@ -56,6 +66,11 @@ class FreestyleMappingDao extends DataAccessObject
             WHERE mapping_field.cardwall_tracker_id = ?
                   AND mapping_field.tracker_id = ?
                   AND mapped_value.column_id = ?";
-        return $this->getDB()->run($sql, $milestone_tracker->getId(), $tracker->getId(), $column->getId());
+        return $this->getDB()->run(
+            $sql,
+            $taskboard_tracker->getMilestoneTrackerId(),
+            $taskboard_tracker->getTrackerId(),
+            $column->getId()
+        );
     }
 }
