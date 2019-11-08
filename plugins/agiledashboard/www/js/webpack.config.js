@@ -72,8 +72,7 @@ const webpack_config_for_overview_and_vue = {
 
 const webpack_config_for_artifact_additional_action = {
     entry: {
-        "artifact-additional-action":
-            "./artifact-additional-action/src/artifact-additional-action.ts"
+        "artifact-additional-action": "./artifact-additional-action/src/index.ts"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(

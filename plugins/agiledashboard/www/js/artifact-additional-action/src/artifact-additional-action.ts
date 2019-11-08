@@ -21,8 +21,8 @@ import { patch } from "../../../../../../src/www/themes/common/tlp/src/js/fetch-
 import { initGettext } from "../../../../../../src/www/scripts/tuleap/gettext/gettext-init";
 import { addFeedback, clearAllFeedbacks } from "../../../../../../src/www/scripts/tuleap/feedback";
 
-document.addEventListener("DOMContentLoaded", () => {
-    const action_button = document.getElementById("artifact-explicit-backlog-action");
+export function initArtifactAdditionalAction(mount_point: Document): void {
+    const action_button = mount_point.getElementById("artifact-explicit-backlog-action");
     if (action_button === null) {
         return;
     }
@@ -37,9 +37,16 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     }
 
-    const language = document.body.dataset.userLocale;
+    const language = mount_point.body.dataset.userLocale;
     if (language === undefined) {
         throw new Error("Not able to find the user language.");
+    }
+
+    const action_button_title = action_button
+        .getElementsByClassName("additional-artifact-action-title")
+        .item(0);
+    if (action_button_title === null) {
+        throw new Error("Can not find the button title of the additional action");
     }
 
     action_button.addEventListener(
@@ -52,8 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     import(/* webpackChunkName: "artifact-additional-action-po-" */ `../po/${locale}.po`)
             );
 
+            clearAllFeedbacks();
             if (action === "add") {
-                clearAllFeedbacks();
                 try {
                     await patch(`/api/v1/projects/${encodeURIComponent(project_id)}/backlog`, {
                         headers: {
@@ -67,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     addFeedback(
                         "error",
                         gettext_provider.gettext(
-                            "An error occured while adding this artifact to top backlog."
+                            "An error occurred while adding this artifact to top backlog."
                         )
                     );
 
@@ -78,14 +85,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     "info",
                     gettext_provider.gettext("This artifact has been added to top backlog.")
                 );
-                const title = action_button.getElementsByClassName(
-                    "additional-artifact-action-title"
-                )[0];
-                title.textContent = gettext_provider.gettext("Remove from top backlog");
+                action_button_title.textContent = gettext_provider.gettext(
+                    "Remove from top backlog"
+                );
                 // eslint-disable-next-line require-atomic-updates
                 action = "remove";
             } else if (action === "remove") {
-                clearAllFeedbacks();
                 try {
                     await patch(`/api/v1/projects/${encodeURIComponent(project_id)}/backlog`, {
                         headers: {
@@ -99,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     addFeedback(
                         "error",
                         gettext_provider.gettext(
-                            "An error occured while removing this artifact from top backlog."
+                            "An error occurred while removing this artifact from top backlog."
                         )
                     );
 
@@ -109,13 +114,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     "info",
                     gettext_provider.gettext("This artifact has been removed from top backlog.")
                 );
-                const title = action_button.getElementsByClassName(
-                    "additional-artifact-action-title"
-                )[0];
-                title.textContent = gettext_provider.gettext("Add to top backlog");
+                action_button_title.textContent = gettext_provider.gettext("Add to top backlog");
                 // eslint-disable-next-line require-atomic-updates
                 action = "add";
             }
         }
     );
-});
+}
