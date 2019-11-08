@@ -99,6 +99,19 @@ class TaskboardCardTest extends RestBase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
+    /**
+     * @dataProvider getUserName
+     */
+    public function testOPTIONSId(string $user_name): void
+    {
+        $response = $this->getResponse(
+            $this->client->options('taskboard_cards/' . self::$user_story_6_id),
+            $user_name
+        );
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(['OPTIONS', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
     public function getUserName(): array
     {
         return [

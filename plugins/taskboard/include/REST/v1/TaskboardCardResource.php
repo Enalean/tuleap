@@ -35,6 +35,8 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
+use Tuleap\Taskboard\REST\v1\Card\CardPatcher;
+use Tuleap\Taskboard\REST\v1\Card\CardPatchRepresentation;
 use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
 use UserManager;
 
@@ -147,6 +149,53 @@ class TaskboardCardResource extends AuthenticatedResource
         Header::sendPaginationHeaders($limit, $offset, $sliced_children->getTotalSize(), self::MAX_LIMIT);
 
         return $collection;
+    }
+
+    /**
+     * @url OPTIONS {id}
+     */
+    public function optionsId(int $id): void
+    {
+        $this->sendIdAllowHeaders();
+    }
+
+    /**
+     * Patch card
+     *
+     * Update the content of a card
+     *
+     * <pre>
+     * /!\ This REST route is under construction and subject to changes /!\
+     * </pre>
+     *
+     * <br>
+     * Example:
+     * <pre>
+     * { "remaining_effort": 13 }
+     * </pre>
+     *
+     * @url PATCH {id}
+     * @access protected
+     *
+     * @param int                     $id      Id of the card
+     * @param CardPatchRepresentation $payload {@from body}
+     *
+     * @throws RestException 401
+     * @throws RestException 404
+     */
+    public function patchId(int $id, CardPatchRepresentation $payload): void
+    {
+        $this->sendIdAllowHeaders();
+        $this->checkAccess();
+
+        $user    = $this->user_manager->getCurrentUser();
+        $patcher = CardPatcher::build();
+        $patcher->patchCard($this->getArtifact($user, $id), $user, $payload);
+    }
+
+    private function sendIdAllowHeaders(): void
+    {
+        Header::allowOptionsPatch();
     }
 
     private function sendChildrenAllowHeaders(): void
