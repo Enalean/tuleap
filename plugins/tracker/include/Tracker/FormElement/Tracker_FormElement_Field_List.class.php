@@ -778,7 +778,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     protected function getSelectedValue($selected_values)
     {
         if ($this->getBind()) {
-            foreach ($this->getBind()->getAllValuesWithActiveUsersOnly() as $id => $value) {
+            foreach ($this->getBind()->getBindValues() as $id => $value) {
                 if (isset($selected_values[$id])) {
                     $from = $value;
                     return $from;
