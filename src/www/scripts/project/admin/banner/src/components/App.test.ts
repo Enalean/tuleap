@@ -59,7 +59,8 @@ describe("App", () => {
             }
         });
 
-        const reload_page = jest.spyOn(window.location, "reload").mockImplementation();
+        delete window.location;
+        window.location = ({ reload: jest.fn() } as unknown) as Location;
         const delete_banner = jest
             .spyOn(rest_querier, "deleteBannerForProject")
             .mockImplementation(() => {
@@ -73,7 +74,7 @@ describe("App", () => {
         await wrapper.vm.$nextTick();
 
         expect(delete_banner).toHaveBeenCalledTimes(1);
-        expect(reload_page).toHaveBeenCalledTimes(1);
+        expect(window.location.reload).toHaveBeenCalledTimes(1);
     });
 
     it("Should display an error if banner deletion fails", async () => {
@@ -108,7 +109,8 @@ describe("App", () => {
             }
         });
 
-        const reload_page = jest.spyOn(window.location, "reload").mockImplementation();
+        delete window.location;
+        window.location = ({ reload: jest.fn() } as unknown) as Location;
         const save_banner = jest
             .spyOn(rest_querier, "saveBannerForProject")
             .mockImplementation(() => {
@@ -123,7 +125,7 @@ describe("App", () => {
 
         expect(wrapper.find(BannerPresenter).props().loading).toBe(true);
         expect(save_banner).toHaveBeenCalledTimes(1);
-        expect(reload_page).toHaveBeenCalledTimes(1);
+        expect(window.location.reload).toHaveBeenCalledTimes(1);
     });
 
     it("Should display an error if banner update fails", async () => {

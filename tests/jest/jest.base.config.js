@@ -37,6 +37,7 @@ module.exports = {
             "../../src/www/themes/common/tlp/src/js/fetch-wrapper.js"
         )
     },
+    testEnvironment: "jest-environment-jsdom-fifteen",
     setupFiles: [path.resolve(__dirname, "./fail-unhandled-promise-rejection.js")],
     setupFilesAfterEnv: [path.resolve(__dirname, "./fail-console-error-warning.js")],
     globals: {
