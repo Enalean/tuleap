@@ -63,7 +63,6 @@ const fat_combined_files = [
         "src/www/scripts/clamp.js",
         "src/www/scripts/codendi/common.js",
         "src/www/scripts/tuleap/massmail_initialize_ckeditor.js",
-        "src/www/scripts/tuleap/is-at-top.js",
         "src/www/scripts/tuleap/get-style-class-property.js",
         "src/www/scripts/tuleap/listFilter.js",
         "src/www/scripts/codendi/feedback.js",
