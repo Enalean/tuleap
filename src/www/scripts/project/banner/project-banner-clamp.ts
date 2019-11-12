@@ -29,8 +29,15 @@ export function allowUnclampingProjectBannerMessage(mount_point: Document): void
 
     addHintMessageIsClampedIfNeeded(project_banner_message);
 
+    let ticking = false;
     const resize_event_listener = function(): void {
-        addHintMessageIsClampedIfNeeded(project_banner_message);
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                addHintMessageIsClampedIfNeeded(project_banner_message);
+                ticking = false;
+            });
+            ticking = true;
+        }
     };
     const fully_display_message_event_listener = function(): void {
         fullyDisplayProjectBannerMessage(
