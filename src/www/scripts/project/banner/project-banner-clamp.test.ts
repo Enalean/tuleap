@@ -78,6 +78,10 @@ describe("Project banner clamp", () => {
     });
 
     it("Checks if an hint needs to be displayed to the user that the message is clamped after a resize", () => {
+        jest.spyOn(window, "requestAnimationFrame").mockImplementation(cb => {
+            cb(1);
+            return 1;
+        });
         const local_document_with_banner = getLocalDocumentWithProjectBannerMessage();
         const banner_message = local_document_with_banner.message;
         allowUnclampingProjectBannerMessage(local_document_with_banner.document);
