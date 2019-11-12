@@ -100,6 +100,16 @@ class EditLicenseAgreementController implements DispatchableWithRequest, Dispatc
         if (! $license || ! $license->isViewable()) {
             throw new NotFoundException('Invalid license id');
         }
+        $can_be_deleted = false;
+        $used_by = [];
+        if ($license->isModifiable()) {
+            $can_be_deleted = $this->factory->canBeDeleted($project, $license);
+            if (! $can_be_deleted) {
+                foreach ($this->factory->getListOfPackagesForLicenseAgreement($license) as $package) {
+                    $used_by []= new UsedByPresenter($project, $package);
+                }
+            }
+        }
 
         $content_renderer = $this->renderer_factory->getRenderer(__DIR__ . '/templates');
 
@@ -107,7 +117,7 @@ class EditLicenseAgreementController implements DispatchableWithRequest, Dispatc
 
         $helper->renderHeader($project);
         if ($license->isModifiable()) {
-            $content_renderer->renderToPage('edit-license-agreement', new EditLicenseAgreementPresenter($project, $license, $this->csrf_token));
+            $content_renderer->renderToPage('edit-license-agreement', new EditLicenseAgreementPresenter($project, $license, $this->csrf_token, $can_be_deleted, ...$used_by));
         } else {
             $content_renderer->renderToPage('view-default-license-agreement', new ViewDefaultLicensePresenter($project));
         }

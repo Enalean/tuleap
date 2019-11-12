@@ -398,8 +398,10 @@ class RouteCollector
     {
         return new SaveLicenseAgreementController(
             ProjectManager::instance(),
-            \TemplateRendererFactory::build(),
-            FRSPermissionManager::build(),
+            new LicenseAgreementControllersHelper(
+                FRSPermissionManager::build(),
+                \TemplateRendererFactory::build(),
+            ),
             new LicenseAgreementFactory(
                 new LicenseAgreementDao()
             ),

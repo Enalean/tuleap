@@ -28,6 +28,7 @@ use Project;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;
 use Tuleap\FRS\LicenseAgreement\NewLicenseAgreement;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
@@ -43,10 +44,6 @@ class SaveLicenseAgreementController implements DispatchableWithRequest, Dispatc
     private const CSRF_TOKEN = 'frs_edit_license_agreement';
 
     /**
-     * @var FRSPermissionManager
-     */
-    private $permission_manager;
-    /**
      * @var LicenseAgreementFactory
      */
     private $factory;
@@ -55,16 +52,15 @@ class SaveLicenseAgreementController implements DispatchableWithRequest, Dispatc
      */
     private $csrf_token;
     /**
-     * @var \TemplateRendererFactory
+     * @var LicenseAgreementControllersHelper
      */
-    private $renderer_factory;
+    private $helper;
 
-    public function __construct(\ProjectManager $project_manager, \TemplateRendererFactory $renderer_factory, FRSPermissionManager $permission_manager, LicenseAgreementFactory $factory, \CSRFSynchronizerToken $csrf_token)
+    public function __construct(\ProjectManager $project_manager, LicenseAgreementControllersHelper $helper, LicenseAgreementFactory $factory, \CSRFSynchronizerToken $csrf_token)
     {
         $this->project_manager    = $project_manager;
-        $this->permission_manager = $permission_manager;
+        $this->helper             = $helper;
         $this->factory            = $factory;
-        $this->renderer_factory   = $renderer_factory;
         $this->csrf_token         = $csrf_token;
     }
 
@@ -74,31 +70,36 @@ class SaveLicenseAgreementController implements DispatchableWithRequest, Dispatc
 
         $this->csrf_token->check(ListLicenseAgreementsController::getUrl($project));
 
-        $helper = new LicenseAgreementControllersHelper($this->permission_manager, $this->renderer_factory);
-        $helper->assertCanAccess($project, $request->getCurrentUser());
+        $this->helper->assertCanAccess($project, $request->getCurrentUser());
 
-        if ($request->existAndNonEmpty('id')) {
-            $license = $this->factory->getLicenseAgreementById($project, (int) $request->get('id'));
-            if (! $license) {
+        if ($request->exist('delete')) {
+            if (! $request->existAndNonEmpty('id')) {
                 throw new NotFoundException('Invalid license id');
             }
-            if (! $license->isModifiable()) {
-                throw new ForbiddenException('You cannot modify this license');
-            }
 
-            $new_license = new LicenseAgreement(
-                $license->getId(),
-                (string) $request->getValidated('title', 'string', ''),
-                (string) $request->getValidated('content', 'text', ''),
-            );
-        } else {
-            $new_license = new NewLicenseAgreement(
-                (string) $request->getValidated('title', 'string', ''),
-                (string) $request->getValidated('content', 'text', ''),
-            );
+            $license = $this->getLicenseFromRequest($request, $project);
+            $this->factory->delete($project, $license);
+            $layout->addFeedback(\Feedback::INFO, sprintf(_('License "%s" was successfully deleted'), $license->getTitle()));
         }
 
-        $this->factory->save($project, $new_license);
+        if ($request->exist('save')) {
+            if ($request->existAndNonEmpty('id')) {
+                $license = $this->getLicenseFromRequest($request, $project);
+
+                $new_license = new LicenseAgreement(
+                    $license->getId(),
+                    (string) $request->getValidated('title', 'string', ''),
+                    (string) $request->getValidated('content', 'text', ''),
+                );
+            } else {
+                $new_license = new NewLicenseAgreement(
+                    (string) $request->getValidated('title', 'string', ''),
+                    (string) $request->getValidated('content', 'text', ''),
+                );
+            }
+
+            $this->factory->save($project, $new_license);
+        }
 
         $layout->redirect(ListLicenseAgreementsController::getUrl($project));
     }
@@ -111,5 +112,17 @@ class SaveLicenseAgreementController implements DispatchableWithRequest, Dispatc
     public static function getCSRFTokenSynchronizer()
     {
         return new \CSRFSynchronizerToken(self::CSRF_TOKEN);
+    }
+
+    private function getLicenseFromRequest(HTTPRequest $request, Project $project): LicenseAgreementInterface
+    {
+        $license = $this->factory->getLicenseAgreementById($project, (int) $request->get('id'));
+        if (! $license) {
+            throw new NotFoundException('Invalid license id');
+        }
+        if (! $license->isModifiable()) {
+            throw new ForbiddenException('You cannot modify this license');
+        }
+        return $license;
     }
 }

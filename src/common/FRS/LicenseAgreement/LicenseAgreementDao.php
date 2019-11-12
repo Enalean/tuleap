@@ -91,14 +91,17 @@ class LicenseAgreementDao extends DataAccessObject
 
     public function saveLicenseAgreementForPackage(\FRSPackage $package, int $license_agreement_id): void
     {
-        $this->getDB()->run(
-            <<<EOT
-            REPLACE INTO frs_package_download_agreement(agreement_id, package_id)
-            VALUES (?, ?)
-            EOT,
-            $license_agreement_id,
-            $package->getPackageID(),
-        );
+        $this->getDB()->tryFlatTransaction(function () use ($package, $license_agreement_id) {
+            $this->resetLicenseAgreementForPackage($package);
+            $this->getDB()->run(
+                <<<EOT
+                INSERT INTO frs_package_download_agreement(agreement_id, package_id)
+                VALUES (?, ?)
+                EOT,
+                $license_agreement_id,
+                $package->getPackageID(),
+            );
+        });
     }
 
     public function resetLicenseAgreementForPackage(\FRSPackage $package): void
@@ -148,5 +151,55 @@ class LicenseAgreementDao extends DataAccessObject
             $project->getID(),
             $license->getId()
         );
+    }
+
+    public function canBeDeleted(Project $project, LicenseAgreementInterface $license_agreement): bool
+    {
+        $result = $this->getDB()->single(
+            <<<EOT
+            SELECT 1
+            FROM frs_package_download_agreement
+            INNER JOIN frs_package fp ON frs_package_download_agreement.package_id = fp.package_id
+            WHERE fp.group_id = ?
+            AND agreement_id = ?
+            AND status_id IN (?, ?)
+            LIMIT 1
+            EOT,
+            [
+                $project->getID(),
+                $license_agreement->getId(),
+                \FRSPackage::STATUS_ACTIVE,
+                \FRSPackage::STATUS_HIDDEN
+            ]
+        );
+        return $result === false;
+    }
+
+    public function getListOfPackagesForLicenseAgreement(LicenseAgreementInterface $license_agreement): array
+    {
+        return $this->getDB()->run(
+            <<<EOT
+            SELECT fp.*
+            FROM frs_package_download_agreement
+            INNER JOIN frs_package fp ON frs_package_download_agreement.package_id = fp.package_id
+            WHERE agreement_id = ?
+            AND status_id IN (?, ?)
+            EOT,
+            $license_agreement->getId(),
+            \FRSPackage::STATUS_ACTIVE,
+            \FRSPackage::STATUS_HIDDEN
+        );
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function delete(LicenseAgreementInterface $license): void
+    {
+        $this->getDB()->tryFlatTransaction(function () use ($license) {
+            $this->getDB()->run('DELETE FROM frs_download_agreement_default WHERE agreement_id = ?', $license->getId());
+            $this->getDB()->run('DELETE FROM frs_package_download_agreement WHERE agreement_id = ?', $license->getId());
+            $this->getDB()->run('DELETE FROM frs_download_agreement WHERE id = ?', $license->getId());
+        });
     }
 }

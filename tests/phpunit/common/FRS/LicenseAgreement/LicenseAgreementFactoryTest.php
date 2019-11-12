@@ -168,4 +168,49 @@ class LicenseAgreementFactoryTest extends TestCase
         $license = $this->factory->getDefaultLicenseAgreementForProject($this->project);
         $this->assertEquals(new DefaultLicenseAgreement(), $license);
     }
+
+    public function testItDeletesACustomLicenseAgreement()
+    {
+        $license = new LicenseAgreement(5, 'title', 'content');
+
+        $this->dao->shouldReceive('delete')->with($license)->once();
+        $this->dao->shouldReceive('canBeDeleted')->with($this->project, $license)->andReturnTrue();
+
+        $this->factory->delete($this->project, $license);
+    }
+
+    public function testItThrowsAnExceptionWhenTryingToDeleteCustomLicenseThatIsUsed()
+    {
+        $license = new LicenseAgreement(5, 'title', 'content');
+
+        $this->dao->shouldReceive('canBeDeleted')->with($this->project, $license)->andReturnFalse();
+
+        $this->dao->shouldNotReceive('delete');
+
+        $this->expectException(InvalidLicenseAgreementException::class);
+
+        $this->factory->delete($this->project, $license);
+    }
+
+    public function testItThrowsAnExceptionWhenTryingToDeleteNoLicenseApproval()
+    {
+        $license = new NoLicenseToApprove();
+
+        $this->dao->shouldNotReceive('delete');
+
+        $this->expectException(InvalidLicenseAgreementException::class);
+
+        $this->factory->delete($this->project, $license);
+    }
+
+    public function testItThrowsAnExceptionWhenTryingToDeleteDefaultLicense()
+    {
+        $license = new DefaultLicenseAgreement();
+
+        $this->dao->shouldNotReceive('delete');
+
+        $this->expectException(InvalidLicenseAgreementException::class);
+
+        $this->factory->delete($this->project, $license);
+    }
 }
