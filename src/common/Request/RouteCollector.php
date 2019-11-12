@@ -360,8 +360,11 @@ class RouteCollector
     {
         return new ListLicenseAgreementsController(
             ProjectManager::instance(),
+            new LicenseAgreementControllersHelper(
+                FRSPermissionManager::build(),
+                \TemplateRendererFactory::build(),
+            ),
             \TemplateRendererFactory::build(),
-            FRSPermissionManager::build(),
             new LicenseAgreementFactory(
                 new LicenseAgreementDao()
             ),
@@ -373,8 +376,11 @@ class RouteCollector
     {
         return new AddLicenseAgreementController(
             ProjectManager::instance(),
+            new LicenseAgreementControllersHelper(
+                FRSPermissionManager::build(),
+                \TemplateRendererFactory::build(),
+            ),
             \TemplateRendererFactory::build(),
-            FRSPermissionManager::build(),
             SaveLicenseAgreementController::getCSRFTokenSynchronizer(),
             new IncludeAssets(__DIR__ . '/../../www/assets/', '/assets'),
         );
@@ -384,8 +390,11 @@ class RouteCollector
     {
         return new EditLicenseAgreementController(
             ProjectManager::instance(),
+            new LicenseAgreementControllersHelper(
+                FRSPermissionManager::build(),
+                \TemplateRendererFactory::build(),
+            ),
             \TemplateRendererFactory::build(),
-            FRSPermissionManager::build(),
             new LicenseAgreementFactory(
                 new LicenseAgreementDao()
             ),

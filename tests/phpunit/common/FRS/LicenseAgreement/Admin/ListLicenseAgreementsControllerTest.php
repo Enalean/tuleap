@@ -52,17 +52,9 @@ class ListLicenseAgreementsControllerTest extends TestCase
      */
     private $project;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ServiceFile
-     */
-    private $service_file;
-    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TemplateRendererFactory
      */
     private $renderer_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FRSPermissionManager
-     */
-    private $permissions_manager;
     /**
      * @var \HTTPRequest
      */
@@ -79,6 +71,10 @@ class ListLicenseAgreementsControllerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|BaseLayout
      */
     private $layout;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LicenseAgreementControllersHelper
+     */
+    private $helper;
 
     protected function setUp(): void
     {
@@ -89,22 +85,20 @@ class ListLicenseAgreementsControllerTest extends TestCase
         $this->request->setCurrentUser($this->current_user);
 
         $this->project_manager = Mockery::mock(ProjectManager::class);
-        $this->service_file = Mockery::mock(\ServiceFile::class, ['displayFRSHeader' => 'foo']);
         $this->project = Mockery::mock(\Project::class, ['isError' => false, 'getID' => '101']);
-        $this->project->shouldReceive('getFileService')->andReturn($this->service_file)->byDefault();
         $this->project_manager->shouldReceive('getProject')->with('101')->andReturns($this->project);
 
         $this->renderer_factory = Mockery::mock(TemplateRendererFactory::class);
 
-        $this->permissions_manager = Mockery::mock(FRSPermissionManager::class);
-        $this->permissions_manager->shouldReceive('isAdmin')->with($this->project, $this->current_user)->andReturnTrue()->byDefault();
+        $this->helper = Mockery::mock(LicenseAgreementControllersHelper::class);
+        $this->helper->shouldReceive('assertCanAccess')->with($this->project, $this->current_user);
 
         $this->factory = Mockery::mock(LicenseAgreementFactory::class);
 
         $this->controller = new ListLicenseAgreementsController(
             $this->project_manager,
+            $this->helper,
             $this->renderer_factory,
-            $this->permissions_manager,
             $this->factory,
             Mockery::mock(\CSRFSynchronizerToken::class),
         );
@@ -112,11 +106,7 @@ class ListLicenseAgreementsControllerTest extends TestCase
 
     public function testItRendersThePageHeader(): void
     {
-        $header_renderer = Mockery::mock(MustacheEngine::class);
-        $header_renderer->shouldReceive('renderToPage')->with('toolbar-presenter', Mockery::any())->once();
-        $this->renderer_factory->shouldReceive('getRenderer')->with(Mockery::on(static function (string $path) {
-            return realpath($path) === realpath(__DIR__ . '/../../../../../../src/templates/frs');
-        }))->andReturn($header_renderer);
+        $this->helper->shouldReceive('renderHeader')->with($this->project);
 
         $content_renderer = Mockery::mock(MustacheEngine::class);
         $content_renderer->shouldReceive('renderToPage')->with('list-license-agreements', Mockery::any())->once();
@@ -128,24 +118,6 @@ class ListLicenseAgreementsControllerTest extends TestCase
 
         $this->factory->shouldReceive('getDefaultLicenseAgreementForProject')->andReturns(new NoLicenseToApprove());
         $this->factory->shouldReceive('getProjectLicenseAgreements')->with($this->project)->andReturn([]);
-
-        $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
-    }
-
-    public function testItThrowsAndExceptionWhenServiceIsNotAvailable(): void
-    {
-        $this->project->shouldReceive('getFileService')->andReturnNull();
-
-        $this->expectException(NotFoundException::class);
-
-        $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
-    }
-
-    public function testItThrowsAnExceptionWhenUserIsNotFileAdministrator(): void
-    {
-        $this->permissions_manager->shouldReceive('isAdmin')->with($this->project, $this->current_user)->andReturnFalse();
-
-        $this->expectException(ForbiddenException::class);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
