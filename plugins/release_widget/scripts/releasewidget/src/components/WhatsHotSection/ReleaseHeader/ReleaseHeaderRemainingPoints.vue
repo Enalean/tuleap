@@ -25,6 +25,7 @@
             <i class="release-remaining-icon fa fa-flag-checkered"></i>
             <span class="release-remaining-value"
                   v-bind:class="{ 'release-remaining-value-disabled': disabled_points, 'release-remaining-value-success': are_all_effort_defined}"
+                  data-test="points-remaining-value"
             >
                 {{ formatPoints(releaseData.remaining_effort) }}
             </span>
@@ -38,6 +39,7 @@
             <div class="release-remaining-progress-value"
                  v-bind:class="{ 'release-remaining-progress-value-success': are_all_effort_defined, 'release-remaining-progress-value-disabled': disabled_points }"
                  v-bind:style="{ width: get_tooltip_effort_points }"
+                 data-test="points-progress-value"
             >
             </div>
         </div>
@@ -69,7 +71,7 @@ export default class ReleaseHeaderRemainingPoints extends Vue {
         return (
             this.releaseData.remaining_effort > 0 &&
             this.releaseData.initial_effort > 0 &&
-            this.releaseData.initial_effort > this.releaseData.remaining_effort
+            this.releaseData.initial_effort >= this.releaseData.remaining_effort
         );
     }
 
