@@ -21,8 +21,10 @@ Requires:	tuleap = @@TULEAP_VERSION@@-@@RELEASE@@%{?dist}
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/label
 %{__cp} -ar vendor db include site-content templates README.mkd VERSION www $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/label
+%{__cp} -ar assets $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets/label
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -30,3 +32,4 @@ Requires:	tuleap = @@TULEAP_VERSION@@-@@RELEASE@@%{?dist}
 %files
 %defattr(-,root,root,-)
 %{_datadir}/tuleap/plugins/label
+%{_datadir}/tuleap/src/www/assets/label

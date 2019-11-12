@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -134,8 +134,8 @@ class labelPlugin extends Plugin // phpcs:ignore
     {
         if ($this->isInProjectDashboard()) {
             $theme_include_assets = new IncludeAssets(
-                __DIR__ . '/../www/themes/BurningParrot/assets',
-                LABEL_BASE_URL . '/themes/BurningParrot/assets'
+                __DIR__ . '/../../../src/www/assets/label/themes',
+                '/assets/label/themes'
             );
 
             $variant = $params['variant'];

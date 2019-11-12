@@ -29,9 +29,9 @@
 
                     @each $color-name, $colors in $tlp-swatch-color-map {
                         &.select-item-label-color-#{$color-name} {
-                            color: #ffffff;
                             border-color: map-get($colors, 'primary');
                             background: map-get($colors, 'primary');
+                            color: #ffffff;
 
                             > .select2-selection__choice__remove {
                                 &::before {
