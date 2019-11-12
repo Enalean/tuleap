@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\FRS\LicenseAgreement;
 
 use ForgeConfig;
+use FRSPackage;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
@@ -50,7 +51,7 @@ class LicenseAgreementFactoryTest extends TestCase
     {
         $this->dao = \Mockery::mock(LicenseAgreementDao::class);
         $this->project = new \Project(['group_id' => '101']);
-        $this->package = new \FRSPackage(['package_id' => '470']);
+        $this->package = new FRSPackage(['package_id' => '470']);
         $this->factory = new LicenseAgreementFactory($this->dao);
     }
 
@@ -58,7 +59,7 @@ class LicenseAgreementFactoryTest extends TestCase
     {
         $this->expectException(InvalidLicenseAgreementException::class);
 
-        $this->factory->getLicenseAgreementForPackage(new \FRSPackage([]));
+        $this->factory->getLicenseAgreementForPackage(new FRSPackage([]));
     }
 
 
@@ -212,5 +213,126 @@ class LicenseAgreementFactoryTest extends TestCase
         $this->expectException(InvalidLicenseAgreementException::class);
 
         $this->factory->delete($this->project, $license);
+    }
+
+    public function testItDuplicatesLicenseAgreementsFromTemplateWithoutAgreements()
+    {
+        $template_project = new \Project(['group_id' => 150]);
+
+        $this->dao->shouldReceive('getProjectLicenseAgreements')->with($template_project)->andReturn([])->once();
+        $this->dao->shouldReceive('getDefaultLicenseIdForProject')->with($template_project)->andReturnFalse()->once();
+
+        $this->dao->shouldNotReceive('save');
+
+        $this->factory->duplicate(\Mockery::mock(\FRSPackageFactory::class), $this->project, $template_project, []);
+    }
+
+    public function testItDuplicatesLicenseAgreementsFromTemplateWithAgreementsAndDefault()
+    {
+        $template_project = new \Project(['group_id' => 150]);
+
+        $this->dao->shouldReceive('getProjectLicenseAgreements')->with($template_project)->andReturn(
+            [
+                ['id' => 5, 'title' => 'some title', 'content' => 'and content']
+            ]
+        );
+        $this->dao->shouldReceive('getDefaultLicenseIdForProject')->with($template_project)->andReturn(5)->once();
+
+        $this->dao->shouldReceive('create')
+            ->once()
+            ->with(
+                $this->project,
+                \Mockery::on(
+                    function (NewLicenseAgreement $agreement) {
+                        return $agreement->getTitle() === 'some title' &&
+                            $agreement->getContent() === 'and content';
+                    }
+                )
+            )
+            ->andReturn(12);
+
+        $this->dao->shouldReceive('setProjectDefault')
+            ->once()
+            ->with(
+                $this->project,
+                \Mockery::on(
+                    function (LicenseAgreement $agreement) {
+                        return $agreement->getId() === 12;
+                    }
+                )
+            );
+
+        $this->factory->duplicate(\Mockery::mock(\FRSPackageFactory::class), $this->project, $template_project, []);
+    }
+
+
+    public function testItDuplicatesLicenseAgreementsFromTemplateWithAgreementsAndDefaultTemplateSiteLicenseAgreement()
+    {
+        $template_project = new \Project(['group_id' => 150]);
+
+        $this->dao->shouldReceive('getProjectLicenseAgreements')->with($template_project)->andReturn(
+            [
+                ['id' => 5, 'title' => 'some title', 'content' => 'and content']
+            ]
+        );
+        $this->dao->shouldReceive('getDefaultLicenseIdForProject')->with($template_project)->andReturn(NoLicenseToApprove::ID)->once();
+
+        $this->dao->shouldReceive('create')
+            ->once()
+            ->with(
+                $this->project,
+                \Mockery::on(
+                    function (NewLicenseAgreement $agreement) {
+                        return $agreement->getTitle() === 'some title' &&
+                            $agreement->getContent() === 'and content';
+                    }
+                )
+            )
+            ->andReturn(12);
+
+        $this->dao->shouldReceive('setProjectDefault')
+            ->once()
+            ->with(
+                $this->project,
+                \Mockery::on(
+                    function (LicenseAgreementInterface $agreement) {
+                        return $agreement instanceof NoLicenseToApprove;
+                    }
+                )
+            );
+
+        $this->factory->duplicate(\Mockery::mock(\FRSPackageFactory::class), $this->project, $template_project, []);
+    }
+
+    public function testItDuplicatesTheLicensesAssociatedToPackages(): void
+    {
+        $template_project = new \Project(['group_id' => 150]);
+
+        $this->dao->shouldReceive('getProjectLicenseAgreements')->with($template_project)->andReturn(
+            [
+                ['id' => 5, 'title' => 'some title', 'content' => 'and content']
+            ]
+        );
+        $this->dao->shouldReceive('getDefaultLicenseIdForProject')->with($template_project)->andReturn(5)->once();
+        $this->dao->shouldReceive('create')->andReturn(12);
+        $this->dao->shouldReceive('setProjectDefault');
+
+        $frs_package_factory = \Mockery::mock(\FRSPackageFactory::class);
+        $packages = [];
+        foreach ([350, 470, 1001, 1002] as $package_id) {
+            $packages[$package_id] = new FRSPackage(['package_id' => (string) $package_id, 'approve_license' => '1']);
+            $frs_package_factory->shouldReceive('getFRSPackageFromDb')->with($package_id)->andReturn($packages[$package_id]);
+        }
+
+        $this->dao->shouldReceive('getLicenseAgreementForPackage')->with($packages[350])->andReturn(
+            ['id' => 5, 'title' => 'some title', 'content' => 'and content']
+        );
+        $this->dao->shouldReceive('getLicenseAgreementForPackage')->with($packages[470])->andReturnNull();
+
+        $this->dao->shouldReceive('isLicenseAgreementValidForProject')->with($this->project, 12)->andReturn(true);
+        $this->dao->shouldReceive('saveLicenseAgreementForPackage')->with($packages[1001], 12)->once();
+        $this->dao->shouldReceive('resetLicenseAgreementForPackage')->with($packages[1002])->once();
+
+        $this->factory->duplicate($frs_package_factory, $this->project, $template_project, [ 350 => 1001, 470 => 1002]);
     }
 }

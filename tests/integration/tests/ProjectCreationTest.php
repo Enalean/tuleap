@@ -39,6 +39,8 @@ use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\DB\DBFactory;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
@@ -130,6 +132,7 @@ class ProjectCreationTest extends TestCase
                 new UGroupDao(),
                 new ProjectHistoryDao()
             ),
+            new LicenseAgreementFactory(new LicenseAgreementDao()),
             $duplicator,
             new ServiceCreator(new ServiceDao()),
             new LabelDao(),

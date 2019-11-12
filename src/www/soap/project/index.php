@@ -26,6 +26,8 @@ use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
@@ -99,6 +101,7 @@ if ($request->exist('wsdl')) {
             $ugroup_dao,
             new ProjectHistoryDao()
         ),
+        new LicenseAgreementFactory(new LicenseAgreementDao()),
         $duplicator,
         new ServiceCreator(new ServiceDao()),
         new LabelDao(),

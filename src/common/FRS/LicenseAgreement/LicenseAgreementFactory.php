@@ -123,13 +123,16 @@ class LicenseAgreementFactory
         return null;
     }
 
-    public function save(Project $project, LicenseAgreementInterface $license): void
+    public function save(Project $project, LicenseAgreementInterface $license): LicenseAgreementInterface
     {
         if ($license instanceof NewLicenseAgreement) {
-            $this->dao->create($project, $license);
-        } elseif ($license instanceof LicenseAgreement) {
+            $id = $this->dao->create($project, $license);
+            return new LicenseAgreement($id, $license->getTitle(), $license->getContent());
+        }
+        if ($license instanceof LicenseAgreement) {
             $this->dao->save($license);
         }
+        return $license;
     }
 
     public function setProjectDefault(Project $project, LicenseAgreementInterface $license): void
@@ -166,5 +169,66 @@ class LicenseAgreementFactory
             throw new InvalidLicenseAgreementException('Cannot delete a license agreement that is still used');
         }
         $this->dao->delete($license);
+    }
+
+    public function duplicate(\FRSPackageFactory $package_factory, Project $project, Project $template_project, array $packages_mapping)
+    {
+        $agreement_mapping = $this->duplicateLicenseAgreements($project, $template_project);
+
+        $this->duplicateDefaultLicense($project, $template_project, $agreement_mapping);
+
+        foreach ($packages_mapping as $template_package_id => $target_package_id) {
+            $template_package = $package_factory->getFRSPackageFromDb($template_package_id);
+            if (! $template_package) {
+                continue;
+            }
+            $target_package   = $package_factory->getFRSPackageFromDb($target_package_id);
+            if (! $target_package) {
+                continue;
+            }
+            $template_license = $this->getLicenseAgreementForPackage($template_package);
+            $target_license   = $this->getMappedLicense($project, $template_license->getId(), $agreement_mapping);
+            if (! $target_license) {
+                continue;
+            }
+            $this->updateLicenseAgreementForPackage($project, $target_package, $target_license->getId());
+        }
+    }
+
+    private function duplicateLicenseAgreements(Project $project, Project $template_project): array
+    {
+        $agreement_mapping = [];
+        foreach ($this->getProjectLicenseAgreements($template_project) as $template_agreement) {
+            $new_agreement = $this->save(
+                $project,
+                new NewLicenseAgreement($template_agreement->getTitle(), $template_agreement->getContent())
+            );
+            $agreement_mapping[$template_agreement->getId()] = $new_agreement;
+        }
+        return $agreement_mapping;
+    }
+
+    private function duplicateDefaultLicense(Project $project, Project $template_project, array $agreement_mapping): void
+    {
+        $default_agreement_template_id = $this->dao->getDefaultLicenseIdForProject($template_project);
+        if ($default_agreement_template_id) {
+            $license = $this->getMappedLicense($project, $default_agreement_template_id, $agreement_mapping);
+            if ($license) {
+                $this->setProjectDefault($project, $license);
+            }
+        }
+    }
+
+    private function getMappedLicense(Project $target_project, int $template_agreement_id, array $agreement_mapping): ?LicenseAgreementInterface
+    {
+        if ($template_agreement_id === NoLicenseToApprove::ID || $template_agreement_id === DefaultLicenseAgreement::ID) {
+            $license = $this->getLicenseAgreementById($target_project, $template_agreement_id);
+            if ($license) {
+                return $license;
+            }
+        } elseif ($agreement_mapping[$template_agreement_id]) {
+            return $agreement_mapping[$template_agreement_id];
+        }
+        return null;
     }
 }

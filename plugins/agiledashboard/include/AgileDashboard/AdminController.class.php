@@ -70,6 +70,8 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
@@ -323,6 +325,7 @@ class AdminController extends BaseController
                 $ugroup_duplicator,
                 $send_notifications,
                 $frs_permissions_creator,
+                new LicenseAgreementFactory(new LicenseAgreementDao()),
                 $duplicator,
                 new ServiceCreator(new \ServiceDao()),
                 new LabelDao(),

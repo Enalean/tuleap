@@ -25,6 +25,8 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
@@ -193,6 +195,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
                 new UGroupDao(),
                 new ProjectHistoryDao()
             ),
+            new LicenseAgreementFactory(new LicenseAgreementDao()),
             $duplicator,
             new ServiceCreator(new ServiceDao()),
             new LabelDao(),

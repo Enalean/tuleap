@@ -41,6 +41,7 @@ use SystemEventManager;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
@@ -95,6 +96,7 @@ final class ProjectCreatorTest extends TestCase
                 Mockery::mock(UgroupDuplicator::class),
                 false,
                 Mockery::mock(FRSPermissionCreator::class),
+                Mockery::mock(LicenseAgreementFactory::class),
                 Mockery::mock(ProjectDashboardDuplicator::class),
                 Mockery::mock(ServiceCreator::class),
                 Mockery::mock(LabelDao::class),
