@@ -289,7 +289,7 @@ document.observe("dom:loaded", function() {
                         $("git_admin_config_edit_area").show();
                         $("git_admin_config_form").show();
                         $("git_admin_config_template_name").show();
-                        $("git_admin_config_template_name").innerHTML = edit_link.readAttribute(
+                        $("git_admin_config_template_name").textContent = edit_link.readAttribute(
                             "data-template-name"
                         );
                         $("git_admin_template_id").value = edit_link.readAttribute(
@@ -331,7 +331,7 @@ document.observe("dom:loaded", function() {
                         $("git_admin_config_edit_area").show();
                         $("git_admin_config_form").show();
                         $("git_admin_config_template_name").show();
-                        $("git_admin_config_template_name").innerHTML = view_link.readAttribute(
+                        $("git_admin_config_template_name").textContent = view_link.readAttribute(
                             "data-template-name"
                         );
                     }
@@ -344,7 +344,7 @@ document.observe("dom:loaded", function() {
         $("git_admin_config_data").value = "";
         $("git_admin_file_name").value = "";
         $("git_admin_template_id").value = "";
-        $("git_admin_config_template_name").innerHTML = "";
+        $("git_admin_config_template_name").textContent = "";
         $("git_admin_config_data_label").show();
         $("git_admin_save_button").show();
         $("git_admin_config_delete").show();
