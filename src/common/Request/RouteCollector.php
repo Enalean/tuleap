@@ -603,6 +603,7 @@ class RouteCollector
     {
         return new ProjectRegistrationController(
             \TemplateRendererFactory::build(),
+            new IncludeAssets(__DIR__ . '/../../www/assets/', '/assets'),
             new ProjectRegistrationUserPermissionChecker(
                 ProjectManager::instance()
             )

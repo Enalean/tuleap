@@ -76,6 +76,10 @@
         "project-admin-banner": {
             "src": "src/www/scripts/project/admin/banner/src",
             "po": "src/www/scripts/project/admin/banner/po"
+        },
+        "project-registration": {
+            "src": "src/www/scripts/project/registration/src",
+            "po": "src/www/scripts/project/registration/po"
         }
     }
 }
