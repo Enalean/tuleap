@@ -31,6 +31,7 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 use System_Command;
+use Tuleap\GlobalSVNPollution;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
 use Tuleap\SVN\Dao;
 use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
@@ -40,7 +41,7 @@ require_once __DIR__ .'/../../bootstrap.php';
 
 class RepositoryManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, GlobalSVNPollution;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
      */
@@ -64,22 +65,9 @@ class RepositoryManagerTest extends TestCase
      */
     private $manager;
 
-    /**
-     * @var bool
-     */
-    private $globals_svnaccess_set_initially;
-
-    /**
-     * @var bool
-     */
-    private $globals_svngroups_set_initially;
-
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->globals_svnaccess_set_initially = isset($GLOBALS['SVNACCESS']);
-        $this->globals_svngroups_set_initially = isset($GLOBALS['SVNGROUPS']);
 
         $this->dao                   = Mockery::mock(Dao::class);
         $this->project_manager       = Mockery::mock(ProjectManager::class);
@@ -105,17 +93,6 @@ class RepositoryManagerTest extends TestCase
         $this->project = Mockery::mock(\Project::class);
         $this->request = Mockery::mock(HTTPRequest::class);
     }
-
-    protected function tearDown(): void
-    {
-        if (! $this->globals_svnaccess_set_initially) {
-            unset($GLOBALS['SVNACCESS']);
-        }
-        if (! $this->globals_svngroups_set_initially) {
-            unset($GLOBALS['SVNGROUPS']);
-        }
-    }
-
 
     public function testItReturnsRepositoryFromAPublicPath(): void
     {
