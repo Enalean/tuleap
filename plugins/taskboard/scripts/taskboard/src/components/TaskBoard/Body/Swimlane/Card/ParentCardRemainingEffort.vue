@@ -19,10 +19,20 @@
 -->
 
 <template>
-    <span v-if="has_remaining_effort" class="taskboard-card-remaining-effort" v-bind:class="additional_classes">
-        {{ card.remaining_effort.value }}
+    <span v-if="has_remaining_effort"
+          class="taskboard-card-remaining-effort"
+          v-bind:class="additional_classes"
+          v-on:click="editRemainingEffort"
+          v-bind:tabindex="tabindex"
+          v-bind:role="role"
+          v-bind:aria-label="$gettext('Remaining effort')"
+          v-bind:title="$gettext('Remaining effort')"
+    >
+        <edit-remaining-effort v-if="is_in_edit_mode"
+                               v-bind:card="card"/>
+        <template v-else>{{ card.remaining_effort.value }}</template>
         <i class="fa fa-long-arrow-right"></i>
-        <i class="fa fa-flag-checkered"></i>
+        <i class="fa" v-bind:class="icon"></i>
     </span>
 </template>
 
@@ -30,8 +40,10 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Card } from "../../../../../type";
-
-@Component
+import EditRemainingEffort from "./RemainingEffort/EditRemainingEffort.vue";
+@Component({
+    components: { EditRemainingEffort }
+})
 export default class ParentCardRemainingEffort extends Vue {
     @Prop({ required: true })
     readonly card!: Card;
@@ -41,7 +53,58 @@ export default class ParentCardRemainingEffort extends Vue {
     }
 
     get additional_classes(): string {
-        return `tlp-badge-${this.card.color} taskboard-card-remaining-effort-${this.card.color}`;
+        const classes = [
+            `tlp-badge-${this.card.color}`,
+            `taskboard-card-remaining-effort-${this.card.color}`
+        ];
+
+        if (this.can_update_remaining_effort) {
+            classes.push("taskboard-card-remaining-effort-editable");
+        }
+
+        if (this.is_in_edit_mode) {
+            classes.push("taskboard-card-remaining-effort-edit-mode");
+        }
+
+        return classes.join(" ");
+    }
+
+    get can_update_remaining_effort(): boolean {
+        if (!this.card.remaining_effort) {
+            return false;
+        }
+
+        return this.card.remaining_effort.can_update;
+    }
+
+    get icon(): string {
+        if (this.card.remaining_effort && this.card.remaining_effort.is_being_saved) {
+            return "fa-circle-o-notch fa-spin";
+        }
+
+        return "fa-flag-checkered";
+    }
+
+    get is_in_edit_mode(): boolean {
+        if (!this.card.remaining_effort) {
+            return false;
+        }
+
+        return this.card.remaining_effort.is_in_edit_mode;
+    }
+
+    get role(): string | undefined {
+        return this.can_update_remaining_effort ? "button" : undefined;
+    }
+
+    get tabindex(): number {
+        return this.can_update_remaining_effort ? 0 : -1;
+    }
+
+    editRemainingEffort(): void {
+        if (this.can_update_remaining_effort && this.card.remaining_effort) {
+            this.card.remaining_effort.is_in_edit_mode = true;
+        }
     }
 }
 </script>
