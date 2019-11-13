@@ -67,6 +67,16 @@ class WebDAVUtils
         return self::$instance;
     }
 
+    public static function setInstance(WebDAVUtils $instance)
+    {
+        self::$instance = $instance;
+    }
+
+    public static function clearInstance()
+    {
+        self::$instance = null;
+    }
+
    /**
      * Replaces '/', '%' and '|' by their respective ASCII code
      *

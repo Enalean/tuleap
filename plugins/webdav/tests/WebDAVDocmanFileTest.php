@@ -160,7 +160,7 @@ class WebDAVDocmanFileTest extends TuleapTestCase
 
     function testSetNameEmbeddedFile()
     {
-        $webDAVDocmanFile = new WebDAVDocmanDocumentTestVersion();
+        $webDAVDocmanFile = new WebDAVDocmanFileTestVersion();
 
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
@@ -170,7 +170,7 @@ class WebDAVDocmanFileTest extends TuleapTestCase
         $project = new MockProject();
         $webDAVDocmanFile->setReturnValue('getProject', $project);
 
-        $item = new MockDocman_Item();
+        $item = new Docman_EmbeddedFile();
         $webDAVDocmanFile->setReturnValue('getItem', $item);
 
         $webDAVDocmanFile->setName('newName');
