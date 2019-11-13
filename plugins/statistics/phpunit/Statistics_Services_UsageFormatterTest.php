@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,21 +16,36 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-require_once __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/../../../src/www/include/user.php';
+declare(strict_types=1);
 
-class Statistics_Services_UsageFormatterTest extends TuleapTestCase
+namespace Tuleap\Statistics;
+
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Statistics_Formatter;
+use Statistics_Services_UsageFormatter;
+
+//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Statistics_Services_UsageFormatterTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
     /** @var Statistics_Services_UsageFormatter */
     private $usage_formatter;
 
-    public function setUp()
+    /**
+     * @var array
+     */
+    private $first_input_datas;
+
+    protected function setUp(): void
     {
         parent::setUp();
-        $stats_formatter        = mock('Statistics_Formatter');
+        $stats_formatter        = Mockery::mock(Statistics_Formatter::class);
         $this->usage_formatter  = new Statistics_Services_UsageFormatter($stats_formatter);
 
         $this->first_input_datas = array(
@@ -49,7 +64,7 @@ class Statistics_Services_UsageFormatterTest extends TuleapTestCase
         );
     }
 
-    public function itBuildsData()
+    public function testItBuildsData(): void
     {
         $expected = array(
             1 => array(
@@ -64,10 +79,10 @@ class Statistics_Services_UsageFormatterTest extends TuleapTestCase
         );
 
         $datas = $this->usage_formatter->buildDatas($this->first_input_datas, "title");
-        $this->assertEqual($datas, $expected);
+        $this->assertEquals($datas, $expected);
     }
 
-    public function itOnlyAddTitlesWhithEmptyData()
+    public function testItOnlyAddTitlesWhithEmptyData(): void
     {
         $input_datas = array(
             array(
@@ -94,6 +109,6 @@ class Statistics_Services_UsageFormatterTest extends TuleapTestCase
         $this->usage_formatter->buildDatas($this->first_input_datas, "title");
         $datas = $this->usage_formatter->buildDatas($input_datas, "descr");
 
-        $this->assertEqual($datas, $expected);
+        $this->assertEquals($datas, $expected);
     }
 }
