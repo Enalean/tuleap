@@ -8,8 +8,7 @@
   "dependencies": {
     "javascript-time-ago": "^1.0.31",
     "node-gettext": "^2.0.0",
-    "prism-languages": "^0.4.0",
-    "prismjs": "^1.15.0",
+    "prismjs": "^1.17.1",
     "sprintf-js": "^1.1.1",
     "vue": "^2.6.10",
     "vue-gettext": "^2.1.5",
