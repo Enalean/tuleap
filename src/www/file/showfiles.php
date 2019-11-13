@@ -515,13 +515,15 @@ function toggle_image(image_id) {
 }
 
 (function($) {
-    $('.frs-license-agreement-modal-link').click(function () {
+    $('.frs-license-agreement-modal-link').click(function (event) {
+        event.preventDefault();
         var file_id = $(this).data('file-id');
         var agreement_id = $(this).data('agreement-id');
         $('#frs-license-agreement-accept_'+agreement_id).data('download-file-id', file_id);
         $('#frs-license-agreement-modal_'+agreement_id).modal('show');
     });
-    $('.frs-license-agreement-accept').click(function () {
+    $('.frs-license-agreement-accept').click(function (event) {
+        event.preventDefault();
         var file_id = $(this).data('download-file-id');
         var agreement_id = $(this).data('agreement-id');
         $('#frs-license-agreement-modal_'+agreement_id).modal('hide');
