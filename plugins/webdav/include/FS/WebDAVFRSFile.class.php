@@ -261,14 +261,14 @@ class WebDAVFRSFile extends Sabre_DAV_File
     /**
      * Checks whether the user can download the file or not
      *
-     * @param int $user
+     * @param PFUser $user
      *
      * @return bool
      */
-    function userCanDownload($user)
+    function userCanDownload(PFUser $user)
     {
 
-        return $this->getFile()->userCanDownload($user->getId());
+        return $this->getFile()->userCanDownload($user);
     }
 
     /**
