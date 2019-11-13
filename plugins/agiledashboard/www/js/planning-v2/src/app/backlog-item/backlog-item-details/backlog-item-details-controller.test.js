@@ -27,15 +27,19 @@ describe("BacklogItemDetailsController -", function() {
             $scope = $rootScope.$new();
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
-            spyOn(BacklogItemCollectionService, "refreshBacklogItem");
+            jest.spyOn(BacklogItemCollectionService, "refreshBacklogItem").mockImplementation(
+                () => {}
+            );
 
             BacklogItemService = _BacklogItemService_;
-            spyOn(BacklogItemService, "getBacklogItem");
-            spyOn(BacklogItemService, "getBacklogItemChildren");
-            spyOn(BacklogItemService, "removeAddBacklogItemChildren");
+            jest.spyOn(BacklogItemService, "getBacklogItem").mockImplementation(() => {});
+            jest.spyOn(BacklogItemService, "getBacklogItemChildren").mockImplementation(() => {});
+            jest.spyOn(BacklogItemService, "removeAddBacklogItemChildren").mockImplementation(
+                () => {}
+            );
 
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
-            spyOn(NewTuleapArtifactModalService, "showCreation");
+            jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(() => {});
 
             BacklogItemDetailsController = $controller(BaseBacklogItemDetailsController, {
                 BacklogItemCollectionService: BacklogItemCollectionService,
@@ -48,7 +52,9 @@ describe("BacklogItemDetailsController -", function() {
     describe("showAddChildModal() -", () => {
         let event, item_type;
         beforeEach(() => {
-            event = jasmine.createSpyObj("Click event", ["preventDefault"]);
+            event = {
+                preventDefault: jest.fn()
+            };
             item_type = { id: 7 };
             BacklogItemDetailsController.backlog_item = {
                 id: 53,
@@ -69,14 +75,14 @@ describe("BacklogItemDetailsController -", function() {
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
                 7,
                 BacklogItemDetailsController.backlog_item.id,
-                jasmine.any(Function)
+                expect.any(Function)
             );
         });
 
         describe("callback -", () => {
             let artifact;
             beforeEach(() => {
-                NewTuleapArtifactModalService.showCreation.and.callFake((a, b, callback) =>
+                NewTuleapArtifactModalService.showCreation.mockImplementation((a, b, callback) =>
                     callback(207)
                 );
                 artifact = {
@@ -87,8 +93,8 @@ describe("BacklogItemDetailsController -", function() {
             });
 
             it("When the artifact modal calls its callback, then the artifact will be appended to the current backlog item's children using REST, it will be retrieved from the server, added to the items collection and appended to the current backlog item's children array", () => {
-                BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
-                BacklogItemService.removeAddBacklogItemChildren.and.returnValue($q.when());
+                BacklogItemService.getBacklogItem.mockReturnValue($q.when(artifact));
+                BacklogItemService.removeAddBacklogItemChildren.mockReturnValue($q.when());
 
                 BacklogItemDetailsController.showAddChildModal(event, item_type);
                 $scope.$apply();
@@ -114,8 +120,8 @@ describe("BacklogItemDetailsController -", function() {
                     data: []
                 };
                 BacklogItemDetailsController.backlog_item.has_children = false;
-                BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
-                BacklogItemService.removeAddBacklogItemChildren.and.returnValue($q.when());
+                BacklogItemService.getBacklogItem.mockReturnValue($q.when(artifact));
+                BacklogItemService.removeAddBacklogItemChildren.mockReturnValue($q.when());
 
                 BacklogItemDetailsController.showAddChildModal(event, item_type);
                 $scope.$apply();

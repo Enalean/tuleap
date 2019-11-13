@@ -23,7 +23,7 @@ import angular from "angular";
 import ngAnimate from "angular-animate";
 import ngSanitize from "angular-sanitize";
 import dragular from "dragular";
-import angular_artifact_modal_module from "angular-artifact-modal";
+import angular_artifact_modal_module from "../../../../../../tracker/www/scripts/angular-artifact-modal/index.js";
 
 import "angular-moment";
 import "moment/locale/fr.js";
@@ -31,7 +31,7 @@ import "angular-gettext";
 import "restangular";
 import translations from "../../po/fr.po";
 
-import card_fields from "card-fields/index.js";
+import card_fields from "../../../card-fields/index.js";
 
 import MainController from "./main-controller.js";
 import PlanningConfig from "./app-config.js";

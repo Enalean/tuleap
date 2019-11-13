@@ -1,23 +1,26 @@
 import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
+import { createAngularPromiseWrapper } from "../../../../../../../../tests/jest/angular-promise-wrapper.js";
 
-describe("MilestoneService", function() {
-    var mockBackend, MilestoneService, BacklogItemFactory;
+describe("MilestoneService", () => {
+    let mockBackend, wrapPromise, MilestoneService, BacklogItemFactory;
 
-    beforeEach(function() {
-        BacklogItemFactory = jasmine.createSpyObj("BacklogItemFactory", ["augment"]);
+    beforeEach(() => {
+        BacklogItemFactory = { augment: jest.fn() };
 
         angular.mock.module(planning_module, function($provide) {
             $provide.value("BacklogItemFactory", BacklogItemFactory);
         });
 
-        angular.mock.inject(function(_MilestoneService_, $httpBackend) {
+        let $rootScope;
+        angular.mock.inject(function(_$rootScope_, _MilestoneService_, $httpBackend) {
+            $rootScope = _$rootScope_;
             MilestoneService = _MilestoneService_;
             mockBackend = $httpBackend;
         });
 
-        installPromiseMatchers();
+        wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
     afterEach(function() {
@@ -25,8 +28,11 @@ describe("MilestoneService", function() {
         mockBackend.verifyNoOutstandingRequest();
     });
 
-    describe("getOpenMilestones() -", function() {
-        it("Given a project id, a limit of 50 items and an offset of 0, when I get the project's open milestones, then a promise will be resolved with an object containing the milestones and the X-PAGINATION-SIZE header as the total number of items", function() {
+    describe("getOpenMilestones()", () => {
+        it(`Given a project id, a limit of 50 items and an offset of 0,
+            when I get the project's open milestones,
+            then a promise will be resolved with an object containing the milestones
+            and the X-PAGINATION-SIZE header as the total number of items`, async () => {
             mockBackend
                 .expectGET(
                     "/api/v1/projects/12/milestones?fields=slim&limit=50&offset=0&order=desc&query=%7B%22status%22:%22open%22%7D"
@@ -72,10 +78,10 @@ describe("MilestoneService", function() {
             var promise = MilestoneService.getOpenMilestones(12, 50, 0);
             mockBackend.flush();
 
-            expect(promise).toBeResolved();
+            await wrapPromise(promise);
             var value = promise.$$state.value;
-            expect(value.results[0]).toEqual(jasmine.objectContaining({ id: 911 }));
-            expect(value.results[1]).toEqual(jasmine.objectContaining({ id: 348 }));
+            expect(value.results[0]).toEqual(expect.objectContaining({ id: 911 }));
+            expect(value.results[1]).toEqual(expect.objectContaining({ id: 348 }));
             expect(value.total).toEqual("2");
         });
     });

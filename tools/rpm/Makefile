@@ -135,7 +135,6 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo
 				-prune -o -print \
 			&& \
 			find $(PKG_NAME)-$(version)/src/www/themes/common/tlp/dist; \
-			find $(PKG_NAME)-$(version)/plugins/agiledashboard/www/js/planning-v2/dist; \
 		} | \
 		cpio -o -H ustar --quiet |\
 		gzip > $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz

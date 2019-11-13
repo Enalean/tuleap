@@ -1,13 +1,15 @@
 import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
+import { createAngularPromiseWrapper } from "../../../../../../../../tests/jest/angular-promise-wrapper.js";
 
-describe("BacklogItemCollectionService -", () => {
-    let $q, BacklogItemCollectionService, BacklogItemService;
+describe("BacklogItemCollectionService", () => {
+    let $q, wrapPromise, BacklogItemCollectionService, BacklogItemService;
 
     beforeEach(() => {
         angular.mock.module(planning_module);
 
+        let $rootScope;
         angular.mock.inject(function(
             _$q_,
             _$rootScope_,
@@ -15,17 +17,19 @@ describe("BacklogItemCollectionService -", () => {
             _BacklogItemService_
         ) {
             $q = _$q_;
+            $rootScope = _$rootScope_;
             BacklogItemCollectionService = _BacklogItemCollectionService_;
             BacklogItemService = _BacklogItemService_;
         });
 
-        spyOn(BacklogItemService, "getBacklogItem");
+        jest.spyOn(BacklogItemService, "getBacklogItem").mockImplementation(() => {});
 
-        installPromiseMatchers();
+        wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
-    describe("refreshBacklogItem() -", () => {
-        describe("Given a backlog item's id and given that this item existed in the item collection", () => {
+    describe("refreshBacklogItem()", () => {
+        describe(`Given a backlog item's id
+            and given that this item existed in the item collection`, () => {
             let initial_item;
 
             beforeEach(() => {
@@ -51,7 +55,10 @@ describe("BacklogItemCollectionService -", () => {
                 };
             });
 
-            it("when I refresh it, then a promise will be resolved and the item will be fetched from the server and updated in the item collection", () => {
+            it(`when I refresh it,
+                then a promise will be resolved
+                and the item will be fetched from the server
+                and updated in the item collection`, async () => {
                 const updated_item = {
                     backlog_item: {
                         id: 7088,
@@ -76,13 +83,13 @@ describe("BacklogItemCollectionService -", () => {
                     }
                 };
 
-                BacklogItemService.getBacklogItem.and.returnValue($q.when(updated_item));
+                BacklogItemService.getBacklogItem.mockReturnValue($q.when(updated_item));
 
                 const promise = BacklogItemCollectionService.refreshBacklogItem(7088);
 
                 expect(BacklogItemCollectionService.items[7088].updating).toBeTruthy();
 
-                expect(promise).toBeResolved();
+                await wrapPromise(promise);
                 expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7088);
                 expect(BacklogItemCollectionService.items[7088]).toEqual({
                     id: 7088,
