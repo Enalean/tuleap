@@ -1464,6 +1464,18 @@ msgstr ""
 msgid "Your notification settings have been successfully updated"
 msgstr "Vos paramètres de notification ont été mis à jour avec succès"
 
+#, php-format
+msgid "changed from %s to %s"
+msgstr "modifié de %s à %s "
+
+#, php-format
+msgid "changed from %s to autocomputed"
+msgstr "modifié de %s à valeur calculée"
+
+#, php-format
+msgid "changed from autocomputed to %s"
+msgstr "modifié de valeur calculée à %s"
+
 msgid ""
 "changed. (But text is too long, we are unable to compute the differences in "
 "a reasonable amount of time.)"
