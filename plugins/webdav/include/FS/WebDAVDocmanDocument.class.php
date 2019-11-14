@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -44,7 +45,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
     {
         $this->user = $user;
         $this->project = $project;
-        $docmanItemFactory = Docman_ItemFactory::instance($project->getId());
+        $docmanItemFactory = Docman_ItemFactory::instance($project->getID());
         $this->item = $docmanItemFactory->getItemFromDb($item->getId());
     }
 
@@ -200,7 +201,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
         if ($this->getUtils()->isWriteEnabled()) {
             // Request
             $params['action']   = 'delete';
-            $params['group_id'] = $this->getProject()->getGroupId();
+            $params['group_id'] = $this->getProject()->getID();
             $params['confirm']  = true;
             $params['id']       = $this->getItem()->getId();
             $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
@@ -227,7 +228,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
             try {
                 // Request
                 $params['action']   = 'update';
-                $params['group_id'] = $this->getProject()->getGroupId();
+                $params['group_id'] = $this->getProject()->getID();
                 $params['confirm']  = true;
 
                 // Item details
