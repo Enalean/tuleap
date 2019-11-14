@@ -23,9 +23,18 @@ import { getYAxisTicksSize } from "./chart-layout-service.js";
 
 export { buildChartLayout };
 
-function buildChartLayout(chart_container, { graph_width, graph_height, margins }, scales) {
+const DEFAULT_NB_TICKS = 10,
+    DEFAULT_TICK_PADDING = 20;
+
+function buildChartLayout(
+    chart_container,
+    { graph_width, graph_height, margins },
+    scales,
+    nb_ticks = DEFAULT_NB_TICKS,
+    tick_padding = DEFAULT_TICK_PADDING
+) {
     const layout = drawSVG(chart_container, graph_width, graph_height);
-    const axes = initAxis(graph_width, margins, scales);
+    const axes = initAxis(graph_width, margins, scales, nb_ticks, tick_padding);
 
     drawAxis(layout, axes, graph_height, margins);
 
@@ -39,24 +48,24 @@ function drawSVG(element, width, height) {
         .attr("height", height);
 }
 
-function initAxis(graph_width, margins, { x_scale, y_scale }) {
+function initAxis(graph_width, margins, { x_scale, y_scale }, nb_ticks, tick_padding) {
     const y_ticks_size = getYAxisTicksSize(graph_width, margins.right, margins.left);
 
     return {
-        x_axis: initXAxis(x_scale),
-        y_axis: initYAxis(y_scale, y_ticks_size)
+        x_axis: initXAxis(x_scale, tick_padding),
+        y_axis: initYAxis(y_scale, y_ticks_size, nb_ticks, tick_padding)
     };
 }
 
-function initXAxis(x_scale) {
-    return axisBottom(x_scale).tickPadding(20);
+function initXAxis(x_scale, tick_padding) {
+    return axisBottom(x_scale).tickPadding(tick_padding);
 }
 
-function initYAxis(y_scale, y_ticks_size) {
+function initYAxis(y_scale, y_ticks_size, nb_ticks, tick_padding) {
     return axisLeft(y_scale)
-        .ticks(10)
+        .ticks(nb_ticks)
         .tickSize(-y_ticks_size)
-        .tickPadding(20);
+        .tickPadding(tick_padding);
 }
 
 function drawAxis(layout, { x_axis, y_axis }, graph_height, { left, bottom }) {

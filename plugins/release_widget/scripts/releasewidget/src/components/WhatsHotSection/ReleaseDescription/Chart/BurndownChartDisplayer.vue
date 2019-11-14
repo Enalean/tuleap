@@ -46,7 +46,7 @@ export default class BurndownChartDisplayer extends Vue {
                 top: 5,
                 right: 5,
                 bottom: 5,
-                left: 5
+                left: 35
             }
         };
     }

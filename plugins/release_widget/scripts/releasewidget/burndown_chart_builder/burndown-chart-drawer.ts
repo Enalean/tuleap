@@ -30,6 +30,7 @@ import {
 } from "../../../../../src/www/scripts/charts-builders/type";
 import { addScaleLines } from "./burndown-scale-drawer";
 import { drawIdealLine } from "../../../../../src/www/scripts/charts-builders/chart-lines-service";
+import { buildChartLayout } from "../../../../../src/www/scripts/charts-builders/chart-layout-builder";
 
 const DEFAULT_REMAINING_EFFORT = 5;
 
@@ -77,13 +78,19 @@ function createBurndownChart(
 
     const first_ideal_line_point = burndown_data.capacity ? burndown_data.capacity : y_axis_maximum;
 
+    const nb_ticks = 4,
+        tick_padding = 5;
+
     drawBurndownChart();
 
     function drawBurndownChart(): void {
-        const svg_burndown = select(chart_container)
-            .append("svg")
-            .attr("width", chart_props.graph_width)
-            .attr("height", chart_props.graph_height);
+        const svg_burndown = buildChartLayout(
+            chart_container,
+            chart_props,
+            { x_scale, y_scale },
+            nb_ticks,
+            tick_padding
+        );
 
         drawIdealLine(
             svg_burndown,
@@ -92,6 +99,9 @@ function createBurndownChart(
         );
         select(chart_container)
             .selectAll("circle")
+            .remove();
+        select(chart_container)
+            .selectAll(".chart-y-axis > .tick > line")
             .remove();
 
         addScaleLines(svg_burndown, coordinates_scale_lines);
