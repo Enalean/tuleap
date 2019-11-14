@@ -84,7 +84,7 @@ class FRSXMLImporterTest extends TuleapTestCase
         UserManager::setInstance($this->user_manager);
 
         $this->ugroup_dao = \Mockery::spy(\UGroupDao::class);
-        stub($this->ugroup_dao)->searchByGroupIdAndName()->returns(new DataAccessResultEmpty());
+        $this->ugroup_dao->shouldReceive('searchByGroupIdAndName')->andReturns(new DataAccessResultEmpty());
 
         $this->xml_import_helper = \Mockery::spy(\XMLImportHelper::class);
         $this->frs_permission_creator = \Mockery::spy(\Tuleap\FRS\FRSPermissionCreator::class);
@@ -209,7 +209,7 @@ XML;
         $xml_element = new SimpleXMLElement($xml);
 
         $user_id = 42;
-        stub($this->user_finder)->getUser()->returns(new PFUser(array('user_id'=> $user_id)));
+        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id'=> $user_id)));
 
         $expected_package_array = $this->getDefaultPackage('package');
         $package_id = 1337;
@@ -258,10 +258,10 @@ XML;
         $release    = \Mockery::spy(FRSRelease::class);
 
         $release->shouldReceive('getGroupId')->andReturn(123);
-        stub($this->user_finder)->getUser()->returns(new PFUser(array('user_id'=> $user_id)));
-        stub($this->package_dao)->createFromArray()->returns($package_id);
-        stub($this->release_dao)->createFromArray()->returns(47);
-        stub($this->release_factory)->getFRSReleaseFromDb()->returns($release);
+        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id'=> $user_id)));
+        $this->package_dao->shouldReceive('createFromArray')->andReturns($package_id);
+        $this->release_dao->shouldReceive('createFromArray')->andReturns(47);
+        $this->release_factory->shouldReceive('getFRSReleaseFromDb')->andReturns($release);
 
         $frs_mapping = array();
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
@@ -301,7 +301,7 @@ XML;
         $xml_element = new SimpleXMLElement($xml);
 
         $user_id = 42;
-        stub($this->user_finder)->getUser()->returns(new PFUser(array('user_id'=> $user_id)));
+        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id'=> $user_id)));
 
         $package_id = 1337;
         $package_array_with_id = array(
@@ -315,7 +315,7 @@ XML;
 
         $expected_package_array = $this->getDefaultPackage('package');
         $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->once()->andReturns($package_id);
-        stub($this->package_dao)->searchById($package_id, FRSPackageDao::INCLUDE_DELETED)->returnsDar($package_array_with_id);
+        $this->package_dao->shouldReceive('searchById')->with($package_id, FRSPackageDao::INCLUDE_DELETED)->andReturns(\TestHelper::arrayToDar($package_array_with_id));
 
         $release_id=8665;
         $expected_release_array = array(
@@ -333,10 +333,10 @@ XML;
         $release_array_with_group = $expected_release_array;
         $release_array_with_group['group_id'] = 123;
 
-        stub($this->filetype_dao)->searchTypeId()->returns(667);
-        stub($this->processor_dao)->searchProcessorId()->returns(69);
-        stub($this->release_dao)->searchById()->returnsDar($release_array_with_group);
-        stub($this->file_dao)->searchFileByName()->returnsEmptyDar();
+        $this->filetype_dao->shouldReceive('searchTypeId')->andReturns(667);
+        $this->processor_dao->shouldReceive('searchProcessorId')->andReturns(69);
+        $this->release_dao->shouldReceive('searchById')->andReturns(\TestHelper::arrayToDar($release_array_with_group));
+        $this->file_dao->shouldReceive('searchFileByName')->andReturns(\TestHelper::emptyDar());
 
         $file_id=12569;
         $expected_file_array = array(
@@ -360,11 +360,11 @@ XML;
 
         $expected_file_array_with_id = $expected_file_array;
         $expected_file_array_with_id['id'] = $file_id;
-        stub($this->file_dao)->searchById($file_id)->returnsDar($expected_file_array_with_id);
+        $this->file_dao->shouldReceive('searchById')->with($file_id)->andReturns(\TestHelper::arrayToDar($expected_file_array_with_id));
 
         $release = \Mockery::spy(FRSRelease::class);
         $release->shouldReceive('getGroupId')->andReturn(123);
-        stub($this->release_factory)->getFRSReleaseFromDb()->returns($release);
+        $this->release_factory->shouldReceive('getFRSReleaseFromDb')->andReturns($release);
 
         $frs_mapping = array();
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, $extraction_path, $frs_mapping);
@@ -399,7 +399,7 @@ XML;
         $xml_element = new SimpleXMLElement($xml);
 
         $user_id = 42;
-        stub($this->user_finder)->getUser()->returns(new PFUser(array('user_id'=> $user_id)));
+        $this->user_finder->shouldReceive('getUser')->andReturns(new PFUser(array('user_id'=> $user_id)));
 
         $package_id = 1337;
         $package_array_with_id = array(
@@ -413,7 +413,7 @@ XML;
 
         $expected_package_array = $this->getDefaultPackage('package');
         $this->package_dao->shouldReceive('createFromArray')->with($expected_package_array)->once()->andReturns($package_id);
-        stub($this->package_dao)->searchById($package_id, FRSPackageDao::INCLUDE_DELETED)->returnsDar($package_array_with_id);
+        $this->package_dao->shouldReceive('searchById')->with($package_id, FRSPackageDao::INCLUDE_DELETED)->andReturns(\TestHelper::arrayToDar($package_array_with_id));
 
         $release_id=8665;
         $expected_release_array = array(
@@ -431,11 +431,11 @@ XML;
         $release_array_with_group = $expected_release_array;
         $release_array_with_group['group_id'] = 123;
 
-        stub($this->link_dao)->create()->returns(true);
+        $this->link_dao->shouldReceive('create')->andReturns(true);
 
         $release = \Mockery::spy(FRSRelease::class);
         $release->shouldReceive('getGroupId')->andReturn(123);
-        stub($this->release_factory)->getFRSReleaseFromDb()->returns($release);
+        $this->release_factory->shouldReceive('getFRSReleaseFromDb')->andReturns($release);
 
         $frs_mapping = array();
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, $extraction_path, $frs_mapping);

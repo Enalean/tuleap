@@ -42,10 +42,10 @@ class FRSPackageFactoryTest extends TuleapTestCase
         $this->frs_permission_manager = \Mockery::spy(Tuleap\FRS\FRSPermissionManager::class);
         $this->project_manager        = \Mockery::spy(ProjectManager::class, ['getProject' => \Mockery::spy(Project::class)]);
 
-        stub($this->user_manager)->getUserById()->returns($this->user);
-        stub($this->frs_package_factory)->getUserManager()->returns($this->user_manager);
-        stub($this->frs_package_factory)->getFRSPermissionManager()->returns($this->frs_permission_manager);
-        stub($this->frs_package_factory)->getProjectManager()->returns($this->project_manager);
+        $this->user_manager->shouldReceive('getUserById')->andReturns($this->user);
+        $this->frs_package_factory->shouldReceive('getUserManager')->andReturns($this->user_manager);
+        $this->frs_package_factory->shouldReceive('getFRSPermissionManager')->andReturns($this->frs_permission_manager);
+        $this->frs_package_factory->shouldReceive('getProjectManager')->andReturns($this->project_manager);
     }
 
     public function testGetFRSPackageFromDb()
@@ -96,15 +96,15 @@ class FRSPackageFactoryTest extends TuleapTestCase
 
     public function testAdminHasAlwaysAccess()
     {
-        stub($this->frs_permission_manager)->isAdmin()->returns(true);
+        $this->frs_permission_manager->shouldReceive('isAdmin')->andReturns(true);
 
         $this->assertTrue($this->frs_package_factory->userCanRead($this->group_id, $this->package_id, $this->user_id));
     }
 
     protected function _userCanReadWithSpecificPerms($can_read_package)
     {
-        stub($this->frs_permission_manager)->userCanRead()->returns(true);
-        stub($this->frs_permission_manager)->isAdmin()->returns(false);
+        $this->frs_permission_manager->shouldReceive('userCanRead')->andReturns(true);
+        $this->frs_permission_manager->shouldReceive('isAdmin')->andReturns(false);
         $this->user->shouldReceive('getUgroups')->with($this->group_id, array())->once()->andReturns(array(1,2,76));
 
         $this->permission_manager->shouldReceive('isPermissionExist')->andReturns(true);
@@ -131,7 +131,7 @@ class FRSPackageFactoryTest extends TuleapTestCase
      */
     public function testUserCanReadWhenNoPermissionsSet()
     {
-        stub($this->frs_permission_manager)->userCanRead()->returns(true);
+        $this->frs_permission_manager->shouldReceive('userCanRead')->andReturns(true);
         $this->user->shouldReceive('getUgroups')->with($this->group_id, array())->once()->andReturns(array(1,2,76));
 
         $this->permission_manager = \Mockery::spy(PermissionsManager::class);
@@ -144,25 +144,25 @@ class FRSPackageFactoryTest extends TuleapTestCase
 
     public function testAdminCanAlwaysUpdate()
     {
-        stub($this->frs_permission_manager)->isAdmin()->returns(true);
+        $this->frs_permission_manager->shouldReceive('isAdmin')->andReturns(true);
         $this->assertTrue($this->frs_package_factory->userCanUpdate($this->group_id, $this->package_id, $this->user_id));
     }
 
     public function testMereMortalCannotUpdate()
     {
-        stub($this->frs_permission_manager)->isAdmin()->returns(false);
+        $this->frs_permission_manager->shouldReceive('isAdmin')->andReturns(false);
         $this->assertFalse($this->frs_package_factory->userCanUpdate($this->group_id, $this->package_id, $this->user_id));
     }
 
     public function testAdminCanAlwaysCreate()
     {
-        stub($this->frs_permission_manager)->isAdmin()->returns(true);
+        $this->frs_permission_manager->shouldReceive('isAdmin')->andReturns(true);
         $this->assertTrue($this->frs_package_factory->userCanCreate($this->group_id, $this->user_id));
     }
 
     public function testMereMortalCannotCreate()
     {
-        stub($this->frs_permission_manager)->isAdmin()->returns(false);
+        $this->frs_permission_manager->shouldReceive('isAdmin')->andReturns(false);
         $this->assertFalse($this->frs_package_factory->userCanCreate($this->group_id, $this->user_id));
     }
 
