@@ -38,6 +38,7 @@ use Tuleap\User\Account\EmailNotSentException;
 use Tuleap\User\Account\EmailUpdater;
 use Tuleap\User\Account\UpdateAccountInformationController;
 use PHPUnit\Framework\TestCase;
+use Tuleap\User\Profile\AvatarGenerator;
 use UserManager;
 
 final class UpdateAccountInformationControllerTest extends TestCase
@@ -76,6 +77,10 @@ final class UpdateAccountInformationControllerTest extends TestCase
      * @var M\LegacyMockInterface|M\MockInterface|EmailUpdater
      */
     private $email_updater;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|AvatarGenerator
+     */
+    private $avatar_generator;
 
     protected function setUp(): void
     {
@@ -102,11 +107,13 @@ final class UpdateAccountInformationControllerTest extends TestCase
 
         $this->user_manager = M::mock(UserManager::class);
         $this->email_updater = M::mock(EmailUpdater::class);
+        $this->avatar_generator = M::mock(AvatarGenerator::class);
         $this->controller = new UpdateAccountInformationController(
             $this->event_manager,
             $this->csrf_token,
             $this->user_manager,
             $this->email_updater,
+            $this->avatar_generator,
         );
 
         $this->layout_inspector = new LayoutInspector();
@@ -120,6 +127,7 @@ final class UpdateAccountInformationControllerTest extends TestCase
             ->withLanguage(M::spy(\BaseLanguage::class))
             ->withAddDate(940000000)
             ->withTimezone('GMT')
+            ->withAvatarUrl("/path/to/avatar.png")
             ->build();
     }
 
@@ -158,11 +166,35 @@ final class UpdateAccountInformationControllerTest extends TestCase
         );
     }
 
-    public function testItUpdatesRealNameWhenRealNameChanged(): void
+    public function testItUpdatesRealNameAndAvatarWhenRealNameChanged(): void
     {
         $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
             return $user->getRealName() === 'Franck Zappa';
         })->once()->andReturnTrue();
+
+        $this->avatar_generator->shouldReceive('generate')->once();
+
+        $this->controller->process(
+            HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', 'Franck Zappa')->build(),
+            $this->layout,
+            []
+        );
+
+        $feedback = $this->layout_inspector->getFeedback();
+        $this->assertCount(1, $feedback);
+        $this->assertEquals(\Feedback::INFO, $feedback[0]['level']);
+        $this->assertStringContainsStringIgnoringCase('real name successfully updated', $feedback[0]['message']);
+    }
+
+    public function testItUpdatesRealNameButNotAvatarWhenRealNameChangedAndUserHasCustomAvatar(): void
+    {
+        $this->user->setHasCustomAvatar(true);
+
+        $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
+            return $user->getRealName() === 'Franck Zappa';
+        })->once()->andReturnTrue();
+
+        $this->avatar_generator->shouldReceive('generate')->never();
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('realname', 'Franck Zappa')->build(),
@@ -407,6 +439,8 @@ final class UpdateAccountInformationControllerTest extends TestCase
         $this->user_manager->shouldReceive('updateDb')->withArgs(static function (\PFUser $user) {
             return $user->getEmailNew() === 'bob@example.com';
         })->once()->andReturnTrue();
+
+        $this->avatar_generator->shouldReceive('generate')->once();
 
         $this->controller->process(
             HTTPRequestBuilder::get()

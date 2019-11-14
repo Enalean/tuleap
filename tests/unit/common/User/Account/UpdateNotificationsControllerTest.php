@@ -28,7 +28,6 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
-use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\User\Account\UpdateNotificationsPreferences;
 use PHPUnit\Framework\TestCase;
 use UserManager;
@@ -56,8 +55,9 @@ class UpdateNotificationsControllerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->user         = UserTestBuilder::aUser()->withId(120)->build();
-        $this->user->_preferencesdao = M::spy(\UserPreferencesDao::class);
+        $this->user = \Mockery::mock(\PFUser::class);
+        $this->user->shouldReceive(['getId' => 120, 'isAnonymous' => false]);
+        $this->user->preferencesdao = M::spy(\UserPreferencesDao::class);
 
         $this->user_manager = M::mock(UserManager::class);
         $this->csrf_token   = M::mock(CSRFSynchronizerToken::class);
@@ -78,6 +78,18 @@ class UpdateNotificationsControllerTest extends TestCase
     public function testItChecksCSRFToken(): void
     {
         $this->csrf_token->shouldReceive('check')->with('/account/notifications')->once();
+
+        $this->user
+            ->shouldReceive('getMailSiteUpdates')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getMailVA')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getPreference')
+            ->with(Codendi_Mail_Interface::PREF_FORMAT)
+            ->andReturn(Codendi_Mail_Interface::FORMAT_HTML);
+
         $this->user_manager->shouldReceive('updateDb');
 
         $this->controller->process(
@@ -90,6 +102,18 @@ class UpdateNotificationsControllerTest extends TestCase
     public function testItRedirects(): void
     {
         $this->csrf_token->shouldReceive('check');
+
+        $this->user
+            ->shouldReceive('getMailSiteUpdates')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getMailVA')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getPreference')
+            ->with(Codendi_Mail_Interface::PREF_FORMAT)
+            ->andReturn(Codendi_Mail_Interface::FORMAT_HTML);
+
         $this->user_manager->shouldReceive('updateDb');
 
         $layout_inspector = new LayoutInspector();
@@ -107,9 +131,22 @@ class UpdateNotificationsControllerTest extends TestCase
     {
         $this->csrf_token->shouldReceive('check');
 
-        $this->user_manager->shouldReceive('updateDb')->withArgs(function (\PFUser $user) {
-            return $user->getMailSiteUpdates() === 1;
-        })->once();
+        $this->user
+            ->shouldReceive('getMailSiteUpdates')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getMailVA')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getPreference')
+            ->with(Codendi_Mail_Interface::PREF_FORMAT)
+            ->andReturn(Codendi_Mail_Interface::FORMAT_HTML);
+
+        $this->user
+            ->shouldReceive('setMailSiteUpdates')
+            ->with(1)
+            ->once();
+        $this->user_manager->shouldReceive('updateDb')->once();
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('site_email_updates', '1')->build(),
@@ -122,11 +159,22 @@ class UpdateNotificationsControllerTest extends TestCase
     {
         $this->csrf_token->shouldReceive('check');
 
-        $this->user->setMailSiteUpdates('1');
+        $this->user
+            ->shouldReceive('getMailSiteUpdates')
+            ->andReturn(1);
+        $this->user
+            ->shouldReceive('getMailVA')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getPreference')
+            ->with(Codendi_Mail_Interface::PREF_FORMAT)
+            ->andReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
-        $this->user_manager->shouldReceive('updateDb')->withArgs(function (\PFUser $user) {
-            return $user->getMailSiteUpdates() === 0;
-        })->once();
+        $this->user
+            ->shouldReceive('setMailSiteUpdates')
+            ->with(0)
+            ->once();
+        $this->user_manager->shouldReceive('updateDb')->once();
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
@@ -139,7 +187,16 @@ class UpdateNotificationsControllerTest extends TestCase
     {
         $this->csrf_token->shouldReceive('check');
 
-        $this->user->setMailSiteUpdates('1');
+        $this->user
+            ->shouldReceive('getMailSiteUpdates')
+            ->andReturn(1);
+        $this->user
+            ->shouldReceive('getMailVA')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getPreference')
+            ->with(Codendi_Mail_Interface::PREF_FORMAT)
+            ->andReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
         $this->user_manager->shouldNotReceive('updateDb');
 
@@ -154,7 +211,16 @@ class UpdateNotificationsControllerTest extends TestCase
     {
         $this->csrf_token->shouldReceive('check');
 
-        $this->user->setMailSiteUpdates('0');
+        $this->user
+            ->shouldReceive('getMailSiteUpdates')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getMailVA')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getPreference')
+            ->with(Codendi_Mail_Interface::PREF_FORMAT)
+            ->andReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
         $this->user_manager->shouldNotReceive('updateDb');
 
@@ -169,9 +235,22 @@ class UpdateNotificationsControllerTest extends TestCase
     {
         $this->csrf_token->shouldReceive('check');
 
-        $this->user_manager->shouldReceive('updateDb')->withArgs(function (\PFUser $user) {
-            return $user->getMailVA() === 1;
-        })->once();
+        $this->user
+            ->shouldReceive('getMailSiteUpdates')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getMailVA')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getPreference')
+            ->with(Codendi_Mail_Interface::PREF_FORMAT)
+            ->andReturn(Codendi_Mail_Interface::FORMAT_HTML);
+
+        $this->user
+            ->shouldReceive('setMailVA')
+            ->with(1)
+            ->once();
+        $this->user_manager->shouldReceive('updateDb')->once();
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('site_email_community', '1')->build(),
@@ -184,11 +263,22 @@ class UpdateNotificationsControllerTest extends TestCase
     {
         $this->csrf_token->shouldReceive('check');
 
-        $this->user->setMailVA('1');
+        $this->user
+            ->shouldReceive('getMailSiteUpdates')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getMailVA')
+            ->andReturn(1);
+        $this->user
+            ->shouldReceive('getPreference')
+            ->with(Codendi_Mail_Interface::PREF_FORMAT)
+            ->andReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
-        $this->user_manager->shouldReceive('updateDb')->withArgs(function (\PFUser $user) {
-            return $user->getMailVA() === 0;
-        })->once();
+        $this->user
+            ->shouldReceive('setMailVA')
+            ->with(0)
+            ->once();
+        $this->user_manager->shouldReceive('updateDb')->once();
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->build(),
@@ -201,7 +291,16 @@ class UpdateNotificationsControllerTest extends TestCase
     {
         $this->csrf_token->shouldReceive('check');
 
-        $this->user->setMailVA('1');
+        $this->user
+            ->shouldReceive('getMailSiteUpdates')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getMailVA')
+            ->andReturn(1);
+        $this->user
+            ->shouldReceive('getPreference')
+            ->with(Codendi_Mail_Interface::PREF_FORMAT)
+            ->andReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
         $this->user_manager->shouldNotReceive('updateDb');
 
@@ -217,7 +316,16 @@ class UpdateNotificationsControllerTest extends TestCase
     {
         $this->csrf_token->shouldReceive('check');
 
-        $this->user->_preferences[Codendi_Mail_Interface::PREF_FORMAT] = Codendi_Mail_Interface::FORMAT_HTML;
+        $this->user
+            ->shouldReceive('getMailSiteUpdates')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getMailVA')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getPreference')
+            ->with(Codendi_Mail_Interface::PREF_FORMAT)
+            ->andReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('email_format', 'html')->build(),
@@ -230,7 +338,16 @@ class UpdateNotificationsControllerTest extends TestCase
     {
         $this->csrf_token->shouldReceive('check');
 
-        $this->user->_preferences[Codendi_Mail_Interface::PREF_FORMAT] = Codendi_Mail_Interface::FORMAT_TEXT;
+        $this->user
+            ->shouldReceive('getMailSiteUpdates')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getMailVA')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getPreference')
+            ->with(Codendi_Mail_Interface::PREF_FORMAT)
+            ->andReturn(Codendi_Mail_Interface::FORMAT_TEXT);
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('email_format', 'text')->build(),
@@ -243,7 +360,16 @@ class UpdateNotificationsControllerTest extends TestCase
     {
         $this->csrf_token->shouldReceive('check');
 
-        $this->user->_preferences[Codendi_Mail_Interface::PREF_FORMAT] = Codendi_Mail_Interface::FORMAT_HTML;
+        $this->user
+            ->shouldReceive('getMailSiteUpdates')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getMailVA')
+            ->andReturn(0);
+        $this->user
+            ->shouldReceive('getPreference')
+            ->with(Codendi_Mail_Interface::PREF_FORMAT)
+            ->andReturn(Codendi_Mail_Interface::FORMAT_HTML);
 
         $this->controller->process(
             HTTPRequestBuilder::get()->withUser($this->user)->withParam('email_format', 'html')->build(),

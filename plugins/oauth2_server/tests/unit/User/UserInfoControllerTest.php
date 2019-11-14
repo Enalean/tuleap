@@ -83,6 +83,7 @@ final class UserInfoControllerTest extends TestCase
             ->withRealName('Test USER')
             ->withTimezone('America/Montreal')
             ->withLocale('en_US')
+            ->withAvatarUrl("/path/to/avatar.png")
             ->build();
         return [
             'With subject claim only' => [
@@ -95,11 +96,11 @@ final class UserInfoControllerTest extends TestCase
             ],
             'With profile scope'      => [
                 new GrantedAuthorization($user, [OpenIDConnectProfileScope::fromItself()]),
-                '{"sub":"110","name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"https:\/\/\/themes\/common\/images\/avatar_default.png","zoneinfo":"America\/Montreal","locale":"en-US"}'
+                '{"sub":"110","name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"/path/to/avatar.png","zoneinfo":"America\/Montreal","locale":"en-US"}'
             ],
             'With all scopes'         => [
                 new GrantedAuthorization($user, [OpenIDConnectEmailScope::fromItself(), OpenIDConnectProfileScope::fromItself()]),
-                '{"sub":"110","email":"user@example.com","email_verified":true,"name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"https:\/\/\/themes\/common\/images\/avatar_default.png","zoneinfo":"America\/Montreal","locale":"en-US"}'
+                '{"sub":"110","email":"user@example.com","email_verified":true,"name":"Test USER","preferred_username":"testuser","profile":"https:\/\/tuleap.example.com\/users\/testuser","picture":"/path/to/avatar.png","zoneinfo":"America\/Montreal","locale":"en-US"}'
             ]
         ];
     }

@@ -129,6 +129,7 @@ use Tuleap\User\Account\UpdatePasswordController;
 use Tuleap\User\Account\UpdateSessionPreferencesController;
 use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
+use Tuleap\User\Profile\AvatarGenerator;
 use Tuleap\User\Profile\ProfileAsJSONForTooltipController;
 use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
@@ -437,10 +438,11 @@ class RouteCollector
     public static function postAccountAvatar()
     {
         $user_manager = \UserManager::instance();
+
         return new ChangeAvatarController(
             DisplayAccountInformationController::getCSRFToken(),
-            $user_manager,
-            new UserAvatarSaver($user_manager)
+            new UserAvatarSaver($user_manager),
+            $user_manager
         );
     }
 
@@ -474,12 +476,12 @@ class RouteCollector
 
     public static function getUsersNameAvatar()
     {
-        return new AvatarController();
+        return new AvatarController(new AvatarGenerator());
     }
 
     public static function getUsersNameAvatarHash()
     {
-        return new AvatarController(['expires' => 'never']);
+        return new AvatarController(new AvatarGenerator(), ['expires' => 'never']);
     }
 
     public static function postJoinPrivateProjectMail()

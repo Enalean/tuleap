@@ -86,9 +86,9 @@ class TestBase extends RestBase
             "display_name" => "Test User 1 (rest_api_tester_1)",
             "username"     => "rest_api_tester_1",
             "ldap_id"      => "tester1",
-            "avatar_url"   => "https://localhost/themes/common/images/avatar_default.png",
+            "avatar_url"   => "https://localhost/users/rest_api_tester_1/avatar.png",
             "is_anonymous" => false,
-            "has_avatar"   => false
+            "has_avatar"   => true
         ];
 
         $this->user_103 = [

@@ -65,7 +65,7 @@ class UserAvatarSaver
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $avatar_folder));
         }
         $image->save($user->getAvatarFilePath(), IMAGETYPE_PNG, 9, 0640);
-        $user->setHasAvatar();
+        $user->setHasCustomAvatar(true);
         $this->user_manager->updateDb($user);
     }
 }

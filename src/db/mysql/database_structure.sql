@@ -875,7 +875,7 @@ CREATE TABLE user (
   language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US',
   last_pwd_update int(11) NOT NULL default '0',
   expiry_date int(11),
-  has_avatar TINYINT(1) NOT NULL DEFAULT 0,
+  has_custom_avatar TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY  (user_id),
   INDEX idx_user_name(user_name(10)),
   INDEX idx_user_mail(email(10)),
