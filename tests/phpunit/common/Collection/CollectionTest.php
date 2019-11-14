@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,56 +18,38 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 
-if (!class_exists("FakeValue")) {
-    class FakeValue
-    {
-    }
-}
+namespace Tuleap\Collection;
 
-/**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- *
- *
- *
- */
-class CollectionTestCase extends TuleapTestCase
+use Collection;
+use PHPUnit\Framework\TestCase;
+use stdClass;
+
+class CollectionTest extends TestCase
 {
-
-    var $collection_class_name;
-
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function __construct($name = 'Collection test', $collection_class_name = 'you_must_define_classname')
+    public function testEmptyCollection()
     {
-        parent::__construct($name);
-        $this->collection_class_name = $collection_class_name;
-    }
-
-    function testEmptyCollection()
-    {
-        $c = new $this->collection_class_name();
+        $c = new Collection();
         $this->assertTrue($c->isEmpty());
     }
-    function testNonEmptyCollection()
+    public function testNonEmptyCollection()
     {
-        $c = new $this->collection_class_name();
-        $a = new StdClass();
+        $c = new Collection();
+        $a = new stdClass();
         $c->add($a);
         $this->assertFalse($c->isEmpty());
     }
-    function testContains()
+    public function testContains()
     {
-        $col = new $this->collection_class_name();
-        $a = new StdClass();
+        $col = new Collection();
+        $a = new stdClass();
         $a->toto = 1;
-        $b = new StdClass();
+        $b = new stdClass();
         $b->toto = 2;
-        $c = new StdClass();
+        $c = new stdClass();
         $c->toto = 3;
-        $d = new StdClass();
+        $d = new stdClass();
         $d->toto = 4;
         $col->add($a);
         $col->add($b);
@@ -78,145 +61,145 @@ class CollectionTestCase extends TuleapTestCase
 
         $key1 = 'key';
         $key2 = 'key';
-        $col = new $this->collection_class_name();
+        $col = new Collection();
         $this->assertFalse($col->contains($key2));
         $col->add($key1);
         $this->assertTrue($col->contains($key2));
 
         $key3_val = 'key';
         $key3 = $key3_val;
-        $col = new $this->collection_class_name();
+        $col = new Collection();
         $col->add($key3);
         $this->assertTrue($col->contains($key3_val));
         unset($GLOBALS['debug']);
     }
-    function testReference()
+    public function testReference()
     {
-        $col = new $this->collection_class_name();
-        $a = new StdClass();
+        $col = new Collection();
+        $a = new stdClass();
         $a->toto = 1;
-        $b = new StdClass();
+        $b = new stdClass();
         $b->toto = 2;
         $col->add($a);
         $this->assertTrue($col->contains($a));
         $this->assertFalse($col->contains($b));
     }
-    function testSize()
+    public function testSize()
     {
-        $a = new StdClass();
+        $a = new stdClass();
         $a->toto = 1;
-        $b = new StdClass();
+        $b = new stdClass();
         $b->toto = 2;
-        $col = new $this->collection_class_name();
-        $this->assertEqual($col->size(), 0);
+        $col = new Collection();
+        $this->assertEquals($col->size(), 0);
         $col->add($a);
-        $this->assertEqual($col->size(), 1);
+        $this->assertEquals($col->size(), 1);
         $col->add($a);
-        $this->assertEqual($col->size(), 2);
+        $this->assertEquals($col->size(), 2);
         $col->add($b);
-        $this->assertEqual($col->size(), 3);
+        $this->assertEquals($col->size(), 3);
     }
 
-    function testNotEqualsNotCollection()
+    public function testNotEqualsNotCollection()
     {
         $a = 'a';
-        $col1 = new $this->collection_class_name();
+        $col1 = new Collection();
         $this->assertFalse($col1->equals($a));
     }
 
-    function testEqualsNoElements()
+    public function testEqualsNoElements()
     {
-        $col1 = new $this->collection_class_name();
-        $col2 = new $this->collection_class_name();
+        $col1 = new Collection();
+        $col2 = new Collection();
         $this->assertTrue($col1->equals($col2));
     }
 
-    function testNotEqualsOneElement()
+    public function testNotEqualsOneElement()
     {
-        $a = new StdClass();
-        $col1 = new $this->collection_class_name();
-        $col2 = new $this->collection_class_name();
+        $a = new stdClass();
+        $col1 = new Collection();
+        $col2 = new Collection();
         $col1->add($a);
         $this->assertFalse($col1->equals($col2));
     }
 
-    function testEqualsOneElement()
+    public function testEqualsOneElement()
     {
-        $a = new StdClass();
+        $a = new stdClass();
         $a->toto = 1;
-        $b = new StdClass();
+        $b = new stdClass();
         $b->toto = 2;
-        $col1 = new $this->collection_class_name();
-        $col2 = new $this->collection_class_name();
+        $col1 = new Collection();
+        $col2 = new Collection();
         $col1->add($a);
         $col2->add($a);
         $this->assertTrue($col1->equals($col2));
     }
 
-    function testNotEqualsTwoElements()
+    public function testNotEqualsTwoElements()
     {
-        $a = new StdClass();
+        $a = new stdClass();
         $a->toto = 1;
-        $b = new StdClass();
+        $b = new stdClass();
         $b->toto = 2;
-        $col1 = new $this->collection_class_name();
-        $col2 = new $this->collection_class_name();
+        $col1 = new Collection();
+        $col2 = new Collection();
         $col1->add($a);
         $col2->add($a);
         $col1->add($b);
         $this->assertFalse($col1->equals($col2));
     }
-    function testEqualsTwoElements()
+    public function testEqualsTwoElements()
     {
-        $a = new StdClass();
+        $a = new stdClass();
         $a->toto = 1;
-        $b = new StdClass();
+        $b = new stdClass();
         $b->toto = 2;
-        $col1 = new $this->collection_class_name();
-        $col2 = new $this->collection_class_name();
+        $col1 = new Collection();
+        $col2 = new Collection();
         $col1->add($a);
         $col2->add($a);
-        $col1->add($b);
-        $col2->add($b);
-        $this->assertTrue($col1->equals($col2));
-    }
-
-    function testEqualsDifferentOrder()
-    {
-        $a = new StdClass();
-        $a->toto = 1;
-        $b = new StdClass();
-        $b->toto = 2;
-        $col1 = new $this->collection_class_name();
-        $col2 = new $this->collection_class_name();
-        $col1->add($a);
         $col1->add($b);
         $col2->add($b);
+        $this->assertTrue($col1->equals($col2));
+    }
+
+    public function testEqualsDifferentOrder()
+    {
+        $a = new stdClass();
+        $a->toto = 1;
+        $b = new stdClass();
+        $b->toto = 2;
+        $col1 = new Collection();
+        $col2 = new Collection();
+        $col1->add($a);
+        $col1->add($b);
+        $col2->add($b);
         $col2->add($a);
         $this->assertTrue($col1->equals($col2));
     }
 
-    function testEqualsDifferentSizes()
+    public function testEqualsDifferentSizes()
     {
-        $a = new StdClass();
-        $col1 = new $this->collection_class_name();
-        $col2 = new $this->collection_class_name();
+        $a = new stdClass();
+        $col1 = new Collection();
+        $col2 = new Collection();
         $col1->add($a);
         $col1->add($a);
         $col2->add($a);
         $this->assertFalse($col1->equals($col2));
     }
 
-    function testEqualsSameAndDifferentElements()
+    public function testEqualsSameAndDifferentElements()
     {
-        $a = new StdClass();
+        $a = new stdClass();
         $a->toto = 1;
-        $b = new StdClass();
+        $b = new stdClass();
         $b->toto = 2;
-        $c = new StdClass();
+        $c = new stdClass();
         $c->toto = 3;
-        $col1 = new $this->collection_class_name();
-        $col2 = new $this->collection_class_name();
+        $col1 = new Collection();
+        $col2 = new Collection();
         $col1->add($a);
         $col2->add($a);
         $col1->add($b);
@@ -224,14 +207,14 @@ class CollectionTestCase extends TuleapTestCase
         $this->assertFalse($col1->equals($col2));
     }
 
-    function testEqualsUniqueAndNonUniqueElements()
+    public function testEqualsUniqueAndNonUniqueElements()
     {
-        $a = new StdClass();
+        $a = new stdClass();
         $a->toto = 1;
-        $b = new StdClass();
+        $b = new stdClass();
         $b->toto = 2;
-        $col1 = new $this->collection_class_name();
-        $col2 = new $this->collection_class_name();
+        $col1 = new Collection();
+        $col2 = new Collection();
         $col1->add($a);
         $col1->add($a);
         $col2->add($a);
@@ -239,24 +222,24 @@ class CollectionTestCase extends TuleapTestCase
         $this->assertFalse($col1->equals($col2));
     }
 
-    function testInitialArray()
+    public function testInitialArray()
     {
-        $a = new StdClass();
+        $a = new stdClass();
         $a->toto = 1;
-        $b = new StdClass();
+        $b = new stdClass();
         $b->toto = 2;
         $arr = array();
         $arr[] = $a;
         $arr[] = $b;
-        $col = new $this->collection_class_name($arr);
+        $col = new Collection($arr);
         $this->assertTrue($col->contains($a));
         $this->assertTrue($col->contains($b));
     }
 
-    function testRemove()
+    public function testRemove()
     {
-        $a = new StdClass();
-        $col = new $this->collection_class_name();
+        $a = new stdClass();
+        $col = new Collection();
         $col->add($a);
         $this->assertTrue($col->contains($a));
         $this->assertTrue($col->remove($a));
@@ -265,5 +248,3 @@ class CollectionTestCase extends TuleapTestCase
         $this->assertFalse($col->remove($a));
     }
 }
-//We just tells SimpleTest to always ignore this testcase
-SimpleTest::ignore('CollectionTestCase');
