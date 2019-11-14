@@ -34,6 +34,7 @@ class FRSPackageFactoryTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->user                   = \Mockery::spy(PFUser::class);
         $this->frs_package_factory    = \Mockery::mock(FRSPackageFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->user_manager           = \Mockery::spy(UserManager::class);

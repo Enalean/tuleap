@@ -56,8 +56,10 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
 
     public function setUp()
     {
-        $this->frs_service_permission_manager = mock('Tuleap\FRS\FRSPermissionManager');
-        $this->release_factory                = mock('FRSReleaseFactory');
+        parent::setUp();
+        $this->setUpGlobalsMockery();
+        $this->frs_service_permission_manager = \Mockery::spy(\Tuleap\FRS\FRSPermissionManager::class);
+        $this->release_factory                = \Mockery::spy(\FRSReleaseFactory::class);
 
         $this->release_permission_manager = new ReleasePermissionManager(
             $this->frs_service_permission_manager,
@@ -65,7 +67,7 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
         );
 
         $this->project = aMockProject()->withId(100)->build();
-        $this->user    = mock('PFUser');
+        $this->user    = \Mockery::spy(\PFUser::class);
         $this->release = \Mockery::spy(\FRSRelease::class);
     }
 

@@ -26,8 +26,8 @@ class PaneCollectorTest extends TuleapTestCase
 {
     public function itDoesNotBuildPaneIfServiceNotUsed()
     {
-        $service_builder = mock('Tuleap\FRS\PermissionsPerGroup\PermissionPerGroupFRSServicePresenterBuilder');
-        $package_builder = mock('Tuleap\FRS\PermissionsPerGroup\PermissionPerGroupFRSPackagesPresenterBuilder');
+        $service_builder = \Mockery::spy(\Tuleap\FRS\PermissionsPerGroup\PermissionPerGroupFRSServicePresenterBuilder::class);
+        $package_builder = \Mockery::spy(\Tuleap\FRS\PermissionsPerGroup\PermissionPerGroupFRSPackagesPresenterBuilder::class);
 
         $builder = new PaneCollector(
             $service_builder,
@@ -39,8 +39,8 @@ class PaneCollectorTest extends TuleapTestCase
 
         $selected_ugroup_id = null;
 
-        expect($service_builder)->getPanePresenter()->never();
-        expect($package_builder)->getPanePresenter()->never();
+        $service_builder->shouldReceive('getPanePresenter')->never();
+        $package_builder->shouldReceive('getPanePresenter')->never();
 
         $builder->collectPane($project, $selected_ugroup_id);
     }
