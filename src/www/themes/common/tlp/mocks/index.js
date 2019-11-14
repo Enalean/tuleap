@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,30 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global jasmine:readonly */
+/* eslint-env jest */
 
-const tlp = jasmine.createSpyObj("tlp", [
-    "get",
-    "patch",
-    "put",
-    "post",
-    "del",
-    "recursiveGet",
-    "options",
-    "datePicker",
-    "select2",
-    "modal",
-    "dropdown",
-    "filterInlineTable"
-]);
-
-// Because TLP is set up as external in webpack configs
-window.tlp = tlp;
-
-export { tlp, mockFetchSuccess, mockFetchError };
+export { mockFetchSuccess, mockFetchError };
 
 function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
-    spy_function.and.returnValue(
+    spy_function.mockReturnValue(
         Promise.resolve({
             headers,
             json: () => Promise.resolve(return_json)
@@ -49,7 +31,7 @@ function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
 }
 
 function mockFetchError(spy_function, { status, statusText, error_json } = {}) {
-    spy_function.and.returnValue(
+    spy_function.mockReturnValue(
         Promise.reject({
             response: {
                 ok: false,

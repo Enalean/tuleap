@@ -19,7 +19,7 @@
 
 import CKEDITOR from "ckeditor";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper.js";
+import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest.js";
 import {
     MaxSizeUploadExceededError,
     UploadError

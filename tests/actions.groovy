@@ -24,16 +24,6 @@ def runPHPUnitTests(String version) {
     sh "make -C $WORKSPACE/sources phpunit-ci-${version}"
 }
 
-def runKarmaTests(String name, String path) {
-    sh """
-    cid="\$(docker create -v \$WORKSPACE/sources:/sources:ro --security-opt seccomp=\$WORKSPACE/sources/tests/karma/seccomp_chrome.json --network none \$DOCKER_REGISTRY/enalean/tuleap-test-karma:latest --path ${path})"
-    docker start --attach "\$cid" || true
-    mkdir -p 'results/karma'
-    docker cp "\$cid":/output/test-results.xml results/karma/test-${name}-results.xml || true
-    docker rm -fv "\$cid"
-    """
-}
-
 def runJestTests(String name, String path) {
     sh """
     mkdir -p 'results/jest/coverage/'
