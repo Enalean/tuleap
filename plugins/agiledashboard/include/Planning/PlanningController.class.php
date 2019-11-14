@@ -54,6 +54,7 @@ use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 use Tuleap\Widget\WidgetFactory;
@@ -562,7 +563,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                 $logger,
                 $event_manager
             ),
-            $synchronized_project_membership_dao
+            $synchronized_project_membership_dao,
+            new XMLFileContentRetriever()
         );
 
         try {

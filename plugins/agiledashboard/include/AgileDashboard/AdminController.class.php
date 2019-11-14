@@ -85,6 +85,7 @@ use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
+use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 use UGroupBinding;
@@ -377,7 +378,8 @@ class AdminController extends BaseController
                             $logger,
                             $this->event_manager
                         ),
-                        $synchronized_project_membership_dao
+                        $synchronized_project_membership_dao,
+                        new XMLFileContentRetriever()
                     )
                 ),
                 new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),

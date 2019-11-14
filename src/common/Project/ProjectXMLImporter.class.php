@@ -20,10 +20,10 @@
 
 require_once __DIR__.'/../../www/include/account.php';
 
+use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
-use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
@@ -31,9 +31,10 @@ use Tuleap\Project\UserRemover;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\Import\ImportNotValidException;
+use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\XML\MappingsRegistry;
 
-class ProjectXMLImporter
+class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /** @var EventManager */
     private $event_manager;
@@ -86,6 +87,10 @@ class ProjectXMLImporter
      * @var ProjectMemberAdder
      */
     private $project_member_adder;
+    /**
+     * @var XMLFileContentRetriever
+     */
+    private $XML_file_content_retriever;
 
     public function __construct(
         EventManager $event_manager,
@@ -102,7 +107,8 @@ class ProjectXMLImporter
         ProjectCreator $project_creator,
         UploadedLinksUpdater $uploaded_links_updater,
         ProjectDashboardXMLImporter $dashboard_importer,
-        SynchronizedProjectMembershipDao $synchronized_project_membership_dao
+        SynchronizedProjectMembershipDao $synchronized_project_membership_dao,
+        XMLFileContentRetriever $XML_file_content_retriever
     ) {
         $this->event_manager                       = $event_manager;
         $this->project_manager                     = $project_manager;
@@ -119,6 +125,7 @@ class ProjectXMLImporter
         $this->uploaded_links_updater              = $uploaded_links_updater;
         $this->dashboard_importer                  = $dashboard_importer;
         $this->synchronized_project_membership_dao = $synchronized_project_membership_dao;
+        $this->XML_file_content_retriever          = $XML_file_content_retriever;
     }
 
     public function importNewFromArchive(
@@ -208,7 +215,7 @@ class ProjectXMLImporter
     {
         $this->logger->info('Start importing from file ' . $xml_file_path);
 
-        $xml_element = $this->getSimpleXMLElementFromFilePath($xml_file_path);
+        $xml_element = $this->XML_file_content_retriever->getSimpleXMLElementFromFilePath($xml_file_path);
 
         $this->importFromXMLIntoExistingProject($configuration, $project_id, $xml_element, '');
     }
@@ -239,7 +246,7 @@ class ProjectXMLImporter
     {
         $this->logger->info('Start collecting errors from file ' . $xml_file_path);
 
-        $xml_element = $this->getSimpleXMLElementFromFilePath($xml_file_path);
+        $xml_element = $this->XML_file_content_retriever->getSimpleXMLElementFromFilePath($xml_file_path);
         $project = $this->project_manager->getValidProjectByShortNameOrId($project_id);
 
         return $this->collectBlockingErrorsWithoutImportingContent($project, $xml_element);
@@ -323,7 +330,7 @@ class ProjectXMLImporter
                 $this->synchronized_project_membership_dao->enable($project);
             }
 
-            list($ugroups_in_xml, $project_members) = $this->getUgroupsFromXMLToAdd($project, $xml_element->ugroups);
+            [$ugroups_in_xml, $project_members] = $this->getUgroupsFromXMLToAdd($project, $xml_element->ugroups);
 
             foreach ($project_members as $user) {
                 $this->addProjectMember($project, $user);
@@ -453,50 +460,7 @@ class ProjectXMLImporter
             throw new RuntimeException('No content available in archive for file ' . ArchiveInterface::PROJECT_FILE);
         }
 
-        return $this->getSimpleXMLElementFromString($xml_contents);
-    }
-
-    /**
-     * @return SimpleXMLElement
-     */
-    private function getSimpleXMLElementFromFilePath($file_path)
-    {
-        $xml_contents = file_get_contents($file_path, 'r');
-        return $this->getSimpleXMLElementFromString($xml_contents);
-    }
-
-    private function getSimpleXMLElementFromString($file_contents)
-    {
-        $this->checkFileIsValidXML($file_contents);
-
-        return simplexml_load_string($file_contents, 'SimpleXMLElement', $this->getLibXMLOptions());
-    }
-
-    private function checkFileIsValidXML($file_contents)
-    {
-        libxml_use_internal_errors(true);
-        libxml_clear_errors();
-        $xml = new DOMDocument();
-        $xml->loadXML($file_contents, $this->getLibXMLOptions());
-        $errors = libxml_get_errors();
-
-        if (! empty($errors)) {
-            throw new RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_xml'));
-        }
-    }
-
-    private function getLibXMLOptions()
-    {
-        if ($this->isAllowedToLoadHugeFiles()) {
-            return LIBXML_PARSEHUGE;
-        }
-
-        return 0;
-    }
-
-    private function isAllowedToLoadHugeFiles()
-    {
-        return defined('IS_SCRIPT') && IS_SCRIPT;
+        return $this->XML_file_content_retriever->getSimpleXMLElementFromString($xml_contents);
     }
 
     private function importDashboards(SimpleXMLElement $xml_element, PFUser $user, Project $project, MappingsRegistry $mapping_registry)

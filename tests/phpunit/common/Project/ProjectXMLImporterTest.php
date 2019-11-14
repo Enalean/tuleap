@@ -26,6 +26,7 @@ use Mockery as M;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
+use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\RestoreLibXMLEntityLoadingInitialState;
 use Tuleap\XML\MappingsRegistry;
@@ -127,7 +128,8 @@ class ProjectXMLImporterTest extends TestCase
             $project_creator,
             M::spy(\Tuleap\FRS\UploadedLinksUpdater::class),
             M::spy(\Tuleap\Dashboard\Project\ProjectDashboardXMLImporter::class),
-            $this->sync_members
+            $this->sync_members,
+            new XMLFileContentRetriever()
         );
 
         $this->configuration = new Import\ImportConfig();
