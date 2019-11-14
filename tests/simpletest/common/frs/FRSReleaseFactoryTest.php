@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2012-Present. All rights reserved
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -12,31 +12,12 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-
-Mock::generate('PFUser');
-Mock::generate('UserManager');
-Mock::generate('PermissionsManager');
-Mock::generate('FRSPackageFactory');
-Mock::generatePartial(
-    'FRSReleaseFactory',
-    'FRSReleaseFactoryTestVersion',
-    array(
-        'getUserManager',
-        'getPermissionsManager',
-        '_getFRSPackageFactory',
-        'getFRSReleasesInfoListFromDb',
-        'delete_release',
-        'userCanAdmin'
-    )
-);
 
 class FRSReleaseFactoryTest extends TuleapTestCase
 {
@@ -53,10 +34,11 @@ class FRSReleaseFactoryTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->user  = mock('PFUser');
-        $this->frs_release_factory = new FRSReleaseFactoryTestVersion($this);
-        $this->user_manager        = new MockUserManager($this);
-        $this->permission_manager  = new MockPermissionsManager($this);
+        $this->setUpGlobalsMockery();
+        $this->user  = \Mockery::spy(\PFUser::class);
+        $this->frs_release_factory = \Mockery::mock(\FRSReleaseFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->user_manager        = \Mockery::spy(\UserManager::class);
+        $this->permission_manager  = \Mockery::spy(\PermissionsManager::class);
         stub($this->user_manager)->getUserById()->returns($this->user);
         stub($this->frs_release_factory)->getUserManager()->returns($this->user_manager);
         $project = Mockery::spy(Project::class);
@@ -83,15 +65,12 @@ class FRSReleaseFactoryTest extends TuleapTestCase
     protected function _userCanReadWhenNoPermsOnRelease($canReadPackage)
     {
         stub($this->frs_release_factory)->userCanAdmin()->returns(false);
+        $this->permission_manager->shouldReceive('isPermissionExist')->with($this->release_id, 'RELEASE_READ')->once()->andReturns(false);
+        $this->frs_release_factory->shouldReceive('getPermissionsManager')->andReturns($this->permission_manager);
 
-        $this->permission_manager->expectOnce('isPermissionExist', array($this->release_id, 'RELEASE_READ'));
-        $this->permission_manager->setReturnValue('isPermissionExist', false);
-        $this->frs_release_factory->setReturnValue('getPermissionsManager', $this->permission_manager);
-
-        $frs_package_factory = new MockFRSPackageFactory($this);
-        $frs_package_factory->expectOnce('userCanRead', array($this->group_id, $this->package_id, null));
-        $frs_package_factory->setReturnValue('userCanRead', $canReadPackage);
-        $this->frs_release_factory->setReturnValue('_getFRSPackageFactory', $frs_package_factory);
+        $frs_package_factory = \Mockery::spy(\FRSPackageFactory::class);
+        $frs_package_factory->shouldReceive('userCanRead')->with($this->group_id, $this->package_id, null)->once()->andReturns($canReadPackage);
+        $this->frs_release_factory->shouldReceive('_getFRSPackageFactory')->andReturns($frs_package_factory);
 
         return $this->frs_release_factory;
     }
@@ -110,14 +89,10 @@ class FRSReleaseFactoryTest extends TuleapTestCase
 
     protected function _userCanReadWithSpecificPerms($can_read_release)
     {
-        $this->user->expectOnce('getUgroups', array($this->group_id, array()));
-        $this->user->setReturnValue('getUgroups', array(1,2,76));
-
-        $this->permission_manager->expectOnce('isPermissionExist', array($this->release_id, 'RELEASE_READ'));
-        $this->permission_manager->setReturnValue('isPermissionExist', true);
-        $this->permission_manager->expectOnce('userHasPermission', array($this->release_id, 'RELEASE_READ', array(1,2,76)));
-        $this->permission_manager->setReturnValue('userHasPermission', $can_read_release);
-        $this->frs_release_factory->setReturnValue('getPermissionsManager', $this->permission_manager);
+        $this->user->shouldReceive('getUgroups')->with($this->group_id, array())->once()->andReturns(array(1,2,76));
+        $this->permission_manager->shouldReceive('isPermissionExist')->with($this->release_id, 'RELEASE_READ')->once()->andReturns(true);
+        $this->permission_manager->shouldReceive('userHasPermission')->with($this->release_id, 'RELEASE_READ', array(1,2,76))->once()->andReturns($can_read_release);
+        $this->frs_release_factory->shouldReceive('getPermissionsManager')->andReturns($this->permission_manager);
     }
 
     public function testUserCanReadWithSpecificPermsHasAccess()
@@ -159,23 +134,25 @@ class FRSReleaseFactoryTest extends TuleapTestCase
 
     public function testDeleteProjectReleasesFail()
     {
-        $release = array('release_id' => 1);
-        $this->frs_release_factory->setReturnValue('getFRSReleasesInfoListFromDb', array($release, $release, $release));
-        $this->frs_release_factory->setReturnValueAt(0, 'delete_release', true);
-        $this->frs_release_factory->setReturnValueAt(1, 'delete_release', false);
-        $this->frs_release_factory->setReturnValueAt(2, 'delete_release', true);
-        $this->frs_release_factory->expectCallCount('delete_release', 3);
+        $release1 = array('release_id' => 1);
+        $release2 = array('release_id' => 2);
+        $release3 = array('release_id' => 3);
+        $this->frs_release_factory->shouldReceive('getFRSReleasesInfoListFromDb')->andReturns(array($release1, $release2, $release3));
+        $this->frs_release_factory->shouldReceive('delete_release')->with(1, 1)->once()->andReturns(true);
+        $this->frs_release_factory->shouldReceive('delete_release')->with(1, 2)->once()->andReturns(false);
+        $this->frs_release_factory->shouldReceive('delete_release')->with(1, 3)->once()->andReturns(true);
         $this->assertFalse($this->frs_release_factory->deleteProjectReleases(1));
     }
 
     public function testDeleteProjectReleasesSuccess()
     {
-        $release = array('release_id' => 1);
-        $this->frs_release_factory->setReturnValue('getFRSReleasesInfoListFromDb', array($release, $release, $release));
-        $this->frs_release_factory->setReturnValueAt(0, 'delete_release', true);
-        $this->frs_release_factory->setReturnValueAt(1, 'delete_release', true);
-        $this->frs_release_factory->setReturnValueAt(2, 'delete_release', true);
-        $this->frs_release_factory->expectCallCount('delete_release', 3);
+        $release1 = array('release_id' => 1);
+        $release2 = array('release_id' => 2);
+        $release3 = array('release_id' => 3);
+        $this->frs_release_factory->shouldReceive('getFRSReleasesInfoListFromDb')->andReturns(array($release1, $release2, $release3));
+        $this->frs_release_factory->shouldReceive('delete_release')->with(1, 1)->once()->andReturns(true);
+        $this->frs_release_factory->shouldReceive('delete_release')->with(1, 2)->once()->andReturns(true);
+        $this->frs_release_factory->shouldReceive('delete_release')->with(1, 3)->once()->andReturns(true);
         $this->assertTrue($this->frs_release_factory->deleteProjectReleases(1));
     }
 }

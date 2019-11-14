@@ -26,7 +26,7 @@ class UploadedLinksRequestFormatterTest extends TuleapTestCase
 {
     public function itExtractsOneArrayFromLinksProvidedInRequest()
     {
-        $request = mock('HTTPRequest');
+        $request = \Mockery::spy(\HTTPRequest::class);
         stub($request)->get('uploaded-link-name')->returns(array('test', ''));
         stub($request)->get('uploaded-link')->returns(array('http://example.com', 'ftp://example.com'));
         stub($request)->validArray()->returns(true);
@@ -42,7 +42,7 @@ class UploadedLinksRequestFormatterTest extends TuleapTestCase
 
     public function itThrowsAnExceptionWhenRequestDoesNotProvideCorrectInput()
     {
-        $request = mock('HTTPRequest');
+        $request = \Mockery::spy(\HTTPRequest::class);
         stub($request)->get('uploaded-link-name')->returns(array('test'));
         stub($request)->get('uploaded-link')->returns(array('http://example.com', 'https://example.com'));
         stub($request)->validArray()->returns(true);
@@ -54,7 +54,7 @@ class UploadedLinksRequestFormatterTest extends TuleapTestCase
 
     public function itDoesNotAcceptInvalidLinks()
     {
-        $request = mock('HTTPRequest');
+        $request = \Mockery::spy(\HTTPRequest::class);
         stub($request)->get('uploaded-link-name')->returns(array('invalid'));
         stub($request)->get('uploaded-link')->returns(array('example.com'));
         stub($request)->validArray()->returns(true);
@@ -67,7 +67,7 @@ class UploadedLinksRequestFormatterTest extends TuleapTestCase
 
     public function itDoesNotEmptyLinks()
     {
-        $request = mock('HTTPRequest');
+        $request = \Mockery::spy(\HTTPRequest::class);
         stub($request)->get('uploaded-link-name')->returns(array());
         stub($request)->get('uploaded-link')->returns(array());
         stub($request)->validArray()->returns(true);

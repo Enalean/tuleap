@@ -19,34 +19,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Mock::generate('PFUser');
-Mock::generate('UserManager');
-Mock::generate('Project');
-Mock::generate('ProjectManager');
-Mock::generate('DataAccessResult');
-Mock::generate('FRSReleaseFactory');
-Mock::generate('FRSPackageFactory');
-Mock::generate('FRSFileDao');
-Mock::generate('FRSFile');
-Mock::generate('BackendSystem');
-Mock::generate('BaseLanguage');
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestVersion', array('_getFRSReleaseFactory', '_getProjectManager', 'moveDeletedFilesToStagingArea'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_getFRSFileDao', 'purgeFile', 'archiveBeforePurge'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao', 'archiveBeforePurge'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging', 'restoreDeletedFiles'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSReleaseFactory', '_getFRSFileDao', '_getUserManager', '_getEventManager'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array('_getFRSFileDao', 'restoreFile'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestCreateFiles', array('create', 'moveFileForge','isFileBaseNameExists', 'isSameFileMarkedToBeRestored', 'compareMd5Checksums', 'getSrcDir'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryFakeCreation', array('moveFileForge', 'create'));
-
 class FRSFileFactoryTest extends TuleapTestCase
 {
 
     function setUp()
     {
         parent::setUp();
-        $GLOBALS['Language']           = new MockBaseLanguage($this);
+        $this->setUpGlobalsMockery();
+        $GLOBALS['Language']           = \Mockery::spy(\BaseLanguage::class);
         $GLOBALS['ftp_frs_dir_prefix'] = $this->getTmpDir();
         $GLOBALS['ftp_incoming_dir']   = $this->getTmpDir();
         ForgeConfig::store();
@@ -81,122 +61,95 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testPurgeDeletedFiles()
     {
-        $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('moveDeletedFilesToStagingArea', true);
-        $ff->setReturnValue('purgeFiles', true);
-        $ff->setReturnValue('cleanStaging', true);
-        $ff->setReturnValue('restoreDeletedFiles', true);
-        $backend = new MockBackendSystem($this);
-        $ff->expectOnce('moveDeletedFilesToStagingArea');
-        $ff->expectOnce('purgeFiles', array(1287504083, $backend));
-        $ff->expectOnce('cleanStaging');
-        $ff->expectOnce('restoreDeletedFiles', array($backend));
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $ff->shouldReceive('moveDeletedFilesToStagingArea')->once()->andReturns(true);
+        $ff->shouldReceive('purgeFiles')->with(1287504083, $backend)->once()->andReturns(true);
+        $ff->shouldReceive('cleanStaging')->once()->andReturns(true);
+        $ff->shouldReceive('restoreDeletedFiles')->with($backend)->once()->andReturns(true);
 
         $this->assertTrue($ff->moveFiles(1287504083, $backend));
     }
 
     function testMoveFilesMoveStagingError()
     {
-        $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('moveDeletedFilesToStagingArea', false);
-        $ff->setReturnValue('purgeFiles', true);
-        $ff->setReturnValue('cleanStaging', true);
-        $ff->setReturnValue('restoreDeletedFiles', true);
-        $ff->expectOnce('moveDeletedFilesToStagingArea');
-        $backend = new MockBackendSystem($this);
-        $ff->expectOnce('purgeFiles', array(1287504083, $backend));
-        $ff->expectOnce('cleanStaging');
-        $ff->expectOnce('restoreDeletedFiles', array($backend));
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('moveDeletedFilesToStagingArea')->once()->andReturns(false);
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $ff->shouldReceive('purgeFiles')->with(1287504083, $backend)->once()->andReturns(true);
+        $ff->shouldReceive('cleanStaging')->once()->andReturns(true);
+        $ff->shouldReceive('restoreDeletedFiles')->with($backend)->once()->andReturns(true);
 
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
     function testMoveFilesPurgeError()
     {
-        $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('moveDeletedFilesToStagingArea', true);
-        $ff->setReturnValue('purgeFiles', false);
-        $ff->setReturnValue('cleanStaging', true);
-        $ff->setReturnValue('restoreDeletedFiles', true);
-        $backend = new MockBackendSystem($this);
-        $ff->expectOnce('moveDeletedFilesToStagingArea');
-        $ff->expectOnce('purgeFiles', array(1287504083, $backend));
-        $ff->expectOnce('cleanStaging');
-        $ff->expectOnce('restoreDeletedFiles', array($backend));
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $ff->shouldReceive('moveDeletedFilesToStagingArea')->once()->andReturns(true);
+        $ff->shouldReceive('purgeFiles')->with(1287504083, $backend)->once()->andReturns(false);
+        $ff->shouldReceive('cleanStaging')->once()->andReturns(true);
+        $ff->shouldReceive('restoreDeletedFiles')->with($backend)->once()->andReturns(true);
 
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
     function testMoveFilesCleanStagingError()
     {
-        $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('moveDeletedFilesToStagingArea', true);
-        $ff->setReturnValue('purgeFiles', true);
-        $ff->setReturnValue('cleanStaging', false);
-        $ff->setReturnValue('restoreDeletedFiles', true);
-        $backend = new MockBackendSystem($this);
-        $ff->expectOnce('moveDeletedFilesToStagingArea');
-        $ff->expectOnce('purgeFiles', array(1287504083, $backend));
-        $ff->expectOnce('cleanStaging');
-        $ff->expectOnce('restoreDeletedFiles', array($backend));
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $ff->shouldReceive('moveDeletedFilesToStagingArea')->once()->andReturns(true);
+        $ff->shouldReceive('purgeFiles')->with(1287504083, $backend)->once()->andReturns(true);
+        $ff->shouldReceive('cleanStaging')->once()->andReturns(false);
+        $ff->shouldReceive('restoreDeletedFiles')->with($backend)->once()->andReturns(true);
 
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
     function testMoveFilesRestoreDeletedError()
     {
-        $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('moveDeletedFilesToStagingArea', true);
-        $ff->setReturnValue('purgeFiles', true);
-        $ff->setReturnValue('cleanStaging', true);
-        $ff->setReturnValue('restoreDeletedFiles', false);
-        $backend = new MockBackendSystem($this);
-        $ff->expectOnce('moveDeletedFilesToStagingArea');
-        $ff->expectOnce('purgeFiles', array(1287504083, $backend));
-        $ff->expectOnce('cleanStaging');
-        $ff->expectOnce('restoreDeletedFiles', array($backend));
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $ff->shouldReceive('moveDeletedFilesToStagingArea')->once()->andReturns(true);
+        $ff->shouldReceive('purgeFiles')->with(1287504083, $backend)->once()->andReturns(true);
+        $ff->shouldReceive('cleanStaging')->once()->andReturns(true);
+        $ff->shouldReceive('restoreDeletedFiles')->with($backend)->once()->andReturns(false);
 
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
     function testMoveFilesCatchesExceptionAndLogThem()
     {
-        $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
-        $ff->setLogger(mock('Logger'));
-        $ff->throwOn('purgeFiles', new RuntimeException("Error while doing things"));
-        $ff->setReturnValue('moveDeletedFilesToStagingArea', true);
-        $ff->setReturnValue('cleanStaging', true);
-        $ff->setReturnValue('restoreDeletedFiles', true);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('purgeFiles')->andThrows(new RuntimeException("Error while doing things"));
+        $ff->shouldReceive('moveDeletedFilesToStagingArea')->andReturns(true);
+        $ff->shouldReceive('cleanStaging')->andReturns(true);
+        $ff->shouldReceive('restoreDeletedFiles')->andReturns(true);
 
-        $backend = new MockBackendSystem();
-        $backend->expectOnce('log', array("Error while doing things", Backend::LOG_ERROR));
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $backend->shouldReceive('log')->with("Error while doing things", Backend::LOG_ERROR)->once();
 
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
     function testMoveDeletedFilesToStagingAreaWithNoFiles()
     {
-        $ff = new FRSFileFactoryTestMoveToStaging($this);
-        $ff->setLogger(mock('Logger'));
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
 
-        $dar = new MockDataAccessResult($this);
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('getRow', false);
-        $dar->setReturnValue('valid', false);
-        $dar->setReturnValue('rowCount', 0);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('searchStagingCandidates')->andReturns(\TestHelper::emptyDar());
+        $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
+        $backend = \Mockery::spy(\BackendSystem::class);
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('searchStagingCandidates');
-        $dao->setReturnValue('searchStagingCandidates', $dar);
-        $ff->setReturnValue('_getFRSFileDao', $dao);
-        $backend = new MockBackendSystem($this);
-
-        $ff->expectNever('moveDeletedFileToStagingArea');
+        $ff->shouldReceive('moveDeletedFileToStagingArea')->never();
 
         $this->assertTrue($ff->moveDeletedFilesToStagingArea($backend));
     }
@@ -230,22 +183,21 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testMoveDeletedFileToStagingArea()
     {
-        $ff = new FRSFileFactoryTestPurgeOneFile($this);
-        $ff->setLogger(mock('Logger'));
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
 
         $this->createReleaseDir('prj', 'p1_r1');
         $filepath = $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls';
         touch($filepath);
         $this->assertTrue(is_file($filepath));
-        $file = new MockFRSFile($this);
-        $file->setReturnValue('getFileID', 12);
-        $file->setReturnValue('getFileLocation', $filepath);
+        $file = \Mockery::spy(\FRSFile::class);
+        $file->shouldReceive('getFileID')->andReturns(12);
+        $file->shouldReceive('getFileLocation')->andReturns($filepath);
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('setFileInDeletedList', array(12));
-        $dao->setReturnValue('setFileInDeletedList', true);
-        $ff->setReturnValue('_getFRSFileDao', $dao);
-        $backend = new MockBackendSystem($this);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('setFileInDeletedList')->with(12)->once()->andReturns(true);
+        $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
+        $backend = \Mockery::spy(\BackendSystem::class);
 
         $this->assertTrue($ff->moveDeletedFileToStagingArea($file, $backend));
 
@@ -263,26 +215,24 @@ class FRSFileFactoryTest extends TuleapTestCase
      */
     function testMoveDeletedFileToStagingAreaButFileDoesntExist()
     {
-        $ff = new FRSFileFactoryTestPurgeOneFile($this);
-        $ff->setLogger(mock('Logger'));
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
 
         // Create temp file in a fake release
         $this->createReleaseDir('prj', 'p1_r1');
         $filepath = $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls';
         $this->assertFalse(is_file($filepath), "The file shouldn't exist, this is the base of the test!");
-        $file = new MockFRSFile($this);
-        $file->setReturnValue('getFileID', 12);
-        $file->setReturnValue('getFileLocation', $filepath);
+        $file = \Mockery::spy(\FRSFile::class);
+        $file->shouldReceive('getFileID')->andReturns(12);
+        $file->shouldReceive('getFileLocation')->andReturns($filepath);
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('setFileInDeletedList', array(12)); // Mark as deleted
-        $dao->setReturnValue('setFileInDeletedList', true);
-        $dao->expectOnce('setPurgeDate', array(12, $_SERVER['REQUEST_TIME'])); // Mark as purged
-        $dao->setReturnValue('setPurgeDate', true);
-        $ff->setReturnValue('_getFRSFileDao', $dao);
-        $backend = new MockBackendSystem($this);
-        $backend->expectAt('0', 'log', array('*', 'warn'));
-        $backend->expectAt('1', 'log', array('*', 'error'));
+        $dao = \Mockery::spy(\FRSFileDao::class); // Mark as deleted
+        $dao->shouldReceive('setFileInDeletedList')->with(12)->once()->andReturns(true); // Mark as purged
+        $dao->shouldReceive('setPurgeDate')->with(12, $_SERVER['REQUEST_TIME'])->once()->andReturns(true);
+        $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $backend->shouldReceive('log')->with('*', 'warn')->ordered();
+        $backend->shouldReceive('log')->with('*', 'error')->ordered();
 
         $this->assertFalse($ff->moveDeletedFileToStagingArea($file, $backend));
 
@@ -296,25 +246,24 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testMoveDeletedFileToStagingAreaReleaseNotEmpty()
     {
-        $ff = new FRSFileFactoryTestPurgeOneFile($this);
-        $ff->setLogger(mock('Logger'));
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
 
         // Create temp file in a fake release
         $this->createReleaseDir('prj', 'p1_r1');
         $filepath = $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls';
         touch($filepath);
         $this->assertTrue(is_file($filepath));
-        $file = new MockFRSFile($this);
-        $file->setReturnValue('getFileID', 12);
-        $file->setReturnValue('getFileLocation', $filepath);
+        $file = \Mockery::spy(\FRSFile::class);
+        $file->shouldReceive('getFileID')->andReturns(12);
+        $file->shouldReceive('getFileLocation')->andReturns($filepath);
         // Second file, not deleted
         touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/barfoo.doc');
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('setFileInDeletedList', array(12));
-        $dao->setReturnValue('setFileInDeletedList', true);
-        $ff->setReturnValue('_getFRSFileDao', $dao);
-        $backend = new MockBackendSystem($this);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('setFileInDeletedList')->with(12)->once()->andReturns(true);
+        $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
+        $backend = \Mockery::spy(\BackendSystem::class);
 
         $this->assertTrue($ff->moveDeletedFileToStagingArea($file, $backend));
 
@@ -329,72 +278,55 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testMoveDeletedFilesToStagingAreaFail()
     {
-        $ff = new FRSFileFactoryTestMoveToStaging($this);
-        $ff->setLogger(mock('Logger'));
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
 
-        $dar = new MockDataAccessResult($this);
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('current', array('file_id' => 12));
-        $dar->setReturnValueAt(0, 'valid', true);
-        $dar->setReturnValueAt(1, 'valid', false);
-        $dar->setReturnValue('rowCount', 1);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('searchStagingCandidates')->andReturns(TestHelper::arrayToDar(['file_id' => 12]));
+        $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('searchStagingCandidates');
-        $dao->setReturnValue('searchStagingCandidates', $dar);
-        $ff->setReturnValue('_getFRSFileDao', $dao);
-
-        $refFile = new FRSFile(array('file_id' => 12));
-        $backend = new MockBackendSystem($this);
-        $ff->setReturnValue('moveDeletedFileToStagingArea', false);
-        $ff->expectOnce('moveDeletedFileToStagingArea', array($refFile, $backend));
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $ff->shouldReceive('moveDeletedFileToStagingArea')->with(
+            Mockery::on(function (FRSFile $file) {
+                return $file->getFileID() === 12;
+            }),
+            $backend
+        )->once()->andReturns(false);
 
         $this->assertFalse($ff->moveDeletedFilesToStagingArea($backend));
     }
 
     function testMoveDeletedFilesToStagingAreaWithOneFile()
     {
-        $ff = new FRSFileFactoryTestMoveToStaging($this);
-        $ff->setLogger(mock('Logger'));
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
 
-        $dar = new MockDataAccessResult($this);
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('current', array('file_id' => 12));
-        $dar->setReturnValueAt(0, 'valid', true);
-        $dar->setReturnValueAt(1, 'valid', false);
-        $dar->setReturnValue('rowCount', 1);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('searchStagingCandidates')->once()->andReturn(TestHelper::arrayToDar(['file_id' => 12]));
+        $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('searchStagingCandidates');
-        $dao->setReturnValue('searchStagingCandidates', $dar);
-        $ff->setReturnValue('_getFRSFileDao', $dao);
-
-        $refFile = new FRSFile(array('file_id' => 12));
-        $backend = new MockBackendSystem($this);
-        $ff->setReturnValue('moveDeletedFileToStagingArea', true);
-        $ff->expectOnce('moveDeletedFileToStagingArea', array($refFile, $backend));
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $ff->shouldReceive('moveDeletedFileToStagingArea')->with(
+            Mockery::on(function (FRSFile $file) {
+                return $file->getFileID() === 12;
+            }),
+            $backend
+        )->once()->andReturns(true);
 
         $this->assertTrue($ff->moveDeletedFilesToStagingArea($backend));
     }
 
     function testPurgeFilesWithNoFiles()
     {
-        $dar = new MockDataAccessResult($this);
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('getRow', false);
-        $dar->setReturnValue('valid', false);
-        $dar->setReturnValue('rowCount', 0);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('searchFilesToPurge')->with(1287504083)->once()->andReturn(TestHelper::emptyDar());
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('searchFilesToPurge', array(1287504083));
-        $dao->setReturnValue('searchFilesToPurge', $dar);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
 
-        $ff = new FRSFileFactoryTestPurgeFiles($this);
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('_getFRSFileDao', $dao);
-
-        $ff->expectNever('purgeFile');
-        $backend = new MockBackendSystem($this);
+        $ff->shouldReceive('purgeFile')->never();
+        $backend = \Mockery::spy(\BackendSystem::class);
         $this->assertTrue($ff->purgeFiles(1287504083, $backend));
     }
 
@@ -402,31 +334,27 @@ class FRSFileFactoryTest extends TuleapTestCase
     {
         $refFile = new FRSFile(array('file_id' => 12));
 
-        $dar = new MockDataAccessResult($this);
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('current', array('file_id' => 12));
-        $dar->setReturnValueAt(0, 'valid', true);
-        $dar->setReturnValueAt(1, 'valid', false);
-        $dar->setReturnValue('rowCount', 1);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('searchFilesToPurge')->with(1287504083)->once()->andReturn(TestHelper::arrayToDar(['file_id' => 12]));
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('searchFilesToPurge', array(1287504083));
-        $dao->setReturnValue('searchFilesToPurge', $dar);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
 
-        $ff = new FRSFileFactoryTestPurgeFiles($this);
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('_getFRSFileDao', $dao);
-
-        $backend = new MockBackendSystem($this);
-        $ff->expectOnce('purgeFile', array($refFile, $backend));
-        $ff->setReturnValue('purgeFile', true);
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $ff->shouldReceive('purgeFile')->with(
+            Mockery::on(function (FRSFile $file) {
+                return $file->getFileID() === 12;
+            }),
+            $backend
+        )->once()->andReturns(true);
         $this->assertTrue($ff->purgeFiles(1287504083, $backend));
     }
 
     function testPurgeFileSucceed()
     {
-        $ff = new FRSFileFactoryTestPurgeOneFile($this);
-        $ff->setLogger(mock('Logger'));
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
 
         // Create temp file
         $filepath = $GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/foobar.xls.12';
@@ -434,21 +362,25 @@ class FRSFileFactoryTest extends TuleapTestCase
         touch($filepath);
 
         $this->assertTrue(is_file($filepath));
-        $file = new MockFRSFile($this);
-        $file->setReturnValue('getFileID', 12);
-        $file->setReturnValue('getFileName', 'p1_r1/foobar.xls');
-        $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls');
+        $file = \Mockery::spy(\FRSFile::class);
+        $file->shouldReceive('getFileID')->andReturns(12);
+        $file->shouldReceive('getFileName')->andReturns('p1_r1/foobar.xls');
+        $file->shouldReceive('getFileLocation')->andReturns($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls');
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('setPurgeDate', array(12, '*'));
-        $dao->setReturnValue('setPurgeDate', true);
-        $ff->setReturnValue('_getFRSFileDao', $dao);
-        stub($ff)->archiveBeforePurge()->returns(true);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('setPurgeDate')->with(12, Mockery::any())->once()->andReturns(true);
+        $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
 
-        $backend = new MockBackendSystem();
-        $backend->expectNever('log', array('File p1_r1/foobar.xls(12) not purged, Set purge date in DB fail', 'error'));
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $backend->shouldReceive('log')->never();
+        $ff->shouldReceive('archiveBeforePurge')->with(
+            Mockery::on(function (FRSFile $file) {
+                return $file->getFileID() === 12;
+            }),
+            $backend
+        )->once()->andReturns(true);
+
         $ff->purgeFile($file, $backend);
-        $ff->expectOnce('archiveBeforePurge', array($file, $backend));
 
         $this->assertFalse(is_file($filepath), "File should be deleted");
 
@@ -458,27 +390,26 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testPurgeFileDBUpdateFails()
     {
-        $ff = new FRSFileFactoryTestPurgeOneFile($this);
-        $ff->setLogger(mock('Logger'));
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
 
         // Create temp file
         $filepath = $GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/foobar.xls.12';
         mkdir(dirname($filepath), 0750, true);
         touch($filepath);
         $this->assertTrue(is_file($filepath));
-        $file = new MockFRSFile($this);
-        $file->setReturnValue('getFileID', 12);
-        $file->setReturnValue('getFileName', 'p1_r1/foobar.xls');
-        $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls');
+        $file = \Mockery::spy(\FRSFile::class);
+        $file->shouldReceive('getFileID')->andReturns(12);
+        $file->shouldReceive('getFileName')->andReturns('p1_r1/foobar.xls');
+        $file->shouldReceive('getFileLocation')->andReturns($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls');
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('setPurgeDate', array(12, '*'));
-        $dao->setReturnValue('setPurgeDate', false);
-        $ff->setReturnValue('_getFRSFileDao', $dao);
-        $ff->setReturnValue('archiveBeforePurge', true);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('setPurgeDate')->with(12, Mockery::any())->once()->andReturns(false);
+        $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
+        $ff->shouldReceive('archiveBeforePurge')->andReturns(true);
 
-        $backend = new MockBackendSystem();
-        $backend->expectOnce('log', array('File '.$filepath.' not purged, Set purge date in DB fail', 'error'));
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $backend->shouldReceive('log')->with('File '.$filepath.' not purged, Set purge date in DB fail', 'error')->once();
         $this->assertFalse($ff->purgeFile($file, $backend));
 
         $this->assertFalse(is_file($filepath), "File should be deleted");
@@ -489,25 +420,25 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     public function testPurgeFileSystemCopyFails()
     {
-        $ff = new FRSFileFactoryTestPurgeOneFile($this);
-        $ff->setLogger(mock('Logger'));
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
 
         // Create temp file
         $filepath = $GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/foobar.xls.12';
         mkdir(dirname($filepath), 0750, true);
         touch($filepath);
         $this->assertTrue(is_file($filepath));
-        $file = new MockFRSFile($this);
-        $file->setReturnValue('getFileID', 12);
-        $file->setReturnValue('getFileName', 'p1_r1/foobar.xls');
-        $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls');
+        $file = \Mockery::spy(\FRSFile::class);
+        $file->shouldReceive('getFileID')->andReturns(12);
+        $file->shouldReceive('getFileName')->andReturns('p1_r1/foobar.xls');
+        $file->shouldReceive('getFileLocation')->andReturns($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls');
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectNever('setPurgeDate', array(12, '*'));
-        $ff->setReturnValue('archiveBeforePurge', false);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('setPurgeDate')->never();
+        $ff->shouldReceive('archiveBeforePurge')->andReturns(false);
 
-        $backend = new MockBackendSystem();
-        $backend->expectOnce('log', array('File '.$filepath.' not purged, unlink failed', 'error'));
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $backend->shouldReceive('log')->with('File '.$filepath.' not purged, unlink failed', 'error')->once();
         $this->assertFalse($ff->purgeFile($file, $backend));
 
         // Cleanup
@@ -516,26 +447,25 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testPurgeFileWithFileNotFoundInFS()
     {
-        $ff = new FRSFileFactoryTestPurgeOneFile($this);
-        $ff->setLogger(mock('Logger'));
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
 
         $filepath = $GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/foobar.xls.12';
 
         $this->assertFalse(is_file($filepath));
-        $file = new MockFRSFile($this);
-        $file->setReturnValue('getFileID', 12);
-        $file->setReturnValue('getFileName', 'p1_r1/foobar.xls');
-        $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls');
+        $file = \Mockery::spy(\FRSFile::class);
+        $file->shouldReceive('getFileID')->andReturns(12);
+        $file->shouldReceive('getFileName')->andReturns('p1_r1/foobar.xls');
+        $file->shouldReceive('getFileLocation')->andReturns($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls');
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('setPurgeDate', array(12, '*'));
-        $dao->setReturnValue('setPurgeDate', true);
-        $ff->setReturnValue('_getFRSFileDao', $dao);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('setPurgeDate')->with(12, Mockery::any())->once()->andReturns(true);
+        $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
 
-        $backend = new MockBackendSystem();
-        $backend->expectOnce('log', array('File '.$filepath.' not found on file system, automatically marked as purged', 'warn'));
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $backend->shouldReceive('log')->with('File '.$filepath.' not found on file system, automatically marked as purged', 'warn')->once();
         $this->assertTrue($ff->purgeFile($file, $backend));
-        $ff->expectNever('archiveBeforePurge', array($file, $backend));
+        $ff->shouldReceive('archiveBeforePurge')->never();
     }
 
     private function createDeletedReleaseDir($release_name, $dir_name)
@@ -549,7 +479,7 @@ class FRSFileFactoryTest extends TuleapTestCase
     function testRemoveStagingEmptyDirectories()
     {
         $ff = new FRSFileFactory();
-        $backend = new MockBackendSystem($this);
+        $backend = \Mockery::spy(\BackendSystem::class);
 
         $this->createDeletedReleaseDir('prj', 'p1_r1');
         $this->createDeletedReleaseDir('prj2', 'p2_r5');
@@ -572,8 +502,8 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testRestoreFileSucceed()
     {
-        $fileFactory = new FRSFileFactoryTestRestore();
-        $fileFactory->setLogger(mock('Logger'));
+        $fileFactory = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $fileFactory->setLogger(\Mockery::spy(\Logger::class));
 
         // Create temp file
         $filepath = $GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/toto.xls.12';
@@ -581,31 +511,30 @@ class FRSFileFactoryTest extends TuleapTestCase
         touch($filepath);
         $this->assertTrue(is_dir(dirname($filepath)));
 
-        $file = new MockFRSFile($this);
-        $file->setReturnValue('getFileID', 12);
-        $file->setReturnValue('getFileName', 'p1_r1/toto.xls');
-        $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/toto.xls');
-        $project = new MockProject($this);
-        $file->setReturnValue('getGroup', $project);
+        $file = \Mockery::spy(\FRSFile::class);
+        $file->shouldReceive('getFileID')->andReturns(12);
+        $file->shouldReceive('getFileName')->andReturns('p1_r1/toto.xls');
+        $file->shouldReceive('getFileLocation')->andReturns($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/toto.xls');
+        $project = \Mockery::spy(\Project::class);
+        $file->shouldReceive('getGroup')->andReturns($project);
         $this->createReleaseDir('prj', 'p1_r1');
         $this->assertTrue(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/'));
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('restoreFile');
-        $dao->setReturnValue('restoreFile', true);
-        $fileFactory->setReturnValue('_getFRSFileDao', $dao);
-        $backend = new MockBackendSystem($this);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('restoreFile')->once()->andReturns(true);
+        $fileFactory->shouldReceive('_getFRSFileDao')->andReturns($dao);
+        $backend = \Mockery::spy(\BackendSystem::class);
 
-        $user = new MockPFUser();
-        $um = new MockUserManager($this);
-        $um->setReturnValue('getCurrentUser', $user);
-        $fileFactory->setReturnValue('_getUserManager', $um);
-        $fileFactory->setReturnValue('_getEventManager', \Mockery::spy(EventManager::class));
+        $user = \Mockery::spy(\PFUser::class);
+        $um = \Mockery::spy(\UserManager::class);
+        $um->shouldReceive('getCurrentUser')->andReturns($user);
+        $fileFactory->shouldReceive('_getUserManager')->andReturns($um);
+        $fileFactory->shouldReceive('_getEventManager')->andReturns(\Mockery::spy(EventManager::class));
         $release = \Mockery::spy(FRSRelease::class);
         $release->shouldReceive('isDeleted')->andReturns(false);
-        $releaseFactory = new MockFRSReleaseFactory($this);
-        $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
-        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
+        $releaseFactory = \Mockery::spy(\FRSReleaseFactory::class);
+        $releaseFactory->shouldReceive('getFRSReleaseFromDb')->andReturns($release);
+        $fileFactory->shouldReceive('_getFRSReleaseFactory')->andReturns($releaseFactory);
 
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
 
@@ -616,8 +545,8 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testRestoreFileNotExists()
     {
-        $fileFactory = new FRSFileFactoryTestRestore();
-        $fileFactory->setLogger(mock('Logger'));
+        $fileFactory = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $fileFactory->setLogger(\Mockery::spy(\Logger::class));
 
         // Create temp file
         $filepath = $GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/toto.xls.5';
@@ -625,23 +554,23 @@ class FRSFileFactoryTest extends TuleapTestCase
         $this->createReleaseDir('prj', 'p1_r1');
         $this->assertFalse(file_exists($filepath));
 
-        $file = new MockFRSFile($this);
-        $file->setReturnValue('getFileID', 5);
-        $file->setReturnValue('getFileName', 'p1_r1/toto.xls');
-        $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/toto.xls');
+        $file = \Mockery::spy(\FRSFile::class);
+        $file->shouldReceive('getFileID')->andReturns(5);
+        $file->shouldReceive('getFileName')->andReturns('p1_r1/toto.xls');
+        $file->shouldReceive('getFileLocation')->andReturns($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/toto.xls');
         $this->assertTrue(is_dir(dirname($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/')));
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectNever('restoreFile');
-        $fileFactory->setReturnValue('_getFRSFileDao', $dao);
-        $backend = new MockBackendSystem($this);
-        $backend->setReturnValue('chgrp', true);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('restoreFile')->never();
+        $fileFactory->shouldReceive('_getFRSFileDao')->andReturns($dao);
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $backend->shouldReceive('chgrp')->andReturns(true);
 
         $release = \Mockery::spy(FRSRelease::class);
         $release->shouldReceive('isDeleted')->andReturns(false);
-        $releaseFactory = new MockFRSReleaseFactory($this);
-        $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
-        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
+        $releaseFactory = \Mockery::spy(\FRSReleaseFactory::class);
+        $releaseFactory->shouldReceive('getFRSReleaseFromDb')->andReturns($release);
+        $fileFactory->shouldReceive('_getFRSReleaseFactory')->andReturns($releaseFactory);
 
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
 
@@ -652,8 +581,8 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testRestoreFileLocationNotExists()
     {
-        $fileFactory = new FRSFileFactoryTestRestore();
-        $fileFactory->setLogger(mock('Logger'));
+        $fileFactory = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $fileFactory->setLogger(\Mockery::spy(\Logger::class));
 
         // Create temp file
         $filepath = $GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p2_r1/toto.xls.12';
@@ -661,31 +590,30 @@ class FRSFileFactoryTest extends TuleapTestCase
         $this->createDeletedReleaseDir('prj', 'p2_r1');
         touch($filepath);
         $this->assertTrue(is_dir(dirname($filepath)));
-        $backend = new MockBackendSystem($this);
-        $file = new MockFRSFile($this);
-        $file->setReturnValue('getFileID', 12);
-        $file->setReturnValue('getFileName', 'p2_r1/toto.xls');
-        $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1/toto.xls');
-        $project = new MockProject($this);
-        $file->setReturnValue('getGroup', $project);
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $file = \Mockery::spy(\FRSFile::class);
+        $file->shouldReceive('getFileID')->andReturns(12);
+        $file->shouldReceive('getFileName')->andReturns('p2_r1/toto.xls');
+        $file->shouldReceive('getFileLocation')->andReturns($GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1/toto.xls');
+        $project = \Mockery::spy(\Project::class);
+        $file->shouldReceive('getGroup')->andReturns($project);
         $this->assertTrue(is_dir(dirname($GLOBALS['ftp_frs_dir_prefix'].'/prj/p2_r1/')));
-        $backend->setReturnValue('chgrp', true);
+        $backend->shouldReceive('chgrp')->andReturns(true);
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('restoreFile');
-        $dao->setReturnValue('restoreFile', true);
-        $fileFactory->setReturnValue('_getFRSFileDao', $dao);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('restoreFile')->once()->andReturns(true);
+        $fileFactory->shouldReceive('_getFRSFileDao')->andReturns($dao);
 
-        $user = new MockPFUser();
-        $um = new MockUserManager($this);
-        $um->setReturnValue('getCurrentUser', $user);
-        $fileFactory->setReturnValue('_getUserManager', $um);
-        $fileFactory->setReturnValue('_getEventManager', \Mockery::spy(EventManager::class));
+        $user = \Mockery::spy(\PFUser::class);
+        $um = \Mockery::spy(\UserManager::class);
+        $um->shouldReceive('getCurrentUser')->andReturns($user);
+        $fileFactory->shouldReceive('_getUserManager')->andReturns($um);
+        $fileFactory->shouldReceive('_getEventManager')->andReturns(\Mockery::spy(EventManager::class));
         $release = \Mockery::spy(FRSRelease::class);
         $release->shouldReceive('isDeleted')->andReturns(false);
-        $releaseFactory = new MockFRSReleaseFactory($this);
-        $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
-        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
+        $releaseFactory = \Mockery::spy(\FRSReleaseFactory::class);
+        $releaseFactory->shouldReceive('getFRSReleaseFromDb')->andReturns($release);
+        $fileFactory->shouldReceive('_getFRSReleaseFactory')->andReturns($releaseFactory);
 
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
 
@@ -696,8 +624,8 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testRestoreFileDBUpdateFails()
     {
-        $fileFactory = new FRSFileFactoryTestRestore();
-        $fileFactory->setLogger(mock('Logger'));
+        $fileFactory = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $fileFactory->setLogger(\Mockery::spy(\Logger::class));
 
         // Create temp file
         $filepath = $GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p3_r1/toto.xls.12';
@@ -706,31 +634,30 @@ class FRSFileFactoryTest extends TuleapTestCase
         touch($filepath);
         $this->assertTrue(is_dir(dirname($filepath)));
 
-        $file = new MockFRSFile($this);
-        $file->setReturnValue('getFileID', 12);
-        $file->setReturnValue('getFileName', 'p3_r1/toto.xls');
-        $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/toto.xls');
-        $project = new MockProject($this);
-        $file->setReturnValue('getGroup', $project);
+        $file = \Mockery::spy(\FRSFile::class);
+        $file->shouldReceive('getFileID')->andReturns(12);
+        $file->shouldReceive('getFileName')->andReturns('p3_r1/toto.xls');
+        $file->shouldReceive('getFileLocation')->andReturns($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/toto.xls');
+        $project = \Mockery::spy(\Project::class);
+        $file->shouldReceive('getGroup')->andReturns($project);
         $this->assertTrue(is_dir(dirname($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/')));
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('restoreFile');
-        $dao->setReturnValue('restoreFile', false);
-        $fileFactory->setReturnValue('_getFRSFileDao', $dao);
-        $backend = new MockBackendSystem($this);
-        $backend->setReturnValue('chgrp', true);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('restoreFile')->once()->andReturns(false);
+        $fileFactory->shouldReceive('_getFRSFileDao')->andReturns($dao);
+        $backend = \Mockery::spy(\BackendSystem::class);
+        $backend->shouldReceive('chgrp')->andReturns(true);
 
-        $user = new MockPFUser();
-        $um = new MockUserManager($this);
-        $um->setReturnValue('getCurrentUser', $user);
-        $fileFactory->setReturnValue('_getUserManager', $um);
-        $fileFactory->setReturnValue('_getEventManager', \Mockery::spy(EventManager::class));
+        $user = \Mockery::spy(\PFUser::class);
+        $um = \Mockery::spy(\UserManager::class);
+        $um->shouldReceive('getCurrentUser')->andReturns($user);
+        $fileFactory->shouldReceive('_getUserManager')->andReturns($um);
+        $fileFactory->shouldReceive('_getEventManager')->andReturns(\Mockery::spy(EventManager::class));
         $release = \Mockery::spy(FRSRelease::class);
         $release->shouldReceive('isDeleted')->andReturns(false);
-        $releaseFactory = new MockFRSReleaseFactory($this);
-        $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
-        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
+        $releaseFactory = \Mockery::spy(\FRSReleaseFactory::class);
+        $releaseFactory->shouldReceive('getFRSReleaseFromDb')->andReturns($release);
+        $fileFactory->shouldReceive('_getFRSReleaseFactory')->andReturns($releaseFactory);
 
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
 
@@ -741,8 +668,8 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testRestoreFileInDeletedRelease()
     {
-        $fileFactory = new FRSFileFactoryTestRestore();
-        $fileFactory->setLogger(mock('Logger'));
+        $fileFactory = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $fileFactory->setLogger(\Mockery::spy(\Logger::class));
 
         // Create temp file
         $filepath = $GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p3_r1/toto.xls.12';
@@ -752,14 +679,14 @@ class FRSFileFactoryTest extends TuleapTestCase
 
         $release = \Mockery::spy(FRSRelease::class);
         $release->shouldReceive('isDeleted')->andReturns(true);
-        $releaseFactory = new MockFRSReleaseFactory($this);
-        $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
-        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('cancelRestore');
-        $fileFactory->setReturnValue('_getFRSFileDao', $dao);
-        $file = new MockFRSFile($this);
-        $backend = new MockBackendSystem($this);
+        $releaseFactory = \Mockery::spy(\FRSReleaseFactory::class);
+        $releaseFactory->shouldReceive('getFRSReleaseFromDb')->andReturns($release);
+        $fileFactory->shouldReceive('_getFRSReleaseFactory')->andReturns($releaseFactory);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('cancelRestore')->once();
+        $fileFactory->shouldReceive('_getFRSFileDao')->andReturns($dao);
+        $file = \Mockery::spy(\FRSFile::class);
+        $backend = \Mockery::spy(\BackendSystem::class);
 
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
         $this->assertTrue(is_dir(dirname($filepath)));
@@ -774,49 +701,34 @@ class FRSFileFactoryTest extends TuleapTestCase
     {
         $refFile = new FRSFile(array('file_id' => 12));
 
-        $dar = new MockDataAccessResult($this);
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('current', array('file_id' => 12));
-        $dar->setReturnValueAt(0, 'valid', true);
-        $dar->setReturnValueAt(1, 'valid', false);
-        $dar->setReturnValue('rowCount', 1);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('searchFilesToRestore')->once()->andReturn(TestHelper::arrayToDar(['file_id' => 12]));
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('searchFilesToRestore');
-        $dao->setReturnValue('searchFilesToRestore', $dar);
-
-        $ff = new FRSFileFactoryTestRestoreFiles($this);
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('_getFRSFileDao', $dao);
-        $backend  = new MockBackendSystem($this);
-        $ff->expectOnce('restoreFile', array($refFile, $backend));
-        $ff->setReturnValue('restoreFile', true);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
+        $backend  = \Mockery::spy(\BackendSystem::class);
+        $ff->shouldReceive('restoreFile')->with(
+            Mockery::any(function (FRSFile $file) {
+                $file->getFileID() === 12;
+            }),
+            $backend
+        )->once()->andReturns(true);
 
         $this->assertTrue($ff->restoreDeletedFiles($backend));
     }
 
     function testRestoreDeletedFilesReturnFalse()
     {
-        $dar = new MockDataAccessResult($this);
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValueAt(0, 'current', array('file_id' => 12));
-        $dar->setReturnValueAt(1, 'current', array('file_id' => 13));
-        $dar->setReturnValueAt(0, 'valid', true);
-        $dar->setReturnValueAt(1, 'valid', true);
-        $dar->setReturnValueAt(2, 'valid', false);
-        $dar->setReturnValue('rowCount', 1);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('searchFilesToRestore')->andReturn(TestHelper::arrayToDar(['file_id' => 12], ['file_id' => 13]));
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('searchFilesToRestore');
-        $dao->setReturnValue('searchFilesToRestore', $dar);
-
-        $ff = new FRSFileFactoryTestRestoreFiles($this);
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('_getFRSFileDao', $dao);
-        $backend  = new MockBackendSystem($this);
-        $ff->expectCallCount('restoreFile', 2);
-        $ff->setReturnValueAt(0, 'restoreFile', false);
-        $ff->setReturnValueAt(1, 'restoreFile', true);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
+        $backend  = \Mockery::spy(\BackendSystem::class);
+        $ff->shouldReceive('restoreFile')->once()->andReturns(false);
+        $ff->shouldReceive('restoreFile')->once()->andReturns(true);
 
         $this->assertFalse($ff->restoreDeletedFiles($backend));
     }
@@ -825,19 +737,14 @@ class FRSFileFactoryTest extends TuleapTestCase
     {
         $refFile = new FRSFile(array('file_id' => 12));
 
-        $dar = new MockDataAccessResult($this);
-        $dar->setReturnValue('isError', true);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('searchFilesToRestore')->once()->andReturns(Mockery::mock(DataAccessResult::class, ['isError' => true]));
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('searchFilesToRestore');
-        $dao->setReturnValue('searchFilesToRestore', $dar);
-
-        $ff = new FRSFileFactoryTestRestoreFiles($this);
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('_getFRSFileDao', $dao);
-        $backend  = new MockBackendSystem($this);
-        $ff->expectNever('restoreFile', array($refFile, $backend));
-        $ff->setReturnValue('restoreFile', false);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
+        $backend  = \Mockery::spy(\BackendSystem::class);
+        $ff->shouldReceive('restoreFile')->never()->andReturns(false);
 
         $this->assertFalse($ff->restoreDeletedFiles($backend));
     }
@@ -846,20 +753,14 @@ class FRSFileFactoryTest extends TuleapTestCase
     {
         $refFile = new FRSFile(array('file_id' => 12));
 
-        $dar = new MockDataAccessResult($this);
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('rowCount', 0);
+        $dao = \Mockery::spy(\FRSFileDao::class);
+        $dao->shouldReceive('searchFilesToRestore')->once()->andReturn(TestHelper::emptyDar());
 
-        $dao = new MockFRSFileDao($this);
-        $dao->expectOnce('searchFilesToRestore');
-        $dao->setReturnValue('searchFilesToRestore', $dar);
-
-        $ff = new FRSFileFactoryTestRestoreFiles($this);
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('_getFRSFileDao', $dao);
-        $backend  = new MockBackendSystem($this);
-        $ff->expectNever('restoreFile', array($refFile, $backend));
-        $ff->setReturnValue('restoreFile', false);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('_getFRSFileDao')->andReturns($dao);
+        $backend  = \Mockery::spy(\BackendSystem::class);
+        $ff->shouldReceive('restoreFile')->never()->andReturns(false);
 
         $this->assertTrue($ff->restoreDeletedFiles($backend));
     }
@@ -902,9 +803,8 @@ class FRSFileFactoryTest extends TuleapTestCase
         touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
 
         // Try to release a file named toto.txt in the same release
-        $p = new MockProject($this);
-        $p->expectOnce('getUnixName', array(false), 'Must have project name with capital letters if any');
-        $p->setReturnValue('getUnixName', 'prj');
+        $p = \Mockery::spy(\Project::class);
+        $p->shouldReceive('getUnixName')->with(false)->once()->andReturns('prj');
 
         $r = new FRSRelease();
         $r->setReleaseID(456);
@@ -933,9 +833,8 @@ class FRSFileFactoryTest extends TuleapTestCase
         touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584211');
 
         // Try to release a file named toto.txt in the same release
-        $p = new MockProject();
-        $p->expectOnce('getUnixName', array(false), 'Must have project name with capital letters if any');
-        $p->setReturnValue('getUnixName', 'prj');
+        $p = \Mockery::spy(\Project::class);
+        $p->shouldReceive('getUnixName')->with(false)->once()->andReturns('prj');
 
         $r = new FRSRelease();
         $r->setReleaseID(456);
@@ -960,9 +859,8 @@ class FRSFileFactoryTest extends TuleapTestCase
         touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto zataz.txt');
 
         // Try to release a file named 'toto zataz.txt' in the same release
-        $p = new MockProject();
-        $p->expectOnce('getUnixName', array(false), 'Must have project name with capital letters if any');
-        $p->setReturnValue('getUnixName', 'prj');
+        $p = \Mockery::spy(\Project::class);
+        $p->shouldReceive('getUnixName')->with(false)->once()->andReturns('prj');
 
         $r = new FRSRelease();
         $r->setReleaseID(456);
@@ -994,8 +892,8 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testCreateFileSetReleaseTime()
     {
-        $p = new MockProject($this);
-        $p->setReturnValue('getUnixName', 'prj');
+        $p = \Mockery::spy(\Project::class);
+        $p->shouldReceive('getUnixName')->andReturns('prj');
         $r = new FRSRelease();
         $r->setReleaseID(456);
         $r->setPackageID(123);
@@ -1007,16 +905,16 @@ class FRSFileFactoryTest extends TuleapTestCase
         $f->setGroup($p);
         $f->setFileName('file_sample');
 
-        $dao = new MockFRSFileDao($this);
+        $dao = \Mockery::spy(\FRSFileDao::class);
         stub($dao)->searchFileByName()->returnsEmptyDar();
-        $ff = new FRSFileFactoryFakeCreation();
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('create', 55);
-        $ff->setReturnValue('moveFileForge', true);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('create')->andReturns(55);
+        $ff->shouldReceive('moveFileForge')->andReturns(true);
         $ff->dao = $dao;
 
-        $rf = new MockFRSReleaseFactory($this);
-        $rf->setReturnValue('getFRSReleaseFromDb', $r);
+        $rf = \Mockery::spy(\FRSReleaseFactory::class);
+        $rf->shouldReceive('getFRSReleaseFromDb')->andReturns($r);
         $ff->release_factory = $rf;
 
         $before = time();
@@ -1029,8 +927,8 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testCreateFileDoNotSetReleaseTimeIfAlreadySet()
     {
-        $p = new MockProject($this);
-        $p->setReturnValue('getUnixName', 'prj');
+        $p = \Mockery::spy(\Project::class);
+        $p->shouldReceive('getUnixName')->andReturns('prj');
         $r = new FRSRelease();
         $r->setReleaseID(456);
         $r->setPackageID(123);
@@ -1044,16 +942,16 @@ class FRSFileFactoryTest extends TuleapTestCase
         $f->setReleaseTime(3125);
         $f->setPostDate(3125);
 
-        $dao = new MockFRSFileDao($this);
+        $dao = \Mockery::spy(\FRSFileDao::class);
         stub($dao)->searchFileByName()->returnsEmptyDar();
-        $ff = new FRSFileFactoryFakeCreation();
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('create', 55);
-        $ff->setReturnValue('moveFileForge', true);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('create')->andReturns(55);
+        $ff->shouldReceive('moveFileForge')->andReturns(true);
         $ff->dao = $dao;
 
-        $rf = new MockFRSReleaseFactory($this);
-        $rf->setReturnValue('getFRSReleaseFromDb', $r);
+        $rf = \Mockery::spy(\FRSReleaseFactory::class);
+        $rf->shouldReceive('getFRSReleaseFromDb')->andReturns($r);
         $ff->release_factory = $rf;
 
         $before = time();
@@ -1074,8 +972,8 @@ class FRSFileFactoryTest extends TuleapTestCase
         $this->createReleaseDir('prj', 'p123_r456');
         touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584197');
 
-        $p = new MockProject($this);
-        $p->setReturnValue('getUnixName', 'prj');
+        $p = \Mockery::spy(\Project::class);
+        $p->shouldReceive('getUnixName')->andReturns('prj');
 
         $r = new FRSRelease();
         $r->setReleaseID(456);
@@ -1087,10 +985,10 @@ class FRSFileFactoryTest extends TuleapTestCase
         $f->setFileName('toto.txt_1299584219');
         $f->setRelease($r);
 
-        $ff = new FRSFileFactoryTestCreateFiles();
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
-        $ff->setReturnValue('isFileBaseNameExists', true);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('getSrcDir')->andReturns($GLOBALS['ftp_incoming_dir']);
+        $ff->shouldReceive('isFileBaseNameExists')->andReturns(true);
         try {
             $ff->createFile($f);
         } catch (Exception $e) {
@@ -1112,8 +1010,8 @@ class FRSFileFactoryTest extends TuleapTestCase
         // toto.txt_1299584187 is the file having been deleted but not yet moved
         touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584187');
 
-        $p = new MockProject($this);
-        $p->setReturnValue('getUnixName', 'prj');
+        $p = \Mockery::spy(\Project::class);
+        $p->shouldReceive('getUnixName')->andReturns('prj');
 
         $r = new FRSRelease();
         $r->setReleaseID(456);
@@ -1128,17 +1026,17 @@ class FRSFileFactoryTest extends TuleapTestCase
         $f->setFileID(15225);
         $f->setFileLocation($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
 
-        $ff = new FRSFileFactoryTestCreateFiles();
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
-        $ff->setReturnValue('isFileBaseNameExists', false);
-        $ff->setReturnValue('isSameFileMarkedToBeRestored', false);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('getSrcDir')->andReturns($GLOBALS['ftp_incoming_dir']);
+        $ff->shouldReceive('isFileBaseNameExists')->andReturns(false);
+        $ff->shouldReceive('isSameFileMarkedToBeRestored')->andReturns(false);
 
         //moveFielForge will copy the new file to its destination
-        $ff->setReturnValue('moveFileForge', true);
+        $ff->shouldReceive('moveFileForge')->andReturns(true);
         touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584210');
 
-        $ff->setReturnValue('create', 15225);
+        $ff->shouldReceive('create')->andReturns(15225);
         $this->assertEqual($ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5), $f);
 
         unlink($GLOBALS['ftp_incoming_dir'].'/toto.txt');
@@ -1158,8 +1056,8 @@ class FRSFileFactoryTest extends TuleapTestCase
         touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
         $this->createReleaseDir('prj', 'p123_r456');
 
-        $p = new MockProject($this);
-        $p->setReturnValue('getUnixName', 'prj');
+        $p = \Mockery::spy(\Project::class);
+        $p->shouldReceive('getUnixName')->andReturns('prj');
 
         $r = new FRSRelease();
         $r->setReleaseID(456);
@@ -1173,11 +1071,11 @@ class FRSFileFactoryTest extends TuleapTestCase
         $f->setRelease($r);
         $f->setFileLocation($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
 
-        $ff = new FRSFileFactoryTestCreateFiles();
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
-        $ff->setReturnValue('isFileBaseNameExists', false);
-        $ff->setReturnValue('isSameFileMarkedToBeRestored', true);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('getSrcDir')->andReturns($GLOBALS['ftp_incoming_dir']);
+        $ff->shouldReceive('isFileBaseNameExists')->andReturns(false);
+        $ff->shouldReceive('isSameFileMarkedToBeRestored')->andReturns(true);
 
         try {
             $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
@@ -1192,7 +1090,7 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testCreateFileNotYetIncoming()
     {
-        $p = new MockProject();
+        $p = \Mockery::spy(\Project::class);
 
         $r = new FRSRelease();
         $r->setReleaseID(456);
@@ -1202,9 +1100,11 @@ class FRSFileFactoryTest extends TuleapTestCase
         $f = new FRSFile();
         $f->setFileName('toto.txt');
         $f->setRelease($r);
-        $ff = new FRSFileFactoryTestCreateFiles();
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->shouldReceive('isFileBaseNameExists')->andReturn(false);
+        $ff->shouldReceive('isSameFileMarkedToBeRestored')->andReturn(false);
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('getSrcDir')->andReturns($GLOBALS['ftp_incoming_dir']);
         $this->assertFalse(is_file($GLOBALS['ftp_incoming_dir'].'/toto.txt'));
         try {
             $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
@@ -1215,8 +1115,8 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testCreateFileSkipCompareMD5Checksums()
     {
-        $p = new MockProject($this);
-        $p->setReturnValue('getUnixName', 'prj');
+        $p = \Mockery::spy(\Project::class);
+        $p->shouldReceive('getUnixName')->andReturns('prj');
 
         $r = new FRSRelease();
         $r->setReleaseID(456);
@@ -1228,16 +1128,18 @@ class FRSFileFactoryTest extends TuleapTestCase
         $f->setFileName('toto.txt');
         $f->setRelease($r);
         $f->setFileLocation($GLOBALS['ftp_incoming_dir']);
-        $ff = new FRSFileFactoryTestCreateFiles();
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->shouldReceive('isFileBaseNameExists')->andReturn(false);
+        $ff->shouldReceive('isSameFileMarkedToBeRestored')->andReturn(false);
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('getSrcDir')->andReturns($GLOBALS['ftp_incoming_dir']);
 
         $path = $GLOBALS['ftp_incoming_dir'].'/'.$f->getFileName();
         touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
-        $ff->setReturnValue('moveFileForge', true);
-        $ff->setReturnValue('create', true);
+        $ff->shouldReceive('moveFileForge')->andReturns(true);
+        $ff->shouldReceive('create')->andReturns(true);
 
-        $ff->expectNever('compareMd5Checksums');
+        $ff->shouldReceive('compareMd5Checksums')->never();
         $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
 
         unlink($GLOBALS['ftp_incoming_dir'].'/toto.txt');
@@ -1245,7 +1147,7 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testCreateFileCompareMD5Checksums()
     {
-        $project = stub('Project')->getId()->returns(111);
+        $project = mockery_stub(\Project::class)->getId()->returns(111);
 
         $r = \Mockery::mock(FRSRelease::class.'[getProject]');
         $r->shouldReceive('getProject')->andReturn($project);
@@ -1253,9 +1155,12 @@ class FRSFileFactoryTest extends TuleapTestCase
         $r->setPackageID(123);
         $r->setGroupID(111);
 
-        $ff = new FRSFileFactoryTestCreateFiles();
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->shouldReceive('isFileBaseNameExists')->andReturn(false);
+        $ff->shouldReceive('isSameFileMarkedToBeRestored')->andReturn(false);
+        $ff->shouldReceive('compareMd5Checksums')->andReturn(false);
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('getSrcDir')->andReturns($GLOBALS['ftp_incoming_dir']);
 
         $f = new FRSFile();
         $f->setRelease($r);
@@ -1279,7 +1184,7 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testCreateFileMoveFileForgeKo()
     {
-        $project = stub('Project')->getId()->returns(111);
+        $project = mockery_stub(\Project::class)->getId()->returns(111);
 
         $r = \Mockery::mock(FRSRelease::class.'[getProject]');
         $r->shouldReceive('getProject')->andReturn($project);
@@ -1287,14 +1192,16 @@ class FRSFileFactoryTest extends TuleapTestCase
         $r->setPackageID(123);
         $r->setGroupID(111);
 
-        $ff = new FRSFileFactoryTestCreateFiles();
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->shouldReceive('isFileBaseNameExists')->andReturn(false);
+        $ff->shouldReceive('isSameFileMarkedToBeRestored')->andReturn(false);
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('getSrcDir')->andReturns($GLOBALS['ftp_incoming_dir']);
 
         $f = new FRSFile();
         $f->setRelease($r);
 
-        $ff->setReturnValue('moveFileForge', false);
+        $ff->shouldReceive('moveFileForge')->andReturns(false);
         try {
             $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
         } catch (Exception $e) {
@@ -1309,8 +1216,8 @@ class FRSFileFactoryTest extends TuleapTestCase
         touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
         touch($GLOBALS['ftp_incoming_dir'].'/toto.txt');
 
-        $p = new MockProject();
-        $p->setReturnValue('getUnixName', 'prj');
+        $p = \Mockery::spy(\Project::class);
+        $p->shouldReceive('getUnixName')->andReturns('prj');
 
         $r = new FRSRelease();
         $r->setReleaseID(456);
@@ -1322,11 +1229,13 @@ class FRSFileFactoryTest extends TuleapTestCase
         $f->setRelease($r);
         $f->setFileLocation($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
 
-        $ff = new FRSFileFactoryTestCreateFiles();
-        $ff->setLogger(mock('Logger'));
-        $ff->setReturnValue('getSrcDir', $GLOBALS['ftp_incoming_dir']);
-        $ff->setReturnValue('moveFileForge', true);
-        $ff->setReturnValue('create', false);
+        $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $ff->setLogger(\Mockery::spy(\Logger::class));
+        $ff->shouldReceive('isFileBaseNameExists')->andReturn(false);
+        $ff->shouldReceive('isSameFileMarkedToBeRestored')->andReturn(false);
+        $ff->shouldReceive('getSrcDir')->andReturns($GLOBALS['ftp_incoming_dir']);
+        $ff->shouldReceive('moveFileForge')->andReturns(true);
+        $ff->shouldReceive('create')->andReturns(false);
 
         try {
             $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
@@ -1341,85 +1250,73 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testDeleteProjectFRSPackagesFail()
     {
-        $packageFactory = new MockFRSPackageFactory();
-        $packageFactory->setReturnValue('deleteProjectPackages', false);
+        $packageFactory = \Mockery::spy(\FRSPackageFactory::class);
 
-        $releaseFactory = new MockFRSReleaseFactory();
-        $releaseFactory->setReturnValue('deleteProjectReleases', true);
-        $releaseFactory->setReturnValue('_getFRSPackageFactory', $packageFactory);
+        $releaseFactory = \Mockery::spy(\FRSReleaseFactory::class);
+        $releaseFactory->shouldReceive('_getFRSPackageFactory')->andReturns($packageFactory);
 
-        $fileFactory = new FRSFileFactoryTestVersion();
-        $fileFactory->setLogger(mock('Logger'));
-        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
-        $fileFactory->setReturnValue('moveDeletedFilesToStagingArea', true);
+        $fileFactory = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $fileFactory->setLogger(\Mockery::spy(\Logger::class));
+        $fileFactory->shouldReceive('_getFRSReleaseFactory')->andReturns($releaseFactory);
 
-        $fileFactory->expectOnce('moveDeletedFilesToStagingArea');
-        $releaseFactory->expectOnce('deleteProjectReleases');
-        $packageFactory->expectOnce('deleteProjectPackages');
-        $backend = new MockBackendSystem();
+        $fileFactory->shouldReceive('moveDeletedFilesToStagingArea')->once()->andReturns(true);
+        $releaseFactory->shouldReceive('deleteProjectReleases')->once()->andReturns(true);
+        $packageFactory->shouldReceive('deleteProjectPackages')->once()->andReturns(false);
+        $backend = \Mockery::spy(\BackendSystem::class);
         $this->assertFalse($fileFactory->deleteProjectFRS(1, $backend));
     }
 
     function testDeleteProjectFRSReleasesFail()
     {
-        $packageFactory = new MockFRSPackageFactory();
-        $packageFactory->setReturnValue('deleteProjectPackages', true);
+        $packageFactory = \Mockery::spy(\FRSPackageFactory::class);
 
-        $releaseFactory = new MockFRSReleaseFactory();
-        $releaseFactory->setReturnValue('deleteProjectReleases', false);
-        $releaseFactory->setReturnValue('_getFRSPackageFactory', $packageFactory);
+        $releaseFactory = \Mockery::spy(\FRSReleaseFactory::class);
+        $releaseFactory->shouldReceive('_getFRSPackageFactory')->andReturns($packageFactory);
 
-        $fileFactory = new FRSFileFactoryTestVersion();
-        $fileFactory->setLogger(mock('Logger'));
-        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
-        $fileFactory->setReturnValue('moveDeletedFilesToStagingArea', true);
+        $fileFactory = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $fileFactory->setLogger(\Mockery::spy(\Logger::class));
+        $fileFactory->shouldReceive('_getFRSReleaseFactory')->andReturns($releaseFactory);
 
-        $fileFactory->expectOnce('moveDeletedFilesToStagingArea');
-        $releaseFactory->expectOnce('deleteProjectReleases');
-        $packageFactory->expectOnce('deleteProjectPackages');
-        $backend = new MockBackendSystem();
+        $fileFactory->shouldReceive('moveDeletedFilesToStagingArea')->once()->andReturns(true);
+        $releaseFactory->shouldReceive('deleteProjectReleases')->once()->andReturns(false);
+        $packageFactory->shouldReceive('deleteProjectPackages')->once()->andReturns(true);
+        $backend = \Mockery::spy(\BackendSystem::class);
         $this->assertFalse($fileFactory->deleteProjectFRS(1, $backend));
     }
 
     function testDeleteProjectFRSMoveFail()
     {
-        $packageFactory = new MockFRSPackageFactory();
-        $packageFactory->setReturnValue('deleteProjectPackages', true);
+        $packageFactory = \Mockery::spy(\FRSPackageFactory::class);
 
-        $releaseFactory = new MockFRSReleaseFactory();
-        $releaseFactory->setReturnValue('deleteProjectReleases', true);
-        $releaseFactory->setReturnValue('_getFRSPackageFactory', $packageFactory);
+        $releaseFactory = \Mockery::spy(\FRSReleaseFactory::class);
+        $releaseFactory->shouldReceive('_getFRSPackageFactory')->andReturns($packageFactory);
 
-        $fileFactory = new FRSFileFactoryTestVersion();
-        $fileFactory->setLogger(mock('Logger'));
-        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
-        $fileFactory->setReturnValue('moveDeletedFilesToStagingArea', false);
+        $fileFactory = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $fileFactory->setLogger(\Mockery::spy(\Logger::class));
+        $fileFactory->shouldReceive('_getFRSReleaseFactory')->andReturns($releaseFactory);
 
-        $fileFactory->expectOnce('moveDeletedFilesToStagingArea');
-        $releaseFactory->expectOnce('deleteProjectReleases');
-        $packageFactory->expectOnce('deleteProjectPackages');
-        $backend = new MockBackendSystem();
+        $fileFactory->shouldReceive('moveDeletedFilesToStagingArea')->once()->andReturns(false);
+        $releaseFactory->shouldReceive('deleteProjectReleases')->once()->andReturns(true);
+        $packageFactory->shouldReceive('deleteProjectPackages')->once()->andReturns(true);
+        $backend = \Mockery::spy(\BackendSystem::class);
         $this->assertFalse($fileFactory->deleteProjectFRS(1, $backend));
     }
 
     function testDeleteProjectFRSSuccess()
     {
-        $packageFactory = new MockFRSPackageFactory();
-        $packageFactory->setReturnValue('deleteProjectPackages', true);
+        $packageFactory = \Mockery::spy(\FRSPackageFactory::class);
 
-        $releaseFactory = new MockFRSReleaseFactory();
-        $releaseFactory->setReturnValue('deleteProjectReleases', true);
-        $releaseFactory->setReturnValue('_getFRSPackageFactory', $packageFactory);
+        $releaseFactory = \Mockery::spy(\FRSReleaseFactory::class);
+        $releaseFactory->shouldReceive('_getFRSPackageFactory')->andReturns($packageFactory);
 
-        $fileFactory = new FRSFileFactoryTestVersion();
-        $fileFactory->setLogger(mock('Logger'));
-        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
-        $fileFactory->setReturnValue('moveDeletedFilesToStagingArea', true);
+        $fileFactory = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $fileFactory->setLogger(\Mockery::spy(\Logger::class));
+        $fileFactory->shouldReceive('_getFRSReleaseFactory')->andReturns($releaseFactory);
 
-        $fileFactory->expectOnce('moveDeletedFilesToStagingArea');
-        $releaseFactory->expectOnce('deleteProjectReleases');
-        $packageFactory->expectOnce('deleteProjectPackages');
-        $backend = new MockBackendSystem();
+        $fileFactory->shouldReceive('moveDeletedFilesToStagingArea')->once()->andReturns(true);
+        $releaseFactory->shouldReceive('deleteProjectReleases')->once()->andReturns(true);
+        $packageFactory->shouldReceive('deleteProjectPackages')->once()->andReturns(true);
+        $backend = \Mockery::spy(\BackendSystem::class);
         $this->assertTrue($fileFactory->deleteProjectFRS(1, $backend));
     }
 }

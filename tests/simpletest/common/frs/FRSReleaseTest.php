@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-Mock::generate('Project');
-Mock::generate('ProjectManager');
-Mock::generate('FRSPackageFactory');
-Mock::generatePartial('FRSRelease', 'FRSReleaseTestVersion', array('_getFRSPackageFactory', '_getProjectManager'));
 
 class FRSReleaseTest extends TuleapTestCase
 {
@@ -82,7 +76,7 @@ class FRSReleaseTest extends TuleapTestCase
     {
         $r = new FRSRelease();
 
-        $p = new MockProject($this);
+        $p = new Project(['group_id' => 101]);
         $r->setProject($p);
 
         $this->assertIdentical($p, $r->getProject());
@@ -90,52 +84,48 @@ class FRSReleaseTest extends TuleapTestCase
 
     function testGetProjectWithGroupIdSet()
     {
-        $r = new FRSReleaseTestVersion($this);
+        $r = \Mockery::mock(\FRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $r->setGroupID(123);
 
-        $p = new MockProject($this);
+        $p = new Project(['group_id' => 101]);
 
-        $pm = new MockProjectManager($this);
-        $pm->expectOnce('getProject', array(123));
-        $pm->setReturnValue('getProject', $p);
+        $pm = \Mockery::spy(\ProjectManager::class);
+        $pm->shouldReceive('getProject')->with(123)->once()->andReturns($p);
 
-        $r->setReturnValue('_getProjectManager', $pm);
+        $r->shouldReceive('_getProjectManager')->andReturns($pm);
 
         $this->assertIdentical($p, $r->getProject());
     }
 
     function testGetProjectWithNeitherProjectNorGroupID()
     {
-        $r = new FRSReleaseTestVersion($this);
+        $r = \Mockery::mock(\FRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $r->setPackageId(696);
 
         $pkg = new FRSPackage(array('group_id' => 123));
 
-        $pf = new MockFRSPackageFactory($this);
-        $pf->expectOnce('getFRSPackageFromDb', array(696, null, FRSPackageDao::INCLUDE_DELETED));
-        $pf->setReturnValue('getFRSPackageFromDb', $pkg);
-        $r->setReturnValue('_getFRSPackageFactory', $pf);
+        $pf = \Mockery::spy(\FRSPackageFactory::class);
+        $pf->shouldReceive('getFRSPackageFromDb')->with(696, null, FRSPackageDao::INCLUDE_DELETED)->once()->andReturns($pkg);
+        $r->shouldReceive('_getFRSPackageFactory')->andReturns($pf);
 
-        $p = new MockProject($this);
-        $pm = new MockProjectManager($this);
-        $pm->expectOnce('getProject', array(123));
-        $pm->setReturnValue('getProject', $p);
-        $r->setReturnValue('_getProjectManager', $pm);
+        $p = new Project(['group_id' => 101]);
+        $pm = \Mockery::spy(\ProjectManager::class);
+        $pm->shouldReceive('getProject')->with(123)->once()->andReturns($p);
+        $r->shouldReceive('_getProjectManager')->andReturns($pm);
 
         $this->assertIdentical($p, $r->getProject());
     }
 
     function testGetGroupIdWithoutProjectSet()
     {
-        $r = new FRSReleaseTestVersion($this);
+        $r = \Mockery::mock(\FRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $r->setPackageId(696);
 
         $pkg = new FRSPackage(array('group_id' => 123));
 
-        $pf = new MockFRSPackageFactory($this);
-        $pf->expectOnce('getFRSPackageFromDb', array(696, null, FRSPackageDao::INCLUDE_DELETED));
-        $pf->setReturnValue('getFRSPackageFromDb', $pkg);
-        $r->setReturnValue('_getFRSPackageFactory', $pf);
+        $pf = \Mockery::spy(\FRSPackageFactory::class);
+        $pf->shouldReceive('getFRSPackageFromDb')->with(696, null, FRSPackageDao::INCLUDE_DELETED)->once()->andReturns($pkg);
+        $r->shouldReceive('_getFRSPackageFactory')->andReturns($pf);
 
         $this->assertEqual($r->getGroupID(), 123);
     }
@@ -144,8 +134,8 @@ class FRSReleaseTest extends TuleapTestCase
     {
         $r = new FRSRelease();
 
-        $p = new MockProject($this);
-        $p->setReturnValue('getID', 123);
+        $p = \Mockery::spy(\Project::class);
+        $p->shouldReceive('getID')->andReturns(123);
         $r->setProject($p);
 
         $this->assertEqual($r->getGroupID(), 123);
