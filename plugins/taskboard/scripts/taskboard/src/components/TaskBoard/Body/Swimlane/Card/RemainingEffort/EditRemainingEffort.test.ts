@@ -85,9 +85,9 @@ describe("EditRemainingEffort", () => {
         expect(wrapper.attributes("style")).toBe("");
 
         wrapper.setData({ value: "3.14" });
-        expect(wrapper.attributes("style")).toBe("width: 25px;");
+        expect(wrapper.attributes("style")).toBe("width: 50px;");
 
         wrapper.setData({ value: "3.1416" });
-        expect(wrapper.attributes("style")).toBe("width: 35px;");
+        expect(wrapper.attributes("style")).toBe("width: 70px;");
     });
 });
