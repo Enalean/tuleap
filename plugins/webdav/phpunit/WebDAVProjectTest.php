@@ -19,66 +19,72 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\WebDAV;
+
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\TestCase;
+use Project;
+use Project_AccessPrivateException;
+use Sabre_DAV_Exception_FileNotFound;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\Project\ProjectAccessChecker;
+use WebDAVProject;
+
 require_once __DIR__.'/bootstrap.php';
 
 /**
  * This is the unit test of WebDAVProject
  */
-class WebDAVProjectTest extends TuleapTestCase
+final class WebDAVProjectTest extends TestCase
 {
+    use MockeryPHPUnitIntegration, GlobalLanguageMock;
 
     /**
      * Testing when The project have no active services
      */
-    function testGetChildrenNoServices()
+    public function testGetChildrenNoServices(): void
     {
-        $webDAVProject = \Mockery::mock(\WebDAVProject::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVProject = Mockery::mock(WebDAVProject::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $utils = \Mockery::spy(\WebDAVUtils::class);
+        $utils = Mockery::spy(\WebDAVUtils::class);
         $webDAVProject->shouldReceive('getUtils')->andReturns($utils);
-        $em = \Mockery::spy(\EventManager::class);
+        $em = Mockery::spy(\EventManager::class);
         $utils->shouldReceive('getEventManager')->andReturns($em);
 
         $webDAVProject->shouldReceive('usesFile')->andReturns(false);
-        $this->assertEqual($webDAVProject->getChildren(), array());
+        $this->assertSame([], $webDAVProject->getChildren());
     }
-
-    /**
-     * Testing when the user can't access to the service
-     */
-    /*function testGetChildrenFRSActive() {
-
-        $webDAVProject = new WebDAVProjectTestVersion($this);
-        $this->assertEqual($webDAVProject->getChildren(), array());
-
-    }*/
 
     /**
      * Testing when the service doesn't exist
      */
-    function testGetChildFailWithNotExist()
+    public function testGetChildFailWithNotExist(): void
     {
-        $webDAVProject = \Mockery::mock(\WebDAVProject::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $webDAVProject = Mockery::mock(WebDAVProject::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $utils = \Mockery::spy(\WebDAVUtils::class);
+        $utils = Mockery::spy(\WebDAVUtils::class);
         $webDAVProject->shouldReceive('getUtils')->andReturns($utils);
-        $em = \Mockery::spy(\EventManager::class);
+        $em = Mockery::spy(\EventManager::class);
         $utils->shouldReceive('getEventManager')->andReturns($em);
 
         $webDAVProject->shouldReceive('usesFile')->andReturns(false);
-        $this->expectException('Sabre_DAV_Exception_FileNotFound');
+        $this->expectException(Sabre_DAV_Exception_FileNotFound::class);
         $webDAVProject->getChild('Files');
     }
 
-    function testUserCanReadWithAccessCheckerSuccessfull()
+    public function testUserCanReadWithAccessCheckerSuccessfull(): void
     {
-        $user =  \Mockery::spy(PFUser::class);
-        $project = \Mockery::spy(Project::class);
+        $user =  Mockery::spy(PFUser::class);
+        $project = Mockery::spy(Project::class);
 
-        $access_checker = \Mockery::mock(\Tuleap\Project\ProjectAccessChecker::class);
+        $access_checker = Mockery::mock(ProjectAccessChecker::class);
 
-        $webDAVProject = \Mockery::mock(
-            \WebDAVProject::class,
+        $webDAVProject = Mockery::mock(
+            WebDAVProject::class,
             [
                 $user,
                 $project,
@@ -92,15 +98,15 @@ class WebDAVProjectTest extends TuleapTestCase
         $this->assertTrue($webDAVProject->userCanRead());
     }
 
-    function testUserCanReadWithAccessCheckerThrowingException()
+    public function testUserCanReadWithAccessCheckerThrowingException(): void
     {
-        $user =  \Mockery::spy(PFUser::class);
-        $project = \Mockery::spy(Project::class);
+        $user =  Mockery::spy(PFUser::class);
+        $project = Mockery::spy(Project::class);
 
-        $access_checker = \Mockery::mock(\Tuleap\Project\ProjectAccessChecker::class);
+        $access_checker = Mockery::mock(ProjectAccessChecker::class);
 
-        $webDAVProject = \Mockery::mock(
-            \WebDAVProject::class,
+        $webDAVProject = Mockery::mock(
+            WebDAVProject::class,
             [
                 $user,
                 $project,
