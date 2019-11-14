@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,24 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Glyph;
 
-class GlyphLocationsCollectorTest extends \TuleapTestCase
+use Mockery;
+use PHPUnit\Framework\TestCase;
+
+class GlyphLocationsCollectorTest extends TestCase
 {
-    public function itFindsDeclaredLocation()
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    public function testItFindsDeclaredLocation(): void
     {
         $glyph_location_collector = new GlyphLocationsCollector();
-        $glyph_location_collector->addLocation('tuleap-git', mock('Tuleap\\Glyph\\GlyphLocation'));
-        $glyph_location = mock('Tuleap\\Glyph\\GlyphLocation');
+        $glyph_location_collector->addLocation('tuleap-git', Mockery::mock(GlyphLocation::class));
+        $glyph_location = Mockery::mock(GlyphLocation::class);
         $glyph_location_collector->addLocation('tuleap-tracker', $glyph_location);
 
         $found_glyph_location = $glyph_location_collector->getLocation('tuleap-tracker-test');
-        $this->assertIdentical($glyph_location, $found_glyph_location);
+        $this->assertSame($glyph_location, $found_glyph_location);
     }
 
-    public function itReturnsNullWhenLocationIsNotFound()
+    public function testItReturnsNullWhenLocationIsNotFound(): void
     {
         $glyph_location_collector = new GlyphLocationsCollector();
-        $this->assertEqual(null, $glyph_location_collector->getLocation('do-not-exist'));
+        $this->assertEquals(null, $glyph_location_collector->getLocation('do-not-exist'));
     }
 }

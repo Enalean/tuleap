@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Glyph;
 
-class GlyphLocationTest extends \TuleapTestCase
+use PHPUnit\Framework\TestCase;
+
+class GlyphLocationTest extends TestCase
 {
-    public function itGetsTheSimplifiedPath()
+    public function testItGetsTheSimplifiedPath(): void
     {
         $glyph_location = new GlyphLocation('/a//b/../c//');
-        $this->assertEqual($glyph_location->getPath(), '/a/c/');
+        $this->assertEquals($glyph_location->getPath(), '/a/c/');
     }
 }
