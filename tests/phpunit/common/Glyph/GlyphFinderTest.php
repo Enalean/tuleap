@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,46 +18,59 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Glyph;
 
-class GlyphFinderTest extends \TuleapTestCase
+use EventManager;
+use ForgeConfig;
+use Mockery;
+use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
+
+class GlyphFinderTest extends TestCase
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    /**
+     * @var string
+     */
     private $tmp_tuleap_dir;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        \ForgeConfig::store();
-        $this->tmp_tuleap_dir = $this->getTmpDir();
-        \ForgeConfig::set('tuleap_dir', $this->tmp_tuleap_dir);
+        ForgeConfig::store();
+        $this->tmp_tuleap_dir = vfsStream::setup()->url();
+        ForgeConfig::set('tuleap_dir', $this->tmp_tuleap_dir);
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
-        \ForgeConfig::restore();
+        ForgeConfig::restore();
         parent::tearDown();
     }
 
-    public function itThrowsAnExceptionWhenTheGlyphCanNotBeFound()
+    public function testItThrowsAnExceptionWhenTheGlyphCanNotBeFound(): void
     {
-        $glyph_finder = new GlyphFinder(\Mockery::spy(\EventManager::class));
+        $glyph_finder = new GlyphFinder(Mockery::spy(EventManager::class));
 
-        $this->expectException('Tuleap\\Glyph\\GlyphNotFoundException');
+        $this->expectException(GlyphNotFoundException::class);
 
         $glyph_finder->get('does-not-exist');
     }
 
-    public function itFindsAGlyphInCore()
+    public function testItFindsAGlyphInCore(): void
     {
         mkdir($this->tmp_tuleap_dir . '/src/glyphs/', 0777, true);
         file_put_contents($this->tmp_tuleap_dir . '/src/glyphs/test.svg', 'Glyph in core');
 
-        $event_manager = \Mockery::mock(\EventManager::class);
+        $event_manager = Mockery::mock(EventManager::class);
         $event_manager->shouldNotReceive('processEvent');
 
         $glyph_finder = new GlyphFinder($event_manager);
-        $glyph = $glyph_finder->get('test');
+        $glyph        = $glyph_finder->get('test');
 
-        $this->assertEqual($glyph->getInlineString(), 'Glyph in core');
+        $this->assertEquals($glyph->getInlineString(), 'Glyph in core');
     }
 }
