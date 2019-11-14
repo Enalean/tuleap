@@ -72,6 +72,10 @@ class UserDetailsPresenter
      * @var bool
      */
     public $user_has_rest_read_only_administration_delegation;
+    /**
+     * @var string
+     */
+    public $avatar_url;
 
     public function __construct(
         PFUser $user,
@@ -94,6 +98,7 @@ class UserDetailsPresenter
         $this->expiry = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $user->getExpiryDate());
 
         $this->has_avatar = $user->hasAvatar();
+        $this->avatar_url = $user->getAvatarUrl();
 
         $this->access                                                   = $access;
         $this->change_password                                          = $change_password;

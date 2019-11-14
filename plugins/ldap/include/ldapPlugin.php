@@ -317,14 +317,16 @@ class LdapPlugin extends Plugin
                             'display_name' => $tuleap_user->getRealName().' ('.$tuleap_user->getUserName().')',
                             'login'        => $tuleap_user->getUserName(),
                             'user_id'      => $tuleap_user->getId(),
-                            'has_avatar'   => $tuleap_user->hasAvatar()
+                            'has_avatar'   => $tuleap_user->hasAvatar(),
+                            'avatar_url'   => $tuleap_user->getAvatarUrl()
                         );
                     } else {
                         $params['userList'][] = array(
                             'display_name' => $sync->getCommonName($lr).' ('.$lr->getLogin().')',
                             'login'        => $lr->getLogin(),
                             'user_id'      => $tuleap_user_id,
-                            'has_avatar'   => false
+                            'has_avatar'   => false,
+                            'avatar_url'   => ''
                         );
                     }
                 }

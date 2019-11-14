@@ -69,6 +69,7 @@ use Tuleap\Tracker\Artifact\LatestHeartbeatsCollector;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigController;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\FormElement\BurndownCacheDateRetriever;
@@ -121,7 +122,6 @@ use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
 use Tuleap\Tracker\Permission\Fields\PermissionsOnFieldsUpdateController;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\Tracker\ProjectDeletionEvent;
-use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Reference\ReferenceCreator;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigController;
@@ -1506,14 +1506,20 @@ class trackerPlugin extends Plugin
      */
     private function getTrackerNotificationManager()
     {
+        $user_manager                   = UserManager::instance();
         $user_to_notify_dao             = $this->getUserToNotifyDao();
         $ugroup_to_notify_dao           = $this->getUgroupToNotifyDao();
         $unsubscribers_notification_dao = new UnsubscribersNotificationDAO;
         $notification_list_builder      = new NotificationListBuilder(
             new UGroupDao(),
-            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, $unsubscribers_notification_dao),
+            new CollectionOfUserInvolvedInNotificationPresenterBuilder(
+                $user_to_notify_dao,
+                $unsubscribers_notification_dao,
+                $user_manager
+            ),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
         );
+
         return new Tracker_NotificationsManager(
             $this,
             $notification_list_builder,
@@ -1521,7 +1527,7 @@ class trackerPlugin extends Plugin
             $ugroup_to_notify_dao,
             new UserNotificationSettingsDAO,
             new GlobalNotificationsAddressesBuilder(),
-            UserManager::instance(),
+            $user_manager,
             new UGroupManager(),
             new GlobalNotificationSubscribersFilter($unsubscribers_notification_dao),
             new NotificationLevelExtractor(),

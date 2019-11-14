@@ -22,6 +22,7 @@ namespace Tuleap\User\Admin;
 
 use CSRFSynchronizerToken;
 use Tuleap\Layout\PaginationPresenter;
+use UserManager;
 
 class UserListResultsPresenter
 {
@@ -46,8 +47,10 @@ class UserListResultsPresenter
     public $nb_projects_header;
     public $status_header;
     public $profile_header;
+    private $user_manager;
 
     public function __construct(
+        UserManager $user_manager,
         $group_id,
         $result,
         $nb_matching_users,
@@ -60,6 +63,7 @@ class UserListResultsPresenter
         $limit,
         $offset
     ) {
+        $this->user_manager          = $user_manager;
         $this->nb_matching_users     = $nb_matching_users;
         $this->nb_active_sessions    = $nb_active_sessions;
         $this->display_purge_session = $nb_active_sessions > 0;
@@ -135,11 +139,18 @@ class UserListResultsPresenter
             if (isset($row['admin_of'])) {
                 $nb_admin_of = $row['admin_of'];
             }
+
+            $user = $this->user_manager->getUserById($row['user_id']);
+            if (! $user) {
+                continue;
+            }
+
             $matching_users[] = new UserListResultsUserPresenter(
                 $row['user_id'],
                 $row['user_name'],
                 $row['realname'],
                 $row['has_avatar'],
+                $user->getAvatarUrl(),
                 $row['status'],
                 $nb_member_of,
                 $nb_admin_of
