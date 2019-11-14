@@ -11,8 +11,8 @@
     "prismjs": "^1.17.1",
     "sprintf-js": "^1.1.1",
     "vue": "^2.6.10",
-    "vue-gettext": "^2.1.5",
-    "vuex": "^3.1.1"
+    "vue-gettext": "^2.1.6",
+    "vuex": "^3.1.2"
   },
   "devDependencies": {},
   "config": {

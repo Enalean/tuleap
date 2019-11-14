@@ -20,7 +20,7 @@
     "sprintf-js": "^1.1.1",
     "striptags": "^2.2.1",
     "vue": "^2.6.10",
-    "vue-gettext": "^2.1.5"
+    "vue-gettext": "^2.1.6"
   },
   "devDependencies": {},
   "config": {
