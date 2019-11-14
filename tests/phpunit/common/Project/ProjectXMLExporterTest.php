@@ -249,7 +249,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
         $this->assertNotNull($xml_objet->services);
         $this->assertEquals((string)$xml_objet->services->service[0]['enabled'], '1');
         $this->assertEquals((string)$xml_objet->services->service[0]['shortname'], 's01');
-        $this->assertEquals((string)$xml_objet->services->service[1]['enabled'], '');
+        $this->assertEquals((string)$xml_objet->services->service[1]['enabled'], '0');
         $this->assertEquals((string)$xml_objet->services->service[1]['shortname'], 's02');
     }
 }
