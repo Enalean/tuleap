@@ -73,7 +73,11 @@ trait NotificationsAdminSettingsControllerCommon
         $unsubscribers_notification_dao = new UnsubscribersNotificationDAO;
         $notification_list_builder      = new NotificationListBuilder(
             new UGroupDao(),
-            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, $unsubscribers_notification_dao),
+            new CollectionOfUserInvolvedInNotificationPresenterBuilder(
+                $user_to_notify_dao,
+                $unsubscribers_notification_dao,
+                $user_manager
+            ),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
         );
         return new Tracker_NotificationsManager(
@@ -92,7 +96,7 @@ trait NotificationsAdminSettingsControllerCommon
             new NotificationsForceUsageUpdater(
                 new RecipientsManager(
                     \Tracker_FormElementFactory::instance(),
-                    UserManager::instance(),
+                    $user_manager,
                     new UnsubscribersNotificationDAO,
                     new UserNotificationSettingsRetriever(
                         new \Tracker_GlobalNotificationDao(),

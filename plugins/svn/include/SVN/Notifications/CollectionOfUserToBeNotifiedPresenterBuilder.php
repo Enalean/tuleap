@@ -39,12 +39,13 @@ class CollectionOfUserToBeNotifiedPresenterBuilder
     {
         $presenters = array();
         foreach ($this->dao->searchUsersByNotificationId($notification->getId()) as $row) {
+            $user = new \PFUser($row);
             $presenters[] = new UserInvolvedInNotificationPresenter(
                 $row['user_id'],
                 $row['user_name'],
                 $row['realname'],
                 $row['has_avatar'],
-                '/users/'. urlencode($row['user_name']) .'/avatar.png'
+                $user->getAvatarUrl()
             );
         }
         $this->sortUsersAlphabetically($presenters);

@@ -18,7 +18,7 @@
             <a class="tlp-card tlp-card-selectable widget-project-members-administrators-card" href="/users/{{ user_name }}">
                 <div class="tlp-avatar widget-project-members-avatar">
                     {{# has_avatar }}
-                        <img src="/users/{{ user_name }}/avatar.png">
+                        <img src="{{ avatar_url }}">
                     {{/ has_avatar }}
                 </div>
                 <span class="widget-project-members-username">{{ username_display }}</span>

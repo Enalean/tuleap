@@ -109,6 +109,7 @@ class UserImportCollection
         foreach ($this->getUsers() as $user) {
             $formatted_user = array();
             $formatted_user['has_avatar']       = $user->hasAvatar();
+            $formatted_user['avatar_url']       = $user->getAvatarUrl();
             $formatted_user['user_name']        = $user->getUserName();
             $formatted_user['email']            = $user->getEmail();
             $formatted_user['profile_page_url'] = "/users/" . urlencode($user->getUserName()) .  "/";

@@ -34,12 +34,14 @@ class UserListResultsUserPresenter
     public $nb_member_of_title;
     public $nb_admin_of_title;
     public $status;
+    public $avatar_url;
 
     public function __construct(
         $id,
         $name,
         $realname,
         $has_avatar,
+        $avatar_url,
         $status,
         $nb_member_of,
         $nb_admin_of
@@ -48,6 +50,7 @@ class UserListResultsUserPresenter
         $this->name         = $name;
         $this->realname     = $realname;
         $this->has_avatar   = $has_avatar;
+        $this->avatar_url   = $avatar_url;
         $this->nb_member_of = (int)$nb_member_of;
         $this->nb_admin_of  = (int)$nb_admin_of;
 
