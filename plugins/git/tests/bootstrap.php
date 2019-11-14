@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011-2018. All rights reserved.
+ * Copyright Enalean (c) 2011-Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -23,6 +23,7 @@
  */
 
 require_once __DIR__ . '/../include/gitPlugin.php';
+require_once __DIR__ . '/../../statistics/include/statisticsPlugin.php';
 
 foreach (glob(dirname(__FILE__).'/builders/*.php') as $file) {
     require_once $file;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -23,7 +23,6 @@
  */
 
 require_once dirname(__FILE__).'/../bootstrap.php';
-require_once __DIR__ .'/../../../statistics/tests/bootstrap.php';
 
 class Git_SystemEventManagerTest extends TuleapTestCase
 {

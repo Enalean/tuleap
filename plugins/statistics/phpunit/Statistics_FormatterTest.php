@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,14 +16,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-require_once __DIR__ . '/bootstrap.php';
+declare(strict_types=1);
 
-class Statistics_FormatterTest extends TuleapTestCase
+namespace Tuleap\Statistics;
+
+use PHPUnit\Framework\TestCase;
+use Statistics_Formatter;
+
+//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Statistics_FormatterTest extends TestCase
 {
-
-    public function itExportsCsv()
+    public function testItExportsCsv(): void
     {
         $data_line            = array('Data1,', 'Data 2', 'Data 3', 'Data 4', 'Data5');
         $statistics_formatter = new Statistics_Formatter('', '', ',', ',');
@@ -31,7 +37,7 @@ class Statistics_FormatterTest extends TuleapTestCase
         $statistics_formatter->addLine($data_line);
         $statistics_formatter->addEmptyLine();
         $statistics_formatter->addLine($data_line);
-        $this->assertEqual($statistics_formatter->getCsvContent(), '
+        $this->assertEquals($statistics_formatter->getCsvContent(), '
 Title
 "Data1,","Data 2","Data 3","Data 4",Data5
 
@@ -39,7 +45,7 @@ Title
 ');
     }
 
-    public function itClearsContent()
+    public function testItClearsContent(): void
     {
         $data_line            = array('Data', 'Data', 'Data');
         $statistics_formatter = new Statistics_Formatter('', '', ',');
@@ -47,18 +53,18 @@ Title
         $statistics_formatter->addLine($data_line);
         $statistics_formatter->addEmptyLine();
         $statistics_formatter->clearContent();
-        $this->assertEqual($statistics_formatter->getCsvContent(), '');
+        $this->assertEquals($statistics_formatter->getCsvContent(), '');
     }
 
-    public function itExportsMultipleTimes()
+    public function testItExportsMultipleTimes(): void
     {
         $data_line            = array('Data', 'Data', 'Data');
         $statistics_formatter = new Statistics_Formatter('', '', ',');
         $statistics_formatter->addLine($data_line);
-        $this->assertEqual($statistics_formatter->getCsvContent(), PHP_EOL . 'Data,Data,Data' . PHP_EOL);
-        $this->assertEqual($statistics_formatter->getCsvContent(), PHP_EOL . 'Data,Data,Data' . PHP_EOL);
+        $this->assertEquals($statistics_formatter->getCsvContent(), PHP_EOL . 'Data,Data,Data' . PHP_EOL);
+        $this->assertEquals($statistics_formatter->getCsvContent(), PHP_EOL . 'Data,Data,Data' . PHP_EOL);
         $statistics_formatter->addLine($data_line);
-        $this->assertEqual(
+        $this->assertEquals(
             $statistics_formatter->getCsvContent(),
             PHP_EOL . 'Data,Data,Data' . PHP_EOL . 'Data,Data,Data' . PHP_EOL
         );
