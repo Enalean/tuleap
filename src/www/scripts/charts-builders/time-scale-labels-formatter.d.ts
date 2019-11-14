@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,30 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.release-chart-burndown-row {
-    flex: 0 0 auto;
-    width: 220px + $tlp-spacing;
-    margin: 0 $tlp-spacing 0 auto;
-    padding: 0 0 0 $tlp-half-spacing;
-}
+import { BaseType, Selection } from "d3-selection";
 
-.release-chart-burndown-container {
-    position: relative;
-    margin-bottom: $tlp-spacing;
-    padding-top: calc(45% + 20px);
-}
-
-.release-chart-burndown {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.release-line-scale,
-.release-chart-burndown .ideal-line > path {
-    stroke-width: 2px;
-    stroke: $tlp-ui-border-normal;
-    fill: transparent;
+export class TimeScaleLabelsFormatter {
+    constructor({
+        layout,
+        first_date,
+        last_date
+    }: {
+        layout: Selection<SVGSVGElement, unknown, null, undefined>;
+        first_date: string;
+        last_date: string;
+    });
+    formatTicks(): void;
+    ticksEvery(): void;
+    getFormatter(): (d: string) => string;
+    canFirstLabelOverlapSecondLabel(first_tick: BaseType, second_tick: BaseType): boolean;
+    removeAllLabelsOverlapsOthersLabels(first_index: number, displayed_ticks: BaseType[]): void;
 }
