@@ -28,7 +28,8 @@ module.exports = {
         "frs-permissions": "./frs/permissions-per-group/index.js",
         "project-admin-services": "./project/admin/services/src/index-project-admin.js",
         "site-admin-services": "./project/admin/services/src/index-site-admin.js",
-        "project-admin-banner": "./project/admin/banner/index-banner-project-admin.ts"
+        "project-admin-banner": "./project/admin/banner/index-banner-project-admin.ts",
+        "project-registration": "./project/registration/index.ts"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path, "/assets/"),

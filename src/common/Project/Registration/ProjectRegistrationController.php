@@ -40,13 +40,19 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
      * @var ProjectRegistrationUserPermissionChecker
      */
     private $permission_checker;
+    /**
+     * @var IncludeAssets
+     */
+    private $registration_assets;
 
     public function __construct(
         TemplateRendererFactory $template_renderer_factory,
+        IncludeAssets $registration_assets,
         ProjectRegistrationUserPermissionChecker $permission_checker
     ) {
         $this->template_renderer_factory = $template_renderer_factory;
         $this->permission_checker        = $permission_checker;
+        $this->registration_assets       = $registration_assets;
     }
 
     /**
@@ -56,6 +62,7 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
     {
         $this->permission_checker->checkUserCreateAProject($request);
 
+        $layout->includeFooterJavascriptFile($this->registration_assets->getFileURL('project-registration.js'));
         $layout->addCssAsset(
             new CssAsset(
                 new IncludeAssets(

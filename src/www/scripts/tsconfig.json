@@ -5,6 +5,7 @@
     },
     "include": [
         "project/admin/banner/**/*",
-        "project/banner/**/*"
+        "project/banner/**/*",
+        "project/registration/**/*"
     ]
 }
