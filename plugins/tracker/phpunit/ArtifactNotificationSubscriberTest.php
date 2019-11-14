@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('bootstrap.php');
-
-class ArtifactNotificationSubscriberTest extends TuleapTestCase
+class ArtifactNotificationSubscriberTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalLanguageMock, \Tuleap\GlobalResponseMock;
 
     /** @var Tracker_ArtifactNotificationSubscriber */
     private $artifact_subscriber;
@@ -38,15 +37,18 @@ class ArtifactNotificationSubscriberTest extends TuleapTestCase
     /** @var Tracker_ArtifactDao */
     private $artifact_dao;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->artifact     = stub('Tracker_Artifact')->getId()->returns(201);
-        $this->artifact_dao = mock('Tracker_ArtifactDao');
+        $this->artifact     = Mockery::mock(\Tracker_Artifact::class);
+        $this->artifact->shouldReceive('getId')->andReturn(201);
+        $this->artifact->shouldReceive('getUri');
+        $this->artifact_dao = \Mockery::spy(\Tracker_ArtifactDao::class);
 
-        $this->user    = stub('PFUser')->getId()->returns(101);
-        $this->request = mock('Codendi_Request');
+        $this->user    = Mockery::mock(\PFUser::class);
+        $this->user->shouldReceive('getId')->andReturn(101);
+        $this->request = \Mockery::spy(\Codendi_Request::class);
 
         $this->artifact_subscriber = new Tracker_ArtifactNotificationSubscriber(
             $this->artifact,
@@ -54,20 +56,20 @@ class ArtifactNotificationSubscriberTest extends TuleapTestCase
         );
     }
 
-    public function itsubscribeUser()
+    public function testItSubscribeUser(): void
     {
-        stub($this->artifact)->userCanView($this->user)->returns(true);
+        $this->artifact->shouldReceive('userCanView')->withArgs([$this->user])->andReturn(true);
 
-        expect($this->artifact_dao)->deleteUnsubscribeNotification(201, 101)->once();
+        $this->artifact_dao->shouldReceive('deleteUnsubscribeNotification')->withArgs([201, 101])->once();
 
         $this->artifact_subscriber->subscribeUser($this->user, $this->request);
     }
 
-    public function itUnsubscribeUser()
+    public function testItUnsubscribeUser(): void
     {
-        stub($this->artifact)->userCanView($this->user)->returns(true);
+        $this->artifact->shouldReceive('userCanView')->withArgs([$this->user])->andReturn(true);
 
-        expect($this->artifact_dao)->createUnsubscribeNotification(201, 101)->once();
+        $this->artifact_dao->shouldReceive('createUnsubscribeNotification')->withArgs([201, 101])->once();
 
         $this->artifact_subscriber->unsubscribeUser($this->user, $this->request);
     }
