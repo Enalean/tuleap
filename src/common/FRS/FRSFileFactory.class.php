@@ -713,7 +713,7 @@ class FRSFileFactory
                     $purgeState = $purgeState & $this->purgeFile($file, $backend);
                 }
             }
-            return $purgeState;
+            return (bool) $purgeState;
         }
         return false;
     }

@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +16,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-class FRSPackageTest extends TuleapTestCase
+class FRSPackageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     function testIsActive()
     {
-        global $GLOBALS;
-
         $active_value = 1;
         $deleted_value = 2;
         $hidden_value = 3;
@@ -43,8 +41,6 @@ class FRSPackageTest extends TuleapTestCase
 
     function testIsDeleted()
     {
-        global $GLOBALS;
-
         $active_value = 1;
         $deleted_value = 2;
         $hidden_value = 3;
@@ -62,8 +58,6 @@ class FRSPackageTest extends TuleapTestCase
 
     function testIsHidden()
     {
-        global $GLOBALS;
-
         $active_value = 1;
         $deleted_value = 2;
         $hidden_value = 3;

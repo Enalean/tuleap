@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,14 +16,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Tuleap\FRS;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-class FRSReleasePermissionManagerTest extends TuleapTestCase
+class FRSReleasePermissionManagerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var FRSPermissionManager
      */
@@ -54,10 +58,8 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
      */
     private $release;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->frs_service_permission_manager = \Mockery::spy(\Tuleap\FRS\FRSPermissionManager::class);
         $this->release_factory                = \Mockery::spy(\FRSReleaseFactory::class);
 
@@ -71,7 +73,7 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
         $this->release = \Mockery::spy(\FRSRelease::class);
     }
 
-    public function itReturnsTrueWhenReleaseIsHiddenAndUserIsFrsAdmin()
+    public function testItReturnsTrueWhenReleaseIsHiddenAndUserIsFrsAdmin()
     {
         $this->release->shouldReceive('isHidden')->andReturns(true);
         $this->release_factory->shouldReceive('userCanAdmin')->with($this->user, $this->project->getID())->andReturns(true);
@@ -81,7 +83,7 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
         );
     }
 
-    public function itReturnsFalseWhenReleaseIsHiddenAndUserDoesntHaveAdminPermissions()
+    public function testItReturnsFalseWhenReleaseIsHiddenAndUserDoesntHaveAdminPermissions()
     {
         $this->release->shouldReceive('isHidden')->andReturns(true);
         $this->release_factory->shouldReceive('userCanAdmin')->with($this->user, $this->project->getID())->andReturns(false);
@@ -91,7 +93,7 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
         );
     }
 
-    public function itReturnsTrueWHenReleaseIsActiveAndUserCanAccessFrsServiceAndUserCanAccessRelease()
+    public function testItReturnsTrueWHenReleaseIsActiveAndUserCanAccessFrsServiceAndUserCanAccessRelease()
     {
         $this->release->shouldReceive('isActive')->andReturns(true);
         $this->frs_service_permission_manager->shouldReceive('userCanRead')->with($this->project, $this->user)->andReturns(true);
@@ -102,7 +104,7 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
         );
     }
 
-    public function itReturnsFalseWhenReleaseIsActiveAndUserCannotAccessFrsService()
+    public function testItReturnsFalseWhenReleaseIsActiveAndUserCannotAccessFrsService()
     {
         $this->release->shouldReceive('isActive')->andReturns(true);
         $this->frs_service_permission_manager->shouldReceive('userCanRead')->with($this->project, $this->user)->andReturns(false);
@@ -112,7 +114,7 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
         );
     }
 
-    public function itReturnsFalseWHenReleaseIsActiveAndUserCanAccessFrsServiceAndUserCanNotAccessRelease()
+    public function testItReturnsFalseWHenReleaseIsActiveAndUserCanAccessFrsServiceAndUserCanNotAccessRelease()
     {
         $this->release->shouldReceive('isActive')->andReturns(true);
         $this->frs_service_permission_manager->shouldReceive('userCanRead')->with($this->project, $this->user)->andReturns(true);

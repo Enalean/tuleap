@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,15 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Tuleap\FRS\PermissionsPerGroup;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-class PaneCollectorTest extends TuleapTestCase
+class PaneCollectorTest extends TestCase
 {
-    public function itDoesNotBuildPaneIfServiceNotUsed()
+    use MockeryPHPUnitIntegration;
+
+    public function testItDoesNotBuildPaneIfServiceNotUsed()
     {
         $service_builder = \Mockery::spy(\Tuleap\FRS\PermissionsPerGroup\PermissionPerGroupFRSServicePresenterBuilder::class);
         $package_builder = \Mockery::spy(\Tuleap\FRS\PermissionsPerGroup\PermissionPerGroupFRSPackagesPresenterBuilder::class);

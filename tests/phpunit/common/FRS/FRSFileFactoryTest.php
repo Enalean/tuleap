@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,31 +16,26 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-class FRSFileFactoryTest extends TuleapTestCase
+class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\ForgeConfigSandbox, \Tuleap\TemporaryTestDirectory, \Tuleap\GlobalLanguageMock;
 
-    function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-        $GLOBALS['Language']           = \Mockery::spy(\BaseLanguage::class);
         $GLOBALS['ftp_frs_dir_prefix'] = $this->getTmpDir();
         $GLOBALS['ftp_incoming_dir']   = $this->getTmpDir();
-        ForgeConfig::store();
         ForgeConfig::set('ftp_frs_dir_prefix', $GLOBALS['ftp_frs_dir_prefix']);
         ForgeConfig::set('ftp_incoming_dir', $GLOBALS['ftp_incoming_dir']);
         copy(__DIR__ . '/_fixtures/file_sample', $GLOBALS['ftp_incoming_dir'] . '/file_sample');
     }
 
-    function tearDown()
+    protected function tearDown(): void
     {
-        unset($GLOBALS['Language']);
         unset($GLOBALS['ftp_frs_dir_prefix']);
         unset($GLOBALS['ftp_incoming_dir']);
-        ForgeConfig::restore();
-        parent::tearDown();
     }
 
     function testgetUploadSubDirectory()
@@ -56,7 +50,7 @@ class FRSFileFactoryTest extends TuleapTestCase
         $file_fact = new FRSFileFactory();
 
         $sub_dir = $file_fact->getUploadSubDirectory($release);
-        $this->assertEqual($sub_dir, 'p'.$package_id.'_r'.$release_id);
+        $this->assertEquals($sub_dir, 'p'.$package_id.'_r'.$release_id);
     }
 
     function testPurgeDeletedFiles()
@@ -162,25 +156,6 @@ class FRSFileFactoryTest extends TuleapTestCase
         }
     }
 
-    private function removeDeletedReleaseDir($release_name, $dir_name, $file_name)
-    {
-        // Clean-up
-        if ($file_name) {
-            unlink($GLOBALS['ftp_frs_dir_prefix']."/DELETED/$release_name/$dir_name/$file_name");
-        }
-        rmdir($GLOBALS['ftp_frs_dir_prefix']."/DELETED/$release_name/$dir_name");
-        rmdir($GLOBALS['ftp_frs_dir_prefix']."/DELETED/$release_name");
-    }
-
-    private function removeRelease($release_name, $dir_name, $file_name)
-    {
-        if ($file_name) {
-            unlink($GLOBALS['ftp_frs_dir_prefix']."/$release_name/$dir_name/$file_name");
-        }
-
-        rmdir($GLOBALS['ftp_frs_dir_prefix']."/$release_name/$dir_name");
-    }
-
     function testMoveDeletedFileToStagingArea()
     {
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -204,8 +179,6 @@ class FRSFileFactoryTest extends TuleapTestCase
         $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/foobar.xls.12'));
         $this->assertFalse(is_file($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls'));
         $this->assertFalse(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1'));
-
-        $this->removeDeletedReleaseDir('prj', 'p1_r1', 'foobar.xls.12');
     }
 
     /**
@@ -239,9 +212,6 @@ class FRSFileFactoryTest extends TuleapTestCase
         $this->assertFalse(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/foobar.xls.12'));
         $this->assertFalse(is_file($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls'));
         $this->assertFalse(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1'));
-
-        // Clean-up
-        $this->removeDeletedReleaseDir('prj', 'p1_r1', "");
     }
 
     function testMoveDeletedFileToStagingAreaReleaseNotEmpty()
@@ -270,10 +240,6 @@ class FRSFileFactoryTest extends TuleapTestCase
         $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj/p1_r1/foobar.xls.12'));
         $this->assertFalse(is_file($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls'));
         $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/barfoo.doc'), 'The other file in the release must not be deleted');
-
-        // Clean-up
-        $this->removeRelease('prj', 'p1_r1', 'barfoo.doc');
-        $this->removeDeletedReleaseDir('prj', 'p1_r1', 'foobar.xls.12');
     }
 
     function testMoveDeletedFilesToStagingAreaFail()
@@ -332,8 +298,6 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testPurgeFilesWithOneFile()
     {
-        $refFile = new FRSFile(array('file_id' => 12));
-
         $dao = \Mockery::spy(\FRSFileDao::class);
         $dao->shouldReceive('searchFilesToPurge')->with(1287504083)->once()->andReturn(TestHelper::arrayToDar(['file_id' => 12]));
 
@@ -348,6 +312,7 @@ class FRSFileFactoryTest extends TuleapTestCase
             }),
             $backend
         )->once()->andReturns(true);
+
         $this->assertTrue($ff->purgeFiles(1287504083, $backend));
     }
 
@@ -383,9 +348,6 @@ class FRSFileFactoryTest extends TuleapTestCase
         $ff->purgeFile($file, $backend);
 
         $this->assertFalse(is_file($filepath), "File should be deleted");
-
-        // Cleanup
-        $this->removeDeletedReleaseDir('prj', 'p1_r1', "");
     }
 
     function testPurgeFileDBUpdateFails()
@@ -413,9 +375,6 @@ class FRSFileFactoryTest extends TuleapTestCase
         $this->assertFalse($ff->purgeFile($file, $backend));
 
         $this->assertFalse(is_file($filepath), "File should be deleted");
-
-        // Cleanup
-        $this->removeDeletedReleaseDir('prj', 'p1_r1', '');
     }
 
     public function testPurgeFileSystemCopyFails()
@@ -440,9 +399,6 @@ class FRSFileFactoryTest extends TuleapTestCase
         $backend = \Mockery::spy(\BackendSystem::class);
         $backend->shouldReceive('log')->with('File '.$filepath.' not purged, unlink failed', 'error')->once();
         $this->assertFalse($ff->purgeFile($file, $backend));
-
-        // Cleanup
-        $this->removeDeletedReleaseDir('prj', 'p1_r1', 'foobar.xls.12');
     }
 
     function testPurgeFileWithFileNotFoundInFS()
@@ -494,10 +450,6 @@ class FRSFileFactoryTest extends TuleapTestCase
         $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj2/p2_r5/file.txt.7'));
         $this->assertFalse(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p7_r8'));
         $this->assertTrue(is_file($GLOBALS['ftp_frs_dir_prefix'].'/DELETED/prj3/p9_r10/foo.txt.12'));
-
-        // Cleanup
-        $this->removeDeletedReleaseDir('prj2', 'p2_r5', 'file.txt.7');
-        $this->removeDeletedReleaseDir('prj3', 'p9_r10', 'foo.txt.12');
     }
 
     function testRestoreFileSucceed()
@@ -537,10 +489,6 @@ class FRSFileFactoryTest extends TuleapTestCase
         $fileFactory->shouldReceive('_getFRSReleaseFactory')->andReturns($releaseFactory);
 
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
-
-        // Cleanup
-        $this->removeDeletedReleaseDir('prj', 'p1_r1', '');
-        $this->removeRelease('prj', 'p1_r1', 'toto.xls');
     }
 
     function testRestoreFileNotExists()
@@ -573,10 +521,6 @@ class FRSFileFactoryTest extends TuleapTestCase
         $fileFactory->shouldReceive('_getFRSReleaseFactory')->andReturns($releaseFactory);
 
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
-
-        // Cleanup
-        $this->removeDeletedReleaseDir('prj', 'p1_r1', '');
-        $this->removeRelease('prj', 'p1_r1', '');
     }
 
     function testRestoreFileLocationNotExists()
@@ -616,10 +560,6 @@ class FRSFileFactoryTest extends TuleapTestCase
         $fileFactory->shouldReceive('_getFRSReleaseFactory')->andReturns($releaseFactory);
 
         $this->assertTrue($fileFactory->restoreFile($file, $backend));
-
-        // Cleanup
-        $this->removeDeletedReleaseDir('prj', 'p2_r1', '');
-        $this->removeRelease('prj', 'p2_r1', 'toto.xls');
     }
 
     function testRestoreFileDBUpdateFails()
@@ -660,10 +600,6 @@ class FRSFileFactoryTest extends TuleapTestCase
         $fileFactory->shouldReceive('_getFRSReleaseFactory')->andReturns($releaseFactory);
 
         $this->assertFalse($fileFactory->restoreFile($file, $backend));
-
-        // Cleanup
-        $this->removeDeletedReleaseDir('prj', 'p3_r1', '');
-        $this->removeRelease('prj', 'p3_r1', 'toto.xls');
     }
 
     function testRestoreFileInDeletedRelease()
@@ -692,9 +628,6 @@ class FRSFileFactoryTest extends TuleapTestCase
         $this->assertTrue(is_dir(dirname($filepath)));
         $this->assertFalse(file_exists($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1/toto.xls'));
         $this->assertFalse(is_dir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p3_r1'));
-
-        // Cleanup
-        $this->removeDeletedReleaseDir('prj', 'p3_r1', 'toto.xls.12');
     }
 
     function testRestoreDeletedFiles()
@@ -816,14 +749,11 @@ class FRSFileFactoryTest extends TuleapTestCase
         $f->setRelease($r);
 
         $ff = new FRSFileFactory();
-        $ff->setFileForge(dirname(__FILE__).'/../../../../src/utils/fileforge.pl');
+        $ff->setFileForge(__DIR__ . '/../../../../src/utils/fileforge.pl');
 
         $res = $ff->moveFileForge($f, $r);
         $this->assertTrue($res);
-        $this->assertTrue(file_exists($GLOBALS['ftp_frs_dir_prefix'].'/prj/'.$f->getFilePath()));
-
-        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/'.$f->getFilePath());
-        $this->removeRelease('prj', 'p123_r456', '');
+        $this->assertFileExists($GLOBALS['ftp_frs_dir_prefix'].'/prj/'.$f->getFilePath());
     }
 
     function testMoveFileforgeFileExist()
@@ -848,8 +778,6 @@ class FRSFileFactoryTest extends TuleapTestCase
 
         $ff = new FRSFileFactory();
         $this->assertFalse($ff->moveFileForge($f));
-
-        $this->removeRelease('prj', 'p123_r456', 'toto.txt_1299584211');
     }
 
     function testMoveFileforgeFileExistWithSpaces()
@@ -873,8 +801,6 @@ class FRSFileFactoryTest extends TuleapTestCase
 
         $ff = new FRSFileFactory();
         $this->assertFalse($ff->moveFileForge($f));
-
-        $this->removeRelease('prj', 'p123_r456', 'toto zataz.txt');
     }
 
     function testCreateFileIllegalName()
@@ -883,11 +809,9 @@ class FRSFileFactoryTest extends TuleapTestCase
         $f = new FRSFile();
         $f->setFileName('%toto#.txt');
 
-        try {
-            $ff->createFile($f);
-        } catch (Exception $e) {
-            $this->assertIsA($e, 'FRSFileIllegalNameException');
-        }
+        $this->expectException(FRSFileIllegalNameException::class);
+
+        $ff->createFile($f);
     }
 
     function testCreateFileSetReleaseTime()
@@ -906,7 +830,7 @@ class FRSFileFactoryTest extends TuleapTestCase
         $f->setFileName('file_sample');
 
         $dao = \Mockery::spy(\FRSFileDao::class);
-        stub($dao)->searchFileByName()->returnsEmptyDar();
+        $dao->shouldReceive('searchFileByName')->andReturns(TestHelper::emptyDar());
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Logger::class));
         $ff->shouldReceive('create')->andReturns(55);
@@ -943,7 +867,7 @@ class FRSFileFactoryTest extends TuleapTestCase
         $f->setPostDate(3125);
 
         $dao = \Mockery::spy(\FRSFileDao::class);
-        stub($dao)->searchFileByName()->returnsEmptyDar();
+        $dao->shouldReceive('searchFileByName')->andReturns(TestHelper::emptyDar());
         $ff = \Mockery::mock(\FRSFileFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $ff->setLogger(\Mockery::spy(\Logger::class));
         $ff->shouldReceive('create')->andReturns(55);
@@ -989,13 +913,10 @@ class FRSFileFactoryTest extends TuleapTestCase
         $ff->setLogger(\Mockery::spy(\Logger::class));
         $ff->shouldReceive('getSrcDir')->andReturns($GLOBALS['ftp_incoming_dir']);
         $ff->shouldReceive('isFileBaseNameExists')->andReturns(true);
-        try {
-            $ff->createFile($f);
-        } catch (Exception $e) {
-            $this->assertIsA($e, 'FRSFileExistsException');
-        }
 
-        $this->removeRelease('prj', 'p123_r456', 'toto.txt_1299584197');
+        $this->expectException(FRSFileExistsException::class);
+
+        $ff->createFile($f);
     }
 
     /**
@@ -1037,12 +958,7 @@ class FRSFileFactoryTest extends TuleapTestCase
         touch($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584210');
 
         $ff->shouldReceive('create')->andReturns(15225);
-        $this->assertEqual($ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5), $f);
-
-        unlink($GLOBALS['ftp_incoming_dir'].'/toto.txt');
-        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584210');
-        unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt_1299584187');
-        $this->removeRelease('prj', 'p123_r456', '');
+        $this->assertEquals($ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5), $f);
     }
 
     /**
@@ -1077,14 +993,9 @@ class FRSFileFactoryTest extends TuleapTestCase
         $ff->shouldReceive('isFileBaseNameExists')->andReturns(false);
         $ff->shouldReceive('isSameFileMarkedToBeRestored')->andReturns(true);
 
-        try {
-            $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
-        } catch (Exception $e) {
-            $this->assertIsA($e, 'FRSFileToBeRestoredException');
-        }
+        $this->expectException(FRSFileToBeRestoredException::class);
 
-        unlink($GLOBALS['ftp_incoming_dir'].'/toto.txt');
-        $this->removeRelease('prj', 'p123_r456', '');
+        $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
     }
 
 
@@ -1106,11 +1017,10 @@ class FRSFileFactoryTest extends TuleapTestCase
         $ff->setLogger(\Mockery::spy(\Logger::class));
         $ff->shouldReceive('getSrcDir')->andReturns($GLOBALS['ftp_incoming_dir']);
         $this->assertFalse(is_file($GLOBALS['ftp_incoming_dir'].'/toto.txt'));
-        try {
-            $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
-        } catch (Exception $e) {
-            $this->assertIsA($e, 'FRSFileInvalidNameException');
-        }
+
+        $this->expectException(FRSFileInvalidNameException::class);
+
+        $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
     }
 
     function testCreateFileSkipCompareMD5Checksums()
@@ -1147,7 +1057,7 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testCreateFileCompareMD5Checksums()
     {
-        $project = mockery_stub(\Project::class)->getId()->returns(111);
+        $project = new Project(['group_id' => 111]);
 
         $r = \Mockery::mock(FRSRelease::class.'[getProject]');
         $r->shouldReceive('getProject')->andReturn($project);
@@ -1170,10 +1080,11 @@ class FRSFileFactoryTest extends TuleapTestCase
         $path = $GLOBALS['ftp_incoming_dir'].'/'.$f->getFileName();
         $f->setReferenceMd5('d41d8cd98f00b204e9800998ecf8427e');
 
+
         try {
             $ff->createFile($f, FRSFileFactory::COMPUTE_MD5);
         } catch (Exception $e) {
-            $this->assertIsA($e, 'FRSFileMD5SumException');
+            $this->assertInstanceOf(FRSFileMD5SumException::class, $e);
         }
 
         $this->assertNotNull($f->getComputedMd5());
@@ -1184,7 +1095,7 @@ class FRSFileFactoryTest extends TuleapTestCase
 
     function testCreateFileMoveFileForgeKo()
     {
-        $project = mockery_stub(\Project::class)->getId()->returns(111);
+        $project = new Project(['group_id' => 111]);
 
         $r = \Mockery::mock(FRSRelease::class.'[getProject]');
         $r->shouldReceive('getProject')->andReturn($project);
@@ -1202,11 +1113,10 @@ class FRSFileFactoryTest extends TuleapTestCase
         $f->setRelease($r);
 
         $ff->shouldReceive('moveFileForge')->andReturns(false);
-        try {
-            $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
-        } catch (Exception $e) {
-            $this->assertIsA($e, 'FRSFileForgeException');
-        }
+
+        $this->expectException(FRSFileForgeException::class);
+
+        $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
     }
 
     function testCreateFileDbEntryMovedFile()
@@ -1237,15 +1147,9 @@ class FRSFileFactoryTest extends TuleapTestCase
         $ff->shouldReceive('moveFileForge')->andReturns(true);
         $ff->shouldReceive('create')->andReturns(false);
 
-        try {
-            $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
-        } catch (Exception $e) {
-            $this->assertIsA($e, 'FRSFileDbException');
-        }
+        $this->expectException(FRSFileDbException::class);
 
-        //Cleanup
-        unlink($GLOBALS['ftp_incoming_dir'].'/toto.txt');
-        $this->removeRelease('prj', 'p123_r456', 'toto.txt');
+        $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
     }
 
     function testDeleteProjectFRSPackagesFail()

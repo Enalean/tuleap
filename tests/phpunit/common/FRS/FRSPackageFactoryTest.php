@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +16,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-class FRSPackageFactoryTest extends TuleapTestCase
+class FRSPackageFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     protected $group_id   = 12;
     protected $package_id = 34;
     protected $user_id    = 56;
@@ -31,10 +33,8 @@ class FRSPackageFactoryTest extends TuleapTestCase
     private $permission_manager;
     private $frs_permission_manager;
 
-    public function setUp()
+    public function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->user                   = \Mockery::spy(PFUser::class);
         $this->frs_package_factory    = \Mockery::mock(FRSPackageFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->user_manager           = \Mockery::spy(UserManager::class);
@@ -90,8 +90,8 @@ class FRSPackageFactoryTest extends TuleapTestCase
 
         $PackageFactory = \Mockery::mock(FRSPackageFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $PackageFactory->shouldReceive('_getFRSPackageDao')->andReturns($dao);
-        $this->assertEqual($PackageFactory->getFRSPackageFromDb(1, null, 0x0001), $package1);
-        $this->assertEqual($PackageFactory->getFRSPackageFromDb(2), $package2);
+        $this->assertEquals($PackageFactory->getFRSPackageFromDb(1, null, 0x0001), $package1);
+        $this->assertEquals($PackageFactory->getFRSPackageFromDb(2), $package2);
     }
 
     public function testAdminHasAlwaysAccess()
