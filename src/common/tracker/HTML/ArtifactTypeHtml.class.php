@@ -1793,7 +1793,7 @@ EOS;
      *
      *  @return void
      */
-    protected function displayFieldValuesList($field_id)
+    public function displayFieldValuesList($field_id)
     {
         global $ath,$art_field_fact,$Language;
         $hp = Codendi_HTMLPurifier::instance();
