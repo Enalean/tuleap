@@ -19,48 +19,46 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('CollectionTestCase.class.php');
+declare(strict_types=1);
 
-class LinkedListTestCase extends CollectionTestCase
+namespace Tuleap\Collection;
+
+use LinkedList;
+use PHPUnit\Framework\TestCase;
+use stdClass;
+
+class LinkedListTest extends TestCase
 {
-
-    function __construct($name = 'Collection test', $collection_class_name = 'you_must_define_classname')
+    public function testOrder(): void
     {
-        parent::__construct($name, $collection_class_name);
-    }
-
-    function testOrder()
-    {
-        $a = new StdClass();
-        $b = new StdClass();
-        $c = new StdClass();
-        $l = new $this->collection_class_name();
+        $a = new stdClass();
+        $b = new stdClass();
+        $c = new stdClass();
+        $l = new LinkedList();
         $l->add($c);
         $l->add($b);
         $l->add($a);
         $it = $l->iterator();
         $element = $it->current();
-        $this->assertReference($element, $c);
+        $this->assertSame($element, $c);
         $it->next();
         $element = $it->current();
-        $this->assertReference($element, $b);
+        $this->assertSame($element, $b);
         $it->next();
         $element = $it->current();
-        $this->assertReference($element, $a);
+        $this->assertSame($element, $a);
     }
 
-    function testEqualsDifferentOrder()
+    public function testEqualsDifferentOrder(): void
     {
-        $a = new StdClass();
-        $b = new StdClass();
-        $l1 = new $this->collection_class_name();
+        $a = new stdClass();
+        $b = new stdClass();
+        $l1 = new LinkedList();
         $l1->add($a);
         $l1->add($b);
-        $l2 = new $this->collection_class_name();
+        $l2 = new LinkedList();
         $l2->add($b);
         $l2->add($a);
         $this->assertFalse($l1->equals($l2));
     }
 }
-//We just tells SimpleTest to always ignore this testcase
-SimpleTest::ignore('LinkedListTestCase');
