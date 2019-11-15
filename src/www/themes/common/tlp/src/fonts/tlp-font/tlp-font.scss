@@ -44,7 +44,13 @@ $tlp-fontawesome-icons: (
     mediawiki: '\f014',
     folder-globe: '\f015',
     add-to-backlog: '\f016',
-    dependencies-graph: '\f017'
+    dependencies-graph: '\f017',
+    backlog: '\f018',
+    remove-from-backlog: '\f019',
+    taskboard: '\f020',
+    kanban: '\f021',
+    esc-key: '\f022',
+    enter-key: '\f023'
 );
 
 @each $label, $unicode in $tlp-fontawesome-icons {
