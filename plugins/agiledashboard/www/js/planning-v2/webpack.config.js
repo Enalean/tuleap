@@ -20,7 +20,10 @@
 const path = require("path");
 const webpack_configurator = require("../../../../../tools/utils/scripts/webpack-configurator.js");
 
-const assets_dir_path = path.resolve(__dirname, "./dist");
+const assets_dir_path = path.resolve(
+    __dirname,
+    "../../../../../src/www/assets/agiledashboard/planning-v2"
+);
 
 const webpack_config = {
     entry: {
@@ -35,12 +38,11 @@ const webpack_config = {
     },
     resolve: {
         alias: webpack_configurator.extendAliases(
+            webpack_configurator.tlp_fetch_alias,
+            webpack_configurator.angular_tlp_alias,
             {
-                "card-fields": path.resolve(__dirname, "../card-fields"),
-                // angular-tlp
-                angular$: path.resolve(__dirname, "node_modules/angular"),
-                "angular-mocks$": path.resolve(__dirname, "node_modules/angular-mocks"),
                 // card-fields dependencies
+                angular$: path.resolve(__dirname, "node_modules/angular"),
                 "angular-sanitize$": path.resolve(__dirname, "node_modules/angular-sanitize"),
                 moment$: path.resolve(__dirname, "node_modules/moment"),
                 he$: path.resolve(__dirname, "node_modules/he"),
@@ -49,13 +51,12 @@ const webpack_config = {
                     __dirname,
                     "node_modules/escape-string-regexp"
                 )
-            },
-            webpack_configurator.angular_artifact_modal_aliases
+            }
         )
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_ng_cache_loader,
             webpack_configurator.rule_vue_loader,
             webpack_configurator.rule_angular_mixed_vue_gettext,

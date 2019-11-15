@@ -4,8 +4,18 @@ import "angular-mocks";
 
 import BaseMilestoneController from "./milestone-controller.js";
 
-describe("MilestoneController -", function() {
-    var $q,
+function createElement(tag_name, class_name) {
+    const local_document = document.implementation.createHTMLDocument();
+    const element = local_document.createElement(tag_name);
+    if (!class_name) {
+        return element;
+    }
+    element.classList.add(class_name);
+    return element;
+}
+
+describe("MilestoneController", function() {
+    let $q,
         $scope,
         $document,
         $timeout,
@@ -43,23 +53,41 @@ describe("MilestoneController -", function() {
             dragularService = _dragularService_;
 
             BacklogService = _BacklogService_;
-            spyOn(BacklogService, "addOrReorderBacklogItemsInBacklog");
+            jest.spyOn(BacklogService, "addOrReorderBacklogItemsInBacklog").mockImplementation(
+                () => {}
+            );
 
             DroppedService = _DroppedService_;
-            spyOn(DroppedService, "moveFromSubmilestoneToBacklog");
-            spyOn(DroppedService, "moveFromSubmilestoneToSubmilestone");
-            spyOn(DroppedService, "defineComparedToBeFirstItem").and.callThrough();
-            spyOn(DroppedService, "defineComparedToBeLastItem").and.callThrough();
-            spyOn(DroppedService, "reorderSubmilestone");
+            jest.spyOn(DroppedService, "moveFromSubmilestoneToBacklog").mockImplementation(
+                () => {}
+            );
+            jest.spyOn(DroppedService, "moveFromSubmilestoneToSubmilestone").mockImplementation(
+                () => {}
+            );
+            jest.spyOn(DroppedService, "defineComparedToBeFirstItem");
+            jest.spyOn(DroppedService, "defineComparedToBeLastItem");
+            jest.spyOn(DroppedService, "reorderSubmilestone").mockImplementation(() => {});
 
             MilestoneCollectionService = _MilestoneCollectionService_;
-            spyOn(MilestoneCollectionService, "refreshMilestone");
-            spyOn(MilestoneCollectionService, "removeBacklogItemsFromMilestoneContent");
-            spyOn(MilestoneCollectionService, "addOrReorderBacklogItemsInMilestoneContent");
+            jest.spyOn(MilestoneCollectionService, "refreshMilestone").mockImplementation(() => {});
+            jest.spyOn(
+                MilestoneCollectionService,
+                "removeBacklogItemsFromMilestoneContent"
+            ).mockImplementation(() => {});
+            jest.spyOn(
+                MilestoneCollectionService,
+                "addOrReorderBacklogItemsInMilestoneContent"
+            ).mockImplementation(() => {});
 
             BacklogItemSelectedService = _BacklogItemSelectedService_;
-            spyOn(BacklogItemSelectedService, "areThereMultipleSelectedBaklogItems");
-            spyOn(BacklogItemSelectedService, "getCompactedSelectedBacklogItem");
+            jest.spyOn(
+                BacklogItemSelectedService,
+                "areThereMultipleSelectedBaklogItems"
+            ).mockImplementation(() => {});
+            jest.spyOn(
+                BacklogItemSelectedService,
+                "getCompactedSelectedBacklogItem"
+            ).mockImplementation(() => {});
 
             MilestoneController = $controller(BaseMilestoneController, {
                 $scope: $scope,
@@ -101,11 +129,11 @@ describe("MilestoneController -", function() {
             it("that was not already loaded, when I toggle a milestone, then its content will be loaded", () => {
                 MilestoneController.milestone = {
                     content: [],
-                    getContent: jasmine.createSpy("getContent")
+                    getContent: jest.fn()
                 };
 
                 var get_content_request = $q.defer();
-                MilestoneController.milestone.getContent.and.returnValue(
+                MilestoneController.milestone.getContent.mockReturnValue(
                     get_content_request.promise
                 );
                 get_content_request.resolve({
@@ -156,8 +184,8 @@ describe("MilestoneController -", function() {
         });
     });
 
-    describe("dragularDrop() -", function() {
-        var $dropped_item_element,
+    describe("dragularDrop()", () => {
+        let $dropped_item_element,
             dropped_item_ids,
             dropped_items,
             $target_element,
@@ -170,13 +198,13 @@ describe("MilestoneController -", function() {
             source_milestone_id,
             move_request;
 
-        beforeEach(function() {
+        beforeEach(() => {
             dropped_item_ids = [33];
             dropped_items = [{ id: 33 }];
             source_milestone_id = 81;
-            $dropped_item_element = affix("li");
+            $dropped_item_element = createElement("li");
             angular.element($dropped_item_element).data("item-id", dropped_item_ids[0]);
-            $source_element = affix("ul.submilestone");
+            $source_element = createElement("ul", "submilestone");
             angular.element($source_element).data("submilestone-id", source_milestone_id);
             initial_index = 0;
             target_index = 0;
@@ -192,7 +220,7 @@ describe("MilestoneController -", function() {
 
         describe("Given an event, the dropped element, the target element, the source element, the source model, the initial index, the target model and the target index", function() {
             it("when I reorder an item in the submilestone (e.g. a Sprint), then the item will be reordered using DroppedService", function() {
-                DroppedService.reorderSubmilestone.and.returnValue(move_request.promise);
+                DroppedService.reorderSubmilestone.mockReturnValue(move_request.promise);
                 $target_element = $source_element;
                 source_model = [{ id: dropped_item_ids[0] }, { id: 96 }];
                 target_model = undefined;
@@ -216,11 +244,11 @@ describe("MilestoneController -", function() {
             });
 
             it("when I move an item from one submilestone (e.g. a Sprint) to another submilestone, then the item will be moved using DroppedService and both the source and target submilestones' initial efforts will be updated", function() {
-                DroppedService.moveFromSubmilestoneToSubmilestone.and.returnValue(
+                DroppedService.moveFromSubmilestoneToSubmilestone.mockReturnValue(
                     move_request.promise
                 );
                 var target_milestone_id = 14;
-                $target_element = affix("ul.submilestone");
+                $target_element = createElement("ul", "submilestone");
                 angular.element($target_element).data("submilestone-id", target_milestone_id);
                 source_model = [];
                 target_model = [{ id: dropped_item_ids[0] }, { id: 96 }];
@@ -253,8 +281,8 @@ describe("MilestoneController -", function() {
             });
 
             it("when I move an item from a submilestone (e.g. a Sprint) to the backlog, then the item will be moved using DroppedService and the submilestone's initial effort will be updated", function() {
-                DroppedService.moveFromSubmilestoneToBacklog.and.returnValue(move_request.promise);
-                $target_element = affix("ul.backlog");
+                DroppedService.moveFromSubmilestoneToBacklog.mockReturnValue(move_request.promise);
+                $target_element = createElement("ul", "backlog");
                 source_model = [];
                 target_model = [{ id: dropped_item_ids[0] }, { id: 96 }];
 
@@ -287,12 +315,12 @@ describe("MilestoneController -", function() {
             });
         });
 
-        describe("dragularOptionsForMilestone() -", function() {
-            describe("accepts() -", function() {
+        describe("dragularOptionsForMilestone()", () => {
+            describe("accepts()", () => {
                 var $element_to_drop, $target_container_element;
-                beforeEach(function() {
-                    $element_to_drop = affix("li");
-                    $target_container_element = affix("ul");
+                beforeEach(() => {
+                    $element_to_drop = createElement("li");
+                    $target_container_element = createElement("ul");
                 });
 
                 describe("Given an element to drop and a target container element", function() {
@@ -335,18 +363,22 @@ describe("MilestoneController -", function() {
                 });
             });
 
-            describe("moves() -", function() {
+            describe("moves()", () => {
                 var $element_to_drag, $container, $handle_element;
-                beforeEach(function() {
-                    $element_to_drag = affix("li");
+                beforeEach(() => {
+                    $element_to_drag = createElement("li");
                     $container = undefined;
                 });
 
-                describe("Given an element to drag and its child handle element", function() {
-                    it("and given that the handle has an ancestor with the 'dragular-handle' class and the element didn't have nodrag data, when I check if the element can be dragged, then it will return true", function() {
-                        var $handle_element = $element_to_drag
-                            .affix("div.dragular-handle")
-                            .affix("span");
+                describe("Given an element to drag and its child handle element", () => {
+                    it(`and given that the handle has an ancestor with the 'dragular-handle' class
+                        and the element didn't have nodrag data,
+                        when I check if the element can be dragged,
+                        then it will return true`, () => {
+                        const dragular_handle = createElement("div", "dragular-handle");
+                        const $handle_element = createElement("span");
+                        dragular_handle.appendChild($handle_element);
+                        $element_to_drag.appendChild(dragular_handle);
 
                         var result = MilestoneController.dragularOptionsForMilestone().moves(
                             $element_to_drag,
@@ -357,8 +389,12 @@ describe("MilestoneController -", function() {
                         expect(result).toBeTruthy();
                     });
 
-                    it("and given that the handle didn't have any ancestor with the 'dragular-handle' class and the element didn't have nodrag data, when I check if the element can be dragged, then it will return false", function() {
-                        var $handle_element = $element_to_drag.affix("span");
+                    it(`and given that the handle didn't have any ancestor with the 'dragular-handle' class
+                        and the element didn't have nodrag data,
+                        when I check if the element can be dragged,
+                        then it will return false`, () => {
+                        const $handle_element = createElement("span");
+                        $element_to_drag.appendChild($handle_element);
 
                         var result = MilestoneController.dragularOptionsForMilestone().moves(
                             $element_to_drag,
@@ -392,7 +428,7 @@ describe("MilestoneController -", function() {
                 backlog_items = [{ id: 1 }, { id: 2 }],
                 compared_to = { item_id: 3, direction: "before" };
 
-            DroppedService.reorderSubmilestone.and.returnValue(dropped_request.promise);
+            DroppedService.reorderSubmilestone.mockReturnValue(dropped_request.promise);
 
             MilestoneController.reorderMilestoneContent(milestone_id, backlog_items, compared_to);
             dropped_request.resolve();
@@ -411,7 +447,7 @@ describe("MilestoneController -", function() {
 
     describe("moveToTop() -", function() {
         beforeEach(function() {
-            spyOn(MilestoneController, "reorderMilestoneContent").and.returnValue(
+            jest.spyOn(MilestoneController, "reorderMilestoneContent").mockReturnValue(
                 $q.defer().promise
             );
         });
@@ -441,8 +477,8 @@ describe("MilestoneController -", function() {
             var moved_backlog_item = { id: 50 };
             var selected_backlog_items = [{ id: 50 }, { id: 69 }];
 
-            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.and.returnValue(true);
-            BacklogItemSelectedService.getCompactedSelectedBacklogItem.and.returnValue(
+            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.mockReturnValue(true);
+            BacklogItemSelectedService.getCompactedSelectedBacklogItem.mockReturnValue(
                 selected_backlog_items
             );
 
@@ -476,7 +512,7 @@ describe("MilestoneController -", function() {
             get_content_promise_request = $q.defer();
             MilestoneController.get_content_promise = get_content_promise_request.promise;
 
-            spyOn(MilestoneController, "reorderMilestoneContent").and.returnValue(
+            jest.spyOn(MilestoneController, "reorderMilestoneContent").mockReturnValue(
                 $q.defer().promise
             );
         });
@@ -512,8 +548,8 @@ describe("MilestoneController -", function() {
             var moved_backlog_item = { id: 50 };
             var selected_backlog_items = [{ id: 50 }, { id: 69 }];
 
-            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.and.returnValue(true);
-            BacklogItemSelectedService.getCompactedSelectedBacklogItem.and.returnValue(
+            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.mockReturnValue(true);
+            BacklogItemSelectedService.getCompactedSelectedBacklogItem.mockReturnValue(
                 selected_backlog_items
             );
 

@@ -8,20 +8,20 @@ describe("BacklogService -", function() {
     beforeEach(function() {
         angular.mock.module(planning_module, function($provide) {
             $provide.decorator("BacklogItemFactory", function($delegate) {
-                spyOn($delegate, "augment");
+                jest.spyOn($delegate, "augment").mockImplementation(() => {});
 
                 return $delegate;
             });
 
             $provide.decorator("$filter", function() {
-                return jasmine.createSpy("$filter").and.callFake(function() {
+                return jest.fn(function() {
                     return function() {};
                 });
             });
 
             $provide.decorator("ProjectService", function($delegate) {
-                spyOn($delegate, "getProjectBacklog");
-                spyOn($delegate, "getProject");
+                jest.spyOn($delegate, "getProjectBacklog").mockImplementation(() => {});
+                jest.spyOn($delegate, "getProject").mockImplementation(() => {});
 
                 return $delegate;
             });
@@ -149,7 +149,7 @@ describe("BacklogService -", function() {
 
         it("Given filter terms that matched items, when I filter backlog items, then the InPropertiesFilter will be called and the items' filtered content collection will be updated", function() {
             BacklogService.items.content = [{ id: 46 }, { id: 37 }, { id: 62 }];
-            $filter.and.callFake(function() {
+            $filter.mockImplementation(function() {
                 return function() {
                     return [{ id: 46 }, { id: 62 }];
                 };
@@ -166,8 +166,8 @@ describe("BacklogService -", function() {
         it("Given a project id, when I load the project backlog, then ProjectService will be called and the backlog object will be updated", function() {
             var project_request = $q.defer();
             var project_backlog_request = $q.defer();
-            ProjectService.getProject.and.returnValue(project_request.promise);
-            ProjectService.getProjectBacklog.and.returnValue(project_backlog_request.promise);
+            ProjectService.getProject.mockReturnValue(project_request.promise);
+            ProjectService.getProjectBacklog.mockReturnValue(project_backlog_request.promise);
 
             BacklogService.loadProjectBacklog(736);
             project_request.resolve({

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,8 +29,8 @@ class PlanningJavascriptDependenciesProvider implements JavascriptDependenciesPr
     public function getDependencies()
     {
         $planning_v2_include_assets = new IncludeAssets(
-            AGILEDASHBOARD_BASE_DIR . '/../www/js/planning-v2/dist',
-            AGILEDASHBOARD_BASE_URL . '/js/planning-v2/dist'
+            __DIR__ . '/../../../../../src/www/assets/agiledashboard/planning-v2',
+            '/assets/agiledashboard/planning-v2'
         );
         $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
         $include_assets = new IncludeAssets($assets_path, '/assets');

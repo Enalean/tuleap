@@ -1,9 +1,0 @@
-*.sw*
-*~
-node_modules/
-src/**/*.css
-!src/assets/*.css
-test-results.xml
-coverage/
-.sass-cache/
-dist/

@@ -22,7 +22,7 @@ describe("BacklogItemFactory", function() {
 
         beforeEach(
             angular.mock.inject(function(BacklogItemFactory) {
-                spyOn(BacklogItemFactory, "augment").and.callThrough();
+                jest.spyOn(BacklogItemFactory, "augment");
 
                 BacklogItemFactory.augment(item);
             })

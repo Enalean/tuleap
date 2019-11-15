@@ -5,12 +5,24 @@ import _ from "lodash";
 
 import BaseBacklogController from "./backlog-controller.js";
 import BacklogFilterValue from "../backlog-filter-terms.js";
+import { createAngularPromiseWrapper } from "../../../../../../../../tests/jest/angular-promise-wrapper.js";
+
+function createElement(tag_name, class_name) {
+    const local_document = document.implementation.createHTMLDocument();
+    const element = local_document.createElement(tag_name);
+    if (!class_name) {
+        return element;
+    }
+    element.classList.add(class_name);
+    return element;
+}
 
 describe("BacklogController - ", () => {
     let $q,
         $scope,
         $document,
         $controller,
+        wrapPromise,
         dragularService,
         BacklogController,
         BacklogService,
@@ -49,10 +61,11 @@ describe("BacklogController - ", () => {
     beforeEach(() => {
         angular.mock.module(planning_module);
 
+        let $rootScope;
         angular.mock.inject(function(
             _$q_,
             _$document_,
-            $rootScope,
+            _$rootScope_,
             _$controller_,
             _dragularService_,
             _BacklogService_,
@@ -69,21 +82,25 @@ describe("BacklogController - ", () => {
         ) {
             $q = _$q_;
             $document = _$document_;
-            $scope = $rootScope.$new();
+            $rootScope = _$rootScope_;
             dragularService = _dragularService_;
 
             var returnPromise = function(method) {
                 var self = this;
-                spyOn(self, method).and.returnValue($q.defer().promise);
+                jest.spyOn(self, method).mockReturnValue($q.defer().promise);
             };
 
             BacklogService = _BacklogService_;
-            spyOn(BacklogService, "removeBacklogItemsFromBacklog");
-            spyOn(BacklogService, "appendBacklogItems");
-            spyOn(BacklogService, "filterItems");
-            spyOn(BacklogService, "loadProjectBacklog");
-            spyOn(BacklogService, "loadMilestoneBacklog");
-            spyOn(BacklogService, "addOrReorderBacklogItemsInBacklog");
+            jest.spyOn(BacklogService, "removeBacklogItemsFromBacklog").mockImplementation(
+                () => {}
+            );
+            jest.spyOn(BacklogService, "appendBacklogItems").mockImplementation(() => {});
+            jest.spyOn(BacklogService, "filterItems").mockImplementation(() => {});
+            jest.spyOn(BacklogService, "loadProjectBacklog").mockImplementation(() => {});
+            jest.spyOn(BacklogService, "loadMilestoneBacklog").mockImplementation(() => {});
+            jest.spyOn(BacklogService, "addOrReorderBacklogItemsInBacklog").mockImplementation(
+                () => {}
+            );
 
             MilestoneService = _MilestoneService_;
             _([
@@ -112,7 +129,9 @@ describe("BacklogController - ", () => {
             ]).forEach(returnPromise, BacklogItemService);
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
-            spyOn(BacklogItemCollectionService, "refreshBacklogItem");
+            jest.spyOn(BacklogItemCollectionService, "refreshBacklogItem").mockImplementation(
+                () => {}
+            );
 
             ProjectService = _ProjectService_;
             _([
@@ -123,37 +142,53 @@ describe("BacklogController - ", () => {
             ]).forEach(returnPromise, ProjectService);
 
             DroppedService = _DroppedService_;
-            spyOn(DroppedService, "moveFromBacklogToSubmilestone");
-            spyOn(DroppedService, "defineComparedToBeFirstItem").and.callThrough();
-            spyOn(DroppedService, "defineComparedToBeLastItem").and.callThrough();
-            spyOn(DroppedService, "reorderBacklog");
+            jest.spyOn(DroppedService, "moveFromBacklogToSubmilestone").mockImplementation(
+                () => {}
+            );
+            jest.spyOn(DroppedService, "defineComparedToBeFirstItem");
+            jest.spyOn(DroppedService, "defineComparedToBeLastItem");
+            jest.spyOn(DroppedService, "reorderBacklog").mockImplementation(() => {});
 
             MilestoneCollectionService = _MilestoneCollectionService_;
-            spyOn(MilestoneCollectionService, "refreshMilestone");
-            spyOn(MilestoneCollectionService, "removeBacklogItemsFromMilestoneContent");
-            spyOn(MilestoneCollectionService, "addOrReorderBacklogItemsInMilestoneContent");
+            jest.spyOn(MilestoneCollectionService, "refreshMilestone").mockImplementation(() => {});
+            jest.spyOn(
+                MilestoneCollectionService,
+                "removeBacklogItemsFromMilestoneContent"
+            ).mockImplementation(() => {});
+            jest.spyOn(
+                MilestoneCollectionService,
+                "addOrReorderBacklogItemsInMilestoneContent"
+            ).mockImplementation(() => {});
 
             BacklogItemSelectedService = _BacklogItemSelectedService_;
-            spyOn(BacklogItemSelectedService, "areThereMultipleSelectedBaklogItems");
-            spyOn(BacklogItemSelectedService, "getCompactedSelectedBacklogItem");
+            jest.spyOn(
+                BacklogItemSelectedService,
+                "areThereMultipleSelectedBaklogItems"
+            ).mockImplementation(() => {});
+            jest.spyOn(
+                BacklogItemSelectedService,
+                "getCompactedSelectedBacklogItem"
+            ).mockImplementation(() => {});
 
             SharedPropertiesService = _SharedPropertiesService_;
-            spyOn(SharedPropertiesService, "getProjectId").and.returnValue(736);
-            spyOn(SharedPropertiesService, "getMilestoneId").and.returnValue(592);
-            spyOn(SharedPropertiesService, "getMilestone").and.returnValue(milestone);
-            spyOn(SharedPropertiesService, "getInitialBacklogItems").and.returnValue(
+            jest.spyOn(SharedPropertiesService, "getProjectId").mockReturnValue(736);
+            jest.spyOn(SharedPropertiesService, "getMilestoneId").mockReturnValue(592);
+            jest.spyOn(SharedPropertiesService, "getMilestone").mockReturnValue(milestone);
+            jest.spyOn(SharedPropertiesService, "getInitialBacklogItems").mockReturnValue(
                 initial_backlog_items
             );
 
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
-            spyOn(NewTuleapArtifactModalService, "showCreation");
-            spyOn(NewTuleapArtifactModalService, "showEdition");
+            jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(() => {});
+            jest.spyOn(NewTuleapArtifactModalService, "showEdition").mockImplementation(() => {});
 
             ItemAnimatorService = _ItemAnimatorService_;
             $controller = _$controller_;
         });
+        $scope = $rootScope.$new();
+        wrapPromise = createAngularPromiseWrapper($rootScope);
 
-        spyOn(ItemAnimatorService, "animateCreated");
+        jest.spyOn(ItemAnimatorService, "animateCreated").mockImplementation(() => {});
 
         BacklogFilterValue.terms = "";
 
@@ -175,8 +210,6 @@ describe("BacklogController - ", () => {
             ItemAnimatorService
         });
         BacklogController.$onInit();
-
-        installPromiseMatchers();
     });
 
     describe("$onInit() - ", function() {
@@ -193,7 +226,7 @@ describe("BacklogController - ", () => {
             it(
                 "If a milestone has been injected, then use it",
                 angular.mock.inject(function() {
-                    spyOn(BacklogController, "loadBacklog").and.callThrough();
+                    jest.spyOn(BacklogController, "loadBacklog");
 
                     BacklogController.$onInit();
 
@@ -205,47 +238,39 @@ describe("BacklogController - ", () => {
                 })
             );
 
-            it(
-                "If no milestone has been injected, then it will be retrived",
-                angular.mock.inject(function() {
-                    var milestone_request = $q.defer();
+            it("If no milestone has been injected, then it will be retrived", () => {
+                var milestone_request = $q.defer();
 
-                    SharedPropertiesService.getMilestone.and.stub();
-                    MilestoneService.getMilestone.and.returnValue(milestone_request.promise);
-                    spyOn(BacklogController, "loadBacklog").and.callThrough();
-
-                    BacklogController.$onInit();
-                    milestone_request.resolve({
-                        results: milestone
-                    });
-                    $scope.$apply();
-
-                    expect(BacklogService.loadMilestoneBacklog).toHaveBeenCalledWith(milestone);
-                })
-            );
-        });
-
-        it(
-            "Load injected backlog items",
-            angular.mock.inject(function() {
-                SharedPropertiesService.getMilestoneId.and.stub();
-                SharedPropertiesService.getInitialBacklogItems.and.returnValue(
-                    initial_backlog_items
-                );
-                spyOn(BacklogController, "loadInitialBacklogItems").and.callThrough();
+                SharedPropertiesService.getMilestone.mockImplementation(() => {});
+                MilestoneService.getMilestone.mockReturnValue(milestone_request.promise);
+                jest.spyOn(BacklogController, "loadBacklog");
 
                 BacklogController.$onInit();
-
-                expect(BacklogController.loadInitialBacklogItems).toHaveBeenCalledWith(
-                    initial_backlog_items
-                );
-                expect(BacklogController.all_backlog_items).toEqual({
-                    7: { id: 7 }
+                milestone_request.resolve({
+                    results: milestone
                 });
-                expect(BacklogService.appendBacklogItems).toHaveBeenCalledWith([{ id: 7 }]);
-                expect(BacklogService.filterItems).toHaveBeenCalledWith("");
-            })
-        );
+                $scope.$apply();
+
+                expect(BacklogService.loadMilestoneBacklog).toHaveBeenCalledWith(milestone);
+            });
+        });
+
+        it("Load injected backlog items", () => {
+            SharedPropertiesService.getMilestoneId.mockImplementation(() => {});
+            SharedPropertiesService.getInitialBacklogItems.mockReturnValue(initial_backlog_items);
+            jest.spyOn(BacklogController, "loadInitialBacklogItems");
+
+            BacklogController.$onInit();
+
+            expect(BacklogController.loadInitialBacklogItems).toHaveBeenCalledWith(
+                initial_backlog_items
+            );
+            expect(BacklogController.all_backlog_items).toEqual({
+                7: { id: 7 }
+            });
+            expect(BacklogService.appendBacklogItems).toHaveBeenCalledWith([{ id: 7 }]);
+            expect(BacklogService.filterItems).toHaveBeenCalledWith("");
+        });
     });
 
     describe("displayBacklogItems() -", function() {
@@ -253,7 +278,7 @@ describe("BacklogController - ", () => {
 
         beforeEach(function() {
             fetch_backlog_items_request = $q.defer();
-            spyOn(BacklogController, "fetchBacklogItems").and.returnValue(
+            jest.spyOn(BacklogController, "fetchBacklogItems").mockReturnValue(
                 fetch_backlog_items_request.promise
             );
             BacklogController.backlog_items = {
@@ -263,30 +288,40 @@ describe("BacklogController - ", () => {
             };
         });
 
-        it("Given that we aren't already loading backlog_items and all backlog_items have not yet been loaded, when I display the backlog items, then the REST route will be called and a promise will be resolved", function() {
-            var promise = BacklogController.displayBacklogItems();
+        it(`Given that we aren't already loading backlog_items
+            and all backlog_items have not yet been loaded,
+            when I display the backlog items,
+            then the REST route will be called
+            and a promise will be resolved`, () => {
+            const promise = BacklogController.displayBacklogItems();
             fetch_backlog_items_request.resolve(86);
 
             expect(BacklogController.fetchBacklogItems).toHaveBeenCalledWith(50, 50);
-            expect(promise).toBeResolved();
+            return wrapPromise(promise);
         });
 
-        it("Given that we were already loading backlog_items, when I display the backlog items then the REST route won't be called again and a promise will be resolved", function() {
+        it(`Given that we were already loading backlog_items,
+            when I display the backlog items
+            then the REST route won't be called again
+            and a promise will be resolved`, () => {
             BacklogController.backlog_items.loading = true;
 
-            var promise = BacklogController.displayBacklogItems();
+            const promise = BacklogController.displayBacklogItems();
 
             expect(BacklogController.fetchBacklogItems).not.toHaveBeenCalled();
-            expect(promise).toBeResolved();
+            return wrapPromise(promise);
         });
 
-        it("Given that all the backlog_items had been loaded, when I display the backlog items, then the REST route won't be called again and a promise will be resolved", function() {
+        it(`Given that all the backlog_items had been loaded,
+            when I display the backlog items,
+            then the REST route won't be called again
+            and a promise will be resolved`, () => {
             BacklogController.backlog_items.fully_loaded = true;
 
-            var promise = BacklogController.displayBacklogItems();
+            const promise = BacklogController.displayBacklogItems();
 
             expect(BacklogController.fetchBacklogItems).not.toHaveBeenCalled();
-            expect(promise).toBeResolved();
+            return wrapPromise(promise);
         });
     });
 
@@ -295,7 +330,7 @@ describe("BacklogController - ", () => {
 
         beforeEach(function() {
             fetch_backlog_items_request = $q.defer();
-            spyOn(BacklogController, "fetchBacklogItems").and.returnValue(
+            jest.spyOn(BacklogController, "fetchBacklogItems").mockReturnValue(
                 fetch_backlog_items_request.promise
             );
             BacklogController.backlog_items = {
@@ -304,47 +339,70 @@ describe("BacklogController - ", () => {
             };
         });
 
-        it("Given that we aren't already loading backlog_items and all backlog_items have not yet been loaded, when I fetch all the backlog items, then the REST route will be called and a promise will be resolved", function() {
-            var promise = BacklogController.fetchAllBacklogItems(50, 50);
+        it(`Given that we aren't already loading backlog_items
+            and all backlog_items have not yet been loaded,
+            when I fetch all the backlog items,
+            then the REST route will be called
+            and a promise will be resolved`, () => {
+            const promise = BacklogController.fetchAllBacklogItems(50, 50);
             fetch_backlog_items_request.resolve(40);
 
             expect(BacklogController.fetchBacklogItems).toHaveBeenCalledWith(50, 50);
-            expect(promise).toBeResolved();
+            return wrapPromise(promise);
         });
 
-        it("Given that there were more items than the current offset and limit, when I fetch all the backlog items, then the REST route will be called twice and a promise will be resolved", function() {
-            var promise = BacklogController.fetchAllBacklogItems(50, 50);
+        it(`Given that there were more items than the current offset and limit,
+            when I fetch all the backlog items,
+            then the REST route will be called twice
+            and a promise will be resolved`, async () => {
+            const promise = BacklogController.fetchAllBacklogItems(50, 50);
             fetch_backlog_items_request.resolve(134);
 
-            expect(promise).toBeResolved();
+            await wrapPromise(promise);
             expect(BacklogController.fetchBacklogItems).toHaveBeenCalledWith(50, 50);
             expect(BacklogController.fetchBacklogItems).toHaveBeenCalledWith(50, 100);
-            expect(BacklogController.fetchBacklogItems.calls.count()).toEqual(2);
+            expect(BacklogController.fetchBacklogItems.mock.calls.length).toEqual(2);
         });
 
-        it("Given that we were already loading backlog_items, when I fetch all the backlog items, then the REST route won't be called again and a promise will be rejected", function() {
+        it(`Given that we were already loading backlog_items,
+            when I fetch all the backlog items,
+            then the REST route won't be called again
+            and a promise will be rejected`, () => {
             BacklogController.backlog_items.loading = true;
 
-            var promise = BacklogController.fetchAllBacklogItems(50, 50);
-
-            expect(BacklogController.fetchBacklogItems).not.toHaveBeenCalled();
-            expect(promise).toBeRejected();
+            expect.assertions(1);
+            // eslint-disable-next-line jest/valid-expect-in-promise
+            const promise = BacklogController.fetchAllBacklogItems(50, 50).catch(() => {
+                expect(BacklogController.fetchBacklogItems).not.toHaveBeenCalled();
+            });
+            return wrapPromise(promise);
         });
 
-        it("Given that all the backlog_items had been loaded, when I fetch all the backlog items, then the REST route won't be called again and a promise will be resolved", function() {
+        it(`Given that all the backlog_items had been loaded,
+            when I fetch all the backlog items,
+            then the REST route won't be called again
+            and a promise will be rejected`, () => {
             BacklogController.backlog_items.fully_loaded = true;
 
-            var promise = BacklogController.fetchAllBacklogItems(50, 50);
-
-            expect(BacklogController.fetchBacklogItems).not.toHaveBeenCalled();
-            expect(promise).toBeRejected();
+            expect.assertions(1);
+            // eslint-disable-next-line jest/valid-expect-in-promise
+            const promise = BacklogController.fetchAllBacklogItems(50, 50).catch(() => {
+                expect(BacklogController.fetchBacklogItems).not.toHaveBeenCalled();
+            });
+            return wrapPromise(promise);
         });
     });
 
     describe("fetchBacklogItems() -", () => {
-        it("Given that we were in a project's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Project route will be queried, its result will be appended to the backlog items and its promise will be returned", () => {
-            spyOn(BacklogController, "isMilestoneContext").and.returnValue(false);
-            BacklogItemService.getProjectBacklogItems.and.returnValue(
+        it(`Given that we were in a project's context
+            and given a limit and an offset,
+            when I fetch backlog items,
+            then the backlog will be marked as loading,
+            BacklogItemService's Project route will be queried,
+            its result will be appended to the backlog items
+            and its promise will be returned`, async () => {
+            jest.spyOn(BacklogController, "isMilestoneContext").mockReturnValue(false);
+            BacklogItemService.getProjectBacklogItems.mockReturnValue(
                 $q.resolve({
                     results: [{ id: 734 }],
                     total: 34
@@ -354,7 +412,7 @@ describe("BacklogController - ", () => {
             var promise = BacklogController.fetchBacklogItems(60, 25);
             expect(BacklogController.backlog_items.loading).toBeTruthy();
 
-            expect(promise).toBeResolvedWith(34);
+            expect(await wrapPromise(promise)).toEqual(34);
             expect(BacklogItemService.getProjectBacklogItems).toHaveBeenCalledWith(736, 60, 25);
             expect(BacklogController.all_backlog_items).toEqual({
                 7: { id: 7 },
@@ -364,8 +422,14 @@ describe("BacklogController - ", () => {
             expect(BacklogService.filterItems).toHaveBeenCalledWith("");
         });
 
-        it("Given that we were in a milestone's context and given a limit and an offset, when I fetch backlog items, then the backlog will be marked as loading, BacklogItemService's Milestone route will be queried, its result will be appended to the backlog items and its promise will be returned", () => {
-            BacklogItemService.getMilestoneBacklogItems.and.returnValue(
+        it(`Given that we were in a milestone's context
+            and given a limit and an offset,
+            when I fetch backlog items,
+            then the backlog will be marked as loading,
+            BacklogItemService's Milestone route will be queried,
+            its result will be appended to the backlog items
+            and its promise will be returned`, async () => {
+            BacklogItemService.getMilestoneBacklogItems.mockReturnValue(
                 $q.resolve({
                     results: [{ id: 836 }],
                     total: 85
@@ -375,7 +439,7 @@ describe("BacklogController - ", () => {
             var promise = BacklogController.fetchBacklogItems(60, 25);
             expect(BacklogController.backlog_items.loading).toBeTruthy();
 
-            expect(promise).toBeResolvedWith(85);
+            expect(await wrapPromise(promise)).toEqual(85);
             expect(BacklogItemService.getMilestoneBacklogItems).toHaveBeenCalledWith(592, 60, 25);
             expect(BacklogController.all_backlog_items).toEqual({
                 7: { id: 7 },
@@ -388,11 +452,11 @@ describe("BacklogController - ", () => {
 
     describe("filterBacklog() -", () => {
         beforeEach(() => {
-            spyOn(BacklogController, "fetchAllBacklogItems");
+            jest.spyOn(BacklogController, "fetchAllBacklogItems").mockImplementation(() => {});
         });
 
         it("Given that all items had not been loaded, when I filter the backlog, then all the backlog items will be loaded and filtered", () => {
-            BacklogController.fetchAllBacklogItems.and.returnValue($q.when(50));
+            BacklogController.fetchAllBacklogItems.mockReturnValue($q.when(50));
             BacklogController.filter.terms = "flamboyantly";
 
             BacklogController.filterBacklog();
@@ -403,7 +467,7 @@ describe("BacklogController - ", () => {
         });
 
         it("Given that all items had already been loaded, when I filter the backlog, then all the backlog items will be filtered", () => {
-            BacklogController.fetchAllBacklogItems.and.returnValue($q.reject(99));
+            BacklogController.fetchAllBacklogItems.mockReturnValue($q.reject(99));
             BacklogController.filter.terms = "Jeffersonianism";
 
             BacklogController.filterBacklog();
@@ -421,27 +485,27 @@ describe("BacklogController - ", () => {
         });
 
         it("Given an event and an item_type, when I show the new artifact modal, then the NewTuleapArtifactModalService will be called with a callback", () => {
-            SharedPropertiesService.getMilestone.and.returnValue(undefined);
+            SharedPropertiesService.getMilestone.mockReturnValue(undefined);
 
             BacklogController.showAddBacklogItemParentModal(item_type);
 
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
                 50,
                 null,
-                jasmine.any(Function)
+                expect.any(Function)
             );
         });
 
         describe("callback -", () => {
             beforeEach(() => {
-                NewTuleapArtifactModalService.showCreation.and.callFake((a, b, callback) =>
+                NewTuleapArtifactModalService.showCreation.mockImplementation((a, b, callback) =>
                     callback(5202)
                 );
             });
 
             describe("Given an item id and given that we were in a project's context,", () => {
                 it("when the new artifact modal calls its callback, then the created artifact will not be added to milestone content", () => {
-                    spyOn(BacklogController, "isMilestoneContext").and.returnValue(false);
+                    jest.spyOn(BacklogController, "isMilestoneContext").mockReturnValue(false);
 
                     BacklogController.showAddBacklogItemParentModal(item_type);
                     $scope.$apply();
@@ -453,7 +517,7 @@ describe("BacklogController - ", () => {
 
             describe("Given an item id and given that we were in a milestone's context,", () => {
                 it("when the new artifact modal calls its callback, then the created artifact will be added to milestone content", () => {
-                    spyOn(BacklogController, "isMilestoneContext").and.returnValue(true);
+                    jest.spyOn(BacklogController, "isMilestoneContext").mockReturnValue(true);
 
                     BacklogController.showAddBacklogItemParentModal(item_type);
                     $scope.$apply();
@@ -468,12 +532,14 @@ describe("BacklogController - ", () => {
     describe("showAddBacklogItemModal() -", () => {
         let event, item_type;
         beforeEach(() => {
-            event = jasmine.createSpyObj("Click event", ["preventDefault"]);
+            event = {
+                preventDefault: jest.fn()
+            };
             item_type = { id: 50 };
         });
 
         it("Given an event and an item_type object, when I show the new artifact modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback", () => {
-            SharedPropertiesService.getMilestone.and.returnValue(undefined);
+            SharedPropertiesService.getMilestone.mockReturnValue(undefined);
 
             BacklogController.showAddBacklogItemModal(event, item_type);
 
@@ -481,14 +547,14 @@ describe("BacklogController - ", () => {
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
                 50,
                 null,
-                jasmine.any(Function)
+                expect.any(Function)
             );
         });
 
         describe("callback -", () => {
             let artifact;
             beforeEach(() => {
-                NewTuleapArtifactModalService.showCreation.and.callFake((a, b, callback) =>
+                NewTuleapArtifactModalService.showCreation.mockImplementation((a, b, callback) =>
                     callback(5202)
                 );
                 artifact = {
@@ -505,14 +571,14 @@ describe("BacklogController - ", () => {
                         rest_base_route: "projects"
                     };
 
-                    spyOn(BacklogController, "isMilestoneContext").and.returnValue(false);
+                    jest.spyOn(BacklogController, "isMilestoneContext").mockReturnValue(false);
                 });
 
                 it("when the new artifact modal calls its callback, then the artifact will be prepended to the backlog using REST, it will be retrieved from the server, and the items and backlog_items collections will be updated", () => {
                     BacklogController.backlog_items.content = [{ id: 3894 }];
                     BacklogController.backlog_items.filtered_content = [{ id: 3894 }];
-                    BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
-                    ProjectService.removeAddReorderToBacklog.and.returnValue($q.when());
+                    BacklogItemService.getBacklogItem.mockReturnValue($q.when(artifact));
+                    ProjectService.removeAddReorderToBacklog.mockReturnValue($q.when());
 
                     BacklogController.showAddBacklogItemModal(event, item_type);
                     $scope.$apply();
@@ -542,8 +608,8 @@ describe("BacklogController - ", () => {
                     BacklogController.filter.terms = "needle";
                     BacklogController.backlog_items.content = [{ id: 7453 }];
                     BacklogController.backlog_items.filtered_content = [];
-                    BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
-                    ProjectService.removeAddReorderToBacklog.and.returnValue($q.when());
+                    BacklogItemService.getBacklogItem.mockReturnValue($q.when(artifact));
+                    ProjectService.removeAddReorderToBacklog.mockReturnValue($q.when());
 
                     BacklogController.showAddBacklogItemModal(event, item_type);
                     $scope.$apply();
@@ -557,8 +623,8 @@ describe("BacklogController - ", () => {
 
                 it("and given that the backlog_items collection was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog and prepended to the backlog_items collection", () => {
                     BacklogController.backlog_items.content = [];
-                    BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
-                    ProjectService.removeAddToBacklog.and.returnValue($q.when());
+                    BacklogItemService.getBacklogItem.mockReturnValue($q.when(artifact));
+                    ProjectService.removeAddToBacklog.mockReturnValue($q.when());
 
                     BacklogController.showAddBacklogItemModal(event, item_type);
                     $scope.$apply();
@@ -581,8 +647,8 @@ describe("BacklogController - ", () => {
 
                 it(", when the new artifact modal calls its callback, then the artifact will be prepended to the backlog, it will be retrieved from the server, and the items and backlog_items collections will be updated", () => {
                     BacklogController.backlog_items.content = [{ id: 6240 }];
-                    BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
-                    MilestoneService.removeAddReorderToBacklog.and.returnValue($q.when());
+                    BacklogItemService.getBacklogItem.mockReturnValue($q.when(artifact));
+                    MilestoneService.removeAddReorderToBacklog.mockReturnValue($q.when());
 
                     BacklogController.showAddBacklogItemModal(event, item_type);
                     $scope.$apply();
@@ -606,8 +672,8 @@ describe("BacklogController - ", () => {
 
                 it("and given that the scope's backlog_items was empty, when the new artifact modal calls its callback, then the artifact will be prepended to the backlog and prepended to the backlog_items collection", () => {
                     BacklogController.backlog_items.content = [];
-                    BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
-                    MilestoneService.removeAddToBacklog.and.returnValue($q.when());
+                    BacklogItemService.getBacklogItem.mockReturnValue($q.when(artifact));
+                    MilestoneService.removeAddToBacklog.mockReturnValue($q.when());
 
                     BacklogController.showAddBacklogItemModal(event, item_type);
                     $scope.$apply();
@@ -690,9 +756,9 @@ describe("BacklogController - ", () => {
         beforeEach(function() {
             dropped_item_ids = [78];
             dropped_items = [{ id: 78 }];
-            $dropped_item_element = affix("li");
+            $dropped_item_element = createElement("li");
             angular.element($dropped_item_element).data("item-id", dropped_item_ids[0]);
-            $source_element = affix("ul.backlog");
+            $source_element = createElement("ul", "backlog");
             initial_index = 0;
             target_index = 0;
             compared_to = {
@@ -703,9 +769,17 @@ describe("BacklogController - ", () => {
             move_request = $q.defer();
         });
 
-        describe("Given an event, the dropped element, the target element, the source element, the source model, the initial index, the target model and the target index", function() {
-            it("when I reorder an item in the backlog, then the item will be reordered using DroppedService", function() {
-                DroppedService.reorderBacklog.and.returnValue(move_request.promise);
+        describe(`Given an event,
+            the dropped element,
+            the target element,
+            the source element,
+            the source model,
+            the initial index,
+            the target model
+            and the target index`, () => {
+            it(`when I reorder an item in the backlog,
+                then the item will be reordered using DroppedService`, () => {
+                DroppedService.reorderBacklog.mockReturnValue(move_request.promise);
                 $target_element = $source_element;
                 source_model = [{ id: dropped_item_ids[0] }, { id: 53 }];
                 target_model = undefined;
@@ -728,10 +802,13 @@ describe("BacklogController - ", () => {
                 );
             });
 
-            it("when I move an item from the backlog to a submilestone (e.g. to a Sprint), then the item will be moved using DroppedService and the submilestone's initial effort will be updated", function() {
-                DroppedService.moveFromBacklogToSubmilestone.and.returnValue(move_request.promise);
+            it(`when I move an item from the backlog to a submilestone (e.g. to a Sprint),
+                then the item will be moved using DroppedService
+                and the submilestone's initial effort will be updated`, () => {
+                DroppedService.moveFromBacklogToSubmilestone.mockReturnValue(move_request.promise);
                 var destination_milestone_id = 80;
-                $target_element = affix("ul.submilestone");
+
+                $target_element = createElement("ul", "submilestone");
                 angular.element($target_element).data("submilestone-id", destination_milestone_id);
                 source_model = [];
                 target_model = [{ id: dropped_item_ids[0] }, { id: 53 }];
@@ -770,7 +847,7 @@ describe("BacklogController - ", () => {
                 backlog_items = [{ id: 1 }, { id: 2 }],
                 compared_to = { item_id: 3, direction: "before" };
 
-            DroppedService.reorderBacklog.and.returnValue(dropped_request.promise);
+            DroppedService.reorderBacklog.mockReturnValue(dropped_request.promise);
 
             BacklogController.reorderBacklogItems(backlog_items, compared_to);
             dropped_request.resolve();
@@ -790,7 +867,9 @@ describe("BacklogController - ", () => {
 
     describe("moveToTop() -", function() {
         beforeEach(function() {
-            spyOn(BacklogController, "reorderBacklogItems").and.returnValue($q.defer().promise);
+            jest.spyOn(BacklogController, "reorderBacklogItems").mockReturnValue(
+                $q.defer().promise
+            );
         });
 
         it("move one item to the top of the backlog", function() {
@@ -816,8 +895,8 @@ describe("BacklogController - ", () => {
             var moved_backlog_item = { id: 50 };
             var selected_backlog_items = [{ id: 50 }, { id: 69 }];
 
-            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.and.returnValue(true);
-            BacklogItemSelectedService.getCompactedSelectedBacklogItem.and.returnValue(
+            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.mockReturnValue(true);
+            BacklogItemSelectedService.getCompactedSelectedBacklogItem.mockReturnValue(
                 selected_backlog_items
             );
 
@@ -846,8 +925,8 @@ describe("BacklogController - ", () => {
             var moved_backlog_item = { id: 50 };
             var selected_backlog_items = [{ id: 50 }, { id: 69 }];
 
-            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.and.returnValue(true);
-            BacklogItemSelectedService.getCompactedSelectedBacklogItem.and.returnValue(
+            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.mockReturnValue(true);
+            BacklogItemSelectedService.getCompactedSelectedBacklogItem.mockReturnValue(
                 selected_backlog_items
             );
 
@@ -879,8 +958,10 @@ describe("BacklogController - ", () => {
 
         beforeEach(function() {
             fetch_all_backlog_items_request = $q.defer();
-            spyOn(BacklogController, "reorderBacklogItems").and.returnValue($q.defer().promise);
-            spyOn(BacklogController, "fetchAllBacklogItems").and.returnValue(
+            jest.spyOn(BacklogController, "reorderBacklogItems").mockReturnValue(
+                $q.defer().promise
+            );
+            jest.spyOn(BacklogController, "fetchAllBacklogItems").mockReturnValue(
                 fetch_all_backlog_items_request.promise
             );
         });
@@ -915,8 +996,8 @@ describe("BacklogController - ", () => {
             var moved_backlog_item = { id: 50 };
             var selected_backlog_items = [{ id: 50 }, { id: 69 }];
 
-            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.and.returnValue(true);
-            BacklogItemSelectedService.getCompactedSelectedBacklogItem.and.returnValue(
+            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.mockReturnValue(true);
+            BacklogItemSelectedService.getCompactedSelectedBacklogItem.mockReturnValue(
                 selected_backlog_items
             );
 
@@ -952,8 +1033,8 @@ describe("BacklogController - ", () => {
             var moved_backlog_item = { id: 50 };
             var selected_backlog_items = [{ id: 50 }, { id: 69 }];
 
-            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.and.returnValue(true);
-            BacklogItemSelectedService.getCompactedSelectedBacklogItem.and.returnValue(
+            BacklogItemSelectedService.areThereMultipleSelectedBaklogItems.mockReturnValue(true);
+            BacklogItemSelectedService.getCompactedSelectedBacklogItem.mockReturnValue(
                 selected_backlog_items
             );
 
@@ -981,12 +1062,12 @@ describe("BacklogController - ", () => {
         });
     });
 
-    describe("dragularOptionsForBacklog() -", function() {
-        describe("accepts() -", function() {
+    describe("dragularOptionsForBacklog()", () => {
+        describe("accepts()", () => {
             var $element_to_drop, $target_container_element;
-            beforeEach(function() {
-                $element_to_drop = affix("li");
-                $target_container_element = affix("ul");
+            beforeEach(() => {
+                $element_to_drop = createElement("li");
+                $target_container_element = createElement("ul");
             });
 
             describe("Given an element to drop and a target container element", function() {
@@ -1029,18 +1110,22 @@ describe("BacklogController - ", () => {
             });
         });
 
-        describe("moves() -", function() {
+        describe("moves()", () => {
             var $element_to_drag, $container, $handle_element;
-            beforeEach(function() {
-                $element_to_drag = affix("li");
+            beforeEach(() => {
+                $element_to_drag = createElement("li");
                 $container = undefined;
             });
 
-            describe("Given an element to drag and its child handle element", function() {
-                it("and given that the handle has an ancestor with the 'dragular-handle' class and the element didn't have nodrag data, when I check if the element can be dragged, then it will return true", function() {
-                    var $handle_element = $element_to_drag
-                        .affix("div.dragular-handle")
-                        .affix("span");
+            describe("Given an element to drag and its child handle element", () => {
+                it(`and given that the handle has an ancestor with the 'dragular-handle' class
+                    and the element didn't have nodrag data,
+                    when I check if the element can be dragged,
+                    then it will return true`, () => {
+                    const dragular_handle = createElement("div", "dragular-handle");
+                    const $handle_element = createElement("span");
+                    dragular_handle.appendChild($handle_element);
+                    $element_to_drag.appendChild(dragular_handle);
 
                     var result = BacklogController.dragularOptionsForBacklog().moves(
                         $element_to_drag,
@@ -1051,8 +1136,12 @@ describe("BacklogController - ", () => {
                     expect(result).toBeTruthy();
                 });
 
-                it("and given that the handle didn't have any ancestor with the 'dragular-handle' class and the element didn't have nodrag data, when I check if the element can be dragged, then it will return false", function() {
-                    var $handle_element = $element_to_drag.affix("span");
+                it(`and given that the handle didn't have any ancestor with the 'dragular-handle' class
+                    and the element didn't have nodrag data,
+                    when I check if the element can be dragged,
+                    then it will return false`, () => {
+                    const $handle_element = createElement("span");
+                    $element_to_drag.appendChild($handle_element);
 
                     var result = BacklogController.dragularOptionsForBacklog().moves(
                         $element_to_drag,

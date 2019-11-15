@@ -59,14 +59,6 @@ pipeline {
                     }
                     post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
                 }
-                stage ('Karma') {
-                    stages {
-                        stage('Karma AgileDashboard PlanningV2') {
-                            steps { script { actions.runKarmaTests('planning', 'plugins/agiledashboard/www/js/planning-v2') } }
-                        }
-                    }
-                    post { always { junit 'results/karma/test-*-results.xml' } }
-                }
                 stage ('Jest') {
                     agent {
                         docker {

@@ -1,7 +1,6 @@
 import _ from "lodash";
 import angular from "angular";
 import "angular-mocks";
-import "tlp-mocks";
 
 import planning_module from "./app.js";
 import BaseController from "./planning-controller.js";
@@ -78,16 +77,18 @@ describe("PlanningController - ", () => {
             $q = _$q_;
 
             SharedPropertiesService = _SharedPropertiesService_;
-            spyOn(SharedPropertiesService, "getUserId").and.returnValue(102);
-            spyOn(SharedPropertiesService, "getProjectId").and.returnValue(736);
-            spyOn(SharedPropertiesService, "getMilestoneId").and.returnValue(592);
-            spyOn(SharedPropertiesService, "getMilestone").and.returnValue(undefined);
-            spyOn(SharedPropertiesService, "getInitialMilestones");
-            spyOn(SharedPropertiesService, "getViewMode");
+            jest.spyOn(SharedPropertiesService, "getUserId").mockReturnValue(102);
+            jest.spyOn(SharedPropertiesService, "getProjectId").mockReturnValue(736);
+            jest.spyOn(SharedPropertiesService, "getMilestoneId").mockReturnValue(592);
+            jest.spyOn(SharedPropertiesService, "getMilestone").mockReturnValue(undefined);
+            jest.spyOn(SharedPropertiesService, "getInitialMilestones").mockImplementation(
+                () => {}
+            );
+            jest.spyOn(SharedPropertiesService, "getViewMode").mockImplementation(() => {});
 
             var returnPromise = function(method) {
                 var self = this;
-                spyOn(self, method).and.returnValue($q.defer().promise);
+                jest.spyOn(self, method).mockReturnValue($q.defer().promise);
             };
 
             BacklogItemService = _BacklogItemService_;
@@ -113,23 +114,24 @@ describe("PlanningController - ", () => {
                 "putSubMilestones",
                 "patchSubMilestones",
                 "removeAddReorderToBacklog",
-                "removeAddToBacklog",
-                "updateInitialEffort"
+                "removeAddToBacklog"
             ]).forEach(returnPromise, MilestoneService);
 
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
-            spyOn(NewTuleapArtifactModalService, "showCreation");
-            spyOn(NewTuleapArtifactModalService, "showEdition");
+            jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(() => {});
+            jest.spyOn(NewTuleapArtifactModalService, "showEdition").mockImplementation(() => {});
 
             UserPreferencesService = _UserPreferencesService_;
-            spyOn(UserPreferencesService, "setPreference").and.returnValue($q.defer().promise);
+            jest.spyOn(UserPreferencesService, "setPreference").mockReturnValue($q.defer().promise);
 
             BacklogService = _BacklogService_;
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
-            spyOn(BacklogItemCollectionService, "refreshBacklogItem");
+            jest.spyOn(BacklogItemCollectionService, "refreshBacklogItem").mockImplementation(
+                () => {}
+            );
 
-            $filter = jasmine.createSpy("$filter").and.callFake(function() {
+            $filter = jest.fn(function() {
                 return function() {};
             });
 
@@ -138,7 +140,7 @@ describe("PlanningController - ", () => {
             $controller = _$controller_;
         });
 
-        spyOn(ItemAnimatorService, "animateCreated");
+        jest.spyOn(ItemAnimatorService, "animateCreated").mockImplementation(() => {});
 
         PlanningController = $controller(BaseController, {
             $filter,
@@ -153,20 +155,18 @@ describe("PlanningController - ", () => {
             BacklogItemSelectedService
         });
         PlanningController.$onInit();
-
-        installPromiseMatchers();
     });
 
     describe("$onInit() -", () => {
         describe("Given we were in a Project context (Top backlog)", () => {
             beforeEach(() => {
-                SharedPropertiesService.getMilestoneId.and.stub();
+                SharedPropertiesService.getMilestoneId.mockImplementation(() => {});
             });
 
             it("and given that no milestone was injected, when I load the controller, then the milestones will be retrieved", function() {
-                SharedPropertiesService.getInitialMilestones.and.stub();
+                SharedPropertiesService.getInitialMilestones.mockImplementation(() => {});
                 var milestone_request = $q.defer();
-                MilestoneService.getOpenMilestones.and.returnValue(milestone_request.promise);
+                MilestoneService.getOpenMilestones.mockReturnValue(milestone_request.promise);
 
                 PlanningController.$onInit();
                 milestone_request.resolve({
@@ -185,7 +185,7 @@ describe("PlanningController - ", () => {
                     736,
                     50,
                     0,
-                    jasmine.any(Object)
+                    expect.any(Object)
                 );
                 expect(PlanningController.milestones.loading).toBeFalsy();
                 expect(PlanningController.milestones.content).toEqual([
@@ -199,15 +199,15 @@ describe("PlanningController - ", () => {
 
         describe("Given we were in a Milestone context", () => {
             beforeEach(() => {
-                SharedPropertiesService.getMilestoneId.and.returnValue(592);
+                SharedPropertiesService.getMilestoneId.mockReturnValue(592);
             });
 
             it("and given that no milestone was injected, when I load the controller, then the submilestones will be retrieved", () => {
-                SharedPropertiesService.getInitialMilestones.and.stub();
+                SharedPropertiesService.getInitialMilestones.mockImplementation(() => {});
                 var milestone_request = $q.defer();
                 var submilestone_request = $q.defer();
-                MilestoneService.getMilestone.and.returnValue(milestone_request.promise);
-                MilestoneService.getOpenSubMilestones.and.returnValue(submilestone_request.promise);
+                MilestoneService.getMilestone.mockReturnValue(milestone_request.promise);
+                MilestoneService.getOpenSubMilestones.mockReturnValue(submilestone_request.promise);
 
                 PlanningController.$onInit();
                 milestone_request.resolve({
@@ -229,7 +229,7 @@ describe("PlanningController - ", () => {
                     592,
                     50,
                     0,
-                    jasmine.any(Object)
+                    expect.any(Object)
                 );
                 expect(PlanningController.milestones.loading).toBeFalsy();
                 expect(PlanningController.milestones.content).toEqual([
@@ -244,8 +244,8 @@ describe("PlanningController - ", () => {
         it(
             "Load injected milestones",
             angular.mock.inject(() => {
-                SharedPropertiesService.getInitialMilestones.and.returnValue(initial_milestones);
-                spyOn(PlanningController, "loadInitialMilestones").and.callThrough();
+                SharedPropertiesService.getInitialMilestones.mockReturnValue(initial_milestones);
+                jest.spyOn(PlanningController, "loadInitialMilestones");
 
                 PlanningController.$onInit();
 
@@ -256,7 +256,7 @@ describe("PlanningController - ", () => {
         );
 
         it("Load injected view mode", () => {
-            SharedPropertiesService.getViewMode.and.returnValue("detailed-view");
+            SharedPropertiesService.getViewMode.mockReturnValue("detailed-view");
             PlanningController.show_closed_view_key = "show-closed-view";
 
             PlanningController.$onInit();
@@ -291,13 +291,13 @@ describe("PlanningController - ", () => {
         var milestone_request;
         beforeEach(function() {
             milestone_request = $q.defer();
-            spyOn(PlanningController, "isMilestoneContext");
+            jest.spyOn(PlanningController, "isMilestoneContext").mockImplementation(() => {});
             PlanningController.milestones.content = [{ id: 747 }];
         });
 
         it("Given that we were in a project's context, when I display closed milestones, then MilestoneService will be called and the milestones collection will be updated with the closed milestones in reverse order", function() {
-            PlanningController.isMilestoneContext.and.returnValue(false);
-            MilestoneService.getClosedMilestones.and.returnValue(milestone_request.promise);
+            PlanningController.isMilestoneContext.mockReturnValue(false);
+            MilestoneService.getClosedMilestones.mockReturnValue(milestone_request.promise);
 
             PlanningController.displayClosedMilestones();
             expect(PlanningController.milestones.loading).toBeTruthy();
@@ -316,8 +316,8 @@ describe("PlanningController - ", () => {
         });
 
         it("Given that we were in a milestone's context, when I display closed milestones, then MilestoneService will be called and the milestones collection will be updated with the closed milestones in reverse order", function() {
-            PlanningController.isMilestoneContext.and.returnValue(true);
-            MilestoneService.getClosedSubMilestones.and.returnValue(milestone_request.promise);
+            PlanningController.isMilestoneContext.mockReturnValue(true);
+            MilestoneService.getClosedSubMilestones.mockReturnValue(milestone_request.promise);
 
             PlanningController.displayClosedMilestones();
             expect(PlanningController.milestones.loading).toBeTruthy();
@@ -338,7 +338,7 @@ describe("PlanningController - ", () => {
 
     describe("thereAreOpenMilestonesLoaded() -", function() {
         it("Given that open milestones have previously been loaded, when I check if open milestones have been loaded, then it will return true", function() {
-            $filter.and.returnValue(function() {
+            $filter.mockReturnValue(function() {
                 return [
                     {
                         id: 9,
@@ -353,7 +353,7 @@ describe("PlanningController - ", () => {
         });
 
         it("Given that open milestones have never been loaded, when I check if open milestones have been loaded, then it will return false", function() {
-            $filter.and.returnValue(function() {
+            $filter.mockReturnValue(function() {
                 return [];
             });
 
@@ -365,7 +365,7 @@ describe("PlanningController - ", () => {
 
     describe("thereAreClosedMilestonesLoaded() -", function() {
         it("Given that closed milestones have previously been loaded, when I check if closed milestones have been loaded, then it will return true", function() {
-            $filter.and.returnValue(function() {
+            $filter.mockReturnValue(function() {
                 return [
                     {
                         id: 36,
@@ -380,7 +380,7 @@ describe("PlanningController - ", () => {
         });
 
         it("Given that closed milestones have never been loaded, when I check if closed milestones have been loaded, then it will return false", function() {
-            $filter.and.returnValue(function() {
+            $filter.mockReturnValue(function() {
                 return [];
             });
 
@@ -482,7 +482,7 @@ describe("PlanningController - ", () => {
         var event, item, get_request;
         beforeEach(function() {
             get_request = $q.defer();
-            event = jasmine.createSpyObj("Click event", ["preventDefault"]);
+            event = { preventDefault: jest.fn() };
             event.which = 1;
             item = {
                 artifact: {
@@ -492,10 +492,15 @@ describe("PlanningController - ", () => {
                     }
                 }
             };
-            NewTuleapArtifactModalService.showEdition.and.callFake(function(c, a, b, callback) {
+            NewTuleapArtifactModalService.showEdition.mockImplementation(function(
+                c,
+                a,
+                b,
+                callback
+            ) {
                 callback(8541);
             });
-            BacklogItemCollectionService.refreshBacklogItem.and.returnValue(get_request.promise);
+            BacklogItemCollectionService.refreshBacklogItem.mockReturnValue(get_request.promise);
         });
 
         it("Given a left click event and an item to edit, when I show the edit modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback, and the callback will be called", function() {
@@ -506,7 +511,7 @@ describe("PlanningController - ", () => {
                 102,
                 30,
                 651,
-                jasmine.any(Function)
+                expect.any(Function)
             );
             expect(BacklogItemCollectionService.refreshBacklogItem).toHaveBeenCalledWith(8541);
         });
@@ -522,6 +527,9 @@ describe("PlanningController - ", () => {
 
         describe("callback -", function() {
             it("Given a milestone, when the artifact modal calls its callback, then the milestone's initial effort will be updated", function() {
+                const updateInitialEffort = jest
+                    .spyOn(MilestoneService, "updateInitialEffort")
+                    .mockImplementation(() => {});
                 var milestone = {
                     id: 38,
                     label: "Release v1.0"
@@ -531,7 +539,7 @@ describe("PlanningController - ", () => {
                 get_request.resolve();
                 $scope.$apply();
 
-                expect(MilestoneService.updateInitialEffort).toHaveBeenCalledWith(milestone);
+                expect(updateInitialEffort).toHaveBeenCalledWith(milestone);
             });
         });
     });
@@ -539,8 +547,13 @@ describe("PlanningController - ", () => {
     describe("showEditSubmilestoneModal() -", function() {
         var event, item;
         beforeEach(function() {
-            event = jasmine.createSpyObj("Click event", ["stopPropagation", "preventDefault"]);
-            NewTuleapArtifactModalService.showEdition.and.callFake(function(c, a, b, callback) {
+            event = { preventDefault: jest.fn(), stopPropagation: jest.fn() };
+            NewTuleapArtifactModalService.showEdition.mockImplementation(function(
+                c,
+                a,
+                b,
+                callback
+            ) {
                 callback(9040);
             });
         });
@@ -555,7 +568,7 @@ describe("PlanningController - ", () => {
                     }
                 }
             };
-            spyOn(PlanningController, "refreshSubmilestone");
+            jest.spyOn(PlanningController, "refreshSubmilestone").mockImplementation(() => {});
 
             PlanningController.showEditSubmilestoneModal(event, item);
 
@@ -563,7 +576,7 @@ describe("PlanningController - ", () => {
                 102,
                 12,
                 9040,
-                jasmine.any(Function)
+                expect.any(Function)
             );
             expect(PlanningController.refreshSubmilestone).toHaveBeenCalledWith(9040);
         });
@@ -573,8 +586,8 @@ describe("PlanningController - ", () => {
         let event, submilestone_type;
         beforeEach(() => {
             submilestone_type = { id: 82 };
-            event = jasmine.createSpyObj("Click event", ["preventDefault"]);
-            NewTuleapArtifactModalService.showCreation.and.callFake((a, b, callback) =>
+            event = { preventDefault: jest.fn() };
+            NewTuleapArtifactModalService.showCreation.mockImplementation((a, b, callback) =>
                 callback(1668)
             );
         });
@@ -585,7 +598,7 @@ describe("PlanningController - ", () => {
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
                 82,
                 PlanningController.milestone_id,
-                jasmine.any(Function)
+                expect.any(Function)
             );
         });
 
@@ -600,8 +613,8 @@ describe("PlanningController - ", () => {
                             semantic_status: "open"
                         }
                     ];
-                    MilestoneService.patchSubMilestones.and.returnValue($q.when());
-                    MilestoneService.getMilestone.and.returnValue(
+                    MilestoneService.patchSubMilestones.mockReturnValue($q.when());
+                    MilestoneService.getMilestone.mockReturnValue(
                         $q.when({
                             results: {
                                 id: 1668,
@@ -617,7 +630,7 @@ describe("PlanningController - ", () => {
                     expect(MilestoneService.patchSubMilestones).toHaveBeenCalledWith(736, [1668]);
                     expect(MilestoneService.getMilestone).toHaveBeenCalledWith(
                         1668,
-                        jasmine.any(Object)
+                        expect.any(Object)
                     );
                     expect(PlanningController.milestones.content).toEqual([
                         {
@@ -635,14 +648,14 @@ describe("PlanningController - ", () => {
             });
 
             it("Given that we were in a project context (Top Backlog), when the artifact modal calls its callback, then the MilestoneService will be called and the milestones collection will be updated", () => {
-                spyOn(PlanningController, "isMilestoneContext").and.returnValue(false);
+                jest.spyOn(PlanningController, "isMilestoneContext").mockReturnValue(false);
                 PlanningController.milestones.content = [
                     {
                         id: 3118,
                         label: "Sprint 2015-38"
                     }
                 ];
-                MilestoneService.getMilestone.and.returnValue(
+                MilestoneService.getMilestone.mockReturnValue(
                     $q.when({
                         results: {
                             id: 1668,
@@ -656,7 +669,7 @@ describe("PlanningController - ", () => {
 
                 expect(MilestoneService.getMilestone).toHaveBeenCalledWith(
                     1668,
-                    jasmine.any(Object)
+                    expect.any(Object)
                 );
                 expect(PlanningController.milestones.content).toEqual([
                     {
@@ -676,8 +689,7 @@ describe("PlanningController - ", () => {
         let item_type, artifact, submilestone;
 
         beforeEach(() => {
-            MilestoneService.updateInitialEffort.and.callThrough();
-            NewTuleapArtifactModalService.showCreation.and.callFake((a, b, callback) =>
+            NewTuleapArtifactModalService.showCreation.mockImplementation((a, b, callback) =>
                 callback(7488)
             );
             artifact = {
@@ -696,7 +708,7 @@ describe("PlanningController - ", () => {
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
                 94,
                 null,
-                jasmine.any(Function)
+                expect.any(Function)
             );
         });
 
@@ -711,8 +723,8 @@ describe("PlanningController - ", () => {
 
             it("when the artifact modal calls its callback, then the artifact will be prepended to the submilestone using the REST route and will be prepended to its content attribute", () => {
                 submilestone.content = [{ id: 9402 }];
-                BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
-                MilestoneService.addReorderToContent.and.returnValue($q.when());
+                BacklogItemService.getBacklogItem.mockReturnValue($q.when(artifact));
+                MilestoneService.addReorderToContent.mockReturnValue($q.when());
 
                 PlanningController.showAddItemToSubMilestoneModal(item_type, submilestone);
                 $scope.$apply();
@@ -726,8 +738,8 @@ describe("PlanningController - ", () => {
             });
 
             it("and given that the submilestone's content was empty, when the artifact modal calls its callback, then the artifact will be prepended to the submilestone using the REST route and will be prepended to its content attribute", () => {
-                BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
-                MilestoneService.addToContent.and.returnValue($q.when());
+                BacklogItemService.getBacklogItem.mockReturnValue($q.when(artifact));
+                MilestoneService.addToContent.mockReturnValue($q.when());
 
                 PlanningController.showAddItemToSubMilestoneModal(item_type, submilestone);
                 $scope.$apply();
@@ -748,7 +760,7 @@ describe("PlanningController - ", () => {
 
         it("Given an existing submilestone, when I refresh it, then the submilestone will be retrieved from the server and the milestones collection will be updated", function() {
             PlanningController.milestones.content = [{ id: 9040 }];
-            MilestoneService.getMilestone.and.returnValue(get_milestone_request.promise);
+            MilestoneService.getMilestone.mockReturnValue(get_milestone_request.promise);
 
             PlanningController.refreshSubmilestone(9040);
 
@@ -756,13 +768,13 @@ describe("PlanningController - ", () => {
                 results: { id: 9040 }
             });
             expect(PlanningController.milestones.content).toEqual([
-                jasmine.objectContaining({ id: 9040, updating: true })
+                expect.objectContaining({ id: 9040, updating: true })
             ]);
             $scope.$apply();
 
             expect(MilestoneService.getMilestone).toHaveBeenCalledWith(9040);
             expect(PlanningController.milestones.content).toEqual([
-                jasmine.objectContaining({ id: 9040, updating: false })
+                expect.objectContaining({ id: 9040, updating: false })
             ]);
         });
     });
