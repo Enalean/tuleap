@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018 - present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -24,38 +24,38 @@
 
 namespace Tuleap\Tracker\Tests;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
-use TuleapTestCase;
 
-require_once('bootstrap.php');
-
-class ProjectAdminPermissionPerGroupPresenterBuilderTest extends TuleapTestCase
+class ProjectAdminPermissionPerGroupPresenterBuilderTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var ProjectAdminPermissionPerGroupPresenterBuilder
      */
     private $presenter_builder;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->presenter_builder = new ProjectAdminPermissionPerGroupPresenterBuilder(
-            mock('UGroupManager')
+            \Mockery::spy(\UGroupManager::class)
         );
     }
 
-    public function itBuildsAPresenterWithANullUGroupNameWhenNoGroupIsSelected()
+    public function testItBuildsAPresenterWithANullUGroupNameWhenNoGroupIsSelected(): void
     {
-        $project = aMockProject()->build();
-        $user    = mock('PFUser');
+        $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('getId')->andReturn(101);
 
         $presenter = $this->presenter_builder->buildPresenter(
             $project,
-            $user,
             null
         );
 
-        $this->assertEqual($presenter->selected_ugroup_name, '');
+        $this->assertEquals($presenter->selected_ugroup_name, '');
     }
 }
