@@ -103,4 +103,21 @@ describe("ReleaseHeader", () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
         expect(wrapper.contains("[data-test=display-skeleton]")).toBe(true);
     });
+
+    it("When release's title contains '>', Then '>' is displayed", async () => {
+        releaseData = {
+            label: "1 > 2",
+            id: 2,
+            start_date: null,
+            number_of_artifact_by_trackers: []
+        };
+
+        component_options.propsData = {
+            releaseData,
+            isLoading: true
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.find("[data-test=title-release]").text()).toEqual("Release 1 > 2");
+    });
 });
