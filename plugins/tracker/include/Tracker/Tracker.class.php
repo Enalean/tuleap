@@ -37,9 +37,6 @@ use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
-use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
-use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
-use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRetriever;
 use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
@@ -64,6 +61,9 @@ use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
+use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRetriever;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerCrumbInContext;
 use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
@@ -1837,14 +1837,9 @@ class Tracker implements Tracker_Dispatchable_Interface
         $user_to_notify_dao             = new UsersToNotifyDao();
         $ugroup_to_notify_dao           = new UgroupsToNotifyDao();
         $unsubscribers_notification_dao = new UnsubscribersNotificationDAO;
-        $user_manager                   = UserManager::instance();
         $notification_list_builder      = new NotificationListBuilder(
             new UGroupDao(),
-            new CollectionOfUserInvolvedInNotificationPresenterBuilder(
-                $user_to_notify_dao,
-                $unsubscribers_notification_dao,
-                $user_manager
-            ),
+            new CollectionOfUserInvolvedInNotificationPresenterBuilder($user_to_notify_dao, $unsubscribers_notification_dao),
             new CollectionOfUgroupToBeNotifiedPresenterBuilder($ugroup_to_notify_dao)
         );
         return new Tracker_NotificationsManager(
@@ -1854,7 +1849,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             $ugroup_to_notify_dao,
             new UserNotificationSettingsDAO,
             new GlobalNotificationsAddressesBuilder(),
-            $user_manager,
+            UserManager::instance(),
             new UGroupManager(),
             new GlobalNotificationSubscribersFilter($unsubscribers_notification_dao),
             new NotificationLevelExtractor(),
@@ -1863,7 +1858,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             new NotificationsForceUsageUpdater(
                 new RecipientsManager(
                     \Tracker_FormElementFactory::instance(),
-                    $user_manager,
+                    UserManager::instance(),
                     $unsubscribers_notification_dao,
                     new UserNotificationSettingsRetriever(
                         new Tracker_GlobalNotificationDao(),

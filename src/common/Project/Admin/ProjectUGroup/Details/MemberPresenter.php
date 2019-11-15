@@ -42,10 +42,6 @@ class MemberPresenter
      * @var StatusPresenter
      */
     public $status_presenter;
-    /**
-     * @var string
-     */
-    public $avatar_url;
 
     public function __construct(\UserHelper $user_helper, \PFUser $member, ProjectUGroup $ugroup, ProjectUGroupMemberUpdatable $ugroup_members_updatable)
     {
@@ -63,7 +59,6 @@ class MemberPresenter
         }
 
         $this->has_avatar                = $member->hasAvatar();
-        $this->avatar_url                = $member->getAvatarUrl();
         $this->user_name                 = $member->getUserName();
         $this->user_id                   = $member->getId();
         $updatable_error_messages        = $ugroup_members_updatable->getUserUpdatableErrorMessages($member);

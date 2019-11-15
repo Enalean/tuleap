@@ -579,7 +579,8 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
             function addAvatar(container, user_id) {
                 var user = tracker_user_data[field_id].get(user_id);
-                var label = user.label,
+                var username = tuleap.escaper.html(user.username),
+                    label = user.label,
                     avatar_img,
                     avatar_div,
                     user_div;
@@ -593,7 +594,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 avatar_div.writeAttribute("data-user-id", user_id);
 
                 avatar_img = new Element("img", {
-                    src: user.avatar_url
+                    src: "/users/" + username + "/avatar.png"
                 });
                 avatar_img.observe("load", function() {
                     if (this.width == 0 || this.height == 0) {

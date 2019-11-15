@@ -125,7 +125,6 @@ class UserListResultsPresenter
 
     private function getMatchingUsers($result)
     {
-        $user_manager = \UserManager::instance();
         $matching_users = array();
         foreach ($result as $row) {
             $nb_member_of = 0;
@@ -136,18 +135,11 @@ class UserListResultsPresenter
             if (isset($row['admin_of'])) {
                 $nb_admin_of = $row['admin_of'];
             }
-
-            $user = $user_manager->getUserById($row['user_id']);
-            if (! $user) {
-                continue;
-            }
-
             $matching_users[] = new UserListResultsUserPresenter(
                 $row['user_id'],
                 $row['user_name'],
                 $row['realname'],
                 $row['has_avatar'],
-                $user->getAvatarUrl(),
                 $row['status'],
                 $nb_member_of,
                 $nb_admin_of

@@ -97,15 +97,12 @@ if (count($userList) < $limit) {
     $dar = $userDao->searchUserNameLike($userName, $sql_limit);
     while ($dar->valid()) {
         $row  = $dar->current();
-        $user = new PFUser($row);
-
-        $is_user_restricted = $user->isRestricted();
+        $is_user_restricted = (new PFUser($row))->isRestricted();
         if (! $is_user_restricted || ($is_user_restricted && $display_restricted_user)) {
             $userList[] = array(
                 'display_name' => $row['realname']." (".$row['user_name'].")",
                 'login'        => $row['user_name'],
                 'has_avatar'   => $row['has_avatar'],
-                'avatar_url'   => $user->getAvatarUrl(),
                 'user_id'      => $row['user_id'],
             );
         }
@@ -175,7 +172,7 @@ if ($json_format) {
             'type'           => 'user',
             'id'             => $display_name,
             'text'           => $display_name,
-            'avatar_url'     => $user_info['avatar_url'],
+            'avatar_url'     => '/users/' . urlencode($login) . '/avatar.png',
             'has_avatar'     => (bool)$user_info['has_avatar'],
             'tuleap_user_id' => $user_id
         ];

@@ -35,19 +35,11 @@ class CollectionOfUserInvolvedInNotificationPresenterBuilder
      * @var UnsubscribersNotificationDAO
      */
     private $unsubscribers_notification_dao;
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
 
-    public function __construct(
-        UsersToNotifyDao $users_to_notify_dao,
-        UnsubscribersNotificationDAO $unsubscribers_notification_dao,
-        \UserManager $user_manager
-    ) {
+    public function __construct(UsersToNotifyDao $users_to_notify_dao, UnsubscribersNotificationDAO $unsubscribers_notification_dao)
+    {
         $this->users_to_notify_dao            = $users_to_notify_dao;
         $this->unsubscribers_notification_dao = $unsubscribers_notification_dao;
-        $this->user_manager                   = $user_manager;
     }
 
     public function getCollectionOfUserToBeNotifiedPresenter(Tracker_GlobalNotification $notification)
@@ -72,13 +64,12 @@ class CollectionOfUserInvolvedInNotificationPresenterBuilder
     {
         $presenters = [];
         foreach ($user_rows as $row) {
-            $user = $this->user_manager->getUserById($row['user_id']);
             $presenters[] = new UserInvolvedInNotificationPresenter(
                 $row['user_id'],
                 $row['user_name'],
                 $row['realname'],
                 $row['has_avatar'],
-                $user->getAvatarUrl()
+                '/users/'. urlencode($row['user_name']) .'/avatar.png'
             );
         }
         $this->sortUsersAlphabetically($presenters);

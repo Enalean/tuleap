@@ -134,7 +134,6 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         $json = parent::fetchFormattedForJson();
         $json['username'] = $this->getUsername();
         $json['realname'] = $this->getUser()->getRealName();
-        $json['avatar_url'] = $this->getUser()->getAvatarUrl();
         return $json;
     }
 

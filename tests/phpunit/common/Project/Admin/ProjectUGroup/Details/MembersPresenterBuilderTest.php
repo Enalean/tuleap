@@ -168,13 +168,12 @@ final class MembersPresenterBuilderTest extends TestCase
         $first_member = Mockery::mock(
             \PFUser::class,
             [
-                'getUserName'  => 'jmost',
-                'getId'        => 105,
-                'getRealName'  => 'Junko Most',
-                'hasAvatar'    => true,
-                'isAdmin'      => false,
-                'getStatus'    => 'A',
-                'getAvatarUrl' => ''
+                'getUserName' => 'jmost',
+                'getId'       => 105,
+                'getRealName' => 'Junko Most',
+                'hasAvatar'   => true,
+                'isAdmin'     => false,
+                'getStatus'   => 'A'
             ]
         );
         $ugroup->shouldReceive('getMembersIncludingSuspendedAndDeleted')
@@ -211,13 +210,12 @@ final class MembersPresenterBuilderTest extends TestCase
         $first_member = Mockery::mock(
             \PFUser::class,
             [
-                'getUserName'  => 'jmost',
-                'getId'        => 105,
-                'getRealName'  => 'Junko Most',
-                'hasAvatar'    => true,
-                'isAdmin'      => false,
-                'getStatus'    => 'A',
-                'getAvatarUrl' => ''
+                'getUserName' => 'jmost',
+                'getId'       => 105,
+                'getRealName' => 'Junko Most',
+                'hasAvatar'   => true,
+                'isAdmin'     => false,
+                'getStatus'   => 'A'
             ]
         );
         $ugroup->shouldReceive('getMembersIncludingSuspendedAndDeleted')
@@ -256,13 +254,12 @@ final class MembersPresenterBuilderTest extends TestCase
         $first_member = Mockery::mock(
             \PFUser::class,
             [
-                'getUserName'  => 'jmost',
-                'getId'        => 105,
-                'getRealName'  => 'Junko Most',
-                'hasAvatar'    => true,
-                'isAdmin'      => false,
-                'getStatus'    => 'A',
-                'getAvatarUrl' => ''
+                'getUserName' => 'jmost',
+                'getId'       => 105,
+                'getRealName' => 'Junko Most',
+                'hasAvatar'   => true,
+                'isAdmin'     => false,
+                'getStatus'   => 'A'
             ]
         );
         $first_member->shouldReceive('isMember')
