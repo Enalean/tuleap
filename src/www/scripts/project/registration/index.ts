@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     await initVueGettext(Vue, (locale: string) =>
-        import(/* webpackChunkName: "project-admin-banner-po-" */ `./po/${locale}.po`)
+        import(/* webpackChunkName: "project-registration-po-" */ `./po/${locale}.po`)
     );
 
     const AppComponent = Vue.extend(App);
