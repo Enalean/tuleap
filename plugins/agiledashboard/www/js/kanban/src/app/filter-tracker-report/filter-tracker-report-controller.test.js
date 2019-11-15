@@ -1,6 +1,7 @@
 import kanban_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
+import BaseController from "./filter-tracker-report-controller.js";
 
 describe("FilterTrackerReportController -", () => {
     let FilterTrackerReportController, $window, FilterTrackerReportService;
@@ -45,7 +46,7 @@ describe("FilterTrackerReportController -", () => {
             }
         ]);
 
-        FilterTrackerReportController = $controller("FilterTrackerReportController", {
+        FilterTrackerReportController = $controller(BaseController, {
             $window: $window,
             FilterTrackerReportService: FilterTrackerReportService
         });

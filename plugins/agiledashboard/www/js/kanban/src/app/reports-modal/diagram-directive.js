@@ -1,5 +1,5 @@
 import angular from "angular";
-import { createCumulativeChart } from "cumulative-flow-diagram";
+import { createCumulativeChart } from "../../../../cumulative-flow-diagram/index.js";
 
 export default Graph;
 

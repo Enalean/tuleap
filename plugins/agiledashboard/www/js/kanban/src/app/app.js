@@ -20,15 +20,16 @@
 import angular from "angular";
 import ngSanitize from "angular-sanitize";
 import dragular from "dragular";
-import angular_artifact_modal from "angular-artifact-modal";
+import angular_artifact_modal from "../../../../../../tracker/www/scripts/angular-artifact-modal/index.js";
 
-import angular_tlp from "angular-tlp/index.js";
-import angular_async from "angular-tlp/angular-async.js";
+import angular_tlp from "angular-tlp/index";
+import angular_async from "angular-tlp/angular-async";
 
 import "angular-locker";
 import "angular-gettext";
 import "ng-scrollbar";
 import "restangular";
+import "angular-moment";
 import translations from "../../po/fr.po";
 
 import jwt from "./jwt/jwt.js";
@@ -68,6 +69,7 @@ import FeedbackComponent from "./feedback-component.js";
 
 export default angular
     .module("kanban", [
+        "angularMoment",
         "angular-locker",
         "gettext",
         "ngScrollbar",

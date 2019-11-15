@@ -16,7 +16,7 @@ describe("AddToDashboardController -", () => {
             SharedPropertiesService = _SharedPropertiesService_;
         });
 
-        $element = affix("div");
+        $element = angular.element("div");
         AddToDashboardCtrl = $controller(AddToDashboardBaseController, {
             $element: $element,
             SharedPropertiesService: SharedPropertiesService
@@ -25,8 +25,6 @@ describe("AddToDashboardController -", () => {
             project_dashboards: [],
             user_dashboards: []
         };
-        spyOn(SharedPropertiesService, "getUserIsAdmin");
-        spyOn(SharedPropertiesService, "getUserIsOnWidget");
     });
 
     describe("showDashboardButton() -", () => {
@@ -41,8 +39,8 @@ describe("AddToDashboardController -", () => {
                     name: "dashboard 2"
                 }
             ];
-            SharedPropertiesService.getUserIsAdmin.and.returnValue(false);
-            SharedPropertiesService.getUserIsOnWidget.and.returnValue(false);
+            jest.spyOn(SharedPropertiesService, "getUserIsAdmin").mockReturnValue(false);
+            jest.spyOn(SharedPropertiesService, "getUserIsOnWidget").mockReturnValue(false);
 
             const showButton = AddToDashboardCtrl.showDashboardButton();
             expect(showButton).toBe(true);
@@ -59,8 +57,8 @@ describe("AddToDashboardController -", () => {
                     name: "project dashboard 2"
                 }
             ];
-            SharedPropertiesService.getUserIsAdmin.and.returnValue(true);
-            SharedPropertiesService.getUserIsOnWidget.and.returnValue(false);
+            jest.spyOn(SharedPropertiesService, "getUserIsAdmin").mockReturnValue(true);
+            jest.spyOn(SharedPropertiesService, "getUserIsOnWidget").mockReturnValue(false);
 
             const showButton = AddToDashboardCtrl.showDashboardButton();
             expect(showButton).toBe(true);
@@ -77,8 +75,8 @@ describe("AddToDashboardController -", () => {
                     name: "dashboard 2"
                 }
             ];
-            SharedPropertiesService.getUserIsAdmin.and.returnValue(true);
-            SharedPropertiesService.getUserIsOnWidget.and.returnValue(false);
+            jest.spyOn(SharedPropertiesService, "getUserIsAdmin").mockReturnValue(true);
+            jest.spyOn(SharedPropertiesService, "getUserIsOnWidget").mockReturnValue(false);
 
             const showButton = AddToDashboardCtrl.showDashboardButton();
             expect(showButton).toBe(true);
@@ -95,16 +93,16 @@ describe("AddToDashboardController -", () => {
                     name: "project dashboard 2"
                 }
             ];
-            SharedPropertiesService.getUserIsAdmin.and.returnValue(false);
-            SharedPropertiesService.getUserIsOnWidget.and.returnValue(false);
+            jest.spyOn(SharedPropertiesService, "getUserIsAdmin").mockReturnValue(false);
+            jest.spyOn(SharedPropertiesService, "getUserIsOnWidget").mockReturnValue(false);
 
             const showButton = AddToDashboardCtrl.showDashboardButton();
             expect(showButton).toBe(false);
         });
 
         it("does not display the button for a user project admin because the user has no personal dashboard and no project dashboard", () => {
-            SharedPropertiesService.getUserIsAdmin.and.returnValue(true);
-            SharedPropertiesService.getUserIsOnWidget.and.returnValue(false);
+            jest.spyOn(SharedPropertiesService, "getUserIsAdmin").mockReturnValue(true);
+            jest.spyOn(SharedPropertiesService, "getUserIsOnWidget").mockReturnValue(false);
 
             const showButton = AddToDashboardCtrl.showDashboardButton();
             expect(showButton).toBe(false);

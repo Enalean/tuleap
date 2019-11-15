@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,10 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const base_config = require("../../../../tests/jest/jest.base.config.js");
+const base_config = require("../../../../../tests/jest/jest.base.config.js");
 
 module.exports = {
     ...base_config,
-    displayName: "tuleap-agiledashboard",
-    testPathIgnorePatterns: ["/node_modules/", "<rootDir>/kanban"]
+    displayName: "kanban",
+    setupFiles: ["./tests/jest.setup.js"],
+    moduleNameMapper: {
+        ...base_config.moduleNameMapper,
+        "^.+\\.html$": "identity-obj-proxy",
+        // angular-mocks is imported by card fields tests
+        "^angular-mocks$": "<rootDir>/node_modules/angular-mocks/angular-mocks.js",
+        "^angular$": "<rootDir>/node_modules/angular/index.js",
+        "^angular-sanitize$": "<rootDir>/node_modules/angular-sanitize/index.js",
+        "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js",
+        "@tuleap-vue-components/(.*)$": "<rootDir>/../../../../src/www/scripts/vue-components/$1"
+    }
 };

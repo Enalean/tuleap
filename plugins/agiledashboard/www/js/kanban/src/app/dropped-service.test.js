@@ -1,30 +1,33 @@
 import "./app.js";
 import angular from "angular";
 import "angular-mocks";
+import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
 describe("DroppedService -", function() {
-    var DroppedService, KanbanService;
+    let wrapPromise, DroppedService, KanbanService;
 
     beforeEach(function() {
         angular.mock.module("kanban", function($provide) {
             $provide.decorator("KanbanService", function($delegate, $q) {
-                spyOn($delegate, "moveInArchive").and.returnValue($q.when());
-                spyOn($delegate, "moveInBacklog").and.returnValue($q.when());
-                spyOn($delegate, "moveInColumn").and.returnValue($q.when());
-                spyOn($delegate, "reorderArchive").and.returnValue($q.when());
-                spyOn($delegate, "reorderBacklog").and.returnValue($q.when());
-                spyOn($delegate, "reorderColumn").and.returnValue($q.when());
+                jest.spyOn($delegate, "moveInArchive").mockReturnValue($q.when());
+                jest.spyOn($delegate, "moveInBacklog").mockReturnValue($q.when());
+                jest.spyOn($delegate, "moveInColumn").mockReturnValue($q.when());
+                jest.spyOn($delegate, "reorderArchive").mockReturnValue($q.when());
+                jest.spyOn($delegate, "reorderBacklog").mockReturnValue($q.when());
+                jest.spyOn($delegate, "reorderColumn").mockReturnValue($q.when());
 
                 return $delegate;
             });
         });
 
-        angular.mock.inject(function(_DroppedService_, _KanbanService_) {
+        let $rootScope;
+        angular.mock.inject(function(_$rootScope_, _DroppedService_, _KanbanService_) {
+            $rootScope = _$rootScope_;
             DroppedService = _DroppedService_;
             KanbanService = _KanbanService_;
         });
 
-        installPromiseMatchers();
+        wrapPromise = createAngularPromiseWrapper($rootScope);
     });
 
     describe("moveToColumn() -", function() {
@@ -40,18 +43,21 @@ describe("DroppedService -", function() {
             from_column = 912;
         });
 
-        it("Given a kanban id, a numeric column id, a kanban item id, and a compared_to object, when I move the kanban item to the column, then KanbanService.moveInColumn will be called and a promise will be resolved", function() {
+        it(`Given a kanban id, a numeric column id, a kanban item id, and a compared_to object,
+            when I move the kanban item to the column,
+            then KanbanService.moveInColumn will be called
+            and a promise will be resolved`, async () => {
             column_id = 33;
 
-            var promise = DroppedService.moveToColumn(
+            const promise = DroppedService.moveToColumn(
                 kanban_id,
                 column_id,
                 kanban_item_id,
                 compared_to,
                 from_column
             );
+            await wrapPromise(promise);
 
-            expect(promise).toBeResolved();
             expect(KanbanService.moveInColumn).toHaveBeenCalledWith(
                 kanban_id,
                 column_id,
@@ -61,18 +67,21 @@ describe("DroppedService -", function() {
             );
         });
 
-        it("Given 'backlog' as a column id, when I move the kanban item to the backlog, then KanbanService.moveInBacklog will be called and a promise will be resolved", function() {
+        it(`Given 'backlog' as a column id,
+            when I move the kanban item to the backlog,
+            then KanbanService.moveInBacklog will be called
+            and a promise will be resolved`, async () => {
             column_id = "backlog";
 
-            var promise = DroppedService.moveToColumn(
+            const promise = DroppedService.moveToColumn(
                 kanban_id,
                 column_id,
                 kanban_item_id,
                 compared_to,
                 from_column
             );
+            await wrapPromise(promise);
 
-            expect(promise).toBeResolved();
             expect(KanbanService.moveInBacklog).toHaveBeenCalledWith(
                 kanban_id,
                 kanban_item_id,
@@ -81,18 +90,21 @@ describe("DroppedService -", function() {
             );
         });
 
-        it("Given 'archive' as a column id, when I move the kanban item to the archive, then KanbanService.moveInArchive will be called and a promise will be resolved", function() {
+        it(`Given 'archive' as a column id,
+            when I move the kanban item to the archive,
+            then KanbanService.moveInArchive will be called
+            and a promise will be resolved`, async () => {
             column_id = "archive";
 
-            var promise = DroppedService.moveToColumn(
+            const promise = DroppedService.moveToColumn(
                 kanban_id,
                 column_id,
                 kanban_item_id,
                 compared_to,
                 from_column
             );
+            await wrapPromise(promise);
 
-            expect(promise).toBeResolved();
             expect(KanbanService.moveInArchive).toHaveBeenCalledWith(
                 kanban_id,
                 kanban_item_id,
@@ -114,17 +126,20 @@ describe("DroppedService -", function() {
             };
         });
 
-        it("Given a kanban id, a numeric column id, a kanban item id, and a compared_to object, when I reorder the kanban item in the same column, then KanbanService.reorderColumn will be called and a promise will be resolved", function() {
+        it(`Given a kanban id, a numeric column id, a kanban item id, and a compared_to object,
+            when I reorder the kanban item in the same column,
+            then KanbanService.reorderColumn will be called
+            and a promise will be resolved`, async () => {
             column_id = 22;
 
-            var promise = DroppedService.reorderColumn(
+            const promise = DroppedService.reorderColumn(
                 kanban_id,
                 column_id,
                 kanban_item_id,
                 compared_to
             );
+            await wrapPromise(promise);
 
-            expect(promise).toBeResolved();
             expect(KanbanService.reorderColumn).toHaveBeenCalledWith(
                 kanban_id,
                 column_id,
@@ -133,17 +148,20 @@ describe("DroppedService -", function() {
             );
         });
 
-        it("Given 'backlog' as a column id, when I reorder the kanban item in the backlog, then KanbanService.reorderBacklog will be called and a promise will be resolved", function() {
+        it(`Given 'backlog' as a column id,
+            when I reorder the kanban item in the backlog,
+            then KanbanService.reorderBacklog will be called
+            and a promise will be resolved`, async () => {
             column_id = "backlog";
 
-            var promise = DroppedService.reorderColumn(
+            const promise = DroppedService.reorderColumn(
                 kanban_id,
                 column_id,
                 kanban_item_id,
                 compared_to
             );
+            await wrapPromise(promise);
 
-            expect(promise).toBeResolved();
             expect(KanbanService.reorderBacklog).toHaveBeenCalledWith(
                 kanban_id,
                 kanban_item_id,
@@ -151,17 +169,20 @@ describe("DroppedService -", function() {
             );
         });
 
-        it("Given 'archive' as a column id, when I reorder the kanban item in the archive, then KanbanService.reorderArchive will be called and a promise will be resolved", function() {
+        it(`Given 'archive' as a column id,
+            when I reorder the kanban item in the archive,
+            then KanbanService.reorderArchive will be called
+            and a promise will be resolved`, async () => {
             column_id = "archive";
 
-            var promise = DroppedService.reorderColumn(
+            const promise = DroppedService.reorderColumn(
                 kanban_id,
                 column_id,
                 kanban_item_id,
                 compared_to
             );
+            await wrapPromise(promise);
 
-            expect(promise).toBeResolved();
             expect(KanbanService.reorderArchive).toHaveBeenCalledWith(
                 kanban_id,
                 kanban_item_id,

@@ -39,11 +39,11 @@ describe("EditKanbanController -", () => {
         $scope = $rootScope.$new();
 
         modal_instance = {
-            tlp_modal: jasmine.createSpyObj("tlp_modal", ["hide"])
+            tlp_modal: { hide: jest.fn() }
         };
         const rebuild_scrollbars = angular.noop;
 
-        spyOn(SharedPropertiesService, "getKanban").and.returnValue({
+        jest.spyOn(SharedPropertiesService, "getKanban").mockReturnValue({
             label: "boxman",
             tracker: {
                 id: 48,
@@ -51,7 +51,7 @@ describe("EditKanbanController -", () => {
             }
         });
 
-        spyOn(RestErrorService, "reload");
+        jest.spyOn(RestErrorService, "reload").mockImplementation(() => {});
 
         EditKanbanController = $controller(BaseController, {
             $scope,
@@ -71,12 +71,14 @@ describe("EditKanbanController -", () => {
                 kanban: { id: 48 },
                 selectable_report_ids
             });
-            spyOn(KanbanService, "updateSelectableReports");
-            spyOn(FilterTrackerReportService, "changeSelectableReports");
+            jest.spyOn(KanbanService, "updateSelectableReports").mockImplementation(() => {});
+            jest.spyOn(FilterTrackerReportService, "changeSelectableReports").mockImplementation(
+                () => {}
+            );
         });
 
         it("Given that we selected reports to be selectable, then the reports' ids will be saved in backend and will be updated in the dedicated service", () => {
-            KanbanService.updateSelectableReports.and.returnValue($q.when());
+            KanbanService.updateSelectableReports.mockReturnValue($q.when());
 
             EditKanbanController.saveReports();
             expect(EditKanbanController.saving).toBe(true);
@@ -94,7 +96,7 @@ describe("EditKanbanController -", () => {
         });
 
         it("when there is a REST error, then the modal will be closed and the error modal will be shown", () => {
-            KanbanService.updateSelectableReports.and.returnValue($q.reject({ status: 500 }));
+            KanbanService.updateSelectableReports.mockReturnValue($q.reject({ status: 500 }));
 
             EditKanbanController.saveReports();
             $scope.$apply();

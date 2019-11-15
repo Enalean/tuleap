@@ -8,7 +8,7 @@ describe("ColumnCollectionService -", function() {
     beforeEach(function() {
         angular.mock.module(kanban_module, function($provide) {
             $provide.decorator("SharedPropertiesService", function($delegate) {
-                spyOn($delegate, "getKanban");
+                jest.spyOn($delegate, "getKanban").mockImplementation(() => {});
 
                 return $delegate;
             });
@@ -26,7 +26,7 @@ describe("ColumnCollectionService -", function() {
                 id: "archive",
                 content: []
             };
-            SharedPropertiesService.getKanban.and.returnValue({
+            SharedPropertiesService.getKanban.mockReturnValue({
                 archive: archive
             });
 
@@ -40,7 +40,7 @@ describe("ColumnCollectionService -", function() {
                 id: "backlog",
                 content: []
             };
-            SharedPropertiesService.getKanban.and.returnValue({
+            SharedPropertiesService.getKanban.mockReturnValue({
                 backlog: backlog
             });
 
@@ -54,7 +54,7 @@ describe("ColumnCollectionService -", function() {
                 id: 68,
                 content: []
             };
-            SharedPropertiesService.getKanban.and.returnValue({
+            SharedPropertiesService.getKanban.mockReturnValue({
                 columns: [column]
             });
 
@@ -72,7 +72,7 @@ describe("ColumnCollectionService -", function() {
             var second_column = {
                 wip_in_edit: true
             };
-            SharedPropertiesService.getKanban.and.returnValue({
+            SharedPropertiesService.getKanban.mockReturnValue({
                 columns: [first_column, second_column]
             });
 
@@ -93,7 +93,7 @@ describe("ColumnCollectionService -", function() {
                 id: 69,
                 content: []
             };
-            SharedPropertiesService.getKanban.and.returnValue({
+            SharedPropertiesService.getKanban.mockReturnValue({
                 columns: [column]
             });
 
@@ -113,7 +113,7 @@ describe("ColumnCollectionService -", function() {
                 id: 69,
                 content: []
             };
-            SharedPropertiesService.getKanban.and.returnValue({
+            SharedPropertiesService.getKanban.mockReturnValue({
                 columns: [column, column_to_remove]
             });
 
@@ -133,7 +133,7 @@ describe("ColumnCollectionService -", function() {
                 id: 69,
                 content: []
             };
-            SharedPropertiesService.getKanban.and.returnValue({
+            SharedPropertiesService.getKanban.mockReturnValue({
                 columns: [first_column, second_column]
             });
 
@@ -164,7 +164,7 @@ describe("ColumnCollectionService -", function() {
                 content: [{ id: 46 }, { id: 37 }, { id: 62 }]
             };
 
-            SharedPropertiesService.getKanban.and.returnValue({
+            SharedPropertiesService.getKanban.mockReturnValue({
                 columns: columns,
                 backlog: backlog,
                 archive: archive
@@ -186,7 +186,7 @@ describe("ColumnCollectionService -", function() {
                 content: [{ id: 46 }, { id: 37 }, { id: 62 }]
             };
 
-            SharedPropertiesService.getKanban.and.returnValue({
+            SharedPropertiesService.getKanban.mockReturnValue({
                 columns: columns,
                 backlog: backlog,
                 archive: archive
