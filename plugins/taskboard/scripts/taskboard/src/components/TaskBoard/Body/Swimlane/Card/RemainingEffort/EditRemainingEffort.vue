@@ -38,8 +38,8 @@ import { NewRemainingEffortPayload } from "../../../../../../store/swimlane/card
 
 const swimlane = namespace("swimlane");
 
-const MINIMAL_WIDTH_IN_PX = 20;
-const NB_PX_PER_CHAR = 5;
+const MINIMAL_WIDTH_IN_PX = 30;
+const NB_PX_PER_CHAR = 10;
 
 @Component
 export default class EditRemainingEffort extends Vue {
@@ -72,6 +72,9 @@ export default class EditRemainingEffort extends Vue {
 
         const input = this.$el as HTMLInputElement;
         input.focus();
+        setTimeout(() => {
+            input.select();
+        }, 10);
 
         document.addEventListener("keyup", this.keyup);
     }

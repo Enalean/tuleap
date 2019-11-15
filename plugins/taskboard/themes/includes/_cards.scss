@@ -270,6 +270,10 @@ a.taskboard-card-xref {
                 color: darken(map-get($colors, 'primary'), 5%);
             }
 
+            > .fa-long-arrow-right {
+                margin: 0 2px;
+            }
+
             &.taskboard-card-remaining-effort-edit-mode,
             &:focus,
             &:hover {
@@ -282,18 +286,33 @@ a.taskboard-card-xref {
                     background: darken(map-get($colors, 'primary'), 5%);
                 }
             }
+
+            &.taskboard-card-remaining-effort-edit-mode {
+                margin: 10px 16px 0 0;
+                border-top-left-radius: 20px;
+                border-bottom-left-radius: 20px;
+
+                &::after {
+                    right: -16px;
+                    border-width: 15px 0 15px 15px;
+                }
+            }
         }
     }
 }
 
 @each $color-name, $colors in $tlp-swatch-color-map {
     .taskboard-card-remaining-effort-input-#{$color-name} {
-        width: 20px;
+        width: 30px;
+        padding: 1px 5px;
         border: 0;
+        border-radius: 2px;
         background: map-get($colors, 'secondary');
         color: map-get($colors, 'text');
-        font-size: 10px;
-        line-height: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        line-height: 14px;
     }
 }
 
