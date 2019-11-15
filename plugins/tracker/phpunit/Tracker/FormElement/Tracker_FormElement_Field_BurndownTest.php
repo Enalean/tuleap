@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
+use Codendi_Request;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
@@ -35,11 +36,16 @@ use Tracker_Chart_Data_Burndown;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElementFactory;
+use TrackerManager;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_BurndownTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerManager
+     */
+    private $tracker_manager;
 
     /**
      * @var \Tracker
@@ -92,6 +98,8 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->tracker_manager = Mockery::mock(TrackerManager::class);
 
         $this->tracker    = \Mockery::spy(\Tracker::class);
         $this->tracker_id = 101;
@@ -294,5 +302,62 @@ class Tracker_FormElement_Field_BurndownTest extends TestCase
         $burndown_view->shouldReceive('display')->once();
 
         $this->burndown_field->fetchBurndownImage($this->sprint, $this->user);
+    }
+
+    public function testProcessShouldRenderGraphWhenShowBurndownFuncIsCalled(): void
+    {
+        $artifact_id = 999;
+
+        $request = new Codendi_Request(
+            [
+                'formElement' => 1234,
+                'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
+                'src_aid'     => $artifact_id
+            ]
+        );
+
+        $artifact        = Mockery::spy(\Tracker_Artifact::class);
+        $artifactFactory = Mockery::mock(\Tracker_ArtifactFactory::class);
+        $artifactFactory->shouldReceive('getArtifactById')->withArgs([$artifact_id])->andReturn($artifact);
+
+        $field = \Mockery::mock(\Tracker_FormElement_Field_Burndown::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field->shouldReceive('getArtifactFactory')->andReturn($artifactFactory);
+        $field->shouldReceive('fetchBurndownImage')->with($artifact, $this->user)->once();
+
+        $field->process($this->tracker_manager, $request, $this->user);
+    }
+
+    public function testProcessMustNotBuildBurndownWhenSrcAidIsNotValid(): void
+    {
+        $request = new Codendi_Request(array('formElement' => 1234,
+                                             'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
+                                             'src_aid'     => '; DROP DATABASE mouuahahahaha!'));
+
+
+
+        $artifactFactory = Mockery::mock(\Tracker_ArtifactFactory::class);
+        $artifactFactory->shouldReceive('getArtifactById')->andReturn(null);
+
+        $field = \Mockery::mock(\Tracker_FormElement_Field_Burndown::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field->shouldReceive('getArtifactFactory')->andReturn($artifactFactory);
+        $field->shouldReceive('fetchBurndownImage')->never();
+
+        $field->process($this->tracker_manager, $request, $this->user);
+    }
+
+    public function testProcessMustNotBuildBurndownWhenArtifactDoesNotExist(): void
+    {
+        $request = new Codendi_Request(array('formElement' => 1234,
+                                             'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
+                                             'src_aid'     => 999));
+
+        $artifactFactory = Mockery::mock(\Tracker_ArtifactFactory::class);
+        $artifactFactory->shouldReceive('getArtifactById')->andReturn(null);
+
+        $field = \Mockery::mock(\Tracker_FormElement_Field_Burndown::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field->shouldReceive('getArtifactFactory')->andReturn($artifactFactory);
+        $field->shouldReceive('fetchBurndownImage')->never();
+
+        $field->process($this->tracker_manager, $request, $this->user);
     }
 }
