@@ -20,15 +20,15 @@
 
 <template>
     <section>
-        <div v-if="isBrowserIE11" class="tlp-alert-danger" v-translate>
+        <div v-if="isBrowserIE11" class="tlp-alert-danger" data-test="is-IE11" v-translate>
             The plugin "Release Widget" is not supported under IE11. Please use a more recent browser.
         </div>
-        <div v-else-if="has_rest_error" class="tlp-alert-danger">
+        <div v-else-if="has_rest_error" class="tlp-alert-danger" data-test="show-error-message">
             {{ error }}
         </div>
-        <div v-else-if="is_loading" class="release-loader"></div>
+        <div v-else-if="is_loading" class="release-loader" data-test="is-loading"></div>
         <div v-else>
-            <div class="project-release-widget-content">
+            <div class="project-release-widget-content" data-test="widget-content">
                 <roadmap-section/>
                 <whats-hot-section/>
             </div>

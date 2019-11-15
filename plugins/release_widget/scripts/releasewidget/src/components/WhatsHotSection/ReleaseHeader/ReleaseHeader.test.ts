@@ -66,7 +66,8 @@ describe("ReleaseHeader", () => {
             setUserLocale("en-US");
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.element).toMatchSnapshot();
+
+            expect(wrapper.contains("[data-test=display-arrow]")).toBe(true);
         });
 
         it("When there isn't a start date of a release, Then there isn't an arrow", async () => {
@@ -82,7 +83,7 @@ describe("ReleaseHeader", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.element).toMatchSnapshot();
+            expect(wrapper.contains("[data-test=display-arrow]")).toBe(false);
         });
     });
 
@@ -96,10 +97,10 @@ describe("ReleaseHeader", () => {
 
         component_options.propsData = {
             releaseData,
-            disabled: true
+            isLoading: true
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.contains("[data-test=display-skeleton]")).toBe(true);
     });
 });

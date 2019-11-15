@@ -55,20 +55,29 @@ describe("Given a release widget", () => {
 
     it("When there are no errors, then the widget content will be displayed", async () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.element).toMatchSnapshot();
+
+        expect(wrapper.contains("[data-test=widget-content]")).toBe(true);
+        expect(wrapper.contains("[data-test=show-error-message]")).toBe(false);
+        expect(wrapper.contains("[data-test=is-loading]")).toBe(false);
     });
 
     it("When there is an error, then the widget content will not be displayed", async () => {
         store_options.state.error_message = "404 Error";
         store_options.getters.has_rest_error = true;
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.element).toMatchSnapshot();
+
+        expect(wrapper.contains("[data-test=show-error-message]")).toBe(true);
+        expect(wrapper.contains("[data-test=widget-content]")).toBe(false);
+        expect(wrapper.contains("[data-test=is-loading]")).toBe(false);
     });
 
     it("When it is loading rest data, then a loader will be displayed", async () => {
         store_options.state.is_loading = true;
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.element).toMatchSnapshot();
+
+        expect(wrapper.contains("[data-test=is-loading]")).toBe(true);
+        expect(wrapper.contains("[data-test=widget-content]")).toBe(false);
+        expect(wrapper.contains("[data-test=show-error-message]")).toBe(false);
     });
 
     it("When there is a rest error and it is empty, Then another message is displayed", async () => {
@@ -76,13 +85,17 @@ describe("Given a release widget", () => {
         store_options.getters.has_rest_error = true;
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.find("[data-test=show-error-message]").text()).toEqual(
+            "Oops, an error occurred!"
+        );
     });
 
     it("When the browser is IE11, Then an error message is displayed instead of the content ", async () => {
         component_options.propsData = { isBrowserIE11: true };
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.find("[data-test=is-IE11]").text()).toEqual(
+            'The plugin "Release Widget" is not supported under IE11. Please use a more recent browser.'
+        );
     });
 });
