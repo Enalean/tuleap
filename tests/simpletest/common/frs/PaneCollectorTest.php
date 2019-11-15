@@ -34,8 +34,8 @@ class PaneCollectorTest extends TuleapTestCase
             $package_builder
         );
 
-        $project = aMockProject()->build();
-        stub($project)->usesFile()->returns(false);
+        $project = \Mockery::spy(\Project::class, ['getID' => false, 'getUnixName' => false, 'isPublic' => false]);
+        $project->shouldReceive('usesFile')->andReturns(false);
 
         $selected_ugroup_id = null;
 

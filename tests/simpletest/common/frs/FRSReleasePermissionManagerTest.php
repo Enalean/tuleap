@@ -66,7 +66,7 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
             $this->release_factory
         );
 
-        $this->project = aMockProject()->withId(100)->build();
+        $this->project = \Mockery::spy(\Project::class, ['getID' => 100, 'getUnixName' => false, 'isPublic' => false]);
         $this->user    = \Mockery::spy(\PFUser::class);
         $this->release = \Mockery::spy(\FRSRelease::class);
     }
@@ -74,7 +74,7 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
     public function itReturnsTrueWhenReleaseIsHiddenAndUserIsFrsAdmin()
     {
         $this->release->shouldReceive('isHidden')->andReturns(true);
-        stub($this->release_factory)->userCanAdmin($this->user, $this->project->getID())->returns(true);
+        $this->release_factory->shouldReceive('userCanAdmin')->with($this->user, $this->project->getID())->andReturns(true);
 
         $this->assertTrue(
             $this->release_permission_manager->canUserSeeRelease($this->user, $this->release, $this->project)
@@ -84,7 +84,7 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
     public function itReturnsFalseWhenReleaseIsHiddenAndUserDoesntHaveAdminPermissions()
     {
         $this->release->shouldReceive('isHidden')->andReturns(true);
-        stub($this->release_factory)->userCanAdmin($this->user, $this->project->getID())->returns(false);
+        $this->release_factory->shouldReceive('userCanAdmin')->with($this->user, $this->project->getID())->andReturns(false);
 
         $this->assertFalse(
             $this->release_permission_manager->canUserSeeRelease($this->user, $this->release, $this->project)
@@ -94,12 +94,8 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
     public function itReturnsTrueWHenReleaseIsActiveAndUserCanAccessFrsServiceAndUserCanAccessRelease()
     {
         $this->release->shouldReceive('isActive')->andReturns(true);
-        stub($this->frs_service_permission_manager)->userCanRead($this->project, $this->user)->returns(true);
-        stub($this->release_factory)->userCanRead(
-            $this->project->getID(),
-            $this->release->getPackageID(),
-            $this->release->getReleaseID()
-        )->returns(true);
+        $this->frs_service_permission_manager->shouldReceive('userCanRead')->with($this->project, $this->user)->andReturns(true);
+        $this->release_factory->shouldReceive('userCanRead')->with($this->project->getID(), $this->release->getPackageID(), $this->release->getReleaseID())->andReturns(true);
 
         $this->assertTrue(
             $this->release_permission_manager->canUserSeeRelease($this->user, $this->release, $this->project)
@@ -109,7 +105,7 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
     public function itReturnsFalseWhenReleaseIsActiveAndUserCannotAccessFrsService()
     {
         $this->release->shouldReceive('isActive')->andReturns(true);
-        stub($this->frs_service_permission_manager)->userCanRead($this->project, $this->user)->returns(false);
+        $this->frs_service_permission_manager->shouldReceive('userCanRead')->with($this->project, $this->user)->andReturns(false);
 
         $this->assertFalse(
             $this->release_permission_manager->canUserSeeRelease($this->user, $this->release, $this->project)
@@ -119,12 +115,8 @@ class FRSReleasePermissionManagerTest extends TuleapTestCase
     public function itReturnsFalseWHenReleaseIsActiveAndUserCanAccessFrsServiceAndUserCanNotAccessRelease()
     {
         $this->release->shouldReceive('isActive')->andReturns(true);
-        stub($this->frs_service_permission_manager)->userCanRead($this->project, $this->user)->returns(true);
-        stub($this->release_factory)->userCanRead(
-            $this->project->getID(),
-            $this->release->getPackageID(),
-            $this->release->getReleaseID()
-        )->returns(false);
+        $this->frs_service_permission_manager->shouldReceive('userCanRead')->with($this->project, $this->user)->andReturns(true);
+        $this->release_factory->shouldReceive('userCanRead')->with($this->project->getID(), $this->release->getPackageID(), $this->release->getReleaseID())->andReturns(false);
 
         $this->assertFalse(
             $this->release_permission_manager->canUserSeeRelease($this->user, $this->release, $this->project)

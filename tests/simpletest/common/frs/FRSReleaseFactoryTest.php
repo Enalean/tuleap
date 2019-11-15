@@ -39,8 +39,8 @@ class FRSReleaseFactoryTest extends TuleapTestCase
         $this->frs_release_factory = \Mockery::mock(\FRSReleaseFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->user_manager        = \Mockery::spy(\UserManager::class);
         $this->permission_manager  = \Mockery::spy(\PermissionsManager::class);
-        stub($this->user_manager)->getUserById()->returns($this->user);
-        stub($this->frs_release_factory)->getUserManager()->returns($this->user_manager);
+        $this->user_manager->shouldReceive('getUserById')->andReturns($this->user);
+        $this->frs_release_factory->shouldReceive('getUserManager')->andReturns($this->user_manager);
         $project = Mockery::spy(Project::class);
         $project->shouldReceive('getID')->andReturn($this->group_id);
         $project->shouldReceive('isActive')->andReturn(true);
@@ -58,13 +58,13 @@ class FRSReleaseFactoryTest extends TuleapTestCase
 
     public function testAdminHasAlwaysAccessToReleases()
     {
-        stub($this->frs_release_factory)->userCanAdmin()->returns(true);
+        $this->frs_release_factory->shouldReceive('userCanAdmin')->andReturns(true);
         $this->assertTrue($this->frs_release_factory->userCanRead($this->group_id, $this->package_id, $this->release_id, $this->user_id));
     }
 
     protected function _userCanReadWhenNoPermsOnRelease($canReadPackage)
     {
-        stub($this->frs_release_factory)->userCanAdmin()->returns(false);
+        $this->frs_release_factory->shouldReceive('userCanAdmin')->andReturns(false);
         $this->permission_manager->shouldReceive('isPermissionExist')->with($this->release_id, 'RELEASE_READ')->once()->andReturns(false);
         $this->frs_release_factory->shouldReceive('getPermissionsManager')->andReturns($this->permission_manager);
 
@@ -110,25 +110,25 @@ class FRSReleaseFactoryTest extends TuleapTestCase
 
     public function testAdminCanAlwaysUpdateReleases()
     {
-        stub($this->frs_release_factory)->userCanAdmin()->returns(true);
+        $this->frs_release_factory->shouldReceive('userCanAdmin')->andReturns(true);
         $this->assertTrue($this->frs_release_factory->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
     }
 
     public function testMereMortalCannotUpdateReleases()
     {
-        stub($this->frs_release_factory)->userCanAdmin()->returns(false);
+        $this->frs_release_factory->shouldReceive('userCanAdmin')->andReturns(false);
         $this->assertFalse($this->frs_release_factory->userCanUpdate($this->group_id, $this->release_id, $this->user_id));
     }
 
     public function testAdminCanAlwaysCreateReleases()
     {
-        stub($this->frs_release_factory)->userCanAdmin()->returns(true);
+        $this->frs_release_factory->shouldReceive('userCanAdmin')->andReturns(true);
         $this->assertTrue($this->frs_release_factory->userCanCreate($this->group_id, $this->user_id));
     }
 
     public function testMereMortalCannotCreateReleases()
     {
-        stub($this->frs_release_factory)->userCanAdmin()->returns(false);
+        $this->frs_release_factory->shouldReceive('userCanAdmin')->andReturns(false);
         $this->assertFalse($this->frs_release_factory->userCanCreate($this->group_id, $this->user_id));
     }
 

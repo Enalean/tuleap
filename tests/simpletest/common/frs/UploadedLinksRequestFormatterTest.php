@@ -27,9 +27,9 @@ class UploadedLinksRequestFormatterTest extends TuleapTestCase
     public function itExtractsOneArrayFromLinksProvidedInRequest()
     {
         $request = \Mockery::spy(\HTTPRequest::class);
-        stub($request)->get('uploaded-link-name')->returns(array('test', ''));
-        stub($request)->get('uploaded-link')->returns(array('http://example.com', 'ftp://example.com'));
-        stub($request)->validArray()->returns(true);
+        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(array('test', ''));
+        $request->shouldReceive('get')->with('uploaded-link')->andReturns(array('http://example.com', 'ftp://example.com'));
+        $request->shouldReceive('validArray')->andReturns(true);
 
         $formatter      = new UploadedLinksRequestFormatter();
         $expected_links = array(
@@ -43,9 +43,9 @@ class UploadedLinksRequestFormatterTest extends TuleapTestCase
     public function itThrowsAnExceptionWhenRequestDoesNotProvideCorrectInput()
     {
         $request = \Mockery::spy(\HTTPRequest::class);
-        stub($request)->get('uploaded-link-name')->returns(array('test'));
-        stub($request)->get('uploaded-link')->returns(array('http://example.com', 'https://example.com'));
-        stub($request)->validArray()->returns(true);
+        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(array('test'));
+        $request->shouldReceive('get')->with('uploaded-link')->andReturns(array('http://example.com', 'https://example.com'));
+        $request->shouldReceive('validArray')->andReturns(true);
 
         $this->expectException('Tuleap\FRS\UploadedLinksInvalidFormException');
         $formatter = new UploadedLinksRequestFormatter();
@@ -55,9 +55,9 @@ class UploadedLinksRequestFormatterTest extends TuleapTestCase
     public function itDoesNotAcceptInvalidLinks()
     {
         $request = \Mockery::spy(\HTTPRequest::class);
-        stub($request)->get('uploaded-link-name')->returns(array('invalid'));
-        stub($request)->get('uploaded-link')->returns(array('example.com'));
-        stub($request)->validArray()->returns(true);
+        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(array('invalid'));
+        $request->shouldReceive('get')->with('uploaded-link')->andReturns(array('example.com'));
+        $request->shouldReceive('validArray')->andReturns(true);
 
         $formatter = new UploadedLinksRequestFormatter();
 
@@ -68,9 +68,9 @@ class UploadedLinksRequestFormatterTest extends TuleapTestCase
     public function itDoesNotEmptyLinks()
     {
         $request = \Mockery::spy(\HTTPRequest::class);
-        stub($request)->get('uploaded-link-name')->returns(array());
-        stub($request)->get('uploaded-link')->returns(array());
-        stub($request)->validArray()->returns(true);
+        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(array());
+        $request->shouldReceive('get')->with('uploaded-link')->andReturns(array());
+        $request->shouldReceive('validArray')->andReturns(true);
 
         $formatter      = new UploadedLinksRequestFormatter();
         $expected_links = array();
