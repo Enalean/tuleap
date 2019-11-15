@@ -928,30 +928,3 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
         );
     }
 }
-
-class Tracker_FormElement_Field_ArtifactLink_RESTTests extends TuleapTestCase
-{
-
-    public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName()
-    {
-        $field = new Tracker_FormElement_Field_ArtifactLink(
-            1,
-            101,
-            null,
-            'field_artlink',
-            'Field ArtLink',
-            '',
-            1,
-            'P',
-            true,
-            '',
-            1
-        );
-
-        $this->expectException('Tracker_FormElement_RESTValueByField_NotImplementedException');
-
-        $value = 'some_value';
-
-        $field->getFieldDataFromRESTValueByField($value);
-    }
-}
