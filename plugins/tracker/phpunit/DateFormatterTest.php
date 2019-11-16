@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,41 +18,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('bootstrap.php');
-require_once __DIR__ . '/../../../src/www/include/utils.php';
+declare(strict_types = 1);
 
-class Tracker_FormElement_DateFormatterTest extends TuleapTestCase
+class Tracker_FormElement_DateFormatterTest extends \PHPUnit\Framework\TestCase  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalResponseMock, \Tuleap\GlobalLanguageMock;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Date
+     */
+    private $field;
 
     /** @var Tracker_FormElement_DateFormatter */
     private $date_formatter;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->field          = aMockDateWithoutTimeField()->withId(07)->build();
+        $this->field          = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $this->date_formatter = new Tracker_FormElement_DateFormatter($this->field);
     }
 
-    public function itFormatsTimestampInRightFormat()
+    public function testItFormatsTimestampInRightFormat(): void
     {
         $timestamp = 1409752174;
         $expected  = '2014-09-03';
 
-        $this->assertEqual($expected, $this->date_formatter->formatDate($timestamp));
+        $this->assertEquals($expected, $this->date_formatter->formatDate($timestamp));
     }
 
-    public function itValidatesWellFormedValue()
+    public function testItValidatesWellFormedValue(): void
     {
         $value    = '2014-09-03';
 
         $this->assertTrue($this->date_formatter->validate($value));
     }
 
-    public function itDoesNotValidateNotWellFormedValue()
+    public function testItDoesNotValidateNotWellFormedValue(): void
     {
         $value    = '2014/09/03';
+        $this->field->shouldReceive('getLabel')->once();
 
         $this->assertFalse($this->date_formatter->validate($value));
     }
