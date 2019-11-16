@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Webdav\Docman\DocumentDownloader;
+
 require_once 'bootstrap.php';
 
 Mock::generate('BaseLanguage');
@@ -583,7 +585,7 @@ class WebDAVTreeTest extends TuleapTestCase
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
         $tree->setReturnValue('getUtils', $utils);
-        $destination = new TestDocmanFile($this->user, $this->project, $this->docman_document, 0);
+        $destination = new TestDocmanFile($this->user, $this->project, $this->docman_document, Mockery::mock(DocumentDownloader::class));
         $tree->setReturnValue('getNodeForPath', $destination, array('destination'));
         $source = new TestFolder($this->user, $this->project, $this->docman_folder, 0);
         $tree->setReturnValue('getNodeForPath', $source, array('source'));
