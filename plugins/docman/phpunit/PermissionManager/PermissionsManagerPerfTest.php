@@ -1,9 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
- * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- *
- * Originally written by Manuel VACELET, 2006.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,33 +11,54 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
-require_once 'bootstrap.php';
+declare(strict_types=1);
 
-class PermissionsManagerPerfTest extends TuleapTestCase
+namespace Tuleap\Docman\PermissionManager;
+
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Docman_PermissionsManager;
+use Mockery;
+use PermissionsManager;
+use PFUser;
+use Project;
+use URLVerification;
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class PermissionsManagerPerfTest extends TestCase
 {
-    var $user;
-    var $docmanPm;
-    var $refOnNull;
+    use MockeryPHPUnitIntegration;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
+     */
+    private $user;
+    /**
+     * @var Mockery\Mock
+     */
+    private $docmanPm;
     /**
      * @var \Mockery\MockInterface|URLVerification
      */
     private $url_verification;
 
-    public function setUp()
+    private $refOnNull;
+
+    public function setUp(): void
     {
         parent::setUp();
 
-        $this->user     = \Mockery::spy(PFUser::class);
+        $this->user = \Mockery::spy(PFUser::class);
         $this->docmanPm = \Mockery::mock(Docman_PermissionsManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $project        = Mockery::mock(Project::class);
+        $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturn('102');
         $this->url_verification = Mockery::mock(URLVerification::class);
         $this->docmanPm->allows(['_itemIsLockedForUser' => false]);
@@ -49,7 +67,7 @@ class PermissionsManagerPerfTest extends TuleapTestCase
         $this->refOnNull = null;
     }
 
-    public function testSuperAdminHasAllAccess()
+    public function testSuperAdminHasAllAccess(): void
     {
         $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         $this->user->allows(['isSuperUser' => true]);
@@ -68,7 +86,7 @@ class PermissionsManagerPerfTest extends TuleapTestCase
         $this->docmanPm->userCanAdmin($this->user, 324324423413);
     }
 
-    public function testProjectAdminHasAllAccess()
+    public function testProjectAdminHasAllAccess(): void
     {
         $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         $this->user->allows(['isSuperUser' => false]);
@@ -88,7 +106,7 @@ class PermissionsManagerPerfTest extends TuleapTestCase
         $this->docmanPm->userCanAdmin($this->user, 324324423413);
     }
 
-    public function testDocmanAdminHasAllAccess()
+    public function testDocmanAdminHasAllAccess(): void
     {
         $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         $this->user->allows(['isSuperUser' => false]);
@@ -107,7 +125,7 @@ class PermissionsManagerPerfTest extends TuleapTestCase
         $this->docmanPm->userCanAdmin($this->user, 324324423413);
     }
 
-    public function testManageRightGivesReadAndWriteRights()
+    public function testManageRightGivesReadAndWriteRights(): void
     {
         $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         // user is not super admin
@@ -134,7 +152,7 @@ class PermissionsManagerPerfTest extends TuleapTestCase
         $this->docmanPm->userCanRead($this->user, $itemId);
     }
 
-    public function testWriteRightGivesReadRights()
+    public function testWriteRightGivesReadRights(): void
     {
         $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         // user is not super admin
@@ -157,7 +175,7 @@ class PermissionsManagerPerfTest extends TuleapTestCase
         $this->docmanPm->userCanRead($this->user, $itemId);
     }
 
-    public function testOnReadTestManageRightGivesReadAndWriteRights()
+    public function testOnReadTestManageRightGivesReadAndWriteRights(): void
     {
         $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
@@ -169,7 +187,9 @@ class PermissionsManagerPerfTest extends TuleapTestCase
         $itemId = 78903;
 
         $pm = \Mockery::spy(PermissionsManager::class);
-        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->once()->andReturns(true);
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->once()->andReturns(
+            true
+        );
         $pm->shouldReceive('userHasPermission')->times(2);
         $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
 
@@ -183,7 +203,7 @@ class PermissionsManagerPerfTest extends TuleapTestCase
         $this->docmanPm->userCanManage($this->user, $itemId);
     }
 
-    public function testOnReadTestWriteRightGivesReadAndWriteRights()
+    public function testOnReadTestWriteRightGivesReadAndWriteRights(): void
     {
         $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         // user is not docman admin
@@ -202,7 +222,9 @@ class PermissionsManagerPerfTest extends TuleapTestCase
         // userCanWrite
         // 3. one for WRITE (and eventually lock, but not in this test).
         $pm = \Mockery::spy(PermissionsManager::class);
-        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_WRITE', ['test'])->once()->andReturns(true);
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_WRITE', ['test'])->once()->andReturns(
+            true
+        );
         $pm->shouldReceive('userHasPermission')->times(3);
         $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
 
@@ -213,7 +235,7 @@ class PermissionsManagerPerfTest extends TuleapTestCase
         $this->docmanPm->userCanWrite($this->user, $itemId);
     }
 
-    public function testOnWriteTestManageRightGivesReadAndWriteRights()
+    public function testOnWriteTestManageRightGivesReadAndWriteRights(): void
     {
         $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         // user is not docman admin
@@ -226,7 +248,9 @@ class PermissionsManagerPerfTest extends TuleapTestCase
 
         // 2 userHasPerm call
         $pm = \Mockery::spy(PermissionsManager::class);
-        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->once()->andReturns(true);
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->once()->andReturns(
+            true
+        );
         $pm->shouldReceive('userHasPermission')->once();
         $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
 
