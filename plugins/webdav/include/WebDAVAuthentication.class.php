@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2015. All Rights Reserved.
+ * Copyright (c) Enalean SAS, 2015 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,11 +19,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Webdav\Authentication\HeadersSender;
+
 /**
  * Class of authentication
  */
 class WebDAVAuthentication
 {
+    /**
+     * @var HeadersSender
+     */
+    private $headers_sender;
+
+    public function __construct(HeadersSender $headers_sender)
+    {
+        $this->headers_sender = $headers_sender;
+    }
 
     /**
      * Authentication method
@@ -68,21 +79,9 @@ class WebDAVAuthentication
      *
      * @return void
      */
-    function setHeader()
+    public function setHeader(): void
     {
-
-        header('WWW-Authenticate: Basic realm="'.$GLOBALS['sys_name'].' WebDAV Authentication"');
-        header('HTTP/1.0 401 Unauthorized');
-
-        // text returned when user hit cancel
-        echo $GLOBALS['Language']->getText('plugin_webdav_common', 'authentication_required');
-
-        // The HTTP_BasicAuth (and digest) will return a 401 statuscode.
-        // If there is no die() after that, the server will just do it's thing as usual
-        // and override it with it's own statuscode (200, 404, 207, 201, or whatever was appropriate).
-        // So the die() actually makes sure that the php script doesn't continue if the client
-        // has an incorrect or no username and password.
-        die();
+        $this->headers_sender->sendHeaders();
     }
 
     /**
