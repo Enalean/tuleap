@@ -1,32 +1,31 @@
 <?php
 /**
- * Copyright (c) Xerox, 2006. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
- * Originally written by Nicolas Terray, 2006.
+ * This file is a part of Tuleap.
  *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  *
  */
 
-require_once 'bootstrap.php';
+declare(strict_types=1);
 
-class TokenTest extends TuleapTestCase
+use PHPUnit\Framework\TestCase;
+
+class TokenTest extends TestCase
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     function testGenerateRandomToken()
     {
@@ -62,10 +61,11 @@ class TokenTest extends TuleapTestCase
         $t4->allows(['_getHTTPRequest' => $http]);
         $t4->__construct();
 
-        $this->assertNotEqual($t1->getToken(), $t2->getToken(), 'Same users, same referers, different tokens');
-        $this->assertNotEqual($t1->getToken(), $t3->getToken(), 'Different referers, different tokens');
-        $this->assertNotEqual($t1->getToken(), $t4->getToken(), 'Different users, different tokens');
+        $this->assertNotEquals($t1->getToken(), $t2->getToken(), 'Same users, same referers, different tokens');
+        $this->assertNotEquals($t1->getToken(), $t3->getToken(), 'Different referers, different tokens');
+        $this->assertNotEquals($t1->getToken(), $t4->getToken(), 'Different users, different tokens');
     }
+
     function testNullToken()
     {
         $dao  = \Mockery::spy(Docman_TokenDao::class);
@@ -126,17 +126,22 @@ class TokenTest extends TuleapTestCase
         foreach (array('aaaa', '?action=foo', '?action=details&section=notification') as $referer) {
             $t = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
             $t->allows(['_getDao' => $dao]);
-            $t->allows(['_getReferer' => 'http://codendi.com/'. $referer]);
+            $t->allows(['_getReferer' => 'http://codendi.com/' . $referer]);
             $t->allows(['_getCurrentUserId' => '123']);
             $t->allows(['_getHTTPRequest' => $http]);
             $t->__construct();
 
             $this->assertNull($t->getToken(), 'Without valid referer, we should have a null token');
         }
-        foreach (array('?action=show', '?id=1&action=show', '?action=details', '?action=details&section=history') as $referer) {
+        foreach (array(
+                     '?action=show',
+                     '?id=1&action=show',
+                     '?action=details',
+                     '?action=details&section=history'
+                 ) as $referer) {
             $t = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
             $t->allows(['_getDao' => $dao]);
-            $t->allows(['_getReferer' => 'http://codendi.com/'. $referer]);
+            $t->allows(['_getReferer' => 'http://codendi.com/' . $referer]);
             $t->allows(['_getCurrentUserId' => '123']);
             $t->allows(['_getHTTPRequest' => $http]);
             $t->__construct();
