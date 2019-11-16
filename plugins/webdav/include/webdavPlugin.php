@@ -104,7 +104,7 @@ class WebDAVPlugin extends Plugin
 
         // Creating the Root directory from WebDAV file system
         $maxFileSize = $this->getPluginInfo()->getPropertyValueForName('max_file_size');
-        $rootDirectory = new WebDAVRoot($this, $user, $maxFileSize);
+        $rootDirectory = new WebDAVRoot($this, $user, $maxFileSize, new ProjectDao());
 
         // The tree manages all the file objects
         $tree = new WebDAVTree($rootDirectory);
