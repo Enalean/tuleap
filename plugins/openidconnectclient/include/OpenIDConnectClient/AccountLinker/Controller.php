@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -177,12 +177,16 @@ class Controller
         }
     }
 
-    private function redirectAfterFailure($message)
+    /**
+     * @psalm-return never-return
+     */
+    private function redirectAfterFailure($message): void
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             $message
         );
         $GLOBALS['Response']->redirect('/');
+        exit();
     }
 }

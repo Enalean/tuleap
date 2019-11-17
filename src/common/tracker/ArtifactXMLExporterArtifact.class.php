@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -111,7 +111,7 @@ class ArtifactXMLExporterArtifact
         }
 
         try {
-            $this->addLastChangesetIfNoHistoryRecorded($artifact_node, $tracker_id, $artifact_id, $current_fields_values);
+            $this->addLastChangesetIfNoHistoryRecorded($artifact_node, $tracker_id, $artifact_id, $current_fields_values ?? []);
         } catch (Exception_TV3XMLException $exception) {
             $this->logger->warn("Artifact $artifact_id: skip last changeset if no history: ".$exception->getMessage());
         } catch (Exception_TV3XMLInvalidFieldTypeException $exception) {

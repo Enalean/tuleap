@@ -966,9 +966,9 @@ class ArtifactsResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
+        $user  = $this->user_manager->getCurrentUser();
+        $limit = $this->artifacts_deletion_config->getArtifactsDeletionLimit();
         try {
-            $user                = $this->user_manager->getCurrentUser();
-            $limit               = $this->artifacts_deletion_config->getArtifactsDeletionLimit();
             $remaining_deletions = $this->getRemainingNumberOfDeletion($user);
 
             $artifact = $this->getArtifactById($user, $id);
@@ -1039,7 +1039,7 @@ class ArtifactsResource extends AuthenticatedResource
         } catch (MoveArtifactTargetProjectNotActiveException $exception) {
             throw new RestException(400, $exception->getMessage());
         } finally {
-            Header::sendRateLimitHeaders($limit, $remaining_deletions);
+            Header::sendRateLimitHeaders($limit, $remaining_deletions ?? 0);
             $this->sendAllowHeadersForArtifact();
         }
     }

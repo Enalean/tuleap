@@ -400,7 +400,10 @@ class ArtifactTemporaryFilesResource
         }
     }
 
-    private function raiseError($status_code, $message = null)
+    /**
+     * @psalm-return never-return
+     */
+    private function raiseError($status_code, $message = null): void
     {
         $this->sendAllowHeadersForArtifactFiles();
 

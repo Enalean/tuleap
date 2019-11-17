@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -59,7 +59,7 @@ class UserInfoResponse
             throw new IncorrectlyFormattedUserInfoResponseException($user_info_response_body);
         }
 
-        return new self($json_response);
+        return new self((array) $json_response);
     }
 
     /**

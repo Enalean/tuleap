@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -99,12 +99,16 @@ class Controller
         }
     }
 
-    private function redirectToAccountPage($message, $feedback_type)
+    /**
+     * @psalm-return never-return
+     */
+    private function redirectToAccountPage($message, $feedback_type): void
     {
         $GLOBALS['Response']->addFeedback(
             $feedback_type,
             $message
         );
         $GLOBALS['Response']->redirect('/account/');
+        exit();
     }
 }
