@@ -18,20 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__.'/../../www/include/account.php';
+require_once __DIR__ . '/../../www/include/account.php';
 
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Project\ProjectDashboardSaver;
 use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UserRemover;
+use Tuleap\Project\UserRemoverDao;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\XMLFileContentRetriever;
+use Tuleap\Widget\WidgetFactory;
 use Tuleap\XML\MappingsRegistry;
 
 class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -126,6 +134,63 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $this->dashboard_importer                  = $dashboard_importer;
         $this->synchronized_project_membership_dao = $synchronized_project_membership_dao;
         $this->XML_file_content_retriever          = $XML_file_content_retriever;
+    }
+
+    public static function build(\User\XML\Import\IFindUserFromXMLReference $user_finder): self
+    {
+        $event_manager           = EventManager::instance();
+        $user_manager            = UserManager::instance();
+        $ugroup_manager          = new UGroupManager();
+        $logger                  = new ProjectXMLImporterLogger();
+        $frs_permissions_creator = new FRSPermissionCreator(
+            new FRSPermissionDao(),
+            new UGroupDao(),
+            new ProjectHistoryDao()
+        );
+
+        $widget_factory                      = new WidgetFactory(
+            $user_manager,
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+            $event_manager
+        );
+        $widget_dao                          = new DashboardWidgetDao($widget_factory);
+        $project_dao                         = new ProjectDashboardDao($widget_dao);
+        $synchronized_project_membership_dao = new SynchronizedProjectMembershipDao();
+
+        return new self(
+            $event_manager,
+            ProjectManager::instance(),
+            $user_manager,
+            new XML_RNGValidator(),
+            $ugroup_manager,
+            $user_finder,
+            ServiceManager::instance(),
+            $logger,
+            $frs_permissions_creator,
+            new UserRemover(
+                ProjectManager::instance(),
+                $event_manager,
+                new ArtifactTypeFactory(false),
+                new UserRemoverDao(),
+                $user_manager,
+                new ProjectHistoryDao(),
+                new UGroupManager()
+            ),
+            ProjectMemberAdderWithoutStatusCheckAndNotifications::build(),
+            ProjectCreator::buildSelfByPassValidation(),
+            new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance()),
+            new ProjectDashboardXMLImporter(
+                new ProjectDashboardSaver(
+                    $project_dao
+                ),
+                $widget_factory,
+                $widget_dao,
+                $logger,
+                $event_manager
+            ),
+            $synchronized_project_membership_dao,
+            new XMLFileContentRetriever()
+        );
     }
 
     public function importNewFromArchive(

@@ -58,59 +58,8 @@ if ($request->exist('wsdl')) {
     $soapLimitFactory = new SOAP_RequestLimitatorFactory();
 
     $ugroup_dao         = new UGroupDao();
-    $send_notifications = true;
-    $ugroup_user_dao    = new UGroupUserDao();
-    $ugroup_manager     = new UGroupManager();
-    $ugroup_binding     = new UGroupBinding($ugroup_user_dao, $ugroup_manager);
-    $ugroup_duplicator  = new Tuleap\Project\UgroupDuplicator(
-        $ugroup_dao,
-        $ugroup_manager,
-        $ugroup_binding,
-        MemberAdder::build(ProjectMemberAdderWithoutStatusCheckAndNotifications::build()),
-        EventManager::instance()
-    );
 
-    $widget_factory = new WidgetFactory(
-        UserManager::instance(),
-        new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-        EventManager::instance()
-    );
-
-    $widget_dao        = new DashboardWidgetDao($widget_factory);
-    $project_dao       = new ProjectDashboardDao($widget_dao);
-    $project_retriever = new ProjectDashboardRetriever($project_dao);
-    $widget_retriever  = new DashboardWidgetRetriever($widget_dao);
-    $duplicator        = new ProjectDashboardDuplicator(
-        $project_dao,
-        $project_retriever,
-        $widget_dao,
-        $widget_retriever,
-        $widget_factory
-    );
-
-    $force_activation = false;
-
-    $projectCreator = new ProjectCreator(
-        $projectManager,
-        ReferenceManager::instance(),
-        $userManager,
-        $ugroup_duplicator,
-        $send_notifications,
-        new Tuleap\FRS\FRSPermissionCreator(
-            new Tuleap\FRS\FRSPermissionDao(),
-            $ugroup_dao,
-            new ProjectHistoryDao()
-        ),
-        new LicenseAgreementFactory(new LicenseAgreementDao()),
-        $duplicator,
-        new ServiceCreator(new ServiceDao()),
-        new LabelDao(),
-        new DefaultProjectVisibilityRetriever(),
-        new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
-        new \Rule_ProjectName(),
-        new \Rule_ProjectFullName(),
-        $force_activation
-    );
+    $projectCreator = ProjectCreator::buildSelfRegularValidation();
 
     $generic_user_dao     = new GenericUserDao();
     $generic_user_factory = new GenericUserFactory($userManager, $projectManager, $generic_user_dao);

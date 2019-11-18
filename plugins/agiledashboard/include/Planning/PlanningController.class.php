@@ -28,36 +28,13 @@ use Tuleap\AgileDashboard\Planning\AdditionalPlanningConfigurationWarningsRetrie
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\Presenters\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
-use Tuleap\Dashboard\Project\ProjectDashboardDao;
-use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
-use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
-use Tuleap\Dashboard\Project\ProjectDashboardSaver;
-use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\FRS\FRSPermissionCreator;
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
-use Tuleap\FRS\UploadedLinksDao;
-use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Project\DefaultProjectVisibilityRetriever;
-use Tuleap\Project\Label\LabelDao;
-use Tuleap\Project\UgroupDuplicator;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
-use Tuleap\Project\UGroups\Membership\MemberAdder;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
-use Tuleap\Project\UserRemover;
-use Tuleap\Project\UserRemoverDao;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
-use Tuleap\Widget\WidgetFactory;
 
 /**
  * Handles the HTTP actions related to a planning.
@@ -471,101 +448,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
 
     private function importConfiguration()
     {
-        $ugroup_user_dao   = new UGroupUserDao();
-        $ugroup_manager    = new UGroupManager();
-        $event_manager     = $this->event_manager;
-        $ugroup_binding    = new UGroupBinding($ugroup_user_dao, $ugroup_manager);
-        $ugroup_duplicator = new UgroupDuplicator(
-            new UGroupDao(),
-            $ugroup_manager,
-            $ugroup_binding,
-            MemberAdder::build(ProjectMemberAdderWithoutStatusCheckAndNotifications::build()),
-            $event_manager
-        );
-
-        $send_notifications = false;
-        $force_activation   = true;
-
-        $frs_permissions_creator = new FRSPermissionCreator(
-            new FRSPermissionDao(),
-            new UGroupDao(),
-            new ProjectHistoryDao()
-        );
-
-        $user_manager   = UserManager::instance();
-        $widget_factory = new WidgetFactory(
-            $user_manager,
-            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-            $event_manager
-        );
-
-        $widget_dao            = new DashboardWidgetDao($widget_factory);
-        $project_dashboard_dao = new ProjectDashboardDao($widget_dao);
-        $project_retriever     = new ProjectDashboardRetriever($project_dashboard_dao);
-        $widget_retriever      = new DashboardWidgetRetriever($widget_dao);
-        $duplicator            = new ProjectDashboardDuplicator(
-            $project_dashboard_dao,
-            $project_retriever,
-            $widget_dao,
-            $widget_retriever,
-            $widget_factory
-        );
-
-        $synchronized_project_membership_dao = new SynchronizedProjectMembershipDao();
-
-        $project_creator = new ProjectCreator(
-            ProjectManager::instance(),
-            ReferenceManager::instance(),
-            $user_manager,
-            $ugroup_duplicator,
-            $send_notifications,
-            $frs_permissions_creator,
-            new LicenseAgreementFactory(new LicenseAgreementDao()),
-            $duplicator,
-            new ServiceCreator(new ServiceDao()),
-            new LabelDao(),
-            new DefaultProjectVisibilityRetriever(),
-            new SynchronizedProjectMembershipDuplicator($synchronized_project_membership_dao),
-            new \Rule_ProjectName(),
-            new \Rule_ProjectFullName(),
-            $force_activation
-        );
-
-        $logger       = new ProjectXMLImporterLogger();
-        $xml_importer = new ProjectXMLImporter(
-            $event_manager,
-            ProjectManager::instance(),
-            $user_manager,
-            new XML_RNGValidator(),
-            $ugroup_manager,
-            new XMLImportHelper($user_manager),
-            ServiceManager::instance(),
-            $logger,
-            $frs_permissions_creator,
-            new UserRemover(
-                ProjectManager::instance(),
-                $event_manager,
-                new ArtifactTypeFactory(false),
-                new UserRemoverDao(),
-                $user_manager,
-                new ProjectHistoryDao(),
-                new UGroupManager()
-            ),
-            ProjectMemberAdderWithoutStatusCheckAndNotifications::build(),
-            $project_creator,
-            new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance()),
-            new ProjectDashboardXMLImporter(
-                new ProjectDashboardSaver(
-                    $project_dashboard_dao
-                ),
-                $widget_factory,
-                $widget_dao,
-                $logger,
-                $event_manager
-            ),
-            $synchronized_project_membership_dao,
-            new XMLFileContentRetriever()
-        );
+        $xml_importer = ProjectXMLImporter::build(new XMLImportHelper(UserManager::instance()));
 
         try {
             $errors = $xml_importer->collectBlockingErrorsWithoutImporting(

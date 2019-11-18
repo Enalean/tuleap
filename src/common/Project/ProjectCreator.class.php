@@ -25,8 +25,14 @@ require_once __DIR__ . '/../../common/wiki/lib/WikiCloner.class.php';
 define('PROJECT_APPROVAL_BY_ADMIN', 'P');
 define('PROJECT_APPROVAL_AUTO', 'A');
 
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
+use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
@@ -37,8 +43,12 @@ use Tuleap\Project\ProjectDescriptionUsageRetriever;
 use Tuleap\Project\ProjectInvalidTemplateException;
 use Tuleap\Project\ProjectRegistrationDisabledException;
 use Tuleap\Project\UgroupDuplicator;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
+use Tuleap\Project\UGroups\Membership\MemberAdder;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Service\ServiceCreator;
+use Tuleap\Widget\WidgetFactory;
 
 /**
  * Manage creation of a new project in the forge.
@@ -163,6 +173,73 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->default_project_visibility_retriever = $default_project_visibility_retriever;
         $this->synchronized_project_membership_duplicator  = $synchronized_project_membership_duplicator;
         $this->frs_license_agreement_factory = $frs_license_agreement_factory;
+    }
+
+    public static function buildSelfByPassValidation(): self
+    {
+        return self::buildSelf(true, false);
+    }
+
+    public static function buildSelfRegularValidation(): self
+    {
+        return self::buildSelf(false, true);
+    }
+
+    private static function buildSelf(bool $force_activation, bool $send_notifications): self
+    {
+        $ugroup_dao         = new UGroupDao();
+        $ugroup_user_dao    = new UGroupUserDao();
+        $ugroup_manager     = new UGroupManager();
+        $ugroup_binding     = new UGroupBinding($ugroup_user_dao, $ugroup_manager);
+        $ugroup_duplicator  = new Tuleap\Project\UgroupDuplicator(
+            $ugroup_dao,
+            $ugroup_manager,
+            $ugroup_binding,
+            MemberAdder::build(ProjectMemberAdderWithoutStatusCheckAndNotifications::build()),
+            EventManager::instance()
+        );
+
+        $user_manager   = UserManager::instance();
+        $widget_factory = new WidgetFactory(
+            $user_manager,
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+            EventManager::instance()
+        );
+
+        $widget_dao        = new DashboardWidgetDao($widget_factory);
+        $project_dao       = new ProjectDashboardDao($widget_dao);
+        $project_retriever = new ProjectDashboardRetriever($project_dao);
+        $widget_retriever  = new DashboardWidgetRetriever($widget_dao);
+
+        $duplicator        = new ProjectDashboardDuplicator(
+            $project_dao,
+            $project_retriever,
+            $widget_dao,
+            $widget_retriever,
+            $widget_factory
+        );
+
+        return new self(
+            ProjectManager::instance(),
+            ReferenceManager::instance(),
+            $user_manager,
+            $ugroup_duplicator,
+            $send_notifications,
+            new Tuleap\FRS\FRSPermissionCreator(
+                new Tuleap\FRS\FRSPermissionDao(),
+                $ugroup_dao,
+                new ProjectHistoryDao()
+            ),
+            new LicenseAgreementFactory(new LicenseAgreementDao()),
+            $duplicator,
+            new ServiceCreator(new ServiceDao()),
+            new LabelDao(),
+            new DefaultProjectVisibilityRetriever(),
+            new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
+            new \Rule_ProjectName(),
+            new \Rule_ProjectFullName(),
+            $force_activation
+        );
     }
 
     /**
@@ -325,7 +402,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->initFRSModuleFromTemplate($group, $template_group, $ugroup_mapping);
 
         if ($data->projectShouldInheritFromTemplate() && $legacy[Service::TRACKERV3]) {
-            list($tracker_mapping, $report_mapping) =
+            [$tracker_mapping, $report_mapping] =
                 $this->initTrackerV3ModuleFromTemplate($group, $template_group, $ugroup_mapping);
         } else {
             $tracker_mapping = array();
@@ -427,7 +504,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 $result=db_query($sql);
 
                 if (!$result) {
-                    list($host,$port) = explode(':', $GLOBALS['sys_default_domain']);
+                    [$host,$port] = explode(':', $GLOBALS['sys_default_domain']);
                     exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'ins_desc_fail', array($host,db_error())));
                 }
             }
@@ -446,7 +523,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     {
         $result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".$this->project_manager->getProject($group_id)->getUnixName()."')");
         if (!$result) {
-            list($host,$port) = explode(':', $GLOBALS['sys_default_domain']);
+            [$host,$port] = explode(':', $GLOBALS['sys_default_domain']);
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'ins_file_fail', array($host,db_error())));
         }
     }
