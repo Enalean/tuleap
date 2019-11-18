@@ -1445,6 +1445,13 @@ msgstr ""
 "quelques minutes."
 
 msgid ""
+"This repository is managed by a Gerrit server running an unsupported "
+"version. Please, reach out to your site administrators to fix the issue."
+msgstr ""
+"Ce dépôt est géré un serveur Gerrit utilisant une version non supportée. "
+"Veuillez contacter les administrateurs du site pour corriger le problème."
+
+msgid ""
 "This repository was migrated to the server in the past. You cannot migrate "
 "again without deleting the project on the Gerrit server"
 msgstr ""
@@ -1728,6 +1735,13 @@ msgstr "Vous êtes sur le point de créer un fork du dépôt: %1$s"
 
 msgid "You are not allowed to access this page"
 msgstr "Vous n'êtes pas autorisé à accéder à cette page"
+
+msgid ""
+"You are using a version of Gerrit that is not supported, please contact your "
+"site administrators."
+msgstr ""
+"Vous utilisez une version de Gerrit qui n'est pas supportée, veuillez "
+"contacter les administrateurs du site."
 
 msgid "You can define several generic webhooks."
 msgstr "Vous pouvez définir plusieurs webhooks génériques."

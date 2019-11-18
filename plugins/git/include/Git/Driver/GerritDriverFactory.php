@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tuleap\Git\Driver\Gerrit\GerritUnsupportedVersionDriver;
 
 /**
  * I build Git_Driver_Gerrit objects
@@ -51,6 +53,6 @@ class Git_Driver_Gerrit_GerritDriverFactory
             );
         }
 
-        return new Git_Driver_GerritLegacy(new Git_Driver_Gerrit_RemoteSSHCommand($this->logger), $this->logger);
+        return new GerritUnsupportedVersionDriver();
     }
 }

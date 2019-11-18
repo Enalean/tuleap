@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,8 @@ use DateHelper;
 use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
 use GitRepository;
+use Tuleap\Git\Driver\Gerrit\GerritUnsupportedVersionDriver;
+use Tuleap\Git\Driver\Gerrit\UnsupportedGerritVersionException;
 
 class GerritStatusPresenter
 {
@@ -33,6 +35,8 @@ class GerritStatusPresenter
     public $is_migrated_to_gerrit;
     /** @var bool */
     public $has_migration_error;
+    /** @var bool */
+    public $is_migrated_to_unsupported_gerrit_version = false;
     /** @var string */
     public $gerrit_url;
     /** @var string */
@@ -59,6 +63,7 @@ class GerritStatusPresenter
             $driver               = $driver_factory->getDriver($gerrit_server);
             $this->gerrit_project = $driver->getGerritProjectName($repository);
             $this->gerrit_url     = $gerrit_server->getProjectUrl($this->gerrit_project);
+            $this->is_migrated_to_unsupported_gerrit_version = $driver instanceof GerritUnsupportedVersionDriver;
         }
 
         if ($this->has_migration_error === true) {

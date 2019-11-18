@@ -30,6 +30,7 @@ use Git_Driver_Gerrit_ProjectCreatorStatusDao;
 use Git_RemoteServer_Gerrit_ProjectNameBuilder;
 use Git_RemoteServer_GerritServer;
 use GitRepository;
+use Tuleap\Git\Driver\Gerrit\UnsupportedGerritVersionException;
 use Tuleap\Git\GerritCanMigrateChecker;
 
 class Gerrit extends Pane
@@ -111,7 +112,13 @@ class Gerrit extends Pane
     public function getContent()
     {
         if ($this->repository->isMigratedToGerrit()) {
-            return $this->getContentAlreadyMigrated();
+            try {
+                return $this->getContentAlreadyMigrated();
+            } catch (UnsupportedGerritVersionException $exception) {
+                return '<p class="alert alert-error">' .
+                    dgettext('tuleap-git', 'You are using a version of Gerrit that is not supported, please contact your site administrators.') .
+                    '</p>';
+            }
         }
 
         $html     = '';
@@ -191,8 +198,12 @@ class Gerrit extends Pane
         $html = '';
         foreach ($this->gerrit_servers as $server) {
             $driver         = $this->driver_factory->getDriver($server);
-            $plugin_enabled = (int) $driver->isDeletePluginEnabled($server);
-            $should_delete  = (int) $this->doesRemoteGerritProjectNeedDeleting($server);
+            try {
+                $plugin_enabled = (int) $driver->isDeletePluginEnabled($server);
+                $should_delete  = (int) $this->doesRemoteGerritProjectNeedDeleting($server);
+            } catch (UnsupportedGerritVersionException $exception) {
+                continue;
+            }
 
             $html .= '<option
                         data-repo-delete="'.(int) $should_delete.'"
