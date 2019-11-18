@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 const path = require("path");
 const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
 
@@ -32,14 +33,11 @@ const webpack_config = {
         tlp: "tlp"
     },
     resolve: {
-        alias: webpack_configurator.extendAliases(
-            webpack_configurator.tlp_fetch_alias,
-            webpack_configurator.tlp_mocks_alias
-        )
+        alias: webpack_configurator.extendAliases(webpack_configurator.tlp_fetch_alias)
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader
         ]
