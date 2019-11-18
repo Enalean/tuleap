@@ -87,3 +87,8 @@ export enum Direction {
     BEFORE = "before",
     AFTER = "after"
 }
+
+export enum Event {
+    CANCEL_CARD_EDITION = "cancel-card-edition",
+    SAVE_CARD_EDITION = "save-card-edition"
+}

@@ -22,13 +22,15 @@ import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
 import { createTaskboardLocalVue } from "../../../../../../helpers/local-vue-for-test";
 import EditRemainingEffort from "./EditRemainingEffort.vue";
 import { RootState } from "../../../../../../store/type";
-import { Card } from "../../../../../../type";
+import { Card, Event } from "../../../../../../type";
+import EventBus from "../../../../../../helpers/event-bus";
 
 async function getWrapper(): Promise<Wrapper<EditRemainingEffort>> {
     return shallowMount(EditRemainingEffort, {
         localVue: await createTaskboardLocalVue(),
         propsData: {
             card: {
+                id: 42,
                 color: "fiesta-red",
                 remaining_effort: {
                     value: 3.14,
@@ -75,6 +77,61 @@ describe("EditRemainingEffort", () => {
             card,
             value
         });
+        expect(card.remaining_effort.is_in_edit_mode).toBe(true);
+    });
+
+    it(`Saves the new value if user clicks on save button (that is outside of this component)
+        and it stays in edit mode to wait the REST call to be done`, async () => {
+        const wrapper = await getWrapper();
+
+        const value = 42;
+        wrapper.setData({ value });
+
+        const card = wrapper.props("card");
+        EventBus.$emit(Event.SAVE_CARD_EDITION, card);
+
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveRemainingEffort", {
+            card,
+            value
+        });
+        expect(card.remaining_effort.is_in_edit_mode).toBe(true);
+    });
+
+    it(`Cancels the edition of the remaining effort if user clicks on cancel button (that is outside of this componenet)`, async () => {
+        const wrapper = await getWrapper();
+
+        const value = 42;
+        wrapper.setData({ value });
+
+        const card = wrapper.props("card");
+        EventBus.$emit(Event.CANCEL_CARD_EDITION, card);
+
+        expect(card.remaining_effort.is_in_edit_mode).toBe(false);
+        expect(card.remaining_effort.value).toBe(3.14);
+    });
+
+    it(`does not save anynthing if user clicks on save button for another card`, async () => {
+        const wrapper = await getWrapper();
+
+        const value = 42;
+        wrapper.setData({ value });
+
+        const card = wrapper.props("card");
+        EventBus.$emit(Event.SAVE_CARD_EDITION, {} as Card);
+
+        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
+        expect(card.remaining_effort.is_in_edit_mode).toBe(true);
+    });
+
+    it(`does not cancel the edition of the remaining effort if user clicks on cancel button for another card`, async () => {
+        const wrapper = await getWrapper();
+
+        const value = 42;
+        wrapper.setData({ value });
+
+        const card = wrapper.props("card");
+        EventBus.$emit(Event.CANCEL_CARD_EDITION, {} as Card);
+
         expect(card.remaining_effort.is_in_edit_mode).toBe(true);
     });
 
