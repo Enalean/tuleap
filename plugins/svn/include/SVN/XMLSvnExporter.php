@@ -21,16 +21,14 @@
 namespace Tuleap\SVN;
 
 use Logger;
-use Tuleap\Project\XML\Export\ArchiveInterface;
-use Tuleap\SVN\Repository\RepositoryManager;
-use Tuleap\SVN\Repository\Repository;
-use Tuleap\SVN\AccessControl\AccessFileReader;
-use Tuleap\SVN\Admin\MailNotificationManager;
 use Project;
 use SimpleXMLElement;
+use Tuleap\Project\XML\Export\ArchiveInterface;
+use Tuleap\SVN\AccessControl\AccessFileReader;
+use Tuleap\SVN\Admin\MailNotificationManager;
+use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVN\Repository\RepositoryManager;
 use XML_SimpleXMLCDATAFactory;
-use System_Command;
-use ForgeConfig;
 
 class XMLSvnExporter
 {
@@ -60,14 +58,13 @@ class XMLSvnExporter
     private $mail_notification_manager;
 
     /**
-     * System_Command
-     */
-    private $system_command;
-
-    /**
      * @var Logger
      */
     private $logger;
+    /**
+     * @var AccessFileReader
+     */
+    private $access_file_reader;
 
     public function __construct(
         RepositoryManager $repository_manager,
@@ -75,16 +72,16 @@ class XMLSvnExporter
         SvnAdmin $svn_admin,
         XML_SimpleXMLCDATAFactory $cdata_section_factory,
         MailNotificationManager $mail_notification_manager,
-        System_Command $system_command,
-        Logger $logger
+        Logger $logger,
+        AccessFileReader $access_file_reader
     ) {
         $this->repository_manager        = $repository_manager;
         $this->project                   = $project;
         $this->svn_admin                 = $svn_admin;
         $this->cdata_section_factory     = $cdata_section_factory;
         $this->mail_notification_manager = $mail_notification_manager;
-        $this->system_command            = $system_command;
         $this->logger                    = $logger;
+        $this->access_file_reader        = $access_file_reader;
     }
 
     public function exportToXml(SimpleXMLElement $xml_content, ArchiveInterface $archive, $temporary_dump_path_on_filesystem)
@@ -118,8 +115,7 @@ class XMLSvnExporter
 
     private function dumpAccessFile(SimpleXMLElement $node, Repository $repository)
     {
-        $accessfile_reader  = new AccessFileReader($repository);
-        $custom_access_file = $accessfile_reader->readContentBlock($repository);
+        $custom_access_file = $this->access_file_reader->readContentBlock($repository);
 
         $this->cdata_section_factory->insert($node, "access-file", $custom_access_file);
     }

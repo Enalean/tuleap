@@ -48,6 +48,7 @@ use Tuleap\SVN\AccessControl\AccessControlController;
 use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
+use Tuleap\SVN\AccessControl\AccessFileReader;
 use Tuleap\SVN\AccessControl\SVNRefreshAllAccessFilesCommand;
 use Tuleap\SVN\Admin\AdminController;
 use Tuleap\SVN\Admin\GlobalAdminController;
@@ -220,7 +221,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
     }
 
-    private function getSvnExporter(Project $project)
+    private function getSvnExporter(Project $project): XMLSvnExporter
     {
         return new XMLSvnExporter(
             $this->getRepositoryManager(),
@@ -228,8 +229,8 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             new SvnAdmin(new System_Command(), new SvnLogger(), Backend::instance(Backend::SVN)),
             new XML_SimpleXMLCDATAFactory(),
             $this->getMailNotificationManager(),
-            new System_Command(),
-            new SvnLogger()
+            new SvnLogger(),
+            new AccessFileReader()
         );
     }
 

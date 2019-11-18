@@ -242,16 +242,17 @@ class XMLRepositoryImporter
         Repository $repo,
         AccessFileHistoryCreator $accessfile_history_creator
     ) {
+        $writer = $this->getAccessFileWriter($repo);
+
         // Add entry to history
         $access_file = $accessfile_history_creator->create(
             $repo,
             $this->access_file_contents,
             time(),
-            new SVN_AccessFile_Writer($repo->getSystemPath())
+            $writer
         );
 
         // Write .SVNAccessFile
-        $writer = new SVN_AccessFile_Writer($repo->getSystemPath());
         $logger->info("[svn {$this->name}] Save Access File version #" . $access_file->getVersionNumber() . " to " . $writer->filename() . ": " . $access_file->getContent());
         if (! $writer->write_with_defaults($access_file->getContent())) {
             throw new XMLImporterException("Could not write to " . $writer->filename());
@@ -292,5 +293,13 @@ class XMLRepositoryImporter
                 'configuration' => $configuration,
             )
         );
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function getAccessFileWriter(Repository $repo): SVN_AccessFile_Writer
+    {
+        return new SVN_AccessFile_Writer($repo->getSystemPath());
     }
 }
