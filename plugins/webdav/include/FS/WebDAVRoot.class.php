@@ -37,6 +37,11 @@ class WebDAVRoot extends Sabre_DAV_Directory
     private $maxFileSize;
 
     /**
+     * @var ProjectDao
+     */
+    private $project_dao;
+
+    /**
      * Constructor of the class
      *
      * @param Plugin $plugin
@@ -45,12 +50,13 @@ class WebDAVRoot extends Sabre_DAV_Directory
      *
      * @return void
      */
-    function __construct($plugin, $user, $maxFileSize)
+    function __construct($plugin, $user, $maxFileSize, ProjectDao $project_dao)
     {
 
         $this->user = $user;
         $this->plugin = $plugin;
         $this->maxFileSize = $maxFileSize;
+        $this->project_dao = $project_dao;
     }
 
     /**
@@ -178,12 +184,10 @@ class WebDAVRoot extends Sabre_DAV_Directory
      *
      * @return int
      */
-    function getProjectIdByName($projectName)
+    public function getProjectIdByName($projectName)
     {
-
-        $dao = new ProjectDao(CodendiDataAccess::instance());
-        $res=$dao->searchByUnixGroupName($projectName);
-        $groupId=$res->getRow();
+        $res = $this->project_dao->searchByUnixGroupName($projectName);
+        $groupId = $res->getRow();
         return $groupId['group_id'];
     }
 
@@ -213,11 +217,10 @@ class WebDAVRoot extends Sabre_DAV_Directory
      *
      * @param PFUser $user
      *
-     * @return Array
+     * @return array
      */
-    function getUserProjectList($user)
+    public function getUserProjectList($user): array
     {
-
         $res = $user->getProjects();
         $projects = array();
         foreach ($res as $groupId) {
@@ -234,20 +237,15 @@ class WebDAVRoot extends Sabre_DAV_Directory
     /**
      * Generates public projects list
      *
-     * @return Array
+     * @return array
      */
-    function getPublicProjectList()
+    public function getPublicProjectList(): array
     {
-
-        $dao = new ProjectDao(CodendiDataAccess::instance());
-        $res = $dao->searchByPublicStatus(true);
-        $projects = array();
-        if ($res && !$res->isError() && $res->rowCount() > 0) {
-            foreach ($res as $row) {
-                if ($this->isWebDAVAllowedForProject($row['group_id'])) {
-                    $project = $this->getWebDAVProject($row['group_id']);
-                    $projects[] = $project;
-                }
+        $projects = [];
+        foreach ($this->project_dao->searchByPublicStatus(true) as $row) {
+            if ($this->isWebDAVAllowedForProject($row['group_id'])) {
+                $project = $this->getWebDAVProject($row['group_id']);
+                $projects[] = $project;
             }
         }
         return $projects;
