@@ -39,6 +39,7 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -83,6 +84,14 @@ class ProjectReleasePresenterBuilder
      * @var TrackerFactory
      */
     private $tracker_factory;
+    /**
+     * @var ExplicitBacklogDao
+     */
+    private $explicit_backlog_dao;
+    /**
+     * @var ArtifactsInExplicitBacklogDao
+     */
+    private $artifacts_in_explicit_backlog_dao;
 
     public function __construct(
         HTTPRequest $request,
@@ -90,7 +99,9 @@ class ProjectReleasePresenterBuilder
         AgileDashboard_Milestone_Backlog_BacklogFactory $agile_dashboard_milestone_backlog_backlog_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $agile_dashboard_milestone_backlog_backlog_item_collection_factory,
         Planning_MilestoneFactory $planning_milestone_factory,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
+        ExplicitBacklogDao $explicit_backlog_dao,
+        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao
     ) {
         $this->request                                                           = $request;
         $this->planning_factory                                                  = $planning_factory;
@@ -100,6 +111,8 @@ class ProjectReleasePresenterBuilder
         $this->current_user                                                      = $this->request->getCurrentUser();
         $this->planning_virtual_top_milestone                                    = $this->planning_milestone_factory->getVirtualTopMilestone($this->current_user, $this->request->getProject());
         $this->tracker_factory                                                   = $tracker_factory;
+        $this->explicit_backlog_dao                                              = $explicit_backlog_dao;
+        $this->artifacts_in_explicit_backlog_dao                                 = $artifacts_in_explicit_backlog_dao;
     }
 
     public static function build(): ProjectReleasePresenterBuilder
@@ -154,7 +167,9 @@ class ProjectReleasePresenterBuilder
                 new Tracker_Artifact_PriorityDao()
             ),
             $milestone_factory,
-            TrackerFactory::instance()
+            TrackerFactory::instance(),
+            new ExplicitBacklogDao(),
+            new ArtifactsInExplicitBacklogDao()
         );
     }
 
@@ -188,6 +203,12 @@ class ProjectReleasePresenterBuilder
 
     private function getNumberBacklogItems(): int
     {
+        $project_id = (int) $this->request->getProject()->getID();
+
+        if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id)) {
+            return $this->artifacts_in_explicit_backlog_dao->getNumberOfItemsInExplicitBacklog($project_id);
+        }
+
         $backlog = $this->agile_dashboard_milestone_backlog_backlog_item_collection_factory
             ->getUnassignedOpenCollection(
                 $this->current_user,
