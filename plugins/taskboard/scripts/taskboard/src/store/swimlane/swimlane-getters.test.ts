@@ -313,6 +313,36 @@ describe("Swimlane state getters", () => {
             expect(column).toBeUndefined();
         });
     });
+
+    describe("has_at_least_one_card_in_edit_mode", () => {
+        it("Returns false if there isn't any parent card in edit mode", () => {
+            const state = {
+                swimlanes: [
+                    {
+                        card: {},
+                        children_cards: [{} as Card, {} as Card]
+                    },
+                    {
+                        card: { remaining_effort: { is_in_edit_mode: false } },
+                        children_cards: [{} as Card, {} as Card]
+                    }
+                ]
+            } as SwimlaneState;
+            expect(getters.has_at_least_one_card_in_edit_mode(state)).toBe(false);
+        });
+        it("Returns true if there is a parent card in edit mode", () => {
+            const state = {
+                swimlanes: [
+                    { card: {}, children_cards: [{} as Card, {} as Card] },
+                    {
+                        card: { remaining_effort: { is_in_edit_mode: true } },
+                        children_cards: [{} as Card, {} as Card]
+                    }
+                ]
+            } as SwimlaneState;
+            expect(getters.has_at_least_one_card_in_edit_mode(state)).toBe(true);
+        });
+    });
 });
 
 function getCellElement(swimlane_id: string, column_id: string): HTMLElement {

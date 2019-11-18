@@ -61,6 +61,10 @@ export const column_and_swimlane_of_cell = (
     };
 };
 
+export const has_at_least_one_card_in_edit_mode = (state: SwimlaneState): boolean => {
+    return state.swimlanes.some(doesSwimlaneContainACardInEditMode);
+};
+
 export const is_loading_cards = (state: SwimlaneState): boolean => {
     return (
         state.is_loading_swimlanes ||
@@ -87,4 +91,16 @@ function nbCardsInColumnForSwimlane(swimlane: Swimlane, column: ColumnDefinition
 
         return sum + 1;
     }, 0);
+}
+
+function doesSwimlaneContainACardInEditMode(swimlane: Swimlane): boolean {
+    return isCardInEditMode(swimlane.card);
+}
+
+function isCardInEditMode(card: Card): boolean {
+    if (!card.remaining_effort) {
+        return false;
+    }
+
+    return card.remaining_effort.is_in_edit_mode;
 }

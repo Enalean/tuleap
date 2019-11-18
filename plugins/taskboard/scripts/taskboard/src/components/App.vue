@@ -43,6 +43,7 @@ import ErrorModal from "./GlobalError/ErrorModal.vue";
 
 const column = namespace("column");
 const error = namespace("error");
+const swimlane = namespace("swimlane");
 
 @Component({
     components: {
@@ -67,8 +68,25 @@ export default class App extends Vue {
     @error.State
     readonly has_modal_error!: boolean;
 
+    @swimlane.Getter
+    readonly has_at_least_one_card_in_edit_mode!: boolean;
+
     get has_at_least_one_column(): boolean {
         return this.columns.length > 0;
+    }
+
+    mounted(): void {
+        window.addEventListener(
+            "beforeunload",
+            (event: Event): void => {
+                if (this.has_at_least_one_card_in_edit_mode) {
+                    event.preventDefault();
+                    event.returnValue = false;
+                } else {
+                    delete event["returnValue"];
+                }
+            }
+        );
     }
 }
 </script>
