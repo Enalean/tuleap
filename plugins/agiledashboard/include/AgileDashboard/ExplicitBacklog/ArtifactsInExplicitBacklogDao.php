@@ -121,4 +121,13 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
 
         return count($rows) > 0;
     }
+
+    public function getNumberOfItemsInExplicitBacklog(int $project_id): int
+    {
+        $sql = "SELECT count(*)
+                FROM plugin_agiledashboard_planning_artifacts_explicit_backlog
+                WHERE project_id = ?";
+
+        return $this->getDB()->single($sql, [$project_id]);
+    }
 }
