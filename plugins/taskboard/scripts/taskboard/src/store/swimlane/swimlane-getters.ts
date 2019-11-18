@@ -41,29 +41,6 @@ export const cards_in_cell = (state: SwimlaneState, getters: [], root_state: Roo
     });
 };
 
-export const column_and_swimlane_of_cell = (
-    state: SwimlaneState,
-    getters: [],
-    root_state: RootState
-) => (
-    cell: HTMLElement
-): {
-    swimlane?: Swimlane;
-    column?: ColumnDefinition;
-} => {
-    const swimlane = state.swimlanes.find(
-        swimlane => swimlane.card.id === Number(cell.dataset.swimlaneId)
-    );
-    const column = root_state.column.columns.find(
-        column => column.id === Number(cell.dataset.columnId)
-    );
-
-    return {
-        swimlane,
-        column
-    };
-};
-
 export const has_at_least_one_card_in_edit_mode = (state: SwimlaneState): boolean => {
     return state.swimlanes.some(doesSwimlaneContainACardInEditMode);
 };

@@ -21,7 +21,6 @@ import * as getters from "./swimlane-getters";
 import { Dropzone, SwimlaneState } from "./type";
 import { Card, ColumnDefinition, Swimlane } from "../../type";
 import { RootState } from "../type";
-import { createElement } from "../../helpers/jest/create-dom-element";
 
 jest.mock("tlp");
 
@@ -276,61 +275,6 @@ describe("Swimlane state getters", () => {
         });
     });
 
-    describe("column_and_swimlane_of_cell", () => {
-        let swimlane_state: SwimlaneState;
-        let root_state: RootState;
-        let swimlane_to_find: Swimlane;
-        let column_to_find: ColumnDefinition;
-
-        beforeEach(() => {
-            swimlane_to_find = { card: { id: 100 } as Card } as Swimlane;
-            column_to_find = { id: 15, label: "Todo" } as ColumnDefinition;
-
-            swimlane_state = {
-                swimlanes: [swimlane_to_find]
-            } as SwimlaneState;
-
-            root_state = {
-                column: {
-                    columns: [column_to_find]
-                }
-            } as RootState;
-        });
-
-        it("shoud return the column and the swimlane referenced by the cell", () => {
-            const target_cell = getCellElement(
-                swimlane_to_find.card.id.toString(),
-                column_to_find.id.toString()
-            );
-
-            const { swimlane, column } = getters.column_and_swimlane_of_cell(
-                swimlane_state,
-                [],
-                root_state
-            )(target_cell);
-
-            if (!swimlane || !column) {
-                throw new Error("swimlane or column have not been found");
-            }
-
-            expect(swimlane.card.id).toEqual(100);
-            expect(column.label).toEqual("Todo");
-        });
-
-        it("should return an undefined swimlane or column if one or the other have not been found", () => {
-            const target_cell = getCellElement("300", "200");
-
-            const { swimlane, column } = getters.column_and_swimlane_of_cell(
-                swimlane_state,
-                [],
-                root_state
-            )(target_cell);
-
-            expect(swimlane).toBeUndefined();
-            expect(column).toBeUndefined();
-        });
-    });
-
     describe("has_at_least_one_card_in_edit_mode", () => {
         it("Returns false if there isn't any parent card in edit mode", () => {
             const state = {
@@ -464,12 +408,3 @@ describe("Swimlane state getters", () => {
         });
     });
 });
-
-function getCellElement(swimlane_id: string, column_id: string): HTMLElement {
-    const target_cell = createElement();
-
-    target_cell.setAttribute("data-swimlane-id", swimlane_id);
-    target_cell.setAttribute("data-column-id", column_id);
-
-    return target_cell;
-}

@@ -44,9 +44,9 @@ describe(`drag-drop helper`, () => {
             expect(drag_drop.isContainer(element)).toBe(false);
         });
 
-        it(`Given a collapsed column, it will return false`, () => {
+        it(`Given a collapsed column, it will return true`, () => {
             const element = createElement("taskboard-cell", "taskboard-cell-collapsed");
-            expect(drag_drop.isContainer(element)).toBe(false);
+            expect(drag_drop.isContainer(element)).toBe(true);
         });
 
         it(`Given a "regular" taskboard cell, it will return true`, () => {

@@ -81,6 +81,12 @@
     &:hover {
         background: darken($tlp-ui-white, 2%);
     }
+
+    > .gu-transit,
+    > .gu-mirror,
+    > .taskboard-draggable-item {
+        display: none;
+    }
 }
 
 .taskboard-swimlane-toggle {

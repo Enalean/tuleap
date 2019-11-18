@@ -44,8 +44,10 @@ describe(`drag-drop-actions`, () => {
         context = ({
             commit: jest.fn(),
             getters: {
-                column_and_swimlane_of_cell: jest.fn(),
                 cards_in_cell: jest.fn()
+            },
+            rootGetters: {
+                column_and_swimlane_of_cell: jest.fn()
             },
             dispatch: jest.fn(),
             rootState: {} as RootState
@@ -71,13 +73,13 @@ describe(`drag-drop-actions`, () => {
             it will do nothing`, async () => {
             jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(true);
 
-            context.getters.column_and_swimlane_of_cell.mockImplementation(() => {
+            context.rootGetters.column_and_swimlane_of_cell.mockImplementation(() => {
                 return { swimlane: undefined, column: { id: 31 } as ColumnDefinition };
             });
             const payload = createPayload();
             await actions.handleDrop(context, payload);
 
-            expect(context.getters.column_and_swimlane_of_cell).toHaveBeenCalledWith(
+            expect(context.rootGetters.column_and_swimlane_of_cell).toHaveBeenCalledWith(
                 payload.target_cell
             );
             expect(context.dispatch).not.toHaveBeenCalled();
@@ -88,13 +90,13 @@ describe(`drag-drop-actions`, () => {
                 it will do nothing`, async () => {
             jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(true);
 
-            context.getters.column_and_swimlane_of_cell.mockImplementation(() => {
+            context.rootGetters.column_and_swimlane_of_cell.mockImplementation(() => {
                 return { swimlane: { card: { id: 543 } } as Swimlane, column: undefined };
             });
             const payload = createPayload();
             await actions.handleDrop(context, payload);
 
-            expect(context.getters.column_and_swimlane_of_cell).toHaveBeenCalledWith(
+            expect(context.rootGetters.column_and_swimlane_of_cell).toHaveBeenCalledWith(
                 payload.target_cell
             );
             expect(context.dispatch).not.toHaveBeenCalled();
@@ -106,7 +108,7 @@ describe(`drag-drop-actions`, () => {
             jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(true);
             const column = { id: 31, label: "Todo" } as ColumnDefinition;
             const swimlane = { card: { id: 543, has_children: true } } as Swimlane;
-            context.getters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
+            context.rootGetters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
 
             const getCard = jest.spyOn(item_finder, "getCardFromSwimlane").mockReturnValue(null);
 
@@ -123,7 +125,7 @@ describe(`drag-drop-actions`, () => {
             jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(true);
             const column = { id: 31, label: "Todo" } as ColumnDefinition;
             const swimlane = { card: { id: 543 } } as Swimlane;
-            context.getters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
+            context.rootGetters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
             const card = { id: 667, label: "Do the stuff" } as Card;
             jest.spyOn(item_finder, "getCardFromSwimlane")
                 .mockReturnValueOnce(card)
@@ -154,7 +156,7 @@ describe(`drag-drop-actions`, () => {
             jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(true);
             const column = { id: 31, label: "Todo" } as ColumnDefinition;
             const swimlane = { card: { id: 543 } } as Swimlane;
-            context.getters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
+            context.rootGetters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
             const card = { id: 667, label: "Do the stuff" } as Card;
             const sibling = { id: 778, label: "Documentation" } as Card;
             jest.spyOn(item_finder, "getCardFromSwimlane")
@@ -185,7 +187,7 @@ describe(`drag-drop-actions`, () => {
             const column = { id: 31, label: "Todo" } as ColumnDefinition;
             const swimlane = { card: { id: 543 } } as Swimlane;
 
-            context.getters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
+            context.rootGetters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
 
             const card = { id: 667, label: "Do the stuff" } as Card;
             const sibling = null;
@@ -216,7 +218,7 @@ describe(`drag-drop-actions`, () => {
             const column = { id: 31, label: "Todo" } as ColumnDefinition;
             const swimlane = { card: { id: 543 } } as Swimlane;
 
-            context.getters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
+            context.rootGetters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
 
             const card = { id: 667, label: "Do the stuff" } as Card;
             const sibling = { id: 778, label: "Documentation" } as Card;
@@ -255,7 +257,7 @@ describe(`drag-drop-actions`, () => {
             const card = { id: 667, label: "Do the stuff" } as Card;
             const swimlane = { card, children_cards: [] as Card[] } as Swimlane;
 
-            context.getters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
+            context.rootGetters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
 
             jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(false);
             jest.spyOn(item_finder, "getCardFromSwimlane")
@@ -287,7 +289,7 @@ describe(`drag-drop-actions`, () => {
             const card = { id: 667, label: "Do the stuff", has_children: false } as Card;
             const swimlane = { card } as Swimlane;
 
-            context.getters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
+            context.rootGetters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
 
             const sibling = null;
 
@@ -316,7 +318,7 @@ describe(`drag-drop-actions`, () => {
             const swimlane = { card: { id: 666, has_children: true } } as Swimlane;
             const card = { id: 667, label: "Do the stuff", has_children: false } as Card;
 
-            context.getters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
+            context.rootGetters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
 
             const sibling = null;
 

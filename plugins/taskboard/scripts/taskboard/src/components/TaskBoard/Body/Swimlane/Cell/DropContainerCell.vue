@@ -29,7 +29,7 @@
          v-bind:data-accepted-trackers-ids="accepted_trackers_ids(column)"
     >
         <slot v-if="!column.is_collapsed && ! is_overlay_displayed"></slot>
-        <cell-disallows-drop-overlay v-bind:is-drop-rejected="is_overlay_displayed"/>
+        <cell-disallows-drop-overlay v-bind:is-column-collapsed="column.is_collapsed" v-bind:is-drop-rejected="is_overlay_displayed"/>
     </div>
 </template>
 

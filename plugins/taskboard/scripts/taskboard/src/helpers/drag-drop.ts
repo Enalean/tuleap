@@ -29,8 +29,7 @@ export function isContainer(element?: Element): boolean {
     return (
         element.classList.contains("taskboard-cell") &&
         !element.classList.contains("taskboard-cell-swimlane-header") &&
-        !element.classList.contains("taskboard-card-parent") &&
-        !element.classList.contains("taskboard-cell-collapsed") // Not supported yet
+        !element.classList.contains("taskboard-card-parent")
     );
 }
 

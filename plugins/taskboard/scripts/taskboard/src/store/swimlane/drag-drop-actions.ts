@@ -38,7 +38,9 @@ export function handleDrop(
         return Promise.resolve();
     }
 
-    const { swimlane, column } = context.getters.column_and_swimlane_of_cell(payload.target_cell);
+    const { swimlane, column } = context.rootGetters.column_and_swimlane_of_cell(
+        payload.target_cell
+    );
     if (!swimlane || !column) {
         return Promise.resolve();
     }
