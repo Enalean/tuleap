@@ -1,8 +1,6 @@
 .pull-request-timeline {
     flex: 1 1 auto;
-    align-self: stretch;
     padding: $tlp-spacing;
-    border-left: 1px solid $tlp-ui-border-light;
     background-color: mix($tlp-theme-background-color, $tlp-ui-white, 50%);
     background-image: linear-gradient(to bottom, $tlp-ui-white, transparent 30%);
 

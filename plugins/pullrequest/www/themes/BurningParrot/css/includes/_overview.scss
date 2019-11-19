@@ -1,4 +1,13 @@
+@import './reviewers';
 @import './timeline';
+
+.pull-request-reviewers-timeline {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-self: stretch;
+    border-left: 1px solid $tlp-ui-border-light;
+}
 
 #pull-request-overview {
     position: sticky;

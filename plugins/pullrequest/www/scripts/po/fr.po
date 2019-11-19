@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.2.4\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "... Skipped 1 common line"
@@ -25,6 +25,9 @@ msgstr "Abandonné"
 
 msgid "Add labels"
 msgstr "Ajouter un label"
+
+msgid "Add reviewers"
+msgstr "Ajouter des relecteurs"
 
 msgid "Already merged"
 msgstr "Déjà intégré"
@@ -73,6 +76,9 @@ msgstr "La discussion n’a pas commencé"
 
 msgid "Edit message"
 msgstr "Éditer le message"
+
+msgid "Edit reviewers"
+msgstr "Éditer les relecteurs"
 
 msgid "Error details"
 msgstr "Détails de l'erreur"
@@ -161,6 +167,9 @@ msgid ""
 msgstr ""
 "Le statut d’intégration de cette pull request est indéterminé. Essayez de "
 "l’intégrer en ligne de commande et poussez vers la destination."
+
+msgid "Reviewers:"
+msgstr "Relecteurs :"
 
 msgid "Save"
 msgstr "Sauvegarder"
