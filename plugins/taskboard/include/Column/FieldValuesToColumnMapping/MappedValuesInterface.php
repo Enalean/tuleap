@@ -26,4 +26,8 @@ interface MappedValuesInterface
      * @return int[]
      */
     public function getValueIds(): array;
+
+    public function isEmpty(): bool;
+
+    public function getFirstValue(): int;
 }

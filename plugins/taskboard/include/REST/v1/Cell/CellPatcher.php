@@ -24,6 +24,8 @@ namespace Tuleap\Taskboard\REST\v1\Cell;
 
 use Luracast\Restler\RestException;
 use PFUser;
+use Tracker_Artifact;
+use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\REST\v1\IdsFromBodyAreNotUniqueException;
 use Tuleap\AgileDashboard\REST\v1\OrderIdOutOfBoundException;
 use Tuleap\AgileDashboard\REST\v1\OrderRepresentation;
@@ -38,33 +40,38 @@ class CellPatcher
 {
     /** @var UserManager */
     private $user_manager;
-    /** @var \Tracker_ArtifactFactory */
+    /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
     /** @var SwimlaneChildrenRetriever */
     private $children_retriever;
     /** @var ArtifactsRankOrderer */
     private $rank_orderer;
+    /** @var CardMappedFieldUpdater */
+    private $mapped_field_updater;
 
     public function __construct(
         UserManager $user_manager,
-        \Tracker_ArtifactFactory $artifact_factory,
+        Tracker_ArtifactFactory $artifact_factory,
         SwimlaneChildrenRetriever $children_retriever,
-        ArtifactsRankOrderer $rank_orderer
+        ArtifactsRankOrderer $rank_orderer,
+        CardMappedFieldUpdater $mapped_field_updater
     ) {
-        $this->user_manager       = $user_manager;
-        $this->artifact_factory   = $artifact_factory;
-        $this->children_retriever = $children_retriever;
-        $this->rank_orderer       = $rank_orderer;
+        $this->user_manager         = $user_manager;
+        $this->artifact_factory     = $artifact_factory;
+        $this->children_retriever   = $children_retriever;
+        $this->rank_orderer         = $rank_orderer;
+        $this->mapped_field_updater = $mapped_field_updater;
     }
 
     public static function build(): self
     {
-        $artifact_factory = \Tracker_ArtifactFactory::instance();
+        $artifact_factory = Tracker_ArtifactFactory::instance();
         return new CellPatcher(
             UserManager::build(),
             $artifact_factory,
             new SwimlaneChildrenRetriever(),
-            ArtifactsRankOrderer::build()
+            ArtifactsRankOrderer::build(),
+            CardMappedFieldUpdater::build()
         );
     }
 
@@ -72,7 +79,7 @@ class CellPatcher
      * @throws I18NRestException
      * @throws RestException
      */
-    public function patchCell(int $swimlane_id, CellPatchRepresentation $payload): void
+    public function patchCell(int $swimlane_id, int $column_id, CellPatchRepresentation $payload): void
     {
         $current_user      = $this->user_manager->getCurrentUser();
         $swimlane_artifact = $this->getSwimlaneArtifact($current_user, $swimlane_id);
@@ -80,6 +87,16 @@ class CellPatcher
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
         $payload->checkIsValid();
+
+        if ($payload->add !== null) {
+            $artifact_to_add = $this->getArtifactToAdd($current_user, $payload->add);
+            $this->mapped_field_updater->updateCardMappedField(
+                $swimlane_artifact,
+                $column_id,
+                $artifact_to_add,
+                $current_user
+            );
+        }
 
         $order = $payload->order;
         if ($order !== null) {
@@ -90,9 +107,27 @@ class CellPatcher
     }
 
     /**
+     * @throws I18NRestException
+     */
+    private function getArtifactToAdd(PFUser $current_user, int $id): Tracker_Artifact
+    {
+        $artifact = $this->artifact_factory->getArtifactById($id);
+        if (! $artifact || ! $artifact->userCanView($current_user)) {
+            throw new I18NRestException(
+                400,
+                sprintf(
+                    dgettext('tuleap-taskboard', "Could not find artifact to add with id %d."),
+                    $id
+                )
+            );
+        }
+        return $artifact;
+    }
+
+    /**
      * @throws RestException
      */
-    private function getSwimlaneArtifact(PFUser $current_user, int $id): \Tracker_Artifact
+    private function getSwimlaneArtifact(PFUser $current_user, int $id): Tracker_Artifact
     {
         $artifact = $this->artifact_factory->getArtifactById($id);
         if (! $artifact || ! $artifact->userCanView($current_user)) {
@@ -108,14 +143,14 @@ class CellPatcher
     private function validateOrder(
         OrderRepresentation $order,
         PFUser $current_user,
-        \Tracker_Artifact $swimlane_artifact
+        Tracker_Artifact $swimlane_artifact
     ): void {
         $children_artifact_ids          = $this->children_retriever->getSwimlaneArtifactIds(
             $swimlane_artifact,
             $current_user
         );
         $index_of_swimlane_children_ids = array_fill_keys($children_artifact_ids, true);
-        $order_validator = new OrderValidator($index_of_swimlane_children_ids);
+        $order_validator                = new OrderValidator($index_of_swimlane_children_ids);
         try {
             $order_validator->validate($order);
         } catch (IdsFromBodyAreNotUniqueException | OrderIdOutOfBoundException $e) {

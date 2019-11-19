@@ -71,7 +71,7 @@ class FreestyleMappingFactory
         }
         $field_value_ids = [];
         foreach ($rows as $row) {
-            $field_value_ids[] = $row['value_id'];
+            $field_value_ids[] = (int) $row['value_id'];
         }
         return new MappedValues($field_value_ids);
     }

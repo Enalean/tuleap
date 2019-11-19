@@ -28,6 +28,10 @@ use Tuleap\REST\I18NRestException;
 final class CellPatchRepresentation
 {
     /**
+     * @var int | null $add {@type int} {@required false}
+     */
+    public $add;
+    /**
      * @var OrderRepresentation | null $order {@type \Tuleap\AgileDashboard\REST\v1\OrderRepresentation} {@required false}
      */
     public $order;
@@ -37,10 +41,10 @@ final class CellPatchRepresentation
      */
     public function checkIsValid(): void
     {
-        if ($this->order === null) {
+        if ($this->order === null && $this->add === null) {
             throw new I18NRestException(
                 400,
-                dgettext('tuleap-taskboard', "Please specify 'order' in the payload.")
+                dgettext('tuleap-taskboard', "Please specify 'add' and/or 'order' in the payload.")
             );
         }
     }

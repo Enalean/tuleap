@@ -20,25 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
+namespace Tuleap\Taskboard\Column;
 
-final class EmptyMappedValues implements MappedValuesInterface
+final class InvalidColumnException extends \Exception
 {
-    /**
-     * @return int[]
-     */
-    public function getValueIds(): array
-    {
-        return [];
-    }
-
-    public function isEmpty(): bool
-    {
-        return true;
-    }
-
-    public function getFirstValue(): int
-    {
-        throw new \RuntimeException();
-    }
 }
