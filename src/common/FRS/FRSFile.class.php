@@ -20,6 +20,7 @@
  */
 
 use GuzzleHttp\Psr7\ServerRequest;
+use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
@@ -523,33 +524,25 @@ class FRSFile
      *
      * WARNING : for the moment, user can download the file if the user can view the package and can view the release the file belongs to.
      *
-     * @param int $user_id the ID of the user. If $user_id is 0, then we take the current user.
      * @return bool true if the user has permissions to download the file, false otherwise
      */
-    function userCanDownload($user_id = 0)
+    public function userCanDownload(PFUser $user): bool
     {
-        $user_manager = UserManager::instance();
-        if ($user_id == 0) {
-            $user = $user_manager->getCurrentUser();
-        } else {
-            $user = $user_manager->getUserById($user_id);
-        }
-
-        if ($user) {
-            if ($user->isSuperUser()) {
-                return true;
-            }
+        $project            = $this->getGroup();
+        $permission_manager = FRSPermissionManager::build();
+        if ($permission_manager->isAdmin($project, $user)) {
+            return true;
         }
 
         $user_can_download = false;
         if (! $this->isDeleted()) {
-            $group = $this->getGroup();
-            $group_id = $group->getID();
+            $user_id    = $user->getId();
+            $project_id = $project->getID();
             if (permission_exist('RELEASE_READ', $this->getReleaseID())) {
-                if (permission_is_authorized('RELEASE_READ', $this->getReleaseID(), $user_id, $group_id)) {
+                if (permission_is_authorized('RELEASE_READ', $this->getReleaseID(), $user_id, $project_id)) {
                     $user_can_download = true;
                 }
-            } elseif (permission_is_authorized('PACKAGE_READ', $this->getPackageID(), $user_id, $group_id)) {
+            } elseif (permission_is_authorized('PACKAGE_READ', $this->getPackageID(), $user_id, $project_id)) {
                 $user_can_download = true;
             }
         }

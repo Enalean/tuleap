@@ -64,7 +64,7 @@ class FRSPermissionManager
         );
     }
 
-    public function isAdmin(Project $project, PFUser $user)
+    public function isAdmin(Project $project, PFUser $user): bool
     {
         try {
             $this->access_checker->checkUserCanAccessProject($user, $project);

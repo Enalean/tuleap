@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -38,7 +38,7 @@ Mock::generatePartial(
 Mock::generatePartial(
     'WebDAVFRSRelease',
     'WebDAVFRSReleaseTestVersion2',
-    array('getReleaseId', 'getPackage', 'getProject', 'getUtils', 'getMaxFileSize', 'getFRSFileFromId', 'getFileIdFromName', 'getWebDAVFRSFile', 'userIsAdmin', 'unlinkFile', 'openFile', 'streamCopyToStream', 'closeFile')
+    array('getReleaseId', 'getPackage', 'getProject', 'getUser', 'getUtils', 'getMaxFileSize', 'getFRSFileFromId', 'getFileIdFromName', 'getWebDAVFRSFile', 'userIsAdmin', 'unlinkFile', 'openFile', 'streamCopyToStream', 'closeFile')
 );
 
 /**
@@ -132,7 +132,6 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
      */
     function testGetChildFailureWithUserCanNotDownload()
     {
-
         $webDAVFRSRelease = new WebDAVFRSReleaseTestVersion2($this);
         $webDAVFile = new MockWebDAVFRSFile();
         $file = new MockFRSFile($this);
@@ -143,6 +142,9 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
 
         $webDAVFile->setReturnValue('userCanDownload', false);
         $webDAVFRSRelease->setReturnValue('getWebDAVFRSFile', $webDAVFile);
+
+        $user = Mockery::mock(PFUser::class);
+        $webDAVFRSRelease->setReturnValue('getUser', $user);
 
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
@@ -167,6 +169,9 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
 
         $webDAVFile->setReturnValue('fileExists', false);
         $webDAVFRSRelease->setReturnValue('getWebDAVFRSFile', $webDAVFile);
+
+        $user = Mockery::mock(PFUser::class);
+        $webDAVFRSRelease->setReturnValue('getUser', $user);
 
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
 
@@ -199,6 +204,9 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
         $webDAVFRSRelease->setReturnValue('getReleaseId', 3);
         $webDAVFRSRelease->setReturnValue('getWebDAVFRSFile', $webDAVFile);
 
+        $user = Mockery::mock(PFUser::class);
+        $webDAVFRSRelease->setReturnValue('getUser', $user);
+
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
 
         $webDAVFRSRelease->getChild('fileName');
@@ -228,6 +236,9 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
         $webDAVFRSRelease->setReturnValue('getPackage', $package);
         $webDAVFRSRelease->setReturnValue('getReleaseId', 3);
         $webDAVFRSRelease->setReturnValue('getWebDAVFRSFile', $webDAVFile);
+
+        $user = Mockery::mock(PFUser::class);
+        $webDAVFRSRelease->setReturnValue('getUser', $user);
 
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
 
@@ -262,6 +273,9 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
         $webDAVFRSRelease->setReturnValue('getMaxFileSize', 64);
         $webDAVFRSRelease->setReturnValue('getWebDAVFRSFile', $webDAVFile);
 
+        $user = Mockery::mock(PFUser::class);
+        $webDAVFRSRelease->setReturnValue('getUser', $user);
+
         $this->expectException('Sabre_DAV_Exception_RequestedRangeNotSatisfiable');
 
         $webDAVFRSRelease->getChild('fileName');
@@ -294,6 +308,9 @@ class WebDAVFRSReleaseTest extends TuleapTestCase
         $webDAVFile->setReturnValue('getSize', 64);
         $webDAVFRSRelease->setReturnValue('getMaxFileSize', 64);
         $webDAVFRSRelease->setReturnValue('getWebDAVFRSFile', $webDAVFile);
+
+        $user = Mockery::mock(PFUser::class);
+        $webDAVFRSRelease->setReturnValue('getUser', $user);
 
         $this->assertEqual($webDAVFRSRelease->getChild('fileName'), $webDAVFile);
     }

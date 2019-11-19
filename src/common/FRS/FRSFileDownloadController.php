@@ -90,7 +90,7 @@ final class FRSFileDownloadController extends DispatchablePSR15Compatible implem
         }
 
         // Check permissions for downloading the file, and check that the file has the active status
-        if (! $file->userCanDownload($current_user->getId()) || ! $file->isActive()) {
+        if (! $file->userCanDownload($current_user) || ! $file->isActive()) {
             throw new NotFoundException(_('The file cannot be found'));
         }
 
