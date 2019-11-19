@@ -26,8 +26,6 @@ use Mockery;
 
 trait GlobalLanguageMock
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
      * @before
      */
@@ -42,5 +40,6 @@ trait GlobalLanguageMock
     protected function clearLanguage()
     {
         unset($GLOBALS['Language']);
+        Mockery::close();
     }
 }
