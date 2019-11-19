@@ -19,15 +19,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\WebDAV\Docman\DocumentDownloader;
+
 /**
  * This class Represents Docman files & embedded files in WebDAV
  */
 class WebDAVDocmanFile extends WebDAVDocmanDocument
 {
 
-    public function __construct($user, $project, $item)
+    public function __construct($user, $project, $item, DocumentDownloader $document_downloader)
     {
-        parent::__construct($user, $project, $item);
+        parent::__construct($user, $project, $item, $document_downloader);
     }
 
     /**
@@ -134,7 +136,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
      *
      * @return void
      */
-    function download($version, $filesize = '', $path = '')
+    public function download($version, $filesize = '', $path = '')
     {
         $version->preDownload($this->getItem(), $this->getUser());
         // Download the file
@@ -148,12 +150,12 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
      *
      * @return void
      */
-    function put($data)
+    public function put($data)
     {
         if ($this->getUtils()->isWriteEnabled()) {
             // Request
             $params['action']   = 'new_version';
-            $params['group_id'] = $this->getProject()->getGroupId();
+            $params['group_id'] = $this->getProject()->getID();
             $params['confirm']  = true;
 
             // File stuff

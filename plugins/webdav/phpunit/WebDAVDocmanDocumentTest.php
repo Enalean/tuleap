@@ -32,6 +32,7 @@ use Project;
 use ProjectManager;
 use Sabre_DAV_Exception_Forbidden;
 use Sabre_DAV_Exception_MethodNotAllowed;
+use Tuleap\WebDAV\Docman\DocumentDownloader;
 use WebDAVDocmanDocument;
 use WebDAVUtils;
 
@@ -71,6 +72,11 @@ class WebDAVDocmanDocumentTest extends TestCase
      */
     private $globals;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DocumentDownloader
+     */
+    private $document_downloader;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -97,6 +103,8 @@ class WebDAVDocmanDocumentTest extends TestCase
         $this->project  = Mockery::mock(Project::class);
 
         $this->project->shouldReceive('getID')->andReturn(102);
+
+        $this->document_downloader = Mockery::mock(DocumentDownloader::class);
     }
 
     protected function tearDown(): void
@@ -112,7 +120,7 @@ class WebDAVDocmanDocumentTest extends TestCase
 
     public function testDeleteNoWriteEnabled(): void
     {
-        $webDAVDocmanDocument = new WebDAVDocmanDocument($this->user, $this->project, $this->document);
+        $webDAVDocmanDocument = new WebDAVDocmanDocument($this->user, $this->project, $this->document, $this->document_downloader);
 
         $this->utils->shouldReceive('isWriteEnabled')->andReturnFalse();
 
@@ -123,7 +131,7 @@ class WebDAVDocmanDocumentTest extends TestCase
 
     public function testDeleteSuccess(): void
     {
-        $webDAVDocmanDocument = new WebDAVDocmanDocument($this->user, $this->project, $this->document);
+        $webDAVDocmanDocument = new WebDAVDocmanDocument($this->user, $this->project, $this->document, $this->document_downloader);
 
         $this->utils->shouldReceive('isWriteEnabled')->andReturnTrue();
         $this->utils->shouldReceive('processDocmanRequest')->once();
@@ -133,7 +141,7 @@ class WebDAVDocmanDocumentTest extends TestCase
 
     public function testSetNameNoWriteEnabled(): void
     {
-        $webDAVDocmanDocument = new WebDAVDocmanDocument($this->user, $this->project, $this->document);
+        $webDAVDocmanDocument = new WebDAVDocmanDocument($this->user, $this->project, $this->document, $this->document_downloader);
 
         $this->utils->shouldReceive('isWriteEnabled')->andReturnFalse();
 
@@ -144,7 +152,7 @@ class WebDAVDocmanDocumentTest extends TestCase
 
     public function testSetNameSuccess(): void
     {
-        $webDAVDocmanDocument = new WebDAVDocmanDocument($this->user, $this->project, $this->document);
+        $webDAVDocmanDocument = new WebDAVDocmanDocument($this->user, $this->project, $this->document, $this->document_downloader);
 
         $this->utils->shouldReceive('isWriteEnabled')->andReturnTrue();
         $this->utils->shouldReceive('processDocmanRequest')->once();

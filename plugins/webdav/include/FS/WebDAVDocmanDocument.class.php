@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\WebDAV\Docman\DocumentDownloader;
+
 /**
  * This class Represents Docman documents in WebDAV
  *
@@ -31,6 +33,10 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
     protected $user;
     protected $project;
     protected $item;
+    /**
+     * @var DocumentDownloader
+     */
+    private $document_downloader;
 
     /**
      * Constuctor of the class
@@ -41,12 +47,13 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
      *
      * @return void
      */
-    function __construct($user, Project $project, $item)
+    public function __construct($user, Project $project, $item, DocumentDownloader $document_downloader)
     {
         $this->user = $user;
         $this->project = $project;
         $docmanItemFactory = Docman_ItemFactory::instance($project->getID());
         $this->item = $docmanItemFactory->getItemFromDb($item->getId());
+        $this->document_downloader = $document_downloader;
     }
 
     /**
@@ -170,25 +177,9 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
      *
      * @return void
      */
-    function download($fileType, $fileSize, $path)
+    public function download($fileType, $fileSize, $path)
     {
-        header('Content-Description: File Transfer');
-        header('Content-Type: '. $fileType);
-        header('Content-Disposition: attachment; filename="'.$this->getName().'"');
-        header('Content-Transfer-Encoding: binary');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Pragma: public');
-        header('Content-Length: '. $fileSize);
-        ob_clean();
-        flush();
-        $file = fopen($path, "r");
-        while (! feof($file)) {
-            print fread($file, 30*1024);
-            flush();
-        }
-        fclose($file);
-        exit;
+        $this->document_downloader->downloadDocument($this->getName(), $fileType, $fileSize, $path);
     }
 
     /**
