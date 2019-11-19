@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Notifications;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use UserManager;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
@@ -46,9 +47,26 @@ class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends TestCas
             'searchUsersUnsubcribedFromNotificationByTrackerID'
         )->andReturns($user_rows);
 
+        $user1 = \Mockery::mock(\PFUser::class);
+        $user1->shouldReceive('getAvatarUrl');
+        $user2 = \Mockery::mock(\PFUser::class);
+        $user2->shouldReceive('getAvatarUrl');
+        $user_manager = \Mockery::mock(UserManager::class);
+        $user_manager
+            ->shouldReceive('getUserById')
+            ->with(200)
+            ->once()
+            ->andReturn($user1);
+        $user_manager
+            ->shouldReceive('getUserById')
+            ->with(102)
+            ->once()
+            ->andReturn($user2);
+
         $builder    = new CollectionOfUserInvolvedInNotificationPresenterBuilder(
             $users_to_notify_dao,
-            $unsubscribers_notification_dao
+            $unsubscribers_notification_dao,
+            $user_manager
         );
 
         $tracker    = \Mockery::mock(\Tracker::class);

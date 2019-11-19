@@ -33,6 +33,10 @@ class AdministratorPresenter
 
     /** @var \UserHelper */
     private $user_helper;
+    /**
+     * @var string
+     */
+    public $avatar_url;
 
     public function __construct(\UserHelper $user_helper)
     {
@@ -42,6 +46,7 @@ class AdministratorPresenter
     public function build(\PFUser $user, ?UserWithStarBadge $badged_user = null)
     {
         $this->has_avatar       = $user->hasAvatar();
+        $this->avatar_url       = $user->getAvatarUrl();
         $this->user_name        = $user->getUserName();
         $this->username_display = $this->user_helper->getDisplayNameFromUser($user);
         if ($this->userHasStarBadge($user, $badged_user)) {

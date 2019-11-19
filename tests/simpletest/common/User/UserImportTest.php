@@ -84,7 +84,8 @@ class UserImportTest extends TuleapTestCase
             'user_name'        => 'zurg',
             'email'            => 'zurg@example.com',
             'profile_page_url' => '/users/zurg/',
-            'username_display' => 'getDisplayName'
+            'username_display' => 'getDisplayName',
+            'avatar_url'       => ''
         );
 
         $this->assertEqual($user_collection->getFormattedUsers(), array($expected_user));
@@ -105,7 +106,8 @@ class UserImportTest extends TuleapTestCase
             'user_name'        => 'zurg',
             'email'            => 'zurg@example.com',
             'profile_page_url' => '/users/zurg/',
-            'username_display' => 'getDisplayName'
+            'username_display' => 'getDisplayName',
+            'avatar_url'       => ''
         );
 
         $this->assertEqual($user_collection->getFormattedUsers(), array($expected_user));

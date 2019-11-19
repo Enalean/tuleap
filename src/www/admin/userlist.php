@@ -209,6 +209,7 @@ if (! $group_id) {
     $display_nb_projects = true;
 }
 $results_presenter = new Tuleap\User\Admin\UserListResultsPresenter(
+    UserManager::instance(),
     $group_id,
     $result['users'],
     $result['numrows'],

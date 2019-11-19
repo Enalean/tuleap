@@ -88,13 +88,17 @@ class Tracker_FormElement_Field_List_Bind_UsersValue_fetchJSONTest extends Tulea
     {
         $value = new Tracker_FormElement_Field_List_Bind_UsersValue(12, 'neo', 'Thomas A. Anderson (neo)');
         $json = $value->fetchFormattedForJson();
-        $this->assertEqual($json, array(
-            'id'       => '12',
-            'label'    => 'Thomas A. Anderson (neo)',
-            'is_hidden' => false,
-            'username' => 'neo',
-            'realname' => 'Le roi arthur',
-        ));
+        $this->assertEqual(
+            $json,
+            [
+                'id'         => '12',
+                'label'      => 'Thomas A. Anderson (neo)',
+                'is_hidden'  => false,
+                'username'   => 'neo',
+                'realname'   => 'Le roi arthur',
+                'avatar_url' => ''
+            ]
+        );
     }
 
     public function itReturnsNullForGetJsonIfUserIsNone()
