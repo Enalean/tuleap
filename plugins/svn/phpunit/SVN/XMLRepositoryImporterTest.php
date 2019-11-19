@@ -125,6 +125,11 @@ class XMLRepositoryImporterTest extends TestCase
      */
     private $xml_repo;
 
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|XMLUserChecker
+     */
+    private $xml_user_checker;
+
     private function instantiateImporterWithXml(\SimpleXMLElement $xml)
     {
         $this->xml_repo                     = $xml;
@@ -137,6 +142,7 @@ class XMLRepositoryImporterTest extends TestCase
         $this->user_manager                 = \Mockery::mock(UserManager::class);
         $this->notifications_emails_builder = \Mockery::mock(NotificationsEmailsBuilder::class);
         $this->repository_copier            = \Mockery::mock(RepositoryCopier::class);
+        $this->xml_user_checker             = \Mockery::mock(XMLUserChecker::class);
 
         $this->repository_importer = \Mockery::mock(
             XMLRepositoryImporter::class,
@@ -150,7 +156,8 @@ class XMLRepositoryImporterTest extends TestCase
                 $this->repository_manager,
                 $this->user_manager,
                 $this->notifications_emails_builder,
-                $this->repository_copier
+                $this->repository_copier,
+                $this->xml_user_checker
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -304,6 +311,8 @@ class XMLRepositoryImporterTest extends TestCase
         )->andReturn([]);
         $this->mail_notification_manager->shouldReceive('create')->twice();
 
+        $this->xml_user_checker->shouldReceive('currentUserIsHTTPUser')->once()->andReturnFalse();
+
         $this->repository_importer->import(
             $this->configuration,
             $this->logger,
@@ -355,6 +364,8 @@ class XMLRepositoryImporterTest extends TestCase
         $writer->shouldReceive('write_with_defaults')->once()->andReturnTrue();
 
         $this->repository_importer->shouldReceive('getAccessFileWriter')->andReturn($writer);
+
+        $this->xml_user_checker->shouldReceive('currentUserIsHTTPUser')->andReturnFalse();
 
         $this->repository_importer->import(
             $this->configuration,

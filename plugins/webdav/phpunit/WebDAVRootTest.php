@@ -94,7 +94,7 @@ final class WebDAVRootTest extends TestCase
     {
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
         $this->project_dao->shouldReceive('searchByPublicStatus')->andReturns([
-            'group_id' => 101
+            ['group_id' => 101]
         ]);
 
         $webDAVProject = \Mockery::spy(\WebDAVProject::class);

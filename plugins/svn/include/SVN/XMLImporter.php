@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -48,7 +48,8 @@ class XMLImporter
         RepositoryManager $repository_manager,
         \UserManager $user_manager,
         NotificationsEmailsBuilder $notifications_emails_builder,
-        RepositoryCopier $repository_copier
+        RepositoryCopier $repository_copier,
+        XMLUserChecker $xml_user_checker
     ) {
         $this->repositories_data = array();
 
@@ -70,7 +71,8 @@ class XMLImporter
                 $repository_manager,
                 $user_manager,
                 $notifications_emails_builder,
-                $repository_copier
+                $repository_copier,
+                $xml_user_checker
             );
         }
     }
