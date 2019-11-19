@@ -309,11 +309,10 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      *
      * @return bool
      */
-    function userCanRead($user)
+    public function userCanRead(PFUser $user): bool
     {
-
         return (($this->getRelease()->isActive() && $this->getRelease()->userCanRead($user->getId()))
-        || ($this->getRelease()->isHidden() && $this->userIsAdmin()));
+        || ($this->getRelease()->isHidden() && $this->userIsAdmin($user)));
     }
 
     /**
@@ -321,11 +320,10 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      *
      * @return bool
      */
-    function userIsAdmin()
+    public function userIsAdmin(PFUser $user): bool
     {
-
         $utils = $this->getUtils();
-        return $utils->userIsAdmin($this->getUser(), $this->getProject()->getGroupId());
+        return $utils->userIsAdmin($user, $this->getProject()->getID());
     }
 
     /**
@@ -346,7 +344,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      *
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_Node#delete()
      */
-    function delete()
+    public function delete()
     {
 
         if ($this->userCanWrite()) {
