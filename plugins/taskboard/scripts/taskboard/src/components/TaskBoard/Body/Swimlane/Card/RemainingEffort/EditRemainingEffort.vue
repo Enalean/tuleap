@@ -32,9 +32,10 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Card } from "../../../../../../type";
+import { Card, Event } from "../../../../../../type";
 import { namespace } from "vuex-class";
 import { NewRemainingEffortPayload } from "../../../../../../store/swimlane/card/type";
+import EventBus from "../../../../../../helpers/event-bus";
 
 const swimlane = namespace("swimlane");
 
@@ -77,15 +78,31 @@ export default class EditRemainingEffort extends Vue {
         }, 10);
 
         document.addEventListener("keyup", this.keyup);
+        EventBus.$on(Event.CANCEL_CARD_EDITION, this.cancelButtonCallback);
+        EventBus.$on(Event.SAVE_CARD_EDITION, this.saveButtonCallback);
     }
 
-    destroyed(): void {
+    beforeDestroy(): void {
+        EventBus.$off(Event.CANCEL_CARD_EDITION, this.cancelButtonCallback);
+        EventBus.$off(Event.SAVE_CARD_EDITION, this.saveButtonCallback);
         document.removeEventListener("keyup", this.keyup);
     }
 
     initValue(): void {
         if (this.card.remaining_effort) {
             this.value = String(this.card.remaining_effort.value);
+        }
+    }
+
+    cancelButtonCallback(card: Card): void {
+        if (card.id === this.card.id) {
+            this.cancel();
+        }
+    }
+
+    saveButtonCallback(card: Card): void {
+        if (card.id === this.card.id) {
+            this.save();
         }
     }
 
@@ -101,8 +118,8 @@ export default class EditRemainingEffort extends Vue {
         }
     }
 
-    save(event: KeyboardEvent): void {
-        const input = event.target as HTMLInputElement;
+    save(): void {
+        const input = this.$el as HTMLInputElement;
         if (!input.checkValidity()) {
             // force :invalid pseudo-class
             input.blur();

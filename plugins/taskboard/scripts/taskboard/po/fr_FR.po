@@ -12,6 +12,9 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Cancel"
+msgstr "Annuler"
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -84,6 +87,9 @@ msgstr "Recharger la page"
 
 msgid "Remaining effort"
 msgstr "Effort restant"
+
+msgid "Save"
+msgstr "Sauver"
 
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"

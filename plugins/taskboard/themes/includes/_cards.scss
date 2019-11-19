@@ -217,6 +217,20 @@ a.taskboard-card-xref {
     }
 }
 
+.taskboard-card-cancel-save-buttons {
+    margin: ($tlp-half-spacing - 5px) 0 0;
+    text-align: right;
+}
+
+.taskboard-card-cancel-button {
+    margin: 5px 0 0;
+}
+
+.taskboard-card-save-button {
+    margin: 5px 0 0 5px;
+    float: right;
+}
+
 .taskboard-card-remaining-effort {
     position: relative;
     margin: 10px 12px 0 0;
