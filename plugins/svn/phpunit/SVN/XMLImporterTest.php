@@ -106,6 +106,11 @@ final class XMLImporterTest extends TestCase
      */
     private $access_file_history_creator;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|XMLUserChecker
+     */
+    private $xml_user_checker;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -128,6 +133,7 @@ final class XMLImporterTest extends TestCase
         $this->repository_creator          = Mockery::mock(RepositoryCreator::class);
         $this->mail_notification_manager   = Mockery::mock(MailNotificationManager::class);
         $this->access_file_manager         = Mockery::mock(AccessFileHistoryCreator::class);
+        $this->xml_user_checker            = Mockery::mock(XMLUserChecker::class);
     }
 
     public function testItShouldDoNothingIfNoSvnNode(): void
@@ -144,7 +150,8 @@ final class XMLImporterTest extends TestCase
             $this->repository_manager,
             $this->user_manager,
             $this->notification_emails_builder,
-            $this->repository_copier
+            $this->repository_copier,
+            $this->xml_user_checker
         );
 
         $importer->import(
@@ -174,7 +181,8 @@ final class XMLImporterTest extends TestCase
             $this->repository_manager,
             $this->user_manager,
             $this->notification_emails_builder,
-            $this->repository_copier
+            $this->repository_copier,
+            $this->xml_user_checker
         );
 
         $this->rule_name->shouldReceive('isValid')->once()->andReturnFalse();

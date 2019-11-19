@@ -554,7 +554,8 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $this->getRepositoryManager(),
             $user_manager,
             $this->getNotificationEmailsBuilder(),
-            $this->getCopier()
+            $this->getCopier(),
+            new \Tuleap\SVN\XMLUserChecker()
         );
         $svn->import(
             $params['configuration'],

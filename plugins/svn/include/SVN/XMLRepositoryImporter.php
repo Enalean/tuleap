@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean SAS, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -93,6 +93,11 @@ class XMLRepositoryImporter
      */
     private $repository_copier;
 
+    /**
+     * @var XMLUserChecker
+     */
+    private $xml_user_checker;
+
     public function __construct(
         SimpleXMLElement $xml_repo,
         $extraction_path,
@@ -103,7 +108,8 @@ class XMLRepositoryImporter
         RepositoryManager $repository_manager,
         \UserManager $user_manager,
         NotificationsEmailsBuilder $notifications_emails_builder,
-        RepositoryCopier $repository_copier
+        RepositoryCopier $repository_copier,
+        XMLUserChecker $xml_user_checker
     ) {
         $attrs      = $xml_repo->attributes();
         $this->name = $attrs['name'];
@@ -131,6 +137,7 @@ class XMLRepositoryImporter
         $this->user_manager                 = $user_manager;
         $this->notifications_emails_builder = $notifications_emails_builder;
         $this->repository_copier            = $repository_copier;
+        $this->xml_user_checker             = $xml_user_checker;
     }
 
     public function import(
@@ -200,7 +207,7 @@ class XMLRepositoryImporter
             $this->importReferences($configuration, $logger, $repo);
         }
 
-        if (!$this->currentUserIsHTTPUser()) {
+        if (! $this->xml_user_checker->currentUserIsHTTPUser()) {
             $this->backend_svn->setUserAndGroup($project, $repo->getSystemPath());
         }
     }
@@ -229,12 +236,6 @@ class XMLRepositoryImporter
                 "failed to svnadmin load $dumpfile_arg in $rootpath_arg: exited with status {$e->return_value}"
             );
         }
-    }
-
-    private function currentUserIsHTTPUser()
-    {
-        $http_user = posix_getpwnam(ForgeConfig::get('sys_http_user'));
-        return ($http_user['uid'] === posix_getuid());
     }
 
     private function importAccessFile(
