@@ -28,6 +28,8 @@
     "tus-js-client": "^1.8.0-1",
     "vue": "^2.6.10",
     "vue-gettext": "^2.1.6",
+    "vue-dompurify-html": "^2.1.1",
+    "vuex": "^3.1.2",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
@@ -38,6 +40,8 @@
     "load-json-file": "^5.1.0",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "vue-property-decorator": "^8.2.2",
+    "vue-template-compiler": "^2.6.10",
+    "vuex-class": "^0.3.2",
     "vuex-mock-store": "0.0.7",
     "webpack-assets-manifest": "^3.1.1"
   },
@@ -47,6 +51,6 @@
   "scripts": {
     "build": "NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
     "test": "$npm_package_config_bin/jest",
-    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' 'CI=true npm run test -- --watch'"
+    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development'"
   }
 }

@@ -17,6 +17,8 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import Vuex from "vuex";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createLocalVue } from "@vue/test-utils";
 import { initVueGettext } from "../../../../tuleap/gettext/vue-gettext-init";
 import { Vue } from "vue/types/vue";
@@ -26,6 +28,9 @@ export async function createProjectRegistrationLocalVue(): Promise<typeof Vue> {
     await initVueGettext(local_vue, () => {
         throw new Error("Fallback to default");
     });
+
+    local_vue.use(Vuex);
+    local_vue.use(VueDOMPurifyHTML);
 
     return local_vue;
 }

@@ -937,6 +937,9 @@ msgstr "Pas de licence à approuver"
 msgid "No matching labels"
 msgstr "Il n'y a aucun label correspondant"
 
+msgid "No project template found!"
+msgstr "Aucun patron de projet trouvé!"
+
 msgid "No project trove categories"
 msgstr "Aucune catégorie de projet"
 

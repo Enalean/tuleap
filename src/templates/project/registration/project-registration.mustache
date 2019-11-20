@@ -19,4 +19,12 @@
   */
 }}
 
-<div id="project-registration"></div>
+{{# has_templates }}
+    <div id="project-registration" data-available-tuleap-templates="{{ tuleap_templates }}"></div>
+{{/has_templates}}
+
+{{^ has_templates }}
+    <div class="tlp-alert-danger">
+        {{# gettext }} No project template found! {{/ gettext }}
+    </div>
+{{/has_templates}}

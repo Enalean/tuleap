@@ -10,6 +10,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Next"
+msgstr "Suivant"
+
 msgid "Start a new project"
 msgstr "Démarrer un nouveau projet"
 
@@ -19,8 +22,8 @@ msgid ""
 "created."
 msgstr ""
 "Le template de projet que vous allez sélectionner va instancier quelques "
-"services. Ne vous inquiétez pas, vous pourrez toujours modifier votre "
-"espace projet, une fois que celui-ci aura été créé."
+"services. Ne vous inquiétez pas, vous pourrez toujours modifier votre espace "
+"projet, une fois que celui-ci aura été créé."
 
 msgid ""
 "This space is under construction. You can still use the current registration "
@@ -28,6 +31,9 @@ msgid ""
 msgstr ""
 "Cet espace est en cours de construction. Vous pouvez toujours utiliser le "
 "processus courant d'enregistrement de projet pendant ce temps."
+
+msgid "Tuleap templates"
+msgstr "Patrons de projet Tuleap"
 
 msgid "What kind of project is it?"
 msgstr "Quel type de projet est-ce ?"
