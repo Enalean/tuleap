@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const AppComponent = Vue.extend(App);
 
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const initial_root_state: RootState = {
         admin_url,
         has_content,

@@ -85,6 +85,7 @@ export default class BannerPresenter extends Vue {
     private createEditor(): void {
         this.destroyEditor();
 
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const text_area: HTMLTextAreaElement = this.$refs.embedded_editor as HTMLTextAreaElement;
 
         // eslint-disable-next-line no-undef

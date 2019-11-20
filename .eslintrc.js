@@ -104,6 +104,7 @@ module.exports = {
         "vue/v-on-style": ["error", "longform"],
         // Typescript
         "@typescript-eslint/camelcase": "off",
+        "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],
         "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/no-explicit-any": "error",
         "@typescript-eslint/no-non-null-assertion": "error",
@@ -158,11 +159,17 @@ module.exports = {
             files: ["*.test.js", "*.test.ts", "tests/jest/fail-console-error-warning.js"],
             extends: ["plugin:jest/recommended"],
             rules: {
-                "jest/no-expect-resolves": "error",
-                "jest/prefer-spy-on": "error",
-                "jest/no-empty-title": "error",
                 "jest/consistent-test-it": "error",
-                "jest/no-large-snapshots": ["error", { maxSize: 100 }]
+                "jest/no-empty-title": "error",
+                "jest/no-expect-resolves": "error",
+                "jest/no-large-snapshots": ["error", { maxSize: 100 }],
+                "jest/prefer-spy-on": "error"
+            }
+        },
+        {
+            files: ["*.test.ts"],
+            rules: {
+                "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "as" }]
             }
         },
         {

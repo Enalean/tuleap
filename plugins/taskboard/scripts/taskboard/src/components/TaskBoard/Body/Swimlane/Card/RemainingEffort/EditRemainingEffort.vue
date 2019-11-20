@@ -71,6 +71,7 @@ export default class EditRemainingEffort extends Vue {
     mounted(): void {
         this.initValue();
 
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const input = this.$el as HTMLInputElement;
         input.focus();
         setTimeout(() => {
@@ -119,6 +120,7 @@ export default class EditRemainingEffort extends Vue {
     }
 
     save(): void {
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const input = this.$el as HTMLInputElement;
         if (!input.checkValidity()) {
             // force :invalid pseudo-class
