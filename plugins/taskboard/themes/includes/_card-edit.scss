@@ -1,0 +1,107 @@
+/**
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.taskboard-card-cancel-save-buttons {
+    margin: ($tlp-half-spacing - 5px) 0 0;
+    text-align: right;
+}
+
+.taskboard-card-cancel-button {
+    margin: 5px 0 0;
+}
+
+.taskboard-card-save-button {
+    margin: 5px 0 0 5px;
+    float: right;
+}
+
+.taskboard-card-remaining-effort {
+    &.taskboard-card-remaining-effort-editable {
+        cursor: pointer;
+
+        &::before {
+            content: '\f040'; // fa-pencil
+            display: flex;
+            position: absolute;
+            top: 0;
+            left: -$tlp-spacing;
+            align-items: center;
+            width: 20px;
+            height: 26px;
+            transition: opacity ease-in-out 100ms;
+            opacity: 0;
+            font-family: FontAwesome;
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        &:not(.taskboard-card-remaining-effort-edit-mode):hover::before {
+            opacity: 1;
+        }
+
+        &.taskboard-card-remaining-effort-edit-mode {
+            margin: 10px 16px 0 0;
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+
+            &::after {
+                right: -16px;
+                border-width: 15px 0 15px 15px;
+            }
+        }
+
+        > .fa-long-arrow-right {
+            margin: 0 2px;
+        }
+    }
+
+
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.taskboard-card-remaining-effort-#{$color-name}::after {
+            content: '';
+            position: absolute;
+            top: -1px;
+            right: -13px;
+            width: 0;
+            height: 0;
+            border-width: 13px 0 13px 12px;
+            border-style: solid;
+            border-color: transparent transparent transparent map-get($colors, 'primary');
+        }
+
+        &.taskboard-card-remaining-effort-editable {
+            &.tlp-badge-#{$color-name}::before {
+                color: darken(map-get($colors, 'primary'), 5%);
+            }
+
+            &.taskboard-card-remaining-effort-edit-mode,
+            &:focus,
+            &:hover {
+                &.taskboard-card-remaining-effort-#{$color-name}::after {
+                    border-color: transparent transparent transparent darken(map-get($colors, 'primary'), 5%);
+                }
+
+                &.tlp-badge-#{$color-name} {
+                    border: 1px solid darken(map-get($colors, 'primary'), 5%);
+                    background: darken(map-get($colors, 'primary'), 5%);
+                }
+            }
+        }
+    }
+}
