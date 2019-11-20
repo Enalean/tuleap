@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,10 +16,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-class FRSReleaseTest extends TuleapTestCase
+class FRSReleaseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     function testIsActive()
     {
@@ -79,7 +81,7 @@ class FRSReleaseTest extends TuleapTestCase
         $p = new Project(['group_id' => 101]);
         $r->setProject($p);
 
-        $this->assertIdentical($p, $r->getProject());
+        $this->assertSame($p, $r->getProject());
     }
 
     function testGetProjectWithGroupIdSet()
@@ -94,7 +96,7 @@ class FRSReleaseTest extends TuleapTestCase
 
         $r->shouldReceive('_getProjectManager')->andReturns($pm);
 
-        $this->assertIdentical($p, $r->getProject());
+        $this->assertSame($p, $r->getProject());
     }
 
     function testGetProjectWithNeitherProjectNorGroupID()
@@ -113,7 +115,7 @@ class FRSReleaseTest extends TuleapTestCase
         $pm->shouldReceive('getProject')->with(123)->once()->andReturns($p);
         $r->shouldReceive('_getProjectManager')->andReturns($pm);
 
-        $this->assertIdentical($p, $r->getProject());
+        $this->assertSame($p, $r->getProject());
     }
 
     function testGetGroupIdWithoutProjectSet()
@@ -127,7 +129,7 @@ class FRSReleaseTest extends TuleapTestCase
         $pf->shouldReceive('getFRSPackageFromDb')->with(696, null, FRSPackageDao::INCLUDE_DELETED)->once()->andReturns($pkg);
         $r->shouldReceive('_getFRSPackageFactory')->andReturns($pf);
 
-        $this->assertEqual($r->getGroupID(), 123);
+        $this->assertSame($r->getGroupID(), 123);
     }
 
     function testGetGroupIdWithProjectSet()
@@ -138,6 +140,6 @@ class FRSReleaseTest extends TuleapTestCase
         $p->shouldReceive('getID')->andReturns(123);
         $r->setProject($p);
 
-        $this->assertEqual($r->getGroupID(), 123);
+        $this->assertSame($r->getGroupID(), 123);
     }
 }

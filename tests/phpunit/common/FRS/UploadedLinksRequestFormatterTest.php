@@ -1,30 +1,34 @@
 <?php
 /**
- *  Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
- *   This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
- *   Tuleap is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *   Tuleap is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *   You should have received a copy of the GNU General Public License
- *   along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Tuleap\FRS;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-class UploadedLinksRequestFormatterTest extends TuleapTestCase
+class UploadedLinksRequestFormatterTest extends TestCase
 {
-    public function itExtractsOneArrayFromLinksProvidedInRequest()
+    use MockeryPHPUnitIntegration;
+
+    public function testItExtractsOneArrayFromLinksProvidedInRequest()
     {
         $request = \Mockery::spy(\HTTPRequest::class);
         $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(array('test', ''));
@@ -37,10 +41,10 @@ class UploadedLinksRequestFormatterTest extends TuleapTestCase
             array('link' => 'ftp://example.com', 'name' => '')
         );
 
-        $this->assertEqual($expected_links, $formatter->formatFromRequest($request));
+        $this->assertSame($expected_links, $formatter->formatFromRequest($request));
     }
 
-    public function itThrowsAnExceptionWhenRequestDoesNotProvideCorrectInput()
+    public function testItThrowsAnExceptionWhenRequestDoesNotProvideCorrectInput()
     {
         $request = \Mockery::spy(\HTTPRequest::class);
         $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(array('test'));
@@ -52,7 +56,7 @@ class UploadedLinksRequestFormatterTest extends TuleapTestCase
         $formatter->formatFromRequest($request);
     }
 
-    public function itDoesNotAcceptInvalidLinks()
+    public function testItDoesNotAcceptInvalidLinks()
     {
         $request = \Mockery::spy(\HTTPRequest::class);
         $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(array('invalid'));
@@ -65,7 +69,7 @@ class UploadedLinksRequestFormatterTest extends TuleapTestCase
         $formatter->formatFromRequest($request);
     }
 
-    public function itDoesNotEmptyLinks()
+    public function testItDoesNotEmptyLinks()
     {
         $request = \Mockery::spy(\HTTPRequest::class);
         $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(array());
@@ -75,6 +79,6 @@ class UploadedLinksRequestFormatterTest extends TuleapTestCase
         $formatter      = new UploadedLinksRequestFormatter();
         $expected_links = array();
 
-        $this->assertEqual($expected_links, $formatter->formatFromRequest($request));
+        $this->assertSame($expected_links, $formatter->formatFromRequest($request));
     }
 }

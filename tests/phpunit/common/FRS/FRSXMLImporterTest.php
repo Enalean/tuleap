@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,6 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 use Tuleap\FRS\FRSPermission;
@@ -43,18 +44,18 @@ class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory
     }
 }
 
-class FRSXMLImporterTest extends TuleapTestCase
+class FRSXMLImporterTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\TemporaryTestDirectory, \Tuleap\GlobalLanguageMock;
+
     /**
      * @var \Tuleap\FRS\UploadedLinksDao
      */
     protected $link_dao;
     protected $frs_permission_creator;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->package_factory = new FRSPackageFactoryMock();
         $this->release_factory = \Mockery::mock(\FRSReleaseFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->file_factory = new FRSXMLImporterTest_FRSFileFactory();
@@ -108,20 +109,18 @@ class FRSXMLImporterTest extends TuleapTestCase
         );
 
         EventManager::setInstance(Mockery::spy(EventManager::class));
-        $GLOBALS['Language'] = \Mockery::spy(\BaseLanguage::class);
         if (isset($GLOBALS['ftp_incoming_dir'])) {
             $this->old_ftp_incoming_dir = $GLOBALS['ftp_incoming_dir'];
         }
         if (isset($GLOBALS['old_ftp_frs_dir_prefix'])) {
             $this->old_ftp_frs_dir_prefix = $GLOBALS['ftp_frs_dir_prefix'];
         }
-        $GLOBALS['ftp_incoming_dir'] = parent::getTmpDir();
-        $GLOBALS['ftp_frs_dir_prefix'] = parent::getTmpDir();
+        $GLOBALS['ftp_incoming_dir'] = $this->getTmpDir();
+        $GLOBALS['ftp_frs_dir_prefix'] = $this->getTmpDir();
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
-        $GLOBALS['Language'] = null;
         FRSPackageFactory::clearInstance();
         ProjectManager::clearInstance();
         FRSReleaseFactory::clearInstance();
@@ -140,7 +139,7 @@ class FRSXMLImporterTest extends TuleapTestCase
         parent::tearDown();
     }
 
-    public function itShouldImportOnePackageWithDefaultValues()
+    public function testItShouldImportOnePackageWithDefaultValues()
     {
         $pm = ProjectManager::instance();
         $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
@@ -161,7 +160,7 @@ XML;
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
     }
 
-    public function itShouldImportPermissions()
+    public function testItShouldImportPermissions()
     {
         $pm = ProjectManager::instance();
         $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
@@ -187,7 +186,7 @@ XML;
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
     }
 
-    public function itShouldImportOnePackageWithOneRelease()
+    public function testItShouldImportOnePackageWithOneRelease()
     {
         $pm = ProjectManager::instance();
         $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
@@ -231,7 +230,7 @@ XML;
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
     }
 
-    public function itShouldImportOnePackageWithOneReleaseLinkedToAnArtifact()
+    public function testItShouldImportOnePackageWithOneReleaseLinkedToAnArtifact()
     {
         $pm = ProjectManager::instance();
         $project = $pm->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
@@ -266,11 +265,10 @@ XML;
         $frs_mapping = array();
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, '', $frs_mapping);
 
-        $this->assertArrayNotEmpty($frs_mapping);
-        $this->assertEqual($frs_mapping[47], 'A101');
+        $this->assertSame($frs_mapping[47], 'A101');
     }
 
-    public function itShouldImportOnePackageWithOneReleaseWithOneFile()
+    public function testItShouldImportOnePackageWithOneReleaseWithOneFile()
     {
         $extraction_path = sys_get_temp_dir();
         $temp_file = tempnam($extraction_path, 'thefile_');
@@ -370,7 +368,7 @@ XML;
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, $extraction_path, $frs_mapping);
     }
 
-    public function itShouldImportReleaseWithLinks()
+    public function testItShouldImportReleaseWithLinks()
     {
         $extraction_path = sys_get_temp_dir();
         $project_manager = ProjectManager::instance();

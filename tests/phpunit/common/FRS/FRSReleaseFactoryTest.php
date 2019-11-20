@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
- * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,10 +16,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-class FRSReleaseFactoryTest extends TuleapTestCase
+class FRSReleaseFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     protected $group_id   = 12;
     protected $package_id = 34;
     protected $release_id = 56;
@@ -31,10 +33,8 @@ class FRSReleaseFactoryTest extends TuleapTestCase
     private $user_manager;
     private $permission_manager;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->user  = \Mockery::spy(\PFUser::class);
         $this->frs_release_factory = \Mockery::mock(\FRSReleaseFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->user_manager        = \Mockery::spy(\UserManager::class);
@@ -50,7 +50,7 @@ class FRSReleaseFactoryTest extends TuleapTestCase
         ProjectManager::setInstance($project_manager);
     }
 
-    public function tearDown() : void
+    protected function tearDown() : void
     {
         parent::tearDown();
         ProjectManager::clearInstance();
