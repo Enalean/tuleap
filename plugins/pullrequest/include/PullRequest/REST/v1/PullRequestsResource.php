@@ -63,9 +63,7 @@ use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\Events\PullRequestDiffRepresentationBuild;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
 use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
-use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
-use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\PullRequestTargetException;
@@ -94,6 +92,9 @@ use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestWithGitReference;
+use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersRepresentation;
+use Tuleap\PullRequest\Reviewer\ReviewerDAO;
+use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
 use Tuleap\PullRequest\Timeline\Factory as TimelineFactory;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
@@ -1149,6 +1150,44 @@ class PullRequestsResource extends AuthenticatedResource
         return $comment_representation;
     }
 
+    /**
+     * Get pull request's reviewers
+     *
+     * @url OPTIONS {id}/reviewers
+     *
+     * @param int $id Pull request ID
+     */
+    public function optionsReviewers(int $id): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get pull request's reviewers
+     *
+     * @url GET {id}/reviewers
+     *
+     * @access hybrid
+     *
+     * @param int $id Pull request ID
+     *
+     * @return ReviewersRepresentation
+     *
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function getReviewers(int $id): ReviewersRepresentation
+    {
+        $this->checkAccess();
+        $this->optionsReviewers($id);
+
+        $pull_request = $this->getAccessiblePullRequest($id);
+
+        $reviewer_retrievers = new ReviewerRetriever($this->user_manager, new ReviewerDAO());
+
+        return ReviewersRepresentation::fromUsers(...$reviewer_retrievers->getReviewers($pull_request));
+    }
+
     private function checkLimit($limit)
     {
         if ($limit > self::MAX_LIMIT) {
@@ -1173,18 +1212,16 @@ class PullRequestsResource extends AuthenticatedResource
     }
 
     /**
-     * @param $id
-     * @return PullRequestWithGitReference
      * @throws RestException
      */
-    private function getAccessiblePullRequestWithGitReferenceForCurrentUser($id)
+    private function getAccessiblePullRequest(int $pull_request_id): PullRequest
     {
         try {
-            $pull_request = $this->pull_request_factory->getPullRequestById($id);
+            $pull_request = $this->pull_request_factory->getPullRequestById($pull_request_id);
             $current_user = $this->user_manager->getCurrentUser();
             $this->permission_checker->checkPullRequestIsReadableByUser($pull_request, $current_user);
 
-            $git_reference = $this->git_pull_request_reference_retriever->getGitReferenceFromPullRequest($pull_request);
+            return $pull_request;
         } catch (PullRequestNotFoundException $exception) {
             throw new RestException(404);
         } catch (\GitRepoNotFoundException $exception) {
@@ -1195,6 +1232,20 @@ class PullRequestsResource extends AuthenticatedResource
             throw new RestException(403, $exception->getMessage());
         } catch (UserCannotReadGitRepositoryException $exception) {
             throw new RestException(403, 'User is not able to READ the git repository');
+        } catch (GitPullRequestReferenceNotFoundException $exception) {
+            throw new RestException(404);
+        }
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function getAccessiblePullRequestWithGitReferenceForCurrentUser(int $id): PullRequestWithGitReference
+    {
+        try {
+            $pull_request = $this->getAccessiblePullRequest($id);
+
+            $git_reference = $this->git_pull_request_reference_retriever->getGitReferenceFromPullRequest($pull_request);
         } catch (GitPullRequestReferenceNotFoundException $exception) {
             throw new RestException(404);
         }
