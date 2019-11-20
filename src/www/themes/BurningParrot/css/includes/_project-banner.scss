@@ -25,9 +25,14 @@
 }
 
 .project-banner-clamped {
+    width: calc(100vw - #{$sidebar-expanded-width + $tlp-spacing * 4});
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.sidebar-collapsed .project-banner-clamped {
+    width: calc(100vw - #{$sidebar-collapsed-width + $tlp-spacing * 4});
 }
 
 .project-banner-can-be-unclamped {
