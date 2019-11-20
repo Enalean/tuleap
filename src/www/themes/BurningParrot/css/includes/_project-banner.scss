@@ -19,8 +19,8 @@
 
 .project-banner {
     display: flex;
-    flex-direction: row;
-    padding: $tlp-spacing;
+    justify-content: space-between;
+    padding: $tlp-spacing 15px $tlp-spacing $tlp-spacing;
     background-color: $tlp-ui-warning;
 }
 
@@ -45,11 +45,12 @@
 }
 
 #project-banner-close {
-    align-self: center;
-    margin-left: auto;
-    padding-left: $tlp-half-spacing;
+    position: relative;
+    top: 4px;
+    left: -2px;
+    align-self: baseline;
+    margin-left: $tlp-spacing;
     color: $tlp-ui-white;
-    font-weight: 600;
     cursor: pointer;
 
     &:hover {

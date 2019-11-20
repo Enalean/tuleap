@@ -20,8 +20,8 @@
 
 .project-banner {
     display: flex;
-    flex-direction: row;
-    padding: 20px;
+    justify-content: space-between;
+    padding: 20px 15px 20px 20px;
     background-color: $ui-color-warning;
 }
 
@@ -46,11 +46,12 @@
 }
 
 #project-banner-close {
-    align-self: center;
-    margin-left: auto;
-    padding-left: 10px;
+    position: relative;
+    top: 4px;
+    left: -2px;
+    align-self: baseline;
+    margin-left: 20px;
     color: $white;
-    font-weight: 600;
     cursor: pointer;
 
     &:hover {
