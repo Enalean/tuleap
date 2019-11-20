@@ -286,7 +286,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             case self::FUNC_SHOW_BURNDOWN:
                 try {
                     $artifact_id = $request->getValidated('src_aid', 'uint', 0);
-                    $artifact    = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
+                    $artifact    = $this->getArtifactFactory()->getArtifactById($artifact_id);
                     if (! $artifact) {
                         return false;
                     }
@@ -854,5 +854,13 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             new SemanticTimeframeDao(),
             $this->getFormElementFactory()
         );
+    }
+
+    /**
+     * protected for testing purpose
+     */
+    protected function getArtifactFactory(): Tracker_ArtifactFactory
+    {
+        return Tracker_ArtifactFactory::instance();
     }
 }
