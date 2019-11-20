@@ -19,7 +19,7 @@
 
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
-class ProjectCreationData
+class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     private $logger;
@@ -170,8 +170,8 @@ class ProjectCreationData
         $this->short_description   = isset($project['form_short_description']) ? $project['form_short_description'] : null;
         $this->built_from_template = isset($project['built_from_template'])    ? $project['built_from_template']    : null;
         $this->is_test             = isset($project['is_test'])                ? $project['is_test']                : null;
-        $this->access              = $this->getAccessFromProjectArrayData($project);
-        $this->trove_data          = isset($project['trove'])                  ? $project['trove']                  : array();
+        $this->setAccessFromProjectData($project);
+        $this->trove_data          = isset($project['trove']) ? $project['trove'] : [];
         $this->data_services       = isset($project['services'])               ? $project['services']               : array();
         $this->data_fields         = $project;
     }
@@ -333,5 +333,20 @@ class ProjectCreationData
         if (isset($this->data_services[$service_id])) {
             $this->data_services[$service_id]['is_used'] = '1';
         }
+    }
+
+    public function setShortDescription($short_description): void
+    {
+        $this->short_description = $short_description;
+    }
+
+    /**
+     * @param array $project
+     *
+     * @return string
+     */
+    public function setAccessFromProjectData(array $project): string
+    {
+        return $this->access = $this->getAccessFromProjectArrayData($project);
     }
 }

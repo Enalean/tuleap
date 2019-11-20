@@ -22,6 +22,7 @@ namespace Tuleap\REST;
 
 use Guzzle\Http\Exception\BadResponseException;
 use REST_TestDataBuilder;
+use Tuleap\Project\REST\v1\RestProjectCreator;
 
 /**
  * @group ProjectTests
@@ -40,8 +41,8 @@ class ProjectTest extends ProjectBase
     public function testPOSTForRegularUser()
     {
         $post_resource = json_encode([
-            'label' => 'Test Request 9747',
-            'shortname'  => 'test9747',
+            'label' => 'Test Request 9747 regular user',
+            'shortname'  => 'test9747-regular-user',
             'description' => 'Test of Request 9747 for REST API Project Creation',
             'is_public' => true,
             'template_id' => 100
@@ -55,7 +56,7 @@ class ProjectTest extends ProjectBase
                 $post_resource
             )
         );
-        $this->assertEquals($response->getStatusCode(), 403);
+        $this->assertEquals($response->getStatusCode(), 201);
     }
 
     public function testPOSTForAdmin()
@@ -125,6 +126,29 @@ class ProjectTest extends ProjectBase
             )
         );
         $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testProjectCreationWithXMLTemplate() : void
+    {
+        $post_resource = json_encode([
+            'label'       => 'Created from scrum XML template',
+            'shortname'   => 'from-scrum-template',
+            'description' => 'I create projects',
+            'is_public'   => false,
+            'xml_template_name' => RestProjectCreator::SCRUM_TEMPLATE
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_2_NAME,
+            $this->client->post(
+                'projects',
+                null,
+                $post_resource
+            )
+        );
+        $this->assertEquals($response->getStatusCode(), 201);
+        $project = $response->json();
+        $this->assertEquals('Created from scrum XML template', $project['label']);
     }
 
     public function testGET()

@@ -183,7 +183,7 @@ if ($special_cat === 'none') {
     . "GROUP BY groups.group_id ORDER BY groups.group_name ";
 }
 
-$limit  = $TROVE_BROWSELIMIT;
+$limit  = TroveCatFactory::BROWSELIMIT;
 $offset = (int) $request->getValidated('offset', 'uint', 0);
 $query_projlist .= " LIMIT $limit OFFSET $offset ";
 
@@ -226,7 +226,7 @@ $renderer->renderToPage(
         $root_categories,
         $projects,
         new \Tuleap\Layout\PaginationPresenter(
-            $TROVE_BROWSELIMIT,
+            TroveCatFactory::BROWSELIMIT,
             $offset,
             count($projects),
             $total_nb_projects,
