@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use Tracker_FormElement_Field_List_BindValue;
-use Tuleap\Taskboard\TaskboardTracker;
+use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
 class ArtifactMappedFieldValueRetriever
 {

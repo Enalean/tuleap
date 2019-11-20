@@ -23,27 +23,25 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use Cardwall_Column;
-use Cardwall_OnTop_ConfigFactory;
 use Planning_Milestone;
-use Tracker_FormElementFactory;
-use TrackerFactory;
-use Tuleap\Taskboard\TaskboardTracker;
+use Tuleap\Taskboard\Tracker\TaskboardTracker;
+use Tuleap\Taskboard\Tracker\TrackerCollectionRetriever;
 
 class TrackerMappingPresenterBuilder
 {
-    /** @var Cardwall_OnTop_ConfigFactory */
-    private $config_factory;
+    /** @var TrackerCollectionRetriever */
+    private $trackers_retriever;
     /** @var MappedFieldRetriever */
     private $mapped_field_retriever;
     /** @var MappedValuesRetriever */
     private $mapped_values_retriever;
 
     public function __construct(
-        Cardwall_OnTop_ConfigFactory $config_factory,
+        TrackerCollectionRetriever $trackers_retriever,
         MappedFieldRetriever $mapped_field_retriever,
         MappedValuesRetriever $mapped_values_retriever
     ) {
-        $this->config_factory          = $config_factory;
+        $this->trackers_retriever      = $trackers_retriever;
         $this->mapped_field_retriever  = $mapped_field_retriever;
         $this->mapped_values_retriever = $mapped_values_retriever;
     }
@@ -51,10 +49,7 @@ class TrackerMappingPresenterBuilder
     public static function build(): self
     {
         return new self(
-            new Cardwall_OnTop_ConfigFactory(
-                TrackerFactory::instance(),
-                Tracker_FormElementFactory::instance()
-            ),
+            TrackerCollectionRetriever::build(),
             MappedFieldRetriever::build(),
             MappedValuesRetriever::build()
         );
@@ -65,15 +60,11 @@ class TrackerMappingPresenterBuilder
      */
     public function buildMappings(Planning_Milestone $milestone, Cardwall_Column $column): array
     {
-        $config   = $this->config_factory->getOnTopConfigByPlanning($milestone->getPlanning());
-        $mappings = [];
-        if ($config) {
-            foreach ($config->getTrackers() as $tracker) {
-                $taskboard_tracker = new TaskboardTracker($milestone->getArtifact()->getTracker(), $tracker);
-                $mappings[]        = $this->buildMappingForATracker($taskboard_tracker, $column);
+        return $this->trackers_retriever->getTrackersForMilestone($milestone)->map(
+            function (TaskboardTracker $tracker) use ($column) {
+                return $this->buildMappingForATracker($tracker, $column);
             }
-        }
-        return $mappings;
+        );
     }
 
     private function buildMappingForATracker(

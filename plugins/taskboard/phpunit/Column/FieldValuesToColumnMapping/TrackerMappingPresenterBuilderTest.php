@@ -23,15 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use Cardwall_Column;
-use Cardwall_OnTop_Config;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Planning;
 use Planning_Milestone;
 use Tracker;
 use Tracker_FormElement_Field_Selectbox;
-use Tuleap\Taskboard\TaskboardTracker;
+use Tuleap\Taskboard\Tracker\TaskboardTracker;
+use Tuleap\Taskboard\Tracker\TrackerCollection;
+use Tuleap\Taskboard\Tracker\TrackerCollectionRetriever;
 
 final class TrackerMappingPresenterBuilderTest extends TestCase
 {
@@ -39,8 +39,8 @@ final class TrackerMappingPresenterBuilderTest extends TestCase
 
     /** @var TrackerMappingPresenterBuilder */
     private $builder;
-    /** @var \Cardwall_OnTop_ConfigFactory|M\LegacyMockInterface|M\MockInterface */
-    private $config_factory;
+    /** @var M\LegacyMockInterface|M\MockInterface|TrackerCollectionRetriever */
+    private $trackers_retriever;
     /** @var M\LegacyMockInterface|M\MockInterface|MappedFieldRetriever */
     private $mapped_field_retriever;
     /** @var M\LegacyMockInterface|M\MockInterface|MappedValuesRetriever */
@@ -48,11 +48,11 @@ final class TrackerMappingPresenterBuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->config_factory          = M::mock(\Cardwall_OnTop_ConfigFactory::class);
+        $this->trackers_retriever      = M::mock(TrackerCollectionRetriever::class);
         $this->mapped_field_retriever  = M::mock(MappedFieldRetriever::class);
         $this->mapped_values_retriever = M::mock(MappedValuesRetriever::class);
         $this->builder                 = new TrackerMappingPresenterBuilder(
-            $this->config_factory,
+            $this->trackers_retriever,
             $this->mapped_field_retriever,
             $this->mapped_values_retriever
         );
@@ -60,31 +60,27 @@ final class TrackerMappingPresenterBuilderTest extends TestCase
 
     public function testNoTrackers(): void
     {
-        $planning          = M::mock(Planning::class);
-        $milestone_tracker = M::mock(Tracker::class);
-        $milestone         = $this->mockMilestone($planning, $milestone_tracker);
-        $ongoing_column    = new Cardwall_Column(25, 'On Going', 'graffiti-yellow');
-        $empty_config      = $this->mockConfig($planning);
-        $empty_config->shouldReceive('getTrackers')
+        $milestone      = M::mock(Planning_Milestone::class);
+        $ongoing_column = new Cardwall_Column(25, 'On Going', 'graffiti-yellow');
+        $this->trackers_retriever->shouldReceive('getTrackersForMilestone')
+            ->with($milestone)
             ->once()
-            ->andReturn([]);
+            ->andReturn(new TrackerCollection([]));
 
         $this->assertEquals([], $this->builder->buildMappings($milestone, $ongoing_column));
     }
 
     public function testNoValuesForTracker(): void
     {
-        $planning          = M::mock(Planning::class);
         $milestone_tracker = M::mock(Tracker::class);
-        $milestone         = $this->mockMilestone($planning, $milestone_tracker);
+        $milestone         = M::mock(Planning_Milestone::class);
         $ongoing_column    = new Cardwall_Column(25, 'On Going', 'graffiti-yellow');
         $tracker           = $this->mockTracker('76');
         $taskboard_tracker = new TaskboardTracker($milestone_tracker, $tracker);
-        $config            = $this->mockConfig($planning);
-        $config->shouldReceive('getTrackers')
+        $this->trackers_retriever->shouldReceive('getTrackersForMilestone')
+            ->with($milestone)
             ->once()
-            ->andReturn([$tracker]);
-
+            ->andReturn(new TrackerCollection([$taskboard_tracker]));
         $this->mockMappedField('3086', $taskboard_tracker);
         $this->mockMappedValues([], $taskboard_tracker, $ongoing_column);
 
@@ -96,16 +92,15 @@ final class TrackerMappingPresenterBuilderTest extends TestCase
 
     public function testBuildMappingsReturnsMappingsForGivenColumn(): void
     {
-        $planning          = M::mock(Planning::class);
         $milestone_tracker = M::mock(Tracker::class);
-        $milestone         = $this->mockMilestone($planning, $milestone_tracker);
+        $milestone         = M::mock(Planning_Milestone::class);
         $ongoing_column    = new Cardwall_Column(25, 'On Going', 'graffiti-yellow');
         $tracker           = $this->mockTracker('76');
         $taskboard_tracker = new TaskboardTracker($milestone_tracker, $tracker);
-        $config            = $this->mockConfig($planning);
-        $config->shouldReceive('getTrackers')
+        $this->trackers_retriever->shouldReceive('getTrackersForMilestone')
+            ->with($milestone)
             ->once()
-            ->andReturn([$tracker]);
+            ->andReturn(new TrackerCollection([$taskboard_tracker]));
         $this->mockMappedField('3086', $taskboard_tracker);
         $this->mockMappedValues([1674], $taskboard_tracker, $ongoing_column);
 
@@ -117,18 +112,17 @@ final class TrackerMappingPresenterBuilderTest extends TestCase
 
     public function testBuildMappingsMultipleTrackers(): void
     {
-        $planning                 = M::mock(Planning::class);
         $milestone_tracker        = M::mock(Tracker::class);
-        $milestone                = $this->mockMilestone($planning, $milestone_tracker);
+        $milestone                = M::mock(Planning_Milestone::class);
         $ongoing_column           = new Cardwall_Column(25, 'On Going', 'graffiti-yellow');
         $first_tracker            = $this->mockTracker('76');
         $first_taskboard_tracker  = new TaskboardTracker($milestone_tracker, $first_tracker);
         $second_tracker           = $this->mockTracker('83');
         $second_taskboard_tracker = new TaskboardTracker($milestone_tracker, $second_tracker);
-        $config                   = $this->mockConfig($planning);
-        $config->shouldReceive('getTrackers')
+        $this->trackers_retriever->shouldReceive('getTrackersForMilestone')
+            ->with($milestone)
             ->once()
-            ->andReturn([$first_tracker, $second_tracker]);
+            ->andReturn(new TrackerCollection([$first_taskboard_tracker, $second_taskboard_tracker]));
 
         $this->mockMappedField('3086', $first_taskboard_tracker);
         $this->mockMappedValues([1674], $first_taskboard_tracker, $ongoing_column);
@@ -144,19 +138,6 @@ final class TrackerMappingPresenterBuilderTest extends TestCase
             [new ListFieldValuePresenter(1857), new ListFieldValuePresenter(1858)]
         );
         $this->assertEquals([$expected_first_mapping, $expected_second_mapping], $result);
-    }
-
-    /**
-     * @return Cardwall_OnTop_Config|M\LegacyMockInterface|M\MockInterface
-     */
-    private function mockConfig(Planning $planning)
-    {
-        $config = M::mock(Cardwall_OnTop_Config::class);
-        $this->config_factory->shouldReceive('getOnTopConfigByPlanning')
-            ->with($planning)
-            ->once()
-            ->andReturn($config);
-        return $config;
     }
 
     /**
@@ -196,22 +177,5 @@ final class TrackerMappingPresenterBuilderTest extends TestCase
             )
             ->once()
             ->andReturn($mapped_values);
-    }
-
-    /**
-     * @return M\LegacyMockInterface|M\MockInterface|Planning_Milestone
-     */
-    private function mockMilestone(Planning $planning, Tracker $milestone_tracker)
-    {
-        $milestone = M::mock(Planning_Milestone::class);
-        $milestone
-            ->shouldReceive('getPlanning')
-            ->andReturn($planning);
-        $milestone->shouldReceive('getArtifact')
-            ->andReturn(
-                M::mock(\Tracker_Artifact::class)->shouldReceive(['getTracker' => $milestone_tracker])
-                    ->getMock()
-            );
-        return $milestone;
     }
 }

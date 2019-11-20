@@ -33,6 +33,7 @@ use Tuleap\Taskboard\Column\ColumnPresenterCollectionRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenterBuilder;
 use Tuleap\Taskboard\REST\ResourcesInjector;
 use Tuleap\Taskboard\Routing\MilestoneExtractor;
+use Tuleap\Taskboard\Tracker\TrackerPresenterCollectionBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
@@ -101,7 +102,8 @@ class taskboardPlugin extends Plugin
             new BoardPresenterBuilder(
                 $agiledashboard_plugin->getMilestonePaneFactory(),
                 ColumnPresenterCollectionRetriever::build(),
-                new AgileDashboard_BacklogItemDao()
+                new AgileDashboard_BacklogItemDao(),
+                TrackerPresenterCollectionBuilder::build()
             ),
             $agiledashboard_plugin->getIncludeAssets(),
             new IncludeAssets(

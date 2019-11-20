@@ -24,7 +24,7 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
 use Cardwall_Column;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\Taskboard\TaskboardTracker;
+use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
 class FreestyleMappingDao extends DataAccessObject
 {

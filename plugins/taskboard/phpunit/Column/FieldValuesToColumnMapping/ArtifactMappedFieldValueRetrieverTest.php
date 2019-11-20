@@ -25,7 +25,7 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Taskboard\TaskboardTracker;
+use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
 final class ArtifactMappedFieldValueRetrieverTest extends TestCase
 {
