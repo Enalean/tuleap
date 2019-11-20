@@ -172,6 +172,7 @@ module.exports = {
                 "plugins/tracker/grammar/",
                 "tools/**/*.js",
                 "jest.config.js",
+                "jest.projects.config.js",
                 "tests/jest/*.js"
             ],
             env: {

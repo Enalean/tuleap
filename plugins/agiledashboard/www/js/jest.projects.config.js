@@ -17,10 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const base_config = require("../../../../tests/jest/jest.base.config.js");
-
 module.exports = {
-    ...base_config,
-    displayName: "tuleap-agiledashboard",
-    testPathIgnorePatterns: ["/node_modules/", "<rootDir>/kanban", "<rootDir>/planning-v2"]
+    projects: ["<rootDir>/**/jest.config.js"]
 };
