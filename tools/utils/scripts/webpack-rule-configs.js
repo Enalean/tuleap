@@ -19,9 +19,7 @@
 
 const BabelPresetEnv = require("@babel/preset-env").default;
 const BabelPluginSyntaxDynamicImport = require("@babel/plugin-syntax-dynamic-import").default;
-const BabelPluginRewireExports = require("babel-plugin-rewire-exports").default;
 const BabelPluginDynamicImportNode = require("babel-plugin-dynamic-import-node");
-const BabelPluginIstanbul = require("babel-plugin-istanbul").default;
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 
@@ -64,35 +62,6 @@ const babel_options_chrome_firefox = {
     plugins: [BabelPluginSyntaxDynamicImport]
 };
 
-const babel_options_karma = {
-    env: {
-        watch: babel_options_ie11,
-        production: babel_options_ie11,
-        test: {
-            presets: [babel_preset_env_chrome_config],
-            plugins: [
-                BabelPluginSyntaxDynamicImport,
-                BabelPluginRewireExports,
-                "@babel/plugin-transform-modules-amd"
-            ]
-        },
-        coverage: {
-            presets: [babel_preset_env_chrome_config],
-            plugins: [
-                BabelPluginSyntaxDynamicImport,
-                BabelPluginRewireExports,
-                [
-                    BabelPluginIstanbul,
-                    {
-                        exclude: ["**/*.spec.js", "**/*.spec.ts"]
-                    }
-                ],
-                "@babel/plugin-transform-modules-amd"
-            ]
-        }
-    }
-};
-
 const babel_options_jest = {
     presets: [
         [
@@ -112,7 +81,7 @@ const babel_options_jest = {
 function configureBabelRule(babel_options) {
     return {
         test: /\.js$/,
-        exclude: [/node_modules/, /vendor/, /bower_components/],
+        exclude: [/node_modules/, /vendor/],
         use: [
             {
                 loader: "babel-loader",
@@ -170,7 +139,7 @@ const rule_mustache_files = {
 
 const rule_ng_cache_loader = {
     test: /\.html$/,
-    exclude: [/node_modules/, /vendor/, /bower_components/],
+    exclude: [/node_modules/, /vendor/],
     use: [
         {
             loader: "ng-cache-loader",
@@ -186,7 +155,7 @@ const artifact_modal_vue_initializer_path = path.resolve(
 
 const rule_angular_gettext_loader = {
     test: /\.po$/,
-    exclude: [/node_modules/, /vendor/, /bower_components/],
+    exclude: [/node_modules/, /vendor/],
     issuer: {
         not: [artifact_modal_vue_initializer_path]
     },
@@ -195,17 +164,6 @@ const rule_angular_gettext_loader = {
         {
             loader: "angular-gettext-loader",
             query: "browserify=true&format=json"
-        }
-    ]
-};
-
-const rule_angular_gettext_extract_loader = {
-    test: /src.*\.(js|html)$/,
-    exclude: [/node_modules/, /vendor/, /bower_components/],
-    use: [
-        {
-            loader: "angular-gettext-extract-loader",
-            query: "pofile=po/template.pot"
         }
     ]
 };
@@ -261,14 +219,12 @@ module.exports = {
     configureTypescriptRules,
     babel_options_ie11,
     babel_options_chrome_firefox,
-    babel_options_karma,
     babel_options_jest,
     rule_po_files,
     rule_mustache_files,
     rule_vue_loader,
     rule_ng_cache_loader,
     rule_angular_gettext_loader,
-    rule_angular_gettext_extract_loader,
     rule_angular_mixed_vue_gettext,
     rule_easygettext_loader,
     rule_scss_loader,

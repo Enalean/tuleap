@@ -54,7 +54,6 @@ module.exports = {
         "!**/tests/**",
         "!**/coverage/**",
         "!**/webpack*js",
-        "!**/karma*js",
         "!**/gulpfile.js",
         "!**/jest.config.js",
         "!**/*.d.ts"

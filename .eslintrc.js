@@ -3,7 +3,6 @@ module.exports = {
         "you-dont-need-lodash-underscore",
         "cypress",
         "vue",
-        "jasmine",
         "jest",
         "@typescript-eslint",
         "import"
@@ -156,33 +155,6 @@ module.exports = {
             }
         },
         {
-            files: ["*.spec.js"],
-            env: {
-                jasmine: true
-            },
-            globals: {
-                // jasmine 3.2
-                expectAsync: true,
-                // jasmine-fixture
-                affix: true,
-                // jasmine-promise-matchers,
-                installPromiseMatchers: true
-            },
-            rules: {
-                "jasmine/expect-matcher": "error",
-                "jasmine/expect-single-argument": "error",
-                "jasmine/no-assign-spyon": "error",
-                "jasmine/no-disabled-tests": "error",
-                "jasmine/no-expect-in-setup-teardown": "error",
-                "jasmine/no-focused-tests": "error",
-                "jasmine/no-global-setup": "error",
-                "jasmine/no-promise-without-done-fail": "error",
-                "jasmine/no-suite-callback-args": "error",
-                "jasmine/no-unsafe-spy": "error",
-                "jasmine/prefer-jasmine-matcher": "error"
-            }
-        },
-        {
             files: ["*.test.js", "*.test.ts", "tests/jest/fail-console-error-warning.js"],
             extends: ["plugin:jest/recommended"],
             rules: {
@@ -196,7 +168,6 @@ module.exports = {
         {
             files: [
                 "gulpfile.js",
-                "karma.*.js",
                 "webpack.*.js",
                 "plugins/tracker/grammar/",
                 "tools/**/*.js",

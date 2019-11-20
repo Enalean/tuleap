@@ -24,44 +24,6 @@ const assets_dir_path = path.resolve(__dirname, "../assets");
 const assets_public_path = "assets/";
 const manifest_plugin = webpack_configurator.getManifestPlugin();
 
-const webpack_config_for_artifact_modal = {
-    entry: "./angular-artifact-modal/index.js",
-    context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(assets_dir_path),
-    externals: {
-        tlp: "tlp",
-        ckeditor: "CKEDITOR"
-    },
-    resolve: {
-        alias: webpack_configurator.extendAliases(
-            webpack_configurator.angular_artifact_modal_aliases,
-            webpack_configurator.vue_components_alias,
-            {
-                // Those are needed for tests
-                angular$: path.resolve(__dirname, "node_modules/angular"),
-                "angular-mocks$": path.resolve(__dirname, "node_modules/angular-mocks"),
-                jquery$: path.resolve(__dirname, "node_modules/jquery")
-            }
-        )
-    },
-    module: {
-        rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
-            webpack_configurator.rule_ng_cache_loader,
-            webpack_configurator.rule_vue_loader,
-            webpack_configurator.rule_angular_mixed_vue_gettext,
-            webpack_configurator.rule_angular_gettext_loader
-        ]
-    },
-    plugins: [
-        webpack_configurator.getMomentLocalePlugin(),
-        webpack_configurator.getVueLoaderPlugin()
-    ],
-    resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias
-    }
-};
-
 const webpack_config_for_burndown_chart = {
     entry: {
         "burndown-chart": "./burndown-chart/src/burndown-chart.js"
@@ -81,7 +43,7 @@ const webpack_config_for_burndown_chart = {
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_po_files
         ]
     },
@@ -113,7 +75,6 @@ const webpack_config_for_vue = {
         alias: webpack_configurator.extendAliases(
             webpack_configurator.tlp_fetch_alias,
             webpack_configurator.tlp_mocks_alias,
-            webpack_configurator.jquery_mocks_alias,
             webpack_configurator.vue_components_alias,
             {
                 "permission-badge": path_to_badge
@@ -122,7 +83,7 @@ const webpack_config_for_vue = {
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader
         ]
@@ -134,17 +95,8 @@ const webpack_config_for_vue = {
 };
 
 if (process.env.NODE_ENV === "watch" || process.env.NODE_ENV === "test") {
-    webpack_config_for_artifact_modal.devtool = "cheap-module-eval-source-map";
     webpack_config_for_burndown_chart.devtool = "cheap-module-eval-source-map";
     webpack_config_for_vue.devtool = "cheap-module-eval-source-map";
 }
 
-if (process.env.NODE_ENV === "production") {
-    module.exports = [webpack_config_for_burndown_chart, webpack_config_for_vue];
-} else {
-    module.exports = [
-        webpack_config_for_artifact_modal,
-        webpack_config_for_burndown_chart,
-        webpack_config_for_vue
-    ];
-}
+module.exports = [webpack_config_for_burndown_chart, webpack_config_for_vue];
