@@ -17,6 +17,56 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@mixin ease-out-background-gradient($color) {
+    /* ease out gradients does not exist yet in css. https://github.com/w3c/csswg-drafts/issues/1332
+       Here we compute manually the various stops to simulate ease-out for a smooth transition.
+       Formula is: function (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t } with t ∈ [0, 1]
+     */
+    background: linear-gradient(to left,
+    transparentize($color, 0) 22px,
+    transparentize($color, .02) 25px,
+    transparentize($color, .08) 28px,
+    transparentize($color, .18) 30px,
+    transparentize($color, .32) 33px,
+    transparentize($color, .5) 36px,
+    transparentize($color, .68) 39px,
+    transparentize($color, .82) 42px,
+    transparentize($color, .92) 44px,
+    transparentize($color, .98) 47px,
+    transparentize($color, 1) 50px);
+}
+
+.taskboard-card {
+    &::after {
+        @include ease-out-background-gradient($tlp-ui-white);
+        content: '\f040'; // fa-pencil
+        display: flex;
+        position: absolute;
+        top: 0;
+        right: 0;
+        justify-content: flex-end;
+        width: 50px;
+        height: calc(100% - #{$tlp-spacing});
+        padding: $tlp-half-spacing;
+        transition: opacity ease-in-out 100ms;
+        opacity: 0;
+        color: $tlp-ui-dimmed;
+        font-family: FontAwesome;
+        font-size: 14px;
+        font-weight: 300;
+    }
+
+    &:hover::after {
+        opacity: 1;
+    }
+
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.taskboard-card-background-#{$color-name}::after {
+            @include ease-out-background-gradient(map-get($colors, 'secondary'));
+        }
+    }
+}
+
 .taskboard-card-cancel-save-buttons {
     margin: ($tlp-half-spacing - 5px) 0 0;
     text-align: right;
