@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const root_state: State = {
         tuleap_templates
-    } as State;
+    };
 
     Vue.use(VueDOMPurifyHTML);
 
