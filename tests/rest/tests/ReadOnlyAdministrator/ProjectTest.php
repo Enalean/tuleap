@@ -36,8 +36,8 @@ class ProjectTest extends ProjectBase
     public function testPOST(): void
     {
         $post_resource = json_encode([
-            'label' => 'Test Request 9747',
-            'shortname'  => 'test9747',
+            'label' => 'Test Request 9747 read only',
+            'shortname'  => 'test9747-ro',
             'description' => 'Test of Request 9747 for REST API Project Creation',
             'is_public' => true,
             'template_id' => 100
@@ -51,7 +51,7 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals(201, $response->getStatusCode());
     }
 
     public function testGET(): void

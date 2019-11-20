@@ -21,8 +21,6 @@
 
 // ################################## Trove Globals
 
-$GLOBALS['TROVE_BROWSELIMIT'] = 20;
-
 
 // adds a group to a trove node
 function trove_setnode($group_id, $trove_cat_id, $rootnode = 0)

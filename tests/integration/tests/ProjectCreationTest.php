@@ -42,6 +42,7 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
@@ -61,7 +62,7 @@ use UserManager;
 
 class ProjectCreationTest extends TestCase
 {
-    use GlobalLanguageMock;
+    use GlobalLanguageMock, GlobalSVNPollution;
 
     public function setUp(): void
     {
@@ -77,9 +78,6 @@ class ProjectCreationTest extends TestCase
         unset($GLOBALS['cvs_prefix']);
         unset($GLOBALS['sys_default_domain']);
         unset($GLOBALS['feedback']);
-        unset($GLOBALS['TROVE_BROWSELIMIT']);
-        unset($GLOBALS['SVNACCESS']);
-        unset($GLOBALS['SVNGROUPS']);
         $_GET = [];
         $_REQUEST = [];
     }

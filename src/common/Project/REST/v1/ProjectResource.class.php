@@ -30,6 +30,8 @@ use Project_InvalidShortName_Exception;
 use ProjectCreator;
 use ProjectManager;
 use ProjectUGroup;
+use ProjectXMLImporter;
+use ReferenceManager;
 use ServiceManager;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
@@ -50,6 +52,12 @@ use Tuleap\Project\ProjectStatusMapper;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\UgroupDuplicator;
+use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
+use Tuleap\Project\UGroups\Membership\MemberAdder;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
+use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
+use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
@@ -73,6 +81,8 @@ use User_ForgeUserGroupPermissionsManager;
 use UserManager;
 use Wiki;
 use WikiDao;
+use XML_RNGValidator;
+use XMLImportHelper;
 
 /**
  * Wrapper for project related REST methods
@@ -155,12 +165,7 @@ class ProjectResource extends AuthenticatedResource
      * @url    POST
      * @status 201
      *
-     * @param string            $shortname        Name of the project
-     * @param string | null     $description      Full description of the project {@required false}
-     * @param string            $label            A short description of the project
-     * @param bool              $is_public        Define the visibility of the project
-     * @param bool | null       $allow_restricted Define if the project should accept restricted users {@required false}
-     * @param int               $template_id      Template for this project.
+     * @param ProjectPostRepresentation $post_representation {@from body}
      *
      *
      * @return ProjectRepresentation
@@ -168,36 +173,14 @@ class ProjectResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 429
      */
-    protected function post($shortname, ?string $description, $label, $is_public, ?bool $allow_restricted, $template_id)
+    protected function post(ProjectPostRepresentation $post_representation)
     {
         $this->checkAccess();
 
         $user = $this->user_manager->getCurrentUser();
 
-        if (! $this->isUserARestProjectManager($user)) {
-            throw new RestException(403, 'You are not allowed to create a project through the api');
-        }
-
-        if (! $this->project_manager->userCanCreateProject($this->user_manager->getCurrentUser())) {
-            throw new RestException(429, 'Too many projects were created');
-        }
-
-        $data = [
-            'project' => [
-                'form_short_description' => $description,
-                'is_test'                => false,
-                'is_public'              => $is_public,
-                'built_from_template'    => $template_id,
-            ]
-        ];
-
-        if ($allow_restricted !== null) {
-            $data['project']['allow_restricted'] = $allow_restricted;
-        }
-
         try {
-            $project_creator    = ProjectCreator::buildSelfRegularValidation();
-            $project            = $project_creator->createFromRest($shortname, $label, $data);
+            $project = $this->getRestProjectCreator()->create($user, $post_representation);
         } catch (Project_InvalidShortName_Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Project_InvalidFullName_Exception $exception) {
@@ -205,6 +188,8 @@ class ProjectResource extends AuthenticatedResource
         } catch (ProjectInvalidTemplateException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (ProjectDescriptionMandatoryException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (InvalidTemplateException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 
@@ -1723,5 +1708,20 @@ class ProjectResource extends AuthenticatedResource
     private function getUserGroupQueryParser(): UserGroupQueryParameterParser
     {
         return new UserGroupQueryParameterParser($this->json_decoder);
+    }
+
+    private function getRestProjectCreator(): RestProjectCreator
+    {
+        return new RestProjectCreator(
+            $this->project_manager,
+            ProjectCreator::buildSelfRegularValidation(),
+            new XMLFileContentRetriever(),
+            ServiceManager::instance(),
+            \BackendLogger::getDefaultLogger(),
+            new XML_RNGValidator(),
+            ProjectXMLImporter::build(
+                new XMLImportHelper(UserManager::instance())
+            )
+        );
     }
 }

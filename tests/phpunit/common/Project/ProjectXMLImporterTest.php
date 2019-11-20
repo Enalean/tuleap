@@ -36,10 +36,6 @@ class ProjectXMLImporterTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration, RestoreLibXMLEntityLoadingInitialState;
 
-    /**
-     * @var bool
-     */
-    private $globals_trove_browselimit_set_initially;
     private $event_manager;
     /**
      * @var M\MockInterface
@@ -81,7 +77,6 @@ class ProjectXMLImporterTest extends TestCase
     protected function setUp() : void
     {
         parent::setUp();
-        $this->globals_trove_browselimit_set_initially = isset($GLOBALS['TROVE_BROWSELIMIT']);
 
         $this->event_manager     = M::spy(EventManager::class);
         $this->project_manager   = M::spy(\ProjectManager::class);
@@ -133,13 +128,6 @@ class ProjectXMLImporterTest extends TestCase
         );
 
         $this->configuration = new Import\ImportConfig();
-    }
-
-    protected function tearDown() : void
-    {
-        if (! $this->globals_trove_browselimit_set_initially) {
-            unset($GLOBALS['TROVE_BROWSELIMIT']);
-        }
     }
 
     public function testItAsksToPluginToImportInformationsFromTheGivenXml()
