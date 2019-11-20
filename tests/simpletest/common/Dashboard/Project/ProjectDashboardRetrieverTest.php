@@ -34,18 +34,19 @@ class ProjectDashboardRetrieverTest extends \TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->project_with_a_dashboard  = aMockProject()->withId(1)->build();
-        $this->project_without_dashboard = aMockProject()->withId(2)->build();
+        $this->project_with_a_dashboard  = \Mockery::spy(\Project::class, ['getID' => 1, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project_without_dashboard = \Mockery::spy(\Project::class, ['getID' => 2, 'getUnixName' => false, 'isPublic' => false]);
 
-        $dao = mock('Tuleap\Dashboard\Project\ProjectDashboardDao');
+        $dao = \Mockery::spy(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
 
-        stub($dao)->searchAllProjectDashboards(1)->returnsDar(array(
+        $dao->shouldReceive('searchAllProjectDashboards')->with(1)->andReturns(\TestHelper::arrayToDar(array(
             'id'         => 1,
             'project_id' => 1,
             'name'       => 'dashboard_one'
-        ));
-        stub($dao)->searchAllProjectDashboards(2)->returnsEmptyDar();
+        )));
+        $dao->shouldReceive('searchAllProjectDashboards')->with(2)->andReturns(\TestHelper::emptyDar());
 
         $this->project_retriever = new ProjectDashboardRetriever($dao);
     }

@@ -70,6 +70,8 @@ class WidgetRetrieverTest extends \TuleapTestCase
 
     public function setUp()
     {
+        parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->widget_one   = new DashboardWidget(1, 'image', 10, 1, 0, 0);
         $this->widget_two   = new DashboardWidget(2, 'image', 11, 2, 0, 0);
         $this->widget_three = new DashboardWidget(3, 'image', 12, 1, 1, 0);
@@ -100,32 +102,32 @@ class WidgetRetrieverTest extends \TuleapTestCase
 
     public function itReturnsAllWidgets()
     {
-        $dao       = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
+        $dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
 
-        stub($dao)->searchAllLinesByDashboardIdOrderedByRank()->returnsDar(array(
+        $dao->shouldReceive('searchAllLinesByDashboardIdOrderedByRank')->andReturns(\TestHelper::arrayToDar(array(
             'id'             => 1,
             'dashboard_id'   => 1,
             'dashboard_type' => 'user',
             'layout'         => 'one-column',
             'rank'           => 0
-        ));
-        stub($dao)->searchAllColumnsByLineIdOrderedByRank()->returnsDarFromArray(array(
+        )));
+        $dao->shouldReceive('searchAllColumnsByLineIdOrderedByRank')->andReturns(\TestHelper::argListToDar(array(
             array('id' => 1, 'line_id' => 1, 'rank' => 0),
             array('id' => 2, 'line_id' => 1, 'rank' => 1),
             array('id' => 3, 'line_id' => 1, 'rank' => 2)
-        ));
-        stub($dao)->searchAllWidgetByColumnId(1)->returnsDarFromArray(array(
+        )));
+        $dao->shouldReceive('searchAllWidgetByColumnId')->with(1)->andReturns(\TestHelper::argListToDar(array(
             array('id' => 1, 'column_id' => 1, 'rank' => 0, 'name' => 'image', 'content_id' => 10, 'is_minimized' => 0),
             array('id' => 3, 'column_id' => 1, 'rank' => 1, 'name' => 'image', 'content_id' => 12, 'is_minimized' => 0)
-        ));
-        stub($dao)->searchAllWidgetByColumnId(2)->returnsDarFromArray(array(
+        )));
+        $dao->shouldReceive('searchAllWidgetByColumnId')->with(2)->andReturns(\TestHelper::argListToDar(array(
             array('id' => 2, 'column_id' => 2, 'rank' => 0, 'name' => 'image', 'content_id' => 11, 'is_minimized' => 0),
             array('id' => 4, 'column_id' => 2, 'rank' => 1, 'name' => 'image', 'content_id' => 13, 'is_minimized' => 0)
-        ));
-        stub($dao)->searchAllWidgetByColumnId(3)->returnsDarFromArray(array(
+        )));
+        $dao->shouldReceive('searchAllWidgetByColumnId')->with(3)->andReturns(\TestHelper::argListToDar(array(
             array('id' => 5, 'column_id' => 3, 'rank' => 0, 'name' => 'image', 'content_id' => 14, 'is_minimized' => 0)
-        ));
+        )));
 
         $lines                = $retriever->getAllWidgets(1, 'user');
         $columns              = $lines[0]->getWidgetColumns();
@@ -148,12 +150,12 @@ class WidgetRetrieverTest extends \TuleapTestCase
 
     public function itReturnsEmptyArrayIfThereAreNotWidgets()
     {
-        $dao       = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
+        $dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
 
-        stub($dao)->searchAllLinesByDashboardIdOrderedByRank()->returnsEmptyDar();
-        stub($dao)->searchAllColumnsByLineIdOrderedByRank()->returnsEmptyDar();
-        stub($dao)->searchAllWidgetByColumnId()->returnsEmptyDar();
+        $dao->shouldReceive('searchAllLinesByDashboardIdOrderedByRank')->andReturns(\TestHelper::emptyDar());
+        $dao->shouldReceive('searchAllColumnsByLineIdOrderedByRank')->andReturns(\TestHelper::emptyDar());
+        $dao->shouldReceive('searchAllWidgetByColumnId')->andReturns(\TestHelper::emptyDar());
 
         $widget_lines = $retriever->getAllWidgets(1, 'user');
         $this->assertArrayEmpty($widget_lines);
@@ -161,14 +163,14 @@ class WidgetRetrieverTest extends \TuleapTestCase
 
     public function itReturnsColumnsByLineById()
     {
-        $dao       = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
+        $dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
 
-        stub($dao)->searchAllColumnsByLineIdOrderedByRank()->returnsDarFromArray(array(
+        $dao->shouldReceive('searchAllColumnsByLineIdOrderedByRank')->andReturns(\TestHelper::argListToDar(array(
             array('id' => 1, 'line_id' => 1, 'rank' => 0),
             array('id' => 2, 'line_id' => 1, 'rank' => 1),
             array('id' => 3, 'line_id' => 1, 'rank' => 2)
-        ));
+        )));
 
         $columns = $retriever->getColumnsByLineById(1);
 
@@ -181,10 +183,10 @@ class WidgetRetrieverTest extends \TuleapTestCase
 
     public function itReturnsEmptyArrayIfThereAreNotColumnsByLineById()
     {
-        $dao       = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
+        $dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
 
-        stub($dao)->searchAllColumnsByLineIdOrderedByRank()->returnsEmptyDar();
+        $dao->shouldReceive('searchAllColumnsByLineIdOrderedByRank')->andReturns(\TestHelper::emptyDar());
 
         $columns = $retriever->getColumnsByLineById(1);
 
@@ -193,17 +195,17 @@ class WidgetRetrieverTest extends \TuleapTestCase
 
     public function itReturnsWidgetById()
     {
-        $dao       = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
+        $dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
 
-        stub($dao)->searchWidgetById()->returnsDar(array(
+        $dao->shouldReceive('searchWidgetById')->andReturns(\TestHelper::arrayToDar(array(
             'id'           => 1,
             'column_id'    => 1,
             'rank'         => 0,
             'name'         => 'image',
             'content_id'   => 10,
             'is_minimized' => 0
-        ));
+        )));
 
         $widget   = $retriever->getWidgetById(1);
         $expected = new DashboardWidget(1, 'image', 10, 1, 0, 0);
@@ -213,10 +215,10 @@ class WidgetRetrieverTest extends \TuleapTestCase
 
     public function itThrowsExceptionIfThereIsNoWidget()
     {
-        $dao       = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
+        $dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
 
-        stub($dao)->searchWidgetById()->returnsEmptyDar();
+        $dao->shouldReceive('searchWidgetById')->andReturns(\TestHelper::emptyDar());
 
         $this->expectException();
 

@@ -50,6 +50,7 @@ class WidgetDeletorTest extends \TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->widget_one = new DashboardWidget(1, 'image', 10, 1, 0, 0);
         $this->widget_two = new DashboardWidget(2, 'image', 11, 2, 0, 0);
@@ -61,22 +62,22 @@ class WidgetDeletorTest extends \TuleapTestCase
 
     public function itDeletesColumn()
     {
-        $dao     = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
+        $dao     = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $deletor = new DashboardWidgetDeletor($dao);
 
-        expect($dao)->removeColumn()->once();
-        expect($dao)->reorderColumns()->once();
+        $dao->shouldReceive('removeColumn')->once();
+        $dao->shouldReceive('reorderColumns')->once();
 
         $deletor->deleteColumn($this->column);
     }
 
     public function itnDeletesLine()
     {
-        $dao     = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
+        $dao     = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $deletor = new DashboardWidgetDeletor($dao);
 
-        expect($dao)->removeLine()->once();
-        expect($dao)->reorderLines()->once();
+        $dao->shouldReceive('removeLine')->once();
+        $dao->shouldReceive('reorderLines')->once();
 
         $deletor->deleteLineByColumn($this->column);
     }
