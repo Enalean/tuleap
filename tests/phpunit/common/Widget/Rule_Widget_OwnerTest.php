@@ -23,15 +23,12 @@
  *
  */
 
-class Rule_Widget_OwnerTest extends TuleapTestCase
+use PHPUnit\Framework\TestCase;
+
+class Rule_Widget_OwnerTest extends TestCase
 {
 
-    function UnitTestCase($name = 'Rule_Widget_Owner test')
-    {
-        $this->UnitTestCase($name);
-    }
-
-    function testOk()
+    public function testOk(): void
     {
         $r = new Rule_Widget_Owner();
         $this->assertTrue($r->isValid("u102"));
@@ -40,7 +37,7 @@ class Rule_Widget_OwnerTest extends TuleapTestCase
         $this->assertTrue($r->isValid("g1"));
     }
 
-    function testBadFormat()
+    public function testBadFormat(): void
     {
         $r = new Rule_Widget_Owner();
         $this->assertFalse($r->isValid("uw102"));
