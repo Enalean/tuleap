@@ -22,6 +22,7 @@ namespace Tuleap\REST;
 
 use Guzzle\Http\Exception\BadResponseException;
 use REST_TestDataBuilder;
+use Tuleap\Project\Registration\Template\ScrumTemplate;
 use Tuleap\Project\REST\v1\RestProjectCreator;
 
 /**
@@ -135,11 +136,11 @@ class ProjectTest extends ProjectBase
             'shortname'   => 'from-scrum-template',
             'description' => 'I create projects',
             'is_public'   => false,
-            'xml_template_name' => RestProjectCreator::SCRUM_TEMPLATE
+            'xml_template_name' => ScrumTemplate::NAME,
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_2_NAME,
+            REST_TestDataBuilder::TEST_USER_5_NAME,
             $this->client->post(
                 'projects',
                 null,

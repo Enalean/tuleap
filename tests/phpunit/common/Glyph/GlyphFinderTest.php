@@ -23,33 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Glyph;
 
 use EventManager;
-use ForgeConfig;
 use Mockery;
-use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
 class GlyphFinderTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var string
-     */
-    private $tmp_tuleap_dir;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        ForgeConfig::store();
-        $this->tmp_tuleap_dir = vfsStream::setup()->url();
-        ForgeConfig::set('tuleap_dir', $this->tmp_tuleap_dir);
-    }
-
-    protected function tearDown(): void
-    {
-        ForgeConfig::restore();
-        parent::tearDown();
-    }
 
     public function testItThrowsAnExceptionWhenTheGlyphCanNotBeFound(): void
     {
@@ -62,15 +41,12 @@ class GlyphFinderTest extends TestCase
 
     public function testItFindsAGlyphInCore(): void
     {
-        mkdir($this->tmp_tuleap_dir . '/src/glyphs/', 0777, true);
-        file_put_contents($this->tmp_tuleap_dir . '/src/glyphs/test.svg', 'Glyph in core');
-
         $event_manager = Mockery::mock(EventManager::class);
         $event_manager->shouldNotReceive('processEvent');
 
         $glyph_finder = new GlyphFinder($event_manager);
-        $glyph        = $glyph_finder->get('test');
+        $glyph        = $glyph_finder->get('scrum');
 
-        $this->assertEquals($glyph->getInlineString(), 'Glyph in core');
+        $this->assertStringStartsWith('<svg', $glyph->getInlineString());
     }
 }

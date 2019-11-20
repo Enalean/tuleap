@@ -21,26 +21,12 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Project\Registration;
+namespace Tuleap\Project\Registration\Template;
 
-use Tuleap\Event\Dispatchable;
-
-class TuleapProjectTemplatesCollector implements Dispatchable
+class InvalidTemplateException extends \Exception
 {
-    public const NAME = "tuleapProjectTemplatesCollector";
-
-    /**
-     * @var TemplatePresenter[]
-     */
-    private $template_collection = [];
-
-    public function addNewTemplate(TemplatePresenter $template_presenter): void
+    public function __construct()
     {
-        $this->template_collection[] = $template_presenter;
-    }
-
-    public function getAllTemplates(): array
-    {
-        return $this->template_collection;
+        parent::__construct('You should provide `template_id` or `xml_template_name`');
     }
 }

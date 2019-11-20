@@ -69,7 +69,7 @@ class GlyphFinder
      */
     private function getCoreGlyph($name)
     {
-        $core_glyphs_location = new GlyphLocation(\ForgeConfig::get('tuleap_dir') . '/src/glyphs');
+        $core_glyphs_location = new GlyphLocation(__DIR__ . '/../../glyphs');
         return $this->readGlyph($core_glyphs_location, $name);
     }
 

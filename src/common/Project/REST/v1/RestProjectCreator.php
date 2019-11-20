@@ -23,17 +23,16 @@ declare(strict_types = 1);
 
 namespace Tuleap\Project\REST\v1;
 
-use ForgeConfig;
 use Luracast\Restler\RestException;
 use Project;
 use ProjectCreationData;
+use Tuleap\Project\Registration\Template\InvalidTemplateException;
+use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 
 class RestProjectCreator
 {
-    public const SCRUM_TEMPLATE = 'scrum';
-
     /**
      * @var \ProjectManager
      */
@@ -62,6 +61,10 @@ class RestProjectCreator
      * @var \ProjectXMLImporter
      */
     private $project_XML_importer;
+    /**
+     * @var TemplateFactory
+     */
+    private $template_factory;
 
     public function __construct(
         \ProjectManager $project_manager,
@@ -70,7 +73,8 @@ class RestProjectCreator
         \ServiceManager $service_manager,
         \Logger $logger,
         \XML_RNGValidator $validator,
-        \ProjectXMLImporter $project_XML_importer
+        \ProjectXMLImporter $project_XML_importer,
+        TemplateFactory $template_factory
     ) {
         $this->project_manager            = $project_manager;
         $this->project_creator            = $project_creator;
@@ -79,6 +83,7 @@ class RestProjectCreator
         $this->logger                     = $logger;
         $this->validator                  = $validator;
         $this->project_XML_importer       = $project_XML_importer;
+        $this->template_factory           = $template_factory;
     }
 
     /**
@@ -151,7 +156,7 @@ class RestProjectCreator
      */
     private function createProjectFromSystemTemplate(ProjectPostRepresentation $post_representation): Project
     {
-        $xml_path   = $this->getSystemTemplatePath($post_representation);
+        $xml_path    = $this->template_factory->getTemplate($post_representation->xml_template_name)->getXMLPath();
         $xml_element = $this->XML_file_content_retriever->getSimpleXMLElementFromFilePath(
             $xml_path
         );
@@ -180,14 +185,5 @@ class RestProjectCreator
         $this->project_XML_importer->import($configuration, $project->getGroupId(), $xml_path);
 
         return $project;
-    }
-
-    private function getSystemTemplatePath(ProjectPostRepresentation $post_representation): string
-    {
-        if ($post_representation->xml_template_name === self::SCRUM_TEMPLATE) {
-            return __DIR__ . '/../../../../../tools/utils/setup_templates/scrum/project.xml';
-        }
-
-        throw new InvalidTemplateException();
     }
 }

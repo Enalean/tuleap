@@ -34,6 +34,10 @@ use ProjectManager;
 use ProjectXMLImporter;
 use ServiceManager;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Project\Registration\Template\InvalidTemplateException;
+use Tuleap\Project\Registration\Template\ScrumTemplate;
+use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 
@@ -63,6 +67,11 @@ class RestProjectCreatorTest extends TestCase
             M::spy(Logger::class),
             new \XML_RNGValidator(),
             $this->project_XML_importer,
+            new TemplateFactory(
+                new GlyphFinder(
+                    new \EventManager()
+                )
+            )
         );
 
         $this->user = new \PFUser(['language_id' => 'en_US']);
@@ -141,7 +150,7 @@ class RestProjectCreatorTest extends TestCase
         ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        $this->project->xml_template_name = RestProjectCreator::SCRUM_TEMPLATE;
+        $this->project->xml_template_name = ScrumTemplate::NAME;
         $this->project->shortname         = 'gpig';
         $this->project->label             = 'Guinea Pig';
         $this->project->description       = 'foo';
