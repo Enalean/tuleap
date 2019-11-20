@@ -256,11 +256,8 @@ a.taskboard-card-xref {
             font-size: 14px;
             font-weight: 300;
         }
-    }
 
-    &.taskboard-card-remaining-effort-edit-mode,
-    &:hover {
-        &::before {
+        &:not(.taskboard-card-remaining-effort-edit-mode):hover::before {
             opacity: 1;
         }
     }
