@@ -19,7 +19,7 @@
 
 import { MilestoneData, StoreOptions } from "../../../../type";
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import BurndownChart from "./BurndownChart.vue";
 import { createReleaseWidgetLocalVue } from "../../../../helpers/local-vue-for-test";
 import { DefaultData } from "vue/types/options";

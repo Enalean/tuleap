@@ -19,7 +19,7 @@
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import TaskBoardBody from "./TaskBoardBody.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import SwimlaneSkeleton from "./Swimlane/Skeleton/SwimlaneSkeleton.vue";
 import CollapsedSwimlane from "./Swimlane/CollapsedSwimlane.vue";
 import { ColumnDefinition, Swimlane } from "../../../type";

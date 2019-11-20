@@ -21,7 +21,7 @@ import { ColumnDefinition, Swimlane } from "../../../../type";
 import InvalidMappingSwimlane from "./InvalidMappingSwimlane.vue";
 import { Wrapper, shallowMount } from "@vue/test-utils";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import CellForSoloCard from "./CellForSoloCard.vue";
 import ParentCell from "./ParentCell.vue";
 import { RootState } from "../../../../store/type";

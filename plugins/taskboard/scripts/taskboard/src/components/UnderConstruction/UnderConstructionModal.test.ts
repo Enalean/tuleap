@@ -19,7 +19,10 @@
 
 import * as tlp from "tlp";
 import { shallowMount, Wrapper } from "@vue/test-utils";
-import { createStoreMock, Store } from "@tuleap-vue-components/store-wrapper-jest";
+import {
+    createStoreMock,
+    Store
+} from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
 import UnderConstructionModal from "./UnderConstructionModal.vue";
 

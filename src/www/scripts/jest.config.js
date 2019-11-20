@@ -39,9 +39,5 @@ module.exports = {
         "!**/bootstrap/**",
         "!**/datepicker/**",
         "!**/FlamingParrot/keymaster-sequence/**"
-    ],
-    moduleNameMapper: {
-        ...base_config.moduleNameMapper,
-        "@tuleap-vue-components/(.*)$": "<rootDir>/../../../src/www/scripts/vue-components/$1"
-    }
+    ]
 };

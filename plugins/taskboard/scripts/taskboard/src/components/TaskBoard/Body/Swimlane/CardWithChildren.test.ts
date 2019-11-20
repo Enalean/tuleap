@@ -19,7 +19,7 @@
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import CardWithChildren from "./CardWithChildren.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import { Card, ColumnDefinition, Swimlane } from "../../../../type";
 import { RootState } from "../../../../store/type";
 

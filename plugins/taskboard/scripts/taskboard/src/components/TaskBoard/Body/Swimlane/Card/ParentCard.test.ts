@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ParentCard from "./ParentCard.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 
 jest.useFakeTimers();
 
