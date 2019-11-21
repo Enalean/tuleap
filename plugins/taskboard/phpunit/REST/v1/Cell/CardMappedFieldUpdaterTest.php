@@ -41,7 +41,7 @@ use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValues;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesRetriever;
 use Tuleap\Taskboard\Column\MilestoneTrackerRetriever;
-use Tuleap\Taskboard\TaskboardTracker;
+use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
 final class CardMappedFieldUpdaterTest extends TestCase
 {

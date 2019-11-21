@@ -27,7 +27,7 @@ use Cardwall_FieldProviders_SemanticStatusFieldRetriever;
 use Tracker;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingFactory;
-use Tuleap\Taskboard\TaskboardTracker;
+use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
 class MappedValuesRetriever
 {

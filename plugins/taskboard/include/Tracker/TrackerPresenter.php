@@ -20,35 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Taskboard;
+namespace Tuleap\Taskboard\Tracker;
 
 use Tracker;
 
-final class TaskboardTracker
+final class TrackerPresenter
 {
-    /** @var Tracker */
-    private $milestone_tracker;
-    /** @var Tracker */
-    private $tracker;
+    /** @var int */
+    public $id;
+    /** @var bool */
+    public $can_update_mapped_field;
 
-    public function __construct(Tracker $milestone_tracker, Tracker $tracker)
+    public function __construct(TaskboardTracker $tracker, bool $can_update_mapped_field)
     {
-        $this->milestone_tracker = $milestone_tracker;
-        $this->tracker = $tracker;
-    }
-
-    public function getMilestoneTrackerId(): int
-    {
-        return (int) $this->milestone_tracker->getId();
-    }
-
-    public function getTrackerId(): int
-    {
-        return (int) $this->tracker->getId();
-    }
-
-    public function getTracker(): Tracker
-    {
-        return $this->tracker;
+        $this->id                      = $tracker->getTrackerId();
+        $this->can_update_mapped_field = $can_update_mapped_field;
     }
 }

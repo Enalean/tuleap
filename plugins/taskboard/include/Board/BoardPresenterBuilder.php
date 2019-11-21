@@ -27,6 +27,7 @@ use AgileDashboard_MilestonePresenter;
 use PFUser;
 use Planning_MilestonePaneFactory;
 use Tuleap\Taskboard\Column\ColumnPresenterCollectionRetriever;
+use Tuleap\Taskboard\Tracker\TrackerPresenterCollectionBuilder;
 
 class BoardPresenterBuilder
 {
@@ -42,15 +43,19 @@ class BoardPresenterBuilder
      * @var AgileDashboard_BacklogItemDao
      */
     private $backlog_item_dao;
+    /** @var TrackerPresenterCollectionBuilder */
+    private $trackers_builder;
 
     public function __construct(
         Planning_MilestonePaneFactory $pane_factory,
         ColumnPresenterCollectionRetriever $columns_retriever,
-        AgileDashboard_BacklogItemDao $backlog_item_dao
+        AgileDashboard_BacklogItemDao $backlog_item_dao,
+        TrackerPresenterCollectionBuilder $trackers_builder
     ) {
         $this->pane_factory      = $pane_factory;
         $this->columns_retriever = $columns_retriever;
         $this->backlog_item_dao  = $backlog_item_dao;
+        $this->trackers_builder  = $trackers_builder;
     }
 
     public function getPresenter(\Planning_Milestone $milestone, PFuser $user, bool $is_ie_11): BoardPresenter
@@ -65,6 +70,7 @@ class BoardPresenterBuilder
             $user,
             $milestone,
             $this->columns_retriever->getColumns($user, $milestone),
+            $this->trackers_builder->buildCollection($milestone, $user),
             $has_content,
             $is_ie_11
         );

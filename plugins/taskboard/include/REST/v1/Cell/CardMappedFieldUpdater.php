@@ -42,7 +42,7 @@ use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesRetriever;
 use Tuleap\Taskboard\Column\InvalidColumnException;
 use Tuleap\Taskboard\Column\MilestoneTrackerRetriever;
-use Tuleap\Taskboard\TaskboardTracker;
+use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class CardMappedFieldUpdater

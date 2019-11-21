@@ -28,7 +28,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\EmptyMappedValues;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValues;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesInterface;
-use Tuleap\Taskboard\TaskboardTracker;
+use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
 class FreestyleMappingFactory
 {
