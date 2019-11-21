@@ -23,15 +23,12 @@
  *
  */
 
-class Valid_Widget_OwnerTest extends TuleapTestCase
+use PHPUnit\Framework\TestCase;
+
+class Valid_Widget_OwnerTest extends TestCase
 {
 
-    function UnitTestCase($name = 'Valid_Widget_Owner test')
-    {
-        $this->UnitTestCase($name);
-    }
-
-    function testOk()
+    public function testOk(): void
     {
         $v = new Valid_Widget_Owner();
 
@@ -41,7 +38,7 @@ class Valid_Widget_OwnerTest extends TuleapTestCase
         $this->assertTrue($v->validate("g1"));
     }
 
-    function testSpecialChars()
+    public function testSpecialChars(): void
     {
         $v = new Valid_Widget_Owner();
 
@@ -54,7 +51,7 @@ class Valid_Widget_OwnerTest extends TuleapTestCase
         $this->assertFalse($v->validate("u102\0u102"));
     }
 
-    function testSqlInjections()
+    public function testSqlInjections(): void
     {
         $v = new Valid_Widget_Owner();
 
@@ -63,7 +60,7 @@ class Valid_Widget_OwnerTest extends TuleapTestCase
         $this->assertFalse($v->validate("--"));
     }
 
-    function testHTMLInjections()
+    public function testHTMLInjections(): void
     {
         $v = new Valid_Widget_Owner();
 
