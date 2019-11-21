@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -146,7 +147,7 @@ class WebDAVAuthenticationTest extends TestCase
         $user->shouldReceive('isAnonymous')->andReturns(true);
         $webDAVAuthentication->shouldReceive('getUser')->andReturns($user);
 
-        $this->assertEquals($webDAVAuthentication->authenticate(), $user);
+        $this->assertEquals($user, $webDAVAuthentication->authenticate());
     }
 
     /**
@@ -162,6 +163,6 @@ class WebDAVAuthenticationTest extends TestCase
         $user->shouldReceive('isAnonymous')->andReturns(false);
         $webDAVAuthentication->shouldReceive('getUser')->andReturns($user);
 
-        $this->assertEquals($webDAVAuthentication->authenticate(), $user);
+        $this->assertEquals($user, $webDAVAuthentication->authenticate());
     }
 }
