@@ -857,6 +857,9 @@ fi
 # This adds the proper /etc/rc*.d links for the script that runs the Tuleap backend
 #/sbin/chkconfig --add %{APP_NAME}
 
+# Clean old tuleap cache file
+%{__rm} -f %{APP_CACHE_DIR}/tuleap_hooks_cache
+
 # Restart the services
 #/sbin/service httpd start
 #/etc/init.d/codendi start

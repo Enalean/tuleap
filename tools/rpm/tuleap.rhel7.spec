@@ -765,6 +765,9 @@ if [ $1 -eq 1 ]; then
     /usr/bin/systemctl mask php73-php-fpm || :
 fi
 
+# Clean old tuleap cache file
+%{__rm} -f %{APP_CACHE_DIR}/tuleap_hooks_cache
+
 %post core-subversion
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 
