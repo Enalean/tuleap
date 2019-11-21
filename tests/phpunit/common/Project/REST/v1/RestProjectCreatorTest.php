@@ -34,10 +34,13 @@ use ProjectManager;
 use ProjectXMLImporter;
 use ServiceManager;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
+use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 
@@ -162,18 +165,18 @@ class RestProjectCreatorTest extends TestCase
 
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($template_project)->andReturn([]);
 
-        $new_project = new \Project(['group_id' => 2000]);
-        $this->project_creator->shouldReceive('build')->with(M::on(function (\ProjectCreationData $data) {
-            return $data->getUnixName() === 'gpig' &&
-                $data->getFullName() === 'Guinea Pig' &&
-                $data->getShortDescription() === 'foo' &&
-                $data->getAccess() === \Project::ACCESS_PRIVATE_WO_RESTRICTED;
-        }))->andReturn($new_project);
-
-        $this->project_XML_importer->shouldReceive('import')->with(
+        $this->project_XML_importer->shouldReceive('importWithProjectData')->with(
             \Hamcrest\Core\IsEqual::equalTo(new ImportConfig()),
-            2000,
-            M::any()
+            M::on(static function (ArchiveInterface $archive) {
+                return realpath($archive->getExtractionPath()) === realpath(dirname((new ScrumTemplate(M::mock(Glyph::class)))->getXMLPath()));
+            }),
+            \Hamcrest\Core\IsEqual::equalTo(new SystemEventRunnerForProjectCreationFromXMLTemplate()),
+            M::on(static function (\ProjectCreationData $data) {
+                return $data->getUnixName() === 'gpig' &&
+                    $data->getFullName() === 'Guinea Pig' &&
+                    $data->getShortDescription() === 'foo' &&
+                    $data->getAccess() === \Project::ACCESS_PRIVATE_WO_RESTRICTED;
+            })
         );
 
         $this->creator->create($this->user, $this->project);

@@ -30,6 +30,7 @@ use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectImportCleanupUserCreatorFromAdministrators;
+use Tuleap\Project\SystemEventRunnerInterface;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
@@ -193,10 +194,28 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         );
     }
 
+    public function importWithProjectData(
+        ImportConfig $configuration,
+        ArchiveInterface $archive,
+        SystemEventRunnerInterface $event_runner,
+        ProjectCreationData $project_creation_data
+    ): Project {
+        $this->logger->info('Start creating new project from archive ' . $archive->getExtractionPath());
+
+        $xml_element = $this->getProjectXMLFromArchive($archive);
+        $this->assertXMLisValid($xml_element);
+
+        $project = $this->createProject($event_runner, $project_creation_data);
+
+        $this->importContent($configuration, $project, $xml_element, $archive->getExtractionPath());
+
+        return $project;
+    }
+
     public function importNewFromArchive(
         ImportConfig $configuration,
         ArchiveInterface $archive,
-        Tuleap\Project\SystemEventRunner $event_runner,
+        Tuleap\Project\SystemEventRunnerInterface $event_runner,
         $is_template,
         $project_name_override = null
     ) {
@@ -204,35 +223,21 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
 
         $xml_element = $this->getProjectXMLFromArchive($archive);
 
-        $error                 = false;
-        $params['xml_content'] = $xml_element;
-        $params['error']       = &$error;
-        $this->event_manager->processEvent(
-            Event::IMPORT_XML_IS_PROJECT_VALID,
-            $params
-        );
+        $this->assertXMLisValid($xml_element);
 
-        if ($params['error']) {
-            throw new ImportNotValidException();
-        }
+        $project_creation_data = $this->getProjectCreationDataFromXml($xml_element, $is_template, $project_name_override);
 
-        if (!empty($project_name_override)) {
-            $xml_element['unix-name'] = $project_name_override;
-        }
-
-        $project = $this->createProject($xml_element, $event_runner, $is_template);
+        $project = $this->createProject($event_runner, $project_creation_data);
 
         $this->importContent($configuration, $project, $xml_element, $archive->getExtractionPath());
     }
 
-    private function createProject(
-        SimpleXMLElement $xml,
-        Tuleap\Project\SystemEventRunner $event_runner,
-        $is_template
-    ) {
-        $event_runner->checkPermissions();
+    private function getProjectCreationDataFromXml(SimpleXMLElement $xml, bool $is_template, ?string $project_name_override): ProjectCreationData
+    {
+        if (! empty($project_name_override)) {
+            $xml['unix-name'] = $project_name_override;
+        }
 
-        $this->logger->info("Create project {$xml['unix-name']}");
         $data = ProjectCreationData::buildFromXML(
             $xml,
             100,
@@ -245,8 +250,20 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             $this->logger->info("The project will be a template");
             $data->setIsTemplate();
         }
-        $this->logger->debug("ProjectMetadata extrcted from XML, now create in DB");
-        $project = $this->project_creator->build($data);
+        $this->logger->debug("ProjectMetadata extracted from XML, now create in DB");
+
+        return $data;
+    }
+
+    private function createProject(
+        Tuleap\Project\SystemEventRunnerInterface $event_runner,
+        ProjectCreationData $project_creation_data
+    ) {
+        $event_runner->checkPermissions();
+
+        $this->logger->info(sprintf('Create project %s', $project_creation_data->getUnixName()));
+
+        $project = $this->project_creator->build($project_creation_data);
 
         $this->logger->info("Execute system events to finish creation of project {$project->getID()}, this can take a while...");
         $event_runner->runSystemEvents();
@@ -261,17 +278,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
 
         $xml_element = $this->getProjectXMLFromArchive($archive);
 
-        $error                 = false;
-        $params['xml_content'] = $xml_element;
-        $params['error']       = &$error;
-        $this->event_manager->processEvent(
-            Event::IMPORT_XML_IS_PROJECT_VALID,
-            $params
-        );
-
-        if ($params['error']) {
-            throw new ImportNotValidException();
-        }
+        $this->assertXMLisValid($xml_element);
 
         $this->importFromXMLIntoExistingProject($configuration, $project_id, $xml_element, $archive->getExtractionPath());
     }
@@ -531,5 +538,25 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
     private function importDashboards(SimpleXMLElement $xml_element, PFUser $user, Project $project, MappingsRegistry $mapping_registry)
     {
         $this->dashboard_importer->import($xml_element, $user, $project, $mapping_registry);
+    }
+
+    /**
+     * @throws ImportNotValidException
+     */
+    private function assertXMLisValid(SimpleXMLElement $xml_element): void
+    {
+        $error  = false;
+        $params = [
+            'xml_content' => $xml_element,
+            'error'       => &$error,
+        ];
+        $this->event_manager->processEvent(
+            Event::IMPORT_XML_IS_PROJECT_VALID,
+            $params
+        );
+
+        if ($params['error']) {
+            throw new ImportNotValidException();
+        }
     }
 }
