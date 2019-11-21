@@ -1,5 +1,5 @@
 /*
- * Copyright Enalean (c) 2019. All rights reserved.
+ * Copyright Enalean (c) 2019-Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -23,7 +23,7 @@
 
 import * as actions from "../../store/actions.js";
 import initial_state from "../../store/state.js";
-import { mockFetchError } from "tlp-fetch-mocks-helper-jest";
+import { mockFetchError } from "../../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
 import { ERROR_OCCURRED } from "../../../../constants.js";
 import * as rest_querier from "../../api/rest-querier.js";
 

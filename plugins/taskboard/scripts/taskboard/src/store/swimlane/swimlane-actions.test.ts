@@ -24,7 +24,7 @@ import * as actions from "./swimlane-actions";
 import { loadChildrenCards } from "./swimlane-actions";
 import { ActionContext } from "vuex";
 import { MoveCardsPayload, ReorderCardsPayload, SwimlaneState } from "./type";
-import { mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
+import { mockFetchSuccess } from "../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
 import { RootState } from "../type";
 
 jest.mock("tlp");

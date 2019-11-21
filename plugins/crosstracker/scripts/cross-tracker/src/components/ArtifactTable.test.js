@@ -18,7 +18,10 @@
  */
 
 import Vue from "vue";
-import { mockFetchError, mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
+import {
+    mockFetchError,
+    mockFetchSuccess
+} from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
 import { createStore } from "../store/index.js";
 import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report.js";
 import ArtifactTable from "./ArtifactTable.vue";

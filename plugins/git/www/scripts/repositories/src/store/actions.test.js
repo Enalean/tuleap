@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchSuccess, mockFetchError } from "tlp-fetch-mocks-helper-jest";
+import {
+    mockFetchSuccess,
+    mockFetchError
+} from "../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
 import {
     PROJECT_KEY,
     ERROR_TYPE_NO_GIT,

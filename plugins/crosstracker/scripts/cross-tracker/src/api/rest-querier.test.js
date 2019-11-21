@@ -26,7 +26,7 @@ import {
     getTrackersOfProject,
     getCSVReport
 } from "./rest-querier.js";
-import { mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
+import { mockFetchSuccess } from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
 import * as tlp from "tlp";
 
 jest.mock("tlp");

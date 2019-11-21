@@ -18,7 +18,7 @@
  */
 
 import * as actions from "./actions";
-import { mockFetchError } from "tlp-fetch-mocks-helper-jest";
+import { mockFetchError } from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
 import { TrackerAgileDashboard, Context, MilestoneData } from "../type";
 import * as rest_querier from "../api/rest-querier";
 

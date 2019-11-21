@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchError, mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
+import {
+    mockFetchError,
+    mockFetchSuccess
+} from "../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
 import * as RestService from "./rest-service.js";
 import * as rest_error_state from "./rest-error-state.js";
 

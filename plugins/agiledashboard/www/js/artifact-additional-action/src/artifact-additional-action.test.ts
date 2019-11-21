@@ -22,7 +22,10 @@ import * as fetch_wrapper from "../../../../../../src/www/themes/common/tlp/src/
 import * as get_text from "../../../../../../src/www/scripts/tuleap/gettext/gettext-init";
 import * as feedbacks from "../../../../../../src/www/scripts/tuleap/feedback";
 import GetText from "../../../../../../src/www/scripts/node_modules/@types/node-gettext";
-import { mockFetchError, mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
+import {
+    mockFetchError,
+    mockFetchSuccess
+} from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
 
 describe("Artifact additional action", () => {
     beforeEach(() => {
