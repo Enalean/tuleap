@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,25 +14,15 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  *
  */
 
+import { State } from "./type";
 import { TemplateData } from "../type";
 
-export interface State {
-    tuleap_templates: TemplateData[];
-    selected_template: TemplateData | null;
-}
-
-export interface Context {
-    state: State;
-    commit: Function;
-}
-
-export interface StoreOptions {
-    state: {
-        tuleap_templates: TemplateData[];
-        selected_template: TemplateData | null;
-    };
-}
+export default {
+    setSelectedTemplate(state: State, selected_template: TemplateData): void {
+        state.selected_template = selected_template;
+    }
+};

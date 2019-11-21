@@ -18,24 +18,16 @@
   -->
 
 <template>
-    <div class="project-registration">
+    <div class="project-registration" data-test="project-registration">
         <h1 class="project-registration-title" v-translate>Start a new project</h1>
-
-        <div class="register-new-project-section">
-            <new-project-boxes/>
-            <project-list/>
-        </div>
+        <router-view/>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import NewProjectBoxes from "./NewProjectBoxes.vue";
-import ProjectList from "./ProjectList.vue";
 
-@Component({
-    components: { ProjectList, NewProjectBoxes }
-})
+@Component
 export default class App extends Vue {}
 </script>

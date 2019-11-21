@@ -18,17 +18,24 @@
   -->
 
 <template>
-    <div class="register-new-project-list">
-        <h2><span class="tlp-badge-primary register-new-project-section-badge">1</span><span v-translate>What kind of project is it?</span></h2>
+    <div>
+        <div class="register-new-project-section">
+            <new-project-boxes/>
+            <div class="register-new-project-list">
+                <h2>
+                    <span class="tlp-badge-primary register-new-project-section-badge">1</span>
+                    <span v-translate>What kind of project is it?</span>
+                </h2>
 
-        <p v-translate>
-            The project template you will select provides some services. Don’t worry, you can always modify your project workspace after your project has been created.
-        </p>
+                <p v-translate>
+                    The project template you will select provides some services. Don’t worry, you can always modify your project workspace after your project has been created.
+                </p>
 
-        <div class="tlp-alert-warning" v-translate>
-            This space is under construction. You can still use the current registration process in the meantime.
+                <under-construction-information/>
+                <tuleap-template-list/>
+            </div>
         </div>
-        <tuleap-template-list/>
+        <tuleap-template-footer/>
     </div>
 </template>
 
@@ -36,9 +43,17 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import TuleapTemplateList from "./TuleapTemplates/TuleapTemplateList.vue";
+import UnderConstructionInformation from "./UnderConstructionInformation.vue";
+import NewProjectBoxes from "./NewProjectBoxes.vue";
+import TuleapTemplateFooter from "./TuleapTemplates/TuleapTemplateFooter.vue";
 
 @Component({
-    components: { TuleapTemplateList }
+    components: {
+        TuleapTemplateFooter,
+        NewProjectBoxes,
+        UnderConstructionInformation,
+        TuleapTemplateList
+    }
 })
 export default class ProjectList extends Vue {}
 </script>
