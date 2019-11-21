@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer;
 
+use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
 
 class ReviewerDAO extends DataAccessObject
@@ -35,5 +36,18 @@ class ReviewerDAO extends DataAccessObject
                        WHERE plugin_pullrequest_reviewer_user.pull_request_id = ?',
             $pull_request_id
         );
+    }
+
+    public function setReviewers(int $pull_request_id, int ...$user_ids): void
+    {
+        $this->getDB()->tryFlatTransaction(static function (EasyDB $db) use ($pull_request_id, $user_ids) {
+            $db->delete('plugin_pullrequest_reviewer_user', ['pull_request_id' => $pull_request_id]);
+            foreach ($user_ids as $user_id) {
+                $db->insert(
+                    'plugin_pullrequest_reviewer_user',
+                    ['pull_request_id' => $pull_request_id, 'user_id' => $user_id]
+                );
+            }
+        });
     }
 }
