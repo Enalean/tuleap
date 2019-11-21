@@ -60,6 +60,7 @@ class WebDAVFRSPackageTest extends TestCase
 
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $webDAVFRSPackage->shouldReceive('getWebDAVRelease')->andReturns($release);
+        $webDAVFRSPackage->shouldReceive('getUser')->andReturns(Mockery::mock(\PFUser::class));
 
         $FRSRelease = \Mockery::spy(FRSRelease::class);
         $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns(array($FRSRelease));
@@ -77,6 +78,7 @@ class WebDAVFRSPackageTest extends TestCase
 
         $webDAVFRSPackage = \Mockery::mock(\WebDAVFRSPackage::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $webDAVFRSPackage->shouldReceive('getWebDAVRelease')->andReturns($release);
+        $webDAVFRSPackage->shouldReceive('getUser')->andReturns(Mockery::mock(\PFUser::class));
 
         $FRSRelease = \Mockery::spy(FRSRelease::class);
         $webDAVFRSPackage->shouldReceive('getReleaseList')->andReturns(array($FRSRelease));
@@ -119,6 +121,7 @@ class WebDAVFRSPackageTest extends TestCase
         $webDAVFRSPackage->shouldReceive('getWebDAVRelease')->andReturns($WebDAVRelease);
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $webDAVFRSPackage->shouldReceive('getUtils')->andReturns($utils);
+        $webDAVFRSPackage->shouldReceive('getUser')->andReturns(Mockery::mock(\PFUser::class));
 
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
@@ -140,6 +143,7 @@ class WebDAVFRSPackageTest extends TestCase
         $webDAVFRSPackage->shouldReceive('getWebDAVRelease')->andReturns($WebDAVRelease);
         $utils = \Mockery::spy(\WebDAVUtils::class);
         $webDAVFRSPackage->shouldReceive('getUtils')->andReturns($utils);
+        $webDAVFRSPackage->shouldReceive('getUser')->andReturns(Mockery::mock(\PFUser::class));
 
         $this->assertEquals($webDAVFRSPackage->getChild($WebDAVRelease->getReleaseId()), $WebDAVRelease);
     }
