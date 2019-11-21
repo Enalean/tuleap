@@ -34,21 +34,22 @@ class UserDashboardRetrieverTest extends \TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $dao = mock('Tuleap\Dashboard\User\UserDashboardDao');
+        $dao = \Mockery::spy(\Tuleap\Dashboard\User\UserDashboardDao::class);
 
-        $this->user_with_a_dashboard = mock('PFUser');
-        stub($this->user_with_a_dashboard)->getId()->returns(1);
+        $this->user_with_a_dashboard = \Mockery::spy(\PFUser::class);
+        $this->user_with_a_dashboard->shouldReceive('getId')->andReturns(1);
 
-        $this->user_without_dashboard = mock('PFUser');
-        stub($this->user_without_dashboard)->getId()->returns(2);
+        $this->user_without_dashboard = \Mockery::spy(\PFUser::class);
+        $this->user_without_dashboard->shouldReceive('getId')->andReturns(2);
 
-        stub($dao)->searchAllUserDashboards($this->user_with_a_dashboard)->returnsDar(array(
+        $dao->shouldReceive('searchAllUserDashboards')->with($this->user_with_a_dashboard)->andReturns(\TestHelper::arrayToDar(array(
             'id'      => 1,
             'user_id' => 1,
             'name'    => 'dashboard_one'
-        ));
-        stub($dao)->searchAllUserDashboards($this->user_without_dashboard)->returnsEmptyDar();
+        )));
+        $dao->shouldReceive('searchAllUserDashboards')->with($this->user_without_dashboard)->andReturns(\TestHelper::emptyDar());
 
         $this->user_retriever = new UserDashboardRetriever($dao);
     }

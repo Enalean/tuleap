@@ -81,17 +81,18 @@ class ProjectDashboardXMLImporter_Base extends \TuleapTestCase // phpcs:ignore S
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->dao                     = mock('Tuleap\Dashboard\Project\ProjectDashboardDao');
+        $this->dao                     = \Mockery::spy(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
         $this->project_dashboard_saver = new ProjectDashboardSaver(
             $this->dao
         );
-        $this->widget_creator = mock('Tuleap\Dashboard\Widget\WidgetCreator');
-        $this->widget_factory = mock('Tuleap\Widget\WidgetFactory');
-        $this->widget_dao     = mock('Tuleap\Dashboard\Widget\DashboardWidgetDao');
+        $this->widget_creator = \Mockery::spy(\Tuleap\Dashboard\Widget\WidgetCreator::class);
+        $this->widget_factory = \Mockery::spy(\Tuleap\Widget\WidgetFactory::class);
+        $this->widget_dao     = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $this->event_manager  = \Mockery::spy(\EventManager::class);
 
-        $this->logger                     = mock('Logger');
+        $this->logger                     = \Mockery::spy(\Logger::class);
         $this->project_dashboard_importer = new ProjectDashboardXMLImporter(
             $this->project_dashboard_saver,
             $this->widget_factory,
@@ -102,8 +103,8 @@ class ProjectDashboardXMLImporter_Base extends \TuleapTestCase // phpcs:ignore S
 
         $this->mappings_registry = new MappingsRegistry();
 
-        $this->user    = mock('PFUser');
-        $this->project = aMockProject()->withId(101)->build();
+        $this->user    = \Mockery::spy(\PFUser::class);
+        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
     }
 }
 
@@ -112,7 +113,7 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporter_Base
 {
     public function itLogsAWarningWhenUserDontHavePrivilegeToAddAProjectDashboard()
     {
-        stub($this->user)->isAdmin(101)->returns(false);
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(false);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -124,14 +125,14 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporter_Base
         );
 
         $expected_exception = new UserCanNotUpdateProjectDashboardException();
-        stub($this->logger)->warn('[Dashboards] '.$expected_exception->getMessage(), null)->once();
+        $this->logger->shouldReceive('warn')->with('[Dashboards] '.$expected_exception->getMessage(), null)->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itLogsAWarningWhenDashboardNameIsNull()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -143,17 +144,15 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporter_Base
         );
 
         $expected_exception = new NameDashboardDoesNotExistException();
-        stub($this->logger)->warn('[Dashboards] '.$expected_exception->getMessage(), null)->once();
+        $this->logger->shouldReceive('warn')->with('[Dashboards] '.$expected_exception->getMessage(), null)->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itLogsAWarningWhenDashboardNameAlreadyExistsInTheSameProject()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar(
-            array(1, 101, 'test')
-        );
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar(array(1, 101, 'test')));
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -165,15 +164,15 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporter_Base
         );
 
         $expected_exception = new NameDashboardAlreadyExistsException();
-        stub($this->logger)->warn('[Dashboards] '.$expected_exception->getMessage(), null)->once();
+        $this->logger->shouldReceive('warn')->with('[Dashboards] '.$expected_exception->getMessage(), null)->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itImportsAProjectDashboard()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -185,8 +184,8 @@ class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporter_Base
               </project>'
         );
 
-        stub($this->logger)->warn()->never();
-        stub($this->project_dashboard_saver)->expectCallCount('save', 3);
+        $this->logger->shouldReceive('warn')->never();
+        $this->dao->shouldReceive('save')->times(2);
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 }
@@ -196,8 +195,8 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
 {
     public function itImportsALine()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -214,21 +213,21 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        stub($this->dao)->save()->returns(10001);
-        $widget = mock('Widget');
-        stub($widget)->getId()->returns('projectmembers');
-        stub($widget)->getInstanceId()->returns(null);
-        stub($this->widget_factory)->getInstanceByWidgetName('projectmembers')->returns($widget);
+        $this->dao->shouldReceive('save')->andReturns(10001);
+        $widget = \Mockery::spy(\Widget::class);
+        $widget->shouldReceive('getId')->andReturns('projectmembers');
+        $widget->shouldReceive('getInstanceId')->andReturns(null);
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns($widget);
 
-        expect($this->widget_dao)->createLine(10001, ProjectDashboardController::DASHBOARD_TYPE, 1)->once();
+        $this->widget_dao->shouldReceive('createLine')->with(10001, ProjectDashboardController::DASHBOARD_TYPE, 1)->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itImportsAColumn()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -245,20 +244,20 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        stub($this->dao)->save()->returns(10001);
+        $this->dao->shouldReceive('save')->andReturns(10001);
 
-        stub($this->widget_factory)->getInstanceByWidgetName('projectmembers')->returns(stub('Widget')->getId()->returns('projectmembers'));
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectmembers')->getMock());
 
-        stub($this->widget_dao)->createLine()->returns(12);
-        expect($this->widget_dao)->createColumn(12, 1)->once();
+        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
+        $this->widget_dao->shouldReceive('createColumn')->with(12, 1)->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itSetOwnerAndIdExplicitlyToOvercomeWidgetDesignedToGatherThoseDataFromHTTP()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -275,23 +274,23 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        stub($this->widget_dao)->createLine()->returns(12);
-        stub($this->widget_dao)->createColumn()->returns(122);
+        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
+        $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
 
-        $widget = stub('Widget')->getId()->returns('projectmembers');
-        expect($widget)->setOwner(101, ProjectDashboardController::LEGACY_DASHBOARD_TYPE)->once();
+        $widget = \Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectmembers')->getMock();
+        $widget->shouldReceive('setOwner')->with(101, ProjectDashboardController::LEGACY_DASHBOARD_TYPE)->once();
 
-        stub($this->widget_factory)->getInstanceByWidgetName('projectmembers')->returns($widget);
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns($widget);
 
-        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectmembers', 0, 122, 1)->once();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1)->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itImportsAWidget()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -308,19 +307,19 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        stub($this->widget_dao)->createLine()->returns(12);
-        stub($this->widget_dao)->createColumn()->returns(122);
-        stub($this->widget_factory)->getInstanceByWidgetName('projectmembers')->returns(stub('Widget')->getId()->returns('projectmembers'));
+        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
+        $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectmembers')->getMock());
 
-        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectmembers', 0, 122, 1)->once();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1)->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itErrorsWhenWidgetNameIsUnknown()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -337,21 +336,21 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        stub($this->widget_dao)->createLine()->returns(12);
-        stub($this->widget_dao)->createColumn()->returns(122);
-        stub($this->widget_factory)->getInstanceByWidgetName()->returns(null);
+        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
+        $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->andReturns(null);
 
-        expect($this->widget_dao)->insertWidgetInColumnWithRank()->never();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
 
-        stub($this->logger)->error()->once();
+        $this->logger->shouldReceive('error')->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itErrorsWhenWidgetContentCannotBeCreated()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -368,21 +367,21 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        expect($this->widget_dao)->createLine()->never();
-        expect($this->widget_dao)->createColumn()->never();
-        stub($this->widget_factory)->getInstanceByWidgetName()->returns(stub('Widget')->getInstanceId()->returns(false));
+        $this->widget_dao->shouldReceive('createLine')->never();
+        $this->widget_dao->shouldReceive('createColumn')->never();
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getInstanceId')->andReturns(false)->getMock());
 
-        expect($this->widget_dao)->insertWidgetInColumnWithRank()->never();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
 
-        stub($this->logger)->error()->once();
+        $this->logger->shouldReceive('error')->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itImportsTwoWidgetsInSameColumn()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -400,24 +399,24 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        stub($this->logger)->error()->never();
+        $this->logger->shouldReceive('error')->never();
 
-        stub($this->widget_dao)->createLine()->returns(12);
-        stub($this->widget_dao)->createColumn()->returns(122);
-        stub($this->widget_factory)->getInstanceByWidgetName('projectmembers')->returns(stub('Widget')->getId()->returns('projectmembers'));
-        stub($this->widget_factory)->getInstanceByWidgetName('projectheartbeat')->returns(stub('Widget')->getId()->returns('projectheartbeat'));
+        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
+        $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectmembers')->getMock());
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectheartbeat')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectheartbeat')->getMock());
 
-        expect($this->widget_dao)->insertWidgetInColumnWithRank()->count(2);
-        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectmembers', 0, 122, 1)->at(0);
-        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectheartbeat', 0, 122, 2)->at(1);
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(2);
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1)->ordered();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 122, 2)->ordered();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itDoesntImportTwiceUniqueWidgets()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -439,24 +438,24 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        stub($this->widget_dao)->createLine()->returns(12);
-        stub($this->widget_dao)->createColumn()->returns(122);
-        $widget = mock('Widget');
-        stub($widget)->getId()->returns('projectheartbeat');
-        stub($widget)->isUnique()->returns(true);
-        stub($this->widget_factory)->getInstanceByWidgetName('projectheartbeat')->returns($widget);
+        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
+        $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
+        $widget = \Mockery::spy(\Widget::class);
+        $widget->shouldReceive('getId')->andReturns('projectheartbeat');
+        $widget->shouldReceive('isUnique')->andReturns(true);
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectheartbeat')->andReturns($widget);
 
-        stub($this->logger)->warn()->once();
-        expect($this->widget_dao)->insertWidgetInColumnWithRank()->count(1);
-        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectheartbeat', 0, 122, 1);
+        $this->logger->shouldReceive('warn')->once();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(1);
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 122, 1);
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itImportsUniqueWidgetsWhenThereAreInDifferentDashboards()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -480,28 +479,26 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        stub($this->widget_dao)->createLine()->returnsAt(0, 12);
-        stub($this->widget_dao)->createLine()->returnsAt(0, 22);
-        stub($this->widget_dao)->createColumn()->returnsAt(0, 122);
-        stub($this->widget_dao)->createColumn()->returnsAt(1, 222);
-        $widget = mock('Widget');
-        stub($widget)->getId()->returns('projectheartbeat');
-        stub($widget)->isUnique()->returns(true);
-        stub($this->widget_factory)->getInstanceByWidgetName('projectheartbeat')->returns($widget);
+        $this->widget_dao->shouldReceive('createColumn')->andReturns(122)->ordered();
+        $this->widget_dao->shouldReceive('createColumn')->andReturns(222)->ordered();
+        $widget = \Mockery::spy(\Widget::class);
+        $widget->shouldReceive('getId')->andReturns('projectheartbeat');
+        $widget->shouldReceive('isUnique')->andReturns(true);
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectheartbeat')->andReturns($widget);
 
-        stub($this->logger)->warn()->never();
-        stub($this->logger)->error()->never();
-        expect($this->widget_dao)->insertWidgetInColumnWithRank()->count(2);
-        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectheartbeat', 0, 122, 1)->at(0);
-        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectheartbeat', 0, 222, 1)->at(1);
+        $this->logger->shouldReceive('warn')->never();
+        $this->logger->shouldReceive('error')->never();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(2);
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 122, 1)->ordered();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 222, 1)->ordered();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itDoesntCreateLineAndColumnWhenWidgetIsNotValid()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -518,19 +515,19 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        expect($this->widget_dao)->createLine()->never();
-        expect($this->widget_dao)->createColumn()->never();
-        expect($this->widget_dao)->insertWidgetInColumnWithRank()->never();
+        $this->widget_dao->shouldReceive('createLine')->never();
+        $this->widget_dao->shouldReceive('createColumn')->never();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
 
-        stub($this->widget_factory)->getInstanceByWidgetName('projectmembers')->returns(null);
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns(null);
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itDoesntImportAPersonalWidget()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -547,20 +544,20 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        expect($this->widget_dao)->createLine()->never();
-        expect($this->widget_dao)->createColumn()->never();
-        stub($this->widget_factory)->getInstanceByWidgetName('myprojects')->returns(stub('Widget')->getId()->returns('myprojects'));
+        $this->widget_dao->shouldReceive('createLine')->never();
+        $this->widget_dao->shouldReceive('createColumn')->never();
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('myprojects')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('myprojects')->getMock());
 
-        expect($this->logger)->error()->once();
-        expect($this->widget_dao)->insertWidgetInColumnWithRank()->never();
+        $this->logger->shouldReceive('error')->once();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itImportsTwoWidgetsInTwoColumns()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -580,27 +577,27 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        stub($this->logger)->error()->never();
+        $this->logger->shouldReceive('error')->never();
 
-        stub($this->widget_dao)->createLine()->returns(12);
-        stub($this->widget_dao)->createColumn()->returnsAt(0, 122);
-        stub($this->widget_dao)->createColumn()->returnsAt(1, 124);
-        stub($this->widget_factory)->getInstanceByWidgetName('projectmembers')->returns(stub('Widget')->getId()->returns('projectmembers'));
-        stub($this->widget_factory)->getInstanceByWidgetName('projectheartbeat')->returns(stub('Widget')->getId()->returns('projectheartbeat'));
+        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
+        $this->widget_dao->shouldReceive('createColumn')->andReturns(122)->ordered();
+        $this->widget_dao->shouldReceive('createColumn')->andReturns(124)->ordered();
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectmembers')->getMock());
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectheartbeat')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectheartbeat')->getMock());
 
-        expect($this->widget_dao)->insertWidgetInColumnWithRank()->count(2);
-        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectmembers', 0, 122, 1)->at(0);
-        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectheartbeat', 0, 124, 1)->at(1);
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(2);
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1)->ordered();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 124, 1)->ordered();
 
-        expect($this->widget_dao)->adjustLayoutAccordinglyToNumberOfWidgets(2, 12)->once();
+        $this->widget_dao->shouldReceive('adjustLayoutAccordinglyToNumberOfWidgets')->with(2, 12)->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itImportsTwoWidgetsWithSetLayout()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -620,29 +617,29 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        stub($this->dao)->save()->returns(144);
+        $this->dao->shouldReceive('save')->andReturns(144);
 
-        stub($this->logger)->error()->never();
+        $this->logger->shouldReceive('error')->never();
 
-        stub($this->widget_dao)->createLine()->returns(12);
-        stub($this->widget_dao)->createColumn()->returnsAt(0, 122);
-        stub($this->widget_dao)->createColumn()->returnsAt(1, 124);
-        stub($this->widget_factory)->getInstanceByWidgetName('projectmembers')->returns(stub('Widget')->getId()->returns('projectmembers'));
-        stub($this->widget_factory)->getInstanceByWidgetName('projectheartbeat')->returns(stub('Widget')->getId()->returns('projectheartbeat'));
+        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
+        $this->widget_dao->shouldReceive('createColumn')->andReturns(122)->ordered();
+        $this->widget_dao->shouldReceive('createColumn')->andReturns(124)->ordered();
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectmembers')->getMock());
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectheartbeat')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectheartbeat')->getMock());
 
-        expect($this->widget_dao)->insertWidgetInColumnWithRank()->count(2);
-        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectmembers', 0, 122, 1)->at(0);
-        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectheartbeat', 0, 124, 1)->at(1);
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(2);
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1)->ordered();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 124, 1)->ordered();
 
-        expect($this->widget_dao)->updateLayout(12, 'two-columns-small-big')->once();
+        $this->widget_dao->shouldReceive('updateLayout')->with(12, 'two-columns-small-big')->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itFallsbackToAutomaticLayoutWhenLayoutIsUnknown()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -662,29 +659,29 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        stub($this->logger)->error()->never();
-        stub($this->logger)->warn()->once();
+        $this->logger->shouldReceive('error')->never();
+        $this->logger->shouldReceive('warn')->once();
 
-        stub($this->widget_dao)->createLine()->returns(12);
-        stub($this->widget_dao)->createColumn()->returnsAt(0, 122);
-        stub($this->widget_dao)->createColumn()->returnsAt(1, 124);
-        stub($this->widget_factory)->getInstanceByWidgetName('projectmembers')->returns(stub('Widget')->getId()->returns('projectmembers'));
-        stub($this->widget_factory)->getInstanceByWidgetName('projectheartbeat')->returns(stub('Widget')->getId()->returns('projectheartbeat'));
+        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
+        $this->widget_dao->shouldReceive('createColumn')->andReturns(122)->ordered();
+        $this->widget_dao->shouldReceive('createColumn')->andReturns(124)->ordered();
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectmembers')->getMock());
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectheartbeat')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectheartbeat')->getMock());
 
-        expect($this->widget_dao)->insertWidgetInColumnWithRank()->count(2);
-        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectmembers', 0, 122, 1)->at(0);
-        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectheartbeat', 0, 124, 1)->at(1);
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(2);
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1)->ordered();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 124, 1)->ordered();
 
-        expect($this->widget_dao)->updateLayout()->never();
-        expect($this->widget_dao)->adjustLayoutAccordinglyToNumberOfWidgets()->once();
+        $this->widget_dao->shouldReceive('updateLayout')->never();
+        $this->widget_dao->shouldReceive('adjustLayoutAccordinglyToNumberOfWidgets')->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itImportsAWidgetWithPreferences()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -706,8 +703,8 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        stub($this->widget_dao)->createLine()->returns(12);
-        stub($this->widget_dao)->createColumn()->returns(122);
+        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
+        $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
 
         $widget = \Mockery::mock(\Widget::class, [ 'getId' => 'projectrss' ])->shouldIgnoreMissing();
         $widget->shouldReceive('create')->with(\Mockery::on(function (\Codendi_Request $request) {
@@ -719,17 +716,17 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
             return false;
         }))->once()->andReturns(35);
 
-        stub($this->widget_factory)->getInstanceByWidgetName('projectrss')->returns($widget);
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectrss')->andReturns($widget);
 
-        expect($this->widget_dao)->insertWidgetInColumnWithRank('projectrss', 35, 122, 1)->once();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectrss', 35, 122, 1)->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
     public function itSkipWidgetCreationWhenCreateRaisesExceptions()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -751,18 +748,18 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
               </project>'
         );
 
-        expect($this->widget_dao)->createLine()->never();
-        expect($this->widget_dao)->createColumn()->never();
+        $this->widget_dao->shouldReceive('createLine')->never();
+        $this->widget_dao->shouldReceive('createColumn')->never();
 
         $this->mappings_registry->addReference('K123', 78998);
 
-        $widget = mock('Widget');
-        stub($widget)->getId()->returns('projectimageviewer');
-        stub($widget)->create()->throws(new \Exception("foo"));
+        $widget = \Mockery::spy(\Widget::class);
+        $widget->shouldReceive('getId')->andReturns('projectimageviewer');
+        $widget->shouldReceive('create')->andThrows(new \Exception("foo"));
 
-        stub($this->widget_factory)->getInstanceByWidgetName('projectimageviewer')->returns($widget);
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectimageviewer')->andReturns($widget);
 
-        expect($this->widget_dao)->insertWidgetInColumnWithRank()->never();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -775,6 +772,7 @@ class ProjectDashboardXMLImporter_PluginTest extends ProjectDashboardXMLImporter
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->project_dashboard_importer = new ProjectDashboardXMLImporter(
             $this->project_dashboard_saver,
@@ -793,8 +791,8 @@ class ProjectDashboardXMLImporter_PluginTest extends ProjectDashboardXMLImporter
 
     public function itImportsAWidgetDefinedInAPlugin()
     {
-        stub($this->user)->isAdmin(101)->returns(true);
-        stub($this->dao)->searchByProjectIdAndName()->returnsDar();
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
 
         $xml = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -816,13 +814,13 @@ class ProjectDashboardXMLImporter_PluginTest extends ProjectDashboardXMLImporter
               </project>'
         );
 
-        stub($this->widget_dao)->createLine()->returns(12);
-        stub($this->widget_dao)->createColumn()->returns(122);
+        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
+        $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
 
         $this->mappings_registry->addReference('K123', 78998);
 
-        $widget = mock('Widget');
-        stub($widget)->getId()->returns('kanban');
+        $widget = \Mockery::spy(\Widget::class);
+        $widget->shouldReceive('getId')->andReturns('kanban');
 
         $this->event_manager->shouldReceive('processEvent')->with(\Mockery::on(function (ConfigureAtXMLImport $event) {
             $event->setContentId(35);
@@ -830,9 +828,9 @@ class ProjectDashboardXMLImporter_PluginTest extends ProjectDashboardXMLImporter
             return true;
         }))->once();
 
-        stub($this->widget_factory)->getInstanceByWidgetName('plugin_agiledashboard_projects_kanban')->returns($widget);
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('plugin_agiledashboard_projects_kanban')->andReturns($widget);
 
-        expect($this->widget_dao)->insertWidgetInColumnWithRank('kanban', 35, 122, 1)->once();
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('kanban', 35, 122, 1)->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }

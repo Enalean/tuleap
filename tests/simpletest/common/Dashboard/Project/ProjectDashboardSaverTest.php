@@ -40,38 +40,37 @@ class ProjectDashboardSaverTest extends \TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->dao     = mock('Tuleap\Dashboard\Project\ProjectDashboardDao');
-        $this->project = aMockProject()->withId(1)->build();
+        $this->dao     = \Mockery::spy(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
+        $this->project = \Mockery::spy(\Project::class, ['getID' => 1, 'getUnixName' => false, 'isPublic' => false]);
 
-        stub($this->dao)->searchByProjectIdAndName(1, 'new_dashboard')->returnsEmptyDar();
-        stub($this->dao)->searchByProjectIdAndName(1, 'existing_dashboard')->returnsDar(
-            array(
-                'id'         => 1,
-                'project_id' => 1,
-                'name'       => 'existing_dashboard'
-            )
-        );
+        $this->dao->shouldReceive('searchByProjectIdAndName')->with(1, 'new_dashboard')->andReturns(\TestHelper::emptyDar());
+        $this->dao->shouldReceive('searchByProjectIdAndName')->with(1, 'existing_dashboard')->andReturns(\TestHelper::arrayToDar(array(
+            'id'         => 1,
+            'project_id' => 1,
+            'name'       => 'existing_dashboard'
+        )));
 
-        $this->admin_user = mock('PFUser');
-        stub($this->admin_user)->isAdmin()->returns(true);
+        $this->admin_user = \Mockery::spy(\PFUser::class);
+        $this->admin_user->shouldReceive('isAdmin')->andReturns(true);
 
-        $this->regular_user = mock('PFUser');
-        stub($this->regular_user)->isAdmin()->returns(false);
+        $this->regular_user = \Mockery::spy(\PFUser::class);
+        $this->regular_user->shouldReceive('isAdmin')->andReturns(false);
 
         $this->project_saver = new ProjectDashboardSaver($this->dao);
     }
 
     public function itSavesDashboard()
     {
-        expect($this->dao)->save(1, 'new_dashboard')->once();
+        $this->dao->shouldReceive('save')->with(1, 'new_dashboard')->once();
 
         $this->project_saver->save($this->admin_user, $this->project, 'new_dashboard');
     }
 
     public function itThrowsExceptionWhenDashboardAlreadyExists()
     {
-        expect($this->dao)->save()->never();
+        $this->dao->shouldReceive('save')->never();
         $this->expectException('Tuleap\Dashboard\NameDashboardAlreadyExistsException');
 
         $this->project_saver->save($this->admin_user, $this->project, 'existing_dashboard');
@@ -79,7 +78,7 @@ class ProjectDashboardSaverTest extends \TuleapTestCase
 
     public function itThrowsExceptionWhenNameDoesNotExist()
     {
-        expect($this->dao)->save()->never();
+        $this->dao->shouldReceive('save')->never();
         $this->expectException('Tuleap\Dashboard\NameDashboardDoesNotExistException');
 
         $this->project_saver->save($this->admin_user, $this->project, '');
@@ -87,7 +86,7 @@ class ProjectDashboardSaverTest extends \TuleapTestCase
 
     public function itThrowsExceptionWhenUserCanNotCreateDashboard()
     {
-        expect($this->dao)->save()->never();
+        $this->dao->shouldReceive('save')->never();
         $this->expectException('Tuleap\Dashboard\Project\UserCanNotUpdateProjectDashboardException');
 
         $this->project_saver->save($this->regular_user, $this->project, 'new_dashboard');
