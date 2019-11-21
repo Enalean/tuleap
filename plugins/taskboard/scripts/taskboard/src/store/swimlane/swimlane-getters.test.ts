@@ -338,23 +338,56 @@ describe("Swimlane state getters", () => {
                     {
                         card: {},
                         children_cards: [{} as Card, {} as Card]
-                    },
+                    } as Swimlane,
                     {
                         card: { remaining_effort: { is_in_edit_mode: false } },
                         children_cards: [{} as Card, {} as Card]
-                    }
+                    } as Swimlane
                 ]
             } as SwimlaneState;
             expect(getters.has_at_least_one_card_in_edit_mode(state)).toBe(false);
         });
-        it("Returns true if there is a parent card in edit mode", () => {
+        it("Returns true if there is a parent card with remaining effort in edit mode", () => {
             const state = {
                 swimlanes: [
-                    { card: {}, children_cards: [{} as Card, {} as Card] },
+                    {
+                        card: {},
+                        children_cards: [{} as Card, {} as Card]
+                    } as Swimlane,
                     {
                         card: { remaining_effort: { is_in_edit_mode: true } },
                         children_cards: [{} as Card, {} as Card]
-                    }
+                    } as Swimlane
+                ]
+            } as SwimlaneState;
+            expect(getters.has_at_least_one_card_in_edit_mode(state)).toBe(true);
+        });
+        it("Returns true if there is a parent card in edit mode", () => {
+            const state = {
+                swimlanes: [
+                    {
+                        card: {},
+                        children_cards: [{} as Card, {} as Card]
+                    } as Swimlane,
+                    {
+                        card: { is_in_edit_mode: true },
+                        children_cards: [{} as Card, {} as Card]
+                    } as Swimlane
+                ]
+            } as SwimlaneState;
+            expect(getters.has_at_least_one_card_in_edit_mode(state)).toBe(true);
+        });
+        it("Returns true if there is a children card in edit mode", () => {
+            const state = {
+                swimlanes: [
+                    {
+                        card: {},
+                        children_cards: [{} as Card, {} as Card]
+                    } as Swimlane,
+                    {
+                        card: {},
+                        children_cards: [{} as Card, { is_in_edit_mode: true } as Card]
+                    } as Swimlane
                 ]
             } as SwimlaneState;
             expect(getters.has_at_least_one_card_in_edit_mode(state)).toBe(true);

@@ -23,6 +23,32 @@ import { SwimlaneState } from "../type";
 import { NewRemainingEffortPayload } from "./type";
 
 describe(`Card mutations`, () => {
+    describe("addCardToEditMode", () => {
+        it("switch is_in_edit_mode to true", () => {
+            const card: Card = { id: 123, is_in_edit_mode: false } as Card;
+            const state: SwimlaneState = {
+                swimlanes: [{ card } as Swimlane]
+            } as SwimlaneState;
+
+            mutations.addCardToEditMode(state, card);
+
+            expect(state.swimlanes[0].card.is_in_edit_mode).toBe(true);
+        });
+    });
+
+    describe("removeCardFromEditMode", () => {
+        it("switch is_in_edit_mode to false", () => {
+            const card: Card = { id: 123, is_in_edit_mode: true } as Card;
+            const state: SwimlaneState = {
+                swimlanes: [{ card } as Swimlane]
+            } as SwimlaneState;
+
+            mutations.removeCardFromEditMode(state, card);
+
+            expect(state.swimlanes[0].card.is_in_edit_mode).toBe(false);
+        });
+    });
+
     describe("startSavingRemainingEffort", () => {
         it("switch is_being_saved to true", () => {
             const card: Card = { remaining_effort: { is_being_saved: false } } as Card;

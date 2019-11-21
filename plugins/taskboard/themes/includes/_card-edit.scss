@@ -36,7 +36,7 @@
     transparentize($color, 1) 50px);
 }
 
-.taskboard-card {
+:not(.gu-mirror) > .taskboard-card:not(.taskboard-card-edit-mode) {
     &::after {
         @include ease-out-background-gradient($tlp-ui-white);
         content: '\f040'; // fa-pencil
@@ -67,9 +67,21 @@
     }
 }
 
+.taskboard-card-edit-mode {
+    margin: 0;
+}
+
 .taskboard-card-cancel-save-buttons {
     margin: ($tlp-half-spacing - 5px) 0 0;
     text-align: right;
+
+    &.taskboard-card-cancel-save-buttons-for-child {
+        margin: ($tlp-half-spacing - 5px) 0 $tlp-spacing;
+    }
+}
+
+.taskboard-child:last-child > .taskboard-card-cancel-save-buttons-for-child {
+    margin: ($tlp-half-spacing - 5px) 0 0;
 }
 
 .taskboard-card-cancel-button {

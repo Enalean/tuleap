@@ -24,31 +24,49 @@ import { createTaskboardLocalVue } from "../../../../../../helpers/local-vue-for
 import EventBus from "../../../../../../helpers/event-bus";
 
 async function createWrapper(
+    is_in_edit_mode: boolean,
     remaining_effort: RemainingEffort | null
 ): Promise<Wrapper<CancelSaveButtons>> {
     return shallowMount(CancelSaveButtons, {
         localVue: await createTaskboardLocalVue(),
         propsData: {
-            card: { remaining_effort } as Card
+            card: {
+                is_in_edit_mode,
+                remaining_effort
+            } as Card
         }
     });
 }
 
 describe("CancelSaveButtons", () => {
     it("displays nothing if there isn't any remaining effort", async () => {
-        const wrapper = await createWrapper(null);
+        const wrapper = await createWrapper(false, null);
 
         expect(wrapper.isEmpty()).toBe(true);
     });
 
     it("displays nothing if remaining effort is not in edit mode", async () => {
-        const wrapper = await createWrapper({ is_in_edit_mode: false } as RemainingEffort);
+        const wrapper = await createWrapper(false, { is_in_edit_mode: false } as RemainingEffort);
 
         expect(wrapper.isEmpty()).toBe(true);
     });
 
+    it("displays buttons if remaining effort is in edit mode", async () => {
+        const wrapper = await createWrapper(false, { is_in_edit_mode: true } as RemainingEffort);
+
+        expect(wrapper.contains("[data-test=cancel]")).toBe(true);
+        expect(wrapper.contains("[data-test=save]")).toBe(true);
+    });
+
+    it("displays buttons if card is in edit mode", async () => {
+        const wrapper = await createWrapper(true, null);
+
+        expect(wrapper.contains("[data-test=cancel]")).toBe(true);
+        expect(wrapper.contains("[data-test=save]")).toBe(true);
+    });
+
     it("Emits cancel-card-edition event when user clicks on cancel button", async () => {
-        const wrapper = await createWrapper({ is_in_edit_mode: true } as RemainingEffort);
+        const wrapper = await createWrapper(true, null);
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
         const cancel = wrapper.find("[data-test=cancel]");
@@ -61,7 +79,7 @@ describe("CancelSaveButtons", () => {
     });
 
     it("Emits save-card-edition event when user clicks on save button", async () => {
-        const wrapper = await createWrapper({ is_in_edit_mode: true } as RemainingEffort);
+        const wrapper = await createWrapper(true, null);
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
         const cancel = wrapper.find("[data-test=save]");

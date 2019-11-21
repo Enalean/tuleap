@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="taskboard-card" v-bind:class="additional_classnames">
+    <div class="taskboard-card" v-bind:class="additional_classnames" v-on:click="switchToEditMode">
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card"/>
             <div class="taskboard-card-info">
@@ -37,10 +37,12 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import CardXrefLabel from "./CardXrefLabel.vue";
 import CardAssignees from "./CardAssignees.vue";
-import { Card } from "../../../../../type";
+import { Card, Event } from "../../../../../type";
 import { namespace } from "vuex-class";
+import EventBus from "../../../../../helpers/event-bus";
 
 const user = namespace("user");
+const swimlane = namespace("swimlane");
 
 @Component({
     components: {
@@ -48,12 +50,18 @@ const user = namespace("user");
         CardAssignees
     }
 })
-export default class ParentCard extends Vue {
+export default class BaseCard extends Vue {
     @user.State
     readonly user_has_accessibility_mode!: boolean;
 
     @Prop({ required: true })
     readonly card!: Card;
+
+    @swimlane.Mutation
+    readonly addCardToEditMode!: (card: Card) => void;
+
+    @swimlane.Mutation
+    readonly removeCardFromEditMode!: (card: Card) => void;
 
     add_show_class = true;
 
@@ -61,6 +69,33 @@ export default class ParentCard extends Vue {
         setTimeout(() => {
             this.add_show_class = false;
         }, 500);
+        EventBus.$on(Event.CANCEL_CARD_EDITION, this.cancelButtonCallback);
+        EventBus.$on(Event.SAVE_CARD_EDITION, this.saveButtonCallback);
+    }
+
+    beforeDestroy(): void {
+        EventBus.$off(Event.CANCEL_CARD_EDITION, this.cancelButtonCallback);
+        EventBus.$off(Event.SAVE_CARD_EDITION, this.saveButtonCallback);
+    }
+
+    cancelButtonCallback(card: Card): void {
+        if (card.id === this.card.id) {
+            this.removeCardFromEditMode(this.card);
+        }
+    }
+
+    saveButtonCallback(card: Card): void {
+        if (card.id === this.card.id) {
+            this.removeCardFromEditMode(this.card);
+        }
+    }
+
+    switchToEditMode(): void {
+        if (this.card.is_in_edit_mode) {
+            return;
+        }
+
+        this.addCardToEditMode(this.card);
     }
 
     get additional_classnames(): string {
@@ -76,6 +111,10 @@ export default class ParentCard extends Vue {
 
         if (this.add_show_class && !this.card.has_been_dropped) {
             classnames.push("taskboard-card-show");
+        }
+
+        if (this.card.is_in_edit_mode) {
+            classnames.push("taskboard-card-edit-mode");
         }
 
         return classnames.join(" ");
