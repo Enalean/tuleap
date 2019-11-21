@@ -18,35 +18,30 @@
   -->
 
 <template>
-    <div
-        class="taskboard-card taskboard-draggable-item"
-        v-bind:class="additional_classnames"
+    <base-card
+        class="taskboard-draggable-item"
         v-if="card.is_open || are_closed_items_displayed"
+        v-bind:card="card"
         v-bind:data-card-id="card.id"
         v-bind:data-tracker-id="card.tracker_id"
-    >
-        <div class="taskboard-card-content">
-            <card-xref-label v-bind:card="card"/>
-            <div class="taskboard-card-info">
-                <card-assignees v-bind:assignees="card.assignees"/>
-            </div>
-        </div>
-        <div class="taskboard-card-accessibility" v-if="show_accessibility_pattern"></div>
-    </div>
+    />
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from "vue-property-decorator";
-import CardXrefLabel from "./CardXrefLabel.vue";
-import CardAssignees from "./CardAssignees.vue";
-import CardMixin from "./card-mixin";
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
+import BaseCard from "./BaseCard.vue";
+import { Card } from "../../../../../type";
 
 @Component({
-    components: { CardXrefLabel, CardAssignees }
+    components: { BaseCard }
 })
-export default class ChildCard extends Mixins(CardMixin) {
+export default class ChildCard extends Vue {
     @State
     readonly are_closed_items_displayed!: boolean;
+
+    @Prop({ required: true })
+    readonly card!: Card;
 }
 </script>

@@ -21,6 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import ChildCard from "./ChildCard.vue";
 import { Card, User } from "../../../../../type";
 import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import BaseCard from "./BaseCard.vue";
 
 describe("ChildCard", () => {
     describe("Closed items", () => {
@@ -46,17 +47,42 @@ describe("ChildCard", () => {
                     })
                 }
             });
-
             expect(wrapper.isEmpty()).toBe(true);
         });
 
         it(`Given user wants to see closed items
         When the card is closed
         Then it is rendered`, () => {
+            const card: Card = {
+                id: 43,
+                assignees: [] as User[],
+                is_open: false
+            } as Card;
+
+            const wrapper = shallowMount(ChildCard, {
+                propsData: { card },
+                mocks: {
+                    $store: createStoreMock({
+                        state: {
+                            are_closed_items_displayed: true,
+                            user: {
+                                user_has_accessibility_mode: false
+                            }
+                        }
+                    })
+                }
+            });
+
+            expect(wrapper.isEmpty()).toBe(false);
+            expect(wrapper.find(BaseCard).props("card")).toBe(card);
+        });
+
+        it(`adds draggable attributes`, () => {
             const wrapper = shallowMount(ChildCard, {
                 propsData: {
                     card: {
                         id: 43,
+                        tracker_id: 69,
                         assignees: [] as User[],
                         is_open: false
                     } as Card
@@ -73,61 +99,9 @@ describe("ChildCard", () => {
                 }
             });
 
-            expect(wrapper.isEmpty()).toBe(false);
-        });
-    });
-
-    describe("Accessibility", () => {
-        it(`Given user is not in accessibility mode
-        Then the card is not displayed with accessibility patterns`, () => {
-            const wrapper = shallowMount(ChildCard, {
-                propsData: {
-                    card: {
-                        id: 43,
-                        assignees: [] as User[],
-                        is_open: true,
-                        background_color: "fiesta-red"
-                    } as Card
-                },
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            are_closed_items_displayed: true,
-                            user: {
-                                user_has_accessibility_mode: false
-                            }
-                        }
-                    })
-                }
-            });
-
-            expect(wrapper.contains(".taskboard-card-accessibility")).toBe(false);
-        });
-
-        it(`Given user is in accessibility mode
-        Then the card is displayed with accessibility patterns`, () => {
-            const wrapper = shallowMount(ChildCard, {
-                propsData: {
-                    card: {
-                        id: 43,
-                        assignees: [] as User[],
-                        is_open: true,
-                        background_color: "fiesta-red"
-                    } as Card
-                },
-                mocks: {
-                    $store: createStoreMock({
-                        state: {
-                            are_closed_items_displayed: true,
-                            user: {
-                                user_has_accessibility_mode: true
-                            }
-                        }
-                    })
-                }
-            });
-
-            expect(wrapper.contains(".taskboard-card-accessibility")).toBe(true);
+            expect(wrapper.attributes("data-card-id")).toBe("43");
+            expect(wrapper.attributes("data-tracker-id")).toBe("69");
+            expect(wrapper.classes("taskboard-draggable-item")).toBe(true);
         });
     });
 });
