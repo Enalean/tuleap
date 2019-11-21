@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\OpenIDConnectClient\Authentication\StateFactory;
+declare(strict_types=1);
+
+namespace Tuleap\OpenIDConnectClient\Authentication;
+
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use RandomNumberGenerator;
 
 require_once(__DIR__ . '/../bootstrap.php');
 
-class StateFactoryTest extends TuleapTestCase
+class StateFactoryTest extends TestCase
 {
-    public function itKeepsSameKey()
+    use MockeryPHPUnitIntegration;
+
+    public function testItKeepsSameKey(): void
     {
         $random_number_generator = new RandomNumberGenerator();
 
@@ -34,11 +42,11 @@ class StateFactoryTest extends TuleapTestCase
         $state_1_2       = $state_factory_1->createState(2);
         $state_2         = $state_factory_2->createState(1);
 
-        $this->assertEqual($state_1_1->getSecretKey(), $state_1_2->getSecretKey());
-        $this->assertEqual($state_1_1->getSecretKey(), $state_2->getSecretKey());
+        $this->assertEquals($state_1_1->getSecretKey(), $state_1_2->getSecretKey());
+        $this->assertEquals($state_1_1->getSecretKey(), $state_2->getSecretKey());
     }
 
-    public function itKeepsSameNonce()
+    public function testItKeepsSameNonce(): void
     {
         $random_number_generator = new RandomNumberGenerator();
 
@@ -48,11 +56,11 @@ class StateFactoryTest extends TuleapTestCase
         $state_1_2       = $state_factory_1->createState(2);
         $state_2         = $state_factory_2->createState(1);
 
-        $this->assertEqual($state_1_1->getNonce(), $state_2->getNonce());
-        $this->assertEqual($state_1_1->getNonce(), $state_1_2->getNonce());
+        $this->assertEquals($state_1_1->getNonce(), $state_2->getNonce());
+        $this->assertEquals($state_1_1->getNonce(), $state_1_2->getNonce());
     }
 
-    public function itCreatesStateWithGivenParameters()
+    public function testItCreatesStateWithGivenParameters(): void
     {
         $value = 1234;
 
@@ -60,6 +68,6 @@ class StateFactoryTest extends TuleapTestCase
         $state_factory           = new StateFactory($random_number_generator);
         $state                   = $state_factory->createState($value);
 
-        $this->assertEqual($value, $state->getProviderId());
+        $this->assertEquals($value, $state->getProviderId());
     }
 }

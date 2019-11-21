@@ -18,26 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\OpenIDConnectClient;
+
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__.'/bootstrap.php';
 
-use Tuleap\OpenIDConnectClient\AdminRouter;
-
-class AdminRouterTest extends TuleapTestCase
+class RouterTest extends TestCase
 {
-    public function itIsOnlyAccessibleBySuperUser()
+    use MockeryPHPUnitIntegration;
+
+    public function testItOnlyAcceptsHTTPS(): void
     {
-        $controller = mock('Tuleap\OpenIDConnectClient\Administration\Controller');
-        $csrf_token = mock('CSRFSynchronizerToken');
-        $user       = mock('PFUser');
-        $user->setReturnValue('isSuperUser', false);
-        $request    = mock('HTTPRequest');
-        $request->setReturnValue('getCurrentUser', $user);
+        $login_controller          = \Mockery::spy(\Tuleap\OpenIDConnectClient\Login\Controller::class);
+        $account_linker_controller = \Mockery::spy(\Tuleap\OpenIDConnectClient\AccountLinker\Controller::class);
+        $user_mapping_controller   = \Mockery::spy(\Tuleap\OpenIDConnectClient\UserMapping\Controller::class);
+        $request                   = \Mockery::spy(\HTTPRequest::class);
+        $request->shouldReceive('isSecure')->andReturns(false);
 
         $response = Mockery::mock(\Tuleap\Layout\BaseLayout::class);
         $response->shouldReceive('addFeedback')->once();
         $response->shouldReceive('redirect')->once();
 
-        $router = new AdminRouter($controller, $csrf_token);
+        $router = new Router($login_controller, $account_linker_controller, $user_mapping_controller);
         $router->process($request, $response, []);
     }
 }

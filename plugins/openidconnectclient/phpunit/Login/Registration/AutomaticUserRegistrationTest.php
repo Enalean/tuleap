@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,26 +20,30 @@
 
 namespace Tuleap\OpenIDConnectClient\Login\Registration;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tuleap\GlobalLanguageMock;
 
 require_once(__DIR__ . '/../../bootstrap.php');
 
-class AutomaticUserRegistrationTest extends TuleapTestCase
+class AutomaticUserRegistrationTest extends TestCase
 {
-    public function itCreatesAnAccount()
+    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+
+    public function testItCreatesAnAccount(): void
     {
-        $user_manager       = mock('UserManager');
-        stub($user_manager)->createAccount()->once();
-        $username_generator = mock('Tuleap\OpenIDConnectClient\Login\Registration\UsernameGenerator');
+        $user_manager       = \Mockery::spy(\UserManager::class);
+        $user_manager->shouldReceive('createAccount')->once();
+        $username_generator = \Mockery::spy(\Tuleap\OpenIDConnectClient\Login\Registration\UsernameGenerator::class);
 
         $automatic_user_registration = new AutomaticUserRegistration($user_manager, $username_generator);
         $automatic_user_registration->register(array('email' => 'user@example.com'));
     }
 
-    public function itNeedsAnEmail()
+    public function testItNeedsAnEmail(): void
     {
-        $user_manager       = mock('UserManager');
-        $username_generator = mock('Tuleap\OpenIDConnectClient\Login\Registration\UsernameGenerator');
+        $user_manager       = \Mockery::spy(\UserManager::class);
+        $username_generator = \Mockery::spy(\Tuleap\OpenIDConnectClient\Login\Registration\UsernameGenerator::class);
 
         $automatic_user_registration = new AutomaticUserRegistration($user_manager, $username_generator);
         $this->expectException('Tuleap\OpenIDConnectClient\Login\Registration\NotEnoughDataToRegisterUserException');
