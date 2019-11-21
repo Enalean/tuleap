@@ -220,6 +220,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
                 if ($formated_diff) {
                     $string = '<div class="diff">'. $formated_diff .'</div>';
                 }
+                break;
             default:
                 break;
         }

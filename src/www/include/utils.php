@@ -68,10 +68,10 @@ function util_get_user_preferences_export_datefmt()
     $fmt = '';
     $u_pref = user_get_preference("user_csv_dateformat");
     switch ($u_pref) {
-        case "month_day_year";
+        case "month_day_year":
             $fmt = 'm/d/Y H:i:s';
             break;
-        case "day_month_year";
+        case "day_month_year":
             $fmt = 'd/m/Y H:i:s';
             break;
         default:

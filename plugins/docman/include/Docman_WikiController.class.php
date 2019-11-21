@@ -55,6 +55,7 @@ class Docman_WikiController extends Docman_Controller
                 break;
             case 'wiki_before_content':
                 $this->wiki_before_content();
+                // Fall-through seems to be intentional here...
             case 'check_whether_wiki_page_is_referenced':
                 $this->isWikiPageReferenced();
                 break;
@@ -66,6 +67,7 @@ class Docman_WikiController extends Docman_Controller
                 break;
             case 'is_wiki_page_editable':
                 $this->isWikiPageEditable();
+                break;
             default:
                 break;
         }

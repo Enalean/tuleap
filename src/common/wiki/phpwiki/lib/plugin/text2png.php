@@ -179,6 +179,7 @@ class WikiPlugin_text2png extends WikiPlugin
                             ),
                             E_USER_NOTICE
                         );
+                        break;
                     case 2:
                         trigger_error(
                             sprintf(

@@ -121,23 +121,18 @@ class PastelTheme extends Theme
 
         switch (get_class($plot)) {
             case 'GroupBarPlot':
-            {
                 foreach ($plot->plots as $_plot) {
                     $this->ApplyPlot($_plot);
                 }
                 break;
-            }
 
             case 'AccBarPlot':
-            {
                 foreach ($plot->plots as $_plot) {
                     $this->ApplyPlot($_plot);
                 }
                 break;
-            }
 
             case 'BarPlot':
-            {
                 $plot->Clear();
 
                 $color = $this->GetNextColor();
@@ -145,34 +140,25 @@ class PastelTheme extends Theme
                 $plot->SetFillColor($color);
                 $plot->SetShadow('red', 3, 4, false);
                 break;
-            }
 
             case 'LinePlot':
-            {
                 $plot->Clear();
                 $plot->SetColor($this->GetNextColor().'@0.4');
                 $plot->SetWeight(2);
 //                $plot->SetBarCenter();
                 break;
-            }
 
             case 'PiePlot':
-            {
                 $plot->SetCenter(0.5, 0.45);
                 $plot->ShowBorder(false);
                 $plot->SetSliceColors($this->GetThemeColors());
                 break;
-            }
 
             case 'PiePlot3D':
-            {
                 $plot->SetSliceColors($this->GetThemeColors());
                 break;
-            }
 
             default:
-            {
-            }
         }
     }
 }

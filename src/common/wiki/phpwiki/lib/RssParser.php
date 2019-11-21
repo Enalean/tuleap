@@ -161,6 +161,7 @@ class RSSParser extends XmlParser
                     if (trim($data)) {
                         $this->date .= " " . trim($data);
                     }
+                    // Let's just say the fall-through here is intentional but it's likely nobody knows or wants to remember
                 default:
                     if (trim($data)) {
                         $this->divers .= " " . $current_tag."/".$data;

@@ -536,6 +536,7 @@ class DB_common extends PEAR
         switch ($fetchmode) {
             case DB_FETCHMODE_OBJECT:
                 $this->fetchmode_object_class = $object_class;
+                // The fall-through might be intentional here
             case DB_FETCHMODE_ORDERED:
             case DB_FETCHMODE_ASSOC:
                 $this->fetchmode = $fetchmode;

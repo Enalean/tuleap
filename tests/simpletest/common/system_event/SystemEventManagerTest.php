@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 — 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 — Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -155,6 +155,7 @@ class SystemEventManagerGetTypesForQueueTest extends TuleapTestCase
                     case Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE:
                         $params['types'][] = 'feed_mini';
                         $params['types'][] = 'search_wiki';
+                        break;
                     default:
                         break;
                 }
