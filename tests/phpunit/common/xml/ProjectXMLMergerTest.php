@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,31 @@
 
 namespace Tuleap\XML;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tuleap\TemporaryTestDirectory;
 
-class ProjectXMLMergerTest extends TuleapTestCase
+class ProjectXMLMergerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+
     private $fixtures;
     private $destination;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->fixtures = __DIR__ .'/_fixtures';
-        $this->destination   = tempnam(sys_get_temp_dir(), 'XML');
+        $this->destination   = tempnam($this->getTmpDir(), 'XML');
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         unlink($this->destination);
         parent::tearDown();
     }
 
-    public function itMergesTwoXMLFilesInOne()
+    public function testItMergesTwoXMLFilesInOne()
     {
         $source1 = "$this->fixtures/source1.xml";
         $source2 = "$this->fixtures/source2.xml";
@@ -50,6 +54,6 @@ class ProjectXMLMergerTest extends TuleapTestCase
         $merger = new ProjectXMLMerger();
         $merger->merge($source1, $source2, $this->destination);
 
-        $this->assertEqual(file_get_contents($this->destination), $expected);
+        $this->assertEquals($expected, file_get_contents($this->destination));
     }
 }

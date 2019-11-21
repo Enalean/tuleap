@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class XML_SecurityTest extends TuleapTestCase
+declare(strict_types=1);
+
+namespace Tuleap\XML;
+
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use XML_Security;
+
+class XML_SecurityTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
     private $bad_xml = '<!DOCTYPE root
         [
@@ -28,13 +37,10 @@ class XML_SecurityTest extends TuleapTestCase
         <test><testing>&foo;</testing></test>';
 
 
-    public function itDisableExternalLoadOfEntities()
+    public function testItDisableExternalLoadOfEntities()
     {
-        if ($this->isCentOS5()) {
-            $this->expectError();
-        }
         $doc = $this->loadXML();
-        $this->assertEqual('', (string)$doc->testing);
+        $this->assertEquals('', (string)$doc->testing);
     }
 
     private function loadXML()
@@ -47,12 +53,5 @@ class XML_SecurityTest extends TuleapTestCase
         $xml_security->enableExternalLoadOfEntities();
 
         return $xml;
-    }
-
-    private function isCentOS5()
-    {
-        $etc_issue = file("/etc/issue");
-
-        return strpos($etc_issue[0], "CentOS release 5") === 0;
     }
 }
