@@ -86,7 +86,7 @@ class Docman_PermissionsItemManager
         $ugroups_ids = $literalizer->getUgroupIds($project, $item->getId(), self::PERMISSIONS_TYPE);
 
         if (empty($ugroups_ids)) {
-            $ugroups_ids = PermissionsManager::instance()->getAuthorizedUgroupIds(
+            $ugroups_ids = $this->getPermissionsManager()->getAuthorizedUgroupIds(
                 $project->getID(),
                 'PLUGIN_DOCMAN_ADMIN'
             );
@@ -105,7 +105,7 @@ class Docman_PermissionsItemManager
         if (! $item->getParentId()) {
             return;
         }
-        return Docman_ItemFactory::instance($project->getID())->getItemFromDb($item->getParentId());
+        return $this->getDocmanItemFactory($project)->getItemFromDb($item->getParentId());
     }
 
     /**
@@ -117,9 +117,33 @@ class Docman_PermissionsItemManager
      */
     public function exportPermissions(Docman_Item $item)
     {
-        $project     = ProjectManager::instance()->getProject($item->getGroupId());
-        $literalizer = new UGroupLiteralizer();
+        $project     = $this->getProjectManager()->getProject($item->getGroupId());
+        $literalizer = $this->getUGroupLiteralizer();
         $ugroup_ids  = $this->getUgroupIdsPermissions($item, $literalizer, $project);
         return $literalizer->ugroupIdsToString($ugroup_ids, $project);
+    }
+
+    // protected for testing purpose
+    protected function getUGroupLiteralizer(): UGroupLiteralizer
+    {
+        return new UGroupLiteralizer();
+    }
+
+    // protected for testing purpose
+    protected function getProjectManager(): ProjectManager
+    {
+        return ProjectManager::instance();
+    }
+
+    // protected for testing purpose
+    protected function getPermissionsManager(): PermissionsManager
+    {
+        return PermissionsManager::instance();
+    }
+
+    // protected for testing purpose
+    protected function getDocmanItemFactory(Project $project): Docman_ItemFactory
+    {
+        return Docman_ItemFactory::instance($project->getID());
     }
 }

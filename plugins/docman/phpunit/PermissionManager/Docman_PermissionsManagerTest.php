@@ -1,9 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
- * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- *
- * Originally written by Manuel VACELET, 2006.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,25 +11,30 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  *
  */
 
-require_once 'bootstrap.php';
+declare(strict_types = 1);
 
-Mock::generate('PFUser');
-Mock::generate('PermissionsManager');
-Mock::generate('Docman_PermissionsManagerDao');
-Mock::generate('DataAccessResult');
+namespace Tuleap\Docman\PermissionManager;
 
-class Docman_PermissionsManagerTest extends TuleapTestCase
+use Docman_PermissionsManager;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Project;
+use URLVerification;
+
+// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class Docman_PermissionsManagerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     private $user;
     /**
      * @var \Mockery\MockInterface|Docman_PermissionsManager
@@ -47,11 +49,11 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
      */
     private $url_verification;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        $this->user = mock('PFUser');
-        $this->user->setReturnValue('getId', 1234);
+        $this->user = \Mockery::spy(\PFUser::class);
+        $this->user->shouldReceive('getId')->andReturns(1234);
         $this->docmanPm  = Mockery::mock(Docman_PermissionsManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->project   = Mockery::mock(Project::class);
         $this->project->shouldReceive('getID')->andReturn('102');
@@ -66,7 +68,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
-        $this->user->setReturnValue('isSuperUser', true);
+        $this->user->shouldReceive('isSuperUser')->andReturns(true);
 
         $this->assertTrue($this->docmanPm->userCanAdmin($this->user));
         $this->assertTrue($this->docmanPm->userCanRead($this->user, '2231'));
@@ -90,12 +92,12 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(true);
-        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
 
         $this->assertTrue($this->docmanPm->userCanAdmin($this->user));
 
-        $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', false);
+        $pm = \Mockery::spy(\PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->andReturns(false);
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm);
 
         $this->assertTrue($this->docmanPm->userCanRead($this->user, '42231'));
@@ -111,14 +113,14 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
-        $this->user->setReturnValue('getUgroups', ['test']);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->user->shouldReceive('getUgroups')->andReturns(['test']);
 
         $itemId = 1515;
 
         // Start Test
-        $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test']));
+        $pm = \Mockery::spy(\PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->andReturns(true);
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm);
 
         $this->assertTrue($this->docmanPm->userCanManage($this->user, $itemId));
@@ -139,15 +141,15 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
 
-        $this->user->setReturnValue('getUgroups', ['test']);
+        $this->user->shouldReceive('getUgroups')->andReturns(['test']);
 
         $itemId = 1515;
 
         // Start Test
-        $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', ['test']));
+        $pm = \Mockery::spy(\PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_WRITE', ['test'])->andReturns(true);
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm);
 
         $this->assertFalse($this->docmanPm->userCanManage($this->user, $itemId));
@@ -168,15 +170,15 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
 
-        $this->user->setReturnValue('getUgroups', ['test']);
+        $this->user->shouldReceive('getUgroups')->andReturns(['test']);
 
         $itemId = 1515;
 
         // Start Test
-        $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_READ', ['test']));
+        $pm = \Mockery::spy(\PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_READ', ['test'])->andReturns(true);
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm);
 
         $this->assertFalse($this->docmanPm->userCanManage($this->user, $itemId));
@@ -192,15 +194,15 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
 
-        $this->user->setReturnValue('getUgroups', ['test']);
+        $this->user->shouldReceive('getUgroups')->andReturns(['test']);
 
         $itemId = 1515;
 
         // Start Test
-        $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', false);
+        $pm = \Mockery::spy(\PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->andReturns(false);
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm);
 
         $this->assertFalse($this->docmanPm->userCanManage($this->user, $itemId));
@@ -217,15 +219,15 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
 
-        $this->user->setReturnValue('getUgroups', ['test']);
+        $this->user->shouldReceive('getUgroups')->andReturns(['test']);
 
         $itemId = 1515;
 
         // User has write permission
-        $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', ['test']));
+        $pm = \Mockery::spy(\PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_WRITE', ['test'])->andReturns(true);
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm);
 
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
@@ -240,19 +242,18 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
          // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
 
-        $this->user->setReturnValue('getUgroups', ['test']);
+        $this->user->shouldReceive('getUgroups')->andReturns(['test']);
 
         $itemId = 1515;
 
         // Start Test
-        $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', false);
-        $pm->expectCallCount('userHasPermission', 3);
-        $pm->expectAt(0, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_READ', ['test']));
-        $pm->expectAt(1, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_WRITE', ['test']));
-        $pm->expectAt(2, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test']));
+        $pm = \Mockery::spy(\PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->times(3)->andReturns(false);
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_READ', ['test'])->ordered();
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_WRITE', ['test'])->ordered();
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->ordered();
 
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm);
 
@@ -266,18 +267,17 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
          // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
 
-        $this->user->setReturnValue('getUgroups', ['test']);
+        $this->user->shouldReceive('getUgroups')->andReturns(['test']);
 
         $itemId = 1515;
 
         // Start Test
-        $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', false);
-        $pm->expectCallCount('userHasPermission', 2);
-        $pm->expectAt(0, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_WRITE', ['test']));
-        $pm->expectAt(1, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test']));
+        $pm = \Mockery::spy(\PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->times(2)->andReturns(false);
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_WRITE', ['test'])->ordered();
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->ordered();
 
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm);
 
@@ -291,17 +291,16 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
          // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
 
-        $this->user->setReturnValue('getUgroups', ['test']);
+        $this->user->shouldReceive('getUgroups')->andReturns(['test']);
 
         $itemId = 1515;
 
         // Start Test
-        $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', false);
-        $pm->expectCallCount('userHasPermission', 1);
-        $pm->expectAt(0, 'userHasPermission', array($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test']));
+        $pm = \Mockery::spy(\PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->once()->andReturns(false);
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->ordered();
 
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm);
 
@@ -316,8 +315,8 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
-        $this->user->setReturnValue('getUgroups', []);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->user->shouldReceive('getUgroups')->andReturns([]);
 
         $permission_manager = Mockery::mock(PermissionsManager::class);
         $permission_manager->shouldReceive('userHasPermission')->with('1515', Mockery::any(), Mockery::any())
@@ -353,8 +352,8 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
-        $this->user->setReturnValue('getUgroups', []);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->user->shouldReceive('getUgroups')->andReturns([]);
 
         $permission_manager = Mockery::mock(PermissionsManager::class);
         $permission_manager->shouldReceive('userHasPermission')->with('1515', Mockery::any(), Mockery::any())
@@ -390,8 +389,8 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         // user is not docman admin
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         // user is not super admin
-        $this->user->setReturnValue('isSuperUser', false);
-        $this->user->setReturnValue('getUgroups', []);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->user->shouldReceive('getUgroups')->andReturns([]);
 
         $permission_manager = Mockery::mock(PermissionsManager::class);
         $permission_manager->shouldReceive('userHasPermission')->with('1515', Mockery::any(), Mockery::any())
@@ -425,11 +424,11 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(true);
-        $this->user->setReturnValue('isSuperUser', false);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
 
         // No need to fetch perms when admin
-        $dao = new MockDocman_PermissionsManagerDao($this);
-        $dao->expectCallCount('retrievePermissionsForItems', 0);
+        $dao = \Mockery::spy(\Docman_PermissionsManagerDao::class);
+        $dao->shouldReceive('retrievePermissionsForItems')->never();
 
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao);
 
@@ -443,11 +442,11 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
-        $this->user->setReturnValue('isSuperUser', true);
+        $this->user->shouldReceive('isSuperUser')->andReturns(true);
 
         // No need to fetch perms when admin
-        $dao = new MockDocman_PermissionsManagerDao($this);
-        $dao->expectCallCount('retrievePermissionsForItems', 0);
+        $dao = \Mockery::spy(\Docman_PermissionsManagerDao::class);
+        $dao->shouldReceive('retrievePermissionsForItems')->never();
 
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao);
 
@@ -464,7 +463,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         // Ensure everything comes from cache
         $this->docmanPm->shouldNotReceive('_isUserDocmanAdmin');
         $this->docmanPm->shouldNotReceive('_getPermissionManagerInstance');
-        $this->user->expectCallCount('isSuperUser', 0);
+        $this->user->shouldReceive('isSuperUser')->never();
 
         $itemId = 1515;
         $this->docmanPm->_setCanManage($this->user->getId(), $itemId, true);
@@ -479,7 +478,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         // Ensure everything comes from cache
         $this->docmanPm->shouldNotReceive('_isUserDocmanAdmin');
         $this->docmanPm->shouldNotReceive('_getPermissionManagerInstance');
-        $this->user->expectCallCount('isSuperUser', 0);
+        $this->user->shouldReceive('isSuperUser')->never();
 
         $itemId = 1515;
         $this->docmanPm->_setCanWrite($this->user->getId(), $itemId, true);
@@ -493,7 +492,7 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         // Ensure everything comes from cache
         $this->docmanPm->shouldNotReceive('_isUserDocmanAdmin');
         $this->docmanPm->shouldNotReceive('_getPermissionManagerInstance');
-        $this->user->expectCallCount('isSuperUser', 0);
+        $this->user->shouldReceive('isSuperUser')->never();
 
         $itemId = 1515;
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
@@ -506,13 +505,13 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
         $this->docmanPm->shouldReceive('_itemIsLockedForUser')->andReturn(false);
-        $this->user->setReturnValue('isSuperUser', false);
-        $this->user->setReturnValue('getUgroups', ['test']);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->user->shouldReceive('getUgroups')->andReturns(['test']);
 
         $itemId = 1515;
 
-        $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', ['test']));
+        $pm = \Mockery::spy(\PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_WRITE', ['test'])->andReturns(true);
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm);
 
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
@@ -525,13 +524,13 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
     {
         $this->url_verification->shouldReceive('userCanAccessProject')->andReturn(true);
         $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->andReturn(false);
-        $this->user->setReturnValue('isSuperUser', false);
-        $this->user->setReturnValue('getUgroups', ['test']);
+        $this->user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->user->shouldReceive('getUgroups')->andReturns(['test']);
 
         $itemId = 1515;
 
-        $pm = new MockPermissionsManager($this);
-        $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test']));
+        $pm = \Mockery::spy(\PermissionsManager::class);
+        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->andReturns(true);
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm);
 
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
@@ -620,151 +619,137 @@ class Docman_PermissionsManagerTest extends TuleapTestCase
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
     }
 
-    public function testGetDocmanManagerUsersError()
+    public function testGetDocmanManagerUsersError(): void
     {
-        $pm = new MockPermissionsManager();
-        $pm->setReturnValue('getUgroupIdByObjectIdAndPermissionType', null);
-        $dao = new MockDocman_PermissionsManagerDao();
+        $pm  = \Mockery::spy(\PermissionsManager::class);
+        $dao = \Mockery::spy(\Docman_PermissionsManagerDao::class);
 
-        $pm->expectOnce('getUgroupIdByObjectIdAndPermissionType');
-        $dao->expectNever('getUgroupMembers');
+        $pm->shouldReceive('getUgroupIdByObjectIdAndPermissionType')->once()->andReturns(null);
+        $dao->shouldReceive('getUgroupMembers')->never();
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm)->once();
-        $this->assertEqual(array(), $this->docmanPm->getDocmanManagerUsers(1, 1));
+        $this->assertEquals(array(), $this->docmanPm->getDocmanManagerUsers(1, $this->project));
     }
 
-    public function testGetDocmanManagerUsersDynamicUgroup()
+    public function testGetDocmanManagerUsersDynamicUgroup(): void
     {
         $dar = array(array('ugroup_id' => 101));
-        $pm = new MockPermissionsManager();
-        $pm->setReturnValue('getUgroupIdByObjectIdAndPermissionType', $dar);
+        $pm  = \Mockery::mock(\PermissionsManager::class);
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm)->once();
-        $dao = new MockDocman_PermissionsManagerDao();
+        $dao     = \Mockery::mock(\Docman_PermissionsManagerDao::class);
         $members = array(array('email'       => 'john.doe@example.com',
                                'language_id' => 'en_US'),
                          array('email'       => 'jane.doe@example.com',
                                'language_id' => 'fr_FR'));
-        $dao->setReturnvalue('getUgroupMembers', $members);
+        $dao->shouldReceive('getUgroupMembers')->with(101)->andReturn($members);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
 
-        $pm->expectOnce('getUgroupIdByObjectIdAndPermissionType');
-        $dao->expectOnce('getUgroupMembers');
+        $pm->shouldReceive('getUgroupIdByObjectIdAndPermissionType')->once()->andReturns($dar);
         $userArray = array('john.doe@example.com' => 'en_US',
                            'jane.doe@example.com' => 'fr_FR');
-        $this->assertEqual($userArray, $this->docmanPm->getDocmanManagerUsers(1, 1));
+        $this->assertEquals($userArray, $this->docmanPm->getDocmanManagerUsers(1, $this->project));
     }
 
-    public function testGetDocmanManagerUsersEmptyDynamicUgroup()
+    public function testGetDocmanManagerUsersEmptyDynamicUgroup(): void
     {
         $dar = array(array('ugroup_id' => 101));
-        $pm = new MockPermissionsManager();
-        $pm->setReturnValue('getUgroupIdByObjectIdAndPermissionType', $dar);
+        $pm  = \Mockery::mock(\PermissionsManager::class);
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm)->once();
-        $dao = new MockDocman_PermissionsManagerDao();
-        $dao->setReturnvalue('getUgroupMembers', array());
-        $dao->setReturnvalue('getDocmanAdminUgroups', null);
+        $dao = \Mockery::mock(\Docman_PermissionsManagerDao::class);
+        $dao->shouldReceive('getUgroupMembers')->with(101)->andReturn([]);
+        $dao->shouldReceive('getDocmanAdminUgroups')->with($this->project)->andReturn([]);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
 
-        $pm->expectOnce('getUgroupIdByObjectIdAndPermissionType');
-        $dao->expectOnce('getUgroupMembers');
-        $this->assertEqual(array(), $this->docmanPm->getDocmanManagerUsers(1, 1));
+        $pm->shouldReceive('getUgroupIdByObjectIdAndPermissionType')->once()->andReturns($dar);
+        $this->assertEquals(array(), $this->docmanPm->getDocmanManagerUsers(1, $this->project));
     }
 
-    function testGetDocmanManagerUsersStaticUgroup()
+    function testGetDocmanManagerUsersStaticUgroup(): void
     {
         $dar = array(array('ugroup_id' => 100));
-        $pm = new MockPermissionsManager();
-        $pm->setReturnValue('getUgroupIdByObjectIdAndPermissionType', $dar);
+        $pm  = \Mockery::spy(\PermissionsManager::class);
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm);
-        $dao = new MockDocman_PermissionsManagerDao();
+        $dao = \Mockery::spy(\Docman_PermissionsManagerDao::class);
         $dao->setReturnvalue('getDocmanAdminUgroups', null);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao);
 
-        $pm->expectOnce('getUgroupIdByObjectIdAndPermissionType');
-        $dao->expectNever('getUgroupMembers');
-        $this->assertEqual(array(), $this->docmanPm->getDocmanManagerUsers(1, 1));
+        $pm->shouldReceive('getUgroupIdByObjectIdAndPermissionType')->once()->andReturns($dar);
+        $dao->shouldReceive('getUgroupMembers')->never();
+        $this->assertEquals(array(), $this->docmanPm->getDocmanManagerUsers(1, $this->project));
     }
 
-    function testGetDocmanAdminUsersError()
+    function testGetDocmanAdminUsersError(): void
     {
-        $dao = new MockDocman_PermissionsManagerDao();
-        $dao->setReturnValue('getDocmanAdminUgroups', null);
+        $dao = \Mockery::spy(\Docman_PermissionsManagerDao::class);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao);
 
-        $dao->expectOnce('getDocmanAdminUgroups');
-        $dao->expectNever('getUgroupMembers');
-        $this->assertEqual(array(), $this->docmanPm->getDocmanAdminUsers($this->project));
+        $dao->shouldReceive('getDocmanAdminUgroups')->once()->andReturns(null);
+        $dao->shouldReceive('getUgroupMembers')->never();
+        $this->assertEquals(array(), $this->docmanPm->getDocmanAdminUsers($this->project));
     }
 
-    public function testGetDocmanAdminUsersDynamicUgroup()
+    public function testGetDocmanAdminUsersDynamicUgroup(): void
     {
-        $dar = array(array('ugroup_id' => 101));
-        $dao = new MockDocman_PermissionsManagerDao();
-        $dao->setReturnValue('getDocmanAdminUgroups', $dar);
+        $dar     = array(array('ugroup_id' => 101));
+        $dao     = \Mockery::spy(\Docman_PermissionsManagerDao::class);
         $members = array(array('email'       => 'john.doe@example.com',
                                'language_id' => 'en_US'),
                          array('email'       => 'jane.doe@example.com',
                                'language_id' => 'fr_FR'));
-        $dao->setReturnvalue('getUgroupMembers', $members);
+        $dao->shouldReceive('getUgroupMembers')->with(101)->andReturn($members);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
 
-        $dao->expectOnce('getDocmanAdminUgroups');
-        $dao->expectOnce('getUgroupMembers');
+        $dao->shouldReceive('getDocmanAdminUgroups')->once()->andReturns($dar);
         $userArray = array('john.doe@example.com' => 'en_US',
                            'jane.doe@example.com' => 'fr_FR');
-        $this->assertEqual($userArray, $this->docmanPm->getDocmanAdminUsers($this->project));
+        $this->assertEquals($userArray, $this->docmanPm->getDocmanAdminUsers($this->project));
     }
 
     public function testGetDocmanAdminUsersEmptyDynamicUgroup()
     {
         $dar = array(array('ugroup_id' => 101));
-        $dao = new MockDocman_PermissionsManagerDao();
-        $dao->setReturnValue('getDocmanAdminUgroups', $dar);
-        $dao->setReturnvalue('getUgroupMembers', array());
+        $dao = \Mockery::spy(\Docman_PermissionsManagerDao::class);
+        $dao->shouldReceive('getUgroupMembers')->with(101)->andReturn([]);
         $dao->setReturnvalue('getDocmanAdminUgroups', null);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
 
-        $dao->expectOnce('getDocmanAdminUgroups');
-        $dao->expectOnce('getUgroupMembers');
-        $this->assertEqual(array(), $this->docmanPm->getDocmanAdminUsers($this->project));
+        $dao->shouldReceive('getDocmanAdminUgroups')->once()->andReturns($dar);
+        $this->assertEquals(array(), $this->docmanPm->getDocmanAdminUsers($this->project));
     }
 
     public function testGetDocmanAdminUsersStaticUgroup()
     {
         $dar = array(array('ugroup_id' => 100));
-        $dao = new MockDocman_PermissionsManagerDao();
-        $dao->setReturnValue('getDocmanAdminUgroups', $dar);
+        $dao = \Mockery::spy(\Docman_PermissionsManagerDao::class);
         $dao->setReturnvalue('getDocmanAdminUgroups', null);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
 
-        $dao->expectOnce('getDocmanAdminUgroups');
-        $dao->expectNever('getUgroupMembers');
-        $this->assertEqual(array(), $this->docmanPm->getDocmanAdminUsers($this->project));
+        $dao->shouldReceive('getDocmanAdminUgroups')->once()->andReturns($dar);
+        $dao->shouldReceive('getUgroupMembers')->never();
+        $this->assertEquals(array(), $this->docmanPm->getDocmanAdminUsers($this->project));
     }
 
     public function testGetProjectAdminUsersError()
     {
-        $dao = new MockDocman_PermissionsManagerDao();
-        $dao->setReturnValue('getProjectAdminMembers', null);
+        $dao = \Mockery::spy(\Docman_PermissionsManagerDao::class);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao);
 
-        $dao->expectOnce('getProjectAdminMembers');
-        $this->assertEqual(array(), $this->docmanPm->getProjectAdminUsers($this->project));
+        $dao->shouldReceive('getProjectAdminMembers')->once()->andReturns(null);
+        $this->assertEquals(array(), $this->docmanPm->getProjectAdminUsers($this->project));
     }
 
     public function testGetProjectAdminUsersSuccess()
     {
-        $dao = new MockDocman_PermissionsManagerDao();
+        $dao = \Mockery::spy(\Docman_PermissionsManagerDao::class);
         $dar = array(array('email'       => 'john.doe@example.com',
                            'language_id' => 'en_US'),
                      array('email'       => 'jane.doe@example.com',
                            'language_id' => 'fr_FR'));
-        $dao->setReturnValue('getProjectAdminMembers', $dar);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
 
-        $dao->expectOnce('getProjectAdminMembers');
+        $dao->shouldReceive('getProjectAdminMembers')->once()->andReturns($dar);
         $userArray = array('john.doe@example.com' => 'en_US',
                            'jane.doe@example.com' => 'fr_FR');
-        $this->assertEqual($userArray, $this->docmanPm->getProjectAdminUsers($this->project));
+        $this->assertEquals($userArray, $this->docmanPm->getProjectAdminUsers($this->project));
     }
 }
