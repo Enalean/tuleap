@@ -144,7 +144,7 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
         $this->tpl->assign('tree', $commit->GetTree());
 
         $detector = new LanguageDetectorForPrismJS();
-        $this->tpl->assign('language', $detector->getLanguageFromExtension(substr(strrchr($blob->GetName(), '.'), 1)));
+        $this->tpl->assign('language', $detector->getLanguage($blob->GetName()));
         $this->tpl->assign('bloblines', $blob->GetData(true));
         $include_assets = new IncludeAssets(__DIR__ . '/../../../www/assets', GIT_BASE_URL . '/assets');
         $GLOBALS['Response']->includeFooterJavascriptFile(
