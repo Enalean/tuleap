@@ -139,12 +139,12 @@ describe("EditRemainingEffort", () => {
         const wrapper = await getWrapper();
 
         wrapper.setData({ value: "3" });
-        expect(wrapper.attributes("style")).toBe("");
+        expect(wrapper.classes()).toEqual(["taskboard-card-remaining-effort-input-fiesta-red"]);
 
         wrapper.setData({ value: "3.14" });
-        expect(wrapper.attributes("style")).toBe("width: 50px;");
+        expect(wrapper.classes()).toContain("taskboard-card-remaining-effort-input-width-40");
 
-        wrapper.setData({ value: "3.1416" });
-        expect(wrapper.attributes("style")).toBe("width: 70px;");
+        wrapper.setData({ value: "3.14159265358979323846264338327950288" });
+        expect(wrapper.classes()).toContain("taskboard-card-remaining-effort-input-width-60");
     });
 });
