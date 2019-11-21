@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class XMLImportHelperTest extends TuleapTestCase
+declare(strict_types=1);
+
+namespace Tuleap\XML;
+
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\TestCase;
+use SimpleXMLElement;
+use Tuleap\GlobalLanguageMock;
+use XMLImportHelper;
+
+class XMLImportHelperTest extends TestCase
 {
+    use MockeryPHPUnitIntegration, GlobalLanguageMock;
 
     public function testItImportsAnonymousUser()
     {
-        $user_manager  = mock('UserManager');
+        $user_manager  = \Mockery::spy(\UserManager::class);
         $import_helper = new XMLImportHelper($user_manager);
-        stub($user_manager)->getUserByIdentifier()->returns(null);
-        stub($user_manager)->getUserAnonymous()->returns(new PFUser());
+        $user_manager->shouldReceive('getUserByIdentifier')->andReturns(null);
+        $user_manager->shouldReceive('getUserAnonymous')->andReturns(new PFUser());
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-<user>veloc@dino.com</user>');
+<user>veloc@example.com</user>');
 
         $user = $import_helper->getUser($xml);
 
-        $this->assertEqual($user->getEmail(), 'veloc@dino.com');
+        $this->assertEquals('veloc@example.com', $user->getEmail());
     }
 }

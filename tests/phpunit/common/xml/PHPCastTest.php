@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,43 +20,45 @@
 
 namespace Tuleap\XML;
 
-use SimpleXMLElement;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-class PHPCastTest extends \TuleapTestCase
+class PHPCastTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    public function itTransformsZeroToFalse()
+    public function testItTransformsZeroToFalse()
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><stuff enabled="0" />');
 
-        $this->assertIdentical(false, PHPCast::toBoolean($xml['enabled']));
+        $this->assertFalse(PHPCast::toBoolean($xml['enabled']));
     }
 
-    public function itTransformsOneToTrue()
+    public function testItTransformsOneToTrue()
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><stuff enabled="1" />');
 
-        $this->assertIdentical(true, PHPCast::toBoolean($xml['enabled']));
+        $this->assertTrue(PHPCast::toBoolean($xml['enabled']));
     }
 
-    public function itTransformsTrueToTrue()
+    public function testItTransformsTrueToTrue()
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><stuff enabled="true" />');
 
-        $this->assertIdentical(true, PHPCast::toBoolean($xml['enabled']));
+        $this->assertTrue(PHPCast::toBoolean($xml['enabled']));
     }
 
-    public function itTransformsFalseToFalse()
+    public function testItTransformsFalseToFalse()
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><stuff enabled="false" />');
 
-        $this->assertIdentical(false, PHPCast::toBoolean($xml['enabled']));
+        $this->assertFalse(PHPCast::toBoolean($xml['enabled']));
     }
 
-    public function itTransformsGarbageToFalse()
+    public function testItTransformsGarbageToFalse()
     {
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?><stuff enabled="stuff" />');
 
-        $this->assertIdentical(false, PHPCast::toBoolean($xml['enabled']));
+        $this->assertFalse(PHPCast::toBoolean($xml['enabled']));
     }
 }
