@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\PullRequest\Authorization;
 
 use GitRepositoryFactory;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Project_AccessPrivateException;
 use Project_AccessProjectNotFoundException;
 use Tuleap\PullRequest\PullRequest;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class PullRequestPermissionCheckerTest extends \TuleapTestCase
+class PullRequestPermissionCheckerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var GitRepositoryFactory
      */
@@ -50,19 +56,19 @@ class PullRequestPermissionCheckerTest extends \TuleapTestCase
      */
     private $repository;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->user                   = mock('PFUser');
-        $this->pull_request           = mock('Tuleap\\PullRequest\\PullRequest');
-        $this->repository             = mock('GitRepository');
-        $this->git_repository_factory = mock('GitRepositoryFactory');
-        $this->url_verification       = mock('URLVerification');
+        $this->user                   = \Mockery::spy(\PFUser::class);
+        $this->pull_request           = \Mockery::spy(\Tuleap\PullRequest\PullRequest::class);
+        $this->repository             = \Mockery::spy(\GitRepository::class);
+        $this->git_repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->url_verification       = \Mockery::spy(\URLVerification::class);
     }
 
-    public function itThrowsWhenGitRepoIsNotFound()
+    public function testItThrowsWhenGitRepoIsNotFound(): void
     {
-        stub($this->git_repository_factory)->getRepositoryById()->returns(null);
+        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
 
         $permission_checker = $this->instantiatePermissionChecker();
 
@@ -71,11 +77,11 @@ class PullRequestPermissionCheckerTest extends \TuleapTestCase
         $permission_checker->checkPullRequestIsReadableByUser($this->pull_request, $this->user);
     }
 
-    public function itLetsExceptionBubbleUpWhenUserHasNotAccessToProject()
+    public function testItLetsExceptionBubbleUpWhenUserHasNotAccessToProject(): void
     {
-        stub($this->git_repository_factory)->getRepositoryById()->returns($this->repository);
-        stub($this->repository)->getProject()->returns(\Mockery::mock(\Project::class));
-        stub($this->url_verification)->userCanAccessProject()->throws(new Project_AccessPrivateException());
+        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
+        $this->repository->shouldReceive('getProject')->andReturns(\Mockery::mock(\Project::class));
+        $this->url_verification->shouldReceive('userCanAccessProject')->andThrows(new Project_AccessPrivateException());
 
         $permission_checker = $this->instantiatePermissionChecker();
 
@@ -84,11 +90,11 @@ class PullRequestPermissionCheckerTest extends \TuleapTestCase
         $permission_checker->checkPullRequestIsReadableByUser($this->pull_request, $this->user);
     }
 
-    public function itLetsExceptionBubbleUpWhenProjectIsNotFound()
+    public function testItLetsExceptionBubbleUpWhenProjectIsNotFound(): void
     {
-        stub($this->git_repository_factory)->getRepositoryById()->returns($this->repository);
-        stub($this->repository)->getProject()->returns(\Mockery::mock(\Project::class));
-        stub($this->url_verification)->userCanAccessProject()->throws(new Project_AccessProjectNotFoundException());
+        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
+        $this->repository->shouldReceive('getProject')->andReturns(\Mockery::mock(\Project::class));
+        $this->url_verification->shouldReceive('userCanAccessProject')->andThrows(new Project_AccessProjectNotFoundException());
 
         $permission_checker = $this->instantiatePermissionChecker();
 
@@ -97,11 +103,11 @@ class PullRequestPermissionCheckerTest extends \TuleapTestCase
         $permission_checker->checkPullRequestIsReadableByUser($this->pull_request, $this->user);
     }
 
-    public function itThrowsWhenUserCannotReadGitRepo()
+    public function testItThrowsWhenUserCannotReadGitRepo(): void
     {
-        stub($this->repository)->userCanRead($this->user)->returns(false);
-        stub($this->repository)->getProject()->returns(\Mockery::mock(\Project::class));
-        stub($this->git_repository_factory)->getRepositoryById()->returns($this->repository);
+        $this->repository->shouldReceive('userCanRead')->with($this->user)->andReturns(false);
+        $this->repository->shouldReceive('getProject')->andReturns(\Mockery::mock(\Project::class));
+        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
 
         $permission_checker = $this->instantiatePermissionChecker();
 
@@ -110,7 +116,7 @@ class PullRequestPermissionCheckerTest extends \TuleapTestCase
         $permission_checker->checkPullRequestIsReadableByUser($this->pull_request, $this->user);
     }
 
-    private function instantiatePermissionChecker()
+    private function instantiatePermissionChecker(): PullRequestPermissionChecker
     {
         return new PullRequestPermissionChecker(
             $this->git_repository_factory,

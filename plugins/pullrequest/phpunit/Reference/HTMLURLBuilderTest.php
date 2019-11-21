@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\PullRequest\Reference;
+
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__.'/../bootstrap.php';
 
-class HTMLURLBuilderTest extends \TuleapTestCase
+class HTMLURLBuilderTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var \GitRepositoryFactory
      */
@@ -37,24 +44,24 @@ class HTMLURLBuilderTest extends \TuleapTestCase
      */
     private $project_id;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->repository_id = 8;
         $this->project_id    = 109;
 
-        $this->git_repository_factory = mock('GitRepositoryFactory');
-        $repository                   = mock('GitRepository');
-        $project                      = aMockProject()->withId($this->project_id)->build();
-        stub($repository)->getProject()->returns($project);
-        stub($this->git_repository_factory)->getRepositoryById($this->repository_id)->returns($repository);
+        $this->git_repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
+        $repository                   = \Mockery::spy(\GitRepository::class);
+        $project                      = \Mockery::spy(\Project::class, ['getID' => $this->project_id, 'getUnixName' => false, 'isPublic' => false]);
+        $repository->shouldReceive('getProject')->andReturns($project);
+        $this->git_repository_factory->shouldReceive('getRepositoryById')->with($this->repository_id)->andReturns($repository);
     }
 
-    public function itReturnsTheWebURLToPullRequestOverview()
+    public function testItReturnsTheWebURLToPullRequestOverview(): void
     {
-        $pull_request = mock('Tuleap\\PullRequest\\PullRequest');
-        stub($pull_request)->getId()->returns(27);
-        stub($pull_request)->getRepositoryId()->returns($this->repository_id);
+        $pull_request = \Mockery::spy(\Tuleap\PullRequest\PullRequest::class);
+        $pull_request->shouldReceive('getId')->andReturns(27);
+        $pull_request->shouldReceive('getRepositoryId')->andReturns($this->repository_id);
 
         $html_url_builder = new HTMLURLBuilder(
             $this->git_repository_factory
@@ -64,6 +71,6 @@ class HTMLURLBuilderTest extends \TuleapTestCase
 
         $expected_url = '/plugins/git/?action=pull-requests&repo_id=8&group_id=109#/pull-requests/27/overview';
 
-        $this->assertEqual($expected_url, $result);
+        $this->assertEquals($expected_url, $result);
     }
 }

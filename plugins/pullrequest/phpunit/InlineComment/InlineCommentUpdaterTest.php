@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,27 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\PullRequest\InlineComment;
 
-use TuleapTestCase;
-use GitRepository;
-use ForgeConfig;
+use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\FileUniDiff;
 use Tuleap\PullRequest\FileNullDiff;
 use Tuleap\PullRequest\UniDiffLine;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class WhenSourceChangesTest extends TuleapTestCase
+class WhenSourceChangesTest extends TestCase
 {
-    public function setUp()
+    /**
+     * @var InlineCommentUpdater
+     */
+    private $updater;
+
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->updater = new InlineCommentUpdater();
     }
 
-    public function itShouldBeObsoleteIfLineWasAddedAndLineIsDeleted()
+    public function testItShouldBeObsoleteIfLineWasAddedAndLineIsDeleted(): void
     {
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
 
@@ -59,11 +64,11 @@ class WhenSourceChangesTest extends TuleapTestCase
             $targeted_diff
         );
 
-        $this->assertEqual(1, count($updated_comments));
-        $this->assertEqual(true, $updated_comments[0]->isOutdated());
+        $this->assertEquals(1, count($updated_comments));
+        $this->assertTrue($updated_comments[0]->isOutdated());
     }
 
-    public function itShouldBeObsoleteIfLineWasKeptAndLineIsDeleted()
+    public function testItShouldBeObsoleteIfLineWasKeptAndLineIsDeleted(): void
     {
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
 
@@ -84,11 +89,11 @@ class WhenSourceChangesTest extends TuleapTestCase
             $targeted_diff
         );
 
-        $this->assertEqual(1, count($updated_comments));
-        $this->assertEqual(true, $updated_comments[0]->isOutdated());
+        $this->assertEquals(1, count($updated_comments));
+        $this->assertTrue($updated_comments[0]->isOutdated());
     }
 
-    public function itShouldBeObsoleteIfLineWasAddedAndLineContentHasChanged()
+    public function testItShouldBeObsoleteIfLineWasAddedAndLineContentHasChanged(): void
     {
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
 
@@ -112,11 +117,11 @@ class WhenSourceChangesTest extends TuleapTestCase
             $targeted_diff
         );
 
-        $this->assertEqual(1, count($updated_comments));
-        $this->assertEqual(true, $updated_comments[0]->isOutdated());
+        $this->assertEquals(1, count($updated_comments));
+        $this->assertTrue($updated_comments[0]->isOutdated());
     }
 
-    public function itShouldBeMovedIfLineWasAddedAndLineIsMoved()
+    public function testItShouldBeMovedIfLineWasAddedAndLineIsMoved(): void
     {
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
 
@@ -143,12 +148,12 @@ class WhenSourceChangesTest extends TuleapTestCase
             $targeted_diff
         );
 
-        $this->assertEqual(1, count($updated_comments));
-        $this->assertEqual(false, $updated_comments[0]->isOutdated());
-        $this->assertEqual(3, $updated_comments[0]->getUnidiffOffset());
+        $this->assertEquals(1, count($updated_comments));
+        $this->assertFalse($updated_comments[0]->isOutdated());
+        $this->assertEquals(3, $updated_comments[0]->getUnidiffOffset());
     }
 
-    public function itShouldBeMovedIfLineWasKeptAndLineIsMoved()
+    public function testItShouldBeMovedIfLineWasKeptAndLineIsMoved(): void
     {
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
 
@@ -175,12 +180,12 @@ class WhenSourceChangesTest extends TuleapTestCase
             $targeted_diff
         );
 
-        $this->assertEqual(1, count($updated_comments));
-        $this->assertEqual(false, $updated_comments[0]->isOutdated());
-        $this->assertEqual(3, $updated_comments[0]->getUnidiffOffset());
+        $this->assertEquals(1, count($updated_comments));
+        $this->assertFalse($updated_comments[0]->isOutdated());
+        $this->assertEquals(3, $updated_comments[0]->getUnidiffOffset());
     }
 
-    public function itShouldBeObsoleteIfLineWasDeletedAndLineIsNoMoreDeleted()
+    public function testItShouldBeObsoleteIfLineWasDeletedAndLineIsNoMoreDeleted(): void
     {
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
 
@@ -203,11 +208,11 @@ class WhenSourceChangesTest extends TuleapTestCase
             $targeted_diff
         );
 
-        $this->assertEqual(1, count($updated_comments));
-        $this->assertEqual(true, $updated_comments[0]->isOutdated());
+        $this->assertEquals(1, count($updated_comments));
+        $this->assertTrue($updated_comments[0]->isOutdated());
     }
 
-    public function itShouldBeKeptIfLineWasDeletedAndLineIsMoved()
+    public function testItShouldBeKeptIfLineWasDeletedAndLineIsMoved(): void
     {
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
 
@@ -231,8 +236,8 @@ class WhenSourceChangesTest extends TuleapTestCase
             $targeted_diff
         );
 
-        $this->assertEqual(1, count($updated_comments));
-        $this->assertEqual(false, $updated_comments[0]->isOutdated());
-        $this->assertEqual(2, $updated_comments[0]->getUnidiffOffset());
+        $this->assertEquals(1, count($updated_comments));
+        $this->assertFalse($updated_comments[0]->isOutdated());
+        $this->assertEquals(2, $updated_comments[0]->getUnidiffOffset());
     }
 }

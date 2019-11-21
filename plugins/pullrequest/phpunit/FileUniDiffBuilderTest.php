@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,36 +18,49 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\PullRequest;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tuleap\TemporaryTestDirectory;
 
-require_once 'bootstrap.php';
+require_once __DIR__.'/bootstrap.php';
 
-class FileUniDiffBuilderTest extends TuleapTestCase
+class FileUniDiffBuilderTest extends TestCase
 {
-    public function setUp()
+    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+
+    /**
+     * @var FileUniDiffBuilder
+     */
+    private $builder;
+
+    /**
+     * @var string
+     */
+    private $fixture_dir;
+
+    /**
+     * @var GitExec
+     */
+    private $git_exec;
+
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->builder = new FileUniDiffBuilder();
 
-        $this->fixture_dir = '/tmp/tuleap-pullrequest-fileunidiffbuilder-test_'.rand(0, 99999999);
-        mkdir($this->fixture_dir);
-        system("cd $this->fixture_dir && git init 2>&1 >/dev/null");
+        $this->fixture_dir = $this->getTmpDir();
 
         $this->git_exec = new GitExec($this->fixture_dir);
+        $this->git_exec->init();
         $this->git_exec->setLocalCommiter('John Doe', 'john.doe@example.com');
     }
 
-    public function tearDown()
-    {
-        system("rm -rf $this->fixture_dir");
-
-        parent::tearDown();
-    }
-
-    public function itHandlesChangedFile()
+    public function testItHandlesChangedFile(): void
     {
         $file_path = "$this->fixture_dir/file";
 
@@ -62,38 +75,38 @@ class FileUniDiffBuilderTest extends TuleapTestCase
         $diff = $this->builder->buildFileUnidiff($this->git_exec, $file_path, 'HEAD^', 'HEAD');
 
         $lines = $diff->getLines();
-        $this->assertEqual(7, count($lines));
+        $this->assertEquals(7, count($lines));
 
         $line = $diff->getLineFromNewOffset(1);
-        $this->assertEqual(UniDiffLine::ADDED, $line->getType());
-        $this->assertEqual(null, $line->getOldOffset());
+        $this->assertEquals(UniDiffLine::ADDED, $line->getType());
+        $this->assertEquals(null, $line->getOldOffset());
 
         $line = $diff->getLineFromNewOffset(2);
-        $this->assertEqual(UniDiffLine::KEPT, $line->getType());
-        $this->assertEqual(1, $line->getOldOffset());
+        $this->assertEquals(UniDiffLine::KEPT, $line->getType());
+        $this->assertEquals(1, $line->getOldOffset());
 
         $line = $diff->getLineFromNewOffset(3);
-        $this->assertEqual(UniDiffLine::KEPT, $line->getType());
-        $this->assertEqual(2, $line->getOldOffset());
+        $this->assertEquals(UniDiffLine::KEPT, $line->getType());
+        $this->assertEquals(2, $line->getOldOffset());
 
         $line = $diff->getLineFromNewOffset(4);
-        $this->assertEqual(UniDiffLine::KEPT, $line->getType());
-        $this->assertEqual(3, $line->getOldOffset());
+        $this->assertEquals(UniDiffLine::KEPT, $line->getType());
+        $this->assertEquals(3, $line->getOldOffset());
 
         $line = $diff->getLineFromNewOffset(5);
-        $this->assertEqual(UniDiffLine::ADDED, $line->getType());
-        $this->assertEqual(null, $line->getOldOffset());
+        $this->assertEquals(UniDiffLine::ADDED, $line->getType());
+        $this->assertEquals(null, $line->getOldOffset());
 
         $line = $diff->getLineFromNewOffset(6);
-        $this->assertEqual(UniDiffLine::ADDED, $line->getType());
-        $this->assertEqual(null, $line->getOldOffset());
+        $this->assertEquals(UniDiffLine::ADDED, $line->getType());
+        $this->assertEquals(null, $line->getOldOffset());
 
         $line = $diff->getLineFromOldOffset(4);
-        $this->assertEqual(UniDiffLine::REMOVED, $line->getType());
-        $this->assertEqual(null, $line->getNewOffset());
+        $this->assertEquals(UniDiffLine::REMOVED, $line->getType());
+        $this->assertEquals(null, $line->getNewOffset());
     }
 
-    public function itHandlesDeletedFile()
+    public function testItHandlesDeletedFile(): void
     {
         $file_path = "$this->fixture_dir/file";
 
@@ -107,18 +120,18 @@ class FileUniDiffBuilderTest extends TuleapTestCase
         $diff = $this->builder->buildFileUnidiff($this->git_exec, $file_path, 'HEAD^', 'HEAD');
 
         $lines = $diff->getLines();
-        $this->assertEqual(2, count($lines));
+        $this->assertEquals(2, count($lines));
 
-        $this->assertEqual(UniDiffLine::REMOVED, $lines[1]->getType());
-        $this->assertEqual(1, $lines[1]->getOldOffset());
-        $this->assertEqual(null, $lines[1]->getNewOffset());
+        $this->assertEquals(UniDiffLine::REMOVED, $lines[1]->getType());
+        $this->assertEquals(1, $lines[1]->getOldOffset());
+        $this->assertEquals(null, $lines[1]->getNewOffset());
 
-        $this->assertEqual(UniDiffLine::REMOVED, $lines[2]->getType());
-        $this->assertEqual(2, $lines[2]->getOldOffset());
-        $this->assertEqual(null, $lines[2]->getNewOffset());
+        $this->assertEquals(UniDiffLine::REMOVED, $lines[2]->getType());
+        $this->assertEquals(2, $lines[2]->getOldOffset());
+        $this->assertEquals(null, $lines[2]->getNewOffset());
     }
 
-    public function itHandlesAddedFile()
+    public function testItHandlesAddedFile(): void
     {
         $file_path  = "$this->fixture_dir/file";
         $file2_path = "$this->fixture_dir/file2";
@@ -134,14 +147,14 @@ class FileUniDiffBuilderTest extends TuleapTestCase
         $diff = $this->builder->buildFileUnidiff($this->git_exec, $file2_path, 'HEAD^', 'HEAD');
 
         $lines = $diff->getLines();
-        $this->assertEqual(2, count($lines));
+        $this->assertEquals(2, count($lines));
 
-        $this->assertEqual(UniDiffLine::ADDED, $lines[1]->getType());
-        $this->assertEqual(1, $lines[1]->getNewOffset());
-        $this->assertEqual(null, $lines[1]->getOldOffset());
+        $this->assertEquals(UniDiffLine::ADDED, $lines[1]->getType());
+        $this->assertEquals(1, $lines[1]->getNewOffset());
+        $this->assertEquals(null, $lines[1]->getOldOffset());
 
-        $this->assertEqual(UniDiffLine::ADDED, $lines[2]->getType());
-        $this->assertEqual(2, $lines[2]->getNewOffset());
-        $this->assertEqual(null, $lines[2]->getOldOffset());
+        $this->assertEquals(UniDiffLine::ADDED, $lines[2]->getType());
+        $this->assertEquals(2, $lines[2]->getNewOffset());
+        $this->assertEquals(null, $lines[2]->getOldOffset());
     }
 }
