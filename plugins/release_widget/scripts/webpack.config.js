@@ -30,8 +30,7 @@ const webpack_config = {
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),
     resolve: {
-        extensions: [".js", ".ts", ".vue"],
-        alias: webpack_configurator.extendAliases(webpack_configurator.tlp_mocks_alias)
+        extensions: [".js", ".ts", ".vue"]
     },
     externals: {
         tlp: "tlp"
