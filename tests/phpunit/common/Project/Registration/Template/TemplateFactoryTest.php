@@ -23,22 +23,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template;
 
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\XML\ProjectXMLMerger;
 
 class TemplateFactoryTest extends TestCase
 {
+    use ForgeConfigSandbox;
 
     private $factory;
 
     protected function setUp(): void
     {
-        $this->factory = new TemplateFactory(new GlyphFinder(new \EventManager()));
+        \ForgeConfig::set('codendi_cache_dir', vfsStream::setup('root')->url());
+        $this->factory  = new TemplateFactory(new GlyphFinder(new \EventManager()), new ProjectXMLMerger());
     }
 
     public function testItReturnsTemplates(): void
     {
-        $templates = $this->factory->getTemplates();
+        $templates = $this->factory->getValidTemplates();
         $this->assertCount(1, $templates);
         $this->assertInstanceOf(ScrumTemplate::class, $templates[0]);
     }
@@ -47,6 +52,15 @@ class TemplateFactoryTest extends TestCase
     {
         $template = $this->factory->getTemplate(ScrumTemplate::NAME);
         $this->assertInstanceOf(ScrumTemplate::class, $template);
+    }
+
+    public function testItReturnsScrumTemplateXML(): void
+    {
+        $template = $this->factory->getTemplate(ScrumTemplate::NAME);
+        $xml = simplexml_load_file($template->getXMLPath());
+        $this->assertNotEmpty($xml->services);
+        $this->assertNotEmpty($xml->agiledashboard);
+        $this->assertNotEmpty($xml->trackers);
     }
 
     public function testItThrowsAnExceptionWhenTemplateDoesntExist(): void

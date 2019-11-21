@@ -23,25 +23,26 @@ declare(strict_types = 1);
 
 namespace Tuleap\Project\Registration\Template;
 
-/**
- * @psalm-immutable
- */
 class TemplatePresenter
 {
     /**
      * @var string
+     * @readonly
      */
     public $title;
-    /**s
+    /**
      * @var string
+     * @readonly
      */
     public $description;
     /**
      * @var string
+     * @readonly
      */
     public $name;
     /**
      * @var string
+     * @readonly
      */
     public $glyph;
 

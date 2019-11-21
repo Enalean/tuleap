@@ -77,6 +77,7 @@ use Tuleap\REST\v1\OrderRepresentationBase;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\Widget\Event\GetProjectsWithCriteria;
+use Tuleap\XML\ProjectXMLMerger;
 use UGroupManager;
 use URLVerification;
 use User_ForgeUserGroupPermissionsDao;
@@ -1728,7 +1729,8 @@ class ProjectResource extends AuthenticatedResource
             new TemplateFactory(
                 new GlyphFinder(
                     EventManager::instance()
-                )
+                ),
+                new ProjectXMLMerger()
             )
         );
     }

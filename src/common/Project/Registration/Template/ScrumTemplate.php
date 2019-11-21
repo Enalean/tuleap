@@ -24,13 +24,15 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration\Template;
 
 use Tuleap\Glyph\Glyph;
+use Tuleap\Glyph\GlyphFinder;
+use Tuleap\XML\ProjectXMLMerger;
 
-/**
- * @psalm-immutable
- */
 class ScrumTemplate implements ProjectTemplate
 {
     public const NAME = 'scrum';
+
+    private const PROJECT_XML = __DIR__ . '/../../../../../tools/utils/setup_templates/scrum/project.xml';
+    private const AGILEDASHBOARD_XML = __DIR__.'/../../../../../plugins/agiledashboard/www/resources/scrum_dashboard_template.xml';
 
     /**
      * @var string
@@ -41,20 +43,43 @@ class ScrumTemplate implements ProjectTemplate
      */
     private $description;
     /**
-     * @var Glyph
+     * @var string
      */
-    private $glyph;
+    private $xml_path;
+    /**
+     * @var GlyphFinder
+     */
+    private $glyph_finder;
+    /**
+     * @var ProjectXMLMerger
+     */
+    private $project_xml_merger;
 
-    public function __construct(Glyph $glyph)
+    public function __construct(GlyphFinder $glyph_finder, ProjectXMLMerger $project_xml_merger)
     {
-        $this->title       = _('Scrum');
-        $this->description = _('Manage your project using epics and user stories in releases and sprints');
-        $this->glyph       = $glyph;
+        $this->title              = _('Scrum');
+        $this->description        = _('Manage your project using epics and user stories in releases and sprints');
+        $this->glyph_finder       = $glyph_finder;
+        $this->project_xml_merger = $project_xml_merger;
     }
 
+    /**
+     * Actual XML file is generated "on the fly" in order to guaranty the consistency between the AgileDashboard
+     * "Start Scrum" template and the "Project Creation" Scrum template
+     */
     public function getXMLPath(): string
     {
-        return __DIR__ . '/../../../../../tools/utils/setup_templates/scrum/project.xml';
+        $base_dir = \ForgeConfig::getCacheDir() . '/scrum_template';
+        if (! is_dir($base_dir) && ! mkdir($base_dir, 0755) && ! is_dir($base_dir)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $base_dir));
+        }
+        $xml_path = \ForgeConfig::getCacheDir() . '/scrum_template/project.xml';
+        $this->project_xml_merger->merge(
+            self::PROJECT_XML,
+            self::AGILEDASHBOARD_XML,
+            $xml_path,
+        );
+        return $xml_path;
     }
 
     public function getTitle(): string
@@ -69,7 +94,7 @@ class ScrumTemplate implements ProjectTemplate
 
     public function getGlyph(): Glyph
     {
-        return $this->glyph;
+        return $this->glyph_finder->get(self::NAME);
     }
 
     public function getName(): string

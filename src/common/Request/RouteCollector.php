@@ -127,6 +127,7 @@ use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
+use Tuleap\XML\ProjectXMLMerger;
 use UGroupBinding;
 use UGroupManager;
 use UGroupUserDao;
@@ -609,7 +610,8 @@ class RouteCollector
                 new TemplateFactory(
                     new GlyphFinder(
                         EventManager::instance()
-                    )
+                    ),
+                    new ProjectXMLMerger()
                 )
             )
         );

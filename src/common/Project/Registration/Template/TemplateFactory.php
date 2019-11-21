@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration\Template;
 
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\XML\ProjectXMLMerger;
 
 class TemplateFactory
 {
@@ -32,17 +33,17 @@ class TemplateFactory
      */
     private $templates;
 
-    public function __construct(GlyphFinder $glyph_finder)
+    public function __construct(GlyphFinder $glyph_finder, ProjectXMLMerger $project_xml_merger)
     {
         $this->templates = [
-            ScrumTemplate::NAME => new ScrumTemplate($glyph_finder->get(ScrumTemplate::NAME)),
+            ScrumTemplate::NAME => new ScrumTemplate($glyph_finder, $project_xml_merger),
         ];
     }
 
     /**
      * @return ProjectTemplate[]
      */
-    public function getTemplates(): array
+    public function getValidTemplates(): array
     {
         return array_values($this->templates);
     }

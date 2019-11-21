@@ -25,9 +25,6 @@ namespace Tuleap\Project\Registration\Template;
 
 use Tuleap\Glyph\Glyph;
 
-/**
- * @psalm-immutable
- */
 interface ProjectTemplate
 {
     public function getName(): string;

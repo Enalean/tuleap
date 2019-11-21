@@ -159,9 +159,7 @@ class RestProjectCreator
     private function createProjectFromSystemTemplate(ProjectPostRepresentation $post_representation): Project
     {
         $xml_path    = $this->template_factory->getTemplate($post_representation->xml_template_name)->getXMLPath();
-        $xml_element = $this->XML_file_content_retriever->getSimpleXMLElementFromFilePath(
-            $xml_path
-        );
+        $xml_element = $this->XML_file_content_retriever->getSimpleXMLElementFromFilePath($xml_path);
 
         $data = ProjectCreationData::buildFromXML(
             $xml_element,
