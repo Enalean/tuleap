@@ -25,7 +25,9 @@ use Backend;
 use EventManager;
 use ForgeConfig;
 use Logger;
+use RuntimeException;
 use Symfony\Component\VarExporter\VarExporter;
+use Webimpress\SafeWriter\FileWriter;
 
 class PluginLoader
 {
@@ -35,15 +37,22 @@ class PluginLoader
      * @var EventManager
      */
     private $event_manager;
+
     /**
      * @var \PluginFactory
      */
     private $plugin_factory;
 
-    public function __construct(EventManager $event_manager, \PluginFactory $plugin_factory)
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    public function __construct(EventManager $event_manager, \PluginFactory $plugin_factory, Logger $logger)
     {
         $this->event_manager  = $event_manager;
         $this->plugin_factory = $plugin_factory;
+        $this->logger = $logger;
     }
 
     public function loadPlugins()
@@ -101,16 +110,12 @@ class PluginLoader
 
     private function serializeInFile(string $path, EventPluginCache $var) : void
     {
-        $resource = fopen($path, 'wb');
-        if ($resource === false) {
-            return;
+        $content = '<?php'.PHP_EOL.'return '.VarExporter::export($var).';';
+        try {
+            FileWriter::writeFile($path, $content);
+        } catch (RuntimeException $exception) {
+            $this->logger->error("Unable to store tuleap hooks content:" . $exception->getMessage());
         }
-        if (flock($resource, LOCK_EX | LOCK_NB)) {
-            fwrite($resource, '<?php'.PHP_EOL.'return '.VarExporter::export($var).';');
-            fflush($resource);
-            flock($resource, LOCK_UN);
-        }
-        fclose($resource);
     }
 
     private function getHooksOfAvailablePlugins()
