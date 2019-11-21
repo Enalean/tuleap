@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TaskBoard from "./TaskBoard.vue";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 
 describe("TaskBoard", () => {
     it("displays a table with header and body", () => {

@@ -24,7 +24,6 @@ module.exports = {
     displayName: "frs",
     moduleNameMapper: {
         ...base_config.moduleNameMapper,
-        "^.+\\.html$": "identity-obj-proxy",
-        "@tuleap-vue-components/(.*)$": "<rootDir>/../../../../src/www/scripts/vue-components/$1"
+        "^.+\\.html$": "identity-obj-proxy"
     }
 };

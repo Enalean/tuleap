@@ -21,7 +21,6 @@ const path = require("path");
 
 const path_to_tuleap_root = path.resolve(__dirname, "../../../");
 const path_to_tlp = path.join(path_to_tuleap_root, "src/www/themes/common/tlp/");
-const path_to_tuleap_core = path.join(path_to_tuleap_root, "src/www/scripts/");
 
 const tlp_fetch_alias = {
     "tlp-fetch": path.join(path_to_tlp, "src/js/fetch-wrapper.js")
@@ -33,10 +32,6 @@ const angular_tlp_alias = {
 
 const tlp_mocks_alias = {
     "tlp-mocks": path.join(path_to_tlp, "mocks/index.js")
-};
-
-const vue_components_alias = {
-    "@tuleap-vue-components": path.join(path_to_tuleap_core, "vue-components")
 };
 
 const easygettext_loader_alias = {
@@ -52,6 +47,5 @@ module.exports = {
     angular_tlp_alias,
     easygettext_loader_alias,
     tlp_fetch_alias,
-    tlp_mocks_alias,
-    vue_components_alias
+    tlp_mocks_alias
 };

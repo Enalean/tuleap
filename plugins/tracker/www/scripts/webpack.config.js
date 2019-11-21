@@ -75,7 +75,6 @@ const webpack_config_for_vue = {
         alias: webpack_configurator.extendAliases(
             webpack_configurator.tlp_fetch_alias,
             webpack_configurator.tlp_mocks_alias,
-            webpack_configurator.vue_components_alias,
             {
                 "permission-badge": path_to_badge
             }

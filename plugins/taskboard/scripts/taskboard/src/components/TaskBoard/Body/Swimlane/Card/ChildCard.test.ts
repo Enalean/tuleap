@@ -20,7 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import ChildCard from "./ChildCard.vue";
 import { Card, User } from "../../../../../type";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 
 describe("ChildCard", () => {
     describe("Closed items", () => {

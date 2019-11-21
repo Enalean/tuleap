@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,8 +35,7 @@ const webpack_config = {
     resolve: {
         alias: webpack_configurator.extendAliases(
             webpack_configurator.tlp_fetch_alias,
-            webpack_configurator.tlp_mocks_alias,
-            webpack_configurator.vue_components_alias
+            webpack_configurator.tlp_mocks_alias
         )
     },
     module: {

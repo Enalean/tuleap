@@ -31,8 +31,7 @@ module.exports = [
             "/assets/taskboard/scripts/"
         ),
         resolve: {
-            extensions: [".js", ".ts", ".vue"],
-            alias: webpack_configurator.extendAliases(webpack_configurator.vue_components_alias)
+            extensions: [".js", ".ts", ".vue"]
         },
         externals: {
             tlp: "tlp"

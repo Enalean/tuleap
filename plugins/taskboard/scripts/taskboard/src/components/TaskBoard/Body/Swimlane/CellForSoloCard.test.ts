@@ -20,7 +20,7 @@
 import { shallowMount, Slots, Wrapper } from "@vue/test-utils";
 import CellForSoloCard from "./CellForSoloCard.vue";
 import { ColumnDefinition } from "../../../../type";
-import { createStoreMock } from "@tuleap-vue-components/store-wrapper-jest";
+import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import { RootState } from "../../../../store/type";
 
 function getWrapper(column: ColumnDefinition, slots: Slots = {}): Wrapper<CellForSoloCard> {

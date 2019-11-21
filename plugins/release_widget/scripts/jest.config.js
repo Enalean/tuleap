@@ -21,9 +21,5 @@ const base_config = require("../../../tests/jest/jest.base.config.js");
 
 module.exports = {
     ...base_config,
-    displayName: "release_widget",
-    moduleNameMapper: {
-        ...base_config.moduleNameMapper,
-        "@tuleap-vue-components/(.*)$": "<rootDir>/../../../src/www/scripts/vue-components/$1"
-    }
+    displayName: "release_widget"
 };

@@ -49,8 +49,7 @@
             "tlp": ["src/www/themes/common/tlp/src/index.d.ts"],
             "tlp-fetch-mocks-helper-jest": [
                 "src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.d.ts"
-            ],
-            "@tuleap-vue-components/*": ["src/www/scripts/vue-components/*"]
+            ]
         } /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */,
         // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
         // "typeRoots": [],                       /* List of folders to include type definitions from. */
