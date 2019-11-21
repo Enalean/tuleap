@@ -30,10 +30,6 @@ const angular_tlp_alias = {
     "angular-tlp": path.join(path_to_tlp, "angular-tlp/index.js")
 };
 
-const tlp_mocks_alias = {
-    "tlp-mocks": path.join(path_to_tlp, "mocks/index.js")
-};
-
 const easygettext_loader_alias = {
     "easygettext-loader": path.resolve(__dirname, "./easygettext-loader.js")
 };
@@ -46,6 +42,5 @@ module.exports = {
     extendAliases,
     angular_tlp_alias,
     easygettext_loader_alias,
-    tlp_fetch_alias,
-    tlp_mocks_alias
+    tlp_fetch_alias
 };

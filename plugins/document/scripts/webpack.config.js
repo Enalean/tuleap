@@ -33,10 +33,7 @@ const webpack_config = {
         tlp: "tlp"
     },
     resolve: {
-        alias: webpack_configurator.extendAliases(
-            webpack_configurator.tlp_fetch_alias,
-            webpack_configurator.tlp_mocks_alias
-        )
+        alias: webpack_configurator.tlp_fetch_alias
     },
     module: {
         rules: [

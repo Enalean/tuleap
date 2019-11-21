@@ -30,9 +30,6 @@ const webpack_config_for_create_button = {
     externals: {
         tlp: "tlp"
     },
-    resolve: {
-        alias: webpack_configurator.extendAliases(webpack_configurator.tlp_mocks_alias)
-    },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     module: {
@@ -61,7 +58,7 @@ const webpack_config = {
     resolve: {
         alias: webpack_configurator.extendAliases(
             {
-                "tuleap-pullrequest-module": path.resolve(__dirname, "./src/app/app.js"),
+                // angular-tlp
                 angular$: path.resolve(__dirname, "node_modules/angular")
             },
             webpack_configurator.angular_tlp_alias

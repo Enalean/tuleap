@@ -72,13 +72,9 @@ const webpack_config_for_vue = {
         tlp: "tlp"
     },
     resolve: {
-        alias: webpack_configurator.extendAliases(
-            webpack_configurator.tlp_fetch_alias,
-            webpack_configurator.tlp_mocks_alias,
-            {
-                "permission-badge": path_to_badge
-            }
-        )
+        alias: webpack_configurator.extendAliases(webpack_configurator.tlp_fetch_alias, {
+            "permission-badge": path_to_badge
+        })
     },
     module: {
         rules: [

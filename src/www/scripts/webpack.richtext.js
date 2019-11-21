@@ -41,12 +41,9 @@ module.exports = {
         ]
     },
     resolve: {
-        alias: webpack_configurator.extendAliases(
-            {
-                "tlp-fetch": path.resolve(__dirname, "../themes/common/tlp/src/js/fetch-wrapper.js")
-            },
-            webpack_configurator.tlp_mocks_alias
-        )
+        alias: {
+            "tlp-fetch": path.resolve(__dirname, "../themes/common/tlp/src/js/fetch-wrapper.js")
+        }
     },
     optimization: {
         minimizer: [

@@ -12,10 +12,11 @@
             {
                 // We force webpack to resolve angular in this app's node_modules,
                 // otherwise angular-artifact-modal makes us include it twice
-                angular$: path.resolve(__dirname, "node_modules/angular"),
-                "angular-mocks$": path.resolve(__dirname, "node_modules/angular-mocks")
-            },
-            webpack_configurator.angular_artifact_modal_aliases
+                webpack_configurator.angular_tlp_alias,
+                {
+                    angular$: path.resolve(__dirname, "node_modules/angular")
+                }
+            }
         )
     }
     ```
