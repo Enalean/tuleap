@@ -17,21 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Module } from "vuex";
-import { ColumnState } from "./type";
-import { RootState } from "../type";
-import * as mutations from "./column-mutations";
-import * as actions from "./column-actions";
-import * as getters from "./column-getters";
+import { shallowMount } from "@vue/test-utils";
+import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
+import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
 
-export function createColumnModule(
-    initial_column_state: ColumnState
-): Module<ColumnState, RootState> {
-    return {
-        namespaced: true,
-        state: initial_column_state,
-        mutations,
-        actions,
-        getters
-    };
-}
+describe("CellDisallowsDropOverlay", () => {
+    it("displays div with an icon and an error message", async () => {
+        const wrapper = shallowMount(CellDisallowsDropOverlay, {
+            localVue: await createTaskboardLocalVue()
+        });
+        expect(wrapper.element).toMatchSnapshot();
+    });
+});

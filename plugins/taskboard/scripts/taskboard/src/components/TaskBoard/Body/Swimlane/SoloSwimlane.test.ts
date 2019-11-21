@@ -31,7 +31,16 @@ async function createWrapper(
 ): Promise<Wrapper<SoloSwimlane>> {
     return shallowMount(SoloSwimlane, {
         localVue: await createTaskboardLocalVue(),
-        mocks: { $store: createStoreMock({ state: { column: { columns } } as RootState }) },
+        mocks: {
+            $store: createStoreMock({
+                state: {
+                    column: { columns }
+                } as RootState,
+                getters: {
+                    "column/accepted_trackers_ids": (): number[] => [101, 102]
+                }
+            })
+        },
         propsData: { swimlane, column: target_column }
     });
 }

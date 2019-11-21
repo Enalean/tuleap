@@ -22,12 +22,15 @@ import { Card, ColumnDefinition, Swimlane } from "../../type";
 import { isStatusAcceptedByColumn } from "../../helpers/list-value-to-column-mapper";
 import { getColumnOfCard } from "../../helpers/list-value-to-column-mapper";
 import { RootState } from "../type";
+import { findSwimlane } from "./swimlane-helpers";
 
 export const cards_in_cell = (state: SwimlaneState, getters: [], root_state: RootState) => (
     current_swimlane: Swimlane,
     current_column: ColumnDefinition
 ): Card[] => {
-    return current_swimlane.children_cards.filter((card: Card) => {
+    const swimlane_in_state = findSwimlane(state, current_swimlane);
+
+    return swimlane_in_state.children_cards.filter((card: Card) => {
         const column_of_card = getColumnOfCard(root_state.column.columns, card);
 
         if (!column_of_card) {

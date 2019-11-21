@@ -17,21 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Module } from "vuex";
-import { ColumnState } from "./type";
-import { RootState } from "../type";
-import * as mutations from "./column-mutations";
-import * as actions from "./column-actions";
-import * as getters from "./column-getters";
+import { ColumnDefinition, Mapping } from "../../type";
 
-export function createColumnModule(
-    initial_column_state: ColumnState
-): Module<ColumnState, RootState> {
-    return {
-        namespaced: true,
-        state: initial_column_state,
-        mutations,
-        actions,
-        getters
-    };
-}
+export const accepted_trackers_ids = () => (column: ColumnDefinition): number[] => {
+    return column.mappings.reduce((trackers_ids: number[], mapping: Mapping) => {
+        if (mapping.accepts.length > 0) {
+            trackers_ids.push(mapping.tracker_id);
+        }
+
+        return trackers_ids;
+    }, []);
+};

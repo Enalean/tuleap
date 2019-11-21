@@ -23,6 +23,7 @@
          v-bind:class="classes"
          v-bind:data-swimlane-id="swimlane.card.id"
          v-bind:data-column-id="column.id"
+         v-bind:data-accepted-trackers-ids="accepted_trackers_ids(column)"
          v-on:mouseenter="mouseEntersCollapsedColumn"
          v-on:mouseout="mouseLeavesCollapsedColumn"
          v-on:click="expandCollapsedColumn"
@@ -35,6 +36,7 @@
                 <card-skeleton v-for="i in nb_skeletons_to_display" v-bind:key="i"/>
             </template>
         </template>
+        <cell-disallows-drop-overlay/>
     </div>
 </template>
 
@@ -44,15 +46,17 @@ import { Card, ColumnDefinition, Swimlane } from "../../../../type";
 import { namespace } from "vuex-class";
 import ChildCard from "./Card/ChildCard.vue";
 import CardSkeleton from "./Skeleton/CardSkeleton.vue";
+import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
 import SkeletonMixin from "./Skeleton/skeleton-mixin";
 import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
 import ExpandCollapsedColumnMixin from "./expand-collapsed-column-mixin";
 import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
 
 const swimlane = namespace("swimlane");
+const column = namespace("column");
 
 @Component({
-    components: { ChildCard, CardSkeleton }
+    components: { ChildCard, CardSkeleton, CellDisallowsDropOverlay }
 })
 export default class ColumnWithChildren extends Mixins(
     SkeletonMixin,
@@ -71,6 +75,9 @@ export default class ColumnWithChildren extends Mixins(
         current_swimlane: Swimlane,
         current_column: ColumnDefinition
     ) => Card[];
+
+    @column.Getter
+    readonly accepted_trackers_ids!: (column: ColumnDefinition) => number[];
 
     get cards(): Card[] {
         return this.cards_in_cell(this.swimlane, this.column);

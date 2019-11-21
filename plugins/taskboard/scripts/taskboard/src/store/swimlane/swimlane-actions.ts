@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Swimlane } from "../../type";
+import { Card, ColumnDefinition, Swimlane } from "../../type";
 import { recursiveGet, patch } from "tlp";
 import { ActionContext } from "vuex";
-import { SwimlaneState, ReorderCardsPayload } from "./type";
+import { SwimlaneState, MoveCardsPayload, ReorderCardsPayload } from "./type";
 import { RootState } from "../type";
 import { UserPreference, UserPreferenceValue } from "../user/type";
 
@@ -139,22 +139,60 @@ export async function reorderCardsInCell(
     context: ActionContext<SwimlaneState, RootState>,
     payload: ReorderCardsPayload
 ): Promise<void> {
-    const swimlane_id = payload.swimlane.card.id;
-    const column_id = payload.column.id;
-
     try {
-        await patch(
-            `/api/v1/taskboard_cells/${encodeURIComponent(swimlane_id)}/column/${column_id}`,
-            {
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ order: payload.position })
-            }
-        );
+        const url = getPATCHCellUrl(payload.swimlane, payload.column);
 
-        await context.commit("changeCardPosition", payload);
+        await patch(url, {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ order: payload.position })
+        });
+
+        context.commit("changeCardPosition", payload);
     } catch (error) {
         await context.dispatch("error/handleModalError", error, { root: true });
     }
+}
+
+export async function moveCardToCell(
+    context: ActionContext<SwimlaneState, RootState>,
+    payload: MoveCardsPayload
+): Promise<void> {
+    try {
+        const url = getPATCHCellUrl(payload.swimlane, payload.column);
+        const body = getMoveCardBody(payload);
+
+        await patch(url, {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body
+        });
+
+        context.commit("moveCardToColumn", payload);
+    } catch (error) {
+        await context.dispatch("error/handleModalError", error, { root: true });
+    }
+}
+
+function getMoveCardBody(payload: MoveCardsPayload): string {
+    const body = {
+        add: payload.card.id
+    };
+
+    if (payload.position) {
+        Object.assign(body, { order: payload.position });
+    }
+
+    return JSON.stringify(body);
+}
+
+function getPATCHCellUrl(swimlane: Swimlane, column: ColumnDefinition): string {
+    const swimlane_id = swimlane.card.id;
+    const column_id = column.id;
+
+    return `/api/v1/taskboard_cells/${encodeURIComponent(swimlane_id)}/column/${encodeURIComponent(
+        column_id
+    )}`;
 }

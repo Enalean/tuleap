@@ -23,7 +23,7 @@ import { RecursiveGetInit } from "tlp";
 import * as actions from "./swimlane-actions";
 import { loadChildrenCards } from "./swimlane-actions";
 import { ActionContext } from "vuex";
-import { ReorderCardsPayload, SwimlaneState } from "./type";
+import { MoveCardsPayload, ReorderCardsPayload, SwimlaneState } from "./type";
 import { mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
 import { RootState } from "../type";
 
@@ -37,6 +37,9 @@ describe("Swimlane state actions", () => {
         context = ({
             commit: jest.fn(),
             dispatch: jest.fn(),
+            getters: {
+                is_drop_accepted_in_target: (): boolean => true
+            },
             rootState: {
                 milestone_id: 42,
                 user: {
@@ -295,6 +298,96 @@ describe("Swimlane state actions", () => {
             tlpPatchMock.mockRejectedValue(error);
 
             await actions.reorderCardsInCell(context, payload);
+
+            expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
+                root: true
+            });
+        });
+    });
+
+    describe("moveCardToCell", () => {
+        let card_to_move: Card,
+            swimlane: Swimlane,
+            column: ColumnDefinition,
+            payload: MoveCardsPayload;
+
+        beforeEach(() => {
+            card_to_move = { id: 102, tracker_id: 7, mapped_list_value: { id: 49 } } as Card;
+            swimlane = {
+                card: { id: 86 },
+                children_cards: [
+                    { id: 100, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
+                    card_to_move
+                ]
+            } as Swimlane;
+
+            column = {
+                id: 42
+            } as ColumnDefinition;
+
+            payload = {
+                swimlane,
+                column,
+                card: card_to_move
+            } as MoveCardsPayload;
+        });
+
+        it("The new column of the card is stored", async () => {
+            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatchMock, {});
+
+            await actions.moveCardToCell(context, payload);
+
+            expect(tlpPatchMock).toHaveBeenCalledWith(`/api/v1/taskboard_cells/86/column/42`, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    add: card_to_move.id
+                })
+            });
+
+            expect(context.commit).toHaveBeenCalledWith("moveCardToColumn", payload);
+        });
+
+        it("When the payload has a position, it will add it to the REST payload", async () => {
+            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatchMock, {});
+
+            const position: CardPosition = {
+                ids: [card_to_move.id],
+                direction: Direction.BEFORE,
+                compared_to: 100
+            };
+
+            Object.assign(payload, { position });
+
+            await actions.moveCardToCell(context, payload);
+
+            expect(tlpPatchMock).toHaveBeenCalledWith(`/api/v1/taskboard_cells/86/column/42`, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    add: card_to_move.id,
+                    order: {
+                        ids: [102],
+                        direction: "before",
+                        compared_to: 100
+                    }
+                })
+            });
+
+            expect(context.commit).toHaveBeenCalledWith("moveCardToColumn", payload);
+        });
+
+        it("A modal opens on error", async () => {
+            const error = new Error();
+
+            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            tlpPatchMock.mockRejectedValue(error);
+
+            await actions.moveCardToCell(context, payload);
 
             expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
                 root: true

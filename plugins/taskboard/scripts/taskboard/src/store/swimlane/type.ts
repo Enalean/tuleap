@@ -22,6 +22,7 @@ import { Card, CardPosition, ColumnDefinition, Swimlane } from "../../type";
 export interface SwimlaneState {
     swimlanes: Array<Swimlane>;
     is_loading_swimlanes: boolean;
+    last_hovered_drop_zone?: HTMLElement;
 }
 
 export interface AddChildrenToSwimlanePayload {
@@ -30,14 +31,27 @@ export interface AddChildrenToSwimlanePayload {
 }
 
 export interface ReorderCardsPayload {
-    swimlane: Swimlane;
-    column: ColumnDefinition;
-    position: CardPosition;
+    readonly swimlane: Swimlane;
+    readonly column: ColumnDefinition;
+    readonly position: CardPosition;
+}
+
+export interface MoveCardsPayload {
+    readonly card: Card;
+    readonly swimlane: Swimlane;
+    readonly column: ColumnDefinition;
+    readonly position?: CardPosition;
 }
 
 export interface HandleDropPayload {
-    dropped_card: HTMLElement;
-    target_cell: HTMLElement;
-    source_cell: HTMLElement;
-    sibling_card?: HTMLElement;
+    readonly dropped_card: HTMLElement;
+    readonly target_cell: HTMLElement;
+    readonly source_cell: HTMLElement;
+    readonly sibling_card?: HTMLElement;
+}
+
+export interface HandleDragPayload {
+    readonly dropped_card?: Element;
+    readonly target_cell?: Element;
+    readonly source_cell?: Element;
 }

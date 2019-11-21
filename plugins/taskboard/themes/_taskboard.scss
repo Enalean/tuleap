@@ -71,3 +71,8 @@
         margin: $tlp-spacing 0;
     }
 }
+
+.taskboard-no-text-selection {
+    cursor: default;
+    user-select: none;
+}

@@ -17,9 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { SwimlaneState } from "./type";
-import { Swimlane } from "../../type";
-import { findSwimlane, findSwimlaneIndex, replaceSwimlane } from "./swimlane-helpers";
+import { MoveCardsPayload, SwimlaneState } from "./type";
+import { Swimlane, Card } from "../../type";
+import {
+    findDroppedCard,
+    findSwimlane,
+    findSwimlaneIndex,
+    replaceSwimlane
+} from "./swimlane-helpers";
 
 describe(`swimlane-helpers`, () => {
     let state: SwimlaneState, second_swimlane: Swimlane;
@@ -84,6 +89,95 @@ describe(`swimlane-helpers`, () => {
 
             const unknown_index = findSwimlaneIndex(state, unknown_swimlane);
             expect(unknown_index).toBe(-1);
+        });
+    });
+
+    describe("findDroppedCard", () => {
+        it("Given a payload for the drop of a child card, Then it should return the child card from the state", () => {
+            const card_from_state = {
+                id: 10,
+                mapped_list_value: {
+                    label: "Current column"
+                }
+            };
+            const swimlane = {
+                card: {
+                    id: 1,
+                    has_children: true
+                },
+                children_cards: [card_from_state]
+            };
+
+            const state = { swimlanes: [swimlane] } as SwimlaneState;
+
+            const payload = {
+                swimlane,
+                card: {
+                    id: 10,
+                    mapped_list_value: {
+                        label: "New column"
+                    }
+                }
+            } as MoveCardsPayload;
+
+            const card = findDroppedCard(state, payload);
+
+            expect(card).toEqual(card_from_state);
+        });
+
+        it("Given a payload for the drop of a solo card, Then it should return the solo card from the state", () => {
+            const card_from_state = {
+                id: 10,
+                has_children: false,
+                mapped_list_value: {
+                    label: "Current column"
+                }
+            };
+            const swimlane = {
+                card: card_from_state
+            };
+
+            const state = { swimlanes: [swimlane] } as SwimlaneState;
+
+            const payload = {
+                swimlane,
+                card: {
+                    id: 10,
+                    mapped_list_value: {
+                        label: "New column"
+                    }
+                }
+            } as MoveCardsPayload;
+
+            const card = findDroppedCard(state, payload);
+
+            expect(card).toEqual(card_from_state);
+        });
+
+        it("Throws an error when the card has not been found, so it means there is probably a bug with the payload", () => {
+            const swimlane = {
+                card: {
+                    id: 1,
+                    has_children: true
+                },
+                children_cards: [] as Card[]
+            } as Swimlane;
+
+            const state = { swimlanes: [swimlane] } as SwimlaneState;
+
+            const payload = {
+                swimlane,
+                card: {
+                    id: 40,
+                    mapped_list_value: {
+                        label: "New column"
+                    }
+                }
+            } as MoveCardsPayload;
+
+            expect(() => findDroppedCard(state, payload)).toThrow(
+                "Dropped card has not been found in the swimlane."
+            );
         });
     });
 });

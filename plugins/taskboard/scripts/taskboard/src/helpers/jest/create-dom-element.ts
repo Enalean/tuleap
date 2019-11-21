@@ -17,21 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Module } from "vuex";
-import { ColumnState } from "./type";
-import { RootState } from "../type";
-import * as mutations from "./column-mutations";
-import * as actions from "./column-actions";
-import * as getters from "./column-getters";
+export function createElement(...css_classes: string[]): HTMLElement {
+    const local_document = document.implementation.createHTMLDocument();
+    const div = local_document.createElement("div");
+    div.classList.add(...css_classes);
+    return div;
+}
 
-export function createColumnModule(
-    initial_column_state: ColumnState
-): Module<ColumnState, RootState> {
-    return {
-        namespaced: true,
-        state: initial_column_state,
-        mutations,
-        actions,
-        getters
-    };
+export function createNonHTMLElement(): Element {
+    const local_document = document.implementation.createDocument(
+        "http://www.w3.org/2000/svg",
+        "svg",
+        null
+    );
+    return local_document.createElement("g");
 }

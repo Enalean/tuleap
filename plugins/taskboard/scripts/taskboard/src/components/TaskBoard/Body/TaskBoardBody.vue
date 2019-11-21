@@ -43,14 +43,14 @@ import { Component } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
 import dragula, { Drake } from "dragula";
 import { Swimlane, ColumnDefinition, Card } from "../../../type";
-import { HandleDropPayload } from "../../../store/swimlane/type";
 import CollapsedSwimlane from "./Swimlane/CollapsedSwimlane.vue";
 import CardWithChildren from "./Swimlane/CardWithChildren.vue";
 import SwimlaneSkeleton from "./Swimlane/Skeleton/SwimlaneSkeleton.vue";
 import SoloSwimlane from "./Swimlane/SoloSwimlane.vue";
 import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
 import { getColumnOfCard } from "../../../helpers/list-value-to-column-mapper";
-import { isContainer, canMove, accepts } from "../../../helpers/drag-drop";
+import { isContainer, canMove, invalid, checkCellAcceptsDrop } from "../../../helpers/drag-drop";
+import { HandleDropPayload } from "../../../store/swimlane/type.js";
 
 const column = namespace("column");
 const swimlane = namespace("swimlane");
@@ -97,6 +97,9 @@ export default class TaskBoardBody extends Vue {
     @swimlane.Action
     handleDrop!: (payload: HandleDropPayload) => void;
 
+    @swimlane.Mutation
+    readonly removeHighlightOnLastHoveredDropZone!: () => void;
+
     drake!: Drake | undefined;
 
     created(): void {
@@ -113,7 +116,14 @@ export default class TaskBoardBody extends Vue {
         this.drake = dragula({
             isContainer,
             moves: canMove,
-            accepts
+            invalid,
+            revertOnSpill: true,
+            accepts: (
+                dropped_card?: Element,
+                target_cell?: Element,
+                source_cell?: Element
+            ): boolean =>
+                checkCellAcceptsDrop(this.$store, { dropped_card, target_cell, source_cell })
         });
 
         this.drake.on(
@@ -125,6 +135,8 @@ export default class TaskBoardBody extends Vue {
                 sibling_card?: HTMLElement
             ) => this.handleDrop({ dropped_card, target_cell, source_cell, sibling_card })
         );
+
+        this.drake.on("cancel", this.removeHighlightOnLastHoveredDropZone);
     }
 
     getColumnOfSoloCard(swimlane: Swimlane): ColumnDefinition {

@@ -20,11 +20,11 @@
 
 <template>
     <span v-if="has_initial_effort"
-          class="taskboard-card-inital-effort tlp-badge-outline tlp-tooltip tlp-tooltip-top"
+          class="taskboard-card-inital-effort tlp-badge-outline taskboard-item-no-drag taskboard-no-text-selection"
           v-bind:class="color_classname"
-          v-bind:data-tlp-tooltip="initial_effort_label"
+          v-bind:title="initial_effort_label"
     >
-        <i class="fa fa-flag-checkered fa-flip-horizontal tlp-badge-icon"></i>
+        <i class="fa fa-flag-checkered fa-flip-horizontal tlp-badge-icon taskboard-item-no-drag"></i>
         {{ card.initial_effort }}
     </span>
 </template>

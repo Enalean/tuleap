@@ -21,6 +21,7 @@ import * as getters from "./swimlane-getters";
 import { SwimlaneState } from "./type";
 import { Card, ColumnDefinition, Swimlane } from "../../type";
 import { RootState } from "../type";
+import { createElement } from "../../helpers/jest/create-dom-element";
 
 jest.mock("tlp");
 
@@ -230,7 +231,7 @@ describe("Swimlane state getters", () => {
                 mappings: [{ tracker_id: 7, accepts: [{ id: 49 }] }]
             } as ColumnDefinition;
 
-            swimlane_state = {} as SwimlaneState;
+            swimlane_state = { swimlanes: [] as Swimlane[] } as SwimlaneState;
 
             root_state = {
                 column: {
@@ -241,7 +242,7 @@ describe("Swimlane state getters", () => {
 
         it("Should return the cards of the column", () => {
             const swimlane: Swimlane = {
-                card: { id: 43 } as Card,
+                card: { id: 43, has_children: true } as Card,
                 children_cards: [
                     { id: 95, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
                     { id: 102, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
@@ -250,12 +251,28 @@ describe("Swimlane state getters", () => {
                 is_loading_children_cards: false
             } as Swimlane;
 
+            swimlane_state.swimlanes.push(swimlane);
+
             expect(
                 getters.cards_in_cell(swimlane_state, [], root_state)(swimlane, column_todo)
             ).toEqual([
                 { id: 95, tracker_id: 7, mapped_list_value: { id: 49 } },
                 { id: 102, tracker_id: 7, mapped_list_value: { id: 49 } }
             ]);
+        });
+
+        it("Should return an empty array if it is a solo card swimlane", () => {
+            const swimlane: Swimlane = {
+                card: { id: 43, has_children: false } as Card,
+                children_cards: [],
+                is_loading_children_cards: false
+            } as Swimlane;
+
+            swimlane_state.swimlanes.push(swimlane);
+
+            expect(
+                getters.cards_in_cell(swimlane_state, [], root_state)(swimlane, column_todo)
+            ).toEqual([]);
         });
     });
 
@@ -346,8 +363,7 @@ describe("Swimlane state getters", () => {
 });
 
 function getCellElement(swimlane_id: string, column_id: string): HTMLElement {
-    const local_document = document.implementation.createHTMLDocument();
-    const target_cell = local_document.createElement("div");
+    const target_cell = createElement();
 
     target_cell.setAttribute("data-swimlane-id", swimlane_id);
     target_cell.setAttribute("data-column-id", column_id);

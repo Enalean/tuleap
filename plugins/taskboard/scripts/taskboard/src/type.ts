@@ -69,6 +69,7 @@ export interface Card {
     remaining_effort: RemainingEffort | null;
     is_open: boolean;
     is_collapsed: boolean;
+    has_been_dropped: boolean;
 }
 
 export interface User {

@@ -51,7 +51,7 @@ export default class CardMixin extends Vue {
             classnames.push("taskboard-card-with-accessibility");
         }
 
-        if (this.add_show_class) {
+        if (this.add_show_class && !this.card.has_been_dropped) {
             classnames.push("taskboard-card-show");
         }
 
