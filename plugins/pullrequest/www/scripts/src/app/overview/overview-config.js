@@ -12,6 +12,9 @@ function OverviewConfig($stateProvider) {
             },
             "timeline@overview": {
                 template: '<div timeline id="timeline"></div>'
+            },
+            "reviewers@overview": {
+                template: '<div reviewers id="reviewers"></div>'
             }
         }
     });

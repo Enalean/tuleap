@@ -1,0 +1,16 @@
+.pull-request-reviewers {
+    display: flex;
+    align-items: center;
+    padding: $tlp-spacing;
+    border-bottom: 1px solid $tlp-ui-border-light;
+    background: $tlp-ui-white;
+
+    .tlp-label {
+        margin: 0 5px 0 0;
+        cursor: default;
+    }
+}
+
+.reviewer {
+    margin: -4px $tlp-half-spacing -4px 0;
+}
