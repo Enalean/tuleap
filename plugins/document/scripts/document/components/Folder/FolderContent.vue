@@ -104,25 +104,25 @@ export default {
         EventBus.$off("toggle-quick-look", this.toggleQuickLook);
     },
     methods: {
-        toggleQuickLook(event) {
+        async toggleQuickLook(event) {
             if (!this.currently_previewed_item) {
-                this.displayQuickLook(event.details.item);
+                await this.displayQuickLook(event.details.item);
                 return;
             }
 
             if (this.currently_previewed_item.id !== event.details.item.id) {
-                this.displayQuickLook(event.details.item);
+                await this.displayQuickLook(event.details.item);
                 return;
             }
 
             if (!this.toggle_quick_look) {
-                this.displayQuickLook(event.details.item);
+                await this.displayQuickLook(event.details.item);
             } else {
-                this.closeQuickLook(event.details.item);
+                await this.closeQuickLook(event.details.item);
             }
         },
-        displayQuickLook(item) {
-            this.$router.replace({
+        async displayQuickLook(item) {
+            await this.$router.replace({
                 name: "preview",
                 params: { preview_item_id: item.id }
             });
@@ -130,14 +130,14 @@ export default {
             this.$store.commit("updateCurrentlyPreviewedItem", item);
             this.$store.commit("toggleQuickLook", true);
         },
-        closeQuickLook() {
+        async closeQuickLook() {
             if (this.current_folder.parent_id !== 0) {
-                this.$router.replace({
+                await this.$router.replace({
                     name: "folder",
                     params: { item_id: this.current_folder.id }
                 });
             } else {
-                this.$router.replace({
+                await this.$router.replace({
                     name: "root_folder"
                 });
             }

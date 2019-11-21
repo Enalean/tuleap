@@ -39,6 +39,7 @@ describe("FolderContent", () => {
         store = createStoreMock(store_options);
 
         const router = new VueRouter({
+            mode: "abstract",
             routes: [
                 {
                     path: "/preview/42",
@@ -70,18 +71,19 @@ describe("FolderContent", () => {
     });
 
     it(`Should not display preview when component is rendered`, () => {
-        store.state.currently_previewed_item = {};
-        store.state.current_folder = {};
-        store.state.folder_content = [item];
-
-        const wrapper = factory();
+        const wrapper = factory({
+            project_id: 101,
+            currently_previewed_item: {},
+            current_folder: {},
+            folder_content: [item]
+        });
 
         expect(wrapper.contains("[data-test=document-quick-look]")).toBeFalsy();
         expect(wrapper.contains("[data-test=document-folder-owner-information]")).toBeTruthy();
     });
 
     describe("toggleQuickLook", () => {
-        it(`Given no item is currently previewed, then it directly displays quick look`, () => {
+        it(`Given no item is currently previewed, then it directly displays quick look`, async () => {
             store.state.currently_previewed_item = null;
             store.state.current_folder = item;
 
@@ -92,7 +94,7 @@ describe("FolderContent", () => {
 
             expect(wrapper.vm.$route.path).toBe("/");
 
-            wrapper.vm.toggleQuickLook(event);
+            await wrapper.vm.toggleQuickLook(event);
 
             expect(store.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", item);
             expect(store.commit).toHaveBeenCalledWith("toggleQuickLook", true);
@@ -100,7 +102,7 @@ describe("FolderContent", () => {
             expect(wrapper.vm.$route.path).toBe("/preview/42");
         });
 
-        it(`Given user toggle quicklook from an item to an other, the it displays the quick look of new item`, () => {
+        it(`Given user toggle quicklook from an item to an other, the it displays the quick look of new item`, async () => {
             store.state.currently_previewed_item = {
                 id: 105,
                 title: "my previewed item"
@@ -112,14 +114,14 @@ describe("FolderContent", () => {
             const event = {
                 details: { item }
             };
-            wrapper.vm.toggleQuickLook(event);
+            await wrapper.vm.toggleQuickLook(event);
 
             expect(store.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", item);
             expect(store.commit).toHaveBeenCalledWith("toggleQuickLook", true);
             expect(wrapper.vm.$route.path).toBe("/preview/42");
         });
 
-        it(`Given user toggle quick look, then it open quick look`, () => {
+        it(`Given user toggle quick look, then it open quick look`, async () => {
             store.state.currently_previewed_item = item;
 
             store.state.current_folder = item;
@@ -129,14 +131,14 @@ describe("FolderContent", () => {
             const event = {
                 details: { item }
             };
-            wrapper.vm.toggleQuickLook(event);
+            await wrapper.vm.toggleQuickLook(event);
 
             expect(store.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", item);
             expect(store.commit).toHaveBeenCalledWith("toggleQuickLook", true);
             expect(wrapper.vm.$route.path).toBe("/preview/42");
         });
 
-        it(`Given user toggle quick look on a previewed item, then it closes quick look`, () => {
+        it(`Given user toggle quick look on a previewed item, then it closes quick look`, async () => {
             store.state.currently_previewed_item = item;
 
             store.state.current_folder = item;
@@ -146,7 +148,7 @@ describe("FolderContent", () => {
             const event = {
                 details: { item }
             };
-            wrapper.vm.toggleQuickLook(event);
+            await wrapper.vm.toggleQuickLook(event);
 
             expect(store.commit).not.toHaveBeenCalledWith("updateCurrentlyPreviewedItem", item);
             expect(store.commit).toHaveBeenCalledWith("toggleQuickLook", false);

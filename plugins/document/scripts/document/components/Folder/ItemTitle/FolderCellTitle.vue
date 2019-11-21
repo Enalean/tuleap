@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-Present. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -96,14 +96,14 @@ export default {
         }
     },
     methods: {
-        goToFolder() {
+        async goToFolder() {
             if (!this.is_uploading || abortCurrentUploads(this.$gettext, this.$store)) {
-                this.doGoToFolder();
+                await this.doGoToFolder();
             }
         },
-        doGoToFolder() {
+        async doGoToFolder() {
             this.$store.commit("appendFolderToAscendantHierarchy", this.item);
-            this.$router.push({ name: "folder", params: { item_id: this.item.id } });
+            await this.$router.push({ name: "folder", params: { item_id: this.item.id } });
         },
         async loadChildren() {
             this.is_loading = true;

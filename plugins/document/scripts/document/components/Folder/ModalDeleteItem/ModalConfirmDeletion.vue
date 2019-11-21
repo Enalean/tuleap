@@ -144,7 +144,7 @@ export default {
             await this.$store.dispatch("deleteItem", [this.item, this.additional_options]);
 
             if (!this.has_modal_error) {
-                this.$router.replace({
+                await this.$router.replace({
                     name: "folder",
                     params: { item_id: deleted_item.parent_id }
                 });
