@@ -24,16 +24,18 @@ namespace Tuleap\Plugin;
 
 use EventManager;
 use ForgeConfig;
+use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use PluginFactory;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\TemporaryTestDirectory;
 
 final class PluginLoaderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration, ForgeConfigSandbox, TemporaryTestDirectory;
 
     /**
      * @var string
@@ -48,19 +50,25 @@ final class PluginLoaderTest extends TestCase
      */
     private $plugin_factory;
 
+    /**
+     * @var Logger|Mockery\LegacyMockInterface|Mockery\MockInterface
+     */
+    private $logger;
+
     protected function setUp() : void
     {
-        $tuleap_cache_directory = vfsStream::setup()->url();
+        $tuleap_cache_directory = $this->getTmpDir();
         ForgeConfig::set('codendi_cache_dir', $tuleap_cache_directory);
         $this->hooks_cache_file_path = $tuleap_cache_directory . DIRECTORY_SEPARATOR . PluginLoader::HOOK_CACHE_KEY;
 
         $this->event_manager  = Mockery::mock(EventManager::class);
         $this->plugin_factory = Mockery::mock(PluginFactory::class);
+        $this->logger         = Mockery::mock(Logger::class);
     }
 
     public function testMissingHooksFileCacheIsCreated() : void
     {
-        $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory);
+        $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
         $this->plugin_factory->shouldReceive('getAvailablePlugins')->andReturn([]);
 
@@ -72,7 +80,7 @@ final class PluginLoaderTest extends TestCase
 
     public function testEmptyHooksFileCacheIsPopulated() : void
     {
-        $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory);
+        $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
         $this->plugin_factory->shouldReceive('getAvailablePlugins')->andReturn([]);
 
@@ -86,7 +94,7 @@ final class PluginLoaderTest extends TestCase
 
     public function testReadOnlyEmptyHooksFileCacheIsPopulatedWithoutWarning() : void
     {
-        $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory);
+        $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
         $this->plugin_factory->shouldReceive('getAvailablePlugins')->andReturn([]);
 
@@ -101,7 +109,7 @@ final class PluginLoaderTest extends TestCase
 
     public function testHooksFileCacheWithGarbageDataIsOverwritten() : void
     {
-        $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory);
+        $plugin_loader  = new PluginLoader($this->event_manager, $this->plugin_factory, $this->logger);
 
         $this->plugin_factory->shouldReceive('getAvailablePlugins')->andReturn([]);
 

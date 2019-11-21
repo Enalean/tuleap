@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df6611ba53eb597e103e7a1dd3e8942f",
+    "content-hash": "bdf9eea1de74892a8a886d8c4d182a84",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -143,6 +143,7 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
+            "abandoned": "psr/container",
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
@@ -2294,6 +2295,53 @@
                 "punycode"
             ],
             "time": "2016-11-16T10:37:54+00:00"
+        },
+        {
+            "name": "webimpress/safe-writer",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webimpress/safe-writer.git",
+                "reference": "3a4645bb6e3ac0115cfaa9cb74453407051bbc00"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webimpress/safe-writer/zipball/3a4645bb6e3ac0115cfaa9cb74453407051bbc00",
+                "reference": "3a4645bb6e3ac0115cfaa9cb74453407051bbc00",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6 || ^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7.27 || ^6.5.14 || ^7.5.16",
+                "squizlabs/php_codesniffer": "^3.5.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev",
+                    "dev-develop": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Webimpress\\SafeWriter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "description": "Tool to write files safely, to avoid race conditions",
+            "keywords": [
+                "concurrent write",
+                "file writer",
+                "race condition",
+                "safe writer",
+                "webimpress"
+            ],
+            "time": "2019-11-16T23:30:24+00:00"
         },
         {
             "name": "zendframework/zend-cache",
@@ -5402,7 +5450,7 @@
             ],
             "support": {
                 "issues": "https://github.com/simpletest/simpletest/issues",
-                "source": "https://github.com/Enalean/simpletest/tree/20190916"
+                "source": "https://github.com/Enalean/simpletest/tree/master-tuleap"
             },
             "time": "2019-09-14T14:51:34+00:00"
         },

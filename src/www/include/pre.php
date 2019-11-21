@@ -125,7 +125,8 @@ $event_manager  = EventManager::instance();
 $plugin_manager = PluginManager::instance();
 $plugin_loader  = new PluginLoader(
     $event_manager,
-    PluginFactory::instance()
+    PluginFactory::instance(),
+    new BackendLogger()
 );
 $cookie_manager = new CookieManager();
 
