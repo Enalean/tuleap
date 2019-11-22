@@ -38,6 +38,8 @@ use Planning_VirtualTopMilestone;
 use PlanningFactory;
 use Project;
 use TrackerFactory;
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Tracker\TrackerColor;
 
 class ProjectReleasePresenterBuilderTest extends TestCase
@@ -92,6 +94,14 @@ class ProjectReleasePresenterBuilderTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
      */
     private $tracker_factory;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
+     */
+    private $explicit_backlog_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
+     */
+    private $artifacts_in_explicit_backlog_dao;
 
     public function setUp(): void
     {
@@ -107,6 +117,8 @@ class ProjectReleasePresenterBuilderTest extends TestCase
         $this->agiledashboard_milestone_backlog_factory                 = Mockery::mock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
         $this->agiledashboard_milestone_backlog                         = Mockery::mock(AgileDashboard_Milestone_Backlog_Backlog::class);
         $this->tracker_factory                                          = Mockery::mock(TrackerFactory::class);
+        $this->explicit_backlog_dao                                     = Mockery::mock(ExplicitBacklogDao::class);
+        $this->artifacts_in_explicit_backlog_dao                        = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
 
         $this->http_request->shouldReceive('getProject')->andReturn($this->project);
         $this->http_request->shouldReceive('getCurrentUser')->andReturn($this->john_doe);
@@ -123,7 +135,9 @@ class ProjectReleasePresenterBuilderTest extends TestCase
             $this->agiledashboard_milestone_backlog_factory,
             $this->agiledashboard_milestone_backlog_item_collection_factory,
             $this->planning_milestone_factory,
-            $this->tracker_factory
+            $this->tracker_factory,
+            $this->explicit_backlog_dao,
+            $this->artifacts_in_explicit_backlog_dao
         );
     }
 
@@ -145,6 +159,8 @@ class ProjectReleasePresenterBuilderTest extends TestCase
             ->withArgs([$this->john_doe, $this->planning_virtual_top_milestone, $this->agiledashboard_milestone_backlog, false])
             ->andReturn($this->agileDashboard_milestone_backlog_item_collection)
             ->once();
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
 
         $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturn(Mockery::mock(Planning::class));
 
@@ -176,6 +192,8 @@ class ProjectReleasePresenterBuilderTest extends TestCase
             ->andReturn($this->agileDashboard_milestone_backlog_item_collection)
             ->once();
 
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+
         $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturnFalse();
 
         $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(5);
@@ -203,6 +221,8 @@ class ProjectReleasePresenterBuilderTest extends TestCase
             ->withArgs([$this->john_doe, $this->planning_virtual_top_milestone, $this->agiledashboard_milestone_backlog, false])
             ->andReturn($this->agileDashboard_milestone_backlog_item_collection)
             ->once();
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
 
         $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturn(Mockery::mock(Planning::class));
 
@@ -237,6 +257,8 @@ class ProjectReleasePresenterBuilderTest extends TestCase
             ->andReturn($this->agileDashboard_milestone_backlog_item_collection)
             ->once();
 
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+
         $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturnFalse();
 
         $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->andReturn(5);
@@ -269,6 +291,8 @@ class ProjectReleasePresenterBuilderTest extends TestCase
             ->withArgs([$this->john_doe, $this->planning_virtual_top_milestone, $this->agiledashboard_milestone_backlog, false])
             ->andReturn($this->agileDashboard_milestone_backlog_item_collection)
             ->once();
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
 
         $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturnFalse();
 
@@ -306,6 +330,8 @@ class ProjectReleasePresenterBuilderTest extends TestCase
             ->andReturn($this->agileDashboard_milestone_backlog_item_collection)
             ->once();
 
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+
         $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturnFalse();
 
         $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
@@ -318,6 +344,41 @@ class ProjectReleasePresenterBuilderTest extends TestCase
         $tracker_json = '[{"id":122,"color_name":"fiesta-red","label":"Bug"},{"id":124,"color_name":"deep-blue","label":"Story"}]';
 
         $this->assertEqualsCanonicalizing($tracker_json, $built_presenter->json_trackers_agile_dashboard);
+    }
+
+    public function testGetNumberItemsOfExplicitBacklogAndNotTopBacklog(): void
+    {
+        $this->planning_virtual_top_milestone
+            ->shouldReceive('getPlanning')
+            ->once()
+            ->andReturn(Mockery::mock(Planning::class, ['getBacklogTrackersIds' => []]));
+
+        $this->agiledashboard_milestone_backlog_factory
+            ->shouldReceive('getSelfBacklog')
+            ->withArgs([$this->planning_virtual_top_milestone])
+            ->never();
+
+        $this->agiledashboard_milestone_backlog_item_collection_factory
+            ->shouldReceive('getUnassignedOpenCollection')
+            ->andReturn($this->agileDashboard_milestone_backlog_item_collection)
+            ->never();
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(true)->once();
+
+        $this->artifacts_in_explicit_backlog_dao->shouldReceive('getNumberOfItemsInExplicitBacklog')->andReturn(50)->once();
+
+        $this->planning_factory->shouldReceive('getRootPlanning')->once()->andReturnFalse();
+
+        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->andReturn(5);
+
+        $this->planning_milestone_factory
+            ->shouldReceive('getAllFutureMilestones')
+            ->never()
+            ->andReturn([]);
+
+        $built_presenter = $this->builder->getProjectReleasePresenter(false);
+
+        $this->assertEquals(50, $built_presenter->nb_backlog_items);
     }
 
     private function mockAnArtifact(string $name, string $color)
