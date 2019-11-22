@@ -33,6 +33,7 @@ use PHPUnit\Framework\TestCase;
 use ProjectCreator;
 use ProjectManager;
 use ProjectXMLImporter;
+use Service;
 use ServiceManager;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\Glyph;
@@ -41,6 +42,7 @@ use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
+use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\XMLFileContentRetriever;
@@ -64,7 +66,7 @@ class RestProjectCreatorTest extends TestCase
 
     protected function setUp(): void
     {
-        \ForgeConfig::set('codendi_cache_dir', vfsStream::setup('root')->url());
+        \ForgeConfig::set('codendi_cache_dir', vfsStream::setup('RestProjectCreatorTest')->url());
 
         $this->project_manager      = M::mock(ProjectManager::class);
         $this->project_creator      = M::mock(ProjectCreator::class);
@@ -83,6 +85,10 @@ class RestProjectCreatorTest extends TestCase
                     new \EventManager()
                 ),
                 new ProjectXMLMerger(),
+                new ConsistencyChecker(
+                    $this->service_manager,
+                    new XMLFileContentRetriever(),
+                )
             )
         );
 
@@ -172,12 +178,19 @@ class RestProjectCreatorTest extends TestCase
         $template_project = new \Project(['group_id' => 100]);
         $this->project_manager->shouldReceive('getProject')->with(100)->andReturn($template_project);
 
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($template_project)->andReturn([]);
+        $services = [
+            M::mock(Service::class, ['getShortName' => \trackerPlugin::SERVICE_SHORTNAME, 'getId' => 12]),
+            M::mock(Service::class, ['getShortName' => \GitPlugin::SERVICE_SHORTNAME, 'getId' => 13]),
+            M::mock(Service::class, ['getShortName' => \AgileDashboardPlugin::PLUGIN_SHORTNAME, 'getId' => 14]),
+        ];
+
+        $this->service_manager->shouldReceive('getListOfServicesAvailableAtSiteLevel')->andReturns($services);
+        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($template_project)->andReturns($services);
 
         $this->project_XML_importer->shouldReceive('importWithProjectData')->with(
             \Hamcrest\Core\IsEqual::equalTo(new ImportConfig()),
             M::on(static function (ArchiveInterface $archive) {
-                return realpath($archive->getExtractionPath()) === realpath(dirname((new ScrumTemplate(M::mock(GlyphFinder::class), new ProjectXMLMerger()))->getXMLPath()));
+                return realpath($archive->getExtractionPath()) === realpath(dirname((new ScrumTemplate(M::mock(GlyphFinder::class), new ProjectXMLMerger(), M::mock(ConsistencyChecker::class)))->getXMLPath()));
             }),
             \Hamcrest\Core\IsEqual::equalTo(new SystemEventRunnerForProjectCreationFromXMLTemplate()),
             M::on(static function (\ProjectCreationData $data) {

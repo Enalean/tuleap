@@ -226,7 +226,10 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->services;
     }
 
-    public function getActiveServices()
+    /**
+     * @return Service[]
+     */
+    public function getActiveServices(): array
     {
         $this->cacheServices();
         return $this->cache_active_services;

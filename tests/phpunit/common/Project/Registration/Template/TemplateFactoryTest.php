@@ -23,22 +23,38 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template;
 
+use Mockery as M;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\XML\ProjectXMLMerger;
 
 class TemplateFactoryTest extends TestCase
 {
-    use ForgeConfigSandbox;
+    use M\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox;
 
+    /**
+     * @var TemplateFactory
+     */
     private $factory;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|ConsistencyChecker
+     */
+    private $consistency_checker;
 
     protected function setUp(): void
     {
-        \ForgeConfig::set('codendi_cache_dir', vfsStream::setup('root')->url());
-        $this->factory  = new TemplateFactory(new GlyphFinder(new \EventManager()), new ProjectXMLMerger());
+        \ForgeConfig::set('codendi_cache_dir', vfsStream::setup('TemplateFactoryTest')->url());
+
+        $this->consistency_checker = M::mock(ConsistencyChecker::class);
+        $this->consistency_checker->shouldReceive('areAllServicesAvailable')->andReturnTrue()->byDefault();
+        $this->factory  = new TemplateFactory(
+            new GlyphFinder(new \EventManager()),
+            new ProjectXMLMerger(),
+            $this->consistency_checker,
+        );
     }
 
     public function testItReturnsTemplates(): void
@@ -68,5 +84,21 @@ class TemplateFactoryTest extends TestCase
         $this->expectException(InvalidTemplateException::class);
 
         $this->factory->getTemplate('stuff');
+    }
+
+    public function testItDoesntReturnTheTemplatesWhoseServicesAreNotAvailable(): void
+    {
+        $this->consistency_checker->shouldReceive('areAllServicesAvailable')->andReturnFalse();
+
+        $this->assertEmpty($this->factory->getValidTemplates());
+    }
+
+    public function testItDoesntReturnTheTemplateThatIsNotAvailable(): void
+    {
+        $this->consistency_checker->shouldReceive('areAllServicesAvailable')->andReturnFalse();
+
+        $this->expectException(InvalidTemplateException::class);
+
+        $this->factory->getTemplate(ScrumTemplate::NAME);
     }
 }

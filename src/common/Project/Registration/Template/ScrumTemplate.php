@@ -25,6 +25,7 @@ namespace Tuleap\Project\Registration\Template;
 
 use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\XML\ProjectXMLMerger;
 
 class ScrumTemplate implements ProjectTemplate
@@ -43,10 +44,6 @@ class ScrumTemplate implements ProjectTemplate
      */
     private $description;
     /**
-     * @var string
-     */
-    private $xml_path;
-    /**
      * @var GlyphFinder
      */
     private $glyph_finder;
@@ -54,13 +51,26 @@ class ScrumTemplate implements ProjectTemplate
      * @var ProjectXMLMerger
      */
     private $project_xml_merger;
+    /**
+     * @var ConsistencyChecker
+     */
+    private $consistency_checker;
+    /**
+     * @var bool
+     */
+    private $available;
+    /**
+     * @var string
+     */
+    private $xml_path;
 
-    public function __construct(GlyphFinder $glyph_finder, ProjectXMLMerger $project_xml_merger)
+    public function __construct(GlyphFinder $glyph_finder, ProjectXMLMerger $project_xml_merger, ConsistencyChecker $consistency_checker)
     {
         $this->title              = _('Scrum');
         $this->description        = _('Manage your project using epics and user stories in releases and sprints');
         $this->glyph_finder       = $glyph_finder;
         $this->project_xml_merger = $project_xml_merger;
+        $this->consistency_checker = $consistency_checker;
     }
 
     /**
@@ -69,17 +79,19 @@ class ScrumTemplate implements ProjectTemplate
      */
     public function getXMLPath(): string
     {
-        $base_dir = \ForgeConfig::getCacheDir() . '/scrum_template';
-        if (! is_dir($base_dir) && ! mkdir($base_dir, 0755) && ! is_dir($base_dir)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $base_dir));
+        if ($this->xml_path === null) {
+            $base_dir = \ForgeConfig::getCacheDir() . '/scrum_template';
+            if (! is_dir($base_dir) && ! mkdir($base_dir, 0755) && ! is_dir($base_dir)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $base_dir));
+            }
+            $this->xml_path = \ForgeConfig::getCacheDir() . '/scrum_template/project.xml';
+            $this->project_xml_merger->merge(
+                self::PROJECT_XML,
+                self::AGILEDASHBOARD_XML,
+                $this->xml_path,
+            );
         }
-        $xml_path = \ForgeConfig::getCacheDir() . '/scrum_template/project.xml';
-        $this->project_xml_merger->merge(
-            self::PROJECT_XML,
-            self::AGILEDASHBOARD_XML,
-            $xml_path,
-        );
-        return $xml_path;
+        return $this->xml_path;
     }
 
     public function getTitle(): string
@@ -100,5 +112,13 @@ class ScrumTemplate implements ProjectTemplate
     public function getName(): string
     {
         return self::NAME;
+    }
+
+    public function isAvailable(): bool
+    {
+        if ($this->available === null) {
+            $this->available = $this->consistency_checker->areAllServicesAvailable($this->getXMLPath());
+        }
+        return $this->available;
     }
 }

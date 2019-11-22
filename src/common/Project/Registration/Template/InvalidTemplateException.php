@@ -27,6 +27,6 @@ class InvalidTemplateException extends \Exception
 {
     public function __construct()
     {
-        parent::__construct('You should provide `template_id` or `xml_template_name`');
+        parent::__construct('The xml template name provided is not valid');
     }
 }

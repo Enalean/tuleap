@@ -60,6 +60,7 @@ use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutSt
 use Tuleap\Project\UGroups\Membership\MemberAdder;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
+use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Event\ProjectGetSvn;
@@ -1726,12 +1727,7 @@ class ProjectResource extends AuthenticatedResource
             ProjectXMLImporter::build(
                 new XMLImportHelper(UserManager::instance())
             ),
-            new TemplateFactory(
-                new GlyphFinder(
-                    EventManager::instance()
-                ),
-                new ProjectXMLMerger()
-            )
+            TemplateFactory::build()
         );
     }
 }
