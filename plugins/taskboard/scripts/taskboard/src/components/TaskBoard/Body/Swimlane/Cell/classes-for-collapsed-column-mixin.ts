@@ -19,31 +19,24 @@
 
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { namespace } from "vuex-class";
-import { ColumnDefinition } from "../../../../type";
+import { ColumnDefinition } from "../../../../../type";
 
-const column_store = namespace("column");
-
-@Component({})
-export default class HoveringStateForCollapsedColumnMixin extends Vue {
+@Component
+export default class ClassesForCollapsedColumnMixin extends Vue {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
 
-    @column_store.Mutation
-    readonly mouseEntersColumn!: (column: ColumnDefinition) => void;
-
-    @column_store.Mutation
-    readonly mouseLeavesColumn!: (column: ColumnDefinition) => void;
-
-    mouseEntersCollapsedColumn(): void {
-        if (this.column.is_collapsed) {
-            this.mouseEntersColumn(this.column);
+    get classes(): string {
+        if (!this.column.is_collapsed) {
+            return "";
         }
-    }
 
-    mouseLeavesCollapsedColumn(): void {
-        if (this.column.is_collapsed) {
-            this.mouseLeavesColumn(this.column);
+        const classes = ["taskboard-cell-collapsed"];
+
+        if (this.column.has_hover) {
+            classes.push("taskboard-cell-collapsed-hover");
         }
+
+        return classes.join(" ");
     }
 }

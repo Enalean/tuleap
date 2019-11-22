@@ -24,6 +24,9 @@
          v-on:mouseenter="mouseEntersCollapsedColumn"
          v-on:mouseout="mouseLeavesCollapsedColumn"
          v-on:click="expandCollapsedColumn"
+         v-bind:data-swimlane-id="swimlane.card.id"
+         v-bind:data-column-id="column.id"
+         v-bind:data-accepted-trackers-ids="accepted_trackers_ids(column)"
     >
         <slot v-if="!column.is_collapsed"></slot>
         <cell-disallows-drop-overlay v-bind:is-drop-rejected="does_cell_reject_drop(swimlane, column)"/>
@@ -31,33 +34,40 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Prop } from "vue-property-decorator";
-import { ColumnDefinition, Swimlane } from "../../../../type";
 import { namespace } from "vuex-class";
+import { Component, Mixins, Prop } from "vue-property-decorator";
 import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
 import ExpandCollapsedColumnMixin from "./expand-collapsed-column-mixin";
 import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
 import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
-import ClassesForDropZonesMixin from "./classes-for-drop-zones-mixin";
+import { ColumnDefinition, Swimlane } from "../../../../../type";
 
+const column_store = namespace("column");
 const swimlane = namespace("swimlane");
 
 @Component({
     components: { CellDisallowsDropOverlay }
 })
-export default class CellForSoloCard extends Mixins(
+export default class DropContainerCell extends Mixins(
     HoveringStateForCollapsedColumnMixin,
     ExpandCollapsedColumnMixin,
-    ClassesForCollapsedColumnMixin,
-    ClassesForDropZonesMixin
+    ClassesForCollapsedColumnMixin
 ) {
-    @Prop({ required: true })
-    readonly column!: ColumnDefinition;
-
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
 
+    @column_store.Getter
+    readonly accepted_trackers_ids!: (column: ColumnDefinition) => number[];
+
     @swimlane.Getter
     readonly does_cell_reject_drop!: (swimlane: Swimlane, column: ColumnDefinition) => boolean;
+
+    get dropzone_classes(): string {
+        if (this.does_cell_reject_drop(this.swimlane, this.column)) {
+            return "taskboard-drop-not-accepted";
+        }
+
+        return "";
+    }
 }
 </script>

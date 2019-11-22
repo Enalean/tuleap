@@ -19,24 +19,22 @@
 
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { ColumnDefinition } from "../../../../type";
+import { namespace } from "vuex-class";
+import { ColumnDefinition } from "../../../../../type";
+
+const column_store = namespace("column");
 
 @Component
-export default class ClassesForCollapsedColumnMixin extends Vue {
+export default class ExpandCollapsedColumnMixin extends Vue {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
 
-    get classes(): string {
-        if (!this.column.is_collapsed) {
-            return "";
+    @column_store.Action
+    readonly expandColumn!: (column: ColumnDefinition) => void;
+
+    expandCollapsedColumn(): void {
+        if (this.column.is_collapsed) {
+            this.expandColumn(this.column);
         }
-
-        const classes = ["taskboard-cell-collapsed"];
-
-        if (this.column.has_hover) {
-            classes.push("taskboard-cell-collapsed-hover");
-        }
-
-        return classes.join(" ");
     }
 }

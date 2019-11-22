@@ -19,25 +19,12 @@
   -->
 
 <template>
-    <div class="taskboard-cell"
-         v-bind:class="[classes, dropzone_classes]"
-         v-bind:data-swimlane-id="swimlane.card.id"
-         v-bind:data-column-id="column.id"
-         v-bind:data-accepted-trackers-ids="accepted_trackers_ids(column)"
-         v-on:mouseenter="mouseEntersCollapsedColumn"
-         v-on:mouseout="mouseLeavesCollapsedColumn"
-         v-on:click="expandCollapsedColumn"
-    >
-        <template v-if="!column.is_collapsed">
-            <template v-for="card of cards">
-                <child-card v-bind:key="card.id" v-bind:card="card"/>
-            </template>
-            <template v-if="swimlane.is_loading_children_cards">
-                <card-skeleton v-for="i in nb_skeletons_to_display" v-bind:key="i"/>
-            </template>
+    <drop-container-cell v-bind:column="column" v-bind:swimlane="swimlane">
+        <child-card v-for="card of cards" v-bind:key="card.id" v-bind:card="card"/>
+        <template v-if="swimlane.is_loading_children_cards">
+            <card-skeleton v-for="i in nb_skeletons_to_display" v-bind:key="i"/>
         </template>
-        <cell-disallows-drop-overlay v-bind:is-drop-rejected="does_cell_reject_drop(swimlane, column)"/>
-    </div>
+    </drop-container-cell>
 </template>
 
 <script lang="ts">
@@ -46,26 +33,15 @@ import { Card, ColumnDefinition, Swimlane } from "../../../../type";
 import { namespace } from "vuex-class";
 import ChildCard from "./Card/ChildCard.vue";
 import CardSkeleton from "./Skeleton/CardSkeleton.vue";
-import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
 import SkeletonMixin from "./Skeleton/skeleton-mixin";
-import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
-import ExpandCollapsedColumnMixin from "./expand-collapsed-column-mixin";
-import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
-import ClassesForDropZonesMixin from "./classes-for-drop-zones-mixin";
+import DropContainerCell from "./Cell/DropContainerCell.vue";
 
 const swimlane = namespace("swimlane");
-const column = namespace("column");
 
 @Component({
-    components: { ChildCard, CardSkeleton, CellDisallowsDropOverlay }
+    components: { DropContainerCell, ChildCard, CardSkeleton }
 })
-export default class ColumnWithChildren extends Mixins(
-    SkeletonMixin,
-    HoveringStateForCollapsedColumnMixin,
-    ExpandCollapsedColumnMixin,
-    ClassesForCollapsedColumnMixin,
-    ClassesForDropZonesMixin
-) {
+export default class ColumnWithChildren extends Mixins(SkeletonMixin) {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
 
@@ -77,12 +53,6 @@ export default class ColumnWithChildren extends Mixins(
         current_swimlane: Swimlane,
         current_column: ColumnDefinition
     ) => Card[];
-
-    @column.Getter
-    readonly accepted_trackers_ids!: (column: ColumnDefinition) => number[];
-
-    @swimlane.Getter
-    readonly does_cell_reject_drop!: (swimlane: Swimlane, column: ColumnDefinition) => boolean;
 
     get cards(): Card[] {
         return this.cards_in_cell(this.swimlane, this.column);

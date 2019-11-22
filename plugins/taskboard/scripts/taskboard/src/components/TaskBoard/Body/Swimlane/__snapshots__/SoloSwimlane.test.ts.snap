@@ -8,20 +8,14 @@ exports[`SoloSwimlane displays the parent card in Done column when status maps t
     swimlane="[object Object]"
   />
    
-  <cell-for-solo-card-stub
+  <drop-container-cell-stub
     column="[object Object]"
-    data-accepted-trackers-ids="101,102"
-    data-column-id="2"
-    data-swimlane-id="43"
     swimlane="[object Object]"
   >
     <!---->
-  </cell-for-solo-card-stub>
-  <cell-for-solo-card-stub
+  </drop-container-cell-stub>
+  <drop-container-cell-stub
     column="[object Object]"
-    data-accepted-trackers-ids="101,102"
-    data-column-id="3"
-    data-swimlane-id="43"
     swimlane="[object Object]"
   >
     <card-with-remaining-effort-stub
@@ -29,6 +23,6 @@ exports[`SoloSwimlane displays the parent card in Done column when status maps t
       class="taskboard-cell-solo-card taskboard-draggable-item"
       data-card-id="43"
     />
-  </cell-for-solo-card-stub>
+  </drop-container-cell-stub>
 </div>
 `;

@@ -21,14 +21,11 @@
 <template>
     <div class="taskboard-swimlane" v-if="should_solo_card_be_displayed">
         <swimlane-header v-bind:swimlane="swimlane"/>
-        <cell-for-solo-card
+        <drop-container-cell
             v-for="col of columns"
             v-bind:key="col.id"
             v-bind:column="col"
             v-bind:swimlane="swimlane"
-            v-bind:data-swimlane-id="swimlane.card.id"
-            v-bind:data-column-id="col.id"
-            v-bind:data-accepted-trackers-ids="accepted_trackers_ids(col)"
         >
             <card-with-remaining-effort
                 v-if="column.id === col.id"
@@ -37,7 +34,7 @@
                 v-bind:data-card-id="swimlane.card.id"
                 v-bind:data-tracker-id="swimlane.card.tracker_id"
             />
-        </cell-for-solo-card>
+        </drop-container-cell>
     </div>
 </template>
 
@@ -48,14 +45,14 @@ import { namespace } from "vuex-class";
 import { ColumnDefinition, Swimlane } from "../../../../type";
 import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
-import CellForSoloCard from "./CellForSoloCard.vue";
+import DropContainerCell from "./Cell/DropContainerCell.vue";
 
 const column_store = namespace("column");
 
 @Component({
     components: {
         CardWithRemainingEffort,
-        CellForSoloCard,
+        DropContainerCell,
         SwimlaneHeader
     }
 })
@@ -68,9 +65,6 @@ export default class SoloSwimlane extends Vue {
 
     @column_store.State
     readonly columns!: Array<ColumnDefinition>;
-
-    @column_store.Getter
-    readonly accepted_trackers_ids!: (column: ColumnDefinition) => number[];
 
     get should_solo_card_be_displayed(): boolean {
         return !this.column.is_collapsed;
