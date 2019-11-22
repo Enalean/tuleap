@@ -19,35 +19,34 @@
   -->
 
 <template>
-    <div class="taskboard-card taskboard-card-parent" v-bind:class="additional_classnames">
-        <div class="taskboard-card-content">
-            <card-xref-label v-bind:card="card"/>
-            <div class="taskboard-card-info">
-                <card-initial-effort v-bind:card="card"/>
-                <card-assignees v-bind:assignees="card.assignees"/>
-            </div>
-        </div>
-        <div class="taskboard-card-accessibility" v-if="show_accessibility_pattern"></div>
-        <div class="taskboard-card-progress" v-bind:class="progress_color" v-bind:style="{ width: progress_bar_width }"></div>
-    </div>
+    <base-card class="taskboard-card-parent" v-bind:card="card">
+        <template v-slot="initial_effort">
+            <card-initial-effort v-bind:card="card"/>
+        </template>
+        <template v-slot="remaining_effort">
+            <div class="taskboard-card-progress" v-bind:class="progress_color" v-bind:style="{ width: progress_bar_width }"></div>
+        </template>
+    </base-card>
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from "vue-property-decorator";
-import CardMixin from "./card-mixin";
-import CardXrefLabel from "./CardXrefLabel.vue";
-import CardAssignees from "./CardAssignees.vue";
+import Vue from "vue";
+import { Component, Prop } from "vue-property-decorator";
 import CardInitialEffort from "./CardInitialEffort.vue";
 import { getWidthPercentage } from "../../../../../helpers/progress-bars";
+import BaseCard from "./BaseCard.vue";
+import { Card } from "../../../../../type";
 
 @Component({
     components: {
-        CardInitialEffort,
-        CardXrefLabel,
-        CardAssignees
+        BaseCard,
+        CardInitialEffort
     }
 })
-export default class ParentCard extends Mixins(CardMixin) {
+export default class ParentCard extends Vue {
+    @Prop({ required: true })
+    readonly card!: Card;
+
     get progress_bar_width(): string {
         const { initial_effort, remaining_effort } = this.card;
 
