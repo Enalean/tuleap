@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,24 @@
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
-namespace Tuleap\Project\REST\v1;
+namespace Tuleap\Project\Registration\Template;
 
-class InvalidTemplateException extends \Exception
+use Tuleap\Glyph\Glyph;
+
+/**
+ * @psalm-immutable
+ */
+interface ProjectTemplate
 {
-    public function __construct()
-    {
-        parent::__construct('You should provide `template_id` or `xml_template_name`');
-    }
+    public function getName(): string;
+
+    public function getTitle(): string;
+
+    public function getDescription(): string;
+
+    public function getGlyph(): Glyph;
+
+    public function getXMLPath(): string;
 }

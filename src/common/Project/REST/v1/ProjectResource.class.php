@@ -33,6 +33,7 @@ use ProjectUGroup;
 use ProjectXMLImporter;
 use ReferenceManager;
 use ServiceManager;
+use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
@@ -49,6 +50,8 @@ use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\ProjectDescriptionMandatoryException;
 use Tuleap\Project\ProjectInvalidTemplateException;
 use Tuleap\Project\ProjectStatusMapper;
+use Tuleap\Project\Registration\Template\InvalidTemplateException;
+use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
@@ -1721,6 +1724,11 @@ class ProjectResource extends AuthenticatedResource
             new XML_RNGValidator(),
             ProjectXMLImporter::build(
                 new XMLImportHelper(UserManager::instance())
+            ),
+            new TemplateFactory(
+                new GlyphFinder(
+                    EventManager::instance()
+                )
             )
         );
     }

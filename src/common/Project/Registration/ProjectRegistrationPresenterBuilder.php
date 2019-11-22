@@ -23,25 +23,31 @@ declare(strict_types = 1);
 
 namespace Tuleap\Project\Registration;
 
+use Tuleap\Project\Registration\Template\ProjectTemplate;
+use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\Registration\Template\TemplatePresenter;
+
 class ProjectRegistrationPresenterBuilder
 {
     /**
-     * @var \EventManager
+     * @var TemplateFactory
      */
-    private $event_manager;
+    private $template_factory;
 
-    public function __construct(\EventManager $event_manager)
+    public function __construct(TemplateFactory $template_factory)
     {
-        $this->event_manager = $event_manager;
+        $this->template_factory = $template_factory;
     }
 
     public function buildPresenter(): ProjectRegistrationPresenter
     {
-        $event = new TuleapProjectTemplatesCollector();
-        $this->event_manager->processEvent($event);
-
         return new ProjectRegistrationPresenter(
-            $event->getAllTemplates()
+            ...array_map(
+                static function (ProjectTemplate $project_template) {
+                    return new TemplatePresenter($project_template);
+                },
+                $this->template_factory->getTemplates()
+            )
         );
     }
 }

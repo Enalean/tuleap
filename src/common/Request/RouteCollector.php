@@ -65,6 +65,7 @@ use Tuleap\FRS\LicenseAgreement\Admin\SaveLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\Admin\SetDefaultLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
+use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
@@ -93,6 +94,7 @@ use Tuleap\Project\Home;
 use Tuleap\Project\Registration\ProjectRegistrationController;
 use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\Service\AddController;
 use Tuleap\Project\Service\DeleteController;
 use Tuleap\Project\Service\EditController;
@@ -595,12 +597,7 @@ class RouteCollector
         );
     }
 
-    public function getLegacyController(string $path)
-    {
-        return new LegacyRoutesController($path);
-    }
-
-    public function getProjectRegistrationController(): ProjectRegistrationController
+    public static function getProjectRegistrationController(): ProjectRegistrationController
     {
         return new ProjectRegistrationController(
             \TemplateRendererFactory::build(),
@@ -608,9 +605,21 @@ class RouteCollector
             new ProjectRegistrationUserPermissionChecker(
                 ProjectManager::instance()
             ),
-            new ProjectRegistrationPresenterBuilder(EventManager::instance())
+            new ProjectRegistrationPresenterBuilder(
+                new TemplateFactory(
+                    new GlyphFinder(
+                        EventManager::instance()
+                    )
+                )
+            )
         );
     }
+
+    public function getLegacyController(string $path)
+    {
+        return new LegacyRoutesController($path);
+    }
+
 
     private function getLegacyControllerHandler(string $path) : array
     {

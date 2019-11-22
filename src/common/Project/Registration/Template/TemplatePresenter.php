@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,10 +21,11 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\Project\Registration;
+namespace Tuleap\Project\Registration\Template;
 
-use Tuleap\Glyph\Glyph;
-
+/**
+ * @psalm-immutable
+ */
 class TemplatePresenter
 {
     /**
@@ -44,16 +45,11 @@ class TemplatePresenter
      */
     public $glyph;
 
-
-    public function __construct(
-        string $name,
-        string $title,
-        string $description,
-        Glyph $glyph
-    ) {
-        $this->title       = $title;
-        $this->description = $description;
-        $this->name        = $name;
-        $this->glyph         = $glyph->getInlineString();
+    public function __construct(ProjectTemplate $template)
+    {
+        $this->title       = $template->getTitle();
+        $this->description = $template->getDescription();
+        $this->name        = $template->getName();
+        $this->glyph       = $template->getGlyph()->getInlineString();
     }
 }

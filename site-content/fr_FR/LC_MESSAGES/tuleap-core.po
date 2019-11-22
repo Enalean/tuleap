@@ -813,6 +813,12 @@ msgstr ""
 "Assurez-vous de copier votre nouvelle clé d'accès, vous ne pourrez plus la "
 "voir de nouveau !"
 
+msgid ""
+"Manage your project using epics and user stories in releases and sprints"
+msgstr ""
+"Gérez vos projets en utilisant des epics et des user stories dans des "
+"releases et des sprints"
+
 msgid "Maximum number of projects waiting for validation (-1 means no limits)"
 msgstr ""
 "Nombre maximum de projets dans la file d'attente de validation (-1 pour pas "
@@ -1325,6 +1331,9 @@ msgstr "Enregister"
 
 msgid "Scope"
 msgstr "Portée"
+
+msgid "Scrum"
+msgstr "Scrum"
 
 msgid "Search"
 msgstr "Rechercher"

@@ -23,6 +23,11 @@ declare(strict_types = 1);
 
 namespace Tuleap\Project\Registration;
 
+use Tuleap\Project\Registration\Template\TemplatePresenter;
+
+/**
+ * @psalm-immutable
+ */
 class ProjectRegistrationPresenter
 {
     /**
@@ -34,7 +39,7 @@ class ProjectRegistrationPresenter
      */
     public $has_templates;
 
-    public function __construct(array $tuleap_templates)
+    public function __construct(TemplatePresenter ...$tuleap_templates)
     {
         $this->tuleap_templates = json_encode($tuleap_templates);
         $this->has_templates    = count($tuleap_templates) > 0;

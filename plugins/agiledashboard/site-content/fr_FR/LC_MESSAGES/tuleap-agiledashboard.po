@@ -158,12 +158,6 @@ msgstr "Carte de Kanban"
 msgid "Make sure to check their configuration."
 msgstr "Merci de vérifier leur configuration."
 
-msgid ""
-"Manage your project using epics and user stories in releases and sprints"
-msgstr ""
-"Gérez vos projets en utilisant des epics et des user stories dans des releases "
-"et des sprints"
-
 msgid "Milestones"
 msgstr "Jalons"
 

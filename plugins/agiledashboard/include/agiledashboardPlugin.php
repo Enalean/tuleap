@@ -74,16 +74,12 @@ use Tuleap\AgileDashboard\Widget\WidgetKanbanRetriever;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
-use Tuleap\Glyph\GlyphLocation;
-use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
-use Tuleap\Project\Registration\TemplatePresenter;
-use Tuleap\Project\Registration\TuleapProjectTemplatesCollector;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
@@ -220,8 +216,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(StatisticsCollectionCollector::NAME);
             $this->addHook('project_is_deleted');
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
-            $this->addHook(TuleapProjectTemplatesCollector::NAME);
-            $this->addHook(GlyphLocationsCollector::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2055,30 +2049,5 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         if ($action !== null) {
             $event->addAction($action);
         }
-    }
-
-    public function tuleapProjectTemplatesCollector(TuleapProjectTemplatesCollector $collector): void
-    {
-        $glyph_finder = new \Tuleap\Glyph\GlyphFinder(EventManager::instance());
-
-        $collector->addNewTemplate(
-            new TemplatePresenter(
-                "scrum_template",
-                dgettext('tuleap-agiledashboard', "Scrum"),
-                dgettext(
-                    'tuleap-agiledashboard',
-                    "Manage your project using epics and user stories in releases and sprints"
-                ),
-                $glyph_finder->get('scrum')
-            )
-        );
-    }
-
-    public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector)
-    {
-        $glyph_locations_collector->addLocation(
-            'scrum',
-            new GlyphLocation(__DIR__ . '/../glyphs')
-        );
     }
 }
