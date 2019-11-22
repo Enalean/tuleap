@@ -246,16 +246,19 @@ a.taskboard-card-xref {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 
+    &::after {
+        content: '';
+        position: absolute;
+        top: -1px;
+        right: -13px;
+        width: 0;
+        height: 0;
+        border-width: 13px 0 13px 12px;
+        border-style: solid;
+    }
+
     @each $color-name, $colors in $tlp-swatch-color-map {
         &.taskboard-card-remaining-effort-#{$color-name}::after {
-            content: '';
-            position: absolute;
-            top: -1px;
-            right: -13px;
-            width: 0;
-            height: 0;
-            border-width: 13px 0 13px 12px;
-            border-style: solid;
             border-color: transparent transparent transparent map-get($colors, 'primary');
         }
     }

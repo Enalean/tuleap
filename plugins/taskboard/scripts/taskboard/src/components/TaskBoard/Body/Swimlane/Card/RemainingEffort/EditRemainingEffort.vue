@@ -20,6 +20,7 @@
 
 <template>
     <input type="text"
+           class="taskboard-card-remaining-effort-input"
            v-bind:class="classes"
            v-model="value"
            v-on:keyup.enter="save"
