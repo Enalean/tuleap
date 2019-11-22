@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright 1999-2000 (c) The SourceForge Crew
  * http://sourceforge.net
@@ -20,6 +20,9 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Symfony\Component\VarExporter\VarExporter;
+use Webimpress\SafeWriter\FileWriter;
 
 class BaseLanguage
 {
@@ -201,7 +204,14 @@ class BaseLanguage
             // This directory must be world reachable, but writable only by the web-server
             mkdir($this->getCacheDirectory(), 0755);
         }
-        file_put_contents($this->getCacheDirectory().DIRECTORY_SEPARATOR.$lang.'.php', '<?php'.PHP_EOL.'return '.\Symfony\Component\VarExporter\VarExporter::export($text_array).';');
+
+        $path = $this->getCacheDirectory().DIRECTORY_SEPARATOR.$lang.'.php';
+        $content = '<?php'.PHP_EOL.'return '.VarExporter::export($text_array).';';
+        try {
+            FileWriter::writeFile($path, $content);
+        } catch (RuntimeException $exception) {
+            //Do nothing
+        }
     }
 
     /**
