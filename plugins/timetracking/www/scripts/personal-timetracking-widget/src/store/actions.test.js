@@ -23,7 +23,7 @@
 
 import * as actions from "./actions.js";
 import * as rest_querier from "../api/rest-querier.js";
-import { mockFetchError } from "tlp-fetch-mocks-helper-jest";
+import { mockFetchError } from "../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
 import {
     REST_FEEDBACK_ADD,
     REST_FEEDBACK_EDIT,

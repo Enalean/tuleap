@@ -19,7 +19,10 @@
 
 import * as actions from "./user-actions";
 import * as tlp from "tlp";
-import { mockFetchError, mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
+import {
+    mockFetchError,
+    mockFetchSuccess
+} from "../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
 import { ActionContext } from "vuex";
 import { RootState } from "../type";
 import { UserPreference, UserPreferenceValue, UserState } from "./type";

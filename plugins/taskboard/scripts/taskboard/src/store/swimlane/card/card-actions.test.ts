@@ -24,7 +24,10 @@ import * as tlp from "tlp";
 import { SwimlaneState } from "../type";
 import { Card } from "../../../type";
 import * as actions from "./card-actions";
-import { mockFetchError, mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
+import {
+    mockFetchError,
+    mockFetchSuccess
+} from "../../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
 
 jest.mock("tlp");
 

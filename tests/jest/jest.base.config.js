@@ -27,10 +27,6 @@ module.exports = {
     },
     moduleNameMapper: {
         "^.+\\.po$": "identity-obj-proxy",
-        "tlp-fetch-mocks-helper-jest": path.resolve(
-            __dirname,
-            "../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper.js"
-        ),
         "^tlp$": path.resolve(__dirname, "../../src/www/themes/common/tlp/src/js/index.js"),
         "^tlp-fetch$": path.resolve(
             __dirname,

@@ -18,7 +18,10 @@
  */
 
 import * as TUS from "tus-js-client";
-import { mockFetchSuccess, mockFetchError } from "tlp-fetch-mocks-helper-jest";
+import {
+    mockFetchSuccess,
+    mockFetchError
+} from "../../../themes/common/tlp/mocks/tlp-fetch-mock-helper.js";
 import * as gettext_factory from "../gettext/gettext-factory.js";
 import {
     buildFileUploadHandler,

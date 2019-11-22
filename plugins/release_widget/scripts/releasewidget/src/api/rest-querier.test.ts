@@ -25,7 +25,7 @@ import {
 } from "./rest-querier";
 
 import * as tlp from "tlp";
-import { mockFetchSuccess } from "tlp-fetch-mocks-helper-jest";
+import { mockFetchSuccess } from "../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
 import { BurndownData, MilestoneContent, MilestoneData } from "../type";
 
 jest.mock("tlp");
