@@ -277,5 +277,63 @@ describe(`drag-drop-actions`, () => {
             });
             expect(context.commit).toHaveBeenCalledWith("removeHighlightOnLastHoveredDropZone");
         });
+
+        it(`
+            Given a solo card
+            When it has been dragged over some different containers and dropped in the source one
+            Then it should not try to reorder the cards
+        `, async () => {
+            const column = { id: 31, label: "Todo" } as ColumnDefinition;
+            const card = { id: 667, label: "Do the stuff", has_children: false } as Card;
+            const swimlane = { card } as Swimlane;
+
+            context.getters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
+
+            const sibling = null;
+
+            jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(true);
+            jest.spyOn(item_finder, "getCardFromSwimlane")
+                .mockReturnValueOnce(card)
+                .mockReturnValueOnce(sibling);
+
+            context.getters.cards_in_cell.mockReturnValue([card]); // Card is alone in its cell
+
+            jest.spyOn(card_positioner, "getCardPosition");
+
+            const payload = createPayload();
+            await actions.handleDrop(context, payload);
+
+            expect(card_positioner.getCardPosition).not.toHaveBeenCalled();
+            expect(context.dispatch).not.toHaveBeenCalledWith();
+        });
+
+        it(`
+            Given a child card alone in a cell
+            When it has been dragged over some different containers and dropped in the source one
+            Then it should not try to reorder the cards
+        `, async () => {
+            const column = { id: 31, label: "Todo" } as ColumnDefinition;
+            const swimlane = { card: { id: 666, has_children: true } } as Swimlane;
+            const card = { id: 667, label: "Do the stuff", has_children: false } as Card;
+
+            context.getters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
+
+            const sibling = null;
+
+            jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(true);
+            jest.spyOn(item_finder, "getCardFromSwimlane")
+                .mockReturnValueOnce(card)
+                .mockReturnValueOnce(sibling);
+
+            context.getters.cards_in_cell.mockReturnValue([card]); // Card is alone in its cell
+
+            jest.spyOn(card_positioner, "getCardPosition");
+
+            const payload = createPayload();
+            await actions.handleDrop(context, payload);
+
+            expect(card_positioner.getCardPosition).not.toHaveBeenCalled();
+            expect(context.dispatch).not.toHaveBeenCalledWith();
+        });
     });
 });
