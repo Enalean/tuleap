@@ -54,6 +54,10 @@ export function handleDrop(
     const cards_in_cell = context.getters.cards_in_cell(swimlane, column);
 
     if (hasCardBeenDroppedInTheSameCell(payload.target_cell, payload.source_cell)) {
+        if (is_solo_card || cards_in_cell.length <= 1) {
+            return Promise.resolve();
+        }
+
         const reoder_payload = getReorderCardsPayload(
             card,
             sibling,
