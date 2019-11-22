@@ -59,6 +59,7 @@ final class ReviewerUpdaterTest extends TestCase
     {
         $pull_request = Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(85);
+        $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_REVIEW);
 
         $this->dao->shouldReceive('setReviewers')->with(85);
 
@@ -69,6 +70,7 @@ final class ReviewerUpdaterTest extends TestCase
     {
         $pull_request = Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(85);
+        $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_REVIEW);
 
         $user_1 = Mockery::mock(\PFUser::class);
         $user_1->shouldReceive('getId')->andReturn('101');
@@ -85,6 +87,7 @@ final class ReviewerUpdaterTest extends TestCase
     {
         $pull_request = Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(85);
+        $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_REVIEW);
 
         $user = Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturn('101');
@@ -94,5 +97,15 @@ final class ReviewerUpdaterTest extends TestCase
 
         $this->expectException(UserCannotBeAddedAsReviewerException::class);
         $this->reviewer_updater->updatePullRequestReviewers($pull_request, $user);
+    }
+
+    public function testUpdatingListOfReviewersIsNotPossibleOnAClosedPullRequest(): void
+    {
+        $pull_request = Mockery::mock(PullRequest::class);
+        $pull_request->shouldReceive('getId')->andReturn(86);
+        $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_MERGED);
+
+        $this->expectException(ReviewersCannotBeUpdatedOnClosedPullRequestException::class);
+        $this->reviewer_updater->updatePullRequestReviewers($pull_request);
     }
 }

@@ -98,6 +98,7 @@ use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersPUTRepresentation;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersRepresentation;
 use Tuleap\PullRequest\Reviewer\ReviewerDAO;
 use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
+use Tuleap\PullRequest\Reviewer\ReviewersCannotBeUpdatedOnClosedPullRequestException;
 use Tuleap\PullRequest\Reviewer\ReviewerUpdater;
 use Tuleap\PullRequest\Reviewer\UserCannotBeAddedAsReviewerException;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
@@ -1226,6 +1227,11 @@ class PullRequestsResource extends AuthenticatedResource
             throw new RestException(
                 400,
                 'User #' . $exception->getUser()->getId() . ' cannot access this pull request'
+            );
+        } catch (ReviewersCannotBeUpdatedOnClosedPullRequestException $exception) {
+            throw new RestException(
+                403,
+                'This pull request is already closed, the reviewers can not be updated'
             );
         }
     }
