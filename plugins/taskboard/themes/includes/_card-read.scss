@@ -261,21 +261,6 @@ a.taskboard-card-xref {
     }
 }
 
-@each $color-name, $colors in $tlp-swatch-color-map {
-    .taskboard-card-remaining-effort-input-#{$color-name} {
-        width: 30px;
-        padding: 1px 5px;
-        border: 0;
-        border-radius: 2px;
-        background: map-get($colors, 'secondary');
-        color: map-get($colors, 'text');
-        font-size: 13px;
-        font-weight: 600;
-        font-variant-numeric: tabular-nums;
-        line-height: 14px;
-    }
-}
-
 @keyframes showCard {
     0% {
         transform: scale(0);

@@ -21,7 +21,6 @@
 <template>
     <input type="text"
            v-bind:class="classes"
-           v-bind:style="style"
            v-model="value"
            v-on:keyup.enter="save"
            pattern="[0-9]*(\.[0-9]+)?"
@@ -40,6 +39,7 @@ import EventBus from "../../../../../../helpers/event-bus";
 const swimlane = namespace("swimlane");
 
 const MINIMAL_WIDTH_IN_PX = 30;
+const MAXIMAL_WIDTH_IN_PX = 60;
 const NB_PX_PER_CHAR = 10;
 
 @Component
@@ -54,18 +54,18 @@ export default class EditRemainingEffort extends Vue {
 
     value = "";
 
-    get classes(): string {
-        return `taskboard-card-remaining-effort-input-${this.card.color}`;
-    }
+    get classes(): Array<string> {
+        const classes = [`taskboard-card-remaining-effort-input-${this.card.color}`];
 
-    get style(): string {
-        const width = NB_PX_PER_CHAR * (this.value.length + 1);
+        let width = NB_PX_PER_CHAR * this.value.length;
 
         if (width <= MINIMAL_WIDTH_IN_PX) {
-            return "";
+            return classes;
+        } else if (width > MAXIMAL_WIDTH_IN_PX) {
+            width = MAXIMAL_WIDTH_IN_PX;
         }
 
-        return `width: ${width}px;`;
+        return [...classes, `taskboard-card-remaining-effort-input-width-${width}`];
     }
 
     mounted(): void {
