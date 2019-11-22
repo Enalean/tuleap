@@ -25,10 +25,10 @@ use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\CLI\Command\ConfigGetCommand;
 use Tuleap\CLI\Command\ConfigSetCommand;
 use Tuleap\CLI\Command\DailyJobCommand;
-use Tuleap\CLI\Command\QueueSystemCheckCommand;
 use Tuleap\CLI\Command\ImportProjectXMLCommand;
 use Tuleap\CLI\Command\LaunchEveryMinuteJobCommand;
 use Tuleap\CLI\Command\ProcessSystemEventsCommand;
+use Tuleap\CLI\Command\QueueSystemCheckCommand;
 use Tuleap\CLI\Command\UserPasswordCommand;
 use Tuleap\CLI\Command\WorkerSupervisorCommand;
 use Tuleap\CLI\Command\WorkerSVNRootUpdateCommand;
@@ -37,14 +37,15 @@ use Tuleap\CLI\DelayExecution\ConditionalTuleapCronEnvExecutionDelayer;
 use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
 use Tuleap\CLI\DelayExecution\ExecutionDelayerRandomizedSleep;
 use Tuleap\DB\DBFactory;
+use Tuleap\FRS\CorrectFrsRepositoryPermissionsCommand;
+use Tuleap\Mail\AutomaticMailsLogger;
+use Tuleap\Mail\AutomaticMailsSender;
 use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\Queue\TaskWorker\TaskWorkerProcessCommand;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyRevoker;
-use TuleapCfg\Command\ProcessFactory;
-use Tuleap\Mail\AutomaticMailsSender;
 use Tuleap\User\IdleUsersDao;
-use Tuleap\Mail\AutomaticMailsLogger;
+use TuleapCfg\Command\ProcessFactory;
 
 (static function () {
     require_once __DIR__ . '/../vendor/autoload.php';
@@ -213,6 +214,16 @@ $CLI_command_collector->addCommand(
     static function () : WorkerSystemCtlCommand {
         return new WorkerSystemCtlCommand(
             new ProcessFactory(),
+        );
+    }
+);
+
+$CLI_command_collector->addCommand(
+    CorrectFrsRepositoryPermissionsCommand::NAME,
+    function (): CorrectFrsRepositoryPermissionsCommand {
+        return new CorrectFrsRepositoryPermissionsCommand(
+            new DirectoryIterator('/var/lib/tuleap/ftp/tuleap/'),
+            ProjectManager::instance()
         );
     }
 );
