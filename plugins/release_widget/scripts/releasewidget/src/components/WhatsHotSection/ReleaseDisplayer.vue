@@ -24,7 +24,7 @@
     >
         <release-header
             v-on:toggleReleaseDetails="toggleReleaseDetails()"
-            v-bind:release-data="displayed_release"
+            v-bind:release_data="displayed_release"
             v-bind:is-loading="is_loading"
             v-bind:class="{ 'project-release-toggle-closed': !is_open, 'disabled': is_loading}"
         />
@@ -33,8 +33,8 @@
                 {{ error_message }}
             </div>
             <div v-else data-test="display-release-data">
-                <release-badges v-bind:release-data="displayed_release"/>
-                <release-description v-bind:release-data="displayed_release"/>
+                <release-badges v-bind:release_data="displayed_release"/>
+                <release-description v-bind:release_data="displayed_release"/>
             </div>
         </div>
     </div>
@@ -59,9 +59,9 @@ import { FetchWrapperError } from "tlp";
 })
 export default class ReleaseDisplayer extends Vue {
     @Prop()
-    releaseData!: MilestoneData;
+    release_data!: MilestoneData;
     @Action
-    getEnhancedMilestones!: (releaseData: MilestoneData) => Promise<MilestoneData>;
+    getEnhancedMilestones!: (release_data: MilestoneData) => Promise<MilestoneData>;
 
     is_open = false;
     is_loading = true;
@@ -73,12 +73,12 @@ export default class ReleaseDisplayer extends Vue {
     }
 
     get displayed_release(): MilestoneData {
-        return this.release_data_enhanced ? this.release_data_enhanced : this.releaseData;
+        return this.release_data_enhanced ? this.release_data_enhanced : this.release_data;
     }
 
     async created(): Promise<void> {
         try {
-            this.release_data_enhanced = await this.getEnhancedMilestones(this.releaseData);
+            this.release_data_enhanced = await this.getEnhancedMilestones(this.release_data);
         } catch (rest_error) {
             await this.handle_error(rest_error);
         } finally {

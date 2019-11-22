@@ -5,8 +5,7 @@ exports[`ReleaseDescription Given user display widget, Then a good link to top p
   class="release-content-description"
 >
   <release-description-badges-tracker-stub
-    release-data="[object Object]"
-    releasedata="[object Object]"
+    release_data="[object Object]"
   />
    
   <div
@@ -44,7 +43,7 @@ exports[`ReleaseDescription Given user display widget, Then a good link to top p
     </h2>
      
     <burndown-chart-stub
-      releasedata="[object Object]"
+      release_data="[object Object]"
     />
   </div>
 </div>

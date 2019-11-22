@@ -36,14 +36,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { MilestoneData } from "../../type";
+import { Component } from "vue-property-decorator";
 import { State } from "vuex-class";
 
 @Component
 export default class RoadmapSection extends Vue {
-    @Prop()
-    readonly releaseData!: MilestoneData;
     @State
     readonly nb_backlog_items!: number;
     @State

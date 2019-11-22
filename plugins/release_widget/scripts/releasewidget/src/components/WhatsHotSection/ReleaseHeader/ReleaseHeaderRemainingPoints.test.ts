@@ -23,7 +23,7 @@ import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-com
 import { MilestoneData, StoreOptions } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
-let releaseData: MilestoneData;
+let release_data: MilestoneData;
 const component_options: ShallowMountOptions<ReleaseHeaderRemainingPoints> = {};
 
 describe("ReleaseHeaderRemainingEffort", () => {
@@ -46,7 +46,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             state: {}
         };
 
-        releaseData = {
+        release_data = {
             label: "mile",
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
@@ -55,13 +55,13 @@ describe("ReleaseHeaderRemainingEffort", () => {
         };
 
         component_options.propsData = {
-            releaseData
+            release_data
         };
     });
 
     describe("Display remaining points", () => {
         it("When there is negative remaining points, Then it displays and percent in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -74,7 +74,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -95,7 +95,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
         });
 
         it("When there isn't remaining effort points, Then 0 is displayed and message in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -107,7 +107,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -124,7 +124,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
         });
 
         it("When there is remaining effort point and is null, Then 0 is displayed and message in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -137,7 +137,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -154,7 +154,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
         });
 
         it("When there is remaining effort point, not null and greater than 0, Then it's displayed and percent in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -167,7 +167,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -184,7 +184,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
         });
 
         it("When there is remaining effort point, equal at 0, Then it's displayed and percent in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -197,7 +197,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -217,7 +217,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
         });
 
         it("When there isn't initial effort point, Then remaining effort is displayed and message in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -229,7 +229,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -246,7 +246,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
         });
 
         it("When there is initial effort point but null, Then remaining effort is displayed and message in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -259,7 +259,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -276,7 +276,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
         });
 
         it("When there is initial effort point but equal at 0, Then remaining effort is displayed and message in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -289,7 +289,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -306,7 +306,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
         });
 
         it("When remaining effort > initial effort, Then remaining effort is displayed and message in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -319,7 +319,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -338,7 +338,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
         });
 
         it("When remaining effort == initial effort, Then remaining effort is displayed and marked as success", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -351,7 +351,7 @@ describe("ReleaseHeaderRemainingEffort", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);

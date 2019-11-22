@@ -47,7 +47,7 @@ import { getBurndownData } from "../../../../api/rest-querier";
 })
 export default class BurndownChart extends Vue {
     @Prop()
-    readonly releaseData!: MilestoneData;
+    readonly release_data!: MilestoneData;
 
     is_loading = true;
     message_error_rest: string | null = null;
@@ -57,10 +57,10 @@ export default class BurndownChart extends Vue {
     }
 
     async created(): Promise<void> {
-        if (!this.releaseData.burndown_data) {
+        if (!this.release_data.burndown_data) {
             try {
-                this.releaseData.burndown_data = await getBurndownData(
-                    this.releaseData.id,
+                this.release_data.burndown_data = await getBurndownData(
+                    this.release_data.id,
                     this.$store.state
                 );
             } catch (rest_error) {
@@ -74,26 +74,26 @@ export default class BurndownChart extends Vue {
     }
 
     get has_error_duration(): boolean {
-        if (!this.releaseData.burndown_data) {
+        if (!this.release_data.burndown_data) {
             return true;
         }
 
         return (
-            this.releaseData.burndown_data.duration === null ||
-            this.releaseData.burndown_data.duration === 0
+            this.release_data.burndown_data.duration === null ||
+            this.release_data.burndown_data.duration === 0
         );
     }
 
     get has_error_start_date(): boolean {
-        return !this.releaseData.start_date;
+        return !this.release_data.start_date;
     }
 
     get is_under_calculation(): boolean {
-        if (!this.releaseData.burndown_data) {
+        if (!this.release_data.burndown_data) {
             return false;
         }
 
-        return this.releaseData.burndown_data.is_under_calculation;
+        return this.release_data.burndown_data.is_under_calculation;
     }
 
     async handle_error(rest_error: FetchWrapperError): Promise<void> {

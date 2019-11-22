@@ -20,7 +20,7 @@
 <template functional>
     <div class="release-number-artifact">
         <div
-            v-for="tracker in props.releaseData.number_of_artifact_by_trackers"
+            v-for="tracker in props.release_data.number_of_artifact_by_trackers"
             v-bind:key="tracker.id"
             class="release-number-artifacts-tracker"
             v-bind:class="['release-number-artifacts-tracker-' + tracker.color_name]"

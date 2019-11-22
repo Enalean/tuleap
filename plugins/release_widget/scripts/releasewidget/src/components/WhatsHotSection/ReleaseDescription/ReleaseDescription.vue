@@ -19,9 +19,9 @@
 
 <template>
     <div class="release-content-description">
-        <release-description-badges-tracker v-bind:release-data="releaseData"/>
+        <release-description-badges-tracker v-bind:release_data="release_data"/>
         <div class="release-description-row">
-            <div class="release-description" v-dompurify-html="releaseData.description"></div>
+            <div class="release-description" v-dompurify-html="release_data.description"></div>
             <a v-if="get_overview_link !== null" v-bind:href="get_overview_link" data-test="overview-link">
                 <i class="release-description-link-icon fa fa-long-arrow-right"></i>
                 <translate> Go to release overview </translate>
@@ -29,7 +29,7 @@
         </div>
         <div class="release-chart-burndown-row">
             <h2 class="tlp-pane-subtitle" v-translate>Burndown</h2>
-            <burndown-chart v-bind:release-data="releaseData"/>
+            <burndown-chart v-bind:release_data="release_data"/>
         </div>
     </div>
 </template>
@@ -47,21 +47,21 @@ import BurndownChart from "./Chart/BurndownChart.vue";
 })
 export default class ReleaseDescription extends Vue {
     @Prop()
-    readonly releaseData!: MilestoneData;
+    readonly release_data!: MilestoneData;
     @State
     readonly project_id!: number;
 
     get get_overview_link(): string | null {
-        if (!this.releaseData.planning) {
+        if (!this.release_data.planning) {
             return null;
         }
         return (
             "/plugins/agiledashboard/?group_id=" +
             encodeURIComponent(this.project_id) +
             "&planning_id=" +
-            encodeURIComponent(this.releaseData.planning.id) +
+            encodeURIComponent(this.release_data.planning.id) +
             "&action=show&aid=" +
-            encodeURIComponent(this.releaseData.id) +
+            encodeURIComponent(this.release_data.id) +
             "&pane=details"
         );
     }
