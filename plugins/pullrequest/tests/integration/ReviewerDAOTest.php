@@ -22,10 +22,44 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer;
 
+use ParagonIE\EasyDB\EasyStatement;
 use PHPUnit\Framework\TestCase;
+use Tuleap\DB\DBFactory;
 
 final class ReviewerDAOTest extends TestCase
 {
+    /**
+     * @var int[]
+     */
+    private static $reviewers_id = [];
+
+    public static function setUpBeforeClass(): void
+    {
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        self::$reviewers_id[] = (int) $db->insertReturnId(
+            'user',
+            [
+                'user_name' => 'pr_reviewer_1',
+                'email' => 'pr_reviewer_1@example.com',
+            ]
+        );
+        self::$reviewers_id[] = (int) $db->insertReturnId(
+            'user',
+            [
+                'user_name' => 'pr_reviewer_2',
+                'email' => 'pr_reviewer_2@example.com',
+            ]
+        );
+    }
+
+    public static function tearDownAfterClass() : void
+    {
+        $db                       = DBFactory::getMainTuleapDBConnection()->getDB();
+
+        $user_to_delete_condition = EasyStatement::open()->in('user_id IN (?*)', self::$reviewers_id);
+        $db->safeQuery("DELETE FROM user WHERE $user_to_delete_condition", $user_to_delete_condition->values());
+    }
+
     public function testCanSearchReviewersOnANotExistingPullRequest(): void
     {
         $dao = new ReviewerDAO();
@@ -33,5 +67,22 @@ final class ReviewerDAOTest extends TestCase
         $user_rows = $dao->searchReviewers(9999999);
 
         $this->assertEmpty($user_rows);
+    }
+
+    public function testCanSetReviewersOnAPullRequest(): void
+    {
+        $dao = new ReviewerDAO();
+        $dao->setReviewers(1, ...self::$reviewers_id);
+
+        $new_reviewer_rows = $dao->searchReviewers(1);
+
+        $reviewer_ids = [];
+        foreach ($new_reviewer_rows as $new_reviewer_row) {
+            $reviewer_ids[] = $new_reviewer_row['user_id'];
+        }
+        $this->assertEqualsCanonicalizing(self::$reviewers_id, $reviewer_ids);
+
+        $dao->setReviewers(1);
+        $this->assertEmpty($dao->searchReviewers(1));
     }
 }

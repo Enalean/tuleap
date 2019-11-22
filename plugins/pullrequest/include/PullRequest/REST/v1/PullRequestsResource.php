@@ -55,6 +55,7 @@ use Tuleap\Label\REST\UnableToAddAndRemoveSameLabelException;
 use Tuleap\Label\REST\UnableToAddEmptyLabelException;
 use Tuleap\Label\UnknownLabelException;
 use Tuleap\Project\Label\LabelDao;
+use Tuleap\Project\REST\UserRESTReferenceRetriever;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
@@ -92,9 +93,13 @@ use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestWithGitReference;
+use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerRepresentationInformationExtractor;
+use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersPUTRepresentation;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersRepresentation;
 use Tuleap\PullRequest\Reviewer\ReviewerDAO;
 use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
+use Tuleap\PullRequest\Reviewer\ReviewerUpdater;
+use Tuleap\PullRequest\Reviewer\UserCannotBeAddedAsReviewerException;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
 use Tuleap\PullRequest\Timeline\Factory as TimelineFactory;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
@@ -1159,7 +1164,7 @@ class PullRequestsResource extends AuthenticatedResource
      */
     public function optionsReviewers(int $id): void
     {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPut();
     }
 
     /**
@@ -1186,6 +1191,43 @@ class PullRequestsResource extends AuthenticatedResource
         $reviewer_retrievers = new ReviewerRetriever($this->user_manager, new ReviewerDAO());
 
         return ReviewersRepresentation::fromUsers(...$reviewer_retrievers->getReviewers($pull_request));
+    }
+
+    /**
+     * Set pull request's reviewers
+     *
+     * @url PUT {id}/reviewers
+     *
+     * @status 204
+     *
+     * @param int $id Pull request ID
+     * @param ReviewersPUTRepresentation $representation
+     *
+     * @throws RestException 400
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    protected function putReviewers(int $id, ReviewersPUTRepresentation $representation): void
+    {
+        $this->checkAccess();
+        $this->optionsReviewers($id);
+
+        $pull_request = $this->getWritablePullRequestWithGitReference($id);
+
+        $information_extractor = new ReviewerRepresentationInformationExtractor(
+            new UserRESTReferenceRetriever($this->user_manager),
+        );
+        $users = $information_extractor->getUsers($representation);
+
+        $reviewer_updater = new ReviewerUpdater(new ReviewerDAO(), $this->permission_checker);
+        try {
+            $reviewer_updater->updatePullRequestReviewers($pull_request->getPullRequest(), ...$users);
+        } catch (UserCannotBeAddedAsReviewerException $exception) {
+            throw new RestException(
+                400,
+                'User #' . $exception->getUser()->getId() . ' cannot access this pull request'
+            );
+        }
     }
 
     private function checkLimit($limit)
