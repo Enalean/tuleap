@@ -22,7 +22,13 @@ import { Card, CardPosition, ColumnDefinition, Swimlane } from "../../type";
 export interface SwimlaneState {
     swimlanes: Array<Swimlane>;
     is_loading_swimlanes: boolean;
-    last_hovered_drop_zone?: HTMLElement;
+    last_hovered_drop_zone?: Dropzone;
+}
+
+export interface Dropzone {
+    swimlane_id: number;
+    column_id: number;
+    is_drop_rejected: boolean;
 }
 
 export interface AddChildrenToSwimlanePayload {

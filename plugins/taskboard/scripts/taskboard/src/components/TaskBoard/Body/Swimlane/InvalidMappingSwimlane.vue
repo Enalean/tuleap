@@ -20,7 +20,7 @@
 <template>
     <div class="taskboard-swimlane">
         <parent-cell v-bind:swimlane="swimlane"/>
-        <cell-for-solo-card v-for="col of columns" v-bind:key="col.id" v-bind:column="col"/>
+        <cell-for-solo-card v-for="col of columns" v-bind:key="col.id" v-bind:column="col" v-bind:swimlane="swimlane"/>
     </div>
 </template>
 <script lang="ts">

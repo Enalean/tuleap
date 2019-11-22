@@ -24,8 +24,21 @@ import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test"
 describe("CellDisallowsDropOverlay", () => {
     it("displays div with an icon and an error message", async () => {
         const wrapper = shallowMount(CellDisallowsDropOverlay, {
+            propsData: {
+                isDropRejected: true
+            },
             localVue: await createTaskboardLocalVue()
         });
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("Does not render if the drop is not rejected", async () => {
+        const wrapper = shallowMount(CellDisallowsDropOverlay, {
+            propsData: {
+                isDropRejected: false
+            },
+            localVue: await createTaskboardLocalVue()
+        });
+        expect(wrapper.isEmpty()).toBe(true);
     });
 });

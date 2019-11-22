@@ -107,3 +107,18 @@ function isCardInEditMode(card: Card): boolean {
 
     return card.remaining_effort.is_in_edit_mode;
 }
+
+export const does_cell_reject_drop = (state: SwimlaneState) => (
+    swimlane: Swimlane,
+    column: ColumnDefinition
+): boolean => {
+    if (!state.last_hovered_drop_zone) {
+        return false;
+    }
+
+    return (
+        state.last_hovered_drop_zone.is_drop_rejected === true &&
+        state.last_hovered_drop_zone.column_id === column.id &&
+        state.last_hovered_drop_zone.swimlane_id === swimlane.card.id
+    );
+};

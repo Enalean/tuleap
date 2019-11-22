@@ -13,6 +13,7 @@ exports[`SoloSwimlane displays the parent card in Done column when status maps t
     data-accepted-trackers-ids="101,102"
     data-column-id="2"
     data-swimlane-id="43"
+    swimlane="[object Object]"
   >
     <!---->
   </cell-for-solo-card-stub>
@@ -21,6 +22,7 @@ exports[`SoloSwimlane displays the parent card in Done column when status maps t
     data-accepted-trackers-ids="101,102"
     data-column-id="3"
     data-swimlane-id="43"
+    swimlane="[object Object]"
   >
     <card-with-remaining-effort-stub
       card="[object Object]"

@@ -18,7 +18,8 @@
   -->
 
 <template functional>
-    <div class="taskboard-drop-not-accepted-overlay">
+    <div v-if="props.isDropRejected" class="taskboard-drop-not-accepted-overlay">
+
         <i class="fa fa-ban taskboard-drop-not-accepted-icon"></i>
         <p v-translate>This column does not allow to drop this card here.</p>
     </div>

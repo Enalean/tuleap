@@ -37,7 +37,8 @@ async function createWrapper(
                     column: { columns }
                 } as RootState,
                 getters: {
-                    "column/accepted_trackers_ids": (): number[] => [101, 102]
+                    "column/accepted_trackers_ids": (): number[] => [101, 102],
+                    "swimlane/does_cell_reject_drop": (): boolean => false
                 }
             })
         },
