@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,27 +18,53 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Repository\View;
 
 class LanguageDetectorForPrismJS
 {
-    private static $EXTENSIONS = [
-        'js'   => 'javascript',
-        'py'   => 'python',
-        'rb'   => 'ruby',
-        'ps1'  => 'powershell',
-        'psm1' => 'powershell',
-        'sh'   => 'bash',
-        'bat'  => 'batch',
-        'h'    => 'c',
-        'tex'  => 'latex',
-        'vue'  => 'javascript',
-        'mkd'  => 'markdown',
-        'yml'  => 'yaml'
+    private const FILENAMES = [
+        'CMakeLists.txt' => 'cmake'
     ];
 
-    public function getLanguageFromExtension($extension)
+    private const EXTENSIONS = [
+        'js'       => 'javascript',
+        'py'       => 'python',
+        'rb'       => 'ruby',
+        'ps1'      => 'powershell',
+        'psm1'     => 'powershell',
+        'sh'       => 'bash',
+        'bat'      => 'batch',
+        'h'        => 'c',
+        'tex'      => 'latex',
+        'vue'      => 'javascript',
+        'mkd'      => 'markdown',
+        'yml'      => 'yaml',
+        'cmake.in' => 'cmake'
+    ];
+
+    public function getLanguage(string $filename): string
     {
-        return isset(self::$EXTENSIONS[$extension]) ? self::$EXTENSIONS[$extension] : $extension;
+        if (isset(self::FILENAMES[$filename])) {
+            return self::FILENAMES[$filename];
+        }
+
+        $path_information = pathinfo($filename);
+        if (! isset($path_information['extension'])) {
+            return '';
+        }
+
+        $extension             = $path_information['extension'];
+        $second_extension_part = pathinfo($path_information['filename'], PATHINFO_EXTENSION);
+
+        if ($second_extension_part !== '') {
+            $composite_extension = $second_extension_part . '.' . $extension;
+            if (isset(self::EXTENSIONS[$composite_extension])) {
+                return self::EXTENSIONS[$composite_extension];
+            }
+        }
+
+        return self::EXTENSIONS[$extension] ?? $extension;
     }
 }

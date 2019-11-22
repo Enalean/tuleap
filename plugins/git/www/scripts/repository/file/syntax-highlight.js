@@ -149,6 +149,7 @@ import "prismjs/components/prism-xojo";
 import "prismjs/components/prism-yaml";
 import "prismjs/components/prism-hcl";
 import "prismjs/components/prism-jsx";
+import "prismjs/components/prism-cmake";
 
 document.addEventListener("DOMContentLoaded", () => {
     Prism.highlightAll();
