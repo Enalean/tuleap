@@ -18,20 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\UserMapping;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-require_once(__DIR__ . '/../bootstrap.php');
+require_once __DIR__ . '/../bootstrap.php';
 
-class UserMappingManagerTest extends TuleapTestCase
+class UserMappingManagerTest extends TestCase
 {
-    public function itThrowsAnExceptionIfTheMappingCanNotBeFound()
+    use MockeryPHPUnitIntegration;
+
+    public function testItThrowsAnExceptionIfTheMappingCanNotBeFound(): void
     {
-        $dao = mock('Tuleap\OpenIDConnectClient\UserMapping\UserMappingDao');
-        stub($dao)->searchByProviderIdAndUserId()->returns(false);
-        $provider = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
-        $user = mock('PFUser');
+        $dao = \Mockery::spy(\Tuleap\OpenIDConnectClient\UserMapping\UserMappingDao::class);
+        $dao->shouldReceive('searchByProviderIdAndUserId')->andReturns(false);
+        $provider = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $user = \Mockery::spy(\PFUser::class);
         $user_mapping_manager = new UserMappingManager($dao);
 
         $this->expectException('Tuleap\OpenIDConnectClient\UserMapping\UserMappingNotFoundException');

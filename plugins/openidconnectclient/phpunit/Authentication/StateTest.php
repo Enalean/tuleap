@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\OpenIDConnectClient\Authentication\State;
+declare(strict_types=1);
+
+namespace Tuleap\OpenIDConnectClient\Authentication;
+
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
 require_once(__DIR__ . '/../bootstrap.php');
 
-class StateTest extends TuleapTestCase
+class StateTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    public function itCreatesStateFromSignedState()
+    public function testItCreatesStateFromSignedState(): void
     {
         $secret_key  = 'Tuleap';
         $return_to   = '/return_to';
@@ -35,6 +41,6 @@ class StateTest extends TuleapTestCase
         $state        = new State($provider_id, $return_to, $secret_key, $nonce);
         $signed_state = $state->getSignedState();
 
-        $this->assertEqual($state, State::createFromSignature($signed_state, $return_to, $secret_key, $nonce));
+        $this->assertEquals($state, State::createFromSignature($signed_state, $return_to, $secret_key, $nonce));
     }
 }

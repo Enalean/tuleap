@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\OpenIDConnectClient\Provider;
+
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 require_once(__DIR__ . '/../bootstrap.php');
 
-use Tuleap\OpenIDConnectClient\Provider\Provider;
-use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
-
-class ProviderManagerTest extends TuleapTestCase
+class ProviderManagerTest extends TestCase
 {
-    public function itCreatesNewProvider()
+    use MockeryPHPUnitIntegration;
+
+    public function testItCreatesNewProvider(): void
     {
-        $provider_dao     = mock('Tuleap\OpenIDConnectClient\Provider\ProviderDao');
+        $provider_dao     = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\ProviderDao::class);
         $provider_manager = new ProviderManager($provider_dao);
 
-        $provider_dao->expectOnce('create');
+        $provider_dao->shouldReceive('create')->once();
 
         $provider_manager->create(
             'Provider',
@@ -44,12 +50,12 @@ class ProviderManagerTest extends TuleapTestCase
         );
     }
 
-    public function itCreatesNewProviderWithAnEmptyUserInfoEndpoint()
+    public function testItCreatesNewProviderWithAnEmptyUserInfoEndpoint(): void
     {
-        $provider_dao     = mock('Tuleap\OpenIDConnectClient\Provider\ProviderDao');
+        $provider_dao     = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\ProviderDao::class);
         $provider_manager = new ProviderManager($provider_dao);
 
-        $provider_dao->expectOnce('create');
+        $provider_dao->shouldReceive('create')->once();
 
         $provider_manager->create(
             'Provider',
@@ -63,10 +69,9 @@ class ProviderManagerTest extends TuleapTestCase
         );
     }
 
-    public function itUpdatesProvider()
+    public function testItUpdatesProvider(): void
     {
-        $provider_dao     = mock('Tuleap\OpenIDConnectClient\Provider\ProviderDao');
-        $provider_dao->setReturnValue('save', true);
+        $provider_dao     = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\ProviderDao::class);
         $provider_manager = new ProviderManager($provider_dao);
         $provider         = new Provider(
             0,
@@ -81,18 +86,18 @@ class ProviderManagerTest extends TuleapTestCase
             'fiesta_red'
         );
 
-        $provider_dao->expectOnce('save');
+        $provider_dao->shouldReceive('save')->once()->andReturns(true);
 
         $provider_manager->update($provider);
     }
 
-    public function itChecksDataBeforeManipulatingAProvider()
+    public function testItChecksDataBeforeManipulatingAProvider(): void
     {
-        $provider_dao     = mock('Tuleap\OpenIDConnectClient\Provider\ProviderDao');
+        $provider_dao     = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\ProviderDao::class);
         $provider_manager = new ProviderManager($provider_dao);
 
-        $provider_dao->expectNever('create');
-        $provider_dao->expectNever('save');
+        $provider_dao->shouldReceive('create')->never();
+        $provider_dao->shouldReceive('save')->never();
         $this->expectException('Tuleap\OpenIDConnectClient\Provider\ProviderMalformedDataException');
 
         $provider         = new Provider(

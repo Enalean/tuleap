@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Authentication;
+
+use Firebase\JWT\JWT;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
 require_once(__DIR__ . '/../bootstrap.php');
 
-use Firebase\JWT\JWT;
-
-class IDTokenVerifierTest extends \TuleapTestCase
+class IDTokenVerifierTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     private $rsa_key;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->rsa_key = openssl_pkey_new(
@@ -40,9 +46,9 @@ class IDTokenVerifierTest extends \TuleapTestCase
         );
     }
 
-    public function itRejectsIDTokenIfPartsAreMissingInTheJWT()
+    public function testItRejectsIDTokenIfPartsAreMissingInTheJWT(): void
     {
-        $provider          = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
+        $provider          = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
         $nonce             = 'random_string';
         $id_token_verifier = new IDTokenVerifier();
         $fake_id_token     = 'aaaaa.aaaaa';
@@ -51,9 +57,9 @@ class IDTokenVerifierTest extends \TuleapTestCase
         $id_token_verifier->validate($provider, $nonce, $fake_id_token);
     }
 
-    public function itRejectsIDTokenIfPayloadCantBeRead()
+    public function testItRejectsIDTokenIfPayloadCantBeRead(): void
     {
-        $provider          = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
+        $provider          = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
         $nonce             = 'random_string';
         $id_token_verifier = new IDTokenVerifier();
         $fake_id_token     = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.' .
@@ -65,11 +71,11 @@ class IDTokenVerifierTest extends \TuleapTestCase
         $id_token_verifier->validate($provider, $nonce, $fake_id_token);
     }
 
-    public function itRejectsIDTokenIfSubjectIdentifierIsNotPresent()
+    public function testItRejectsIDTokenIfSubjectIdentifierIsNotPresent(): void
     {
-        $provider = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
-        stub($provider)->getAuthorizationEndpoint()->returns('https://example.com/oauth2/auth');
-        stub($provider)->getClientId()->returns('client_id');
+        $provider = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
+        $provider->shouldReceive('getClientId')->andReturns('client_id');
         $nonce    = 'random_string';
 
         $id_token_verifier = new IDTokenVerifier();
@@ -86,11 +92,11 @@ class IDTokenVerifierTest extends \TuleapTestCase
         $id_token_verifier->validate($provider, $nonce, $id_token);
     }
 
-    public function itRejectsIDTokenIfAudienceClaimIsInvalid()
+    public function testItRejectsIDTokenIfAudienceClaimIsInvalid(): void
     {
-        $provider = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
-        stub($provider)->getAuthorizationEndpoint()->returns('https://example.com/oauth2/auth');
-        stub($provider)->getClientId()->returns('client_id');
+        $provider = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
+        $provider->shouldReceive('getClientId')->andReturns('client_id');
         $nonce    = 'random_string';
 
         $id_token_verifier = new IDTokenVerifier();
@@ -108,11 +114,11 @@ class IDTokenVerifierTest extends \TuleapTestCase
         $id_token_verifier->validate($provider, $nonce, $id_token);
     }
 
-    public function itRejectsIDTokenIfAudienceClaimIsNotPresentInTheList()
+    public function testItRejectsIDTokenIfAudienceClaimIsNotPresentInTheList(): void
     {
-        $provider = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
-        stub($provider)->getAuthorizationEndpoint()->returns('https://example.com/oauth2/auth');
-        stub($provider)->getClientId()->returns('client_id');
+        $provider = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
+        $provider->shouldReceive('getClientId')->andReturns('client_id');
         $nonce    = 'random_string';
 
         $id_token_verifier = new IDTokenVerifier();
@@ -130,11 +136,11 @@ class IDTokenVerifierTest extends \TuleapTestCase
         $id_token_verifier->validate($provider, $nonce, $id_token);
     }
 
-    public function itRejectsIDTokenIfIssuerIdentifierIsInvalid()
+    public function testItRejectsIDTokenIfIssuerIdentifierIsInvalid(): void
     {
-        $provider = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
-        stub($provider)->getAuthorizationEndpoint()->returns('https://example.com/oauth2/auth');
-        stub($provider)->getClientId()->returns('client_id');
+        $provider = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
+        $provider->shouldReceive('getClientId')->andReturns('client_id');
         $nonce    = 'random_string';
 
         $id_token_verifier = new IDTokenVerifier();
@@ -153,11 +159,11 @@ class IDTokenVerifierTest extends \TuleapTestCase
         $id_token_verifier->validate($provider, $nonce, $id_token);
     }
 
-    public function itRejectsIDTokenIfNonceIsInvalid()
+    public function testItRejectsIDTokenIfNonceIsInvalid(): void
     {
-        $provider = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
-        stub($provider)->getAuthorizationEndpoint()->returns('https://example.com/oauth2/auth');
-        stub($provider)->getClientId()->returns('client_id');
+        $provider = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
+        $provider->shouldReceive('getClientId')->andReturns('client_id');
         $nonce    = 'random_string';
 
         $id_token_verifier = new IDTokenVerifier();
@@ -176,11 +182,11 @@ class IDTokenVerifierTest extends \TuleapTestCase
         $id_token_verifier->validate($provider, $nonce, $id_token);
     }
 
-    public function itAcceptsAValidIDToken()
+    public function testItAcceptsAValidIDToken(): void
     {
-        $provider = mock('Tuleap\OpenIDConnectClient\Provider\Provider');
-        stub($provider)->getAuthorizationEndpoint()->returns('https://example.com/oauth2/auth');
-        stub($provider)->getClientId()->returns('client_id_2');
+        $provider = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
+        $provider->shouldReceive('getClientId')->andReturns('client_id_2');
         $nonce    = 'random_string';
 
         $id_token_verifier = new IDTokenVerifier();
@@ -197,6 +203,6 @@ class IDTokenVerifierTest extends \TuleapTestCase
         );
 
         $verified_id_token = $id_token_verifier->validate($provider, $nonce, $id_token);
-        $this->assertIdentical($verified_id_token, $id_token_content);
+        $this->assertSame($verified_id_token, $id_token_content);
     }
 }

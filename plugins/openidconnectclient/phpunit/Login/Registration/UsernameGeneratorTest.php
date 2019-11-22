@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,20 @@
 
 namespace Tuleap\OpenIDConnectClient\Login\Registration;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
 require_once(__DIR__ . '/../../bootstrap.php');
 
-class UsernameGeneratorTest extends TuleapTestCase
+class UsernameGeneratorTest extends TestCase
 {
-    public function itGeneratesUsernameFromPreferredUsername()
+    use MockeryPHPUnitIntegration;
+
+    public function testItGeneratesUsernameFromPreferredUsername(): void
     {
-        $rule = mock('Rule_UserName');
-        stub($rule)->isUnixValid()->returns(true);
-        stub($rule)->isValid()->returns(true);
+        $rule = \Mockery::spy(\Rule_UserName::class);
+        $rule->shouldReceive('isUnixValid')->andReturns(true);
+        $rule->shouldReceive('isValid')->andReturns(true);
         $username_generator = new UsernameGenerator($rule);
 
         $generated_username = $username_generator->getUsername(
@@ -38,14 +41,14 @@ class UsernameGeneratorTest extends TuleapTestCase
                 'preferred_username' => 'mypreferredusername'
             )
         );
-        $this->assertEqual('mypreferredusername', $generated_username);
+        $this->assertEquals('mypreferredusername', $generated_username);
     }
 
-    public function itGeneratesUsernameFromGivenAndFamilyNames()
+    public function testItGeneratesUsernameFromGivenAndFamilyNames(): void
     {
-        $rule = mock('Rule_UserName');
-        stub($rule)->isUnixValid()->returns(true);
-        stub($rule)->isValid()->returns(true);
+        $rule = \Mockery::spy(\Rule_UserName::class);
+        $rule->shouldReceive('isUnixValid')->andReturns(true);
+        $rule->shouldReceive('isValid')->andReturns(true);
         $username_generator = new UsernameGenerator($rule);
 
         $generated_username = $username_generator->getUsername(
@@ -54,14 +57,14 @@ class UsernameGeneratorTest extends TuleapTestCase
                 'family_name' => 'Family Name'
             )
         );
-        $this->assertEqual('gfamilyname', $generated_username);
+        $this->assertEquals('gfamilyname', $generated_username);
     }
 
-    public function itGeneratesUsernameFromFamilyName()
+    public function testItGeneratesUsernameFromFamilyName(): void
     {
-        $rule = mock('Rule_UserName');
-        stub($rule)->isUnixValid()->returns(true);
-        stub($rule)->isValid()->returns(true);
+        $rule = \Mockery::spy(\Rule_UserName::class);
+        $rule->shouldReceive('isUnixValid')->andReturns(true);
+        $rule->shouldReceive('isValid')->andReturns(true);
         $username_generator = new UsernameGenerator($rule);
 
         $generated_username = $username_generator->getUsername(
@@ -69,14 +72,14 @@ class UsernameGeneratorTest extends TuleapTestCase
                 'family_name' => 'Family Name'
             )
         );
-        $this->assertEqual('familyname', $generated_username);
+        $this->assertEquals('familyname', $generated_username);
     }
 
-    public function itGeneratesUsernameFromGivenName()
+    public function testItGeneratesUsernameFromGivenName(): void
     {
-        $rule = mock('Rule_UserName');
-        stub($rule)->isUnixValid()->returns(true);
-        stub($rule)->isValid()->returns(true);
+        $rule = \Mockery::spy(\Rule_UserName::class);
+        $rule->shouldReceive('isUnixValid')->andReturns(true);
+        $rule->shouldReceive('isValid')->andReturns(true);
         $username_generator = new UsernameGenerator($rule);
 
         $generated_username = $username_generator->getUsername(
@@ -84,15 +87,14 @@ class UsernameGeneratorTest extends TuleapTestCase
                 'given_name' => 'Given Name'
             )
         );
-        $this->assertEqual('givenname', $generated_username);
+        $this->assertEquals('givenname', $generated_username);
     }
 
-    public function itGeneratesUsernameWhenASimilarOneAlreadyExist()
+    public function testItGeneratesUsernameWhenASimilarOneAlreadyExist(): void
     {
-        $rule = mock('Rule_UserName');
-        stub($rule)->isUnixValid()->returns(true);
-        stub($rule)->isValid()->returnsAt(0, false);
-        stub($rule)->isValid()->returnsAt(1, true);
+        $rule = \Mockery::spy(\Rule_UserName::class);
+        $rule->shouldReceive('isUnixValid')->andReturns(true);
+        $rule->shouldReceive('isValid')->andReturns(false, true);
         $username_generator = new UsernameGenerator($rule);
 
         $generated_username = $username_generator->getUsername(
@@ -100,25 +102,25 @@ class UsernameGeneratorTest extends TuleapTestCase
                 'preferred_username' => 'mypreferredusername'
             )
         );
-        $this->assertEqual('mypreferredusername1', $generated_username);
+        $this->assertEquals('mypreferredusername1', $generated_username);
     }
 
-    public function itNeedsAtLeastGivenOrFamilyNamesToGenerateUsername()
+    public function testItNeedsAtLeastGivenOrFamilyNamesToGenerateUsername(): void
     {
-        $rule = mock('Rule_UserName');
-        stub($rule)->isUnixValid()->returns(true);
-        stub($rule)->isValid()->returns(true);
+        $rule = \Mockery::spy(\Rule_UserName::class);
+        $rule->shouldReceive('isUnixValid')->andReturns(true);
+        $rule->shouldReceive('isValid')->andReturns(true);
         $username_generator = new UsernameGenerator($rule);
 
         $this->expectException('Tuleap\OpenIDConnectClient\Login\Registration\NotEnoughDataToGenerateUsernameException');
         $username_generator->getUsername(array());
     }
 
-    public function itNeedsDataCompatibleWithUnixUsername()
+    public function testItNeedsDataCompatibleWithUnixUsername(): void
     {
-        $rule = mock('Rule_UserName');
-        stub($rule)->isUnixValid()->returns(false);
-        stub($rule)->isValid()->returns(true);
+        $rule = \Mockery::spy(\Rule_UserName::class);
+        $rule->shouldReceive('isUnixValid')->andReturns(false);
+        $rule->shouldReceive('isValid')->andReturns(true);
         $username_generator = new UsernameGenerator($rule);
 
         $this->expectException('Tuleap\OpenIDConnectClient\Login\Registration\DataIncompatibleWithUsernameGenerationException');
@@ -130,12 +132,11 @@ class UsernameGeneratorTest extends TuleapTestCase
         );
     }
 
-    public function itTriesToUseGivenAndFamilyNamesEvenIfPreferredUsernameIsNotCompatible()
+    public function testItTriesToUseGivenAndFamilyNamesEvenIfPreferredUsernameIsNotCompatible(): void
     {
-        $rule = mock('Rule_UserName');
-        stub($rule)->isUnixValid()->returnsAt(0, false);
-        stub($rule)->isUnixValid()->returnsAt(1, true);
-        stub($rule)->isValid()->returns(true);
+        $rule = \Mockery::spy(\Rule_UserName::class);
+        $rule->shouldReceive('isUnixValid')->andReturns(false, true);
+        $rule->shouldReceive('isValid')->andReturns(true);
         $username_generator = new UsernameGenerator($rule);
 
         $generated_username = $username_generator->getUsername(
@@ -145,6 +146,6 @@ class UsernameGeneratorTest extends TuleapTestCase
                 'family_name'        => 'Family Name'
             )
         );
-        $this->assertEqual('gfamilyname', $generated_username);
+        $this->assertEquals('gfamilyname', $generated_username);
     }
 }
