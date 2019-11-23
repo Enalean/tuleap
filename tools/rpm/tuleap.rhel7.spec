@@ -490,6 +490,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_svn/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/ldap/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
@@ -1077,6 +1078,7 @@ fi
 %files plugin-mediawiki
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/mediawiki
+%{APP_DIR}/src/www/assets/mediawiki
 %dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki
 %dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki/master
 %dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki/projects
