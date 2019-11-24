@@ -17,16 +17,29 @@
 class Text
 {
     public $t;
-    public $x=0,$y=0,$halign="left",$valign="top",$color=array(0,0,0);
-    public $hide=false, $dir=0;
-    public $iScalePosY=null,$iScalePosX=null;
+    public $x=0;
+    public $y=0;
+    public $halign="left";
+    public $valign="top";
+    public $color=array(0,0,0);
+    public $hide=false;
+    public $dir=0;
+    public $iScalePosY=null;
+    public $iScalePosX=null;
     public $iWordwrap=0;
-    public $font_family=FF_DEFAULT,$font_style=FS_NORMAL; // old. FF_FONT1
+    public $font_family=FF_DEFAULT;
+    public $font_style=FS_NORMAL; // old. FF_FONT1
     protected $boxed=false; // Should the text be boxed
     protected $paragraph_align="left";
-    protected $icornerradius=0,$ishadowwidth=3;
-    protected $fcolor='white',$bcolor='black',$shadow=false;
-    protected $iCSIMarea='',$iCSIMalt='',$iCSIMtarget='',$iCSIMWinTarget='';
+    protected $icornerradius=0;
+    protected $ishadowwidth=3;
+    protected $fcolor='white';
+    protected $bcolor='black';
+    protected $shadow=false;
+    protected $iCSIMarea='';
+    protected $iCSIMalt='';
+    protected $iCSIMtarget='';
+    protected $iCSIMWinTarget='';
     private $iBoxType = 1; // Which variant of filled box around text we want
 
     // for __get, __set

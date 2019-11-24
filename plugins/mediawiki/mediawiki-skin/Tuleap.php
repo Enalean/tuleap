@@ -25,8 +25,10 @@ class SkinTuleap extends SkinTemplate
     public const MEDIAWIKI_URL = '/\/plugins\/mediawiki\/wiki\/(.*)\/index.php\//';
 
     /** Using fusionforge. */
-    var $skinname = 'tuleap', $stylename = 'tuleap',
-            $template = 'TuleapTemplate', $useHeadElement = true;
+    public $skinname = 'tuleap';
+    public $stylename = 'tuleap';
+    public $template = 'TuleapTemplate';
+    public $useHeadElement = true;
 
     function setupTemplate($classname, $repository = false, $cache_dir = false)
     {

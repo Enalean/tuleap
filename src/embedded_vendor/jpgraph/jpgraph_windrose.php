@@ -46,14 +46,21 @@ define('__DEBUG', false);
 //===================================================
 class WindrosePlotScale
 {
-    private $iMax,$iDelta=5;
+    private $iMax;
+    private $iDelta=5;
     private $iNumCirc=3;
     public $iMaxNum=0;
     private $iLblFmt='%.0f%%';
-    public $iFontFamily=FF_VERDANA,$iFontStyle=FS_NORMAL,$iFontSize=10;
-    public $iZFontFamily=FF_ARIAL,$iZFontStyle=FS_NORMAL,$iZFontSize=10;
-    public $iFontColor='black',$iZFontColor='black';
-    private $iFontFrameColor=false, $iFontBkgColor=false;
+    public $iFontFamily=FF_VERDANA;
+    public $iFontStyle=FS_NORMAL;
+    public $iFontSize=10;
+    public $iZFontFamily=FF_ARIAL;
+    public $iZFontStyle=FS_NORMAL;
+    public $iZFontSize=10;
+    public $iFontColor='black';
+    public $iZFontColor='black';
+    private $iFontFrameColor=false;
+    private $iFontBkgColor=false;
     private $iLblZeroTxt=null;
     private $iLblAlign=LBLALIGN_CENTER;
     public $iAngle='auto';
@@ -293,15 +300,28 @@ class WindrosePlotScale
 //===================================================
 class LegendStyle
 {
-    public $iLength = 40, $iMargin = 20 , $iBottomMargin=5;
-    public $iCircleWeight=2,  $iCircleRadius = 18, $iCircleColor='black';
-    public $iTxtFontFamily=FF_VERDANA,$iTxtFontStyle=FS_NORMAL,$iTxtFontSize=8;
-    public $iLblFontFamily=FF_VERDANA,$iLblFontStyle=FS_NORMAL,$iLblFontSize=8;
-    public $iCircleFontFamily=FF_VERDANA,$iCircleFontStyle=FS_NORMAL,$iCircleFontSize=8;
-    public $iLblFontColor='black',$iTxtFontColor='black',$iCircleFontColor='black';
+    public $iLength = 40;
+    public $iMargin = 20;
+    public $iBottomMargin=5;
+    public $iCircleWeight=2;
+    public $iCircleRadius = 18;
+    public $iCircleColor='black';
+    public $iTxtFontFamily=FF_VERDANA;
+    public $iTxtFontStyle=FS_NORMAL;
+    public $iTxtFontSize=8;
+    public $iLblFontFamily=FF_VERDANA;
+    public $iLblFontStyle=FS_NORMAL;
+    public $iLblFontSize=8;
+    public $iCircleFontFamily=FF_VERDANA;
+    public $iCircleFontStyle=FS_NORMAL;
+    public $iCircleFontSize=8;
+    public $iLblFontColor='black';
+    public $iTxtFontColor='black';
+    public $iCircleFontColor='black';
     public $iShow=true;
     public $iFormatString='%.1f';
-    public $iTxtMargin=6, $iTxt='';
+    public $iTxtMargin=6;
+    private $iTxt='';
     public $iZCircleTxt='Calm';
 
     function SetFont($aFontFamily, $aFontStyle = FS_NORMAL, $aFontSize = 10)
@@ -423,9 +443,11 @@ class WindrosePlot
 {
     private $iAntiAlias=true;
     private $iData=array();
-    public $iX=0.5,$iY=0.5;
+    public $iX=0.5;
+    public $iY=0.5;
     public $iSize=0.55;
-    private $iGridColor1='gray',$iGridColor2='darkgreen';
+    private $iGridColor1='gray';
+    private $iGridColor2='darkgreen';
     private $iRadialColorArray=array();
     private $iRadialWeightArray=array();
     private $iRadialStyleArray=array();
@@ -433,19 +455,26 @@ class WindrosePlot
     private $iRangeStyle = RANGE_OVERLAPPING ;
     public $iCenterSize=60;
     private $iType = WINDROSE_TYPE16;
-    public $iFontFamily=FF_VERDANA,$iFontStyle=FS_NORMAL,$iFontSize=10;
+    public $iFontFamily=FF_VERDANA;
+    public $iFontStyle=FS_NORMAL;
+    public $iFontSize=10;
     public $iFontColor='darkgray';
     private $iRadialGridStyle='longdashed';
     private $iAllDirectionLabels =  array('E','ENE','NE','NNE','N','NNW','NW','WNW','W','WSW','SW','SSW','S','SSE','SE','ESE');
     private $iStandardDirections = array();
-    private $iCircGridWeight=3, $iRadialGridWeight=1;
+    private $iCircGridWeight=3;
+    private $iRadialGridWeight=1;
     private $iLabelMargin=12;
     private $iLegweights = array(2,4,6,8,10,12,14,16,18,20);
     private $iLegColors = array('orange','black','blue','red','green','purple','navy','yellow','brown');
-    private $iLabelFormatString='', $iLabels=array();
+    private $iLabelFormatString='';
+    private $iLabels=array();
     private $iLabelPositioning = LBLPOSITION_EDGE;
     private $iColor='white';
-    private $iShowBox=false, $iBoxColor='black',$iBoxWeight=1,$iBoxStyle='solid';
+    private $iShowBox=false;
+    private $iBoxColor='black';
+    private $iBoxWeight=1;
+    private $iBoxStyle='solid';
     private $iOrdinalEncoding=KEYENCODING_ANTICLOCKWISE;
     public $legend=null;
 
@@ -1589,7 +1618,8 @@ class WindrosePlot
 //============================================================
 class WindroseGraph extends Graph
 {
-    private $posx, $posy;
+    private $posx;
+    private $posy;
     public $plots=array();
 
     function __construct($width = 300, $height = 200, $cachedName = "", $timeout = 0, $inline = 1)

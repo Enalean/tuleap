@@ -16,7 +16,11 @@
 //===================================================
 class FuncGenerator
 {
-    private $iFunc='',$iXFunc='',$iMin,$iMax,$iStepSize;
+    private $iFunc='';
+    private $iXFunc='';
+    private $iMin;
+    private $iMax;
+    private $iStepSize;
 
     function __construct($aFunc, $aXFunc = '')
     {
@@ -73,11 +77,18 @@ define('DSUTILS_YEAR5', 13); // Major ticks on a five-yearly basis
 
 class DateScaleUtils
 {
-    public static $iMin=0, $iMax=0;
+    public static $iMin=0;
+    public static $iMax=0;
 
-    private static $starthour,$startmonth, $startday, $startyear;
-    private static $endmonth, $endyear, $endday;
-    private static $tickPositions=array(),$minTickPositions=array();
+    private static $starthour;
+    private static $startmonth;
+    private static $startday;
+    private static $startyear;
+    private static $endmonth;
+    private static $endyear;
+    private static $endday;
+    private static $tickPositions=array();
+    private static $minTickPositions=array();
     private static $iUseWeeks = true;
 
     static function UseWeekFormat($aFlg)
@@ -622,10 +633,14 @@ define('__LR_EPSILON', 1.0e-8);
 //=============================================================================
 class LinearRegression
 {
-    private $ix=array(),$iy=array();
-    private $ib=0, $ia=0;
+    private $ix=array();
+    private $iy=array();
+    private $ib=0;
+    private $ia=0;
     private $icalculated=false;
-    public $iDet=0, $iCorr=0, $iStdErr=0;
+    public $iDet=0;
+    public $iCorr=0;
+    public $iStdErr=0;
 
     public function __construct($aDataX, $aDataY)
     {

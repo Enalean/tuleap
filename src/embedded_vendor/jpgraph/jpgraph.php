@@ -285,7 +285,8 @@ function GenImgName()
 //===================================================
 class JpgTimer
 {
-    private $start, $idx;
+    private $start;
+    private $idx;
 
     function __construct()
     {
@@ -319,7 +320,10 @@ class DateLocale
 {
 
     public $iLocale = 'C'; // environmental locale be used by default
-    private $iDayAbb = null, $iShortDay = null, $iShortMonth = null, $iMonthName = null;
+    private $iDayAbb = null;
+    private $iShortDay = null;
+    private $iShortMonth = null;
+    private $iMonthName = null;
 
     function __construct()
     {
@@ -418,9 +422,14 @@ $gJpgDateLocale = new DateLocale();
 //=======================================================
 class Footer
 {
-    public $iLeftMargin = 3, $iRightMargin = 3, $iBottomMargin = 3 ;
-    public $left,$center,$right;
-    private $iTimer=null, $itimerpoststring='';
+    public $iLeftMargin = 3;
+    public $iRightMargin = 3;
+    public $iBottomMargin = 3 ;
+    public $left;
+    public $center;
+    public $right;
+    private $iTimer=null;
+    private $itimerpoststring='';
 
     function __construct()
     {
@@ -478,72 +487,115 @@ class Graph
     public $y2plots=array();  // Array of all plot object in the graph (for Y 2 axis)
     public $ynplots=array();
     public $xscale=null;  // X Scale object (could be instance of LinearScale or LogScale
-    public $yscale=null,$y2scale=null, $ynscale=array();
+    public $yscale=null;
+    public $y2scale=null;
+    public $ynscale=array();
     public $iIcons = array();  // Array of Icons to add to
     public $cache_name;   // File name to be used for the current graph in the cache directory
     public $xgrid=null;   // X Grid object (linear or logarithmic)
-    public $ygrid=null,$y2grid=null; //dito for Y
-    public $doframe,$frame_color, $frame_weight; // Frame around graph
-    public $boxed=false, $box_color='black', $box_weight=1;  // Box around plot area
-    public $doshadow=false,$shadow_width=4,$shadow_color='gray@0.5'; // Shadow for graph
+    public $ygrid=null; //dito for Y
+    public $y2grid=null; //dito for Y
+    public $doframe;
+    public $frame_color; // Frame around graph
+    public $frame_weight; // Frame around graph
+    public $boxed=false;
+    public $box_color='black';
+    public $box_weight=1;  // Box around plot area
+    public $doshadow=false;
+    public $shadow_width=4;
+    public $shadow_color='gray@0.5'; // Shadow for graph
     public $xaxis=null;   // X-axis (instane of Axis class)
-    public $yaxis=null, $y2axis=null, $ynaxis=array(); // Y axis (instance of Axis class)
+    public $yaxis=null;
+    public $y2axis=null;
+    public $ynaxis=array(); // Y axis (instance of Axis class)
     public $margin_color; // Margin color of graph
     public $plotarea_color=array(255,255,255); // Plot area color
-    public $title,$subtitle,$subsubtitle;  // Title and subtitle(s) text object
+    public $title; // Title and subtitle(s) text object
+    public $subtitle;
+    public $subsubtitle;
     public $axtype="linlin";  // Type of axis
-    public $xtick_factor,$ytick_factor; // Factor to determine the maximum number of ticks depending on the plot width
-    public $texts=null, $y2texts=null; // Text object to ge shown in the graph
-    public $lines=null, $y2lines=null;
-    public $bands=null, $y2bands=null;
-    public $text_scale_off=0, $text_scale_abscenteroff=-1; // Text scale in fractions and for centering bars
-    public $background_image='',$background_image_type=-1,$background_image_format="png";
-    public $background_image_bright=0,$background_image_contr=0,$background_image_sat=0;
-    public $background_image_xpos=0,$background_image_ypos=0;
-    public $image_bright=0, $image_contr=0, $image_sat=0;
+    public $xtick_factor;
+    public $ytick_factor; // Factor to determine the maximum number of ticks depending on the plot width
+    public $texts=null;
+    public $y2texts=null; // Text object to ge shown in the graph
+    public $lines=null;
+    public $y2lines=null;
+    public $bands=null;
+    public $y2bands=null;
+    public $text_scale_off=0;
+    public $text_scale_abscenteroff=-1; // Text scale in fractions and for centering bars
+    public $background_image='';
+    public $background_image_type=-1;
+    public $background_image_format="png";
+    public $background_image_bright=0;
+    public $background_image_contr=0;
+    public $background_image_sat=0;
+    public $background_image_xpos=0;
+    public $background_image_ypos=0;
+    public $image_bright=0;
+    public $image_contr=0;
+    public $image_sat=0;
     public $inline;
-    public $showcsim=0,$csimcolor="red";//debug stuff, draw the csim boundaris on the image if <>0
+    public $showcsim=0; //debug stuff, draw the csim boundaris on the image if <>0
+    public $csimcolor="red";//debug stuff, draw the csim boundaris on the image if <>0
     public $grid_depth=DEPTH_BACK; // Draw grid under all plots as default
     public $iAxisStyle = AXSTYLE_SIMPLE;
-    public $iCSIMdisplay=false,$iHasStroked = false;
+    public $iCSIMdisplay=false;
+    public $iHasStroked = false;
     public $footer;
-    public $csimcachename = '', $csimcachetimeout = 0, $iCSIMImgAlt='';
+    public $csimcachename = '';
+    public $csimcachetimeout = 0;
+    public $iCSIMImgAlt='';
     public $iDoClipping = false;
     public $y2orderback=true;
     public $tabtitle;
-    public $bkg_gradtype=-1,$bkg_gradstyle=BGRAD_MARGIN;
-    public $bkg_gradfrom='navy', $bkg_gradto='silver';
-    public $plot_gradtype=-1,$plot_gradstyle=BGRAD_MARGIN;
-    public $plot_gradfrom='silver', $plot_gradto='navy';
+    public $bkg_gradtype=-1;
+    public $bkg_gradstyle=BGRAD_MARGIN;
+    public $bkg_gradfrom='navy';
+    public $bkg_gradto='silver';
+    public $plot_gradtype=-1;
+    public $plot_gradstyle=BGRAD_MARGIN;
+    public $plot_gradfrom='silver';
+    public $plot_gradto='navy';
 
     public $titlebackground = false;
-    public $titlebackground_color = 'lightblue',
-           $titlebackground_style = 1,
-           $titlebackground_framecolor,
-           $titlebackground_framestyle,
-           $titlebackground_frameweight,
-           $titlebackground_bevelheight;
+    public $titlebackground_color = 'lightblue';
+    public $titlebackground_style = 1;
+    public $titlebackground_framecolor;
+    public $titlebackground_framestyle;
+    public $titlebackground_frameweight;
+    public $titlebackground_bevelheight;
     public $titlebkg_fillstyle=TITLEBKG_FILLSTYLE_SOLID;
-    public $titlebkg_scolor1='black',$titlebkg_scolor2='white';
-    public $framebevel, $framebeveldepth;
-    public $framebevelborder, $framebevelbordercolor;
-    public $framebevelcolor1, $framebevelcolor2;
+    public $titlebkg_scolor1='black';
+    public $titlebkg_scolor2='white';
+    public $framebevel;
+    public $framebeveldepth;
+    public $framebevelborder;
+    public $framebevelbordercolor;
+    public $framebevelcolor1;
+    public $framebevelcolor2;
     public $background_image_mix=100;
     public $background_cflag = '';
     public $background_cflag_type = BGIMG_FILLPLOT;
     public $background_cflag_mix = 100;
-    public $iImgTrans=false,
-           $iImgTransHorizon = 100,$iImgTransSkewDist=150,
-           $iImgTransDirection = 1, $iImgTransMinSize = true,
-           $iImgTransFillColor='white',$iImgTransHighQ=false,
-           $iImgTransBorder=false,$iImgTransHorizonPos=0.5;
+    public $iImgTrans=false;
+    protected $iImgTransHorizon = 100;
+    protected $iImgTransSkewDist=150;
+    protected $iImgTransDirection = 1;
+    protected $iImgTransMinSize = true;
+    protected $iImgTransFillColor='white';
+    protected $iImgTransHighQ=false;
+    protected $iImgTransBorder=false;
+    protected $iImgTransHorizonPos=0.5;
     public $legend;
     public $graph_theme;
     protected $iYAxisDeltaPos=50;
     protected $iIconDepth=DEPTH_BACK;
-    protected $iAxisLblBgType = 0,
-              $iXAxisLblBgFillColor = 'lightgray', $iXAxisLblBgColor = 'black',
-              $iYAxisLblBgFillColor = 'lightgray', $iYAxisLblBgColor = 'black';
+    protected $iAxisLblBgType = 0;
+    protected $iXAxisLblBgFillColor = 'lightgray';
+    protected $iXAxisLblBgColor = 'black';
+    protected $iYAxisLblBgFillColor = 'lightgray';
+    protected $iYAxisLblBgColor = 'black';
     protected $iTables=null;
 
     protected $isRunningClear = false;
@@ -3298,7 +3350,10 @@ class Graph
 //===================================================
 class LineProperty
 {
-    public $iWeight=1, $iColor='black', $iStyle='solid', $iShow=false;
+    public $iWeight=1;
+    public $iColor='black';
+    public $iStyle='solid';
+    public $iShow=false;
 
     function __construct($aWeight = 1, $aColor = 'black', $aStyle = 'solid')
     {
@@ -3349,9 +3404,13 @@ class LineProperty
 //===================================================
 class GraphTabTitle extends Text
 {
-    private $corner = 6 , $posx = 7, $posy = 4;
-    private $fillcolor='lightyellow',$bordercolor='black';
-    private $align = 'left', $width=TABTITLE_WIDTHFIT;
+    private $corner = 6;
+    private $posx = 7;
+    private $posy = 4;
+    private $fillcolor='lightyellow';
+    private $bordercolor='black';
+    private $align = 'left';
+    private $width=TABTITLE_WIDTHFIT;
     function __construct()
     {
         $this->t = '';
@@ -3478,8 +3537,12 @@ class GraphTabTitle extends Text
 class SuperScriptText extends Text
 {
     private $iSuper='';
-    private $sfont_family='',$sfont_style='',$sfont_size=8;
-    private $iSuperMargin=2,$iVertOverlap=4,$iSuperScale=0.65;
+    private $sfont_family='';
+    private $sfont_style='';
+    private $sfont_size=8;
+    private $iSuperMargin=2;
+    private $iVertOverlap=4;
+    private $iSuperScale=0.65;
     private $iSDir=0;
     private $iSimple=false;
 
@@ -3665,10 +3728,16 @@ class Grid
 {
     protected $img;
     protected $scale;
-    protected $majorcolor='#CCCCCC',$minorcolor='#DDDDDD';
-    protected $majortype='solid',$minortype='solid';
-    protected $show=false, $showMinor=false,$majorweight=1,$minorweight=1;
-    protected $fill=false,$fillcolor=array('#EFEFEF','#BBCCFF');
+    protected $majorcolor='#CCCCCC';
+    protected $minorcolor='#DDDDDD';
+    protected $majortype='solid';
+    protected $minortype='solid';
+    protected $show=false;
+    protected $showMinor=false;
+    protected $majorweight=1;
+    protected $minorweight=1;
+    protected $fill=false;
+    protected $fillcolor=array('#EFEFEF','#BBCCFF');
 
     function __construct($aAxis)
     {
@@ -3836,23 +3905,33 @@ class AxisPrototype
 {
     public $scale=null;
     public $img=null;
-    public $hide=false,$hide_labels=false;
+    public $hide=false;
+    public $hide_labels=false;
     public $title=null;
-    public $font_family=FF_DEFAULT,$font_style=FS_NORMAL,$font_size=8,$label_angle=0;
+    public $font_family=FF_DEFAULT;
+    public $font_style=FS_NORMAL;
+    public $font_size=8;
+    public $label_angle=0;
     public $tick_step=1;
     public $pos = false;
     public $ticks_label = array();
 
     protected $weight=1;
-    protected $color=array(0,0,0),$label_color=array(0,0,0);
+    protected $color=array(0,0,0);
+    protected $label_color=array(0,0,0);
     protected $ticks_label_colors=null;
-    protected $show_first_label=true,$show_last_label=true;
+    protected $show_first_label=true;
+    protected $show_last_label=true;
     protected $label_step=1; // Used by a text axis to specify what multiple of major steps
     // should be labeled.
     protected $labelPos=0;   // Which side of the axis should the labels be?
-    protected $title_adjust,$title_margin,$title_side=SIDE_LEFT;
+    protected $title_adjust;
+    protected $title_margin;
+    protected $title_side=SIDE_LEFT;
     protected $tick_label_margin=5;
-    protected $label_halign = '',$label_valign = '', $label_para_align='left';
+    protected $label_halign = '';
+    protected $label_valign = '';
+    protected $label_para_align='left';
     protected $hide_line=false;
     protected $iDeltaAbsPos=0;
 
@@ -4349,16 +4428,23 @@ class Ticks
     public $label_formfunc='';
     public $label_dateformatstr='';
     public $direction=1; // Should ticks be in(=1) the plot area or outside (=-1)
-    public $supress_last=false,$supress_tickmarks=false,$supress_minor_tickmarks=false;
-    public $maj_ticks_pos = array(), $maj_ticklabels_pos = array(),
-           $ticks_pos = array(), $maj_ticks_label = array();
+    public $supress_last=false;
+    public $supress_tickmarks=false;
+    public $supress_minor_tickmarks=false;
+    public $maj_ticks_pos = array();
+    public $maj_ticklabels_pos = array();
+    public $ticks_pos = array();
+    public $maj_ticks_label = array();
     public $precision;
 
-    protected $minor_abs_size=3, $major_abs_size=5;
+    protected $minor_abs_size=3;
+    protected $major_abs_size=5;
     protected $scale;
     protected $is_set=false;
-    protected $supress_zerolabel=false,$supress_first=false;
-    protected $mincolor='',$majcolor='';
+    protected $supress_zerolabel=false;
+    protected $supress_first=false;
+    protected $mincolor='';
+    protected $majcolor='';
     protected $weight=1;
     protected $label_usedateformat=false;
 
@@ -4480,12 +4566,16 @@ class Ticks
 //===================================================
 class LinearTicks extends Ticks
 {
-    public $minor_step=1, $major_step=2;
-    public $xlabel_offset=0,$xtick_offset=0;
+    public $minor_step=1;
+    public $major_step=2;
+    public $xlabel_offset=0;
+    public $xtick_offset=0;
     private $label_offset=0; // What offset should the displayed label have
     // i.e should we display 0,1,2 or 1,2,3,4 or 2,3,4 etc
     private $text_label_start=0;
-    private $iManualTickPos = null, $iManualMinTickPos = null, $iManualTickLabels = null;
+    private $iManualTickPos = null;
+    private $iManualMinTickPos = null;
+    private $iManualTickLabels = null;
     private $iAdjustForDST = false; // If a date falls within the DST period add one hour to the diaplyed time
 
     function __construct()
@@ -4878,7 +4968,8 @@ class LinearScale
     public $intscale=false; // Restrict autoscale to integers
     protected $autoscale_min=false; // Forced minimum value, auto determine max
     protected $autoscale_max=false; // Forced maximum value, auto determine min
-    private $gracetop=0,$gracebottom=0;
+    private $gracetop=0;
+    private $gracebottom=0;
 
     private $_world_size; // Plot area size in world coordinates
 
@@ -5453,12 +5544,17 @@ class DisplayValue
 {
     public $margin=5;
     public $show=false;
-    public $valign='',$halign='center';
-    public $format='%.1f',$negformat='';
-    private $ff=FF_DEFAULT,$fs=FS_NORMAL,$fsize=8;
+    public $valign='';
+    public $halign='center';
+    public $format='%.1f';
+    public $negformat='';
+    private $ff=FF_DEFAULT;
+    private $fs=FS_NORMAL;
+    private $fsize=8;
     private $iFormCallback='';
     private $angle=0;
-    private $color='navy',$negcolor='';
+    private $color='navy';
+    private $negcolor='';
     private $iHideZero=false;
     public $txt=null;
 
@@ -5598,10 +5694,12 @@ class Plot
     public $color='black';
     public $hidelegend=false;
     public $line_weight=1;
-    public $csimtargets=array(),$csimwintargets=array(); // Array of targets for CSIM
+    public $csimtargets=array();
+    public $csimwintargets=array(); // Array of targets for CSIM
     public $csimareas='';   // Resultant CSIM area tags
     public $csimalts=null;   // ALT:s for corresponding target
-    public $legendcsimtarget='',$legendcsimwintarget='';
+    public $legendcsimtarget='';
+    public $legendcsimwintarget='';
     public $legendcsimalt='';
     protected $weight=1;
     protected $center=false;

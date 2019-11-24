@@ -36,10 +36,11 @@ DEFINE('LEDC_INVERTGRAY', 15);
 //========================================================================
 class DigitalLED74
 {
-    private $iLED_X = 4, $iLED_Y=7,
+    private $iLED_X = 4;
+    private $iLED_Y=7;
 
         // fg-up, fg-down, bg
-        $iColorSchema = array(
+    private $iColorSchema = array(
             LEDC_RED  => array('red','darkred:0.9','red:0.3'),// 0
             LEDC_GREEN  => array('green','darkgreen','green:0.3'),// 1
             LEDC_BLUE  => array('lightblue:0.9','darkblue:0.85','darkblue:0.7'),// 2
@@ -56,7 +57,7 @@ class DigitalLED74
             LEDC_STEELBLUE => array('steelblue','steelblue:0.65','steelblue:0.5'),
             LEDC_NAVY  => array('navy:1.3','navy:0.95','navy:0.8'),//14
             LEDC_INVERTGRAY => array('darkgray','lightgray:1.5','white')//15
-            ),
+            );
 
         /* Each line of the character is encoded as a 4 bit value
          0      ____
@@ -76,8 +77,7 @@ class DigitalLED74
          14     xxx_
          15     xxxx
         */
-
-        $iLEDSpec = array(
+    private $iLEDSpec = array(
             0 => array(6,9,11,15,13,9,6),
             1 => array(2,6,10,2,2,2,2),
             2 => array(6,9,1,2,4,8,15),
@@ -195,9 +195,11 @@ class DigitalLED74
             'Э' => array(6,9,1,7,1,9,6),
             'Ю' => array(2,2,2,3,2,2,2),// need to add O
             'Я' => array(7,9,9,7,3,5,9)
-            ),
+            );
 
-        $iSuperSampling = 3, $iMarg = 1, $iRad = 4;
+    private $iSuperSampling = 3;
+    private $iMarg = 1;
+    private $iRad = 4;
 
     function __construct($aRadius = 2, $aMargin = 0.6)
     {

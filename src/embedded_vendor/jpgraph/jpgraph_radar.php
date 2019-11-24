@@ -108,8 +108,10 @@ class RadarLogTicks extends Ticks
 class RadarLinearTicks extends Ticks
 {
 
-    private $minor_step=1, $major_step=2;
-    private $xlabel_offset=0,$xtick_offset=0;
+    private $minor_step=1;
+    private $major_step=2;
+    private $xlabel_offset=0;
+    private $xtick_offset=0;
 
     function __construct()
     {
@@ -366,7 +368,8 @@ class RadarGrid
  //extends Grid {
     private $type='solid';
     private $grid_color='#DDDDDD';
-    private $show=false, $weight=1;
+    private $show=false;
+    private $weight=1;
 
     function __construct()
     {
@@ -443,7 +446,8 @@ class RadarPlot
     public $csimareas="";   // Resultant CSIM area tags
     public $csimalts=null;   // ALT:s for corresponding target
     private $data=array();
-    private $fill=false, $fill_color=array(200,170,180);
+    private $fill=false;
+    private $fill_color=array(200,170,180);
     private $color=array(0,0,0);
     private $weight=1;
     private $linestyle='solid';
@@ -601,8 +605,10 @@ class RadarPlot
 //===================================================
 class RadarGraph extends Graph
 {
-    public $grid,$axis=null;
-    private $posx,$posy;
+    public $grid;
+    public $axis=null;
+    private $posx;
+    private $posy;
     private $len;
     private $axis_title=null;
 

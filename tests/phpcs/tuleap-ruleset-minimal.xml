@@ -26,9 +26,7 @@
         <exclude name="PSR2.Classes.ClassDeclaration.CloseBraceSameLine"/>
         <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace"/>
         <exclude name="PEAR.Functions.ValidDefaultValue.NotAtEnd"/>
-        <exclude name="PSR2.Classes.PropertyDeclaration.Multiple"/>
         <exclude name="Generic.NamingConventions.UpperCaseConstantName.ConstantNotUpperCase"/>
-        <exclude name="PSR2.Classes.PropertyDeclaration.Multiple"/>
     </rule>
     <!-- Forbid superfluous whitespaces -->
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">

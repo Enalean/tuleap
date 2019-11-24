@@ -22,8 +22,12 @@ define("BAND_DIAGCROSS", 8); // Diagonal crosses
 // Utility class to hold coordinates for a rectangle
 class Rectangle
 {
-    public $x,$y,$w,$h;
-    public $xe, $ye;
+    public $x;
+    public $y;
+    public $w;
+    public $h;
+    public $xe;
+    public $ye;
     function __construct($aX, $aY, $aWidth, $aHeight)
     {
         $this->x=$aX;
@@ -586,7 +590,9 @@ class PlotBand
 {
     public $depth; // Determine if band should be over or under the plots
     private $prect=null;
-    private $dir, $min, $max;
+    private $dir;
+    private $min;
+    private $max;
 
     function __construct($aDir, $aPattern, $aMin, $aMax, $aColor = "black", $aWeight = 1, $aDepth = DEPTH_BACK)
     {

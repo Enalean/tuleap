@@ -111,9 +111,25 @@ function gif_getSize($gif, &$width, &$height)
 
 class CGIFLZW
 {
-    var $MAX_LZW_BITS;
-    var $Fresh, $CodeSize, $SetCodeSize, $MaxCode, $MaxCodeSize, $FirstCode, $OldCode;
-    var $ClearCode, $EndCode, $Next, $Vals, $Stack, $sp, $Buf, $CurBit, $LastBit, $Done, $LastByte;
+    public $MAX_LZW_BITS;
+    public $Fresh;
+    public $CodeSize;
+    public $SetCodeSize;
+    public $MaxCode;
+    public $MaxCodeSize;
+    public $FirstCode;
+    public $OldCode;
+    public $ClearCode;
+    public $EndCode;
+    public $Next;
+    public $Vals;
+    public $Stack;
+    public $sp;
+    public $Buf;
+    public $CurBit;
+    public $LastBit;
+    public $Done;
+    public $LastByte;
 
     // CONSTRUCTOR
     function __construct()

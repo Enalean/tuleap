@@ -49,8 +49,10 @@ define('SECPERMIN', 60);
 class DateScale extends LinearScale
 {
     private $date_format = '';
-    private $iStartAlign = false, $iEndAlign = false;
-    private $iStartTimeAlign = false, $iEndTimeAlign = false;
+    private $iStartAlign = false;
+    private $iEndAlign = false;
+    private $iStartTimeAlign = false;
+    private $iEndTimeAlign = false;
 
     //---------------
     // CONSTRUCTOR

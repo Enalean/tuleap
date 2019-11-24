@@ -16,12 +16,18 @@
 //===================================================
 class IconPlot
 {
-    public $iX=0,$iY=0,$iScale=1.0,$iMix=100;
-    private $iHorAnchor='left',$iVertAnchor='top';
+    public $iX=0;
+    public $iY=0;
+    public $iScale=1.0;
+    public $iMix=100;
+    private $iHorAnchor='left';
+    private $iVertAnchor='top';
     private $iFile='';
     private $iAnchors = array('left','right','top','bottom','center');
-    private $iCountryFlag='',$iCountryStdSize=3;
-    private $iScalePosY=null,$iScalePosX=null;
+    private $iCountryFlag='';
+    private $iCountryStdSize=3;
+    private $iScalePosY=null;
+    private $iScalePosX=null;
     private $iImgString='';
 
 

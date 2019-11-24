@@ -16,9 +16,11 @@
 //===================================================
 class PiePlot3D extends PiePlot
 {
-    private $labelhintcolor="red",$showlabelhint=true;
+    private $labelhintcolor="red";
+    private $showlabelhint=true;
     private $angle=50;
-    private $edgecolor="", $edgeweight=1;
+    private $edgecolor="";
+    private $edgeweight=1;
     private $iThickness=false;
 
     //---------------

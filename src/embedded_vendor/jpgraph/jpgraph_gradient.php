@@ -30,7 +30,8 @@ define("GRAD_DIAGONAL", 11);
 //===================================================
 class Gradient
 {
-    private $img=null, $numcolors=100;
+    private $img=null;
+    private $numcolors=100;
     //---------------
     // CONSTRUCTOR
     function __construct(&$img)

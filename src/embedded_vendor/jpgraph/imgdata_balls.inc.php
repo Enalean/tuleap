@@ -15,7 +15,9 @@ class ImgData_Balls extends ImgData
     MARK_IMG_MBALL => 'imgdata_small',
     MARK_IMG_SBALL => 'imgdata_xsmall',
     MARK_IMG_BALL => 'imgdata_xsmall');
-    protected $colors,$index,$maxidx;
+    protected $colors;
+    protected $index;
+    protected $maxidx;
     private $colors_1 = array('blue','lightblue','brown','darkgreen',
          'green','purple','red','gray','yellow','silver','gray');
     private $index_1  = array('blue'=>9,'lightblue'=>1,'brown'=>6,'darkgreen'=>7,
@@ -46,7 +48,9 @@ class ImgData_Balls extends ImgData
     'purple'=>8,'red'=>5,'yellow'=>6);
     private $maxidx_3 = 14 ;
 
-    protected $imgdata_large, $imgdata_small, $imgdata_xsmall ;
+    protected $imgdata_large;
+    protected $imgdata_small;
+    protected $imgdata_xsmall ;
 
 
     function GetImg($aMark, $aIdx)

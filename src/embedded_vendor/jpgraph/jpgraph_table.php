@@ -25,21 +25,36 @@ DEFINE('TIMG_HEIGHT', 2);
 //---------------------------------------------------------------------
 class GTextTableCell
 {
-    public $iColSpan=1,$iRowSpan=1;
-    public $iMarginLeft=5,$iMarginRight=5,$iMarginTop=5,$iMarginBottom=5;
+    public $iColSpan=1;
+    public $iRowSpan=1;
+    public $iMarginLeft=5;
+    public $iMarginRight=5;
+    public $iMarginTop=5;
+    public $iMarginBottom=5;
     public $iVal=null;
-    private $iBGColor='', $iFontColor='black';
-    private $iFF=FF_FONT1,$iFS=FS_NORMAL,$iFSize=10;
-    private $iRow=0, $iCol=0;
-    private $iVertAlign = 'bottom', $iHorAlign = 'left';
-    private $iMerged=false,$iPRow=null,$iPCol=null;
+    private $iBGColor='';
+    private $iFontColor='black';
+    private $iFF=FF_FONT1;
+    private $iFS=FS_NORMAL;
+    private $iFSize=10;
+    private $iRow=0;
+    private $iCol=0;
+    private $iVertAlign = 'bottom';
+    private $iHorAlign = 'left';
+    private $iMerged=false;
+    private $iPRow=null;
+    private $iPCol=null;
     private $iTable=null;
     private $iGridColor=array('darkgray','darkgray','darkgray','darkgray');
     private $iGridWeight=array(1,1,0,0); // left,top,bottom,right;
     private $iGridStyle=array(TGRID_SINGLE,TGRID_SINGLE,TGRID_SINGLE,TGRID_SINGLE); // left,top,bottom,right;
     private $iNumberFormat=null;
-    private $iIcon=null, $iIconConstrain=array();
-    private $iCSIMtarget = '',$iCSIMwintarget = '', $iCSIMalt = '', $iCSIMArea = '';
+    private $iIcon=null;
+    private $iIconConstrain=array();
+    private $iCSIMtarget = '';
+    private $iCSIMwintarget = '';
+    private $iCSIMalt = '';
+    private $iCSIMArea = '';
 
     function __construct($aVal = '', $aRow = 0, $aCol = 0)
     {
@@ -544,16 +559,23 @@ class GTextTableCell
 //---------------------------------------------------------------------
 class GTextTable
 {
-    public $iCells = array(), $iSize=array(0,0); // Need to be public since they are used by the cell
-    private $iWidth=0, $iHeight=0;
-    private $iColWidth=null,$iRowHeight=null;
+    public $iCells = array(); // Need to be public since they are used by the cell
+    public $iSize=array(0,0); // Need to be public since they are used by the cell
+    private $iWidth=0;
+    private $iHeight=0;
+    private $iColWidth=null;
+    private $iRowHeight=null;
     private $iImg=null;
-    private $iXPos=0, $iYPos=0;
-    private $iScaleXPos=null,$iScaleYPos=null;
+    private $iXPos=0;
+    private $iYPos=0;
+    private $iScaleXPos=null;
+    private $iScaleYPos=null;
     private $iBGColor='';
-    private $iBorderColor='black',$iBorderWeight=1;
+    private $iBorderColor='black';
+    private $iBorderWeight=1;
     private $iInit=false;
-    private $iYAnchor='top',$iXAnchor='left';
+    private $iYAnchor='top';
+    private $iXAnchor='left';
     /*-----------------------------------------------------------------
      * First and second phase constructors
      *-----------------------------------------------------------------

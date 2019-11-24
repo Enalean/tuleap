@@ -16,14 +16,25 @@
 
 class PlotMark
 {
-    public $title, $show=true;
-    public $type,$weight=1;
-    public $iFormatCallback="", $iFormatCallback2="";
+    public $title;
+    public $show=true;
+    public $type;
+    public $weight=1;
+    public $iFormatCallback="";
+    public $iFormatCallback2="";
     public $fill_color="blue";
-    public $color="black", $width=4;
-    private $yvalue,$xvalue='',$csimtarget,$csimwintarget='',$csimalt,$csimareas;
-    private $markimg='',$iScale=1.0;
-    private $oldfilename='',$iFileName='';
+    public $color="black";
+    public $width=4;
+    private $yvalue;
+    private $xvalue='';
+    private $csimtarget;
+    private $csimwintarget='';
+    private $csimalt;
+    private $csimareas;
+    private $markimg='';
+    private $iScale=1.0;
+    private $oldfilename='';
+    private $iFileName='';
     private $imgdata_balls = null;
     private $imgdata_diamonds = null;
     private $imgdata_squares = null;
@@ -508,7 +519,8 @@ class ImgData
     protected $colors = array(); // Available colors
     protected $index  = array(); // Index for colors
     protected $maxidx = 0 ;  // Max color index
-    protected $anchor_x=0.5, $anchor_y=0.5 ;    // Where is the center of the image
+    protected $anchor_x=0.5;
+    private $anchor_y=0.5 ;    // Where is the center of the image
 
     function __construct()
     {

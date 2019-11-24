@@ -17,7 +17,9 @@ class StockPlot extends Plot
     protected $iTupleSize = 4;
     private $iWidth=9;
     private $iEndLines=1;
-    private $iStockColor1='white',$iStockColor2='darkred',$iStockColor3='darkred';
+    private $iStockColor1='white';
+    private $iStockColor2='darkred';
+    private $iStockColor3='darkred';
     //---------------
     // CONSTRUCTOR
     function __construct($datay, $datax = false)
@@ -180,7 +182,8 @@ class StockPlot extends Plot
 //===================================================
 class BoxPlot extends StockPlot
 {
-    private $iPColor='black',$iNColor='white';
+    private $iPColor='black';
+    private $iNColor='white';
 
     function __construct($datay, $datax = false)
     {

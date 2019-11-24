@@ -493,7 +493,8 @@ class FakePageRevision
 // abstract base class
 class PageFormatter_attach extends PageFormatter
 {
-    var $type, $prefix;
+    public $type;
+    public $prefix;
 
     // Display templated contents for wikiblog, comment and wikiforum
     function format($text)
@@ -521,15 +522,18 @@ class PageFormatter_attach extends PageFormatter
 
 class PageFormatter_wikiblog extends PageFormatter_attach
 {
-    var $type = 'wikiblog', $prefix = "BLOG";
+    public $type = 'wikiblog';
+    public $prefix = "BLOG";
 }
 class PageFormatter_comment extends PageFormatter_attach
 {
-    var $type = 'comment', $prefix = "COMMENT";
+    public $type = 'comment';
+    public $prefix = "COMMENT";
 }
 class PageFormatter_wikiforum extends PageFormatter_attach
 {
-    var $type = 'wikiforum', $prefix = "FORUM";
+    public $type = 'wikiforum';
+    public $prefix = "FORUM";
 }
 
 /** wikiabuse for htmlarea editing. not yet used.
