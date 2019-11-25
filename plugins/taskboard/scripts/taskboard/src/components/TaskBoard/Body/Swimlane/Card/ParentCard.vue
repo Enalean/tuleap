@@ -20,10 +20,10 @@
 
 <template>
     <base-card class="taskboard-card-parent" v-bind:card="card">
-        <template v-slot="initial_effort">
+        <template v-slot:initial_effort>
             <card-initial-effort v-bind:card="card"/>
         </template>
-        <template v-slot="remaining_effort">
+        <template v-slot:remaining_effort>
             <div class="taskboard-card-progress" v-bind:class="progress_color" v-bind:style="{ width: progress_bar_width }"></div>
         </template>
     </base-card>
