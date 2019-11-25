@@ -20,32 +20,44 @@
 
 <template>
     <div class="taskboard-cell"
-         v-bind:class="classes"
+         v-bind:class="[classes, dropzone_classes]"
          v-on:mouseenter="mouseEntersCollapsedColumn"
          v-on:mouseout="mouseLeavesCollapsedColumn"
          v-on:click="expandCollapsedColumn"
     >
         <slot v-if="!column.is_collapsed"></slot>
-        <cell-disallows-drop-overlay/>
+        <cell-disallows-drop-overlay v-bind:is-drop-rejected="does_cell_reject_drop(swimlane, column)"/>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Mixins, Prop } from "vue-property-decorator";
-import { ColumnDefinition } from "../../../../type";
+import { ColumnDefinition, Swimlane } from "../../../../type";
+import { namespace } from "vuex-class";
 import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
 import ExpandCollapsedColumnMixin from "./expand-collapsed-column-mixin";
 import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
 import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
+import ClassesForDropZonesMixin from "./classes-for-drop-zones-mixin";
+
+const swimlane = namespace("swimlane");
+
 @Component({
     components: { CellDisallowsDropOverlay }
 })
 export default class CellForSoloCard extends Mixins(
     HoveringStateForCollapsedColumnMixin,
     ExpandCollapsedColumnMixin,
-    ClassesForCollapsedColumnMixin
+    ClassesForCollapsedColumnMixin,
+    ClassesForDropZonesMixin
 ) {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
+
+    @Prop({ required: true })
+    readonly swimlane!: Swimlane;
+
+    @swimlane.Getter
+    readonly does_cell_reject_drop!: (swimlane: Swimlane, column: ColumnDefinition) => boolean;
 }
 </script>

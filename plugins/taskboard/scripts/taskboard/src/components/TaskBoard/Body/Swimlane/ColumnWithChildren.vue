@@ -20,7 +20,7 @@
 
 <template>
     <div class="taskboard-cell"
-         v-bind:class="classes"
+         v-bind:class="[classes, dropzone_classes]"
          v-bind:data-swimlane-id="swimlane.card.id"
          v-bind:data-column-id="column.id"
          v-bind:data-accepted-trackers-ids="accepted_trackers_ids(column)"
@@ -36,7 +36,7 @@
                 <card-skeleton v-for="i in nb_skeletons_to_display" v-bind:key="i"/>
             </template>
         </template>
-        <cell-disallows-drop-overlay/>
+        <cell-disallows-drop-overlay v-bind:is-drop-rejected="does_cell_reject_drop(swimlane, column)"/>
     </div>
 </template>
 
@@ -51,6 +51,7 @@ import SkeletonMixin from "./Skeleton/skeleton-mixin";
 import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
 import ExpandCollapsedColumnMixin from "./expand-collapsed-column-mixin";
 import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
+import ClassesForDropZonesMixin from "./classes-for-drop-zones-mixin";
 
 const swimlane = namespace("swimlane");
 const column = namespace("column");
@@ -62,7 +63,8 @@ export default class ColumnWithChildren extends Mixins(
     SkeletonMixin,
     HoveringStateForCollapsedColumnMixin,
     ExpandCollapsedColumnMixin,
-    ClassesForCollapsedColumnMixin
+    ClassesForCollapsedColumnMixin,
+    ClassesForDropZonesMixin
 ) {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
@@ -78,6 +80,9 @@ export default class ColumnWithChildren extends Mixins(
 
     @column.Getter
     readonly accepted_trackers_ids!: (column: ColumnDefinition) => number[];
+
+    @swimlane.Getter
+    readonly does_cell_reject_drop!: (swimlane: Swimlane, column: ColumnDefinition) => boolean;
 
     get cards(): Card[] {
         return this.cards_in_cell(this.swimlane, this.column);

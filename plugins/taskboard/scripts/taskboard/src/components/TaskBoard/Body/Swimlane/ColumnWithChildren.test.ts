@@ -53,6 +53,7 @@ function createWrapper(
                 } as RootState,
                 getters: {
                     "swimlane/cards_in_cell": (): Card[] => cards_in_cell,
+                    "swimlane/does_cell_reject_drop": (): boolean => false,
                     "column/accepted_trackers_ids": (): number[] => [101, 102]
                 }
             })

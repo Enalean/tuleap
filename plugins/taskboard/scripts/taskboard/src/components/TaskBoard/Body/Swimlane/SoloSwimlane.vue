@@ -25,6 +25,7 @@
             v-for="col of columns"
             v-bind:key="col.id"
             v-bind:column="col"
+            v-bind:swimlane="swimlane"
             v-bind:data-swimlane-id="swimlane.card.id"
             v-bind:data-column-id="col.id"
             v-bind:data-accepted-trackers-ids="accepted_trackers_ids(col)"

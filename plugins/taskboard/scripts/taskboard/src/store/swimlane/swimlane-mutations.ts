@@ -25,6 +25,7 @@ import {
     ReorderCardsPayload
 } from "./type";
 import { findSwimlane, replaceSwimlane, findDroppedCard } from "./swimlane-helpers";
+import Vue from "vue";
 
 export * from "./card/card-mutations";
 
@@ -141,16 +142,20 @@ function getFirstListValueId(mapping: Mapping): number {
 
 export function removeHighlightOnLastHoveredDropZone(state: SwimlaneState): void {
     if (state.last_hovered_drop_zone) {
-        state.last_hovered_drop_zone.classList.remove("taskboard-drop-not-accepted");
+        state.last_hovered_drop_zone.is_drop_rejected = false;
     }
 }
 
 export function setHighlightOnLastHoveredDropZone(state: SwimlaneState): void {
     if (state.last_hovered_drop_zone) {
-        state.last_hovered_drop_zone.classList.add("taskboard-drop-not-accepted");
+        state.last_hovered_drop_zone.is_drop_rejected = true;
     }
 }
 
 export function setLastHoveredDropZone(state: SwimlaneState, target: HTMLElement): void {
-    state.last_hovered_drop_zone = target;
+    Vue.set(state, "last_hovered_drop_zone", {
+        column_id: Number(target.dataset.columnId),
+        swimlane_id: Number(target.dataset.swimlaneId),
+        is_drop_rejected: false
+    });
 }

@@ -18,7 +18,7 @@
  */
 
 import * as getters from "./swimlane-getters";
-import { SwimlaneState } from "./type";
+import { Dropzone, SwimlaneState } from "./type";
 import { Card, ColumnDefinition, Swimlane } from "../../type";
 import { RootState } from "../type";
 import { createElement } from "../../helpers/jest/create-dom-element";
@@ -391,6 +391,76 @@ describe("Swimlane state getters", () => {
                 ]
             } as SwimlaneState;
             expect(getters.has_at_least_one_card_in_edit_mode(state)).toBe(true);
+        });
+    });
+
+    describe("does_cell_reject_drop", () => {
+        let state: SwimlaneState, swimlane: Swimlane, column: ColumnDefinition;
+
+        beforeEach(() => {
+            state = {
+                last_hovered_drop_zone: undefined
+            } as SwimlaneState;
+
+            swimlane = {
+                card: {
+                    id: 200
+                }
+            } as Swimlane;
+
+            column = { id: 12 } as ColumnDefinition;
+        });
+
+        it("returns false if no previous drop zone (DZ) is known", () => {
+            const does_reject = getters.does_cell_reject_drop(state)(swimlane, column);
+
+            expect(does_reject).toBe(false);
+        });
+
+        it("returns false if the DZ does not reject the drop", () => {
+            state.last_hovered_drop_zone = {
+                is_drop_rejected: false
+            } as Dropzone;
+
+            const does_reject = getters.does_cell_reject_drop(state)(swimlane, column);
+
+            expect(does_reject).toBe(false);
+        });
+
+        it("returns false if the provided column id does not match with the known DZ column", () => {
+            state.last_hovered_drop_zone = {
+                is_drop_rejected: false,
+                column_id: 50,
+                swimlane_id: swimlane.card.id
+            } as Dropzone;
+
+            const does_reject = getters.does_cell_reject_drop(state)(swimlane, column);
+
+            expect(does_reject).toBe(false);
+        });
+
+        it("returns false if the provided swimlane id does not match with the known DZ swimlane", () => {
+            state.last_hovered_drop_zone = {
+                is_drop_rejected: true,
+                column_id: column.id,
+                swimlane_id: 500
+            } as Dropzone;
+
+            const does_reject = getters.does_cell_reject_drop(state)(swimlane, column);
+
+            expect(does_reject).toBe(false);
+        });
+
+        it("returns true when the provided coordinates match the DZ and drop is rejected", () => {
+            state.last_hovered_drop_zone = {
+                is_drop_rejected: true,
+                column_id: column.id,
+                swimlane_id: swimlane.card.id
+            } as Dropzone;
+
+            const does_reject = getters.does_cell_reject_drop(state)(swimlane, column);
+
+            expect(does_reject).toBe(true);
         });
     });
 });

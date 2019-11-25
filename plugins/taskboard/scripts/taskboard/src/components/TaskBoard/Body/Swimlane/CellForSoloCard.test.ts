@@ -19,14 +19,26 @@
 
 import { shallowMount, Slots, Wrapper } from "@vue/test-utils";
 import CellForSoloCard from "./CellForSoloCard.vue";
-import { ColumnDefinition } from "../../../../type";
+import { ColumnDefinition, Swimlane } from "../../../../type";
 import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import { RootState } from "../../../../store/type";
 
 function getWrapper(column: ColumnDefinition, slots: Slots = {}): Wrapper<CellForSoloCard> {
+    const swimlane = { card: { id: 1 } } as Swimlane;
+
     return shallowMount(CellForSoloCard, {
-        propsData: { column },
-        mocks: { $store: createStoreMock({ state: { column: {} } as RootState }) },
+        propsData: {
+            column,
+            swimlane
+        },
+        mocks: {
+            $store: createStoreMock({
+                state: { column: {}, swimlane: {} } as RootState,
+                getters: {
+                    "swimlane/does_cell_reject_drop": (): boolean => false
+                }
+            })
+        },
         slots
     });
 }
