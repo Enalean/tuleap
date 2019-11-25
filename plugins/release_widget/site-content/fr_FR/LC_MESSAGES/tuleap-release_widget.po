@@ -1,11 +1,19 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
-msgid "A widget for release monitoring."
-msgstr "Un widget pour le suivi de release."
+#, php-format
+msgid "%s Widget"
+msgstr "%s Widget"
+
+#, php-format
+msgid "A widget for %s monitoring."
+msgstr "Un widget pour le suivi de %s."
+
+msgid "A widget for milestone monitoring."
+msgstr "Un widget pour le suivi de jalons."
 
 msgid "Agile dashboard"
 msgstr "Tableau de bord agile"
 
-msgid "Release Widget"
-msgstr "Release Widget"
+msgid "Milestone Widget"
+msgstr "Jalon Widget"

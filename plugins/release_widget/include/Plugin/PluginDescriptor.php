@@ -25,9 +25,9 @@ class PluginDescriptor extends \PluginDescriptor
     public function __construct()
     {
         parent::__construct(
-            dgettext('tuleap-release_widget', 'Release Widget'),
+            dgettext('tuleap-release_widget', 'Milestone Widget'),
             false,
-            dgettext('tuleap-release_widget', 'A widget for release monitoring.')
+            dgettext('tuleap-release_widget', 'A widget for milestone monitoring.')
         );
 
         $this->setVersionFromFile(__DIR__ . '/../../VERSION');
