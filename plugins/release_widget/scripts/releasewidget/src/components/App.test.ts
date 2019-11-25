@@ -40,7 +40,7 @@ describe("Given a release widget", () => {
     beforeEach(() => {
         component_options.propsData = {
             project_id,
-            isBrowserIE11: false
+            is_browser_IE11: false
         };
 
         store_options = {
@@ -91,7 +91,7 @@ describe("Given a release widget", () => {
     });
 
     it("When the browser is IE11, Then an error message is displayed instead of the content ", async () => {
-        component_options.propsData = { isBrowserIE11: true };
+        component_options.propsData = { is_browser_IE11: true };
         const wrapper = await getPersonalWidgetInstance(store_options);
 
         expect(wrapper.find("[data-test=is-IE11]").text()).toEqual(

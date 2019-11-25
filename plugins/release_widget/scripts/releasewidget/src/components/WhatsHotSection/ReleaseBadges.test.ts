@@ -23,7 +23,7 @@ import { createStoreMock } from "../../../../../../../src/www/scripts/vue-compon
 import { MilestoneData, StoreOptions } from "../../type";
 import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
 
-let releaseData: MilestoneData & Required<Pick<MilestoneData, "planning">>;
+let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const total_sprint = 10;
 const initial_effort = 10;
 const component_options: ShallowMountOptions<ReleaseBadges> = {};
@@ -52,7 +52,7 @@ describe("ReleaseBadges", () => {
             }
         };
 
-        releaseData = {
+        release_data = {
             label: "mile",
             id: 2,
             planning: {
@@ -64,7 +64,7 @@ describe("ReleaseBadges", () => {
             number_of_artifact_by_trackers: []
         };
 
-        component_options.propsData = { releaseData };
+        component_options.propsData = { release_data };
     });
 
     it("When the component is displayed, Then a good link to top planning of the release is rendered", async () => {
@@ -74,9 +74,9 @@ describe("ReleaseBadges", () => {
             "/plugins/agiledashboard/?group_id=" +
                 encodeURIComponent(project_id) +
                 "&planning_id=" +
-                encodeURIComponent(releaseData.planning.id) +
+                encodeURIComponent(release_data.planning.id) +
                 "&action=show&aid=" +
-                encodeURIComponent(releaseData.id) +
+                encodeURIComponent(release_data.id) +
                 "&pane=planning-v2"
         );
     });
@@ -90,7 +90,7 @@ describe("ReleaseBadges", () => {
         });
 
         it("When there is initial effort but null, Then the points of initial effort are 'N/A'", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -102,7 +102,7 @@ describe("ReleaseBadges", () => {
                 number_of_artifact_by_trackers: []
             };
 
-            component_options.propsData = { releaseData };
+            component_options.propsData = { release_data };
             const wrapper = await getPersonalWidgetInstance(store_options);
 
             expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBe(false);
@@ -110,7 +110,7 @@ describe("ReleaseBadges", () => {
         });
 
         it("When there isn't initial effort, Then the points of initial effort are 'N/A'", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -122,7 +122,7 @@ describe("ReleaseBadges", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
             const wrapper = await getPersonalWidgetInstance(store_options);
 
@@ -140,7 +140,7 @@ describe("ReleaseBadges", () => {
         });
 
         it("When there are points of capacity but null, Then the points of capacity are 'N/A'", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -153,7 +153,7 @@ describe("ReleaseBadges", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -163,7 +163,7 @@ describe("ReleaseBadges", () => {
         });
 
         it("When there aren't points of capacity, Then the points of capacity are 'N/A'", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -175,7 +175,7 @@ describe("ReleaseBadges", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);

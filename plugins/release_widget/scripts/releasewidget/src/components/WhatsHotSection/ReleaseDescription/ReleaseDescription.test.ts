@@ -23,7 +23,7 @@ import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-com
 import { MilestoneData, StoreOptions } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
-let releaseData: MilestoneData & Required<Pick<MilestoneData, "planning">>;
+let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const component_options: ShallowMountOptions<ReleaseDescription> = {};
 const project_id = 102;
 
@@ -47,7 +47,7 @@ describe("ReleaseDescription", () => {
             state: {}
         };
 
-        releaseData = {
+        release_data = {
             id: 2,
             planning: {
                 id: "100"
@@ -56,7 +56,7 @@ describe("ReleaseDescription", () => {
         };
 
         component_options.propsData = {
-            releaseData
+            release_data
         };
     });
 

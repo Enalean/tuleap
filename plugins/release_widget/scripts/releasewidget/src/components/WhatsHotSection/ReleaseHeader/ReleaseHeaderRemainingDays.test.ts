@@ -23,7 +23,7 @@ import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-com
 import { MilestoneData, StoreOptions } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
-let releaseData: MilestoneData;
+let release_data: MilestoneData;
 let component_options: ShallowMountOptions<ReleaseHeaderRemainingDays>;
 
 describe("ReleaseHeaderRemainingDays", () => {
@@ -46,7 +46,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             state: {}
         };
 
-        releaseData = {
+        release_data = {
             label: "mile",
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
@@ -56,14 +56,14 @@ describe("ReleaseHeaderRemainingDays", () => {
 
         component_options = {
             propsData: {
-                releaseData
+                release_data
             }
         };
     });
 
     describe("Display remaining days", () => {
         it("When there is number of start days but equal at 0, Then number days of end is displayed and percent in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -75,7 +75,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -92,7 +92,7 @@ describe("ReleaseHeaderRemainingDays", () => {
         });
 
         it("When there isn't number of start days, Then 0 is displayed and a message in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -102,7 +102,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -119,7 +119,7 @@ describe("ReleaseHeaderRemainingDays", () => {
         });
 
         it("When there is negative number of start days, Then 0 is displayed and 0.00% in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -131,7 +131,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -149,7 +149,7 @@ describe("ReleaseHeaderRemainingDays", () => {
         });
 
         it("When there is negative remaining days, Then 0 is displayed and 100% in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -162,7 +162,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -180,7 +180,7 @@ describe("ReleaseHeaderRemainingDays", () => {
         });
 
         it("When there isn't remaining days, Then 0 is displayed and there is a message in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -191,7 +191,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -208,7 +208,7 @@ describe("ReleaseHeaderRemainingDays", () => {
         });
 
         it("When there is remaining days but equal at 0, Then remaining days is displayed and percent in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -221,7 +221,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -238,7 +238,7 @@ describe("ReleaseHeaderRemainingDays", () => {
         });
 
         it("When there is remaining days and is null, Then 0 is displayed and there is a message in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -251,7 +251,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -268,7 +268,7 @@ describe("ReleaseHeaderRemainingDays", () => {
         });
 
         it("When there is remaining days, not null and greater than 0, Then remaining days is displayed and percent in tooltip", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 planning: {
@@ -281,7 +281,7 @@ describe("ReleaseHeaderRemainingDays", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);

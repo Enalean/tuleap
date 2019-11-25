@@ -21,12 +21,12 @@
     <div class="project-release-infos-badges">
         <a class="project-release-info-badge tlp-badge-primary toggle-sprints" v-if="get_top_planning_link !== null" v-bind:href="get_top_planning_link" data-test="planning-link">
             <i class="fa fa-map-signs tlp-badge-icon"></i>
-            <translate v-bind:translate-n="releaseData.total_sprint" translate-plural="%{ releaseData.total_sprint } sprints">
-                %{ releaseData.total_sprint } sprint
+            <translate v-bind:translate-n="release_data.total_sprint" translate-plural="%{ release_data.total_sprint } sprints">
+                %{ release_data.total_sprint } sprint
             </translate>
         </a>
         <div class="project-release-info-badge tlp-badge-primary tlp-badge-outline">
-            <translate v-if="capacity_exists" v-bind:translate-params="{capacity: releaseData.capacity}" data-test="capacity-not-empty">
+            <translate v-if="capacity_exists" v-bind:translate-params="{capacity: release_data.capacity}" data-test="capacity-not-empty">
                 Capacity: %{capacity}
             </translate>
             <translate v-else data-test="capacity-empty">
@@ -34,7 +34,7 @@
             </translate>
         </div>
         <div class="project-release-info-badge tlp-badge-warning tlp-badge-outline">
-            <translate v-if="initial_effort_exist" v-bind:translate-params="{initialEffort: releaseData.initial_effort}" data-test="initial-effort-not-empty">
+            <translate v-if="initial_effort_exist" v-bind:translate-params="{initialEffort: release_data.initial_effort}" data-test="initial-effort-not-empty">
                 Initial effort: %{initialEffort}
             </translate>
             <translate v-else data-test="initial-effort-empty">
@@ -53,37 +53,37 @@ import { State } from "vuex-class";
 @Component
 export default class ReleaseBadges extends Vue {
     @Prop()
-    readonly releaseData!: MilestoneData;
+    readonly release_data!: MilestoneData;
     @State
     readonly project_id!: number;
 
     get get_top_planning_link(): string | null {
-        if (!this.releaseData.planning) {
+        if (!this.release_data.planning) {
             return null;
         }
         return (
             "/plugins/agiledashboard/?group_id=" +
             encodeURIComponent(this.project_id) +
             "&planning_id=" +
-            encodeURIComponent(this.releaseData.planning.id) +
+            encodeURIComponent(this.release_data.planning.id) +
             "&action=show&aid=" +
-            encodeURIComponent(this.releaseData.id) +
+            encodeURIComponent(this.release_data.id) +
             "&pane=planning-v2"
         );
     }
 
     get capacity_exists(): boolean {
-        if (!this.releaseData.capacity) {
+        if (!this.release_data.capacity) {
             return false;
         }
-        return this.releaseData.capacity > 0;
+        return this.release_data.capacity > 0;
     }
 
     get initial_effort_exist(): boolean {
-        if (!this.releaseData.initial_effort) {
+        if (!this.release_data.initial_effort) {
             return false;
         }
-        return this.releaseData.initial_effort > 0;
+        return this.release_data.initial_effort > 0;
     }
 }
 </script>

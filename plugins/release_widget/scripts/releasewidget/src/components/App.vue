@@ -20,7 +20,7 @@
 
 <template>
     <section>
-        <div v-if="isBrowserIE11" class="tlp-alert-danger" data-test="is-IE11" v-translate>
+        <div v-if="is_browser_IE11" class="tlp-alert-danger" data-test="is-IE11" v-translate>
             The plugin "Release Widget" is not supported under IE11. Please use a more recent browser.
         </div>
         <div v-else-if="has_rest_error" class="tlp-alert-danger" data-test="show-error-message">
@@ -49,15 +49,15 @@ import { TrackerAgileDashboard } from "../type";
 })
 export default class App extends Vue {
     @Prop()
-    readonly projectId!: number;
+    readonly project_id!: number;
     @Prop()
-    readonly isBrowserIE11!: boolean;
+    readonly is_browser_IE11!: boolean;
     @Prop()
-    readonly nbUpcomingReleases!: number;
+    readonly nb_upcoming_releases!: number;
     @Prop()
-    readonly nbBacklogItems!: number;
+    readonly nb_backlog_items!: number;
     @Prop()
-    readonly trackersAgileDashboard!: TrackerAgileDashboard[];
+    readonly trackers_agile_dashboard!: TrackerAgileDashboard[];
     @State
     readonly is_loading!: boolean;
     @State
@@ -76,10 +76,10 @@ export default class App extends Vue {
     getMilestones!: () => void;
 
     created(): void {
-        this.setProjectId(this.projectId);
-        this.setNbUpcomingReleases(this.nbUpcomingReleases);
-        this.setNbBacklogItem(this.nbBacklogItems);
-        this.setTrackers(this.trackersAgileDashboard);
+        this.setProjectId(this.project_id);
+        this.setNbUpcomingReleases(this.nb_upcoming_releases);
+        this.setNbBacklogItem(this.nb_backlog_items);
+        this.setTrackers(this.trackers_agile_dashboard);
         this.getMilestones();
     }
 

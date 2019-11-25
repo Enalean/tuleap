@@ -25,7 +25,7 @@ import { MilestoneData, StoreOptions } from "../../type";
 import { DefaultData } from "vue/types/options";
 import { createReleaseWidgetLocalVue } from "../../helpers/local-vue-for-test";
 
-let releaseData: MilestoneData;
+let release_data: MilestoneData;
 let component_options: ShallowMountOptions<ReleaseDisplayer>;
 
 describe("ReleaseDisplayer", () => {
@@ -48,7 +48,7 @@ describe("ReleaseDisplayer", () => {
             state: {}
         };
 
-        releaseData = {
+        release_data = {
             label: "mile",
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
@@ -60,7 +60,7 @@ describe("ReleaseDisplayer", () => {
 
         component_options = {
             propsData: {
-                releaseData
+                release_data
             },
             data(): DefaultData<ReleaseDisplayer> {
                 return {

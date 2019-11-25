@@ -26,7 +26,7 @@ import { DefaultData } from "vue/types/options";
 import * as rest_querier from "../../../../api/rest-querier";
 import BurndownChartError from "./BurndownChartError.vue";
 
-let releaseData: MilestoneData;
+let release_data: MilestoneData;
 const component_options: ShallowMountOptions<BurndownChart> = {};
 const project_id = 102;
 
@@ -50,7 +50,7 @@ describe("BurndownChart", () => {
             state: {}
         };
 
-        releaseData = {
+        release_data = {
             id: 2,
             planning: {
                 id: "100"
@@ -69,7 +69,7 @@ describe("BurndownChart", () => {
         };
 
         component_options.propsData = {
-            releaseData
+            release_data
         };
 
         getPersonalWidgetInstance(store_options);
@@ -89,7 +89,7 @@ describe("BurndownChart", () => {
 
     it("When there isn't start date, Then BurndownChartError component is rendered", async () => {
         store_options.state.project_id = project_id;
-        releaseData = {
+        release_data = {
             id: 2,
             planning: {
                 id: "100"
@@ -108,7 +108,7 @@ describe("BurndownChart", () => {
         };
 
         component_options.propsData = {
-            releaseData
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -122,7 +122,7 @@ describe("BurndownChart", () => {
 
     it("When there isn't duration, Then BurndownChartError component is rendered", async () => {
         store_options.state.project_id = project_id;
-        releaseData = {
+        release_data = {
             id: 2,
             planning: {
                 id: "100"
@@ -141,7 +141,7 @@ describe("BurndownChart", () => {
         };
 
         component_options.propsData = {
-            releaseData
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -155,7 +155,7 @@ describe("BurndownChart", () => {
 
     it("When duration is null, Then BurndownChartError component is rendered", async () => {
         store_options.state.project_id = project_id;
-        releaseData = {
+        release_data = {
             id: 2,
             planning: {
                 id: "100"
@@ -174,7 +174,7 @@ describe("BurndownChart", () => {
         };
 
         component_options.propsData = {
-            releaseData
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -188,7 +188,7 @@ describe("BurndownChart", () => {
 
     it("When duration is null and there isn't start date, Then BurndownChartError component is rendered", async () => {
         store_options.state.project_id = project_id;
-        releaseData = {
+        release_data = {
             id: 2,
             planning: {
                 id: "100"
@@ -207,7 +207,7 @@ describe("BurndownChart", () => {
         };
 
         component_options.propsData = {
-            releaseData
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -221,7 +221,7 @@ describe("BurndownChart", () => {
 
     it("When duration is null and it is under calculation, Then BurndownChartError component is rendered", async () => {
         store_options.state.project_id = project_id;
-        releaseData = {
+        release_data = {
             id: 2,
             planning: {
                 id: "100"
@@ -240,7 +240,7 @@ describe("BurndownChart", () => {
         };
 
         component_options.propsData = {
-            releaseData
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -254,7 +254,7 @@ describe("BurndownChart", () => {
 
     it("When the burndown can be create, Then there is just a message", async () => {
         store_options.state.project_id = project_id;
-        releaseData = {
+        release_data = {
             id: 2,
             planning: {
                 id: "100"
@@ -273,7 +273,7 @@ describe("BurndownChart", () => {
         };
 
         component_options.propsData = {
-            releaseData
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -298,7 +298,7 @@ describe("BurndownChart", () => {
         jest.spyOn(rest_querier, "getBurndownData").mockReturnValue(Promise.resolve(burndown_data));
 
         store_options.state.project_id = project_id;
-        releaseData = {
+        release_data = {
             id: 2,
             planning: {
                 id: "100"
@@ -317,7 +317,7 @@ describe("BurndownChart", () => {
         };
 
         component_options.propsData = {
-            releaseData
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -338,7 +338,7 @@ describe("BurndownChart", () => {
         };
 
         component_options.propsData = {
-            releaseData
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
@@ -357,7 +357,7 @@ describe("BurndownChart", () => {
         };
 
         component_options.propsData = {
-            releaseData
+            release_data
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);

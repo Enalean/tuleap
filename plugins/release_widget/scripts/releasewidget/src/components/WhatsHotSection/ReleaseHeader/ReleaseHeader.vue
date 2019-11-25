@@ -20,19 +20,19 @@
 <template>
     <div class="project-release-header" v-on:click="$emit('toggleReleaseDetails')">
         <i class="project-release-whats-hot-icon fa"></i>
-        <h1 class="project-release-title" v-translate="{ release_label: releaseData.label }" data-test="title-release">
+        <h1 class="project-release-title" v-translate="{ release_label: release_data.label }" data-test="title-release">
             Release %{release_label}
         </h1>
         <span class="project-release-date" v-if="startDateExist()">
-            {{ formatDate(releaseData.start_date) }}
+            {{ formatDate(release_data.start_date) }}
             <i class="release-date-icon fa fa-long-arrow-right" data-test="display-arrow"></i>
-            {{ formatDate(releaseData.end_date) }}
+            {{ formatDate(release_data.end_date) }}
         </span>
         <div class="release-spacer"></div>
         <div v-if="isLoading" class="tlp-skeleton-text release-remaining-disabled" data-test="display-skeleton"></div>
         <div v-else class="release-remaining-effort-badges">
-            <release-header-remaining-days v-bind:release-data="releaseData"/>
-            <release-header-remaining-points v-bind:release-data="releaseData"/>
+            <release-header-remaining-days v-bind:release_data="release_data"/>
+            <release-header-remaining-points v-bind:release_data="release_data"/>
         </div>
     </div>
 </template>
@@ -50,14 +50,14 @@ import { Component, Prop } from "vue-property-decorator";
 })
 export default class ReleaseHeader extends Vue {
     @Prop()
-    readonly releaseData!: MilestoneData;
+    readonly release_data!: MilestoneData;
     @Prop()
     readonly isLoading!: boolean;
 
     formatDate = (date: string): string => formatDateYearMonthDay(date);
 
     startDateExist(): boolean {
-        return this.releaseData.start_date !== null;
+        return this.release_data.start_date !== null;
     }
 }
 </script>

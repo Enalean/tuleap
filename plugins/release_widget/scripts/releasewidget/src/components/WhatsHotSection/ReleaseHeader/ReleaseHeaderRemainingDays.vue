@@ -27,9 +27,9 @@
                   v-bind:class="{ 'release-remaining-value-danger': are_dates_correctly_set, 'release-remaining-value-disabled': disabled_date }"
                   data-test="display-remaining-day-text"
             >
-                {{ formatDate(releaseData.number_days_until_end) }}
+                {{ formatDate(release_data.number_days_until_end) }}
             </span>
-            <translate class="release-remaining-text" v-bind:translate-n="releaseData.number_days_until_end"
+            <translate class="release-remaining-text" v-bind:translate-n="release_data.number_days_until_end"
                        translate-plural="days to go"
             >
                 day to go
@@ -55,34 +55,34 @@ import { MilestoneData } from "../../../type";
 @Component
 export default class ReleaseHeaderRemainingDays extends Vue {
     @Prop()
-    readonly releaseData!: MilestoneData;
+    readonly release_data!: MilestoneData;
     @State
     readonly project_id!: number;
 
     disabled_date =
-        (!this.releaseData.number_days_since_start &&
-            this.releaseData.number_days_since_start !== 0) ||
-        (!this.releaseData.number_days_until_end && this.releaseData.number_days_until_end !== 0);
+        (!this.release_data.number_days_since_start &&
+            this.release_data.number_days_since_start !== 0) ||
+        (!this.release_data.number_days_until_end && this.release_data.number_days_until_end !== 0);
 
     formatDate = (date: number): number => (date && date > 0 ? date : 0);
 
     get are_dates_correctly_set(): boolean {
         if (
-            this.releaseData.number_days_since_start === null ||
-            typeof this.releaseData.number_days_since_start === "undefined" ||
-            !this.releaseData.number_days_until_end
+            this.release_data.number_days_since_start === null ||
+            typeof this.release_data.number_days_since_start === "undefined" ||
+            !this.release_data.number_days_until_end
         ) {
             return false;
         }
         return (
-            this.releaseData.number_days_since_start >= 0 &&
-            this.releaseData.number_days_until_end > 0
+            this.release_data.number_days_since_start >= 0 &&
+            this.release_data.number_days_until_end > 0
         );
     }
 
     get get_tooltip_effort_date(): string {
-        const days_since_start = this.releaseData.number_days_since_start;
-        const days_until_end = this.releaseData.number_days_until_end;
+        const days_since_start = this.release_data.number_days_since_start;
+        const days_until_end = this.release_data.number_days_until_end;
 
         if (!days_since_start && days_since_start !== 0) {
             return this.$gettext("No start date defined.");

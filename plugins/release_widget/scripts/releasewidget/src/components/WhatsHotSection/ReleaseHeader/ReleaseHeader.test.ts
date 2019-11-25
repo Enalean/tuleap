@@ -24,7 +24,7 @@ import { MilestoneData, StoreOptions } from "../../../type";
 import { setUserLocale } from "../../../helpers/user-locale-helper";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
-let releaseData: MilestoneData;
+let release_data: MilestoneData;
 let component_options: ShallowMountOptions<ReleaseHeader>;
 
 describe("ReleaseHeader", () => {
@@ -46,7 +46,7 @@ describe("ReleaseHeader", () => {
             state: {}
         };
 
-        releaseData = {
+        release_data = {
             label: "mile",
             id: 2,
             start_date: new Date("2017-01-22T13:42:08+02:00").toDateString(),
@@ -56,7 +56,7 @@ describe("ReleaseHeader", () => {
 
         component_options = {
             propsData: {
-                releaseData
+                release_data
             }
         };
     });
@@ -71,7 +71,7 @@ describe("ReleaseHeader", () => {
         });
 
         it("When there isn't a start date of a release, Then there isn't an arrow", async () => {
-            releaseData = {
+            release_data = {
                 label: "mile",
                 id: 2,
                 start_date: null,
@@ -79,7 +79,7 @@ describe("ReleaseHeader", () => {
             };
 
             component_options.propsData = {
-                releaseData
+                release_data
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
@@ -88,7 +88,7 @@ describe("ReleaseHeader", () => {
     });
 
     it("When the widget is loading, Then there is a skeleton instead of points", async () => {
-        releaseData = {
+        release_data = {
             label: "mile",
             id: 2,
             start_date: null,
@@ -96,7 +96,7 @@ describe("ReleaseHeader", () => {
         };
 
         component_options.propsData = {
-            releaseData,
+            release_data,
             isLoading: true
         };
 
@@ -105,7 +105,7 @@ describe("ReleaseHeader", () => {
     });
 
     it("When release's title contains '>', Then '>' is displayed", async () => {
-        releaseData = {
+        release_data = {
             label: "1 > 2",
             id: 2,
             start_date: null,
@@ -113,7 +113,7 @@ describe("ReleaseHeader", () => {
         };
 
         component_options.propsData = {
-            releaseData,
+            release_data,
             isLoading: true
         };
 

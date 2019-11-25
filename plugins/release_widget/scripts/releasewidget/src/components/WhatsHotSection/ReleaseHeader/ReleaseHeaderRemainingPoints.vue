@@ -27,9 +27,9 @@
                   v-bind:class="{ 'release-remaining-value-disabled': disabled_points, 'release-remaining-value-success': are_all_effort_defined}"
                   data-test="points-remaining-value"
             >
-                {{ formatPoints(releaseData.remaining_effort) }}
+                {{ formatPoints(release_data.remaining_effort) }}
             </span>
-            <translate class="release-remaining-text" v-bind:translate-n="releaseData.remaining_effort"
+            <translate class="release-remaining-text" v-bind:translate-n="release_data.remaining_effort"
                        translate-plural="pts to go"
             >
                 pt to go
@@ -55,29 +55,29 @@ import { MilestoneData } from "../../../type";
 @Component
 export default class ReleaseHeaderRemainingPoints extends Vue {
     @Prop()
-    readonly releaseData!: MilestoneData;
+    readonly release_data!: MilestoneData;
 
     disabled_points =
-        (!this.releaseData.remaining_effort && this.releaseData.remaining_effort !== 0) ||
-        !this.releaseData.initial_effort ||
-        this.releaseData.initial_effort < this.releaseData.remaining_effort;
+        (!this.release_data.remaining_effort && this.release_data.remaining_effort !== 0) ||
+        !this.release_data.initial_effort ||
+        this.release_data.initial_effort < this.release_data.remaining_effort;
 
     formatPoints = (pts: number): number => (pts ? pts : 0);
 
     get are_all_effort_defined(): boolean {
-        if (!this.releaseData.remaining_effort || !this.releaseData.initial_effort) {
+        if (!this.release_data.remaining_effort || !this.release_data.initial_effort) {
             return false;
         }
         return (
-            this.releaseData.remaining_effort > 0 &&
-            this.releaseData.initial_effort > 0 &&
-            this.releaseData.initial_effort >= this.releaseData.remaining_effort
+            this.release_data.remaining_effort > 0 &&
+            this.release_data.initial_effort > 0 &&
+            this.release_data.initial_effort >= this.release_data.remaining_effort
         );
     }
 
     get get_tooltip_effort_points(): string {
-        const remaining_effort = this.releaseData.remaining_effort;
-        const initial_effort = this.releaseData.initial_effort;
+        const remaining_effort = this.release_data.remaining_effort;
+        const initial_effort = this.release_data.initial_effort;
 
         if (!remaining_effort && remaining_effort !== 0) {
             return this.$gettext("No remaining effort defined.");
