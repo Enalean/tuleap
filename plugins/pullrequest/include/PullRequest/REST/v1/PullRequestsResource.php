@@ -1188,7 +1188,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $pull_request = $this->getAccessiblePullRequest($id);
 
-        $reviewer_retrievers = new ReviewerRetriever($this->user_manager, new ReviewerDAO());
+        $reviewer_retrievers = new ReviewerRetriever($this->user_manager, new ReviewerDAO(), $this->permission_checker);
 
         return ReviewersRepresentation::fromUsers(...$reviewer_retrievers->getReviewers($pull_request));
     }

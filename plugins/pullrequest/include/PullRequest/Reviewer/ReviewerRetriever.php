@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer;
 
+use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
+use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
 use UserManager;
 
@@ -35,11 +37,19 @@ final class ReviewerRetriever
      * @var ReviewerDAO
      */
     private $reviewer_dao;
+    /**
+     * @var PullRequestPermissionChecker
+     */
+    private $pull_request_permission_checker;
 
-    public function __construct(UserManager $user_manager, ReviewerDAO $reviewer_dao)
-    {
-        $this->user_manager = $user_manager;
-        $this->reviewer_dao = $reviewer_dao;
+    public function __construct(
+        UserManager $user_manager,
+        ReviewerDAO $reviewer_dao,
+        PullRequestPermissionChecker $pull_request_permission_checker
+    ) {
+        $this->user_manager                    = $user_manager;
+        $this->reviewer_dao                    = $reviewer_dao;
+        $this->pull_request_permission_checker = $pull_request_permission_checker;
     }
 
     /**
@@ -52,7 +62,13 @@ final class ReviewerRetriever
         $users = [];
 
         foreach ($user_rows as $user_row) {
-            $users[] = $this->user_manager->getUserInstanceFromRow($user_row);
+            $reviewer = $this->user_manager->getUserInstanceFromRow($user_row);
+
+            try {
+                $this->pull_request_permission_checker->checkPullRequestIsReadableByUser($pull_request, $reviewer);
+                $users[] = $reviewer;
+            } catch (UserCannotReadGitRepositoryException $exception) {
+            }
         }
 
         return $users;
