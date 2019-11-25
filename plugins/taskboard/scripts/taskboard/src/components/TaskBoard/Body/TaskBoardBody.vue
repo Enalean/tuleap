@@ -42,7 +42,7 @@ import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
 import dragula, { Drake } from "dragula";
-import { Swimlane, ColumnDefinition, Card } from "../../../type";
+import { Swimlane, ColumnDefinition, Card, TaskboardEvent } from "../../../type";
 import CollapsedSwimlane from "./Swimlane/CollapsedSwimlane.vue";
 import CardWithChildren from "./Swimlane/CardWithChildren.vue";
 import SwimlaneSkeleton from "./Swimlane/Skeleton/SwimlaneSkeleton.vue";
@@ -51,6 +51,7 @@ import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
 import { getColumnOfCard } from "../../../helpers/list-value-to-column-mapper";
 import { isContainer, canMove, invalid, checkCellAcceptsDrop } from "../../../helpers/drag-drop";
 import { HandleDropPayload } from "../../../store/swimlane/type";
+import EventBus from "../../../helpers/event-bus";
 
 const column = namespace("column");
 const swimlane = namespace("swimlane");
@@ -110,7 +111,7 @@ export default class TaskBoardBody extends Vue {
         if (this.drake) {
             this.drake.destroy();
         }
-        document.removeEventListener("keyup", this.cancelDragOnEscape);
+        EventBus.$off(TaskboardEvent.ESC_KEY_PRESSED, this.cancelDragOnEscape);
     }
 
     mounted(): void {
@@ -139,7 +140,7 @@ export default class TaskBoardBody extends Vue {
 
         this.drake.on("cancel", this.removeHighlightOnLastHoveredDropZone);
 
-        document.addEventListener("keyup", this.cancelDragOnEscape);
+        EventBus.$on(TaskboardEvent.ESC_KEY_PRESSED, this.cancelDragOnEscape);
     }
 
     getColumnOfSoloCard(swimlane: Swimlane): ColumnDefinition {
@@ -154,8 +155,8 @@ export default class TaskBoardBody extends Vue {
         return getColumnOfCard(this.columns, swimlane.card) === undefined;
     }
 
-    cancelDragOnEscape(event: KeyboardEvent): void {
-        if (event.key === "Escape" && this.drake) {
+    cancelDragOnEscape(): void {
+        if (this.drake) {
             this.drake.cancel(true);
         }
     }

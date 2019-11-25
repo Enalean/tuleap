@@ -23,11 +23,12 @@ import TaskBoardBody from "./TaskBoardBody.vue";
 import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import SwimlaneSkeleton from "./Swimlane/Skeleton/SwimlaneSkeleton.vue";
 import CollapsedSwimlane from "./Swimlane/CollapsedSwimlane.vue";
-import { ColumnDefinition, Swimlane } from "../../../type";
+import { ColumnDefinition, Swimlane, TaskboardEvent } from "../../../type";
 import { createTaskboardLocalVue } from "../../../helpers/local-vue-for-test";
 import * as mapper from "../../../helpers/list-value-to-column-mapper";
 import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
 import { RootState } from "../../../store/type";
+import EventBus from "../../../helpers/event-bus";
 
 interface FakeDrake {
     on: jest.SpyInstance;
@@ -37,7 +38,8 @@ interface FakeDrake {
 jest.mock("dragula", () => {
     const fake_drake = {
         on: jest.fn(),
-        destroy: jest.fn()
+        destroy: jest.fn(),
+        cancel: jest.fn()
     };
     return jest.fn((): FakeDrake => fake_drake);
 });
@@ -156,6 +158,16 @@ describe("TaskBoardBody", () => {
         expect(wrapper.contains(SwimlaneSkeleton)).toBe(true);
     });
 
+    it(`will cancel dragging on "Escape"`, async () => {
+        const mock_drake = dragula.default();
+        jest.spyOn(mock_drake, "cancel").mockImplementation(() => {});
+
+        await createWrapper([], false);
+        EventBus.$emit(TaskboardEvent.ESC_KEY_PRESSED);
+
+        expect(mock_drake.cancel).toHaveBeenCalledWith(true);
+    });
+
     describe(`mounted()`, () => {
         it(`will create a "drake"`, async () => {
             await createWrapper([], false);
@@ -163,14 +175,15 @@ describe("TaskBoardBody", () => {
             expect(dragula.default).toHaveBeenCalled();
         });
 
-        it(`will cancel dragging on "Escape"`, async () => {
-            const addListener = jest
-                .spyOn(document, "addEventListener")
-                .mockImplementation(() => {});
+        it(`will listen to esc-key-pressed event`, async () => {
+            const event_bus_on = jest.spyOn(EventBus, "$on");
 
             await createWrapper([], false);
 
-            expect(addListener).toHaveBeenCalledWith("keyup", expect.any(Function));
+            expect(event_bus_on).toHaveBeenCalledWith(
+                TaskboardEvent.ESC_KEY_PRESSED,
+                expect.any(Function)
+            );
         });
     });
 
@@ -183,14 +196,14 @@ describe("TaskBoardBody", () => {
             expect(mock_drake.destroy).toHaveBeenCalled();
         });
 
-        it(`will remove the "Escape" listener`, async () => {
-            jest.spyOn(document, "removeEventListener").mockImplementation(() => {});
+        it(`will remove the esc-key-pressed listener`, async () => {
+            const event_bus_off = jest.spyOn(EventBus, "$off");
 
             const wrapper = await createWrapper([], false);
             wrapper.destroy();
 
-            expect(document.removeEventListener).toHaveBeenCalledWith(
-                "keyup",
+            expect(event_bus_off).toHaveBeenCalledWith(
+                TaskboardEvent.ESC_KEY_PRESSED,
                 expect.any(Function)
             );
         });

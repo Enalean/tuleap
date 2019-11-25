@@ -36,10 +36,11 @@ import { Component } from "vue-property-decorator";
 import BoardWithoutAnyColumnsError from "./GlobalError/BoardWithoutAnyColumnsError.vue";
 import GlobalAppError from "./GlobalError/GlobalAppError.vue";
 import UnderConstructionModal from "./UnderConstruction/UnderConstructionModal.vue";
-import { ColumnDefinition } from "../type";
+import { ColumnDefinition, TaskboardEvent } from "../type";
 import TaskBoard from "./TaskBoard/TaskBoard.vue";
 import NoContentEmptyState from "./EmptyState/NoContentEmptyState.vue";
 import ErrorModal from "./GlobalError/ErrorModal.vue";
+import EventBus from "./../helpers/event-bus";
 
 const column = namespace("column");
 const error = namespace("error");
@@ -76,17 +77,28 @@ export default class App extends Vue {
     }
 
     mounted(): void {
-        window.addEventListener(
-            "beforeunload",
-            (event: Event): void => {
-                if (this.has_at_least_one_card_in_edit_mode) {
-                    event.preventDefault();
-                    event.returnValue = false;
-                } else {
-                    delete event["returnValue"];
-                }
-            }
-        );
+        window.addEventListener("beforeunload", this.beforeUnload);
+        document.addEventListener("keyup", this.keyup);
+    }
+
+    beforeDestroy(): void {
+        window.removeEventListener("beforeunload", this.beforeUnload);
+        document.removeEventListener("keyup", this.keyup);
+    }
+
+    beforeUnload(event: Event): void {
+        if (this.has_at_least_one_card_in_edit_mode) {
+            event.preventDefault();
+            event.returnValue = false;
+        } else {
+            delete event["returnValue"];
+        }
+    }
+
+    keyup(event: KeyboardEvent): void {
+        if (event.key === "Escape") {
+            EventBus.$emit(TaskboardEvent.ESC_KEY_PRESSED);
+        }
     }
 }
 </script>

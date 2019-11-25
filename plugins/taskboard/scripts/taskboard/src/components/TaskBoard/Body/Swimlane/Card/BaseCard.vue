@@ -37,7 +37,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import CardXrefLabel from "./CardXrefLabel.vue";
 import CardAssignees from "./CardAssignees.vue";
-import { Card, Event } from "../../../../../type";
+import { Card, TaskboardEvent } from "../../../../../type";
 import { namespace } from "vuex-class";
 import EventBus from "../../../../../helpers/event-bus";
 
@@ -69,13 +69,13 @@ export default class BaseCard extends Vue {
         setTimeout(() => {
             this.add_show_class = false;
         }, 500);
-        EventBus.$on(Event.CANCEL_CARD_EDITION, this.cancelButtonCallback);
-        EventBus.$on(Event.SAVE_CARD_EDITION, this.saveButtonCallback);
+        EventBus.$on(TaskboardEvent.CANCEL_CARD_EDITION, this.cancelButtonCallback);
+        EventBus.$on(TaskboardEvent.SAVE_CARD_EDITION, this.saveButtonCallback);
     }
 
     beforeDestroy(): void {
-        EventBus.$off(Event.CANCEL_CARD_EDITION, this.cancelButtonCallback);
-        EventBus.$off(Event.SAVE_CARD_EDITION, this.saveButtonCallback);
+        EventBus.$off(TaskboardEvent.CANCEL_CARD_EDITION, this.cancelButtonCallback);
+        EventBus.$off(TaskboardEvent.SAVE_CARD_EDITION, this.saveButtonCallback);
     }
 
     cancelButtonCallback(card: Card): void {

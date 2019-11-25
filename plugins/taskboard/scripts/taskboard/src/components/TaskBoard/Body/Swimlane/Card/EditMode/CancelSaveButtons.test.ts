@@ -19,7 +19,7 @@
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import CancelSaveButtons from "./CancelSaveButtons.vue";
-import { Card, Event, RemainingEffort } from "../../../../../../type";
+import { Card, TaskboardEvent, RemainingEffort } from "../../../../../../type";
 import { createTaskboardLocalVue } from "../../../../../../helpers/local-vue-for-test";
 import EventBus from "../../../../../../helpers/event-bus";
 
@@ -73,7 +73,19 @@ describe("CancelSaveButtons", () => {
         cancel.trigger("click");
 
         expect(event_bus_emit).toHaveBeenCalledWith(
-            Event.CANCEL_CARD_EDITION,
+            TaskboardEvent.CANCEL_CARD_EDITION,
+            wrapper.props("card")
+        );
+    });
+
+    it("Emits cancel-card-edition event when user press ESC key", async () => {
+        const wrapper = await createWrapper(true, null);
+        const event_bus_emit = jest.spyOn(EventBus, "$emit");
+
+        EventBus.$emit(TaskboardEvent.ESC_KEY_PRESSED);
+
+        expect(event_bus_emit).toHaveBeenCalledWith(
+            TaskboardEvent.CANCEL_CARD_EDITION,
             wrapper.props("card")
         );
     });
@@ -85,6 +97,9 @@ describe("CancelSaveButtons", () => {
         const cancel = wrapper.find("[data-test=save]");
         cancel.trigger("click");
 
-        expect(event_bus_emit).toHaveBeenCalledWith(Event.SAVE_CARD_EDITION, wrapper.props("card"));
+        expect(event_bus_emit).toHaveBeenCalledWith(
+            TaskboardEvent.SAVE_CARD_EDITION,
+            wrapper.props("card")
+        );
     });
 });
