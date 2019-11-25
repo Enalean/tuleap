@@ -46,9 +46,14 @@ final class ReviewerUpdater
 
     /**
      * @throws UserCannotBeAddedAsReviewerException
+     * @throws ReviewersCannotBeUpdatedOnClosedPullRequestException
      */
     public function updatePullRequestReviewers(PullRequest $pull_request, PFUser ...$new_reviewers): void
     {
+        if ($pull_request->getStatus() !== PullRequest::STATUS_REVIEW) {
+            throw new ReviewersCannotBeUpdatedOnClosedPullRequestException($pull_request);
+        }
+
         $new_reviewer_ids = [];
 
         foreach ($new_reviewers as $user) {
