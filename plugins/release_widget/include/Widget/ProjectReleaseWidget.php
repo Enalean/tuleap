@@ -22,8 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ReleaseWidget\Widget;
 
+use Exception;
+use HTTPRequest;
+use PlanningDao;
+use PlanningFactory;
+use PlanningPermissionsManager;
 use TemplateRenderer;
 use TemplateRendererFactory;
+use TrackerFactory;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
@@ -32,20 +38,41 @@ use Widget;
 class ProjectReleaseWidget extends Widget
 {
     public const NAME = 'release';
+    /**
+     * @var string
+     */
+    private $label_tracker_backlog;
 
     public function __construct()
     {
+        $planning_factory = new PlanningFactory(
+            new PlanningDao(),
+            TrackerFactory::instance(),
+            new PlanningPermissionsManager()
+        );
+
+        $http       = HTTPRequest::instance();
+        $project_id = $http->getProject()->getID();
+
+        $root_planning = $planning_factory->getRootPlanning($http->getCurrentUser(), $project_id);
+
+        if (!$root_planning) {
+            throw new Exception('Root planning does not exist');
+        }
+
+        $this->label_tracker_backlog = $root_planning->getPlanningTracker()->getName();
+
         parent::__construct(self::NAME);
     }
 
     public function getTitle() : string
     {
-        return dgettext('tuleap-release_widget', 'Release Widget');
+        return sprintf(dgettext('tuleap-release_widget', '%s Widget'), $this->label_tracker_backlog);
     }
 
     public function getDescription() : string
     {
-        return dgettext('tuleap-release_widget', 'A widget for release monitoring.');
+        return sprintf(dgettext('tuleap-release_widget', 'A widget for %s monitoring.'), $this->label_tracker_backlog);
     }
 
     public function getIcon()
