@@ -28,16 +28,9 @@
                     <span v-translate>Project information</span>
                 </h2>
                 <under-construction-information/>
-                <div class="tlp-form-element" data-test="register-new-project-information-form">
-                    <label class="tlp-label" for="project-name">
-                        <span v-translate>Name</span>
-                        <i class="fa fa-asterisk"></i>
-                    </label>
-                    <input id="project-name" type="text" class="tlp-input" v-bind:placeholder="translated_placeholder"
-                           disabled>
-                    <p class="tlp-text-info"><i class="fa fa-life-saver register-new-project-icon"></i><span v-translate>Between 3 and 30 characters length</span>
-                    </p>
-                </div>
+                <form action="#" ref="form" data-test="register-new-project-information-form">
+                    <project-name/>
+                </form>
             </div>
         </div>
         <project-information-footer/>
@@ -50,17 +43,15 @@ import { Component } from "vue-property-decorator";
 import UnderConstructionInformation from "../UnderConstructionInformation.vue";
 import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
+import ProjectName from "./Input/ProjectName.vue";
 
 @Component({
     components: {
+        ProjectName,
         ProjectInformationFooter,
         ProjectInformationSvg,
         UnderConstructionInformation
     }
 })
-export default class ProjectInformation extends Vue {
-    get translated_placeholder(): string {
-        return this.$gettext("My new project");
-    }
-}
+export default class ProjectInformation extends Vue {}
 </script>

@@ -28,6 +28,17 @@ msgstr "Suivant"
 msgid "Project information"
 msgstr "Information sur le projet"
 
+msgid ""
+"Project short name must have between 3 and 30 characters length. It can only "
+"contains alphanumerical characters and dashes. Must start with a letter."
+msgstr ""
+"Le nom court de project doit comprendre entre 3 et 30 caractères. Il peut "
+"seulement contenir des caractères alphanumériques. Il doit commencer par "
+"une lettre."
+
+msgid "Project shortname:"
+msgstr "Nom court de projet :"
+
 msgid "Start a new project"
 msgstr "Démarrer un nouveau projet"
 
