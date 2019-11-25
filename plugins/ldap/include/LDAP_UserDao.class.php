@@ -120,7 +120,7 @@ class LDAP_UserDao extends DataAccessObject
      *
      * @return bool
      */
-    function userNameIsAvailable($name)
+    public function userNameIsAvailable($name)
     {
         $sql = 'SELECT user_name'.
             ' FROM user'.
