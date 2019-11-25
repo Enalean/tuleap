@@ -23,6 +23,7 @@
         <a class="taskboard-card-xref taskboard-item-no-drag"
            v-bind:href="card.artifact_html_uri"
            v-bind:class="additional_classnames"
+           data-test="xref"
         >{{ card.xref }}</a>
         <span class="taskboard-card-label">{{ card.label }}</span>
     </div>
@@ -39,6 +40,10 @@ export default class CardXrefLabel extends Vue {
     readonly card!: Card;
 
     get additional_classnames(): string {
+        if (this.card.background_color) {
+            return `taskboard-card-xref-${this.card.background_color}`;
+        }
+
         return `taskboard-card-xref-${this.card.color}`;
     }
 }
