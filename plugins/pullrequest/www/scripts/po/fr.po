@@ -23,14 +23,15 @@ msgstr "Abandonner"
 msgid "Abandoned"
 msgstr "Abandonné"
 
-msgid "Add"
-msgstr "Ajouter"
-
 msgid "Add labels"
 msgstr "Ajouter un label"
 
 msgid "Add reviewers"
 msgstr "Ajouter des relecteurs"
+
+msgctxt "submit-form"
+msgid "Add reviewers"
+msgstr "Ajouter les relecteurs"
 
 msgid "Already merged"
 msgstr "Déjà intégré"
@@ -55,6 +56,10 @@ msgstr "Checkout"
 
 msgid "Checkout with"
 msgstr "Checkout avec"
+
+msgctxt "submit-form"
+msgid "Clear reviewers"
+msgstr "Enlever les relecteurs"
 
 msgid "Close"
 msgstr "Fermer"
@@ -206,6 +211,9 @@ msgstr "Il n'existe pas de pull requests fermées"
 msgid "There are no open pull requests"
 msgstr "Il n'existe pas de pull requests ouvertes"
 
+msgid "This pull request will be cleared from all of its reviewers."
+msgstr "Plus aucun relecteur ne sera assigné à cette pull request."
+
 msgid "Title"
 msgstr "Titre"
 
@@ -215,8 +223,9 @@ msgstr "Diff unifié"
 msgid "Unknown"
 msgstr "Inconnu"
 
-msgid "Update"
-msgstr "Mettre à jour"
+msgid "Update reviewers"
+msgstr "Éditer les relecteurs"
 
+msgctxt "submit-form"
 msgid "Update reviewers"
 msgstr "Éditer les relecteurs"
