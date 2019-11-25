@@ -26,7 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use XML_Security;
 
-class XML_SecurityTest extends TestCase
+class XML_SecurityTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use MockeryPHPUnitIntegration;
 
@@ -36,6 +36,10 @@ class XML_SecurityTest extends TestCase
         ]>
         <test><testing>&foo;</testing></test>';
 
+    protected function tearDown(): void
+    {
+        libxml_disable_entity_loader(true);
+    }
 
     public function testItDisableExternalLoadOfEntities()
     {

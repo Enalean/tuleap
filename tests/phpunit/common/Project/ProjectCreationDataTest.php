@@ -26,11 +26,10 @@ use Mockery as M;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Configuration\Logger\LoggerInterface;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
-use Tuleap\Test\RestoreLibXMLEntityLoadingInitialState;
 
 class ProjectCreationDataTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration, RestoreLibXMLEntityLoadingInitialState;
+    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
      * @var M\MockInterface|ProjectManager
@@ -74,7 +73,7 @@ class ProjectCreationDataTest extends TestCase
 
     public function testItHasBasicMetadataFromProject()
     {
-        $xml = simplexml_load_file(__DIR__.'/_fixtures/ProjectCreationData/project_with_services.xml');
+        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $project_data = ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
         $this->assertEquals('kanbansampleproject', $project_data->getUnixName());
         $this->assertEquals('Kanban Sample project', $project_data->getFullName());
@@ -84,7 +83,7 @@ class ProjectCreationDataTest extends TestCase
 
     public function testItLoadsPrivateProjects()
     {
-        $xml = simplexml_load_file(__DIR__.'/_fixtures/ProjectCreationData/project_with_services.xml');
+        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'private';
         $project_data = ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
         $this->assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
@@ -94,7 +93,7 @@ class ProjectCreationDataTest extends TestCase
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        $xml = simplexml_load_file(__DIR__.'/_fixtures/ProjectCreationData/project_with_services.xml');
+        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'unrestricted';
         $project_data = ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
         $this->assertEquals(Project::ACCESS_PUBLIC_UNRESTRICTED, $project_data->getAccess());
@@ -104,7 +103,7 @@ class ProjectCreationDataTest extends TestCase
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        $xml = simplexml_load_file(__DIR__.'/_fixtures/ProjectCreationData/project_with_services.xml');
+        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'private-wo-restr';
         $project_data = ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
         $this->assertEquals(Project::ACCESS_PRIVATE_WO_RESTRICTED, $project_data->getAccess());
@@ -114,7 +113,7 @@ class ProjectCreationDataTest extends TestCase
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
-        $xml = simplexml_load_file(__DIR__.'/_fixtures/ProjectCreationData/project_with_services.xml');
+        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'unrestricted';
 
         $this->expectException(Tuleap\Project\XML\Import\ImportNotValidException::class);
@@ -126,7 +125,7 @@ class ProjectCreationDataTest extends TestCase
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
-        $xml = simplexml_load_file(__DIR__.'/_fixtures/ProjectCreationData/project_with_services.xml');
+        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'private-wo-restr';
 
         $this->expectException(Tuleap\Project\XML\Import\ImportNotValidException::class);
@@ -138,7 +137,7 @@ class ProjectCreationDataTest extends TestCase
     {
         ForgeConfig::set('sys_is_project_public', 1);
 
-        $xml = simplexml_load_file(__DIR__.'/_fixtures/ProjectCreationData/project_with_services.xml');
+        $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         unset($xml['access']);
 
         $project_data = ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);

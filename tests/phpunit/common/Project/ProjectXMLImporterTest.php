@@ -28,13 +28,12 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Test\RestoreLibXMLEntityLoadingInitialState;
 use Tuleap\XML\MappingsRegistry;
 use Tuleap\Project\XML\Import;
 
 class ProjectXMLImporterTest extends TestCase
 {
-    use M\Adapter\Phpunit\MockeryPHPUnitIntegration, RestoreLibXMLEntityLoadingInitialState;
+    use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     private $event_manager;
     /**
