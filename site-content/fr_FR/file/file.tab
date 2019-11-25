@@ -176,7 +176,6 @@ file_admin_editreleases	release_perm	Les permissions associées à cette version
 file_admin_editreleases	upload_file_deleted	Vous avez récemment supprimez le fichier $1, vous pourrez à nouveau le télécharger dans moins de deux heures.
 file_admin_editreleases	create_new_release	Créer une nouvelle version
 file_admin_editreleases	create_canceled	Création de la version annulée
-file_admin_editreleases	update_canceled	Mise à jour de la version annulée
 file_admin_editreleases	upload_file_msg	(La taille maximum autorisée est de $1 Mb - Veuillez compresser vos fichiers)
 file_admin_editreleases	md5sum	md5 Checksum
 file_admin_editreleases	user	Propriétaire

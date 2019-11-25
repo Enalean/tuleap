@@ -98,11 +98,6 @@ class FRSReleaseController
 
     public function update(HTTPRequest $request, Project $project, FRSRelease $release)
     {
-        if ($request->exist('cancel')) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases', 'update_canceled'));
-            $GLOBALS['Response']->redirect('/file/?group_id='.$project->getGroupId());
-        }
-
         frs_process_release_form(
             $is_update = true,
             $request,
