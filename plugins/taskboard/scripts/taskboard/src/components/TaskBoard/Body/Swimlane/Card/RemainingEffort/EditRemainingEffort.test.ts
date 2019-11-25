@@ -139,7 +139,10 @@ describe("EditRemainingEffort", () => {
         const wrapper = await getWrapper();
 
         wrapper.setData({ value: "3" });
-        expect(wrapper.classes()).toEqual(["taskboard-card-remaining-effort-input-fiesta-red"]);
+        expect(wrapper.classes()).toEqual([
+            "taskboard-card-remaining-effort-input",
+            "taskboard-card-remaining-effort-input-fiesta-red"
+        ]);
 
         wrapper.setData({ value: "3.14" });
         expect(wrapper.classes()).toContain("taskboard-card-remaining-effort-input-width-40");
