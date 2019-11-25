@@ -22,6 +22,7 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB;
 use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 use Tuleap\Mediawiki\Maintenance\CleanUnused;
@@ -112,7 +113,6 @@ class MediaWikiPlugin extends Plugin
         $this->addHook(Event::SITE_ACCESS_CHANGE);
 
         $this->addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
@@ -141,14 +141,6 @@ class MediaWikiPlugin extends Plugin
     public function getServiceShortname()
     {
         return self::SERVICE_SHORTNAME;
-    }
-
-    public function burning_parrot_get_stylesheets($params)
-    {
-        if (strpos($_SERVER['REQUEST_URI'], '/plugins/mediawiki') === 0) {
-            $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
-        }
     }
 
     public function burning_parrot_get_javascript_files($params)
@@ -296,7 +288,12 @@ class MediaWikiPlugin extends Plugin
         // Only show the stylesheet if we're actually in the Mediawiki pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="/plugins/mediawiki/themes/default/css/style.css" />';
+            $asset = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/mediawiki/themes',
+                '/assets/mediawiki/themes'
+            );
+
+            echo '<link rel="stylesheet" type="text/css" href="'. $asset->getFileURL('style.css') .'" />';
         }
     }
 
