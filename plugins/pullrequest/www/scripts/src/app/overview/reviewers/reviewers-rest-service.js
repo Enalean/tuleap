@@ -25,15 +25,37 @@ function ReviewersRestService($http, $q, ErrorModalService) {
     const self = this;
 
     Object.assign(self, {
-        getReviewers
+        getReviewers,
+        updateReviewers,
+        searchUsers
     });
 
     function getReviewers(pull_request_id) {
         return $http
             .get("/api/v1/pull_requests/" + encodeURIComponent(pull_request_id) + "/reviewers")
-            .catch(function(response) {
+            .catch(response => {
                 ErrorModalService.showError(response);
-                return $q.reject(response);
+            });
+    }
+
+    function updateReviewers(pull_request_id, reviewer_representations) {
+        return $http
+            .put("/api/v1/pull_requests/" + encodeURIComponent(pull_request_id) + "/reviewers", {
+                users: reviewer_representations
+            })
+            .catch(response => {
+                ErrorModalService.showError(response);
+            });
+    }
+
+    function searchUsers(query) {
+        return $http
+            .get("/api/v1/users/", { params: { query: query } })
+            .then(response => {
+                return response;
+            })
+            .catch(response => {
+                ErrorModalService.showError(response);
             });
     }
 }

@@ -14,3 +14,8 @@
 .reviewer {
     margin: -4px $tlp-half-spacing -4px 0;
 }
+
+#pull-request-update-modal .select2-selection__choice {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}

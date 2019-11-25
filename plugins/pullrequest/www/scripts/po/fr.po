@@ -23,6 +23,9 @@ msgstr "Abandonner"
 msgid "Abandoned"
 msgstr "Abandonné"
 
+msgid "Add"
+msgstr "Ajouter"
+
 msgid "Add labels"
 msgstr "Ajouter un label"
 
@@ -168,6 +171,10 @@ msgstr ""
 "Le statut d’intégration de cette pull request est indéterminé. Essayez de "
 "l’intégrer en ligne de commande et poussez vers la destination."
 
+msgctxt "field-label"
+msgid "Reviewers"
+msgstr "Relecteurs"
+
 msgid "Reviewers:"
 msgstr "Relecteurs :"
 
@@ -176,6 +183,9 @@ msgstr "Sauvegarder"
 
 msgid "Say something…"
 msgstr "Dites quelque chose…"
+
+msgid "Select reviewers"
+msgstr "Éditer les relecteurs"
 
 msgid "Show details"
 msgstr "Voir les détails"
@@ -204,3 +214,9 @@ msgstr "Diff unifié"
 
 msgid "Unknown"
 msgstr "Inconnu"
+
+msgid "Update"
+msgstr "Mettre à jour"
+
+msgid "Update reviewers"
+msgstr "Éditer les relecteurs"

@@ -25,7 +25,9 @@ function ReviewersService(ReviewersRestService) {
     const self = this;
 
     Object.assign(self, {
-        getReviewers
+        getReviewers,
+        updateReviewers,
+        buildUserRepresentationsForPut
     });
 
     function getReviewers(pull_request) {
@@ -35,6 +37,16 @@ function ReviewersService(ReviewersRestService) {
             reviewers = response.data.users;
 
             return reviewers;
+        });
+    }
+
+    function updateReviewers(pull_request, reviewer_representations) {
+        return ReviewersRestService.updateReviewers(pull_request.id, reviewer_representations);
+    }
+
+    function buildUserRepresentationsForPut(user_representations) {
+        return Array.from(user_representations, user => {
+            return { id: parseInt(user.id, 10) };
         });
     }
 }

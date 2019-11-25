@@ -19,4 +19,9 @@
 
 import angular from "angular";
 
-export default angular.module("angular-tlp", []).service("TlpModalService", class {}).name;
+export default angular.module("angular-tlp", []).service(
+    "TlpModalService",
+    class {
+        open() {}
+    }
+).name;
