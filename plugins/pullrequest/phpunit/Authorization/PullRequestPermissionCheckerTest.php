@@ -22,14 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Authorization;
 
+use GitRepoNotFoundException;
 use GitRepositoryFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Project_AccessException;
 use Project_AccessPrivateException;
 use Project_AccessProjectNotFoundException;
+use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\PullRequest\PullRequest;
-
-require_once __DIR__ . '/../bootstrap.php';
+use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 
 class PullRequestPermissionCheckerTest extends TestCase
 {
@@ -52,6 +54,10 @@ class PullRequestPermissionCheckerTest extends TestCase
      */
     private $url_verification;
     /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessControlVerifier
+     */
+    private $access_control_verifier;
+    /**
      * @var \GitRepository
      */
     private $repository;
@@ -59,68 +65,100 @@ class PullRequestPermissionCheckerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user                   = \Mockery::spy(\PFUser::class);
-        $this->pull_request           = \Mockery::spy(\Tuleap\PullRequest\PullRequest::class);
-        $this->repository             = \Mockery::spy(\GitRepository::class);
-        $this->git_repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->url_verification       = \Mockery::spy(\URLVerification::class);
+        $this->user                    = \Mockery::spy(\PFUser::class);
+        $this->pull_request            = \Mockery::spy(\Tuleap\PullRequest\PullRequest::class);
+        $this->repository              = \Mockery::spy(\GitRepository::class);
+        $this->git_repository_factory  = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->url_verification        = \Mockery::spy(\URLVerification::class);
+        $this->access_control_verifier = \Mockery::mock(AccessControlVerifier::class);
     }
 
     public function testItThrowsWhenGitRepoIsNotFound(): void
     {
+        $this->pull_request->shouldReceive('getRepositoryId')->andReturn(10);
         $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
 
         $permission_checker = $this->instantiatePermissionChecker();
 
-        $this->expectException('GitRepoNotFoundException');
+        $this->expectException(GitRepoNotFoundException::class);
 
         $permission_checker->checkPullRequestIsReadableByUser($this->pull_request, $this->user);
     }
 
     public function testItLetsExceptionBubbleUpWhenUserHasNotAccessToProject(): void
     {
+        $this->pull_request->shouldReceive('getRepositoryId')->andReturn(10);
         $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
         $this->repository->shouldReceive('getProject')->andReturns(\Mockery::mock(\Project::class));
         $this->url_verification->shouldReceive('userCanAccessProject')->andThrows(new Project_AccessPrivateException());
 
         $permission_checker = $this->instantiatePermissionChecker();
 
-        $this->expectException('Project_AccessException');
+        $this->expectException(Project_AccessException::class);
 
         $permission_checker->checkPullRequestIsReadableByUser($this->pull_request, $this->user);
     }
 
     public function testItLetsExceptionBubbleUpWhenProjectIsNotFound(): void
     {
+        $this->pull_request->shouldReceive('getRepositoryId')->andReturn(10);
         $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
         $this->repository->shouldReceive('getProject')->andReturns(\Mockery::mock(\Project::class));
         $this->url_verification->shouldReceive('userCanAccessProject')->andThrows(new Project_AccessProjectNotFoundException());
 
         $permission_checker = $this->instantiatePermissionChecker();
 
-        $this->expectException('Project_AccessProjectNotFoundException');
+        $this->expectException(Project_AccessProjectNotFoundException::class);
 
         $permission_checker->checkPullRequestIsReadableByUser($this->pull_request, $this->user);
     }
 
     public function testItThrowsWhenUserCannotReadGitRepo(): void
     {
+        $this->pull_request->shouldReceive('getRepositoryId')->andReturn(10);
         $this->repository->shouldReceive('userCanRead')->with($this->user)->andReturns(false);
         $this->repository->shouldReceive('getProject')->andReturns(\Mockery::mock(\Project::class));
         $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
 
         $permission_checker = $this->instantiatePermissionChecker();
 
-        $this->expectException('Tuleap\\PullRequest\\Exception\\UserCannotReadGitRepositoryException');
+        $this->expectException(UserCannotReadGitRepositoryException::class);
 
         $permission_checker->checkPullRequestIsReadableByUser($this->pull_request, $this->user);
+    }
+
+    public function testChecksTheUserCanMergeAPullRequest(): void
+    {
+        $this->pull_request->shouldReceive('getRepoDestId')->andReturn(10);
+        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
+        $this->repository->shouldReceive('userCanAccessProject')->andReturn(\Mockery::mock(\Project::class));
+        $this->access_control_verifier->shouldReceive('canWrite')->andReturn(true);
+
+        $permission_checker = $this->instantiatePermissionChecker();
+
+        $permission_checker->checkPullRequestIsMergeableByUser($this->pull_request, $this->user);
+    }
+
+    public function testRejectsUserThatCannotMergeAPullRequest(): void
+    {
+        $this->pull_request->shouldReceive('getRepoDestId')->andReturn(10);
+        $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
+        $this->repository->shouldReceive('userCanAccessProject')->andReturn(\Mockery::mock(\Project::class));
+        $this->access_control_verifier->shouldReceive('canWrite')->andReturn(false);
+
+        $permission_checker = $this->instantiatePermissionChecker();
+
+        $this->expectException(UserCannotMergePullRequestException::class);
+
+        $permission_checker->checkPullRequestIsMergeableByUser($this->pull_request, $this->user);
     }
 
     private function instantiatePermissionChecker(): PullRequestPermissionChecker
     {
         return new PullRequestPermissionChecker(
             $this->git_repository_factory,
-            $this->url_verification
+            $this->url_verification,
+            $this->access_control_verifier
         );
     }
 }

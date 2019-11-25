@@ -27,6 +27,8 @@ use Logger;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tuleap\Git\Permissions\AccessControlVerifier;
+use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
+use Tuleap\PullRequest\Authorization\UserCannotMergePullRequestException;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use Tuleap\PullRequest\PullRequest;
@@ -66,21 +68,27 @@ class StatusPatcher
      * @var URLVerification
      */
     private $url_verification;
+    /**
+     * @var PullRequestPermissionChecker
+     */
+    private $pull_request_permission_checker;
 
     public function __construct(
         GitRepositoryFactory $git_repository_factory,
         AccessControlVerifier $access_control_verifier,
+        PullRequestPermissionChecker $pull_request_permission_checker,
         PullRequestCloser $pull_request_closer,
         TimelineEventCreator $timeline_event_creator,
         URLVerification $url_verification,
         Logger $logger
     ) {
-        $this->git_repository_factory  = $git_repository_factory;
-        $this->access_control_verifier = $access_control_verifier;
-        $this->pull_request_closer     = $pull_request_closer;
-        $this->timeline_event_creator  = $timeline_event_creator;
-        $this->url_verification        = $url_verification;
-        $this->logger                  = $logger;
+        $this->git_repository_factory          = $git_repository_factory;
+        $this->access_control_verifier         = $access_control_verifier;
+        $this->pull_request_permission_checker = $pull_request_permission_checker;
+        $this->pull_request_closer             = $pull_request_closer;
+        $this->timeline_event_creator          = $timeline_event_creator;
+        $this->url_verification                = $url_verification;
+        $this->logger                          = $logger;
     }
 
     /**
@@ -112,7 +120,7 @@ class StatusPatcher
                 break;
             case PullRequestRepresentation::STATUS_MERGE:
                 try {
-                    $this->checkUserCanWrite($user, $git_repository_destination, $pull_request->getBranchDest());
+                    $this->pull_request_permission_checker->checkPullRequestIsMergeableByUser($pull_request, $user);
                     $this->pull_request_closer->doMerge($git_repository_destination, $pull_request, $user);
                     $this->timeline_event_creator->storeMergeEvent($pull_request, $user);
                 } catch (PullRequestCannotBeMerged $exception) {
@@ -120,6 +128,8 @@ class StatusPatcher
                 } catch (Git_Command_Exception $exception) {
                     $this->logger->error('Error while merging the pull request -> ' . $exception->getMessage());
                     throw new RestException(500, 'Error while merging the pull request');
+                } catch (UserCannotMergePullRequestException $exception) {
+                    throw new RestException(403, 'User is not able to WRITE the git repository');
                 }
                 break;
             default:
@@ -161,18 +171,6 @@ class StatusPatcher
             ! $this->access_control_verifier->canWrite($user, $repository_dest, $destination_reference)
         ) {
             throw new RestException(403, 'User is not able to WRITE in both source and destination git repositories');
-        }
-    }
-
-    /**
-     * @throws RestException
-     */
-    private function checkUserCanWrite(PFUser $user, GitRepository $repository, $reference)
-    {
-        ProjectAuthorization::userCanAccessProject($user, $repository->getProject(), $this->url_verification);
-
-        if (! $this->access_control_verifier->canWrite($user, $repository, $reference)) {
-            throw new RestException(403, 'User is not able to WRITE the git repository');
         }
     }
 }

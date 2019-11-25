@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\PullRequest\Authorization;
 
 use GitRepository;
 use GitRepositoryFactory;
 use PFUser;
+use Tuleap\Git\Permissions\AccessControlVerifier;
+use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
 use URLVerification;
@@ -37,22 +41,49 @@ class PullRequestPermissionChecker
      * @var URLVerification
      */
     private $url_verification;
+    /**
+     * @var AccessControlVerifier
+     */
+    private $access_control_verifier;
 
     public function __construct(
         GitRepositoryFactory $git_repository_factory,
-        URLVerification $URL_verification
+        URLVerification $URL_verification,
+        AccessControlVerifier $access_control_verifier
     ) {
-        $this->git_repository_factory = $git_repository_factory;
-        $this->url_verification       = $URL_verification;
+        $this->git_repository_factory  = $git_repository_factory;
+        $this->url_verification        = $URL_verification;
+        $this->access_control_verifier = $access_control_verifier;
     }
 
-    public function checkPullRequestIsReadableByUser(PullRequest $pull_request, PFUser $user)
+    /**
+     * @throws \Project_AccessException
+     * @throws UserCannotReadGitRepositoryException
+     * @throws \GitRepoNotFoundException
+     */
+    public function checkPullRequestIsReadableByUser(PullRequest $pull_request, PFUser $user): void
     {
         $repository = $this->getRepository($pull_request->getRepositoryId());
         $this->checkUserCanReadRepository($user, $repository);
     }
 
-    private function getRepository($repository_id)
+    /**
+     * @throws \GitRepoNotFoundException
+     * @throws UserCannotMergePullRequestException
+     */
+    public function checkPullRequestIsMergeableByUser(PullRequest $pull_request, PFUser $user): void
+    {
+        $repository = $this->getRepository($pull_request->getRepoDestId());
+
+        if (! $this->access_control_verifier->canWrite($user, $repository, $pull_request->getBranchDest())) {
+            throw new UserCannotMergePullRequestException($pull_request, $user);
+        }
+    }
+
+    /**
+     * @throws \GitRepoNotFoundException
+     */
+    private function getRepository(int $repository_id): GitRepository
     {
         $repository = $this->git_repository_factory->getRepositoryById($repository_id);
 
@@ -63,7 +94,11 @@ class PullRequestPermissionChecker
         return $repository;
     }
 
-    private function checkUserCanReadRepository(PFUser $user, GitRepository $repository)
+    /**
+     * @throws \Project_AccessException
+     * @throws UserCannotReadGitRepositoryException
+     */
+    private function checkUserCanReadRepository(PFUser $user, GitRepository $repository): void
     {
         $this->url_verification->userCanAccessProject($user, $repository->getProject());
 
