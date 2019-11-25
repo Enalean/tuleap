@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
  *
@@ -25,6 +25,7 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Event\Events\HitEvent;
 use Tuleap\Userlog\UserLogBuilder;
 use Tuleap\Userlog\UserLogExporter;
 use Tuleap\Userlog\UserLogRouter;
@@ -40,7 +41,7 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
         parent::__construct($id);
         $this->addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->addHook('cssfile', 'cssFile', false);
-        $this->addHook(Event::HIT, 'logUser', false);
+        $this->addHook(HitEvent::NAME);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
@@ -97,23 +98,25 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
         }
     }
 
-    public function logUser($params)
+    public function hitEvent(HitEvent $event)
     {
-        if (! $params['is_script']) {
-            $request = $params['request'];
-
-            $userLogManager = new UserLogManager(new AdminPageRenderer(), UserManager::instance());
-            $userLogManager->logAccess(
-                $_SERVER['REQUEST_TIME'],
-                $request->getProject()->getID(),
-                $request->getCurrentUser()->getId(),
-                $request->getFromServer('HTTP_USER_AGENT'),
-                $request->getFromServer('REQUEST_METHOD'),
-                $request->getFromServer('REQUEST_URI'),
-                HTTPRequest::instance()->getIPAddress(),
-                $request->getFromServer('HTTP_REFERER')
-            );
+        if ($event->isScript() === true) {
+            return;
         }
+
+        $request = $event->getRequest();
+
+        $userLogManager = new UserLogManager(new AdminPageRenderer(), UserManager::instance());
+        $userLogManager->logAccess(
+            $_SERVER['REQUEST_TIME'],
+            $request->getProject()->getID(),
+            $request->getCurrentUser()->getId(),
+            $request->getFromServer('HTTP_USER_AGENT'),
+            $request->getFromServer('REQUEST_METHOD'),
+            $request->getFromServer('REQUEST_URI'),
+            HTTPRequest::instance()->getIPAddress(),
+            $request->getFromServer('HTTP_REFERER')
+        );
     }
 
     public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)

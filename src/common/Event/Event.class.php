@@ -1220,15 +1220,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const CONTENT_SECURITY_POLICY_SCRIPT_WHITELIST = 'content_security_policy_script_whitelist';
 
     /**
-     * Event sent at each hit
-     *
-     * Parameters:
-     * 'is_script' => boolean (IN)
-     * 'request'   => HTTPRequest (IN)
-     */
-    public const HIT = 'hit';
-
-    /**
      * Event sent at the beginning of display the homepage
      */
     public const DISPLAYING_HOMEPAGE = 'displaying_homepage';

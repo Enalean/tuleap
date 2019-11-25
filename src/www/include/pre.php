@@ -21,6 +21,7 @@
 
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CookieManager;
+use Tuleap\Event\Events\HitEvent;
 use Tuleap\Plugin\PluginLoader;
 use Tuleap\Request\CurrentPage;
 use Tuleap\TimezoneRetriever;
@@ -177,13 +178,8 @@ setlocale(LC_CTYPE, "$current_locale.UTF-8");
 setlocale(LC_MESSAGES, "$current_locale.UTF-8");
 setlocale(LC_TIME, "$current_locale.UTF-8");
 
-$event_manager->processEvent(
-    Event::HIT,
-    array(
-        'is_script' => IS_SCRIPT,
-        'request'  => $request
-    )
-);
+$hit_event = new HitEvent($request, IS_SCRIPT);
+$event_manager->processEvent($hit_event);
 
 /*
 
