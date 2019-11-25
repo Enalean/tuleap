@@ -29,7 +29,7 @@ use Symfony\Component\Lock\Store\SemaphoreStore;
 use Tuleap\DB\DBConnection;
 use Tuleap\DB\DBFactory;
 
-class SystemEventRunner
+final class SystemEventRunner implements SystemEventRunnerInterface
 {
 
     /** @var SystemEventProcessor_Factory */
@@ -40,15 +40,15 @@ class SystemEventRunner
         $this->system_event_processor_factory = $system_event_processor_factory;
     }
 
-    public function checkPermissions()
+    public function checkPermissions(): void
     {
         // Check we have permissions to create project and run system events
-        if (posix_geteuid() != 0) {
+        if (posix_geteuid() !== 0) {
             throw new Project_Creation_Exception("You need to be root to create a project for import");
         }
     }
 
-    public function runSystemEvents()
+    public function runSystemEvents(): void
     {
         $processor = $this->system_event_processor_factory->getProcessForQueue(SystemEvent::DEFAULT_QUEUE);
 

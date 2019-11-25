@@ -28,6 +28,8 @@ use Project;
 use ProjectCreationData;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
+use Tuleap\Project\XML\Import\DirectoryArchive;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 
@@ -180,10 +182,13 @@ class RestProjectCreator
             ]
         );
 
-        $project = $this->project_creator->build($data);
-        $configuration = new ImportConfig();
-        $this->project_XML_importer->import($configuration, $project->getGroupId(), $xml_path);
+        $archive = new DirectoryArchive(dirname($xml_path));
 
-        return $project;
+        return $this->project_XML_importer->importWithProjectData(
+            new ImportConfig(),
+            $archive,
+            new SystemEventRunnerForProjectCreationFromXMLTemplate(),
+            $data
+        );
     }
 }
