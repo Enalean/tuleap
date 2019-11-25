@@ -18,6 +18,7 @@
  */
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
+import * as dragula from "dragula";
 import TaskBoardBody from "./TaskBoardBody.vue";
 import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import SwimlaneSkeleton from "./Swimlane/Skeleton/SwimlaneSkeleton.vue";
@@ -27,6 +28,19 @@ import { createTaskboardLocalVue } from "../../../helpers/local-vue-for-test";
 import * as mapper from "../../../helpers/list-value-to-column-mapper";
 import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
 import { RootState } from "../../../store/type";
+
+interface FakeDrake {
+    on: jest.SpyInstance;
+    destroy: jest.SpyInstance;
+}
+
+jest.mock("dragula", () => {
+    const fake_drake = {
+        on: jest.fn(),
+        destroy: jest.fn()
+    };
+    return jest.fn((): FakeDrake => fake_drake);
+});
 
 async function createWrapper(
     swimlanes: Swimlane[],
@@ -45,6 +59,10 @@ async function createWrapper(
         }
     });
 }
+
+afterEach(() => {
+    jest.clearAllMocks();
+});
 
 describe("TaskBoardBody", () => {
     it("displays swimlanes for solo cards or cards with children", async () => {
@@ -136,5 +154,45 @@ describe("TaskBoardBody", () => {
             localVue: await createTaskboardLocalVue()
         });
         expect(wrapper.contains(SwimlaneSkeleton)).toBe(true);
+    });
+
+    describe(`mounted()`, () => {
+        it(`will create a "drake"`, async () => {
+            await createWrapper([], false);
+
+            expect(dragula.default).toHaveBeenCalled();
+        });
+
+        it(`will cancel dragging on "Escape"`, async () => {
+            const addListener = jest
+                .spyOn(document, "addEventListener")
+                .mockImplementation(() => {});
+
+            await createWrapper([], false);
+
+            expect(addListener).toHaveBeenCalledWith("keyup", expect.any(Function));
+        });
+    });
+
+    describe(`destroy()`, () => {
+        it(`will destroy the "drake"`, async () => {
+            const mock_drake = dragula.default();
+            const wrapper = await createWrapper([], false);
+            wrapper.destroy();
+
+            expect(mock_drake.destroy).toHaveBeenCalled();
+        });
+
+        it(`will remove the "Escape" listener`, async () => {
+            jest.spyOn(document, "removeEventListener").mockImplementation(() => {});
+
+            const wrapper = await createWrapper([], false);
+            wrapper.destroy();
+
+            expect(document.removeEventListener).toHaveBeenCalledWith(
+                "keyup",
+                expect.any(Function)
+            );
+        });
     });
 });
