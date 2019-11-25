@@ -50,7 +50,7 @@ import SoloSwimlane from "./Swimlane/SoloSwimlane.vue";
 import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
 import { getColumnOfCard } from "../../../helpers/list-value-to-column-mapper";
 import { isContainer, canMove, invalid, checkCellAcceptsDrop } from "../../../helpers/drag-drop";
-import { HandleDropPayload } from "../../../store/swimlane/type.js";
+import { HandleDropPayload } from "../../../store/swimlane/type";
 
 const column = namespace("column");
 const swimlane = namespace("swimlane");
@@ -110,6 +110,7 @@ export default class TaskBoardBody extends Vue {
         if (this.drake) {
             this.drake.destroy();
         }
+        document.removeEventListener("keyup", this.cancelDragOnEscape);
     }
 
     mounted(): void {
@@ -137,6 +138,8 @@ export default class TaskBoardBody extends Vue {
         );
 
         this.drake.on("cancel", this.removeHighlightOnLastHoveredDropZone);
+
+        document.addEventListener("keyup", this.cancelDragOnEscape);
     }
 
     getColumnOfSoloCard(swimlane: Swimlane): ColumnDefinition {
@@ -149,6 +152,12 @@ export default class TaskBoardBody extends Vue {
 
     hasInvalidMapping(swimlane: Swimlane): boolean {
         return getColumnOfCard(this.columns, swimlane.card) === undefined;
+    }
+
+    cancelDragOnEscape(event: KeyboardEvent): void {
+        if (event.key === "Escape" && this.drake) {
+            this.drake.cancel(true);
+        }
     }
 }
 </script>
