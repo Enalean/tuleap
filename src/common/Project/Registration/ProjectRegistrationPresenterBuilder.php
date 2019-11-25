@@ -46,7 +46,7 @@ class ProjectRegistrationPresenterBuilder
                 static function (ProjectTemplate $project_template) {
                     return new TemplatePresenter($project_template);
                 },
-                $this->template_factory->getTemplates()
+                $this->template_factory->getValidTemplates()
             )
         );
     }

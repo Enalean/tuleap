@@ -28,6 +28,7 @@ use ForgeConfig;
 use Logger;
 use Luracast\Restler\RestException;
 use Mockery as M;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use ProjectCreator;
 use ProjectManager;
@@ -43,6 +44,7 @@ use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\Import\ArchiveInterface;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\XMLFileContentRetriever;
+use Tuleap\XML\ProjectXMLMerger;
 
 class RestProjectCreatorTest extends TestCase
 {
@@ -55,9 +57,15 @@ class RestProjectCreatorTest extends TestCase
     private $project_creator;
     private $service_manager;
     private $project_XML_importer;
+    /**
+     * @var string
+     */
+    private $base_dir;
 
     protected function setUp(): void
     {
+        \ForgeConfig::set('codendi_cache_dir', vfsStream::setup('root')->url());
+
         $this->project_manager      = M::mock(ProjectManager::class);
         $this->project_creator      = M::mock(ProjectCreator::class);
         $this->service_manager      = M::mock(ServiceManager::class);
@@ -73,7 +81,8 @@ class RestProjectCreatorTest extends TestCase
             new TemplateFactory(
                 new GlyphFinder(
                     new \EventManager()
-                )
+                ),
+                new ProjectXMLMerger(),
             )
         );
 
@@ -168,7 +177,7 @@ class RestProjectCreatorTest extends TestCase
         $this->project_XML_importer->shouldReceive('importWithProjectData')->with(
             \Hamcrest\Core\IsEqual::equalTo(new ImportConfig()),
             M::on(static function (ArchiveInterface $archive) {
-                return realpath($archive->getExtractionPath()) === realpath(dirname((new ScrumTemplate(M::mock(Glyph::class)))->getXMLPath()));
+                return realpath($archive->getExtractionPath()) === realpath(dirname((new ScrumTemplate(M::mock(GlyphFinder::class), new ProjectXMLMerger()))->getXMLPath()));
             }),
             \Hamcrest\Core\IsEqual::equalTo(new SystemEventRunnerForProjectCreationFromXMLTemplate()),
             M::on(static function (\ProjectCreationData $data) {
