@@ -118,6 +118,6 @@ describe("ReleaseHeader", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.find("[data-test=title-release]").text()).toEqual("Release 1 > 2");
+        expect(wrapper.find("[data-test=title-release]").text()).toEqual("1 > 2");
     });
 });

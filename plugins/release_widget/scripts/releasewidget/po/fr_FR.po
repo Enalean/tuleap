@@ -77,9 +77,6 @@ msgstr "Aucune date de début définie."
 msgid "Oops, an error occurred!"
 msgstr "Oups, une erreur s'est produite !"
 
-msgid "Release %{release_label}"
-msgstr "Version %{release_label}"
-
 msgid ""
 "The plugin \"Release Widget\" is not supported under IE11. Please use a more "
 "recent browser."

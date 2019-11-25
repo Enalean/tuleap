@@ -20,8 +20,8 @@
 <template>
     <div class="project-release-header" v-on:click="$emit('toggleReleaseDetails')">
         <i class="project-release-whats-hot-icon fa"></i>
-        <h1 class="project-release-title" v-translate="{ release_label: release_data.label }" data-test="title-release">
-            Release %{release_label}
+        <h1 class="project-release-title" data-test="title-release">
+            {{ release_data.label }}
         </h1>
         <span class="project-release-date" v-if="startDateExist()">
             {{ formatDate(release_data.start_date) }}
