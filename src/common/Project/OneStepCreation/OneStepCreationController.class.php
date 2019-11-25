@@ -20,6 +20,8 @@
 
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
+use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\Project\Registration\RegistrationForbiddenException;
 
 /**
  * Base controller for one step creation project
@@ -50,6 +52,10 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
      * @var CSRFSynchronizerToken
      */
     private $csrf_token;
+    /**
+     * @var ProjectRegistrationUserPermissionChecker
+     */
+    private $permission_checker;
 
     public function __construct(
         Codendi_Request $request,
@@ -57,7 +63,8 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
         Project_CustomDescription_CustomDescriptionFactory $custom_description_factory,
         TroveCatFactory $trove_cat_factory,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
+        ProjectRegistrationUserPermissionChecker $permission_checker
     ) {
         parent::__construct('project', $request);
         $this->project_manager              = $project_manager;
@@ -81,6 +88,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         );
 
         $this->default_project_visibility_retriever = $default_project_visibility_retriever;
+        $this->permission_checker = $permission_checker;
     }
 
     /**
@@ -88,10 +96,11 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
      */
     public function index()
     {
-        $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_index', 'project_registration')));
-        if ($this->project_manager->userCanCreateProject($this->request->getCurrentUser())) {
+        try {
+            $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_index', 'project_registration')));
+            $this->permission_checker->checkUserCreateAProject($this->request->getCurrentUser());
             $this->render('register', $this->presenter);
-        } else {
+        } catch (RegistrationForbiddenException $exception) {
             $this->render('register-disabled', []);
         }
         $GLOBALS['HTML']->footer(array());
@@ -103,13 +112,14 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
      */
     public function create()
     {
-        if ($this->project_manager->userCanCreateProject($this->request->getCurrentUser())) {
+        try {
+            $this->permission_checker->checkUserCreateAProject($this->request->getCurrentUser());
             $this->csrf_token->check();
             $this->validate();
             $project = $this->doCreate();
             $this->notifySiteAdmin($project);
             $this->postCreate($project);
-        } else {
+        } catch (RegistrationForbiddenException $exception) {
             $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_index', 'project_registration')));
             $this->render('register-disabled', []);
             $GLOBALS['HTML']->footer(array());

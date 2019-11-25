@@ -23,38 +23,65 @@ declare(strict_types = 1);
 
 namespace Tuleap\Project\Registration;
 
-use HTTPRequest;
-use Tuleap\Request\ForbiddenException;
+use ForgeConfig;
+use PFUser;
+use Project;
+use ProjectDao;
+use ProjectManager;
 
 class ProjectRegistrationUserPermissionChecker
 {
     /**
-     * @var \ProjectManager
+     * @var ProjectDao
      */
-    private $project_manager;
+    private $project_dao;
 
-    public function __construct(\ProjectManager $project_manager)
+    public function __construct(ProjectDao $project_dao)
     {
-        $this->project_manager = $project_manager;
+        $this->project_dao = $project_dao;
     }
 
-    /**
-     * @throws ForbiddenException
-     */
-    public function checkUserCreateAProject(HTTPRequest $request): void
+    public function checkUserCreateAProject(PFUser $user): void
     {
-        $user = $request->getCurrentUser();
-
-        if (! \ForgeConfig::get('sys_use_project_registration') && ! $user->isSuperUser()) {
-            throw new ForbiddenException();
+        if (! ForgeConfig::get('sys_use_project_registration') && ! $user->isSuperUser()) {
+            throw new LimitedToSiteAdministratorsException();
         }
 
         if ($user->isAnonymous()) {
-            throw new ForbiddenException();
+            throw new AnonymousNotAllowedException();
         }
 
-        if (! $this->project_manager->userCanCreateProject($user)) {
-            throw new ForbiddenException();
+        if ($user->isRestricted() && (int) ForgeConfig::get(ProjectManager::CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS) === 0) {
+            throw new RestrictedUsersNotAllowedException();
         }
+
+        if ((int) ForgeConfig::get(ProjectManager::CONFIG_PROJECT_APPROVAL, 1) === 1) {
+            if (! $this->numberOfProjectsWaitingForValidationBelowThreshold()) {
+                throw new MaxNumberOfProjectReachedException();
+            }
+            if (! $this->numberOfProjectsWaitingForValidationPerUserBelowThreshold($user)) {
+                throw new MaxNumberOfProjectReachedException();
+            }
+        }
+    }
+
+    private function numberOfProjectsWaitingForValidationBelowThreshold(): bool
+    {
+        $max_nb_projects_waiting_for_validation = (int) ForgeConfig::get(ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION, -1);
+        if ($max_nb_projects_waiting_for_validation < 0) {
+            return true;
+        }
+        $current_nb_projects_waiting_for_validation = $this->project_dao->countByStatus(Project::STATUS_PENDING);
+        return $current_nb_projects_waiting_for_validation < $max_nb_projects_waiting_for_validation;
+    }
+
+    private function numberOfProjectsWaitingForValidationPerUserBelowThreshold(PFUser $requester): bool
+    {
+        $max_per_user = (int) ForgeConfig::get(ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER, -1);
+        if ($max_per_user < 0) {
+            return true;
+        }
+        $current_per_user = $this->project_dao->countByStatusAndUser((int) $requester->getId(), Project::STATUS_PENDING);
+        return $current_per_user < $max_per_user;
     }
 }

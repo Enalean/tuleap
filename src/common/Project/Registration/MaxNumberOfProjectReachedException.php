@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +19,10 @@
  *
  */
 
-!(function($) {
-    $(function() {
-        var form = $("#siteadmin-project-creation-moderation");
-        if (form.length === 0) {
-            return;
-        }
+declare(strict_types=1);
 
-        $("#toggle-projects-must-be-approved").change(function() {
-            $(this)[0].form.submit();
-        });
-    });
-})(window.jQuery);
+namespace Tuleap\Project\Registration;
+
+class MaxNumberOfProjectReachedException extends RegistrationForbiddenException
+{
+}

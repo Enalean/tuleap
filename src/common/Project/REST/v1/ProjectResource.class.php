@@ -50,6 +50,7 @@ use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\ProjectDescriptionMandatoryException;
 use Tuleap\Project\ProjectInvalidTemplateException;
 use Tuleap\Project\ProjectStatusMapper;
+use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
@@ -1727,7 +1728,10 @@ class ProjectResource extends AuthenticatedResource
             ProjectXMLImporter::build(
                 new XMLImportHelper(UserManager::instance())
             ),
-            TemplateFactory::build()
+            TemplateFactory::build(),
+            new ProjectRegistrationUserPermissionChecker(
+                new \ProjectDao()
+            ),
         );
     }
 }

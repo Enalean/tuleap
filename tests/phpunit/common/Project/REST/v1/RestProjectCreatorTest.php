@@ -38,6 +38,8 @@ use ServiceManager;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
+use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
@@ -63,6 +65,10 @@ class RestProjectCreatorTest extends TestCase
      * @var string
      */
     private $base_dir;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|ProjectRegistrationUserPermissionChecker
+     */
+    private $permissions_checker;
 
     protected function setUp(): void
     {
@@ -72,6 +78,9 @@ class RestProjectCreatorTest extends TestCase
         $this->project_creator      = M::mock(ProjectCreator::class);
         $this->service_manager      = M::mock(ServiceManager::class);
         $this->project_XML_importer = M::mock(ProjectXMLImporter::class);
+        $this->permissions_checker  = M::mock(ProjectRegistrationUserPermissionChecker::class);
+        $this->permissions_checker->shouldReceive('checkUserCreateAProject')->byDefault();
+
         $this->creator              = new RestProjectCreator(
             $this->project_manager,
             $this->project_creator,
@@ -89,7 +98,8 @@ class RestProjectCreatorTest extends TestCase
                     $this->service_manager,
                     new XMLFileContentRetriever(),
                 )
-            )
+            ),
+            $this->permissions_checker
         );
 
         $this->user = new \PFUser(['language_id' => 'en_US']);
@@ -99,7 +109,7 @@ class RestProjectCreatorTest extends TestCase
 
     public function testCreateThrowExceptionWhenUserCannotCreateProjects()
     {
-        $this->project_manager->shouldReceive('userCanCreateProject')->with($this->user)->andReturnFalse();
+        $this->permissions_checker->shouldReceive('checkUserCreateAProject')->with($this->user)->andThrow(new MaxNumberOfProjectReachedException());
 
         $this->expectException(RestException::class);
 

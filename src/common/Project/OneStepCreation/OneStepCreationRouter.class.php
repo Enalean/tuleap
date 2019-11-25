@@ -19,11 +19,12 @@
  */
 
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 
 /**
  * Routes the one step creation requests
  */
-class Project_OneStepCreation_OneStepCreationRouter
+class Project_OneStepCreation_OneStepCreationRouter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     /**
@@ -39,17 +40,23 @@ class Project_OneStepCreation_OneStepCreationRouter
     private $default_project_visibility_retriever;
     /** @var Project_CustomDescription_CustomDescriptionFactory */
     private $custom_description_factory;
+    /**
+     * @var ProjectRegistrationUserPermissionChecker
+     */
+    private $permission_checker;
 
     public function __construct(
         ProjectManager $project_manager,
         DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
         Project_CustomDescription_CustomDescriptionFactory $custom_description_factory,
-        TroveCatFactory $trove_cat_factory
+        TroveCatFactory $trove_cat_factory,
+        ProjectRegistrationUserPermissionChecker $permission_checker
     ) {
         $this->project_manager                      = $project_manager;
         $this->default_project_visibility_retriever = $default_project_visibility_retriever;
         $this->custom_description_factory           = $custom_description_factory;
         $this->trove_cat_factory                    = $trove_cat_factory;
+        $this->permission_checker                   = $permission_checker;
     }
 
     public function route(Codendi_Request $request)
@@ -61,7 +68,8 @@ class Project_OneStepCreation_OneStepCreationRouter
             $this->default_project_visibility_retriever,
             $this->custom_description_factory,
             $this->trove_cat_factory,
-            $csrf_token
+            $csrf_token,
+            $this->permission_checker
         );
 
         if ($request->get('create_project')) {

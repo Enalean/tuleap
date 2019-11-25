@@ -602,7 +602,7 @@ class RouteCollector
             \TemplateRendererFactory::build(),
             new IncludeAssets(__DIR__ . '/../../www/assets/', '/assets'),
             new ProjectRegistrationUserPermissionChecker(
-                ProjectManager::instance()
+                new \ProjectDao()
             ),
             new ProjectRegistrationPresenterBuilder(
                 TemplateFactory::build()

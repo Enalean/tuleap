@@ -29,6 +29,7 @@ use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ForbiddenException;
 
 final class ProjectRegistrationController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
@@ -66,7 +67,11 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        $this->permission_checker->checkUserCreateAProject($request);
+        try {
+            $this->permission_checker->checkUserCreateAProject($request->getCurrentUser());
+        } catch (RegistrationForbiddenException $exception) {
+            throw new ForbiddenException();
+        }
 
         $layout->includeFooterJavascriptFile($this->registration_assets->getFileURL('project-registration.js'));
         $layout->addCssAsset(

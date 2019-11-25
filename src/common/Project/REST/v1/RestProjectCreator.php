@@ -26,6 +26,9 @@ namespace Tuleap\Project\REST\v1;
 use Luracast\Restler\RestException;
 use Project;
 use ProjectCreationData;
+use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
+use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\Project\Registration\RegistrationForbiddenException;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
@@ -67,6 +70,10 @@ class RestProjectCreator
      * @var TemplateFactory
      */
     private $template_factory;
+    /**
+     * @var ProjectRegistrationUserPermissionChecker
+     */
+    private $permission_checker;
 
     public function __construct(
         \ProjectManager $project_manager,
@@ -76,7 +83,8 @@ class RestProjectCreator
         \Logger $logger,
         \XML_RNGValidator $validator,
         \ProjectXMLImporter $project_XML_importer,
-        TemplateFactory $template_factory
+        TemplateFactory $template_factory,
+        ProjectRegistrationUserPermissionChecker $permission_checker
     ) {
         $this->project_manager            = $project_manager;
         $this->project_creator            = $project_creator;
@@ -86,6 +94,7 @@ class RestProjectCreator
         $this->validator                  = $validator;
         $this->project_XML_importer       = $project_XML_importer;
         $this->template_factory           = $template_factory;
+        $this->permission_checker         = $permission_checker;
     }
 
     /**
@@ -100,8 +109,12 @@ class RestProjectCreator
      */
     public function create(\PFUser $user, ProjectPostRepresentation $post_representation): Project
     {
-        if (! $this->project_manager->userCanCreateProject($user)) {
+        try {
+            $this->permission_checker->checkUserCreateAProject($user);
+        } catch (MaxNumberOfProjectReachedException $exception) {
             throw new RestException(429, 'Too many projects were created');
+        } catch (RegistrationForbiddenException $exception) {
+            throw new RestException(403, 'You are not allowed to create new projects');
         }
 
         if ($post_representation->template_id !== null) {

@@ -24,11 +24,19 @@ declare(strict_types = 1);
 namespace phpunit\common\Project\Registration;
 
 use ForgeConfig;
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
+use Project;
+use ProjectDao;
 use ProjectManager;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Project\Registration\AnonymousNotAllowedException;
+use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\Project\Registration\LimitedToSiteAdministratorsException;
+use Tuleap\Project\Registration\RestrictedUsersNotAllowedException;
 use Tuleap\Request\ForbiddenException;
 
 class ProjectRegistrationUserPermissionCheckerTest extends TestCase
@@ -37,78 +45,132 @@ class ProjectRegistrationUserPermissionCheckerTest extends TestCase
     /**
      * @var ProjectRegistrationUserPermissionChecker
      */
-    private $builder;
+    private $permission_checker;
 
     /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectManager
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectDao
      */
-    private $project_manager;
+    private $project_dao;
+    private $user;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->project_dao        = \Mockery::mock(ProjectDao::class);
+        $this->permission_checker = new ProjectRegistrationUserPermissionChecker($this->project_dao);
 
-        $this->project_manager = \Mockery::mock(ProjectManager::class);
-        $this->builder = new ProjectRegistrationUserPermissionChecker($this->project_manager);
+        $this->user = \Mockery::mock(\PFUser::class, ['getId' => '110']);
+        $this->user->shouldReceive('isAnonymous')->andReturnFalse()->byDefault();
+        $this->user->shouldReceive('isSuperUser')->andReturnFalse()->byDefault();
+        $this->user->shouldReceive('isRestricted')->andReturnFalse()->byDefault();
     }
 
     public function testItThrowsExceptionWhenPlatformDoesNotAllRegistrationAndUserIsNotGlobalAdmin(): void
     {
-        ForgeConfig::set("sys_use_project_registration", false);
+        ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '0');
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->once()->andReturnFalse();
+        $this->user->shouldReceive('isSuperUser')->once()->andReturnFalse();
 
-        $request  = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->once()->andReturn($user);
+        $this->expectException(LimitedToSiteAdministratorsException::class);
 
-        $this->expectException(ForbiddenException::class);
-
-        $this->builder->checkUserCreateAProject($request);
+        $this->permission_checker->checkUserCreateAProject($this->user);
     }
 
     public function testAnonymousCanNotCreateNewProject(): void
     {
-        ForgeConfig::set("sys_use_project_registration", true);
+        ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAnonymous')->once()->andReturnTrue();
+        $this->user->shouldReceive('isAnonymous')->once()->andReturnTrue();
 
-        $request  = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->once()->andReturn($user);
+        $this->expectException(AnonymousNotAllowedException::class);
 
-        $this->expectException(ForbiddenException::class);
-
-        $this->builder->checkUserCreateAProject($request);
+        $this->permission_checker->checkUserCreateAProject($this->user);
     }
 
-    public function testUserCanNotCreateProjectRaiseException() : void
+
+    public function testUserCanCreateProjectWhenNoRestrictionsAreConfigured(): void
     {
-        ForgeConfig::set("sys_use_project_registration", true);
+        ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAnonymous')->once()->andReturnFalse();
-        $this->project_manager->shouldReceive('userCanCreateProject')->withArgs([$user])->once()->andReturnFalse();
-
-        $request  = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->once()->andReturn($user);
-
-        $this->expectException(ForbiddenException::class);
-
-        $this->builder->checkUserCreateAProject($request);
+        $this->permission_checker->checkUserCreateAProject($this->user);
     }
 
-    public function testUserCanCreateProject() : void
+
+    public function testUserCannotCreateProjectWhenMaxInQueue(): void
     {
-        ForgeConfig::set("sys_use_project_registration", true);
+        ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
+        ForgeConfig::set(ProjectManager::CONFIG_PROJECT_APPROVAL, '1');
+        ForgeConfig::set(ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION, '5');
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAnonymous')->once()->andReturnFalse();
-        $this->project_manager->shouldReceive('userCanCreateProject')->withArgs([$user])->once()->andReturnTrue();
+        $this->project_dao->shouldReceive('countByStatus')->once()->with(Project::STATUS_PENDING)->andReturn('5');
 
-        $request  = \Mockery::mock(\HTTPRequest::class);
-        $request->shouldReceive('getCurrentUser')->once()->andReturn($user);
+        $this->expectException(MaxNumberOfProjectReachedException::class);
 
-        $this->builder->checkUserCreateAProject($request);
+        $this->permission_checker->checkUserCreateAProject($this->user);
+    }
+
+    public function testUserCanCreateProjectWhenQueueNotFull(): void
+    {
+        ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
+        ForgeConfig::set(ProjectManager::CONFIG_PROJECT_APPROVAL, '1');
+        ForgeConfig::set(ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION, '5');
+
+        $this->project_dao->shouldReceive('countByStatus')->once()->with(Project::STATUS_PENDING)->andReturn('4');
+
+        $this->permission_checker->checkUserCreateAProject($this->user);
+    }
+
+    public function testUserCannotCreateWhenMaxProjectPerUserIsReached(): void
+    {
+        ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
+        ForgeConfig::set(ProjectManager::CONFIG_PROJECT_APPROVAL, '1');
+        ForgeConfig::set(ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER, '5');
+
+        $this->project_dao->shouldReceive('countByStatusAndUser')->once()->with(110, Project::STATUS_PENDING)->andReturn(5);
+
+        $this->expectException(MaxNumberOfProjectReachedException::class);
+        $this->permission_checker->checkUserCreateAProject($this->user);
+    }
+
+    public function testUserCanCreateWhenMaxProjectPerUserIsNotReached(): void
+    {
+        ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
+        ForgeConfig::set(ProjectManager::CONFIG_PROJECT_APPROVAL, '1');
+        ForgeConfig::set(ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER, '5');
+
+        $this->project_dao->shouldReceive('countByStatusAndUser')->once()->with(110, Project::STATUS_PENDING)->andReturn(4);
+
+        $this->permission_checker->checkUserCreateAProject($this->user);
+    }
+
+    public function testUserCannotCreateProjectBecauseSheIsRestricted(): void
+    {
+        ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
+        ForgeConfig::set(ProjectManager::CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS, '0');
+
+        $restricted_user = Mockery::mock(PFUser::class, ['isSuperUser' => false, 'isAnonymous' => false, 'isRestricted' => true]);
+
+        $this->expectException(RestrictedUsersNotAllowedException::class);
+        $this->permission_checker->checkUserCreateAProject($restricted_user);
+    }
+
+    public function testUserCanCreateProjectBecauseDespiteBeenRestricted(): void
+    {
+        ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
+        ForgeConfig::set(ProjectManager::CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS, '1');
+
+        $restricted_user = Mockery::mock(PFUser::class, ['isSuperUser' => false, 'isAnonymous' => false, 'isRestricted' => true]);
+
+        $this->permission_checker->checkUserCreateAProject($restricted_user);
+    }
+
+    public function testUserCannotCreateProjectBecauseSheIsRestrictedAndThereIsNoConfigurationSet(): void
+    {
+        ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
+
+        $restricted_user = Mockery::mock(PFUser::class, ['isSuperUser' => false, 'isAnonymous' => false, 'isRestricted' => true]);
+
+        $this->expectException(RestrictedUsersNotAllowedException::class);
+
+        $this->permission_checker->checkUserCreateAProject($restricted_user);
     }
 }
