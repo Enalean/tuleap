@@ -35,4 +35,22 @@ describe("CardXrefLabel", () => {
         });
         expect(wrapper.element).toMatchSnapshot();
     });
+
+    it("displays the xref and the label using the background color if it exists", () => {
+        const wrapper = shallowMount(CardXrefLabel, {
+            propsData: {
+                card: {
+                    id: 43,
+                    label: "Story 2",
+                    xref: "story #43",
+                    color: "lake-placid-blue",
+                    background_color: "fiesta-red",
+                    artifact_html_uri: "/path/to/43"
+                }
+            }
+        });
+        expect(wrapper.find("[data-test=xref]").classes("taskboard-card-xref-fiesta-red")).toBe(
+            true
+        );
+    });
 });

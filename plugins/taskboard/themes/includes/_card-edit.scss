@@ -63,6 +63,23 @@
     @each $color-name, $colors in $tlp-swatch-color-map {
         &.taskboard-card-background-#{$color-name}::after {
             @include ease-out-background-gradient(map-get($colors, 'secondary'));
+            color: map-get($colors, 'text');
+        }
+
+        &.taskboard-card-#{$color-name}:not([class*='taskboard-card-background-'])::after {
+            color: map-get($colors, 'text');
+        }
+    }
+}
+
+.taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card:not(.taskboard-card-edit-mode) {
+    &:not([class*='taskboard-card-background-'])::after {
+        @include ease-out-background-gradient($tlp-theme-background-color);
+    }
+
+    @each $color-name, $colors in $tlp-swatch-color-map {
+        &.taskboard-card-background-#{$color-name}::after {
+            @include ease-out-background-gradient(mix(map-get($colors, 'secondary'), $tlp-theme-background-color));
         }
     }
 }

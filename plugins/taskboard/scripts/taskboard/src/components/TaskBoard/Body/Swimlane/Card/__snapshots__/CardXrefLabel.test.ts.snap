@@ -6,6 +6,7 @@ exports[`CardXrefLabel displays the xref and the label of a card 1`] = `
 >
   <a
     class="taskboard-card-xref taskboard-item-no-drag taskboard-card-xref-lake-placid-blue"
+    data-test="xref"
     href="/path/to/43"
   >
     story #43

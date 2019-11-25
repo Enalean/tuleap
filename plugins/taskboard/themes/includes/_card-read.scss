@@ -137,7 +137,7 @@
     box-shadow: none;
 }
 
-.taskboard-cell:first-child > .taskboard-card {
+.taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card {
     border: 1px solid $tlp-ui-border-normal;
     background: $tlp-theme-background-color;
 
