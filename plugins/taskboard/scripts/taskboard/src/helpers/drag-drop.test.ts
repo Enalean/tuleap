@@ -84,8 +84,15 @@ describe(`drag-drop helper`, () => {
             expect(drag_drop.canMove(element, target, handle)).toBe(false);
         });
 
-        it(`Given a "regular" taskboard card, it will return true`, () => {
-            const element = createElement("taskboard-card");
+        it(`Given a child card, it will return true`, () => {
+            const element = createElement("taskboard-child");
+            const target = undefined;
+            const handle = createElement();
+            expect(drag_drop.canMove(element, target, handle)).toBe(true);
+        });
+
+        it(`Given a solo card cell, it will return true`, () => {
+            const element = createElement("taskboard-cell-solo-card");
             const target = undefined;
             const handle = createElement();
             expect(drag_drop.canMove(element, target, handle)).toBe(true);

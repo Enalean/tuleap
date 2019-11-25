@@ -38,6 +38,7 @@ export async function loadSwimlanes(
             },
             getCollectionCallback: (collection: Card[]): Swimlane[] => {
                 const is_loading_children_cards = false;
+                const is_in_edit_mode = false;
                 const children_cards: Card[] = [];
 
                 const swimlanes = collection.map(card => {
@@ -48,7 +49,7 @@ export async function loadSwimlanes(
                     }
 
                     return {
-                        card: { ...card, remaining_effort },
+                        card: { ...card, remaining_effort, is_in_edit_mode },
                         children_cards,
                         is_loading_children_cards
                     };
@@ -84,6 +85,7 @@ export async function loadChildrenCards(
             },
             getCollectionCallback: (collection: Card[]): Card[] => {
                 collection.forEach(card => {
+                    card.is_in_edit_mode = false;
                     if (card.remaining_effort) {
                         card.remaining_effort.is_being_saved = false;
                         card.remaining_effort.is_in_edit_mode = false;

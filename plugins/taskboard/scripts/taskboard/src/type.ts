@@ -69,6 +69,7 @@ export interface Card {
     remaining_effort: RemainingEffort | null;
     is_open: boolean;
     is_collapsed: boolean;
+    is_in_edit_mode: boolean;
     has_been_dropped: boolean;
 }
 

@@ -40,9 +40,9 @@ export function canMove(element?: Element, target?: Element, handle?: Element): 
     }
 
     return (
-        (!element.classList.contains("taskboard-card-collapsed") &&
-            element.classList.contains("taskboard-card")) ||
-        element.classList.contains("taskboard-cell-solo-card")
+        !element.classList.contains("taskboard-card-collapsed") &&
+        (element.classList.contains("taskboard-cell-solo-card") ||
+            element.classList.contains("taskboard-child"))
     );
 }
 

@@ -51,6 +51,10 @@ export default class CancelSaveButtons extends Vue {
     readonly card!: Card;
 
     get should_display_buttons(): boolean {
+        if (this.card.is_in_edit_mode) {
+            return true;
+        }
+
         if (!this.card.remaining_effort) {
             return false;
         }

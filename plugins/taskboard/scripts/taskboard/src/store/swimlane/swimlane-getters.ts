@@ -97,10 +97,14 @@ function nbCardsInColumnForSwimlane(swimlane: Swimlane, column: ColumnDefinition
 }
 
 function doesSwimlaneContainACardInEditMode(swimlane: Swimlane): boolean {
-    return isCardInEditMode(swimlane.card);
+    return isCardInEditMode(swimlane.card) || swimlane.children_cards.some(isCardInEditMode);
 }
 
 function isCardInEditMode(card: Card): boolean {
+    if (card.is_in_edit_mode) {
+        return true;
+    }
+
     if (!card.remaining_effort) {
         return false;
     }

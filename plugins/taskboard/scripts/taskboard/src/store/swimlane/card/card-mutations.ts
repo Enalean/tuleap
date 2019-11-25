@@ -17,9 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, RemainingEffort, Swimlane } from "../../../type";
+import { Card, RemainingEffort } from "../../../type";
 import { SwimlaneState } from "../type";
 import { NewRemainingEffortPayload } from "./type";
+
+export function addCardToEditMode(state: SwimlaneState, card: Card): void {
+    findCard(state, card).is_in_edit_mode = true;
+}
+
+export function removeCardFromEditMode(state: SwimlaneState, card: Card): void {
+    findCard(state, card).is_in_edit_mode = false;
+}
 
 export function startSavingRemainingEffort(state: SwimlaneState, card: Card): void {
     const state_card = findCard(state, card);
@@ -27,6 +35,7 @@ export function startSavingRemainingEffort(state: SwimlaneState, card: Card): vo
         state_card.remaining_effort.is_being_saved = true;
     }
 }
+
 export function resetSavingRemainingEffort(state: SwimlaneState, card: Card): void {
     const state_card = findCard(state, card);
     if (state_card.remaining_effort) {
@@ -51,15 +60,17 @@ function switchRemainingEffortToReadOnlyMode(remaining_effort: RemainingEffort):
 }
 
 function findCard(state: SwimlaneState, card: Card): Card {
-    // We only search for parent card because this is the only one that can have its remaining effort updated
-    // If one day we need to find a child (eg: edit the title) then we will have to search against
-    // children cards as well.
-    const swimlane: Swimlane | undefined = state.swimlanes.find(
-        swimlane => swimlane.card.id === card.id
-    );
-    if (!swimlane) {
-        throw new Error("Could not find card with id=" + card.id);
+    for (const swimlane of state.swimlanes) {
+        if (swimlane.card.id === card.id) {
+            return swimlane.card;
+        }
+
+        for (const child of swimlane.children_cards) {
+            if (child.id === card.id) {
+                return child;
+            }
+        }
     }
 
-    return swimlane.card;
+    throw new Error("Could not find card with id=" + card.id);
 }

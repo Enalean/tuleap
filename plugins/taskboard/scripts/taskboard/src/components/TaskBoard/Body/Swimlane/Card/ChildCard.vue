@@ -18,13 +18,17 @@
   -->
 
 <template>
-    <base-card
-        class="taskboard-draggable-item"
+    <div
+        class="taskboard-child taskboard-draggable-item"
         v-if="card.is_open || are_closed_items_displayed"
-        v-bind:card="card"
         v-bind:data-card-id="card.id"
         v-bind:data-tracker-id="card.tracker_id"
-    />
+    >
+        <base-card
+            v-bind:card="card"
+        />
+        <cancel-save-buttons class="taskboard-card-cancel-save-buttons-for-child" v-bind:card="card"/>
+    </div>
 </template>
 
 <script lang="ts">
@@ -33,9 +37,10 @@ import { Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
 import BaseCard from "./BaseCard.vue";
 import { Card } from "../../../../../type";
+import CancelSaveButtons from "./EditMode/CancelSaveButtons.vue";
 
 @Component({
-    components: { BaseCard }
+    components: { CancelSaveButtons, BaseCard }
 })
 export default class ChildCard extends Vue {
     @State

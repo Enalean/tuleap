@@ -76,15 +76,15 @@ describe("Swimlane state actions", () => {
             await actions.loadSwimlanes(context);
             expect(context.commit).toHaveBeenCalledWith("addSwimlanes", [
                 {
-                    card: { id: 43 },
-                    children_cards: [],
+                    card: { id: 43, is_in_edit_mode: false },
+                    children_cards: [] as Card[],
                     is_loading_children_cards: false
-                },
+                } as Swimlane,
                 {
-                    card: { id: 44 },
-                    children_cards: [],
+                    card: { id: 44, is_in_edit_mode: false },
+                    children_cards: [] as Card[],
                     is_loading_children_cards: false
-                }
+                } as Swimlane
             ]);
         });
 
@@ -120,19 +120,19 @@ describe("Swimlane state actions", () => {
             expect(context.dispatch).toHaveBeenCalledWith(
                 "loadChildrenCards",
                 expect.objectContaining({
-                    card: card_with_children
+                    card: { ...card_with_children, is_in_edit_mode: false }
                 })
             );
             expect(context.dispatch).toHaveBeenCalledWith(
                 "loadChildrenCards",
                 expect.objectContaining({
-                    card: other_card_with_children
+                    card: { ...other_card_with_children, is_in_edit_mode: false }
                 })
             );
             expect(context.dispatch).not.toHaveBeenCalledWith(
                 "loadChildrenCards",
                 expect.objectContaining({
-                    card: card_without_children
+                    card: { ...card_without_children, is_in_edit_mode: false }
                 })
             );
         });
