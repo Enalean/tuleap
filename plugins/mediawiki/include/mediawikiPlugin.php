@@ -671,7 +671,7 @@ class MediaWikiPlugin extends Plugin
             $row['group_id'],
             self::SERVICE_SHORTNAME,
             $size,
-            $_SERVER['REQUEST_TIME']
+            $params['collect_date']->getTimestamp()
         );
 
         $end  = microtime(true);

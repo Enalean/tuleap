@@ -190,7 +190,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         }
 
         $dao = $params['DiskUsageManager']->_getDao();
-        $dao->addGroup($project_row['group_id'], 'plugin_forumml', $sum, $_SERVER['REQUEST_TIME']);
+        $dao->addGroup($project_row['group_id'], 'plugin_forumml', $sum, $params['collect_date']->getTimestamp());
 
         $end  = microtime(true);
         $time = $end - $start;

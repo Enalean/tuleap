@@ -926,7 +926,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $row['group_id'],
             self::SERVICE_SHORTNAME,
             $collector->collectForGitoliteRepositories($project),
-            $_SERVER['REQUEST_TIME']
+            $params['collect_date']->getTimestamp()
         );
 
         $end  = microtime(true);

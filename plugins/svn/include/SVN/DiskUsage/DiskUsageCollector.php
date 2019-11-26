@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,14 +41,14 @@ class DiskUsageCollector
         $this->dao       = $dao;
     }
 
-    public function collectDiskUsageForProject(Project $project)
+    public function collectDiskUsageForProject(Project $project, \DateTimeImmutable $collect_date)
     {
         $svn_disk_size = $this->retriever->getDiskUsageForProject($project);
         $this->dao->addGroup(
             $project->getID(),
             SvnPlugin::SERVICE_SHORTNAME,
             $svn_disk_size,
-            $_SERVER['REQUEST_TIME']
+            $collect_date->getTimestamp()
         );
     }
 }
