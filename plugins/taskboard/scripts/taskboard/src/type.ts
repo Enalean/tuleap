@@ -90,7 +90,8 @@ export enum Direction {
     AFTER = "after"
 }
 
-export enum Event {
+export enum TaskboardEvent {
     CANCEL_CARD_EDITION = "cancel-card-edition",
-    SAVE_CARD_EDITION = "save-card-edition"
+    SAVE_CARD_EDITION = "save-card-edition",
+    ESC_KEY_PRESSED = "esc-key-pressed"
 }

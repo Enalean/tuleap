@@ -22,7 +22,7 @@ import { createStoreMock } from "../../../../../../../../../../../src/www/script
 import { createTaskboardLocalVue } from "../../../../../../helpers/local-vue-for-test";
 import EditRemainingEffort from "./EditRemainingEffort.vue";
 import { RootState } from "../../../../../../store/type";
-import { Card, Event } from "../../../../../../type";
+import { Card, TaskboardEvent } from "../../../../../../type";
 import EventBus from "../../../../../../helpers/event-bus";
 
 async function getWrapper(): Promise<Wrapper<EditRemainingEffort>> {
@@ -88,7 +88,7 @@ describe("EditRemainingEffort", () => {
         wrapper.setData({ value });
 
         const card = wrapper.props("card");
-        EventBus.$emit(Event.SAVE_CARD_EDITION, card);
+        EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, card);
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveRemainingEffort", {
             card,
@@ -104,7 +104,7 @@ describe("EditRemainingEffort", () => {
         wrapper.setData({ value });
 
         const card = wrapper.props("card");
-        EventBus.$emit(Event.CANCEL_CARD_EDITION, card);
+        EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, card);
 
         expect(card.remaining_effort.is_in_edit_mode).toBe(false);
         expect(card.remaining_effort.value).toBe(3.14);
@@ -117,7 +117,7 @@ describe("EditRemainingEffort", () => {
         wrapper.setData({ value });
 
         const card = wrapper.props("card");
-        EventBus.$emit(Event.SAVE_CARD_EDITION, {} as Card);
+        EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, {} as Card);
 
         expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
         expect(card.remaining_effort.is_in_edit_mode).toBe(true);
@@ -130,7 +130,7 @@ describe("EditRemainingEffort", () => {
         wrapper.setData({ value });
 
         const card = wrapper.props("card");
-        EventBus.$emit(Event.CANCEL_CARD_EDITION, {} as Card);
+        EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, {} as Card);
 
         expect(card.remaining_effort.is_in_edit_mode).toBe(true);
     });

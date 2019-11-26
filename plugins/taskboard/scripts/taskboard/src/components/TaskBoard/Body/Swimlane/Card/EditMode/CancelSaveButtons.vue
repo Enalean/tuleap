@@ -42,7 +42,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Card, Event } from "../../../../../../type";
+import { Card, TaskboardEvent } from "../../../../../../type";
 import EventBus from "../../../../../../helpers/event-bus";
 
 @Component
@@ -62,12 +62,20 @@ export default class CancelSaveButtons extends Vue {
         return this.card.remaining_effort.is_in_edit_mode;
     }
 
+    mounted(): void {
+        EventBus.$on(TaskboardEvent.ESC_KEY_PRESSED, this.cancel);
+    }
+
+    beforeDestroy(): void {
+        EventBus.$off(TaskboardEvent.ESC_KEY_PRESSED, this.cancel);
+    }
+
     cancel(): void {
-        EventBus.$emit(Event.CANCEL_CARD_EDITION, this.card);
+        EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, this.card);
     }
 
     save(): void {
-        EventBus.$emit(Event.SAVE_CARD_EDITION, this.card);
+        EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, this.card);
     }
 }
 </script>

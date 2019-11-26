@@ -105,4 +105,36 @@ describe("App", () => {
         });
         expect(wrapper.find(ErrorModal).exists()).toBe(true);
     });
+
+    describe(`mounted()`, () => {
+        it(`will listen to the "keyup" event`, () => {
+            jest.spyOn(document, "addEventListener").mockImplementation(() => {});
+
+            shallowMount(App, {
+                mocks: {
+                    $store: getStore(true, [], false, false)
+                }
+            });
+
+            expect(document.addEventListener).toHaveBeenCalledWith("keyup", expect.any(Function));
+        });
+    });
+
+    describe(`destroy()`, () => {
+        it(`will remove the "keyup" listener`, () => {
+            jest.spyOn(document, "removeEventListener").mockImplementation(() => {});
+
+            const wrapper = shallowMount(App, {
+                mocks: {
+                    $store: getStore(true, [], false, false)
+                }
+            });
+            wrapper.destroy();
+
+            expect(document.removeEventListener).toHaveBeenCalledWith(
+                "keyup",
+                expect.any(Function)
+            );
+        });
+    });
 });

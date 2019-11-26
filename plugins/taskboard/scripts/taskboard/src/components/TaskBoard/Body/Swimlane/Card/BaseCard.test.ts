@@ -20,7 +20,7 @@
 import { shallowMount, Slots, Wrapper } from "@vue/test-utils";
 import BaseCard from "./BaseCard.vue";
 import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import { Card, Event, User } from "../../../../../type";
+import { Card, TaskboardEvent, User } from "../../../../../type";
 import EventBus from "../../../../../helpers/event-bus";
 
 jest.useFakeTimers();
@@ -157,7 +157,7 @@ describe("BaseCard", () => {
             const card = getCard({ is_in_edit_mode: true } as Card);
             const wrapper = getWrapper(card);
 
-            EventBus.$emit(Event.CANCEL_CARD_EDITION, card);
+            EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, card);
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "swimlane/removeCardFromEditMode",
                 card
@@ -169,7 +169,7 @@ describe("BaseCard", () => {
             const card = getCard({ is_in_edit_mode: true } as Card);
             const wrapper = getWrapper(card);
 
-            EventBus.$emit(Event.SAVE_CARD_EDITION, card);
+            EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, card);
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "swimlane/removeCardFromEditMode",
                 card
