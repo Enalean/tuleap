@@ -29,6 +29,7 @@ use PFUser;
 use Planning_ArtifactMilestone;
 use PluginManager;
 use RuntimeException;
+use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tuleap\REST\AuthenticatedResource;
@@ -160,6 +161,38 @@ class TaskboardCardResource extends AuthenticatedResource
     }
 
     /**
+     * Get card
+     *
+     * Get a single card.
+     *
+     * @url    GET {id}
+     * @access hybrid
+     *
+     * @param int $id           Id of the card
+     * @param int $milestone_id Id of the milestone {@from path}
+     *
+     * @return CardRepresentation
+     *
+     * @throws RestException 401
+     * @throws RestException 404
+     */
+    public function getId(int $id, int $milestone_id): CardRepresentation
+    {
+        $this->sendIdAllowHeaders();
+        $this->checkAccess();
+
+        $user      = $this->user_manager->getCurrentUser();
+        $milestone = $this->getMilestone($user, $milestone_id);
+        $artifact  = $this->getArtifact($user, $id);
+
+        $card_representation_builder = CardRepresentationBuilder::buildSelf();
+        $priority_manager = Tracker_Artifact_PriorityManager::build();
+
+        $rank = (int) $priority_manager->getGlobalRank($id);
+        return $card_representation_builder->build($milestone, $artifact, $user, $rank);
+    }
+
+    /**
      * Patch card
      *
      * Update the content of a card
@@ -195,7 +228,7 @@ class TaskboardCardResource extends AuthenticatedResource
 
     private function sendIdAllowHeaders(): void
     {
-        Header::allowOptionsPatch();
+        Header::allowOptionsGetPatch();
     }
 
     private function sendChildrenAllowHeaders(): void
