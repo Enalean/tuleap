@@ -46,8 +46,8 @@ msgstr "Capacité : %{capacity}"
 msgid "Capacity: N/A"
 msgstr "Capacité : N/A"
 
-msgid "Go to release overview"
-msgstr "Aller au résumé de la version"
+msgid "Go to %{label_tracker} overview"
+msgstr "Aller au résumé de l'outils de suivi : %{label_tracker}"
 
 msgid "Initial effort (%s) should be bigger or equal to remaining effort (%s)."
 msgstr ""

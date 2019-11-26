@@ -24,7 +24,7 @@
             <div class="release-description" v-dompurify-html="release_data.description"></div>
             <a v-if="get_overview_link !== null" v-bind:href="get_overview_link" data-test="overview-link">
                 <i class="release-description-link-icon fa fa-long-arrow-right"></i>
-                <translate> Go to release overview </translate>
+                <translate v-bind:translate-params="{label_tracker: release_data.artifact.tracker.label}"> Go to %{label_tracker} overview </translate>
             </a>
         </div>
         <div class="release-chart-burndown-row">
