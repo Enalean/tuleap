@@ -21,8 +21,8 @@
     <div class="project-release-infos-badges">
         <a class="project-release-info-badge tlp-badge-primary toggle-sprints" v-if="get_top_planning_link !== null" v-bind:href="get_top_planning_link" data-test="planning-link">
             <i class="fa fa-map-signs tlp-badge-icon"></i>
-            <translate v-bind:translate-n="release_data.total_sprint" translate-plural="%{ release_data.total_sprint } sprints">
-                %{ release_data.total_sprint } sprint
+            <translate v-bind:translate-params="{total_sprint: release_data.total_sprint}" v-bind:translate-n="release_data.total_sprint" translate-plural="%{ total_sprint } sprints">
+                %{ total_sprint } sprint
             </translate>
         </a>
         <div class="project-release-info-badge tlp-badge-primary tlp-badge-outline">
