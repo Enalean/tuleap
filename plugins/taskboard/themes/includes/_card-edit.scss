@@ -84,8 +84,19 @@
     }
 }
 
-.taskboard-card-edit-mode {
+.taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card.taskboard-card-edit-mode,
+.taskboard-card.taskboard-card-edit-mode {
     margin: 0;
+    border: 1px solid $tlp-theme-color;
+    background: transparentize($tlp-theme-color, .9);
+
+    &.taskboard-card-with-accessibility {
+        padding: $tlp-half-spacing $tlp-half-spacing $tlp-half-spacing ($tlp-half-spacing + 2);
+    }
+
+    > .taskboard-card-accessibility {
+        display: none;
+    }
 }
 
 .taskboard-card-cancel-save-buttons {
