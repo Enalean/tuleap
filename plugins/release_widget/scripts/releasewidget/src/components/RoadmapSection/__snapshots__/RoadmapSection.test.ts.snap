@@ -29,9 +29,20 @@ exports[`RoadmapSection Given user display widget, Then a good link to top plann
       <translate-stub
         tag="span"
         translateparams="[object Object]"
+        translateplural="%{ nb_backlog_items } items in the backlog."
       >
         
-                %{nb_backlog_items} items in the backlog, %{nb_upcoming_releases} upcoming releases
+                %{nb_backlog_items} item in the backlog.
+            
+      </translate-stub>
+       
+      <translate-stub
+        tag="span"
+        translateparams="[object Object]"
+        translateplural="%{nb_upcoming_releases} upcoming %{label_tracker}."
+      >
+        
+                %{nb_upcoming_releases} upcoming %{label_tracker}.
             
       </translate-stub>
     </a>
