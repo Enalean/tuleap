@@ -130,13 +130,20 @@ define('ACTINFO_2D', 0);
 class GanttActivityInfo
 {
     public $iShow=true;
-    public $iLeftColMargin=4,$iRightColMargin=1,$iTopColMargin=1,$iBottomColMargin=3;
+    public $iLeftColMargin=4;
+    public $iRightColMargin=1;
+    public $iTopColMargin=1;
+    public $iBottomColMargin=3;
     public $vgrid = null;
     private $iColor='black';
     private $iBackgroundColor='lightgray';
-    private $iFFamily=FF_FONT1,$iFStyle=FS_NORMAL,$iFSize=10,$iFontColor='black';
+    private $iFFamily=FF_FONT1;
+    private $iFStyle=FS_NORMAL;
+    private $iFSize=10;
+    private $iFontColor='black';
     private $iTitles=array();
-    private $iWidth=array(),$iHeight=-1;
+    private $iWidth=array();
+    private $iHeight=-1;
     private $iTopHeaderMargin = 4;
     private $iStyle=1;
     private $iHeaderAlign='center';
@@ -344,9 +351,13 @@ class GanttGraph extends Graph
     private $iLabelHMarginFactor=0.2; // 10% margin on each side of the labels
     private $iLabelVMarginFactor=0.4; // 40% margin on top and bottom of label
     private $iLayout=GANTT_FROMTOP; // Could also be GANTT_EVEN
-    private $iSimpleFont = FF_FONT1,$iSimpleFontSize=11;
-    private $iSimpleStyle=GANTT_RDIAG,$iSimpleColor='yellow',$iSimpleBkgColor='red';
-    private $iSimpleProgressBkgColor='gray',$iSimpleProgressColor='darkgreen';
+    private $iSimpleFont = FF_FONT1;
+    private $iSimpleFontSize=11;
+    private $iSimpleStyle=GANTT_RDIAG;
+    private $iSimpleColor='yellow';
+    private $iSimpleBkgColor='red';
+    private $iSimpleProgressBkgColor='gray';
+    private $iSimpleProgressColor='darkgreen';
     private $iSimpleProgressStyle=GANTT_SOLID;
     private $iZoomFactor = 1.0;
     //---------------
@@ -1222,7 +1233,8 @@ define('GICON_TEXTIMPORTANT', 12);
 
 class PredefIcons
 {
-    private $iBuiltinIcon = null, $iLen = -1 ;
+    private $iBuiltinIcon = null;
+    private $iLen = -1;
 
     function GetLen()
     {
@@ -1532,8 +1544,10 @@ $_gPredefIcons = new PredefIcons();
 class IconImage
 {
     private $iGDImage=null;
-    private $iWidth,$iHeight;
-    private $ixalign='left',$iyalign='center';
+    private $iWidth;
+    private $iHeight;
+    private $ixalign='left';
+    private $iyalign='center';
     private $iScale=1.0;
 
     function __construct($aIcon, $aScale = 1)
@@ -1606,12 +1620,17 @@ class IconImage
 class TextProperty
 {
     public $iShow=true;
-    public $csimtarget='',$csimwintarget='',$csimalt='';
-    private $iFFamily=FF_FONT1,$iFStyle=FS_NORMAL,$iFSize=10;
+    public $csimtarget='';
+    public $csimwintarget='';
+    public $csimalt='';
+    private $iFFamily=FF_FONT1;
+    private $iFStyle=FS_NORMAL;
+    private $iFSize=10;
     private $iFontArray=array();
     private $iColor="black";
     private $iText="";
-    private $iHAlign="left",$iVAlign="bottom";
+    private $iHAlign="left";
+    private $iVAlign="bottom";
 
     //---------------
     // CONSTRUCTOR
@@ -1901,12 +1920,18 @@ class TextProperty
 class HeaderProperty
 {
     public $grid;
-    public $iShowLabels=true,$iShowGrid=true;
-    public $iTitleVertMargin=3,$iFFamily=FF_FONT0,$iFStyle=FS_NORMAL,$iFSize=8;
+    public $iShowLabels=true;
+    public $iShowGrid=true;
+    public $iTitleVertMargin=3;
+    public $iFFamily=FF_FONT0;
+    public $iFStyle=FS_NORMAL;
+    public $iFSize=8;
     public $iStyle=0;
-    public $iFrameColor="black",$iFrameWeight=1;
+    public $iFrameColor="black";
+    public $iFrameWeight=1;
     public $iBackgroundColor="white";
-    public $iWeekendBackgroundColor="lightgray",$iSundayTextColor="red"; // these are only used with day scale
+    public $iWeekendBackgroundColor="lightgray";
+    public $iSundayTextColor="red"; // these are only used with day scale
     public $iTextColor="black";
     public $iLabelFormStr="%d";
     public $iIntervall = 1;
@@ -2027,23 +2052,34 @@ class HeaderProperty
 //===================================================
 class GanttScale
 {
-    public $minute,$hour,$day,$week,$month,$year;
-    public $divider,$dividerh,$tableTitle;
-    public $iStartDate=-1,$iEndDate=-1;
+    public $minute;
+    public $hour;
+    public $day;
+    public $week;
+    public $month;
+    public $year;
+    public $divider;
+    public $dividerh;
+    public $tableTitle;
+    public $iStartDate=-1;
+    public $iEndDate=-1;
     // Number of gantt bar position (n.b not necessariliy the same as the number of bars)
     // we could have on bar in position 1, and one bar in position 5 then there are two
     // bars but the number of bar positions is 5
     public $actinfo;
-    public $iTopPlotMargin=10,$iBottomPlotMargin=15;
+    public $iTopPlotMargin=10;
+    public $iBottomPlotMargin=15;
     public $iVertLines=-1;
     public $iVertHeaderSize=-1;
     // The width of the labels (defaults to the widest of all labels)
     private $iLabelWidth;
     // Out image to stroke the scale to
     private $iImg;
-    private $iTableHeaderBackgroundColor="white",$iTableHeaderFrameColor="black";
+    private $iTableHeaderBackgroundColor="white";
+    private $iTableHeaderFrameColor="black";
     private $iTableHeaderFrameWeight=1;
-    private $iAvailableHeight=-1,$iVertSpacing=-1;
+    private $iAvailableHeight=-1;
+    private $iVertSpacing=-1;
     private $iDateLocale;
     private $iVertLayout=GANTT_EVEN;
     private $iUsePlotWeekendBackground=true;
@@ -3216,8 +3252,12 @@ class GanttConstraint
 //===================================================
 class GanttPlotObject
 {
-    public $title,$caption;
-    public $csimarea='',$csimtarget='',$csimwintarget='',$csimalt='';
+    public $title;
+    public $caption;
+    public $csimarea='';
+    public $csimtarget='';
+    public $csimwintarget='';
+    public $csimalt='';
     public $constraints = array();
     public $iCaptionMargin=5;
     public $iConstrainPos=array();
@@ -3322,8 +3362,10 @@ class Progress
 {
     public $iProgress=-1;
     public $iPattern=GANTT_SOLID;
-    public $iColor="black", $iFillColor='black';
-    public $iDensity=98, $iHeight=0.65;
+    public $iColor="black";
+    public $iFillColor='black';
+    public $iDensity=98;
+    public $iHeight=0.65;
 
     function Set($aProg)
     {
@@ -3362,7 +3404,8 @@ define('GANTT_HGRID2', 1);
 class HorizontalGridLine
 {
     private $iGraph=null;
-    private $iRowColor1 = '', $iRowColor2 = '';
+    private $iRowColor1 = '';
+    private $iRowColor2 = '';
     private $iShow=false;
     private $line=null;
     private $iStart=0; // 0=from left margin, 1=just along header
@@ -3447,13 +3490,22 @@ class HorizontalGridLine
 class GanttBar extends GanttPlotObject
 {
     public $progress;
-    public $leftMark,$rightMark;
+    public $leftMark;
+    public $rightMark;
     private $iEnd;
     private $iHeightFactor=0.5;
-    private $iFillColor="white",$iFrameColor="black";
-    private $iShadow=false,$iShadowColor="darkgray",$iShadowWidth=1,$iShadowFrame="black";
-    private $iPattern=GANTT_RDIAG,$iPatternColor="blue",$iPatternDensity=95;
-    private $iBreakStyle=false, $iBreakLineStyle='dotted',$iBreakLineWeight=1;
+    private $iFillColor="white";
+    private $iFrameColor="black";
+    private $iShadow=false;
+    private $iShadowColor="darkgray";
+    private $iShadowWidth=1;
+    private $iShadowFrame="black";
+    private $iPattern=GANTT_RDIAG;
+    private $iPatternColor="blue";
+    private $iPatternDensity=95;
+    private $iBreakStyle=false;
+    private $iBreakLineStyle='dotted';
+    private $iBreakLineWeight=1;
     //---------------
     // CONSTRUCTOR
     function __construct($aPos, $aLabel, $aStart, $aEnd, $aCaption = "", $aHeightFactor = 0.6)
@@ -3837,8 +3889,11 @@ class TextPropertyBelow extends TextProperty
 class GanttVLine extends GanttPlotObject
 {
 
-    private $iLine,$title_margin=3, $iDayOffset=0.5;
-    private $iStartRow = -1, $iEndRow = -1;
+    private $iLine;
+    private $title_margin=3;
+    private $iDayOffset=0.5;
+    private $iStartRow = -1;
+    private $iEndRow = -1;
 
     //---------------
     // CONSTRUCTOR
@@ -3919,10 +3974,13 @@ class GanttVLine extends GanttPlotObject
 //===================================================
 class LinkArrow
 {
-    private $ix,$iy;
+    private $ix;
+    private $iy;
     private $isizespec = array(
     array(2,3),array(3,5),array(3,8),array(6,15),array(8,22));
-    private $iDirection=ARROW_DOWN,$iType=ARROWT_SOLID,$iSize=ARROW_S2;
+    private $iDirection=ARROW_DOWN;
+    private $iType=ARROWT_SOLID;
+    private $iSize=ARROW_S2;
     private $iColor='black';
 
     function __construct($x, $y, $aDirection, $aType = ARROWT_SOLID, $aSize = ARROW_S2)
@@ -3997,10 +4055,16 @@ class LinkArrow
 
 class GanttLink
 {
-    private $ix1,$ix2,$iy1,$iy2;
-    private $iPathType=2,$iPathExtend=15;
-    private $iColor='black',$iWeight=1;
-    private $iArrowSize=ARROW_S2,$iArrowType=ARROWT_SOLID;
+    private $ix1;
+    private $ix2;
+    private $iy1;
+    private $iy2;
+    private $iPathType=2;
+    private $iPathExtend=15;
+    private $iColor='black';
+    private $iWeight=1;
+    private $iArrowSize=ARROW_S2;
+    private $iArrowType=ARROWT_SOLID;
 
     function __construct($x1 = 0, $y1 = 0, $x2 = 0, $y2 = 0)
     {

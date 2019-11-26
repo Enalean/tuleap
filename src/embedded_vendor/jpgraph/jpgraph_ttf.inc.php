@@ -259,7 +259,8 @@ class LanguageConv
 //=============================================================
 class TTF
 {
-    private $font_files,$style_names;
+    private $font_files;
+    private $style_names;
 
     function __construct()
     {

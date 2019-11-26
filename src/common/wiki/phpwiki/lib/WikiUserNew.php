@@ -823,8 +823,10 @@ class _PassUser extends _AnonUser
  * @tables: pref
  */
 {
-    var $_auth_dbi, $_prefs;
-    var $_current_method, $_current_index;
+    public $_auth_dbi;
+    public $_prefs;
+    public $_current_method;
+    public $_current_index;
 
     // check and prepare the auth and pref methods only once
     function __construct($UserName = '', $prefs = false)

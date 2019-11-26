@@ -71,8 +71,12 @@ class WikiUser
 {
     var $_userid = false;
     var $_level  = false;
-    var $_request, $_dbi, $_authdbi, $_homepage;
-    var $_authmethod = '', $_authhow = '';
+    public $_request;
+    public $_dbi;
+    public $_authdbi;
+    public $_homepage;
+    public $_authmethod = '';
+    public $_authhow = '';
 
     /**
      *

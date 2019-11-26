@@ -26,12 +26,17 @@ class LinePlot extends Plot
     public $mark=null;
     protected $filled=false;
     protected $fill_color='blue';
-    protected $step_style=false, $center=false;
+    protected $step_style=false;
+    protected $center=false;
     protected $line_style=1; // Default to solid
     protected $filledAreas = array(); // array of arrays(with min,max,col,filled in them)
     public $barcenter=false;  // When we mix line and bar. Should we center the line in the bar.
-    protected $fillFromMin = false, $fillFromMax = false;
-    protected $fillgrad=false,$fillgrad_fromcolor='navy',$fillgrad_tocolor='silver',$fillgrad_numcolors=100;
+    protected $fillFromMin = false;
+    protected $fillFromMax = false;
+    protected $fillgrad=false;
+    protected $fillgrad_fromcolor='navy';
+    protected $fillgrad_tocolor='silver';
+    protected $fillgrad_numcolors=100;
     protected $iFastStroke=false;
 
     //---------------
@@ -489,7 +494,8 @@ class LinePlot extends Plot
 //===================================================
 class AccLinePlot extends Plot
 {
-    protected $plots=null,$nbrplots=0;
+    protected $plots=null;
+    protected $nbrplots=0;
     private $iStartEndZero=true;
     //---------------
     // CONSTRUCTOR

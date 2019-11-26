@@ -158,7 +158,8 @@ class FieldPlot extends Plot
 //===================================================
 class ScatterPlot extends Plot
 {
-    public $mark,$link;
+    public $mark;
+    public $link;
     private $impuls = false;
     //---------------
     // CONSTRUCTOR

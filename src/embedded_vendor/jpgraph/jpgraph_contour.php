@@ -23,14 +23,18 @@ class Contour
 {
 
     private $dataPoints = array();
-    private $nbrCols=0,$nbrRows=0;
-    private $horizEdges = array(), $vertEdges=array();
+    private $nbrCols=0;
+    private $nbrRows=0;
+    private $horizEdges = array();
+    private $vertEdges=array();
     private $isobarValues = array();
     private $stack = null;
     private $isobarCoord = array();
-    private $nbrIsobars = 10, $isobarColors = array();
+    private $nbrIsobars = 10;
+    private $isobarColors = array();
     private $invert = true;
-    private $highcontrast = false, $highcontrastbw = false;
+    private $highcontrast = false;
+    private $highcontrastbw = false;
 
     /**
      * Create a new contour level "algorithm machine".
@@ -407,7 +411,10 @@ class Contour
 class ContourPlot extends Plot
 {
 
-    private $contour, $contourCoord, $contourVal, $contourColor;
+    private $contour;
+    private $contourCoord;
+    private $contourVal;
+    private $contourColor;
     private $nbrCountours = 0 ;
     private $dataMatrix = array();
     private $invertLegend = false;
@@ -415,7 +422,8 @@ class ContourPlot extends Plot
     private $flipData = false;
     private $isobar = 10;
     private $showLegend = false;
-    private $highcontrast = false, $highcontrastbw = false;
+    private $highcontrast = false;
+    private $highcontrastbw = false;
     private $manualIsobarColors = array();
 
     /**

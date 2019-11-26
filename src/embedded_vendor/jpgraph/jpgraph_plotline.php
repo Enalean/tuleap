@@ -16,10 +16,15 @@
 
 class PlotLine
 {
-    public $scaleposition, $direction=-1;
+    public $scaleposition;
+    public $direction=-1;
     protected $weight=1;
     protected $color = 'black';
-    private $legend='',$hidelegend=false, $legendcsimtarget='', $legendcsimalt='',$legendcsimwintarget='';
+    private $legend='';
+    private $hidelegend=false;
+    private $legendcsimtarget='';
+    private $legendcsimalt='';
+    private $legendcsimwintarget='';
     private $iLineStyle='solid';
     public $numpoints=0; // Needed since the framework expects this property
 

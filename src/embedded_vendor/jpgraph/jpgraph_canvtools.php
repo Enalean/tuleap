@@ -24,8 +24,12 @@ define('CORNER_BOTTOMLEFT', 3);
 class CanvasScale
 {
     private $g;
-    private $w,$h;
-    private $ixmin=0,$ixmax=10,$iymin=0,$iymax=10;
+    private $w;
+    private $h;
+    private $ixmin=0;
+    private $ixmax=10;
+    private $iymin=0;
+    private $iymax=10;
 
     function __construct($graph, $xmin = 0, $xmax = 10, $ymin = 0, $ymax = 10)
     {
@@ -78,7 +82,8 @@ class CanvasScale
 //===================================================
 class Shape
 {
-    private $img,$scale;
+    private $img;
+    private $scale;
 
     function __construct($aGraph, $scale)
     {
@@ -410,11 +415,19 @@ class Shape
 //===================================================
 class CanvasRectangleText
 {
-    private $ix,$iy,$iw,$ih,$ir=4;
-    private $iTxt,$iColor='black',$iFillColor='',$iFontColor='black';
+    private $ix;
+    private $iy;
+    private $iw;
+    private $ih;
+    private $ir=4;
+    private $iTxt;
+    private $iColor='black';
+    private $iFillColor='';
+    private $iFontColor='black';
     private $iParaAlign='center';
     private $iAutoBoxMargin=5;
-    private $iShadowWidth=3,$iShadowColor='';
+    private $iShadowWidth=3;
+    private $iShadowColor='';
 
     function __construct($aTxt = '', $xl = 0, $yt = 0, $w = 0, $h = 0)
     {

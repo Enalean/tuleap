@@ -31,7 +31,10 @@ class BaseLanguage
 
     //array to hold the string values
     var $text_array ;
-    var $lang, $name, $id, $code ;
+    public $lang;
+    public $name;
+    public $id;
+    public $code;
     var $file_array = array();
 
     /**

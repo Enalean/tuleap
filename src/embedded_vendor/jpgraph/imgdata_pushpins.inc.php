@@ -18,7 +18,8 @@ class ImgData_PushPins extends ImgData
     protected $colors = array('blue','green','orange','pink','red');
     protected $index  = array('red' => 0, 'orange' => 1, 'pink' => 2, 'blue' => 3, 'green' => 4 ) ;
     protected $maxidx = 4 ;
-    protected $imgdata_large, $imgdata_small ;
+    protected $imgdata_large;
+    protected $imgdata_small;
 
     function __construct()
     {

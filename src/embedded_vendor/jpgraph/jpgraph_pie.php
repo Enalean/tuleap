@@ -23,21 +23,28 @@ define("PIE_VALUE_ADJPER", 2);
 //===================================================
 class PiePlot
 {
-    public $posx=0.5,$posy=0.5;
+    public $posx=0.5;
+    public $posy=0.5;
     public $is_using_plot_theme = false;
     public $theme="earth";
     protected $use_plot_theme_colors = false;
     protected $radius=0.3;
-    protected $explode_radius=array(),$explode_all=false,$explode_r=20;
-    protected $labels=null, $legends=null;
-    protected $csimtargets=null,$csimwintargets=null;  // Array of targets for CSIM
+    protected $explode_radius=array();
+    protected $explode_all=false;
+    protected $explode_r=20;
+    protected $labels=null;
+    protected $legends=null;
+    protected $csimtargets=null;
+    protected $csimwintargets=null;  // Array of targets for CSIM
     protected $csimareas='';  // Generated CSIM text
     protected $csimalts=null;  // ALT tags for corresponding target
     protected $data=null;
     public $title;
     protected $startangle=0;
-    protected $weight=1, $color="black";
-    protected $legend_margin=6,$show_labels=true;
+    protected $weight=1;
+    protected $color="black";
+    protected $legend_margin=6;
+    protected $show_labels=true;
     protected $themearr = array(
     "earth"  => array(136,34,40,45,46,62,63,134,74,10,120,136,141,168,180,77,209,218,346,395,89,430),
     "pastel" => array(27,415,128,59,66,79,105,110,42,147,152,230,236,240,331,337,405,38),
@@ -45,16 +52,22 @@ class PiePlot
     "sand"   => array(27,168,34,170,19,50,65,72,131,209,46,393));
     protected $setslicecolors=array();
     protected $labeltype=0; // Default to percentage
-    protected $pie_border=true,$pie_interior_border=true;
+    protected $pie_border=true;
+    protected $pie_interior_border=true;
     public $value;
-    protected $ishadowcolor='',$ishadowdrop=4;
+    protected $ishadowcolor='';
+    protected $ishadowdrop=4;
     protected $ilabelposadj=1;
-    protected $legendcsimtargets = array(),$legendcsimwintargets = array();
+    protected $legendcsimtargets = array();
+    protected $legendcsimwintargets = array();
     protected $legendcsimalts = array();
     protected $adjusted_data = array();
     public $guideline = null;
-    protected $guidelinemargin=10,$iShowGuideLineForSingle = false;
-    protected $iGuideLineCurve = false,$iGuideVFactor=1.4,$iGuideLineRFactor=0.8;
+    protected $guidelinemargin=10;
+    protected $iShowGuideLineForSingle = false;
+    protected $iGuideLineCurve = false;
+    protected $iGuideVFactor=1.4;
+    protected $iGuideLineRFactor=0.8;
     protected $la = array(); // Holds the exact angle for each label
 
     //---------------
@@ -1121,7 +1134,9 @@ class PiePlotC extends PiePlot
     private $imidsize=0.5;  // Fraction of total width
     private $imidcolor='white';
     public $midtitle='';
-    private $middlecsimtarget='',$middlecsimwintarget='',$middlecsimalt='';
+    private $middlecsimtarget='';
+    private $middlecsimwintarget='';
+    private $middlecsimalt='';
 
     function __construct($data, $aCenterTitle = '')
     {
@@ -1330,7 +1345,9 @@ class PiePlotC extends PiePlot
 //===================================================
 class PieGraph extends Graph
 {
-    private $posx, $posy, $radius;
+    private $posx;
+    private $posy;
+    private $radius;
     private $legends=array();
     public $plots=array();
     public $pieaa = false ;

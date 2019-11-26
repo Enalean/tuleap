@@ -43,7 +43,9 @@ require_once('lib/XmlParser.php');
 
 class HtmlParser extends XmlParser
 {
-    var $dialect, $_handlers, $root;
+    public $dialect;
+    public $_handlers;
+    public $root;
 
     /**
      *  dialect: "PhpWiki2", "PhpWiki"

@@ -18,7 +18,8 @@ class Spline
 {
     // 3:rd degree polynom approximation
 
-    private $xdata,$ydata;   // Data vectors
+    private $xdata; // Data vectors
+    private $ydata; // Data vectors
     private $y2;   // 2:nd derivate of ydata
     private $n=0;
 

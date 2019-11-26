@@ -195,8 +195,10 @@ function Button($action, $label = false, $page_or_rev = false)
 
 class Theme
 {
-    var $HTML_DUMP_SUFFIX = '';
-    var $DUMP_MODE = false, $dumped_images, $dumped_css;
+    public $HTML_DUMP_SUFFIX = '';
+    public $DUMP_MODE = false;
+    public $dumped_images;
+    public $dumped_css;
 
     function __construct($theme_name = 'default')
     {
@@ -1532,7 +1534,9 @@ class SidebarBox
 class PluginSidebarBox extends SidebarBox
 {
 
-    var $_plugin, $_args = false, $_basepage = false;
+    public $_plugin;
+    public $_args = false;
+    public $_basepage = false;
 
     function __construct($name, $args = false, $basepage = false)
     {

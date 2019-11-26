@@ -16,22 +16,40 @@
 class MGraph
 {
 
-    public $title = null, $subtitle = null, $subsubtitle = null;
+    public $title = null;
+    public $subtitle = null;
+    public $subsubtitle = null;
 
     protected $img=null;
-    protected $iCnt=0,$iGraphs = array(); // image_handle, x, y, fx, fy, sizex, sizey
-    protected $iFillColor='white', $iCurrentColor=0;
-    protected $lm=4,$rm=4,$tm=4,$bm=4;
-    protected $iDoFrame = false, $iFrameColor = 'black', $iFrameWeight = 1;
+    protected $iCnt=0;
+    protected $iGraphs = array(); // image_handle, x, y, fx, fy, sizex, sizey
+    protected $iFillColor='white';
+    protected $iCurrentColor=0;
+    protected $lm=4;
+    protected $rm=4;
+    protected $tm=4;
+    protected $bm=4;
+    protected $iDoFrame = false;
+    protected $iFrameColor = 'black';
+    protected $iFrameWeight = 1;
     protected $iLineWeight = 1;
     protected $expired=false;
-    protected $cache=null,$cache_name = '',$inline=true;
-    protected $image_format='png',$image_quality=75;
-    protected $iWidth=null,$iHeight=null;
-    protected $background_image='',$background_image_center=true,
-    $backround_image_format='',$background_image_mix=100,
-    $background_image_y=null, $background_image_x=null;
-    private $doshadow=false, $shadow_width=4, $shadow_color='gray@0.5';
+    protected $cache=null;
+    protected $cache_name = '';
+    protected $inline=true;
+    protected $image_format='png';
+    protected $image_quality=75;
+    protected $iWidth=null;
+    protected $iHeight=null;
+    protected $background_image='';
+    protected $background_image_center=true;
+    protected $backround_image_format='';
+    protected $background_image_mix=100;
+    protected $background_image_y=null;
+    protected $background_image_x=null;
+    private $doshadow=false;
+    private $shadow_width=4;
+    private $shadow_color='gray@0.5';
     public $footer;
 
 
