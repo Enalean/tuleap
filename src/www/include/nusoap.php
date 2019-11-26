@@ -3291,11 +3291,6 @@ class soap_server extends nusoap_base
             } elseif ($this->wsdl) {
                 header("Content-Type: text/xml; charset=ISO-8859-1\r\n");
                 print $this->wsdl->serialize($this->debug_flag);
-                if ($this->debug_flag) {
-                    $this->debug('wsdl:');
-                    $this->appendDebug($this->varDump($this->wsdl));
-                    print $this->getDebugAsXMLComment();
-                }
             } else {
                 header("Content-Type: text/html; charset=ISO-8859-1\r\n");
                 print "This service does not provide WSDL";

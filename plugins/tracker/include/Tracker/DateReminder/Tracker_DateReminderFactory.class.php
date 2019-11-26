@@ -99,6 +99,7 @@ class Tracker_DateReminderFactory
         } catch (Tracker_DateReminderException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/notifications/' . urlencode((string) $this->getTracker()->getId()) . '/');
+            exit();
         }
         $reminder = $this->getDao()->addDateReminder($this->getTracker()->getId(), $fieldId, $ugroups, $roles, $notificationType, $distance);
         if ($reminder) {
@@ -183,6 +184,7 @@ class Tracker_DateReminderFactory
         } catch (Tracker_DateReminderException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/notifications/' . urlencode((string) $this->getTracker()->getId()) . '/');
+            exit();
         }
         $updateReminder = $this->getDao()->updateDateReminder($reminder->getId(), $ugroups, $roles, $notificationType, $distance, $status);
         if ($updateReminder) {

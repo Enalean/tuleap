@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -106,7 +106,10 @@ class Restrictor
         }
     }
 
-    private function redirectToGerritServerList()
+    /**
+     * @psalm-return never-return
+     */
+    private function redirectToGerritServerList(): void
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
@@ -114,6 +117,7 @@ class Restrictor
         );
 
         $GLOBALS['Response']->redirect(GIT_SITE_ADMIN_BASE_URL . '?pane=gerrit_servers_admin');
+        exit();
     }
 
     private function checkSynchronizerToken($url)

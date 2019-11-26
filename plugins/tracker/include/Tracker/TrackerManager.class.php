@@ -166,7 +166,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         } catch (Tracker_ResourceDoesntExistException $e) {
              exit_error($GLOBALS['Language']->getText('global', 'error'), $e->getMessage());
         } catch (Tracker_CannotAccessTrackerException $e) {
-            if (! $request->isAjax()) {
+            if (isset($object) && ! $request->isAjax()) {
                 $GLOBALS['Response']->addFeedback('error', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
                 $this->displayAllTrackers($object->getTracker()->getProject(), $user);
             } else {

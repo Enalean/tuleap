@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -144,13 +144,17 @@ class Controller
         \account_redirect_after_login($return_to);
     }
 
-    private function redirectAfterFailure($message)
+    /**
+     * @psalm-return never-return
+     */
+    private function redirectAfterFailure($message): void
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             $message
         );
         $GLOBALS['Response']->redirect('/');
+        exit();
     }
 
     private function dealWithUnregisteredUser(FlowResponse $flow_response, $login_time)

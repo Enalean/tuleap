@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -213,11 +213,13 @@ class Controller
 
         try {
             $provider = $this->provider_manager->getById($provider_id);
-            $this->provider_manager->remove($provider);
         } catch (ProviderNotFoundException $ex) {
             $this->redirectAfterFailure(
                 dgettext('tuleap-openidconnectclient', 'The data you provided are not valid.')
             );
+        }
+        try {
+            $this->provider_manager->remove($provider);
         } catch (ProviderDataAccessException $ex) {
             $this->redirectAfterFailure(
                 sprintf(dgettext('tuleap-openidconnectclient', 'An error occured while removing the provider %1$s.'), $provider->getName())
@@ -230,12 +232,16 @@ class Controller
         $this->showAdministration($csrf_token, $user);
     }
 
-    private function redirectAfterFailure($message)
+    /**
+     * @psalm-return never-return
+     */
+    private function redirectAfterFailure($message): void
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
             $message
         );
         $GLOBALS['Response']->redirect(OPENIDCONNECTCLIENT_BASE_URL . '/admin/');
+        exit();
     }
 }

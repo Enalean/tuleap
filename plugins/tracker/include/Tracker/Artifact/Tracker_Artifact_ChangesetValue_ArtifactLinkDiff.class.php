@@ -93,6 +93,9 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
             return;
         }
         $nature = $nature_factory->getFromShortname($artifactlinkinfo->getNature());
+        if ($nature === null) {
+            return;
+        }
         if (! isset($this->added_by_nature[$nature->shortname])) {
             $this->added_by_nature[$nature->shortname] = new AddedLinkByNatureCollection($nature, $formatter);
         }
