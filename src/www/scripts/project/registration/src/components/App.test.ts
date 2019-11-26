@@ -17,19 +17,18 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, Wrapper } from "@vue/test-utils";
 import App from "./App.vue";
-import NewProjectBoxes from "./NewProjectBoxes.vue";
-import ProjectList from "./ProjectList.vue";
 import { createProjectRegistrationLocalVue } from "../helpers/local-vue-for-tests";
 
-describe("App", function() {
-    it("Spawns the app", async () => {
-        const wrapper = shallowMount(App, {
+describe("App", () => {
+    let factory: Wrapper<App>;
+    beforeEach(async () => {
+        factory = shallowMount(App, {
             localVue: await createProjectRegistrationLocalVue()
         });
-
-        expect(wrapper.contains(NewProjectBoxes)).toBe(true);
-        expect(wrapper.contains(ProjectList)).toBe(true);
+    });
+    it("Spawns the app", () => {
+        expect(factory.contains("[data-test=project-registration]")).toBe(true);
     });
 });

@@ -26,6 +26,7 @@
                class="project-registration-selected-template"
                name="selected-template"
                data-test="project-registration-radio"
+               v-on:change="storeSelectedTemplate(template)"
         >
 
         <label class="tlp-card project-registration-template-label"
@@ -52,5 +53,9 @@ import { TemplateData } from "../../type";
 export default class TuleapTemplateCard extends Vue {
     @Prop({ required: true })
     readonly template!: TemplateData;
+
+    storeSelectedTemplate(): void {
+        this.$store.dispatch("setSelectedTemplate", this.template);
+    }
 }
 </script>

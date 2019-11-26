@@ -1,7 +1,7 @@
 <!--
   - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
   -
-  -  This file is a part of Tuleap.
+  - This file is a part of Tuleap.
   -
   - Tuleap is free software; you can redistribute it and/or modify
   - it under the terms of the GNU General Public License as published by
@@ -14,34 +14,20 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
   -
   -->
 
-<template>
-    <div>
-        <h3 v-translate>Tuleap templates</h3>
-
-        <section class="project-registration-default-templates-section">
-            <tuleap-template-card v-for="template of tuleap_templates"
-                                  v-bind:key="template.template_name"
-                                  v-bind:template="template"
-            />
-        </section>
+<template functional>
+    <div class="tlp-alert-warning" v-translate>
+        This space is under construction. You can still use the current registration process in the meantime.
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import TuleapTemplateCard from "./TuleapTemplateCard.vue";
-import { State } from "vuex-class";
-import { TemplateData } from "../../type";
-@Component({
-    components: { TuleapTemplateCard }
-})
-export default class TuleapTemplateList extends Vue {
-    @State
-    tuleap_templates!: TemplateData[];
-}
+
+@Component({})
+export default class UnderConstructionInformation extends Vue {}
 </script>

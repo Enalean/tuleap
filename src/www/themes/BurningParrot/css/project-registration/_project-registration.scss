@@ -48,6 +48,10 @@ $title-margin-left: $illustration-width + $illustration-spacing;
     margin: 0 $tlp-half-spacing 0 0;
 }
 
+.register-new-project-icon {
+    margin: 0 5px 0 0;
+}
+
 @media screen and (max-width: 1200px) {
     .register-new-project-section {
         display: flex;

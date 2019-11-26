@@ -22,8 +22,11 @@ import { createLocalVue, shallowMount, Wrapper } from "@vue/test-utils";
 import TuleapTemplateCard from "./TuleapTemplateCard.vue";
 import { TemplateData } from "../../type";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
+import { Store } from "vuex-mock-store";
+import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
 
 describe("CardWithChildren", () => {
+    const store: Store = createStoreMock({});
     let local_vue = createLocalVue();
 
     beforeEach(async () => {
@@ -33,7 +36,8 @@ describe("CardWithChildren", () => {
     function createWrapper(tuleap_template: TemplateData): Wrapper<TuleapTemplateCard> {
         return shallowMount(TuleapTemplateCard, {
             localVue: local_vue,
-            propsData: { template: tuleap_template }
+            propsData: { template: tuleap_template },
+            mocks: { $store: store }
         });
     }
 
@@ -60,8 +64,23 @@ describe("CardWithChildren", () => {
 
         wrapper.find("[data-test=project-registration-card-label]").trigger("click");
 
-        const checkbox: HTMLInputElement = wrapper.find("[data-test=project-registration-radio]")
+        const radio: HTMLInputElement = wrapper.find("[data-test=project-registration-radio]")
             .element as HTMLInputElement;
-        expect(checkbox.checked).toBe(true);
+        expect(radio.checked).toBe(true);
+    });
+
+    it(`It stores the template when the template is choosen`, () => {
+        const tuleap_template: TemplateData = {
+            title: "scrum",
+            description: "scrum desc",
+            name: "scrum_template",
+            svg: "<svg></svg>"
+        };
+
+        const wrapper = createWrapper(tuleap_template);
+
+        wrapper.find("[data-test=project-registration-radio]").trigger("change");
+
+        expect(store.dispatch).toHaveBeenCalledWith("setSelectedTemplate", tuleap_template);
     });
 });

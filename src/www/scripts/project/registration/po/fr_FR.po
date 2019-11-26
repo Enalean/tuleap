@@ -10,11 +10,29 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Back"
+msgstr "Précédent"
+
+msgid "Between 3 and 30 characters length"
+msgstr "Entre 3 et 30 caractères"
+
+msgid "My new project"
+msgstr "Mon nouveau projet"
+
+msgid "Name"
+msgstr "Nom"
+
 msgid "Next"
 msgstr "Suivant"
 
+msgid "Project information"
+msgstr "Information sur le projet"
+
 msgid "Start a new project"
 msgstr "Démarrer un nouveau projet"
+
+msgid "Start my project"
+msgstr "Créer mon projet"
 
 msgid ""
 "The project template you will select provides some services. Don’t worry, "

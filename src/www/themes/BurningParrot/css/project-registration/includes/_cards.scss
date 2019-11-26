@@ -86,7 +86,15 @@ $card-border-margin: 150px;
 }
 
 .project-registration-button-container {
-    text-align: end;
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+}
+
+.project-registration-back-button {
+    margin: 0 $tlp-spacing 0 0;
+    color: $tlp-swatch-chrome-silver;
+    cursor: pointer;
 }
 
 .project-registration-next-button {

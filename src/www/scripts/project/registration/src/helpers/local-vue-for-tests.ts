@@ -22,6 +22,7 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createLocalVue } from "@vue/test-utils";
 import { initVueGettext } from "../../../../tuleap/gettext/vue-gettext-init";
 import { Vue } from "vue/types/vue";
+import VueRouter from "vue-router";
 
 export async function createProjectRegistrationLocalVue(): Promise<typeof Vue> {
     const local_vue = createLocalVue();
@@ -31,6 +32,7 @@ export async function createProjectRegistrationLocalVue(): Promise<typeof Vue> {
 
     local_vue.use(Vuex);
     local_vue.use(VueDOMPurifyHTML);
+    local_vue.use(VueRouter);
 
     return local_vue;
 }

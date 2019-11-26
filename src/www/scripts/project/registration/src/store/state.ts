@@ -20,7 +20,8 @@
 import { State } from "./type";
 
 const state: State = {
-    tuleap_templates: []
+    tuleap_templates: [],
+    selected_template: null
 };
 
 export default state;

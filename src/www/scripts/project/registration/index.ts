@@ -24,6 +24,7 @@ import { TemplateData } from "./src/type";
 import { createStore } from "./src/store";
 import { State } from "./src/store/type";
 import VueDOMPurifyHTML from "vue-dompurify-html";
+import { createRouter } from "./src/router";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("project-registration");
@@ -41,16 +42,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const tuleap_templates: TemplateData[] = JSON.parse(tuleap_templates_json);
+    const selected_template = null;
 
     const root_state: State = {
-        tuleap_templates
+        tuleap_templates,
+        selected_template
     };
 
     Vue.use(VueDOMPurifyHTML);
 
     const AppComponent = Vue.extend(App);
     const store = createStore(root_state);
+    const router = createRouter();
+
     new AppComponent({
-        store
+        store,
+        router
     }).$mount(vue_mount_point);
 });

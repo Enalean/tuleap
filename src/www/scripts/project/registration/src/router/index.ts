@@ -14,23 +14,31 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
-
 import Vue from "vue";
-import Vuex, { Store } from "vuex";
-import { State } from "./type";
-import mutations from "./mutations";
-import * as actions from "./actions";
-import * as getters from "./getters";
+import VueRouter from "vue-router";
+import ProjectList from "../components/ProjectList.vue";
+import ProjectInformation from "../components/ProjectInformation/ProjectInformation.vue";
 
-Vue.use(Vuex);
+Vue.use(VueRouter);
 
-export function createStore(root_state: State): Store<State> {
-    return new Vuex.Store({
-        state: root_state,
-        mutations,
-        actions,
-        getters
+export function createRouter(): VueRouter {
+    return new VueRouter({
+        mode: "history",
+        base: "/project",
+        routes: [
+            {
+                path: "/new",
+                name: "template",
+                component: ProjectList
+            },
+            {
+                path: "/new-information",
+                name: "information",
+                component: ProjectInformation
+            }
+        ]
     });
 }
