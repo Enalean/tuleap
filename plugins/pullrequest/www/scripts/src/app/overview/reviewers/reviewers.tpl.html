@@ -17,10 +17,12 @@
     </div>
 
     <button ng-if="! reviewers_controller.loading_reviewers && reviewers_controller.hasEditRight() && reviewers_controller.reviewers.length === 0"
+        ng-click="reviewers_controller.showUpdateReviewersModal()"
         class="tlp-button-primary tlp-button-outline tlp-button-small add-reviewers-button">
         <i class="fa fa-user-plus tlp-button-icon"></i> <span translate>Add reviewers</span>
     </button>
     <button ng-if="! reviewers_controller.loading_reviewers && reviewers_controller.hasEditRight() && reviewers_controller.reviewers.length > 0"
+        ng-click="reviewers_controller.showUpdateReviewersModal()"
         class="tlp-button-primary tlp-button-outline tlp-button-small edit-reviewers-button">
         <i class="fa fa-pencil tlp-button-icon"></i> <span translate>Edit reviewers</span>
     </button>

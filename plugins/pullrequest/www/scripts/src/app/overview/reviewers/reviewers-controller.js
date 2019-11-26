@@ -19,15 +19,26 @@
 
 export default ReviewersController;
 
-ReviewersController.$inject = ["SharedPropertiesService", "ReviewersService", "PullRequestService"];
+ReviewersController.$inject = [
+    "SharedPropertiesService",
+    "ReviewersService",
+    "PullRequestService",
+    "UpdateReviewersModalService"
+];
 
-function ReviewersController(SharedPropertiesService, ReviewersService, PullRequestService) {
+function ReviewersController(
+    SharedPropertiesService,
+    ReviewersService,
+    PullRequestService,
+    UpdateReviewersModalService
+) {
     const self = this;
 
     Object.assign(self, {
         pull_request: {},
         reviewers: [],
         loading_reviewers: true,
+        showUpdateReviewersModal: showUpdateReviewersModal,
         hasEditRight: hasEditRight,
         $onInit: init
     });
@@ -44,6 +55,10 @@ function ReviewersController(SharedPropertiesService, ReviewersService, PullRequ
                     self.loading_reviewers = false;
                 });
         });
+    }
+
+    function showUpdateReviewersModal() {
+        UpdateReviewersModalService.showModal(self.pull_request, self.reviewers);
     }
 
     function hasEditRight() {

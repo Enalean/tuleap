@@ -7,6 +7,12 @@
     flex-direction: column;
     align-self: stretch;
     border-left: 1px solid $tlp-ui-border-light;
+
+    @media screen and (max-width: 1200px) {
+        margin: $tlp-spacing 0 0;
+        border-top: 1px solid $tlp-ui-border-light;
+        border-left: 0;
+    }
 }
 
 #pull-request-overview {

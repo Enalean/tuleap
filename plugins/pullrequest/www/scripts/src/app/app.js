@@ -61,6 +61,7 @@ import MergeModalService from "./overview/merge-modal/merge-modal-service.js";
 import EditModalService from "./overview/edit-modal/edit-modal-service.js";
 import ReviewersRestService from "./overview/reviewers/reviewers-rest-service.js";
 import ReviewersService from "./overview/reviewers/reviewers-service.js";
+import UpdateReviewersModalService from "./overview/reviewers/update-reviewers-modal/update-reviewers-modal-service.js";
 import TimelineRestService from "./overview/timeline/timeline-rest-service.js";
 import TimelineService from "./overview/timeline/timeline-service.js";
 import CommitsRestService from "./commits/commits-rest-service.js";
@@ -122,6 +123,7 @@ export default angular
     .service("EditModalService", EditModalService)
     .service("ReviewersRestService", ReviewersRestService)
     .service("ReviewersService", ReviewersService)
+    .service("UpdateReviewersModalService", UpdateReviewersModalService)
     .service("TimelineRestService", TimelineRestService)
     .service("TimelineService", TimelineService)
     .service("CommitsRestService", CommitsRestService)
