@@ -73,7 +73,7 @@ function UpdateReviewersModalController(
             ajax: {
                 transport: function(params, success, failure) {
                     // Pagination has been intentionally not managed at all
-                    return ReviewersRestService.searchUsers(params.data.term).then(
+                    return ReviewersRestService.searchUsers(pull_request.id, params.data.term).then(
                         function(response) {
                             success({
                                 results: response.data

@@ -48,9 +48,13 @@ function ReviewersRestService($http, $q, ErrorModalService) {
             });
     }
 
-    function searchUsers(query) {
+    function searchUsers(pull_request_id, query) {
         return $http
-            .get("/api/v1/users/", { params: { query: query } })
+            .get(
+                "/plugins/pullrequest/autocompleter_reviewers/" +
+                    encodeURIComponent(pull_request_id),
+                { params: { name: query } }
+            )
             .then(response => {
                 return response;
             })
