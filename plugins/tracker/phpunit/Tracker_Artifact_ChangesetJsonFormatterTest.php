@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'bootstrap.php';
-
-class Tracker_Artifact_ChangesetJsonFormatterTest extends TuleapTestCase
+class Tracker_Artifact_ChangesetJsonFormatterTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function itHasJsonRepresentation()
+    public function testItHasJsonRepresentation(): void
     {
+        $artifact = Mockery::mock(Tracker_Artifact::class);
         $timestamp = mktime(1, 1, 1, 9, 25, 2013);
-        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class, [15, aMockArtifact()->build(), 45, $timestamp, ''])->makePartial()->shouldAllowMockingProtectedMethods();
+        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class, [15, $artifact, 45, $timestamp, ''])
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
         $template_renderer = \Mockery::spy(\TemplateRenderer::class);
-        stub($template_renderer)->renderToString()->returns('body');
+        $template_renderer->shouldReceive('renderToString')->andReturn('body');
 
         $json_formatter = new Tracker_Artifact_ChangesetJsonFormatter($template_renderer);
 
-        $this->assertEqual(
+        $this->assertEquals(
             $json_formatter->format($changeset),
             array(
                 'id'           => 15,
