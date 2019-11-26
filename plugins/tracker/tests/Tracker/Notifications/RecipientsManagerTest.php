@@ -21,6 +21,7 @@
 
 namespace Tuleap\Tracker\Notifications;
 
+use Mockery;
 use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_Selectbox;
@@ -57,6 +58,11 @@ class RecipientsManagerTest extends \TuleapTestCase
      */
     private $unsubscribers_notification_dao;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserNotificationSettings
+     */
+    private $user_notification_settings;
+
     public function setUp()
     {
         parent::setUp();
@@ -83,9 +89,12 @@ class RecipientsManagerTest extends \TuleapTestCase
         stub($this->user_manager)->getUserByUserName('recipient3')->returns(
             aUser()->withId(103)->build()
         );
+
+        $this->user_notification_settings = Mockery::mock(UserNotificationSettings::class);
+        stub($this->notification_settings_retriever)->getUserNotificationSettings()->returns($this->user_notification_settings);
     }
 
-    public function itReturnsRecipientsFromField()
+    public function itReturnsRecipientsFromField(): void
     {
         $field = mock(Tracker_FormElement_Field_Selectbox::class);
         stub($field)->isNotificationsSupported()->returns(true);
@@ -106,13 +115,15 @@ class RecipientsManagerTest extends \TuleapTestCase
             mock(Tracker_Artifact_Changeset::class)
         );
 
+        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+
         $this->assertEqual(
             ['recipient1' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itReturnsRecipientsFromCommentators()
+    public function itReturnsRecipientsFromCommentators(): void
     {
         $this->mockADateField(false, true);
 
@@ -128,13 +139,15 @@ class RecipientsManagerTest extends \TuleapTestCase
             mock(Tracker_Artifact_Changeset::class)
         );
 
+        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+
         $this->assertEqual(
             ['recipient2' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itReturnsRecipientsFromTrackerConfig()
+    public function itReturnsRecipientsFromTrackerConfig(): void
     {
         $this->mockADateField(false, true);
 
@@ -156,13 +169,15 @@ class RecipientsManagerTest extends \TuleapTestCase
             mock(Tracker_Artifact_Changeset::class)
         );
 
+        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+
         $this->assertEqual(
             ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itCleansUserFromRecipientsWhenUserCantReadAtLeastOneChangedField()
+    public function itCleansUserFromRecipientsWhenUserCantReadAtLeastOneChangedField(): void
     {
         $this->mockADateField(false, false);
 
@@ -178,13 +193,15 @@ class RecipientsManagerTest extends \TuleapTestCase
             mock(Tracker_Artifact_Changeset::class)
         );
 
+        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+
         $this->assertEqual(
             [],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itCleansUserFromRecipientsWhenUserHasUnsubscribedFromArtifact()
+    public function itCleansUserFromRecipientsWhenUserHasUnsubscribedFromArtifact(): void
     {
         $field = mock('\Tracker_FormElement_Field_SelectBox');
         stub($field)->isNotificationsSupported()->returns(true);
@@ -211,13 +228,15 @@ class RecipientsManagerTest extends \TuleapTestCase
             mock(Tracker_Artifact_Changeset::class)
         );
 
+        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+
         $this->assertEqual(
             ['recipient1' => true, 'recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itDoesNotFilterWhenTrackerIsNotInModeStatusUpdateOnly()
+    public function itDoesNotFilterWhenTrackerIsNotInModeStatusUpdateOnly(): void
     {
         $this->mockADateField(false, true);
 
@@ -239,13 +258,15 @@ class RecipientsManagerTest extends \TuleapTestCase
             mock(Tracker_Artifact_Changeset::class)
         );
 
+        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+
         $this->assertEqual(
             ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itDoesNotFilerWhenStatusChangedAndTrackerIsInStatusChangeOnlyMode()
+    public function itDoesNotFilerWhenStatusChangedAndTrackerIsInStatusChangeOnlyMode(): void
     {
         $this->mockADateField(false, true);
 
@@ -267,13 +288,15 @@ class RecipientsManagerTest extends \TuleapTestCase
             mock(Tracker_Artifact_Changeset::class)
         );
 
+        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+
         $this->assertEqual(
             ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itDoesNotFilterAtArtifactCreation()
+    public function itDoesNotFilterAtArtifactCreation(): void
     {
         $this->mockADateField(false, true);
 
@@ -295,17 +318,15 @@ class RecipientsManagerTest extends \TuleapTestCase
             null
         );
 
-        $user_notification_settings = mock(UserNotificationSettings::class);
-        stub($this->notification_settings_retriever)->getUserNotificationSettings()->returns($user_notification_settings);
-        stub($user_notification_settings)->isInNotifyOnEveryChangeMode()->returns(false);
+        $this->user_notification_settings->shouldReceive('isInNotifyOnEveryChangeMode')->andReturnFalse();
 
         $this->assertEqual(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true)
+            $this->recipients_manager->getRecipients($changeset, false)
         );
     }
 
-    public function itDoesNotFilterUsersWhoAreInGlobalNotificationWithNotificationInEveryStatusChangeChecked()
+    public function itDoesNotFilterUsersWhoAreInGlobalNotificationWithNotificationInEveryStatusChangeChecked(): void
     {
         $this->mockADateField(false, true);
 
@@ -327,9 +348,8 @@ class RecipientsManagerTest extends \TuleapTestCase
             mock(Tracker_Artifact_Changeset::class)
         );
 
-        $user_notification_settings = mock(UserNotificationSettings::class);
-        stub($this->notification_settings_retriever)->getUserNotificationSettings()->returns($user_notification_settings);
-        stub($user_notification_settings)->isInNotifyOnEveryChangeMode()->returns(true);
+        $this->user_notification_settings->shouldReceive('isInNotifyOnEveryChangeMode')->andReturnTrue();
+        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
         $this->assertEqual(
             ['recipient3' => true],
@@ -337,7 +357,38 @@ class RecipientsManagerTest extends \TuleapTestCase
         );
     }
 
-    public function itFilterUsersWhoAreInGlobalNotification()
+    public function itDoesNotFilterUsersWhoAreInInvolvedNotificationWithNotificationInEveryStatusChangeChecked(): void
+    {
+        $this->mockADateField(false, true);
+
+        $changeset = $this->getAMockedChangeset(
+            true,
+            [],
+            [],
+            'On going',
+            'On going',
+            [
+                [
+                    'on_updates'        => true,
+                    'check_permissions' => true,
+                    'recipients'        => ['recipient3']
+                ]
+            ],
+            Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
+            false,
+            mock(Tracker_Artifact_Changeset::class)
+        );
+
+        $this->user_notification_settings->shouldReceive('isInNoGlobalNotificationMode')->andReturnTrue();
+        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+
+        $this->assertEqual(
+            ['recipient3' => true],
+            $this->recipients_manager->getRecipients($changeset, true)
+        );
+    }
+
+    public function itFilterUsersWhoAreInGlobalNotification(): void
     {
         $this->mockADateField(false, true);
 
@@ -371,9 +422,8 @@ class RecipientsManagerTest extends \TuleapTestCase
         stub($tracker)->getNotificationsLevel()->returns(Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE);
         stub($changeset)->getTracker()->returns($tracker);
 
-        $user_notification_settings = mock(UserNotificationSettings::class);
-        stub($this->notification_settings_retriever)->getUserNotificationSettings()->returns($user_notification_settings);
-        stub($user_notification_settings)->isInNotifyOnEveryChangeMode()->returns(false);
+        $this->user_notification_settings->shouldReceive('isInNotifyOnEveryChangeMode')->andReturnFalse();
+        $this->user_notification_settings->shouldReceive('isInNoGlobalNotificationMode')->andReturnFalse();
 
         stub($changeset)->getComment()->returns(
             stub('\Tracker_Artifact_Changeset_Comment')->hasEmptyBody()->returns(false)
@@ -385,7 +435,7 @@ class RecipientsManagerTest extends \TuleapTestCase
         );
     }
 
-    public function itDoesNotFilterIfNoStatusChangeAndTrackerIsInStatusChangeOnlyAndUserSubscribeAllNotifications()
+    public function itDoesNotFilterIfNoStatusChangeAndTrackerIsInStatusChangeOnlyAndUserSubscribeAllNotifications(): void
     {
         $this->mockADateField(false, true);
 
@@ -407,9 +457,8 @@ class RecipientsManagerTest extends \TuleapTestCase
             mock(Tracker_Artifact_Changeset::class)
         );
 
-        $user_notification_settings = mock(UserNotificationSettings::class);
-        stub($this->notification_settings_retriever)->getUserNotificationSettings()->returns($user_notification_settings);
-        stub($user_notification_settings)->isInNotifyOnEveryChangeMode()->returns(true);
+        $this->user_notification_settings->shouldReceive('isInNotifyOnEveryChangeMode')->andReturnTrue();
+        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
         $this->assertEqual(
             ['recipient3' => true],
@@ -417,7 +466,7 @@ class RecipientsManagerTest extends \TuleapTestCase
         );
     }
 
-    public function itFilterUsersWhoOnlyWantSeeStatusChangeWhenStatusIsNotUpdated()
+    public function itFilterUsersWhoOnlyWantSeeStatusChangeWhenStatusIsNotUpdated(): void
     {
         $this->mockADateField(false, true);
 
@@ -442,13 +491,15 @@ class RecipientsManagerTest extends \TuleapTestCase
         stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(102, 36)->returns(true);
         stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(103, 36)->returns(false);
 
+        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+
         $this->assertEqual(
             ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
 
-    public function itDoesNotFilterWhenStatusIsUpdated()
+    public function itDoesNotFilterWhenStatusIsUpdated(): void
     {
         $this->mockADateField(false, true);
 
@@ -473,8 +524,43 @@ class RecipientsManagerTest extends \TuleapTestCase
         stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(102, 36)->returns(true);
         stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(103, 36)->returns(false);
 
+        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
+
         $this->assertEqual(
             ['recipient2' => true, 'recipient3' => true],
+            $this->recipients_manager->getRecipients($changeset, true)
+        );
+    }
+
+    public function itFiltersUsersWhoOnlyWantSeeNewArtifactsWhenArtifactIsUpdatedAndUserIsInvolved(): void
+    {
+        $this->mockADateField(false, true);
+
+        $changeset = $this->getAMockedChangeset(
+            true,
+            [],
+            [],
+            'On going',
+            'On going',
+            [
+                [
+                    'on_updates'        => true,
+                    'check_permissions' => true,
+                    'recipients'        => ['recipient2', 'recipient3']
+                ]
+            ],
+            Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+            false,
+            mock(Tracker_Artifact_Changeset::class)
+        );
+
+        stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(102, 36)->returns(false);
+        stub($this->user_status_change_only_dao)->doesUserIdHaveSubscribeOnlyForStatusChangeNotification(103, 36)->returns(false);
+
+        $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturn(true, false);
+
+        $this->assertEqual(
+            ['recipient3' => true],
             $this->recipients_manager->getRecipients($changeset, true)
         );
     }
@@ -526,7 +612,7 @@ class RecipientsManagerTest extends \TuleapTestCase
         return $changeset;
     }
 
-    public function itBuildsAListOfUserIdsFromTheirTrackerNotificationsSettings()
+    public function itBuildsAListOfUserIdsFromTheirTrackerNotificationsSettings(): void
     {
         $user_recipients_from_tracker = [
             [

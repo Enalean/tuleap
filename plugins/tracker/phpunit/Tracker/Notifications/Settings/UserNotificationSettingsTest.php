@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Notifications\Settings;
 
 require_once __DIR__ . '/../../../bootstrap.php';
@@ -28,48 +30,216 @@ use Tuleap\Tracker\Notifications\GlobalNotification;
 
 class UserNotificationSettingsTest extends TestCase
 {
-    /**
-     * @dataProvider notificationModeProvider
-     */
-    public function testNotificationSettingsMode(
-        $has_unsubscribed,
-        $is_only_on_status_update,
-        array $global_notifications,
-        $tracker_notification_level,
-        $expected_no_notification_at_all_mode,
-        $expected_no_global_notification_mode,
-        $expected_notify_on_artifact_creation_mode,
-        $expected_notify_on_every_change_mode,
-        $expected_notify_onstatus_change
-    ) {
+
+    public function testNoNotificationWhenTrackerModeIsNoNotifications(): void
+    {
+        $has_unsubscribed = false;
+        $is_only_on_status_update = false;
+        $is_involved = false;
+        $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_DISABLED;
+        $global_notifications = [];
+
         $notification_settings = new UserNotificationSettings(
             $has_unsubscribed,
             $is_only_on_status_update,
+            $is_involved,
             $tracker_notification_level,
             ...$global_notifications
         );
 
-        $this->assertEquals($expected_no_notification_at_all_mode, $notification_settings->isInNoNotificationAtAllMode());
-        $this->assertEquals($expected_no_global_notification_mode, $notification_settings->isInNoGlobalNotificationMode());
-        $this->assertEquals($expected_notify_on_artifact_creation_mode, $notification_settings->isInNotifyOnArtifactCreationMode());
-        $this->assertEquals($expected_notify_on_every_change_mode, $notification_settings->isInNotifyOnEveryChangeMode());
-        $this->assertEquals($expected_notify_onstatus_change, $notification_settings->isInNotifyOnStatusChange());
+        $this->assertNoNotification($notification_settings);
     }
 
-    public function notificationModeProvider() : array
+    public function testNoNotificationWhenUserSelectNoNotifications(): void
     {
-        $global_notification             = new GlobalNotification(false);
-        $global_notification_all_updates = new GlobalNotification(true);
+        $has_unsubscribed = true;
+        $is_only_on_status_update = false;
+        $is_involved = false;
+        $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
+        $global_notifications = [];
 
-        return [
-            [true, false, [$global_notification], Tracker::NOTIFICATIONS_LEVEL_DEFAULT, true, false, false, false, false],
-            [false, false, [], Tracker::NOTIFICATIONS_LEVEL_DEFAULT, false, true, false, false, false],
-            [false, false, [$global_notification], Tracker::NOTIFICATIONS_LEVEL_DEFAULT, false, false, true, false, false],
-            [false, false, [$global_notification, $global_notification_all_updates], Tracker::NOTIFICATIONS_LEVEL_DEFAULT, false, false, false, true, false],
-            [false, false, [$global_notification, $global_notification_all_updates], Tracker::NOTIFICATIONS_LEVEL_DEFAULT, false, false, false, true, false],
-            [false, true, [], Tracker::NOTIFICATIONS_LEVEL_DEFAULT, false, false, false, false, true],
-            [false, false, [], Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE, false, false, false, false, true],
-            [false, false, [], Tracker::NOTIFICATIONS_LEVEL_DISABLED, true, false, false, false, false],
-        ];
+        $notification_settings = new UserNotificationSettings(
+            $has_unsubscribed,
+            $is_only_on_status_update,
+            $is_involved,
+            $tracker_notification_level,
+            ...$global_notifications
+        );
+
+        $this->assertNoNotification($notification_settings);
+    }
+
+    public function testNotificationIsInvolvedWhenUserSelectedIsInvolved(): void
+    {
+        $has_unsubscribed = false;
+        $is_only_on_status_update = false;
+        $is_involved = true;
+        $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
+        $global_notifications = [];
+
+        $notification_settings = new UserNotificationSettings(
+            $has_unsubscribed,
+            $is_only_on_status_update,
+            $is_involved,
+            $tracker_notification_level,
+            ...$global_notifications
+        );
+
+        $this->assertNotificationIsInvolved($notification_settings);
+    }
+
+    public function testNotificationIsInvolvedWhenTrackerDefaultModeIsInvolvedAndUserHasNoChoice(): void
+    {
+        $has_unsubscribed = false;
+        $is_only_on_status_update = false;
+        $is_involved = false;
+        $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
+        $global_notifications = [];
+
+        $notification_settings = new UserNotificationSettings(
+            $has_unsubscribed,
+            $is_only_on_status_update,
+            $is_involved,
+            $tracker_notification_level,
+            ...$global_notifications
+        );
+
+        $this->assertNotificationIsInvolved($notification_settings);
+    }
+
+    public function testNotificationOnStatusUpdateWhenUserSelectedStatusUpdate(): void
+    {
+        $has_unsubscribed = false;
+        $is_only_on_status_update = true;
+        $is_involved = false;
+        $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
+        $global_notifications = [];
+
+        $notification_settings = new UserNotificationSettings(
+            $has_unsubscribed,
+            $is_only_on_status_update,
+            $is_involved,
+            $tracker_notification_level,
+            ...$global_notifications
+        );
+
+        $this->assertNotificationStatusUpdate($notification_settings);
+    }
+
+    public function testNotificationOnStatusUpdateWhenTrackerDefaultModeIsStatusUpdateAndUserHasNoChoice(): void
+    {
+        $has_unsubscribed = false;
+        $is_only_on_status_update = false;
+        $is_involved = false;
+        $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
+        $global_notifications = [];
+
+        $notification_settings = new UserNotificationSettings(
+            $has_unsubscribed,
+            $is_only_on_status_update,
+            $is_involved,
+            $tracker_notification_level,
+            ...$global_notifications
+        );
+
+        $this->assertNotificationStatusUpdate($notification_settings);
+    }
+
+    public function testNotificationOnAllUpdatesWhenUserSelectedAllUpdates(): void
+    {
+        $has_unsubscribed = false;
+        $is_only_on_status_update = false;
+        $is_involved = false;
+        $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
+        $global_notifications = [new GlobalNotification(true)];
+
+        $notification_settings = new UserNotificationSettings(
+            $has_unsubscribed,
+            $is_only_on_status_update,
+            $is_involved,
+            $tracker_notification_level,
+            ...$global_notifications
+        );
+
+        $this->assertNotificationAllUpdates($notification_settings);
+    }
+
+    public function testNotificationOnCreationWhenUserSelectedAllUpdates(): void
+    {
+        $has_unsubscribed = false;
+        $is_only_on_status_update = false;
+        $is_involved = false;
+        $tracker_notification_level = Tracker::NOTIFICATIONS_LEVEL_DEFAULT;
+        $global_notifications = [new GlobalNotification(false)];
+
+        $notification_settings = new UserNotificationSettings(
+            $has_unsubscribed,
+            $is_only_on_status_update,
+            $is_involved,
+            $tracker_notification_level,
+            ...$global_notifications
+        );
+
+        $this->assertNotificationOnCreate($notification_settings);
+    }
+
+    /**
+     * @param UserNotificationSettings $notification_settings
+     */
+    private function assertNoNotification(UserNotificationSettings $notification_settings): void
+    {
+        $this->assertTrue($notification_settings->isInNoNotificationAtAllMode());
+        $this->assertFalse($notification_settings->isInNoGlobalNotificationMode());
+        $this->assertFalse($notification_settings->isInNotifyOnArtifactCreationMode());
+        $this->assertFalse($notification_settings->isInNotifyOnEveryChangeMode());
+        $this->assertFalse($notification_settings->isInNotifyOnStatusChange());
+    }
+
+    /**
+     * @param UserNotificationSettings $notification_settings
+     */
+    private function assertNotificationIsInvolved(UserNotificationSettings $notification_settings): void
+    {
+        $this->assertFalse($notification_settings->isInNoNotificationAtAllMode());
+        $this->assertTrue($notification_settings->isInNoGlobalNotificationMode());
+        $this->assertFalse($notification_settings->isInNotifyOnArtifactCreationMode());
+        $this->assertFalse($notification_settings->isInNotifyOnEveryChangeMode());
+        $this->assertFalse($notification_settings->isInNotifyOnStatusChange());
+    }
+
+    /**
+     * @param UserNotificationSettings $notification_settings
+     */
+    private function assertNotificationStatusUpdate(UserNotificationSettings $notification_settings): void
+    {
+        $this->assertFalse($notification_settings->isInNoNotificationAtAllMode());
+        $this->assertFalse($notification_settings->isInNoGlobalNotificationMode());
+        $this->assertFalse($notification_settings->isInNotifyOnArtifactCreationMode());
+        $this->assertFalse($notification_settings->isInNotifyOnEveryChangeMode());
+        $this->assertTrue($notification_settings->isInNotifyOnStatusChange());
+    }
+
+    /**
+     * @param UserNotificationSettings $notification_settings
+     */
+    private function assertNotificationAllUpdates(UserNotificationSettings $notification_settings): void
+    {
+        $this->assertFalse($notification_settings->isInNoNotificationAtAllMode());
+        $this->assertFalse($notification_settings->isInNoGlobalNotificationMode());
+        $this->assertFalse($notification_settings->isInNotifyOnArtifactCreationMode());
+        $this->assertTrue($notification_settings->isInNotifyOnEveryChangeMode());
+        $this->assertFalse($notification_settings->isInNotifyOnStatusChange());
+    }
+
+    /**
+     * @param UserNotificationSettings $notification_settings
+     */
+    private function assertNotificationOnCreate(UserNotificationSettings $notification_settings): void
+    {
+        $this->assertFalse($notification_settings->isInNoNotificationAtAllMode());
+        $this->assertFalse($notification_settings->isInNoGlobalNotificationMode());
+        $this->assertTrue($notification_settings->isInNotifyOnArtifactCreationMode());
+        $this->assertFalse($notification_settings->isInNotifyOnEveryChangeMode());
+        $this->assertFalse($notification_settings->isInNotifyOnStatusChange());
     }
 }

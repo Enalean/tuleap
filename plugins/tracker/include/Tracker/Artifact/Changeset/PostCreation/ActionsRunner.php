@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,6 +37,7 @@ use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\Notifications\InvolvedNotificationDao;
 use Tuleap\Tracker\Notifications\RecipientsManager;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
@@ -94,7 +95,8 @@ class ActionsRunner
                     new UserNotificationSettingsRetriever(
                         new Tracker_GlobalNotificationDao(),
                         new UnsubscribersNotificationDAO(),
-                        new UserNotificationOnlyStatusChangeDAO()
+                        new UserNotificationOnlyStatusChangeDAO(),
+                        new InvolvedNotificationDao()
                     ),
                     new UserNotificationOnlyStatusChangeDAO()
                 ),
