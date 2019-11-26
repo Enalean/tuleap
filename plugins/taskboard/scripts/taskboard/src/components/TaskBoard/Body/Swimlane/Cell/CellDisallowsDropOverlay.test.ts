@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
-import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
+import { createTaskboardLocalVue } from "../../../../../helpers/local-vue-for-test";
 
 describe("CellDisallowsDropOverlay", () => {
     it("displays div with an icon and an error message", async () => {

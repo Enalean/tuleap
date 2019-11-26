@@ -11,8 +11,8 @@
 <script lang="ts">
 import CardsInColumnCount from "../Expanded/CardsInColumnCount.vue";
 import { Component, Mixins } from "vue-property-decorator";
-import ExpandCollapsedColumnMixin from "../../Body/Swimlane/expand-collapsed-column-mixin";
-import HoveringStateForCollapsedColumnMixin from "../../Body/Swimlane/hovering-state-for-collapsed-column-mixin";
+import ExpandCollapsedColumnMixin from "../../Body/Swimlane/Cell/expand-collapsed-column-mixin";
+import HoveringStateForCollapsedColumnMixin from "../../Body/Swimlane/Cell/hovering-state-for-collapsed-column-mixin";
 
 @Component({
     components: { CardsInColumnCount }

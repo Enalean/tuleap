@@ -18,15 +18,20 @@
  */
 
 import { shallowMount, Slots, Wrapper } from "@vue/test-utils";
-import CellForSoloCard from "./CellForSoloCard.vue";
-import { ColumnDefinition, Swimlane } from "../../../../type";
-import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import { RootState } from "../../../../store/type";
+import DropContainerCell from "./DropContainerCell.vue";
+import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
+import { ColumnDefinition, Swimlane } from "../../../../../type";
+import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { RootState } from "../../../../../store/type";
 
-function getWrapper(column: ColumnDefinition, slots: Slots = {}): Wrapper<CellForSoloCard> {
+function getWrapper(
+    column: ColumnDefinition,
+    slots: Slots = {},
+    does_cell_reject_drop = false
+): Wrapper<DropContainerCell> {
     const swimlane = { card: { id: 1 } } as Swimlane;
 
-    return shallowMount(CellForSoloCard, {
+    return shallowMount(DropContainerCell, {
         propsData: {
             column,
             swimlane
@@ -35,7 +40,8 @@ function getWrapper(column: ColumnDefinition, slots: Slots = {}): Wrapper<CellFo
             $store: createStoreMock({
                 state: { column: {}, swimlane: {} } as RootState,
                 getters: {
-                    "swimlane/does_cell_reject_drop": (): boolean => false
+                    "column/accepted_trackers_ids": (): number[] => [],
+                    "swimlane/does_cell_reject_drop": (): boolean => does_cell_reject_drop
                 }
             })
         },
@@ -43,7 +49,7 @@ function getWrapper(column: ColumnDefinition, slots: Slots = {}): Wrapper<CellFo
     });
 }
 
-describe("CellForSoloCard", () => {
+describe("DropContainerCell", () => {
     it(`Given the column is expanded, it displays the content of the cell`, () => {
         const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
         const wrapper = getWrapper(column, {
@@ -110,5 +116,15 @@ describe("CellForSoloCard", () => {
 
         wrapper.trigger("click");
         expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
+    });
+
+    it(`When the cell rejects the drop,
+        it will add a CSS class and will contain a disallowed drop overlay`, () => {
+        const column = { is_collapsed: false } as ColumnDefinition;
+        const wrapper = getWrapper(column, {}, true);
+
+        expect(wrapper.classes("taskboard-drop-not-accepted")).toBe(true);
+        const overlay = wrapper.find(CellDisallowsDropOverlay);
+        expect(overlay.attributes("is-drop-rejected")).toEqual("true");
     });
 });

@@ -52,9 +52,7 @@ function createWrapper(
                     swimlane: {}
                 } as RootState,
                 getters: {
-                    "swimlane/cards_in_cell": (): Card[] => cards_in_cell,
-                    "swimlane/does_cell_reject_drop": (): boolean => false,
-                    "column/accepted_trackers_ids": (): number[] => [101, 102]
+                    "swimlane/cards_in_cell": (): Card[] => cards_in_cell
                 }
             })
         },
@@ -109,59 +107,5 @@ describe("ColumnWithChildren", () => {
 
         expect(wrapper.findAll(ChildCard).length).toBe(3);
         expect(wrapper.findAll(CardSkeleton).length).toBe(0);
-    });
-
-    it(`When the column is collapsed,
-        Then the the cell is marked as collapsed`, () => {
-        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, true, []);
-
-        expect(wrapper.classes("taskboard-cell-collapsed")).toBe(true);
-        expect(wrapper.findAll(ChildCard).length).toBe(0);
-        expect(wrapper.findAll(CardSkeleton).length).toBe(0);
-    });
-
-    it(`It informs the mouseenter when the column is collapsed`, () => {
-        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, true, []);
-        const column = wrapper.vm.$store.state.column.columns[0];
-
-        wrapper.trigger("mouseenter");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseEntersColumn", column);
-    });
-
-    it(`It does not inform the mouseenter when the column is expanded`, () => {
-        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false, []);
-
-        wrapper.trigger("mouseenter");
-        expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
-    });
-
-    it(`It informs the mouseout when the column is collapsed`, () => {
-        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, true, []);
-        const column = wrapper.vm.$store.state.column.columns[0];
-
-        wrapper.trigger("mouseout");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseLeavesColumn", column);
-    });
-
-    it(`It does not inform the mouseout when the column is expanded`, () => {
-        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false, []);
-
-        wrapper.trigger("mouseout");
-        expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
-    });
-
-    it(`it expands the column when user clicks on the collapsed column cell`, () => {
-        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, true, []);
-        const column = wrapper.vm.$store.state.column.columns[0];
-
-        wrapper.trigger("click");
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("column/expandColumn", column);
-    });
-
-    it(`it does not expand the column when user clicks on the expanded column cell`, () => {
-        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false, []);
-
-        wrapper.trigger("click");
-        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
     });
 });

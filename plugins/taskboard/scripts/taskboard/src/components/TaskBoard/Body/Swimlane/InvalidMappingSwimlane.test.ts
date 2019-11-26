@@ -22,9 +22,9 @@ import InvalidMappingSwimlane from "./InvalidMappingSwimlane.vue";
 import { Wrapper, shallowMount } from "@vue/test-utils";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
 import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import CellForSoloCard from "./CellForSoloCard.vue";
 import ParentCell from "./ParentCell.vue";
 import { RootState } from "../../../../store/type";
+import InvalidMappingCell from "./Cell/InvalidMappingCell.vue";
 
 async function createWrapper(
     columns: ColumnDefinition[],
@@ -48,6 +48,6 @@ describe(`InvalidMappingSwimlane`, () => {
         const wrapper = await createWrapper(columns, swimlane);
 
         expect(wrapper.contains(ParentCell)).toBe(true);
-        expect(wrapper.findAll(CellForSoloCard).length).toBe(2);
+        expect(wrapper.findAll(InvalidMappingCell).length).toBe(2);
     });
 });

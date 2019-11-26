@@ -18,28 +18,32 @@
  */
 
 import Vue from "vue";
-import { namespace } from "vuex-class";
 import { Component, Prop } from "vue-property-decorator";
-import { ColumnDefinition, Swimlane } from "../../../../type";
+import { namespace } from "vuex-class";
+import { ColumnDefinition } from "../../../../../type";
 
-const swimlane = namespace("swimlane");
+const column_store = namespace("column");
 
-@Component
-export default class ClassesForCollapsedColumnMixin extends Vue {
+@Component({})
+export default class HoveringStateForCollapsedColumnMixin extends Vue {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
 
-    @Prop({ required: true })
-    readonly swimlane!: Swimlane;
+    @column_store.Mutation
+    readonly mouseEntersColumn!: (column: ColumnDefinition) => void;
 
-    @swimlane.Getter
-    readonly does_cell_reject_drop!: (swimlane: Swimlane, column: ColumnDefinition) => boolean;
+    @column_store.Mutation
+    readonly mouseLeavesColumn!: (column: ColumnDefinition) => void;
 
-    get dropzone_classes(): string {
-        if (this.does_cell_reject_drop(this.swimlane, this.column)) {
-            return "taskboard-drop-not-accepted";
+    mouseEntersCollapsedColumn(): void {
+        if (this.column.is_collapsed) {
+            this.mouseEntersColumn(this.column);
         }
+    }
 
-        return "";
+    mouseLeavesCollapsedColumn(): void {
+        if (this.column.is_collapsed) {
+            this.mouseLeavesColumn(this.column);
+        }
     }
 }

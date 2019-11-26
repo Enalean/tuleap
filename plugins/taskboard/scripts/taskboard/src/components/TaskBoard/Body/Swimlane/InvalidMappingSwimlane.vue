@@ -20,25 +20,25 @@
 <template>
     <div class="taskboard-swimlane">
         <parent-cell v-bind:swimlane="swimlane"/>
-        <cell-for-solo-card v-for="col of columns" v-bind:key="col.id" v-bind:column="col" v-bind:swimlane="swimlane"/>
+        <invalid-mapping-cell
+            v-for="col of columns"
+            v-bind:key="col.id"
+            v-bind:column="col"
+            v-bind:swimlane="swimlane"
+        />
     </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { namespace } from "vuex-class";
-import CellForSoloCard from "./CellForSoloCard.vue";
 import ParentCell from "./ParentCell.vue";
 import { ColumnDefinition, Swimlane } from "../../../../type";
+import InvalidMappingCell from "./Cell/InvalidMappingCell.vue";
 
 const column = namespace("column");
 
-@Component({
-    components: {
-        ParentCell,
-        CellForSoloCard
-    }
-})
+@Component({ components: { InvalidMappingCell, ParentCell } })
 export default class InvalidMappingSwimlane extends Vue {
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
