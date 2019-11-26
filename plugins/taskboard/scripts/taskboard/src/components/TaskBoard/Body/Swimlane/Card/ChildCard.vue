@@ -23,6 +23,7 @@
         v-if="card.is_open || are_closed_items_displayed"
         v-bind:data-card-id="card.id"
         v-bind:data-tracker-id="card.tracker_id"
+        v-bind:data-is-draggable="true"
     >
         <base-card
             v-bind:card="card"

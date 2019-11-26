@@ -29,28 +29,10 @@ describe(`drag-drop helper`, () => {
             expect(drag_drop.isContainer(undefined)).toBe(false);
         });
 
-        it(`Given an unrelated element, it will return false`, () => {
-            const element = createElement("unrelated-class");
-            expect(drag_drop.isContainer(element)).toBe(false);
-        });
-
-        it(`Given a swimlane header cell, it will return false`, () => {
-            const element = createElement("taskboard-cell", "taskboard-cell-swimlane-header");
-            expect(drag_drop.isContainer(element)).toBe(false);
-        });
-
-        it(`Given a parent card, it will return false`, () => {
-            const element = createElement("taskboard-cell", "taskboard-card-parent");
-            expect(drag_drop.isContainer(element)).toBe(false);
-        });
-
-        it(`Given a collapsed column, it will return true`, () => {
-            const element = createElement("taskboard-cell", "taskboard-cell-collapsed");
-            expect(drag_drop.isContainer(element)).toBe(true);
-        });
-
-        it(`Given a "regular" taskboard cell, it will return true`, () => {
+        it(`Given a taskboard cell with a data-is-container flag, it will return true`, () => {
             const element = createElement("taskboard-cell");
+            element.setAttribute("data-is-container", "true");
+
             expect(drag_drop.isContainer(element)).toBe(true);
         });
     });
@@ -58,55 +40,39 @@ describe(`drag-drop helper`, () => {
     describe(`canMove()`, () => {
         it(`Given an undefined element, it will return false`, () => {
             const element = undefined;
-            const target = undefined;
-            const handle = createElement();
-            expect(drag_drop.canMove(element, target, handle)).toBe(false);
+            expect(drag_drop.canMove(element)).toBe(false);
         });
 
-        it(`Given an undefined handle, it will return false`, () => {
-            const element = createElement();
-            const target = undefined;
-            const handle = undefined;
-            expect(drag_drop.canMove(element, target, handle)).toBe(false);
-        });
-
-        it(`Given an unrelated element, it will return false`, () => {
-            const element = createElement("unrelated-class");
-            const target = undefined;
-            const handle = createElement();
-            expect(drag_drop.canMove(element, target, handle)).toBe(false);
-        });
-
-        it(`Given a collapsed card element, it will return false`, () => {
+        it(`Given a element with a is-draggable flag, it will return true`, () => {
             const element = createElement("taskboard-card", "taskboard-card-collapsed");
-            const target = undefined;
-            const handle = createElement();
-            expect(drag_drop.canMove(element, target, handle)).toBe(false);
-        });
+            element.setAttribute("data-is-draggable", "true");
 
-        it(`Given a child card, it will return true`, () => {
-            const element = createElement("taskboard-child");
-            const target = undefined;
-            const handle = createElement();
-            expect(drag_drop.canMove(element, target, handle)).toBe(true);
-        });
-
-        it(`Given a solo card cell, it will return true`, () => {
-            const element = createElement("taskboard-cell-solo-card");
-            const target = undefined;
-            const handle = createElement();
-            expect(drag_drop.canMove(element, target, handle)).toBe(true);
+            expect(drag_drop.canMove(element)).toBe(true);
         });
     });
 
     describe("invalid", () => {
-        it(`Given a handle marked as "no-drag", it will return true`, () => {
+        it(`Given a handle with a not-drag-handle flag, it will return true`, () => {
             const element = createElement("taskboard-card");
-            const handle = createElement("taskboard-item-no-drag");
+            const handle = createElement();
+            handle.setAttribute("data-not-drag-handle", "true");
+
             expect(drag_drop.invalid(element, handle)).toBe(true);
         });
 
-        it(`Given a handle not marked as "no-drag", it will return false`, () => {
+        it(`Given a handle whose a parent has a not-drag-handle flag, it will return true`, () => {
+            const element = createElement("taskboard-card");
+            const handle = createElement();
+
+            const parent = createElement();
+            handle.setAttribute("data-not-drag-handle", "true");
+
+            parent.appendChild(element);
+
+            expect(drag_drop.invalid(element, handle)).toBe(true);
+        });
+
+        it(`Given a regular handle, it will return false`, () => {
             const element = createElement("taskboard-card");
             const handle = createElement("taskboard-stuff");
             expect(drag_drop.invalid(element, handle)).toBe(false);

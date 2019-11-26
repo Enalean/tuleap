@@ -20,9 +20,10 @@
 
 <template>
     <div class="taskboard-card-xref-label">
-        <a class="taskboard-card-xref taskboard-item-no-drag"
+        <a class="taskboard-card-xref"
            v-bind:href="card.artifact_html_uri"
            v-bind:class="additional_classnames"
+           data-not-drag-handle="true"
            data-test="xref"
         >{{ card.xref }}</a>
         <span class="taskboard-card-label">{{ card.label }}</span>
