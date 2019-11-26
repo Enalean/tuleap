@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const nb_upcoming_releases_dataset = vue_mount_point.dataset.nbUpcomingReleases;
     const nb_backlog_items_dataset = vue_mount_point.dataset.nbBacklogItems;
     const trackers_agile_dashboard_dataset = vue_mount_point.dataset.jsonTrackersAgileDashboard;
+    const label_tracker_planning = vue_mount_point.dataset.labelTrackerPlanning;
 
     if (!project_id_dataset) {
         throw new Error("Project Id is missing.");
@@ -64,6 +65,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!trackers_agile_dashboard_dataset) {
         throw new Error("Trackers Agile Dashboard is missing.");
+    }
+
+    if (!label_tracker_planning) {
+        throw new Error("Label Tracker Planning is missing.");
     }
 
     const project_id = Number.parseInt(project_id_dataset, 10);
@@ -83,7 +88,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             is_browser_IE11,
             nb_upcoming_releases,
             nb_backlog_items,
-            trackers_agile_dashboard
+            trackers_agile_dashboard,
+            label_tracker_planning
         }
     }).$mount(vue_mount_point);
 });

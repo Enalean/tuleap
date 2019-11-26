@@ -29,6 +29,7 @@ use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use AgileDashboard_Milestone_MilestoneDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
 use HTTPRequest;
+use Planning;
 use Planning_MilestoneFactory;
 use PlanningDao;
 use PlanningFactory;
@@ -56,10 +57,6 @@ class ProjectReleasePresenterBuilder
      * @var HTTPRequest
      */
     private $request;
-    /**
-     * @var PlanningFactory
-     */
-    private $planning_factory;
     /**
      * @var AgileDashboard_Milestone_Backlog_BacklogFactory
      */
@@ -92,19 +89,22 @@ class ProjectReleasePresenterBuilder
      * @var ArtifactsInExplicitBacklogDao
      */
     private $artifacts_in_explicit_backlog_dao;
+    /**
+     * @var Planning
+     */
+    private $root_planning;
 
     public function __construct(
         HTTPRequest $request,
-        PlanningFactory $planning_factory,
         AgileDashboard_Milestone_Backlog_BacklogFactory $agile_dashboard_milestone_backlog_backlog_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $agile_dashboard_milestone_backlog_backlog_item_collection_factory,
         Planning_MilestoneFactory $planning_milestone_factory,
         TrackerFactory $tracker_factory,
         ExplicitBacklogDao $explicit_backlog_dao,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao
+        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        Planning $root_planning
     ) {
         $this->request                                                           = $request;
-        $this->planning_factory                                                  = $planning_factory;
         $this->agile_dashboard_milestone_backlog_backlog_factory                 = $agile_dashboard_milestone_backlog_backlog_factory;
         $this->agile_dashboard_milestone_backlog_backlog_item_collection_factory = $agile_dashboard_milestone_backlog_backlog_item_collection_factory;
         $this->planning_milestone_factory                                        = $planning_milestone_factory;
@@ -113,6 +113,7 @@ class ProjectReleasePresenterBuilder
         $this->tracker_factory                                                   = $tracker_factory;
         $this->explicit_backlog_dao                                              = $explicit_backlog_dao;
         $this->artifacts_in_explicit_backlog_dao                                 = $artifacts_in_explicit_backlog_dao;
+        $this->root_planning                                                     = $root_planning;
     }
 
     public static function build(): ProjectReleasePresenterBuilder
@@ -146,9 +147,14 @@ class ProjectReleasePresenterBuilder
             new MilestoneBurndownFieldChecker(Tracker_FormElementFactory::instance())
         );
 
+        $root_planning = $planning_factory->getRootPlanning(HTTPRequest::instance()->getCurrentUser(), HTTPRequest::instance()->getProject()->getID());
+
+        if (!$root_planning) {
+            throw new \Exception("Root Planning does not exist.");
+        }
+
         return new self(
             HTTPRequest::instance(),
-            $planning_factory,
             new AgileDashboard_Milestone_Backlog_BacklogFactory(
                 new AgileDashboard_BacklogItemDao(),
                 Tracker_ArtifactFactory::instance(),
@@ -169,7 +175,8 @@ class ProjectReleasePresenterBuilder
             $milestone_factory,
             TrackerFactory::instance(),
             new ExplicitBacklogDao(),
-            new ArtifactsInExplicitBacklogDao()
+            new ArtifactsInExplicitBacklogDao(),
+            $root_planning
         );
     }
 
@@ -180,23 +187,14 @@ class ProjectReleasePresenterBuilder
             $is_IE11,
             $this->getNumberUpcomingReleases(),
             $this->getNumberBacklogItems(),
-            $this->getTrackersIdAgileDashboard()
+            $this->getTrackersIdAgileDashboard(),
+            $this->getLabelTrackerPlanning()
         );
     }
 
     private function getNumberUpcomingReleases(): int
     {
-
-        $root_planning = $this->planning_factory->getRootPlanning(
-            $this->current_user,
-            $this->request->getProject()->getID()
-        );
-
-        if (!$root_planning) {
-            return 0;
-        }
-
-        $futures_milestones = $this->planning_milestone_factory->getAllFutureMilestones($this->current_user, $root_planning);
+        $futures_milestones = $this->planning_milestone_factory->getAllFutureMilestones($this->current_user, $this->root_planning);
 
         return count($futures_milestones);
     }
@@ -237,5 +235,10 @@ class ProjectReleasePresenterBuilder
         }
 
         return $trackers_agile_dashboard;
+    }
+
+    private function getLabelTrackerPlanning(): string
+    {
+        return $this->root_planning->getPlanningTracker()->getName();
     }
 }

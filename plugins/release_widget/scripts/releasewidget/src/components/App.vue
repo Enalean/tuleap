@@ -29,7 +29,7 @@
         <div v-else-if="is_loading" class="release-loader" data-test="is-loading"></div>
         <div v-else>
             <div class="project-release-widget-content" data-test="widget-content">
-                <roadmap-section/>
+                <roadmap-section v-bind:label_tracker_planning="label_tracker_planning"/>
                 <whats-hot-section/>
             </div>
         </div>
@@ -48,6 +48,8 @@ import { TrackerAgileDashboard } from "../type";
     components: { WhatsHotSection, RoadmapSection }
 })
 export default class App extends Vue {
+    @Prop()
+    readonly label_tracker_planning!: string;
     @Prop()
     readonly project_id!: number;
     @Prop()

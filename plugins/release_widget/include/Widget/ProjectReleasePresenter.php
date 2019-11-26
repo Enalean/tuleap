@@ -46,13 +46,18 @@ class ProjectReleasePresenter
      * @var []
      */
     public $json_trackers_agile_dashboard;
+    /**
+     * @var string
+     */
+    public $label_tracker_planning;
 
-    public function __construct(Project $project, bool $is_IE11, int $nb_upcoming_releases, int $nb_backlog_items, array $trackers_id)
+    public function __construct(Project $project, bool $is_IE11, int $nb_upcoming_releases, int $nb_backlog_items, array $trackers_id, string $label_tracker_planning)
     {
         $this->project_id                    = $project->getID();
         $this->is_IE11                       = $is_IE11;
         $this->nb_upcoming_releases          = $nb_upcoming_releases;
         $this->nb_backlog_items              = $nb_backlog_items;
         $this->json_trackers_agile_dashboard = (string)json_encode($trackers_id, JSON_THROW_ON_ERROR);
+        $this->label_tracker_planning        = $label_tracker_planning;
     }
 }
