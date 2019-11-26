@@ -837,11 +837,20 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                     <INPUT TYPE="HIDDEN" NAME="create" VALUE="bla">
                     <INPUT
                             TYPE="submit"
+                            class="btn btn-primary"
                             ID="create_release"
                             data-test="create-release-button"
                             VALUE="<?php echo $is_update ? $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'edit_release')) : $hp->purify($GLOBALS['Language']->getText('file_admin_qrs', 'release_file')); ?>"
                     >
-                    <input type="submit" ID="cancel_release" name="cancel" value="<?php echo  $hp->purify($GLOBALS['Language']->getText('global', 'btn_cancel'));?>" />
+                    <?php
+                        $cancel_url = "/file/showfiles.php?" . http_build_query(
+                            ['group_id'   => $group_id, 'show_release_id' => $release->getReleaseID()]
+                        );
+
+                        echo '<a class="btn" ID="cancel_release" name="cancel" href="'.$cancel_url.'">'.
+                            $hp->purify($GLOBALS['Language']->getText('global', 'btn_cancel'))
+                        .'</a>';
+                    ?>
                 </TD>
             </TR>
         </TABLE>
