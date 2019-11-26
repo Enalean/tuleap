@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,116 +20,37 @@
 
 namespace Tuleap\OpenIDConnectClient\Provider;
 
-use DataAccessObject;
+use ParagonIE\EasyDB\EasyStatement;
+use Tuleap\DB\DataAccessObject;
 
 class ProviderDao extends DataAccessObject
 {
-
     public function searchById($provider_id)
     {
-        $provider_id = $this->getDa()->escapeInt($provider_id);
-        $sql         = "SELECT * FROM plugin_openidconnectclient_provider WHERE id = $provider_id";
-        return $this->retrieveFirstRow($sql);
-    }
+        $sql = "SELECT *
+                FROM plugin_openidconnectclient_provider
+                INNER JOIN plugin_openidconnectclient_provider_generic as generic_openid
+                     ON generic_openid.provider_id = plugin_openidconnectclient_provider.id
+                WHERE id = ?";
 
-    public function create(
-        $name,
-        $authorization_endpoint,
-        $token_endpoint,
-        $user_info_endpoint,
-        $client_id,
-        $client_secret,
-        $icon,
-        $color
-    ) {
-        $name                   = $this->getDa()->quoteSmart($name);
-        $authorization_endpoint = $this->getDa()->quoteSmart($authorization_endpoint);
-        $token_endpoint         = $this->getDa()->quoteSmart($token_endpoint);
-        $user_info_endpoint     = $this->getDa()->quoteSmart($user_info_endpoint);
-        $client_id              = $this->getDa()->quoteSmart($client_id);
-        $client_secret          = $this->getDa()->quoteSmart($client_secret);
-        $icon                   = $this->getDa()->quoteSmart($icon);
-        $color                  = $this->getDa()->quoteSmart($color);
-
-        $sql = "INSERT INTO plugin_openidconnectclient_provider(
-                    name, authorization_endpoint, token_endpoint, user_info_endpoint, client_id, client_secret, icon, color
-                ) VALUES (
-                    $name, $authorization_endpoint, $token_endpoint, $user_info_endpoint, $client_id, $client_secret, $icon, $color
-                );";
-        return $this->updateAndGetLastId($sql);
-    }
-
-    public function save(
-        $id,
-        $name,
-        $authorization_endpoint,
-        $token_endpoint,
-        $user_info_endpoint,
-        $is_unique_authentication_endpoint,
-        $client_id,
-        $client_secret,
-        $icon,
-        $color
-    ) {
-        $id                                = $this->getDa()->escapeInt($id);
-        $name                              = $this->getDa()->quoteSmart($name);
-        $authorization_endpoint            = $this->getDa()->quoteSmart($authorization_endpoint);
-        $token_endpoint                    = $this->getDa()->quoteSmart($token_endpoint);
-        $user_info_endpoint                = $this->getDa()->quoteSmart($user_info_endpoint);
-        $is_unique_authentication_endpoint = $this->getDa()->escapeInt($is_unique_authentication_endpoint);
-        $client_id                         = $this->getDa()->quoteSmart($client_id);
-        $client_secret                     = $this->getDa()->quoteSmart($client_secret);
-        $icon                              = $this->getDa()->quoteSmart($icon);
-        $color                             = $this->getDa()->quoteSmart($color);
-
-        $this->getDa()->startTransaction();
-
-        $has_been_updated = true;
-
-        if ($is_unique_authentication_endpoint) {
-            $has_been_updated = $this->disableUniqueAuthenticationProvider();
-        }
-
-        $sql = "UPDATE plugin_openidconnectclient_provider SET
-                  name = $name, authorization_endpoint = $authorization_endpoint,
-                  token_endpoint = $token_endpoint,
-                  user_info_endpoint = $user_info_endpoint,
-                  client_id = $client_id,
-                  client_secret = $client_secret,
-                  unique_authentication_endpoint = $is_unique_authentication_endpoint,
-                  icon = $icon,
-                  color = $color
-                WHERE id = $id";
-
-        $has_been_updated = $has_been_updated && $this->update($sql);
-        if (! $has_been_updated) {
-            $this->getDa()->rollback();
-            return false;
-        }
-
-        return $this->getDa()->commit();
-    }
-
-    /**
-     * @return bool
-     */
-    private function disableUniqueAuthenticationProvider()
-    {
-        $sql = "UPDATE plugin_openidconnectclient_provider SET unique_authentication_endpoint = FALSE";
-        return $this->update($sql);
+        return $this->getDB()->row($sql, $provider_id);
     }
 
     public function deleteById($id)
     {
-        $id  = $this->getDa()->escapeInt($id);
-        $sql = "DELETE FROM plugin_openidconnectclient_provider WHERE id = $id";
-        return $this->update($sql);
+        $sql = "DELETE generic_provider, plugin_openidconnectclient_provider
+                FROM plugin_openidconnectclient_provider
+                JOIN plugin_openidconnectclient_provider_generic AS generic_provider
+                    ON plugin_openidconnectclient_provider.id =  generic_provider.provider_id
+                WHERE plugin_openidconnectclient_provider.id = ?";
+        return $this->getDB()->run($sql, $id);
     }
 
     public function isAProviderConfiguredAsUniqueEndPointProvider()
     {
         $sql = "SELECT * FROM plugin_openidconnectclient_provider WHERE unique_authentication_endpoint = TRUE LIMIT 1";
-        $this->retrieve($sql);
+        $this->getDB()->run($sql);
+
         return $this->foundRows() > 0;
     }
 
@@ -137,22 +58,32 @@ class ProviderDao extends DataAccessObject
     {
         $sql = "SELECT *
                 FROM plugin_openidconnectclient_provider
+                INNER JOIN plugin_openidconnectclient_provider_generic AS generic_provider
+                    ON plugin_openidconnectclient_provider.id = generic_provider.provider_id
                 WHERE client_id != '' AND client_secret != ''
                 ORDER BY unique_authentication_endpoint DESC, name ASC";
+
         if ($this->isAProviderConfiguredAsUniqueEndPointProvider()) {
             $sql = "SELECT *
                     FROM plugin_openidconnectclient_provider
+                    INNER JOIN plugin_openidconnectclient_provider_generic generic_provider
+                        ON plugin_openidconnectclient_provider.id = generic_provider.provider_id
                     WHERE client_id != '' AND client_secret != '' AND unique_authentication_endpoint = TRUE
+
                     ORDER BY unique_authentication_endpoint DESC, name ASC";
         }
-        return $this->retrieve($sql);
+
+        return $this->getDB()->run($sql);
     }
 
     public function searchProviders()
     {
         $sql = "SELECT *
                 FROM plugin_openidconnectclient_provider
+                INNER JOIN plugin_openidconnectclient_provider_generic AS generic_provider
+                    ON plugin_openidconnectclient_provider.id = generic_provider.provider_id
                 ORDER BY unique_authentication_endpoint DESC, name ASC";
-        return $this->retrieve($sql);
+
+        return $this->getDB()->run($sql);
     }
 }

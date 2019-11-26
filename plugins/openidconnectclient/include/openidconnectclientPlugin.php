@@ -46,6 +46,7 @@ use Tuleap\OpenIDConnectClient\LoginController;
 use Tuleap\OpenIDConnectClient\OpenIDConnectClientLogger;
 use Tuleap\OpenIDConnectClient\OpenIDConnectClientPluginInfo;
 use Tuleap\OpenIDConnectClient\Provider\EnableUniqueAuthenticationEndpointVerifier;
+use Tuleap\OpenIDConnectClient\Provider\GenericProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\ProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Router;
@@ -152,7 +153,7 @@ class openidconnectclientPlugin extends Plugin
      */
     private function getProviderManager()
     {
-        return new ProviderManager(new ProviderDao());
+        return new ProviderManager(new ProviderDao(), new GenericProviderDao());
     }
 
     /**

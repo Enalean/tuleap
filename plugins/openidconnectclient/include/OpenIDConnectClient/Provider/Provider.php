@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,94 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Provider;
 
-class Provider
+interface Provider
 {
+    public function getId(): int;
 
-    private $id;
-    private $name;
-    private $authorization_endpoint;
-    private $token_endpoint;
-    private $user_info_endpoint;
-    private $client_id;
-    private $client_secret;
-    private $is_unique_authentication_endpoint;
-    private $icon;
-    private $color;
+    public function getName() : string;
 
+    public function getClientId() : string;
 
-    public function __construct(
-        $id,
-        $name,
-        $authorization_endpoint,
-        $token_endpoint,
-        $user_info_endpoint,
-        $client_id,
-        $client_secret,
-        $is_unique_authentication_endpoint,
-        $icon,
-        $color
-    ) {
-        $this->id                                = $id;
-        $this->name                              = $name;
-        $this->authorization_endpoint            = $authorization_endpoint;
-        $this->token_endpoint                    = $token_endpoint;
-        $this->user_info_endpoint                = $user_info_endpoint;
-        $this->client_id                         = $client_id;
-        $this->client_secret                     = $client_secret;
-        $this->is_unique_authentication_endpoint = $is_unique_authentication_endpoint;
-        $this->icon                              = $icon;
-        $this->color                             = $color;
-    }
+    public function getClientSecret() : string;
 
-    public function getId()
-    {
-        return $this->id;
-    }
+    public function isUniqueAuthenticationEndpoint() : bool;
 
-    public function getName()
-    {
-        return $this->name;
-    }
+    public function getIcon() : string;
 
-    public function getAuthorizationEndpoint()
-    {
-        return $this->authorization_endpoint;
-    }
+    public function getColor() : string;
 
-    public function getTokenEndpoint()
-    {
-        return $this->token_endpoint;
-    }
+    public function getAuthorizationEndpoint() : string;
 
-    public function getUserInfoEndpoint()
-    {
-        return $this->user_info_endpoint;
-    }
+    public function getTokenEndpoint() : string;
 
-    public function getClientId()
-    {
-        return $this->client_id;
-    }
-
-    public function getClientSecret()
-    {
-        return $this->client_secret;
-    }
-
-    public function isUniqueAuthenticationEndpoint()
-    {
-        return $this->is_unique_authentication_endpoint;
-    }
-
-    public function getIcon()
-    {
-        return $this->icon;
-    }
-
-    public function getColor()
-    {
-        return $this->color;
-    }
+    public function getUserInfoEndpoint() : string;
 }

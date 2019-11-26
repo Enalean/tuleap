@@ -25,8 +25,8 @@ use Feedback;
 use HTTPRequest;
 use PFUser;
 use Tuleap\OpenIDConnectClient\Provider\EnableUniqueAuthenticationEndpointVerifier;
+use Tuleap\OpenIDConnectClient\Provider\GenericProvider;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
-use Tuleap\OpenIDConnectClient\Provider\ProviderDataAccessException;
 use Tuleap\OpenIDConnectClient\Provider\ProviderMalformedDataException;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException;
@@ -34,7 +34,6 @@ use Tuleap\Admin\AdminPageRenderer;
 
 class Controller
 {
-
     /**
      * @var ProviderManager
      */
@@ -114,7 +113,7 @@ class Controller
         $color                  = $request->get('color');
 
         try {
-            $provider = $this->provider_manager->create(
+            $provider = $this->provider_manager->createGenericProvider(
                 $name,
                 $authorization_endpoint,
                 $token_endpoint,
@@ -123,10 +122,6 @@ class Controller
                 $client_secret,
                 $icon,
                 $color
-            );
-        } catch (ProviderDataAccessException $ex) {
-            $this->redirectAfterFailure(
-                dgettext('tuleap-openidconnectclient', 'An error occured while adding a new provider.')
             );
         } catch (ProviderMalformedDataException $ex) {
             $this->redirectAfterFailure(
@@ -175,7 +170,7 @@ class Controller
         $icon                              = $request->get('icon');
         $color                             = $request->get('color');
 
-        $updated_provider = new Provider(
+        $updated_provider = new GenericProvider(
             $id,
             $name,
             $authorization_endpoint,
@@ -190,10 +185,6 @@ class Controller
 
         try {
             $this->provider_manager->update($updated_provider);
-        } catch (ProviderDataAccessException $ex) {
-            $this->redirectAfterFailure(
-                dgettext('tuleap-openidconnectclient', 'An error occured while updating the provider.')
-            );
         } catch (ProviderMalformedDataException $ex) {
             $this->redirectAfterFailure(
                 dgettext('tuleap-openidconnectclient', 'The data you provided are not valid.')
@@ -218,13 +209,7 @@ class Controller
                 dgettext('tuleap-openidconnectclient', 'The data you provided are not valid.')
             );
         }
-        try {
-            $this->provider_manager->remove($provider);
-        } catch (ProviderDataAccessException $ex) {
-            $this->redirectAfterFailure(
-                sprintf(dgettext('tuleap-openidconnectclient', 'An error occured while removing the provider %1$s.'), $provider->getName())
-            );
-        }
+        $this->provider_manager->remove($provider);
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
             sprintf(dgettext('tuleap-openidconnectclient', 'The provider %1$s have been removed.'), $provider->getName())
