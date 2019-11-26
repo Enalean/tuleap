@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,87 +18,90 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('bootstrap.php');
-require_once __DIR__ . '/../../../src/www/include/utils.php';
-
-class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase
+class Tracker_FormElement_DateTimeFormatterTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalResponseMock, \Tuleap\GlobalLanguageMock;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Date
+     */
+    private $field;
 
     /** @var Tracker_FormElement_DateTimeFormatter */
     private $date_formatter;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->field          = aMockDateWithoutTimeField()->withId(07)->build();
+        $this->field          = Mockery::mock(Tracker_FormElement_Field_Date::class);
         $this->date_formatter = new Tracker_FormElement_DateTimeFormatter($this->field);
 
-        $user                 = stub('PFUser')->getPreference('user_csv_dateformat')->returns('');
-        $user_manager         = stub('UserManager')->getCurrentUser()->returns($user);
-
-        UserManager::setInstance($user_manager);
+        $user                 = Mockery::mock(PFUser::class);
+        $user_manager         =  Mockery::mock(\UserManager::class);
+        $user_manager->shouldReceive('getCurrentUser')->andReturn($user);
     }
 
-    public function tearDown()
-    {
-        parent::tearDown();
-
-        UserManager::clearInstance();
-    }
-
-    public function itFormatsTimestampInRightFormat()
+    public function testItFormatsTimestampInRightFormat(): void
     {
         $timestamp = 1409752174;
         $expected  = '2014-09-03 15:49';
 
-        $this->assertEqual($expected, $this->date_formatter->formatDate($timestamp));
+        $this->assertEquals($expected, $this->date_formatter->formatDate($timestamp));
     }
 
-    public function itFormatsTimestampInRightFormatForHoursBeforeNoon()
+    public function testItFormatsTimestampInRightFormatForHoursBeforeNoon(): void
     {
         $timestamp = 1409708974;
         $expected  = '2014-09-03 03:49';
 
-        $this->assertEqual($expected, $this->date_formatter->formatDate($timestamp));
+        $this->assertEquals($expected, $this->date_formatter->formatDate($timestamp));
     }
 
-    public function itValidatesWellFormedValue()
+    public function testItValidatesWellFormedValue(): void
     {
         $value    = '2014-09-03 03:49';
 
         $this->assertTrue($this->date_formatter->validate($value));
     }
 
-    public function itDoesNotValidateNotWellFormedDate()
+    public function testItDoesNotValidateNotWellFormedDate(): void
     {
         $value    = '2014/09/03 03:49';
 
+        $this->field->shouldReceive('getLabel')->once();
+
         $this->assertFalse($this->date_formatter->validate($value));
     }
 
-    public function itDoesNotValidateNotWellFormedTime()
+    public function testItDoesNotValidateNotWellFormedTime(): void
     {
         $value    = '2014-09-03 03-49-34';
 
+        $this->field->shouldReceive('getLabel')->once();
+
         $this->assertFalse($this->date_formatter->validate($value));
     }
 
-    public function itDoesNotValidateDateIfNoSpaceBetweenDateAndTime()
+    public function testItDoesNotValidateDateIfNoSpaceBetweenDateAndTime(): void
     {
         $value    = '2014-09-0303:49';
 
+        $this->field->shouldReceive('getLabel')->once();
+
         $this->assertFalse($this->date_formatter->validate($value));
     }
 
-    public function itDoesNotValidateDateIfNoTime()
+    public function testItDoesNotValidateDateIfNoTime(): void
     {
         $value    = '2014-09-03';
 
+        $this->field->shouldReceive('getLabel')->once();
+
         $this->assertFalse($this->date_formatter->validate($value));
     }
 
-    public function itReturnsWellFormedDateForCSVWihoutSecondsEvenIfGiven()
+    public function testItReturnsWellFormedDateForCSVWihoutSecondsEvenIfGiven(): void
     {
         $date_exploded = array(
             '2014',
@@ -111,10 +114,10 @@ class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase
 
         $expected = '2014-09-03 08:06';
 
-        $this->assertEqual($expected, $this->date_formatter->getFieldDataForCSVPreview($date_exploded));
+        $this->assertEquals($expected, $this->date_formatter->getFieldDataForCSVPreview($date_exploded));
     }
 
-    public function itReturnsWellFormedDateForCSV()
+    public function testItReturnsWellFormedDateForCSV(): void
     {
         $date_exploded = array(
             '2014',
@@ -126,6 +129,6 @@ class Tracker_FormElement_DateTimeFormatterTest extends TuleapTestCase
 
         $expected = '2014-09-03 08:06';
 
-        $this->assertEqual($expected, $this->date_formatter->getFieldDataForCSVPreview($date_exploded));
+        $this->assertEquals($expected, $this->date_formatter->getFieldDataForCSVPreview($date_exploded));
     }
 }
