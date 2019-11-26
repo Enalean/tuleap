@@ -103,8 +103,6 @@ export function changeCardPosition(state: SwimlaneState, payload: ReorderCardsPa
 }
 
 export function moveCardToColumn(state: SwimlaneState, payload: MoveCardsPayload): void {
-    payload.card.has_been_dropped = true;
-
     setColumnOfCard(state, payload);
 
     if (payload.position) {

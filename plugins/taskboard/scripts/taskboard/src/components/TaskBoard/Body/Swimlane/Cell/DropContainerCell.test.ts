@@ -119,12 +119,14 @@ describe("DropContainerCell", () => {
     });
 
     it(`When the cell rejects the drop,
-        it will add a CSS class and will contain a disallowed drop overlay`, () => {
+        it will add a CSS class and will contain a disallowed drop overlay,
+        its content will not be displayed`, () => {
         const column = { is_collapsed: false } as ColumnDefinition;
         const wrapper = getWrapper(column, {}, true);
 
         expect(wrapper.classes("taskboard-drop-not-accepted")).toBe(true);
         const overlay = wrapper.find(CellDisallowsDropOverlay);
         expect(overlay.attributes("is-drop-rejected")).toEqual("true");
+        expect(wrapper.contains(".my-slot-content")).toBe(false);
     });
 });

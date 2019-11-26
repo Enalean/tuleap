@@ -74,3 +74,7 @@ function findCard(state: SwimlaneState, card: Card): Card {
 
     throw new Error("Could not find card with id=" + card.id);
 }
+
+export function setCardHaveAlreadyBeenShown(state: SwimlaneState, card: Card): void {
+    findCard(state, card).has_already_been_shown = true;
+}

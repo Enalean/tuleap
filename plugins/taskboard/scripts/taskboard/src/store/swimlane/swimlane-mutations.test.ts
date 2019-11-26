@@ -228,7 +228,7 @@ describe(`Swimlane state mutations`, () => {
                 id: 102,
                 tracker_id: 7,
                 mapped_list_value: { id: 48 },
-                has_been_dropped: false,
+                has_already_been_shown: false,
                 has_children: false
             } as Card;
             swimlane = {
