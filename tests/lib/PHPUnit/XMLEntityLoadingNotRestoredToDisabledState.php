@@ -20,28 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Test;
+namespace Tuleap\Test\PHPUnit;
 
-trait RestoreLibXMLEntityLoadingInitialState
+use PHPUnit\Runner\AfterTestHook;
+use PHPUnit\Runner\BeforeFirstTestHook;
+
+final class XMLEntityLoadingNotRestoredToDisabledState implements BeforeFirstTestHook, AfterTestHook
 {
-    /**
-     * @var bool
-     */
-    private $status_xml_entity_loading;
-
-    /**
-     * @before
-     */
-    protected function disableEntityLoading() : void
+    public function executeBeforeFirstTest(): void
     {
-        $this->status_xml_entity_loading = libxml_disable_entity_loader(false);
+        libxml_disable_entity_loader(true);
     }
 
-    /**
-     * @after
-     */
-    protected function restoreInitialState() : void
+    public function executeAfterTest(string $test, float $time): void
     {
-        libxml_disable_entity_loader($this->status_xml_entity_loading);
+        if (libxml_disable_entity_loader(true) !== true) {
+            throw new \RuntimeException("$test did not disable XML entity loading after execution");
+        }
     }
 }

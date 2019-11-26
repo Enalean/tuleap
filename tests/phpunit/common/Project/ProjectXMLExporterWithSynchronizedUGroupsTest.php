@@ -33,7 +33,6 @@ use ProjectUGroup;
 use ProjectXMLExporter;
 use ProjectXMLExporterLogger;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
-use Tuleap\Test\RestoreLibXMLEntityLoadingInitialState;
 use UGroupManager;
 use UserManager;
 use UserXMLExportedCollection;
@@ -43,7 +42,7 @@ use Tuleap\Test\Builders as B;
 
 class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, RestoreLibXMLEntityLoadingInitialState;
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     private $event_manager;
     private $ugroup_manager;

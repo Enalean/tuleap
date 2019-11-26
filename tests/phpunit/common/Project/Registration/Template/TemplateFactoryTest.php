@@ -57,7 +57,7 @@ class TemplateFactoryTest extends TestCase
     public function testItReturnsScrumTemplateXML(): void
     {
         $template = $this->factory->getTemplate(ScrumTemplate::NAME);
-        $xml = simplexml_load_file($template->getXMLPath());
+        $xml = simplexml_load_string(file_get_contents($template->getXMLPath()));
         $this->assertNotEmpty($xml->services);
         $this->assertNotEmpty($xml->agiledashboard);
         $this->assertNotEmpty($xml->trackers);
