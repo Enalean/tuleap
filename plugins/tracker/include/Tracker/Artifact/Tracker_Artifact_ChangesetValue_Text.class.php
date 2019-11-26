@@ -119,7 +119,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     /**
      * Get the diff between this changeset value and the one passed in param
      *
-     * @return string The difference between another $changeset_value, false if no differences
+     * @return string|false The difference between another $changeset_value, false if no differences
      */
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
@@ -134,11 +134,17 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $this->fetchDiff($previous, $next, $format);
     }
 
+    /**
+     * @return false|string
+     */
     public function modalDiff($changeset_value, $format = 'modal', ?PFUser $user = null)
     {
         return $this->diff($changeset_value, 'modal', $user);
     }
 
+    /**
+     * @return false|string
+     */
     public function mailDiff(
         $changeset_value,
         $artifact_id,

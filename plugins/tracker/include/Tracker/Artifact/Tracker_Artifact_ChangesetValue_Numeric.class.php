@@ -59,7 +59,7 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
     /**
      * Get the diff between this numeric value and the one passed in param
      *
-     * @return string The difference between another $changeset_value, false if no differences
+     * @return string|false The difference between another $changeset_value, false if no differences
      */
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {

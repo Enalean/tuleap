@@ -108,23 +108,31 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
     /**
      * Returns diff between current date and date in param
      *
-     * @return string The difference between another $changeset_value, false if no differneces
+     * @return string|false The difference between another $changeset_value, false if no differneces
      */
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
-        $next_date     = $this->getDate();
+        $next_date = $this->getDate();
         if ($changeset_value->getTimestamp() != 0) {
             $previous_date = $changeset_value->getDate();
             if ($previous_date !== $next_date) {
                 if ($next_date === '') {
-                    return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'cleared');
+                    return dgettext('tuleap-tracker', 'cleared');
                 } else {
-                    return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from'). ' '.$previous_date .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact', 'to').' '.$next_date;
+                    return sprintf(
+                        dgettext('tuleap-tracker', 'changed from %s to %s'),
+                        $previous_date,
+                        $next_date
+                    );
                 }
             }
         } elseif ($next_date !== '') {
-            return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to').' '.$next_date;
+            return sprintf(
+                dgettext('tuleap-tracker', 'set to %s'),
+                $next_date
+            );
         }
+
         return false;
     }
 

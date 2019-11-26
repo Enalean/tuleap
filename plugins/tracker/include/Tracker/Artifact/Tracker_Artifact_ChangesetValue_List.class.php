@@ -242,7 +242,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     /**
      * Get the diff between this changeset value and the one passed in param
      *
-     * @return string The difference between another $changeset_value, false if no differneces
+     * @return string|false The difference between another $changeset_value, false if no differneces
      */
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {

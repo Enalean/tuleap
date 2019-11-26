@@ -75,7 +75,7 @@ class ChangesetValueComputed extends Tracker_Artifact_ChangesetValue_Float
      * @param PFUser|null                      $user
      * @param bool                             $ignore_perms
      *
-     * @return bool|string
+     * @return string|false
      */
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {

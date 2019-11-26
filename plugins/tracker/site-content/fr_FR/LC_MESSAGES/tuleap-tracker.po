@@ -1502,5 +1502,9 @@ msgstr "sans nature"
 msgid "or"
 msgstr "ou"
 
+#, php-format
+msgid "set to %s"
+msgstr "à %s"
+
 msgid "« Go back to semantic overview"
 msgstr "« Retour à l'administration de la sémantique"

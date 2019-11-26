@@ -96,7 +96,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     /**
      * Returns a diff between current changeset value and changeset value in param
      *
-     * @return string The difference between another $changeset_value, false if no differences
+     * @return string|false The difference between another $changeset_value, false if no differences
      */
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
