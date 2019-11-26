@@ -360,7 +360,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     public function plugin_statistics_disk_usage_collect_project($params) // phpcs:ignore
     {
         $this->getStatisticsCollector($params['DiskUsageManager'])
-            ->proceedToDiskUsageCollection($params, new DateTimeImmutable());
+            ->proceedToDiskUsageCollection($params, $params['collect_date']);
     }
 
     public function plugin_statistics_color($params) // phpcs:ignore

@@ -858,7 +858,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $start   = microtime(true);
         $project = $params['project'];
 
-        $this->getCollector()->collectDiskUsageForProject($project);
+        $this->getCollector()->collectDiskUsageForProject($project, $params['collect_date']);
 
         $end  = microtime(true);
         $time = $end - $start;

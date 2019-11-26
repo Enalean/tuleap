@@ -649,6 +649,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         }
 
         $params['DiskUsageManager']->storeForGroup(
+            $params['collect_date'],
             $row['group_id'],
             'plugin_docman',
             $path,
