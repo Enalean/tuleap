@@ -26,6 +26,7 @@ use Git_Command_Exception;
 use Git_GitRepositoryUrlManager;
 use GitDao;
 use GitPlugin;
+use GitRepoNotFoundException;
 use GitRepository;
 use GitRepositoryFactory;
 use Luracast\Restler\RestException;
@@ -57,6 +58,7 @@ use Tuleap\Label\UnknownLabelException;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\REST\UserRESTReferenceRetriever;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
+use Tuleap\PullRequest\Authorization\UserCannotMergePullRequestException;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
@@ -257,7 +259,8 @@ class PullRequestsResource extends AuthenticatedResource
 
         $this->permission_checker = new PullRequestPermissionChecker(
             $this->git_repository_factory,
-            new URLVerification()
+            new URLVerification(),
+            $this->access_control_verifier
         );
 
         $git_pull_request_reference_dao             = new GitPullRequestReferenceDAO;
@@ -955,6 +958,7 @@ class PullRequestsResource extends AuthenticatedResource
         $status_patcher = new StatusPatcher(
             $this->git_repository_factory,
             $this->access_control_verifier,
+            $this->permission_checker,
             $this->pull_request_closer,
             $this->timeline_event_creator,
             new URLVerification(),
@@ -974,8 +978,7 @@ class PullRequestsResource extends AuthenticatedResource
         $project_id,
         $body
     ) {
-        $repository_dest = $this->getRepository($pull_request->getRepoDestId());
-        $this->checkUserCanWrite($user, $repository_dest, $pull_request->getBranchDest());
+        $this->checkUserCanMerge($pull_request, $user);
 
         $trimmed_title = trim($body->title);
         if (empty($trimmed_title)) {
@@ -1253,8 +1256,8 @@ class PullRequestsResource extends AuthenticatedResource
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
 
         $current_user    = $this->user_manager->getCurrentUser();
-        $repository_dest = $this->getRepository($pull_request->getRepoDestId());
-        $this->checkUserCanWrite($current_user, $repository_dest, $pull_request->getBranchDest());
+
+        $this->checkUserCanMerge($pull_request, $current_user);
 
         return $pull_request_with_git_reference;
     }
@@ -1345,12 +1348,18 @@ class PullRequestsResource extends AuthenticatedResource
         }
     }
 
-    private function checkUserCanWrite(PFUser $user, GitRepository $repository, $reference)
+    /**
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    private function checkUserCanMerge(PullRequest $pull_request, PFUser $user): void
     {
-        ProjectAuthorization::userCanAccessProject($user, $repository->getProject(), new URLVerification());
-
-        if (! $this->access_control_verifier->canWrite($user, $repository, $reference)) {
+        try {
+            $this->permission_checker->checkPullRequestIsMergeableByUser($pull_request, $user);
+        } catch (UserCannotMergePullRequestException $e) {
             throw new RestException(403, 'User is not able to WRITE the git repository');
+        } catch (GitRepoNotFoundException $e) {
+            throw new RestException(404, 'Git repository not found');
         }
     }
 

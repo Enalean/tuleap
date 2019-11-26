@@ -29,6 +29,7 @@ use Tuleap\Git\GitAdditionalActionEvent;
 use Tuleap\Git\GitRepositoryDeletionEvent;
 use Tuleap\Git\GitViews\RepoManagement\Pane\PanesCollection;
 use Tuleap\Git\MarkTechnicalReference;
+use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\GetProtectedGitReferences;
@@ -463,7 +464,11 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $this->getPullRequestFactory(),
             new PullRequestPermissionChecker(
                 $this->getRepositoryFactory(),
-                new URLVerification()
+                new URLVerification(),
+                new AccessControlVerifier(
+                    new FineGrainedRetriever(new FineGrainedDao()),
+                    new \System_Command()
+                )
             ),
             $this->getHTMLBuilder(),
             new GlyphFinder(

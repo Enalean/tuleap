@@ -30,6 +30,8 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tuleap\Git\Permissions\AccessControlVerifier;
+use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
+use Tuleap\PullRequest\Authorization\UserCannotMergePullRequestException;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
@@ -60,6 +62,11 @@ final class StatusPatcherTest extends TestCase
     private $url_verification;
 
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PullRequestPermissionChecker
+     */
+    private $pull_request_permissions_checker;
+
+    /**
      * @var Mockery\MockInterface|AccessControlVerifier
      */
     private $access_control_verifier;
@@ -88,7 +95,6 @@ final class StatusPatcherTest extends TestCase
      * @var GitRepository|Mockery\MockInterface
      */
     private $repository_destination;
-
     /**
      * @var Mockery\MockInterface|Project
      */
@@ -98,16 +104,18 @@ final class StatusPatcherTest extends TestCase
     {
         parent::setUp();
 
-        $this->git_repository_factory  = Mockery::mock(GitRepositoryFactory::class);
-        $this->access_control_verifier = Mockery::mock(AccessControlVerifier::class);
-        $this->pull_request_closer     = Mockery::mock(PullRequestCloser::class);
-        $this->timeline_event_creator  = Mockery::mock(TimelineEventCreator::class);
-        $this->url_verification        = Mockery::mock(URLVerification::class);
-        $logger                        = Mockery::mock(Logger::class);
+        $this->git_repository_factory           = Mockery::mock(GitRepositoryFactory::class);
+        $this->access_control_verifier          = Mockery::mock(AccessControlVerifier::class);
+        $this->pull_request_permissions_checker = Mockery::mock(PullRequestPermissionChecker::class);
+        $this->pull_request_closer              = Mockery::mock(PullRequestCloser::class);
+        $this->timeline_event_creator           = Mockery::mock(TimelineEventCreator::class);
+        $this->url_verification                 = Mockery::mock(URLVerification::class);
+        $logger                                 = Mockery::mock(Logger::class);
 
         $this->patcher = new StatusPatcher(
             $this->git_repository_factory,
             $this->access_control_verifier,
+            $this->pull_request_permissions_checker,
             $this->pull_request_closer,
             $this->timeline_event_creator,
             $this->url_verification,
@@ -115,6 +123,7 @@ final class StatusPatcherTest extends TestCase
         );
 
         $this->user = Mockery::mock(PFUser::class);
+        $this->user->shouldReceive('getId')->andReturn(102);
 
         $this->project_source    = Mockery::mock(Project::class);
         $this->repository_source = Mockery::mock(GitRepository::class);
@@ -290,13 +299,11 @@ final class StatusPatcherTest extends TestCase
         );
     }
 
-    public function testItMergesAPullrequest()
+    public function testItMergesAPullrequest(): void
     {
         $pull_request = $this->buildAPullRequest();
 
-        $this->mockUserCanAccessProject($this->project_destination);
-
-        $this->mockUserCanWrite($this->repository_destination, 'master');
+        $this->pull_request_permissions_checker->shouldReceive('checkPullRequestIsMergeableByUser');
 
         $this->pull_request_closer->shouldReceive('doMerge')
             ->with(
@@ -317,13 +324,12 @@ final class StatusPatcherTest extends TestCase
         );
     }
 
-    public function testUserCannotMergeAPullrequestIfItCannotAccessDestination()
+    public function testUserThatCannotAPullRequestIsRejected(): void
     {
         $pull_request = $this->buildAPullRequest();
 
-        $this->mockUserCannotAccessProject($this->project_destination);
-
-        $this->mockUserCannotWrite($this->repository_destination, 'master');
+        $this->pull_request_permissions_checker->shouldReceive('checkPullRequestIsMergeableByUser')
+            ->andThrow(new UserCannotMergePullRequestException($pull_request, $this->user));
 
         $this->pull_request_closer->shouldReceive('doMerge')
             ->with(
@@ -338,34 +344,7 @@ final class StatusPatcherTest extends TestCase
             ->never();
 
         $this->expectException(RestException::class);
-
-        $this->patcher->patchStatus(
-            $this->user,
-            $pull_request,
-            'merge'
-        );
-    }
-    public function testUserCannotMergeAPullrequestIfItCannotWriteOnDestination()
-    {
-        $pull_request = $this->buildAPullRequest();
-
-        $this->mockUserCanAccessProject($this->project_destination);
-
-        $this->mockUserCannotWrite($this->repository_destination, 'master');
-
-        $this->pull_request_closer->shouldReceive('doMerge')
-            ->with(
-                $this->repository_destination,
-                $pull_request,
-                $this->user
-            )
-            ->never();
-
-        $this->timeline_event_creator->shouldReceive('storeMergeEvent')
-            ->with($pull_request, $this->user)
-            ->never();
-
-        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
 
         $this->patcher->patchStatus(
             $this->user,
