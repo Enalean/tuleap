@@ -47,7 +47,7 @@ function getWrapper(
 function getCard(
     definition: Card = {
         background_color: "",
-        has_been_dropped: false,
+        has_already_been_shown: false,
         is_in_edit_mode: false
     } as Card
 ): Card {
@@ -80,14 +80,19 @@ describe("BaseCard", () => {
         expect(wrapper.classes()).not.toContain("taskboard-card-with-accessibility");
     });
 
-    it("adds the show classes", () => {
-        const wrapper = getWrapper(getCard());
+    it("adds the show classes and set the has_already_been_shown flag on the card", () => {
+        const card = getCard();
+        const wrapper = getWrapper(card);
 
         expect(wrapper.classes()).toContain("taskboard-card-show");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+            "swimlane/setCardHaveAlreadyBeenShown",
+            card
+        );
     });
 
-    it("does not add the show classes if card has been dropped", () => {
-        const wrapper = getWrapper(getCard({ has_been_dropped: true } as Card));
+    it("does not add the show classes if card has already rendered once", () => {
+        const wrapper = getWrapper(getCard({ has_already_been_shown: true } as Card));
 
         expect(wrapper.classes()).not.toContain("taskboard-card-show");
     });
@@ -147,10 +152,14 @@ describe("BaseCard", () => {
         });
 
         it("Given the card is in edit mode, when user clicks on it, then it does nothing", () => {
-            const wrapper = getWrapper(getCard({ is_in_edit_mode: true } as Card));
+            const card = getCard({ is_in_edit_mode: true } as Card);
+            const wrapper = getWrapper(card);
 
             wrapper.trigger("click");
-            expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
+            expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
+                "swimlane/addCardToEditMode",
+                expect.any(Object)
+            );
         });
 
         it(`Cancels the edition of the card if user clicks on cancel button (that is outside of this component)`, () => {

@@ -70,7 +70,7 @@ export interface Card {
     is_open: boolean;
     is_collapsed: boolean;
     is_in_edit_mode: boolean;
-    has_been_dropped: boolean;
+    has_already_been_shown: boolean;
 }
 
 export interface User {

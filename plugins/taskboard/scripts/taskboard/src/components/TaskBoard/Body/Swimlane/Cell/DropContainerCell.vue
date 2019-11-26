@@ -28,8 +28,8 @@
          v-bind:data-column-id="column.id"
          v-bind:data-accepted-trackers-ids="accepted_trackers_ids(column)"
     >
-        <slot v-if="!column.is_collapsed"></slot>
-        <cell-disallows-drop-overlay v-bind:is-drop-rejected="does_cell_reject_drop(swimlane, column)"/>
+        <slot v-if="!column.is_collapsed && ! is_overlay_displayed"></slot>
+        <cell-disallows-drop-overlay v-bind:is-drop-rejected="is_overlay_displayed"/>
     </div>
 </template>
 
@@ -56,6 +56,9 @@ export default class DropContainerCell extends Mixins(
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
 
+    @Prop({ required: true })
+    readonly column!: ColumnDefinition;
+
     @column_store.Getter
     readonly accepted_trackers_ids!: (column: ColumnDefinition) => number[];
 
@@ -68,6 +71,10 @@ export default class DropContainerCell extends Mixins(
         }
 
         return "";
+    }
+
+    get is_overlay_displayed(): boolean {
+        return this.does_cell_reject_drop(this.swimlane, this.column);
     }
 }
 </script>

@@ -63,6 +63,9 @@ export default class BaseCard extends Vue {
     @swimlane.Mutation
     readonly removeCardFromEditMode!: (card: Card) => void;
 
+    @swimlane.Mutation
+    readonly setCardHaveAlreadyBeenShown!: (card: Card) => void;
+
     add_show_class = true;
 
     mounted(): void {
@@ -109,8 +112,9 @@ export default class BaseCard extends Vue {
             classnames.push("taskboard-card-with-accessibility");
         }
 
-        if (this.add_show_class && !this.card.has_been_dropped) {
+        if (this.add_show_class && !this.card.has_already_been_shown) {
             classnames.push("taskboard-card-show");
+            this.setCardHaveAlreadyBeenShown(this.card);
         }
 
         if (this.card.is_in_edit_mode) {
