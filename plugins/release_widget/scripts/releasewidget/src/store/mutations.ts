@@ -17,23 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TrackerAgileDashboard, MilestoneData, State } from "../type";
+import { MilestoneData, State } from "../type";
 
 export default {
-    setProjectId(state: State, project_id: number): void {
-        state.project_id = project_id;
-    },
-
     setIsLoading(state: State, loading: boolean): void {
         state.is_loading = loading;
-    },
-
-    setNbBacklogItem(state: State, total: number): void {
-        state.nb_backlog_items = total;
-    },
-
-    setNbUpcomingReleases(state: State, total: number): void {
-        state.nb_upcoming_releases = total;
     },
 
     setErrorMessage(state: State, error_message: string): void {
@@ -46,9 +34,5 @@ export default {
 
     setCurrentMilestones(state: State, milestones: MilestoneData[]): void {
         state.current_milestones = milestones;
-    },
-
-    setTrackers(state: State, trackers: TrackerAgileDashboard[]): void {
-        state.trackers_agile_dashboard = trackers;
     }
 };

@@ -41,11 +41,6 @@ export interface MilestoneData {
         };
     };
     number_of_artifact_by_trackers: TrackerNumberArtifacts[];
-    artifact?: {
-        tracker?: {
-            label?: string;
-        };
-    };
 }
 
 export interface TrackerNumberArtifacts {
@@ -81,6 +76,8 @@ export interface StoreOptions {
         is_loading?: boolean;
         current_milestones?: Array<MilestoneData>;
         error_message?: string;
+        is_browser_IE11?: boolean;
+        label_tracker_planning?: string;
     };
     getters?: {
         has_rest_error?: boolean;
@@ -97,6 +94,8 @@ export interface State {
     is_loading: boolean;
     current_milestones: MilestoneData[];
     trackers_agile_dashboard: TrackerAgileDashboard[];
+    is_browser_IE11: boolean;
+    label_tracker_planning: string;
 }
 
 export interface Context {

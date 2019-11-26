@@ -40,25 +40,25 @@
 import WhatsHotSection from "./WhatsHotSection/WhatsHotSection.vue";
 import RoadmapSection from "./RoadmapSection/RoadmapSection.vue";
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { Action, Getter, Mutation, State } from "vuex-class";
+import { Component } from "vue-property-decorator";
+import { Action, Getter, State } from "vuex-class";
 import { TrackerAgileDashboard } from "../type";
 
 @Component({
     components: { WhatsHotSection, RoadmapSection }
 })
 export default class App extends Vue {
-    @Prop()
+    @State
     readonly label_tracker_planning!: string;
-    @Prop()
+    @State
     readonly project_id!: number;
-    @Prop()
+    @State
     readonly is_browser_IE11!: boolean;
-    @Prop()
+    @State
     readonly nb_upcoming_releases!: number;
-    @Prop()
+    @State
     readonly nb_backlog_items!: number;
-    @Prop()
+    @State
     readonly trackers_agile_dashboard!: TrackerAgileDashboard[];
     @State
     readonly is_loading!: boolean;
@@ -66,22 +66,10 @@ export default class App extends Vue {
     readonly error_message!: string;
     @Getter
     has_rest_error!: boolean;
-    @Mutation
-    setProjectId!: (projectId: number) => void;
-    @Mutation
-    setNbUpcomingReleases!: (nbUpcomingReleases: number) => void;
-    @Mutation
-    setNbBacklogItem!: (nbBacklogItems: number) => void;
-    @Mutation
-    setTrackers!: (trackers_id: TrackerAgileDashboard[]) => void;
     @Action
     getMilestones!: () => void;
 
     created(): void {
-        this.setProjectId(this.project_id);
-        this.setNbUpcomingReleases(this.nb_upcoming_releases);
-        this.setNbBacklogItem(this.nb_backlog_items);
-        this.setTrackers(this.trackers_agile_dashboard);
         this.getMilestones();
     }
 

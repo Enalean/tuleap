@@ -44,7 +44,9 @@ describe("ReleaseDescription", () => {
 
     beforeEach(() => {
         store_options = {
-            state: {}
+            state: {
+                label_tracker_planning: "Releases"
+            }
         };
 
         release_data = {
@@ -52,12 +54,7 @@ describe("ReleaseDescription", () => {
             planning: {
                 id: "100"
             },
-            number_of_artifact_by_trackers: [],
-            artifact: {
-                tracker: {
-                    label: "Release"
-                }
-            }
+            number_of_artifact_by_trackers: []
         };
 
         component_options.propsData = {
