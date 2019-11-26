@@ -19,7 +19,6 @@
 
 @import 'fonts';
 
-$tlp-font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
 $tlp-h1-color: $tlp-theme-sidebar-background-color;
 
 body {
@@ -113,7 +112,7 @@ p {
     line-height: $tlp-paragraph-line-height;
 
     &:last-child,
-    &[class^="text-"] {
+    &[class^='text-'] {
         margin: 0;
     }
 }
@@ -190,7 +189,7 @@ blockquote {
 %tlp-code {
     background: transparentize($tlp-theme-color, .95);
     color: $tlp-theme-color;
-    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
     font-size: 14px;
     font-weight: 400;
     line-height: 22px;

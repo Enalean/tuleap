@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,5 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
-$tlp-paragraph-line-height: 24px;
+import { shallowMount } from "@vue/test-utils";
+import EditLabel from "./EditLabel.vue";
+import { Card } from "../../../../../../../type";
+
+describe("EditLabel", () => {
+    it("Displays a texteara with its mirror to edit the label", () => {
+        const wrapper = shallowMount(EditLabel, {
+            propsData: {
+                card: { label: "Lorem ipsum doloret" } as Card
+            }
+        });
+
+        expect(wrapper.element).toMatchSnapshot();
+    });
+});

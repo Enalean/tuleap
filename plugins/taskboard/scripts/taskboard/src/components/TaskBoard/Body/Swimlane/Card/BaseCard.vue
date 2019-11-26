@@ -27,6 +27,7 @@
                 <card-assignees v-bind:assignees="card.assignees"/>
             </div>
         </div>
+        <edit-label v-bind:card="card" v-if="card.is_in_edit_mode"/>
         <div class="taskboard-card-accessibility" v-if="show_accessibility_pattern"></div>
         <slot name="remaining_effort"/>
     </div>
@@ -40,12 +41,14 @@ import CardAssignees from "./CardAssignees.vue";
 import { Card, TaskboardEvent } from "../../../../../type";
 import { namespace } from "vuex-class";
 import EventBus from "../../../../../helpers/event-bus";
+import EditLabel from "./EditMode/Label/EditLabel.vue";
 
 const user = namespace("user");
 const swimlane = namespace("swimlane");
 
 @Component({
     components: {
+        EditLabel,
         CardXrefLabel,
         CardAssignees
     }
