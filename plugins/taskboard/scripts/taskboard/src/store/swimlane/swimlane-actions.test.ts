@@ -23,7 +23,12 @@ import { RecursiveGetInit } from "tlp";
 import * as actions from "./swimlane-actions";
 import { loadChildrenCards } from "./swimlane-actions";
 import { ActionContext } from "vuex";
-import { MoveCardsPayload, ReorderCardsPayload, SwimlaneState } from "./type";
+import {
+    MoveCardsPayload,
+    RefreshParentCardActionPayload,
+    ReorderCardsPayload,
+    SwimlaneState
+} from "./type";
 import { mockFetchSuccess } from "../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
 import { RootState } from "../type";
 
@@ -306,61 +311,93 @@ describe("Swimlane state actions", () => {
     });
 
     describe("moveCardToCell", () => {
-        let card_to_move: Card,
-            swimlane: Swimlane,
-            column: ColumnDefinition,
-            payload: MoveCardsPayload;
+        let column: ColumnDefinition;
 
         beforeEach(() => {
-            card_to_move = { id: 102, tracker_id: 7, mapped_list_value: { id: 49 } } as Card;
-            swimlane = {
+            column = { id: 42 } as ColumnDefinition;
+        });
+
+        it(`when a child card was moved,
+            it will PATCH the new cell,
+            move the card to its new column
+            and refresh the parent card`, async () => {
+            const card_to_move = {
+                id: 102,
+                tracker_id: 7,
+                mapped_list_value: { id: 49 },
+                has_children: true
+            } as Card;
+            const swimlane = {
                 card: { id: 86 },
                 children_cards: [
                     { id: 100, tracker_id: 7, mapped_list_value: { id: 49 } } as Card,
                     card_to_move
                 ]
             } as Swimlane;
+            const payload: MoveCardsPayload = { swimlane, column, card: card_to_move };
 
-            column = {
-                id: 42
-            } as ColumnDefinition;
-
-            payload = {
-                swimlane,
-                column,
-                card: card_to_move
-            } as MoveCardsPayload;
-        });
-
-        it("The new column of the card is stored", async () => {
             const tlpPatchMock = jest.spyOn(tlp, "patch");
             mockFetchSuccess(tlpPatchMock, {});
 
             await actions.moveCardToCell(context, payload);
 
             expect(tlpPatchMock).toHaveBeenCalledWith(`/api/v1/taskboard_cells/86/column/42`, {
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    add: card_to_move.id
-                })
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ add: card_to_move.id })
             });
 
+            expect(context.dispatch).toHaveBeenCalledWith("refreshParentCard", { swimlane });
+            expect(context.commit).toHaveBeenCalledWith("moveCardToColumn", payload);
+        });
+
+        it(`when a solo card was moved,
+            it will PATCH the new cell,
+            move the card to its new column
+            and refresh it`, async () => {
+            const card_to_move = {
+                id: 102,
+                tracker_id: 7,
+                mapped_list_value: { id: 49 },
+                has_children: false
+            } as Card;
+            const swimlane: Swimlane = {
+                card: card_to_move,
+                children_cards: [],
+                is_loading_children_cards: false
+            };
+            const payload: MoveCardsPayload = { swimlane, column, card: card_to_move };
+
+            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatchMock, {});
+
+            await actions.moveCardToCell(context, payload);
+
+            expect(tlpPatchMock).toHaveBeenCalledWith("/api/v1/taskboard_cells/86/column/42", {
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ add: card_to_move.id })
+            });
+
+            expect(context.dispatch).toHaveBeenCalledWith("refreshParentCard", { swimlane });
             expect(context.commit).toHaveBeenCalledWith("moveCardToColumn", payload);
         });
 
         it("When the payload has a position, it will add it to the REST payload", async () => {
-            const tlpPatchMock = jest.spyOn(tlp, "patch");
-            mockFetchSuccess(tlpPatchMock, {});
-
+            const card_to_move = {
+                id: 102,
+                tracker_id: 7,
+                mapped_list_value: { id: 49 },
+                has_children: true
+            } as Card;
+            const swimlane = { card: { id: 86 }, children_cards: [card_to_move] } as Swimlane;
             const position: CardPosition = {
                 ids: [card_to_move.id],
                 direction: Direction.BEFORE,
                 compared_to: 100
             };
+            const payload: MoveCardsPayload = { swimlane, column, card: card_to_move, position };
 
-            Object.assign(payload, { position });
+            const tlpPatchMock = jest.spyOn(tlp, "patch");
+            mockFetchSuccess(tlpPatchMock, {});
 
             await actions.moveCardToCell(context, payload);
 
@@ -382,12 +419,60 @@ describe("Swimlane state actions", () => {
         });
 
         it("A modal opens on error", async () => {
+            const card_to_move = {
+                id: 102,
+                tracker_id: 7,
+                mapped_list_value: { id: 49 },
+                has_children: true
+            } as Card;
+            const swimlane = { card: { id: 86 }, children_cards: [card_to_move] } as Swimlane;
+            const payload: MoveCardsPayload = { swimlane, column, card: card_to_move };
+
             const error = new Error();
 
             const tlpPatchMock = jest.spyOn(tlp, "patch");
             tlpPatchMock.mockRejectedValue(error);
 
             await actions.moveCardToCell(context, payload);
+
+            expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
+                root: true
+            });
+        });
+    });
+
+    describe(`refreshParentCard()`, () => {
+        let parent_card: Card, swimlane: Swimlane, payload: RefreshParentCardActionPayload;
+
+        beforeEach(() => {
+            parent_card = { id: 104, label: "Card to refresh" } as Card;
+            swimlane = { card: parent_card, children_cards: [], is_loading_children_cards: false };
+            payload = { swimlane };
+        });
+
+        it(`will GET the card using the REST API and mutate the store`, async () => {
+            const refreshed_card = { id: 104, label: "Refreshed card" } as Card;
+            const tlpGetMock = jest.spyOn(tlp, "get");
+            mockFetchSuccess(tlpGetMock, { return_json: refreshed_card });
+
+            await actions.refreshParentCard(context, payload);
+
+            expect(tlpGetMock).toHaveBeenCalledWith("/api/v1/taskboard_cards/104", {
+                params: { milestone_id: 42 }
+            });
+            expect(context.commit).toHaveBeenCalledWith("refreshParentCard", {
+                swimlane,
+                parent_card: refreshed_card
+            });
+        });
+
+        it(`when there is an error, it will open a modal`, async () => {
+            const error = new Error();
+
+            const tlpGetMock = jest.spyOn(tlp, "get");
+            tlpGetMock.mockRejectedValue(error);
+
+            await actions.refreshParentCard(context, payload);
 
             expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
                 root: true

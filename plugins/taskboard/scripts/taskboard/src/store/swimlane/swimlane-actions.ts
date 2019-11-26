@@ -18,9 +18,15 @@
  */
 
 import { Card, ColumnDefinition, Swimlane } from "../../type";
-import { recursiveGet, patch } from "tlp";
+import { recursiveGet, patch, get } from "tlp";
 import { ActionContext } from "vuex";
-import { SwimlaneState, MoveCardsPayload, ReorderCardsPayload } from "./type";
+import {
+    SwimlaneState,
+    MoveCardsPayload,
+    ReorderCardsPayload,
+    RefreshParentCardActionPayload,
+    RefreshParentCardMutationPayload
+} from "./type";
 import { RootState } from "../type";
 import { UserPreference, UserPreferenceValue } from "../user/type";
 
@@ -172,7 +178,30 @@ export async function moveCardToCell(
             body
         });
 
+        context.dispatch("refreshParentCard", { swimlane: payload.swimlane });
         context.commit("moveCardToColumn", payload);
+    } catch (error) {
+        await context.dispatch("error/handleModalError", error, { root: true });
+    }
+}
+
+export async function refreshParentCard(
+    context: ActionContext<SwimlaneState, RootState>,
+    payload: RefreshParentCardActionPayload
+): Promise<void> {
+    const card_id = payload.swimlane.card.id;
+
+    try {
+        const response = await get(`/api/v1/taskboard_cards/${card_id}`, {
+            params: { milestone_id: context.rootState.milestone_id }
+        });
+        const refreshed_card = await response.json();
+
+        const mutation_payload: RefreshParentCardMutationPayload = {
+            swimlane: payload.swimlane,
+            parent_card: refreshed_card
+        };
+        context.commit("refreshParentCard", mutation_payload);
     } catch (error) {
         await context.dispatch("error/handleModalError", error, { root: true });
     }

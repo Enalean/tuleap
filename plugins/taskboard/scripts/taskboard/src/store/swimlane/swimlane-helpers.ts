@@ -45,8 +45,7 @@ export function replaceSwimlane(state: SwimlaneState, swimlane: Swimlane): void 
 
 export function findDroppedCard(state: SwimlaneState, payload: MoveCardsPayload): Card {
     const swimlane_state = findSwimlane(state, payload.swimlane);
-    const is_solo_card = swimlane_state.card.has_children === false;
-    const card_state = is_solo_card
+    const card_state = isSoloCard(swimlane_state)
         ? swimlane_state.card
         : swimlane_state.children_cards.find(child => child.id === payload.card.id);
 
@@ -55,4 +54,8 @@ export function findDroppedCard(state: SwimlaneState, payload: MoveCardsPayload)
     }
 
     return card_state;
+}
+
+export function isSoloCard(swimlane: Swimlane): boolean {
+    return swimlane.card.has_children === false;
 }
