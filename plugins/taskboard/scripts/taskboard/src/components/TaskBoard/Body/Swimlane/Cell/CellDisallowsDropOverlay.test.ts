@@ -25,7 +25,8 @@ describe("CellDisallowsDropOverlay", () => {
     it("displays div with an icon and an error message", async () => {
         const wrapper = shallowMount(CellDisallowsDropOverlay, {
             propsData: {
-                isDropRejected: true
+                isDropRejected: true,
+                isColumnCollapsed: false
             },
             localVue: await createTaskboardLocalVue()
         });
@@ -40,5 +41,17 @@ describe("CellDisallowsDropOverlay", () => {
             localVue: await createTaskboardLocalVue()
         });
         expect(wrapper.isEmpty()).toBe(true);
+    });
+
+    it("Does not render the error message when the column is collapsed", async () => {
+        const wrapper = shallowMount(CellDisallowsDropOverlay, {
+            propsData: {
+                isDropRejected: false,
+                isColumnCollapsed: true
+            },
+            localVue: await createTaskboardLocalVue()
+        });
+
+        expect(wrapper.contains("[data-test=overlay-error-message]")).toBe(false);
     });
 });

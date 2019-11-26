@@ -40,7 +40,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { namespace, State } from "vuex-class";
+import { namespace, State, Getter } from "vuex-class";
 import dragula, { Drake } from "dragula";
 import { Swimlane, ColumnDefinition, Card, TaskboardEvent } from "../../../type";
 import CollapsedSwimlane from "./Swimlane/CollapsedSwimlane.vue";
@@ -78,19 +78,28 @@ export default class TaskBoardBody extends Vue {
     @swimlane.State
     readonly is_loading_swimlanes!: boolean;
 
+    @column.Mutation
+    readonly mouseEntersColumn!: (column: ColumnDefinition) => void;
+
+    @column.Mutation
+    readonly mouseLeavesColumn!: (column: ColumnDefinition) => void;
+
     @swimlane.Getter
     readonly cards_in_cell!: (
         current_swimlane: Swimlane,
         current_column: ColumnDefinition
     ) => Card[];
 
-    @swimlane.Getter
+    @Getter
     readonly column_and_swimlane_of_cell!: (
         cell: HTMLElement
     ) => {
         swimlane?: Swimlane;
         column?: ColumnDefinition;
     };
+
+    @Getter
+    readonly column_of_cell!: (cell: HTMLElement) => ColumnDefinition | undefined;
 
     @swimlane.Action
     loadSwimlanes!: () => void;
@@ -141,6 +150,48 @@ export default class TaskBoardBody extends Vue {
         this.drake.on("cancel", this.removeHighlightOnLastHoveredDropZone);
 
         EventBus.$on(TaskboardEvent.ESC_KEY_PRESSED, this.cancelDragOnEscape);
+
+        this.drake.on(
+            "over",
+            (element?: Element, target?: Element): void => {
+                if (
+                    !target ||
+                    !target.classList.contains("taskboard-cell-collapsed") ||
+                    !(target instanceof HTMLElement)
+                ) {
+                    return;
+                }
+
+                const column = this.column_of_cell(target);
+
+                if (!column) {
+                    return;
+                }
+
+                this.mouseEntersColumn(column);
+            }
+        );
+
+        this.drake.on(
+            "out",
+            (element?: Element, target?: Element): void => {
+                if (
+                    !target ||
+                    !target.classList.contains("taskboard-cell-collapsed") ||
+                    !(target instanceof HTMLElement)
+                ) {
+                    return;
+                }
+
+                const column = this.column_of_cell(target);
+
+                if (!column) {
+                    return;
+                }
+
+                this.mouseLeavesColumn(column);
+            }
+        );
     }
 
     getColumnOfSoloCard(swimlane: Swimlane): ColumnDefinition {

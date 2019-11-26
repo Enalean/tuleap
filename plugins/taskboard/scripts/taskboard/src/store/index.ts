@@ -20,6 +20,7 @@
 import { Store, StoreOptions } from "vuex";
 import * as mutations from "./mutations";
 import * as actions from "./actions";
+import * as getters from "./getters";
 import error from "./error";
 import swimlane from "./swimlane";
 import fullscreen from "./fullscreen";
@@ -41,6 +42,7 @@ export function createStore(
         state: initial_root_state,
         mutations,
         actions,
+        getters,
         modules: {
             error,
             swimlane,
