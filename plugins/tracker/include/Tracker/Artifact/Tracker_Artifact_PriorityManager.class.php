@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Artifact_PriorityManager
 {
-
     /**
      * @var Tracker_Artifact_PriorityDao
      */
@@ -52,6 +52,16 @@ class Tracker_Artifact_PriorityManager
         $this->priority_history_dao     = $priority_history_dao;
         $this->user_manager             = $user_manager;
         $this->tracker_artifact_factory = $tracker_artifact_factory;
+    }
+
+    public static function build(): self
+    {
+        return new self(
+            new Tracker_Artifact_PriorityDao(),
+            new Tracker_Artifact_PriorityHistoryDao(),
+            UserManager::instance(),
+            Tracker_ArtifactFactory::instance()
+        );
     }
 
     public function enableExceptionsOnError()

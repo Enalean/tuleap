@@ -109,7 +109,41 @@ class TaskboardCardTest extends RestBase
             $user_name
         );
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(['OPTIONS', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    /**
+     * @dataProvider getUserName
+     */
+    public function testGetId(string $user_name): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('taskboard_cards/' . self::$user_story_6_id . '?milestone_id=' . self::$milestone_id),
+            $user_name
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $card = $response->json();
+        $this->assertEquals('US6', $card['label']);
+    }
+
+    public function testGetIdFailsWhenNoMilestoneGiven(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('taskboard_cards/' . self::$user_story_6_id),
+            REST_TestDataBuilder::TEST_USER_1_NAME
+        );
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    public function testGetIdFailsWhenWrongMilestoneGiven(): void
+    {
+        $response = $this->getResponse(
+            $this->client->get('taskboard_cards/' . self::$user_story_6_id. '?milestone_id=0'),
+            REST_TestDataBuilder::TEST_USER_1_NAME
+        );
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     public function getUserName(): array

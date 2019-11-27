@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\REST\v1;
 
-use PFUser;
 use Tracker_Artifact;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\REST\JsonCast;
-use Tuleap\User\REST\UserRepresentation;
+use Tuleap\User\REST\MinimalUserRepresentation;
 
 class CardRepresentation
 {
@@ -67,19 +66,20 @@ class CardRepresentation
      */
     public $has_children;
     /**
-     * @var UserRepresentation[]
+     * @var array {@type MinimalUserRepresentation}
+     * @psalm-var list<MinimalUserRepresentation>
      */
     public $assignees;
     /**
-     * @var MappedListValueRepresentation|null
+     * @var MappedListValueRepresentation | null
      */
     public $mapped_list_value;
     /**
-     * @var float|null
+     * @var float | null
      */
     public $initial_effort;
     /**
-     * @var RemainingEffortRepresentation|null
+     * @var RemainingEffortRepresentation | null
      */
     public $remaining_effort;
     /**
@@ -92,7 +92,8 @@ class CardRepresentation
     public $is_collapsed;
 
     /**
-     * @params UserRepresentation[] $assignees
+     * @param MinimalUserRepresentation[] $assignees
+     * @psalm-param list<MinimalUserRepresentation>
      */
     public function build(
         Tracker_Artifact $artifact,
