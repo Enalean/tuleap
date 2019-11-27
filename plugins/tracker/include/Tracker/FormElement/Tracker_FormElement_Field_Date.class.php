@@ -572,10 +572,10 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     {
         $date_csv_export_pref = $this->_getUserCSVDateFormat();
         switch ($date_csv_export_pref) {
-            case "month_day_year";
+            case "month_day_year":
                 $fmt = 'm/d/Y';
                 break;
-            case "day_month_year";
+            case "day_month_year":
                 $fmt = 'd/m/Y';
                 break;
             default:

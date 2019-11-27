@@ -98,10 +98,13 @@ class HttpClient
             switch ($errno) {
                 case -3:
                     $this->errormsg = 'Socket creation failed (-3)';
+                    break;
                 case -4:
                     $this->errormsg = 'DNS lookup failure (-4)';
+                    break;
                 case -5:
                     $this->errormsg = 'Connection refused or timed out (-5)';
+                    break;
                 default:
                     $this->errormsg = 'Connection failed ('.$errno.')';
                     $this->errormsg .= ' '.$errstr;

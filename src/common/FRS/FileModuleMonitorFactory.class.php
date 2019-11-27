@@ -500,6 +500,7 @@ class FileModuleMonitorFactory
                         break;
                     case 'public_monitoring':
                         $anonymous = false;
+                        // Fall-through seems wanted here
                     case 'anonymous_monitoring':
                         $performAction = $this->anonymousMonitoringActionListener($currentUser, $fileModuleId, $anonymous, $groupId);
                         break;

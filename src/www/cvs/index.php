@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) Enalean, 2016. All Rights Reserved.
+// Copyright (c) Enalean, 2016-Present. All Rights Reserved.
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -18,23 +18,16 @@ if (! $func) {
 }
 
 switch ($func) {
-    case 'browse' : {
+    case 'browse':
         require('../cvs/browse_commit.php');
         break;
-    }
-
-    case 'detailcommit' : {
+    case 'detailcommit':
         require('../cvs/detail_commit.php');
         break;
-    }
-
-
-    case 'admin' : {
+    case 'admin':
         require('../cvs/admin_commit.php');
         break;
-    }
-
-    case 'setAdmin' : {
+    case 'setAdmin':
         $sql = "SELECT cvs_is_private FROM groups WHERE group_id=". db_ei($group_id);
         $result = db_query($sql);
         $initial_settings = db_fetch_array($result);
@@ -93,11 +86,7 @@ switch ($func) {
         $result=db_query($query);
         require('../cvs/admin_commit.php');
         break;
-    }
-
-
-    default : {
-
+    default:
       // ############################ developer access
         if (isset($commit_id)) {
             $_commit_id = $commit_id;
@@ -109,5 +98,4 @@ switch ($func) {
         }
 
         break;
-    }
 }

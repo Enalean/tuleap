@@ -1446,6 +1446,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                         }
                     }
                 }
+                break;
             case self::ACTION_DEFAULT:
                 if ($this->getTracker()->userIsAdmin($current_user)) {
                     if ($request->exist('report_default')) {
@@ -1459,8 +1460,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                     $GLOBALS['Response']->redirect('?'. http_build_query(array(
                         'report'   => $this->id
                     )));
-                    break;
                 }
+                break;
             case 'store-expert-mode':
                 if (! $current_user->isAnonymous()) {
                     if ($request->isPost()) {

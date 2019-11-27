@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -54,6 +54,7 @@ class ChooseNewsItemController
         switch ($action) {
             case 'update':
                 $this->updatePromotedItems();
+                // Updating then redirecting the user would be better but we can leave with it ¯\_(ツ)_/¯
             default:
                 $this->display();
         }

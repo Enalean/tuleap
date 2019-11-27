@@ -1221,6 +1221,7 @@ class Docman_Controller extends Controler
                                 if ($sVersion <= 0) {
                                     $sVersion = null;
                                 }
+                                break;
                             case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
                             case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
                                 // assume ok: do nothing.
@@ -1376,6 +1377,7 @@ class Docman_Controller extends Controler
                     $this->_viewParams['recurseOnDocs'] = true;
                     $this->_actionParams['recurseOnDocs'] = true;
                 }
+                // Fall-through code dealing with new versions creation and update is the same
             case 'update_wl':
             case 'new_version':
                 if (!$this->userCanWrite($item->getId())) {

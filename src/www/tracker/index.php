@@ -106,7 +106,7 @@ if ($func == 'gotoid') {
                 require('./browse.php');
             }
             break;
-        case 'add' : {
+        case 'add':
                 $ah=new ArtifactHtml($ath);
             if (!$ah || !is_object($ah)) {
                     exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
@@ -114,10 +114,8 @@ if ($func == 'gotoid') {
                     require('./add.php');
             }
             break;
-        }
 
-        case 'postadd' : {
-
+        case 'postadd':
                 //              Create a new Artifact
                 $ah=new ArtifactHtml($ath);
             if (!$ah || !is_object($ah)) {
@@ -199,8 +197,7 @@ if ($func == 'gotoid') {
                 }
             }
             break;
-        }
-        case 'postcopy' : {
+        case 'postcopy':
                 //              Create a new Artifact
                 $ah=new ArtifactHtml($ath);
             if (!$ah || !is_object($ah)) {
@@ -295,10 +292,7 @@ if ($func == 'gotoid') {
                 }
             }
             break;
-        }
-
-        case 'delete_cc' : {
-
+        case 'delete_cc':
                 $ah=new ArtifactHtml($ath, $aid);
             if (!$ah || !is_object($ah)) {
                     exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
@@ -332,9 +326,7 @@ if ($func == 'gotoid') {
                 }
             }
             break;
-        }
-
-        case 'delete_comment' : {
+        case 'delete_comment':
             if (!user_isloggedin()) {
                 exit_not_logged_in();
                 return;
@@ -362,10 +354,7 @@ if ($func == 'gotoid') {
                 }
             }
             break;
-        }
-
-        case 'delete_dependent' : {
-
+        case 'delete_dependent':
             if (!user_isloggedin()) {
                     exit_not_logged_in();
                     return;
@@ -393,9 +382,7 @@ if ($func == 'gotoid') {
                 $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&aid='. (int)$aid .'&func=detail');
             }
             break;
-        }
-
-        case 'delete_file' : {
+        case 'delete_file':
                 //      Delete a file from this artifact
                 $ah=new ArtifactHtml($ath, $aid);
 
@@ -424,10 +411,7 @@ if ($func == 'gotoid') {
             }
 
             break;
-        }
-
-
-        case 'postmod' : {
+        case 'postmod':
                 //      Modify an Artifact
                 $ah=new ArtifactHtml($ath, $aid);
             if (!$ah || !is_object($ah)) {
@@ -536,9 +520,7 @@ if ($func == 'gotoid') {
                 }
             }
             break;
-        }
-
-        case 'postmasschange' : {
+        case 'postmasschange':
             $was_error = false;
                 //      Modify several Artifacts
                 //
@@ -674,10 +656,8 @@ if ($func == 'gotoid') {
                 }
             }
             require('./browse.php');
-                break;
-        }
-
-        case 'postaddcomment' : {
+            break;
+        case 'postaddcomment':
             //  Attach a comment to an artifact
             //  Used by non-admins
             $ah=new ArtifactHtml($ath, $aid);
@@ -733,10 +713,7 @@ if ($func == 'gotoid') {
             $ah->mailFollowupWithPermissions($addresses, $changes);
             $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
             break;
-        }
-
-        case 'editcomment' : {
-
+        case 'editcomment':
             if (!user_isloggedin()) {
                 exit_not_logged_in();
                 return;
@@ -748,10 +725,7 @@ if ($func == 'gotoid') {
                 require('./edit_comment.php');
             }
             break;
-
-        }
-
-        case 'getcomment': {
+        case 'getcomment':
             if (!user_isloggedin()) {
                 exit_not_logged_in();
                 return;
@@ -763,9 +737,7 @@ if ($func == 'gotoid') {
                 exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
             }
             break;
-        }
-
-        case 'import' : {
+        case 'import':
             if (!user_isloggedin()) {
                 exit_not_logged_in();
                 return;
@@ -808,12 +780,9 @@ if ($func == 'gotoid') {
                 exit_no_group();
             }
             break;
-        }
-
-        case 'export' : {
+        case 'export':
             require('./export.php');
-                break;
-        }
+            break;
         case 'updatecomment':
             $artifact_id = $request->get('artifact_id');
             if (user_isloggedin() && $request->exist('followup_update')) {
@@ -832,7 +801,7 @@ if ($func == 'gotoid') {
             }
             $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&aid='. (int)$artifact_id .'&func=detail');
             break;
-        case 'browse' : {
+        case 'browse':
                 $masschange = false;
             if ($request->get('change_report_column')) {
                 $report_id = $request->getValidated('report_id', 'uint');
@@ -893,16 +862,13 @@ if ($func == 'gotoid') {
                 require('./browse.php');
             }
             break;
-        }
-
-        case 'masschange' : {
+        case 'masschange':
             $masschange = true;
             $export = false;
-                require('./browse.php');
-                break;
-        }
+            require('./browse.php');
+            break;
 
-        case 'masschange_detail' : {
+        case 'masschange_detail':
             $ah=new ArtifactHtml($ath);
             if (!$ah || !is_object($ah)) {
                     exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
@@ -910,10 +876,7 @@ if ($func == 'gotoid') {
                 require('./masschange_detail.php');
             }
             break;
-        }
-
-
-        case 'detail' : {
+        case 'detail':
                 //      users can modify their own tickets if they submitted them
                 //      even if they are not artifact admins
                 $ah=new ArtifactHtml($ath, $aid);
@@ -934,9 +897,7 @@ if ($func == 'gotoid') {
                 }
             }
             break;
-        }
-
-        case 'copy': {
+        case 'copy':
             $ah=new ArtifactHtml($ath, $aid);
             if (!$ah || !is_object($ah)) {
                 exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_art'));
@@ -956,9 +917,6 @@ if ($func == 'gotoid') {
                 }
             }
             break;
-        }
-
-
         case 'toggle_section':
             $collapsable_sections = array('results', 'query');
             $em->processEvent('tracker_collapsable_sections', array('sections' => &$collapsable_sections));
@@ -975,10 +933,9 @@ if ($func == 'gotoid') {
                 require('./browse.php');
             }
             break;
-        default: {
-                require('./browse.php');
-                break;
-        }
+        default:
+            require('./browse.php');
+            break;
     } // switch
 } elseif ($group_id) {
         //  get the Group object

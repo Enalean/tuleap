@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -63,11 +63,13 @@ class ACLUpdaterTest extends PHPUnit\Framework\TestCase
                     if ($acl == 'd:u:httpuser:rwx,d:g:gpig-ftp_writers:rwx,d:g:gpig-ftp_readers:rx,u:httpuser:rwx,g:gpig-ftp_writers:rwx,g:gpig-ftp_readers:rx') {
                         break;
                     }
+                    // Fall-through seems to be intentional for the test...
                 case $root_path.'/SomeFile':
                 case $root_path.'/SomeDirectory/AnotherFile':
                     if ($acl == 'u:httpuser:rw,g:gpig-ftp_writers:rw,g:gpig-ftp_readers:r') {
                         break;
                     }
+                    // Fall-through seems to be intentional for the test...
                 default:
                     throw new Exception('invalid value for modifyacl '.$path.' '.$acl);
             }
