@@ -23,34 +23,27 @@ import { Store } from "vuex";
 import { RootState } from "../store/type";
 
 export function isContainer(element?: Element): boolean {
-    if (!element) {
+    if (!element || !(element instanceof HTMLElement)) {
         return false;
     }
-    return (
-        element.classList.contains("taskboard-cell") &&
-        !element.classList.contains("taskboard-cell-swimlane-header") &&
-        !element.classList.contains("taskboard-card-parent")
-    );
+
+    return Boolean(element.dataset.isContainer) === true;
 }
 
-export function canMove(element?: Element, target?: Element, handle?: Element): boolean {
-    if (!element || !handle) {
+export function canMove(element?: Element): boolean {
+    if (!element || !(element instanceof HTMLElement)) {
         return false;
     }
 
-    return (
-        !element.classList.contains("taskboard-card-collapsed") &&
-        (element.classList.contains("taskboard-cell-solo-card") ||
-            element.classList.contains("taskboard-child"))
-    );
+    return Boolean(element.dataset.isDraggable) === true;
 }
 
 export function invalid(element?: Element, handle?: Element): boolean {
-    if (!handle) {
+    if (!handle || !(handle instanceof HTMLElement)) {
         return true;
     }
 
-    return handle.classList.contains("taskboard-item-no-drag");
+    return Boolean(handle.closest("[data-not-drag-handle]"));
 }
 
 export function checkCellAcceptsDrop(store: Store<RootState>, payload: HandleDragPayload): boolean {

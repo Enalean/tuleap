@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="taskboard-card-cancel-save-buttons" v-if="should_display_buttons">
+    <div class="taskboard-card-cancel-save-buttons" v-if="should_display_buttons" data-not-drag-handle="true">
         <button type="button"
                 class="tlp-button tlp-button-primary tlp-button-small taskboard-card-save-button"
                 v-on:click="save"

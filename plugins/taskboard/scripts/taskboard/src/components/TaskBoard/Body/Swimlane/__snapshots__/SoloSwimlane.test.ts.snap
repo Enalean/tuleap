@@ -22,6 +22,7 @@ exports[`SoloSwimlane displays the parent card in Done column when status maps t
       card="[object Object]"
       class="taskboard-cell-solo-card taskboard-draggable-item"
       data-card-id="43"
+      data-is-draggable="true"
     />
   </drop-container-cell-stub>
 </div>

@@ -24,6 +24,7 @@
          v-on:mouseenter="mouseEntersCollapsedColumn"
          v-on:mouseout="mouseLeavesCollapsedColumn"
          v-on:click="expandCollapsedColumn"
+         v-bind:data-is-container="true"
          v-bind:data-swimlane-id="swimlane.card.id"
          v-bind:data-column-id="column.id"
          v-bind:data-accepted-trackers-ids="accepted_trackers_ids(column)"

@@ -33,6 +33,7 @@
                 class="taskboard-cell-solo-card taskboard-draggable-item"
                 v-bind:data-card-id="swimlane.card.id"
                 v-bind:data-tracker-id="swimlane.card.tracker_id"
+                v-bind:data-is-draggable="true"
             />
         </drop-container-cell>
     </div>
