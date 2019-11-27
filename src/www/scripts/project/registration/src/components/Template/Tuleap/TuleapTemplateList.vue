@@ -23,9 +23,9 @@
         <h3 v-translate>Tuleap templates</h3>
 
         <section class="project-registration-default-templates-section">
-            <tuleap-template-card v-for="template of tuleap_templates"
-                                  v-bind:key="template.template_name"
-                                  v-bind:template="template"
+            <template-card v-for="template of tuleap_templates"
+                           v-bind:key="template.template_name"
+                           v-bind:template="template"
             />
         </section>
     </div>
@@ -34,11 +34,11 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import TuleapTemplateCard from "./TuleapTemplateCard.vue";
+import TemplateCard from "../TemplateCard.vue";
 import { State } from "vuex-class";
-import { TemplateData } from "../../type";
+import { TemplateData } from "../../../type";
 @Component({
-    components: { TuleapTemplateCard }
+    components: { TemplateCard }
 })
 export default class TuleapTemplateList extends Vue {
     @State

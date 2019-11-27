@@ -1,20 +1,21 @@
 <!--
-  - Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+  - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
   -
   -  This file is a part of Tuleap.
   -
-  -  Tuleap is free software; you can redistribute it and/or modify
-  -  it under the terms of the GNU General Public License as published by
-  -  the Free Software Foundation; either version 2 of the License, or
-  -  (at your option) any later version.
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
   -
-  -  Tuleap is distributed in the hope that it will be useful,
-  -  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  -  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  -  GNU General Public License for more details.
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
   -
-  -  You should have received a copy of the GNU General Public License
-  -  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
   -->
 
 <template>
@@ -35,21 +36,21 @@
                 <tuleap-template-list/>
             </div>
         </div>
-        <tuleap-template-footer/>
+        <template-footer/>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import TuleapTemplateList from "./TuleapTemplates/TuleapTemplateList.vue";
-import UnderConstructionInformation from "./UnderConstructionInformation.vue";
-import NewProjectBoxes from "./NewProjectBoxes.vue";
-import TuleapTemplateFooter from "./TuleapTemplates/TuleapTemplateFooter.vue";
+import TuleapTemplateList from "./Tuleap/TuleapTemplateList.vue";
+import UnderConstructionInformation from "../UnderConstructionInformation.vue";
+import NewProjectBoxes from "./NewProjectBoxesSvg.vue";
+import TemplateFooter from "./TemplateFooter.vue";
 
 @Component({
     components: {
-        TuleapTemplateFooter,
+        TemplateFooter,
         NewProjectBoxes,
         UnderConstructionInformation,
         TuleapTemplateList

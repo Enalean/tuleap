@@ -48,7 +48,6 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import UnderConstructionInformation from "../UnderConstructionInformation.vue";
-import NewProjectBoxes from "../NewProjectBoxes.vue";
 import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 
@@ -56,7 +55,6 @@ import ProjectInformationFooter from "./ProjectInformationFooter.vue";
     components: {
         ProjectInformationFooter,
         ProjectInformationSvg,
-        NewProjectBoxes,
         UnderConstructionInformation
     }
 })

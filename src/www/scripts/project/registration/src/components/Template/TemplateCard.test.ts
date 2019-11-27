@@ -19,7 +19,7 @@
  */
 
 import { createLocalVue, shallowMount, Wrapper } from "@vue/test-utils";
-import TuleapTemplateCard from "./TuleapTemplateCard.vue";
+import TemplateCard from "./TemplateCard.vue";
 import { TemplateData } from "../../type";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import { Store } from "vuex-mock-store";
@@ -33,8 +33,8 @@ describe("CardWithChildren", () => {
         local_vue = await createProjectRegistrationLocalVue();
     });
 
-    function createWrapper(tuleap_template: TemplateData): Wrapper<TuleapTemplateCard> {
-        return shallowMount(TuleapTemplateCard, {
+    function createWrapper(tuleap_template: TemplateData): Wrapper<TemplateCard> {
+        return shallowMount(TemplateCard, {
             localVue: local_vue,
             propsData: { template: tuleap_template },
             mocks: { $store: store }

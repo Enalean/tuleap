@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,17 +14,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../helpers/local-vue-for-tests";
-import ProjectList from "./ProjectList.vue";
-import UnderConstructionInformation from "./UnderConstructionInformation.vue";
-import NewProjectBoxes from "./NewProjectBoxes.vue";
-import TuleapTemplateList from "./TuleapTemplates/TuleapTemplateList.vue";
-import TuleapTemplateFooter from "./TuleapTemplates/TuleapTemplateFooter.vue";
+import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
+import ProjectList from "./AllProjectTemplates.vue";
+import UnderConstructionInformation from "../UnderConstructionInformation.vue";
+import NewProjectBoxes from "./NewProjectBoxesSvg.vue";
+import TuleapTemplateList from "./Tuleap/TuleapTemplateList.vue";
+import TemplateFooter from "./TemplateFooter.vue";
 
 describe("ProjectList", () => {
     let factory: Wrapper<ProjectList>;
@@ -33,12 +33,12 @@ describe("ProjectList", () => {
             localVue: await createProjectRegistrationLocalVue()
         });
     });
-    it("Spawns the ProjectList component", () => {
+    it("Spawns the ProjectTemplates component", () => {
         const wrapper = factory;
 
         expect(wrapper.contains(UnderConstructionInformation)).toBe(true);
         expect(wrapper.contains(NewProjectBoxes)).toBe(true);
         expect(wrapper.contains(TuleapTemplateList)).toBe(true);
-        expect(wrapper.contains(TuleapTemplateFooter)).toBe(true);
+        expect(wrapper.contains(TemplateFooter)).toBe(true);
     });
 });
