@@ -94,7 +94,7 @@ describe("ReviewersService", () => {
         it("Given an array of user representations, then it will return an array of PUT user representations based on user ids", () => {
             const user_representations = [
                 {
-                    avatar_url: "https://dummy.url",
+                    avatar_url: "https://example.com/avatar.png",
                     display_name: "Bob Lemoche (bob)",
                     has_avatar: true,
                     id: 102,
@@ -106,7 +106,7 @@ describe("ReviewersService", () => {
                     username: "bob"
                 },
                 {
-                    avatar_url: "https://dummy.url",
+                    avatar_url: "https://example.com/avatar.png",
                     display_name: "Woody Bacon (woody)",
                     email: "woody@test",
                     has_avatar: false,

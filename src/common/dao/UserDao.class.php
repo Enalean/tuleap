@@ -443,7 +443,7 @@ class UserDao extends DataAccessObject
      * You can limit the number of results.
      * This is used by "search users as you type"
      */
-    public function searchUserNameLike($name, $limit = 0)
+    public function searchUserNameLike($name, $limit = 0, int $offset = 0)
     {
         $name = $this->getDa()->quoteLikeValueSurround($name);
 
@@ -455,6 +455,10 @@ class UserDao extends DataAccessObject
         $sql .= "ORDER BY realname";
         if ($limit > 0) {
             $sql .= " LIMIT ".db_ei($limit);
+
+            if ($offset > 0) {
+                $sql .= ' OFFSET ' . db_ei($offset);
+            }
         }
 
         return $this->retrieve($sql);

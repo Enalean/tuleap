@@ -43,6 +43,8 @@ use Tuleap\Git\Repository\View\RepositoryExternalNavigationTabsCollector;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Label\CanProjectUseLabels;
 use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Label\LabeledItemCollection;
@@ -84,10 +86,13 @@ use Tuleap\PullRequest\Reference\ReferenceFactory;
 use Tuleap\PullRequest\RepoManagement\PullRequestPane;
 use Tuleap\PullRequest\RepoManagement\RepoManagementController;
 use Tuleap\PullRequest\REST\ResourcesInjector;
+use Tuleap\PullRequest\Reviewer\Autocompleter\PotentialReviewerRetriever;
+use Tuleap\PullRequest\Reviewer\Autocompleter\ReviewerAutocompleterController;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\PullRequest\Tooltip\Presenter;
 use Tuleap\Request\CollectRoutesEvent;
+use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 class pullrequestPlugin extends Plugin // phpcs:ignore
 {
@@ -349,6 +354,18 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         return new Factory(new PullRequestDao(), ReferenceManager::instance());
     }
 
+    private function getPullRequestPermissionsChecker(): PullRequestPermissionChecker
+    {
+        return new PullRequestPermissionChecker(
+            $this->getRepositoryFactory(),
+            new URLVerification(),
+            new AccessControlVerifier(
+                new FineGrainedRetriever(new FineGrainedDao()),
+                new \System_Command()
+            )
+        );
+    }
+
     private function getRepositoryFactory()
     {
         return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
@@ -462,14 +479,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $labeled_item_collector = new LabeledItemCollector(
             new PullRequestLabelDao(),
             $this->getPullRequestFactory(),
-            new PullRequestPermissionChecker(
-                $this->getRepositoryFactory(),
-                new URLVerification(),
-                new AccessControlVerifier(
-                    new FineGrainedRetriever(new FineGrainedDao()),
-                    new \System_Command()
-                )
-            ),
+            $this->getPullRequestPermissionsChecker(),
             $this->getHTMLBuilder(),
             new GlyphFinder(
                 EventManager::instance()
@@ -630,15 +640,39 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         return new DefaultSettingsController(new MergeSettingDAO(), new ProjectHistoryDao());
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    public function routeGetAutocompleterReviewers(): ReviewerAutocompleterController
     {
-        $event->getRouteCollector()->post(
-            $this->getPluginPath() . '/repository-settings',
-            $this->getRouteHandler('routePostRepositorySettings')
+        $user_manager        = UserManager::instance();
+        $permissions_checker = $this->getPullRequestPermissionsChecker();
+
+        return new ReviewerAutocompleterController(
+            $user_manager,
+            $this->getPullRequestFactory(),
+            $permissions_checker,
+            new PotentialReviewerRetriever($user_manager, new UserDao(), $permissions_checker),
+            new JSONResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
+            new SapiEmitter()
         );
-        $event->getRouteCollector()->post(
-            $this->getPluginPath() . '/default-settings',
-            $this->getRouteHandler('routePostDefaultSettings')
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
+    {
+        $event->getRouteCollector()->addGroup(
+            $this->getPluginPath(),
+            function (FastRoute\RouteCollector $r) {
+                $r->post(
+                    '/repository-settings',
+                    $this->getRouteHandler('routePostRepositorySettings')
+                );
+                $r->post(
+                    '/default-settings',
+                    $this->getRouteHandler('routePostDefaultSettings')
+                );
+                $r->get(
+                    '/autocompleter_reviewers/{pull_request_id:\d+}',
+                    $this->getRouteHandler('routeGetAutocompleterReviewers')
+                );
+            }
         );
     }
 
