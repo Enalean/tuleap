@@ -29,9 +29,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Swimlane } from "../../../../type";
-import ParentCard from "./Card/ParentCard.vue";
 import NoMappingMessage from "./Header/NoMappingMessage.vue";
-import ParentCardRemainingEffort from "./Card/ParentCardRemainingEffort.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
 import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
 
@@ -39,8 +37,6 @@ import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
     components: {
         CardWithRemainingEffort,
         NoMappingMessage,
-        ParentCard,
-        ParentCardRemainingEffort,
         SwimlaneHeader
     }
 })
