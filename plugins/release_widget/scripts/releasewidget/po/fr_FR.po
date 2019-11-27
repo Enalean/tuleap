@@ -87,9 +87,6 @@ msgstr ""
 "Le plugin \"Release Widget\" n'est pas supporté pour IE11. Merci d'utiliser "
 "un navigateur plus récent."
 
-msgid "There is nothing here!"
-msgstr "Il n'y a rien ici !"
-
 msgid "What's hot"
 msgstr "En cours"
 
