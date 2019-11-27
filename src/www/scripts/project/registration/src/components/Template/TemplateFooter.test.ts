@@ -24,10 +24,10 @@ import VueRouter from "vue-router";
 import { Store } from "vuex-mock-store";
 import { State } from "../../store/type";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
-import TuleapTemplateFooter from "./TuleapTemplateFooter.vue";
+import TemplateFooter from "./TemplateFooter.vue";
 
-describe("TuleapTemplateFooter", () => {
-    let factory: Wrapper<TuleapTemplateFooter>, router: VueRouter, store: Store, state: State;
+describe("TemplateFooter", () => {
+    let factory: Wrapper<TemplateFooter>, router: VueRouter, store: Store, state: State;
     beforeEach(async () => {
         state = {
             selected_template: null,
@@ -57,7 +57,7 @@ describe("TuleapTemplateFooter", () => {
             ]
         });
 
-        factory = shallowMount(TuleapTemplateFooter, {
+        factory = shallowMount(TemplateFooter, {
             localVue: await createProjectRegistrationLocalVue(),
             router,
             mocks: { $store: store }

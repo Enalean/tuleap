@@ -19,8 +19,8 @@
  */
 import Vue from "vue";
 import VueRouter from "vue-router";
-import ProjectList from "../components/ProjectList.vue";
-import ProjectInformation from "../components/ProjectInformation/ProjectInformation.vue";
+import AllProjectTemplates from "../components/Template/AllProjectTemplates.vue";
+import ProjectInformation from "../components/Information/ProjectInformation.vue";
 
 Vue.use(VueRouter);
 
@@ -32,7 +32,7 @@ export function createRouter(): VueRouter {
             {
                 path: "/new",
                 name: "template",
-                component: ProjectList
+                component: AllProjectTemplates
             },
             {
                 path: "/new-information",

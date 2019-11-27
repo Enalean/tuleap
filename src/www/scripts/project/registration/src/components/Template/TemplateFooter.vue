@@ -39,7 +39,7 @@ import { Component } from "vue-property-decorator";
 import { Getter } from "vuex-class";
 
 @Component
-export default class TuleapTemplateFooter extends Vue {
+export default class TemplateFooter extends Vue {
     @Getter
     is_template_selected!: boolean;
 
