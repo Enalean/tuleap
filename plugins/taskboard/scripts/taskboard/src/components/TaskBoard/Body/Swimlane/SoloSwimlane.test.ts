@@ -20,9 +20,10 @@
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import SoloSwimlane from "./SoloSwimlane.vue";
 import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import { ColumnDefinition, Swimlane } from "../../../../type";
+import { Card, ColumnDefinition, Swimlane, User } from "../../../../type";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
 import { RootState } from "../../../../store/type";
+import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
 
 async function createWrapper(
     columns: ColumnDefinition[],
@@ -74,5 +75,51 @@ describe("SoloSwimlane", () => {
         const wrapper = await createWrapper(columns, done_column, swimlane);
 
         expect(wrapper.isEmpty()).toBe(true);
+    });
+
+    describe("is draggable", () => {
+        let card: Card,
+            done_column: ColumnDefinition,
+            columns: ColumnDefinition[],
+            swimlane: Swimlane;
+
+        beforeEach(() => {
+            card = {
+                id: 43,
+                assignees: [] as User[],
+                is_open: true,
+                is_in_edit_mode: true
+            } as Card;
+
+            done_column = { id: 3, label: "Done", is_collapsed: false } as ColumnDefinition;
+
+            columns = [
+                { id: 2, label: "To do", is_collapsed: false } as ColumnDefinition,
+                done_column
+            ];
+            swimlane = { card } as Swimlane;
+        });
+
+        it("is draggable when the card is not in edit mode", async () => {
+            card.is_in_edit_mode = false;
+
+            const wrapper = await createWrapper(columns, done_column, swimlane);
+
+            const solo_card = wrapper.find(CardWithRemainingEffort);
+
+            expect(solo_card.classes()).toContain("taskboard-draggable-item");
+            expect(solo_card.attributes("data-is-draggable")).toBe("true");
+        });
+
+        it("is not draggable when the card is in edit mode", async () => {
+            card.is_in_edit_mode = true;
+
+            const wrapper = await createWrapper(columns, done_column, swimlane);
+
+            const solo_card = wrapper.find(CardWithRemainingEffort);
+
+            expect(solo_card.classes()).not.toContain("taskboard-draggable-item");
+            expect(solo_card.attributes("data-is-draggable")).toBeFalsy();
+        });
     });
 });

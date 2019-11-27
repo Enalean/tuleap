@@ -19,11 +19,12 @@
 
 <template>
     <div
-        class="taskboard-child taskboard-draggable-item"
+        class="taskboard-child"
+        v-bind:class="{'taskboard-draggable-item': ! card.is_in_edit_mode }"
         v-if="card.is_open || are_closed_items_displayed"
         v-bind:data-card-id="card.id"
         v-bind:data-tracker-id="card.tracker_id"
-        v-bind:data-is-draggable="true"
+        v-bind:data-is-draggable="! card.is_in_edit_mode"
     >
         <base-card
             v-bind:card="card"

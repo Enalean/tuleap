@@ -84,4 +84,34 @@ describe("ChildCard", () => {
             expect(wrapper.classes("taskboard-draggable-item")).toBe(true);
         });
     });
+
+    describe("is draggable", () => {
+        it("is draggable when the card is not in edit mode", () => {
+            const card: Card = {
+                id: 43,
+                assignees: [] as User[],
+                is_open: true,
+                is_in_edit_mode: false
+            } as Card;
+
+            const wrapper = getWrapper(card, true);
+
+            expect(wrapper.classes()).toContain("taskboard-draggable-item");
+            expect(wrapper.attributes("data-is-draggable")).toBe("true");
+        });
+
+        it("is not draggable when the card is in edit mode", () => {
+            const card: Card = {
+                id: 43,
+                assignees: [] as User[],
+                is_open: true,
+                is_in_edit_mode: true
+            } as Card;
+
+            const wrapper = getWrapper(card, true);
+
+            expect(wrapper.classes()).not.toContain("taskboard-draggable-item");
+            expect(wrapper.attributes("data-is-draggable")).toBeFalsy();
+        });
+    });
 });

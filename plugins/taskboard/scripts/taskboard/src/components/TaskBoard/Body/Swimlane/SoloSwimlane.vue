@@ -30,10 +30,11 @@
             <card-with-remaining-effort
                 v-if="column.id === col.id"
                 v-bind:card="swimlane.card"
-                class="taskboard-cell-solo-card taskboard-draggable-item"
+                class="taskboard-cell-solo-card"
+                v-bind:class="{'taskboard-draggable-item': ! swimlane.card.is_in_edit_mode}"
                 v-bind:data-card-id="swimlane.card.id"
                 v-bind:data-tracker-id="swimlane.card.tracker_id"
-                v-bind:data-is-draggable="true"
+                v-bind:data-is-draggable="! swimlane.card.is_in_edit_mode"
             />
         </drop-container-cell>
     </div>
