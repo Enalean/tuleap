@@ -96,6 +96,7 @@
     white-space: nowrap;
     direction: rtl;
     cursor: pointer;
+    pointer-events: none;
 
     > .taskboard-header-label {
         margin: 0 $tlp-half-spacing 0 0;
