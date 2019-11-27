@@ -33,6 +33,8 @@ final class ReviewerUpdaterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    private const USER_DOING_THE_CHANGES_ID = 999;
+
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ReviewerDAO
      */
@@ -41,6 +43,11 @@ final class ReviewerUpdaterTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PullRequestPermissionChecker
      */
     private $permissions_checker;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
+     */
+    private $user_doing_the_changes;
 
     /**
      * @var ReviewerUpdater
@@ -52,6 +59,9 @@ final class ReviewerUpdaterTest extends TestCase
         $this->dao                 = Mockery::mock(ReviewerDAO::class);
         $this->permissions_checker = Mockery::mock(PullRequestPermissionChecker::class);
 
+        $this->user_doing_the_changes = Mockery::mock(\PFUser::class);
+        $this->user_doing_the_changes->shouldReceive('getId')->andReturn((string) self::USER_DOING_THE_CHANGES_ID);
+
         $this->reviewer_updater = new ReviewerUpdater($this->dao, $this->permissions_checker);
     }
 
@@ -61,9 +71,13 @@ final class ReviewerUpdaterTest extends TestCase
         $pull_request->shouldReceive('getId')->andReturn(85);
         $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_REVIEW);
 
-        $this->dao->shouldReceive('setReviewers')->with(85);
+        $this->dao->shouldReceive('setReviewers')->with(85, self::USER_DOING_THE_CHANGES_ID, 1)->once();
 
-        $this->reviewer_updater->updatePullRequestReviewers($pull_request);
+        $this->reviewer_updater->updatePullRequestReviewers(
+            $pull_request,
+            $this->user_doing_the_changes,
+            new \DateTimeImmutable('@1')
+        );
     }
 
     public function testSetListOfReviewers(): void
@@ -77,10 +91,16 @@ final class ReviewerUpdaterTest extends TestCase
         $user_2 = Mockery::mock(\PFUser::class);
         $user_2->shouldReceive('getId')->andReturn('102');
 
-        $this->dao->shouldReceive('setReviewers')->with(85, 101, 102);
+        $this->dao->shouldReceive('setReviewers')->with(85, self::USER_DOING_THE_CHANGES_ID, 1, 101, 102)->once();
         $this->permissions_checker->shouldReceive('checkPullRequestIsReadableByUser')->twice();
 
-        $this->reviewer_updater->updatePullRequestReviewers($pull_request, $user_1, $user_2);
+        $this->reviewer_updater->updatePullRequestReviewers(
+            $pull_request,
+            $this->user_doing_the_changes,
+            new \DateTimeImmutable('@1'),
+            $user_1,
+            $user_2
+        );
     }
 
     public function testUpdateTheListOfReviewersIsRejectedIfOneOfTheNewReviewerCanNotAccessThePullRequest(): void
@@ -96,7 +116,12 @@ final class ReviewerUpdaterTest extends TestCase
             ->andThrow(UserCannotReadGitRepositoryException::class);
 
         $this->expectException(UserCannotBeAddedAsReviewerException::class);
-        $this->reviewer_updater->updatePullRequestReviewers($pull_request, $user);
+        $this->reviewer_updater->updatePullRequestReviewers(
+            $pull_request,
+            $this->user_doing_the_changes,
+            new \DateTimeImmutable('@1'),
+            $user
+        );
     }
 
     public function testUpdatingListOfReviewersIsNotPossibleOnAClosedPullRequest(): void
@@ -106,6 +131,6 @@ final class ReviewerUpdaterTest extends TestCase
         $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_MERGED);
 
         $this->expectException(ReviewersCannotBeUpdatedOnClosedPullRequestException::class);
-        $this->reviewer_updater->updatePullRequestReviewers($pull_request);
+        $this->reviewer_updater->updatePullRequestReviewers($pull_request, $this->user_doing_the_changes, new \DateTimeImmutable('@1'));
     }
 }

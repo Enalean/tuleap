@@ -72,7 +72,15 @@ final class ReviewerDAOTest extends TestCase
     public function testCanSetReviewersOnAPullRequest(): void
     {
         $dao = new ReviewerDAO();
-        $dao->setReviewers(1, ...self::$reviewers_id);
+
+        $user_doing_change_id = 1;
+
+        $dao->setReviewers(
+            1,
+            $user_doing_change_id,
+            1,
+            ...self::$reviewers_id
+        );
 
         $new_reviewer_rows = $dao->searchReviewers(1);
 
@@ -82,7 +90,7 @@ final class ReviewerDAOTest extends TestCase
         }
         $this->assertEqualsCanonicalizing(self::$reviewers_id, $reviewer_ids);
 
-        $dao->setReviewers(1);
+        $dao->setReviewers(1, $user_doing_change_id, 3);
         $this->assertEmpty($dao->searchReviewers(1));
     }
 }
