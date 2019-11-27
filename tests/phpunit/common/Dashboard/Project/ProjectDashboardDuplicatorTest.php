@@ -20,13 +20,15 @@
 
 namespace Tuleap\Dashboard\Project;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\Dashboard\Widget\DashboardWidget;
 use Tuleap\Dashboard\Widget\DashboardWidgetColumn;
 use Tuleap\Dashboard\Widget\DashboardWidgetLine;
-use TuleapTestCase;
 
-class ProjectDashboardDuplicatorTest extends TuleapTestCase
+class ProjectDashboardDuplicatorTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
     /**
      * @var ProjectDashboardDuplicator
@@ -43,11 +45,8 @@ class ProjectDashboardDuplicatorTest extends TuleapTestCase
      */
     private $new_project;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
         $this->dao              = \Mockery::spy(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
         $this->retriever        = \Mockery::spy(\Tuleap\Dashboard\Project\ProjectDashboardRetriever::class);
         $this->widget_dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
@@ -66,7 +65,7 @@ class ProjectDashboardDuplicatorTest extends TuleapTestCase
         $this->new_project      = \Mockery::spy(\Project::class, ['getID' => 102, 'getUnixName' => false, 'isPublic' => false]);
     }
 
-    public function itDuplicatesEachDasboards()
+    public function testItDuplicatesEachDasboards()
     {
         $dashboard_01 = new ProjectDashboard(1, 101, 'dashboard');
         $dashboard_02 = new ProjectDashboard(2, 101, 'dashboard 2');
@@ -80,7 +79,7 @@ class ProjectDashboardDuplicatorTest extends TuleapTestCase
         $this->duplicator->duplicate($this->template_project, $this->new_project);
     }
 
-    public function itDuplicatesEachLinesForADashboard()
+    public function testItDuplicatesEachLinesForADashboard()
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
 
@@ -96,7 +95,7 @@ class ProjectDashboardDuplicatorTest extends TuleapTestCase
         $this->duplicator->duplicate($this->template_project, $this->new_project);
     }
 
-    public function itDuplicatesEachColumnsForALine()
+    public function testItDuplicatesEachColumnsForALine()
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
 
@@ -121,7 +120,7 @@ class ProjectDashboardDuplicatorTest extends TuleapTestCase
         $this->duplicator->duplicate($this->template_project, $this->new_project);
     }
 
-    public function itDuplicatesEachWidgetForAColumn()
+    public function testItDuplicatesEachWidgetForAColumn()
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
 

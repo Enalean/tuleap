@@ -20,8 +20,13 @@
 
 namespace Tuleap\Dashboard\Project;
 
-class ProjectDashboardRetrieverTest extends \TuleapTestCase
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+class ProjectDashboardRetrieverTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /** @var Project */
     private $project_with_a_dashboard;
 
@@ -31,11 +36,8 @@ class ProjectDashboardRetrieverTest extends \TuleapTestCase
     /** @var ProjectDashboardRetriever */
     private $project_retriever;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
         $this->project_with_a_dashboard  = \Mockery::spy(\Project::class, ['getID' => 1, 'getUnixName' => false, 'isPublic' => false]);
         $this->project_without_dashboard = \Mockery::spy(\Project::class, ['getID' => 2, 'getUnixName' => false, 'isPublic' => false]);
 
@@ -51,7 +53,7 @@ class ProjectDashboardRetrieverTest extends \TuleapTestCase
         $this->project_retriever = new ProjectDashboardRetriever($dao);
     }
 
-    public function itGetsAllDashboards()
+    public function testItGetsAllDashboards()
     {
         $result = $this->project_retriever->getAllProjectDashboards($this->project_with_a_dashboard);
 
@@ -59,13 +61,13 @@ class ProjectDashboardRetrieverTest extends \TuleapTestCase
             new ProjectDashboard(1, 1, 'dashboard_one')
         );
 
-        $this->assertEqual($expected_result, $result);
+        $this->assertEquals($expected_result, $result);
     }
 
-    public function itReturnsAnEmptyIfThereAreNoDashboards()
+    public function testItReturnsAnEmptyIfThereAreNoDashboards()
     {
         $result = $this->project_retriever->getAllProjectDashboards($this->project_without_dashboard);
 
-        $this->assertArrayEmpty($result);
+        $this->assertEmpty($result);
     }
 }

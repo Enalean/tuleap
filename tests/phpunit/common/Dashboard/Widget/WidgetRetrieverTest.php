@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,17 +16,22 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Tuleap\Dashboard\User;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\Dashboard\Widget\DashboardWidget;
 use Tuleap\Dashboard\Widget\DashboardWidgetColumn;
 use Tuleap\Dashboard\Widget\DashboardWidgetLine;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 
-class WidgetRetrieverTest extends \TuleapTestCase
+class WidgetRetrieverTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var DashboardWidgetLine[]
      */
@@ -68,10 +73,8 @@ class WidgetRetrieverTest extends \TuleapTestCase
      */
     private $widget_five;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->widget_one   = new DashboardWidget(1, 'image', 10, 1, 0, 0);
         $this->widget_two   = new DashboardWidget(2, 'image', 11, 2, 0, 0);
         $this->widget_three = new DashboardWidget(3, 'image', 12, 1, 1, 0);
@@ -100,7 +103,7 @@ class WidgetRetrieverTest extends \TuleapTestCase
         );
     }
 
-    public function itReturnsAllWidgets()
+    public function testItReturnsAllWidgets()
     {
         $dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
@@ -135,20 +138,20 @@ class WidgetRetrieverTest extends \TuleapTestCase
         $column_two_widgets   = $columns[1]->getWidgets();
         $column_three_widgets = $columns[2]->getWidgets();
 
-        $this->assertArrayNotEmpty($lines);
+        $this->assertNotEmpty($lines);
 
-        $this->assertIsA($lines[0], 'Tuleap\Dashboard\Widget\DashboardWidgetLine');
-        $this->assertIsA($columns[0], 'Tuleap\Dashboard\Widget\DashboardWidgetColumn');
-        $this->assertIsA($column_one_widgets[0], 'Tuleap\Dashboard\Widget\DashboardWidget');
+        $this->assertInstanceOf(\Tuleap\Dashboard\Widget\DashboardWidgetLine::class, $lines[0]);
+        $this->assertInstanceOf(\Tuleap\Dashboard\Widget\DashboardWidgetColumn::class, $columns[0]);
+        $this->assertInstanceOf(\Tuleap\Dashboard\Widget\DashboardWidget::class, $column_one_widgets[0]);
 
-        $this->assertCount($lines, 1);
-        $this->assertCount($columns, 3);
-        $this->assertCount($column_one_widgets, 2);
-        $this->assertCount($column_two_widgets, 2);
-        $this->assertCount($column_three_widgets, 1);
+        $this->assertCount(1, $lines);
+        $this->assertCount(3, $columns);
+        $this->assertCount(2, $column_one_widgets);
+        $this->assertCount(2, $column_two_widgets);
+        $this->assertCount(1, $column_three_widgets);
     }
 
-    public function itReturnsEmptyArrayIfThereAreNotWidgets()
+    public function testItReturnsEmptyArrayIfThereAreNotWidgets()
     {
         $dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
@@ -158,10 +161,10 @@ class WidgetRetrieverTest extends \TuleapTestCase
         $dao->shouldReceive('searchAllWidgetByColumnId')->andReturns(\TestHelper::emptyDar());
 
         $widget_lines = $retriever->getAllWidgets(1, 'user');
-        $this->assertArrayEmpty($widget_lines);
+        $this->assertEmpty($widget_lines);
     }
 
-    public function itReturnsColumnsByLineById()
+    public function testItReturnsColumnsByLineById()
     {
         $dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
@@ -174,14 +177,14 @@ class WidgetRetrieverTest extends \TuleapTestCase
 
         $columns = $retriever->getColumnsByLineById(1);
 
-        $this->assertArrayNotEmpty($columns);
+        $this->assertNotEmpty($columns);
 
-        $this->assertIsA($columns[0], 'Tuleap\Dashboard\Widget\DashboardWidgetColumn');
+        $this->assertInstanceOf(\Tuleap\Dashboard\Widget\DashboardWidgetColumn::class, $columns[0]);
 
-        $this->assertCount($columns, 3);
+        $this->assertCount(3, $columns);
     }
 
-    public function itReturnsEmptyArrayIfThereAreNotColumnsByLineById()
+    public function testItReturnsEmptyArrayIfThereAreNotColumnsByLineById()
     {
         $dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
@@ -190,10 +193,10 @@ class WidgetRetrieverTest extends \TuleapTestCase
 
         $columns = $retriever->getColumnsByLineById(1);
 
-        $this->assertArrayEmpty($columns);
+        $this->assertEmpty($columns);
     }
 
-    public function itReturnsWidgetById()
+    public function testItReturnsWidgetById()
     {
         $dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
@@ -210,17 +213,17 @@ class WidgetRetrieverTest extends \TuleapTestCase
         $widget   = $retriever->getWidgetById(1);
         $expected = new DashboardWidget(1, 'image', 10, 1, 0, 0);
 
-        $this->assertEqual($expected, $widget);
+        $this->assertEquals($expected, $widget);
     }
 
-    public function itThrowsExceptionIfThereIsNoWidget()
+    public function testItThrowsExceptionIfThereIsNoWidget()
     {
         $dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
 
         $dao->shouldReceive('searchWidgetById')->andReturns(\TestHelper::emptyDar());
 
-        $this->expectException();
+        $this->expectException(\Exception::class);
 
         $retriever->getWidgetById(1);
     }

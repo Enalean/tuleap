@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,12 +16,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Tuleap\Dashboard\Widget;
 
-class WidgetReorderTest extends \TuleapTestCase
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+class WidgetReorderTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var DashboardWidgetLine[]
      */
@@ -63,11 +69,8 @@ class WidgetReorderTest extends \TuleapTestCase
      */
     private $widget_five;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
         $this->widget_one   = new DashboardWidget(1, 'image', 10, 1, 0, 0);
         $this->widget_two   = new DashboardWidget(2, 'image', 11, 2, 0, 0);
         $this->widget_three = new DashboardWidget(3, 'image', 12, 1, 1, 0);
@@ -89,7 +92,7 @@ class WidgetReorderTest extends \TuleapTestCase
         );
     }
 
-    public function itReordersWidgetsInSameColumn()
+    public function testItReordersWidgetsInSameColumn()
     {
         $dao              = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever        = new DashboardWidgetRetriever($dao);
@@ -103,7 +106,7 @@ class WidgetReorderTest extends \TuleapTestCase
         $widget_reorder->reorderWidgets($this->line_one_columns[0], $this->line_one_columns[0], $widget_to_update, 1);
     }
 
-    public function itReordersWidgetsInNewColumn()
+    public function testItReordersWidgetsInNewColumn()
     {
         $dao              = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever        = new DashboardWidgetRetriever($dao);

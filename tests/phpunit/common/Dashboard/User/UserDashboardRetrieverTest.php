@@ -20,8 +20,13 @@
 
 namespace Tuleap\Dashboard\User;
 
-class UserDashboardRetrieverTest extends \TuleapTestCase
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+class UserDashboardRetrieverTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /** @var \PFUser */
     private $user_without_dashboard;
 
@@ -31,11 +36,8 @@ class UserDashboardRetrieverTest extends \TuleapTestCase
     /** @var UserDashboardRetriever */
     private $user_retriever;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
         $dao = \Mockery::spy(\Tuleap\Dashboard\User\UserDashboardDao::class);
 
         $this->user_with_a_dashboard = \Mockery::spy(\PFUser::class);
@@ -54,7 +56,7 @@ class UserDashboardRetrieverTest extends \TuleapTestCase
         $this->user_retriever = new UserDashboardRetriever($dao);
     }
 
-    public function itGetsAllDashboards()
+    public function testItGetsAllDashboards()
     {
         $result = $this->user_retriever->getAllUserDashboards($this->user_with_a_dashboard);
 
@@ -62,14 +64,14 @@ class UserDashboardRetrieverTest extends \TuleapTestCase
             new UserDashboard(1, 1, 'dashboard_one')
         );
 
-        $this->assertEqual($expected_result, $result);
+        $this->assertEquals($expected_result, $result);
     }
 
-    public function itReturnNothingIfThereAreNoDashboards()
+    public function testItReturnNothingIfThereAreNoDashboards()
     {
 
         $result = $this->user_retriever->getAllUserDashboards($this->user_without_dashboard);
 
-        $this->assertArrayEmpty($result);
+        $this->assertEmpty($result);
     }
 }
