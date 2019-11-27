@@ -20,8 +20,13 @@
 
 namespace Tuleap\Dashboard\Project;
 
-class ProjectDashboardSaverTest extends \TuleapTestCase
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+class ProjectDashboardSaverTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /** @var PFUser */
     private $regular_user;
 
@@ -37,11 +42,8 @@ class ProjectDashboardSaverTest extends \TuleapTestCase
     /** @var Project */
     private $project;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
         $this->dao     = \Mockery::spy(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
         $this->project = \Mockery::spy(\Project::class, ['getID' => 1, 'getUnixName' => false, 'isPublic' => false]);
 
@@ -61,14 +63,14 @@ class ProjectDashboardSaverTest extends \TuleapTestCase
         $this->project_saver = new ProjectDashboardSaver($this->dao);
     }
 
-    public function itSavesDashboard()
+    public function testItSavesDashboard()
     {
         $this->dao->shouldReceive('save')->with(1, 'new_dashboard')->once();
 
         $this->project_saver->save($this->admin_user, $this->project, 'new_dashboard');
     }
 
-    public function itThrowsExceptionWhenDashboardAlreadyExists()
+    public function testItThrowsExceptionWhenDashboardAlreadyExists()
     {
         $this->dao->shouldReceive('save')->never();
         $this->expectException('Tuleap\Dashboard\NameDashboardAlreadyExistsException');
@@ -76,7 +78,7 @@ class ProjectDashboardSaverTest extends \TuleapTestCase
         $this->project_saver->save($this->admin_user, $this->project, 'existing_dashboard');
     }
 
-    public function itThrowsExceptionWhenNameDoesNotExist()
+    public function testItThrowsExceptionWhenNameDoesNotExist()
     {
         $this->dao->shouldReceive('save')->never();
         $this->expectException('Tuleap\Dashboard\NameDashboardDoesNotExistException');
@@ -84,7 +86,7 @@ class ProjectDashboardSaverTest extends \TuleapTestCase
         $this->project_saver->save($this->admin_user, $this->project, '');
     }
 
-    public function itThrowsExceptionWhenUserCanNotCreateDashboard()
+    public function testItThrowsExceptionWhenUserCanNotCreateDashboard()
     {
         $this->dao->shouldReceive('save')->never();
         $this->expectException('Tuleap\Dashboard\Project\UserCanNotUpdateProjectDashboardException');

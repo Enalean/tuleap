@@ -20,8 +20,13 @@
 
 namespace Tuleap\Dashboard\User;
 
-class UserDashboardSaverTest extends \TuleapTestCase
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+class UserDashboardSaverTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /** @var UserDashboardDao */
     private $dao;
 
@@ -31,13 +36,10 @@ class UserDashboardSaverTest extends \TuleapTestCase
     /** @var UserDashboardSaver */
     private $user_saver;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
         $this->dao  = \Mockery::spy(\Tuleap\Dashboard\User\UserDashboardDao::class);
-        $this->user = aUser()->withId(1)->build();
+        $this->user = new \PFUser(['user_id' => 1, 'language_id' => 'en_US']);
 
         $this->dao->shouldReceive('searchByUserIdAndName')->with($this->user, 'new_dashboard')->andReturns(\TestHelper::emptyDar());
         $this->dao->shouldReceive('searchByUserIdAndName')->with($this->user, 'existing_dashboard')->andReturns(\TestHelper::arrayToDar(array(
@@ -49,14 +51,14 @@ class UserDashboardSaverTest extends \TuleapTestCase
         $this->user_saver = new UserDashboardSaver($this->dao);
     }
 
-    public function itSavesDashboard()
+    public function testItSavesDashboard()
     {
         $this->dao->shouldReceive('save')->with($this->user, 'new_dashboard')->once();
 
         $this->user_saver->save($this->user, 'new_dashboard');
     }
 
-    public function itThrowsExceptionWhenDashboardExists()
+    public function testItThrowsExceptionWhenDashboardExists()
     {
         $this->dao->shouldReceive('save')->never();
         $this->expectException('Tuleap\Dashboard\NameDashboardAlreadyExistsException');
@@ -64,7 +66,7 @@ class UserDashboardSaverTest extends \TuleapTestCase
         $this->user_saver->save($this->user, 'existing_dashboard');
     }
 
-    public function itThrowsExceptionWhenNameDoesNotExist()
+    public function testItThrowsExceptionWhenNameDoesNotExist()
     {
         $this->dao->shouldReceive('save')->never();
         $this->expectException('Tuleap\Dashboard\NameDashboardDoesNotExistException');

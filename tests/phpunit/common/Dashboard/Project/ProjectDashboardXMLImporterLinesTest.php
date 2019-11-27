@@ -1,199 +1,35 @@
 <?php
 /**
- *  Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
- *  Tuleap is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- *  Tuleap is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
+
+declare(strict_types=1);
 
 namespace Tuleap\Dashboard\Project;
 
-use Mockery\Exception;
+require_once __DIR__ . '/ProjectDashboardXMLImporterBase.php';
+
 use SimpleXMLElement;
-use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
-use Tuleap\Dashboard\NameDashboardDoesNotExistException;
-use Tuleap\Widget\Event\ConfigureAtXMLImport;
-use Tuleap\Widget\WidgetFactory;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\XML\MappingsRegistry;
 
-class ProjectDashboardXMLImporter_Base extends \TuleapTestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBase
 {
-    /**
-     * @var ProjectDashboardSaver
-     */
-    protected $project_dashboard_saver;
-    /**
-     * @var ProjectDashboardDao
-     */
-    protected $dao;
-    /**
-     * @var \Logger
-     */
-    protected $logger;
-    /**
-     * @var \Project
-     */
-    protected $project;
-
-    /**
-     * @var \PFUser
-     */
-    protected $user;
-
-    /**
-     * @var ProjectDashboardXMLImporter
-     */
-    protected $project_dashboard_importer;
-    /**
-     * @var \Tuleap\Dashboard\Widget\WidgetCreator
-     */
-    protected $widget_creator;
-    /**
-     * @var WidgetFactory
-     */
-    protected $widget_factory;
-    /**
-     * @var DashboardWidgetDao
-     */
-    protected $widget_dao;
-    /**
-     * @var MappingsRegistry
-     */
-    protected $mappings_registry;
-    /**
-     * @var \EventManager
-     */
-    protected $event_manager;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
-        $this->dao                     = \Mockery::spy(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
-        $this->project_dashboard_saver = new ProjectDashboardSaver(
-            $this->dao
-        );
-        $this->widget_creator = \Mockery::spy(\Tuleap\Dashboard\Widget\WidgetCreator::class);
-        $this->widget_factory = \Mockery::spy(\Tuleap\Widget\WidgetFactory::class);
-        $this->widget_dao     = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
-        $this->event_manager  = \Mockery::spy(\EventManager::class);
-
-        $this->logger                     = \Mockery::spy(\Logger::class);
-        $this->project_dashboard_importer = new ProjectDashboardXMLImporter(
-            $this->project_dashboard_saver,
-            $this->widget_factory,
-            $this->widget_dao,
-            $this->logger,
-            $this->event_manager
-        );
-
-        $this->mappings_registry = new MappingsRegistry();
-
-        $this->user    = \Mockery::spy(\PFUser::class);
-        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
-    }
-}
-
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
-class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporter_Base
-{
-    public function itLogsAWarningWhenUserDontHavePrivilegeToAddAProjectDashboard()
-    {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(false);
-
-        $xml = new SimpleXMLElement(
-            '<?xml version="1.0" encoding="UTF-8"?>
-            <project>
-              <dashboards>
-                <dashboard name="Project dashboard" />
-              </dashboards>
-              </project>'
-        );
-
-        $expected_exception = new UserCanNotUpdateProjectDashboardException();
-        $this->logger->shouldReceive('warn')->with('[Dashboards] '.$expected_exception->getMessage(), null)->once();
-
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
-    }
-
-    public function itLogsAWarningWhenDashboardNameIsNull()
-    {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-
-        $xml = new SimpleXMLElement(
-            '<?xml version="1.0" encoding="UTF-8"?>
-            <project>
-              <dashboards>
-                <dashboard name="" />
-              </dashboards>
-              </project>'
-        );
-
-        $expected_exception = new NameDashboardDoesNotExistException();
-        $this->logger->shouldReceive('warn')->with('[Dashboards] '.$expected_exception->getMessage(), null)->once();
-
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
-    }
-
-    public function itLogsAWarningWhenDashboardNameAlreadyExistsInTheSameProject()
-    {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar(array(1, 101, 'test')));
-
-        $xml = new SimpleXMLElement(
-            '<?xml version="1.0" encoding="UTF-8"?>
-            <project>
-              <dashboards>
-                <dashboard name="test" />
-              </dashboards>
-              </project>'
-        );
-
-        $expected_exception = new NameDashboardAlreadyExistsException();
-        $this->logger->shouldReceive('warn')->with('[Dashboards] '.$expected_exception->getMessage(), null)->once();
-
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
-    }
-
-    public function itImportsAProjectDashboard()
-    {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
-
-        $xml = new SimpleXMLElement(
-            '<?xml version="1.0" encoding="UTF-8"?>
-            <project>
-              <dashboards>
-                <dashboard name="dashboard 1" />
-                <dashboard name="dashboard 2" />
-              </dashboards>
-              </project>'
-        );
-
-        $this->logger->shouldReceive('warn')->never();
-        $this->dao->shouldReceive('save')->times(2);
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
-    }
-}
-
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
-class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_Base
-{
-    public function itImportsALine()
+    public function testItImportsALine()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -224,7 +60,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function itImportsAColumn()
+    public function testItImportsAColumn()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -254,7 +90,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function itSetOwnerAndIdExplicitlyToOvercomeWidgetDesignedToGatherThoseDataFromHTTP()
+    public function testItSetOwnerAndIdExplicitlyToOvercomeWidgetDesignedToGatherThoseDataFromHTTP()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -287,7 +123,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function itImportsAWidget()
+    public function testItImportsAWidget()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -316,7 +152,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function itErrorsWhenWidgetNameIsUnknown()
+    public function testItErrorsWhenWidgetNameIsUnknown()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -347,7 +183,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function itErrorsWhenWidgetContentCannotBeCreated()
+    public function testItErrorsWhenWidgetContentCannotBeCreated()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -378,7 +214,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function itImportsTwoWidgetsInSameColumn()
+    public function testItImportsTwoWidgetsInSameColumn()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -413,7 +249,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function itDoesntImportTwiceUniqueWidgets()
+    public function testItDoesntImportTwiceUniqueWidgets()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -452,7 +288,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function itImportsUniqueWidgetsWhenThereAreInDifferentDashboards()
+    public function testItImportsUniqueWidgetsWhenThereAreInDifferentDashboards()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -495,7 +331,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function itDoesntCreateLineAndColumnWhenWidgetIsNotValid()
+    public function testItDoesntCreateLineAndColumnWhenWidgetIsNotValid()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -524,7 +360,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function itDoesntImportAPersonalWidget()
+    public function testItDoesntImportAPersonalWidget()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -554,7 +390,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function itImportsTwoWidgetsInTwoColumns()
+    public function testItImportsTwoWidgetsInTwoColumns()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -594,7 +430,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function itImportsTwoWidgetsWithSetLayout()
+    public function testItImportsTwoWidgetsWithSetLayout()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -636,7 +472,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function itFallsbackToAutomaticLayoutWhenLayoutIsUnknown()
+    public function testItFallsbackToAutomaticLayoutWhenLayoutIsUnknown()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -678,7 +514,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function itImportsAWidgetWithPreferences()
+    public function testItImportsAWidgetWithPreferences()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -723,7 +559,7 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
-    public function itSkipWidgetCreationWhenCreateRaisesExceptions()
+    public function testItSkipWidgetCreationWhenCreateRaisesExceptions()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
         $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
@@ -760,77 +596,6 @@ class ProjectDashboardXMLImporter_LinesTest extends ProjectDashboardXMLImporter_
         $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectimageviewer')->andReturns($widget);
 
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
-
-        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
-    }
-}
-
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MultipleClasses
-class ProjectDashboardXMLImporter_PluginTest extends ProjectDashboardXMLImporter_Base
-{
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
-        $this->project_dashboard_importer = new ProjectDashboardXMLImporter(
-            $this->project_dashboard_saver,
-            $this->widget_factory,
-            $this->widget_dao,
-            $this->logger,
-            $this->event_manager
-        );
-    }
-
-    public function tearDown()
-    {
-        \Mockery::close();
-        parent::tearDown();
-    }
-
-    public function itImportsAWidgetDefinedInAPlugin()
-    {
-        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
-        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
-
-        $xml = new SimpleXMLElement(
-            '<?xml version="1.0" encoding="UTF-8"?>
-            <project>
-              <dashboards>
-                <dashboard name="dashboard 1">
-                  <line>
-                    <column>
-                      <widget name="plugin_agiledashboard_projects_kanban">
-                        <preference name="kanban">
-                            <value name="title">Da kanban</value>
-                            <reference name="id" REF="K123"/>
-                        </preference>
-                      </widget>
-                    </column>
-                  </line>
-                </dashboard>
-              </dashboards>
-              </project>'
-        );
-
-        $this->widget_dao->shouldReceive('createLine')->andReturns(12);
-        $this->widget_dao->shouldReceive('createColumn')->andReturns(122);
-
-        $this->mappings_registry->addReference('K123', 78998);
-
-        $widget = \Mockery::spy(\Widget::class);
-        $widget->shouldReceive('getId')->andReturns('kanban');
-
-        $this->event_manager->shouldReceive('processEvent')->with(\Mockery::on(function (ConfigureAtXMLImport $event) {
-            $event->setContentId(35);
-            $event->setWidgetIsConfigured();
-            return true;
-        }))->once();
-
-        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('plugin_agiledashboard_projects_kanban')->andReturns($widget);
-
-        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('kanban', 35, 122, 1)->once();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }

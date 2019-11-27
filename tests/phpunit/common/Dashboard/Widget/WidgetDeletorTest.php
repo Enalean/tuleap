@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,12 +16,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Tuleap\Dashboard\Widget;
 
-class WidgetDeletorTest extends \TuleapTestCase
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+class WidgetDeletorTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var DashboardWidgetLine[]
      */
@@ -47,11 +53,8 @@ class WidgetDeletorTest extends \TuleapTestCase
      */
     private $column;
 
-    public function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
         $this->widget_one = new DashboardWidget(1, 'image', 10, 1, 0, 0);
         $this->widget_two = new DashboardWidget(2, 'image', 11, 2, 0, 0);
 
@@ -60,7 +63,7 @@ class WidgetDeletorTest extends \TuleapTestCase
         $this->column = new DashboardWidgetColumn(1, 1, 0, $this->widgets);
     }
 
-    public function itDeletesColumn()
+    public function testItDeletesColumn()
     {
         $dao     = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $deletor = new DashboardWidgetDeletor($dao);
@@ -71,7 +74,7 @@ class WidgetDeletorTest extends \TuleapTestCase
         $deletor->deleteColumn($this->column);
     }
 
-    public function itnDeletesLine()
+    public function testItnDeletesLine()
     {
         $dao     = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $deletor = new DashboardWidgetDeletor($dao);
