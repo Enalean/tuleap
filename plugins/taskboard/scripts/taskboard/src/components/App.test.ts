@@ -21,7 +21,6 @@ import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import { createStoreMock } from "../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import { ColumnDefinition } from "../type";
-import ErrorModal from "./GlobalError/ErrorModal.vue";
 import { RootState } from "../store/type";
 
 describe("App", () => {
@@ -95,15 +94,6 @@ describe("App", () => {
             }
         });
         expect(wrapper.element).toMatchSnapshot();
-    });
-
-    it(`displays error modal when there is an error`, () => {
-        const wrapper = shallowMount(App, {
-            mocks: {
-                $store: getStore(true, [], false, true)
-            }
-        });
-        expect(wrapper.find(ErrorModal).exists()).toBe(true);
     });
 
     describe(`mounted()`, () => {

@@ -21,7 +21,6 @@
 <template>
     <div class="taskboard-app">
         <under-construction-modal/>
-        <error-modal v-if="has_modal_error"/>
         <global-app-error v-if="has_global_error"/>
         <board-without-any-columns-error v-else-if="! has_at_least_one_column"/>
         <task-board v-else-if="has_content"/>
@@ -39,7 +38,6 @@ import UnderConstructionModal from "./UnderConstruction/UnderConstructionModal.v
 import { ColumnDefinition, TaskboardEvent } from "../type";
 import TaskBoard from "./TaskBoard/TaskBoard.vue";
 import NoContentEmptyState from "./EmptyState/NoContentEmptyState.vue";
-import ErrorModal from "./GlobalError/ErrorModal.vue";
 import EventBus from "./../helpers/event-bus";
 
 const column = namespace("column");
@@ -48,7 +46,6 @@ const swimlane = namespace("swimlane");
 
 @Component({
     components: {
-        ErrorModal,
         NoContentEmptyState,
         TaskBoard,
         BoardWithoutAnyColumnsError,
@@ -65,9 +62,6 @@ export default class App extends Vue {
 
     @error.State
     readonly has_global_error!: boolean;
-
-    @error.State
-    readonly has_modal_error!: boolean;
 
     @swimlane.Getter
     readonly has_at_least_one_card_in_edit_mode!: boolean;
@@ -91,7 +85,7 @@ export default class App extends Vue {
             event.preventDefault();
             event.returnValue = false;
         } else {
-            delete event["returnValue"];
+            delete event.returnValue;
         }
     }
 

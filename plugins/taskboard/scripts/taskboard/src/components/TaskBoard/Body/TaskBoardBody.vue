@@ -40,18 +40,14 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { namespace, State, Getter } from "vuex-class";
-import dragula, { Drake } from "dragula";
-import { Swimlane, ColumnDefinition, Card, TaskboardEvent } from "../../../type";
+import { namespace, State } from "vuex-class";
+import { Swimlane, ColumnDefinition } from "../../../type";
 import CollapsedSwimlane from "./Swimlane/CollapsedSwimlane.vue";
 import CardWithChildren from "./Swimlane/CardWithChildren.vue";
 import SwimlaneSkeleton from "./Swimlane/Skeleton/SwimlaneSkeleton.vue";
 import SoloSwimlane from "./Swimlane/SoloSwimlane.vue";
 import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
 import { getColumnOfCard } from "../../../helpers/list-value-to-column-mapper";
-import { isContainer, canMove, invalid, checkCellAcceptsDrop } from "../../../helpers/drag-drop";
-import { HandleDropPayload } from "../../../store/swimlane/type";
-import EventBus from "../../../helpers/event-bus";
 
 const column = namespace("column");
 const swimlane = namespace("swimlane");
@@ -78,120 +74,11 @@ export default class TaskBoardBody extends Vue {
     @swimlane.State
     readonly is_loading_swimlanes!: boolean;
 
-    @column.Mutation
-    readonly mouseEntersColumn!: (column: ColumnDefinition) => void;
-
-    @column.Mutation
-    readonly mouseLeavesColumn!: (column: ColumnDefinition) => void;
-
-    @swimlane.Getter
-    readonly cards_in_cell!: (
-        current_swimlane: Swimlane,
-        current_column: ColumnDefinition
-    ) => Card[];
-
-    @Getter
-    readonly column_and_swimlane_of_cell!: (
-        cell: HTMLElement
-    ) => {
-        swimlane?: Swimlane;
-        column?: ColumnDefinition;
-    };
-
-    @Getter
-    readonly column_of_cell!: (cell: HTMLElement) => ColumnDefinition | undefined;
-
     @swimlane.Action
     loadSwimlanes!: () => void;
 
-    @swimlane.Action
-    handleDrop!: (payload: HandleDropPayload) => void;
-
-    @swimlane.Mutation
-    readonly removeHighlightOnLastHoveredDropZone!: () => void;
-
-    drake!: Drake | undefined;
-
     created(): void {
         this.loadSwimlanes();
-    }
-
-    beforeDestroy(): void {
-        if (this.drake) {
-            this.drake.destroy();
-        }
-        EventBus.$off(TaskboardEvent.ESC_KEY_PRESSED, this.cancelDragOnEscape);
-    }
-
-    mounted(): void {
-        this.drake = dragula({
-            isContainer,
-            moves: canMove,
-            invalid,
-            revertOnSpill: true,
-            accepts: (
-                dropped_card?: Element,
-                target_cell?: Element,
-                source_cell?: Element
-            ): boolean =>
-                checkCellAcceptsDrop(this.$store, { dropped_card, target_cell, source_cell })
-        });
-
-        this.drake.on(
-            "drop",
-            (
-                dropped_card: HTMLElement,
-                target_cell: HTMLElement,
-                source_cell: HTMLElement,
-                sibling_card?: HTMLElement
-            ) => this.handleDrop({ dropped_card, target_cell, source_cell, sibling_card })
-        );
-
-        this.drake.on("cancel", this.removeHighlightOnLastHoveredDropZone);
-
-        EventBus.$on(TaskboardEvent.ESC_KEY_PRESSED, this.cancelDragOnEscape);
-
-        this.drake.on(
-            "over",
-            (element?: Element, target?: Element): void => {
-                if (
-                    !target ||
-                    !target.classList.contains("taskboard-cell-collapsed") ||
-                    !(target instanceof HTMLElement)
-                ) {
-                    return;
-                }
-
-                const column = this.column_of_cell(target);
-
-                if (!column) {
-                    return;
-                }
-
-                this.mouseEntersColumn(column);
-            }
-        );
-
-        this.drake.on(
-            "out",
-            (element?: Element, target?: Element): void => {
-                if (
-                    !target ||
-                    !target.classList.contains("taskboard-cell-collapsed") ||
-                    !(target instanceof HTMLElement)
-                ) {
-                    return;
-                }
-
-                const column = this.column_of_cell(target);
-
-                if (!column) {
-                    return;
-                }
-
-                this.mouseLeavesColumn(column);
-            }
-        );
     }
 
     getColumnOfSoloCard(swimlane: Swimlane): ColumnDefinition {
@@ -204,12 +91,6 @@ export default class TaskBoardBody extends Vue {
 
     hasInvalidMapping(swimlane: Swimlane): boolean {
         return getColumnOfCard(this.columns, swimlane.card) === undefined;
-    }
-
-    cancelDragOnEscape(): void {
-        if (this.drake) {
-            this.drake.cancel(true);
-        }
     }
 }
 </script>
