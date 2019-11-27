@@ -19,7 +19,7 @@
 
 import { Card, RemainingEffort } from "../../../type";
 import { SwimlaneState } from "../type";
-import { NewRemainingEffortPayload } from "./type";
+import { NewCardPayload, NewRemainingEffortPayload } from "./type";
 
 export function addCardToEditMode(state: SwimlaneState, card: Card): void {
     findCard(state, card).is_in_edit_mode = true;
@@ -27,6 +27,26 @@ export function addCardToEditMode(state: SwimlaneState, card: Card): void {
 
 export function removeCardFromEditMode(state: SwimlaneState, card: Card): void {
     findCard(state, card).is_in_edit_mode = false;
+}
+
+export function startSavingCard(state: SwimlaneState, card: Card): void {
+    const state_card = findCard(state, card);
+    state_card.is_in_edit_mode = false;
+    state_card.is_being_saved = true;
+}
+
+export function resetSavingCard(state: SwimlaneState, card: Card): void {
+    findCard(state, card).is_being_saved = false;
+}
+
+export function finishSavingCard(state: SwimlaneState, payload: NewCardPayload): void {
+    const state_card = findCard(state, payload.card);
+    state_card.label = payload.label;
+    state_card.is_being_saved = false;
+    state_card.is_just_saved = true;
+    setTimeout(() => {
+        state_card.is_just_saved = false;
+    }, 1000);
 }
 
 export function startSavingRemainingEffort(state: SwimlaneState, card: Card): void {

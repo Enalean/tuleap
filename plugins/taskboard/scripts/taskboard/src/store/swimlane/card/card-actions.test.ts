@@ -19,7 +19,7 @@
 
 import { ActionContext } from "vuex";
 import { RootState } from "../../type";
-import { NewRemainingEffortPayload } from "./type";
+import { NewCardPayload, NewRemainingEffortPayload } from "./type";
 import * as tlp from "tlp";
 import { SwimlaneState } from "../type";
 import { Card } from "../../../type";
@@ -28,6 +28,7 @@ import {
     mockFetchError,
     mockFetchSuccess
 } from "../../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
+import * as fakeApiCall from "./fakeApiCall";
 
 jest.mock("tlp");
 
@@ -97,6 +98,42 @@ describe("Card actions", () => {
                 expect.anything(),
                 { root: true }
             );
+        });
+    });
+
+    describe("saveCard", () => {
+        it("saves the new value", async () => {
+            const card: Card = { id: 123 } as Card;
+            const payload: NewCardPayload = {
+                card,
+                label: "Lorem"
+            };
+
+            await actions.saveCard(context, payload);
+
+            expect(context.commit).toHaveBeenCalledWith("startSavingCard", card);
+            expect(context.commit).toHaveBeenCalledWith("finishSavingCard", payload);
+        });
+
+        it("warns about error if any", async () => {
+            const card: Card = { id: 123 } as Card;
+            const payload: NewCardPayload = {
+                card,
+                label: "Lorem"
+            };
+
+            const tlpPutMock = jest.spyOn(fakeApiCall, "fakePutApiCallToSaveCard");
+            const error = new Error();
+            tlpPutMock.mockRejectedValue(error);
+
+            await actions.saveCard(context, payload);
+
+            expect(context.commit).toHaveBeenCalledWith("startSavingCard", card);
+            expect(context.commit).not.toHaveBeenCalledWith("finishSavingCard", payload);
+            expect(context.commit).toHaveBeenCalledWith("resetSavingCard", card);
+            expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
+                root: true
+            });
         });
     });
 });

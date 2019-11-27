@@ -32,7 +32,8 @@ describe("CardXrefLabel", () => {
                     color: "lake-placid-blue",
                     artifact_html_uri: "/path/to/43",
                     is_in_edit_mode: false
-                } as Card
+                } as Card,
+                label: "Story 2"
             }
         });
         expect(wrapper.element).toMatchSnapshot();
@@ -49,7 +50,8 @@ describe("CardXrefLabel", () => {
                     background_color: "fiesta-red",
                     artifact_html_uri: "/path/to/43",
                     is_in_edit_mode: false
-                } as Card
+                } as Card,
+                label: "Story 2"
             }
         });
         expect(wrapper.find("[data-test=xref]").classes("taskboard-card-xref-fiesta-red")).toBe(
@@ -68,7 +70,8 @@ describe("CardXrefLabel", () => {
                     background_color: "fiesta-red",
                     artifact_html_uri: "/path/to/43",
                     is_in_edit_mode: true
-                } as Card
+                } as Card,
+                label: "Story 2"
             }
         });
         expect(wrapper.text()).toBe("story #43");

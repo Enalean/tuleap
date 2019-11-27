@@ -19,16 +19,35 @@
 
 import { shallowMount } from "@vue/test-utils";
 import EditLabel from "./EditLabel.vue";
-import { Card } from "../../../../../../../type";
 
 describe("EditLabel", () => {
     it("Displays a texteara with its mirror to edit the label", () => {
         const wrapper = shallowMount(EditLabel, {
             propsData: {
-                card: { label: "Lorem ipsum doloret" } as Card
+                value: "Lorem ipsum doloret"
             }
         });
 
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("Saves the card if user hits enter", () => {
+        const wrapper = shallowMount(EditLabel, {
+            propsData: {
+                value: "Lorem ipsum doloret"
+            }
+        });
+        wrapper.find({ ref: "textarea" }).trigger("keydown.enter");
+        expect(wrapper.emitted("save")).toBeTruthy();
+    });
+
+    it("Saves the card if user hits shift + enter", () => {
+        const wrapper = shallowMount(EditLabel, {
+            propsData: {
+                value: "Lorem ipsum doloret"
+            }
+        });
+        wrapper.find({ ref: "textarea" }).trigger("keydown.enter", { shiftKey: true });
+        expect(wrapper.emitted("save")).toBeFalsy();
     });
 });

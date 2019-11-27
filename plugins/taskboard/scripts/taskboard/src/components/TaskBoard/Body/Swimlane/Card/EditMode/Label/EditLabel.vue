@@ -22,7 +22,9 @@
     <div class="taskboard-card-label-editor">
         <pre class="taskboard-card-label-input-mirror" ref="mirror">{{ value }}</pre>
         <textarea class="tlp-textarea taskboard-card-label-input"
-                  v-model="value"
+                  v-bind:value="value"
+                  v-on:input="$emit('input', $event.target.value)"
+                  v-on:keydown.enter="enter"
                   v-on:keyup="keyup"
                   v-bind:rows="rows"
                   ref="textarea"
@@ -33,7 +35,6 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Card } from "../../../../../../../type";
 import { autoFocusAutoSelect } from "../../../../../../../helpers/autofocus-autoselect";
 
 const LINE_HEIGHT_IN_PX = 22;
@@ -42,18 +43,22 @@ const TOP_AND_BOTTOM_PADDING_IN_PX = 16;
 @Component
 export default class EditLabel extends Vue {
     @Prop({ required: true })
-    readonly card!: Card;
+    readonly value!: string;
 
-    value = "";
     rows = 1;
 
     mounted(): void {
-        this.value = this.card.label;
         setTimeout(this.computeRows, 10);
 
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const textarea = this.$refs.textarea as HTMLTextAreaElement;
         autoFocusAutoSelect(textarea);
+    }
+
+    enter(event: KeyboardEvent): void {
+        if (!event.shiftKey) {
+            this.$emit("save");
+        }
     }
 
     keyup(): void {

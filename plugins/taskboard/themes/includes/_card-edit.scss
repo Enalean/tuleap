@@ -36,7 +36,7 @@
     transparentize($color, 1) 50px);
 }
 
-:not(.gu-mirror) > .taskboard-card:not(.taskboard-card-edit-mode) {
+:not(.gu-mirror) > .taskboard-card.taskboard-card-editable:not(.taskboard-card-edit-mode) {
     &::after {
         @include ease-out-background-gradient($tlp-ui-white);
         content: '\f040'; // fa-pencil
@@ -72,7 +72,7 @@
     }
 }
 
-.taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card:not(.taskboard-card-edit-mode) {
+.taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card.taskboard-card-editable:not(.taskboard-card-edit-mode) {
     &:not([class*='taskboard-card-background-'])::after {
         @include ease-out-background-gradient($tlp-theme-background-color);
     }
@@ -87,8 +87,8 @@
 .taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card.taskboard-card-edit-mode,
 .taskboard-card.taskboard-card-edit-mode {
     margin: 0;
-    border: 1px solid $tlp-theme-color;
-    background: transparentize($tlp-theme-color, .9);
+    border: 1px solid $tlp-ui-info;
+    background: transparentize($tlp-ui-info, .9);
 
     &.taskboard-card-with-accessibility {
         padding: $tlp-half-spacing $tlp-half-spacing $tlp-half-spacing ($tlp-half-spacing + 2);
@@ -96,6 +96,30 @@
 
     > .taskboard-card-accessibility {
         display: none;
+    }
+}
+
+.taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card,
+:not(.gu-mirror) > .taskboard-card {
+    &.taskboard-card-is-being-saved {
+        transition: box-shadow 75ms ease-in-out, background-color 75ms ease-in-out;
+        animation: blink-card 1200ms ease-in-out alternate infinite;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .1), 0 -1px 0 rgba(0, 0, 0, .03);
+    }
+
+
+    &.taskboard-card-is-just-saved {
+        transition: box-shadow 75ms ease-in-out, background-color 75ms ease-in-out;
+        animation: pulse-card 500ms ease-in-out;
+        background: mix($tlp-ui-white, $tlp-ui-success, 90%);
+        box-shadow: inset 0 0 0 1px $tlp-ui-success, 0 1px 4px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .1), 0 -1px 0 rgba(0, 0, 0, .03);
+
+        &.taskboard-card-editable:not(.taskboard-card-edit-mode)::after {
+            @include ease-out-background-gradient(mix($tlp-ui-white, $tlp-ui-success, 90%));
+            top: 1px;
+            right: 1px;
+            height: calc(100% - #{$tlp-spacing} - 2px);
+        }
     }
 }
 
@@ -226,5 +250,40 @@
 
     .taskboard-card-remaining-effort-input-width-#{$width} {
         width: #{$width}px;
+    }
+}
+
+@mixin box-shadow-blinking-card($color) {
+    box-shadow: inset 0 0 0 1px $color, 0 1px 4px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .1), 0 -1px 0 rgba(0, 0, 0, .03);
+}
+
+@keyframes blink-card {
+    0% {
+        @include box-shadow-blinking-card(transparent);
+        background: $tlp-ui-white;
+    }
+
+    50% {
+        @include box-shadow-blinking-card($tlp-ui-info);
+        background: transparentize($tlp-ui-info, .9);
+    }
+
+    100% {
+        @include box-shadow-blinking-card(transparent);
+        background: $tlp-ui-white;
+    }
+}
+
+@keyframes pulse-card {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
     }
 }
