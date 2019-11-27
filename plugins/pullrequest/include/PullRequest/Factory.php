@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -189,16 +189,6 @@ class Factory
     public function updateMergeStatus(PullRequest $pull_request, $merge_status)
     {
         $this->dao->updateMergeStatus($pull_request->getId(), $merge_status);
-    }
-
-    public function markAsAbandoned($pull_request)
-    {
-        $this->dao->markAsAbandoned($pull_request->getId());
-    }
-
-    public function markAsMerged($pull_request)
-    {
-        $this->dao->markAsMerged($pull_request->getId());
     }
 
     public function updateTitleAndDescription(PFUser $user, PullRequest $pull_request, $project_id, $new_title, $new_description)

@@ -55,11 +55,6 @@ class StatusPatcher
     private $pull_request_closer;
 
     /**
-     * @var TimelineEventCreator
-     */
-    private $timeline_event_creator;
-
-    /**
      * @var Logger
      */
     private $logger;
@@ -78,7 +73,6 @@ class StatusPatcher
         AccessControlVerifier $access_control_verifier,
         PullRequestPermissionChecker $pull_request_permission_checker,
         PullRequestCloser $pull_request_closer,
-        TimelineEventCreator $timeline_event_creator,
         URLVerification $url_verification,
         Logger $logger
     ) {
@@ -86,7 +80,6 @@ class StatusPatcher
         $this->access_control_verifier         = $access_control_verifier;
         $this->pull_request_permission_checker = $pull_request_permission_checker;
         $this->pull_request_closer             = $pull_request_closer;
-        $this->timeline_event_creator          = $timeline_event_creator;
         $this->url_verification                = $url_verification;
         $this->logger                          = $logger;
     }
@@ -112,8 +105,7 @@ class StatusPatcher
                         $pull_request->getBranchSrc(),
                         $pull_request->getBranchDest()
                     );
-                    $this->pull_request_closer->abandon($pull_request);
-                    $this->timeline_event_creator->storeAbandonEvent($pull_request, $user);
+                    $this->pull_request_closer->abandon($pull_request, $user);
                 } catch (PullRequestCannotBeAbandoned $exception) {
                     throw new RestException(400, $exception->getMessage());
                 }
@@ -122,7 +114,6 @@ class StatusPatcher
                 try {
                     $this->pull_request_permission_checker->checkPullRequestIsMergeableByUser($pull_request, $user);
                     $this->pull_request_closer->doMerge($git_repository_destination, $pull_request, $user);
-                    $this->timeline_event_creator->storeMergeEvent($pull_request, $user);
                 } catch (PullRequestCannotBeMerged $exception) {
                     throw new RestException(400, $exception->getMessage());
                 } catch (Git_Command_Exception $exception) {
