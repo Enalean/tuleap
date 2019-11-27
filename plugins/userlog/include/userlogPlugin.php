@@ -26,6 +26,7 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Event\Events\HitEvent;
+use Tuleap\Userlog\ProjectDashboardUrlParser;
 use Tuleap\Userlog\UserLogBuilder;
 use Tuleap\Userlog\UserLogExporter;
 use Tuleap\Userlog\UserLogRouter;
@@ -105,11 +106,15 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
         }
 
         $request = $event->getRequest();
+        $project_id = $request->getProject()->getID();
+        if (! $project_id) {
+            $project_id = $this->deduceProjectIdFromURL($request);
+        }
 
         $userLogManager = new UserLogManager(new AdminPageRenderer(), UserManager::instance());
         $userLogManager->logAccess(
             $_SERVER['REQUEST_TIME'],
-            $request->getProject()->getID(),
+            $project_id,
             $request->getCurrentUser()->getId(),
             $request->getFromServer('HTTP_USER_AGENT'),
             $request->getFromServer('REQUEST_METHOD'),
@@ -117,6 +122,12 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
             HTTPRequest::instance()->getIPAddress(),
             $request->getFromServer('HTTP_REFERER')
         );
+    }
+
+    private function deduceProjectIdFromURL(HTTPRequest $request): ?int
+    {
+        $parser = new ProjectDashboardUrlParser(ProjectManager::instance());
+        return $parser->getProjectIdFromProjectDashboardURL($request);
     }
 
     public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)
