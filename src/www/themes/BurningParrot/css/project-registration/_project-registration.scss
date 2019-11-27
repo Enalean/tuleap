@@ -18,6 +18,7 @@
  *
  */
 @import './includes/cards';
+@import './includes/project-information';
 
 $illustration-width: 319px;
 $illustration-spacing: (2 * $tlp-double-spacing);
@@ -46,10 +47,6 @@ $title-margin-left: $illustration-width + $illustration-spacing;
 
 .register-new-project-section-badge {
     margin: 0 $tlp-half-spacing 0 0;
-}
-
-.register-new-project-icon {
-    margin: 0 5px 0 0;
 }
 
 @media screen and (max-width: 1200px) {
