@@ -44,6 +44,25 @@
                             </div>
                         </div>
 
+                        {{# platform_have_restricted }}
+                            <div class="tlp-form-element">
+                                <label class="tlp-label" for="toggle-restricted-users-can-create-projects">
+                                    {{# gettext }}Restricted users can create projects{{/ gettext}}
+                                </label>
+                                <div class="tlp-switch">
+                                    <input
+                                            type="checkbox"
+                                            name="restricted_users_can_create_projects"
+                                            id="toggle-restricted-users-can-create-projects"
+                                            class="tlp-switch-checkbox"
+                                            value="1"
+                                            {{# restricted_users_can_create_projects }}checked{{/ restricted_users_can_create_projects }}
+                                    >
+                                    <label for="toggle-restricted-users-can-create-projects" class="tlp-switch-button" aria-hidden></label>
+                                </div>
+                            </div>
+                        {{/ platform_have_restricted }}
+
                         <div class="tlp-form-element">
                             <label class="tlp-label" for="nb-max-projects-waiting-for-validation">{{# gettext }}Maximum number of projects waiting for validation (-1 means no limits){{/ gettext }}</label>
                             <input type="number" class="tlp-input" id="nb-max-projects-waiting-for-validation" name="nb_max_projects_waiting_for_validation" size="4" value="{{ nb_max_projects_waiting_for_validation }}"/>

@@ -63,7 +63,7 @@ class ProjectDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function countByStatusAndUser($user_id, $status)
+    public function countByStatusAndUser(int $user_id, string $status): int
     {
         $user_id = $this->da->escapeInt($user_id);
         $status  = $this->da->quoteSmart($status);
@@ -78,10 +78,7 @@ class ProjectDao extends DataAccessObject
         return (int) $this->foundRows();
     }
 
-    /**
-     * @return int
-     */
-    public function countByStatus(string $project_status)
+    public function countByStatus(string $project_status): int
     {
         $project_status = $this->da->quoteSmart($project_status);
 

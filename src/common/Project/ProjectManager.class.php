@@ -36,9 +36,11 @@ use Tuleap\Webhook\Emitter;
 
 class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    public const CONFIG_PROJECTS_CAN_BE_CREATED                     = 'sys_use_project_registration';
     public const CONFIG_PROJECT_APPROVAL                            = 'sys_project_approval';
     public const CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION          = 'nb_projects_waiting_for_validation';
     public const CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER = 'nb_projects_waiting_for_validation_per_user';
+    public const CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS        = 'restricted_users_can_create_projects';
 
     /**
      * The Projects dao used to fetch data
@@ -1059,35 +1061,6 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     {
             $forum_dao = new ForumDao(CodendiDataAccess::instance());
             return $forum_dao->updatePublicForumToPrivate($group_id);
-    }
-
-    public function userCanCreateProject(PFUser $requester)
-    {
-        if (ForgeConfig::get(self::CONFIG_PROJECT_APPROVAL, 1) == 1) {
-            return $this->numberOfProjectsWaitingForValidationBelowThreshold() &&
-                $this->numberOfProjectsWaitingForValidationPerUserBelowThreshold($requester);
-        }
-        return true;
-    }
-
-    private function numberOfProjectsWaitingForValidationBelowThreshold()
-    {
-        $max_nb_projects_waiting_for_validation = (int) ForgeConfig::get(self::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION, -1);
-        if ($max_nb_projects_waiting_for_validation < 0) {
-            return true;
-        }
-        $current_nb_projects_waiting_for_validation = $this->countProjectsByStatus(Project::STATUS_PENDING);
-        return $current_nb_projects_waiting_for_validation < $max_nb_projects_waiting_for_validation;
-    }
-
-    private function numberOfProjectsWaitingForValidationPerUserBelowThreshold(PFUser $requester)
-    {
-        $max_per_user = (int) ForgeConfig::get(self::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER, -1);
-        if ($max_per_user < 0) {
-            return true;
-        }
-        $current_per_user = $this->_getDao()->countByStatusAndUser($requester->getId(), Project::STATUS_PENDING);
-        return $current_per_user < $max_per_user;
     }
 
     public function countRegisteredProjectsBefore($timestamp)

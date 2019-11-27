@@ -32,7 +32,8 @@ $router = new Project_OneStepCreation_OneStepCreationRouter(
     ProjectManager::instance(),
     new DefaultProjectVisibilityRetriever(),
     new Project_CustomDescription_CustomDescriptionFactory(new Project_CustomDescription_CustomDescriptionDao()),
-    new TroveCatFactory(new TroveCatDao())
+    new TroveCatFactory(new TroveCatDao()),
+    new \Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker(new ProjectDao())
 );
 
 $router->route($request);

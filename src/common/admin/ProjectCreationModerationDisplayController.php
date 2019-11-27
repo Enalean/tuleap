@@ -47,16 +47,17 @@ class ProjectCreationModerationDisplayController implements DispatchableWithRequ
             throw new ForbiddenException();
         }
 
+
         $presenter = new ProjectCreationModerationPresenter(
             new ProjectCreationNavBarPresenter('moderation'),
             new CSRFSynchronizerToken('/admin/project-creation/moderation'),
             ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, true),
             ForgeConfig::get(\ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION, -1),
             ForgeConfig::get(\ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER, -1),
+            ForgeConfig::areRestrictedUsersAllowed(),
+            ForgeConfig::get(\ProjectManager::CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS, false),
             $this->isSysProjectApprovalStillInLocalInc()
         );
-
-        $layout->includeFooterJavascriptFile('/scripts/tuleap/admin-project-creation-moderation.js');
 
         $admin_page = new AdminPageRenderer();
         $admin_page->renderANoFramedPresenter(

@@ -1299,6 +1299,9 @@ msgstr "Les utilisateurs restreints sont autorisés dans ce projet."
 msgid "Restricted users are not allowed in this project."
 msgstr "Les utilisateurs restreints ne sont pas autorisés dans ce projet."
 
+msgid "Restricted users can create projects"
+msgstr "Les utilisateurs restreints peuvent créer des projets"
+
 msgid "Restricted users removal"
 msgstr "Suppression des utilisateurs restreints"
 
