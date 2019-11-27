@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Project\Registration\Template;
 
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Project\XML\ConsistencyChecker;
+use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\XML\ProjectXMLMerger;
 
 class TemplateFactory
@@ -33,11 +35,25 @@ class TemplateFactory
      */
     private $templates;
 
-    public function __construct(GlyphFinder $glyph_finder, ProjectXMLMerger $project_xml_merger)
+    public function __construct(GlyphFinder $glyph_finder, ProjectXMLMerger $project_xml_merger, ConsistencyChecker $consistency_checker)
     {
         $this->templates = [
-            ScrumTemplate::NAME => new ScrumTemplate($glyph_finder, $project_xml_merger),
+            ScrumTemplate::NAME => new ScrumTemplate($glyph_finder, $project_xml_merger, $consistency_checker),
         ];
+    }
+
+    public static function build(): self
+    {
+        return new self(
+            new GlyphFinder(
+                \EventManager::instance()
+            ),
+            new ProjectXMLMerger(),
+            new ConsistencyChecker(
+                \ServiceManager::instance(),
+                new XMLFileContentRetriever()
+            )
+        );
     }
 
     /**
@@ -45,7 +61,13 @@ class TemplateFactory
      */
     public function getValidTemplates(): array
     {
-        return array_values($this->templates);
+        $templates = [];
+        foreach ($this->templates as $template) {
+            if ($template->isAvailable()) {
+                $templates[] = $template;
+            }
+        }
+        return $templates;
     }
 
     /**
@@ -53,7 +75,7 @@ class TemplateFactory
      */
     public function getTemplate(string $name): ProjectTemplate
     {
-        if (! isset($this->templates[$name])) {
+        if (! isset($this->templates[$name]) || ! $this->templates[$name]->isAvailable()) {
             throw new InvalidTemplateException();
         }
         return $this->templates[$name];

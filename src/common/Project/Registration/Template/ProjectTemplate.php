@@ -36,4 +36,6 @@ interface ProjectTemplate
     public function getGlyph(): Glyph;
 
     public function getXMLPath(): string;
+
+    public function isAvailable(): bool;
 }

@@ -65,7 +65,6 @@ use Tuleap\FRS\LicenseAgreement\Admin\SaveLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\Admin\SetDefaultLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
-use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
@@ -127,7 +126,6 @@ use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
-use Tuleap\XML\ProjectXMLMerger;
 use UGroupBinding;
 use UGroupManager;
 use UGroupUserDao;
@@ -607,12 +605,7 @@ class RouteCollector
                 ProjectManager::instance()
             ),
             new ProjectRegistrationPresenterBuilder(
-                new TemplateFactory(
-                    new GlyphFinder(
-                        EventManager::instance()
-                    ),
-                    new ProjectXMLMerger()
-                )
+                TemplateFactory::build()
             )
         );
     }

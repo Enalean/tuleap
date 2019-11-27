@@ -21,7 +21,7 @@ use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Service\ServiceCannotBeUpdatedException;
 use Tuleap\Project\Service\ServiceNotFoundException;
 
-class ServiceManager
+class ServiceManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     public const CUSTOM_SERVICE_SHORTNAME = '';
@@ -136,6 +136,14 @@ class ServiceManager
     public function isServiceAvailableAtSiteLevelByShortName($name)
     {
         return $this->dao->isServiceAvailableAtSiteLevelByShortName($name);
+    }
+
+    /**
+     * @return Service[]
+     */
+    public function getListOfServicesAvailableAtSiteLevel(): array
+    {
+        return $this->project_manager->getProject(Project::ADMIN_PROJECT_ID)->getActiveServices();
     }
 
     private function isServiceActiveInProject($project, $name)
