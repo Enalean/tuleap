@@ -31,8 +31,9 @@ class ReadyToBeImportedUsersCollection_getUserByXxxTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->user = mock('User\XML\Import\ReadyToBeImportedUser');
+        $this->user = \Mockery::spy(\User\XML\Import\ReadyToBeImportedUser::class);
 
         $this->id       = 107;
         $this->username = 'jdoe';
@@ -89,7 +90,7 @@ class ReadyToBeImportedUsersCollection_getUserByXxxTest extends TuleapTestCase
 
     public function itDoesNotIndexByLdapIdWhenNoLdapId()
     {
-        $user = mock('User\XML\Import\ReadyToBeImportedUser');
+        $user = \Mockery::spy(\User\XML\Import\ReadyToBeImportedUser::class);
 
         $id       = 108;
         $username = 'cstevens';

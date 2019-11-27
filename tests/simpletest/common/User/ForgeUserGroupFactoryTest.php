@@ -33,7 +33,9 @@ class User_ForgeUserGroupFactory_BaseTest extends TuleapTestCase
 
     public function setUp()
     {
-        $this->dao     = mock('UserGroupDao');
+        parent::setUp();
+        $this->setUpGlobalsMockery();
+        $this->dao     = \Mockery::spy(\UserGroupDao::class);
         $this->factory = new User_ForgeUserGroupFactory($this->dao);
     }
 }
@@ -43,7 +45,7 @@ class User_ForgeUserGroupFactory_GetAllTest extends User_ForgeUserGroupFactory_B
 
     public function itReturnsEmptyArrayIfNoResultsInDb()
     {
-        stub($this->dao)->getAllForgeUGroups()->returns(false);
+        $this->dao->shouldReceive('getAllForgeUGroups')->andReturns(false);
         $all = $this->factory->getAllForgeUserGroups();
 
         $this->assertEqual(0, count($all));
@@ -69,7 +71,7 @@ class User_ForgeUserGroupFactory_GetAllTest extends User_ForgeUserGroupFactory_B
             ),
         );
 
-        stub($this->dao)->getAllForgeUGroups()->returns($data);
+        $this->dao->shouldReceive('getAllForgeUGroups')->andReturns($data);
         $all = $this->factory->getAllForgeUserGroups();
 
         $this->assertEqual(3, count($all));
@@ -108,7 +110,7 @@ class User_ForgeUserGroupFactory_GetUGroupTest extends User_ForgeUserGroupFactor
             'description' => 'user group'
         );
 
-        stub($this->dao)->getForgeUGroup($user_group_id)->returns($row);
+        $this->dao->shouldReceive('getForgeUGroup')->with($user_group_id)->andReturns($row);
 
         $ugroup = $this->factory->getForgeUserGroupById($user_group_id);
 
@@ -123,7 +125,7 @@ class User_ForgeUserGroupFactory_GetUGroupTest extends User_ForgeUserGroupFactor
 
         $user_group_id = 105;
 
-        stub($this->dao)->getForgeUGroup($user_group_id)->returns(false);
+        $this->dao->shouldReceive('getForgeUGroup')->with($user_group_id)->andReturns(false);
 
         $this->factory->getForgeUserGroupById($user_group_id);
     }
@@ -138,7 +140,7 @@ class User_ForgeUserGroupFactory_cCeateForgeUGroupTest extends User_ForgeUserGro
         $description = 'my desc';
         $id          = 102;
 
-        stub($this->dao)->createForgeUGroup($name, $description)->returns($id);
+        $this->dao->shouldReceive('createForgeUGroup')->with($name, $description)->andReturns($id);
 
         $ugroup = $this->factory->createForgeUGroup($name, $description);
 
@@ -154,7 +156,7 @@ class User_ForgeUserGroupFactory_cCeateForgeUGroupTest extends User_ForgeUserGro
         $name        = 'my group';
         $description = 'my desc';
 
-        stub($this->dao)->createForgeUGroup($name, $description)->throws(new User_UserGroupNameInvalidException());
+        $this->dao->shouldReceive('createForgeUGroup')->with($name, $description)->andThrows(new User_UserGroupNameInvalidException());
 
         $this->factory->createForgeUGroup($name, $description);
     }

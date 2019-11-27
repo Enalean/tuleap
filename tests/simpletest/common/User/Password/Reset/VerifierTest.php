@@ -29,21 +29,19 @@ class VerifierTest extends \TuleapTestCase
     public function itGetsUserAssociatedWithToken()
     {
         $creation_date = new \DateTime();
-        $dao           = mock('Tuleap\\User\\Password\\Reset\\DataAccessObject');
-        stub($dao)->getTokenInformationById()->returns(
-            array(
-                'verifier'      => 'token_verification_part_password_hashed',
-                'user_id'       => 101,
-                'creation_date' => $creation_date->getTimestamp()
-            )
-        );
+        $dao           = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
+        $dao->shouldReceive('getTokenInformationById')->andReturns(array(
+            'verifier'      => 'token_verification_part_password_hashed',
+            'user_id'       => 101,
+            'creation_date' => $creation_date->getTimestamp()
+        ));
 
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $hasher->shouldReceive('verifyHash')->andReturns(true);
 
-        $user         = mock('PFUser');
-        $user_manager = mock('UserManager');
-        stub($user_manager)->getUserById(101)->returns($user);
+        $user         = \Mockery::spy(\PFUser::class);
+        $user_manager = \Mockery::spy(\UserManager::class);
+        $user_manager->shouldReceive('getUserById')->with(101)->andReturns($user);
 
         $token = \Mockery::mock(SplitToken::class);
         $token->shouldReceive('getID')->andReturns(1);
@@ -57,13 +55,13 @@ class VerifierTest extends \TuleapTestCase
 
     public function itThrowsAnExceptionWhenTokenIDCanNotBeFound()
     {
-        $dao = mock('Tuleap\\User\\Password\\Reset\\DataAccessObject');
-        stub($dao)->getTokenInformationById()->returns(false);
+        $dao = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
+        $dao->shouldReceive('getTokenInformationById')->andReturns(false);
 
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $hasher->shouldReceive('verifyHash')->andReturns(true);
 
-        $user_manager = mock('UserManager');
+        $user_manager = \Mockery::spy(\UserManager::class);
 
         $token = \Mockery::mock(SplitToken::class);
         $token->shouldReceive('getID')->andReturns(1);
@@ -76,13 +74,13 @@ class VerifierTest extends \TuleapTestCase
 
     public function itThrowsAnExceptionWhenVerifierPartIsNotValid()
     {
-        $dao = mock('Tuleap\\User\\Password\\Reset\\DataAccessObject');
-        stub($dao)->getTokenInformationById()->returns(array('verifier' => 'token_verification_part_password_hashed'));
+        $dao = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
+        $dao->shouldReceive('getTokenInformationById')->andReturns(array('verifier' => 'token_verification_part_password_hashed'));
 
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $hasher->shouldReceive('verifyHash')->andReturns(false);
 
-        $user_manager = mock('UserManager');
+        $user_manager = \Mockery::spy(\UserManager::class);
 
         $token = \Mockery::mock(SplitToken::class);
         $token->shouldReceive('getID')->andReturns(1);
@@ -100,21 +98,19 @@ class VerifierTest extends \TuleapTestCase
         $expired_creation_date = new \DateTime();
         $expired_creation_date->sub(new \DateInterval(Verifier::TOKEN_VALIDITY_PERIOD));
         $expired_creation_date->sub(new \DateInterval(Verifier::TOKEN_VALIDITY_PERIOD));
-        $dao                   = mock('Tuleap\\User\\Password\\Reset\\DataAccessObject');
-        stub($dao)->getTokenInformationById()->returns(
-            array(
-                'verifier'      => 'token_verification_part_password_hashed',
-                'user_id'       => 101,
-                'creation_date' => $expired_creation_date->getTimestamp()
-            )
-        );
+        $dao                   = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
+        $dao->shouldReceive('getTokenInformationById')->andReturns(array(
+            'verifier'      => 'token_verification_part_password_hashed',
+            'user_id'       => 101,
+            'creation_date' => $expired_creation_date->getTimestamp()
+        ));
 
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $hasher->shouldReceive('verifyHash')->andReturns(true);
 
-        $user         = mock('PFUser');
-        $user_manager = mock('UserManager');
-        stub($user_manager)->getUserById(101)->returns($user);
+        $user         = \Mockery::spy(\PFUser::class);
+        $user_manager = \Mockery::spy(\UserManager::class);
+        $user_manager->shouldReceive('getUserById')->with(101)->andReturns($user);
 
         $token = \Mockery::mock(SplitToken::class);
         $token->shouldReceive('getID')->andReturns(1);

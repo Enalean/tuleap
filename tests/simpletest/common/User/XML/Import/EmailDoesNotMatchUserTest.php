@@ -30,6 +30,7 @@ class EmailDoesNotMatchUser_isActionAllowedTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->user = new EmailDoesNotMatchUser(
             aUser()->withUserName('cstevens')->build(),

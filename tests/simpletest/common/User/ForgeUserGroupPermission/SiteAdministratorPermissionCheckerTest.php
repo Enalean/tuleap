@@ -35,40 +35,41 @@ class SiteAdministratorPermissionCheckerTest extends \TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->permission_dao = mock('User_ForgeUserGroupPermissionsDao');
+        $this->permission_dao = \Mockery::spy(\User_ForgeUserGroupPermissionsDao::class);
 
         $this->permission_checker = new SiteAdministratorPermissionChecker($this->permission_dao);
     }
 
     public function itReturnsFalseWhenPlatformHasOnlyOneSiteAdministrationPermission()
     {
-        stub($this->permission_dao)->isMoreThanOneUgroupUsingForgePermission()->returns(false);
+        $this->permission_dao->shouldReceive('isMoreThanOneUgroupUsingForgePermission')->andReturns(false);
 
         $this->assertFalse($this->permission_checker->checkPlatformHasMoreThanOneSiteAdministrationPermission());
     }
 
     public function itReturnsTrueWhenPlatformHasSeveralSiteAdministrationPermission()
     {
-        stub($this->permission_dao)->isMoreThanOneUgroupUsingForgePermission()->returns(true);
+        $this->permission_dao->shouldReceive('isMoreThanOneUgroupUsingForgePermission')->andReturns(true);
 
         $this->assertTrue($this->permission_checker->checkPlatformHasMoreThanOneSiteAdministrationPermission());
     }
 
     public function itReturnsTrueWhenPlatformHasOnlyAUGroupContainingSiteAdminsitrationPermission()
     {
-        $ugroup = mock('User_ForgeUGroup');
-        stub($ugroup)->getId()->returns(101);
-        stub($this->permission_dao)->isUGroupTheOnlyOneWithPlatformAdministrationPermission()->returns(false);
+        $ugroup = \Mockery::spy(\User_ForgeUGroup::class);
+        $ugroup->shouldReceive('getId')->andReturns(101);
+        $this->permission_dao->shouldReceive('isUGroupTheOnlyOneWithPlatformAdministrationPermission')->andReturns(false);
 
         $this->assertTrue($this->permission_checker->checkUGroupIsNotTheOnlyOneWithPlatformAdministrationPermission($ugroup));
     }
 
     public function itReturnsFalseWhenPlatformHasSeveralAUGroupContainingSiteAdminsitrationPermission()
     {
-        $ugroup = mock('User_ForgeUGroup');
-        stub($ugroup)->getId()->returns(101);
-        stub($this->permission_dao)->isUGroupTheOnlyOneWithPlatformAdministrationPermission()->returns(true);
+        $ugroup = \Mockery::spy(\User_ForgeUGroup::class);
+        $ugroup->shouldReceive('getId')->andReturns(101);
+        $this->permission_dao->shouldReceive('isUGroupTheOnlyOneWithPlatformAdministrationPermission')->andReturns(true);
 
         $this->assertFalse($this->permission_checker->checkUGroupIsNotTheOnlyOneWithPlatformAdministrationPermission($ugroup));
     }

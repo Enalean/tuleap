@@ -40,23 +40,22 @@ class MappingTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->my_user      = aUser()->withId(101)->build();
         $this->none_user    = aUser()->withId(100)->build();
-        $this->collection   = mock('User\XML\Import\ReadyToBeImportedUsersCollection');
-        $this->user_manager = mock('UserManager');
+        $this->collection   = \Mockery::spy(\User\XML\Import\ReadyToBeImportedUsersCollection::class);
+        $this->user_manager = \Mockery::spy(\UserManager::class);
 
-        stub($this->user_manager)->getUserAnonymous()->returns(anAnonymousUser()->build());
-        stub($this->user_manager)->getUserByUserName('None')->returns($this->none_user);
+        $this->user_manager->shouldReceive('getUserAnonymous')->andReturns(anAnonymousUser()->build());
+        $this->user_manager->shouldReceive('getUserByUserName')->with('None')->andReturns($this->none_user);
 
-        $this->mapping = new Mapping($this->user_manager, $this->collection, mock('Logger'));
+        $this->mapping = new Mapping($this->user_manager, $this->collection, \Mockery::spy(\Logger::class));
     }
 
     public function itReturnsAUserReferencedById()
     {
-        stub($this->collection)->getUserById(107)->returns(
-            new WillBeMappedUser('jdoe', $this->my_user)
-        );
+        $this->collection->shouldReceive('getUserById')->with(107)->andReturns(new WillBeMappedUser('jdoe', $this->my_user));
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="id">107</submitted_by>
@@ -70,9 +69,7 @@ class MappingTest extends TuleapTestCase
 
     public function itReturnsAUserReferencedByLdapId()
     {
-        stub($this->collection)->getUserByLdapId('107')->returns(
-            new WillBeMappedUser('jdoe', $this->my_user)
-        );
+        $this->collection->shouldReceive('getUserByLdapId')->with('107')->andReturns(new WillBeMappedUser('jdoe', $this->my_user));
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="ldap">107</submitted_by>
@@ -86,9 +83,7 @@ class MappingTest extends TuleapTestCase
 
     public function itReturnsAUserReferencedByUsername()
     {
-        stub($this->collection)->getUserByUserName('jdoe')->returns(
-            new WillBeMappedUser('jdoe', $this->my_user)
-        );
+        $this->collection->shouldReceive('getUserByUserName')->with('jdoe')->andReturns(new WillBeMappedUser('jdoe', $this->my_user));
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="username">jdoe</submitted_by>
@@ -113,7 +108,7 @@ class MappingTest extends TuleapTestCase
 
     public function itReturnsAMatchingUserReferencedByEmail()
     {
-        stub($this->user_manager)->getUserByEmail('existing@example.com')->returns($this->my_user);
+        $this->user_manager->shouldReceive('getUserByEmail')->with('existing@example.com')->andReturns($this->my_user);
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="email">existing@example.com</submitted_by>
@@ -127,10 +122,8 @@ class MappingTest extends TuleapTestCase
 
     public function itReturnsACreatedUser()
     {
-        stub($this->collection)->getUserById(107)->returns(
-            new WillBeCreatedUser('jdoe', 'John Doe', 'jdoe@example.com', 'S', 'ed107')
-        );
-        stub($this->user_manager)->getUserByUserName('jdoe')->returns($this->my_user);
+        $this->collection->shouldReceive('getUserById')->with(107)->andReturns(new WillBeCreatedUser('jdoe', 'John Doe', 'jdoe@example.com', 'S', 'ed107'));
+        $this->user_manager->shouldReceive('getUserByUserName')->with('jdoe')->andReturns($this->my_user);
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="id">107</submitted_by>
@@ -144,9 +137,7 @@ class MappingTest extends TuleapTestCase
 
     public function itReturnsAnAlreadyExistingUser()
     {
-        stub($this->collection)->getUserById(107)->returns(
-            new AlreadyExistingUser($this->my_user, 107, 'ldap1234')
-        );
+        $this->collection->shouldReceive('getUserById')->with(107)->andReturns(new AlreadyExistingUser($this->my_user, 107, 'ldap1234'));
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="id">107</submitted_by>
@@ -160,9 +151,7 @@ class MappingTest extends TuleapTestCase
 
     public function itReturnsAnActivatedUser()
     {
-        stub($this->collection)->getUserById(107)->returns(
-            new WillBeActivatedUser($this->my_user)
-        );
+        $this->collection->shouldReceive('getUserById')->with(107)->andReturns(new WillBeActivatedUser($this->my_user));
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="id">107</submitted_by>
@@ -176,7 +165,7 @@ class MappingTest extends TuleapTestCase
 
     public function itReturnsNoneUser()
     {
-        stub($this->collection)->getUserByUserName('None')->throws(new UserNotFoundException());
+        $this->collection->shouldReceive('getUserByUserName')->with('None')->andThrows(new UserNotFoundException());
 
         $xml = simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
             <submitted_by format="username">None</submitted_by>

@@ -26,6 +26,7 @@ class UserXMLExportedCollectionTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         ForgeConfig::store();
         ForgeConfig::set('tuleap_dir', __DIR__.'/../../../../../');
 

@@ -24,6 +24,7 @@ class User_PasswordExpirationCheckerTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         ForgeConfig::store();
         $this->password_expiration_checker = new User_PasswordExpirationChecker();
     }

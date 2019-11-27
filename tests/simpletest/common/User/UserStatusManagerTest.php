@@ -24,6 +24,7 @@ class User_LoginManagerStatusTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         ForgeConfig::store();
         $this->user_status_manager = new User_UserStatusManager();
     }

@@ -23,11 +23,12 @@ class GenericUserFactoryTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->user_manager = mock('UserManager');
-        $this->project_manager = mock('ProjectManager');
-        $this->project = mock('Project');
-        stub($this->project_manager)->getProject()->returns($this->project);
-        $dao = mock('GenericUserDao');
+        $this->setUpGlobalsMockery();
+        $this->user_manager = \Mockery::spy(\UserManager::class);
+        $this->project_manager = \Mockery::spy(\ProjectManager::class);
+        $this->project = \Mockery::spy(\Project::class);
+        $this->project_manager->shouldReceive('getProject')->andReturns($this->project);
+        $dao = \Mockery::spy(\GenericUserDao::class);
 
         ForgeConfig::store();
 
@@ -57,7 +58,7 @@ class GenericUserFactoryTest extends TuleapTestCase
     public function itCreatesUserWithNoSuffixByDefault()
     {
         $project_name = 'vla';
-        stub($this->project)->getUnixName()->returns($project_name);
+        $this->project->shouldReceive('getUnixName')->andReturns($project_name);
 
         $generic_user = $this->factory->create('120', 'my_password');
         $this->assertEqual(substr($generic_user->getUnixName(), -strlen($project_name)), $project_name);

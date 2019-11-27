@@ -55,10 +55,11 @@ class UserImportTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->user_helper         = mock('UserHelper');
-        $this->project             = aMockProject()->withId(110)->build();
-        $this->user_manager        = mock('UserManager');
+        $this->user_helper         = \Mockery::spy(\UserHelper::class);
+        $this->project             = \Mockery::spy(\Project::class, ['getID' => 110, 'getUnixName' => false, 'isPublic' => false]);
+        $this->user_manager        = \Mockery::spy(\UserManager::class);
         $this->user_filename       = __DIR__.'/_fixtures/user_import.txt';
         $this->user_email_filename = __DIR__.'/_fixtures/user_email_import.txt';
         $this->user_import         = new UserImport($this->user_manager, $this->user_helper, \Mockery::mock(ProjectMemberAdder::class));
@@ -75,7 +76,7 @@ class UserImportTest extends TuleapTestCase
     {
         $user = $this->getUser(102);
 
-        stub($this->user_manager)->findUser('zurg')->returns($user);
+        $this->user_manager->shouldReceive('findUser')->with('zurg')->andReturns($user);
 
         $user_collection = $this->user_import->parse($this->project->getID(), $this->user_filename);
 
@@ -97,7 +98,7 @@ class UserImportTest extends TuleapTestCase
     {
         $user = $this->getUser(102);
 
-        stub($this->user_manager)->getAllUsersByEmail('zurg@example.com')->returns(array($user));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('zurg@example.com')->andReturns(array($user));
 
         $user_collection = $this->user_import->parse($this->project->getID(), $this->user_email_filename);
 
@@ -120,7 +121,7 @@ class UserImportTest extends TuleapTestCase
         $user  = $this->getUser(102);
         $user2 = $this->getUser(103);
 
-        stub($this->user_manager)->getAllUsersByEmail('zurg@example.com')->returns(array($user, $user2));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('zurg@example.com')->andReturns(array($user, $user2));
 
         $user_collection = $this->user_import->parse($this->project->getID(), $this->user_email_filename);
 
@@ -136,8 +137,8 @@ class UserImportTest extends TuleapTestCase
 
     public function itDoesNotImportUserIfUserNameDoesNotExist()
     {
-        stub($this->user_manager)->findUser('zurg')->returns(null);
-        stub($this->user_manager)->getAllUsersByEmail()->returns([]);
+        $this->user_manager->shouldReceive('findUser')->with('zurg')->andReturns(null);
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->andReturns([]);
 
         $user_collection = $this->user_import->parse($this->project->getID(), $this->user_filename);
 
@@ -156,14 +157,14 @@ class UserImportTest extends TuleapTestCase
      */
     private function getUser($id)
     {
-        $user = mock('PFUser');
-        stub($user)->isActive()->returns(true);
-        stub($user)->isMember($this->project->getID())->returns(false);
-        stub($user)->getEmail()->returns('zurg@example.com');
-        stub($user)->getUserName()->returns('zurg');
-        stub($user)->hasAvatar()->returns('false');
-        stub($user)->getId()->returns($id);
-        stub($this->user_helper)->getDisplayName()->returns('getDisplayName');
+        $user = \Mockery::spy(\PFUser::class);
+        $user->shouldReceive('isActive')->andReturns(true);
+        $user->shouldReceive('isMember')->with($this->project->getID())->andReturns(false);
+        $user->shouldReceive('getEmail')->andReturns('zurg@example.com');
+        $user->shouldReceive('getUserName')->andReturns('zurg');
+        $user->shouldReceive('hasAvatar')->andReturns('false');
+        $user->shouldReceive('getId')->andReturns($id);
+        $this->user_helper->shouldReceive('getDisplayName')->andReturns('getDisplayName');
 
         return $user;
     }
