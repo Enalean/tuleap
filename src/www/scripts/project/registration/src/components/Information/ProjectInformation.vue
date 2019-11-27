@@ -28,8 +28,9 @@
                     <span v-translate>Project information</span>
                 </h2>
                 <under-construction-information/>
-                <form action="#" ref="form" data-test="register-new-project-information-form">
+                <form class="register-new-project-information-form-container" action="#" ref="form" data-test="register-new-project-information-form">
                     <project-name/>
+                    <project-information-input-privacy-switch/>
                 </form>
             </div>
         </div>
@@ -44,10 +45,12 @@ import UnderConstructionInformation from "../UnderConstructionInformation.vue";
 import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
+import ProjectInformationInputPrivacySwitch from "./Input/ProjectInformationInputPrivacySwitch.vue";
 
 @Component({
     components: {
         ProjectName,
+        ProjectInformationInputPrivacySwitch,
         ProjectInformationFooter,
         ProjectInformationSvg,
         UnderConstructionInformation

@@ -39,6 +39,7 @@ $title-margin-left: $illustration-width + $illustration-spacing;
 
 .register-new-project-section {
     display: flex;
+    overflow: hidden;
 }
 
 .register-new-project-list {
@@ -47,6 +48,14 @@ $title-margin-left: $illustration-width + $illustration-spacing;
 
 .register-new-project-section-badge {
     margin: 0 $tlp-half-spacing 0 0;
+}
+
+.register-new-project-icon {
+    margin: 0 5px 0 0;
+}
+
+.register-new-project-information-form-container {
+    display: flex;
 }
 
 @media screen and (max-width: 1200px) {

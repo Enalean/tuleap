@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-form-element">
+    <div class="tlp-form-element project-information-name">
         <label class="tlp-label" for="project-name" v-translate>Name <i class="fa fa-asterisk"></i></label>
         <input id="project-name"
                type="text"

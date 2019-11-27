@@ -32,3 +32,26 @@
 .register-new-project-icon {
     margin: 0 5px 0 0;
 }
+
+.project-information-name {
+    flex-grow: 1;
+    margin: 0 $tlp-spacing $tlp-spacing 0;
+}
+
+
+.project-information-input-privacy-icon {
+    margin: 5px 0 0 5px;
+}
+
+.project-information-input-privacy-switch-checkbox:checked + .project-information-input-privacy-switch-button {
+    &::after {
+        content: '\f023'; // fa-lock
+    }
+}
+
+.project-information-input-privacy-switch-button {
+    &::after {
+        content: '\f09c'; // fa-unlock
+        color: $tlp-ui-dimmed;
+    }
+}
