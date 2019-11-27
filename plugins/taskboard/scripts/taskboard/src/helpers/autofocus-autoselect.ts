@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,5 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
-$tlp-paragraph-line-height: 24px;
+export function autoFocusAutoSelect(element: HTMLTextAreaElement | HTMLInputElement): void {
+    element.focus();
+    setTimeout(() => {
+        element.select();
+    }, 10);
+}

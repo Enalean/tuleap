@@ -25,7 +25,7 @@
            v-bind:class="additional_classnames"
            data-test="xref"
         >{{ card.xref }}</a>
-        <span class="taskboard-card-label">{{ card.label }}</span>
+        <span class="taskboard-card-label" v-if="!card.is_in_edit_mode">{{ card.label }}</span>
     </div>
 </template>
 

@@ -179,6 +179,30 @@
     }
 }
 
+.taskboard-card-label-editor {
+    position: relative;
+    margin: $tlp-half-spacing 0 0;
+}
+
+.taskboard-card-label-input {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    resize: none;
+}
+
+.taskboard-card-label-input-mirror {
+    visibility: hidden;
+    padding: 8px 12px;
+    border: 1px solid transparent;
+    font-family: $tlp-font-family;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
 .taskboard-card-remaining-effort-input {
     width: 30px;
     padding: 1px 5px;

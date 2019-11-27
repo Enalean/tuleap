@@ -19,6 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CardXrefLabel from "./CardXrefLabel.vue";
+import { Card } from "../../../../../type";
 
 describe("CardXrefLabel", () => {
     it("displays the xref and the label of a card", () => {
@@ -29,8 +30,9 @@ describe("CardXrefLabel", () => {
                     label: "Story 2",
                     xref: "story #43",
                     color: "lake-placid-blue",
-                    artifact_html_uri: "/path/to/43"
-                }
+                    artifact_html_uri: "/path/to/43",
+                    is_in_edit_mode: false
+                } as Card
             }
         });
         expect(wrapper.element).toMatchSnapshot();
@@ -45,12 +47,30 @@ describe("CardXrefLabel", () => {
                     xref: "story #43",
                     color: "lake-placid-blue",
                     background_color: "fiesta-red",
-                    artifact_html_uri: "/path/to/43"
-                }
+                    artifact_html_uri: "/path/to/43",
+                    is_in_edit_mode: false
+                } as Card
             }
         });
         expect(wrapper.find("[data-test=xref]").classes("taskboard-card-xref-fiesta-red")).toBe(
             true
         );
+    });
+
+    it("hides the label when card is in edit mode", () => {
+        const wrapper = shallowMount(CardXrefLabel, {
+            propsData: {
+                card: {
+                    id: 43,
+                    label: "Story 2",
+                    xref: "story #43",
+                    color: "lake-placid-blue",
+                    background_color: "fiesta-red",
+                    artifact_html_uri: "/path/to/43",
+                    is_in_edit_mode: true
+                } as Card
+            }
+        });
+        expect(wrapper.text()).toBe("story #43");
     });
 });

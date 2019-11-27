@@ -36,6 +36,7 @@ import { Card, TaskboardEvent } from "../../../../../../type";
 import { namespace } from "vuex-class";
 import { NewRemainingEffortPayload } from "../../../../../../store/swimlane/card/type";
 import EventBus from "../../../../../../helpers/event-bus";
+import { autoFocusAutoSelect } from "../../../../../../helpers/autofocus-autoselect";
 
 const swimlane = namespace("swimlane");
 
@@ -74,10 +75,7 @@ export default class EditRemainingEffort extends Vue {
 
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const input = this.$el as HTMLInputElement;
-        input.focus();
-        setTimeout(() => {
-            input.select();
-        }, 10);
+        autoFocusAutoSelect(input);
 
         EventBus.$on(TaskboardEvent.CANCEL_CARD_EDITION, this.cancelButtonCallback);
         EventBus.$on(TaskboardEvent.SAVE_CARD_EDITION, this.saveButtonCallback);
