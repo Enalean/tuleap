@@ -117,7 +117,7 @@ class ProjectCreationTest extends TestCase
 
         $force_activation = false;
 
-        ForgeConfig::set('sys_use_project_registration', 1);
+        ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
 
         $projectCreator = new ProjectCreator(
             ProjectManager::instance(),

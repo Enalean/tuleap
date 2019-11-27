@@ -33,6 +33,7 @@ use Tuleap\Layout\SidebarPresenter;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
+use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
 use Widget_Static;
@@ -125,7 +126,10 @@ class BurningParrotTheme extends BaseLayout
             $breadcrumbs,
             $this->getMOTD(),
             $this->css_assets,
-            $open_graph
+            $open_graph,
+            new ProjectRegistrationUserPermissionChecker(
+                new \ProjectDao()
+            )
         );
 
         $this->renderer->renderToPage('header', $header_presenter);

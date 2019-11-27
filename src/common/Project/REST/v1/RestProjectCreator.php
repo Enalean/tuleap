@@ -105,7 +105,6 @@ class RestProjectCreator
      * @throws \Tuleap\Project\ProjectDescriptionMandatoryException
      * @throws \Tuleap\Project\ProjectInvalidTemplateException
      * @throws InvalidTemplateException
-     * @throws \Tuleap\Project\ProjectRegistrationDisabledException
      */
     public function create(\PFUser $user, ProjectPostRepresentation $post_representation): Project
     {
@@ -166,7 +165,6 @@ class RestProjectCreator
      * @throws \Project_InvalidShortName_Exception
      * @throws \Tuleap\Project\ProjectDescriptionMandatoryException
      * @throws \Tuleap\Project\ProjectInvalidTemplateException
-     * @throws \Tuleap\Project\ProjectRegistrationDisabledException
      * @throws InvalidTemplateException
      */
     private function createProjectFromSystemTemplate(ProjectPostRepresentation $post_representation): Project

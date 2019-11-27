@@ -41,7 +41,6 @@ use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\ProjectDescriptionMandatoryException;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
 use Tuleap\Project\ProjectInvalidTemplateException;
-use Tuleap\Project\ProjectRegistrationDisabledException;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
@@ -249,7 +248,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      *
      * @return Project created
      * @throws ProjectInvalidTemplateException
-     * @throws ProjectRegistrationDisabledException
      * @throws Project_Creation_Exception
      * @throws Project_InvalidFullName_Exception
      * @throws Project_InvalidShortName_Exception
@@ -257,10 +255,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     public function build(ProjectCreationData $data): Project
     {
-        if (! \ForgeConfig::get('sys_use_project_registration') && ! $this->user_manager->getCurrentUser()->isSuperUser()) {
-            throw new ProjectRegistrationDisabledException();
-        }
-
         $this->checkProjectCreationData($data);
 
         return $this->processProjectCreation($data);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,18 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 require_once __DIR__ . '/../../www/include/account.php';
 require_once __DIR__ .  '/../../www/include/utils_soap.php';
 
+use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 
 /**
  * Wrapper for project related SOAP methods
  */
-class Project_SOAPServer
+class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
 
     /**
@@ -70,6 +72,10 @@ class Project_SOAPServer
 
     /** @var User_ForgeUserGroupPermissionsManager */
     private $forge_ugroup_permissions_manager;
+    /**
+     * @var ProjectRegistrationUserPermissionChecker
+     */
+    private $project_registration_user_permission_checker;
 
     public function __construct(
         ProjectManager $projectManager,
@@ -82,7 +88,8 @@ class Project_SOAPServer
         Project_CustomDescription_CustomDescriptionValueFactory $description_value_factory,
         Project_Service_ServiceUsageFactory $service_usage_factory,
         Project_Service_ServiceUsageManager $service_usage_manager,
-        User_ForgeUserGroupPermissionsManager $forge_ugroup_permissions_manager
+        User_ForgeUserGroupPermissionsManager $forge_ugroup_permissions_manager,
+        ProjectRegistrationUserPermissionChecker $project_registration_user_permission_checker
     ) {
         $this->projectManager                   = $projectManager;
         $this->projectCreator                   = $projectCreator;
@@ -95,6 +102,7 @@ class Project_SOAPServer
         $this->service_usage_factory            = $service_usage_factory;
         $this->service_usage_manager            = $service_usage_manager;
         $this->forge_ugroup_permissions_manager = $forge_ugroup_permissions_manager;
+        $this->project_registration_user_permission_checker = $project_registration_user_permission_checker;
     }
 
     /**
@@ -147,8 +155,11 @@ class Project_SOAPServer
             $this->checkAdminSessionIsValid($adminSessionKey, $sessionKey);
         }
 
-        $template = $this->getTemplateById($templateId, $requester);
         try {
+            $this->project_registration_user_permission_checker->checkUserCreateAProject($requester);
+
+            $template = $this->getTemplateById($templateId, $requester);
+
             $this->limitator->logCallTo('addProject');
             return $this->formatDataAndCreateProject($shortName, $publicName, $privacy, $template);
         } catch (Exception $e) {

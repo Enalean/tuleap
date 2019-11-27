@@ -35,7 +35,7 @@ class FlamingParrot_NavBarItemProjectsPresenter extends FlamingParrot_NavBarItem
     public $register_new_proj;
     public $browse_projects_text;
 
-    public function __construct($id, $is_active, PFUser $user, array $projects)
+    public function __construct($id, $is_active, bool $is_project_registration_enabled, PFUser $user, array $projects)
     {
         parent::__construct($id, $is_active);
 
@@ -49,7 +49,7 @@ class FlamingParrot_NavBarItemProjectsPresenter extends FlamingParrot_NavBarItem
         $this->register_new_proj    = $GLOBALS['Language']->getText('include_menu', 'register_new_proj');
 
         $this->is_trove_cat_enabled            = ForgeConfig::get('sys_use_trove');
-        $this->is_project_registration_enabled = ForgeConfig::get('sys_use_project_registration', true);
+        $this->is_project_registration_enabled = $is_project_registration_enabled;
 
         $this->display_only_trovemap =
             $this->is_trove_cat_enabled
