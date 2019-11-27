@@ -20,11 +20,10 @@
     </div>
     <div class="tlp-modal-body">
         <div class="tlp-form-element">
-            <label class="tlp-label" for="updave-reviewers-modal-select" translate-context="field-label" translate>Reviewers</label>
+            <label class="tlp-label" for="update-reviewers-modal-select" translate-context="field-label" translate>Reviewers</label>
             <select multiple
-                id="updave-reviewers-modal-select"
+                id="update-reviewers-modal-select"
                 class="tlp-select"
-                style="width: 100%;"
             >
                 <option ng-repeat="user in ::update_reviewers_modal.reviewers_selection"
                     value="{{ user.id }}"

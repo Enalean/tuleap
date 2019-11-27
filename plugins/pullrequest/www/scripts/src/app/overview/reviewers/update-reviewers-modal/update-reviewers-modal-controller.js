@@ -70,7 +70,7 @@ function UpdateReviewersModalController(
 
     function init() {
         const user_autocompleter = modal_instance.tlp_modal.element.querySelector(
-            "#updave-reviewers-modal-select"
+            "#update-reviewers-modal-select"
         );
 
         select2(user_autocompleter, {
@@ -93,7 +93,8 @@ function UpdateReviewersModalController(
                 }
             },
             templateResult: self.templateUserResult,
-            templateSelection: self.templateUserSelection
+            templateSelection: self.templateUserSelection,
+            width: "100%"
         });
 
         angular.element(user_autocompleter).on("select2:selecting", self.handleUsersValueSelection);
