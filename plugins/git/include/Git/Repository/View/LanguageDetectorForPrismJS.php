@@ -38,7 +38,7 @@ class LanguageDetectorForPrismJS
         'bat'      => 'batch',
         'h'        => 'c',
         'tex'      => 'latex',
-        'vue'      => 'javascript',
+        'vue'      => 'markup',
         'mkd'      => 'markdown',
         'yml'      => 'yaml',
         'cmake.in' => 'cmake'
