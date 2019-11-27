@@ -15,7 +15,21 @@
     margin: -4px $tlp-half-spacing -4px 0;
 }
 
-#pull-request-update-modal .select2-selection__choice {
-    padding-top: 2px;
-    padding-bottom: 2px;
+#pull-request-update-reviewers-modal {
+    width: 800px;
+
+    .select2-selection__choice {
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+
+    > .tlp-modal-footer {
+        align-items: center;
+
+        > .pull-request-update-reviewers-clear-info {
+            flex: 1 1 auto;
+            margin: 0;
+            font-size: 14px;
+        }
+    }
 }

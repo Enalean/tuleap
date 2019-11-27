@@ -27,6 +27,7 @@ export default UpdateReviewersModalController;
 UpdateReviewersModalController.$inject = [
     "$compile",
     "$rootScope",
+    "$scope",
     "$templateCache",
     "modal_instance",
     "ReviewersService",
@@ -39,6 +40,7 @@ UpdateReviewersModalController.$inject = [
 function UpdateReviewersModalController(
     $compile,
     $rootScope,
+    $scope,
     $templateCache,
     modal_instance,
     ReviewersService,
@@ -58,7 +60,12 @@ function UpdateReviewersModalController(
         templateUserResult,
         templateUserSelection,
         handleUsersValueSelection,
-        handleUsersValueUnselection
+        handleUsersValueUnselection,
+        handleUsersValueClearing,
+        isClearModal,
+        isAddModal,
+        isEditModalAtStart,
+        isEditModal
     });
 
     function init() {
@@ -93,6 +100,8 @@ function UpdateReviewersModalController(
         angular
             .element(user_autocompleter)
             .on("select2:unselecting", self.handleUsersValueUnselection);
+
+        angular.element(user_autocompleter).on("select2:clear", self.handleUsersValueClearing);
     }
 
     function handleUsersValueSelection(event) {
@@ -107,6 +116,16 @@ function UpdateReviewersModalController(
         self.reviewers_selection = self.reviewers_selection.filter(
             user => parseInt(user.id, 10) !== parseInt(removed_selection.id, 10)
         );
+
+        // Without this call, sometimes the template isn't updated
+        $scope.$digest();
+    }
+
+    function handleUsersValueClearing() {
+        self.reviewers_selection.length = 0;
+
+        // Without this call, sometimes the template isn't updated
+        $scope.$digest();
     }
 
     function templateUserResult(result) {
@@ -137,6 +156,27 @@ function UpdateReviewersModalController(
         return reviewers.find(user => {
             return result.id === user.id.toString();
         });
+    }
+
+    function isClearModal() {
+        return (
+            self.is_there_at_least_one_reviewers_already_set &&
+            self.reviewers_selection.length === 0
+        );
+    }
+
+    function isAddModal() {
+        return !self.is_there_at_least_one_reviewers_already_set;
+    }
+
+    function isEditModalAtStart() {
+        return self.is_there_at_least_one_reviewers_already_set;
+    }
+
+    function isEditModal() {
+        return (
+            self.is_there_at_least_one_reviewers_already_set && self.reviewers_selection.length > 0
+        );
     }
 
     function save() {
