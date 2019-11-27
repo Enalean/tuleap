@@ -54,6 +54,7 @@ use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenter
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsEmailRetriever;
 use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
+use Tuleap\Tracker\Notifications\InvolvedNotificationDao;
 use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
@@ -1868,7 +1869,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                     new UserNotificationSettingsRetriever(
                         new Tracker_GlobalNotificationDao(),
                         new UnsubscribersNotificationDAO(),
-                        new UserNotificationOnlyStatusChangeDAO()
+                        new UserNotificationOnlyStatusChangeDAO(),
+                        new InvolvedNotificationDao()
                     ),
                     new UserNotificationOnlyStatusChangeDAO()
                 ),

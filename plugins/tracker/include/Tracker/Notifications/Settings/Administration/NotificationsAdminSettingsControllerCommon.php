@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +28,7 @@ use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationSubscribersFilter;
+use Tuleap\Tracker\Notifications\InvolvedNotificationDao;
 use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
@@ -101,7 +102,8 @@ trait NotificationsAdminSettingsControllerCommon
                     new UserNotificationSettingsRetriever(
                         new \Tracker_GlobalNotificationDao(),
                         new UnsubscribersNotificationDAO(),
-                        new UserNotificationOnlyStatusChangeDAO()
+                        new UserNotificationOnlyStatusChangeDAO(),
+                        new InvolvedNotificationDao()
                     ),
                     new UserNotificationOnlyStatusChangeDAO()
                 ),

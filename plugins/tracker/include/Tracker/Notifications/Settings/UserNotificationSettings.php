@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -49,6 +49,7 @@ class UserNotificationSettings
     public function __construct(
         $has_unsubscribed,
         $is_only_on_status_update,
+        bool $is_involved,
         $tracker_notification_level,
         GlobalNotification ...$global_notifications
     ) {
@@ -57,14 +58,26 @@ class UserNotificationSettings
             return;
         }
 
-        if ($is_only_on_status_update || $tracker_notification_level === Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE) {
+        if ($is_involved) {
+            $this->is_in_no_global_notification_mode = true;
+            return;
+        }
+
+        if ($is_only_on_status_update) {
             $this->is_in_notify_on_status_change_mode = true;
             return;
         }
 
-        if (empty($global_notifications)) {
-            $this->is_in_no_global_notification_mode = true;
-            return;
+        if (count($global_notifications) === 0) {
+            if ($tracker_notification_level === Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE) {
+                $this->is_in_notify_on_status_change_mode = true;
+                return;
+            }
+
+            if ($tracker_notification_level === Tracker::NOTIFICATIONS_LEVEL_DEFAULT) {
+                $this->is_in_no_global_notification_mode = true;
+                return;
+            }
         }
 
         foreach ($global_notifications as $global_notification) {

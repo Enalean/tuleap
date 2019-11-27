@@ -45,6 +45,10 @@ class UserNotificationSettingsDAO extends DataAccessObject
         $this->getDB()->beginTransaction();
         try {
             $this->deleteUserNotificationSettings($user_id, $tracker_id);
+            $this->getDB()->insert(
+                'plugin_tracker_involved_notification_subscribers',
+                ['user_id' => $user_id, 'tracker_id' => $tracker_id]
+            );
             $this->getDB()->commit();
         } catch (\Exception $ex) {
             $this->getDB()->rollBack();
@@ -106,7 +110,14 @@ class UserNotificationSettingsDAO extends DataAccessObject
         $this->deleteUserFromUnsubscribers($user_id, $tracker_id);
         $this->deleteUserFromGlobalNotification($user_id, $tracker_id);
         $this->deleteUserFromStatusUpdateOnlyNotification($user_id, $tracker_id);
+        $this->deleteUserFromInvolvedNotification($user_id, $tracker_id);
         $this->cleanUpEmptyGlobalNotification($tracker_id);
+    }
+
+    private function deleteUserFromInvolvedNotification($user_id, $tracker_id)
+    {
+        $sql = 'DELETE FROM plugin_tracker_involved_notification_subscribers WHERE user_id = ? AND tracker_id = ?';
+        $this->getDB()->run($sql, $user_id, $tracker_id);
     }
 
     private function deleteUserFromUnsubscribers($user_id, $tracker_id)
