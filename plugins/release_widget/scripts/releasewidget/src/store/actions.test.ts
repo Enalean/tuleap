@@ -37,7 +37,9 @@ describe("Store actions", () => {
                 current_milestones: [],
                 error_message: null,
                 is_loading: false,
-                trackers_agile_dashboard: []
+                trackers_agile_dashboard: [],
+                is_browser_IE11: false,
+                label_tracker_planning: "Release"
             }
         };
     });
@@ -85,7 +87,9 @@ describe("Store actions", () => {
                     current_milestones: [],
                     offset: 0,
                     limit: 50,
-                    trackers_agile_dashboard: trackers
+                    trackers_agile_dashboard: trackers,
+                    is_browser_IE11: false,
+                    label_tracker_planning: "Release"
                 };
 
                 const milestones: MilestoneData[] = [
@@ -143,7 +147,9 @@ describe("Store actions", () => {
                 current_milestones: [],
                 offset: 0,
                 limit: 50,
-                trackers_agile_dashboard: trackers
+                trackers_agile_dashboard: trackers,
+                is_browser_IE11: false,
+                label_tracker_planning: "Release"
             };
 
             const milestone: MilestoneData = {

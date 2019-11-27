@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const project_id_dataset = vue_mount_point.dataset.projectId;
-    const is_browser_IE11 = vue_mount_point.dataset.isIe11;
+    const is_browser_IE11_dataset = vue_mount_point.dataset.isIe11;
     const nb_upcoming_releases_dataset = vue_mount_point.dataset.nbUpcomingReleases;
     const nb_backlog_items_dataset = vue_mount_point.dataset.nbBacklogItems;
     const trackers_agile_dashboard_dataset = vue_mount_point.dataset.jsonTrackersAgileDashboard;
@@ -77,19 +77,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     const trackers_agile_dashboard: TrackerAgileDashboard[] = JSON.parse(
         trackers_agile_dashboard_dataset
     );
+    const is_browser_IE11 = Boolean(is_browser_IE11_dataset);
 
     const AppComponent = Vue.extend(App);
-    const store = createStore();
 
     new AppComponent({
-        store,
-        propsData: {
+        store: createStore(
             project_id,
-            is_browser_IE11,
             nb_upcoming_releases,
             nb_backlog_items,
             trackers_agile_dashboard,
+            is_browser_IE11,
             label_tracker_planning
-        }
+        )
     }).$mount(vue_mount_point);
 });
