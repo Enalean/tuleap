@@ -25,8 +25,9 @@ exports[`ReleaseDescription Given user display widget, Then a good link to top p
        
       <translate-stub
         tag="span"
+        translateparams="[object Object]"
       >
-         Go to release overview 
+         Go to %{label_tracker} overview 
       </translate-stub>
     </a>
   </div>

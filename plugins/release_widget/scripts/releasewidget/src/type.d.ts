@@ -41,6 +41,11 @@ export interface MilestoneData {
         };
     };
     number_of_artifact_by_trackers: TrackerNumberArtifacts[];
+    artifact?: {
+        tracker?: {
+            label?: string;
+        };
+    };
 }
 
 export interface TrackerNumberArtifacts {

@@ -52,7 +52,12 @@ describe("ReleaseDescription", () => {
             planning: {
                 id: "100"
             },
-            number_of_artifact_by_trackers: []
+            number_of_artifact_by_trackers: [],
+            artifact: {
+                tracker: {
+                    label: "Release"
+                }
+            }
         };
 
         component_options.propsData = {
