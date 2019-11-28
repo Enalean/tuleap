@@ -25,7 +25,7 @@ namespace Tuleap\SystemEvent;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Lock\Factory as LockFactory;
+use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\SemaphoreStore;
 use SystemEventProcessManager;
 
@@ -58,17 +58,17 @@ class SystemEventProcessManagerTest extends TestCase
         $this->process_manager = new SystemEventProcessManager($this->lock_factory);
     }
 
-    public function testItReturnsFalseIfNoProcessRunning()
+    public function testItReturnsFalseIfNoProcessRunning(): void
     {
-        $this->process_manager->isAlreadyRunning($this->process);
+        $this->assertFalse($this->process_manager->isAlreadyRunning($this->process));
     }
 
-    public function testItReturnsTrueIfAProcessIsRunning()
+    public function testItReturnsTrueIfAProcessIsRunning(): void
     {
-        $lock = $this->lock_factory->createLock($this->process);
+        $lock = $this->lock_factory->createLock($this->process->getLockName());
         $lock->acquire();
 
-        $this->process_manager->isAlreadyRunning($this->process);
+        $this->assertTrue($this->process_manager->isAlreadyRunning($this->process));
 
         $lock->release();
     }

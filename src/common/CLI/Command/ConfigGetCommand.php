@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,7 +43,7 @@ class ConfigGetCommand extends Command
             ->addArgument('key', InputArgument::REQUIRED, 'Variable key');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = $input->getArgument('key');
         if (! ForgeConfig::exists($key)) {
@@ -51,5 +51,6 @@ class ConfigGetCommand extends Command
         }
         $value = ForgeConfig::get($key);
         $output->write($value);
+        return 0;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -76,7 +76,7 @@ class TrackerForceNotificationsLevelCommand extends Command
         $this->tracker_dao                  = $tracker_dao;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $notification_level = $this->checkNotificationLevelParameter($input);
         $notification_level = $this->notification_level_extractor->extractNotificationLevelFromString(
@@ -92,6 +92,8 @@ class TrackerForceNotificationsLevelCommand extends Command
                 $this->force_usage_updater->forceUserPreferences($tracker, $notification_level);
             }
         }
+
+        return 0;
     }
 
     protected function configure()

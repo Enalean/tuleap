@@ -30,7 +30,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Lock\Factory as LockFactory;
+use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\SemaphoreStore;
 use SystemEvent;
 use SystemEventProcess;
