@@ -24,9 +24,10 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 
-class VerifierTest extends \TuleapTestCase
+class VerifierTest extends \PHPUnit\Framework\TestCase
 {
-    public function itGetsUserAssociatedWithToken()
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    public function testItGetsUserAssociatedWithToken() : void
     {
         $creation_date = new \DateTime();
         $dao           = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
@@ -50,10 +51,10 @@ class VerifierTest extends \TuleapTestCase
 
         $token_verifier = new Verifier($dao, $hasher, $user_manager);
 
-        $this->assertEqual($user, $token_verifier->getUser($token));
+        $this->assertEquals($user, $token_verifier->getUser($token));
     }
 
-    public function itThrowsAnExceptionWhenTokenIDCanNotBeFound()
+    public function testItThrowsAnExceptionWhenTokenIDCanNotBeFound() : void
     {
         $dao = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
         $dao->shouldReceive('getTokenInformationById')->andReturns(false);
@@ -72,7 +73,7 @@ class VerifierTest extends \TuleapTestCase
         $token_verifier->getUser($token);
     }
 
-    public function itThrowsAnExceptionWhenVerifierPartIsNotValid()
+    public function testItThrowsAnExceptionWhenVerifierPartIsNotValid() : void
     {
         $dao = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
         $dao->shouldReceive('getTokenInformationById')->andReturns(array('verifier' => 'token_verification_part_password_hashed'));
@@ -93,7 +94,7 @@ class VerifierTest extends \TuleapTestCase
         $token_verifier->getUser($token);
     }
 
-    public function itThrowsAnExceptionWhenTheTokenIsExpired()
+    public function testItThrowsAnExceptionWhenTheTokenIsExpired() : void
     {
         $expired_creation_date = new \DateTime();
         $expired_creation_date->sub(new \DateInterval(Verifier::TOKEN_VALIDITY_PERIOD));

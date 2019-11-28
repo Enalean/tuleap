@@ -23,8 +23,9 @@ namespace Tuleap\User\Admin;
 use ForgeAccess;
 use ForgeConfig;
 
-class UserStatusCheckerTest extends \TuleapTestCase
+class UserStatusCheckerTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     /**
      * @var \PFUser
      */
@@ -36,10 +37,9 @@ class UserStatusCheckerTest extends \TuleapTestCase
     private $status_checker;
 
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->status_checker = new UserStatusChecker();
         $this->user           = \Mockery::spy(\PFUser::class);
@@ -47,7 +47,7 @@ class UserStatusCheckerTest extends \TuleapTestCase
         ForgeConfig::store();
     }
 
-    public function itReturnsTrueWhenPlatformAllowRestricted()
+    public function testItReturnsTrueWhenPlatformAllowRestricted() : void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         $this->user->shouldReceive('isRestricted')->andReturns(false);
@@ -55,7 +55,7 @@ class UserStatusCheckerTest extends \TuleapTestCase
         $this->assertTrue($this->status_checker->isRestrictedStatusAllowedForUser($this->user));
     }
 
-    public function itReturnsTrueWhenUserIsRestricted()
+    public function testItReturnsTrueWhenUserIsRestricted() : void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         $this->user->shouldReceive('isRestricted')->andReturns(true);
@@ -63,7 +63,7 @@ class UserStatusCheckerTest extends \TuleapTestCase
         $this->assertTrue($this->status_checker->isRestrictedStatusAllowedForUser($this->user));
     }
 
-    public function itReturnsFalseWhenUserIsNotRestrictedAndPlatformDontAllowRestricted()
+    public function testItReturnsFalseWhenUserIsNotRestrictedAndPlatformDontAllowRestricted() : void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         $this->user->shouldReceive('isRestricted')->andReturns(false);

@@ -19,15 +19,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class RandomNumberGeneratorTest extends TuleapTestCase
+class RandomNumberGeneratorTest extends \PHPUnit\Framework\TestCase
 {
-    public function itGeneratesTokenOfTheAskedSize()
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    public function testItGeneratesTokenOfTheAskedSize() : void
     {
         $number_generator_8_bits = new RandomNumberGenerator(1);
-        $this->assertEqual(2, strlen($number_generator_8_bits->getNumber()));
+        $this->assertEquals(2, strlen($number_generator_8_bits->getNumber()));
         $number_generator_64_bits = new RandomNumberGenerator(8);
-        $this->assertEqual(16, strlen($number_generator_64_bits->getNumber()));
+        $this->assertEquals(16, strlen($number_generator_64_bits->getNumber()));
         $number_generator_128_bits = new RandomNumberGenerator();
-        $this->assertEqual(32, strlen($number_generator_128_bits->getNumber()));
+        $this->assertEquals(32, strlen($number_generator_128_bits->getNumber()));
     }
 }
