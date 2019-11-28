@@ -1422,7 +1422,6 @@ class ProjectResource extends AuthenticatedResource
      * @url DELETE {id}/banner
      *
      * @param int $id id of the project
-     * @return 200
      * @throws RestException 403
      */
     protected function deleteBanner(int $id) : void

@@ -75,7 +75,7 @@ $uploaded_links_retriever         = new UploadedLinksRetriever(new UploadedLinks
 $uploaded_link_presenters_builder = new UploadedLinkPresentersBuilder();
 
 $pv = false;
-if ($request->valid(new Valid_Pv('pv'))) {
+if ($request->valid(new Valid_Pv())) {
     $pv = $request->get('pv');
 }
 
