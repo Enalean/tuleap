@@ -30,7 +30,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { namespace, Getter } from "vuex-class";
+import { namespace, Getter, Mutation } from "vuex-class";
 import dragula, { Drake } from "dragula";
 import { Swimlane, ColumnDefinition, Card, TaskboardEvent } from "../../type";
 import { isContainer, canMove, invalid, checkCellAcceptsDrop } from "../../helpers/drag-drop";
@@ -74,6 +74,12 @@ export default class TaskBoard extends Vue {
 
     @Getter
     readonly column_of_cell!: (cell: HTMLElement) => ColumnDefinition | undefined;
+
+    @Mutation
+    readonly setIdOfCardBeingDragged!: (card: Element) => void;
+
+    @Mutation
+    readonly resetIdOfCardBeingDragged!: () => void;
 
     @swimlane.Action
     handleDrop!: (payload: HandleDropPayload) => void;
@@ -120,6 +126,8 @@ export default class TaskBoard extends Vue {
         );
 
         this.drake.on("cancel", this.removeHighlightOnLastHoveredDropZone);
+        this.drake.on("drag", this.setIdOfCardBeingDragged);
+        this.drake.on("dragend", this.resetIdOfCardBeingDragged);
 
         EventBus.$on(TaskboardEvent.ESC_KEY_PRESSED, this.cancelDragOnEscape);
 

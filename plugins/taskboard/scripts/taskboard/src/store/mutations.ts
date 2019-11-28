@@ -26,3 +26,18 @@ export function hideClosedItems(state: State): void {
 export function displayClosedItems(state: State): void {
     state.are_closed_items_displayed = true;
 }
+
+export function setIdOfCardBeingDragged(state: State, card: Element): void {
+    if (!card || !(card instanceof HTMLElement)) {
+        return;
+    }
+
+    state.card_being_dragged = {
+        tracker_id: Number(card.dataset.trackerId),
+        card_id: Number(card.dataset.cardId)
+    };
+}
+
+export function resetIdOfCardBeingDragged(state: State): void {
+    state.card_being_dragged = null;
+}
