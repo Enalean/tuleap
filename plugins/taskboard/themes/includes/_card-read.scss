@@ -79,7 +79,6 @@
         border-radius: 3px 0 0 3px;
     }
 
-
     @each $color-name, $colors in $tlp-swatch-color-map {
         &.taskboard-card-#{$color-name}::before {
             background: map-get($colors, 'primary');
@@ -104,6 +103,17 @@
 
 .taskboard-draggable-item {
     cursor: move;
+
+    &.gu-mirror {
+        opacity: 1;
+
+        >.taskboard-card {
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, .08),
+                0 5px 15px rgba(0, 0, 0, .1),
+                0 -1px 0 rgba(0, 0, 0, .03);
+        }
+    }
 }
 
 .taskboard-cell-parent-card,
