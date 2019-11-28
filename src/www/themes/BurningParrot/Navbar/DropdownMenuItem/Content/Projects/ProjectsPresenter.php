@@ -40,6 +40,7 @@ class ProjectsPresenter extends Presenter
 
     public function __construct(
         $id,
+        bool $is_project_registration_enabled,
         array $projects
     ) {
         parent::__construct($id);
@@ -53,7 +54,7 @@ class ProjectsPresenter extends Presenter
 
         $this->is_trove_cat_enabled              = ForgeConfig::get('sys_use_trove');
         $this->is_member_of_at_least_one_project = count($this->projects) > 0;
-        $this->is_project_registration_enabled   = ForgeConfig::get('sys_use_project_registration', true);
+        $this->is_project_registration_enabled   = $is_project_registration_enabled;
         $this->is_there_something_to_filter      = $this->is_member_of_at_least_one_project
             || $this->is_trove_cat_enabled;
     }

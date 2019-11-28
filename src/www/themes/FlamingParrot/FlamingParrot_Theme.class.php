@@ -24,6 +24,7 @@ use Tuleap\OpenGraph\NoOpenGraphPresenter;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
+use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -227,7 +228,10 @@ class FlamingParrot_Theme extends Layout
             $_SERVER['REQUEST_URI'],
             $selected_top_tab,
             $this->getExtraTabs(),
-            $projects_presenters
+            $projects_presenters,
+            new ProjectRegistrationUserPermissionChecker(
+                new ProjectDao()
+            )
         );
         $csrf_logout_token     = new CSRFSynchronizerToken('logout_action');
         $url_redirect          = new URLRedirect($event_manager);

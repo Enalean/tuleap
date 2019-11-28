@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 
 class FlamingParrot_NavBarItemPresentersCollectionBuilder
 {
@@ -38,19 +40,25 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder
 
     /** @var array */
     private $projects;
+    /**
+     * @var ProjectRegistrationUserPermissionChecker
+     */
+    private $registration_user_permission_checker;
 
     public function __construct(
         PFUser $user,
         $request_uri,
         $selected_top_tab,
         array $extra_tabs,
-        array $projects
+        array $projects,
+        ProjectRegistrationUserPermissionChecker $registration_user_permission_checker
     ) {
         $this->user             = $user;
         $this->request_uri      = $request_uri;
         $this->selected_top_tab = $selected_top_tab;
         $this->extra_tabs       = $extra_tabs;
         $this->projects         = $projects;
+        $this->registration_user_permission_checker = $registration_user_permission_checker;
     }
 
     public function buildNavBarItemPresentersCollection()
@@ -91,6 +99,7 @@ class FlamingParrot_NavBarItemPresentersCollectionBuilder
         $collection->addItem(new FlamingParrot_NavBarItemProjectsPresenter(
             'project',
             $this->isNavBarItemActive(array('/softwaremap/', '/projects/', '/project/')),
+            $this->registration_user_permission_checker->isUserAllowedToCreateProjects($this->user),
             $this->user,
             $this->projects
         ));

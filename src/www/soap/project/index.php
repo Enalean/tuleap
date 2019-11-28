@@ -30,6 +30,7 @@ use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
+use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
@@ -47,7 +48,7 @@ $default_domain = ForgeConfig::get('sys_default_domain');
 
 $uri = $protocol.'://'.$default_domain.'/soap/project';
 
-$serviceClass = 'Project_SOAPServer';
+$serviceClass = Project_SOAPServer::class;
 
 if ($request->exist('wsdl')) {
     $wsdlGen = new SOAP_NusoapWSDL($serviceClass, 'TuleapProjectAPI', $uri);
@@ -97,7 +98,10 @@ if ($request->exist('wsdl')) {
         $custom_project_description_value_factory,
         $service_usage_factory,
         $service_usage_manager,
-        $forge_ugroup_permissions_manager
+        $forge_ugroup_permissions_manager,
+        new ProjectRegistrationUserPermissionChecker(
+            new ProjectDao()
+        )
     );
     $xml_security = new XML_Security();
     $xml_security->enableExternalLoadOfEntities();

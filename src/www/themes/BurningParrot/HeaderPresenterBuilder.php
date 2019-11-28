@@ -34,6 +34,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Layout\ThemeVariation;
 use Tuleap\OpenGraph\OpenGraphPresenter;
+use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
 
@@ -85,7 +86,8 @@ class HeaderPresenterBuilder
         array $breadcrumbs,
         $motd,
         CssAssetCollection $css_assets,
-        OpenGraphPresenter $open_graph
+        OpenGraphPresenter $open_graph,
+        ProjectRegistrationUserPermissionChecker $registration_user_permission_checker
     ) {
         $this->navbar_presenter_builder              = $navbar_presenter_builder;
         $this->request                               = $request;
@@ -110,7 +112,8 @@ class HeaderPresenterBuilder
                 $this->current_user,
                 $this->getExtraTabs(),
                 $this->getHelpMenuItems(),
-                $url_redirect
+                $url_redirect,
+                $registration_user_permission_checker
             ),
             $color,
             $this->getStylesheets($theme_variation),

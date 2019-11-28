@@ -43,7 +43,7 @@ class ProjectRegistrationUserPermissionChecker
 
     public function checkUserCreateAProject(PFUser $user): void
     {
-        if (! ForgeConfig::get('sys_use_project_registration') && ! $user->isSuperUser()) {
+        if (! ForgeConfig::get(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED) && ! $user->isSuperUser()) {
             throw new LimitedToSiteAdministratorsException();
         }
 
@@ -62,6 +62,16 @@ class ProjectRegistrationUserPermissionChecker
             if (! $this->numberOfProjectsWaitingForValidationPerUserBelowThreshold($user)) {
                 throw new MaxNumberOfProjectReachedException();
             }
+        }
+    }
+
+    public function isUserAllowedToCreateProjects(PFUser $user): bool
+    {
+        try {
+            $this->checkUserCreateAProject($user);
+            return true;
+        } catch (RegistrationForbiddenException $exception) {
+            return false;
         }
     }
 

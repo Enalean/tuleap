@@ -24,6 +24,7 @@ use EventManager;
 use HTTPRequest;
 use PFUser;
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinkPresentersBuilder;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinksPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Projects\ProjectPresentersBuilder;
@@ -45,23 +46,29 @@ class PresenterBuilder
 
     /** @var array */
     private $help_menu_items;
+    /**
+     * @var ProjectRegistrationUserPermissionChecker
+     */
+    private $registration_user_permission_checker;
 
     public function build(
         HTTPRequest $request,
         PFUser $current_user,
         array $extra_tabs,
         array $help_menu_items,
-        URLRedirect $url_redirect
+        URLRedirect $url_redirect,
+        ProjectRegistrationUserPermissionChecker $registration_user_permission_checker
     ) {
         $this->request         = $request;
         $this->current_user    = $current_user;
         $this->extra_tabs      = $extra_tabs;
         $this->help_menu_items = $help_menu_items;
+        $this->registration_user_permission_checker = $registration_user_permission_checker;
 
         return new Presenter(
             new GlobalNavPresenter(
                 $this->getGlobalMenuItems($current_user),
-                $this->getGlobalDropdownMenuItems()
+                $this->getGlobalDropdownMenuItems($current_user)
             ),
             new SearchPresenter($current_user),
             new UserNavPresenter(
@@ -74,7 +81,7 @@ class PresenterBuilder
         );
     }
 
-    private function getGlobalDropdownMenuItems()
+    private function getGlobalDropdownMenuItems(PFUser $user)
     {
         $global_dropdown_menu_items = array();
 
@@ -86,7 +93,7 @@ class PresenterBuilder
         $is_project_dropdown_visible = $this->current_user->isLoggedIn() && (
                 count($dropdown_menu_item_content_project_presenters) > 0 ||
                 \ForgeConfig::get('sys_use_trove') ||
-                \ForgeConfig::get('sys_use_project_registration')
+                $this->registration_user_permission_checker->isUserAllowedToCreateProjects($user)
             );
 
         if ($is_project_dropdown_visible) {
@@ -95,7 +102,8 @@ class PresenterBuilder
                 'fa fa-archive',
                 new ProjectsPresenter(
                     'projects',
-                    $dropdown_menu_item_content_project_presenters
+                    $this->registration_user_permission_checker->isUserAllowedToCreateProjects($user),
+                    $dropdown_menu_item_content_project_presenters,
                 ),
                 'nav-dropdown-left'
             );

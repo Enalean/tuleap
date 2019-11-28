@@ -152,68 +152,6 @@ final class ProjectCreatorTest extends TestCase
         $this->creator->create('shortname', 'public name', ['project' => ['built_from_template' => $template_id]]);
     }
 
-    public function testItDoesNotCreateProjectWhenRegistrationIsDisabledAndTheUserIsNotSiteAdmin(): void
-    {
-        ForgeConfig::set('sys_use_project_registration', 0);
-
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->once()->andReturnFalse();
-        $this->user_manager->shouldReceive('getCurrentUser')->once()->andReturn($user);
-
-        $this->creator->shouldReceive('processProjectCreation')->never();
-        $this->expectException(ProjectRegistrationDisabledException::class);
-        $this->creator->create('registrationdisablednotsiteadmin', 'Registration disabled without being siteadmin', []);
-    }
-
-    public function testItDoesCreateProjectWhenRegistrationIsDisabledAndTheUserIsSiteAdmin(): void
-    {
-        ForgeConfig::set('sys_use_project_registration', 0);
-
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->once()->andReturnTrue();
-        $this->user_manager->shouldReceive('getCurrentUser')->once()->andReturn($user);
-
-        $this->rule_short_name->shouldReceive('isValid')->once()->andReturnTrue();
-        $this->rule_project_full_name->shouldReceive('isValid')->once()->andReturnTrue();
-
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('isError')->once()->andReturnFalse();
-        $this->project_manager->shouldReceive('getProject')->once()->with(100)->andReturn($project);
-
-        $this->creator->shouldReceive('processProjectCreation')->once();
-
-        $this->creator->create(
-            'registrationdisablednotsiteadmin',
-            'Registration disabled without being siteadmin',
-            ['project' => ['built_from_template' => 100, 'form_short_description' => 'description']]
-        );
-    }
-
-    public function testCreationFailureShouldRaiseException(): void
-    {
-        ForgeConfig::set('sys_use_project_registration', 0);
-
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->once()->andReturnTrue();
-        $this->user_manager->shouldReceive('getCurrentUser')->once()->andReturn($user);
-
-        $this->rule_short_name->shouldReceive('isValid')->once()->andReturnTrue();
-        $this->rule_project_full_name->shouldReceive('isValid')->once()->andReturnTrue();
-
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('isError')->once()->andReturnFalse();
-        $this->project_manager->shouldReceive('getProject')->once()->with(100)->andReturn($project);
-
-        $this->creator->shouldReceive('createProject')->once()->andReturnNull();
-
-        $this->expectException(Project_Creation_Exception::class);
-        $this->creator->create(
-            'registrationdisablednotsiteadmin',
-            'Registration disabled without being siteadmin',
-            ['project' => ['built_from_template' => 100, 'form_short_description' => 'description']]
-        );
-    }
-
     public function testMandatoryDescriptionNotSetRaiseException(): void
     {
         $this->rule_short_name->shouldReceive('isValid')->once()->andReturnTrue();
