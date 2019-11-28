@@ -30,10 +30,13 @@ final class TrackerPresenter
     public $id;
     /** @var bool */
     public $can_update_mapped_field;
+    /** @var int|null  */
+    public $title_field_id;
 
-    public function __construct(TaskboardTracker $tracker, bool $can_update_mapped_field)
+    public function __construct(TaskboardTracker $tracker, bool $can_update_mapped_field, ?int $title_field_id)
     {
         $this->id                      = $tracker->getTrackerId();
         $this->can_update_mapped_field = $can_update_mapped_field;
+        $this->title_field_id          = $title_field_id;
     }
 }

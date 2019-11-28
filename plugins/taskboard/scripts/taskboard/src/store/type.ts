@@ -29,6 +29,13 @@ export interface State {
     milestone_id: number;
     milestone_title: string;
     are_closed_items_displayed: boolean;
+    trackers: Tracker[];
+}
+
+export interface Tracker {
+    id: number;
+    can_update_mapped_field: boolean;
+    title_field_id: number | null;
 }
 
 export interface RootState extends State {

@@ -103,7 +103,7 @@ final class BoardPresenterTest extends TestCase
         $tracker  = M::mock(Tracker::class);
         $tracker->shouldReceive(['getId' => '96']);
         $taskboard_tracker = new TaskboardTracker(M::mock(Tracker::class), $tracker);
-        $trackers          = [new TrackerPresenter($taskboard_tracker, true)];
+        $trackers          = [new TrackerPresenter($taskboard_tracker, true, 10)];
 
         $presenter = new BoardPresenter(
             $this->milestone_presenter,
