@@ -61,3 +61,12 @@ export interface HandleDragPayload {
     readonly target_cell?: Element;
     readonly source_cell?: Element;
 }
+
+export interface RefreshParentCardActionPayload {
+    readonly swimlane: Swimlane;
+}
+
+export interface RefreshParentCardMutationPayload {
+    readonly swimlane: Swimlane;
+    readonly parent_card: Card;
+}

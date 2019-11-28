@@ -22,7 +22,8 @@ import {
     AddChildrenToSwimlanePayload,
     SwimlaneState,
     MoveCardsPayload,
-    ReorderCardsPayload
+    ReorderCardsPayload,
+    RefreshParentCardMutationPayload
 } from "./type";
 import { findSwimlane, replaceSwimlane, findDroppedCard } from "./swimlane-helpers";
 import Vue from "vue";
@@ -40,6 +41,17 @@ function sortSwimlanesByRank(a: Swimlane, b: Swimlane): number {
 export function addSwimlanes(state: SwimlaneState, swimlanes: Array<Swimlane>): void {
     state.swimlanes = state.swimlanes.concat(swimlanes);
     state.swimlanes.sort(sortSwimlanesByRank);
+}
+
+export function refreshParentCard(
+    state: SwimlaneState,
+    payload: RefreshParentCardMutationPayload
+): void {
+    const state_swimlane = findSwimlane(state, payload.swimlane);
+    state_swimlane.card = {
+        ...state_swimlane.card,
+        ...payload.parent_card
+    };
 }
 
 export function beginLoadingSwimlanes(state: SwimlaneState): void {

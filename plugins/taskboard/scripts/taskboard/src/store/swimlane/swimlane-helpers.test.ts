@@ -19,12 +19,7 @@
 
 import { MoveCardsPayload, SwimlaneState } from "./type";
 import { Swimlane, Card } from "../../type";
-import {
-    findDroppedCard,
-    findSwimlane,
-    findSwimlaneIndex,
-    replaceSwimlane
-} from "./swimlane-helpers";
+import * as helpers from "./swimlane-helpers";
 
 describe(`swimlane-helpers`, () => {
     let state: SwimlaneState, second_swimlane: Swimlane;
@@ -42,27 +37,27 @@ describe(`swimlane-helpers`, () => {
             it will find the swimlane stored in the state with
             the same top-level card id`, () => {
             const needle = { card: { id: 24 } } as Swimlane;
-            const result = findSwimlane(state, needle);
+            const result = helpers.findSwimlane(state, needle);
             expect(result).toBe(second_swimlane);
         });
 
         it(`Given an unknown swimlane,
             it will throw an error`, () => {
             const unknown_swimlane = { card: { id: 999 } } as Swimlane;
-            expect(() => findSwimlane(state, unknown_swimlane)).toThrow();
+            expect(() => helpers.findSwimlane(state, unknown_swimlane)).toThrow();
         });
     });
 
     describe(`findSwimlaneIndex`, () => {
         it(`Given a swimlane, it will find its index in the state`, () => {
             const needle = { card: { id: 24 } } as Swimlane;
-            const result = findSwimlaneIndex(state, needle);
+            const result = helpers.findSwimlaneIndex(state, needle);
             expect(result).toBe(1);
         });
 
         it(`Given an unknown swimlane, it will return -1`, () => {
             const unknown_swimlane = { card: { id: 999 } } as Swimlane;
-            const result = findSwimlaneIndex(state, unknown_swimlane);
+            const result = helpers.findSwimlaneIndex(state, unknown_swimlane);
             expect(result).toBe(-1);
         });
     });
@@ -74,9 +69,9 @@ describe(`swimlane-helpers`, () => {
                 card: { id: 24 },
                 children_cards: [{ card: { id: 473 } }]
             } as unknown) as Swimlane;
-            replaceSwimlane(state, replacement);
+            helpers.replaceSwimlane(state, replacement);
 
-            const replacement_index = findSwimlaneIndex(state, replacement);
+            const replacement_index = helpers.findSwimlaneIndex(state, replacement);
             expect(replacement_index).toBe(1);
             const replaced = state.swimlanes[replacement_index];
             expect(replaced).toBe(replacement);
@@ -85,9 +80,9 @@ describe(`swimlane-helpers`, () => {
         it(`Given an unknown swimlane, it won't touch the state`, () => {
             const unknown_swimlane = { card: { id: 999 } } as Swimlane;
 
-            replaceSwimlane(state, unknown_swimlane);
+            helpers.replaceSwimlane(state, unknown_swimlane);
 
-            const unknown_index = findSwimlaneIndex(state, unknown_swimlane);
+            const unknown_index = helpers.findSwimlaneIndex(state, unknown_swimlane);
             expect(unknown_index).toBe(-1);
         });
     });
@@ -120,7 +115,7 @@ describe(`swimlane-helpers`, () => {
                 }
             } as MoveCardsPayload;
 
-            const card = findDroppedCard(state, payload);
+            const card = helpers.findDroppedCard(state, payload);
 
             expect(card).toEqual(card_from_state);
         });
@@ -149,7 +144,7 @@ describe(`swimlane-helpers`, () => {
                 }
             } as MoveCardsPayload;
 
-            const card = findDroppedCard(state, payload);
+            const card = helpers.findDroppedCard(state, payload);
 
             expect(card).toEqual(card_from_state);
         });
@@ -175,9 +170,42 @@ describe(`swimlane-helpers`, () => {
                 }
             } as MoveCardsPayload;
 
-            expect(() => findDroppedCard(state, payload)).toThrow(
+            expect(() => helpers.findDroppedCard(state, payload)).toThrow(
                 "Dropped card has not been found in the swimlane."
             );
+        });
+    });
+
+    describe(`isSoloCard`, () => {
+        it(`Given a swimlane with children, it will return false`, () => {
+            const swimlane: Swimlane = {
+                card: { id: 13, has_children: true },
+                children_cards: [{ id: 104 }, { id: 125 }],
+                is_loading_children_cards: false
+            } as Swimlane;
+
+            expect(helpers.isSoloCard(swimlane)).toBe(false);
+        });
+
+        it(`Given a swimlane that has children but the user can't see them,
+            it will return true`, () => {
+            const swimlane: Swimlane = {
+                card: { id: 45, has_children: true } as Card,
+                children_cards: [],
+                is_loading_children_cards: false
+            } as Swimlane;
+
+            expect(helpers.isSoloCard(swimlane)).toBe(false);
+        });
+
+        it(`Given a swimlane without children, it will return true`, () => {
+            const swimlane: Swimlane = {
+                card: { id: 14, has_children: false } as Card,
+                children_cards: [],
+                is_loading_children_cards: false
+            };
+
+            expect(helpers.isSoloCard(swimlane)).toBe(true);
         });
     });
 });

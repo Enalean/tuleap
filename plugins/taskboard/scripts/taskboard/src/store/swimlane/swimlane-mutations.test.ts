@@ -108,6 +108,45 @@ describe(`Swimlane state mutations`, () => {
         });
     });
 
+    describe(`refreshParentCard()`, () => {
+        it(`given a parent card, it will find it in the swimlanes and replace it`, () => {
+            const swimlane: Swimlane = {
+                card: {
+                    id: 42,
+                    label: "Card in state",
+                    mapped_list_value: { id: 1234, label: "Ongoing" },
+                    initial_effort: 5,
+                    remaining_effort: {
+                        value: 3,
+                        can_update: true,
+                        is_in_edit_mode: false,
+                        is_being_saved: false
+                    }
+                } as Card,
+                children_cards: [],
+                is_loading_children_cards: false
+            };
+            const state = {
+                swimlanes: [swimlane]
+            } as SwimlaneState;
+            const parent_card = {
+                id: 42,
+                label: "Refreshed card",
+                mapped_list_value: { id: 2345, label: "Done" },
+                initial_effort: 6,
+                remaining_effort: {
+                    value: 0,
+                    can_update: true,
+                    is_in_edit_mode: false,
+                    is_being_saved: false
+                }
+            } as Card;
+            mutations.refreshParentCard(state, { swimlane, parent_card });
+
+            expect(state.swimlanes[0].card).toStrictEqual(parent_card);
+        });
+    });
+
     describe(`beginLoadingChildren`, () => {
         let state: SwimlaneState;
         const swimlane = { card: { id: 86 }, is_loading_children_cards: false } as Swimlane;
