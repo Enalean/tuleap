@@ -76,7 +76,7 @@ class TemplateFactory
     public function getTemplate(string $name): ProjectTemplate
     {
         if (! isset($this->templates[$name]) || ! $this->templates[$name]->isAvailable()) {
-            throw new InvalidTemplateException();
+            throw new InvalidXMLTemplateNameException();
         }
         return $this->templates[$name];
     }

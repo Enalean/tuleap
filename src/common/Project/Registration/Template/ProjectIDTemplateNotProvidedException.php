@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Project;
+namespace Tuleap\Project\Registration\Template;
 
 use Project_Creation_Exception;
 
-final class ProjectInvalidTemplateException extends Project_Creation_Exception
+final class ProjectIDTemplateNotProvidedException extends Project_Creation_Exception implements InvalidTemplateException
 {
-    public function __construct(int $template_id)
+    public function __construct()
     {
-        parent::__construct('Template #' . $template_id . ' is not valid');
+        parent::__construct('No project ID as been provided for the template');
     }
 }

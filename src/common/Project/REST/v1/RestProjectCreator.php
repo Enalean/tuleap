@@ -24,13 +24,16 @@ declare(strict_types = 1);
 namespace Tuleap\Project\REST\v1;
 
 use Luracast\Restler\RestException;
+use PFUser;
 use Project;
 use ProjectCreationData;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
+use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\Import\DirectoryArchive;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -103,10 +106,9 @@ class RestProjectCreator
      * @throws \Project_InvalidFullName_Exception
      * @throws \Project_InvalidShortName_Exception
      * @throws \Tuleap\Project\ProjectDescriptionMandatoryException
-     * @throws \Tuleap\Project\ProjectInvalidTemplateException
      * @throws InvalidTemplateException
      */
-    public function create(\PFUser $user, ProjectPostRepresentation $post_representation): Project
+    public function create(PFUser $user, ProjectPostRepresentation $post_representation): Project
     {
         try {
             $this->permission_checker->checkUserCreateAProject($user);
@@ -117,34 +119,33 @@ class RestProjectCreator
         }
 
         if ($post_representation->template_id !== null) {
-            return $this->createProjectFromTemplateId($post_representation);
+            return $this->createProjectFromTemplateId($post_representation, $user);
         }
 
         if ($post_representation->xml_template_name !== null) {
             return $this->createProjectFromSystemTemplate($post_representation);
         }
 
-        throw new InvalidTemplateException();
+        throw new InvalidXMLTemplateNameException();
     }
 
     /**
-     * @param ProjectPostRepresentation $post_representation
-     *
      * @return Project
      * @throws \Project_Creation_Exception
      * @throws \Project_InvalidFullName_Exception
      * @throws \Project_InvalidShortName_Exception
      * @throws \Tuleap\Project\ProjectDescriptionMandatoryException
-     * @throws \Tuleap\Project\ProjectInvalidTemplateException
+     * @throws InvalidTemplateException
      */
-    private function createProjectFromTemplateId(ProjectPostRepresentation $post_representation): Project
-    {
+    private function createProjectFromTemplateId(
+        ProjectPostRepresentation $post_representation,
+        PFUser $current_user
+    ): Project {
         $data = [
             'project' => [
                 'form_short_description' => $post_representation->description,
                 'is_test'                => false,
                 'is_public'              => $post_representation->is_public,
-                'built_from_template'    => $post_representation->template_id,
             ]
         ];
 
@@ -155,16 +156,14 @@ class RestProjectCreator
         return $this->project_creator->createFromRest(
             $post_representation->shortname,
             $post_representation->label,
+            TemplateFromProjectForCreation::fromRESTRepresentation($post_representation, $current_user, $this->project_manager),
             $data
         );
     }
 
     /**
-     * @throws \Project_Creation_Exception
-     * @throws \Project_InvalidFullName_Exception
-     * @throws \Project_InvalidShortName_Exception
-     * @throws \Tuleap\Project\ProjectDescriptionMandatoryException
-     * @throws \Tuleap\Project\ProjectInvalidTemplateException
+     * @param ProjectPostRepresentation $post_representation
+     * @return Project
      * @throws InvalidTemplateException
      */
     private function createProjectFromSystemTemplate(ProjectPostRepresentation $post_representation): Project
@@ -174,10 +173,8 @@ class RestProjectCreator
 
         $data = ProjectCreationData::buildFromXML(
             $xml_element,
-            100,
             $this->validator,
             $this->service_manager,
-            $this->project_manager,
             $this->logger
         );
 

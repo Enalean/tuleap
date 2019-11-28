@@ -63,6 +63,7 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
     {
         $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
         $request->shouldReceive('getTemplateId')->once()->andReturn(null);
+        $request->shouldReceive('getCurrentUser')->once()->andReturn(Mockery::mock(PFUser::class));
         $request->shouldReceive('getUnixName')->twice()->andReturn('project-names');
         $request->shouldReceive('isPublic')->once()->andReturnTrue();
         $request->shouldReceive('getFullName')->twice()->andReturn('project full name');
@@ -87,7 +88,8 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
     public function testItReturnsFalseIfSelectedTemplateIsNotActive(): void
     {
         $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
-        $request->shouldReceive('getTemplateId')->twice()->andReturn(342);
+        $request->shouldReceive('getTemplateId')->once()->andReturn(342);
+        $request->shouldReceive('getCurrentUser')->once()->andReturn(Mockery::mock(PFUser::class));
         $request->shouldReceive('getUnixName')->twice()->andReturn('project-names');
         $request->shouldReceive('isPublic')->once()->andReturnTrue();
         $request->shouldReceive('getFullName')->twice()->andReturn('project full name');
@@ -95,8 +97,10 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
         $request->shouldReceive('getTosApproval')->once()->andReturnTrue();
 
         $project = Mockery::mock(Project::class);
+        $project->shouldReceive('getID')->once()->andReturn(342);
         $project->shouldReceive('isTemplate')->once()->andReturnFalse();
         $project->shouldReceive('isActive')->once()->andReturnFalse();
+        $project->shouldReceive('isError')->once()->andReturnFalse();
         $this->project_manager->shouldReceive('getProject')->once()->withArgs([342])->andReturn($project);
 
         $GLOBALS['Response']->shouldReceive('addFeedback')->once()->withArgs([Feedback::ERROR, Mockery::any()]);
@@ -119,7 +123,9 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
         $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
         $request->shouldReceive('getUnixName')->twice()->andReturn('...invalidProjectName');
 
-        $request->shouldReceive('getTemplateId')->twice()->andReturn(10);
+        $request->shouldReceive('getTemplateId')->once()->andReturn(10);
+        $request->shouldReceive('getCurrentUser')->once()->andReturn(Mockery::mock(PFUser::class));
+        $request->shouldReceive('setTemplateForProjectCreation')->once();
         $request->shouldReceive('isPublic')->once()->andReturnTrue();
         $request->shouldReceive('getFullName')->twice()->andReturn('project full name');
         $request->shouldReceive('getShortDescription')->once()->andReturn('a short description');
@@ -145,7 +151,9 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
     public function testValidateAndGenerateErrorsValidatesProjectPrivacy(): void
     {
         $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
-        $request->shouldReceive('getTemplateId')->twice()->andReturn(10);
+        $request->shouldReceive('getTemplateId')->once()->andReturn(10);
+        $request->shouldReceive('getCurrentUser')->once()->andReturn(Mockery::mock(PFUser::class));
+        $request->shouldReceive('setTemplateForProjectCreation')->once();
         $request->shouldReceive('getUnixName')->twice()->andReturn('project-name');
         $request->shouldReceive('isPublic')->once()->andReturn(null);
         $request->shouldReceive('getFullName')->twice()->andReturn('project full name');
@@ -172,7 +180,9 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
     public function testValidateAndGenerateErrorsValidatesProjectFullName(): void
     {
         $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
-        $request->shouldReceive('getTemplateId')->twice()->andReturn(10);
+        $request->shouldReceive('getTemplateId')->once()->andReturn(10);
+        $request->shouldReceive('getCurrentUser')->once()->andReturn(Mockery::mock(PFUser::class));
+        $request->shouldReceive('setTemplateForProjectCreation')->once();
         $request->shouldReceive('getUnixName')->twice()->andReturn('project-name');
         $request->shouldReceive('isPublic')->once()->andReturnFalse();
         $request->shouldReceive('getFullName')->twice()->andReturn('invalid');
@@ -199,7 +209,9 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
     public function testValidateAndGenerateErrorsValidatesNotSetDescription(): void
     {
         $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
-        $request->shouldReceive('getTemplateId')->twice()->andReturn(10);
+        $request->shouldReceive('getTemplateId')->once()->andReturn(10);
+        $request->shouldReceive('getCurrentUser')->once()->andReturn(Mockery::mock(PFUser::class));
+        $request->shouldReceive('setTemplateForProjectCreation')->once();
         $request->shouldReceive('getUnixName')->twice()->andReturn('project-name');
         $request->shouldReceive('isPublic')->once()->andReturnFalse();
         $request->shouldReceive('getFullName')->twice()->andReturn('invalid');
@@ -228,7 +240,9 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
         ForgeConfig::set('enable_not_mandatory_description', false);
 
         $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
-        $request->shouldReceive('getTemplateId')->twice()->andReturn(10);
+        $request->shouldReceive('getTemplateId')->once()->andReturn(10);
+        $request->shouldReceive('getCurrentUser')->once()->andReturn(Mockery::mock(PFUser::class));
+        $request->shouldReceive('setTemplateForProjectCreation')->once();
         $request->shouldReceive('getUnixName')->twice()->andReturn('project-name');
         $request->shouldReceive('isPublic')->once()->andReturnFalse();
         $request->shouldReceive('getFullName')->twice()->andReturn('invalid');
@@ -257,7 +271,9 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
         ForgeConfig::set('enable_not_mandatory_description', true);
 
         $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
-        $request->shouldReceive('getTemplateId')->twice()->andReturn(10);
+        $request->shouldReceive('getTemplateId')->once()->andReturn(10);
+        $request->shouldReceive('getCurrentUser')->once()->andReturn(Mockery::mock(PFUser::class));
+        $request->shouldReceive('setTemplateForProjectCreation')->once();
         $request->shouldReceive('getUnixName')->twice()->andReturn('project-name');
         $request->shouldReceive('isPublic')->once()->andReturnFalse();
         $request->shouldReceive('getFullName')->twice()->andReturn('invalid');
@@ -284,7 +300,9 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
     public function testValidateAndGenerateErrorsTosApproval(): void
     {
         $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
-        $request->shouldReceive('getTemplateId')->twice()->andReturn(10);
+        $request->shouldReceive('getTemplateId')->once()->andReturn(10);
+        $request->shouldReceive('getCurrentUser')->once()->andReturn(Mockery::mock(PFUser::class));
+        $request->shouldReceive('setTemplateForProjectCreation')->once();
         $request->shouldReceive('getUnixName')->twice()->andReturn('project-name');
         $request->shouldReceive('isPublic')->once()->andReturnFalse();
         $request->shouldReceive('getFullName')->twice()->andReturn('invalid');
@@ -312,7 +330,9 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
     {
 
         $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
-        $request->shouldReceive('getTemplateId')->twice()->andReturn(10);
+        $request->shouldReceive('getTemplateId')->once()->andReturn(10);
+        $request->shouldReceive('getCurrentUser')->once()->andReturn(Mockery::mock(PFUser::class));
+        $request->shouldReceive('setTemplateForProjectCreation')->once();
         $request->shouldReceive('getUnixName')->twice()->andReturn('project-name');
         $request->shouldReceive('isPublic')->once()->andReturnFalse();
         $request->shouldReceive('getFullName')->twice()->andReturn('invalid');
@@ -349,7 +369,9 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
     public function testValidateAndGenerateErrorsWhenMandatoryTroveCatIsNotSet(): void
     {
         $request = Mockery::mock(Project_OneStepCreation_OneStepCreationRequest::class);
-        $request->shouldReceive('getTemplateId')->twice()->andReturn(10);
+        $request->shouldReceive('getTemplateId')->once()->andReturn(10);
+        $request->shouldReceive('getCurrentUser')->once()->andReturn(Mockery::mock(PFUser::class));
+        $request->shouldReceive('setTemplateForProjectCreation')->once();
         $request->shouldReceive('getUnixName')->twice()->andReturn('project-name');
         $request->shouldReceive('isPublic')->once()->andReturnFalse();
         $request->shouldReceive('getFullName')->twice()->andReturn('invalid');
@@ -379,6 +401,7 @@ class OneStepProjectCreationValidatorTest extends TestCase //phpcs:ignore PSR1.C
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('isActive')->andReturnTrue();
         $project->shouldReceive('isTemplate')->andReturnTrue();
+        $project->shouldReceive('isError')->andReturnFalse();
         $this->project_manager->shouldReceive('getProject')->withArgs([10])->andReturn($project);
     }
 

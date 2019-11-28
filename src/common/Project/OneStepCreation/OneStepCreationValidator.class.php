@@ -19,6 +19,10 @@
   */
 
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
+use Tuleap\Project\Registration\Template\InsufficientPermissionToUseProjectAsTemplateException;
+use Tuleap\Project\Registration\Template\ProjectIDTemplateNotProvidedException;
+use Tuleap\Project\Registration\Template\ProjectTemplateNotActiveException;
+use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 
 /**
  * Validates the request
@@ -143,30 +147,31 @@ class Project_OneStepCreation_OneStepCreationValidator //phpcs:ignore PSR1.Class
         return $this;
     }
 
-    /**
-     *
-     * @return \Project_OneStepCreation_OneStepCreationValidator
-     */
-    private function validateTemplateId()
+    private function validateTemplateId(): self
     {
-        if ($this->creation_request->getTemplateId() == null) {
+        try {
+            $template_for_project_creation = TemplateFromProjectForCreation::fromRegisterCreationRequest(
+                $this->creation_request,
+                $this->project_manager
+            );
+        } catch (ProjectIDTemplateNotProvidedException $ex) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
             return $this;
-        }
-
-        $project = $this->project_manager->getProject($this->creation_request->getTemplateId());
-
-        if (! $project->isActive() && ! $project->isTemplate()) {
+        } catch (ProjectTemplateNotActiveException $ex) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 _('Non active projects cannot be used to be project template')
             );
             $this->setIsNotValid();
-        } elseif (! $project->isTemplate() && ! user_ismember($this->creation_request->getTemplateId(), 'A')) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
+            return $this;
+        } catch (InsufficientPermissionToUseProjectAsTemplateException $ex) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
+            return $this;
         }
+
+        $this->creation_request->setTemplateForProjectCreation($template_for_project_creation);
 
         return $this;
     }

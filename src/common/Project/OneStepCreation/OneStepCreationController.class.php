@@ -73,7 +73,6 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
 
         $this->creation_request = new Project_OneStepCreation_OneStepCreationRequest(
             $request,
-            $project_manager,
             $default_project_visibility_retriever
         );
         $this->csrf_token       = $csrf_token;
@@ -147,7 +146,11 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         $projectCreator = ProjectCreator::buildSelfRegularValidation();
 
         $data         = $this->creation_request->getProjectValues();
-        $creationData = ProjectCreationData::buildFromFormArray($this->default_project_visibility_retriever, $data);
+        $creationData = ProjectCreationData::buildFromFormArray(
+            $this->default_project_visibility_retriever,
+            $data['project']['built_from_template'],
+            $data
+        );
 
         try {
             return $projectCreator->build($creationData);

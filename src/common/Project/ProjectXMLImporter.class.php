@@ -240,10 +240,8 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
 
         $data = ProjectCreationData::buildFromXML(
             $xml,
-            100,
             $this->xml_validator,
             ServiceManager::instance(),
-            $this->project_manager,
             $this->logger
         );
         if ($is_template) {

@@ -45,6 +45,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Label\LabelDao;
+use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
@@ -141,15 +142,19 @@ class ProjectCreationTest extends TestCase
             $force_activation
         );
 
-        $projectCreator->create('short-name', 'Long name', array(
-            'project' => array(
-                'form_short_description' => 'description',
-                'is_test'                => false,
-                'is_public'              => false,
-                'services'               => array(),
-                'built_from_template'    => 100,
-            )
-        ));
+        $projectCreator->create(
+            'short-name',
+            'Long name',
+            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
+            [
+                'project' => [
+                    'form_short_description' => 'description',
+                    'is_test'                => false,
+                    'is_public'              => false,
+                    'services'               => [],
+                ]
+            ]
+        );
 
         ProjectManager::clearInstance();
         $project = ProjectManager::instance()->getProjectByUnixName('short-name');

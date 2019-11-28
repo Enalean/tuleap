@@ -22,9 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template;
 
-use Throwable;
+use PFUser;
+use Project;
+use Project_Creation_Exception;
 
-interface InvalidTemplateException extends Throwable
+final class InsufficientPermissionToUseProjectAsTemplateException extends Project_Creation_Exception implements InvalidTemplateException
 {
-
+    public function __construct(Project $project, PFUser $user)
+    {
+        parent::__construct(sprintf('User #%d is not administrator of project #%d', $user->getId(), $project->getID()));
+    }
 }

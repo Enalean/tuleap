@@ -81,7 +81,7 @@ class TemplateFactoryTest extends TestCase
 
     public function testItThrowsAnExceptionWhenTemplateDoesntExist(): void
     {
-        $this->expectException(InvalidTemplateException::class);
+        $this->expectException(InvalidXMLTemplateNameException::class);
 
         $this->factory->getTemplate('stuff');
     }
@@ -97,7 +97,7 @@ class TemplateFactoryTest extends TestCase
     {
         $this->consistency_checker->shouldReceive('areAllServicesAvailable')->andReturnFalse();
 
-        $this->expectException(InvalidTemplateException::class);
+        $this->expectException(InvalidXMLTemplateNameException::class);
 
         $this->factory->getTemplate(ScrumTemplate::NAME);
     }
