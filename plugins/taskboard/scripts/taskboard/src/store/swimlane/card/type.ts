@@ -20,8 +20,8 @@
 import { Card } from "../../../type";
 
 export interface NewRemainingEffortPayload {
-    card: Card;
-    value: number;
+    readonly card: Card;
+    readonly value: number;
 }
 
 export interface NewCardPayload {

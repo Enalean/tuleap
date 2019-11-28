@@ -32,8 +32,8 @@ export interface Dropzone {
 }
 
 export interface AddChildrenToSwimlanePayload {
-    swimlane: Swimlane;
-    children_cards: Card[];
+    readonly swimlane: Swimlane;
+    readonly children_cards: Card[];
 }
 
 export interface ReorderCardsPayload {
