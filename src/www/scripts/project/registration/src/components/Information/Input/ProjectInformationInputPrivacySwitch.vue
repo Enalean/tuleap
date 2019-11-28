@@ -30,7 +30,8 @@
             <input type="checkbox"
                    id="project-information-input-privacy-switch-label"
                    class="tlp-switch-checkbox project-information-input-privacy-switch-checkbox"
-                   v-model="checked"
+                   v-model="is_checked"
+                   v-on:click="$emit('input', ! is_checked)"
                    data-test="project-information-input-privacy-switch"
             >
             <label for="project-information-input-privacy-switch-label"
@@ -46,10 +47,10 @@ import Vue from "vue";
 
 @Component
 export default class ProjectInformationInputPrivacySwitch extends Vue {
-    checked = false;
+    is_checked = false;
 
     get translated_tooltip(): string {
-        if (this.checked) {
+        if (this.is_checked) {
             return this.$gettext(
                 "Project privacy set to private. Only project members can access its content. Restricted users are not allowed in this project."
             );

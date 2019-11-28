@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,26 +14,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-import { Context } from "./type";
-import { ProjectProperties, TemplateData } from "../type";
-import { postProject } from "../api/rest-querier";
-
-export function setSelectedTemplate(
-    context: Context,
-    selected_template: TemplateData
-): Promise<void> {
-    return context.commit("setSelectedTemplate", selected_template);
-}
-
-export async function createProject(
-    context: Context,
-    project_properties: ProjectProperties
-): Promise<string> {
-    const response = await postProject(project_properties);
-
-    return response;
+export function redirectToUrl(url: string): void {
+    window.location.assign(url);
 }
