@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@ namespace Tuleap\Git;
 use TuleapTestCase;
 use EventManager;
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once __DIR__.'/../../bootstrap.php';
 
 class GerritCanMigrateCheckerTest extends TuleapTestCase
 {
@@ -33,19 +33,21 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->gerrit_server_factory = mock('Git_RemoteServer_GerritServerFactory');
+        $this->gerrit_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
         $this->can_migrate_checker   = new GerritCanMigrateChecker(
             EventManager::instance(),
             $this->gerrit_server_factory
         );
 
-        $this->project    = aMockProject()->withId(101)->build();
+        $this->project    = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
     }
 
     public function tearDown()
     {
         EventManager::clearInstance();
+        parent::tearDown();
     }
 
     public function testCanMigrateReturnsFalseIfPlatformCannotUseGerritAndGerritServersNotSet()
@@ -59,7 +61,7 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
         );
 
         $gerrit_servers = array();
-        stub($this->gerrit_server_factory)->getAvailableServersForProject()->returns($gerrit_servers);
+        $this->gerrit_server_factory->shouldReceive('getAvailableServersForProject')->andReturns($gerrit_servers);
 
         $this->assertFalse($this->can_migrate_checker->canMigrate($this->project));
     }
@@ -74,8 +76,8 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
             false
         );
 
-        $gerrit_servers = array(mock('Git_RemoteServer_GerritServer'));
-        stub($this->gerrit_server_factory)->getAvailableServersForProject()->returns($gerrit_servers);
+        $gerrit_servers = array(\Mockery::spy(\Git_RemoteServer_GerritServer::class));
+        $this->gerrit_server_factory->shouldReceive('getAvailableServersForProject')->andReturns($gerrit_servers);
 
         $this->assertFalse($this->can_migrate_checker->canMigrate($this->project));
     }
@@ -91,7 +93,7 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
         );
 
         $gerrit_servers = array();
-        stub($this->gerrit_server_factory)->getAvailableServersForProject()->returns($gerrit_servers);
+        $this->gerrit_server_factory->shouldReceive('getAvailableServersForProject')->andReturns($gerrit_servers);
 
         $this->assertFalse($this->can_migrate_checker->canMigrate($this->project));
     }
@@ -107,7 +109,7 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
         );
 
         $gerrit_servers = array('IAmAServer');
-        stub($this->gerrit_server_factory)->getAvailableServersForProject()->returns($gerrit_servers);
+        $this->gerrit_server_factory->shouldReceive('getAvailableServersForProject')->andReturns($gerrit_servers);
 
         $this->assertTrue($this->can_migrate_checker->canMigrate($this->project));
     }

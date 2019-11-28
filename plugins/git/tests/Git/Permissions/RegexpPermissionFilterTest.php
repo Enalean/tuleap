@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ use TuleapTestCase;
 use User_ForgeUGroup;
 use GitRepository;
 
-require_once dirname(__FILE__) . '/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class RegexpPermissionFilterTest extends TuleapTestCase
 {
@@ -52,21 +52,22 @@ class RegexpPermissionFilterTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->repository = mock('GitRepository');
-        stub($this->repository)->getId()->returns(1);
+        $this->repository = \Mockery::spy(\GitRepository::class);
+        $this->repository->shouldReceive('getId')->andReturns(1);
 
-        $this->permission_factory    = mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory');
-        $this->permission_destructor = mock('Tuleap\Git\Permissions\FineGrainedPermissionDestructor');
+        $this->permission_factory    = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class);
+        $this->permission_destructor = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionDestructor::class);
         $this->permission_filter     = new RegexpPermissionFilter(
             $this->permission_factory,
             new PatternValidator(
                 new FineGrainedPatternValidator(),
-                mock('Tuleap\Git\Permissions\FineGrainedRegexpValidator'),
-                mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
+                \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRegexpValidator::class),
+                \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class)
             ),
             $this->permission_destructor,
-            mock('Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory')
+            \Mockery::spy(\Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory::class)
         );
     }
 
@@ -74,9 +75,9 @@ class RegexpPermissionFilterTest extends TuleapTestCase
     {
         $patterns = $this->buildPatterns();
 
-        stub($this->permission_factory)->getBranchesFineGrainedPermissionsForRepository()->returns($patterns);
-        stub($this->permission_factory)->getTagsFineGrainedPermissionsForRepository()->returns(array());
-        $this->permission_destructor->expectCallCount('deleteRepositoryPermissions', 16);
+        $this->permission_factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->andReturns($patterns);
+        $this->permission_factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->andReturns(array());
+        $this->permission_destructor->shouldReceive('deleteRepositoryPermissions')->times(16);
 
         $this->permission_filter->filterNonRegexpPermissions($this->repository);
     }

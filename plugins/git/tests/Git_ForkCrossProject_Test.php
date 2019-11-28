@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,6 @@
 
 require_once 'bootstrap.php';
 
-Mock::generate('PFUser');
-Mock::generate('UserManager');
-Mock::generate('Project');
-Mock::generate('ProjectManager');
-Mock::generate('GitRepositoryFactory');
-
 class Git_ForkCrossProject_Test extends TuleapTestCase
 {
 
@@ -36,25 +30,25 @@ class Git_ForkCrossProject_Test extends TuleapTestCase
         $project->shouldReceive('getID')->andReturns($groupId);
         $forkPermissions = array();
         $toProjectId = 100;
-        $toProject = new MockProject();
-        $toProject->setReturnValue('getId', $toProjectId);
-        $toProject->setReturnValue('getUnixNameLowerCase', 'toproject');
+        $toProject = \Mockery::spy(\Project::class);
+        $toProject->shouldReceive('getId')->andReturns($toProjectId);
+        $toProject->shouldReceive('getUnixNameLowerCase')->andReturns('toproject');
 
         $repo  = new GitRepository();
         $repos = array($repo);
         $repo_ids = '200';
 
-        $user = mock('PFUser');
-        $user->setReturnValue('isMember', true);
+        $user = \Mockery::spy(\PFUser::class);
+        $user->shouldReceive('isMember')->andReturns(true);
 
-        $usermanager = new MockUserManager();
-        $usermanager->setReturnValue('getCurrentUser', $user);
+        $usermanager = \Mockery::spy(\UserManager::class);
+        $usermanager->shouldReceive('getCurrentUser')->andReturns($user);
 
-        $projectManager = new MockProjectManager();
-        $projectManager->setReturnValue('getProject', $toProject, array($toProjectId));
+        $projectManager = \Mockery::spy(\ProjectManager::class);
+        $projectManager->shouldReceive('getProject')->with($toProjectId)->andReturns($toProject);
 
-        $repositoryFactory = new MockGitRepositoryFactory();
-        $repositoryFactory->setReturnValue('getRepositoryById', $repo, array($repo_ids));
+        $repositoryFactory = \Mockery::spy(\GitRepositoryFactory::class);
+        $repositoryFactory->shouldReceive('getRepositoryById')->with($repo_ids)->andReturns($repo);
 
         $request = new Codendi_Request(array(
                                         'choose_destination' => 'project',
@@ -62,12 +56,9 @@ class Git_ForkCrossProject_Test extends TuleapTestCase
                                         'repos' => $repo_ids,
                                         'repo_access' => $forkPermissions));
 
-        $permissions_manager = stub('GitPermissionsManager')->userIsGitAdmin($user, $toProject)->returns(true);
+        $permissions_manager = \Mockery::spy(\GitPermissionsManager::class)->shouldReceive('userIsGitAdmin')->with($user, $toProject)->andReturns(true)->getMock();
 
-        $git = TestHelper::getPartialMock(
-            'Git',
-            array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView', 'checkSynchronizerToken')
-        );
+        $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $git->setProject($project);
         $git->setRequest($request);
@@ -76,10 +67,10 @@ class Git_ForkCrossProject_Test extends TuleapTestCase
         $git->setFactory($repositoryFactory);
         $git->setPermissionsManager($permissions_manager);
 
-        $git->expectCallCount('addAction', 2);
-        $git->expectAt(0, 'addAction', array('fork', array($repos, $toProject, '', GitRepository::REPO_SCOPE_PROJECT, $user, $GLOBALS['HTML'], '/plugins/git/toproject/', $forkPermissions)));
-        $git->expectAt(1, 'addAction', array('getProjectRepositoryList', array($groupId)));
-        $git->expectOnce('addView', array('forkRepositories'));
+        $git->shouldReceive('addAction')->times(2);
+        $git->shouldReceive('addAction')->with('fork', array($repos, $toProject, '', GitRepository::REPO_SCOPE_PROJECT, $user, $GLOBALS['HTML'], '/plugins/git/toproject/', $forkPermissions))->ordered();
+        $git->shouldReceive('addAction')->with('getProjectRepositoryList', array($groupId))->ordered();
+        $git->shouldReceive('addView')->with('forkRepositories')->once();
 
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, $user);
     }
@@ -90,11 +81,11 @@ class Git_ForkCrossProject_Test extends TuleapTestCase
         $project->shouldReceive('getID')->andReturns(11);
         $project->shouldReceive('getUnixNameLowerCase')->andReturns('projectname');
 
-        $git = TestHelper::getPartialMock('Git', array('definePermittedActions', '_informAboutPendingEvents', 'addError', 'redirect', 'checkSynchronizerToken'));
+        $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $git->setProject($project);
-        $git->setFactory(new MockGitRepositoryFactory());
-        $git->expectOnce('addError', array('No repository selected for the fork'));
-        $git->expectOnce('redirect', array('/plugins/git/projectname/'));
+        $git->setFactory(\Mockery::spy(\GitRepositoryFactory::class));
+        $git->shouldReceive('addError')->with('No repository selected for the fork')->once();
+        $git->shouldReceive('redirect')->with('/plugins/git/projectname/')->once();
 
         $request = new Codendi_Request(array('to_project' => 234, 'repo_access' => array()));
 
@@ -107,10 +98,10 @@ class Git_ForkCrossProject_Test extends TuleapTestCase
         $project->shouldReceive('getID')->andReturns(11);
         $project->shouldReceive('getUnixNameLowerCase')->andReturns('projectname');
 
-        $git = TestHelper::getPartialMock('Git', array('definePermittedActions', '_informAboutPendingEvents', 'addError', 'redirect', 'checkSynchronizerToken'));
+        $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $git->setProject($project);
-        $git->expectOnce('addError', array('No project selected for the fork'));
-        $git->expectOnce('redirect', array('/plugins/git/projectname/'));
+        $git->shouldReceive('addError')->with('No project selected for the fork')->once();
+        $git->shouldReceive('redirect')->with('/plugins/git/projectname/')->once();
 
         $request = new Codendi_Request(array(
             'repos'       => array('qdfj'),
@@ -122,8 +113,8 @@ class Git_ForkCrossProject_Test extends TuleapTestCase
 
     public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks()
     {
-        $git = TestHelper::getPartialMock('Git', array('checkSynchronizerToken'));
-        $git->throwOn('checkSynchronizerToken', new Exception());
+        $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $git->shouldReceive('checkSynchronizerToken')->andThrows(new Exception());
         $this->expectException();
         $git->_doDispatchForkCrossProject(null, null);
     }
@@ -134,7 +125,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase
         $project->shouldReceive('getID')->andReturns(123);
         $project->shouldReceive('getUnixNameLowerCase')->andReturns('projectname');
 
-        $user = mock('PFUser');
+        $user = \Mockery::spy(\PFUser::class);
 
         $to_project = Mockery::mock(Project::class);
         $project_manager = Mockery::mock(ProjectManager::class);
@@ -149,12 +140,12 @@ class Git_ForkCrossProject_Test extends TuleapTestCase
             'repo_access' => array()
         ));
 
-        $git = TestHelper::getPartialMock('Git', array('checkSynchronizerToken', 'addError', 'addAction', 'getText'));
+        $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $git->setProject($project);
         $git->setPermissionsManager($permissions_manager);
         $git->setProjectManager($project_manager);
-        $git->expectOnce('addError', array('Only project administrator can create repositories'));
-        $git->expectNever('addAction');
+        $git->shouldReceive('addError')->with('Only project administrator can create repositories')->once();
+        $git->shouldReceive('addAction')->never();
 
         $git->_doDispatchForkCrossProject($request, $user);
     }

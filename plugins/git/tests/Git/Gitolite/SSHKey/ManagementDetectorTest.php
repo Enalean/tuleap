@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,10 +29,10 @@ class ManagementDetectorTest extends TuleapTestCase
 {
     public function itCanNotManageAuthorizedKeysFileIfGitolite3IsNotUsed()
     {
-        $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
-        stub($version_detector)->isGitolite3()->returns(false);
+        $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
+        $version_detector->shouldReceive('isGitolite3')->andReturns(false);
         $global_parameter_dao = safe_mock(GlobalParameterDao::class);
-        $system_event_manager = mock('SystemEventManager');
+        $system_event_manager = \Mockery::spy(\SystemEventManager::class);
 
         $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
 
@@ -41,11 +41,11 @@ class ManagementDetectorTest extends TuleapTestCase
 
     public function itIsAbleToFindThatTuleapManagesAuthorizedKeysFile()
     {
-        $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
-        stub($version_detector)->isGitolite3()->returns(true);
+        $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
+        $version_detector->shouldReceive('isGitolite3')->andReturns(true);
         $global_parameter_dao = safe_mock(GlobalParameterDao::class);
-        stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(false);
-        $system_event_manager = mock('SystemEventManager');
+        $global_parameter_dao->shouldReceive('isAuthorizedKeysFileManagedByTuleap')->andReturns(false);
+        $system_event_manager = \Mockery::spy(\SystemEventManager::class);
 
         $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
 
@@ -54,11 +54,11 @@ class ManagementDetectorTest extends TuleapTestCase
 
     public function itIsAbleToDetectThatTuleapManagesAuthorizedKeysFile()
     {
-        $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
-        stub($version_detector)->isGitolite3()->returns(true);
+        $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
+        $version_detector->shouldReceive('isGitolite3')->andReturns(true);
         $global_parameter_dao = safe_mock(GlobalParameterDao::class);
-        stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(true);
-        $system_event_manager = mock('SystemEventManager');
+        $global_parameter_dao->shouldReceive('isAuthorizedKeysFileManagedByTuleap')->andReturns(true);
+        $system_event_manager = \Mockery::spy(\SystemEventManager::class);
 
         $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
 
@@ -67,10 +67,10 @@ class ManagementDetectorTest extends TuleapTestCase
 
     public function itCanNotBeRequestedToMigrateToTuleapManagementIfGitolite3IsNotUsed()
     {
-        $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
-        stub($version_detector)->isGitolite3()->returns(false);
+        $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
+        $version_detector->shouldReceive('isGitolite3')->andReturns(false);
         $global_parameter_dao = safe_mock(GlobalParameterDao::class);
-        $system_event_manager = mock('SystemEventManager');
+        $system_event_manager = \Mockery::spy(\SystemEventManager::class);
 
         $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
 
@@ -79,11 +79,11 @@ class ManagementDetectorTest extends TuleapTestCase
 
     public function itCanNotBeRequestedToMigrateToTuleapManagementIfTuleapAlreadyManagesTheAuthorizedKeysFile()
     {
-        $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
-        stub($version_detector)->isGitolite3()->returns(true);
+        $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
+        $version_detector->shouldReceive('isGitolite3')->andReturns(true);
         $global_parameter_dao = safe_mock(GlobalParameterDao::class);
-        stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(true);
-        $system_event_manager = mock('SystemEventManager');
+        $global_parameter_dao->shouldReceive('isAuthorizedKeysFileManagedByTuleap')->andReturns(true);
+        $system_event_manager = \Mockery::spy(\SystemEventManager::class);
 
         $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
 
@@ -92,12 +92,12 @@ class ManagementDetectorTest extends TuleapTestCase
 
     public function itCanNotBeRequestedToMigrateToTuleapManagementIfThereIsAlreadyAMigrationRunning()
     {
-        $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
-        stub($version_detector)->isGitolite3()->returns(true);
+        $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
+        $version_detector->shouldReceive('isGitolite3')->andReturns(true);
         $global_parameter_dao = safe_mock(GlobalParameterDao::class);
-        stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(false);
-        $system_event_manager = mock('SystemEventManager');
-        stub($system_event_manager)->isThereAnEventAlreadyOnGoing()->returns(true);
+        $global_parameter_dao->shouldReceive('isAuthorizedKeysFileManagedByTuleap')->andReturns(false);
+        $system_event_manager = \Mockery::spy(\SystemEventManager::class);
+        $system_event_manager->shouldReceive('isThereAnEventAlreadyOnGoing')->andReturns(true);
 
         $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
 
@@ -106,12 +106,12 @@ class ManagementDetectorTest extends TuleapTestCase
 
     public function itCanBeRequestedToMigrateToTuleapManagementIfThatsNotAlreadyTheCase()
     {
-        $version_detector     = mock('Tuleap\Git\Gitolite\VersionDetector');
-        stub($version_detector)->isGitolite3()->returns(true);
+        $version_detector     = \Mockery::spy(\Tuleap\Git\Gitolite\VersionDetector::class);
+        $version_detector->shouldReceive('isGitolite3')->andReturns(true);
         $global_parameter_dao = safe_mock(GlobalParameterDao::class);
-        stub($global_parameter_dao)->isAuthorizedKeysFileManagedByTuleap()->returns(false);
-        $system_event_manager = mock('SystemEventManager');
-        stub($system_event_manager)->isThereAnEventAlreadyOnGoing()->returns(false);
+        $global_parameter_dao->shouldReceive('isAuthorizedKeysFileManagedByTuleap')->andReturns(false);
+        $system_event_manager = \Mockery::spy(\SystemEventManager::class);
+        $system_event_manager->shouldReceive('isThereAnEventAlreadyOnGoing')->andReturns(false);
 
         $management_detector = new ManagementDetector($version_detector, $global_parameter_dao, $system_event_manager);
 

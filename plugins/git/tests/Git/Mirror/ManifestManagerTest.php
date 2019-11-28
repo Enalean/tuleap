@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014 - 2015. All rights reserved.
+ * Copyright Enalean (c) 2014 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once __DIR__.'/../../bootstrap.php';
 
 class Git_Mirror_ManifestManagerTest extends TuleapTestCase
 {
@@ -47,6 +47,7 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $fixture_dir              = dirname(__FILE__) .'/_fixtures';
         $this->manifest_directory = $fixture_dir .'/manifests';
 
@@ -60,82 +61,64 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase
             ->withDescription('free and open-source web browser')
             ->build();
 
-        $this->singapour_mirror = new Git_Mirror_Mirror(mock('PFUser'), $this->singapour_mirror_id, 'singapour.io', 'singapour', 'PLP');
-        $this->noida_mirror = new Git_Mirror_Mirror(mock('PFUser'), $this->noida_mirror_id, 'noida.org', 'noida', 'test');
+        $this->singapour_mirror = new Git_Mirror_Mirror(\Mockery::spy(\PFUser::class), $this->singapour_mirror_id, 'singapour.io', 'singapour', 'PLP');
+        $this->noida_mirror = new Git_Mirror_Mirror(\Mockery::spy(\PFUser::class), $this->noida_mirror_id, 'noida.org', 'noida', 'test');
 
-        $this->generator   = mock('Git_Mirror_ManifestFileGenerator');
-        $this->data_mapper = mock('Git_Mirror_MirrorDataMapper');
+        $this->generator   = \Mockery::spy(\Git_Mirror_ManifestFileGenerator::class);
+        $this->data_mapper = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
 
-        stub($this->data_mapper)->fetchAll()->returns(array($this->singapour_mirror, $this->noida_mirror));
+        $this->data_mapper->shouldReceive('fetchAll')->andReturns(array($this->singapour_mirror, $this->noida_mirror));
 
         $this->manager = new Git_Mirror_ManifestManager($this->data_mapper, $this->generator);
     }
 
     public function itAsksToUpdateTheManifestsWhereTheRepositoryIsMirrored()
     {
-        stub($this->data_mapper)->fetchAllRepositoryMirrors()->returns(
-            array($this->noida_mirror, $this->singapour_mirror)
-        );
+        $this->data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns(array($this->noida_mirror, $this->singapour_mirror));
 
-        expect($this->generator)->addRepositoryToManifestFile('*', $this->repository)->count(2);
-        expect($this->generator)->addRepositoryToManifestFile($this->noida_mirror, $this->repository)->at(0);
-        expect($this->generator)->addRepositoryToManifestFile($this->singapour_mirror, $this->repository)->at(1);
+        $this->generator->shouldReceive('addRepositoryToManifestFile')->with(\Mockery::any(), $this->repository)->times(2);
+        $this->generator->shouldReceive('addRepositoryToManifestFile')->with($this->noida_mirror, $this->repository)->ordered();
+        $this->generator->shouldReceive('addRepositoryToManifestFile')->with($this->singapour_mirror, $this->repository)->ordered();
 
         $this->manager->triggerUpdate($this->repository);
     }
 
     public function itAsksToDeleteTheRepositoryFromTheManifestsWhereTheRepositoryIsNotMirrored()
     {
-        stub($this->data_mapper)->fetchAllRepositoryMirrors()->returns(
-            array($this->noida_mirror)
-        );
+        $this->data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns(array($this->noida_mirror));
 
-        expect($this->generator)->addRepositoryToManifestFile($this->noida_mirror, $this->repository)->once();
-        expect($this->generator)->removeRepositoryFromManifestFile($this->singapour_mirror, $this->repository->getPath())->once();
+        $this->generator->shouldReceive('addRepositoryToManifestFile')->with($this->noida_mirror, $this->repository)->once();
+        $this->generator->shouldReceive('removeRepositoryFromManifestFile')->with($this->singapour_mirror, $this->repository->getPath())->once();
 
         $this->manager->triggerUpdate($this->repository);
     }
 
     public function itAsksToDeleteTheRepositoryFromAllManifests()
     {
-        expect($this->generator)->removeRepositoryFromManifestFile('*', $this->repository->getPath())->count(2);
-        expect($this->generator)->removeRepositoryFromManifestFile($this->singapour_mirror, $this->repository->getPath())->at(0);
-        expect($this->generator)->removeRepositoryFromManifestFile($this->noida_mirror, $this->repository->getPath())->at(1);
+        $this->generator->shouldReceive('removeRepositoryFromManifestFile')->with(\Mockery::any(), $this->repository->getPath())->times(2);
+        $this->generator->shouldReceive('removeRepositoryFromManifestFile')->with($this->singapour_mirror, $this->repository->getPath())->ordered();
+        $this->generator->shouldReceive('removeRepositoryFromManifestFile')->with($this->noida_mirror, $this->repository->getPath())->ordered();
 
         $this->manager->triggerDelete($this->repository->getPath());
     }
 
     public function itEnsuresThatManifestFilesOfMirrorsContainTheRepositories()
     {
-        stub($this->data_mapper)->fetchRepositoriesForMirror($this->singapour_mirror)->returns(
-            array($this->repository)
-        );
-        stub($this->data_mapper)->fetchRepositoriesForMirror($this->noida_mirror)->returns(
-            array($this->repository, $this->another_repository)
-        );
+        $this->data_mapper->shouldReceive('fetchRepositoriesForMirror')->with($this->singapour_mirror)->andReturns(array($this->repository));
+        $this->data_mapper->shouldReceive('fetchRepositoriesForMirror')->with($this->noida_mirror)->andReturns(array($this->repository, $this->another_repository));
 
-        expect($this->generator)->ensureManifestContainsLatestInfoOfRepositories()->count(2);
-        expect($this->generator)
-            ->ensureManifestContainsLatestInfoOfRepositories(
-                $this->singapour_mirror,
-                array(new GitRepositoryGitoliteAdmin(), $this->repository)
-            )->at(0);
-        expect($this->generator)
-            ->ensureManifestContainsLatestInfoOfRepositories(
-                $this->noida_mirror,
-                array(new GitRepositoryGitoliteAdmin(), $this->repository, $this->another_repository)
-            )->at(1);
+        $this->generator->shouldReceive('ensureManifestContainsLatestInfoOfRepositories')->times(2);
+        $this->generator->shouldReceive('ensureManifestContainsLatestInfoOfRepositories')->with($this->singapour_mirror, array(new GitRepositoryGitoliteAdmin(), $this->repository))->ordered();
+        $this->generator->shouldReceive('ensureManifestContainsLatestInfoOfRepositories')->with($this->noida_mirror, array(new GitRepositoryGitoliteAdmin(), $this->repository, $this->another_repository))->ordered();
 
         $this->manager->checkManifestFiles();
     }
 
     public function itUpdatesTheCurrentTimeAfterAGitPush()
     {
-        stub($this->data_mapper)->fetchAllRepositoryMirrors()->returns(
-            array($this->singapour_mirror)
-        );
+        $this->data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns(array($this->singapour_mirror));
 
-        expect($this->generator)->updateCurrentTimeOfRepository($this->singapour_mirror, $this->repository)->once();
+        $this->generator->shouldReceive('updateCurrentTimeOfRepository')->with($this->singapour_mirror, $this->repository)->once();
 
         $this->manager->triggerUpdateFollowingAGitPush($this->repository);
     }

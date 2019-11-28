@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,40 +26,40 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGcTest extends TuleapTestC
     public function setUp()
     {
         parent::setUp();
-        $this->dao    = safe_mock(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
-        $this->logger = mock('Logger');
+        $this->setUpGlobalsMockery();
+        $this->dao    = Mockery::spy(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
+        $this->logger = \Mockery::spy(\Logger::class);
 
-        $this->gitgc = partial_mock(
-            'Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc',
-            array('execGitGcAsAppAdm'),
-            array(
+        $this->gitgc = \Mockery::mock(
+            \Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc::class,
+            [
                 $this->dao,
                 $this->logger,
                 '/path/to/gitolite_admin_working_copy'
-            )
-        );
+            ]
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
     }
 
     public function itRunsGitGcIfItIsAllowed()
     {
-        stub($this->dao)->isGitGcEnabled()->returns(true);
+        $this->dao->shouldReceive('isGitGcEnabled')->andReturns(true);
 
-        expect($this->logger)->info('Running git gc on gitolite admin working copy.')->once();
-        expect($this->gitgc)->execGitGcAsAppAdm()->once();
+        $this->logger->shouldReceive('info')->with('Running git gc on gitolite admin working copy.')->once();
+        $this->gitgc->shouldReceive('execGitGcAsAppAdm')->once();
 
         $this->gitgc->cleanUpGitoliteAdminWorkingCopy();
     }
 
     public function itDoesNotRunGitGcIfItIsNotAllowed()
     {
-        stub($this->dao)->isGitGcEnabled()->returns(false);
+        $this->dao->shouldReceive('isGitGcEnabled')->andReturns(false);
 
-        expect($this->logger)->warn(
-            'Cannot run git gc on gitolite admin working copy. '.
-            'Please run as root: /usr/share/tuleap/src/utils/php-launcher.sh '.
-            '/usr/share/tuleap/plugins/git/bin/gl-admin-housekeeping.php'
-        )->once();
-        expect($this->gitgc)->execGitGcAsAppAdm()->never();
+        $this->logger->shouldReceive('warn')->with('Cannot run git gc on gitolite admin working copy. '.
+        'Please run as root: /usr/share/tuleap/src/utils/php-launcher.sh '.
+        '/usr/share/tuleap/plugins/git/bin/gl-admin-housekeeping.php')->once();
+        $this->gitgc->shouldReceive('execGitGcAsAppAdm')->never();
 
         $this->gitgc->cleanUpGitoliteAdminWorkingCopy();
     }

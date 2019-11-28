@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2019. All rights reserved
+ * Copyright (c) Enalean, 2016-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -49,16 +49,17 @@ class Gitolite3LogParserTest extends \TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->logger         = mock('GitBackendLogger');
-        $this->factory        = mock('GitRepositoryFactory');
-        $this->user_manager   = mock('UserManager');
+        $this->setUpGlobalsMockery();
+        $this->logger         = \Mockery::spy(\GitBackendLogger::class);
+        $this->factory        = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->user_manager   = \Mockery::spy(\UserManager::class);
         $this->history_dao    = \Mockery::spy(Dao::class);
         $this->user_validator = new \Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
         $this->file_logs_dao  = \Mockery::spy(GitoliteFileLogsDao::class);
-        $this->user_dao       = mock(UserDao::class);
+        $this->user_dao       = \Mockery::spy(UserDao::class);
         $this->parser         = new Gitolite3LogParser(
             $this->logger,
-            mock('System_Command'),
+            \Mockery::spy(\System_Command::class),
             $this->user_validator,
             $this->history_dao,
             $this->factory,
@@ -67,100 +68,100 @@ class Gitolite3LogParserTest extends \TuleapTestCase
             $this->user_dao
         );
 
-        $this->repository = mock('GitRepository');
-        stub($this->repository)->getId()->returns(1);
+        $this->repository = \Mockery::spy(\GitRepository::class);
+        $this->repository->shouldReceive('getId')->andReturns(1);
 
-        $this->user = stub('PFUser')->getId()->returns(101);
+        $this->user = \Mockery::spy(\PFUser::class)->shouldReceive('getId')->andReturns(101)->getMock();
     }
 
     public function itDoesNotParseGitoliteAdministratorLogs()
     {
-        stub($this->factory)->getFromFullPath()->returns($this->repository);
-        stub($this->user_manager)->getUserByUserName()->returns($this->user);
+        $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
 
-        expect($this->history_dao)->addGitReadAccess(20161004, 1, 101, 2)->once();
+        $this->history_dao->shouldReceive('addGitReadAccess')->with(20161004, 1, 101, 2)->once();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
     public function itDoesNotParseGerritSystemUsers()
     {
-        stub($this->factory)->getFromFullPath()->returns($this->repository);
-        stub($this->user_manager)->getUserByUserName()->returns($this->user);
+        $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
 
-        expect($this->history_dao)->addGitReadAccess(20161004, 1, 101, 2)->once();
+        $this->history_dao->shouldReceive('addGitReadAccess')->with(20161004, 1, 101, 2)->once();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-11.log');
     }
 
     public function itDoesNotParseTwoTimesSameLines()
     {
-        stub($this->factory)->getFromFullPath()->returns($this->repository);
-        stub($this->user_manager)->getUserByUserName()->returns($this->user);
-        stub($this->file_logs_dao)->getLastReadLine()->returns(array('end_line' => 2259));
+        $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
+        $this->file_logs_dao->shouldReceive('getLastReadLine')->andReturns(array('end_line' => 2259));
 
-        $this->history_dao->expectCallCount('addGitReadAccess', 0);
+        $this->history_dao->shouldReceive('addGitReadAccess')->never();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
     public function itDoesNotParseWhenRepositoryIsDeleted()
     {
-        stub($this->factory)->getFromFullPath()->returns(null);
-        stub($this->user_manager)->getUserByUserName()->returns($this->user);
+        $this->factory->shouldReceive('getFromFullPath')->andReturns(null);
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
 
-        $this->history_dao->expectCallCount('addGitReadAccess', 0);
+        $this->history_dao->shouldReceive('addGitReadAccess')->never();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
     public function itParseLinesIfTheyAreNew()
     {
-        stub($this->factory)->getFromFullPath()->returns($this->repository);
-        stub($this->file_logs_dao)->getLastReadLine()->returns(array('end_line' => 1362));
-        stub($this->user_manager)->getUserByUserName()->returns($this->user);
+        $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->file_logs_dao->shouldReceive('getLastReadLine')->andReturns(array('end_line' => 1362));
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
 
-        $this->history_dao->expectCallCount('addGitReadAccess', 0);
+        $this->history_dao->shouldReceive('addGitReadAccess')->never();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
     public function itAddsALineForAnonymousWhenUserIsNoMoreInDatabase()
     {
-        stub($this->factory)->getFromFullPath()->returns($this->repository);
-        stub($this->user_manager)->getUserByUserName()->returns(null);
+        $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns(null);
 
-        expect($this->history_dao)->addGitReadAccess(20161004, 1, 0, 2)->once();
+        $this->history_dao->shouldReceive('addGitReadAccess')->with(20161004, 1, 0, 2)->once();
 
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
     public function itUpdatesTheCounterWhenThereAreAlreadyData()
     {
-        stub($this->factory)->getFromFullPath()->returns($this->repository);
-        stub($this->user_manager)->getUserByUserName()->returns($this->user);
+        $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
 
-        expect($this->history_dao)->addGitReadAccess(20161004, 1, 101, 2)->once();
+        $this->history_dao->shouldReceive('addGitReadAccess')->with(20161004, 1, 101, 2)->once();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
     public function itParsesWronglyFormattedLogsWithoutErrors()
     {
-        stub($this->factory)->getFromFullPath()->returns($this->repository);
+        $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->parser->parseLogs(__DIR__ . '/_fixtures/gitolite-2017-11-broken.log');
     }
 
     public function itUpdatesLastAccessDateForUser()
     {
-        stub($this->factory)->getFromFullPath()->returns($this->repository);
-        stub($this->user_manager)->getUserByUserName()->returns($this->user);
+        $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
 
-        expect($this->user_dao)->storeLastAccessDate(101, '*')->once();
+        $this->user_dao->shouldReceive('storeLastAccessDate')->with(101, \Mockery::any())->once();
 
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
     public function itDoesNotUpdateLastAccessDateForAnonymousUser()
     {
-        stub($this->factory)->getFromFullPath()->returns($this->repository);
-        stub($this->user_manager)->getUserByUserName()->returns(null);
+        $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns(null);
 
-        expect($this->user_dao)->storeLastAccessDate()->never();
+        $this->user_dao->shouldReceive('storeLastAccessDate')->never();
 
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }

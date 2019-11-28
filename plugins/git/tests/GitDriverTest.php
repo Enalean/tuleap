@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
- * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,6 +33,7 @@ class GitDriverTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->curDir = getcwd();
         $this->fixturesPath = dirname(__FILE__).'/_fixtures';
 
@@ -51,8 +52,8 @@ class GitDriverTest extends TuleapTestCase
 
     public function itExtractsTheGitVersion()
     {
-        $git_driver = partial_mock('GitDriver', array('execGitAction'));
-        stub($git_driver)->execGitAction('git --version', 'version')->returns('git version 1.8.1.2');
+        $git_driver = \Mockery::mock(\GitDriver::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $git_driver->shouldReceive('execGitAction')->with('git --version', 'version')->andReturns('git version 1.8.1.2');
         $this->assertEqual($git_driver->getGitVersion(), "1.8.1.2");
     }
 

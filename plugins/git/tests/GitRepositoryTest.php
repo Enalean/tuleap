@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,8 +19,6 @@
  */
 
 require_once 'bootstrap.php';
-
-Mock::generatePartial('GitRepository', 'GitRepositorySecondTestVersion', array('_getProjectManager', 'getDao'));
 
 class GitRepositoryTest extends TuleapTestCase
 {
@@ -56,50 +54,47 @@ class GitRepositoryTest extends TuleapTestCase
 
     public function testGetRepositoryIDByNameSuccess()
     {
-        $repo = partial_mock('GitRepository', array('_getProjectManager', 'getDao'));
-        $pm = mock('ProjectManager');
-        $project = mock('Project');
-        $repo->setReturnValue('_getProjectManager', $pm);
-        $pm->setReturnValue('getProjectByUnixName', $project);
+        $repo = \Mockery::mock(\GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $pm = \Mockery::spy(\ProjectManager::class);
+        $project = \Mockery::spy(\Project::class);
+        $pm->shouldReceive('getProjectByUnixName')->andReturns($project);
         $dao = \Mockery::mock(GitDao::class);
-        $repo->setReturnValue('getDao', $dao);
+        $repo->shouldReceive('getDao')->andReturns($dao);
         $dao->shouldReceive('getProjectRepositoryByName')->andReturn(['repository_id' => 48])->once();
 
-        $this->assertEqual($repo->getRepositoryIDByName('repo', 'prj'), 48);
+        $repo->shouldReceive('_getProjectManager')->once()->andReturns($pm);
+        $project->shouldReceive('getID')->once();
 
-        $repo->expectOnce('_getProjectManager');
-        $project->expectOnce('getID');
+        $this->assertEqual($repo->getRepositoryIDByName('repo', 'prj'), 48);
     }
 
     public function testGetRepositoryIDByNameNoRepository()
     {
-        $repo = partial_mock('GitRepository', array('_getProjectManager', 'getDao'));
-        $pm = mock('ProjectManager');
-        $project = mock('Project');
-        $repo->setReturnValue('_getProjectManager', $pm);
-        $pm->setReturnValue('getProjectByUnixName', $project);
+        $repo = \Mockery::mock(\GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $pm = \Mockery::spy(\ProjectManager::class);
+        $project = \Mockery::spy(\Project::class);
+        $pm->shouldReceive('getProjectByUnixName')->andReturns($project);
         $dao = \Mockery::mock(GitDao::class);
-        $repo->setReturnValue('getDao', $dao);
+        $repo->shouldReceive('getDao')->andReturns($dao);
         $dao->shouldReceive('getProjectRepositoryByName')->andReturnFalse()->once();
 
-        $this->assertEqual($repo->getRepositoryIDByName('repo', 'prj'), 0);
+        $repo->shouldReceive('_getProjectManager')->once()->andReturns($pm);
+        $project->shouldReceive('getID')->once();
 
-        $repo->expectOnce('_getProjectManager');
-        $project->expectOnce('getID');
+        $this->assertEqual($repo->getRepositoryIDByName('repo', 'prj'), 0);
     }
 
     public function testGetRepositoryIDByNameNoProjectID()
     {
-        $repo = partial_mock('GitRepository', array('_getProjectManager', 'getDao'));
-        $pm = mock('ProjectManager');
-        $project = mock('Project');
-        $repo->setReturnValue('_getProjectManager', $pm);
-        $pm->setReturnValue('getProjectByUnixName', false);
+        $repo = \Mockery::mock(\GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $pm = \Mockery::spy(\ProjectManager::class);
+        $project = \Mockery::spy(\Project::class);
+        $pm->shouldReceive('getProjectByUnixName')->andReturns(false);
+
+        $repo->shouldReceive('_getProjectManager')->once()->andReturns($pm);
+        $project->shouldReceive('getID')->never();
 
         $this->assertIdentical($repo->getRepositoryIDByName('repo', 'prj'), 0);
-
-        $repo->expectOnce('_getProjectManager');
-        $project->expectNever('getID');
     }
 
     public function _newUser($name)
@@ -223,9 +218,10 @@ class GitRepository_CanDeletedTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->backend = stub('GitBackend')->getGitRootPath()->returns(dirname(__FILE__).'/_fixtures');
-        $project       = stub('Project')->getUnixName()->returns('perms');
+        $this->backend = \Mockery::spy(\GitBackend::class)->shouldReceive('getGitRootPath')->andReturns(dirname(__FILE__).'/_fixtures')->getMock();
+        $project       = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('perms')->getMock();
 
         $this->repo = new GitRepository();
         $this->repo->setBackend($this->backend);
@@ -234,7 +230,7 @@ class GitRepository_CanDeletedTest extends TuleapTestCase
 
     public function itCanBeDeletedWithDotGitDotGitRepositoryShouldSucceed()
     {
-        stub($this->backend)->canBeDeleted()->returns(true);
+        $this->backend->shouldReceive('canBeDeleted')->andReturns(true);
         $this->repo->setPath('perms/coincoin.git.git');
 
         $this->assertTrue($this->repo->canBeDeleted());
@@ -242,7 +238,7 @@ class GitRepository_CanDeletedTest extends TuleapTestCase
 
     public function itCanBeDeletedWithWrongRepositoryPathShouldFail()
     {
-        stub($this->backend)->canBeDeleted()->returns(true);
+        $this->backend->shouldReceive('canBeDeleted')->andReturns(true);
         $this->repo->setPath('perms/coincoin');
 
         $this->assertFalse($this->repo->canBeDeleted());
@@ -250,7 +246,7 @@ class GitRepository_CanDeletedTest extends TuleapTestCase
 
     public function itCannotBeDeletedIfBackendForbidIt()
     {
-        stub($this->backend)->canBeDeleted()->returns(false);
+        $this->backend->shouldReceive('canBeDeleted')->andReturns(false);
 
         $this->repo->setPath('perms/coincoin.git.git');
         $this->assertFalse($this->repo->canBeDeleted());
@@ -272,8 +268,9 @@ class GitRepository_GetAccessUrlTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->backend = mock('GitBackend');
+        $this->backend = \Mockery::spy(\GitBackend::class);
 
         $this->repository = new GitRepository();
         $this->repository->setBackend($this->backend);
@@ -282,7 +279,7 @@ class GitRepository_GetAccessUrlTest extends TuleapTestCase
     public function itReturnsTheBackendContent()
     {
         $access_url = array('ssh' => 'plop');
-        stub($this->backend)->getAccessURL()->returns(array('ssh' => 'plop'));
+        $this->backend->shouldReceive('getAccessURL')->andReturns(array('ssh' => 'plop'));
         $this->assertEqual($this->repository->getAccessURL(), $access_url);
     }
 }

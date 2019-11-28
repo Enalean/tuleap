@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../bootstrap.php';
+require_once __DIR__.'/../../../bootstrap.php';
 
 class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest extends TuleapTestCase
 {
@@ -26,10 +26,11 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest exte
     public function setUp()
     {
         parent::setUp();
-        $this->process_manager = mock('SystemEventProcessManager');
-        $this->process         = mock('SystemEventProcess');
-        $this->response        = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingResponse');
-        $this->next            = mock('Git_GitoliteHousekeeping_ChainOfResponsibility_Command');
+        $this->setUpGlobalsMockery();
+        $this->process_manager = \Mockery::spy(\SystemEventProcessManager::class);
+        $this->process         = \Mockery::spy(\SystemEventProcess::class);
+        $this->response        = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
+        $this->next            = \Mockery::spy(\Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
 
         $this->command = new Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents($this->response, $this->process_manager, $this->process);
         $this->command->setNextCommand($this->next);
@@ -37,28 +38,28 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest exte
 
     public function itExecuteTheNextCommandIfThereIsNoRunningEvents()
     {
-        stub($this->process_manager)->isAlreadyRunning($this->process)->returns(false);
+        $this->process_manager->shouldReceive('isAlreadyRunning')->with($this->process)->andReturns(false);
 
-        expect($this->next)->execute()->once();
+        $this->next->shouldReceive('execute')->once();
 
         $this->command->execute();
     }
 
     public function itDoesNotExectuteTheNextCommandIfThereIsARunningEvent()
     {
-        stub($this->process_manager)->isAlreadyRunning($this->process)->returns(true);
+        $this->process_manager->shouldReceive('isAlreadyRunning')->with($this->process)->andReturns(true);
 
-        expect($this->next)->execute()->never();
+        $this->next->shouldReceive('execute')->never();
 
         $this->command->execute();
     }
 
     public function itStopsTheExecutionWhenThereIsARemainingSystemEventRunning()
     {
-        stub($this->process_manager)->isAlreadyRunning($this->process)->returns(true);
+        $this->process_manager->shouldReceive('isAlreadyRunning')->with($this->process)->andReturns(true);
 
-        expect($this->response)->error('There is still an event marked as running. Start again when all events marked as running are done.')->once();
-        expect($this->response)->abort()->once();
+        $this->response->shouldReceive('error')->with('There is still an event marked as running. Start again when all events marked as running are done.')->once();
+        $this->response->shouldReceive('abort')->once();
 
         $this->command->execute();
     }

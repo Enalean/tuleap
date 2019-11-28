@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,28 +40,25 @@ abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->dao              = \Mockery::spy(GitDao::class);
-        $this->gerrit_server    = mock('Git_RemoteServer_GerritServer');
-        $this->server_factory   = mock('Git_RemoteServer_GerritServerFactory');
-        $this->project_creator  = mock('Git_Driver_Gerrit_ProjectCreator');
-        $this->gitolite_backend = mock('Git_Backend_Gitolite');
-        $this->repository       = mock('GitRepository');
-        $this->user_manager     = mock('UserManager');
-        stub($this->repository)->getBackend()->returns($this->gitolite_backend);
+        $this->gerrit_server    = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
+        $this->server_factory   = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
+        $this->project_creator  = \Mockery::spy(\Git_Driver_Gerrit_ProjectCreator::class);
+        $this->gitolite_backend = \Mockery::spy(\Git_Backend_Gitolite::class);
+        $this->repository       = \Mockery::spy(\GitRepository::class);
+        $this->user_manager     = \Mockery::spy(\UserManager::class);
+        $this->repository->shouldReceive('getBackend')->andReturns($this->gitolite_backend);
 
-        $factory = mock('GitRepositoryFactory');
-        stub($factory)->getRepositoryById($this->repository_id)->returns($this->repository);
+        $factory = \Mockery::spy(\GitRepositoryFactory::class);
+        $factory->shouldReceive('getRepositoryById')->with($this->repository_id)->andReturns($this->repository);
 
         $id= $type= $parameters= $priority= $status= $create_date= $process_date= $end_date= $log = 0;
-        $this->event = TestHelper::getPartialMock(
-            'SystemEvent_GIT_GERRIT_MIGRATION',
-            array('done', 'warning', 'error'),
-            array($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log)
-        );
+        $this->event = \Mockery::mock(\SystemEvent_GIT_GERRIT_MIGRATION::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->event->setParameters("$this->repository_id::$this->remote_server_id::true");
-        $this->logger = mock('Logger');
-        $this->event->injectDependencies($this->dao, $factory, $this->server_factory, $this->logger, $this->project_creator, mock('Git_GitRepositoryUrlManager'), $this->user_manager, mock('MailBuilder'));
+        $this->logger = \Mockery::spy(\Logger::class);
+        $this->event->injectDependencies($this->dao, $factory, $this->server_factory, $this->logger, $this->project_creator, \Mockery::spy(\Git_GitRepositoryUrlManager::class), $this->user_manager, \Mockery::spy(\MailBuilder::class));
     }
 }
 
@@ -71,72 +68,72 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
 
     public function itSwitchesTheBackendToGerrit()
     {
-        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
-        expect($this->dao)->switchToGerrit($this->repository_id, $this->remote_server_id)->once();
+        $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
+        $this->dao->shouldReceive('switchToGerrit')->with($this->repository_id, $this->remote_server_id)->once();
         $this->event->process();
     }
 
     public function itCallsDoneAndReturnsTrue()
     {
-        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
-        expect($this->event)->done()->once();
+        $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
+        $this->event->shouldReceive('done')->once();
         $this->assertTrue($this->event->process());
     }
 
     public function itUpdatesGitolitePermissionsToForbidPushesByAnyoneButGerrit()
     {
-        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
-        expect($this->gitolite_backend)->updateRepoConf()->once();
+        $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
+        $this->gitolite_backend->shouldReceive('updateRepoConf')->once();
         $this->assertTrue($this->event->process());
     }
 
     public function itInformsAboutMigrationSuccess()
     {
-        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
+        $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
         $remote_project = 'tuleap.net-Firefox/mobile';
         $gerrit_url     = 'https://gerrit.example.com:8888/';
-        stub($this->project_creator)->createGerritProject()->returns($remote_project);
-        stub($this->gerrit_server)->getBaseUrl()->returns($gerrit_url);
-        expect($this->event)->done("Created project $remote_project on $gerrit_url")->once();
+        $this->project_creator->shouldReceive('createGerritProject')->andReturns($remote_project);
+        $this->gerrit_server->shouldReceive('getBaseUrl')->andReturns($gerrit_url);
+        $this->event->shouldReceive('done')->with("Created project $remote_project on $gerrit_url")->once();
         $this->event->process();
     }
 
     public function itInformsAboutAnyGenericFailure()
     {
-        stub($this->user_manager)->getUserById()->returns(aUser()->withId(0)->build());
-        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
+        $this->user_manager->shouldReceive('getUserById')->andReturns(aUser()->withId(0)->build());
+        $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
         $e = new Exception("failure detail");
-        stub($this->project_creator)->createGerritProject()->throws($e);
-        expect($this->event)->error("failure detail")->once();
-        expect($this->logger)->error("An error occured while processing event: ".$this->event->verbalizeParameters(null), $e)->once();
+        $this->project_creator->shouldReceive('createGerritProject')->andThrows($e);
+        $this->event->shouldReceive('error')->with("failure detail")->once();
+        $this->logger->shouldReceive('error')->with("An error occured while processing event: ".$this->event->verbalizeParameters(null), $e)->once();
         $this->event->process();
     }
 
     public function itInformsAboutAnyGerritRelatedFailureByAddingAPrefix()
     {
-        stub($this->user_manager)->getUserById()->returns(aUser()->withId(0)->build());
-        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
+        $this->user_manager->shouldReceive('getUserById')->andReturns(aUser()->withId(0)->build());
+        $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
         $e = new Git_Driver_Gerrit_Exception("failure detail");
-        stub($this->project_creator)->createGerritProject()->throws($e);
-        expect($this->event)->error("gerrit: failure detail")->once();
-        expect($this->logger)->error("Gerrit failure: ".$this->event->verbalizeParameters(null), $e)->once();
+        $this->project_creator->shouldReceive('createGerritProject')->andThrows($e);
+        $this->event->shouldReceive('error')->with("gerrit: failure detail")->once();
+        $this->logger->shouldReceive('error')->with("Gerrit failure: ".$this->event->verbalizeParameters(null), $e)->once();
         $this->event->process();
     }
 
     public function itInformsAboutAnyServerFactoryFailure()
     {
-        stub($this->user_manager)->getUserById()->returns(aUser()->withId(0)->build());
+        $this->user_manager->shouldReceive('getUserById')->andReturns(aUser()->withId(0)->build());
         $e = new Exception("failure detail");
-        stub($this->server_factory)->getServer()->throws($e);
-        expect($this->event)->error("failure detail")->once();
-        expect($this->logger)->error("An error occured while processing event: ".$this->event->verbalizeParameters(null), $e)->once();
+        $this->server_factory->shouldReceive('getServer')->andThrows($e);
+        $this->event->shouldReceive('error')->with("failure detail")->once();
+        $this->logger->shouldReceive('error')->with("An error occured while processing event: ".$this->event->verbalizeParameters(null), $e)->once();
         $this->event->process();
     }
 
     public function itMarksTheEventAsWarningWhenTheRepoDoesNotExist()
     {
         $this->event->setParameters("$this->deleted_repository_id::$this->remote_server_id");
-        expect($this->event)->error('Unable to find repository, perhaps it was deleted in the mean time?')->once();
+        $this->event->shouldReceive('error')->with('Unable to find repository, perhaps it was deleted in the mean time?')->once();
         $this->event->process();
     }
 }
@@ -147,9 +144,9 @@ class SystemEvent_GIT_GERRIT_MIGRATION_CallsToProjectCreatorTest extends SystemE
 
     public function itCreatesAProject()
     {
-        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
+        $this->server_factory->shouldReceive('getServer')->with($this->repository)->andReturns($this->gerrit_server);
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
-        expect($this->project_creator)->createGerritProject($this->gerrit_server, $this->repository, "true")->once();
+        $this->project_creator->shouldReceive('createGerritProject')->with($this->gerrit_server, $this->repository, "true")->once();
         $this->event->process();
     }
 }

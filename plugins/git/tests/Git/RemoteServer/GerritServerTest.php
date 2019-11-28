@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once __DIR__.'/../../bootstrap.php';
 
 class Git_RemoteServer_GerritServerTest extends TuleapTestCase
 {
@@ -227,6 +227,7 @@ class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $id                   = 1;
         $host                 = 'le_host';
@@ -259,7 +260,7 @@ class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase
 
     public function itGivesTheCloneUrlForTheEndUserWhoWantToCloneRepository()
     {
-        $user = stub('Git_Driver_Gerrit_User')->getSshUserName()->returns('blurp');
+        $user = \Mockery::spy(\Git_Driver_Gerrit_User::class)->shouldReceive('getSshUserName')->andReturns('blurp')->getMock();
         $this->assertEqual($this->server->getEndUserCloneUrl('gerrit_project_name', $user), 'ssh://blurp@le_host:29418/gerrit_project_name.git');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,15 +34,15 @@ class UserTest extends TuleapTestCase
         $key2_user1 = new Key('user1', 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDF8IKZurK86EWGW2Q8jYkiXmkWZfEQ2SJlYnIylWMey0tRB5pr9G9oKbKt25RHigfeFJXgKIvPhAku5R08ejfoAG+/V3H8cXqf0zk0VxuIuTZk7OJ+8ll0i8x52Daepr102i7agnNk2c7CQ9Tz2+sXgYrMVPK4QroEOXY1rFCbHQ== Work');
         $key1_user2 = new Key('user2', 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC2qLUXmQdrRbYcSgdK2uTs/CHOyHQBOlotCp18WPcueL0d4DT/IDLGp5BFL6ePYS4rJslroGlPCkYDzY2jt7acOJp2oXy+bELaaNeYzW2DgYkGhOSZO/I292R1UXt+V/bFYYfqApFUw+s8UvPB7qUWJISmHbG4tVm4iYdiR2i1Uw==');
 
-        $user1 = mock('PFUser');
-        stub($user1)->getUsername()->returns('user1');
-        stub($user1)->getAuthorizedKeysArray()->returns(array($key1_user1->getKey(), $key2_user1->getKey()));
-        $user2 = mock('PFUser');
-        stub($user2)->getUsername()->returns('user2');
-        stub($user2)->getAuthorizedKeysArray()->returns(array($key1_user2->getKey()));
-        $user_manager       = mock('UserManager');
+        $user1 = \Mockery::spy(\PFUser::class);
+        $user1->shouldReceive('getUsername')->andReturns('user1');
+        $user1->shouldReceive('getAuthorizedKeysArray')->andReturns(array($key1_user1->getKey(), $key2_user1->getKey()));
+        $user2 = \Mockery::spy(\PFUser::class);
+        $user2->shouldReceive('getUsername')->andReturns('user2');
+        $user2->shouldReceive('getAuthorizedKeysArray')->andReturns(array($key1_user2->getKey()));
+        $user_manager       = \Mockery::spy(\UserManager::class);
         $users_with_ssh_key = new ArrayIterator(array($user1, $user2));
-        stub($user_manager)->getUsersWithSshKey()->returns($users_with_ssh_key);
+        $user_manager->shouldReceive('getUsersWithSshKey')->andReturns($users_with_ssh_key);
 
         $user_with_ssh_key_provider = new User($user_manager);
         $expected_result            = array($key1_user1, $key2_user1, $key1_user2);
@@ -51,9 +51,9 @@ class UserTest extends TuleapTestCase
 
     public function itDoesNotFindSSHKeyIfNoUsersHaveUploadedOne()
     {
-        $user_manager       = mock('UserManager');
+        $user_manager       = \Mockery::spy(\UserManager::class);
         $users_with_ssh_key = new ArrayIterator(array());
-        stub($user_manager)->getUsersWithSshKey()->returns($users_with_ssh_key);
+        $user_manager->shouldReceive('getUsersWithSshKey')->andReturns($users_with_ssh_key);
 
         $user_with_ssh_key_provider = new User($user_manager);
 

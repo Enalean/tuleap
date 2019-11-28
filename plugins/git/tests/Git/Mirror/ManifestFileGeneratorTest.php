@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014 - 2017. All rights reserved.
+ * Copyright Enalean (c) 2014 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once __DIR__.'/../../bootstrap.php';
 
 class Git_Mirror_ManifestFileGenerator_BaseTest extends TuleapTestCase
 {
@@ -46,6 +46,7 @@ class Git_Mirror_ManifestFileGenerator_BaseTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->current_time       = $_SERVER['REQUEST_TIME'];
         $this->time_in_the_past   = 1414684049;
         $this->fixture_dir        = $this->getTmpDir();
@@ -61,11 +62,11 @@ class Git_Mirror_ManifestFileGenerator_BaseTest extends TuleapTestCase
             ->withDescription('free and open-source web browser')
             ->build();
 
-        $this->singapour_mirror = new Git_Mirror_Mirror(mock('PFUser'), $this->singapour_mirror_id, 'singapour.com', 'singapour', 'SNP');
+        $this->singapour_mirror = new Git_Mirror_Mirror(\Mockery::spy(\PFUser::class), $this->singapour_mirror_id, 'singapour.com', 'singapour', 'SNP');
         $this->manifest_file_for_singapour = $this->manifest_directory
             . "/manifest_mirror_{$this->singapour_mirror_id}.js.gz";
 
-        $this->logger = mock('Logger');
+        $this->logger = \Mockery::spy(\Logger::class);
 
         $this->generator = new Git_Mirror_ManifestFileGenerator($this->logger, $this->manifest_directory);
     }
@@ -126,8 +127,8 @@ class Git_Mirror_ManifestFileGenerator_removeTest extends Git_Mirror_ManifestFil
     {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
 
-        $this->logger->expectCallCount('debug', 2);
-        expect($this->logger)->debug('removing /linux/kernel.git from manifest of mirror singapour.com (id: 1)')->at(0);
+        $this->logger->shouldReceive('debug')->times(2);
+        $this->logger->shouldReceive('debug')->with('removing /linux/kernel.git from manifest of mirror singapour.com (id: 1)')->ordered();
 
         $this->generator->removeRepositoryFromManifestFile($this->singapour_mirror, $this->kernel_repository->getPath());
     }
@@ -161,8 +162,8 @@ class Git_Mirror_ManifestFileGenerator_addTest extends Git_Mirror_ManifestFileGe
 
     public function itLogsAddition()
     {
-        $this->logger->expectCallCount('debug', 2);
-        expect($this->logger)->debug('adding /linux/kernel.git to manifest of mirror singapour.com (id: 1)')->at(0);
+        $this->logger->shouldReceive('debug')->times(2);
+        $this->logger->shouldReceive('debug')->with('adding /linux/kernel.git to manifest of mirror singapour.com (id: 1)')->ordered();
 
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
     }
@@ -233,8 +234,8 @@ class Git_Mirror_ManifestFileGenerator_addTest extends Git_Mirror_ManifestFileGe
     {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
 
-        $this->logger->expectCallCount('debug', 2);
-        expect($this->logger)->debug('updating /linux/kernel.git in manifest of mirror singapour.com (id: 1)')->at(0);
+        $this->logger->shouldReceive('debug')->times(2);
+        $this->logger->shouldReceive('debug')->with('updating /linux/kernel.git in manifest of mirror singapour.com (id: 1)')->ordered();
 
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
     }
@@ -292,7 +293,7 @@ class Git_Mirror_ManifestFileGenerator_ensureManifestContainsLatestInfoOfReposit
         $content_before = $this->getManifestContent($this->manifest_file_for_singapour);
         $this->assertTrue(isset($content_before["/linux/kernel.git"]));
 
-        expect($this->logger)->debug('removing /linux/kernel.git from manifest of mirror singapour.com (id: 1)')->once();
+        $this->logger->shouldReceive('debug')->with('removing /linux/kernel.git from manifest of mirror singapour.com (id: 1)')->once();
 
         $this->generator->ensureManifestContainsLatestInfoOfRepositories(
             $this->singapour_mirror,

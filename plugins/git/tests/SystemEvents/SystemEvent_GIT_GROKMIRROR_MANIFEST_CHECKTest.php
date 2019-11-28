@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once __DIR__.'/../bootstrap.php';
 
 class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECKTest extends TuleapTestCase
 {
@@ -29,9 +29,10 @@ class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECKTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->manifest_manager = mock('Git_Mirror_ManifestManager');
-        $this->event = partial_mock('SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK', array('done', 'warning', 'error', 'getId'));
+        $this->manifest_manager = \Mockery::spy(\Git_Mirror_ManifestManager::class);
+        $this->event = \Mockery::mock(\SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->event->injectDependencies(
             $this->manifest_manager
@@ -40,7 +41,7 @@ class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECKTest extends TuleapTestCase
 
     public function itChecksTheManifest()
     {
-        expect($this->manifest_manager)->checkManifestFiles()->once();
+        $this->manifest_manager->shouldReceive('checkManifestFiles')->once();
 
         $this->event->process();
     }

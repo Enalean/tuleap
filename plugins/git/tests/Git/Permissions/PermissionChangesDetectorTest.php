@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,7 @@ namespace Tuleap\Git\Permissions;
 use TuleapTestCase;
 use Git;
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once __DIR__.'/../../bootstrap.php';
 
 class PermissionChangesDetectorForRepositoryTest extends TuleapTestCase
 {
@@ -34,8 +34,10 @@ class PermissionChangesDetectorForRepositoryTest extends TuleapTestCase
 
     public function setUp()
     {
-        $this->git_permission_manager = mock('GitPermissionsManager');
-        $this->retriever              = mock('Tuleap\Git\Permissions\FineGrainedRetriever');
+        parent::setUp();
+        $this->setUpGlobalsMockery();
+        $this->git_permission_manager = \Mockery::spy(\GitPermissionsManager::class);
+        $this->retriever              = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class);
 
         $this->detector = new PermissionChangesDetector(
             $this->git_permission_manager,
@@ -63,7 +65,7 @@ class PermissionChangesDetectorForRepositoryTest extends TuleapTestCase
 
     public function itDetectsChangesIfABranchPermissionIsAdded()
     {
-        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->repository)->returns(true);
+        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturns(true);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
             $this->repository,
@@ -79,7 +81,7 @@ class PermissionChangesDetectorForRepositoryTest extends TuleapTestCase
 
     public function itDetectsChangesIfATagPermissionIsAdded()
     {
-        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->repository)->returns(true);
+        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturns(true);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
             $this->repository,
@@ -95,7 +97,7 @@ class PermissionChangesDetectorForRepositoryTest extends TuleapTestCase
 
     public function itDetectsChangesIfAtLeastOneFineGrainedPermissionIsUpdated()
     {
-        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->repository)->returns(true);
+        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturns(true);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
             $this->repository,
@@ -111,7 +113,7 @@ class PermissionChangesDetectorForRepositoryTest extends TuleapTestCase
 
     public function itDetectsChangesIfFineGrainedPermissionAreEnabled()
     {
-        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->repository)->returns(false);
+        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturns(false);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
             $this->repository,
@@ -127,7 +129,7 @@ class PermissionChangesDetectorForRepositoryTest extends TuleapTestCase
 
     public function itDetectsChangesIfFineGrainedPermissionAreDisabled()
     {
-        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->repository)->returns(true);
+        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturns(true);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForRepository(
             $this->repository,
@@ -143,8 +145,8 @@ class PermissionChangesDetectorForRepositoryTest extends TuleapTestCase
 
     public function itDetectsChangesIfGlobalPermissionAreChanged()
     {
-        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->repository)->returns(false);
-        stub($this->git_permission_manager)->getRepositoryGlobalPermissions($this->repository)->returns(array(
+        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturns(false);
+        $this->git_permission_manager->shouldReceive('getRepositoryGlobalPermissions')->with($this->repository)->andReturns(array(
             Git::PERM_READ => array('3'),
             Git::PERM_WRITE => array('4')
         ));
@@ -163,8 +165,8 @@ class PermissionChangesDetectorForRepositoryTest extends TuleapTestCase
 
     public function itDoesNotDetectChangesIfNothingChangedWithFineGrainedPermissions()
     {
-        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->repository)->returns(true);
-        stub($this->git_permission_manager)->getRepositoryGlobalPermissions($this->repository)->returns(array(
+        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturns(true);
+        $this->git_permission_manager->shouldReceive('getRepositoryGlobalPermissions')->with($this->repository)->andReturns(array(
             Git::PERM_READ => array('3')
         ));
 
@@ -182,8 +184,8 @@ class PermissionChangesDetectorForRepositoryTest extends TuleapTestCase
 
     public function itDoesNotDetectChangesIfNothingChangedWithoutFineGrainedPermissions()
     {
-        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->repository)->returns(false);
-        stub($this->git_permission_manager)->getRepositoryGlobalPermissions($this->repository)->returns(array(
+        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->repository)->andReturns(false);
+        $this->git_permission_manager->shouldReceive('getRepositoryGlobalPermissions')->with($this->repository)->andReturns(array(
             Git::PERM_READ => array('3'),
             Git::PERM_WRITE => array('4')
         ));
@@ -205,15 +207,17 @@ class PermissionChangesDetectorForProjectTest extends TuleapTestCase
 {
     public function setUp()
     {
-        $this->git_permission_manager = mock('GitPermissionsManager');
-        $this->retriever              = mock('Tuleap\Git\Permissions\FineGrainedRetriever');
+        parent::setUp();
+        $this->setUpGlobalsMockery();
+        $this->git_permission_manager = \Mockery::spy(\GitPermissionsManager::class);
+        $this->retriever              = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class);
 
         $this->detector = new PermissionChangesDetector(
             $this->git_permission_manager,
             $this->retriever
         );
 
-        $this->project = stub('Project')->getId()->returns(101);
+        $this->project = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(101)->getMock();
 
         $this->default_branch_fine_grained_permission = new DefaultFineGrainedPermission(
             1,
@@ -234,7 +238,7 @@ class PermissionChangesDetectorForProjectTest extends TuleapTestCase
 
     public function itDetectsChangesForProjectIfABranchPermissionIsAdded()
     {
-        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(true);
+        $this->retriever->shouldReceive('doesProjectUseFineGrainedPermissions')->with($this->project)->andReturns(true);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForProject(
             $this->project,
@@ -252,7 +256,7 @@ class PermissionChangesDetectorForProjectTest extends TuleapTestCase
 
     public function itDetectsChangesForProjectIfATagPermissionIsAdded()
     {
-        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(true);
+        $this->retriever->shouldReceive('doesProjectUseFineGrainedPermissions')->with($this->project)->andReturns(true);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForProject(
             $this->project,
@@ -270,7 +274,7 @@ class PermissionChangesDetectorForProjectTest extends TuleapTestCase
 
     public function itDetectsChangesForProjectIfAtLeastOneFineGrainedPermissionIsUpdated()
     {
-        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(true);
+        $this->retriever->shouldReceive('doesProjectUseFineGrainedPermissions')->with($this->project)->andReturns(true);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForProject(
             $this->project,
@@ -288,7 +292,7 @@ class PermissionChangesDetectorForProjectTest extends TuleapTestCase
 
     public function itDetectsChangesForProjectIfFineGrainedPermissionAreEnabled()
     {
-        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(false);
+        $this->retriever->shouldReceive('doesProjectUseFineGrainedPermissions')->with($this->project)->andReturns(false);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForProject(
             $this->project,
@@ -306,7 +310,7 @@ class PermissionChangesDetectorForProjectTest extends TuleapTestCase
 
     public function itDetectsChangesForProjectIfFineGrainedPermissionAreDisabled()
     {
-        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(true);
+        $this->retriever->shouldReceive('doesProjectUseFineGrainedPermissions')->with($this->project)->andReturns(true);
 
         $has_changes = $this->detector->areThereChangesInPermissionsForProject(
             $this->project,
@@ -324,8 +328,8 @@ class PermissionChangesDetectorForProjectTest extends TuleapTestCase
 
     public function itDetectsChangesForProjectIfGlobalPermissionAreChanged()
     {
-        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(false);
-        stub($this->git_permission_manager)->getProjectGlobalPermissions($this->project)->returns(array(
+        $this->retriever->shouldReceive('doesProjectUseFineGrainedPermissions')->with($this->project)->andReturns(false);
+        $this->git_permission_manager->shouldReceive('getProjectGlobalPermissions')->with($this->project)->andReturns(array(
             Git::DEFAULT_PERM_READ => array('3'),
             Git::DEFAULT_PERM_WRITE => array('4'),
             Git::DEFAULT_PERM_WPLUS => array(),
@@ -347,8 +351,8 @@ class PermissionChangesDetectorForProjectTest extends TuleapTestCase
 
     public function itDoesNotDetectChangesForProjectIfNothingChangedWithFineGrainedPermissions()
     {
-        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(true);
-        stub($this->git_permission_manager)->getProjectGlobalPermissions($this->project)->returns(array(
+        $this->retriever->shouldReceive('doesProjectUseFineGrainedPermissions')->with($this->project)->andReturns(true);
+        $this->git_permission_manager->shouldReceive('getProjectGlobalPermissions')->with($this->project)->andReturns(array(
             Git::DEFAULT_PERM_READ => array('3')
         ));
 
@@ -368,8 +372,8 @@ class PermissionChangesDetectorForProjectTest extends TuleapTestCase
 
     public function itDoesNotDetectChangesForProjectIfNothingChangedWithoutFineGrainedPermissions()
     {
-        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(false);
-        stub($this->git_permission_manager)->getProjectGlobalPermissions($this->project)->returns(array(
+        $this->retriever->shouldReceive('doesProjectUseFineGrainedPermissions')->with($this->project)->andReturns(false);
+        $this->git_permission_manager->shouldReceive('getProjectGlobalPermissions')->with($this->project)->andReturns(array(
             Git::DEFAULT_PERM_READ => array('3'),
             Git::DEFAULT_PERM_WRITE => array('4'),
             Git::DEFAULT_PERM_WPLUS => array(),

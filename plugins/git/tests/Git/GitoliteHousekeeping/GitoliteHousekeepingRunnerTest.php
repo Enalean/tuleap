@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,11 +26,12 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends TuleapTest
     public function setUp()
     {
         parent::setUp();
-        $this->process_manager  = mock('SystemEventProcessManager');
-        $this->process          = mock('SystemEventProcess');
+        $this->setUpGlobalsMockery();
+        $this->process_manager  = \Mockery::spy(\SystemEventProcessManager::class);
+        $this->process          = \Mockery::spy(\SystemEventProcess::class);
         $this->housekeeping_dao = safe_mock(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
-        $this->response         = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingResponse');
-        $this->backend_service  = mock('BackendService');
+        $this->response         = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
+        $this->backend_service  = \Mockery::spy(\BackendService::class);
 
         $this->gitolite_var_path       = 'gitolite_var_path';
         $this->remote_admin_repository = 'remote_admin_repository';

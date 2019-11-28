@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,8 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGcTest extends Tul
     public function setUp()
     {
         parent::setUp();
-        $this->response = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingResponse');
+        $this->setUpGlobalsMockery();
+        $this->response = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
         $this->dao      = \Mockery::spy(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
 
         $this->command = new Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGc($this->response, $this->dao);
@@ -34,16 +35,16 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGcTest extends Tul
 
     public function itEnablesGitGc()
     {
-        expect($this->response)->info('Enabling git gc')->once();
-        expect($this->dao)->enableGitGc()->once();
+        $this->response->shouldReceive('info')->with('Enabling git gc')->once();
+        $this->dao->shouldReceive('enableGitGc')->once();
 
         $this->command->execute();
     }
 
     public function itExecutesTheNextCommand()
     {
-        $next = mock('Git_GitoliteHousekeeping_ChainOfResponsibility_Command');
-        expect($next)->execute()->once();
+        $next = \Mockery::spy(\Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
+        $next->shouldReceive('execute')->once();
 
         $this->command->setNextCommand($next);
 
