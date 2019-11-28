@@ -24,6 +24,8 @@ import ProjectInformation from "./ProjectInformation.vue";
 import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import UnderConstructionInformation from "../UnderConstructionInformation.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
+import ProjectInformationInputPrivacySwitch from "./Input/ProjectInformationInputPrivacySwitch.vue";
+import ProjectName from "./Input/ProjectName.vue";
 
 describe("ProjectInformation", () => {
     let factory: Wrapper<ProjectInformation>;
@@ -38,6 +40,7 @@ describe("ProjectInformation", () => {
         expect(wrapper.contains(ProjectInformationSvg)).toBe(true);
         expect(wrapper.contains(UnderConstructionInformation)).toBe(true);
         expect(wrapper.contains(ProjectInformationFooter)).toBe(true);
-        expect(wrapper.contains("[data-test=register-new-project-information-form]")).toBe(true);
+        expect(wrapper.contains(ProjectInformationInputPrivacySwitch)).toBe(true);
+        expect(wrapper.contains(ProjectName)).toBe(true);
     });
 });
