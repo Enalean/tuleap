@@ -20,7 +20,11 @@
 
 <template>
     <div class="taskboard-card-label-editor">
-        <pre class="taskboard-card-label-input-mirror" ref="mirror">{{ value }}</pre>
+        <textarea class="tlp-textarea taskboard-card-label-input-mirror"
+                  v-bind:value="value"
+                  rows="1"
+                  ref="mirror"
+        ></textarea>
         <textarea class="tlp-textarea taskboard-card-label-input"
                   v-bind:value="value"
                   v-on:input="$emit('input', $event.target.value)"
@@ -37,7 +41,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { autoFocusAutoSelect } from "../../../../../../../helpers/autofocus-autoselect";
 
-const LINE_HEIGHT_IN_PX = 22;
+const LINE_HEIGHT_IN_PX = 18;
 const TOP_AND_BOTTOM_PADDING_IN_PX = 16;
 
 @Component
@@ -46,12 +50,14 @@ export default class EditLabel extends Vue {
     readonly value!: string;
 
     rows = 1;
+    mirror!: HTMLTextAreaElement;
 
     mounted(): void {
-        setTimeout(this.computeRows, 10);
-
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const textarea = this.$refs.textarea as HTMLTextAreaElement;
+
+        setTimeout(this.computeRows, 10);
+
         autoFocusAutoSelect(textarea);
     }
 
@@ -67,9 +73,9 @@ export default class EditLabel extends Vue {
 
     computeRows(): void {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        const mirror = this.$refs.mirror as HTMLElement;
-        this.rows = Math.round(
-            (mirror.clientHeight - TOP_AND_BOTTOM_PADDING_IN_PX) / LINE_HEIGHT_IN_PX
+        const mirror = this.$refs.mirror as HTMLTextAreaElement;
+        this.rows = Math.ceil(
+            (mirror.scrollHeight - TOP_AND_BOTTOM_PADDING_IN_PX) / LINE_HEIGHT_IN_PX
         );
     }
 }
