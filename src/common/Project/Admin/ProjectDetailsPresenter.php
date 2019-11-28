@@ -25,6 +25,7 @@ use Project;
 use ProjectManager;
 use TemplateSingleton;
 use Tuleap\Project\ProjectAccessPresenter;
+use Tuleap\Project\Registration\Template\TemplateFactory;
 
 class ProjectDetailsPresenter
 {
@@ -79,6 +80,12 @@ class ProjectDetailsPresenter
      * @var \CSRFSynchronizerToken
      */
     public $csrf_token;
+    /**
+     * @var array
+     */
+    public $built_from_project;
+    public $built_from_xml_template;
+    public $built_from_label;
 
     public function __construct(
         Project $project,
@@ -111,11 +118,19 @@ class ProjectDetailsPresenter
         $this->is_suspended_status = $project->getStatus() === Project::STATUS_SUSPENDED;
         $this->types               = $this->getTypes($project);
 
-        $template = ProjectManager::instance()->getProject($project->getTemplate());
-        $this->built_from = array(
-            'href' => '/admin/groupedit.php?group_id='.$template->getID(),
-            'name' => $template->getPublicname()
-        );
+        $template_factory  = TemplateFactory::build();
+        $xml_template = $template_factory->getTemplateForProject($project);
+        if ($xml_template) {
+            $this->built_from_xml_template = [
+                'name' => $xml_template->getName(),
+            ];
+        } else {
+            $template                 = ProjectManager::instance()->getProject($project->getTemplate());
+            $this->built_from_project = array(
+                'href' => '/admin/groupedit.php?group_id='.$template->getID(),
+                'name' => $template->getPublicname()
+            );
+        }
 
         $this->custom_fields     = $all_custom_fields;
         $this->has_custom_fields = count($this->custom_fields) > 0;

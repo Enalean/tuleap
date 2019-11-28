@@ -95,9 +95,12 @@
                                         {{ built_from_label }}
                                     </label>
                                     <p>
-                                        {{# built_from }}
+                                        {{# built_from_project }}
                                             <a href="{{ href }}">{{ name }}</a>
-                                        {{/ built_from }}
+                                        {{/ built_from_project }}
+                                        {{# built_from_xml_template }}
+                                            {{ name }}
+                                        {{/ built_from_xml_template }}
                                     </p>
                                 </div>
                             </div>

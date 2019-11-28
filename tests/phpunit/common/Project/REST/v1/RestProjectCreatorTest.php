@@ -42,6 +42,7 @@ use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
+use Tuleap\Project\Registration\Template\TemplateDao;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\ConsistencyChecker;
@@ -69,6 +70,10 @@ class RestProjectCreatorTest extends TestCase
      * @var M\LegacyMockInterface|M\MockInterface|ProjectRegistrationUserPermissionChecker
      */
     private $permissions_checker;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|TemplateDao
+     */
+    private $template_dao;
 
     protected function setUp(): void
     {
@@ -80,6 +85,7 @@ class RestProjectCreatorTest extends TestCase
         $this->project_XML_importer = M::mock(ProjectXMLImporter::class);
         $this->permissions_checker  = M::mock(ProjectRegistrationUserPermissionChecker::class);
         $this->permissions_checker->shouldReceive('checkUserCreateAProject')->byDefault();
+        $this->template_dao         = M::mock(TemplateDao::class);
 
         $this->creator              = new RestProjectCreator(
             $this->project_manager,
@@ -97,7 +103,8 @@ class RestProjectCreatorTest extends TestCase
                 new ConsistencyChecker(
                     $this->service_manager,
                     new XMLFileContentRetriever(),
-                )
+                ),
+                $this->template_dao,
             ),
             $this->permissions_checker
         );
@@ -197,6 +204,8 @@ class RestProjectCreatorTest extends TestCase
         $this->service_manager->shouldReceive('getListOfServicesAvailableAtSiteLevel')->andReturns($services);
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($template_project)->andReturns($services);
 
+        $new_project = new \Project(['group_id' => 201]);
+
         $this->project_XML_importer->shouldReceive('importWithProjectData')->with(
             \Hamcrest\Core\IsEqual::equalTo(new ImportConfig()),
             M::on(static function (ArchiveInterface $archive) {
@@ -209,8 +218,10 @@ class RestProjectCreatorTest extends TestCase
                     $data->getShortDescription() === 'foo' &&
                     $data->getAccess() === \Project::ACCESS_PRIVATE_WO_RESTRICTED;
             })
-        );
+        )->andReturn($new_project);
 
-        $this->creator->create($this->user, $this->project);
+        $this->template_dao->shouldReceive('saveTemplate')->with($new_project, ScrumTemplate::NAME)->once();
+
+        $this->assertSame($new_project, $this->creator->create($this->user, $this->project));
     }
 }

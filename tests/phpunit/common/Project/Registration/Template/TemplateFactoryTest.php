@@ -54,6 +54,7 @@ class TemplateFactoryTest extends TestCase
             new GlyphFinder(new \EventManager()),
             new ProjectXMLMerger(),
             $this->consistency_checker,
+            M::mock(TemplateDao::class),
         );
     }
 

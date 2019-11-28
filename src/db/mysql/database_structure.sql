@@ -544,6 +544,11 @@ CREATE TABLE project_webhook_log (
   INDEX idx_webhook_id(webhook_id)
 );
 
+CREATE TABLE project_template_xml (
+    id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    template_name VARCHAR(255)
+);
+
 CREATE TABLE svn_accessfile_history (
     id INT(11) AUTO_INCREMENT,
     version_number INT(11) NOT NULL,
