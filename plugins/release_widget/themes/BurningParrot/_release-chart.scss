@@ -18,14 +18,15 @@
  */
 
 .release-chart-burndown-row {
-    flex: 1 0 auto;
+    flex: 0 0 auto;
     width: 220px + $tlp-spacing;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-spacing 0 auto;
     padding: 0 0 0 $tlp-half-spacing;
 }
 
 .release-chart-burndown-container {
     position: relative;
+    margin-bottom: $tlp-spacing;
     padding-top: 45%;
 }
 
