@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { MoveCardsPayload, SwimlaneState } from "./type";
+import { SwimlaneState } from "./type";
 import { Swimlane, Card } from "../../type";
 import * as helpers from "./swimlane-helpers";
 
@@ -87,92 +87,87 @@ describe(`swimlane-helpers`, () => {
         });
     });
 
-    describe("findDroppedCard", () => {
-        it("Given a payload for the drop of a child card, Then it should return the child card from the state", () => {
+    describe("findCard", () => {
+        it(`Given a card,
+            when the card is a solo card,
+            it will return the card with matching id from the state`, () => {
+            const solo_card = { id: 24, label: "Parameter card", has_children: false } as Card;
             const card_from_state = {
-                id: 10,
-                mapped_list_value: {
-                    label: "Current column"
-                }
-            };
+                id: 24,
+                label: "Card from state",
+                has_children: false
+            } as Card;
             const swimlane = {
-                card: {
-                    id: 1,
-                    has_children: true
-                },
-                children_cards: [card_from_state]
-            };
-
-            const state = { swimlanes: [swimlane] } as SwimlaneState;
-
-            const payload = {
-                swimlane,
-                card: {
-                    id: 10,
-                    mapped_list_value: {
-                        label: "New column"
-                    }
-                }
-            } as MoveCardsPayload;
-
-            const card = helpers.findDroppedCard(state, payload);
-
-            expect(card).toEqual(card_from_state);
-        });
-
-        it("Given a payload for the drop of a solo card, Then it should return the solo card from the state", () => {
-            const card_from_state = {
-                id: 10,
-                has_children: false,
-                mapped_list_value: {
-                    label: "Current column"
-                }
-            };
-            const swimlane = {
-                card: card_from_state
-            };
-
-            const state = { swimlanes: [swimlane] } as SwimlaneState;
-
-            const payload = {
-                swimlane,
-                card: {
-                    id: 10,
-                    mapped_list_value: {
-                        label: "New column"
-                    }
-                }
-            } as MoveCardsPayload;
-
-            const card = helpers.findDroppedCard(state, payload);
-
-            expect(card).toEqual(card_from_state);
-        });
-
-        it("Throws an error when the card has not been found, so it means there is probably a bug with the payload", () => {
-            const swimlane = {
-                card: {
-                    id: 1,
-                    has_children: true
-                },
-                children_cards: [] as Card[]
+                card: card_from_state,
+                children_cards: [],
+                is_loading_children_cards: false
             } as Swimlane;
+            const state = {
+                swimlanes: [
+                    { card: { id: 99, label: "Unrelated swimlane" }, children_cards: [] },
+                    swimlane
+                ]
+            } as SwimlaneState;
 
-            const state = { swimlanes: [swimlane] } as SwimlaneState;
+            const result = helpers.findCard(state, solo_card);
+            expect(result).toBe(card_from_state);
+        });
 
-            const payload = {
-                swimlane,
-                card: {
-                    id: 40,
-                    mapped_list_value: {
-                        label: "New column"
+        it(`Given a card,
+            when the card is a parent card,
+            it will return the card with matching id from the state`, () => {
+            const parent_card = { id: 1, label: "Parameter card", has_children: true } as Card;
+            const card_from_state = { id: 1, label: "Card from state", has_children: true };
+            const swimlane = {
+                card: card_from_state,
+                children_cards: [{ id: 19, label: "Unrelated child" }]
+            };
+            const state = {
+                swimlanes: [
+                    { card: { id: 99, label: "Unrelated swimlane" }, children_cards: [] },
+                    swimlane
+                ]
+            } as SwimlaneState;
+
+            const result = helpers.findCard(state, parent_card);
+            expect(result).toBe(card_from_state);
+        });
+
+        it(`Given a card,
+            when the card is a child card,
+            it will return the card with matching id from the state`, () => {
+            const child_card = { id: 10, label: "Parameter card" } as Card;
+            const card_from_state = { id: 10, label: "Card from state" };
+            const swimlane = {
+                card: { id: 1, has_children: true },
+                children_cards: [{ id: 19, label: "Unrelated child" }, card_from_state]
+            };
+            const state = {
+                swimlanes: [
+                    { card: { id: 99, label: "Unrelated swimlane" }, children_cards: [] },
+                    swimlane
+                ]
+            } as SwimlaneState;
+
+            const result = helpers.findCard(state, child_card);
+            expect(result).toBe(card_from_state);
+        });
+
+        it(`when no card with the same id can be found in the state,
+            it will throw an error to let the developper know there is something wrong
+            in the code`, () => {
+            const unknown_card = { id: 10, label: "Parameter card" } as Card;
+            const state = {
+                swimlanes: [
+                    {
+                        card: { id: 99, label: "Unrelated swimlane" } as Card,
+                        children_cards: [],
+                        is_loading_children_cards: false
                     }
-                }
-            } as MoveCardsPayload;
-
-            expect(() => helpers.findDroppedCard(state, payload)).toThrow(
-                "Dropped card has not been found in the swimlane."
-            );
+                ],
+                is_loading_swimlanes: false
+            } as SwimlaneState;
+            expect(() => helpers.findCard(state, unknown_card)).toThrow();
         });
     });
 

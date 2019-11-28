@@ -20,6 +20,7 @@
 import { Card, RemainingEffort } from "../../../type";
 import { SwimlaneState } from "../type";
 import { NewCardPayload, NewRemainingEffortPayload } from "./type";
+import { findCard } from "../swimlane-helpers";
 
 export function addCardToEditMode(state: SwimlaneState, card: Card): void {
     findCard(state, card).is_in_edit_mode = true;
@@ -77,22 +78,6 @@ export function finishSavingRemainingEffort(
 function switchRemainingEffortToReadOnlyMode(remaining_effort: RemainingEffort): void {
     remaining_effort.is_being_saved = false;
     remaining_effort.is_in_edit_mode = false;
-}
-
-function findCard(state: SwimlaneState, card: Card): Card {
-    for (const swimlane of state.swimlanes) {
-        if (swimlane.card.id === card.id) {
-            return swimlane.card;
-        }
-
-        for (const child of swimlane.children_cards) {
-            if (child.id === card.id) {
-                return child;
-            }
-        }
-    }
-
-    throw new Error("Could not find card with id=" + card.id);
 }
 
 export function setCardHaveAlreadyBeenShown(state: SwimlaneState, card: Card): void {

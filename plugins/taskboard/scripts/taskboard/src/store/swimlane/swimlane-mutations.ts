@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Direction, Swimlane, Mapping } from "../../type";
+import { Card, Direction, Mapping, Swimlane } from "../../type";
 import {
     AddChildrenToSwimlanePayload,
-    SwimlaneState,
     MoveCardsPayload,
+    RefreshCardMutationPayload,
     ReorderCardsPayload,
-    RefreshParentCardMutationPayload
+    SwimlaneState
 } from "./type";
-import { findSwimlane, replaceSwimlane, findDroppedCard } from "./swimlane-helpers";
+import { findCard, findSwimlane, replaceSwimlane } from "./swimlane-helpers";
 import Vue from "vue";
 
 export * from "./card/card-mutations";
@@ -43,15 +43,9 @@ export function addSwimlanes(state: SwimlaneState, swimlanes: Array<Swimlane>): 
     state.swimlanes.sort(sortSwimlanesByRank);
 }
 
-export function refreshParentCard(
-    state: SwimlaneState,
-    payload: RefreshParentCardMutationPayload
-): void {
-    const state_swimlane = findSwimlane(state, payload.swimlane);
-    state_swimlane.card = {
-        ...state_swimlane.card,
-        ...payload.parent_card
-    };
+export function refreshCard(state: SwimlaneState, payload: RefreshCardMutationPayload): void {
+    const state_card = findCard(state, payload.refreshed_card);
+    Object.assign(state_card, payload.refreshed_card);
 }
 
 export function beginLoadingSwimlanes(state: SwimlaneState): void {
@@ -94,17 +88,19 @@ export function expandSwimlane(state: SwimlaneState, swimlane: Swimlane): void {
     swimlane.card.is_collapsed = false;
 }
 
+function getCardIndex(swimlane: Swimlane, card_id: number): number {
+    return swimlane.children_cards.findIndex(child => child.id === card_id);
+}
+
 export function changeCardPosition(state: SwimlaneState, payload: ReorderCardsPayload): void {
     const card_id = payload.position.ids[0];
     const state_swimlane = findSwimlane(state, payload.swimlane);
-    const card_index = state_swimlane.children_cards.findIndex(child => child.id === card_id);
+    const card_index = getCardIndex(state_swimlane, card_id);
     const card_to_move = state_swimlane.children_cards[card_index];
 
     state_swimlane.children_cards.splice(card_index, 1);
 
-    const sibling_index = payload.swimlane.children_cards.findIndex(
-        child => child.id === payload.position.compared_to
-    );
+    const sibling_index = getCardIndex(payload.swimlane, payload.position.compared_to);
 
     if (card_index === -1 || sibling_index === -1) {
         return;
@@ -138,7 +134,7 @@ export function setColumnOfCard(state: SwimlaneState, payload: MoveCardsPayload)
     }
 
     const id = getFirstListValueId(mapping);
-    const card_state = findDroppedCard(state, payload);
+    const card_state = findCard(state, payload.card);
 
     card_state.mapped_list_value = {
         id,
