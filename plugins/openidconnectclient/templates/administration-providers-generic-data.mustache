@@ -1,0 +1,25 @@
+<div class="provider-endpoint">
+    <div class="tlp-property">
+        <label class="tlp-label">
+            {{ authorization_endpoint }}
+        </label>
+        <p>{{ getAuthorizationEndpoint }}</p>
+    </div>
+    <div class="tlp-property">
+        <label class="tlp-label">
+            {{ token_endpoint }}
+        </label>
+        <p>{{ getTokenEndpoint }}</p>
+    </div>
+    <div class="tlp-property">
+        <label class="tlp-label">
+            {{ userinfo_endpoint }}
+        </label>
+        {{# getUserInfoEndpoint }}
+            <p>{{ getUserInfoEndpoint }}</p>
+        {{/ getUserInfoEndpoint }}
+        {{^ getUserInfoEndpoint }}
+            <p class="tlp-property-empty">{{ empty_content }}</p>
+        {{/ getUserInfoEndpoint }}
+    </div>
+</div>

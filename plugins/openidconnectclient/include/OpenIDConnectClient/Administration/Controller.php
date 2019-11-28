@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,16 +21,19 @@
 namespace Tuleap\OpenIDConnectClient\Administration;
 
 use CSRFSynchronizerToken;
+use Embed\Providers\Provider;
 use Feedback;
 use HTTPRequest;
 use PFUser;
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\EnableUniqueAuthenticationEndpointVerifier;
-use Tuleap\OpenIDConnectClient\Provider\GenericProvider;
-use Tuleap\OpenIDConnectClient\Provider\Provider;
+use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProvider;
+use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\ProviderMalformedDataException;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException;
-use Tuleap\Admin\AdminPageRenderer;
 
 class Controller
 {
@@ -54,15 +57,27 @@ class Controller
      * @var AdminPageRenderer
      */
     private $admin_page_renderer;
+    /**
+     * @var GenericProviderManager
+     */
+    private $generic_provider_manager;
+    /**
+     * @var AzureADProviderManager
+     */
+    private $azure_provider_manager;
 
     public function __construct(
         ProviderManager $provider_manager,
+        GenericProviderManager $generic_provider_manager,
+        AzureADProviderManager $azure_provider_manager,
         EnableUniqueAuthenticationEndpointVerifier $enable_unique_authentication_endpoint_verifier,
         IconPresenterFactory $icon_presenter_factory,
         ColorPresenterFactory $color_presenter_factory,
         AdminPageRenderer $admin_page_renderer
     ) {
         $this->provider_manager                               = $provider_manager;
+        $this->generic_provider_manager                       = $generic_provider_manager;
+        $this->azure_provider_manager                         = $azure_provider_manager;
         $this->enable_unique_authentication_endpoint_verifier = $enable_unique_authentication_endpoint_verifier;
         $this->icon_presenter_factory                         = $icon_presenter_factory;
         $this->color_presenter_factory                        = $color_presenter_factory;
@@ -75,12 +90,22 @@ class Controller
         $providers_presenters = array();
 
         foreach ($providers as $provider) {
-            $providers_presenters[] = new ProviderPresenter(
-                $provider,
-                $this->enable_unique_authentication_endpoint_verifier->canBeEnabledBy($provider, $user),
-                $this->icon_presenter_factory->getIconsPresentersForProvider($provider),
-                $this->color_presenter_factory->getColorsPresentersForProvider($provider)
-            );
+            if ($provider instanceof AzureADProvider) {
+                $providers_presenters[] = new AzureProviderPresenter(
+                    $provider,
+                    $this->enable_unique_authentication_endpoint_verifier->canBeEnabledBy($provider, $user),
+                    $this->icon_presenter_factory->getIconsPresentersForProvider($provider),
+                    $this->color_presenter_factory->getColorsPresentersForProvider($provider)
+                );
+                continue;
+            } elseif ($provider instanceof GenericProvider) {
+                $providers_presenters[] = new GenericProviderPresenter(
+                    $provider,
+                    $this->enable_unique_authentication_endpoint_verifier->canBeEnabledBy($provider, $user),
+                    $this->icon_presenter_factory->getIconsPresentersForProvider($provider),
+                    $this->color_presenter_factory->getColorsPresentersForProvider($provider)
+                );
+            }
         }
 
         $presenter = new Presenter(
@@ -99,21 +124,25 @@ class Controller
         );
     }
 
-    public function createProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request)
+    /**
+     * @param HTTPRequest $request
+     * @throws ProviderMalformedDataException
+     */
+    public function createGenericProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request): void
     {
         $csrf_token->check();
 
-        $name                   = $request->get('name');
-        $authorization_endpoint = $request->get('authorization_endpoint');
-        $token_endpoint         = $request->get('token_endpoint');
-        $userinfo_endpoint      = $request->get('userinfo_endpoint') ? $request->get('userinfo_endpoint') : '';
-        $client_id              = $request->get('client_id');
-        $client_secret          = $request->get('client_secret');
-        $icon                   = $request->get('icon');
-        $color                  = $request->get('color');
-
         try {
-            $provider = $this->provider_manager->createGenericProvider(
+            $name                   = $request->get('name');
+            $authorization_endpoint = $request->get('authorization_endpoint');
+            $token_endpoint         = $request->get('token_endpoint');
+            $userinfo_endpoint      = $request->get('userinfo_endpoint') ? $request->get('userinfo_endpoint') : '';
+            $client_id              = $request->get('client_id');
+            $client_secret          = $request->get('client_secret');
+            $icon                   = $request->get('icon');
+            $color                  = $request->get('color');
+
+            $provider = $this->generic_provider_manager->createGenericProvider(
                 $name,
                 $authorization_endpoint,
                 $token_endpoint,
@@ -130,9 +159,50 @@ class Controller
         }
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
-            sprintf(dgettext('tuleap-openidconnectclient', 'The new provider %1$s have been successfully created.'), $provider->getName())
+            sprintf(
+                dgettext('tuleap-openidconnectclient', 'The new provider %1$s have been successfully created.'),
+                $provider->getName()
+            )
         );
+        $GLOBALS['Response']->redirect(OPENIDCONNECTCLIENT_BASE_URL . '/admin');
+    }
 
+    /**
+     * @param HTTPRequest $request
+     * @throws ProviderMalformedDataException
+     */
+    public function createAzureADProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request): void
+    {
+        $csrf_token->check();
+
+        try {
+            $name          = $request->get('name');
+            $client_id     = $request->get('client_id');
+            $client_secret = $request->get('client_secret');
+            $icon          = $request->get('icon');
+            $color         = $request->get('color');
+            $tenant_id     = $request->get('tenant_id');
+
+            $provider = $this->azure_provider_manager->createAzureADProvider(
+                $name,
+                $client_id,
+                $client_secret,
+                $icon,
+                $color,
+                $tenant_id
+            );
+        } catch (ProviderMalformedDataException $ex) {
+            $this->redirectAfterFailure(
+                dgettext('tuleap-openidconnectclient', 'The data you provided are not valid.')
+            );
+        }
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            sprintf(
+                dgettext('tuleap-openidconnectclient', 'The new provider %1$s have been successfully created.'),
+                $provider->getName()
+            )
+        );
         $GLOBALS['Response']->redirect(OPENIDCONNECTCLIENT_BASE_URL . '/admin');
     }
 
@@ -184,7 +254,7 @@ class Controller
         );
 
         try {
-            $this->provider_manager->update($updated_provider);
+            $this->generic_provider_manager->updateGenericProvider($updated_provider);
         } catch (ProviderMalformedDataException $ex) {
             $this->redirectAfterFailure(
                 dgettext('tuleap-openidconnectclient', 'The data you provided are not valid.')

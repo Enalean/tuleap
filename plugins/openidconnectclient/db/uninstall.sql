@@ -20,3 +20,4 @@ DROP TABLE IF EXISTS plugin_openidconnectclient_user_mapping;
 DROP TABLE IF EXISTS plugin_openidconnectclient_provider;
 DROP TABLE IF EXISTS plugin_openidconnectclient_unlinked_account;
 DROP TABLE IF EXISTS plugin_openidconnectclient_provider_generic;
+DROP TABLE IF EXISTS plugin_openidconnectclient_provider_azure_ad;

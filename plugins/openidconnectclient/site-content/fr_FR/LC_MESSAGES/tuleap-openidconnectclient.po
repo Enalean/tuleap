@@ -105,6 +105,9 @@ msgstr "Créer un nouveau compte"
 msgid "Request seems invalid, please retry"
 msgstr "La requête semble invalide, merci de réessayer"
 
+msgid "Tenant ID"
+msgstr "Id du locataire"
+
 msgid ""
 "The OpenID Connect plugin can only be used if the platform is accessible "
 "with HTTPS"
