@@ -41,15 +41,23 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
     private $trackers_retriever;
     /** @var M\LegacyMockInterface|M\MockInterface|MappedFieldRetriever */
     private $mapped_field_retriever;
+    /** @var \Tracker_Semantic_Title */
+    private $semantic_title;
 
     protected function setUp(): void
     {
         $this->trackers_retriever     = M::mock(TrackerCollectionRetriever::class);
         $this->mapped_field_retriever = M::mock(MappedFieldRetriever::class);
+        $this->semantic_title         = M::mock(\Tracker_Semantic_Title::class);
         $this->trackers_builder       = new TrackerPresenterCollectionBuilder(
             $this->trackers_retriever,
             $this->mapped_field_retriever
         );
+    }
+
+    protected function tearDown() : void
+    {
+        \Tracker_Semantic_Title::clearInstances();
     }
 
     public function testBuildCollectionReturnsEmptyArrayWhenNoTrackers(): void
@@ -81,6 +89,8 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
             ->with($taskboard_tracker)
             ->once()
             ->andReturnNull();
+
+        $this->mockSemanticTitle($taskboard_tracker, false);
 
         $result = $this->trackers_builder->buildCollection($milestone, $user);
         $this->assertFalse($result[0]->can_update_mapped_field);
@@ -117,11 +127,17 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
             ->with($second_taskboard_tracker)
             ->once()
             ->andReturn($sb_field_cannot_update);
+
+        $this->mockSemanticTitle($first_taskboard_tracker, false);
+        $this->mockSemanticTitle($second_taskboard_tracker, true);
+
         $result = $this->trackers_builder->buildCollection($milestone, $user);
         $this->assertSame(27, $result[0]->id);
         $this->assertTrue($result[0]->can_update_mapped_field);
+        $this->assertNull($result[0]->title_field_id);
         $this->assertSame(85, $result[1]->id);
         $this->assertFalse($result[1]->can_update_mapped_field);
+        $this->assertEquals(1533, $result[1]->title_field_id);
     }
 
     /**
@@ -132,5 +148,19 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
         return M::mock(Tracker::class)->shouldReceive('getId')
             ->andReturn($id)
             ->getMock();
+    }
+
+    private function mockSemanticTitle(TaskboardTracker $taskboard_tracker, ?bool $is_semantic_set) : void
+    {
+        \Tracker_Semantic_Title::setInstance($this->semantic_title, $taskboard_tracker->getTracker());
+
+        $title_field = null;
+
+        if ($is_semantic_set) {
+            $title_field = M::mock(\Tracker_FormElement_Field_Text::class);
+            $title_field->shouldReceive('getId')->andReturn(1533);
+        }
+
+        $this->semantic_title->shouldReceive('getField')->andReturn($title_field)->once();
     }
 }

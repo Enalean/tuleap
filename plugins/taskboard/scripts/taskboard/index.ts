@@ -26,7 +26,7 @@ import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-g
 import { ColumnDefinition } from "./src/type";
 import Vuex from "vuex";
 import { UserState } from "./src/store/user/type";
-import { RootState } from "./src/store/type";
+import { RootState, Tracker } from "./src/store/type";
 import { ColumnState } from "./src/store/column/type";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -52,6 +52,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const milestone_id = Number.parseInt(vue_mount_point.dataset.milestoneId || "0", 10);
     const user_has_accessibility_mode = Boolean(document.body.dataset.userHasAccessibilityMode);
     const are_closed_items_displayed = Boolean(vue_mount_point.dataset.areClosedItemsDisplayed);
+    const trackers: Array<Tracker> =
+        typeof vue_mount_point.dataset.trackers !== "undefined"
+            ? JSON.parse(vue_mount_point.dataset.trackers)
+            : [];
 
     await initVueGettext(Vue, (locale: string) =>
         import(/* webpackChunkName: "taskboard-po-" */ `./po/${locale}.po`)
@@ -67,7 +71,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         has_content,
         milestone_id,
         milestone_title,
-        are_closed_items_displayed
+        are_closed_items_displayed,
+        trackers
     } as RootState;
 
     const initial_user_state: UserState = {
