@@ -209,6 +209,9 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         return false;
     }
 
+    /**
+     * @return false|string
+     */
     public function mailDiff(
         $changeset_value,
         $artifact_id,
@@ -223,7 +226,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     /**
      * Returns a diff between this changeset value and the one passed in param
      *
-     * @return string The difference between another $changeset_value, false if no differneces
+     * @return string|false The difference between another $changeset_value, false if no differneces
      */
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {

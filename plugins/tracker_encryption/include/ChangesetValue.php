@@ -57,7 +57,7 @@ class ChangesetValue extends Tracker_Artifact_ChangesetValue
     }
 
     /**
-     * @return string
+     * @return string|false
      */
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {

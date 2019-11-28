@@ -137,7 +137,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     /**
      * Returns diff between current perms and perms in param
      *
-     * @return string The difference between another $changeset_value, false if no differneces
+     * @return string|false The difference between another $changeset_value, false if no differneces
      */
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {

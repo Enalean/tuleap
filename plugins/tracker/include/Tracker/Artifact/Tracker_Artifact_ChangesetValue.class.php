@@ -96,7 +96,7 @@ abstract class Tracker_Artifact_ChangesetValue
      * @param PFUser                          $user            The user or null
      * @param bool $ignore_perms
      *
-     * @return string The difference between another $changeset_value, false if no differences
+     * @return string|false The difference between another $changeset_value, false if no differences
      */
     abstract public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false);
 
@@ -105,7 +105,7 @@ abstract class Tracker_Artifact_ChangesetValue
     /**
      * Returns a mail format diff between current changeset value and changeset value in param
      *
-     * @return string The difference between another $changeset_value, false if no differences
+     * @return string|false The difference between another $changeset_value, false if no differences
      */
     public function mailDiff(
         $changeset_value,
@@ -125,7 +125,7 @@ abstract class Tracker_Artifact_ChangesetValue
      * @param string                          $format          The format of the diff (html, text, ...)
      * @param PFUser                          $user            The user or null
      *
-     * @return string The difference between another $changeset_value, false if no differences
+     * @return string|false The difference between another $changeset_value, false if no differences
      */
     public function modalDiff($changeset_value, $format = 'html', ?PFUser $user = null)
     {
