@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Provider;
 
 use Valid_HTTPSURI;
@@ -30,16 +32,21 @@ class ProviderManager
      */
     private $dao;
 
-    public function __construct(ProviderDao $dao)
+    /**
+     * @var GenericProviderDao
+     */
+    private $generic_provider_dao;
+
+    public function __construct(ProviderDao $dao, GenericProviderDao $generic_provider_dao)
     {
-        $this->dao = $dao;
+        $this->dao                  = $dao;
+        $this->generic_provider_dao = $generic_provider_dao;
     }
 
     /**
-     * @return Provider
      * @throws ProviderNotFoundException
      */
-    public function getById($id)
+    public function getById($id) : Provider
     {
         $row = $this->dao->searchById($id);
         if ($row === false) {
@@ -49,20 +56,18 @@ class ProviderManager
     }
 
     /**
-     * @return Provider
-     * @throws ProviderDataAccessException
      * @throws ProviderMalformedDataException
      */
-    public function create(
-        $name,
-        $authorization_endpoint,
-        $token_endpoint,
-        $user_info_endpoint,
-        $client_id,
-        $client_secret,
-        $icon,
-        $color
-    ) {
+    public function createGenericProvider(
+        string $name,
+        string $authorization_endpoint,
+        string $token_endpoint,
+        string $user_info_endpoint,
+        string $client_id,
+        string $client_secret,
+        string $icon,
+        string $color
+    ) : GenericProvider {
         $is_unique_authentication_endpoint = false;
         $is_data_valid                     = $this->isDataValid(
             $name,
@@ -80,7 +85,7 @@ class ProviderManager
             throw new ProviderMalformedDataException();
         }
 
-        $id = $this->dao->create(
+        $id = $this->generic_provider_dao->create(
             $name,
             $authorization_endpoint,
             $token_endpoint,
@@ -91,11 +96,7 @@ class ProviderManager
             $color
         );
 
-        if ($id === false) {
-            throw new ProviderDataAccessException();
-        }
-
-        return new Provider(
+        return new GenericProvider(
             $id,
             $name,
             $authorization_endpoint,
@@ -110,10 +111,9 @@ class ProviderManager
     }
 
     /**
-     * @throws ProviderDataAccessException
      * @throws ProviderMalformedDataException
      */
-    public function update(Provider $provider)
+    public function update(Provider $provider): void
     {
         $is_data_valid = $this->isDataValid(
             $provider->getName(),
@@ -131,7 +131,7 @@ class ProviderManager
             throw new ProviderMalformedDataException();
         }
 
-        $is_updated = $this->dao->save(
+        $this->generic_provider_dao->save(
             $provider->getId(),
             $provider->getName(),
             $provider->getAuthorizationEndpoint(),
@@ -143,27 +143,17 @@ class ProviderManager
             $provider->getIcon(),
             $provider->getColor()
         );
-
-        if (! $is_updated) {
-            throw new ProviderDataAccessException();
-        }
     }
 
-    /**
-     * @throws ProviderDataAccessException
-     */
-    public function remove(Provider $provider)
+    public function remove(Provider $provider): void
     {
-        $is_deleted = $this->dao->deleteById($provider->getId());
-        if (! $is_deleted) {
-            throw new ProviderDataAccessException();
-        }
+        $this->dao->deleteById($provider->getId());
     }
 
     /**
      * @return Provider[]
      */
-    public function getProvidersUsableToLogIn()
+    public function getProvidersUsableToLogIn(): array
     {
         $providers = array();
         $rows      = $this->dao->searchProvidersUsableToLogIn();
@@ -181,7 +171,7 @@ class ProviderManager
     /**
      * @return Provider[]
      */
-    public function getProviders()
+    public function getProviders(): array
     {
         $providers = array();
         $rows      = $this->dao->searchProviders();
@@ -196,47 +186,38 @@ class ProviderManager
         return $providers;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAProviderConfiguredAsUniqueAuthenticationEndpoint()
+    public function isAProviderConfiguredAsUniqueAuthenticationEndpoint(): bool
     {
         return $this->dao->isAProviderConfiguredAsUniqueEndPointProvider();
     }
 
-    /**
-     * @return Provider
-     */
-    private function instantiateFromRow(array $row)
+    private function instantiateFromRow(array $row) : GenericProvider
     {
-        return new Provider(
-            $row['id'],
+        return new GenericProvider(
+            (int)$row['id'],
             $row['name'],
             $row['authorization_endpoint'],
             $row['token_endpoint'],
             $row['user_info_endpoint'],
             $row['client_id'],
             $row['client_secret'],
-            $row['unique_authentication_endpoint'],
+            (bool)$row['unique_authentication_endpoint'],
             $row['icon'],
             $row['color']
         );
     }
 
-    /**
-     * @return bool
-     */
     private function isDataValid(
-        $name,
-        $authorization_endpoint,
-        $token_endpoint,
-        $userinfo_endpoint,
-        $is_unique_authentication_endpoint,
-        $client_id,
-        $client_secret,
-        $icon,
-        $color
-    ) {
+        string $name,
+        string $authorization_endpoint,
+        string $token_endpoint,
+        string $userinfo_endpoint,
+        bool $is_unique_authentication_endpoint,
+        string $client_id,
+        string $client_secret,
+        string $icon,
+        string $color
+    ): bool {
         $string_validator            = new Valid_String();
         $http_uri_validator          = new Valid_HTTPSURI();
         $http_uri_validator->required();

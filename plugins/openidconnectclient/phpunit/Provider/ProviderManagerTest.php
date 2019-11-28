@@ -33,12 +33,13 @@ class ProviderManagerTest extends TestCase
 
     public function testItCreatesNewProvider(): void
     {
-        $provider_dao     = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\ProviderDao::class);
-        $provider_manager = new ProviderManager($provider_dao);
+        $generic_provider_dao = \Mockery::mock(GenericProviderDao::class);
+        $provider_dao         = \Mockery::mock(ProviderDao::class);
+        $provider_manager     = new ProviderManager($provider_dao, $generic_provider_dao);
 
-        $provider_dao->shouldReceive('create')->once();
+        $generic_provider_dao->shouldReceive('create')->andReturn(1)->once();
 
-        $provider_manager->create(
+        $provider_manager->createGenericProvider(
             'Provider',
             'https://example.com/auth',
             'https://example.com/token',
@@ -52,12 +53,13 @@ class ProviderManagerTest extends TestCase
 
     public function testItCreatesNewProviderWithAnEmptyUserInfoEndpoint(): void
     {
-        $provider_dao     = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\ProviderDao::class);
-        $provider_manager = new ProviderManager($provider_dao);
+        $generic_provider_dao = \Mockery::mock(GenericProviderDao::class);
+        $provider_dao         = \Mockery::mock(ProviderDao::class);
+        $provider_manager     = new ProviderManager($provider_dao, $generic_provider_dao);
 
-        $provider_dao->shouldReceive('create')->once();
+        $generic_provider_dao->shouldReceive('create')->andReturn(1)->once();
 
-        $provider_manager->create(
+        $provider_manager->createGenericProvider(
             'Provider',
             'https://example.com/auth',
             'https://example.com/token',
@@ -71,9 +73,10 @@ class ProviderManagerTest extends TestCase
 
     public function testItUpdatesProvider(): void
     {
-        $provider_dao     = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\ProviderDao::class);
-        $provider_manager = new ProviderManager($provider_dao);
-        $provider         = new Provider(
+        $generic_provider_dao = \Mockery::mock(GenericProviderDao::class);
+        $provider_dao         = \Mockery::mock(ProviderDao::class);
+        $provider_manager     = new ProviderManager($provider_dao, $generic_provider_dao);
+        $provider             = new GenericProvider(
             0,
             'Provider',
             'https://example.com/auth',
@@ -86,21 +89,22 @@ class ProviderManagerTest extends TestCase
             'fiesta_red'
         );
 
-        $provider_dao->shouldReceive('save')->once()->andReturns(true);
+        $generic_provider_dao->shouldReceive('save')->once()->andReturns(true);
 
         $provider_manager->update($provider);
     }
 
     public function testItChecksDataBeforeManipulatingAProvider(): void
     {
-        $provider_dao     = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\ProviderDao::class);
-        $provider_manager = new ProviderManager($provider_dao);
+        $generic_provider_dao = \Mockery::mock(GenericProviderDao::class);
+        $provider_dao         = \Mockery::mock(ProviderDao::class);
+        $provider_manager     = new ProviderManager($provider_dao, $generic_provider_dao);
 
-        $provider_dao->shouldReceive('create')->never();
-        $provider_dao->shouldReceive('save')->never();
+        $generic_provider_dao->shouldReceive('create')->never();
+        $generic_provider_dao->shouldReceive('save')->never();
         $this->expectException('Tuleap\OpenIDConnectClient\Provider\ProviderMalformedDataException');
 
-        $provider         = new Provider(
+        $provider = new GenericProvider(
             0,
             'Provider',
             'Not A URL',
@@ -108,12 +112,12 @@ class ProviderManagerTest extends TestCase
             'Not A URL',
             'ID',
             'Secret',
-            'github',
             false,
+            'github',
             'fiesta_red'
         );
 
-        $provider_manager->create(
+        $provider_manager->createGenericProvider(
             $provider->getName(),
             $provider->getAuthorizationEndpoint(),
             $provider->getTokenEndpoint(),

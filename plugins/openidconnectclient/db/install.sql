@@ -29,15 +29,19 @@ CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_user_mapping (
 CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_provider (
     id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    authorization_endpoint TEXT NOT NULL,
-    token_endpoint TEXT NOT NULL,
-    user_info_endpoint TEXT NOT NULL,
     client_id TEXT NOT NULL DEFAULT '',
     client_secret TEXT NOT NULL DEFAULT '',
     unique_authentication_endpoint BOOLEAN DEFAULT FALSE,
     icon VARCHAR(50) NULL,
     color VARCHAR(20) NULL,
     PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_provider_generic (
+    provider_id INT(11) UNSIGNED NOT NULL PRIMARY KEY,
+    authorization_endpoint TEXT NOT NULL,
+    token_endpoint TEXT NOT NULL,
+    user_info_endpoint TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_unlinked_account (
