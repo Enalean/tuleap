@@ -21,13 +21,13 @@
 <template>
     <div class="taskboard-card" v-bind:class="additional_classnames" v-on:click="switchToEditMode">
         <div class="taskboard-card-content">
-            <card-xref-label v-bind:card="card"/>
+            <card-xref-label v-bind:card="card" v-bind:label="label"/>
             <div class="taskboard-card-info">
                 <slot name="initial_effort"/>
                 <card-assignees v-bind:assignees="card.assignees"/>
             </div>
         </div>
-        <edit-label v-bind:card="card" v-if="card.is_in_edit_mode"/>
+        <edit-label v-model="label" v-if="card.is_in_edit_mode" v-on:save="save"/>
         <div class="taskboard-card-accessibility" v-if="show_accessibility_pattern"></div>
         <slot name="remaining_effort"/>
     </div>
@@ -42,6 +42,7 @@ import { Card, TaskboardEvent } from "../../../../../type";
 import { namespace } from "vuex-class";
 import EventBus from "../../../../../helpers/event-bus";
 import EditLabel from "./EditMode/Label/EditLabel.vue";
+import { NewCardPayload } from "../../../../../store/swimlane/card/type";
 
 const user = namespace("user");
 const swimlane = namespace("swimlane");
@@ -69,9 +70,14 @@ export default class BaseCard extends Vue {
     @swimlane.Mutation
     readonly setCardHaveAlreadyBeenShown!: (card: Card) => void;
 
+    @swimlane.Action
+    readonly saveCard!: (payload: NewCardPayload) => Promise<void>;
+
     add_show_class = true;
+    label = "";
 
     mounted(): void {
+        this.label = this.card.label;
         setTimeout(() => {
             this.add_show_class = false;
         }, 500);
@@ -86,18 +92,37 @@ export default class BaseCard extends Vue {
 
     cancelButtonCallback(card: Card): void {
         if (card.id === this.card.id) {
-            this.removeCardFromEditMode(this.card);
+            this.cancel();
         }
     }
 
     saveButtonCallback(card: Card): void {
         if (card.id === this.card.id) {
-            this.removeCardFromEditMode(this.card);
+            this.save();
         }
+    }
+
+    save(): void {
+        if (this.label === this.card.label) {
+            this.cancel();
+            return;
+        }
+
+        const payload: NewCardPayload = { card: this.card, label: this.label };
+        this.saveCard(payload);
+    }
+
+    cancel(): void {
+        this.removeCardFromEditMode(this.card);
+        this.label = this.card.label;
     }
 
     switchToEditMode(): void {
         if (this.card.is_in_edit_mode) {
+            return;
+        }
+
+        if (this.card.is_being_saved) {
             return;
         }
 
@@ -122,6 +147,14 @@ export default class BaseCard extends Vue {
 
         if (this.card.is_in_edit_mode) {
             classnames.push("taskboard-card-edit-mode");
+        } else if (this.card.is_being_saved) {
+            classnames.push("taskboard-card-is-being-saved");
+        } else if (this.card.is_just_saved) {
+            classnames.push("taskboard-card-is-just-saved");
+        }
+
+        if (!this.card.is_being_saved) {
+            classnames.push("taskboard-card-editable");
         }
 
         return classnames.join(" ");

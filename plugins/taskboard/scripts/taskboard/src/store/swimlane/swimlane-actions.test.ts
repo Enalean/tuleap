@@ -81,12 +81,22 @@ describe("Swimlane state actions", () => {
             await actions.loadSwimlanes(context);
             expect(context.commit).toHaveBeenCalledWith("addSwimlanes", [
                 {
-                    card: { id: 43, is_in_edit_mode: false },
+                    card: {
+                        id: 43,
+                        is_in_edit_mode: false,
+                        is_being_saved: false,
+                        is_just_saved: false
+                    },
                     children_cards: [] as Card[],
                     is_loading_children_cards: false
                 } as Swimlane,
                 {
-                    card: { id: 44, is_in_edit_mode: false },
+                    card: {
+                        id: 44,
+                        is_in_edit_mode: false,
+                        is_being_saved: false,
+                        is_just_saved: false
+                    },
                     children_cards: [] as Card[],
                     is_loading_children_cards: false
                 } as Swimlane
@@ -125,19 +135,34 @@ describe("Swimlane state actions", () => {
             expect(context.dispatch).toHaveBeenCalledWith(
                 "loadChildrenCards",
                 expect.objectContaining({
-                    card: { ...card_with_children, is_in_edit_mode: false }
+                    card: {
+                        ...card_with_children,
+                        is_in_edit_mode: false,
+                        is_being_saved: false,
+                        is_just_saved: false
+                    }
                 })
             );
             expect(context.dispatch).toHaveBeenCalledWith(
                 "loadChildrenCards",
                 expect.objectContaining({
-                    card: { ...other_card_with_children, is_in_edit_mode: false }
+                    card: {
+                        ...other_card_with_children,
+                        is_in_edit_mode: false,
+                        is_being_saved: false,
+                        is_just_saved: false
+                    }
                 })
             );
             expect(context.dispatch).not.toHaveBeenCalledWith(
                 "loadChildrenCards",
                 expect.objectContaining({
-                    card: { ...card_without_children, is_in_edit_mode: false }
+                    card: {
+                        ...card_without_children,
+                        is_in_edit_mode: false,
+                        is_being_saved: false,
+                        is_just_saved: false
+                    }
                 })
             );
         });

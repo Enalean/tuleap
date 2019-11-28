@@ -29,7 +29,7 @@
             ></i>
             <div class="taskboard-card taskboard-card-collapsed" v-bind:class="additional_card_classnames">
                 <div class="taskboard-card-content">
-                    <card-xref-label v-bind:card="swimlane.card" class="taskboard-card-xref-label-collapsed"/>
+                    <card-xref-label v-bind:card="swimlane.card" v-bind:label="swimlane.card.label" class="taskboard-card-xref-label-collapsed"/>
                 </div>
             </div>
         </swimlane-header>

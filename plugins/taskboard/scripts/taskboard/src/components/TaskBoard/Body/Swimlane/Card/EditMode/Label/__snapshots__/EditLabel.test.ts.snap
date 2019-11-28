@@ -7,7 +7,7 @@ exports[`EditLabel Displays a texteara with its mirror to edit the label 1`] = `
   <pre
     class="taskboard-card-label-input-mirror"
   >
-    
+    Lorem ipsum doloret
   </pre>
    
   <textarea

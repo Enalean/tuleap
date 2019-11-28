@@ -20,7 +20,9 @@
 import { Card, Swimlane } from "../../../type";
 import * as mutations from "./card-mutations";
 import { SwimlaneState } from "../type";
-import { NewRemainingEffortPayload } from "./type";
+import { NewCardPayload, NewRemainingEffortPayload } from "./type";
+
+jest.useFakeTimers();
 
 describe(`Card mutations`, () => {
     describe("addCardToEditMode", () => {
@@ -105,6 +107,57 @@ describe(`Card mutations`, () => {
                 expect(state.swimlanes[0].card.remaining_effort.is_being_saved).toBe(false);
                 expect(state.swimlanes[0].card.remaining_effort.is_in_edit_mode).toBe(false);
             }
+        });
+    });
+
+    describe("startSavingCard", () => {
+        it("exits edit mode in order to save the card", () => {
+            const card: Card = { is_being_saved: false, is_in_edit_mode: true } as Card;
+            const state: SwimlaneState = {
+                swimlanes: [{ card } as Swimlane]
+            } as SwimlaneState;
+
+            mutations.startSavingCard(state, card);
+
+            expect(state.swimlanes[0].card.is_being_saved).toBe(true);
+            expect(state.swimlanes[0].card.is_in_edit_mode).toBe(false);
+        });
+    });
+
+    describe("resetSavingCard", () => {
+        it("switch is_being_saved to false", () => {
+            const card: Card = { is_being_saved: true } as Card;
+            const state: SwimlaneState = {
+                swimlanes: [{ card } as Swimlane]
+            } as SwimlaneState;
+
+            mutations.resetSavingCard(state, card);
+
+            expect(state.swimlanes[0].card.is_being_saved).toBe(false);
+        });
+    });
+
+    describe("finishSavingCard", () => {
+        it("saves the new value and switch is_being_saved to false and informs that the card has just been saved", () => {
+            const card: Card = {
+                label: "Lorem ipsum",
+                is_being_saved: true,
+                is_just_saved: false
+            } as Card;
+            const state: SwimlaneState = {
+                swimlanes: [{ card } as Swimlane]
+            } as SwimlaneState;
+            const payload: NewCardPayload = { card, label: "Lorem" };
+
+            mutations.finishSavingCard(state, payload);
+
+            expect(state.swimlanes[0].card.label).toBe("Lorem");
+            expect(state.swimlanes[0].card.is_being_saved).toBe(false);
+            expect(state.swimlanes[0].card.is_just_saved).toBe(true);
+
+            jest.advanceTimersByTime(1000);
+
+            expect(state.swimlanes[0].card.is_just_saved).toBe(false);
         });
     });
 });

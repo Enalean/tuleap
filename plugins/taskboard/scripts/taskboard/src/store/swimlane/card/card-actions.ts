@@ -18,9 +18,10 @@
  */
 import { ActionContext } from "vuex";
 import { RootState } from "../../type";
-import { NewRemainingEffortPayload } from "./type";
+import { NewCardPayload, NewRemainingEffortPayload } from "./type";
 import { patch } from "tlp";
 import { SwimlaneState } from "../type";
+import { fakePutApiCallToSaveCard } from "./fakeApiCall";
 
 export async function saveRemainingEffort(
     context: ActionContext<SwimlaneState, RootState>,
@@ -38,6 +39,20 @@ export async function saveRemainingEffort(
         context.commit("finishSavingRemainingEffort", new_remaining_effort);
     } catch (error) {
         context.commit("resetSavingRemainingEffort", card);
+        await context.dispatch("error/handleModalError", error, { root: true });
+    }
+}
+export async function saveCard(
+    context: ActionContext<SwimlaneState, RootState>,
+    payload: NewCardPayload
+): Promise<void> {
+    const card = payload.card;
+    context.commit("startSavingCard", card);
+    try {
+        await fakePutApiCallToSaveCard();
+        context.commit("finishSavingCard", payload);
+    } catch (error) {
+        context.commit("resetSavingCard", card);
         await context.dispatch("error/handleModalError", error, { root: true });
     }
 }

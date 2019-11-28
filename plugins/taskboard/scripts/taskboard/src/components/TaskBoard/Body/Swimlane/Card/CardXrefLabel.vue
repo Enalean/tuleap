@@ -26,7 +26,7 @@
            data-not-drag-handle="true"
            data-test="xref"
         >{{ card.xref }}</a>
-        <span class="taskboard-card-label" v-if="!card.is_in_edit_mode">{{ card.label }}</span>
+        <span class="taskboard-card-label" v-if="!card.is_in_edit_mode">{{ label }}</span>
     </div>
 </template>
 
@@ -39,6 +39,9 @@ import { Card } from "../../../../../type";
 export default class CardXrefLabel extends Vue {
     @Prop({ required: true })
     readonly card!: Card;
+
+    @Prop({ required: true })
+    readonly label!: string;
 
     get additional_classnames(): string {
         if (this.card.background_color) {

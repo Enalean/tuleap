@@ -22,6 +22,8 @@ import BaseCard from "./BaseCard.vue";
 import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import { Card, TaskboardEvent, User } from "../../../../../type";
 import EventBus from "../../../../../helpers/event-bus";
+import EditLabel from "./EditMode/Label/EditLabel.vue";
+import { NewCardPayload } from "../../../../../store/swimlane/card/type";
 
 jest.useFakeTimers();
 
@@ -173,16 +175,106 @@ describe("BaseCard", () => {
             );
         });
 
-        it(`Cancels also the edition of the card if user clicks on save button (that is outside of this component),
-            because edition of title is not implemented yet`, () => {
-            const card = getCard({ is_in_edit_mode: true } as Card);
+        it(`Reset the label to the former value if user hits Cancel`, () => {
+            const card = getCard({ label: "Lorem", is_in_edit_mode: true } as Card);
             const wrapper = getWrapper(card);
 
+            wrapper.setData({ label: "Ipsum" });
+            expect(wrapper.vm.$data.label).toBe("Ipsum");
+            EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, card);
+            expect(wrapper.vm.$data.label).toBe("Lorem");
+        });
+
+        it(`Saves the new label when user hits enter`, () => {
+            const card = getCard({ label: "toto", is_in_edit_mode: true } as Card);
+            const wrapper = getWrapper(card);
+
+            const label = "Lorem ipsum";
+            wrapper.setData({ label });
+            const edit_label = wrapper.find(EditLabel);
+            edit_label.vm.$emit("save");
+
+            expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
+                "swimlane/removeCardFromEditMode",
+                card
+            );
+            expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveCard", {
+                card,
+                label
+            } as NewCardPayload);
+        });
+
+        it(`Saves the new label when user clicks on save button`, () => {
+            const card = getCard({ label: "toto", is_in_edit_mode: true } as Card);
+            const wrapper = getWrapper(card);
+
+            const label = "Lorem ipsum";
+            wrapper.setData({ label });
+
             EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, card);
+
+            expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
+                "swimlane/removeCardFromEditMode",
+                card
+            );
+            expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveCard", {
+                card,
+                label
+            } as NewCardPayload);
+        });
+
+        it(`Does not save the new label if it is identical to the former one`, () => {
+            const card = getCard({ label: "toto", is_in_edit_mode: true } as Card);
+            const wrapper = getWrapper(card);
+
+            wrapper.setData({ label: "toto" });
+            const edit_label = wrapper.find(EditLabel);
+            edit_label.vm.$emit("save");
+
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "swimlane/removeCardFromEditMode",
                 card
             );
+            expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
+        });
+
+        it("displays a card in edit mode", () => {
+            const card = getCard({
+                is_in_edit_mode: true,
+                is_being_saved: true,
+                is_just_saved: true
+            } as Card);
+            const wrapper = getWrapper(card);
+
+            expect(wrapper.classes()).toContain("taskboard-card-edit-mode");
+            expect(wrapper.classes()).not.toContain("taskboard-card-is-being-saved");
+            expect(wrapper.classes()).not.toContain("taskboard-card-is-just-saved");
+        });
+
+        it("displays a card as being saved", () => {
+            const card = getCard({
+                is_in_edit_mode: false,
+                is_being_saved: true,
+                is_just_saved: true
+            } as Card);
+            const wrapper = getWrapper(card);
+
+            expect(wrapper.classes()).not.toContain("taskboard-card-edit-mode");
+            expect(wrapper.classes()).toContain("taskboard-card-is-being-saved");
+            expect(wrapper.classes()).not.toContain("taskboard-card-is-just-saved");
+        });
+
+        it("displays a card as being just saved", () => {
+            const card = getCard({
+                is_in_edit_mode: false,
+                is_being_saved: false,
+                is_just_saved: true
+            } as Card);
+            const wrapper = getWrapper(card);
+
+            expect(wrapper.classes()).not.toContain("taskboard-card-edit-mode");
+            expect(wrapper.classes()).not.toContain("taskboard-card-is-being-saved");
+            expect(wrapper.classes()).toContain("taskboard-card-is-just-saved");
         });
     });
 });

@@ -17,14 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card } from "../../../type";
-
-export interface NewRemainingEffortPayload {
-    card: Card;
-    value: number;
-}
-
-export interface NewCardPayload {
-    readonly card: Card;
-    readonly label: string;
+export function fakePutApiCallToSaveCard(): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, 2000));
 }

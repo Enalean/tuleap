@@ -70,6 +70,8 @@ export interface Card {
     is_open: boolean;
     is_collapsed: boolean;
     is_in_edit_mode: boolean;
+    is_being_saved: boolean;
+    is_just_saved: boolean;
     has_already_been_shown: boolean;
 }
 
