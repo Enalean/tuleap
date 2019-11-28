@@ -70,14 +70,6 @@ class AgileDashboard_MilestonePresenter
         return '/plugins/tracker/?aid='.$this->milestone->getArtifactId();
     }
 
-    private function getParentArtifactId()
-    {
-        $ancestors = $this->milestone->getAncestors();
-        if (count($ancestors) > 0) {
-            return $ancestors[0]->getArtifactId();
-        }
-    }
-
     public function getActivePane()
     {
         return $this->presenter_data->getActivePane();
