@@ -29,6 +29,7 @@ import {
 import { RootState } from "../type";
 import { UserPreference, UserPreferenceValue } from "../user/type";
 import { isSoloCard } from "./swimlane-helpers";
+import { injectDefaultPropertiesInCard } from "../../helpers/card-default";
 
 export * from "./drag-drop-actions";
 export * from "./card/card-actions";
@@ -43,31 +44,16 @@ export async function loadSwimlanes(
                 limit: 100
             },
             getCollectionCallback: (collection: Card[]): Swimlane[] => {
-                const is_loading_children_cards = false;
-                const is_in_edit_mode = false;
-                const is_being_saved = false;
-                const is_just_saved = false;
-                const children_cards: Card[] = [];
-
-                const swimlanes = collection.map(card => {
-                    const { remaining_effort } = card;
-                    if (remaining_effort) {
-                        remaining_effort.is_being_saved = false;
-                        remaining_effort.is_in_edit_mode = false;
+                const swimlanes = collection.map(
+                    (card: Card): Swimlane => {
+                        injectDefaultPropertiesInCard(card);
+                        return {
+                            card,
+                            children_cards: [],
+                            is_loading_children_cards: false
+                        };
                     }
-
-                    return {
-                        card: {
-                            ...card,
-                            remaining_effort,
-                            is_in_edit_mode,
-                            is_being_saved,
-                            is_just_saved
-                        },
-                        children_cards,
-                        is_loading_children_cards
-                    };
-                });
+                );
                 context.commit("addSwimlanes", swimlanes);
                 swimlanes
                     .filter(swimlane => swimlane.card.has_children)
@@ -98,15 +84,7 @@ export async function loadChildrenCards(
                 limit: 100
             },
             getCollectionCallback: (collection: Card[]): Card[] => {
-                collection.forEach(card => {
-                    card.is_in_edit_mode = false;
-                    card.is_being_saved = false;
-                    card.is_just_saved = false;
-                    if (card.remaining_effort) {
-                        card.remaining_effort.is_being_saved = false;
-                        card.remaining_effort.is_in_edit_mode = false;
-                    }
-                });
+                collection.forEach(injectDefaultPropertiesInCard);
                 context.commit("addChildrenToSwimlane", {
                     swimlane,
                     children_cards: collection
