@@ -66,12 +66,13 @@ class UsersToBeImportedCollectionBuilderTestBase extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->user_manager = mock('UserManager');
+        $this->setUpGlobalsMockery();
+        $this->user_manager = \Mockery::spy(\UserManager::class);
         $this->builder = new UsersToBeImportedCollectionBuilder(
             $this->user_manager,
-            mock('Logger'),
+            \Mockery::spy(\Logger::class),
             new XML_Security(),
-            mock('XML_RNGValidator')
+            \Mockery::spy(\XML_RNGValidator::class)
         );
     }
 
@@ -99,6 +100,7 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->active_user_in_ldap = $this->createUser(
             1001,
@@ -108,7 +110,7 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
             'jd3456',
             PFUser::STATUS_ACTIVE
         );
-        stub($this->user_manager)->getUserByIdentifier('ldapId:jd3456')->returns($this->active_user_in_ldap);
+        $this->user_manager->shouldReceive('getUserByIdentifier')->with('ldapId:jd3456')->andReturns($this->active_user_in_ldap);
 
         $this->suspended_user_in_ldap = $this->createUser(
             1002,
@@ -118,7 +120,7 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
             'sus1234',
             PFUser::STATUS_SUSPENDED
         );
-        stub($this->user_manager)->getUserByIdentifier('ldapId:sus1234')->returns($this->suspended_user_in_ldap);
+        $this->user_manager->shouldReceive('getUserByIdentifier')->with('ldapId:sus1234')->andReturns($this->suspended_user_in_ldap);
 
         $this->active_user_in_db = $this->createUser(
             1002,
@@ -128,7 +130,7 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
             '',
             PFUser::STATUS_ACTIVE
         );
-        stub($this->user_manager)->getUserByIdentifier('cstevens')->returns($this->active_user_in_db);
+        $this->user_manager->shouldReceive('getUserByIdentifier')->with('cstevens')->andReturns($this->active_user_in_db);
 
         $this->suspended_user_in_db = $this->createUser(
             1002,
@@ -138,10 +140,10 @@ class UsersToBeImportedCollectionBuilderTest extends UsersToBeImportedCollection
             '',
             PFUser::STATUS_SUSPENDED
         );
-        stub($this->user_manager)->getUserByIdentifier('kperry')->returns($this->suspended_user_in_db);
+        $this->user_manager->shouldReceive('getUserByIdentifier')->with('kperry')->andReturns($this->suspended_user_in_db);
 
-        stub($this->user_manager)->getAllUsersByEmail('mmanson@example.com')->returns(array());
-        stub($this->user_manager)->getAllUsersByEmail('jdoe@example.com')->returns(array(
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('mmanson@example.com')->andReturns(array());
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('jdoe@example.com')->andReturns(array(
             $this->active_user_in_ldap,
             $this->suspended_user_in_ldap
         ));
@@ -406,6 +408,7 @@ class UsersToBeImportedCollectionBuilder_AutomapTest extends UsersToBeImportedCo
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->john_doe = $this->createUser(
             1001,
@@ -415,9 +418,9 @@ class UsersToBeImportedCollectionBuilder_AutomapTest extends UsersToBeImportedCo
             'jd3456',
             PFUser::STATUS_ACTIVE
         );
-        stub($this->user_manager)->getUserByIdentifier('ldapId:jd3456')->returns($this->john_doe);
-        stub($this->user_manager)->getUserByIdentifier('jdoe')->returns($this->john_doe);
-        stub($this->user_manager)->getAllUsersByEmail('jdoe@example.com')->returns(array($this->john_doe));
+        $this->user_manager->shouldReceive('getUserByIdentifier')->with('ldapId:jd3456')->andReturns($this->john_doe);
+        $this->user_manager->shouldReceive('getUserByIdentifier')->with('jdoe')->andReturns($this->john_doe);
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('jdoe@example.com')->andReturns(array($this->john_doe));
 
         $this->cat_steven = $this->createUser(
             1002,
@@ -427,8 +430,8 @@ class UsersToBeImportedCollectionBuilder_AutomapTest extends UsersToBeImportedCo
             '',
             PFUser::STATUS_ACTIVE
         );
-        stub($this->user_manager)->getUserByIdentifier('cstevens')->returns($this->cat_steven);
-        stub($this->user_manager)->getAllUsersByEmail('cstevens@example.com')->returns(array($this->john_doe));
+        $this->user_manager->shouldReceive('getUserByIdentifier')->with('cstevens')->andReturns($this->cat_steven);
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('cstevens@example.com')->andReturns(array($this->john_doe));
     }
 
     public function itReturnsAlreadyActiveUserWhenUserIsValidInLdap()

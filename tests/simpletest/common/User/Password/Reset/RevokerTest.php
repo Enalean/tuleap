@@ -24,11 +24,11 @@ class RevokerTest extends \TuleapTestCase
 {
     public function itThrowsAnExceptionIfTokensHaveNotBeenRemoved()
     {
-        $user = mock('PFUser');
-        stub($user)->getId()->returns(101);
+        $user = \Mockery::spy(\PFUser::class);
+        $user->shouldReceive('getId')->andReturns(101);
 
-        $dao = mock('Tuleap\\User\\Password\\Reset\\DataAccessObject');
-        stub($dao)->deleteTokensByUserId(101)->returns(false);
+        $dao = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
+        $dao->shouldReceive('deleteTokensByUserId')->with(101)->andReturns(false);
 
         $token_revoker = new Revoker($dao);
 

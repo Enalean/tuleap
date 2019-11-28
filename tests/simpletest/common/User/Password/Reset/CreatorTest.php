@@ -29,11 +29,11 @@ class CreatorTest extends \TuleapTestCase
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $hasher->shouldReceive('computeHash')->andReturns('random_hashed');
 
-        $user = mock('PFUser');
-        stub($user)->getId()->returns(101);
+        $user = \Mockery::spy(\PFUser::class);
+        $user->shouldReceive('getId')->andReturns(101);
 
-        $dao = mock('Tuleap\\User\\Password\\Reset\\DataAccessObject');
-        stub($dao)->create(101, 'random_hashed', '*')->returns(22);
+        $dao = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
+        $dao->shouldReceive('create')->with(101, 'random_hashed', \Mockery::any())->andReturns(22);
 
         $token_creator = new Creator($dao, $hasher);
 
@@ -45,10 +45,10 @@ class CreatorTest extends \TuleapTestCase
     {
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $hasher->shouldReceive('computeHash')->andReturns('random_hashed');
-        $user = mock('PFUser');
+        $user = \Mockery::spy(\PFUser::class);
 
-        $dao = mock('Tuleap\\User\\Password\\Reset\\DataAccessObject');
-        stub($dao)->create()->returns(false);
+        $dao = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
+        $dao->shouldReceive('create')->andReturns(false);
 
         $token_creator = new Creator($dao, $hasher);
 

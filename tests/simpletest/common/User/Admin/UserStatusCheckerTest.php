@@ -39,9 +39,10 @@ class UserStatusCheckerTest extends \TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->status_checker = new UserStatusChecker();
-        $this->user           = mock('PFUser');
+        $this->user           = \Mockery::spy(\PFUser::class);
 
         ForgeConfig::store();
     }
@@ -49,7 +50,7 @@ class UserStatusCheckerTest extends \TuleapTestCase
     public function itReturnsTrueWhenPlatformAllowRestricted()
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
-        stub($this->user)->isRestricted()->returns(false);
+        $this->user->shouldReceive('isRestricted')->andReturns(false);
 
         $this->assertTrue($this->status_checker->isRestrictedStatusAllowedForUser($this->user));
     }
@@ -57,7 +58,7 @@ class UserStatusCheckerTest extends \TuleapTestCase
     public function itReturnsTrueWhenUserIsRestricted()
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
-        stub($this->user)->isRestricted()->returns(true);
+        $this->user->shouldReceive('isRestricted')->andReturns(true);
 
         $this->assertTrue($this->status_checker->isRestrictedStatusAllowedForUser($this->user));
     }
@@ -65,7 +66,7 @@ class UserStatusCheckerTest extends \TuleapTestCase
     public function itReturnsFalseWhenUserIsNotRestrictedAndPlatformDontAllowRestricted()
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
-        stub($this->user)->isRestricted()->returns(false);
+        $this->user->shouldReceive('isRestricted')->andReturns(false);
 
         $this->assertFalse($this->status_checker->isRestrictedStatusAllowedForUser($this->user));
     }

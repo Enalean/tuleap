@@ -24,7 +24,7 @@ class HistoryCleanerTest extends \TuleapTestCase
 {
     public function itClearsUserHistory()
     {
-        $user          = mock('PFUser');
+        $user          = \Mockery::spy(\PFUser::class);
         $event_manager = \Mockery::mock(\EventManager::class);
         $event_manager->shouldReceive('processEvent')->with(\Event::USER_HISTORY_CLEAR, array('user' => $user));
 

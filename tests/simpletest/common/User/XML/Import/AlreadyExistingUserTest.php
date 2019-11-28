@@ -30,6 +30,7 @@ class AlreadyExistingUser_isActionAllowedTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->user = new AlreadyExistingUser(
             aUser()->withUserName('cstevens')->build(),

@@ -37,17 +37,18 @@ class MappingFileOptimusPrimeTransformer_BaseTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->filename = $this->getTmpDir() .'/users.csv';
 
-        $this->user_manager = mock('UserManager');
+        $this->user_manager = \Mockery::spy(\UserManager::class);
 
         $cstevens         = aUser()->withUserName('cstevens')->build();
         $to_be_activated  = aUser()->withUserName('to.be.activated')->build();
         $already_existing = aUser()->withUserName('already.existing')->build();
 
-        stub($this->user_manager)->getUserByUserName('cstevens')->returns($cstevens);
-        stub($this->user_manager)->getUserByUserName('to.be.activated')->returns($to_be_activated);
-        stub($this->user_manager)->getUserByUserName('already.existing')->returns($already_existing);
+        $this->user_manager->shouldReceive('getUserByUserName')->with('cstevens')->andReturns($cstevens);
+        $this->user_manager->shouldReceive('getUserByUserName')->with('to.be.activated')->andReturns($to_be_activated);
+        $this->user_manager->shouldReceive('getUserByUserName')->with('already.existing')->andReturns($already_existing);
 
         $this->transformer = new MappingFileOptimusPrimeTransformer($this->user_manager);
         $this->collection  = new UsersToBeImportedCollection();
