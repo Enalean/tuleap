@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -305,7 +305,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     ) {
         $pull_request_factory   = $this->getPullRequestFactory();
         $git_repository_factory = $this->getRepositoryFactory();
-        $timeline_event_creator = $this->getTimelineEventCreator();
+        $closer                 = $this->getPullRequestCloser();
 
         $prs = $pull_request_factory->getOpenedByDestinationBranch($dest_repository, $dest_branch_name);
 
@@ -313,8 +313,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $repository = $git_repository_factory->getRepositoryById($pr->getRepoDestId());
             $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
             if ($git_exec->isAncestor($new_rev, $pr->getSha1Src())) {
-                $pull_request_factory->markAsMerged($pr);
-                $timeline_event_creator->storeMergeEvent($pr, $user);
+                $closer->closeManuallyMergedPullRequest($pr, $user);
             }
         }
     }
@@ -322,19 +321,23 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     private function abandonFromSourceBranch(PFUser $user, GitRepository $repository, $branch_name)
     {
         $pull_request_factory   = $this->getPullRequestFactory();
-        $timeline_event_creator = $this->getTimelineEventCreator();
-        $closer                 = new PullRequestCloser(
-            $this->getPullRequestFactory(),
-            new PullRequestMerger(
-                new MergeSettingRetriever(new MergeSettingDAO())
-            )
-        );
+        $closer                 = $this->getPullRequestCloser();
 
         $prs = $pull_request_factory->getOpenedBySourceBranch($repository, $branch_name);
         foreach ($prs as $pr) {
-            $closer->abandon($pr);
-            $timeline_event_creator->storeAbandonEvent($pr, $user);
+            $closer->abandon($pr, $user);
         }
+    }
+
+    private function getPullRequestCloser(): PullRequestCloser
+    {
+        return new PullRequestCloser(
+            new PullRequestDao(),
+            new PullRequestMerger(
+                new MergeSettingRetriever(new MergeSettingDAO())
+            ),
+            $this->getTimelineEventCreator()
+        );
     }
 
     private function getBranchNameFromRef($refname)

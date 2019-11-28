@@ -34,7 +34,6 @@ use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Authorization\UserCannotMergePullRequestException;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestCloser;
-use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use URLVerification;
 
 final class StatusPatcherTest extends TestCase
@@ -77,11 +76,6 @@ final class StatusPatcherTest extends TestCase
     private $pull_request_closer;
 
     /**
-     * @var Mockery\MockInterface|TimelineEventCreator
-     */
-    private $timeline_event_creator;
-
-    /**
      * @var Mockery\MockInterface|Project
      */
     private $project_source;
@@ -108,7 +102,6 @@ final class StatusPatcherTest extends TestCase
         $this->access_control_verifier          = Mockery::mock(AccessControlVerifier::class);
         $this->pull_request_permissions_checker = Mockery::mock(PullRequestPermissionChecker::class);
         $this->pull_request_closer              = Mockery::mock(PullRequestCloser::class);
-        $this->timeline_event_creator           = Mockery::mock(TimelineEventCreator::class);
         $this->url_verification                 = Mockery::mock(URLVerification::class);
         $logger                                 = Mockery::mock(Logger::class);
 
@@ -117,7 +110,6 @@ final class StatusPatcherTest extends TestCase
             $this->access_control_verifier,
             $this->pull_request_permissions_checker,
             $this->pull_request_closer,
-            $this->timeline_event_creator,
             $this->url_verification,
             $logger
         );
@@ -161,10 +153,6 @@ final class StatusPatcherTest extends TestCase
         $this->mockUserCanWrite($this->repository_destination, 'master');
 
         $this->pull_request_closer->shouldReceive('abandon')
-            ->with($pull_request)
-            ->once();
-
-        $this->timeline_event_creator->shouldReceive('storeAbandonEvent')
             ->with($pull_request, $this->user)
             ->once();
 
@@ -186,10 +174,6 @@ final class StatusPatcherTest extends TestCase
         $this->mockUserCannotWrite($this->repository_destination, 'master');
 
         $this->pull_request_closer->shouldReceive('abandon')
-            ->with($pull_request)
-            ->once();
-
-        $this->timeline_event_creator->shouldReceive('storeAbandonEvent')
             ->with($pull_request, $this->user)
             ->once();
 
@@ -211,10 +195,6 @@ final class StatusPatcherTest extends TestCase
         $this->mockUserCanWrite($this->repository_destination, 'master');
 
         $this->pull_request_closer->shouldReceive('abandon')
-            ->with($pull_request)
-            ->once();
-
-        $this->timeline_event_creator->shouldReceive('storeAbandonEvent')
             ->with($pull_request, $this->user)
             ->once();
 
@@ -236,10 +216,6 @@ final class StatusPatcherTest extends TestCase
         $this->mockUserCannotWrite($this->repository_destination, 'master');
 
         $this->pull_request_closer->shouldReceive('abandon')
-            ->with($pull_request)
-            ->never();
-
-        $this->timeline_event_creator->shouldReceive('storeAbandonEvent')
             ->with($pull_request, $this->user)
             ->never();
 
@@ -262,10 +238,6 @@ final class StatusPatcherTest extends TestCase
             ->with($pull_request)
             ->never();
 
-        $this->timeline_event_creator->shouldReceive('storeAbandonEvent')
-            ->with($pull_request, $this->user)
-            ->never();
-
         $this->expectException(RestException::class);
 
         $this->patcher->patchStatus(
@@ -284,10 +256,6 @@ final class StatusPatcherTest extends TestCase
 
         $this->pull_request_closer->shouldReceive('abandon')
             ->with($pull_request)
-            ->never();
-
-        $this->timeline_event_creator->shouldReceive('storeAbandonEvent')
-            ->with($pull_request, $this->user)
             ->never();
 
         $this->expectException(RestException::class);
@@ -313,10 +281,6 @@ final class StatusPatcherTest extends TestCase
             )
             ->once();
 
-        $this->timeline_event_creator->shouldReceive('storeMergeEvent')
-            ->with($pull_request, $this->user)
-            ->once();
-
         $this->patcher->patchStatus(
             $this->user,
             $pull_request,
@@ -337,10 +301,6 @@ final class StatusPatcherTest extends TestCase
                 $pull_request,
                 $this->user
             )
-            ->never();
-
-        $this->timeline_event_creator->shouldReceive('storeMergeEvent')
-            ->with($pull_request, $this->user)
             ->never();
 
         $this->expectException(RestException::class);

@@ -158,9 +158,6 @@ class PullRequestsResource extends AuthenticatedResource
     /** @var PullRequestCreator */
     private $pull_request_creator;
 
-    /** @var TimelineEventCreator */
-    private $timeline_event_creator;
-
     /** @var EventManager */
     private $event_manager;
 
@@ -238,10 +235,12 @@ class PullRequestsResource extends AuthenticatedResource
                 new GitPullRequestReferenceNamespaceAvailabilityChecker
             )
         );
-        $this->pull_request_closer  = new PullRequestCloser($this->pull_request_factory, $this->pull_request_merger);
+        $this->pull_request_closer  = new PullRequestCloser(
+            $pull_request_dao,
+            $this->pull_request_merger,
+            new TimelineEventCreator(new TimelineDao())
+        );
         $this->logger               = new BackendLogger();
-
-        $this->timeline_event_creator = new TimelineEventCreator(new TimelineDao());
 
         $dao = new \Tuleap\PullRequest\InlineComment\Dao();
         $this->inline_comment_creator = new InlineCommentCreator($dao, $reference_manager);
@@ -960,7 +959,6 @@ class PullRequestsResource extends AuthenticatedResource
             $this->access_control_verifier,
             $this->permission_checker,
             $this->pull_request_closer,
-            $this->timeline_event_creator,
             new URLVerification(),
             $this->logger
         );
