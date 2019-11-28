@@ -23,3 +23,17 @@ export interface TemplateData {
     name: string;
     svg: string;
 }
+
+export interface ProjectProperties {
+    shortname: string;
+    label: string;
+    is_public: boolean;
+    allow_restricted: boolean;
+    xml_template_name: string;
+}
+
+export interface ProjectNameProperties {
+    slugified_name: string;
+    name: string;
+    is_valid: boolean;
+}

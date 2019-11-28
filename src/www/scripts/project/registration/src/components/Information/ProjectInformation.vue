@@ -28,13 +28,16 @@
                     <span v-translate>Project information</span>
                 </h2>
                 <under-construction-information/>
-                <form class="register-new-project-information-form-container" action="#" ref="form" data-test="register-new-project-information-form">
-                    <project-name/>
-                    <project-information-input-privacy-switch/>
-                </form>
+                <div class="register-new-project-information-form-container" data-test="register-new-project-information-form">
+                    <project-name v-model="name_properties"/>
+                    <project-information-input-privacy-switch v-model="is_private"/>
+                </div>
             </div>
         </div>
-        <project-information-footer/>
+        <project-information-footer
+            v-bind:project_name_properties="name_properties"
+            v-bind:is_public="is_private === false"
+        />
     </div>
 </template>
 
@@ -46,6 +49,7 @@ import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
 import ProjectInformationInputPrivacySwitch from "./Input/ProjectInformationInputPrivacySwitch.vue";
+import { ProjectNameProperties } from "../../type";
 
 @Component({
     components: {
@@ -56,5 +60,13 @@ import ProjectInformationInputPrivacySwitch from "./Input/ProjectInformationInpu
         UnderConstructionInformation
     }
 })
-export default class ProjectInformation extends Vue {}
+export default class ProjectInformation extends Vue {
+    name_properties: ProjectNameProperties = {
+        slugified_name: "",
+        name: "",
+        is_valid: false
+    };
+
+    is_private = false;
+}
 </script>

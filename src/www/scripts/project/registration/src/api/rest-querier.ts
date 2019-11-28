@@ -14,26 +14,25 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Context } from "./type";
-import { ProjectProperties, TemplateData } from "../type";
-import { postProject } from "../api/rest-querier";
+import { post } from "tlp";
+import { ProjectProperties } from "../type";
 
-export function setSelectedTemplate(
-    context: Context,
-    selected_template: TemplateData
-): Promise<void> {
-    return context.commit("setSelectedTemplate", selected_template);
-}
+export { postProject };
 
-export async function createProject(
-    context: Context,
-    project_properties: ProjectProperties
-): Promise<string> {
-    const response = await postProject(project_properties);
+async function postProject(project_properties: ProjectProperties): Promise<string> {
+    const headers = {
+        "content-type": "application/json"
+    };
 
-    return response;
+    const json_body = {
+        ...project_properties
+    };
+    const body = JSON.stringify(json_body);
+
+    const response = await post("/api/projects", { headers, body });
+
+    return response.json();
 }

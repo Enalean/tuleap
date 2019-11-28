@@ -68,10 +68,15 @@ export default class ProjectName extends Vue {
             this.error = this.$gettext(
                 "Project short name must have between 3 and 30 characters length. It can only contains alphanumerical characters and dashes. Must start with a letter."
             );
-            return;
+        } else {
+            this.error = "";
         }
 
-        this.error = "";
+        this.$emit("input", {
+            slugified_name: this.slugified_project_name,
+            name: this.$refs.name.value,
+            is_valid: this.error === ""
+        });
     }
 }
 </script>

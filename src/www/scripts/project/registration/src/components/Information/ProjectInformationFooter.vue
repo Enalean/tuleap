@@ -32,9 +32,10 @@
             <button type="button"
                     class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
                     data-test="project-registration-next-button"
-                    disabled
+                    v-on:click="createProject"
+                    v-bind:disabled="! project_name_properties.is_valid"
             >
-                <span v-translate>Start my project</span> <i class="fa fa-arrow-circle-o-right tlp-button-icon-right"></i>
+                <span v-translate>Start my project</span> <i v-bind:class="getIcon"/>
             </button>
         </div>
     </div>
@@ -42,12 +43,52 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
+import { ProjectProperties, TemplateData, ProjectNameProperties } from "../../type";
+import { State } from "vuex-class";
+import { redirectToUrl } from "../../helpers/location-helper";
 
 @Component
 export default class ProjectInformationFooter extends Vue {
+    @State
+    selected_template!: TemplateData;
+
+    @Prop({ required: true })
+    readonly project_name_properties!: ProjectNameProperties;
+
+    @Prop({ required: true })
+    readonly is_public!: boolean;
+
+    is_loading = false;
+
+    get getIcon(): string {
+        if (!this.is_loading) {
+            return "fa tlp-button-icon-right fa-arrow-circle-o-right";
+        }
+
+        return "fa tlp-button-icon-right fa-spin fa-circle-o-notch";
+    }
+
     resetSelectedTemplate(): void {
         this.$store.dispatch("setSelectedTemplate", null);
+    }
+
+    async createProject(): Promise<void> {
+        const project_properties: ProjectProperties = {
+            shortname: this.project_name_properties.slugified_name,
+            label: this.project_name_properties.name,
+            is_public: this.is_public,
+            allow_restricted: true,
+            xml_template_name: this.selected_template.name
+        };
+
+        this.is_loading = true;
+
+        await this.$store.dispatch("createProject", project_properties);
+
+        this.is_loading = false;
+
+        redirectToUrl("/my");
     }
 }
 </script>
