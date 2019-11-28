@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,21 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\User\Password\Reset;
+namespace Tuleap\User\History;
 
-class RevokerTest extends \TuleapTestCase
+class HistoryCleanerTest extends \PHPUnit\Framework\TestCase
 {
-    public function itThrowsAnExceptionIfTokensHaveNotBeenRemoved()
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    public function testItClearsUserHistory() : void
     {
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(101);
+        $user          = \Mockery::spy(\PFUser::class);
+        $event_manager = \Mockery::mock(\EventManager::class);
+        $event_manager->shouldReceive('processEvent')->with(\Event::USER_HISTORY_CLEAR, array('user' => $user));
 
-        $dao = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
-        $dao->shouldReceive('deleteTokensByUserId')->with(101)->andReturns(false);
-
-        $token_revoker = new Revoker($dao);
-
-        $this->expectException('Tuleap\\User\\Password\\Reset\\TokenDataAccessException');
-        $token_revoker->revokeTokens($user);
+        $history_cleaner = new HistoryCleaner($event_manager);
+        $history_cleaner->clearHistory($user);
     }
 }

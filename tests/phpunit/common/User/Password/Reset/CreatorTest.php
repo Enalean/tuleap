@@ -22,9 +22,10 @@ namespace Tuleap\User\Password\Reset;
 
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 
-class CreatorTest extends \TuleapTestCase
+class CreatorTest extends \PHPUnit\Framework\TestCase
 {
-    public function itCreatesToken()
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    public function testItCreatesToken() : void
     {
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $hasher->shouldReceive('computeHash')->andReturns('random_hashed');
@@ -38,10 +39,10 @@ class CreatorTest extends \TuleapTestCase
         $token_creator = new Creator($dao, $hasher);
 
         $token = $token_creator->create($user);
-        $this->assertEqual(22, $token->getID());
+        $this->assertEquals(22, $token->getID());
     }
 
-    public function itThrowsExceptionWhenTokenCanNotBeCreated()
+    public function testItThrowsExceptionWhenTokenCanNotBeCreated() : void
     {
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $hasher->shouldReceive('computeHash')->andReturns('random_hashed');

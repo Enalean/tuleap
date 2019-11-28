@@ -23,9 +23,12 @@ namespace Tuleap\User\Admin;
 use ForgeAccess;
 use ForgeConfig;
 use PFUser;
+use Tuleap\GlobalLanguageMock;
 
-class UserStatusBuilderTest extends \TuleapTestCase
+class UserStatusBuilderTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+
     /**
      * @var UserStatusChecker
      */
@@ -51,10 +54,9 @@ class UserStatusBuilderTest extends \TuleapTestCase
      */
     private $user_status_builder;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         ForgeConfig::store();
 
         $this->user                = \Mockery::spy(\PFUser::class);
@@ -103,27 +105,27 @@ class UserStatusBuilderTest extends \TuleapTestCase
         );
     }
 
-    public function itRetrievesRestrictedStatusWhenPlatformAllowsRestricted()
+    public function testItRetrievesRestrictedStatusWhenPlatformAllowsRestricted() : void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         $this->user->shouldReceive('isRestricted')->andReturns(false);
 
-        $this->assertEqual($this->user_status_builder->getStatus($this->user), $this->status_with_restricted);
+        $this->assertEquals($this->user_status_builder->getStatus($this->user), $this->status_with_restricted);
     }
 
-    public function itRetrievesRestrictedStatusWhenAUserHasRestrictedStatus()
+    public function testItRetrievesRestrictedStatusWhenAUserHasRestrictedStatus() : void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         $this->user->shouldReceive('isRestricted')->andReturns(true);
 
-        $this->assertEqual($this->user_status_builder->getStatus($this->user), $this->status_with_restricted);
+        $this->assertEquals($this->user_status_builder->getStatus($this->user), $this->status_with_restricted);
     }
 
-    public function itShouldNeverReturnsRestrictedWhenNoUserIsRestrictedAndPlatformDoesNotAllowRestricted()
+    public function testItShouldNeverReturnsRestrictedWhenNoUserIsRestrictedAndPlatformDoesNotAllowRestricted() : void
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         $this->user->shouldReceive('isRestricted')->andReturns(false);
 
-        $this->assertEqual($this->user_status_builder->getStatus($this->user), $this->status);
+        $this->assertEquals($this->user_status_builder->getStatus($this->user), $this->status);
     }
 }
