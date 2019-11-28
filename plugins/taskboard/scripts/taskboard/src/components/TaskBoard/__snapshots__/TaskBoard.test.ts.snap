@@ -9,5 +9,7 @@ exports[`TaskBoard displays a table with header and body 1`] = `
   <task-board-header-stub />
    
   <task-board-body-stub />
+   
+  <!---->
 </div>
 `;
