@@ -69,10 +69,19 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_template_merge_setting (
     merge_commit_allowed BOOLEAN NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS plugin_pullrequest_reviewer_user (
+CREATE TABLE plugin_pullrequest_reviewer_change (
+    change_id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     pull_request_id INT(11) NOT NULL,
     user_id INT(11) UNSIGNED NOT NULL,
-    PRIMARY KEY (pull_request_id, user_id)
+    change_date INT(11) NOT NULL,
+    INDEX idx_pr_pull_request_id(pull_request_id)
+);
+
+CREATE TABLE plugin_pullrequest_reviewer_change_user (
+   change_id INT(11) UNSIGNED NOT NULL,
+   user_id INT(11) UNSIGNED NOT NULL,
+   is_removal BOOLEAN NOT NULL,
+   PRIMARY KEY (change_id, user_id)
 );
 
 INSERT INTO reference (id, keyword, description, link, scope, service_short_name, nature)

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer;
 
+use DateTimeImmutable;
 use PFUser;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
@@ -48,8 +49,12 @@ final class ReviewerUpdater
      * @throws UserCannotBeAddedAsReviewerException
      * @throws ReviewersCannotBeUpdatedOnClosedPullRequestException
      */
-    public function updatePullRequestReviewers(PullRequest $pull_request, PFUser ...$new_reviewers): void
-    {
+    public function updatePullRequestReviewers(
+        PullRequest $pull_request,
+        PFUser $user_changing_the_reviewers,
+        DateTimeImmutable $date_of_the_change,
+        PFUser ...$new_reviewers
+    ): void {
         if ($pull_request->getStatus() !== PullRequest::STATUS_REVIEW) {
             throw new ReviewersCannotBeUpdatedOnClosedPullRequestException($pull_request);
         }
@@ -66,6 +71,11 @@ final class ReviewerUpdater
             $new_reviewer_ids[] = (int) $user->getId();
         }
 
-        $this->dao->setReviewers($pull_request->getId(), ...$new_reviewer_ids);
+        $this->dao->setReviewers(
+            $pull_request->getId(),
+            (int) $user_changing_the_reviewers->getId(),
+            $date_of_the_change->getTimestamp(),
+            ...$new_reviewer_ids
+        );
     }
 }

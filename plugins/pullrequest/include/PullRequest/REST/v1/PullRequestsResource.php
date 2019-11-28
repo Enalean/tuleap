@@ -1223,7 +1223,12 @@ class PullRequestsResource extends AuthenticatedResource
 
         $reviewer_updater = new ReviewerUpdater(new ReviewerDAO(), $this->permission_checker);
         try {
-            $reviewer_updater->updatePullRequestReviewers($pull_request->getPullRequest(), ...$users);
+            $reviewer_updater->updatePullRequestReviewers(
+                $pull_request->getPullRequest(),
+                $this->user_manager->getCurrentUser(),
+                new \DateTimeImmutable(),
+                ...$users
+            );
         } catch (UserCannotBeAddedAsReviewerException $exception) {
             throw new RestException(
                 400,
