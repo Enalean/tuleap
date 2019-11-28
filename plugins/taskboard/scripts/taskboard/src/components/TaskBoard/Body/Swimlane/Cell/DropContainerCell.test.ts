@@ -41,7 +41,8 @@ function getWrapper(
                 state: { column: {}, swimlane: {} } as RootState,
                 getters: {
                     "column/accepted_trackers_ids": (): number[] => [],
-                    "swimlane/does_cell_reject_drop": (): boolean => does_cell_reject_drop
+                    "swimlane/does_cell_reject_drop": (): boolean => does_cell_reject_drop,
+                    "swimlane/does_cell_allow_drop": (): boolean => true
                 }
             })
         },

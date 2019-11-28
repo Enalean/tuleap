@@ -407,4 +407,99 @@ describe("Swimlane state getters", () => {
             expect(does_reject).toBe(true);
         });
     });
+
+    describe("does_cell_allow_drop", () => {
+        let root_state: RootState,
+            swimlane_state: SwimlaneState,
+            swimlane: Swimlane,
+            column: ColumnDefinition;
+
+        beforeEach(() => {
+            root_state = {
+                card_being_dragged: null,
+                trackers: [
+                    { id: 1, can_update_mapped_field: true },
+                    { id: 2, can_update_mapped_field: false }
+                ],
+                column: {
+                    columns: [column]
+                }
+            } as RootState;
+
+            swimlane_state = {
+                swimlanes: [swimlane]
+            } as SwimlaneState;
+
+            swimlane = {
+                card: { id: 200 },
+                children_cards: [{ id: 100 }]
+            } as Swimlane;
+
+            column = {} as ColumnDefinition;
+        });
+
+        it("returns true if no card is being dragged", () => {
+            expect(
+                getters.does_cell_allow_drop(swimlane_state, [], root_state)(swimlane, column)
+            ).toBe(true);
+        });
+
+        it("returns false if the tracker of the card being dragged can't be found", () => {
+            root_state.card_being_dragged = {
+                tracker_id: 3,
+                card_id: 100
+            };
+
+            expect(
+                getters.does_cell_allow_drop(swimlane_state, [], root_state)(swimlane, column)
+            ).toBe(false);
+        });
+
+        it("returns true if the tracker of the card being dragged allows the update of the mapped field", () => {
+            root_state.card_being_dragged = {
+                tracker_id: 1,
+                card_id: 100
+            };
+
+            expect(
+                getters.does_cell_allow_drop(swimlane_state, [], root_state)(swimlane, column)
+            ).toBe(true);
+        });
+
+        describe("Allows drop to reorder cards", () => {
+            it(`
+                When the tracker does not allow the update of the mapped field
+                And the card being dragged belongs to the cell
+                Then it returns true
+            `, () => {
+                root_state.card_being_dragged = {
+                    tracker_id: 2,
+                    card_id: 100
+                };
+
+                jest.spyOn(getters, "cards_in_cell").mockReturnValue(() => swimlane.children_cards);
+
+                expect(
+                    getters.does_cell_allow_drop(swimlane_state, [], root_state)(swimlane, column)
+                ).toBe(true);
+            });
+
+            it(`
+                When the tracker does not allow the update of the mapped field
+                And the card being dragged does not belongs to the cell
+                Then it returns false
+            `, () => {
+                root_state.card_being_dragged = {
+                    tracker_id: 2,
+                    card_id: 100
+                };
+
+                jest.spyOn(getters, "cards_in_cell").mockReturnValue(() => []);
+
+                expect(
+                    getters.does_cell_allow_drop(swimlane_state, [], root_state)(swimlane, column)
+                ).toBe(false);
+            });
+        });
+    });
 });

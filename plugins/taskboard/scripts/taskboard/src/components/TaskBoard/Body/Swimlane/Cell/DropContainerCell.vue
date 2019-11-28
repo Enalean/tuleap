@@ -24,7 +24,7 @@
          v-on:mouseenter="mouseEntersCollapsedColumn"
          v-on:mouseout="mouseLeavesCollapsedColumn"
          v-on:click="expandCollapsedColumn"
-         v-bind:data-is-container="true"
+         v-bind:data-is-container="does_cell_allow_drop(swimlane, column)"
          v-bind:data-swimlane-id="swimlane.card.id"
          v-bind:data-column-id="column.id"
          v-bind:data-accepted-trackers-ids="accepted_trackers_ids(column)"
@@ -65,6 +65,9 @@ export default class DropContainerCell extends Mixins(
 
     @swimlane.Getter
     readonly does_cell_reject_drop!: (swimlane: Swimlane, column: ColumnDefinition) => boolean;
+
+    @swimlane.Getter
+    readonly does_cell_allow_drop!: (swimlane: Swimlane, column: ColumnDefinition) => boolean;
 
     get dropzone_classes(): string {
         if (this.does_cell_reject_drop(this.swimlane, this.column)) {

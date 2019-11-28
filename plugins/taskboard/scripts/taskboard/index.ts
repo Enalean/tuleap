@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         milestone_id,
         milestone_title,
         are_closed_items_displayed,
+        card_being_dragged: null,
         trackers
     } as RootState;
 

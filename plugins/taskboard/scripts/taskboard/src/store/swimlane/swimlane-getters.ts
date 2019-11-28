@@ -103,3 +103,28 @@ export const does_cell_reject_drop = (state: SwimlaneState) => (
         state.last_hovered_drop_zone.swimlane_id === swimlane.card.id
     );
 };
+
+export const does_cell_allow_drop = (
+    swimlane_state: SwimlaneState,
+    getters: [],
+    root_state: RootState
+) => (swimlane: Swimlane, column: ColumnDefinition): boolean => {
+    if (!root_state.card_being_dragged) {
+        return true;
+    }
+
+    const { tracker_id, card_id } = root_state.card_being_dragged;
+    const card_tracker = root_state.trackers.find(tracker => tracker.id === tracker_id);
+
+    if (!card_tracker) {
+        return false;
+    }
+
+    if (card_tracker.can_update_mapped_field) {
+        return true;
+    }
+
+    const cards = cards_in_cell(swimlane_state, getters, root_state)(swimlane, column);
+
+    return cards.some(card => card.id === card_id);
+};

@@ -29,6 +29,7 @@ export interface State {
     milestone_id: number;
     milestone_title: string;
     are_closed_items_displayed: boolean;
+    card_being_dragged: DraggedCard | null;
     trackers: Tracker[];
 }
 
@@ -44,4 +45,14 @@ export interface RootState extends State {
     readonly swimlane: SwimlaneState;
     readonly user: UserState;
     readonly column: ColumnState;
+}
+
+export interface DraggedCard {
+    card_id: number;
+    tracker_id: number;
+}
+
+export interface Tracker {
+    id: number;
+    can_update_mapped_field: boolean;
 }
