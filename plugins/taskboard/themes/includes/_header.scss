@@ -52,6 +52,11 @@
         &.taskboard-header-#{$color-name} {
             box-shadow: inset 0 2px 0 0 map-get($colors, 'primary'), inset 0 -1px 0 $tlp-ui-border-normal;
             color: map-get($colors, 'text');
+
+            > .taskboard-header-expand-column,
+            > .taskboard-header-collapse-column {
+                color: map-get($colors, 'primary');
+            }
         }
     }
 }
@@ -104,8 +109,12 @@
 }
 
 .taskboard-header-label {
-    flex: 1 0 auto;
+    flex: 1 0 1%;
+    margin: 0 $tlp-half-spacing;
+    overflow: hidden;
     text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .taskboard-header-wrong-color-container {
