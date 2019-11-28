@@ -23,9 +23,10 @@
   "autoload-dev": {
     "psr-4": {
       "Tuleap\\Test\\": ["../tests/lib/"],
-      "TuleapCodingStandard\\": ["../tests/phpcs/TuleapCodingStandard", "../tests/phpcs/tests/"]
+      "TuleapCodingStandard\\": ["../tests/phpcs/TuleapCodingStandard", "../tests/phpcs/tests/"],
+      "Tuleap\\": ["../tests/simpletest", "../tests/phpunit"]
     },
-    "classmap": ["../tests/lib/"]
+    "classmap": ["../tests/lib/", "../tests/simpletest", "../tests/phpunit"]
   },
   "repositories": [
     {
