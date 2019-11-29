@@ -1,9 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All rights reserved
- * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- *
- * Originally written by Manuel VACELET, 2006.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,22 +11,25 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  *
  */
+declare(strict_types = 1);
 
-require_once 'bootstrap.php';
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-class MetadataListOfValuesElementDaoTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class MetadataListOfValuesElementDaoTest extends TestCase
 {
 
-    function testUpdate()
+    use MockeryPHPUnitIntegration;
+
+    public function testUpdate(): void
     {
         // Data
         $metadataId = 1444;
@@ -59,7 +59,7 @@ class MetadataListOfValuesElementDaoTest extends TuleapTestCase
         $this->assertTrue($val);
     }
 
-    function testDeleteByMetadataId()
+    public function testDeleteByMetadataId(): void
     {
         // Data
         $metadataId = 1444;
