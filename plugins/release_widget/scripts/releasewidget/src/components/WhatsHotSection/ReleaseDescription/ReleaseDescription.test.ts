@@ -68,4 +68,25 @@ describe("ReleaseDescription", () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
         expect(wrapper.element).toMatchSnapshot();
     });
+
+    it("When there is a description, Then there is a tooltip to show the whole description ", async () => {
+        const description =
+            "This is a big description, so I write some things, stuff, foo, bar. This is a big description, so I write some things, stuff, foo, bar.";
+
+        release_data = {
+            id: 2,
+            planning: {
+                id: "100"
+            },
+            number_of_artifact_by_trackers: [],
+            description
+        };
+
+        component_options.propsData = {
+            release_data
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.find("[data-test=tooltip-description]").text()).toEqual(description);
+    });
 });

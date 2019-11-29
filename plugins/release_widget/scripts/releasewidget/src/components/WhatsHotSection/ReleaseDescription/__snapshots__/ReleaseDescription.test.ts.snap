@@ -11,9 +11,7 @@ exports[`ReleaseDescription Given user display widget, Then a good link to top p
   <div
     class="release-description-row"
   >
-    <div
-      class="release-description"
-    />
+    <!---->
      
     <a
       data-test="overview-link"
