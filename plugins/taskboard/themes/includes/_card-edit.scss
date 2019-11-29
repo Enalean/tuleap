@@ -90,8 +90,25 @@
     border: 1px solid $tlp-theme-color;
     background: transparentize($tlp-theme-color, .9);
 
+    &::before,
+    >.taskboard-card-progress {
+        background: $tlp-theme-color;
+    }
+
     &.taskboard-card-with-accessibility {
         padding: $tlp-half-spacing $tlp-half-spacing $tlp-half-spacing ($tlp-half-spacing + 2);
+    }
+
+    /* stylelint-disable-next-line selector-max-compound-selectors */
+    > .taskboard-card-content > .taskboard-card-xref-label > .taskboard-card-xref {
+        color: $tlp-theme-color;
+    }
+
+    /* stylelint-disable-next-line selector-max-compound-selectors */
+    > .taskboard-card-content > .taskboard-card-info > .taskboard-card-inital-effort {
+        border-color: $tlp-theme-color;
+        background: transparentize($tlp-theme-color, .9);
+        color: $tlp-theme-color;
     }
 
     > .taskboard-card-accessibility {
