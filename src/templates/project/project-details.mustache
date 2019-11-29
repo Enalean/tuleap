@@ -23,7 +23,12 @@
 
                             <div class="tlp-property">
                                 <label class="tlp-label">{{ template_project_label }}</label>
-                                <p><a href="{{ template_project_url }}">{{ template_project_name }}</a></p>
+                                {{# built_from_project }}
+                                    <p><a href="{{ template_project_url }}">{{ template_project_name }}</a></p>
+                                {{/ built_from_project }}
+                                {{# built_from_xml_template }}
+                                    <p>{{ name }}</p>
+                                {{/ built_from_xml_template }}
                             </div>
                         </div>
                         <div class="tlp-form-element">

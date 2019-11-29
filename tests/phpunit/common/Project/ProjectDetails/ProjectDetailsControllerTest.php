@@ -42,6 +42,7 @@ use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
 use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
 use Tuleap\Project\Admin\ServicesUsingTruncatedMailRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\TroveCat\TroveCatLinkDao;
 use UGroupBinding;
 
@@ -96,7 +97,6 @@ class ProjectDetailsControllerTest extends TestCase
         $this->project_visibility_configuration = Mockery::mock(
             ProjectVisibilityUserConfigurationPermissions::class
         );
-        $service_truncated_mails_retriever      = Mockery::mock(ServicesUsingTruncatedMailRetriever::class);
         $ugroup_binding                         = Mockery::mock(UGroupBinding::class);
         $trove_cat_link_dao                     = Mockery::mock(TroveCatLinkDao::class);
         $this->csrf_token                       = Mockery::mock(CSRFSynchronizerToken::class);
@@ -110,10 +110,10 @@ class ProjectDetailsControllerTest extends TestCase
             $this->project_history_dao,
             $project_visibility_presenter_builder,
             $this->project_visibility_configuration,
-            $service_truncated_mails_retriever,
             $ugroup_binding,
             $trove_cat_link_dao,
-            $this->csrf_token
+            $this->csrf_token,
+            Mockery::mock(TemplateFactory::class),
         );
 
         $GLOBALS['Response'] = Mockery::mock(BaseLayout::class);

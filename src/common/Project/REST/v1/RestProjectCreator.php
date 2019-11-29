@@ -169,7 +169,8 @@ class RestProjectCreator
      */
     private function createProjectFromSystemTemplate(ProjectPostRepresentation $post_representation): Project
     {
-        $xml_path    = $this->template_factory->getTemplate($post_representation->xml_template_name)->getXMLPath();
+        $template    = $this->template_factory->getTemplate($post_representation->xml_template_name);
+        $xml_path    = $template->getXMLPath();
         $xml_element = $this->XML_file_content_retriever->getSimpleXMLElementFromFilePath($xml_path);
 
         $data = ProjectCreationData::buildFromXML(
@@ -193,11 +194,14 @@ class RestProjectCreator
 
         $archive = new DirectoryArchive(dirname($xml_path));
 
-        return $this->project_XML_importer->importWithProjectData(
-            new ImportConfig(),
-            $archive,
-            new SystemEventRunnerForProjectCreationFromXMLTemplate(),
-            $data
+        return $this->template_factory->recordUsedTemplate(
+            $this->project_XML_importer->importWithProjectData(
+                new ImportConfig(),
+                $archive,
+                new SystemEventRunnerForProjectCreationFromXMLTemplate(),
+                $data
+            ),
+            $template,
         );
     }
 }

@@ -28,6 +28,7 @@ use CSRFSynchronizerToken;
 use Project;
 use TemplateSingleton;
 use Tuleap\Project\Admin\ProjectGlobalVisibilityPresenter;
+use Tuleap\Project\Registration\Template\ProjectTemplate;
 
 class ProjectDetailsPresenter
 {
@@ -74,10 +75,20 @@ class ProjectDetailsPresenter
      * @var bool
      */
     public $is_description_mandatory;
+    /**
+     * @var string|void
+     */
+    public $template_project_label;
+    public $built_from_xml_template;
+    /**
+     * @var array
+     */
+    public $built_from_project;
 
     public function __construct(
         Project $project,
         Project $template_project,
+        ?ProjectTemplate $template,
         array $group_info,
         array $description_fields_representation,
         ProjectHierarchyPresenter $project_hierarchy_presenter,
@@ -118,8 +129,16 @@ class ProjectDetailsPresenter
         $this->template_label                 = _('Projects created from this template');
 
         $this->template_project_label = _('Template used by project');
-        $this->template_project_name  = $template_project->getUnconvertedPublicName();
-        $this->template_project_url   = '/projects/' . urlencode($template_project->getUnixNameLowerCase());
+        if ($template) {
+            $this->built_from_xml_template = [
+                'name' => $template->getName(),
+            ];
+        } else {
+            $this->built_from_project = [
+                'template_project_name' => $template_project->getUnconvertedPublicName(),
+                'template_project_url'  => '/projects/' . urlencode($template_project->getUnixNameLowerCase()),
+            ];
+        }
     }
 
     private function getLocalizedType($project_type_id)

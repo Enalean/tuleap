@@ -34,9 +34,14 @@ class TemplateFactory
      * @var ProjectTemplate[]
      */
     private $templates;
+    /**
+     * @var TemplateDao
+     */
+    private $template_dao;
 
-    public function __construct(GlyphFinder $glyph_finder, ProjectXMLMerger $project_xml_merger, ConsistencyChecker $consistency_checker)
+    public function __construct(GlyphFinder $glyph_finder, ProjectXMLMerger $project_xml_merger, ConsistencyChecker $consistency_checker, TemplateDao $template_dao)
     {
+        $this->template_dao = $template_dao;
         $this->templates = [
             ScrumTemplate::NAME => new ScrumTemplate($glyph_finder, $project_xml_merger, $consistency_checker),
         ];
@@ -52,7 +57,8 @@ class TemplateFactory
             new ConsistencyChecker(
                 \ServiceManager::instance(),
                 new XMLFileContentRetriever()
-            )
+            ),
+            new TemplateDao()
         );
     }
 
@@ -79,5 +85,24 @@ class TemplateFactory
             throw new InvalidTemplateException();
         }
         return $this->templates[$name];
+    }
+
+    public function recordUsedTemplate(\Project $project, ProjectTemplate $template): \Project
+    {
+        $this->template_dao->saveTemplate($project, $template->getName());
+        return $project;
+    }
+
+    public function getTemplateForProject(\Project $project): ?ProjectTemplate
+    {
+        $template_name = $this->template_dao->getTemplateForProject($project);
+        if (! $template_name) {
+            return null;
+        }
+        try {
+            return $this->getTemplate($template_name);
+        } catch (InvalidTemplateException $exception) {
+        }
+        return null;
     }
 }

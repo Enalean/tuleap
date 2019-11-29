@@ -155,8 +155,9 @@ class Statistics_ServicesUsageDao extends DataAccessObject
     {
         $end_date = $this->da->escapeInt($this->end_date);
 
-        $sql = "SELECT group_id, built_from_template AS result
+        $sql = "SELECT group_id, IF(xml.template_name IS NOT NULL, 0, built_from_template) AS result
                 FROM groups
+                    LEFT JOIN project_template_xml AS xml ON (xml.id = groups.group_id)
                 WHERE status='A'
                   AND register_time <= $end_date
                 GROUP BY group_id";
@@ -168,9 +169,10 @@ class Statistics_ServicesUsageDao extends DataAccessObject
     {
         $end_date = $this->da->escapeInt($this->end_date);
 
-        $sql = "SELECT project.group_id, template.group_name AS result
+        $sql = "SELECT project.group_id, IF(xml.template_name IS NOT NULL, xml.template_name, template.group_name) AS result
                 FROM groups AS project
                     INNER JOIN  groups AS template ON (template.group_id = project.built_from_template)
+                    LEFT JOIN project_template_xml AS xml ON (xml.id = project.group_id)
                 WHERE project.status='A'
                   AND project.register_time <= $end_date
                 GROUP BY project.group_id";

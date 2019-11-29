@@ -75,8 +75,6 @@ class ProjectXMLImporterTest extends TestCase
 
     protected function setUp() : void
     {
-        parent::setUp();
-
         $this->event_manager     = M::spy(EventManager::class);
         $this->project_manager   = M::spy(\ProjectManager::class);
         $this->project           = M::spy(\Project::class, [ 'getID' => 122 ]);

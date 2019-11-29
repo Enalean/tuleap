@@ -48,6 +48,7 @@ use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
 use Tuleap\Project\Admin\ServicesUsingTruncatedMailRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
+use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\TroveCat\TroveCatLinkDao;
 use UGroupBinding;
 
@@ -93,11 +94,6 @@ class ProjectDetailsController
     private $project_visibility_configuration;
 
     /**
-     * @var ServicesUsingTruncatedMailRetriever
-     */
-    private $service_truncated_mails_retriever;
-
-    /**
      * @var UGroupBinding
      */
     private $ugroup_binding;
@@ -111,6 +107,10 @@ class ProjectDetailsController
      * @var CSRFSynchronizerToken
      */
     private $csrf_token;
+    /**
+     * @var TemplateFactory
+     */
+    private $template_factory;
 
     public function __construct(
         DescriptionFieldsFactory $description_fields_factory,
@@ -121,10 +121,10 @@ class ProjectDetailsController
         ProjectHistoryDao $project_history_dao,
         ProjectVisibilityPresenterBuilder $project_visibility_presenter_builder,
         ProjectVisibilityUserConfigurationPermissions $project_visibility_configuration,
-        ServicesUsingTruncatedMailRetriever $service_truncated_mails_retriever,
         UGroupBinding $ugroup_binding,
         TroveCatLinkDao $trove_cat_link_dao,
-        CSRFSynchronizerToken $csrf_token
+        CSRFSynchronizerToken $csrf_token,
+        TemplateFactory $template_factory
     ) {
         $this->description_fields_factory           = $description_fields_factory;
         $this->current_project                      = $current_project;
@@ -133,11 +133,11 @@ class ProjectDetailsController
         $this->event_manager                        = $event_manager;
         $this->project_history_dao                  = $project_history_dao;
         $this->project_visibility_configuration     = $project_visibility_configuration;
-        $this->service_truncated_mails_retriever    = $service_truncated_mails_retriever;
         $this->ugroup_binding                       = $ugroup_binding;
         $this->project_visibility_presenter_builder = $project_visibility_presenter_builder;
         $this->trove_cat_link_dao                   = $trove_cat_link_dao;
         $this->csrf_token                           = $csrf_token;
+        $this->template_factory                     = $template_factory;
     }
 
     public function display(HTTPRequest $request)
@@ -182,6 +182,7 @@ class ProjectDetailsController
             new ProjectDetailsPresenter(
                 $project,
                 $template_project,
+                $this->template_factory->getTemplateForProject($project),
                 $group_info,
                 $description_field_representations,
                 $hierarchy_presenter,
