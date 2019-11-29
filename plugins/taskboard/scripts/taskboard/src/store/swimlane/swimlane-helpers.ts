@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { MoveCardsPayload, SwimlaneState } from "./type";
+import { SwimlaneState } from "./type";
 import { Swimlane, Card } from "../../type";
 
 const swimlaneHasSameId = (a: Swimlane) => (b: Swimlane): boolean => a.card.id === b.card.id;
@@ -43,17 +43,23 @@ export function replaceSwimlane(state: SwimlaneState, swimlane: Swimlane): void 
     }
 }
 
-export function findDroppedCard(state: SwimlaneState, payload: MoveCardsPayload): Card {
-    const swimlane_state = findSwimlane(state, payload.swimlane);
-    const card_state = isSoloCard(swimlane_state)
-        ? swimlane_state.card
-        : swimlane_state.children_cards.find(child => child.id === payload.card.id);
+/**
+ * @throws Error
+ */
+export function findCard(state: SwimlaneState, card: Card): Card {
+    for (const swimlane of state.swimlanes) {
+        if (swimlane.card.id === card.id) {
+            return swimlane.card;
+        }
 
-    if (!card_state) {
-        throw new Error("Dropped card has not been found in the swimlane.");
+        for (const child of swimlane.children_cards) {
+            if (child.id === card.id) {
+                return child;
+            }
+        }
     }
 
-    return card_state;
+    throw new Error("Could not find card with id=" + card.id);
 }
 
 export function isSoloCard(swimlane: Swimlane): boolean {

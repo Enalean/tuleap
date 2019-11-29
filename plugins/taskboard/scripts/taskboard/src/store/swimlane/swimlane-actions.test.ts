@@ -25,7 +25,7 @@ import { loadChildrenCards } from "./swimlane-actions";
 import { ActionContext } from "vuex";
 import {
     MoveCardsPayload,
-    RefreshParentCardActionPayload,
+    RefreshCardActionPayload,
     ReorderCardsPayload,
     SwimlaneState
 } from "./type";
@@ -345,7 +345,7 @@ describe("Swimlane state actions", () => {
         it(`when a child card was moved,
             it will PATCH the new cell,
             move the card to its new column
-            and refresh the parent card`, async () => {
+            and refresh the card and its parent`, async () => {
             const card_to_move = {
                 id: 102,
                 tracker_id: 7,
@@ -371,14 +371,17 @@ describe("Swimlane state actions", () => {
                 body: JSON.stringify({ add: card_to_move.id })
             });
 
-            expect(context.dispatch).toHaveBeenCalledWith("refreshParentCard", { swimlane });
+            expect(context.dispatch).toHaveBeenCalledWith("refreshCardAndParent", {
+                swimlane,
+                card: card_to_move
+            });
             expect(context.commit).toHaveBeenCalledWith("moveCardToColumn", payload);
         });
 
         it(`when a solo card was moved,
             it will PATCH the new cell,
             move the card to its new column
-            and refresh it`, async () => {
+            and refresh the card`, async () => {
             const card_to_move = {
                 id: 102,
                 tracker_id: 7,
@@ -402,7 +405,10 @@ describe("Swimlane state actions", () => {
                 body: JSON.stringify({ add: card_to_move.id })
             });
 
-            expect(context.dispatch).toHaveBeenCalledWith("refreshParentCard", { swimlane });
+            expect(context.dispatch).toHaveBeenCalledWith("refreshCardAndParent", {
+                swimlane,
+                card: card_to_move
+            });
             expect(context.commit).toHaveBeenCalledWith("moveCardToColumn", payload);
         });
 
@@ -466,41 +472,108 @@ describe("Swimlane state actions", () => {
         });
     });
 
-    describe(`refreshParentCard()`, () => {
-        let parent_card: Card, swimlane: Swimlane, payload: RefreshParentCardActionPayload;
+    describe(`refreshCardAndParent()`, () => {
+        describe(`Given a swimlane and a card that was just dropped in it, when it is a solo card`, () => {
+            let swimlane: Swimlane, payload: RefreshCardActionPayload;
+            beforeEach(() => {
+                swimlane = {
+                    card: { id: 104, label: "Solo card in state", has_children: false } as Card,
+                    children_cards: [],
+                    is_loading_children_cards: false
+                };
+                payload = { swimlane, card: swimlane.card };
+            });
+            it(`will GET the card using the REST API and mutate the store`, async () => {
+                const refreshed_card = {
+                    id: 104,
+                    label: "Refreshed solo card",
+                    has_children: false
+                } as Card;
+                const tlpGetMock = jest.spyOn(tlp, "get");
+                mockFetchSuccess(tlpGetMock, { return_json: refreshed_card });
 
-        beforeEach(() => {
-            parent_card = { id: 104, label: "Card to refresh" } as Card;
-            swimlane = { card: parent_card, children_cards: [], is_loading_children_cards: false };
-            payload = { swimlane };
+                await actions.refreshCardAndParent(context, payload);
+
+                expect(tlpGetMock).toHaveBeenCalledWith("/api/v1/taskboard_cards/104", {
+                    params: { milestone_id: 42 }
+                });
+                expect(context.commit).toHaveBeenCalledWith("refreshCard", {
+                    swimlane,
+                    refreshed_card
+                });
+            });
+
+            it(`when there is an error, it will open a modal`, async () => {
+                const error = new Error();
+
+                const tlpGetMock = jest.spyOn(tlp, "get");
+                tlpGetMock.mockRejectedValue(error);
+
+                await actions.refreshCardAndParent(context, payload);
+
+                expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
+                    root: true
+                });
+            });
         });
 
-        it(`will GET the card using the REST API and mutate the store`, async () => {
-            const refreshed_card = { id: 104, label: "Refreshed card" } as Card;
-            const tlpGetMock = jest.spyOn(tlp, "get");
-            mockFetchSuccess(tlpGetMock, { return_json: refreshed_card });
-
-            await actions.refreshParentCard(context, payload);
-
-            expect(tlpGetMock).toHaveBeenCalledWith("/api/v1/taskboard_cards/104", {
-                params: { milestone_id: 42 }
+        describe(`Given a swimlane and a card that was just dropped in it, when is is a child card`, () => {
+            let swimlane: Swimlane, payload: RefreshCardActionPayload;
+            beforeEach(() => {
+                const card = { id: 59, label: "Child card" } as Card;
+                swimlane = {
+                    card: { id: 78, label: "Parent card", has_children: true } as Card,
+                    children_cards: [card],
+                    is_loading_children_cards: false
+                };
+                payload = { swimlane, card };
             });
-            expect(context.commit).toHaveBeenCalledWith("refreshParentCard", {
-                swimlane,
-                parent_card: refreshed_card
+            it(`it will GET the card using the REST API and mutate the store with it
+            and it will also GET the parent card using the REST API and mutate the store with it`, async () => {
+                const refreshed_child_card = { id: 59, label: "Refreshed child card" } as Card;
+                const refreshed_parent_card = {
+                    id: 78,
+                    label: "Refreshed parent card",
+                    has_children: true
+                } as Card;
+                const tlpGetMock = jest.spyOn(tlp, "get");
+                tlpGetMock.mockResolvedValueOnce({
+                    json: () => Promise.resolve(refreshed_child_card)
+                } as Response);
+                tlpGetMock.mockResolvedValueOnce({
+                    json: () => Promise.resolve(refreshed_parent_card)
+                } as Response);
+
+                await actions.refreshCardAndParent(context, payload);
+
+                expect(tlpGetMock).toHaveBeenCalledWith("/api/v1/taskboard_cards/59", {
+                    params: { milestone_id: 42 }
+                });
+                expect(context.commit).toHaveBeenCalledWith("refreshCard", {
+                    swimlane,
+                    refreshed_card: refreshed_child_card
+                });
+
+                expect(tlpGetMock).toHaveBeenCalledWith("/api/v1/taskboard_cards/78", {
+                    params: { milestone_id: 42 }
+                });
+                expect(context.commit).toHaveBeenCalledWith("refreshCard", {
+                    swimlane,
+                    refreshed_card: refreshed_parent_card
+                });
             });
-        });
 
-        it(`when there is an error, it will open a modal`, async () => {
-            const error = new Error();
+            it(`when there is an error, it will open a modal`, async () => {
+                const error = new Error();
 
-            const tlpGetMock = jest.spyOn(tlp, "get");
-            tlpGetMock.mockRejectedValue(error);
+                const tlpGetMock = jest.spyOn(tlp, "get");
+                tlpGetMock.mockRejectedValue(error);
 
-            await actions.refreshParentCard(context, payload);
+                await actions.refreshCardAndParent(context, payload);
 
-            expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
-                root: true
+                expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
+                    root: true
+                });
             });
         });
     });

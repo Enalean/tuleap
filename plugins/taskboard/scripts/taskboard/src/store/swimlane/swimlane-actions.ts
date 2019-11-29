@@ -24,11 +24,11 @@ import {
     SwimlaneState,
     MoveCardsPayload,
     ReorderCardsPayload,
-    RefreshParentCardActionPayload,
-    RefreshParentCardMutationPayload
+    RefreshCardActionPayload
 } from "./type";
 import { RootState } from "../type";
 import { UserPreference, UserPreferenceValue } from "../user/type";
+import { isSoloCard } from "./swimlane-helpers";
 
 export * from "./drag-drop-actions";
 export * from "./card/card-actions";
@@ -188,33 +188,48 @@ export async function moveCardToCell(
             body
         });
 
-        context.dispatch("refreshParentCard", { swimlane: payload.swimlane });
+        context.dispatch("refreshCardAndParent", {
+            swimlane: payload.swimlane,
+            card: payload.card
+        });
         context.commit("moveCardToColumn", payload);
     } catch (error) {
         await context.dispatch("error/handleModalError", error, { root: true });
     }
 }
 
-export async function refreshParentCard(
+async function getUpdatedCard(card_id: number, milestone_id: number): Promise<Card> {
+    const response = await get(`/api/v1/taskboard_cards/${card_id}`, {
+        params: { milestone_id }
+    });
+    return response.json();
+}
+
+export function refreshCardAndParent(
     context: ActionContext<SwimlaneState, RootState>,
-    payload: RefreshParentCardActionPayload
+    payload: RefreshCardActionPayload
 ): Promise<void> {
-    const card_id = payload.swimlane.card.id;
-
-    try {
-        const response = await get(`/api/v1/taskboard_cards/${card_id}`, {
-            params: { milestone_id: context.rootState.milestone_id }
-        });
-        const refreshed_card = await response.json();
-
-        const mutation_payload: RefreshParentCardMutationPayload = {
-            swimlane: payload.swimlane,
-            parent_card: refreshed_card
-        };
-        context.commit("refreshParentCard", mutation_payload);
-    } catch (error) {
-        await context.dispatch("error/handleModalError", error, { root: true });
+    const refreshCard = (refreshed_card: Card): void =>
+        context.commit("refreshCard", { swimlane: payload.swimlane, refreshed_card });
+    if (isSoloCard(payload.swimlane)) {
+        return getUpdatedCard(payload.card.id, context.rootState.milestone_id).then(
+            refreshCard,
+            error => context.dispatch("error/handleModalError", error, { root: true })
+        );
     }
+
+    const refresh_parent_promise = getUpdatedCard(
+        payload.swimlane.card.id,
+        context.rootState.milestone_id
+    ).then(refreshCard);
+    const refresh_child_promise = getUpdatedCard(
+        payload.card.id,
+        context.rootState.milestone_id
+    ).then(refreshCard);
+
+    return Promise.all([refresh_parent_promise, refresh_child_promise]).catch(error =>
+        context.dispatch("error/handleModalError", error, { root: true })
+    );
 }
 
 function getMoveCardBody(payload: MoveCardsPayload): string {
