@@ -40,7 +40,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!tuleap_templates_json) {
         return;
     }
-
+    const are_restricted_users_allowed = Boolean(vue_mount_point.dataset.areRestrictedUsersAllowed);
+    const project_default_visibility = String(vue_mount_point.dataset.projectDefaultVisibility);
     const tuleap_templates: TemplateData[] = JSON.parse(tuleap_templates_json);
     const selected_template = null;
     const error = null;
@@ -49,6 +50,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const root_state: State = {
         tuleap_templates,
         selected_template,
+        are_restricted_users_allowed,
+        project_default_visibility,
         error,
         is_creating_project
     };

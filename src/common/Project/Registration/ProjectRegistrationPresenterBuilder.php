@@ -23,6 +23,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Project\Registration;
 
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\Template\ProjectTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\Registration\Template\TemplatePresenter;
@@ -33,15 +34,22 @@ class ProjectRegistrationPresenterBuilder
      * @var TemplateFactory
      */
     private $template_factory;
+    /**
+     * @var DefaultProjectVisibilityRetriever
+     */
+    private $default_project_visibility_retriever;
 
-    public function __construct(TemplateFactory $template_factory)
+    public function __construct(TemplateFactory $template_factory, DefaultProjectVisibilityRetriever $default_project_visibility_retriever)
     {
         $this->template_factory = $template_factory;
+        $this->default_project_visibility_retriever = $default_project_visibility_retriever;
     }
 
     public function buildPresenter(): ProjectRegistrationPresenter
     {
+
         return new ProjectRegistrationPresenter(
+            $this->default_project_visibility_retriever->getDefaultProjectVisibility(),
             ...array_map(
                 static function (ProjectTemplate $project_template) {
                     return new TemplatePresenter($project_template);

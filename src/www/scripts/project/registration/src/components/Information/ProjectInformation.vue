@@ -30,9 +30,19 @@
                     <span v-translate>Project information</span>
                 </h2>
                 <under-construction-information/>
-                <div class="register-new-project-information-form-container" data-test="register-new-project-information-form">
+                <div class="register-new-project-information-form-container"
+                     v-bind:class="{'register-new-project-information-form-container-restricted-allowed' : are_restricted_users_allowed}"
+                     data-test="register-new-project-information-form"
+                >
                     <project-name v-model="name_properties"/>
-                    <project-information-input-privacy-switch v-model="is_private"/>
+                    <project-information-input-privacy-list v-if="are_restricted_users_allowed"
+                                                            v-model="selected_visibility"
+                                                            data-test="register-new-project-information-list"
+                    />
+                    <project-information-input-privacy-switch v-else
+                                                              v-model="is_private"
+                                                              data-test="register-new-project-information-switch"
+                    />
                 </div>
             </div>
         </div>
@@ -40,6 +50,7 @@
         <project-information-footer
             v-bind:project_name_properties="name_properties"
             v-bind:is_public="is_private === false"
+            v-bind:privacy="selected_visibility"
         />
     </div>
 </template>
@@ -52,11 +63,13 @@ import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
 import ProjectInformationInputPrivacySwitch from "./Input/ProjectInformationInputPrivacySwitch.vue";
+import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
 import { ProjectNameProperties } from "../../type";
 import { Getter, State } from "vuex-class";
 
 @Component({
     components: {
+        ProjectInformationInputPrivacyList,
         ProjectName,
         ProjectInformationInputPrivacySwitch,
         ProjectInformationFooter,
@@ -71,6 +84,14 @@ export default class ProjectInformation extends Vue {
     @State
     error!: string;
 
+    @State
+    are_restricted_users_allowed!: boolean;
+
+    @State
+    project_default_visibility!: string;
+
+    selected_visibility = "public";
+
     name_properties: ProjectNameProperties = {
         slugified_name: "",
         name: "",
@@ -78,5 +99,9 @@ export default class ProjectInformation extends Vue {
     };
 
     is_private = false;
+
+    mounted(): void {
+        this.selected_visibility = this.project_default_visibility;
+    }
 }
 </script>

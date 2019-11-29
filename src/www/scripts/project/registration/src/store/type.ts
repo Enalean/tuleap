@@ -23,6 +23,8 @@ import { TemplateData } from "../type";
 export interface State {
     tuleap_templates: TemplateData[];
     selected_template: TemplateData | null;
+    are_restricted_users_allowed: boolean;
+    project_default_visibility: string;
     error: string | null;
     is_creating_project: boolean | null;
 }
@@ -38,5 +40,6 @@ export interface StoreOptions {
         selected_template: TemplateData | null;
         error: string | null;
         is_creating_project: boolean | null;
+        project_default_visibility: string;
     };
 }

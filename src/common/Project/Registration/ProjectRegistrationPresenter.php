@@ -23,6 +23,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Project\Registration;
 
+use ForgeConfig;
 use Tuleap\Project\Registration\Template\TemplatePresenter;
 
 /**
@@ -38,10 +39,20 @@ class ProjectRegistrationPresenter
      * @var bool
      */
     public $has_templates;
+    /**
+     * @var bool
+     */
+    public $are_restricted_users_allowed;
+    /**
+     * @var string
+     */
+    public $project_default_visibility;
 
-    public function __construct(TemplatePresenter ...$tuleap_templates)
+    public function __construct(string $project_default_visibility, TemplatePresenter ...$tuleap_templates)
     {
-        $this->tuleap_templates = json_encode($tuleap_templates);
-        $this->has_templates    = count($tuleap_templates) > 0;
+        $this->tuleap_templates             = json_encode($tuleap_templates);
+        $this->has_templates                = count($tuleap_templates) > 0;
+        $this->are_restricted_users_allowed =  (bool) ForgeConfig::areRestrictedUsersAllowed();
+        $this->project_default_visibility   = $project_default_visibility;
     }
 }
