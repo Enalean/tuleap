@@ -21,6 +21,10 @@ require_once __DIR__ . '/../../www/include/account.php';
 require_once __DIR__ .  '/../../www/include/utils_soap.php';
 
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\Project\Registration\Template\InsufficientPermissionToUseProjectAsTemplateException;
+use Tuleap\Project\Registration\Template\ProjectTemplateIDInvalidException;
+use Tuleap\Project\Registration\Template\ProjectTemplateNotActiveException;
+use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
 
@@ -158,7 +162,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         try {
             $this->project_registration_user_permission_checker->checkUserCreateAProject($requester);
 
-            $template = $this->getTemplateById($templateId, $requester);
+            $template = $this->getTemplateForProjectCreationById($templateId, $requester);
 
             $this->limitator->logCallTo('addProject');
             return $this->formatDataAndCreateProject($shortName, $publicName, $privacy, $template);
@@ -178,24 +182,15 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         );
     }
 
-    /**
-     * Return a project the user is authorized to use as template
-     *
-     * @param int $id
-     * @param PFUser    $requester
-     *
-     * @return Project
-     */
-    private function getTemplateById($id, PFUser $requester)
+    private function getTemplateForProjectCreationById(int $project_id, PFUser $requester): TemplateFromProjectForCreation
     {
-        $project = $this->projectManager->getProject($id);
-        if ($project && !$project->isError()) {
-            if ($project->isTemplate() || $requester->isMember($project->getID(), 'A')) {
-                return $project;
-            }
+        try {
+            return TemplateFromProjectForCreation::fromSOAPServer($project_id, $requester, $this->projectManager);
+        } catch (ProjectTemplateIDInvalidException $exception) {
+            throw new SoapFault('3100', 'Invalid template id ' . $project_id);
+        } catch (ProjectTemplateNotActiveException|InsufficientPermissionToUseProjectAsTemplateException $ex) {
             throw new SoapFault('3104', 'Project is not a template');
         }
-        throw new SoapFault('3100', 'Invalid template id ' . $id);
     }
 
     /**
@@ -221,11 +216,10 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      * @param String $shortName
      * @param String $publicName
      * @param String $privacy
-     * @param Project $template
      *
      * @return int
      */
-    private function formatDataAndCreateProject($shortName, $publicName, $privacy, Project $template)
+    private function formatDataAndCreateProject($shortName, $publicName, $privacy, TemplateFromProjectForCreation $template_for_project_creation)
     {
         $data = array(
             'project' => array(
@@ -233,7 +227,6 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
                 'is_test'                => false,
                 'is_public'              => false,
                 'services'               => array(),
-                'built_from_template'    => $template->getID(),
             )
         );
 
@@ -241,12 +234,12 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
             $data['project']['is_public'] = true;
         }
 
-        foreach ($template->getServices() as $key => $service) {
+        foreach ($template_for_project_creation->getProject()->getServices() as $key => $service) {
             $is_used = $service->isActive() && $service->isUsed();
             $data['project']['services'][$service->getId()]['is_used'] = $is_used;
         }
 
-        $project = $this->projectCreator->create($shortName, $publicName, $data);
+        $project = $this->projectCreator->create($shortName, $publicName, $template_for_project_creation, $data);
         $this->projectManager->activate($project);
         return $project->getID();
     }

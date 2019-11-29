@@ -40,7 +40,8 @@ use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\ProjectDescriptionMandatoryException;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
-use Tuleap\Project\ProjectInvalidTemplateException;
+use Tuleap\Project\ProjectRegistrationDisabledException;
+use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
 use Tuleap\Project\UGroups\Membership\MemberAdder;
@@ -247,7 +248,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * @param ProjectCreationData $data project data
      *
      * @return Project created
-     * @throws ProjectInvalidTemplateException
+     * @throws \Tuleap\Project\Registration\Template\InvalidTemplateException
+     * @throws ProjectRegistrationDisabledException
      * @throws Project_Creation_Exception
      * @throws Project_InvalidFullName_Exception
      * @throws Project_InvalidShortName_Exception
@@ -280,9 +282,9 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      *
      * @return Project
      */
-    public function create($shortName, $publicName, array $data)
+    public function create($shortName, $publicName, TemplateFromProjectForCreation $template_from_project_for_creation, array $data)
     {
-        $creationData = $this->getProjectCreationData($shortName, $publicName, $data);
+        $creationData = $this->getProjectCreationData($shortName, $publicName, $template_from_project_for_creation, $data);
 
         return $this->build($creationData);
     }
@@ -291,12 +293,16 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * @throws Project_Creation_Exception
      * @throws Project_InvalidFullName_Exception
      * @throws Project_InvalidShortName_Exception
-     * @throws ProjectInvalidTemplateException
+     * @throws \Tuleap\Project\Registration\Template\InvalidTemplateException
      * @throws ProjectDescriptionMandatoryException
      */
-    public function createFromRest($short_name, $public_name, array $data): Project
-    {
-        $creation_data = $this->getProjectCreationData($short_name, $public_name, $data);
+    public function createFromRest(
+        $short_name,
+        $public_name,
+        TemplateFromProjectForCreation $template_from_project_for_creation,
+        array $data
+    ): Project {
+        $creation_data = $this->getProjectCreationData($short_name, $public_name, $template_from_project_for_creation, $data);
 
         $this->checkProjectCreationData($creation_data);
 
@@ -358,11 +364,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $this->fakeGroupIdIntoHTTPParams($group_id);
 
-        $template_id    = $group->getTemplate();
-        $template_group = $this->project_manager->getProject($template_id);
-        if ($template_group->isError()) {
-            throw new Project_Creation_Exception('Template associated with the project is not valid');
-        }
+        $template_group = $data->getBuiltFromTemplateProject()->getProject();
 
         $em     = EventManager::instance();
         $legacy = array(
@@ -377,18 +379,18 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         ));
 
         $this->activateServicesFromTemplate($group, $template_group, $data, $legacy);
-        $this->setMessageToRequesterFromTemplate($group_id, $template_id);
-        $this->initForumModuleFromTemplate($group_id, $template_id);
-        $this->initCVSModuleFromTemplate($group_id, $template_id);
+        $this->setMessageToRequesterFromTemplate($group_id, $template_group->getID());
+        $this->initForumModuleFromTemplate($group_id, $template_group->getID());
+        $this->initCVSModuleFromTemplate($group_id, $template_group->getID());
 
         if ($legacy[Service::SVN] === true) {
-            $this->initSVNModuleFromTemplate($group_id, $template_id);
+            $this->initSVNModuleFromTemplate($group_id, $template_group->getID());
         }
 
         // Activate other system references not associated with any service
-        $this->reference_manager->addSystemReferencesWithoutService($template_id, $group_id);
+        $this->reference_manager->addSystemReferencesWithoutService($template_group->getID(), $group_id);
 
-        $this->synchronized_project_membership_duplicator->duplicate((int) $template_id, $group);
+        $this->synchronized_project_membership_duplicator->duplicate((int) $template_group->getID(), $group);
         //Copy ugroups
         $ugroup_mapping = array();
         $this->ugroup_duplicator->duplicateOnProjectCreation($template_group, $group_id, $ugroup_mapping);
@@ -402,16 +404,16 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $tracker_mapping = array();
             $report_mapping  = array();
         }
-        $this->initWikiModuleFromTemplate($group_id, $template_id);
+        $this->initWikiModuleFromTemplate($group_id, $template_group->getID());
 
         //Create project specific references if template is not default site template
         if (!$template_group->isSystem()) {
-            $this->reference_manager->addProjectReferences($template_id, $group_id);
+            $this->reference_manager->addProjectReferences($template_group->getID(), $group_id);
         }
 
-        $this->copyEmailOptionsFromTemplate($group_id, $template_id);
+        $this->copyEmailOptionsFromTemplate($group_id, $template_group->getID());
 
-        $this->label_dao->duplicateLabelsIfNeededBetweenProjectsId($template_id, $group_id);
+        $this->label_dao->duplicateLabelsIfNeededBetweenProjectsId($template_group->getID(), $group_id);
 
         // Raise an event for plugin configuration
         $em->processEvent(Event::REGISTER_PROJECT_CREATION, array(
@@ -419,7 +421,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             'trackerMapping'        => $tracker_mapping, // Trackers v3
             'ugroupsMapping'        => $ugroup_mapping,
             'group_id'              => $group_id,
-            'template_id'           => $template_id,
+            'template_id'           => $template_group->getID(),
             'project_creation_data' => $data,
             'legacy_service_usage'  => $legacy,
             'project_administrator' => $admin_user,
@@ -437,7 +439,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     /**
      * @return int, the group id created
      */
-    private function createGroupEntry($data)
+    private function createGroupEntry(ProjectCreationData $data)
     {
         srand((double)microtime()*1000000);
         $random_num=rand(0, 1000000);
@@ -469,7 +471,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             'short_description'   => "'". db_es(htmlspecialchars($data->getShortDescription())) ."'",
             'register_time'       => time(),
             'rand_hash'           => "'". md5($random_num) ."'",
-            'built_from_template' => db_ei($data->getTemplateId()),
+            'built_from_template' => db_ei($data->getBuiltFromTemplateProject()->getProject()->getID()),
             'type'                => db_ei($type)
         );
         $sql = 'INSERT INTO groups('. implode(', ', array_keys($insert_data)) .') VALUES ('. implode(', ', array_values($insert_data)) .')';
@@ -830,7 +832,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      *
      * @throws Project_InvalidFullName_Exception
      * @throws Project_InvalidShortName_Exception
-     * @throws ProjectInvalidTemplateException
      * @throws ProjectDescriptionMandatoryException
      */
     private function checkProjectCreationData(ProjectCreationData $data) : void
@@ -841,12 +842,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         if (!$this->rule_full_name->isValid($data->getFullName())) {
             throw new Project_InvalidFullName_Exception($this->rule_full_name->getErrorMessage());
-        }
-
-        $template_id      = $data->getTemplateId();
-        $template_project = $this->project_manager->getProject($template_id);
-        if ($template_project->isError()) {
-            throw new ProjectInvalidTemplateException($template_id);
         }
 
         $description = $data->getShortDescription();
@@ -872,9 +867,13 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return $this->project_manager->getProject($id);
     }
 
-    private function getProjectCreationData($short_name, $public_name, array $data)
+    private function getProjectCreationData($short_name, $public_name, TemplateFromProjectForCreation $template_from_project_for_creation, array $data)
     {
-        $creation_data = ProjectCreationData::buildFromFormArray($this->default_project_visibility_retriever, $data);
+        $creation_data = ProjectCreationData::buildFromFormArray(
+            $this->default_project_visibility_retriever,
+            $template_from_project_for_creation,
+            $data
+        );
 
         $creation_data->setUnixName($short_name);
         $creation_data->setFullName($public_name);

@@ -48,20 +48,16 @@ use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\ProjectDescriptionMandatoryException;
-use Tuleap\Project\ProjectInvalidTemplateException;
 use Tuleap\Project\ProjectStatusMapper;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
+use Tuleap\Project\Registration\Template\InsufficientPermissionToUseProjectAsTemplateException;
 use Tuleap\Project\Registration\Template\InvalidTemplateException;
+use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
+use Tuleap\Project\Registration\Template\ProjectTemplateIDInvalidException;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
-use Tuleap\Project\UgroupDuplicator;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
-use Tuleap\Project\UGroups\Membership\MemberAdder;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
-use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Event\ProjectGetSvn;
@@ -79,7 +75,6 @@ use Tuleap\REST\v1\OrderRepresentationBase;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\Widget\Event\GetProjectsWithCriteria;
-use Tuleap\XML\ProjectXMLMerger;
 use UGroupManager;
 use URLVerification;
 use User_ForgeUserGroupPermissionsDao;
@@ -190,8 +185,6 @@ class ProjectResource extends AuthenticatedResource
         } catch (Project_InvalidShortName_Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Project_InvalidFullName_Exception $exception) {
-            throw new RestException(400, $exception->getMessage());
-        } catch (ProjectInvalidTemplateException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (ProjectDescriptionMandatoryException $exception) {
             throw new RestException(400, $exception->getMessage());

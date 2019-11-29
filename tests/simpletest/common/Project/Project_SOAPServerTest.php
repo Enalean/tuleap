@@ -189,7 +189,7 @@ class Project_SOAPServerTest extends TuleapTestCase
 
         $new_project = new MockProject();
         $new_project->setReturnValue('getID', 3459);
-        $this->pc->setReturnValue('create', $new_project, array('toto', 'Mon Toto', '*'));
+        $this->pc->setReturnValue('create', $new_project, array('toto', 'Mon Toto', '*', '*'));
         stub($this->pm)->activate(true)->returns($new_project);
 
         return $server;

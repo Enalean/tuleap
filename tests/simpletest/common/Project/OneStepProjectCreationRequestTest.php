@@ -19,7 +19,9 @@
  */
 
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class OneStepProjectCreationRequestTest extends TuleapTestCase
 {
 
@@ -27,28 +29,26 @@ class OneStepProjectCreationRequestTest extends TuleapTestCase
     private $service_git_id     = 11;
     private $service_tracker_id = 12;
 
-    public function setUp()
-    {
-        parent::setUp();
-
-        $service_git = Mockery::mock(Service::class, ['getId' => $this->service_git_id, 'isUsed' => false]);
-
-        $service_tracker = Mockery::mock(Service::class, ['getId' => $this->service_tracker_id, 'isUsed' => true]);
-
-        $template = mock('Project');
-        stub($template)->getServices()->returns(array($service_git, $service_tracker));
-
-        $this->project_manager = stub('ProjectManager')->getProject($this->template_id)->returns($template);
-    }
-
-    protected function aCreationRequest($request_data)
+    protected function aCreationRequest($request_data): Project_OneStepCreation_OneStepCreationRequest
     {
         $request = aRequest()->withParams($request_data)->build();
-        return new Project_OneStepCreation_OneStepCreationRequest(
+        $creation_request = new Project_OneStepCreation_OneStepCreationRequest(
             $request,
-            $this->project_manager,
             new DefaultProjectVisibilityRetriever()
         );
+        $service_git = Mockery::mock(Service::class, ['getId' => $this->service_git_id, 'isUsed' => false]);
+        $service_tracker = Mockery::mock(Service::class, ['getId' => $this->service_tracker_id, 'isUsed' => true]);
+
+        $project_used_as_template = Mockery::mock(Project::class);
+        $project_used_as_template->shouldReceive('getID')->andReturn($this->template_id);
+        $project_used_as_template->shouldReceive('getServices')->andReturn([$service_git, $service_tracker]);
+
+        $template_for_project_creation = Mockery::mock(TemplateFromProjectForCreation::class);
+        $template_for_project_creation->shouldReceive('getProject')->andReturn($project_used_as_template);
+
+        $creation_request->setTemplateForProjectCreation($template_for_project_creation);
+
+        return $creation_request;
     }
 
     public function testNewObjectSetsACustomTextDescriptionField()

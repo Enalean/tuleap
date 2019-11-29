@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Tuleap\Project\Registration\Template;
 
-use Throwable;
-
-interface InvalidTemplateException extends Throwable
+final class InvalidXMLTemplateNameException extends \RuntimeException implements InvalidTemplateException
 {
-
+    public function __construct()
+    {
+        parent::__construct('The xml template name provided is not valid');
+    }
 }

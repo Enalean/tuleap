@@ -23,13 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Project;
 
 use Backend;
-use BackendCVS;
-use BackendSVN;
 use ForgeConfig;
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Project;
-use Project_Creation_Exception;
 use Project_InvalidFullName_Exception;
 use Project_InvalidShortName_Exception;
 use ProjectCreator;
@@ -44,6 +40,7 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\Label\LabelDao;
+use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
 use Tuleap\Service\ServiceCreator;
 use UserManager;
@@ -119,51 +116,19 @@ final class ProjectCreatorTest extends TestCase
         parent::tearDown();
     }
 
-    public function testInvalidTemplateIDRaisesAnException(): void
-    {
-        $this->project_manager->shouldReceive('getProjectByUnixName')->andReturn(null);
-        $template_id      = 999;
-        $template_project = Mockery::mock(Project::class);
-        $template_project->shouldReceive('isError')->andReturn(true);
-        $this->project_manager->shouldReceive('getProject')->with($template_id)->andReturn($template_project);
-
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isSuperUser')->andReturn(true);
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
-        $this->user_manager->shouldReceive('getUserByUserName')->andReturn(null);
-
-        $system_event_manager = Mockery::mock(SystemEventManager::class);
-        $system_event_manager->shouldReceive('isUserNameAvailable')->andReturn(true);
-        $system_event_manager->shouldReceive('isProjectNameAvailable')->andReturn(true);
-        SystemEventManager::setInstance($system_event_manager);
-
-        $backend_svn = Mockery::mock(BackendSVN::class);
-        $backend_svn->shouldReceive('isNameAvailable')->andReturn(true);
-        Backend::setInstance('SVN', $backend_svn);
-        $backend_cvs = Mockery::mock(BackendCVS::class);
-        $backend_cvs->shouldReceive('isNameAvailable')->andReturn(true);
-        Backend::setInstance('CVS', $backend_cvs);
-
-        $this->rule_short_name->shouldReceive('isValid')->once()->andReturnTrue();
-        $this->rule_project_full_name->shouldReceive('isValid')->once()->andReturnTrue();
-
-        $this->creator->shouldReceive('processProjectCreation')->never();
-        $this->expectException(ProjectInvalidTemplateException::class);
-        $this->creator->create('shortname', 'public name', ['project' => ['built_from_template' => $template_id]]);
-    }
-
     public function testMandatoryDescriptionNotSetRaiseException(): void
     {
         $this->rule_short_name->shouldReceive('isValid')->once()->andReturnTrue();
         $this->rule_project_full_name->shouldReceive('isValid')->once()->andReturnTrue();
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('isError')->once()->andReturnFalse();
-        $this->project_manager->shouldReceive('getProject')->with(100)->andReturn($project);
-
         $this->creator->shouldReceive('processProjectCreation')->never();
         $this->expectException(ProjectDescriptionMandatoryException::class);
-        $this->creator->createFromRest('shortname', 'public name', ['project' => ['built_from_template' => 100]]);
+        $this->creator->createFromRest(
+            'shortname',
+            'public name',
+            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
+            []
+        );
     }
 
     public function testNotMandatoryDescriptionIsValid(): void
@@ -174,12 +139,13 @@ final class ProjectCreatorTest extends TestCase
         $this->rule_short_name->shouldReceive('isValid')->once()->andReturnTrue();
         $this->rule_project_full_name->shouldReceive('isValid')->once()->andReturnTrue();
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('isError')->once()->andReturnFalse();
-        $this->project_manager->shouldReceive('getProject')->once()->with(100)->andReturn($project);
-
         $this->creator->shouldReceive('processProjectCreation')->once();
-        $this->creator->createFromRest('shortname', 'public name', ['project' => ['built_from_template' => 100]]);
+        $this->creator->createFromRest(
+            'shortname',
+            'public name',
+            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
+            []
+        );
     }
 
     public function testInvalidShortNameShouldRaiseException(): void
@@ -189,7 +155,12 @@ final class ProjectCreatorTest extends TestCase
 
         $this->creator->shouldReceive('processProjectCreation')->never();
         $this->expectException(Project_InvalidShortName_Exception::class);
-        $this->creator->createFromRest('shortname', 'public name', ['project' => ['built_from_template' => 100]]);
+        $this->creator->createFromRest(
+            'shortname',
+            'public name',
+            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
+            []
+        );
     }
 
     public function testInvalidFullNameShouldRaiseException(): void
@@ -200,6 +171,11 @@ final class ProjectCreatorTest extends TestCase
 
         $this->creator->shouldReceive('processProjectCreation')->never();
         $this->expectException(Project_InvalidFullName_Exception::class);
-        $this->creator->createFromRest('shortname', 'public name', ['project' => ['built_from_template' => 100]]);
+        $this->creator->createFromRest(
+            'shortname',
+            'public name',
+            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
+            []
+        );
     }
 }

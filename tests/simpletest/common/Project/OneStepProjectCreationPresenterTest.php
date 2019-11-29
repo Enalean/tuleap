@@ -29,7 +29,6 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase //phpcs:
         $request          = aRequest()->withParams($request_data)->build();
         $creation_request = new Project_OneStepCreation_OneStepCreationRequest(
             $request,
-            $project_manager,
             new DefaultProjectVisibilityRetriever()
         );
 

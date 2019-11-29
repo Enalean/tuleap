@@ -26,6 +26,7 @@ use Mockery as M;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Configuration\Logger\LoggerInterface;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 
 class ProjectCreationDataTest extends TestCase
 {
@@ -74,7 +75,7 @@ class ProjectCreationDataTest extends TestCase
     public function testItHasBasicMetadataFromProject()
     {
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
-        $project_data = ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
+        $project_data = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
         $this->assertEquals('kanbansampleproject', $project_data->getUnixName());
         $this->assertEquals('Kanban Sample project', $project_data->getFullName());
         $this->assertEquals('Control project workflow and focus on what’s hot with a card board. Connect it to development tools.', $project_data->getShortDescription());
@@ -85,7 +86,7 @@ class ProjectCreationDataTest extends TestCase
     {
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'private';
-        $project_data = ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
+        $project_data = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
         $this->assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
     }
 
@@ -95,7 +96,7 @@ class ProjectCreationDataTest extends TestCase
 
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'unrestricted';
-        $project_data = ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
+        $project_data = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
         $this->assertEquals(Project::ACCESS_PUBLIC_UNRESTRICTED, $project_data->getAccess());
     }
 
@@ -105,7 +106,7 @@ class ProjectCreationDataTest extends TestCase
 
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         $xml['access'] = 'private-wo-restr';
-        $project_data = ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
+        $project_data = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
         $this->assertEquals(Project::ACCESS_PRIVATE_WO_RESTRICTED, $project_data->getAccess());
     }
 
@@ -118,7 +119,7 @@ class ProjectCreationDataTest extends TestCase
 
         $this->expectException(Tuleap\Project\XML\Import\ImportNotValidException::class);
 
-        ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
+        ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
     }
 
     public function testItThrowAnExceptionWithPrivateWoRestrictedProjectsOnNonRestrictedPlatform()
@@ -130,7 +131,7 @@ class ProjectCreationDataTest extends TestCase
 
         $this->expectException(Tuleap\Project\XML\Import\ImportNotValidException::class);
 
-        ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
+        ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
     }
 
     public function testItCreatesProjectWithDefaultPlatformAccessWhenDataNotInXML()
@@ -140,7 +141,7 @@ class ProjectCreationDataTest extends TestCase
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/ProjectCreationData/project_with_services.xml'));
         unset($xml['access']);
 
-        $project_data = ProjectCreationData::buildFromXML($xml, 100, $this->xml_rngvalidator, $this->service_manager, $this->project_manager);
+        $project_data = ProjectCreationData::buildFromXML($xml, $this->xml_rngvalidator, $this->service_manager);
         $this->assertEquals(Project::ACCESS_PUBLIC, $project_data->getAccess());
     }
 
@@ -150,6 +151,7 @@ class ProjectCreationDataTest extends TestCase
 
         $project_data = ProjectCreationData::buildFromFormArray(
             $this->default_project_visibility_retriever,
+            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
             [
                 'project' => [
                     'is_public' => '0',
@@ -176,14 +178,18 @@ class ProjectCreationDataTest extends TestCase
 
         $web_payload = [
             'project' => [
-                'is_public' => $is_public ? '1' : '0',
+                'is_public'           => $is_public ? '1' : '0',
             ],
         ];
         if ($allow_restricted) {
             $web_payload['project']['allow_restricted'] = '1';
         }
 
-        $project_data = ProjectCreationData::buildFromFormArray($this->default_project_visibility_retriever, $web_payload);
+        $project_data = ProjectCreationData::buildFromFormArray(
+            $this->default_project_visibility_retriever,
+            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
+            $web_payload
+        );
 
         $this->assertEquals($expected_visibility, $project_data->getAccess());
     }
@@ -195,9 +201,10 @@ class ProjectCreationDataTest extends TestCase
 
         $project_data = ProjectCreationData::buildFromFormArray(
             $this->default_project_visibility_retriever,
+            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
             [
                 'project' => [
-                    'is_public' => '1',
+                    'is_public' => '1'
                 ],
             ]
         );
@@ -212,6 +219,7 @@ class ProjectCreationDataTest extends TestCase
 
         $project_data = ProjectCreationData::buildFromFormArray(
             $this->default_project_visibility_retriever,
+            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
             [
                 'project' => [
                     'is_public' => '0',
@@ -229,6 +237,7 @@ class ProjectCreationDataTest extends TestCase
 
         $project_data = ProjectCreationData::buildFromFormArray(
             $this->default_project_visibility_retriever,
+            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
             [
                 'project' => [
                     'is_public' => '1',
@@ -244,7 +253,11 @@ class ProjectCreationDataTest extends TestCase
         ForgeConfig::set('sys_user_can_choose_project_privacy', 1);
         ForgeConfig::set('sys_is_project_public', 0);
 
-        $project_data = ProjectCreationData::buildFromFormArray($this->default_project_visibility_retriever, []);
+        $project_data = ProjectCreationData::buildFromFormArray(
+            $this->default_project_visibility_retriever,
+            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
+            []
+        );
 
         $this->assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
     }

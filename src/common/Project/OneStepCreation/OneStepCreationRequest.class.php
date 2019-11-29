@@ -19,10 +19,12 @@
   */
 
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 
 /**
  * Wraps user request for one step creation form
  */
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Project_OneStepCreation_OneStepCreationRequest
 {
 
@@ -68,6 +70,11 @@ class Project_OneStepCreation_OneStepCreationRequest
     private $templateId;
 
     /**
+     * @var TemplateFromProjectForCreation|null
+     */
+    private $template_for_project_creation = null;
+
+    /**
      *
      * @var bool
      */
@@ -90,9 +97,6 @@ class Project_OneStepCreation_OneStepCreationRequest
      */
     private $custom_descriptions = array();
 
-    /** @var ProjectManager */
-    private $project_manager;
-
     /** @var Codendi_Request */
     private $request;
 
@@ -103,13 +107,11 @@ class Project_OneStepCreation_OneStepCreationRequest
 
     public function __construct(
         Codendi_Request $request,
-        ProjectManager $project_manager,
         DefaultProjectVisibilityRetriever $default_project_visibility_retriever
     ) {
         $default_project_visibility = $default_project_visibility_retriever->getDefaultProjectVisibility();
 
         $this->request                         = $request;
-        $this->project_manager                 = $project_manager;
         $this->is_public                       = $default_project_visibility === Project::ACCESS_PUBLIC ||
             $default_project_visibility === Project::ACCESS_PUBLIC_UNRESTRICTED;
         $this->user_can_choose_project_privacy = ForgeConfig::get('sys_user_can_choose_project_privacy');
@@ -139,7 +141,7 @@ class Project_OneStepCreation_OneStepCreationRequest
                     'allow_restricted'                                                                => $this->allow_restricted,
                     Project_OneStepCreation_OneStepCreationPresenter::USER_CAN_CHOOSE_PROJECT_PRIVACY => $this->userCanSelectProjectPrivacy(),
                     Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME                       => $this->getUnixName(),
-                    Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID                     => $this->getTemplateId(),
+                    'built_from_template'                                                             => $this->getTemplateForProjectCreation(),
                     Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION               => $this->getShortDescription(),
                     'is_test'                                                                         => false,
                     'services'                                                                        => $this->getServices(),
@@ -217,7 +219,21 @@ class Project_OneStepCreation_OneStepCreationRequest
      */
     public function getTemplateId()
     {
-        return $this->templateId;
+        return (int) $this->templateId;
+    }
+
+    public function getTemplateForProjectCreation(): TemplateFromProjectForCreation
+    {
+        if ($this->template_for_project_creation === null) {
+            throw new LogicException('Template ID has not been validated');
+        }
+
+        return $this->template_for_project_creation;
+    }
+
+    public function setTemplateForProjectCreation(TemplateFromProjectForCreation $template_for_project_creation): void
+    {
+        $this->template_for_project_creation = $template_for_project_creation;
     }
 
     /**
@@ -367,8 +383,11 @@ class Project_OneStepCreation_OneStepCreationRequest
      */
     private function getServices()
     {
-        $services = array();
-        $project = $this->project_manager->getProject($this->getTemplateId());
+        if ($this->template_for_project_creation === null) {
+            throw new LogicException('Template ID has not been validated');
+        }
+        $services = [];
+        $project = $this->template_for_project_creation->getProject();
         foreach ($project->getServices() as $service) {
             $id = $service->getId();
             $services[$id]['is_used'] = $service->isUsed();

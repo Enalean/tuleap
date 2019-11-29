@@ -30,20 +30,21 @@ use Luracast\Restler\RestException;
 use Mockery as M;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Project;
 use ProjectCreator;
 use ProjectManager;
 use ProjectXMLImporter;
 use Service;
 use ServiceManager;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
-use Tuleap\Project\Registration\Template\InvalidTemplateException;
+use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
 use Tuleap\Project\Registration\Template\TemplateDao;
 use Tuleap\Project\Registration\Template\TemplateFactory;
+use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\SystemEventRunnerForProjectCreationFromXMLTemplate;
 use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\Project\XML\Import\ArchiveInterface;
@@ -125,7 +126,7 @@ class RestProjectCreatorTest extends TestCase
 
     public function testCreateThrowExceptionWhenNeitherTemplateIdNorTemplateNameIsProvided()
     {
-        $this->expectException(InvalidTemplateException::class);
+        $this->expectException(InvalidXMLTemplateNameException::class);
 
         $this->creator->create($this->user, $this->project);
     }
@@ -138,15 +139,22 @@ class RestProjectCreatorTest extends TestCase
         $this->project->description = 'foo';
         $this->project->is_public = false;
 
+        $template_project = \Mockery::mock(Project::class);
+        $template_project->shouldReceive('isError')->andReturnFalse();
+        $template_project->shouldReceive('isActive')->andReturnFalse();
+        $template_project->shouldReceive('isTemplate')->andReturnTrue();
+        $this->project_manager->shouldReceive('getProject')->with($this->project->template_id)->andReturn($template_project);
         $this->project_creator->shouldReceive('createFromRest')->with(
             'gpig',
             'Guinea Pig',
+            \Mockery::on(static function (TemplateFromProjectForCreation $template_from_project_for_creation) use ($template_project) {
+                return $template_from_project_for_creation->getProject() === $template_project;
+            }),
             [
                 'project' => [
                     'form_short_description' => 'foo',
                     'is_test' => false,
-                    'is_public' => false,
-                    'built_from_template' => 100,
+                    'is_public' => false
                 ]
             ],
         );
@@ -163,15 +171,22 @@ class RestProjectCreatorTest extends TestCase
         $this->project->is_public = false;
         $this->project->allow_restricted = false;
 
+        $template_project = \Mockery::mock(Project::class);
+        $template_project->shouldReceive('isError')->andReturnFalse();
+        $template_project->shouldReceive('isActive')->andReturnFalse();
+        $template_project->shouldReceive('isTemplate')->andReturnTrue();
+        $this->project_manager->shouldReceive('getProject')->with($this->project->template_id)->andReturn($template_project);
         $this->project_creator->shouldReceive('createFromRest')->with(
             'gpig',
             'Guinea Pig',
+            \Mockery::on(static function (TemplateFromProjectForCreation $template_from_project_for_creation) use ($template_project) {
+                return $template_from_project_for_creation->getProject() === $template_project;
+            }),
             [
                 'project' => [
                     'form_short_description' => 'foo',
                     'is_test' => false,
                     'is_public' => false,
-                    'built_from_template' => 100,
                     'allow_restricted' => false,
                 ]
             ],
@@ -192,9 +207,6 @@ class RestProjectCreatorTest extends TestCase
         $this->project->is_public         = false;
         $this->project->allow_restricted  = false;
 
-        $template_project = new \Project(['group_id' => 100]);
-        $this->project_manager->shouldReceive('getProject')->with(100)->andReturn($template_project);
-
         $services = [
             M::mock(Service::class, ['getShortName' => \trackerPlugin::SERVICE_SHORTNAME, 'getId' => 12]),
             M::mock(Service::class, ['getShortName' => \GitPlugin::SERVICE_SHORTNAME, 'getId' => 13]),
@@ -202,7 +214,13 @@ class RestProjectCreatorTest extends TestCase
         ];
 
         $this->service_manager->shouldReceive('getListOfServicesAvailableAtSiteLevel')->andReturns($services);
-        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->with($template_project)->andReturns($services);
+        $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')
+            ->with(\Mockery::on(
+                static function (Project $project): bool {
+                    return $project->getID() === Project::ADMIN_PROJECT_ID;
+                }
+            ))
+            ->andReturns($services);
 
         $new_project = new \Project(['group_id' => 201]);
 
@@ -216,7 +234,7 @@ class RestProjectCreatorTest extends TestCase
                 return $data->getUnixName() === 'gpig' &&
                     $data->getFullName() === 'Guinea Pig' &&
                     $data->getShortDescription() === 'foo' &&
-                    $data->getAccess() === \Project::ACCESS_PRIVATE_WO_RESTRICTED;
+                    $data->getAccess() === Project::ACCESS_PRIVATE_WO_RESTRICTED;
             })
         )->andReturn($new_project);
 

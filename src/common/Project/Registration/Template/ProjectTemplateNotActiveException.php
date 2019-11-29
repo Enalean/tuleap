@@ -22,9 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Registration\Template;
 
-use Throwable;
+use Project;
+use Project_Creation_Exception;
 
-interface InvalidTemplateException extends Throwable
+final class ProjectTemplateNotActiveException extends Project_Creation_Exception implements InvalidTemplateException
 {
-
+    public function __construct(Project $project)
+    {
+        parent::__construct('Project #' . $project->getID() . ' is not active and is not a template');
+    }
 }
