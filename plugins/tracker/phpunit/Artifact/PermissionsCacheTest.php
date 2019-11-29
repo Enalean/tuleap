@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,21 +20,24 @@
 
 namespace Tuleap\Tracker\Artifact;
 
-require_once __DIR__.'/../bootstrap.php';
+use Mockery;
+use PHPUnit\Framework\TestCase;
 
-use TuleapTestCase;
-
-class PermissionsCacheTest extends TuleapTestCase
+class PermissionsCacheTest extends TestCase
 {
-    public function itUsesCacheWhenPossible()
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    public function testItUsesCacheWhenPossible(): void
     {
-        $artifact           = mock('Tracker_Artifact');
-        $user               = mock('PFUser');
-        $permission_checker = mock('Tracker_Permission_PermissionChecker');
+        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact->shouldReceive('getId')->andReturn(102);
 
-        stub($permission_checker)->userCanView($user, $artifact)->returns(true);
+        $user = Mockery::mock(\PFUser::class);
 
-        $permission_checker->expectOnce('userCanView');
+        $permission_checker = Mockery::mock(\Tracker_Permission_PermissionChecker::class);
+        $user->shouldReceive('getId')->andReturn(1);
+
+        $permission_checker->shouldReceive('userCanView')->withArgs([$user, $artifact])->once()->andReturn(true);
 
         PermissionsCache::userCanView($artifact, $user, $permission_checker);
         PermissionsCache::userCanView($artifact, $user, $permission_checker);
