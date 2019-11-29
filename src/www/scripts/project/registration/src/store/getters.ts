@@ -21,3 +21,5 @@
 import { State } from "./type";
 
 export const is_template_selected = (state: State): boolean => state.selected_template !== null;
+
+export const has_error = (state: State): boolean => state.error !== null;

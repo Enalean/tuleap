@@ -31,7 +31,9 @@ describe("TemplateFooter", () => {
     beforeEach(async () => {
         state = {
             selected_template: null,
-            tuleap_templates: []
+            tuleap_templates: [],
+            error: null,
+            is_creating_project: false
         };
         const getters = {
             is_template_selected: false

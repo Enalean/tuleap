@@ -23,6 +23,8 @@ import { TemplateData } from "../type";
 export interface State {
     tuleap_templates: TemplateData[];
     selected_template: TemplateData | null;
+    error: string | null;
+    is_creating_project: boolean | null;
 }
 
 export interface Context {
@@ -34,5 +36,7 @@ export interface StoreOptions {
     state: {
         tuleap_templates: TemplateData[];
         selected_template: TemplateData | null;
+        error: string | null;
+        is_creating_project: boolean | null;
     };
 }

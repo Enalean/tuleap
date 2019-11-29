@@ -33,7 +33,16 @@ export async function createProject(
     context: Context,
     project_properties: ProjectProperties
 ): Promise<string> {
-    const response = await postProject(project_properties);
+    let response;
+
+    try {
+        context.commit("setIsCreatingProject", true);
+        response = await postProject(project_properties);
+        context.commit("setIsCreatingProject", false);
+    } catch (error) {
+        await context.commit("handleError", error);
+        throw error;
+    }
 
     return response;
 }

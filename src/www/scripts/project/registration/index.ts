@@ -43,10 +43,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const tuleap_templates: TemplateData[] = JSON.parse(tuleap_templates_json);
     const selected_template = null;
+    const error = null;
+    const is_creating_project = false;
 
     const root_state: State = {
         tuleap_templates,
-        selected_template
+        selected_template,
+        error,
+        is_creating_project
     };
 
     Vue.use(VueDOMPurifyHTML);

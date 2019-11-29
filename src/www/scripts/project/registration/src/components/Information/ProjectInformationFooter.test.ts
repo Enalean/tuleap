@@ -39,7 +39,9 @@ describe("ProjectInformationFooter", () => {
                 name: "scrum",
                 svg: "<svg></svg>"
             },
-            tuleap_templates: []
+            tuleap_templates: [],
+            error: null,
+            is_creating_project: false
         };
 
         const store_options = {
@@ -85,5 +87,39 @@ describe("ProjectInformationFooter", () => {
         await factory.vm.$nextTick().then(() => {});
 
         expect(redirect_to_url).toHaveBeenCalledWith("/my");
+    });
+
+    it(`Displays spinner when project is creating`, () => {
+        factory.vm.$store.getters.has_error = false;
+        factory.vm.$store.state.is_creating_project = true;
+
+        expect(factory.find("[data-test=project-submission-icon]").classes()).toEqual([
+            "fa",
+            "tlp-button-icon-right",
+            "fa-spin",
+            "fa-circle-o-notch"
+        ]);
+    });
+
+    it(`Does not display spinner when an error occurred`, () => {
+        factory.vm.$store.getters.has_error = true;
+        factory.vm.$store.state.is_creating_project = true;
+
+        expect(factory.find("[data-test=project-submission-icon]").classes()).toEqual([
+            "fa",
+            "tlp-button-icon-right",
+            "fa-arrow-circle-o-right"
+        ]);
+    });
+
+    it(`Does not display spinner by default`, () => {
+        factory.vm.$store.getters.has_error = false;
+        factory.vm.$store.state.is_creating_project = false;
+
+        expect(factory.find("[data-test=project-submission-icon]").classes()).toEqual([
+            "fa",
+            "tlp-button-icon-right",
+            "fa-arrow-circle-o-right"
+        ]);
     });
 });
