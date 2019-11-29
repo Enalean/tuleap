@@ -51,8 +51,7 @@ describe("ProjectInformationFooter", () => {
 
         const project_name_properties: ProjectNameProperties = {
             slugified_name: "this-is-a-test",
-            name: "this is a test",
-            is_valid: true
+            name: "this is a test"
         };
 
         factory = shallowMount(ProjectInformationFooter, {
@@ -185,17 +184,6 @@ describe("ProjectInformationFooter", () => {
             "tlp-button-icon-right",
             "fa-spin",
             "fa-circle-o-notch"
-        ]);
-    });
-
-    it(`Does not display spinner when an error occurred`, () => {
-        factory.vm.$store.getters.has_error = true;
-        factory.vm.$store.state.is_creating_project = true;
-
-        expect(factory.find("[data-test=project-submission-icon]").classes()).toEqual([
-            "fa",
-            "tlp-button-icon-right",
-            "fa-arrow-circle-o-right"
         ]);
     });
 

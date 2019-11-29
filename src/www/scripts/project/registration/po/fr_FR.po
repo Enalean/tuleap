@@ -13,8 +13,11 @@ msgstr ""
 msgid "Back"
 msgstr "Précédent"
 
-msgid "Between 3 and 30 characters length"
-msgstr "Entre 3 et 30 caractères"
+msgid "Between %{ min } and %{ max } characters length"
+msgstr "Entre %{ min } et %{ max } caractères"
+
+msgid "Must start with a letter, avoid spaces and punctuation."
+msgstr "Doit commencer par une lettre, éviter les espaces et la ponctuation."
 
 msgid "My new project"
 msgstr "Mon nouveau projet"
@@ -36,6 +39,10 @@ msgstr "Privé incl. les utilisateurs restreints"
 
 msgid "Project information"
 msgstr "Information sur le projet"
+
+msgid "Project name must be between %{ min } and %{ max } characters length."
+msgstr ""
+"Le nom de de project doit comprendre entre %{ min } et %{ max } caractères"
 
 msgid ""
 "Project privacy set to private including restricted. Only project members "
@@ -73,12 +80,16 @@ msgstr ""
 "des permissions plus restrictives peuvent être apposées sur certains items."
 
 msgid ""
-"Project short name must have between 3 and 30 characters length. It can only "
-"contains alphanumerical characters and dashes. Must start with a letter."
+"Project short name must have between %{ min } and %{ max } characters "
+"length. It can only contain alphanumerical characters and dashes. Must start "
+"with a letter."
 msgstr ""
-"Le nom court de project doit comprendre entre 3 et 30 caractères. Il peut "
-"seulement contenir des caractères alphanumériques. Il doit commencer par une "
-"lettre."
+"Le nom court de project doit comprendre entre %{ min } et %{ max } "
+"caractères. Il peut seulement contenir des caractères alphanumériques. Il "
+"doit commencer par une lettre."
+
+msgid "Project shortname"
+msgstr "Nom court de projet"
 
 msgid "Project shortname:"
 msgstr "Nom court de projet :"

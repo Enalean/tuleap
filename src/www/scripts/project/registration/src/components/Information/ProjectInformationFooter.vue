@@ -26,16 +26,15 @@
                          v-on:click.native="resetSelectedTemplate"
                          class="project-registration-back-button"
                          data-test="project-registration-back-button">
-                <i class="fa fa-long-arrow-left"></i>
+                <i class="fa fa-long-arrow-left"/>
                 <span v-translate>Back</span>
             </router-link>
             <button type="button"
                     class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
                     data-test="project-registration-next-button"
                     v-on:click="createProject"
-                    v-bind:disabled="! project_name_properties.is_valid"
             >
-                <span v-translate>Start my project</span> <i v-bind:class="getIcon" data-test="project-submission-icon"/>
+                <span v-translate>Start my project</span> <i v-bind:class="get_icon" data-test="project-submission-icon"/>
             </button>
         </div>
     </div>
@@ -79,8 +78,8 @@ export default class ProjectInformationFooter extends Vue {
 
     is_loading = false;
 
-    get getIcon(): string {
-        if (!this.is_creating_project || this.has_error) {
+    get get_icon(): string {
+        if (!this.is_creating_project) {
             return "fa tlp-button-icon-right fa-arrow-circle-o-right";
         }
 

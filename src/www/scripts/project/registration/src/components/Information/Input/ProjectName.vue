@@ -25,58 +25,53 @@
                type="text"
                class="tlp-input"
                data-test="new-project-name"
-               v-bind:placeholder="translated_placeholder"
-               minlength="3"
-               maxlength="30"
-               pattern="^[a-zA-ZÀ-ÿ][a-zA-ZÀ-ÿ0-9/ /-]{3,30}"
+               v-bind:placeholder="$gettext('My new project')"
+               v-bind:minlength="min_project_length"
+               v-bind:maxlength="max_project_length"
                ref="name"
                v-on:input="slugifiedProjectName()"
                required
         >
-        <p class="tlp-text-info"><i class="fa fa-life-saver register-new-project-icon"></i><span v-translate>Between 3 and 30 characters length</span></p>
+        <p class="tlp-text-info">
+            <i class="fa fa-life-saver register-new-project-icon"></i>
+            <translate v-bind:translate-params="{min: min_project_length, max: max_project_length}">
+                Between %{ min } and %{ max } characters length
+            </translate>
+        </p>
+        <p class="tlp-text-danger" v-if="has_error" data-test="project-name-is-invalid">
+            <translate v-bind:translate-params="{min: min_project_length, max: max_project_length}">
+                Project name must be between %{ min } and %{ max } characters length.
+            </translate>
+        </p>
 
-        <div class="project-shortname-slugified-section" v-if="slugified_project_name !== ''">
-            <span v-translate>Project shortname:</span>
-            <div class="project-shortname-slugified">{{ slugified_project_name }}</div>
-        </div>
-
-        <p class="tlp-text-danger" v-if="error.length > 0">{{ error }}</p>
+        <project-short-name/>
     </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
-import slugify from "slugify";
 import { Component } from "vue-property-decorator";
+import ProjectShortName from "./ProjectShortName.vue";
+import EventBus from "../../../helpers/event-bus";
 
-@Component({})
+@Component({
+    components: { ProjectShortName }
+})
 export default class ProjectName extends Vue {
-    get translated_placeholder(): string {
-        return this.$gettext("My new project");
-    }
-
     $refs!: {
         name: HTMLFormElement;
     };
 
-    slugified_project_name = "";
-    error = "";
+    has_error = false;
+    min_project_length = 3;
+    max_project_length = 40;
 
     slugifiedProjectName(): void {
-        this.slugified_project_name = slugify(this.$refs.name.value);
+        const project_name = this.$refs.name.value;
+        this.has_error =
+            project_name.length < this.min_project_length ||
+            project_name.length > this.max_project_length;
 
-        if (!this.$refs.name.checkValidity()) {
-            this.error = this.$gettext(
-                "Project short name must have between 3 and 30 characters length. It can only contains alphanumerical characters and dashes. Must start with a letter."
-            );
-        } else {
-            this.error = "";
-        }
-
-        this.$emit("input", {
-            slugified_name: this.slugified_project_name,
-            name: this.$refs.name.value,
-            is_valid: this.error === ""
-        });
+        EventBus.$emit("slugify-project-name", project_name);
     }
 }
 </script>

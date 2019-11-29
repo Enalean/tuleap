@@ -20,6 +20,8 @@
 
 <template>
     <div>
+        <h1 class="project-registration-title" v-translate>Start a new project</h1>
+
         <div class="register-new-project-section">
             <new-project-boxes/>
             <div class="register-new-project-list">

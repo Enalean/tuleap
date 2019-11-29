@@ -38,10 +38,11 @@ export async function createProject(
     try {
         context.commit("setIsCreatingProject", true);
         response = await postProject(project_properties);
-        context.commit("setIsCreatingProject", false);
     } catch (error) {
         await context.commit("handleError", error);
         throw error;
+    } finally {
+        context.commit("setIsCreatingProject", false);
     }
 
     return response;
