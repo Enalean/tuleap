@@ -53,6 +53,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .project-release-header {
     display: flex;
     align-items: baseline;
+    margin: 0 0 $tlp-spacing;
     padding: $tlp-half-spacing $tlp-spacing $tlp-half-spacing 0;
     overflow: hidden;
     background: linear-gradient(to right, transparent 0%, transparentize($tlp-swatch-firemist-silver-secondary, .6) 50%);
