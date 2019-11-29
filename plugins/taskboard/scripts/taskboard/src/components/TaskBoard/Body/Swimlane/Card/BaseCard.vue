@@ -19,7 +19,10 @@
   -->
 
 <template>
-    <div class="taskboard-card" v-bind:class="additional_classnames" v-on:click="switchToEditMode">
+    <div class="taskboard-card" v-bind:class="additional_classnames">
+        <span class="taskboard-card-edit-trigger" v-on:click="switchToEditMode">
+            <i class="fa fa-pencil"></i>
+        </span>
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card" v-bind:label="label"/>
             <div class="taskboard-card-info">

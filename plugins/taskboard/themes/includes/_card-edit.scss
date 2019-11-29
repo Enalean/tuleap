@@ -37,36 +37,52 @@
 }
 
 :not(.gu-mirror) > .taskboard-card.taskboard-card-editable:not(.taskboard-card-edit-mode) {
-    &::after {
-        @include ease-out-background-gradient($tlp-ui-white);
-        content: '\f040'; // fa-pencil
+    > .taskboard-card-edit-trigger {
         display: flex;
         position: absolute;
-        top: 0;
-        right: 0;
+        z-index: 10;
+        top: 6px;
+        right: 9px;
         justify-content: center;
-        width: 45px;
-        height: calc(100% - #{$tlp-half-spacing} - 1px);
-        padding-top: $tlp-half-spacing + 1px;
+        width: 27px;
+        height: 27px;
         transition: opacity ease-in-out 100ms;
+        border-radius: 50%;
         opacity: 0;
+        background: $tlp-ui-white;
+        box-shadow: 0 0 8px 2px $tlp-ui-white;
         color: $tlp-ui-dimmed;
-        font-family: FontAwesome;
         font-size: 14px;
-        font-weight: 300;
+        cursor: pointer;
+
+        > .fa-pencil {
+            position: relative;
+            top: 5px;
+        }
     }
 
-    &:hover::after {
-        opacity: 1;
+    &.taskboard-card-with-accessibility > .taskboard-card-edit-trigger {
+        right: 24px;
+    }
+
+    &:hover {
+        .taskboard-card-inital-effort {
+            opacity: 0;
+        }
+
+        > .taskboard-card-edit-trigger {
+            opacity: 1;
+        }
     }
 
     @each $color-name, $colors in $tlp-swatch-color-map {
-        &.taskboard-card-background-#{$color-name}::after {
-            @include ease-out-background-gradient(map-get($colors, 'secondary'));
+        &.taskboard-card-background-#{$color-name}>.taskboard-card-edit-trigger {
+            background: map-get($colors, 'secondary');
+            box-shadow: 0 0 8px 2px map-get($colors, 'secondary');
             color: map-get($colors, 'text');
         }
 
-        &.taskboard-card-#{$color-name}:not([class*='taskboard-card-background-'])::after {
+        &.taskboard-card-#{$color-name}:not([class*='taskboard-card-background-']) > .taskboard-card-edit-trigger {
             color: map-get($colors, 'text');
         }
     }
@@ -93,6 +109,10 @@
     &::before,
     >.taskboard-card-progress {
         background: $tlp-theme-color;
+    }
+
+    > .taskboard-card-edit-trigger {
+        display: none;
     }
 
     &.taskboard-card-with-accessibility {

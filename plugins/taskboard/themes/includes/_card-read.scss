@@ -107,11 +107,15 @@
     &.gu-mirror {
         opacity: 1;
 
-        >.taskboard-card {
+        > .taskboard-card {
             box-shadow:
                 0 20px 40px rgba(0, 0, 0, .08),
                 0 5px 15px rgba(0, 0, 0, .1),
                 0 -1px 0 rgba(0, 0, 0, .03);
+
+            > .taskboard-card-edit-trigger {
+                display: none;
+            }
         }
     }
 }
@@ -229,6 +233,7 @@ a.taskboard-card-xref {
 }
 
 .taskboard-card-inital-effort {
+    transition: opacity 100ms ease-in-out;
     cursor: default;
 }
 
