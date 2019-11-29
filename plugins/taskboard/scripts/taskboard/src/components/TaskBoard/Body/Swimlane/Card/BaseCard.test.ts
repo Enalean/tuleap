@@ -24,13 +24,15 @@ import { Card, TaskboardEvent, User } from "../../../../../type";
 import EventBus from "../../../../../helpers/event-bus";
 import EditLabel from "./EditMode/Label/EditLabel.vue";
 import { NewCardPayload } from "../../../../../store/swimlane/card/type";
+import { Tracker } from "plugins/taskboard/scripts/taskboard/src/store/type";
 
 jest.useFakeTimers();
 
 function getWrapper(
     card: Card,
     slots: Slots = {},
-    user_has_accessibility_mode = false
+    user_has_accessibility_mode = false,
+    tracker_of_card: Tracker = { title_field_id: 1212 } as Tracker
 ): Wrapper<BaseCard> {
     return shallowMount(BaseCard, {
         mocks: {
@@ -38,6 +40,9 @@ function getWrapper(
                 state: {
                     user: { user_has_accessibility_mode },
                     swimlane: {}
+                },
+                getters: {
+                    tracker_of_card: (): Tracker => tracker_of_card
                 }
             })
         },
@@ -132,11 +137,21 @@ describe("BaseCard", () => {
             const card = getCard({ is_in_edit_mode: true } as Card);
             const wrapper = getWrapper(card);
 
-            wrapper.trigger("click");
+            wrapper.find(".taskboard-card-edit-trigger").trigger("click");
             expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
                 "swimlane/addCardToEditMode",
                 expect.any(Object)
             );
+        });
+
+        it(`Given the user has not the permission to edit the card title,
+            Or the semantic title of the tracker is not set
+            Then it won't display the edit mode trigger button`, () => {
+            const card = getCard({ is_in_edit_mode: false } as Card);
+            const wrapper = getWrapper(card, {}, false, { title_field_id: null } as Tracker);
+
+            expect(wrapper.find(".taskboard-card-edit-trigger").exists()).toBe(false);
+            expect(wrapper.classes("taskboard-card-editable")).toBeFalsy();
         });
 
         it(`Cancels the edition of the card if user clicks on cancel button (that is outside of this component)`, () => {
