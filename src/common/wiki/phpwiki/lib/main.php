@@ -397,7 +397,7 @@ class WikiRequest extends Request
     function _setUser($user)
     {
         $this->_user = $user;
-        if (defined('MAIN_setUser')) {
+        if (defined('MAIN_SETUSER')) {
             return; // don't set cookies twice
         }
         if ($user->isSignedIn()) {
@@ -416,7 +416,7 @@ class WikiRequest extends Request
             $user->isSignedIn() ? $user->getId() : ''
         );
         $this->initializeTheme();
-        define('MAIN_setUser', true);
+        define('MAIN_SETUSER', true);
     }
 
     /* Permission system */

@@ -33,7 +33,7 @@ rcs_id('$Id: text2png.php,v 1.13 2004/02/17 12:11:36 rurban Exp $');
  *
  * See <http://www.php.net/manual/pl/ref.image.php> for more info.
  */
-define('text2png_debug', true);
+define('TEXT2PNG_DEBUG', true);
 
 
 class WikiPlugin_text2png extends WikiPlugin
@@ -169,7 +169,7 @@ class WikiPlugin_text2png extends WikiPlugin
         // create an <img src= tag to show the image!
         $html = HTML();
         if ($success > 0) {
-            if (defined('text2png_debug')) {
+            if (defined('TEXT2PNG_DEBUG')) {
                 switch ($success) {
                     case 1:
                         trigger_error(

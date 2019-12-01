@@ -19,8 +19,8 @@
  */
 
 require_once('session.php');
-define('invalid_session_fault', '3001');
-define('login_fault', '3002');
+define('INVALID_SESSION_FAULT', '3001');
+define('LOGIN_FAULT', '3002');
 
 if (defined('NUSOAP')) {
 // Type definition
@@ -123,7 +123,7 @@ if (defined('NUSOAP')) {
             );
             return $return;
         } else {
-            return new SoapFault(login_fault, $loginname.' : '.$Language->getText('include_session', 'invalid_pwd'), 'login');
+            return new SoapFault(LOGIN_FAULT, $loginname.' : '.$Language->getText('include_session', 'invalid_pwd'), 'login');
         }
     }
 
@@ -162,7 +162,7 @@ if (defined('NUSOAP')) {
             );
             return $return;
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session.', 'retrieveSession');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session.', 'retrieveSession');
         }
     }
 
@@ -189,7 +189,7 @@ if (defined('NUSOAP')) {
         if (session_continue($sessionKey)) {
             UserManager::instance()->logout();
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'logout');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'logout');
         }
     }
 

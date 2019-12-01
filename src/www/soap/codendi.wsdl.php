@@ -22,7 +22,7 @@ require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/nusoap.php';
 require_once __DIR__ . '/../include/utils_soap.php';
 
-define('permission_denied_fault', '3016');
+define('PERMISSION_DENIED_FAULT', '3016');
 
 define('NUSOAP', 1);
 

@@ -704,14 +704,14 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
             $group = $this->getProject($groupId);
         }
         if (!$group || !is_object($group)) {
-            throw new SoapFault('get_group_fault', $groupId.' : '.$GLOBALS['Language']->getText('include_group', 'g_not_found'), $method);
+            throw new SoapFault('GET_GROUP_FAULT', $groupId.' : '.$GLOBALS['Language']->getText('include_group', 'g_not_found'), $method);
         } elseif ($group->isError()) {
-            throw new SoapFault('get_group_fault', $group->getErrorMessage(), $method);
+            throw new SoapFault('GET_GROUP_FAULT', $group->getErrorMessage(), $method);
         } elseif (!$group->isActive()) {
-            throw new SoapFault('get_group_fault', $group->getUnixName().' : '.$GLOBALS['Language']->getText('include_exit', 'project_status_'.$group->getStatus()), $method);
+            throw new SoapFault('GET_GROUP_FAULT', $group->getUnixName().' : '.$GLOBALS['Language']->getText('include_exit', 'project_status_'.$group->getStatus()), $method);
         }
         if (!$this->checkRestrictedAccess($group, $this->_getUserManager()->getCurrentUser())) {
-            throw new SoapFault('get_group_fault', 'Restricted user: permission denied.', $method);
+            throw new SoapFault('GET_GROUP_FAULT', 'Restricted user: permission denied.', $method);
         }
         return $group;
     }

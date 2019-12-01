@@ -1961,7 +1961,7 @@
       <code>$extraParams</code>
     </PossiblyUndefinedVariable>
     <UndefinedConstant occurrences="1">
-      <code>invalid_session_fault</code>
+      <code>INVALID_SESSION_FAULT</code>
     </UndefinedConstant>
   </file>
   <file src="plugins/docman/include/view/Docman_View_Admin_MetadataDetails.class.php">
@@ -15604,12 +15604,12 @@
   </file>
   <file src="src/www/soap/common/group.php">
     <InvalidReturnStatement occurrences="6">
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session ', 'getMyProjects')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'getMyProjects')</code>
       <code>new SoapVar($soap_group, SOAP_ENC_OBJECT)</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'getGroupByName')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getGroupByName')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'getGroup')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getGroup')</code>
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="2">
       <code>array</code>
@@ -15624,8 +15624,8 @@
   </file>
   <file src="src/www/soap/common/session.php">
     <InvalidReturnStatement occurrences="2">
-      <code>new SoapFault(login_fault, $loginname.' : '.$Language-&gt;getText('include_session', 'invalid_pwd'), 'login')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session.', 'retrieveSession')</code>
+      <code>new SoapFault(LOGIN_FAULT, $loginname.' : '.$Language-&gt;getText('include_session', 'invalid_pwd'), 'login')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session.', 'retrieveSession')</code>
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="2">
       <code>array</code>
@@ -15662,101 +15662,101 @@
     </InvalidParamDefault>
     <InvalidReturnStatement occurrences="96">
       <code>$e</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'getPackages')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getPackages')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_package_fault, 'Package name already exists in this project', 'addPackage')</code>
-      <code>new SoapFault(invalid_package_fault, $dar-&gt;isError(), 'addPackage')</code>
-      <code>new SoapFault(invalid_package_fault, 'User is not allowed to create a package', 'addPackage')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'addPackage')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Package name already exists in this project', 'addPackage')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, $dar-&gt;isError(), 'addPackage')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'User is not allowed to create a package', 'addPackage')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addPackage')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_package_fault, 'Invalid Package', 'getReleases')</code>
-      <code>new SoapFault(invalid_package_fault, 'Permission to this Package denied', 'getReleases')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'getReleases')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getReleases')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Permission to this Package denied', 'getReleases')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getReleases')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_package_fault, 'Invalid Package', 'addRelease')</code>
-      <code>new SoapFault(invalid_release_fault, 'Release name already exists in this package', 'addRelease')</code>
-      <code>new SoapFault(invalid_release_fault, $dar-&gt;isError(), 'addRelease')</code>
-      <code>new SoapFault(invalid_release_fault, 'Could not retrieve parent package permission', 'addRelease')</code>
-      <code>new SoapFault(invalid_release_fault, 'User is not allowed to create a release', 'addRelease')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'addRelease')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'updateRelease')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'addRelease')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Release name already exists in this package', 'addRelease')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, $dar-&gt;isError(), 'addRelease')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Could not retrieve parent package permission', 'addRelease')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'User is not allowed to create a release', 'addRelease')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addRelease')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'updateRelease')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_package_fault, 'Invalid Package', 'updateRelease')</code>
-      <code>new SoapFault(invalid_release_fault, 'User is not allowed to update a release', 'updateRelease')</code>
-      <code>new SoapFault(invalid_release_fault, 'Release does not exist', 'updateRelease')</code>
-      <code>new SoapFault(invalid_release_fault, 'Update Failed', 'updateRelease')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'updateRelease')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'User is not allowed to update a release', 'updateRelease')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Release does not exist', 'updateRelease')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Update Failed', 'updateRelease')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_package_fault, 'Invalid Package', 'getFiles')</code>
-      <code>new SoapFault(invalid_package_fault, 'Permission to this Package denied', 'getFiles')</code>
-      <code>new SoapFault(invalid_release_fault, 'Invalid Release', 'getFiles')</code>
-      <code>new SoapFault(invalid_release_fault, 'Permission to this Release denied', 'getFiles')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'getFiles')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getFiles')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Permission to this Package denied', 'getFiles')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'getFiles')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Permission to this Release denied', 'getFiles')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getFiles')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_package_fault, 'Invalid Package', 'getFileInfo')</code>
-      <code>new SoapFault(invalid_package_fault, 'Permission to this Package denied', 'getFileInfo')</code>
-      <code>new SoapFault(invalid_release_fault, 'Invalid Release', 'getFileInfo')</code>
-      <code>new SoapFault(invalid_release_fault, 'Permission to this Release denied', 'getFileInfo')</code>
-      <code>new SoapFault(invalid_file_fault, 'Invalid File', 'getFileInfo')</code>
-      <code>new SoapFault(invalid_session_fault, 'getFileInfo', 'Invalid Session', 'getFileInfo')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getFileInfo')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Permission to this Package denied', 'getFileInfo')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'getFileInfo')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Permission to this Release denied', 'getFileInfo')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'getFileInfo')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'getFileInfo', 'Invalid Session', 'getFileInfo')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_package_fault, 'Invalid Package', 'getFile')</code>
-      <code>new SoapFault(invalid_package_fault, 'Permission to this Package denied', 'getFile')</code>
-      <code>new SoapFault(invalid_release_fault, 'Invalid Release', 'getFile')</code>
-      <code>new SoapFault(invalid_release_fault, 'Permission to this Release denied', 'getFile')</code>
-      <code>new SoapFault(invalid_file_fault, 'Invalid File', 'getFile')</code>
-      <code>new SoapFault(invalid_file_fault, 'File doesn\'t exist on the server', 'getFile')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getFile')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Permission to this Package denied', 'getFile')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'getFile')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Permission to this Release denied', 'getFile')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'getFile')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'File doesn\'t exist on the server', 'getFile')</code>
       <code>base64_encode($contents)</code>
-      <code>new SoapFault(invalid_session_fault, 'getFile', 'Invalid Session', 'getFile')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'getFile', 'Invalid Session', 'getFile')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_package_fault, 'Invalid Package', 'getFileChunk')</code>
-      <code>new SoapFault(invalid_package_fault, 'Permission to this Package denied', 'getFileChunk')</code>
-      <code>new SoapFault(invalid_release_fault, 'Invalid Release', 'getFileChunk')</code>
-      <code>new SoapFault(invalid_release_fault, 'Permission to this Release denied', 'getFileChunk')</code>
-      <code>new SoapFault(invalid_file_fault, 'Invalid File', 'getFileChunk')</code>
-      <code>new SoapFault(invalid_file_fault, 'File doesn\'t exist on the server', 'getFileChunk')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getFileChunk')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Permission to this Package denied', 'getFileChunk')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'getFileChunk')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Permission to this Release denied', 'getFileChunk')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'getFileChunk')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'File doesn\'t exist on the server', 'getFileChunk')</code>
       <code>base64_encode($contents)</code>
-      <code>new SoapFault(invalid_session_fault, 'getFile', 'Invalid Session', 'getFileChunk')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'getFile', 'Invalid Session', 'getFileChunk')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_package_fault, 'Invalid Package', 'addFile')</code>
-      <code>new SoapFault(invalid_release_fault, 'Invalid Release', 'addFile')</code>
-      <code>new SoapFault(invalid_file_fault, 'Could not create temporary file in directory /tmp', 'addFile')</code>
-      <code>new SoapFault(invalid_file_fault, 'Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir'], 'addFile')</code>
-      <code>new SoapFault(invalid_file_fault, 'User is not allowed to add a file', 'addFile')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'addFile')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'addFile')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'addFile')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'Could not create temporary file in directory /tmp', 'addFile')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir'], 'addFile')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'User is not allowed to add a file', 'addFile')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addFile')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_package_fault, 'Invalid Package', 'updateFileComment')</code>
-      <code>new SoapFault(invalid_release_fault, 'Invalid Release', 'updateFileComment')</code>
-      <code>new SoapFault(invalid_file_fault, 'User is not allowed to update file', 'updateFileComment')</code>
-      <code>new SoapFault(invalid_file_fault, 'Invalid File', 'updateFileComment')</code>
-      <code>new SoapFault(invalid_file_fault, 'Unable to update: ' . $e-&gt;getMessage(), 'updateFileComment')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'updateFileComment')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'updateFileComment')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'updateFileComment')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'User is not allowed to update file', 'updateFileComment')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'updateFileComment')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'Unable to update: ' . $e-&gt;getMessage(), 'updateFileComment')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'updateFileComment')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_package_fault, 'Invalid Package', 'addUploadedFile')</code>
-      <code>new SoapFault(invalid_release_fault, 'Invalid Release', 'addUploadedFile')</code>
-      <code>new SoapFault(invalid_file_fault, $e-&gt;getMessage(), 'addUploadedFile')</code>
-      <code>new SoapFault(invalid_file_fault, 'User is not allowed to add a file', 'addUploadedFile')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'addUploadedFile')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'addUploadedFile')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'addUploadedFile')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, $e-&gt;getMessage(), 'addUploadedFile')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'User is not allowed to add a file', 'addUploadedFile')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addUploadedFile')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_file_fault, 'User not allowed to see the uploaded files', 'getUploadedFiles')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'getUploadedFiles')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'User not allowed to see the uploaded files', 'getUploadedFiles')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getUploadedFiles')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_package_fault, 'Invalid Package', 'deleteFile')</code>
-      <code>new SoapFault(invalid_release_fault, 'Invalid Release', 'deleteFile')</code>
-      <code>new SoapFault(invalid_file_fault, 'Invalid File', 'deleteFile')</code>
-      <code>new SoapFault(invalid_file_fault, 'Impossible to delete file', 'deleteFile')</code>
-      <code>new SoapFault(invalid_release_fault, 'User does not have permission to delete a file in this release.', 'deleteFile')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'deleteFile')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'deleteFile')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'deleteFile')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'deleteFile')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'Impossible to delete file', 'deleteFile')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'User does not have permission to delete a file in this release.', 'deleteFile')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deleteFile')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_package_fault, 'Invalid Package', 'deletePackage')</code>
-      <code>new SoapFault(invalid_package_fault, 'Package '.$package-&gt;getPackageID().' could not be deleted', 'deletePackage')</code>
-      <code>new SoapFault(invalid_package_fault, 'You don\'t have permission to delete package '.$package-&gt;getPackageID(), 'deletePackage')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'deletePackage')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'deletePackage')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Package '.$package-&gt;getPackageID().' could not be deleted', 'deletePackage')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'You don\'t have permission to delete package '.$package-&gt;getPackageID(), 'deletePackage')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deletePackage')</code>
       <code>$e</code>
-      <code>new SoapFault(invalid_package_fault, 'Invalid Package', 'deleteRelease')</code>
-      <code>new SoapFault(invalid_release_fault, 'Invalid Release', 'deleteRelease')</code>
-      <code>new SoapFault(invalid_package_fault, 'Release '.$release-&gt;getReleaseID().' could not be deleted', 'deleteRelease')</code>
-      <code>new SoapFault(invalid_package_fault, 'You don\'t have permission to delete package '.$release-&gt;getReleaseID(), 'deleteRelease')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'deleteRelease')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'deleteRelease')</code>
+      <code>new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'deleteRelease')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Release '.$release-&gt;getReleaseID().' could not be deleted', 'deleteRelease')</code>
+      <code>new SoapFault(INVALID_PACKAGE_FAULT, 'You don\'t have permission to delete package '.$release-&gt;getReleaseID(), 'deleteRelease')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deleteRelease')</code>
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="10">
       <code>bool</code>
@@ -15778,23 +15778,23 @@
       <code>null</code>
     </NullableReturnStatement>
     <UndefinedConstant occurrences="17">
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
-      <code>invalid_session_fault</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
+      <code>INVALID_SESSION_FAULT</code>
     </UndefinedConstant>
     <UndefinedDocblockClass occurrences="2">
       <code>the</code>
@@ -15817,235 +15817,235 @@
     </InvalidArrayAccess>
     <InvalidReturnStatement occurrences="230">
       <code>$e</code>
-      <code>new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getTrackerList')</code>
-      <code>new SoapFault(get_artifact_type_factory_fault, 'Could Not Get ArtifactTypeFactory', 'getTrackerList')</code>
-      <code>new SoapFault(get_artifact_type_factory_fault, $atf-&gt;getErrorMessage(), 'getTrackerList')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'getTrackerList')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created', 'getArtifactTypes')</code>
-      <code>new SoapFault(get_artifact_type_fault, $ath-&gt;getErrorMessage(), 'getArtifactTypes')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.', 'getArtifactTypes')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactReportFactory', 'getArtifactTypes')</code>
+      <code>new SoapFault(GET_SERVICE_FAULT, 'Tracker service is not used for this project.', 'getTrackerList')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, 'Could Not Get ArtifactTypeFactory', 'getTrackerList')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, $atf-&gt;getErrorMessage(), 'getTrackerList')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getTrackerList')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'getArtifactTypes')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath-&gt;getErrorMessage(), 'getArtifactTypes')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'getArtifactTypes')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactReportFactory', 'getArtifactTypes')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_factory_fault, 'Could Not Get ArtifactType', 'getArtifactType')</code>
-      <code>new SoapFault(get_artifact_type_factory_fault, $at-&gt;getErrorMessage(), 'getArtifactType')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Permission denied.', 'getArtifactType')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Permission denied.', 'getArtifactType')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'getArtifactType')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, 'Could Not Get ArtifactType', 'getArtifactType')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, $at-&gt;getErrorMessage(), 'getArtifactType')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Permission denied.', 'getArtifactType')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Permission denied.', 'getArtifactType')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactType')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_factory_fault, 'Could Not Get ArtifactTypeFactory', 'getArtifactTypes')</code>
-      <code>new SoapFault(get_artifact_type_factory_fault, $atf-&gt;getErrorMessage(), 'getArtifactTypes')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'getArtifactTypes')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created', 'getArtifactTypes')</code>
-      <code>new SoapFault(get_artifact_type_fault, $ath-&gt;getErrorMessage(), 'getArtifactTypes')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.', 'getArtifactTypes')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldSetFactory', 'getFieldSets')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_fieldset_fact-&gt;getErrorMessage(), 'getFieldSets')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, 'Could Not Get ArtifactTypeFactory', 'getArtifactTypes')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, $atf-&gt;getErrorMessage(), 'getArtifactTypes')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactTypes')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'getArtifactTypes')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath-&gt;getErrorMessage(), 'getArtifactTypes')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'getArtifactTypes')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldSetFactory', 'getFieldSets')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_fieldset_fact-&gt;getErrorMessage(), 'getFieldSets')</code>
       <code>$return</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifacts')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifacts')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'getArtifacts')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactTypes')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'getArtifactTypes')</code>
-      <code>new SoapFault(get_artifact_factory_fault, 'Could Not Get ArtifactFactory', 'getArtifacts')</code>
-      <code>new SoapFault(get_artifact_factory_fault, $af-&gt;getErrorMessage(), 'getArtifacts')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session ', 'getArtifactTypes')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifacts')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifacts')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'getArtifacts')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactTypes')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'getArtifactTypes')</code>
+      <code>new SoapFault(GET_ARTIFACT_FACTORY_FAULT, 'Could Not Get ArtifactFactory', 'getArtifacts')</code>
+      <code>new SoapFault(GET_ARTIFACT_FACTORY_FAULT, $af-&gt;getErrorMessage(), 'getArtifacts')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'getArtifactTypes')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactsFromReport')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifactsFromReport')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'getArtifactsFromReport')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactsFromReport')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'getArtifactsFromReport')</code>
-      <code>new SoapFault(get_artifact_factory_fault, 'Could Not Get ArtifactFactory', 'getArtifactsFromReport')</code>
-      <code>new SoapFault(get_artifact_factory_fault, $af-&gt;getErrorMessage(), 'getArtifactsFromReport')</code>
-      <code>new SoapFault(get_artifact_report_fault, 'Could Not Get ArtifactFactory', 'getArtifactsFromReport')</code>
-      <code>new SoapFault(get_artifact_report_fault, $ar-&gt;getErrorMessage(), 'getArtifactsFromReport')</code>
-      <code>new SoapFault(get_artifact_report_fault, $af-&gt;getErrorMessage(), 'getArtifactsFromReport')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session ', 'getArtifactsFromReport')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactsFromReport')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifactsFromReport')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'getArtifactsFromReport')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactsFromReport')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'getArtifactsFromReport')</code>
+      <code>new SoapFault(GET_ARTIFACT_FACTORY_FAULT, 'Could Not Get ArtifactFactory', 'getArtifactsFromReport')</code>
+      <code>new SoapFault(GET_ARTIFACT_FACTORY_FAULT, $af-&gt;getErrorMessage(), 'getArtifactsFromReport')</code>
+      <code>new SoapFault(GET_ARTIFACT_REPORT_FAULT, 'Could Not Get ArtifactFactory', 'getArtifactsFromReport')</code>
+      <code>new SoapFault(GET_ARTIFACT_REPORT_FAULT, $ar-&gt;getErrorMessage(), 'getArtifactsFromReport')</code>
+      <code>new SoapFault(GET_ARTIFACT_REPORT_FAULT, $af-&gt;getErrorMessage(), 'getArtifactsFromReport')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'getArtifactsFromReport')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created', 'getArtifactById')</code>
-      <code>new SoapFault(get_artifact_type_fault, $ath-&gt;getErrorMessage(), 'getArtifactById')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.', 'getArtifactById')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactById')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'getArtifactById')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifactById')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'getArtifactById')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'getArtifactById')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'getArtifactById')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath-&gt;getErrorMessage(), 'getArtifactById')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'getArtifactById')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactById')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'getArtifactById')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactById')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'getArtifactById')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactById')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created', 'addArtifact')</code>
-      <code>new SoapFault(get_artifact_type_fault, $ath-&gt;getErrorMessage(), 'addArtifact')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.', 'addArtifact')</code>
-      <code>new SoapFault(permission_denied_fault, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'addArtifact')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'addArtifact')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'addArtifact')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'addArtifact')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'addArtifact')</code>
-      <code>new SoapFault(invalid_field_dependency_fault, 'Invalid Field Dependency', 'addArtifact')</code>
-      <code>new SoapFault(create_artifact_fault, $a-&gt;getErrorMessage(), 'addArtifact')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session ', 'addArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'addArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath-&gt;getErrorMessage(), 'addArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'addArtifact')</code>
+      <code>new SoapFault(PERMISSION_DENIED_FAULT, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'addArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'addArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'addArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'addArtifact')</code>
+      <code>new SoapFault(INVALID_FIELD_DEPENDENCY_FAULT, 'Invalid Field Dependency', 'addArtifact')</code>
+      <code>new SoapFault(CREATE_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'addArtifact')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'addArtifact')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created', 'addArtifact')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'addArtifact')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.', 'addArtifact')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'addArtifact')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'addArtifact')</code>
-      <code>new SoapFault(invalid_field_fault, 'Invalid Field:'.$extra_field_name-&gt;field_name, 'addArtifact')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session ', 'addArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'addArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'addArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'addArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'addArtifact')</code>
+      <code>new SoapFault(INVALID_FIELD_FAULT, 'Invalid Field:'.$extra_field_name-&gt;field_name, 'addArtifact')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'addArtifact')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created', 'updateArtifact')</code>
-      <code>new SoapFault(get_artifact_type_fault, $ath-&gt;getErrorMessage(), 'updateArtifact')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.', 'updateArtifact')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'updateArtifact')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'updateArtifact')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'updateArtifact')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'updateArtifact')</code>
-      <code>new SoapFault(invalid_field_dependency_fault, 'Invalid Field Dependency', 'updateArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'updateArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath-&gt;getErrorMessage(), 'updateArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'updateArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'updateArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'updateArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'updateArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'updateArtifact')</code>
+      <code>new SoapFault(INVALID_FIELD_DEPENDENCY_FAULT, 'Invalid Field Dependency', 'updateArtifact')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'ArtifactType could not be created', 'updateArtifact')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'updateArtifact')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'This tracker is no longer valid.', 'updateArtifact')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'updateArtifact')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'updateArtifact')</code>
-      <code>new SoapFault(invalid_field_fault, 'Invalid Field:'.$extra_field_name-&gt;field_name, 'updateArtifact')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session ', 'updateArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'updateArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'updateArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'updateArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'updateArtifact')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'updateArtifact')</code>
+      <code>new SoapFault(INVALID_FIELD_FAULT, 'Invalid Field:'.$extra_field_name-&gt;field_name, 'updateArtifact')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'updateArtifact')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactFollowups')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'getArtifactFollowups')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactFollowups')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'getArtifactFollowups')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifactFollowups')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'getArtifactFollowups')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session ', 'getArtifactFollowups')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactFollowups')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'getArtifactFollowups')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactFollowups')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'getArtifactFollowups')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactFollowups')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'getArtifactFollowups')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'getArtifactFollowups')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactCannedResponses')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'getArtifactCannedResponses')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session ', 'getArtifactCannedResponses')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactCannedResponses')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'getArtifactCannedResponses')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'getArtifactCannedResponses')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactReports')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'getArtifactReports')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Permissions denied.', 'getArtifactReports')</code>
-      <code>new SoapFault(get_report_factory_fault, 'Could Not Get ArtifactReportFactory', 'getArtifactReports')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session ', 'getArtifactReports')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactReports')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'getArtifactReports')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Permissions denied.', 'getArtifactReports')</code>
+      <code>new SoapFault(GET_REPORT_FACTORY_FAULT, 'Could Not Get ArtifactReportFactory', 'getArtifactReports')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'getArtifactReports')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactAttachedFiles')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'getArtifactAttachedFiles')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactAttachedFiles')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'getArtifactAttachedFiles')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifactAttachedFiles')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'getArtifactAttachedFiles')</code>
-      <code>new SoapFault(get_artifact_fault, 'Permissions denied', 'getArtifactAttachedFiles')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'getArtifactAttachedFiles')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactAttachedFiles')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'getArtifactAttachedFiles')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactAttachedFiles')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'getArtifactAttachedFiles')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactAttachedFiles')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'getArtifactAttachedFiles')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Permissions denied', 'getArtifactAttachedFiles')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactAttachedFiles')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactDependencies')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'getArtifactDependencies')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactDependencies')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'getArtifactDependencies')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifactDependencies')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'getArtifactDependencies')</code>
-      <code>new SoapFault(get_artifact_fault, 'Permissions denied', 'getArtifactDependencies')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'getArtifactDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'getArtifactDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'getArtifactDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'getArtifactDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Permissions denied', 'getArtifactDependencies')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactDependencies')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactInverseDependencies')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'getArtifactInverseDependencies')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactInverseDependencies')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'getArtifactInverseDependencies')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifactInverseDependencies')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'getArtifactInverseDependencies')</code>
-      <code>new SoapFault(get_artifact_fault, 'Permissions denied', 'getArtifactInverseDependencies')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'getArtifactInverseDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactInverseDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'getArtifactInverseDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactInverseDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'getArtifactInverseDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactInverseDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'getArtifactInverseDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Permissions denied', 'getArtifactInverseDependencies')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactInverseDependencies')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'addArtifactFile')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'addArtifactFile')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'addArtifactFile')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'addArtifactFile')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'addArtifactFile')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'addArtifactFile')</code>
-      <code>new SoapFault(get_artifact_file_fault, 'Could Not Create File Object', 'addArtifactFile')</code>
-      <code>new SoapFault(get_artifact_file_fault, $af-&gt;getErrorMessage(), 'addArtifactFile')</code>
-      <code>new SoapFault(get_artifact_file_fault, $af-&gt;getErrorMessage(), 'addArtifactFile')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'addArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'addArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'addArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'addArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'addArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'addArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_FILE_FAULT, 'Could Not Create File Object', 'addArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_FILE_FAULT, $af-&gt;getErrorMessage(), 'addArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_FILE_FAULT, $af-&gt;getErrorMessage(), 'addArtifactFile')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addArtifactFile')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'deleteArtifactFile')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'deleteArtifactFile')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'deleteArtifactFile')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'deleteArtifactFile')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'deleteArtifactFile')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'deleteArtifactFile')</code>
-      <code>new SoapFault(get_artifact_file_fault, 'Could Not Create File Object', 'deleteArtifactFile')</code>
-      <code>new SoapFault(get_artifact_file_fault, $af-&gt;getErrorMessage(), 'deleteArtifactFile')</code>
-      <code>new SoapFault(get_artifact_file_fault, $af-&gt;getErrorMessage(), 'deleteArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'deleteArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'deleteArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'deleteArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'deleteArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'deleteArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'deleteArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_FILE_FAULT, 'Could Not Create File Object', 'deleteArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_FILE_FAULT, $af-&gt;getErrorMessage(), 'deleteArtifactFile')</code>
+      <code>new SoapFault(GET_ARTIFACT_FILE_FAULT, $af-&gt;getErrorMessage(), 'deleteArtifactFile')</code>
       <code>$file_id</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'deleteArtifactFile')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deleteArtifactFile')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'addArtifactDependencies')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'addArtifactDependencies')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'addArtifactDependencies')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'addArtifactDependencies')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'addArtifactDependencies')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'addArtifactDependencies')</code>
-      <code>new SoapFault(add_dependency_fault, 'Dependencies addition for artifact #'.$a-&gt;getID().' failed', 'addArtifactDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'addArtifactDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'addArtifactDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifactDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'addArtifactDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'addArtifactDependencies')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'addArtifactDependencies')</code>
+      <code>new SoapFault(ADD_DEPENDENCY_FAULT, 'Dependencies addition for artifact #'.$a-&gt;getID().' failed', 'addArtifactDependencies')</code>
       <code>true</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'addArtifactDependencies')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addArtifactDependencies')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'updateArtifactFollowUp')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'updateArtifactFollowUp')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactById')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'getArtifactById')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'updateArtifactFollowUp')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'updateArtifactFollowUp')</code>
-      <code>new SoapFault(update_artifact_followup_fault, $a-&gt;getErrorMessage(), 'updateArtifactFollowUp')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'updateArtifactFollowUp')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'updateArtifactFollowUp')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactById')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'getArtifactById')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'updateArtifactFollowUp')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'updateArtifactFollowUp')</code>
+      <code>new SoapFault(UPDATE_ARTIFACT_FOLLOWUP_FAULT, $a-&gt;getErrorMessage(), 'updateArtifactFollowUp')</code>
       <code>true</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session ', 'updateArtifactFollowUp')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'updateArtifactFollowUp')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'deleteArtifactFollowUp')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'deleteArtifactFollowUp')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactById')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'getArtifactById')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'deleteArtifactFollowUp')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'deleteArtifactFollowUp')</code>
-      <code>new SoapFault(delete_artifact_followup_fault, $a-&gt;getErrorMessage(), 'deleteArtifactFollowUp')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'deleteArtifactFollowUp')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'deleteArtifactFollowUp')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactById')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'getArtifactById')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'deleteArtifactFollowUp')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'deleteArtifactFollowUp')</code>
+      <code>new SoapFault(DELETE_ARTIFACT_FOLLOWUP_FAULT, $a-&gt;getErrorMessage(), 'deleteArtifactFollowUp')</code>
       <code>true</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session ', 'deleteArtifactFollowUp')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'deleteArtifactFollowUp')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'deleteArtifactDependency')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'deleteArtifactDependency')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'deleteArtifactDependency')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'deleteArtifactDependency')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'deleteArtifactDependency')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'deleteArtifactDependency')</code>
-      <code>new SoapFault(delete_dependency_fault, 'Error deleting dependency'. $dependent_on_artifact_id, 'deleteArtifactDependency')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'deleteArtifactDependency')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'deleteArtifactDependency')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'deleteArtifactDependency')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'deleteArtifactDependency')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'deleteArtifactDependency')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'deleteArtifactDependency')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'deleteArtifactDependency')</code>
+      <code>new SoapFault(DELETE_DEPENDENCY_FAULT, 'Error deleting dependency'. $dependent_on_artifact_id, 'deleteArtifactDependency')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deleteArtifactDependency')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'addArtifactFollowup')</code>
-      <code>new SoapFault(get_artifact_type_fault, $ath-&gt;getErrorMessage(), 'addArtifactFollowup')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'addArtifactFollowup')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'addArtifactFollowup')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'addArtifactFollowup')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'addArtifactFollowup')</code>
-      <code>new SoapFault(create_followup_fault, 'Comment could not be saved', 'addArtifactFollowup')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'addArtifactFollowup')</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Tracker not found.', 'existArtifactSummary')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'addArtifactFollowup')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath-&gt;getErrorMessage(), 'addArtifactFollowup')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifactFollowup')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'addArtifactFollowup')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'addArtifactFollowup')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'addArtifactFollowup')</code>
+      <code>new SoapFault(CREATE_FOLLOWUP_FAULT, 'Comment could not be saved', 'addArtifactFollowup')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addArtifactFollowup')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Tracker not found.', 'existArtifactSummary')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Permission denied.', 'existArtifactSummary')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'existArtifactSummary')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Permission denied.', 'existArtifactSummary')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'existArtifactSummary')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactCCList')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'getArtifactCCList')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactCCList')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'getArtifactCCList')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifactCCList')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'getArtifactCCList')</code>
-      <code>new SoapFault(get_artifact_fault, 'Permissions denied', 'getArtifactCCList')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'getArtifactCCList')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactCCList')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'getArtifactCCList')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactCCList')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'getArtifactCCList')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactCCList')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'getArtifactCCList')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Permissions denied', 'getArtifactCCList')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactCCList')</code>
       <code>$e</code>
-      <code>new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactType', 'getArtifactHistory')</code>
-      <code>new SoapFault(get_artifact_type_fault, $at-&gt;getErrorMessage(), 'getArtifactHistory')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory', 'getArtifactHistory')</code>
-      <code>new SoapFault(get_artifact_field_factory_fault, $art_field_fact-&gt;getErrorMessage(), 'getArtifactHistory')</code>
-      <code>new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifactHistory')</code>
-      <code>new SoapFault(get_artifact_fault, $a-&gt;getErrorMessage(), 'getArtifactHistory')</code>
-      <code>new SoapFault(get_artifact_fault, 'Permissions denied', 'getArtifactHistory')</code>
-      <code>new SoapFault(invalid_session_fault, 'Invalid Session', 'getArtifactHistory')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactHistory')</code>
+      <code>new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at-&gt;getErrorMessage(), 'getArtifactHistory')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactHistory')</code>
+      <code>new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact-&gt;getErrorMessage(), 'getArtifactHistory')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactHistory')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, $a-&gt;getErrorMessage(), 'getArtifactHistory')</code>
+      <code>new SoapFault(GET_ARTIFACT_FAULT, 'Permissions denied', 'getArtifactHistory')</code>
+      <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getArtifactHistory')</code>
     </InvalidReturnStatement>
     <InvalidReturnType occurrences="13">
       <code>array</code>
@@ -16152,8 +16152,8 @@
       <code>is_object($a)</code>
     </TypeDoesNotContainType>
     <UndefinedConstant occurrences="2">
-      <code>permission_denied_fault</code>
-      <code>get_report_factory_fault</code>
+      <code>PERMISSION_DENIED_FAULT</code>
+      <code>GET_REPORT_FACTORY_FAULT</code>
     </UndefinedConstant>
     <UndefinedDocblockClass occurrences="4">
       <code>the</code>
