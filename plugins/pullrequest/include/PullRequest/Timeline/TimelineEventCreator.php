@@ -35,21 +35,21 @@ class TimelineEventCreator
 
     public function storeUpdateEvent(PullRequest $pull_request, $user)
     {
-        $this->timeline_dao->save($pull_request->getId(), $user->getId(), time(), TimelineEvent::UPDATE);
+        $this->timeline_dao->save($pull_request->getId(), $user->getId(), time(), TimelineGlobalEvent::UPDATE);
     }
 
     public function storeRebaseEvent(PullRequest $pull_request, $user)
     {
-        $this->timeline_dao->save($pull_request->getId(), $user->getId(), time(), TimelineEvent::REBASE);
+        $this->timeline_dao->save($pull_request->getId(), $user->getId(), time(), TimelineGlobalEvent::REBASE);
     }
 
     public function storeMergeEvent(PullRequest $pull_request, $user)
     {
-        $this->timeline_dao->save($pull_request->getId(), $user->getId(), time(), TimelineEvent::MERGE);
+        $this->timeline_dao->save($pull_request->getId(), $user->getId(), time(), TimelineGlobalEvent::MERGE);
     }
 
     public function storeAbandonEvent(PullRequest $pull_request, $user)
     {
-        $this->timeline_dao->save($pull_request->getId(), $user->getId(), time(), TimelineEvent::ABANDON);
+        $this->timeline_dao->save($pull_request->getId(), $user->getId(), time(), TimelineGlobalEvent::ABANDON);
     }
 }

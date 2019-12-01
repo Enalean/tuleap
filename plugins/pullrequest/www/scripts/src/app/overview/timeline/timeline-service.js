@@ -37,6 +37,7 @@ function TimelineService($sce, TimelineRestService, gettextCatalog) {
         return getPaginatedTimeline(pull_request, initialTimeline, limit, offset).then(function(
             timeline
         ) {
+            timeline = timeline.filter(event => event.type !== "reviewer-change");
             timeline.forEach(event => {
                 self.formatEvent(event, pull_request);
             });

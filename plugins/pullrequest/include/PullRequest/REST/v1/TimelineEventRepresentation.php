@@ -22,7 +22,7 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\User\REST\MinimalUserRepresentation ;
 use Tuleap\REST\JsonCast;
-use Tuleap\PullRequest\Timeline\TimelineEvent;
+use Tuleap\PullRequest\Timeline\TimelineGlobalEvent;
 
 class TimelineEventRepresentation
 {
@@ -64,10 +64,10 @@ class TimelineEventRepresentation
     private function expandType($type_acronym)
     {
         $status_name = array(
-            TimelineEvent::UPDATE  => self::UPDATE,
-            TimelineEvent::REBASE  => self::REBASE,
-            TimelineEvent::MERGE   => self::MERGE,
-            TimelineEvent::ABANDON => self::ABANDON,
+            TimelineGlobalEvent::UPDATE  => self::UPDATE,
+            TimelineGlobalEvent::REBASE  => self::REBASE,
+            TimelineGlobalEvent::MERGE   => self::MERGE,
+            TimelineGlobalEvent::ABANDON => self::ABANDON,
         );
 
         return $status_name[$type_acronym];

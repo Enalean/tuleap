@@ -98,6 +98,8 @@ use Tuleap\PullRequest\PullRequestWithGitReference;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerRepresentationInformationExtractor;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersPUTRepresentation;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersRepresentation;
+use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeDAO;
+use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeRetriever;
 use Tuleap\PullRequest\Reviewer\ReviewerDAO;
 use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
 use Tuleap\PullRequest\Reviewer\ReviewersCannotBeUpdatedOnClosedPullRequestException;
@@ -208,9 +210,16 @@ class PullRequestsResource extends AuthenticatedResource
         $comment_dao           = new CommentDao();
         $this->comment_factory = new CommentFactory($comment_dao, $reference_manager);
 
+        $this->user_manager         = UserManager::instance();
+
         $inline_comment_dao     = new InlineCommentDao();
         $timeline_dao           = new TimelineDao();
-        $this->timeline_factory = new TimelineFactory($comment_dao, $inline_comment_dao, $timeline_dao);
+        $this->timeline_factory = new TimelineFactory(
+            $comment_dao,
+            $inline_comment_dao,
+            $timeline_dao,
+            new ReviewerChangeRetriever(new ReviewerChangeDAO(), $this->user_manager)
+        );
 
         $this->paginated_timeline_representation_builder = new PaginatedTimelineRepresentationBuilder(
             $this->timeline_factory
@@ -220,7 +229,6 @@ class PullRequestsResource extends AuthenticatedResource
             $this->comment_factory
         );
 
-        $this->user_manager         = UserManager::instance();
         $this->event_manager        = EventManager::instance();
         $this->pull_request_merger  = new PullRequestMerger(
             new MergeSettingRetriever(new MergeSettingDAO())
@@ -1038,7 +1046,7 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $paginated_timeline_representation = $this->paginated_timeline_representation_builder->getPaginatedTimelineRepresentation(
-            $id,
+            $pull_request,
             $project_id,
             $limit,
             $offset

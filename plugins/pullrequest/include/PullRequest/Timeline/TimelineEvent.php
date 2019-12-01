@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,70 +20,7 @@
 
 namespace Tuleap\PullRequest\Timeline;
 
-class TimelineEvent
+interface TimelineEvent
 {
-    public const UPDATE  = 1;
-    public const REBASE  = 2;
-    public const MERGE   = 3;
-    public const ABANDON = 4;
-
-    /** @var int */
-    private $id;
-
-    /** @var int */
-    private $pull_request_id;
-
-    /** @var int */
-    private $user_id;
-
-    /** @var int */
-    private $post_date;
-
-    /** @var int */
-    private $type;
-
-    public function __construct($id, $pull_request_id, $user_id, $post_date, $type)
-    {
-        $this->id              = $id;
-        $this->pull_request_id = $pull_request_id;
-        $this->user_id         = $user_id;
-        $this->post_date       = $post_date;
-        $this->type            = $type;
-    }
-
-    public function buildFromRow(array $row)
-    {
-        return new TimelineEvent(
-            $row['id'],
-            $row['pull_request_id'],
-            $row['user_id'],
-            $row['post_date'],
-            $row['type']
-        );
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getPullRequestId()
-    {
-        return $this->pull_request_id;
-    }
-
-    public function getUserId()
-    {
-        return $this->user_id;
-    }
-
-    public function getPostDate()
-    {
-        return $this->post_date;
-    }
-
-    public function getType()
-    {
-        return $this->type;
-    }
+    public function getPostDate(): int;
 }
