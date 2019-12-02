@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,8 @@ use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
+use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeRetriever;
 use Tuleap\PullRequest\Timeline\Dao as TimeLineDao;
 
 class Factory
@@ -37,44 +39,52 @@ class Factory
 
     /** @var Tuleap\PullRequest\Timeline\Dao */
     private $timeline_dao;
+    /**
+     * @var ReviewerChangeRetriever
+     */
+    private $reviewer_change_retriever;
 
-    public function __construct(CommentDao $comments_dao, InlineCommentDao $inline_comments_dao, TimeLineDao $timeline_dao)
-    {
-        $this->comments_dao        = $comments_dao;
-        $this->inline_comments_dao = $inline_comments_dao;
-        $this->timeline_dao        = $timeline_dao;
+    public function __construct(
+        CommentDao $comments_dao,
+        InlineCommentDao $inline_comments_dao,
+        TimeLineDao $timeline_dao,
+        ReviewerChangeRetriever $reviewer_change_retriever
+    ) {
+        $this->comments_dao              = $comments_dao;
+        $this->inline_comments_dao       = $inline_comments_dao;
+        $this->timeline_dao              = $timeline_dao;
+        $this->reviewer_change_retriever = $reviewer_change_retriever;
     }
 
-    public function getPaginatedTimelineByPullRequestId($pull_request_id, $limit, $offset)
+    public function getPaginatedTimelineByPullRequestId(PullRequest $pull_request, $limit, $offset)
     {
         $comments = array();
-        foreach ($this->comments_dao->searchAllByPullRequestId($pull_request_id) as $row) {
+        foreach ($this->comments_dao->searchAllByPullRequestId($pull_request->getId()) as $row) {
             $comments[] = $this->buildComment($row);
         }
         $total_comment_events = $this->comments_dao->foundRows();
 
         $inline_comments = array();
-        foreach ($this->inline_comments_dao->searchAllByPullRequestId($pull_request_id) as $row) {
+        foreach ($this->inline_comments_dao->searchAllByPullRequestId($pull_request->getId()) as $row) {
             $inline_comments[] = InlineComment::buildFromRow($row);
         }
         $total_inline_comment_events = $this->inline_comments_dao->foundRows();
 
+        $reviewer_changes = $this->reviewer_change_retriever->getChangesForPullRequest($pull_request);
+
         $timeline_events = array();
-        foreach ($this->timeline_dao->searchAllByPullRequestId($pull_request_id) as $row) {
-            $timeline_events[] = TimelineEvent::buildFromRow($row);
+        foreach ($this->timeline_dao->searchAllByPullRequestId($pull_request->getId()) as $row) {
+            $timeline_events[] = TimelineGlobalEvent::buildFromRow($row);
         }
         $total_timeline_events = $this->timeline_dao->foundRows();
 
-        $full_timeline   = array_merge($comments, $inline_comments, $timeline_events);
-        usort($full_timeline, array($this, 'sortByPostDate'));
+        $full_timeline = array_merge($comments, $inline_comments, $reviewer_changes, $timeline_events);
+        usort($full_timeline, static function (TimelineEvent $event1, TimelineEvent $event2): int {
+            return $event1->getPostDate() - $event2->getPostDate();
+        });
         $timeline     = array_slice($full_timeline, $offset, $limit);
-        $total_events = $total_comment_events + $total_inline_comment_events + $total_timeline_events;
+        $total_events = $total_comment_events + $total_inline_comment_events + count($reviewer_changes) + $total_timeline_events;
         return new PaginatedTimeline($timeline, $total_events);
-    }
-
-    private function sortByPostDate($event1, $event2)
-    {
-        return $event1->getPostDate() - $event2->getPostDate();
     }
 
     private function buildComment($row)

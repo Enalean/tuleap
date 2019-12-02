@@ -124,6 +124,24 @@ describe("TimelineService", function() {
                         post_date: "1970-01-01T00:00:00+00:00",
                         type: "timeline-event",
                         event_type: "abandon"
+                    },
+                    {
+                        user: {
+                            id: 102,
+                            display_name: "Site User (userX)",
+                            avatar_url: "/themes/common/images/avatar_default.png"
+                        },
+                        post_date: "2020-01-01T00:00:00+00:00",
+                        type: "reviewer-change",
+                        event_type: "reviewer-change",
+                        added_reviewers: [
+                            {
+                                id: 101,
+                                display_name: "Site Administrator (admin)",
+                                avatar_url: "/themes/common/images/avatar_default.png"
+                            }
+                        ],
+                        removed_reviewers: []
                     }
                 ]
             };
@@ -153,6 +171,7 @@ describe("TimelineService", function() {
             });
             $httpBackend.flush();
 
+            expect(timeline).toHaveLength(7);
             expect($sce.getTrustedHtml(timeline[0].content)).toEqual("Hello world");
             expect($sce.getTrustedHtml(timeline[1].content)).toEqual("Hello<br/>Site User<br/>");
 

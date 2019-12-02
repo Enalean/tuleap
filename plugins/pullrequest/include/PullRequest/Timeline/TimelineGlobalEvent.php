@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\Comment;
+namespace Tuleap\PullRequest\Timeline;
 
-use Tuleap\PullRequest\Timeline\TimelineEvent;
-
-class Comment implements TimelineEvent
+class TimelineGlobalEvent implements TimelineEvent
 {
+    public const UPDATE  = 1;
+    public const REBASE  = 2;
+    public const MERGE   = 3;
+    public const ABANDON = 4;
 
     /** @var int */
     private $id;
@@ -37,17 +39,27 @@ class Comment implements TimelineEvent
     /** @var int */
     private $post_date;
 
-    /** @var string */
-    private $content;
+    /** @var int */
+    private $type;
 
-
-    public function __construct($id, $pull_request_id, $user_id, $post_date, $content)
+    public function __construct($id, $pull_request_id, $user_id, $post_date, $type)
     {
         $this->id              = $id;
         $this->pull_request_id = $pull_request_id;
         $this->user_id         = $user_id;
         $this->post_date       = $post_date;
-        $this->content         = $content;
+        $this->type            = $type;
+    }
+
+    public function buildFromRow(array $row)
+    {
+        return new TimelineGlobalEvent(
+            $row['id'],
+            $row['pull_request_id'],
+            $row['user_id'],
+            $row['post_date'],
+            $row['type']
+        );
     }
 
     public function getId()
@@ -70,8 +82,8 @@ class Comment implements TimelineEvent
         return $this->post_date;
     }
 
-    public function getContent()
+    public function getType()
     {
-        return $this->content;
+        return $this->type;
     }
 }

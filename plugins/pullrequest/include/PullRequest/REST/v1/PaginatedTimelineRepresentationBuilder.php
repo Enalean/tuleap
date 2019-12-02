@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,14 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use Tuleap\PullRequest\Comment\Comment;
+use Tuleap\PullRequest\InlineComment\InlineComment;
+use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerChangeTimelineEventRepresentation;
+use Tuleap\PullRequest\Reviewer\Change\ReviewerChange;
 use Tuleap\PullRequest\Timeline\Factory;
+use Tuleap\PullRequest\Timeline\TimelineEvent;
+use Tuleap\PullRequest\Timeline\TimelineGlobalEvent;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 
@@ -40,9 +47,9 @@ class PaginatedTimelineRepresentationBuilder
         $this->user_manager     = UserManager::instance();
     }
 
-    public function getPaginatedTimelineRepresentation($pull_request_id, $project_id, $limit, $offset)
+    public function getPaginatedTimelineRepresentation(PullRequest $pull_request, $project_id, $limit, $offset)
     {
-        $paginated_events        = $this->timeline_factory->getPaginatedTimelineByPullRequestId($pull_request_id, $limit, $offset);
+        $paginated_events        = $this->timeline_factory->getPaginatedTimelineByPullRequestId($pull_request, $limit, $offset);
         $timeline_representation = array();
 
         foreach ($paginated_events->getEvents() as $event) {
@@ -55,43 +62,54 @@ class PaginatedTimelineRepresentationBuilder
         );
     }
 
-    private function buildEventRepresentation($event, $project_id)
+    private function buildEventRepresentation(TimelineEvent $event, $project_id)
     {
-        $user_representation = new MinimalUserRepresentation();
-        $user_representation->build($this->user_manager->getUserById($event->getUserId()));
-
-        $class_name  = get_class($event);
-        $event_class = substr($class_name, strrpos($class_name, '\\') + 1);
-        switch ($event_class) {
-            case 'Comment':
+        switch (get_class($event)) {
+            case Comment::class:
                 $event_representation = new CommentRepresentation();
                 $event_representation->build(
                     $event->getId(),
                     $project_id,
-                    $user_representation,
+                    $this->buildMinimalUserRepresentation($event->getUserId()),
                     $event->getPostDate(),
                     $event->getContent()
                 );
                 return $event_representation;
-            case 'InlineComment':
+            case InlineComment::class:
                 $event_representation = new TimelineInlineCommentRepresentation();
                 $event_representation->build(
                     $event->getFilePath(),
                     $event->getUnidiffOffset(),
-                    $user_representation,
+                    $this->buildMinimalUserRepresentation($event->getUserId()),
                     $event->getPostDate(),
                     $event->getContent(),
                     $event->isOutdated(),
                     $project_id
                 );
                 return $event_representation;
-            case 'TimelineEvent':
+            case TimelineGlobalEvent::class:
                 $event_representation = new TimelineEventRepresentation(
-                    $user_representation,
+                    $this->buildMinimalUserRepresentation($event->getUserId()),
                     $event->getPostDate(),
                     $event->getType()
                 );
                 return $event_representation;
+            case ReviewerChange::class:
+                return ReviewerChangeTimelineEventRepresentation::fromReviewerChange($event);
         }
+
+        throw new \LogicException('Do not know how to build a timeline event representation from ' . get_class($event));
+    }
+
+    private function buildMinimalUserRepresentation(int $user_id): MinimalUserRepresentation
+    {
+        $user_representation = new MinimalUserRepresentation();
+        $user                = $this->user_manager->getUserById($user_id);
+        if ($user === null) {
+            $user_representation->build($this->user_manager->getUserAnonymous());
+        } else {
+            $user_representation->build($user);
+        }
+        return $user_representation;
     }
 }
