@@ -142,11 +142,12 @@ describe("BaseCard", () => {
             expect(wrapper.classes("taskboard-card-edit-mode")).toBe(true);
         });
 
-        it("Given the card is in read mode, when user clicks on it, then it toggles its edit mode", () => {
+        it("Given the card is in read mode, when user clicks on the trigger pencil, then it toggles its edit mode", () => {
             const card = getCard({ is_in_edit_mode: false } as Card);
             const wrapper = getWrapper(card);
 
-            wrapper.trigger("click");
+            wrapper.find(".taskboard-card-edit-trigger").trigger("click");
+
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "swimlane/addCardToEditMode",
                 card
