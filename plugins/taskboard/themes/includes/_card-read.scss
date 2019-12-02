@@ -64,10 +64,6 @@
         }
     }
 
-    &.taskboard-card-show {
-        animation: showCard 400ms ease-in-out forwards;
-    }
-
     &::before {
         content: '';
         display: block;
@@ -278,22 +274,6 @@ a.taskboard-card-xref {
         &.taskboard-card-remaining-effort-#{$color-name}::after {
             border-color: transparent transparent transparent map-get($colors, 'primary');
         }
-    }
-}
-
-@keyframes showCard {
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-
-    70% {
-        transform: scale(1.1);
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 1;
     }
 }
 
