@@ -161,7 +161,7 @@
     @each $color-name, $colors in $tlp-swatch-color-map {
         &.taskboard-card-background-#{$color-name} {
             border-color: map-get($colors, 'border');
-            background: mix(map-get($colors, 'secondary'), $tlp-theme-background-color);
+            background: map-get($colors, 'secondary');
         }
     }
 }
