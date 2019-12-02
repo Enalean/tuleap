@@ -67,7 +67,7 @@
     "symfony/lock": "^5.0",
     "symfony/process": "^5.0",
     "symfony/var-exporter": "^5.0",
-    "webimpress/safe-writer": "^1.0",
+    "webimpress/safe-writer": "^2.0",
     "zendframework/zend-cache": "^2.8",
     "zendframework/zend-feed": "^2.10",
     "zendframework/zend-httphandlerrunner": "^1.1",

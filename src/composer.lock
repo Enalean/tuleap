@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "96f9bc5aa68e7a7d752b53a30d91683d",
+    "content-hash": "6fc7ade8b902da0061e75ee202dba522",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -2356,30 +2356,31 @@
         },
         {
             "name": "webimpress/safe-writer",
-            "version": "1.0.1",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webimpress/safe-writer.git",
-                "reference": "3a4645bb6e3ac0115cfaa9cb74453407051bbc00"
+                "reference": "d03bea3b98abe1d4c8b24cbebf524361ffaafee4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webimpress/safe-writer/zipball/3a4645bb6e3ac0115cfaa9cb74453407051bbc00",
-                "reference": "3a4645bb6e3ac0115cfaa9cb74453407051bbc00",
+                "url": "https://api.github.com/repos/webimpress/safe-writer/zipball/d03bea3b98abe1d4c8b24cbebf524361ffaafee4",
+                "reference": "d03bea3b98abe1d4c8b24cbebf524361ffaafee4",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.6 || ^7.0"
+                "php": "^7.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5.7.27 || ^6.5.14 || ^7.5.16",
-                "squizlabs/php_codesniffer": "^3.5.2"
+                "phpunit/phpunit": "^8.4.3",
+                "webimpress/coding-standard": "dev-develop"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev",
-                    "dev-develop": "1.1.x-dev"
+                    "dev-master": "2.0.x-dev",
+                    "dev-develop": "2.1.x-dev",
+                    "dev-release-1.0": "1.0.x-dev"
                 }
             },
             "autoload": {
@@ -2399,7 +2400,7 @@
                 "safe writer",
                 "webimpress"
             ],
-            "time": "2019-11-16T23:30:24+00:00"
+            "time": "2019-11-27T19:40:53+00:00"
         },
         {
             "name": "zendframework/zend-cache",
