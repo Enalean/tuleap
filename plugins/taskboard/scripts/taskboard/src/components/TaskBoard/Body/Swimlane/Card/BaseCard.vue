@@ -108,7 +108,11 @@ export default class BaseCard extends Vue {
             return;
         }
 
-        const payload: NewCardPayload = { card: this.card, label: this.label };
+        const payload: NewCardPayload = {
+            card: this.card,
+            label: this.label,
+            tracker: this.tracker
+        };
         this.saveCard(payload);
     }
 

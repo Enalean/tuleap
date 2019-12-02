@@ -19,9 +19,12 @@
 import { ActionContext } from "vuex";
 import { RootState } from "../../type";
 import { NewCardPayload, NewRemainingEffortPayload } from "./type";
-import { patch } from "tlp";
+import { patch, put } from "tlp";
 import { SwimlaneState } from "../type";
-import { fakePutApiCallToSaveCard } from "./fakeApiCall";
+
+const headers = {
+    "Content-Type": "application/json"
+};
 
 export async function saveRemainingEffort(
     context: ActionContext<SwimlaneState, RootState>,
@@ -31,9 +34,7 @@ export async function saveRemainingEffort(
     context.commit("startSavingRemainingEffort", card);
     try {
         await patch(`/api/v1/taskboard_cards/${encodeURIComponent(card.id)}`, {
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers,
             body: JSON.stringify({ remaining_effort: new_remaining_effort.value })
         });
         context.commit("finishSavingRemainingEffort", new_remaining_effort);
@@ -49,7 +50,17 @@ export async function saveCard(
     const card = payload.card;
     context.commit("startSavingCard", card);
     try {
-        await fakePutApiCallToSaveCard();
+        await put(`/api/v1/artifacts/${encodeURIComponent(card.id)}`, {
+            headers,
+            body: JSON.stringify({
+                values: [
+                    {
+                        field_id: payload.tracker.title_field_id,
+                        value: payload.label
+                    }
+                ]
+            })
+        });
         context.commit("finishSavingCard", payload);
     } catch (error) {
         context.commit("resetSavingCard", card);
