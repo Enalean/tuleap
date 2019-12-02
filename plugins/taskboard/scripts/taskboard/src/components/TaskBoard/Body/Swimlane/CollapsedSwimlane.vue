@@ -61,7 +61,7 @@ export default class CollapsedSwimlane extends Vue {
     readonly columns!: Array<ColumnDefinition>;
 
     get additional_classnames(): string {
-        return `taskboard-swimlane-toggle-${this.swimlane.card.color}`;
+        return `tlp-swatch-${this.swimlane.card.color}`;
     }
 
     get additional_card_classnames(): string {

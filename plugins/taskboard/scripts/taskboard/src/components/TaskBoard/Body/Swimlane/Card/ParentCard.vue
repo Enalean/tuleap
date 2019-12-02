@@ -24,7 +24,7 @@
             <card-initial-effort v-bind:card="card"/>
         </template>
         <template v-slot:remaining_effort>
-            <div class="taskboard-card-progress" v-bind:class="progress_color" v-bind:style="{ width: progress_bar_width }"></div>
+            <div class="taskboard-card-progress" v-bind:style="{ width: progress_bar_width }"></div>
         </template>
     </base-card>
 </template>
@@ -53,10 +53,6 @@ export default class ParentCard extends Vue {
         const percentage_width = getWidthPercentage(initial_effort, remaining_effort);
 
         return `${percentage_width}%`;
-    }
-
-    get progress_color(): string {
-        return `taskboard-card-progress-${this.card.color}`;
     }
 }
 </script>

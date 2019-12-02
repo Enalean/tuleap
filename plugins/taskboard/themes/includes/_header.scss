@@ -35,8 +35,8 @@
     border-right: 1px solid $tlp-ui-border-normal;
     border-bottom: 1px solid $tlp-ui-border-normal;
     background: $tlp-ui-white;
-    box-shadow: inset 0 2px 0 0 $tlp-ui-border-normal, inset 0 -1px 0 $tlp-ui-border-normal;
-    color: $tlp-ui-dimmed;
+    box-shadow: inset 0 2px 0 0 var(--primary-color, #{$tlp-ui-border-normal}), inset 0 -1px 0 $tlp-ui-border-normal;
+    color: var(--text-color, #{$tlp-ui-dimmed});
     font-weight: 600;
     text-transform: uppercase;
 
@@ -48,16 +48,9 @@
         opacity: 1;
     }
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
-        &.taskboard-header-#{$color-name} {
-            box-shadow: inset 0 2px 0 0 map-get($colors, 'primary'), inset 0 -1px 0 $tlp-ui-border-normal;
-            color: map-get($colors, 'text');
-
-            > .taskboard-header-expand-column,
-            > .taskboard-header-collapse-column {
-                color: map-get($colors, 'primary');
-            }
-        }
+    > .taskboard-header-expand-column,
+    > .taskboard-header-collapse-column {
+        color: var(--primary-color);
     }
 }
 

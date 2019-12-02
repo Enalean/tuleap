@@ -8,7 +8,7 @@ exports[`CollapsedSwimlane displays a toggle icon and a card with minimal inform
     swimlane="[object Object]"
   >
     <i
-      class="fa fa-plus-square taskboard-swimlane-toggle taskboard-swimlane-toggle-fiesta-red"
+      class="fa fa-plus-square taskboard-swimlane-toggle tlp-swatch-fiesta-red"
       role="button"
       title="Expand"
     />

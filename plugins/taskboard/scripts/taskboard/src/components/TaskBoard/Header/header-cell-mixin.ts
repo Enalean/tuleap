@@ -34,7 +34,7 @@ export default class HeaderCellMixin extends Vue {
         const classes = [];
 
         if (!this.is_rgb_color && this.column.color) {
-            classes.push("taskboard-header-" + this.column.color);
+            classes.push("tlp-swatch-" + this.column.color);
         }
 
         return classes;

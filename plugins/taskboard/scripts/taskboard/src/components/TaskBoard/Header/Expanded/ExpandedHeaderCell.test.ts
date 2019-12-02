@@ -58,7 +58,7 @@ describe("ExpandedHeaderCell", () => {
             }
         });
 
-        expect(wrapper.classes("taskboard-header-fiesta-red")).toBe(false);
+        expect(wrapper.classes("tlp-swatch-fiesta-red")).toBe(false);
     });
 
     it("displays a cell with color", () => {
@@ -75,7 +75,7 @@ describe("ExpandedHeaderCell", () => {
             }
         });
 
-        expect(wrapper.classes("taskboard-header-fiesta-red")).toBe(true);
+        expect(wrapper.classes("tlp-swatch-fiesta-red")).toBe(true);
     });
 
     it("displays a cell with default color", () => {
@@ -92,7 +92,7 @@ describe("ExpandedHeaderCell", () => {
             }
         });
 
-        expect(wrapper.classes("taskboard-header-fiesta-red")).toBe(false);
+        expect(wrapper.classes("tlp-swatch-fiesta-red")).toBe(false);
     });
 
     it("displays a cell with legacy color to regular users", () => {
@@ -109,7 +109,7 @@ describe("ExpandedHeaderCell", () => {
             }
         });
 
-        expect(wrapper.classes("taskboard-header-fiesta-red")).toBe(false);
+        expect(wrapper.classes("tlp-swatch-fiesta-red")).toBe(false);
         expect(wrapper.contains(WrongColorPopover)).toBe(false);
     });
 
@@ -127,7 +127,7 @@ describe("ExpandedHeaderCell", () => {
             }
         });
 
-        expect(wrapper.classes("taskboard-header-fiesta-red")).toBe(false);
+        expect(wrapper.classes("tlp-swatch-fiesta-red")).toBe(false);
         expect(wrapper.contains(WrongColorPopover)).toBe(true);
     });
 });
