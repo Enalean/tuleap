@@ -26,7 +26,8 @@ export interface State {
     are_restricted_users_allowed: boolean;
     project_default_visibility: string;
     error: string | null;
-    is_creating_project: boolean | null;
+    is_creating_project: boolean;
+    is_project_approval_required: boolean;
 }
 
 export interface Context {
@@ -39,7 +40,8 @@ export interface StoreOptions {
         tuleap_templates: TemplateData[];
         selected_template: TemplateData | null;
         error: string | null;
-        is_creating_project: boolean | null;
+        is_creating_project: boolean;
         project_default_visibility: string;
+        is_project_approval_required: boolean;
     };
 }

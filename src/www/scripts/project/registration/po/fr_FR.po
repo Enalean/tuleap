@@ -10,11 +10,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid ""
+"<b>You will receive an email</b> when the administrator has validated it."
+msgstr ""
+"<b>Vous allez recevoir un email</b> lorsque l'administrateur l'aura validé."
+
 msgid "Back"
 msgstr "Précédent"
 
 msgid "Between %{ min } and %{ max } characters length"
 msgstr "Entre %{ min } et %{ max } caractères"
+
+msgid "Go to my home page"
+msgstr "Aller à ma page personnelle"
 
 msgid "Must start with a letter, avoid spaces and punctuation."
 msgstr "Doit commencer par une lettre, éviter les espaces et la ponctuation."
@@ -127,3 +135,6 @@ msgstr "Patrons de projet Tuleap"
 
 msgid "What kind of project is it?"
 msgstr "Quel type de projet est-ce ?"
+
+msgid "Your project has been submitted to the administrators for validation"
+msgstr "Votre projet a été soumis aux administrateurs pour validation"

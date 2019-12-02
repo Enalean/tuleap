@@ -39,7 +39,8 @@ describe("ProjectInformation - ", () => {
             are_restricted_users_allowed: false,
             project_default_visibility: "",
             error: null,
-            is_creating_project: false
+            is_creating_project: false,
+            is_project_approval_required: false
         };
 
         const getters = {

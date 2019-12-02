@@ -21,6 +21,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import AllProjectTemplates from "../components/Template/AllProjectTemplates.vue";
 import ProjectInformation from "../components/Information/ProjectInformation.vue";
+import ProjectApproval from "../components/Approval/ProjectApproval.vue";
 
 Vue.use(VueRouter);
 
@@ -38,6 +39,11 @@ export function createRouter(): VueRouter {
                 path: "/new-information",
                 name: "information",
                 component: ProjectInformation
+            },
+            {
+                path: "/approval",
+                name: "approval",
+                component: ProjectApproval
             }
         ]
     });

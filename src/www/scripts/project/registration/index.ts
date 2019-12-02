@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const selected_template = null;
     const error = null;
     const is_creating_project = false;
+    const is_project_approval_required = Boolean(vue_mount_point.dataset.projectsMustBeApproved);
 
     const root_state: State = {
         tuleap_templates,
@@ -53,7 +54,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         are_restricted_users_allowed,
         project_default_visibility,
         error,
-        is_creating_project
+        is_creating_project,
+        is_project_approval_required
     };
 
     Vue.use(VueDOMPurifyHTML);

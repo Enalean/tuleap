@@ -46,7 +46,8 @@ describe("ProjectInformationInputPrivacyList", () => {
             project_default_visibility: "public",
             tuleap_templates: [],
             error: null,
-            is_creating_project: false
+            is_creating_project: false,
+            is_project_approval_required: false
         };
 
         const store_options = { state };
@@ -162,7 +163,8 @@ describe("ProjectInformationInputPrivacyList", () => {
                     tuleap_templates: [],
                     project_default_visibility: "public",
                     error: null,
-                    is_creating_project: false
+                    is_creating_project: false,
+                    is_project_approval_required: false
                 }
             };
             const wrapper = getProjectInformationInstance(store_options);
@@ -178,7 +180,8 @@ describe("ProjectInformationInputPrivacyList", () => {
                     tuleap_templates: [],
                     project_default_visibility: "unrestricted",
                     error: null,
-                    is_creating_project: false
+                    is_creating_project: false,
+                    is_project_approval_required: false
                 }
             };
             const wrapper = getProjectInformationInstance(store_options);
@@ -195,7 +198,8 @@ describe("ProjectInformationInputPrivacyList", () => {
                     tuleap_templates: [],
                     project_default_visibility: "private-wo-restr",
                     error: null,
-                    is_creating_project: false
+                    is_creating_project: false,
+                    is_project_approval_required: false
                 }
             };
             const wrapper = getProjectInformationInstance(store_options);
@@ -212,7 +216,8 @@ describe("ProjectInformationInputPrivacyList", () => {
                     tuleap_templates: [],
                     project_default_visibility: "private",
                     error: null,
-                    is_creating_project: false
+                    is_creating_project: false,
+                    is_project_approval_required: false
                 }
             };
             const wrapper = getProjectInformationInstance(store_options);

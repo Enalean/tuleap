@@ -47,12 +47,17 @@ class ProjectRegistrationPresenter
      * @var string
      */
     public $project_default_visibility;
+    /**
+     * @var bool
+     */
+    public $projects_must_be_approved;
 
     public function __construct(string $project_default_visibility, TemplatePresenter ...$tuleap_templates)
     {
         $this->tuleap_templates             = json_encode($tuleap_templates);
         $this->has_templates                = count($tuleap_templates) > 0;
-        $this->are_restricted_users_allowed =  (bool) ForgeConfig::areRestrictedUsersAllowed();
+        $this->are_restricted_users_allowed = (bool) ForgeConfig::areRestrictedUsersAllowed();
         $this->project_default_visibility   = $project_default_visibility;
+        $this->projects_must_be_approved    = (bool) ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, true);
     }
 }
