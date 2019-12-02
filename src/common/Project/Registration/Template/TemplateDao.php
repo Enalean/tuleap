@@ -36,7 +36,10 @@ class TemplateDao extends DataAccessObject
         );
     }
 
-    public function getTemplateForProject(\Project $project): string
+    /**
+     * @return string|false
+     */
+    public function getTemplateForProject(\Project $project)
     {
         return $this->getDB()->single('SELECT template_name FROM project_template_xml WHERE id = ?', [$project->getID()]);
     }
