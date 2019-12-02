@@ -79,7 +79,3 @@ function switchRemainingEffortToReadOnlyMode(remaining_effort: RemainingEffort):
     remaining_effort.is_being_saved = false;
     remaining_effort.is_in_edit_mode = false;
 }
-
-export function setCardHaveAlreadyBeenShown(state: SwimlaneState, card: Card): void {
-    findCard(state, card).has_already_been_shown = true;
-}

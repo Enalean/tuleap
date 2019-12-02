@@ -49,7 +49,6 @@ function getWrapper(
 function getCard(
     definition: Card = {
         background_color: "",
-        has_already_been_shown: false,
         is_in_edit_mode: false
     } as Card
 ): Card {
@@ -80,31 +79,6 @@ describe("BaseCard", () => {
 
         expect(wrapper.contains(".taskboard-card-accessibility")).toBe(false);
         expect(wrapper.classes()).not.toContain("taskboard-card-with-accessibility");
-    });
-
-    it("adds the show classes and set the has_already_been_shown flag on the card", () => {
-        const card = getCard();
-        const wrapper = getWrapper(card);
-
-        expect(wrapper.classes()).toContain("taskboard-card-show");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "swimlane/setCardHaveAlreadyBeenShown",
-            card
-        );
-    });
-
-    it("does not add the show classes if card has already rendered once", () => {
-        const wrapper = getWrapper(getCard({ has_already_been_shown: true } as Card));
-
-        expect(wrapper.classes()).not.toContain("taskboard-card-show");
-    });
-
-    it("removes the show classes after 500ms", () => {
-        const wrapper = getWrapper(getCard());
-
-        jest.runAllTimers();
-        expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 500);
-        expect(wrapper.classes()).not.toContain("taskboard-card-show");
     });
 
     it("includes the remaining effort slot", () => {
