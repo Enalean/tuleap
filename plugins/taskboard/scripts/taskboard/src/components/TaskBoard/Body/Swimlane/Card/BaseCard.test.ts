@@ -190,7 +190,8 @@ describe("BaseCard", () => {
             );
             expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveCard", {
                 card,
-                label
+                label,
+                tracker: { title_field_id: 1212 } as Tracker
             } as NewCardPayload);
         });
 
@@ -209,7 +210,8 @@ describe("BaseCard", () => {
             );
             expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveCard", {
                 card,
-                label
+                label,
+                tracker: { title_field_id: 1212 } as Tracker
             } as NewCardPayload);
         });
 

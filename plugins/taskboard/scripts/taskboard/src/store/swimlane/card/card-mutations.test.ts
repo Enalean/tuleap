@@ -21,6 +21,7 @@ import { Card, Swimlane } from "../../../type";
 import * as mutations from "./card-mutations";
 import { SwimlaneState } from "../type";
 import { NewCardPayload, NewRemainingEffortPayload } from "./type";
+import { Tracker } from "../../type";
 
 jest.useFakeTimers();
 
@@ -147,7 +148,7 @@ describe(`Card mutations`, () => {
             const state: SwimlaneState = {
                 swimlanes: [{ card } as Swimlane]
             } as SwimlaneState;
-            const payload: NewCardPayload = { card, label: "Lorem" };
+            const payload: NewCardPayload = { card, label: "Lorem", tracker: {} as Tracker };
 
             mutations.finishSavingCard(state, payload);
 

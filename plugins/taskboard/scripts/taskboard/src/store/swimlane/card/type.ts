@@ -18,6 +18,7 @@
  */
 
 import { Card } from "../../../type";
+import { Tracker } from "../../type";
 
 export interface NewRemainingEffortPayload {
     readonly card: Card;
@@ -27,4 +28,5 @@ export interface NewRemainingEffortPayload {
 export interface NewCardPayload {
     readonly card: Card;
     readonly label: string;
+    readonly tracker: Tracker;
 }

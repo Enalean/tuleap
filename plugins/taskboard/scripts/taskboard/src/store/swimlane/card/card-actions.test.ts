@@ -18,7 +18,7 @@
  */
 
 import { ActionContext } from "vuex";
-import { RootState } from "../../type";
+import { RootState, Tracker } from "../../type";
 import { NewCardPayload, NewRemainingEffortPayload } from "./type";
 import * as tlp from "tlp";
 import { SwimlaneState } from "../type";
@@ -28,7 +28,6 @@ import {
     mockFetchError,
     mockFetchSuccess
 } from "../../../../../../../../src/www/themes/common/tlp/mocks/tlp-fetch-mock-helper";
-import * as fakeApiCall from "./fakeApiCall";
 
 jest.mock("tlp");
 
@@ -103,26 +102,45 @@ describe("Card actions", () => {
 
     describe("saveCard", () => {
         it("saves the new value", async () => {
-            const card: Card = { id: 123 } as Card;
+            const card: Card = { id: 123, tracker_id: 1 } as Card;
+            const tracker = { id: 1, title_field_id: 1355 } as Tracker;
             const payload: NewCardPayload = {
                 card,
-                label: "Lorem"
+                label: "Lorem",
+                tracker: tracker
             };
+
+            const tlpPutMock = jest.spyOn(tlp, "put");
 
             await actions.saveCard(context, payload);
 
+            expect(tlpPutMock).toHaveBeenCalledWith("/api/v1/artifacts/123", {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    values: [
+                        {
+                            field_id: 1355,
+                            value: "Lorem"
+                        }
+                    ]
+                })
+            });
             expect(context.commit).toHaveBeenCalledWith("startSavingCard", card);
             expect(context.commit).toHaveBeenCalledWith("finishSavingCard", payload);
         });
 
         it("warns about error if any", async () => {
-            const card: Card = { id: 123 } as Card;
+            const card: Card = { id: 123, tracker_id: 1 } as Card;
+            const tracker = { id: 1, title_field_id: 1355 } as Tracker;
             const payload: NewCardPayload = {
                 card,
-                label: "Lorem"
+                label: "Lorem",
+                tracker
             };
 
-            const tlpPutMock = jest.spyOn(fakeApiCall, "fakePutApiCallToSaveCard");
+            const tlpPutMock = jest.spyOn(tlp, "put");
             const error = new Error();
             tlpPutMock.mockRejectedValue(error);
 
