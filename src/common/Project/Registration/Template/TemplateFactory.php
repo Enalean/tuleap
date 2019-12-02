@@ -95,11 +95,11 @@ class TemplateFactory
 
     public function getTemplateForProject(\Project $project): ?ProjectTemplate
     {
-        $template_name = $this->template_dao->getTemplateForProject($project);
-        if (! $template_name) {
-            return null;
-        }
         try {
+            $template_name = $this->template_dao->getTemplateForProject($project);
+            if ($template_name === false) {
+                return null;
+            }
             return $this->getTemplate($template_name);
         } catch (InvalidTemplateException $exception) {
         }
