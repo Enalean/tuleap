@@ -27,6 +27,25 @@ use Tuleap\DB\DataAccessObject;
 class ReviewerChangeDAO extends DataAccessObject
 {
     /**
+     * @psalm-return list<array{pull_request_id: int, change_date: int, change_user_id: int, reviewer_user_id: int, is_removal: 0|1}>
+     */
+    public function searchByChangeID(int $change_id): array
+    {
+        return $this->getDB()->run(
+            'SELECT
+                plugin_pullrequest_reviewer_change.pull_request_id,
+                plugin_pullrequest_reviewer_change.change_date,
+                plugin_pullrequest_reviewer_change.user_id AS change_user_id,
+                plugin_pullrequest_reviewer_change_user.user_id AS reviewer_user_id,
+                plugin_pullrequest_reviewer_change_user.is_removal
+            FROM plugin_pullrequest_reviewer_change
+            JOIN plugin_pullrequest_reviewer_change_user ON (plugin_pullrequest_reviewer_change_user.change_id = plugin_pullrequest_reviewer_change.change_id)
+            WHERE plugin_pullrequest_reviewer_change.change_id = ?',
+            $change_id
+        );
+    }
+
+    /**
      * @psalm-return array<int,non-empty-list<array{change_date: int, change_user_id: int, reviewer_user_id: int, is_removal: 0|1}>>
      */
     public function searchByPullRequestID(int $pull_request_id): array

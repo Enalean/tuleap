@@ -682,7 +682,7 @@ class GitActions extends PluginActions
                 $controller->addInfo(
                     sprintf(
                         dgettext('tuleap-git', 'User "%s" successfully added to notifications'),
-                        $user_helper->getDisplayNameFromUser($user)
+                        $user_helper->getDisplayNameFromUser($user) ?? ''
                     )
                 );
                 $this->history_dao->groupAddHistory(
@@ -694,7 +694,7 @@ class GitActions extends PluginActions
                 $controller->addError(
                     sprintf(
                         dgettext('tuleap-git', 'Cannot add user "%s"'),
-                        $user_helper->getDisplayNameFromUser($user)
+                        $user_helper->getDisplayNameFromUser($user) ?? ''
                     )
                 );
                 $great_success = false;

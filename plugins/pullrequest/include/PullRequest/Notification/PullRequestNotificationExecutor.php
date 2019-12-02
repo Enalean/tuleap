@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest;
+declare(strict_types=1);
 
-class PluginDescriptor extends \PluginDescriptor
+namespace Tuleap\PullRequest\Notification;
+
+class PullRequestNotificationExecutor
 {
+    /**
+     * @var \Logger
+     */
+    private $logger;
 
-    public function __construct()
+    public function __construct(\Logger $logger)
     {
-        parent::__construct(
-            dgettext('tuleap-pullrequest', 'Pull request'),
-            false,
-            $GLOBALS['Language']->getText('plugin_pullrequest', 'descriptor_description')
-        );
+        $this->logger = $logger;
+    }
 
-        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
+    public function execute(NotificationToProcess $notification): void
+    {
+        foreach ($notification->getRecipients() as $recipient) {
+            $this->logger->debug(sprintf(
+                'Will send mail to %s for %s',
+                $recipient->getEmail(),
+                $notification->asPlaintext()
+            ));
+        }
     }
 }

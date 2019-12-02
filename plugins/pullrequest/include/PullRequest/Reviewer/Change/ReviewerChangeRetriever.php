@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer\Change;
 
+use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
+use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\PullRequest;
 use UserManager;
 
@@ -32,16 +34,45 @@ class ReviewerChangeRetriever
      */
     private $dao;
     /**
+     * @var Factory
+     */
+    private $pull_request_factory;
+    /**
      * @var UserManager
      */
     private $user_manager;
 
-    public function __construct(ReviewerChangeDAO $dao, UserManager $user_manager)
-    {
-        $this->dao          = $dao;
-        $this->user_manager = $user_manager;
+    public function __construct(
+        ReviewerChangeDAO $dao,
+        Factory $pull_request_factory,
+        UserManager $user_manager
+    ) {
+        $this->dao                  = $dao;
+        $this->pull_request_factory = $pull_request_factory;
+        $this->user_manager         = $user_manager;
     }
 
+    public function getChangeWithTheAssociatedPullRequestByID(int $change_id): ?ReviewerChangePullRequestAssociation
+    {
+        $raw_change_information = $this->dao->searchByChangeID($change_id);
+        if (empty($raw_change_information)) {
+            return null;
+        }
+
+        try {
+            $pull_request = $this->pull_request_factory->getPullRequestById($raw_change_information[0]['pull_request_id']);
+        } catch (PullRequestNotFoundException $e) {
+            return null;
+        }
+
+        $reviewer_change = $this->buildReviewerChangeFromRawReviewerInformation($raw_change_information);
+
+        if ($reviewer_change === null) {
+            return null;
+        }
+
+        return new ReviewerChangePullRequestAssociation($reviewer_change, $pull_request);
+    }
 
     /**
      * @return ReviewerChange[]

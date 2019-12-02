@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -198,7 +198,7 @@ class UserHelper
      *
      * @param PFUser the user to display
      *
-     * @return the display name of the user $user or null if $user is null
+     * @return ?string the display name of the user $user or null if $user is null
      *
      * @see getDisplayName
      */

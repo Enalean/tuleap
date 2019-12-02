@@ -30,6 +30,7 @@ use GitRepoNotFoundException;
 use GitRepository;
 use GitRepositoryFactory;
 use Luracast\Restler\RestException;
+use PermissionsOverrider_PermissionsOverriderManager;
 use PFUser;
 use PluginFactory;
 use Project_AccessException;
@@ -37,6 +38,7 @@ use Project_AccessProjectNotFoundException;
 use ProjectHistoryDao;
 use ProjectManager;
 use ReferenceManager;
+use TemplateRendererFactory;
 use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
 use Tuleap\Git\CommitStatus\CommitStatusDAO;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
@@ -55,8 +57,11 @@ use Tuleap\Label\REST\LabelsUpdater;
 use Tuleap\Label\REST\UnableToAddAndRemoveSameLabelException;
 use Tuleap\Label\REST\UnableToAddEmptyLabelException;
 use Tuleap\Label\UnknownLabelException;
+use Tuleap\Mail\MailFilter;
 use Tuleap\Project\Label\LabelDao;
+use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\REST\UserRESTReferenceRetriever;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Authorization\UserCannotMergePullRequestException;
 use Tuleap\PullRequest\Comment\Comment;
@@ -88,18 +93,29 @@ use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 use Tuleap\PullRequest\InlineComment\InlineCommentCreator;
 use Tuleap\PullRequest\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
+use Tuleap\PullRequest\Logger;
 use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
+use Tuleap\PullRequest\Notification\EventSubjectToNotificationListener;
+use Tuleap\PullRequest\Notification\EventSubjectToNotificationListenerProvider;
+use Tuleap\PullRequest\Notification\EventSubjectToNotificationSynchronousDispatcher;
+use Tuleap\PullRequest\Notification\NotificationToProcessBuilder;
+use Tuleap\PullRequest\Notification\PullRequestNotificationExecutor;
+use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationSendMail;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestWithGitReference;
+use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerRepresentationInformationExtractor;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersPUTRepresentation;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersRepresentation;
+use Tuleap\PullRequest\Reviewer\Change\ReviewerChange;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeDAO;
+use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeEvent;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeRetriever;
+use Tuleap\PullRequest\Reviewer\Notification\ReviewerChangeNotificationToProcessBuilder;
 use Tuleap\PullRequest\Reviewer\ReviewerDAO;
 use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
 use Tuleap\PullRequest\Reviewer\ReviewersCannotBeUpdatedOnClosedPullRequestException;
@@ -133,7 +149,7 @@ class PullRequestsResource extends AuthenticatedResource
     /** @var GitRepositoryFactory */
     private $git_repository_factory;
 
-    /** @var Tuleap\PullRequest\Factory */
+    /** @var PullRequestFactory */
     private $pull_request_factory;
 
     /** @var Tuleap\PullRequest\Timeline\Factory */
@@ -218,7 +234,11 @@ class PullRequestsResource extends AuthenticatedResource
             $comment_dao,
             $inline_comment_dao,
             $timeline_dao,
-            new ReviewerChangeRetriever(new ReviewerChangeDAO(), $this->user_manager)
+            new ReviewerChangeRetriever(
+                new ReviewerChangeDAO(),
+                $this->pull_request_factory,
+                $this->user_manager,
+            )
         );
 
         $this->paginated_timeline_representation_builder = new PaginatedTimelineRepresentationBuilder(
@@ -1229,7 +1249,27 @@ class PullRequestsResource extends AuthenticatedResource
         );
         $users = $information_extractor->getUsers($representation);
 
-        $reviewer_updater = new ReviewerUpdater(new ReviewerDAO(), $this->permission_checker);
+        $reviewer_updater = new ReviewerUpdater(
+            new ReviewerDAO(),
+            $this->permission_checker,
+            new EventSubjectToNotificationSynchronousDispatcher(
+                new EventSubjectToNotificationListenerProvider([
+                    ReviewerChangeEvent::class => [
+                        function (): NotificationToProcessBuilder {
+                            return new ReviewerChangeNotificationToProcessBuilder(
+                                new ReviewerChangeRetriever(
+                                    new ReviewerChangeDAO(),
+                                    $this->pull_request_factory,
+                                    $this->user_manager
+                                ),
+                                \UserHelper::instance()
+                            );
+                        }
+                    ]
+                ]),
+                new PullRequestNotificationExecutor(new Logger())
+            )
+        );
         try {
             $reviewer_updater->updatePullRequestReviewers(
                 $pull_request->getPullRequest(),

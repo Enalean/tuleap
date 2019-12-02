@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest;
+declare(strict_types=1);
 
-class PluginDescriptor extends \PluginDescriptor
+namespace Tuleap\PullRequest\Reviewer\Change;
+
+use Tuleap\PullRequest\Notification\EventSubjectToNotification;
+
+/**
+ * @psalm-immutable
+ */
+final class ReviewerChangeEvent implements EventSubjectToNotification
 {
+    /**
+     * @var int
+     */
+    private $change_id;
 
-    public function __construct()
+    private function __construct(int $change_id)
     {
-        parent::__construct(
-            dgettext('tuleap-pullrequest', 'Pull request'),
-            false,
-            $GLOBALS['Language']->getText('plugin_pullrequest', 'descriptor_description')
-        );
+        $this->change_id = $change_id;
+    }
 
-        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
+    public static function fromID(int $change_id): self
+    {
+        return new self($change_id);
+    }
+
+    public function getChangeID() : int
+    {
+        return $this->change_id;
     }
 }

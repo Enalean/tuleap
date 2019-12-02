@@ -1,5 +1,4 @@
 plugin_pullrequest	descriptor_description	Revue de code et demande de fusion
-plugin_pullrequest	descriptor_name	Pull request
 
 plugin_pullrequest	title	Pull request
 plugin_pullrequest	service_lbl_key	Pull request
