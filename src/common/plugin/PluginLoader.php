@@ -27,6 +27,7 @@ use ForgeConfig;
 use Logger;
 use RuntimeException;
 use Symfony\Component\VarExporter\VarExporter;
+use Webimpress\SafeWriter\Exception\ExceptionInterface;
 use Webimpress\SafeWriter\FileWriter;
 
 class PluginLoader
@@ -113,7 +114,7 @@ class PluginLoader
         $content = '<?php'.PHP_EOL.'return '.VarExporter::export($var).';';
         try {
             FileWriter::writeFile($path, $content);
-        } catch (RuntimeException $exception) {
+        } catch (ExceptionInterface $exception) {
             $this->logger->error("Unable to store tuleap hooks content:" . $exception->getMessage());
         }
     }
