@@ -64,7 +64,7 @@ class SVNRefreshAllAccessFilesCommand extends Command
         parent::__construct(self::NAME);
     }
 
-    public function execute(InputInterface $input, OutputInterface $output): void
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("<comment>Start refresh access files:</comment>");
 
@@ -75,7 +75,7 @@ class SVNRefreshAllAccessFilesCommand extends Command
             $output->writeln("<comment>No SVN multi-repositories found.</comment>");
             $output->writeln("<comment>End of refresh access files.</comment>");
 
-            return;
+            return 0;
         }
 
         $count_refreshed_repositories = 0;
@@ -95,6 +95,7 @@ class SVNRefreshAllAccessFilesCommand extends Command
         $table->render();
 
         $output->writeln("<info>" . $count_refreshed_repositories . " SVN access files restored.</info>");
+        return 0;
     }
 
     private function refreshRepositories(array $project_repositories, Table $table): void

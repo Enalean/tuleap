@@ -46,7 +46,7 @@ class WorkerSVNRootUpdateCommand extends Command
             ->addOption('verbose', '', InputOption::VALUE_NONE, 'Output logs on stdout instead of log file');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $locker = new DaemonLocker('/var/run/svnroot_updater.pid');
 
@@ -70,5 +70,7 @@ class WorkerSVNRootUpdateCommand extends Command
         $updater->listen('backend-svn-1');
 
         $logger->info("Service terminated");
+
+        return 0;
     }
 }

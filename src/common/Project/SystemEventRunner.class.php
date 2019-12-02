@@ -24,9 +24,8 @@ use Project_Creation_Exception;
 use SystemEventProcessor_Factory;
 use SystemEvent;
 use SystemEventProcessorMutex;
-use Symfony\Component\Lock\Factory as LockFactory;
+use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\SemaphoreStore;
-use Tuleap\DB\DBConnection;
 use Tuleap\DB\DBFactory;
 
 final class SystemEventRunner implements SystemEventRunnerInterface

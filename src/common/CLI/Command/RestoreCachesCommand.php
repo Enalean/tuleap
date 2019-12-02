@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,10 +35,12 @@ class RestoreCachesCommand extends Command
         $this->setName(self::NAME)->setDescription('Recreate cache directories if needed');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $site_cache = new SiteCache(new ConsoleLogger($output));
         $site_cache->restoreCacheDirectories();
         $site_cache->restoreOwnership();
+
+        return 0;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -58,7 +58,7 @@ class ConfigSetCommand extends Command
             ->addArgument('value', InputArgument::REQUIRED, 'Variable value');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = $input->getArgument('key');
 
@@ -74,6 +74,7 @@ class ConfigSetCommand extends Command
         $value = $input->getArgument('value');
 
         $this->config_dao->save($key, $value);
+        return 0;
     }
 
     /**

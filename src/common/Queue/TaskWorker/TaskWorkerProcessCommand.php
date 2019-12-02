@@ -61,7 +61,7 @@ final class TaskWorkerProcessCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $path_file_event = $input->getArgument('input_file');
         assert(is_string($path_file_event));
@@ -70,5 +70,7 @@ final class TaskWorkerProcessCommand extends Command
         $event              = json_decode($event_string, true, 512, JSON_THROW_ON_ERROR);
         $worker_queue_event = new WorkerEvent($this->logger, $event);
         $this->event_dispatcher->dispatch($worker_queue_event);
+
+        return 0;
     }
 }
