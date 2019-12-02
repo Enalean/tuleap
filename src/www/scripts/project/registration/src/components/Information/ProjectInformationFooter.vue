@@ -35,7 +35,7 @@
                     v-on:click="createProject"
                     v-bind:disabled="! project_name_properties.is_valid"
             >
-                <span v-translate>Start my project</span> <i v-bind:class="getIcon"/>
+                <span v-translate>Start my project</span> <i v-bind:class="getIcon" data-test="project-submission-icon"/>
             </button>
         </div>
     </div>
@@ -45,7 +45,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { ProjectProperties, TemplateData, ProjectNameProperties } from "../../type";
-import { State } from "vuex-class";
+import { Getter, State } from "vuex-class";
 import { redirectToUrl } from "../../helpers/location-helper";
 
 @Component
@@ -53,16 +53,20 @@ export default class ProjectInformationFooter extends Vue {
     @State
     selected_template!: TemplateData;
 
+    @State
+    is_creating_project!: boolean;
+
+    @Getter
+    has_error!: boolean;
+
     @Prop({ required: true })
     readonly project_name_properties!: ProjectNameProperties;
 
     @Prop({ required: true })
     readonly is_public!: boolean;
 
-    is_loading = false;
-
     get getIcon(): string {
-        if (!this.is_loading) {
+        if (!this.is_creating_project || this.has_error) {
             return "fa tlp-button-icon-right fa-arrow-circle-o-right";
         }
 
@@ -82,11 +86,7 @@ export default class ProjectInformationFooter extends Vue {
             xml_template_name: this.selected_template.name
         };
 
-        this.is_loading = true;
-
         await this.$store.dispatch("createProject", project_properties);
-
-        this.is_loading = false;
 
         redirectToUrl("/my");
     }

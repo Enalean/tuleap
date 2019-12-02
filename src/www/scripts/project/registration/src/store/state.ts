@@ -21,7 +21,9 @@ import { State } from "./type";
 
 const state: State = {
     tuleap_templates: [],
-    selected_template: null
+    selected_template: null,
+    error: null,
+    is_creating_project: false
 };
 
 export default state;

@@ -20,6 +20,8 @@
 
 <template>
     <div>
+        <div class="tlp-alert-danger" v-if="has_error" data-test="project-creation-failed">{{ error }}</div>
+
         <div class="register-new-project-section">
             <project-information-svg/>
             <div class="register-new-project-list">
@@ -34,6 +36,7 @@
                 </div>
             </div>
         </div>
+
         <project-information-footer
             v-bind:project_name_properties="name_properties"
             v-bind:is_public="is_private === false"
@@ -50,6 +53,7 @@ import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
 import ProjectInformationInputPrivacySwitch from "./Input/ProjectInformationInputPrivacySwitch.vue";
 import { ProjectNameProperties } from "../../type";
+import { Getter, State } from "vuex-class";
 
 @Component({
     components: {
@@ -61,6 +65,12 @@ import { ProjectNameProperties } from "../../type";
     }
 })
 export default class ProjectInformation extends Vue {
+    @Getter
+    has_error!: boolean;
+
+    @State
+    error!: string;
+
     name_properties: ProjectNameProperties = {
         slugified_name: "",
         name: "",

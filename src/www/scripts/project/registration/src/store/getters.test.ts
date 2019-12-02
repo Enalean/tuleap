@@ -23,7 +23,12 @@ import { State } from "./type";
 describe("getters", () => {
     describe("is_template_selected", () => {
         it(`Should return false when the selected template is null `, () => {
-            const state: State = { selected_template: null, tuleap_templates: [] };
+            const state: State = {
+                selected_template: null,
+                tuleap_templates: [],
+                error: null,
+                is_creating_project: false
+            };
             expect(getters.is_template_selected(state)).toBe(false);
         });
         it(`Should return true when a template is choosen `, () => {
@@ -34,9 +39,32 @@ describe("getters", () => {
                     name: "scrum_template",
                     svg: "<svg></svg>"
                 },
-                tuleap_templates: []
+                tuleap_templates: [],
+                error: null,
+                is_creating_project: false
             };
             expect(getters.is_template_selected(state)).toBe(true);
+        });
+    });
+
+    describe("has_error", () => {
+        it(`Should return false when no error message is stored`, () => {
+            const state: State = {
+                selected_template: null,
+                tuleap_templates: [],
+                error: null,
+                is_creating_project: false
+            };
+            expect(getters.has_error(state)).toBe(false);
+        });
+        it(`Should return true when a template is choosen `, () => {
+            const state: State = {
+                selected_template: null,
+                tuleap_templates: [],
+                error: "Ho snap!",
+                is_creating_project: false
+            };
+            expect(getters.has_error(state)).toBe(true);
         });
     });
 });

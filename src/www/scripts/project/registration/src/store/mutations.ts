@@ -20,9 +20,25 @@
 
 import { State } from "./type";
 import { TemplateData } from "../type";
+import { FetchWrapperError } from "tlp";
 
 export default {
     setSelectedTemplate(state: State, selected_template: TemplateData): void {
         state.selected_template = selected_template;
+    },
+
+    setIsCreatingProject(state: State, is_creating_project: boolean): void {
+        state.error = null;
+        state.is_creating_project = is_creating_project;
+    },
+
+    async handleError(state: State, rest_error: FetchWrapperError): Promise<void> {
+        try {
+            const { error } = await rest_error.response.json();
+            state.error = error.message;
+        } catch (e) {
+            state.error = "Internal server error";
+            throw e;
+        }
     }
 };
