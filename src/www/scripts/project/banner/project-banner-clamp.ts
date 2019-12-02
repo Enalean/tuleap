@@ -23,11 +23,17 @@ export const PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS = "project-banner-can
 
 export function allowUnclampingProjectBannerMessage(mount_point: Document): void {
     const project_banner_message = mount_point.getElementById(PROJECT_BANNER_MESSAGE_ID);
-    if (project_banner_message === null) {
+    if (project_banner_message === null || project_banner_message.parentElement === null) {
         return;
     }
+    const project_banner_message_wrapper = project_banner_message.parentElement;
 
     addHintMessageIsClampedIfNeeded(project_banner_message);
+
+    const observer = new MutationObserver(() => {
+        addHintMessageIsClampedIfNeeded(project_banner_message);
+    });
+    observer.observe(project_banner_message_wrapper, { attributes: true });
 
     let ticking = false;
     const resize_event_listener = function(): void {
