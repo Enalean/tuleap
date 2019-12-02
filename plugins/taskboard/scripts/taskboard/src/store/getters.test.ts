@@ -37,7 +37,8 @@ describe("column_and_swimlane_of_cell", () => {
             },
             swimlane: {
                 swimlanes: [swimlane_to_find]
-            }
+            },
+            trackers: [{ id: 1 }]
         } as RootState;
     });
 
@@ -64,6 +65,21 @@ describe("column_and_swimlane_of_cell", () => {
 
         expect(swimlane).toBeUndefined();
         expect(column).toBeUndefined();
+    });
+
+    describe("tracker_of_card", () => {
+        it("Given a card, it returns its tracker", () => {
+            const card = { id: 100, tracker_id: 1 } as Card;
+            const expected_tracker = { id: 1 };
+
+            expect(getters.tracker_of_card(root_state)(card)).toEqual(expected_tracker);
+        });
+
+        it("Throws an error when the tracker is not found", () => {
+            const card = { id: 100, tracker_id: 3 } as Card;
+
+            expect(() => getters.tracker_of_card(root_state)(card)).toThrowError("not been found");
+        });
     });
 });
 

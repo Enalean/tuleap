@@ -20,7 +20,7 @@
 
 <template>
     <div class="taskboard-card" v-bind:class="additional_classnames">
-        <span class="taskboard-card-edit-trigger" v-on:click="switchToEditMode">
+        <span v-if="can_user_update_title" class="taskboard-card-edit-trigger" v-on:click="switchToEditMode">
             <i class="fa fa-pencil"></i>
         </span>
         <div class="taskboard-card-content">
@@ -42,7 +42,8 @@ import { Component, Prop } from "vue-property-decorator";
 import CardXrefLabel from "./CardXrefLabel.vue";
 import CardAssignees from "./CardAssignees.vue";
 import { Card, TaskboardEvent } from "../../../../../type";
-import { namespace } from "vuex-class";
+import { Tracker } from "../../../../../store/type";
+import { namespace, Getter } from "vuex-class";
 import EventBus from "../../../../../helpers/event-bus";
 import EditLabel from "./EditMode/Label/EditLabel.vue";
 import { NewCardPayload } from "../../../../../store/swimlane/card/type";
@@ -64,6 +65,9 @@ export default class BaseCard extends Vue {
     @Prop({ required: true })
     readonly card!: Card;
 
+    @Getter
+    readonly tracker_of_card!: (card: Card) => Tracker;
+
     @swimlane.Mutation
     readonly addCardToEditMode!: (card: Card) => void;
 
@@ -73,7 +77,7 @@ export default class BaseCard extends Vue {
     @swimlane.Action
     readonly saveCard!: (payload: NewCardPayload) => Promise<void>;
 
-    label = "";
+    private label = "";
 
     mounted(): void {
         this.label = this.card.label;
@@ -144,15 +148,23 @@ export default class BaseCard extends Vue {
             classnames.push("taskboard-card-is-just-saved");
         }
 
-        if (!this.card.is_being_saved) {
+        if (this.can_user_update_title && !this.card.is_being_saved) {
             classnames.push("taskboard-card-editable");
         }
 
         return classnames.join(" ");
     }
 
+    get can_user_update_title(): boolean {
+        return this.tracker.title_field_id !== null;
+    }
+
     get show_accessibility_pattern(): boolean {
         return this.user_has_accessibility_mode && this.card.background_color.length > 0;
+    }
+
+    get tracker(): Tracker {
+        return this.tracker_of_card(this.card);
     }
 }
 </script>

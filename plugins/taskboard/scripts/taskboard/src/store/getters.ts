@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { RootState } from "./type";
-import { ColumnDefinition, Swimlane } from "../type";
+import { RootState, Tracker } from "./type";
+import { ColumnDefinition, Swimlane, Card } from "../type";
 
 export const column_of_cell = (root_state: RootState) => (
     cell: HTMLElement
@@ -42,4 +42,14 @@ export const column_and_swimlane_of_cell = (root_state: RootState) => (
         swimlane,
         column
     };
+};
+
+export const tracker_of_card = (root_state: RootState) => (card: Card): Tracker => {
+    const tracker = root_state.trackers.find(tracker => tracker.id === card.tracker_id);
+
+    if (!tracker) {
+        throw new Error(`Tracker ${card.tracker_id} has not been found in the store.`);
+    }
+
+    return tracker;
 };
