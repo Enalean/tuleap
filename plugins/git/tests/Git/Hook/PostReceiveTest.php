@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013-2019. All rights reserved.
+ * Copyright Enalean (c) 2013-Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -42,17 +42,18 @@ abstract class Git_Hook_PostReceive_Common extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->user                       = mock('PFUser');
-        $this->log_analyzer               = mock('Git_Hook_LogAnalyzer');
-        $this->git_repository_factory     = mock('GitRepositoryFactory');
-        $this->user_manager               = mock('UserManager');
-        $this->repository                 = mock('GitRepository');
-        $this->ci_launcher                = mock('Git_Ci_Launcher');
-        $this->parse_log                  = mock('Git_Hook_ParseLog');
-        $this->system_event_manager       = mock('Git_SystemEventManager');
-        $this->mail_builder               = mock('MailBuilder');
+        $this->setUpGlobalsMockery();
+        $this->user                       = \Mockery::spy(\PFUser::class);
+        $this->log_analyzer               = \Mockery::spy(\Git_Hook_LogAnalyzer::class);
+        $this->git_repository_factory     = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->user_manager               = \Mockery::spy(\UserManager::class);
+        $this->repository                 = \Mockery::spy(\GitRepository::class);
+        $this->ci_launcher                = \Mockery::spy(\Git_Ci_Launcher::class);
+        $this->parse_log                  = \Mockery::spy(\Git_Hook_ParseLog::class);
+        $this->system_event_manager       = \Mockery::spy(\Git_SystemEventManager::class);
+        $this->mail_builder               = \Mockery::spy(\MailBuilder::class);
         $this->event_manager              = \Mockery::spy(\EventManager::class);
-        $this->request_sender             = mock('Tuleap\Git\Webhook\WebhookRequestSender');
+        $this->request_sender             = \Mockery::spy(\Tuleap\Git\Webhook\WebhookRequestSender::class);
 
         $this->post_receive = new Git_Hook_PostReceive(
             $this->log_analyzer,
@@ -63,10 +64,10 @@ abstract class Git_Hook_PostReceive_Common extends TuleapTestCase
             $this->system_event_manager,
             $this->event_manager,
             $this->request_sender,
-            mock('Tuleap\Git\Hook\PostReceiveMailSender')
+            \Mockery::spy(\Tuleap\Git\Hook\PostReceiveMailSender::class)
         );
 
-        stub($this->repository)->getNotifiedMails()->returns(array());
+        $this->repository->shouldReceive('getNotifiedMails')->andReturns(array());
     }
 }
 
@@ -76,50 +77,62 @@ class Git_Hook_PostReceive_UserAndRepoTest extends Git_Hook_PostReceive_Common
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->push_details = stub('Git_Hook_PushDetails')->getRevisionList()->returns(array());
-        stub($this->log_analyzer)->getPushDetails()->returns($this->push_details);
+        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array())->getMock();
     }
 
     public function itGetRepositoryFromFactory()
     {
-        expect($this->git_repository_factory)->getFromFullPath('/var/lib/tuleap/gitolite/repositories/garden/dev.git')->once();
+        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
+
+        $this->git_repository_factory->shouldReceive('getFromFullPath')->with('/var/lib/tuleap/gitolite/repositories/garden/dev.git')->once();
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
     public function itGetUserFromManager()
     {
-        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
-        expect($this->user_manager)->getUserByUserName('john_doe')->once();
+        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
+
+        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->user_manager->shouldReceive('getUserByUserName')->with('john_doe')->once();
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
     public function itSkipsIfRepositoryIsNotKnown()
     {
-        stub($this->git_repository_factory)->getFromFullPath()->returns(null);
+        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
 
-        expect($this->parse_log)->execute()->never();
+        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns(null);
+
+        $this->parse_log->shouldReceive('execute')->never();
 
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
     public function itFallsBackOnAnonymousIfUserIsNotKnows()
     {
-        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
+        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
 
-        stub($this->user_manager)->getUserByUserName()->returns(null);
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns(null);
 
-        expect($this->log_analyzer)->getPushDetails($this->repository, new IsAnonymousUserExpectaction(), 'd8f1e57', '469eaa9', 'refs/heads/master')->once();
+        $this->log_analyzer->shouldReceive('getPushDetails')
+            ->with($this->repository, Mockery::any(), 'd8f1e57', '469eaa9', 'refs/heads/master')
+            ->once()
+            ->andReturns($this->push_details);
 
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 
     public function itGetsPushDetailsFromLogAnalyzer()
     {
-        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
-        stub($this->user_manager)->getUserByUserName()->returns($this->user);
+        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
 
-        expect($this->log_analyzer)->getPushDetails($this->repository, $this->user, 'd8f1e57', '469eaa9', 'refs/heads/master')->once();
+        $this->log_analyzer->shouldReceive('getPushDetails')
+            ->with($this->repository, $this->user, 'd8f1e57', '469eaa9', 'refs/heads/master')
+            ->once()
+            ->andReturns($this->push_details);
 
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
@@ -131,16 +144,17 @@ class Git_Hook_PostReceive_ExtractTest extends Git_Hook_PostReceive_Common
     public function setUp()
     {
         parent::setUp();
-        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
-        stub($this->user_manager)->getUserByUserName()->returns($this->user);
+        $this->setUpGlobalsMockery();
+        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
     }
 
     public function itExecutesExtractOnEachCommit()
     {
-        $this->push_details = stub('Git_Hook_PushDetails')->getRevisionList()->returns(array('469eaa9'));
-        stub($this->log_analyzer)->getPushDetails()->returns($this->push_details);
+        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array('469eaa9'))->getMock();
+        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
 
-        expect($this->parse_log)->execute($this->push_details)->once();
+        $this->parse_log->shouldReceive('execute')->with($this->push_details)->once();
 
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
@@ -152,15 +166,16 @@ class Git_Hook_PostReceive_TriggerCiTest extends Git_Hook_PostReceive_Common
     public function setUp()
     {
         parent::setUp();
-        $this->push_details = stub('Git_Hook_PushDetails')->getRevisionList()->returns(array('469eaa9'));
-        stub($this->log_analyzer)->getPushDetails()->returns($this->push_details);
-        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
-        stub($this->user_manager)->getUserByUserName()->returns(mock('PFUser'));
+        $this->setUpGlobalsMockery();
+        $this->push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array('469eaa9'))->getMock();
+        $this->log_analyzer->shouldReceive('getPushDetails')->andReturns($this->push_details);
+        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
+        $this->user_manager->shouldReceive('getUserByUserName')->andReturns(\Mockery::spy(\PFUser::class));
     }
 
     public function itTriggersACiBuild()
     {
-        expect($this->ci_launcher)->executeForRepository($this->repository)->once();
+        $this->ci_launcher->shouldReceive('executeForRepository')->with($this->repository)->once();
         $this->post_receive->execute('/var/lib/tuleap/gitolite/repositories/garden/dev.git', 'john_doe', 'd8f1e57', '469eaa9', 'refs/heads/master', $this->mail_builder);
     }
 }
@@ -171,12 +186,13 @@ class Git_Hook_PostReceive_LaunchGrokMirrorUpdates extends Git_Hook_PostReceive_
     public function setUp()
     {
         parent::setUp();
-        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
+        $this->setUpGlobalsMockery();
+        $this->git_repository_factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
     }
 
     public function itLaunchesGrokMirrorUpdates()
     {
-        expect($this->system_event_manager)->queueGrokMirrorManifestFollowingAGitPush($this->repository)->once();
+        $this->system_event_manager->shouldReceive('queueGrokMirrorManifestFollowingAGitPush')->with($this->repository)->once();
         $this->post_receive->beforeParsingReferences('/var/lib/tuleap/gitolite/repositories/garden/dev.git');
     }
 }

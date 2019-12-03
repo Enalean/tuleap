@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\Git\Gitolite\SSHKey;
 
+use Mockery;
 use Tuleap\Git\Gitolite\SSHKey\Provider\TestProvider;
 use TuleapTestCase;
 
@@ -36,7 +37,7 @@ class AuthorizedKeysFileCreatorTest extends TuleapTestCase
         $keys = new TestProvider();
         $keys->append($key1);
         $keys->append($key2);
-        $system_command = mock('System_Command');
+        $system_command = Mockery::spy('System_Command');
 
         $temporary_file = tempnam(sys_get_temp_dir(), 'AuthorizedKeysFileCreatorUnitTests');
 
@@ -62,9 +63,10 @@ command="/bin/false user2",some-options ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDF
         $keys = new TestProvider();
         $keys->append($key1);
         $keys->append($key2);
-        $system_command = mock('System_Command');
-        $system_command->throwAt(0, 'exec', new \System_Command_CommandException('', array(), 1));
-        $system_command->throwAt(1, 'exec', new \System_Command_CommandException('', array(), 1));
+        $system_command = Mockery::mock('System_Command');
+        $system_command->shouldReceive('exec')->once()->andThrow(new \System_Command_CommandException('', array(), 1))->ordered();
+        $system_command->shouldReceive('exec')->once()->andThrow(new \System_Command_CommandException('', array(), 1))->ordered();
+        $system_command->shouldReceive('exec')->once()->andReturnTrue()->ordered();
         $temporary_file = tempnam(sys_get_temp_dir(), 'AuthorizedKeysFileCreatorUnitTests');
 
         $invalid_keys_collector       = new InvalidKeysCollector();

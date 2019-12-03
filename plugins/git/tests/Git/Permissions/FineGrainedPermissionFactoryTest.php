@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,68 +30,66 @@ class FineGrainedPermissionFactoryTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->dao            = safe_mock(FineGrainedDao::class);
-        $this->ugroup_manager = mock('UGroupManager');
-        $this->normalizer     = mock('PermissionsNormalizer');
+        $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
+        $this->normalizer     = \Mockery::spy(\PermissionsNormalizer::class);
 
         $this->factory = new FineGrainedPermissionFactory(
             $this->dao,
             $this->ugroup_manager,
             $this->normalizer,
-            mock('PermissionsManager'),
+            \Mockery::spy(\PermissionsManager::class),
             new PatternValidator(
                 new FineGrainedPatternValidator(),
                 new FineGrainedRegexpValidator(),
-                mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever')
+                \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class)
             ),
             new FineGrainedPermissionSorter(),
-            mock('Tuleap\Git\XmlUgroupRetriever')
+            \Mockery::spy(\Tuleap\Git\XmlUgroupRetriever::class)
         );
 
         $this->repository = aGitRepository()->withId(43)->build();
 
-        $project               = mock('Project');
-        $this->project_manager = mock('ProjectManager');
+        $project               = \Mockery::spy(\Project::class);
+        $this->project_manager = \Mockery::spy(\ProjectManager::class);
 
-        $ugroup_01 = stub('ProjectUGroup')->getId()->returns(101);
-        $ugroup_02 = stub('ProjectUGroup')->getId()->returns(102);
-        $ugroup_03 = stub('ProjectUGroup')->getId()->returns(103);
+        $ugroup_01 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(101)->getMock();
+        $ugroup_02 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(102)->getMock();
+        $ugroup_03 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(103)->getMock();
 
-        stub($this->ugroup_manager)->getById(101)->returns($ugroup_01);
-        stub($this->ugroup_manager)->getById(102)->returns($ugroup_02);
-        stub($this->ugroup_manager)->getById(103)->returns($ugroup_03);
-        stub($this->project_manager)->getProject(101)->returns($project);
-        stub($this->normalizer)->getNormalizedUGroupIds()->returns(array());
+        $this->ugroup_manager->shouldReceive('getById')->with(101)->andReturns($ugroup_01);
+        $this->ugroup_manager->shouldReceive('getById')->with(102)->andReturns($ugroup_02);
+        $this->ugroup_manager->shouldReceive('getById')->with(103)->andReturns($ugroup_03);
+        $this->project_manager->shouldReceive('getProject')->with(101)->andReturns($project);
+        $this->normalizer->shouldReceive('getNormalizedUGroupIds')->andReturns(array());
 
-        stub($this->dao)->searchBranchesFineGrainedPermissionsForRepository()->returnsDar(array(
+        $this->dao->shouldReceive('searchBranchesFineGrainedPermissionsForRepository')->andReturns(\TestHelper::arrayToDar(array(
             'id'            => 1,
             'repository_id' => 43,
             'pattern'       => 'refs/heads/master',
-        ));
+        )));
 
-        stub($this->dao)->searchTagsFineGrainedPermissionsForRepository()->returnsDar(array(
+        $this->dao->shouldReceive('searchTagsFineGrainedPermissionsForRepository')->andReturns(\TestHelper::arrayToDar(array(
             'id'            => 2,
             'repository_id' => 43,
             'pattern'       => 'refs/tags/v1',
-        ));
+        )));
 
-        stub($this->dao)->searchWriterUgroupIdsForFineGrainedPermissions(1)->returnsDar(
-            array('ugroup_id' => 101),
-            array('ugroup_id' => 102)
-        );
+        $this->dao->shouldReceive('searchWriterUgroupIdsForFineGrainedPermissions')->with(1)->andReturns(\TestHelper::arrayToDar(array('ugroup_id' => 101), array('ugroup_id' => 102)));
 
-        stub($this->dao)->searchRewinderUgroupIdsForFineGrainePermissions(1)->returnsDar(array(
+        $this->dao->shouldReceive('searchRewinderUgroupIdsForFineGrainePermissions')->with(1)->andReturns(\TestHelper::arrayToDar(array(
             'ugroup_id' => 103,
-        ));
+        )));
 
-        stub($this->dao)->searchWriterUgroupIdsForFineGrainedPermissions(2)->returnsDar(array(
+        $this->dao->shouldReceive('searchWriterUgroupIdsForFineGrainedPermissions')->with(2)->andReturns(\TestHelper::arrayToDar(array(
             'ugroup_id' => 101,
-        ));
+        )));
 
-        stub($this->dao)->searchRewinderUgroupIdsForFineGrainePermissions(2)->returnsDar(array(
+        $this->dao->shouldReceive('searchRewinderUgroupIdsForFineGrainePermissions')->with(2)->andReturns(\TestHelper::arrayToDar(array(
             'ugroup_id' => 102,
-        ));
+        )));
     }
 
     public function itRetrievesUpdatedPermissions()

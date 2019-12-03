@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,7 @@ namespace Tuleap\Git\Permissions;
 use TuleapTestCase;
 use GitRepository;
 
-require_once dirname(__FILE__) . '/../../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 class PatternValidatorTest extends TuleapTestCase
 {
@@ -55,11 +55,12 @@ class PatternValidatorTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->repository       = mock('GitRepository');
-        $this->regexp_retriever = mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever');
-        $this->regexp_validator = mock('Tuleap\Git\Permissions\FineGrainedRegexpValidator');
-        $this->validator        = mock('Tuleap\Git\Permissions\FineGrainedPatternValidator');
+        $this->repository       = \Mockery::spy(\GitRepository::class);
+        $this->regexp_retriever = \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class);
+        $this->regexp_validator = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRegexpValidator::class);
+        $this->validator        = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPatternValidator::class);
 
         $this->pattern_validator = new PatternValidator(
             $this->validator,
@@ -67,80 +68,88 @@ class PatternValidatorTest extends TuleapTestCase
             $this->regexp_retriever
         );
 
-        stub($this->repository)->getProject()->returns(mock('Project'));
+        $this->repository->shouldReceive('getProject')->andReturns(\Mockery::spy(\Project::class));
     }
 
     public function itValidPatternForRepositoryWithRegexpModeWhenRegexpAreActivated()
     {
-        stub($this->regexp_retriever)->areRegexpActivatedForRepository()->returns(true);
-        $this->pattern_validator->isValidForRepository($this->repository, 'master', true);
+        $this->regexp_retriever->shouldReceive('areRegexpActivatedForRepository')->andReturns(true);
 
-        $this->regexp_validator->expectOnce('isPatternValid');
-        $this->validator->expectNever('isPatternValid');
+        $this->regexp_validator->shouldReceive('isPatternValid')->once();
+        $this->validator->shouldReceive('isPatternValid')->never();
+
+        $this->pattern_validator->isValidForRepository($this->repository, 'master', true);
     }
 
     public function itValidPatternForRepositoryWithStandardModeWhenRegexpAreNotAvailable()
     {
-        stub($this->regexp_retriever)->areRegexpActivatedForRepository()->returns(false);
-        $this->pattern_validator->isValidForRepository($this->repository, 'master', false);
+        $this->regexp_retriever->shouldReceive('areRegexpActivatedForRepository')->andReturns(false);
 
-        $this->regexp_validator->expectNever('isPatternValid');
-        $this->validator->expectOnce('isPatternValid');
+        $this->regexp_validator->shouldReceive('isPatternValid')->never();
+        $this->validator->shouldReceive('isPatternValid')->once();
+
+        $this->pattern_validator->isValidForRepository($this->repository, 'master', false);
     }
 
     public function itValidsPatternForRepositoryWithRegexpModeWhenRegexpAreCurrentlyActivated()
     {
-        stub($this->regexp_retriever)->areRegexpActivatedForRepository()->returns(false);
-        $this->pattern_validator->isValidForRepository($this->repository, 'master', true);
+        $this->regexp_retriever->shouldReceive('areRegexpActivatedForRepository')->andReturns(false);
 
-        $this->regexp_validator->expectOnce('isPatternValid');
-        $this->validator->expectNever('isPatternValid');
+        $this->regexp_validator->shouldReceive('isPatternValid')->once();
+        $this->validator->shouldReceive('isPatternValid')->never();
+
+        $this->pattern_validator->isValidForRepository($this->repository, 'master', true);
     }
 
     public function itValidsPatternForRepositoryWithStandardModeWhenRegexpAreConflictingWithPlateform()
     {
-        stub($this->regexp_retriever)->areRegexpActivatedForRepository()->returns(true);
-        stub($this->regexp_retriever)->areRegexpRepositoryConflitingWithPlateform()->returns(true);
-        $this->pattern_validator->isValidForRepository($this->repository, 'master', true);
+        $this->regexp_retriever->shouldReceive('areRegexpActivatedForRepository')->andReturns(true);
+        $this->regexp_retriever->shouldReceive('areRegexpRepositoryConflitingWithPlateform')->andReturns(true);
 
-        $this->regexp_validator->expectNever('isPatternValid');
-        $this->validator->expectOnce('isPatternValid');
+        $this->regexp_validator->shouldReceive('isPatternValid')->never();
+        $this->validator->shouldReceive('isPatternValid')->once();
+
+        $this->pattern_validator->isValidForRepository($this->repository, 'master', true);
     }
 
     public function itValidPatternForDefaultWithRegexpModeWhenRegexpAreActivated()
     {
-        stub($this->regexp_retriever)->areRegexpActivatedForDefault()->returns(true);
-        $this->pattern_validator->isValidForDefault($this->repository->getProject(), 'master', true);
+        $this->regexp_retriever->shouldReceive('areRegexpActivatedForDefault')->andReturns(true);
 
-        $this->regexp_validator->expectOnce('isPatternValid');
-        $this->validator->expectNever('isPatternValid');
+        $this->regexp_validator->shouldReceive('isPatternValid')->once();
+        $this->validator->shouldReceive('isPatternValid')->never();
+
+        $this->pattern_validator->isValidForDefault($this->repository->getProject(), 'master', true);
     }
 
     public function itValidPatternForDefaultWithStandardModeWhenRegexpAreNotAvailable()
     {
-        stub($this->regexp_retriever)->areRegexpActivatedForDefault()->returns(false);
-        $this->pattern_validator->isValidForDefault($this->repository->getProject(), 'master', false);
+        $this->regexp_retriever->shouldReceive('areRegexpActivatedForDefault')->andReturns(false);
 
-        $this->regexp_validator->expectNever('isPatternValid');
-        $this->validator->expectOnce('isPatternValid');
+        $this->regexp_validator->shouldReceive('isPatternValid')->never();
+        $this->validator->shouldReceive('isPatternValid')->once();
+
+        $this->pattern_validator->isValidForDefault($this->repository->getProject(), 'master', false);
     }
 
     public function itValidsPatternForDefaultWithRegexpModeWhenRegexpAreCurrentlyActivated()
     {
-        stub($this->regexp_retriever)->areRegexpActivatedForDefault()->returns(false);
-        $this->pattern_validator->isValidForDefault($this->repository->getProject(), 'master', true);
+        $this->regexp_retriever->shouldReceive('areRegexpActivatedForDefault')->andReturns(false);
 
-        $this->regexp_validator->expectOnce('isPatternValid');
-        $this->validator->expectNever('isPatternValid');
+        $this->regexp_validator->shouldReceive('isPatternValid')->once();
+        $this->validator->shouldReceive('isPatternValid')->never();
+
+        $this->pattern_validator->isValidForDefault($this->repository->getProject(), 'master', true);
     }
 
     public function itValidsPatternForDefaultWithStandardModeWhenRegexpAreConflictingWithPlateform()
     {
-        stub($this->regexp_retriever)->areRegexpActivatedForDefault()->returns(true);
-        stub($this->regexp_retriever)->areDefaultRegexpConflitingWithPlateform()->returns(true);
-        $this->pattern_validator->isValidForDefault($this->repository->getProject(), 'master', true);
+        $this->regexp_retriever->shouldReceive('areRegexpActivatedForDefault')->andReturns(true);
+        $this->regexp_retriever->shouldReceive('areDefaultRegexpConflitingWithPlateform')->andReturns(true);
 
-        $this->regexp_validator->expectNever('isPatternValid');
-        $this->validator->expectOnce('isPatternValid');
+        $this->regexp_validator->shouldReceive('isPatternValid')->never();
+        $this->validator->shouldReceive('isPatternValid')->once();
+
+        $this->pattern_validator->isValidForDefault($this->repository->getProject(), 'master', true);
     }
 }

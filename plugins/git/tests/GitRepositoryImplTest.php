@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -62,6 +62,6 @@ class Git_Backend_Gitolite_isNameValidTest extends GitRepositoryImplTest
 {
     public function newCreator()
     {
-        return new Git_Backend_Gitolite(mock('Git_GitoliteDriver'), mock(GitoliteAccessURLGenerator::class), mock('Logger'));
+        return new Git_Backend_Gitolite(\Mockery::spy(\Git_GitoliteDriver::class), mock(GitoliteAccessURLGenerator::class), \Mockery::spy(\Logger::class));
     }
 }

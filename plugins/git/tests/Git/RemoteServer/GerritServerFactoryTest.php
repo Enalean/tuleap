@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -54,6 +54,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->dar_1 = array(
             'id'                   => $this->server_id,
             'host'                 => $this->host,
@@ -85,13 +86,13 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase
 
         $git_dao   = safe_mock(GitDao::class);
         $this->dao = \Mockery::spy(Git_RemoteServer_Dao::class);
-        $this->system_event_manager = mock('Git_SystemEventManager');
+        $this->system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
 
-        stub($this->dao)->searchAll()->returns([$this->dar_1, $this->dar_2]);
-        stub($this->dao)->getById($this->server_id)->returns($this->dar_1);
-        stub($this->dao)->getById()->returns([]);
+        $this->dao->shouldReceive('searchAll')->andReturns([$this->dar_1, $this->dar_2]);
+        $this->dao->shouldReceive('getById')->with($this->server_id)->andReturns($this->dar_1);
+        $this->dao->shouldReceive('getById')->andReturns([]);
 
-        $this->project_manager = mock('ProjectManager');
+        $this->project_manager = \Mockery::spy(\ProjectManager::class);
 
         $this->factory = new Git_RemoteServer_GerritServerFactory($this->dao, $git_dao, $this->system_event_manager, $this->project_manager);
 
@@ -123,8 +124,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase
             '',
             $this->auth_type
         );
-        stub($git_dao)->isRemoteServerUsed($this->server_id)->returns(true);
-        stub($git_dao)->isRemoteServerUsed($this->alternate_server_id)->returns(false);
+        $git_dao->shouldReceive('isRemoteServerUsed')->with($this->server_id)->andReturns(true);
+        $git_dao->shouldReceive('isRemoteServerUsed')->with($this->alternate_server_id)->andReturns(false);
     }
 
     public function itThrowsAnExceptionIfThereIsNoSuchServer()
@@ -157,8 +158,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase
 
     public function itGetsAllServersForAGivenProject()
     {
-        stub($this->project_manager)->getChildProjects()->returns(array());
-        $project = stub('Project')->getId()->returns(458);
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
+        $project = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(458)->getMock();
         $this->dao->shouldReceive('searchAllByProjectId')->with(458)->andReturn([$this->dar_1])->once();
         $servers = $this->factory->getServersForProject($project);
         $this->assertIsA($servers[$this->server_id], 'Git_RemoteServer_GerritServer');
@@ -166,16 +167,16 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase
 
     public function itReturnsChildServers()
     {
-        $parent     = aMockProject()->withId(369)->build();
-        $child1      = aMockProject()->withId(933)->build();
-        $child2      = aMockProject()->withId(934)->build();
+        $parent     = \Mockery::spy(\Project::class, ['getID' => 369, 'getUnixName' => false, 'isPublic' => false]);
+        $child1      = \Mockery::spy(\Project::class, ['getID' => 933, 'getUnixName' => false, 'isPublic' => false]);
+        $child2      = \Mockery::spy(\Project::class, ['getID' => 934, 'getUnixName' => false, 'isPublic' => false]);
 
-        stub($this->project_manager)->getChildProjects(369)->returns(array($child1, $child2));
-        stub($this->project_manager)->getChildProjects()->returns(array());
+        $this->project_manager->shouldReceive('getChildProjects')->with(369)->andReturns(array($child1, $child2));
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
 
-        stub($this->dao)->searchAllByProjectId(933)->returns([$this->dar_1]);
-        stub($this->dao)->searchAllByProjectId(934)->returns([$this->dar_2]);
-        stub($this->dao)->searchAllByProjectId()->returns([]);
+        $this->dao->shouldReceive('searchAllByProjectId')->with(933)->andReturns([$this->dar_1]);
+        $this->dao->shouldReceive('searchAllByProjectId')->with(934)->andReturns([$this->dar_2]);
+        $this->dao->shouldReceive('searchAllByProjectId')->andReturns([]);
 
         $servers = $this->factory->getServersForProject($parent);
         $this->assertCount($servers, 2);
@@ -187,14 +188,14 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase
 
     public function itReturnsAllProjectChildren()
     {
-        $parent      = aMockProject()->withId(369)->build();
-        $child1      = aMockProject()->withId(933)->build();
-        $child2      = aMockProject()->withId(934)->build();
-        $grandchild  = aMockProject()->withId(96)->build();
+        $parent      = \Mockery::spy(\Project::class, ['getID' => 369, 'getUnixName' => false, 'isPublic' => false]);
+        $child1      = \Mockery::spy(\Project::class, ['getID' => 933, 'getUnixName' => false, 'isPublic' => false]);
+        $child2      = \Mockery::spy(\Project::class, ['getID' => 934, 'getUnixName' => false, 'isPublic' => false]);
+        $grandchild  = \Mockery::spy(\Project::class, ['getID' => 96, 'getUnixName' => false, 'isPublic' => false]);
 
-        stub($this->project_manager)->getChildProjects(369)->returns(array($child1, $child2));
-        stub($this->project_manager)->getChildProjects(933)->returns(array($grandchild));
-        stub($this->project_manager)->getChildProjects()->returns(array());
+        $this->project_manager->shouldReceive('getChildProjects')->with(369)->andReturns(array($child1, $child2));
+        $this->project_manager->shouldReceive('getChildProjects')->with(933)->andReturns(array($grandchild));
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
 
         $this->dao->shouldReceive('searchAllByProjectId')->andReturn([])->times(4);
 
@@ -203,14 +204,14 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase
 
     public function itReturnsOnlyOneServerEvenWhenThereAreSeveral()
     {
-        $parent     = aMockProject()->withId(369)->build();
-        $child      = aMockProject()->withId(933)->build();
+        $parent     = \Mockery::spy(\Project::class, ['getID' => 369, 'getUnixName' => false, 'isPublic' => false]);
+        $child      = \Mockery::spy(\Project::class, ['getID' => 933, 'getUnixName' => false, 'isPublic' => false]);
 
-        stub($this->project_manager)->getChildProjects(369)->returns(array($child));
-        stub($this->project_manager)->getChildProjects()->returns(array());
+        $this->project_manager->shouldReceive('getChildProjects')->with(369)->andReturns(array($child));
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
 
-        stub($this->dao)->searchAllByProjectId(369)->returns([$this->dar_1]);
-        stub($this->dao)->searchAllByProjectId(933)->returns([$this->dar_1]);
+        $this->dao->shouldReceive('searchAllByProjectId')->with(369)->andReturns([$this->dar_1]);
+        $this->dao->shouldReceive('searchAllByProjectId')->with(933)->andReturns([$this->dar_1]);
 
         $servers = $this->factory->getServersForProject($parent);
         $this->assertCount($servers, 1);
@@ -220,26 +221,14 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase
     public function itSavesAnExistingServer()
     {
         $this->main_gerrit_server->setLogin('new_login');
-        expect($this->dao)->save(
-            $this->server_id,
-            $this->host,
-            $this->ssh_port,
-            $this->http_port,
-            'new_login',
-            $this->identity_file,
-            $this->replication_key,
-            $this->use_ssl,
-            $this->gerrit_version,
-            $this->http_password,
-            $this->auth_type
-        )->once();
+        $this->dao->shouldReceive('save')->with($this->server_id, $this->host, $this->ssh_port, $this->http_port, 'new_login', $this->identity_file, $this->replication_key, $this->use_ssl, $this->gerrit_version, $this->http_password, $this->auth_type)->once();
         $this->factory->save($this->main_gerrit_server);
     }
 
     public function itTriggersKeyUpdateEventOnSave()
     {
         $this->main_gerrit_server->setLogin('new_login');
-        expect($this->system_event_manager)->queueGerritReplicationKeyUpdate($this->main_gerrit_server)->once();
+        $this->system_event_manager->shouldReceive('queueGerritReplicationKeyUpdate')->with($this->main_gerrit_server)->once();
         $this->factory->save($this->main_gerrit_server);
     }
 
@@ -259,26 +248,26 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase
             '',
             $this->auth_type
         );
-        stub($this->dao)->save()->returns(113);
+        $this->dao->shouldReceive('save')->andReturns(113);
         $this->factory->save($new_server);
         $this->assertEqual($new_server->getId(), 113);
     }
 
     public function itDeletesAnExistingServer()
     {
-        expect($this->dao)->delete($this->alternate_server_id)->once();
+        $this->dao->shouldReceive('delete')->with($this->alternate_server_id)->once();
         $this->factory->delete($this->alternate_gerrit_server);
     }
 
     public function itTriggersKeyUpdateEventOnDelete()
     {
-        expect($this->system_event_manager)->queueGerritReplicationKeyUpdate($this->alternate_gerrit_server)->once();
+        $this->system_event_manager->shouldReceive('queueGerritReplicationKeyUpdate')->with($this->alternate_gerrit_server)->once();
         $this->factory->delete($this->alternate_gerrit_server);
     }
 
     public function itDoesNotDeleteUsedServer()
     {
-        expect($this->dao)->delete($this->server_id)->never();
+        $this->dao->shouldReceive('delete')->with($this->server_id)->never();
         $this->factory->delete($this->main_gerrit_server);
     }
 }

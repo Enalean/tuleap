@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017-2019. All rights reserved.
+ * Copyright Enalean (c) 2017-Present. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,8 +38,9 @@ class PostReceiveMailsRetrieverTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $project = aMockProject()->withId(42)->build();
+        $project = \Mockery::spy(\Project::class, ['getID' => 42, 'getUnixName' => false, 'isPublic' => false]);
 
         $this->repository   = aGitRepository()
             ->withId(101)
@@ -48,34 +49,23 @@ class PostReceiveMailsRetrieverTest extends TuleapTestCase
             ->build();
 
         $notified_users_dao = safe_mock(UsersToNotifyDao::class);
-        stub($notified_users_dao)
-            ->searchUsersByRepositoryId(101)
-            ->returnsDar(
-                array('email' => 'andrew@example.com'),
-                array('email' => 'smith@example.com')
-            );
+        $notified_users_dao->shouldReceive('searchUsersByRepositoryId')->with(101)->andReturns(\TestHelper::arrayToDar(array('email' => 'andrew@example.com'), array('email' => 'smith@example.com')));
 
         $notified_ugroup_dao = safe_mock(UgroupsToNotifyDao::class);
-        stub($notified_ugroup_dao)
-            ->searchUgroupsByRepositoryId(101)
-            ->returnsDar(
-                array('ugroup_id' => 104, 'name' => 'Developers')
-            );
+        $notified_ugroup_dao->shouldReceive('searchUgroupsByRepositoryId')->with(101)->andReturns(\TestHelper::arrayToDar(array('ugroup_id' => 104, 'name' => 'Developers')));
 
         $developers = aMockUGroup()
             ->withMembers(
                 array(
-                    aUser()->withId(201)->withStatus(PFUser::STATUS_ACTIVE)->withEmail('jdoe@example.com')->build(),
-                    aUser()->withId(202)->withStatus(PFUser::STATUS_RESTRICTED)->withEmail('charles@example.com')->build(),
-                    aUser()->withId(203)->withStatus(PFUser::STATUS_SUSPENDED)->withEmail('suspended@example.com')->build()
+                    (new \UserTestBuilder())->withId(201)->withStatus(PFUser::STATUS_ACTIVE)->withEmail('jdoe@example.com')->build(),
+                    (new \UserTestBuilder())->withId(202)->withStatus(PFUser::STATUS_RESTRICTED)->withEmail('charles@example.com')->build(),
+                    (new \UserTestBuilder())->withId(203)->withStatus(PFUser::STATUS_SUSPENDED)->withEmail('suspended@example.com')->build()
                 )
             )
             ->build();
 
-        $ugroup_manager = mock('UGroupManager');
-        stub($ugroup_manager)
-            ->getUGroup($project, 104)
-            ->returns($developers);
+        $ugroup_manager = \Mockery::spy(\UGroupManager::class);
+        $ugroup_manager->shouldReceive('getUGroup')->with($project, 104)->andReturns($developers);
 
         $this->retriever = new PostReceiveMailsRetriever($notified_users_dao, $notified_ugroup_dao, $ugroup_manager);
     }

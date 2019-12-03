@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,16 +37,17 @@ class XmlUgroupRetrieverTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->logger   = mock('Logger');
-        $ugroup_manager = mock('UGroupManager');
+        $this->logger   = \Mockery::spy(\Logger::class);
+        $ugroup_manager = \Mockery::spy(\UGroupManager::class);
 
         $this->retriever = new XmlUgroupRetriever(
             $this->logger,
             $ugroup_manager
         );
 
-        $this->project = aMockProject()->withId(101)->build();
+        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
 
         $this->ugroup_01 = new ProjectUGroup(array(
             'ugroup_id' => 101,
@@ -60,8 +61,8 @@ class XmlUgroupRetrieverTest extends TuleapTestCase
             'group_id'  => 101
         ));
 
-        stub($ugroup_manager)->getUGroupByName($this->project, 'Contributors')->returns($this->ugroup_01);
-        stub($ugroup_manager)->getUGroupByName($this->project, 'project_members')->returns($this->ugroup_02);
+        $ugroup_manager->shouldReceive('getUGroupByName')->with($this->project, 'Contributors')->andReturns($this->ugroup_01);
+        $ugroup_manager->shouldReceive('getUGroupByName')->with($this->project, 'project_members')->andReturns($this->ugroup_02);
     }
 
     public function itRetrievesUgroupIdsForAPermission()
@@ -107,7 +108,7 @@ XML;
         $xml_node = new SimpleXMLElement($xml);
         $expected = array($this->ugroup_01, $this->ugroup_02);
 
-        expect($this->logger)->warn()->once();
+        $this->logger->shouldReceive('warn')->once();
         $this->assertEqual($this->retriever->getUgroupsForPermissionNode($this->project, $xml_node), $expected);
     }
 

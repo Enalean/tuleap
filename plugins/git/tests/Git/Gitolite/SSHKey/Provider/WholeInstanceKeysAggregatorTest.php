@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,13 +20,15 @@
 
 namespace Tuleap\Git\Gitolite\SSHKey\Provider;
 
+use Mockery;
+
 class WholeInstanceKeysAggregatorTest extends \TuleapTestCase
 {
     public function itUsesAllKeyProviders()
     {
-        $gitolite_admin_key = mock('Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin');
-        $gerrit_server_keys = mock('Tuleap\Git\Gitolite\SSHKey\Provider\GerritServer');
-        $user_keys          = mock('Tuleap\Git\Gitolite\SSHKey\Provider\User');
+        $gitolite_admin_key = Mockery::spy('Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin');
+        $gerrit_server_keys = Mockery::spy('Tuleap\Git\Gitolite\SSHKey\Provider\GerritServer');
+        $user_keys          = Mockery::spy('Tuleap\Git\Gitolite\SSHKey\Provider\User');
 
         $whole_instance_keys = new WholeInstanceKeysAggregator($gitolite_admin_key, $gerrit_server_keys, $user_keys);
 

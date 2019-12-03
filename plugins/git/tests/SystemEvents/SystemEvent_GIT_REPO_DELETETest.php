@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,27 +43,28 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->project_id    = 101;
         $this->repository_id = 69;
 
-        $this->repository = mock('GitRepository');
-        stub($this->repository)->getId()->returns($this->repository_id);
-        stub($this->repository)->getProjectId()->returns($this->project_id);
+        $this->repository = \Mockery::spy(\GitRepository::class);
+        $this->repository->shouldReceive('getId')->andReturns($this->repository_id);
+        $this->repository->shouldReceive('getProjectId')->andReturns($this->project_id);
 
-        $this->repository_factory = mock('GitRepositoryFactory');
-        stub($this->repository_factory)->getDeletedRepository($this->repository_id)->returns($this->repository);
+        $this->repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->repository_factory->shouldReceive('getDeletedRepository')->with($this->repository_id)->andReturns($this->repository);
 
-        $this->system_event_manager  = mock('Git_SystemEventManager');
+        $this->system_event_manager  = \Mockery::spy(\Git_SystemEventManager::class);
         $this->ugroups_to_notify_dao = \Mockery::spy(UgroupsToNotifyDao::class);
         $this->users_to_notify_dao   = \Mockery::spy(UsersToNotifyDao::class);
         $this->event_manager         = \Mockery::spy(\EventManager::class);
 
-        $this->event = partial_mock('SystemEvent_GIT_REPO_DELETE', array('done', 'warning', 'error', 'getId'));
+        $this->event = \Mockery::mock(\SystemEvent_GIT_REPO_DELETE::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->event->setParameters($this->project_id . SystemEvent::PARAMETER_SEPARATOR . $this->repository_id);
         $this->event->injectDependencies(
             $this->repository_factory,
-            mock('Logger'),
+            \Mockery::spy(\Logger::class),
             $this->system_event_manager,
             $this->ugroups_to_notify_dao,
             $this->users_to_notify_dao,
@@ -73,22 +74,22 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase
 
     public function itDeletesTheRepository()
     {
-        expect($this->repository)->delete()->once();
+        $this->repository->shouldReceive('delete')->once();
 
         $this->event->process();
     }
 
     public function itDeletesNotifications()
     {
-        expect($this->ugroups_to_notify_dao)->deleteByRepositoryId(69)->once();
-        expect($this->users_to_notify_dao)->deleteByRepositoryId(69)->once();
+        $this->ugroups_to_notify_dao->shouldReceive('deleteByRepositoryId')->with(69)->once();
+        $this->users_to_notify_dao->shouldReceive('deleteByRepositoryId')->with(69)->once();
 
         $this->event->process();
     }
 
     public function itAsksToDeleteRepositoryFromManifestFiles()
     {
-        expect($this->system_event_manager)->queueGrokMirrorManifestRepoDelete($this->repository->getPath())->once();
+        $this->system_event_manager->shouldReceive('queueGrokMirrorManifestRepoDelete')->with($this->repository->getPath())->once();
 
         $this->event->process();
     }

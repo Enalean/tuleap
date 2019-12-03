@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once __DIR__.'/../../bootstrap.php';
 
 class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase
 {
@@ -37,21 +37,22 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $project = stub('Project')->getID()->returns(101);
+        $project = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns(101)->getMock();
 
-        $this->git_exec_repo = mock('Git_Exec');
+        $this->git_exec_repo = \Mockery::spy(\Git_Exec::class);
 
-        $this->repository = mock('GitRepository');
-        stub($this->repository)->getFullName()->returns('dev');
-        stub($this->repository)->getProject()->returns($project);
+        $this->repository = \Mockery::spy(\GitRepository::class);
+        $this->repository->shouldReceive('getFullName')->andReturns('dev');
+        $this->repository->shouldReceive('getProject')->andReturns($project);
 
-        $this->repository_in_subpath = mock('GitRepository');
-        stub($this->repository_in_subpath)->getProject()->returns($project);
-        stub($this->repository_in_subpath)->getFullName()->returns('arch/x86_64/dev');
+        $this->repository_in_subpath = \Mockery::spy(\GitRepository::class);
+        $this->repository_in_subpath->shouldReceive('getProject')->andReturns($project);
+        $this->repository_in_subpath->shouldReceive('getFullName')->andReturns('arch/x86_64/dev');
 
-        $this->user = aUser()->withId(350)->build();
-        $this->reference_manager = mock('ReferenceManager');
+        $this->user = (new \UserTestBuilder())->withId(350)->build();
+        $this->reference_manager = \Mockery::spy(\ReferenceManager::class);
 
         $this->post_receive = new Git_Hook_ExtractCrossReferences($this->git_exec_repo, $this->reference_manager);
 
@@ -61,61 +62,61 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase
 
     public function itGetsEachRevisionContent()
     {
-        expect($this->git_exec_repo)->catFile('469eaa9')->once();
+        $this->git_exec_repo->shouldReceive('catFile')->with('469eaa9')->once();
 
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
     public function itExtractCrossReferencesForGivenUser()
     {
-        stub($this->git_exec_repo)->catFile()->returns('whatever');
+        $this->git_exec_repo->shouldReceive('catFile')->andReturns('whatever');
 
-        expect($this->reference_manager)->extractCrossRef('*', '*', '*', '*', 350)->once();
+        $this->reference_manager->shouldReceive('extractCrossRef')->with(\Mockery::any(), \Mockery::any(), \Mockery::any(), \Mockery::any(), 350)->once();
 
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
     public function itExtractCrossReferencesOnGitCommit()
     {
-        stub($this->git_exec_repo)->catFile()->returns('whatever');
+        $this->git_exec_repo->shouldReceive('catFile')->andReturns('whatever');
 
-        expect($this->reference_manager)->extractCrossRef('*', '*', Git::REFERENCE_NATURE, '*', '*')->once();
+        $this->reference_manager->shouldReceive('extractCrossRef')->with(\Mockery::any(), \Mockery::any(), Git::REFERENCE_NATURE, \Mockery::any(), \Mockery::any())->once();
 
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
     public function itExtractCrossReferencesOnCommitMessage()
     {
-        stub($this->git_exec_repo)->catFile()->returns('bla bla bla');
+        $this->git_exec_repo->shouldReceive('catFile')->andReturns('bla bla bla');
 
-        expect($this->reference_manager)->extractCrossRef('bla bla bla', '*', '*', '*', '*')->once();
+        $this->reference_manager->shouldReceive('extractCrossRef')->with('bla bla bla', \Mockery::any(), \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
 
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
     public function itExtractCrossReferencesForProject()
     {
-        stub($this->git_exec_repo)->catFile()->returns('');
+        $this->git_exec_repo->shouldReceive('catFile')->andReturns('');
 
-        expect($this->reference_manager)->extractCrossRef('*', '*', '*', 101, '*')->once();
+        $this->reference_manager->shouldReceive('extractCrossRef')->with(\Mockery::any(), \Mockery::any(), \Mockery::any(), 101, \Mockery::any())->once();
 
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
     public function itSetTheReferenceToTheRepository()
     {
-        stub($this->git_exec_repo)->catFile()->returns('');
+        $this->git_exec_repo->shouldReceive('catFile')->andReturns('');
 
-        expect($this->reference_manager)->extractCrossRef('*', 'dev/469eaa9', '*', '*', '*')->once();
+        $this->reference_manager->shouldReceive('extractCrossRef')->with(\Mockery::any(), 'dev/469eaa9', \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
 
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
     public function itSetTheReferenceToTheRepositoryWithSubRepo()
     {
-        stub($this->git_exec_repo)->catFile()->returns('');
+        $this->git_exec_repo->shouldReceive('catFile')->andReturns('');
 
-        expect($this->reference_manager)->extractCrossRef('*', 'arch/x86_64/dev/469eaa9', '*', '*', '*')->once();
+        $this->reference_manager->shouldReceive('extractCrossRef')->with(\Mockery::any(), 'arch/x86_64/dev/469eaa9', \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
 
         $push_details = new Git_Hook_PushDetails($this->repository_in_subpath, $this->user, 'refs/heads/master', 'whatever', 'whatever', array());
         $this->post_receive->execute($push_details, '469eaa9');

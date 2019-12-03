@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013, 2014. All rights reserved.
+ * Copyright Enalean (c) 2011 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -24,7 +24,7 @@
 
 use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once __DIR__.'/../bootstrap.php';
 
 class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase
 {
@@ -38,9 +38,10 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->ssh_key_dumper = mock('Git_Gitolite_SSHKeyDumper');
-        $this->gerrit_server_factory = mock('Git_RemoteServer_GerritServerFactory');
-        $this->event = partial_mock('SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP', array('done', 'error'));
+        $this->setUpGlobalsMockery();
+        $this->ssh_key_dumper = \Mockery::spy(\Git_Gitolite_SSHKeyDumper::class);
+        $this->gerrit_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
+        $this->event = \Mockery::mock(\SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->event->injectDependencies($this->gerrit_server_factory, $this->ssh_key_dumper);
     }
 
@@ -49,8 +50,10 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase
         $gerrit_server_id = 7;
         $this->event->setParameters("$gerrit_server_id");
 
-        expect($this->gerrit_server_factory)->getServerById($gerrit_server_id)->once();
-        stub($this->gerrit_server_factory)->getServerById()->returns(mock('Git_RemoteServer_GerritServer'));
+        $this->gerrit_server_factory->shouldReceive('getServerById')
+            ->with($gerrit_server_id)
+            ->once()
+            ->andReturns(\Mockery::spy(\Git_RemoteServer_GerritServer::class));
 
         $this->event->process();
     }
@@ -80,11 +83,15 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase
             '',
             $auth_type
         );
-        stub($this->gerrit_server_factory)->getServerById()->returns($gerrit_server);
+        $this->gerrit_server_factory->shouldReceive('getServerById')->andReturns($gerrit_server);
 
-        $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
-        $key->setGerritHostId($gerrit_server_id)->setValue($replication_key);
-        expect($this->ssh_key_dumper)->dumpSSHKeys($key, new InvalidKeysCollector())->once();
+        $this->ssh_key_dumper->shouldReceive('dumpSSHKeys')->with(
+            Mockery::on(function (Git_RemoteServer_Gerrit_ReplicationSSHKey $key) use ($gerrit_server_id) {
+                return $key->getGerritHostId() === $gerrit_server_id;
+            }),
+            Mockery::type(InvalidKeysCollector::class)
+        )
+            ->once();
 
         $this->event->process();
     }
@@ -94,11 +101,15 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase
         $gerrit_server_id = 7;
         $this->event->setParameters("$gerrit_server_id");
 
-        stub($this->gerrit_server_factory)->getServerById()->throws(new Git_RemoteServer_NotFoundException($gerrit_server_id));
+        $this->gerrit_server_factory->shouldReceive('getServerById')->andThrows(new Git_RemoteServer_NotFoundException($gerrit_server_id));
 
-        $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
-        $key->setGerritHostId($gerrit_server_id)->setValue('');
-        expect($this->ssh_key_dumper)->dumpSSHKeys($key, new InvalidKeysCollector())->once();
+        $this->ssh_key_dumper->shouldReceive('dumpSSHKeys')->with(
+            Mockery::on(function (Git_RemoteServer_Gerrit_ReplicationSSHKey $key) use ($gerrit_server_id) {
+                return $key->getGerritHostId() === $gerrit_server_id;
+            }),
+            Mockery::type(InvalidKeysCollector::class)
+        )
+            ->once();
 
         $this->event->process();
     }
@@ -107,10 +118,10 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase
     {
         $this->event->setParameters("7");
 
-        stub($this->gerrit_server_factory)->getServerById()->returns(mock('Git_RemoteServer_GerritServer'));
-        stub($this->ssh_key_dumper)->dumpSSHKeys()->returns(true);
+        $this->gerrit_server_factory->shouldReceive('getServerById')->andReturns(\Mockery::spy(\Git_RemoteServer_GerritServer::class));
+        $this->ssh_key_dumper->shouldReceive('dumpSSHKeys')->andReturns(true);
 
-        expect($this->event)->done()->once();
+        $this->event->shouldReceive('done')->once();
 
         $this->event->process();
     }
@@ -119,10 +130,10 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase
     {
         $this->event->setParameters("7");
 
-        stub($this->gerrit_server_factory)->getServerById()->returns(mock('Git_RemoteServer_GerritServer'));
-        stub($this->ssh_key_dumper)->dumpSSHKeys()->returns(false);
+        $this->gerrit_server_factory->shouldReceive('getServerById')->andReturns(\Mockery::spy(\Git_RemoteServer_GerritServer::class));
+        $this->ssh_key_dumper->shouldReceive('dumpSSHKeys')->andReturns(false);
 
-        expect($this->event)->error()->once();
+        $this->event->shouldReceive('error')->once();
 
         $this->event->process();
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../bootstrap.php';
+require_once __DIR__.'/../../../bootstrap.php';
 
 class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarterTest extends TuleapTestCase
 {
@@ -26,23 +26,24 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarterTest extend
     public function setUp()
     {
         parent::setUp();
-        $this->response         = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingResponse');
-        $this->backend_service  = mock('BackendService');
+        $this->setUpGlobalsMockery();
+        $this->response         = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
+        $this->backend_service  = \Mockery::spy(\BackendService::class);
 
         $this->command = new Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarter($this->response, $this->backend_service);
     }
 
     public function itRestartsTheService()
     {
-        expect($this->response)->info('Restarting service')->once();
-        expect($this->backend_service)->start()->once();
+        $this->response->shouldReceive('info')->with('Restarting service')->once();
+        $this->backend_service->shouldReceive('start')->once();
 
         $this->command->execute();
     }
 
     public function itEndsWithSuccess()
     {
-        expect($this->response)->success()->once();
+        $this->response->shouldReceive('success')->once();
 
         $this->command->execute();
     }

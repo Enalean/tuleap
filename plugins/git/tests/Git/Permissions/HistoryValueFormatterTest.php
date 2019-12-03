@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,23 +23,24 @@ namespace Tuleap\Git\Permissions;
 use TuleapTestCase;
 use Git;
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once __DIR__.'/../../bootstrap.php';
 
 class HistoryValueFormatterTest extends TuleapTestCase
 {
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->ugroup_01 = stub('ProjectUGroup')->getId()->returns(101);
-        $this->ugroup_02 = stub('ProjectUGroup')->getId()->returns(102);
-        $this->ugroup_03 = stub('ProjectUGroup')->getId()->returns(103);
+        $this->ugroup_01 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(101)->getMock();
+        $this->ugroup_02 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(102)->getMock();
+        $this->ugroup_03 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(103)->getMock();
 
-        stub($this->ugroup_01)->getName()->returns('Contributors');
-        stub($this->ugroup_02)->getName()->returns('Developers');
-        stub($this->ugroup_03)->getName()->returns('Admins');
+        $this->ugroup_01->shouldReceive('getName')->andReturns('Contributors');
+        $this->ugroup_02->shouldReceive('getName')->andReturns('Developers');
+        $this->ugroup_03->shouldReceive('getName')->andReturns('Admins');
 
-        $this->project             = stub('Project')->getID()->returns(101);
+        $this->project             = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns(101)->getMock();
         $this->repository          = aGitRepository()->withId(1)->withProject($this->project)->build();
         $this->migrated_repository = aGitRepository()
             ->withId(1)
@@ -47,11 +48,11 @@ class HistoryValueFormatterTest extends TuleapTestCase
             ->withRemoteServerId(1)
             ->build();
 
-        $this->permissions_manager = mock('PermissionsManager');
-        $this->ugroup_manager      = mock('UGroupManager');
-        $this->retriever           = mock('Tuleap\Git\Permissions\FineGrainedRetriever');
-        $this->default_factory     = mock('Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory');
-        $this->factory             = mock('Tuleap\Git\Permissions\FineGrainedPermissionFactory');
+        $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
+        $this->ugroup_manager      = \Mockery::spy(\UGroupManager::class);
+        $this->retriever           = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class);
+        $this->default_factory     = \Mockery::spy(\Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory::class);
+        $this->factory             = \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class);
 
         $this->formatter           = new HistoryValueFormatter(
             $this->permissions_manager,
@@ -61,7 +62,7 @@ class HistoryValueFormatterTest extends TuleapTestCase
             $this->factory
         );
 
-        stub($this->ugroup_manager)->getUgroupsById($this->project)->returns(array(
+        $this->ugroup_manager->shouldReceive('getUgroupsById')->with($this->project)->andReturns(array(
             101 => $this->ugroup_01,
             102 => $this->ugroup_02,
             103 => $this->ugroup_03,
@@ -70,23 +71,11 @@ class HistoryValueFormatterTest extends TuleapTestCase
 
     public function itExportsValueWithoutFineGrainedPermissionsForRepository()
     {
-        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject(
-            $this->project,
-            1,
-            Git::PERM_READ
-        )->returns(array(101));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->andReturns(array(101));
 
-        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject(
-            $this->project,
-            1,
-            Git::PERM_WRITE
-        )->returns(array(102));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_WRITE)->andReturns(array(102));
 
-        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject(
-            $this->project,
-            1,
-            Git::PERM_WPLUS
-        )->returns(array(103));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_WPLUS)->andReturns(array(103));
 
         $expected_result = <<<EOS
 Read: Contributors
@@ -101,11 +90,7 @@ EOS;
 
     public function itDoesNotExportWriteAndRewindIfRepositoryIsMigratedOnGerrit()
     {
-        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject(
-            $this->project,
-            1,
-            Git::PERM_READ
-        )->returns(array(101));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->andReturns(array(101));
 
         $expected_result = <<<EOS
 Read: Contributors
@@ -118,23 +103,11 @@ EOS;
 
     public function itExportsValueWithoutFineGrainedPermissionsForProject()
     {
-        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject(
-            $this->project,
-            101,
-            Git::DEFAULT_PERM_READ
-        )->returns(array(101));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_READ)->andReturns(array(101));
 
-        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject(
-            $this->project,
-            101,
-            Git::DEFAULT_PERM_WRITE
-        )->returns(array(102));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_WRITE)->andReturns(array(102));
 
-        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject(
-            $this->project,
-            101,
-            Git::DEFAULT_PERM_WPLUS
-        )->returns(array(103));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_WPLUS)->andReturns(array(103));
 
         $expected_result = <<<EOS
 Read: Contributors
@@ -149,11 +122,7 @@ EOS;
 
     public function itExportsValueWithFineGrainedPermissionsForRepository()
     {
-        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject(
-            $this->project,
-            1,
-            Git::PERM_READ
-        )->returns(array(101));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->andReturns(array(101));
 
         $expected_result = <<<EOS
 Read: Contributors
@@ -178,13 +147,11 @@ EOS;
             array()
         );
 
-        stub($this->retriever)->doesRepositoryUseFineGrainedPermissions($this->migrated_repository)->returns(true);
+        $this->retriever->shouldReceive('doesRepositoryUseFineGrainedPermissions')->with($this->migrated_repository)->andReturns(true);
 
-        stub($this->factory)->getBranchesFineGrainedPermissionsForRepository($this->migrated_repository)
-            ->returns(array(1 => $branch_fine_grained_permission));
+        $this->factory->shouldReceive('getBranchesFineGrainedPermissionsForRepository')->with($this->migrated_repository)->andReturns(array(1 => $branch_fine_grained_permission));
 
-        stub($this->factory)->getTagsFineGrainedPermissionsForRepository($this->migrated_repository)
-            ->returns(array(2 => $tag_fine_grained_permission));
+        $this->factory->shouldReceive('getTagsFineGrainedPermissionsForRepository')->with($this->migrated_repository)->andReturns(array(2 => $tag_fine_grained_permission));
 
         $result = $this->formatter->formatValueForRepository($this->migrated_repository);
 
@@ -193,11 +160,7 @@ EOS;
 
     public function itExportsValueWithFineGrainedPermissionsForProject()
     {
-        stub($this->permissions_manager)->getAuthorizedUGroupIdsForProject(
-            $this->project,
-            101,
-            Git::DEFAULT_PERM_READ
-        )->returns(array(101));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_READ)->andReturns(array(101));
 
         $expected_result = <<<EOS
 Read: Contributors
@@ -222,13 +185,11 @@ EOS;
             array()
         );
 
-        stub($this->retriever)->doesProjectUseFineGrainedPermissions($this->project)->returns(true);
+        $this->retriever->shouldReceive('doesProjectUseFineGrainedPermissions')->with($this->project)->andReturns(true);
 
-        stub($this->default_factory)->getBranchesFineGrainedPermissionsForProject($this->project)
-            ->returns(array(1 => $branch_fine_grained_permission));
+        $this->default_factory->shouldReceive('getBranchesFineGrainedPermissionsForProject')->with($this->project)->andReturns(array(1 => $branch_fine_grained_permission));
 
-        stub($this->default_factory)->getTagsFineGrainedPermissionsForProject($this->project)
-            ->returns(array(2 => $tag_fine_grained_permission));
+        $this->default_factory->shouldReceive('getTagsFineGrainedPermissionsForProject')->with($this->project)->andReturns(array(2 => $tag_fine_grained_permission));
 
         $result = $this->formatter->formatValueForProject($this->project);
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017 - Present. All rights reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,24 +38,23 @@ class NotificationsForProjectMemberCleanerTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->project = aMockProject()->withId(101)->build();
-        $this->user    = mock('PFUser');
+        $this->setUpGlobalsMockery();
+        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $this->user    = \Mockery::spy(\PFUser::class);
 
-        stub($this->user)->getId()->returns(107);
-        stub($this->user)->getEmail()->returns('jdoe@example.com');
+        $this->user->shouldReceive('getId')->andReturns(107);
+        $this->user->shouldReceive('getEmail')->andReturns('jdoe@example.com');
 
-        $this->mails_to_notify_manager = mock('Git_PostReceiveMailManager');
-        $this->factory                 = mock('GitRepositoryFactory');
+        $this->mails_to_notify_manager = \Mockery::spy(\Git_PostReceiveMailManager::class);
+        $this->factory                 = \Mockery::spy(\GitRepositoryFactory::class);
 
-        $this->unreadable_repository = stub('GitRepository')->getId()->returns(1);
-        $this->readable_repository   = stub('GitRepository')->getId()->returns(2);
+        $this->unreadable_repository = \Mockery::spy(\GitRepository::class)->shouldReceive('getId')->andReturns(1)->getMock();
+        $this->readable_repository   = \Mockery::spy(\GitRepository::class)->shouldReceive('getId')->andReturns(2)->getMock();
 
-        stub($this->unreadable_repository)->userCanRead($this->user)->returns(false);
-        stub($this->readable_repository)->userCanRead($this->user)->returns(true);
+        $this->unreadable_repository->shouldReceive('userCanRead')->with($this->user)->andReturns(false);
+        $this->readable_repository->shouldReceive('userCanRead')->with($this->user)->andReturns(true);
 
-        stub($this->factory)
-            ->getAllRepositories($this->project)
-            ->returns(array($this->unreadable_repository, $this->readable_repository));
+        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns(array($this->unreadable_repository, $this->readable_repository));
 
         $this->users_to_notify_dao = \Mockery::mock(UsersToNotifyDao::class);
 
@@ -68,9 +67,9 @@ class NotificationsForProjectMemberCleanerTest extends TuleapTestCase
 
     public function itDoesNotRemoveAnythingIfUserIsStillMemberOfTheProject()
     {
-        stub($this->user)->isMember($this->project->getID())->returns(true);
+        $this->user->shouldReceive('isMember')->with($this->project->getID())->andReturns(true);
 
-        expect($this->mails_to_notify_manager)->removeMailByRepository()->never();
+        $this->mails_to_notify_manager->shouldReceive('removeMailByRepository')->never();
         $this->users_to_notify_dao->shouldReceive('delete')->never();
 
         $this->cleaner->cleanNotificationsAfterUserRemoval($this->project, $this->user);
@@ -78,13 +77,9 @@ class NotificationsForProjectMemberCleanerTest extends TuleapTestCase
 
     public function itRemovesNotificationForRepositoriesTheUserCannotAccess()
     {
-        stub($this->user)->isMember($this->project)->returns(false);
+        $this->user->shouldReceive('isMember')->with($this->project)->andReturns(false);
 
-        expect($this->mails_to_notify_manager)
-            ->removeMailByRepository()
-            ->count(1);
-        expect($this->mails_to_notify_manager)
-            ->removeMailByRepository($this->unreadable_repository, 'jdoe@example.com')
+        $this->mails_to_notify_manager->shouldReceive('removeMailByRepository')->with($this->unreadable_repository, 'jdoe@example.com')
             ->once();
 
         $this->users_to_notify_dao->shouldReceive('delete')->with($this->unreadable_repository->getId(), $this->user->getId())->once();

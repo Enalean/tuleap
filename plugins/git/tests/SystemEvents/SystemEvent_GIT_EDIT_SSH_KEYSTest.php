@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
+ * Copyright Enalean (c) 2014 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once __DIR__.'/../bootstrap.php';
 
 class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase
 {
@@ -37,15 +37,16 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->user                 = mock('PFUser');
-        $this->user_manager         = mock('UserManager');
-        $this->sshkey_dumper        = mock('Git_Gitolite_SSHKeyDumper');
-        $this->user_account_manager = mock('Git_UserAccountManager');
-        $this->system_event_manager = mock('Git_SystemEventManager');
-        $this->logger               = mock('BackendLogger');
+        $this->user                 = \Mockery::spy(\PFUser::class);
+        $this->user_manager         = \Mockery::spy(\UserManager::class);
+        $this->sshkey_dumper        = \Mockery::spy(\Git_Gitolite_SSHKeyDumper::class);
+        $this->user_account_manager = \Mockery::spy(\Git_UserAccountManager::class);
+        $this->system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
+        $this->logger               = \Mockery::spy(\BackendLogger::class);
 
-        stub($this->user_manager)->getUserById(105)->returns($this->user);
+        $this->user_manager->shouldReceive('getUserById')->with(105)->andReturns($this->user);
     }
 
     public function testItLogsAnErrorIfNoUserIsPassed()
@@ -94,14 +95,10 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase
             $this->logger
         );
 
-        stub($this->user)->getAuthorizedKeysArray()->returns($new_keys);
+        $this->user->shouldReceive('getAuthorizedKeysArray')->andReturns($new_keys);
 
-        expect($this->logger)->error()->never();
-        expect($this->user_account_manager)->synchroniseSSHKeys(
-            $original_keys,
-            $new_keys,
-            $this->user
-        )->once();
+        $this->logger->shouldReceive('error')->never();
+        $this->user_account_manager->shouldReceive('synchroniseSSHKeys')->with($original_keys, $new_keys, $this->user)->once();
 
         $event->process();
     }
@@ -123,14 +120,10 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase
             $this->logger
         );
 
-        stub($this->user)->getAuthorizedKeysArray()->returns($new_keys);
+        $this->user->shouldReceive('getAuthorizedKeysArray')->andReturns($new_keys);
 
-        expect($this->logger)->error()->never();
-        expect($this->user_account_manager)->synchroniseSSHKeys(
-            $original_keys,
-            $new_keys,
-            $this->user
-        )->once();
+        $this->logger->shouldReceive('error')->never();
+        $this->user_account_manager->shouldReceive('synchroniseSSHKeys')->with($original_keys, $new_keys, $this->user)->once();
 
          $event->process();
     }
@@ -146,9 +139,9 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase
             $this->logger
         );
 
-        stub($this->user)->getAuthorizedKeysArray()->returns([]);
+        $this->user->shouldReceive('getAuthorizedKeysArray')->andReturns([]);
 
-        $this->user_account_manager->throwOn('synchroniseSSHKeys', new Git_UserSynchronisationException());
+        $this->user_account_manager->shouldReceive('synchroniseSSHKeys')->andThrows(new Git_UserSynchronisationException());
 
         $event->process();
 

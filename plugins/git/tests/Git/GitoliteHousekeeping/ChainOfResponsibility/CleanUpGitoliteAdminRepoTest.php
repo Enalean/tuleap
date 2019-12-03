@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../bootstrap.php';
+require_once __DIR__.'/../../../bootstrap.php';
 
 class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTest extends TuleapTestCase
 {
@@ -28,7 +28,8 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTes
     public function setUp()
     {
         parent::setUp();
-        $this->response = mock('Git_GitoliteHousekeeping_GitoliteHousekeepingResponse');
+        $this->setUpGlobalsMockery();
+        $this->response = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
         $this->fixtures = $this->getTmpDir();
         copy(dirname(__FILE__) . '/_fixtures/gitolite_admin.tgz', $this->fixtures . '/gitolite_admin.tgz');
 
@@ -49,13 +50,13 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTes
 
     public function itAbortsIfThereIsAlreadyABackupDir()
     {
-        $next = mock('Git_GitoliteHousekeeping_ChainOfResponsibility_Command');
+        $next = \Mockery::spy(\Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
         `(cd $this->fixtures && cp -r admin admin.old)`;
         $this->command->setNextCommand($next);
 
-        expect($this->response)->error("The gitolite backup dir $this->fixtures/admin.old already exists. Please remove it.")->once();
-        expect($this->response)->abort()->once();
-        expect($next)->execute()->never();
+        $this->response->shouldReceive('error')->with("The gitolite backup dir $this->fixtures/admin.old already exists. Please remove it.")->once();
+        $this->response->shouldReceive('abort')->once();
+        $next->shouldReceive('execute')->never();
 
         $this->command->execute();
     }
@@ -77,15 +78,15 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTes
 
     public function itDisplaysMeaningfulFeedbackToTheUser()
     {
-        expect($this->response)->info("Moving admin to $this->fixtures/admin.old and cloning $this->remote_admin_repository")->once();
+        $this->response->shouldReceive('info')->with("Moving admin to $this->fixtures/admin.old and cloning $this->remote_admin_repository")->once();
 
         $this->command->execute();
     }
 
     public function itExecutesTheNextCommand()
     {
-        $next = mock('Git_GitoliteHousekeeping_ChainOfResponsibility_Command');
-        expect($next)->execute()->once();
+        $next = \Mockery::spy(\Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
+        $next->shouldReceive('execute')->once();
 
         $this->command->setNextCommand($next);
 

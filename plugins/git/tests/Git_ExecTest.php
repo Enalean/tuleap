@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,6 +30,7 @@ class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->symlink_repo = '/tmp/tuleap-git-exec-test_'.rand(0, 99999999);
         $this->fixture_dir = '/tmp/tuleap-git-exec-test_'.rand(0, 99999999);
@@ -131,6 +132,7 @@ class Git_Exec_ObjectExists extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->symlink_repo = '/tmp/tuleap-git-exec-test_'.rand(0, 99999999);
         $this->fixture_dir = '/tmp/tuleap-git-exec-test_'.rand(0, 99999999);
