@@ -36,7 +36,7 @@ describe("CollapsedHeaderCell", () => {
         });
 
         expect(wrapper.classes("taskboard-header-collapsed")).toBe(true);
-        expect(wrapper.classes("taskboard-header-fiesta-red")).toBe(false);
+        expect(wrapper.classes("tlp-swatch-fiesta-red")).toBe(false);
         expect(wrapper.contains(ExpandButton)).toBe(true);
     });
 
@@ -52,7 +52,7 @@ describe("CollapsedHeaderCell", () => {
             }
         });
 
-        expect(wrapper.classes("taskboard-header-fiesta-red")).toBe(true);
+        expect(wrapper.classes("tlp-swatch-fiesta-red")).toBe(true);
     });
 
     it(`Given the column has hover, then it shows its label`, () => {

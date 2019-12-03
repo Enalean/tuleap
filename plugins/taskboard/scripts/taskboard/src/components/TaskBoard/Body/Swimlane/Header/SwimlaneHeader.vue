@@ -51,7 +51,7 @@ export default class SwimlaneHeader extends Vue {
     readonly collapseSwimlane!: (swimlane: Swimlane) => void;
 
     get additional_classnames(): string {
-        return `taskboard-swimlane-toggle-${this.swimlane.card.color}`;
+        return `tlp-swatch-${this.swimlane.card.color}`;
     }
 
     get title(): string {

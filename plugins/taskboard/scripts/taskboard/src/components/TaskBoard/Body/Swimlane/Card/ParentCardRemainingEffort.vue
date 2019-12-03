@@ -54,10 +54,7 @@ export default class ParentCardRemainingEffort extends Vue {
     }
 
     get additional_classes(): string {
-        const classes = [
-            `tlp-badge-${this.card.color}`,
-            `taskboard-card-remaining-effort-${this.card.color}`
-        ];
+        const classes = [`tlp-badge-${this.card.color}`, `tlp-swatch-${this.card.color}`];
 
         if (this.can_update_remaining_effort) {
             classes.push("taskboard-card-remaining-effort-editable");

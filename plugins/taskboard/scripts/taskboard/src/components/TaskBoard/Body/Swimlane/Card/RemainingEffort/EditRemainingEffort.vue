@@ -57,17 +57,15 @@ export default class EditRemainingEffort extends Vue {
     value = "";
 
     get classes(): Array<string> {
-        const classes = [`taskboard-card-remaining-effort-input-${this.card.color}`];
-
         let width = NB_PX_PER_CHAR * this.value.length;
 
         if (width <= MINIMAL_WIDTH_IN_PX) {
-            return classes;
+            return [];
         } else if (width > MAXIMAL_WIDTH_IN_PX) {
             width = MAXIMAL_WIDTH_IN_PX;
         }
 
-        return [...classes, `taskboard-card-remaining-effort-input-width-${width}`];
+        return [`taskboard-card-remaining-effort-input-width-${width}`];
     }
 
     mounted(): void {

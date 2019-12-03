@@ -49,11 +49,10 @@ async function getWrapper(): Promise<Wrapper<EditRemainingEffort>> {
 }
 
 describe("EditRemainingEffort", () => {
-    it("Display a text input with right color", async () => {
+    it("Displays a text input", async () => {
         const wrapper = await getWrapper();
 
         expect(wrapper.attributes("type")).toBe("text");
-        expect(wrapper.classes("taskboard-card-remaining-effort-input-fiesta-red")).toBe(true);
         expect(wrapper.attributes("aria-label")).toBe("New remaining effort");
     });
 
@@ -139,10 +138,7 @@ describe("EditRemainingEffort", () => {
         const wrapper = await getWrapper();
 
         wrapper.setData({ value: "3" });
-        expect(wrapper.classes()).toEqual([
-            "taskboard-card-remaining-effort-input",
-            "taskboard-card-remaining-effort-input-fiesta-red"
-        ]);
+        expect(wrapper.classes()).toEqual(["taskboard-card-remaining-effort-input"]);
 
         wrapper.setData({ value: "3.14" });
         expect(wrapper.classes()).toContain("taskboard-card-remaining-effort-input-width-40");

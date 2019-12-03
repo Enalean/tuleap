@@ -42,7 +42,7 @@ describe("ParentCardRemainingEffort", () => {
         const wrapper = await getWrapper({ value: 666 } as RemainingEffort);
 
         expect(wrapper.classes("tlp-badge-lake-placid-blue")).toBe(true);
-        expect(wrapper.classes("taskboard-card-remaining-effort-lake-placid-blue")).toBe(true);
+        expect(wrapper.classes("tlp-swatch-lake-placid-blue")).toBe(true);
         expect(wrapper.text()).toBe("666");
         expect(wrapper.find("i[class~=fa-flag-checkered]").exists()).toBe(true);
         expect(wrapper.attributes("title")).toBe("Remaining effort");

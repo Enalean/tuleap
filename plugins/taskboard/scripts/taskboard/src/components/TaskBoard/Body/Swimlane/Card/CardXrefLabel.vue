@@ -45,10 +45,10 @@ export default class CardXrefLabel extends Vue {
 
     get additional_classnames(): string {
         if (this.card.background_color) {
-            return `taskboard-card-xref-${this.card.background_color}`;
+            return `tlp-swatch-${this.card.background_color}`;
         }
 
-        return `taskboard-card-xref-${this.card.color}`;
+        return `tlp-swatch-${this.card.color}`;
     }
 }
 </script>

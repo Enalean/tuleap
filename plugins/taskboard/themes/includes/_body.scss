@@ -99,10 +99,8 @@
     font-size: 14px;
     cursor: pointer;
 
-    @each $color-name, $colors in $tlp-swatch-color-map {
-        &.taskboard-swimlane-toggle-#{$color-name}::before {
-            color: map-get($colors, 'primary');
-        }
+    &::before {
+        color: var(--primary-color);
     }
 }
 

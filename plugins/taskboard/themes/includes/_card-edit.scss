@@ -24,7 +24,7 @@
 
 :not(.gu-mirror) > .taskboard-card.taskboard-card-editable:not(.taskboard-card-edit-mode) {
     > .taskboard-card-edit-trigger {
-        @include pencil-background($tlp-ui-white);
+        @include pencil-background(var(--secondary-color, #{$tlp-ui-white}));
         display: flex;
         position: absolute;
         z-index: 10;
@@ -36,7 +36,7 @@
         transition: opacity ease-in-out 100ms;
         border-radius: 50%;
         opacity: 0;
-        color: $tlp-ui-dimmed;
+        color: var(--text-color, var(--card-text-color, $tlp-ui-dimmed));
         font-size: 14px;
         cursor: pointer;
 
@@ -57,17 +57,6 @@
 
         > .taskboard-card-edit-trigger {
             opacity: 1;
-        }
-    }
-
-    @each $color-name, $colors in $tlp-swatch-color-map {
-        &.taskboard-card-background-#{$color-name} > .taskboard-card-edit-trigger {
-            @include pencil-background(map-get($colors, 'secondary'));
-            color: map-get($colors, 'text');
-        }
-
-        &.taskboard-card-#{$color-name}:not([class*='taskboard-card-background-']) > .taskboard-card-edit-trigger {
-            color: map-get($colors, 'text');
         }
     }
 }
@@ -239,17 +228,12 @@
     padding: 1px 5px;
     border: 0;
     border-radius: 2px;
+    background: var(--secondary-color);
+    color: var(--text-color);
     font-size: 13px;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
     line-height: 14px;
-}
-
-@each $color-name, $colors in $tlp-swatch-color-map {
-    .taskboard-card-remaining-effort-input-#{$color-name} {
-        background: map-get($colors, 'secondary');
-        color: map-get($colors, 'text');
-    }
 }
 
 @for $width from 4 through 6 {

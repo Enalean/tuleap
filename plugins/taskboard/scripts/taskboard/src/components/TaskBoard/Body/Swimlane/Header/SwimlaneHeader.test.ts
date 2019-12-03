@@ -57,7 +57,7 @@ describe("SwimlaneHeader", () => {
 
         expect(
             wrapper.contains(
-                ".fa-minus-square.taskboard-swimlane-toggle.taskboard-swimlane-toggle-fiesta-red[role=button]"
+                ".fa-minus-square.taskboard-swimlane-toggle.tlp-swatch-fiesta-red[role=button]"
             )
         ).toBe(true);
         expect(wrapper.contains(".taskboard-fullscreen")).toBe(false);
