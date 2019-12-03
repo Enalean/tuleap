@@ -71,6 +71,8 @@ class ProjectCategoriesUpdaterTest extends TestCase
             ]
         );
 
+        $this->factory->shouldReceive('getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren')->andReturn([])->byDefault();
+
         $this->updater = new ProjectCategoriesUpdater($this->factory, $this->history_dao, $this->set_node_facade);
     }
 
@@ -81,7 +83,11 @@ class ProjectCategoriesUpdaterTest extends TestCase
             ->once()
             ->with('changed_trove', "", 42);
 
-        $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([]));
+        $this->factory->shouldReceive('removeProjectTopCategoryValue');
+        $this->set_node_facade->shouldReceive('setNode');
+
+
+        $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => ['', '11']]));
     }
 
     public function testItUpdatesCategoriesValues(): void
@@ -111,7 +117,7 @@ class ProjectCategoriesUpdaterTest extends TestCase
 
     public function testItIgnoresSubmittedCategoryIfItIsNotInTopLevelOnes(): void
     {
-        $this->history_dao->shouldReceive('groupAddHistory');
+        $this->history_dao->shouldNotReceive('groupAddHistory');
         $this->factory->shouldNotReceive('removeProjectTopCategoryValue');
 
         $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([3 => []]));
@@ -119,10 +125,26 @@ class ProjectCategoriesUpdaterTest extends TestCase
 
     public function testItIgnoresSubmittedCategoryIfValueIsNotAnArray(): void
     {
-        $this->history_dao->shouldReceive('groupAddHistory');
+        $this->history_dao->shouldNotReceive('groupAddHistory');
         $this->factory->shouldNotReceive('removeProjectTopCategoryValue');
         $this->set_node_facade->shouldNotReceive('setNode')->with($this->project, 23, 1);
 
         $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => '23']));
+    }
+
+    public function testItEnsuresThatMandatoryCategoriesAreSet(): void
+    {
+        $this->history_dao->shouldNotReceive('groupAddHistory');
+        $this->factory->shouldNotReceive('removeProjectTopCategoryValue');
+        $this->set_node_facade->shouldNotReceive('setNode');
+
+        $this->factory->shouldReceive('getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren')->andReturn([
+           new \TroveCat(1, '', ''),
+           new \TroveCat(2, '', ''),
+        ]);
+
+        $this->expectException(MissingMandatoryCategoriesException::class);
+
+        $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => ['', '11', '12'], 2 => ['']]));
     }
 }

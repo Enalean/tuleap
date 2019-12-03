@@ -1403,6 +1403,9 @@ msgstr "Page d'accueil"
 msgid "Site news"
 msgstr "News du site"
 
+msgid "Some mandatory categories are missing"
+msgstr "Des catégories sont manquantes"
+
 msgid "Source code management"
 msgstr "Gestion de code source"
 

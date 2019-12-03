@@ -53,13 +53,17 @@ final class CategoryCollection
                 continue;
             }
             $category = new TroveCat((int) $root_id, '', '');
+            $has_children = false;
             foreach ($trove_cat_ids as $cat_id) {
                 if ($cat_id === '') {
                     continue;
                 }
                 $category->addChildren(new TroveCat((int) $cat_id, '', ''));
+                $has_children = true;
             }
-            $root_categories[] = $category;
+            if ($has_children) {
+                $root_categories[] = $category;
+            }
         }
         return new self(...$root_categories);
     }
