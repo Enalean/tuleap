@@ -122,6 +122,10 @@
     }
 }
 
+.taskboard-cell {
+    position: relative;
+}
+
 .taskboard-cell-parent-card,
 .taskboard-cell-solo-card {
     display: flex;
