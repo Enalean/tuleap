@@ -962,6 +962,11 @@
     </element>
   </define>
   <define name="rendererContent">
+    <optional>
+      <attribute name="ID">
+        <data type="ID"/>
+      </attribute>
+    </optional>
     <element name="name">
       <data type="string"/>
     </element>

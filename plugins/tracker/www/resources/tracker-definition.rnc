@@ -429,6 +429,7 @@ tracker =
         }
 
     rendererContent =
+        attribute ID { xsd:ID }?,
         element name { xsd:string },
         element description { xsd:string }?,
         attribute id { xsd:long }?,
