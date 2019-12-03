@@ -25,14 +25,14 @@ namespace Tuleap\Project\Admin\Categories;
 
 use Project;
 use ProjectHistoryDao;
-use TroveCatDao;
+use TroveCatFactory;
 
 class ProjectCategoriesUpdater
 {
     /**
-     * @var TroveCatDao
+     * @var TroveCatFactory
      */
-    private $dao;
+    private $factory;
     /**
      * @var ProjectHistoryDao
      */
@@ -42,39 +42,35 @@ class ProjectCategoriesUpdater
      */
     private $set_node_facade;
 
-    public function __construct(TroveCatDao $dao, ProjectHistoryDao $history_dao, TroveSetNodeFacade $set_node_facade)
+    public function __construct(TroveCatFactory $factory, ProjectHistoryDao $history_dao, TroveSetNodeFacade $set_node_facade)
     {
-        $this->dao             = $dao;
-        $this->history_dao     = $history_dao;
+        $this->factory     = $factory;
+        $this->history_dao = $history_dao;
         $this->set_node_facade = $set_node_facade;
     }
 
-    /**
-     * @param Project    $project
-     * @param int[]      $submitted_categories
-     */
-    public function update(Project $project, array $submitted_categories): void
+    public function update(Project $project, CategoryCollection $submitted_categories): void
     {
         $top_categories_nb_max_values = [];
-        foreach ($this->dao->getTopCategories() as $row) {
+        foreach ($this->factory->getTopCategories() as $row) {
             $top_categories_nb_max_values[$row['trove_cat_id']] = $row['nb_max_values'];
         }
 
         $this->history_dao->groupAddHistory('changed_trove', "", $project->getID());
-        foreach ($submitted_categories as $root_id => $trove_cat_ids) {
-            if (! isset($top_categories_nb_max_values[$root_id])) {
+        foreach ($submitted_categories->getRootCategories() as $root_category) {
+            if (! isset($top_categories_nb_max_values[$root_category->getId()])) {
                 continue;
             }
 
-            if (! is_array($trove_cat_ids)) {
-                continue;
-            }
+            $trove_cat_ids = $submitted_categories->getCategory($root_category)->getChildren();
 
-            $this->dao->removeProjectTopCategoryValue($project->getID(), $root_id);
+            $this->factory->removeProjectTopCategoryValue($project, $root_category->getId());
 
-            $first_trove_cat_ids = \array_slice($trove_cat_ids, 1, $top_categories_nb_max_values[$root_id]);
-            foreach ($first_trove_cat_ids as $submitted_category_id) {
-                $this->set_node_facade->setNode($project, (int) $submitted_category_id, (int) $root_id);
+            for ($i = 0; $i < $top_categories_nb_max_values[$root_category->getId()]; $i++) {
+                if (! isset($trove_cat_ids[$i])) {
+                    break;
+                }
+                $this->set_node_facade->setNode($project, $trove_cat_ids[$i]->getId(), $root_category->getId());
             }
         }
     }

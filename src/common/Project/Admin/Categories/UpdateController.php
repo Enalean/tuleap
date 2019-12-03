@@ -85,7 +85,7 @@ class UpdateController implements DispatchableWithRequest, DispatchableWithProje
         $csrf = new \CSRFSynchronizerToken($redirect_url);
         $csrf->check();
 
-        $this->updater->update($project, $categories);
+        $this->updater->update($project, CategoryCollection::buildFromWebPayload($categories));
 
         $layout->addFeedback(\Feedback::INFO, gettext("Categories successfully updated."));
         $layout->redirect($redirect_url);

@@ -321,7 +321,7 @@ class RouteCollector
         return new Categories\UpdateController(
             \ProjectManager::instance(),
             new ProjectCategoriesUpdater(
-                new TroveCatDao(),
+                new \TroveCatFactory(new TroveCatDao()),
                 new ProjectHistoryDao(),
                 new Categories\TroveSetNodeFacade()
             )
