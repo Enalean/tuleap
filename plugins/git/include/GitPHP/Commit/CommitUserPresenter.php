@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -48,7 +48,7 @@ class CommitUserPresenter
             $user_helper                  = \UserHelper::instance();
             $user_presenter->has_avatar   = $user->hasAvatar();
             $user_presenter->avatar_url   = $user->getAvatarUrl();
-            $user_presenter->display_name = trim($user_helper->getDisplayNameFromUser($user));
+            $user_presenter->display_name = trim($user_helper->getDisplayNameFromUser($user) ?? '');
             $user_presenter->url          = $user_helper->getUserUrl($user);
         }
 

@@ -59,12 +59,6 @@ final class ReviewerChangeDAOTest extends TestCase
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->run('DELETE FROM plugin_pullrequest_reviewer_change');
         $db->run('DELETE FROM plugin_pullrequest_reviewer_change_user');
-
-        $user_to_delete_condition = EasyStatement::open()->in(
-            'user_id IN (?*)',
-            [self::$pr_reviewer_1_id, self::$pr_reviewer_2_id, self::$pr_reviewer_3_id]
-        );
-        $db->safeQuery("DELETE FROM user WHERE $user_to_delete_condition", $user_to_delete_condition->values());
     }
 
     public static function tearDownAfterClass(): void
@@ -77,6 +71,29 @@ final class ReviewerChangeDAOTest extends TestCase
             "DELETE FROM user WHERE $user_to_delete_condition",
             $user_to_delete_condition->values()
         );
+    }
+
+    public function testSearchesReviewerChangeFromID(): void
+    {
+        $reviewer_dao = new ReviewerDAO();
+        $change_id    = $reviewer_dao->setReviewers(40, self::$pr_reviewer_1_id, 10, ...[self::$pr_reviewer_2_id]);
+
+        $this->assertNotNull($change_id);
+
+        $reviewer_change_dao    = new ReviewerChangeDAO();
+        $raw_change_information = $reviewer_change_dao->searchByChangeID($change_id);
+
+        $expected_result = [
+            [
+                'pull_request_id'  => 40,
+                'change_date'      => 10,
+                'change_user_id'   => self::$pr_reviewer_1_id,
+                'reviewer_user_id' => self::$pr_reviewer_2_id,
+                'is_removal'       => 0,
+            ]
+        ];
+
+        $this->assertEquals($expected_result, $raw_change_information);
     }
 
     public function testSearchesReviewerChangesOfAPullRequest(): void

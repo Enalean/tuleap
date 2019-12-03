@@ -24,9 +24,11 @@ namespace Tuleap\PullRequest\Reviewer;
 
 use DateTimeImmutable;
 use PFUser;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeEvent;
 
 final class ReviewerUpdater
 {
@@ -38,11 +40,19 @@ final class ReviewerUpdater
      * @var PullRequestPermissionChecker
      */
     private $pull_request_permission_checker;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
-    public function __construct(ReviewerDAO $dao, PullRequestPermissionChecker $pull_request_permission_checker)
-    {
+    public function __construct(
+        ReviewerDAO $dao,
+        PullRequestPermissionChecker $pull_request_permission_checker,
+        EventDispatcherInterface $event_dispatcher
+    ) {
         $this->dao                             = $dao;
         $this->pull_request_permission_checker = $pull_request_permission_checker;
+        $this->event_dispatcher                = $event_dispatcher;
     }
 
     /**
@@ -71,11 +81,18 @@ final class ReviewerUpdater
             $new_reviewer_ids[] = (int) $user->getId();
         }
 
-        $this->dao->setReviewers(
+        $change_id = $this->dao->setReviewers(
             $pull_request->getId(),
             (int) $user_changing_the_reviewers->getId(),
             $date_of_the_change->getTimestamp(),
             ...$new_reviewer_ids
         );
+
+        if ($change_id === null) {
+            return;
+        }
+
+        $reviewer_change_event = ReviewerChangeEvent::fromID($change_id);
+        $this->event_dispatcher->dispatch($reviewer_change_event);
     }
 }

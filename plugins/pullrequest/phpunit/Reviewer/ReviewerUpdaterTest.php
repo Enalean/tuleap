@@ -25,9 +25,11 @@ namespace Tuleap\PullRequest\Reviewer;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeEvent;
 
 final class ReviewerUpdaterTest extends TestCase
 {
@@ -43,12 +45,15 @@ final class ReviewerUpdaterTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PullRequestPermissionChecker
      */
     private $permissions_checker;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
      */
     private $user_doing_the_changes;
-
     /**
      * @var ReviewerUpdater
      */
@@ -58,11 +63,12 @@ final class ReviewerUpdaterTest extends TestCase
     {
         $this->dao                 = Mockery::mock(ReviewerDAO::class);
         $this->permissions_checker = Mockery::mock(PullRequestPermissionChecker::class);
+        $this->event_dispatcher    = Mockery::mock(EventDispatcherInterface::class);
 
         $this->user_doing_the_changes = Mockery::mock(\PFUser::class);
         $this->user_doing_the_changes->shouldReceive('getId')->andReturn((string) self::USER_DOING_THE_CHANGES_ID);
 
-        $this->reviewer_updater = new ReviewerUpdater($this->dao, $this->permissions_checker);
+        $this->reviewer_updater = new ReviewerUpdater($this->dao, $this->permissions_checker, $this->event_dispatcher);
     }
 
     public function testListOfReviewersCanBeCleared(): void
@@ -71,7 +77,10 @@ final class ReviewerUpdaterTest extends TestCase
         $pull_request->shouldReceive('getId')->andReturn(85);
         $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_REVIEW);
 
-        $this->dao->shouldReceive('setReviewers')->with(85, self::USER_DOING_THE_CHANGES_ID, 1)->once();
+        $this->dao->shouldReceive('setReviewers')->with(85, self::USER_DOING_THE_CHANGES_ID, 1)
+            ->once()->andReturn(78);
+
+        $this->event_dispatcher->shouldReceive('dispatch')->with(Mockery::type(ReviewerChangeEvent::class));
 
         $this->reviewer_updater->updatePullRequestReviewers(
             $pull_request,
@@ -91,8 +100,18 @@ final class ReviewerUpdaterTest extends TestCase
         $user_2 = Mockery::mock(\PFUser::class);
         $user_2->shouldReceive('getId')->andReturn('102');
 
-        $this->dao->shouldReceive('setReviewers')->with(85, self::USER_DOING_THE_CHANGES_ID, 1, 101, 102)->once();
+        $expected_change_id = 79;
+        $this->dao->shouldReceive('setReviewers')->with(85, self::USER_DOING_THE_CHANGES_ID, 1, 101, 102)
+            ->once()->andReturn($expected_change_id);
         $this->permissions_checker->shouldReceive('checkPullRequestIsReadableByUser')->twice();
+
+        $this->event_dispatcher->shouldReceive('dispatch')->with(
+            Mockery::on(
+                static function (ReviewerChangeEvent $event) use ($expected_change_id): bool {
+                    return $event->getChangeID() === $expected_change_id;
+                }
+            )
+        );
 
         $this->reviewer_updater->updatePullRequestReviewers(
             $pull_request,
@@ -100,6 +119,25 @@ final class ReviewerUpdaterTest extends TestCase
             new \DateTimeImmutable('@1'),
             $user_1,
             $user_2
+        );
+    }
+
+    public function testReviewerChangeEventIsNotSentWhenNoNewChangesAreCreated(): void
+    {
+        $pull_request = Mockery::mock(PullRequest::class);
+        $pull_request->shouldReceive('getId')->andReturn(85);
+        $pull_request->shouldReceive('getStatus')->andReturn(PullRequest::STATUS_REVIEW);
+
+        $this->dao->shouldReceive('setReviewers')->once()->andReturnNull();
+        $this->permissions_checker->shouldReceive('checkPullRequestIsReadableByUser');
+
+        $this->event_dispatcher->shouldNotReceive('dispatch');
+
+        $this->reviewer_updater->updatePullRequestReviewers(
+            $pull_request,
+            $this->user_doing_the_changes,
+            new \DateTimeImmutable('@1'),
+            $this->user_doing_the_changes
         );
     }
 

@@ -25,6 +25,8 @@ namespace Tuleap\PullRequest\Reviewer\Change;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
+use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\PullRequest;
 
 final class ReviewerChangeRetrieverTest extends TestCase
@@ -40,16 +42,25 @@ final class ReviewerChangeRetrieverTest extends TestCase
      */
     private $user_manager;
     /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Factory
+     */
+    private $pull_request_factory;
+    /**
      * @var ReviewerChangeRetriever
      */
     private $reviewer_change_retriever;
 
     protected function setUp(): void
     {
-        $this->reviewer_change_dao = \Mockery::mock(ReviewerChangeDAO::class);
-        $this->user_manager        = \Mockery::mock(\UserManager::class);
+        $this->reviewer_change_dao  = \Mockery::mock(ReviewerChangeDAO::class);
+        $this->pull_request_factory = \Mockery::mock(Factory::class);
+        $this->user_manager         = \Mockery::mock(\UserManager::class);
 
-        $this->reviewer_change_retriever = new ReviewerChangeRetriever($this->reviewer_change_dao, $this->user_manager);
+        $this->reviewer_change_retriever = new ReviewerChangeRetriever(
+            $this->reviewer_change_dao,
+            $this->pull_request_factory,
+            $this->user_manager
+        );
     }
 
     public function testRetrieveListOfReviewerChangesOfAPullRequest(): void
@@ -107,6 +118,94 @@ final class ReviewerChangeRetrieverTest extends TestCase
         $this->assertEquals($user_1_id, $valid_change->changedBy()->getId());
         $this->assertCount(1, $valid_change->getAddedReviewers());
         $this->assertCount(1, $valid_change->getRemovedReviewers());
+    }
+
+    public function testCanRetrieveChangeWithAssociatedPullRequest(): void
+    {
+        $change_id       = 852;
+        $pull_request_id = 11;
+
+        $user_1_id = 102;
+        $user_2_id = 103;
+
+        $this->reviewer_change_dao->shouldReceive('searchByChangeID')->with($change_id)->andReturn([
+            [
+                'pull_request_id'  => $pull_request_id,
+                'change_date'      => 1575293481,
+                'change_user_id'   => $user_1_id,
+                'reviewer_user_id' => $user_2_id,
+                'is_removal'       => 0
+            ]
+        ]);
+
+        $this->user_manager->shouldReceive('getUserById')->with($user_1_id)->andReturn($this->buildUserWithID($user_1_id));
+        $this->user_manager->shouldReceive('getUserById')->with($user_2_id)->andReturn($this->buildUserWithID($user_2_id));
+
+        $pull_request = \Mockery::mock(PullRequest::class);
+        $this->pull_request_factory->shouldReceive('getPullRequestById')->with($pull_request_id)
+            ->andReturn($pull_request);
+
+        $change_pull_request_association = $this->reviewer_change_retriever->getChangeWithTheAssociatedPullRequestByID($change_id);
+
+        $this->assertSame($pull_request, $change_pull_request_association->getPullRequest());
+        $reviewer_change = $change_pull_request_association->getReviewerChange();
+        $this->assertEquals($user_1_id, $reviewer_change->changedBy()->getId());
+        $this->assertCount(1, $reviewer_change->getAddedReviewers());
+        $this->assertEquals($user_2_id, $reviewer_change->getAddedReviewers()[0]->getId());
+        $this->assertEmpty($reviewer_change->getRemovedReviewers());
+    }
+
+    public function testReviewerChangeIsNotReturnedWhenTheAssociatedPullRequestCannotBeFound(): void
+    {
+        $change_id = 854;
+
+        $this->reviewer_change_dao->shouldReceive('searchByChangeID')->with($change_id)->andReturn([
+            [
+                'pull_request_id'  => 11,
+                'change_date'      => 1575293581,
+                'change_user_id'   => 102,
+                'reviewer_user_id' => 102,
+                'is_removal'       => 0
+            ]
+        ]);
+
+        $this->pull_request_factory->shouldReceive('getPullRequestById')->andThrow(PullRequestNotFoundException::class);
+
+        $change_pull_request_association = $this->reviewer_change_retriever->getChangeWithTheAssociatedPullRequestByID($change_id);
+
+        $this->assertNull($change_pull_request_association);
+    }
+
+    public function testReviewerChangeAssociatedWithThePullRequestIsNotReturnedWhenTheUsersLinkedToItAreNotFound(): void
+    {
+        $change_id       = 855;
+
+        $this->reviewer_change_dao->shouldReceive('searchByChangeID')->with($change_id)->andReturn([
+            [
+                'pull_request_id'  => 11,
+                'change_date'      => 1575293481,
+                'change_user_id'   => 102,
+                'reviewer_user_id' => 102,
+                'is_removal'       => 0
+            ]
+        ]);
+
+        $this->pull_request_factory->shouldReceive('getPullRequestById')->andReturn(\Mockery::mock(PullRequest::class));
+
+        $this->user_manager->shouldReceive('getUserById')->andReturn(null);
+
+        $change_pull_request_association = $this->reviewer_change_retriever->getChangeWithTheAssociatedPullRequestByID($change_id);
+
+        $this->assertNull($change_pull_request_association);
+    }
+
+    public function testReviewerChangeIsNotReturnedWhenTheChangeIDDoesNotExist(): void
+    {
+        $this->reviewer_change_dao->shouldReceive('searchByChangeID')->andReturn([]);
+
+        $change_pull_request_association = $this->reviewer_change_retriever->getChangeWithTheAssociatedPullRequestByID(404);
+
+        $this->assertNull($change_pull_request_association);
     }
 
     private function buildUserWithID(int $user_id): PFUser

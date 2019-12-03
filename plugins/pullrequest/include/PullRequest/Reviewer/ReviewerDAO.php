@@ -46,13 +46,13 @@ class ReviewerDAO extends DataAccessObject
         int $user_doing_the_change_id,
         int $change_timestamp,
         int ...$user_ids
-    ): void {
-        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use (
+    ): ?int {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use (
             $pull_request_id,
             $user_doing_the_change_id,
             $change_timestamp,
             $user_ids
-        ) {
+        ): ?int {
             $current_reviewer_ids  = array_map(
                 static function (array $user_row): int {
                     return $user_row['user_id'];
@@ -63,10 +63,10 @@ class ReviewerDAO extends DataAccessObject
             $removed_reviewer_ids  = array_diff($current_reviewer_ids, $user_ids);
 
             if (empty($added_reviewer_ids) && empty($removed_reviewer_ids)) {
-                return;
+                return null;
             }
 
-            $change_id = $db->insertReturnId(
+            $change_id = (int) $db->insertReturnId(
                 'plugin_pullrequest_reviewer_change',
                 [
                     'pull_request_id' => $pull_request_id,
@@ -94,6 +94,8 @@ class ReviewerDAO extends DataAccessObject
                 'plugin_pullrequest_reviewer_change_user',
                 $change_user_rows
             );
+
+            return $change_id;
         });
     }
 }
