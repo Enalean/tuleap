@@ -198,7 +198,7 @@ class ImportProjectXMLCommand extends Command
             $users_collection->process($user_manager, $broker_log);
 
             $user_finder = new \User\XML\Import\Mapping($user_manager, $users_collection, $broker_log);
-            $xml_importer = ProjectXMLImporter::build($user_finder);
+            $xml_importer = ProjectXMLImporter::build($user_finder, \ProjectCreator::buildSelfByPassValidation());
 
             if (empty($project_id)) {
                 $factory             = new SystemEventProcessor_Factory(

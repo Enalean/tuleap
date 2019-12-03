@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-use Backend;
 use ForgeConfig;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -33,7 +32,6 @@ use ProjectManager;
 use ReferenceManager;
 use Rule_ProjectFullName;
 use Rule_ProjectName;
-use SystemEventManager;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\FRS\FRSPermissionCreator;
@@ -65,6 +63,30 @@ final class ProjectCreatorTest extends TestCase
      */
     public $creator;
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectDashboardDuplicator
+     */
+    private $dashboard_duplicator;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LabelDao
+     */
+    private $label_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UgroupDuplicator
+     */
+    private $ugroup_duplicator;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SynchronizedProjectMembershipDuplicator
+     */
+    private $synchronized_project_membership_duplicator;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ReferenceManager
+     */
+    private $reference_manager;
+    /**
+     * @var \EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
+     */
+    private $event_manager;
+    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Rule_ProjectFullName
      */
     private $rule_project_full_name;
@@ -75,49 +97,24 @@ final class ProjectCreatorTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->project_manager = Mockery::mock(ProjectManager::class);
-        ProjectManager::setInstance($this->project_manager);
-        $this->user_manager = Mockery::mock(UserManager::class);
-        UserManager::setInstance($this->user_manager);
+        $this->project_manager        = Mockery::mock(ProjectManager::class);
+        $this->user_manager           = Mockery::mock(UserManager::class);
         $this->rule_short_name        = Mockery::mock(Rule_ProjectName::class);
         $this->rule_project_full_name = Mockery::mock(Rule_ProjectFullName::class);
 
-        $this->creator = Mockery::mock(
-            ProjectCreator::class,
-            [
-                $this->project_manager,
-                Mockery::mock(ReferenceManager::class),
-                $this->user_manager,
-                Mockery::mock(UgroupDuplicator::class),
-                false,
-                Mockery::mock(FRSPermissionCreator::class),
-                Mockery::mock(LicenseAgreementFactory::class),
-                Mockery::mock(ProjectDashboardDuplicator::class),
-                Mockery::mock(ServiceCreator::class),
-                Mockery::mock(LabelDao::class),
-                new DefaultProjectVisibilityRetriever(),
-                Mockery::mock(SynchronizedProjectMembershipDuplicator::class),
-                $this->rule_short_name,
-                $this->rule_project_full_name,
-                false
-            ]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
-    }
-
-    protected function tearDown(): void
-    {
-        ProjectManager::clearInstance();
-        UserManager::clearInstance();
-        SystemEventManager::clearInstance();
-        Backend::clearInstances();
-
-        parent::tearDown();
+        $this->event_manager                              = Mockery::mock(\EventManager::class);
+        $this->reference_manager                          = Mockery::mock(ReferenceManager::class);
+        $this->synchronized_project_membership_duplicator = Mockery::mock(
+            SynchronizedProjectMembershipDuplicator::class
+        );
+        $this->ugroup_duplicator                          = Mockery::mock(UgroupDuplicator::class);
+        $this->label_dao                                  = Mockery::mock(LabelDao::class);
+        $this->dashboard_duplicator                       = Mockery::mock(ProjectDashboardDuplicator::class);
     }
 
     public function testMandatoryDescriptionNotSetRaiseException(): void
     {
+        $this->buildProjectCreator(false);
         $this->rule_short_name->shouldReceive('isValid')->once()->andReturnTrue();
         $this->rule_project_full_name->shouldReceive('isValid')->once()->andReturnTrue();
 
@@ -133,6 +130,7 @@ final class ProjectCreatorTest extends TestCase
 
     public function testNotMandatoryDescriptionIsValid(): void
     {
+        $this->buildProjectCreator(false);
         ForgeConfig::set('enable_not_mandatory_description', true);
         ForgeConfig::set('sys_default_domain', 'example.com');
 
@@ -150,6 +148,7 @@ final class ProjectCreatorTest extends TestCase
 
     public function testInvalidShortNameShouldRaiseException(): void
     {
+        $this->buildProjectCreator(false);
         $this->rule_short_name->shouldReceive('isValid')->once()->andReturnFalse();
         $this->rule_short_name->shouldReceive('getErrorMessage')->once();
 
@@ -165,6 +164,7 @@ final class ProjectCreatorTest extends TestCase
 
     public function testInvalidFullNameShouldRaiseException(): void
     {
+        $this->buildProjectCreator(false);
         $this->rule_short_name->shouldReceive('isValid')->once()->andReturnTrue();
         $this->rule_project_full_name->shouldReceive('isValid')->once()->andReturnFalse();
         $this->rule_project_full_name->shouldReceive('getErrorMessage')->once();
@@ -177,5 +177,135 @@ final class ProjectCreatorTest extends TestCase
             TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
             []
         );
+    }
+
+    public function testItCreatesAProjectAndAutoActivateIt(): void
+    {
+        $this->buildProjectCreator(true);
+        ForgeConfig::set('enable_not_mandatory_description', true);
+        ForgeConfig::set('sys_default_domain', 'example.com');
+
+        $user = Mockery::mock(\PFUser::class);
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+
+        $this->creator->shouldReceive('createGroupEntry')->andReturn(101)->once();
+        $this->creator->shouldReceive('setCategories')->once();
+        $this->creator->shouldReceive('initFileModule')->once();
+        $this->creator->shouldReceive('setProjectAdmin')->once();
+        $this->creator->shouldReceive('fakeGroupIdIntoHTTPParams')->once();
+        $this->creator->shouldReceive('activateServicesFromTemplate')->once();
+        $this->creator->shouldReceive('setMessageToRequesterFromTemplate')->once();
+        $this->creator->shouldReceive('initForumModuleFromTemplate')->once();
+        $this->creator->shouldReceive('initCVSModuleFromTemplate')->once();
+        $this->creator->shouldReceive('initSVNModuleFromTemplate')->once();
+        $this->creator->shouldReceive('initFRSModuleFromTemplate')->once();
+        $this->creator->shouldReceive('initTrackerV3ModuleFromTemplate')->once();
+        $this->creator->shouldReceive('initWikiModuleFromTemplate')->once();
+        $this->creator->shouldReceive('copyEmailOptionsFromTemplate')->once();
+
+        $this->dashboard_duplicator->shouldReceive('duplicate')->once();
+
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('isError')->andReturns(false);
+        $this->project_manager->shouldReceive('getProject')->andReturn($project);
+
+        $this->rule_short_name->shouldReceive('isValid')->andReturn(true);
+        $this->rule_project_full_name->shouldReceive('isValid')->andReturn(true);
+
+        $this->event_manager->shouldReceive('processEvent')->twice();
+
+        $this->reference_manager->shouldReceive('addSystemReferencesWithoutService')->once();
+        $this->synchronized_project_membership_duplicator->shouldReceive('duplicate')->once();
+        $this->ugroup_duplicator->shouldReceive('duplicateOnProjectCreation')->once();
+
+        $this->label_dao->shouldReceive('duplicateLabelsIfNeededBetweenProjectsId')->once();
+
+        $this->creator->shouldReceive('autoActivateProject')->once();
+
+        $this->creator->create(
+            "test",
+            "shortname",
+            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
+            []
+        );
+    }
+
+    public function testItCreatesAProjectWithoutAutoValidation(): void
+    {
+        $this->buildProjectCreator(false);
+        ForgeConfig::set('enable_not_mandatory_description', true);
+        ForgeConfig::set('sys_default_domain', 'example.com');
+
+        $user = Mockery::mock(\PFUser::class);
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+
+        $this->creator->shouldReceive('createGroupEntry')->andReturn(101)->once();
+        $this->creator->shouldReceive('setCategories')->once();
+        $this->creator->shouldReceive('initFileModule')->once();
+        $this->creator->shouldReceive('setProjectAdmin')->once();
+        $this->creator->shouldReceive('fakeGroupIdIntoHTTPParams')->once();
+        $this->creator->shouldReceive('activateServicesFromTemplate')->once();
+        $this->creator->shouldReceive('setMessageToRequesterFromTemplate')->once();
+        $this->creator->shouldReceive('initForumModuleFromTemplate')->once();
+        $this->creator->shouldReceive('initCVSModuleFromTemplate')->once();
+        $this->creator->shouldReceive('initSVNModuleFromTemplate')->once();
+        $this->creator->shouldReceive('initFRSModuleFromTemplate')->once();
+        $this->creator->shouldReceive('initTrackerV3ModuleFromTemplate')->once();
+        $this->creator->shouldReceive('initWikiModuleFromTemplate')->once();
+        $this->creator->shouldReceive('copyEmailOptionsFromTemplate')->once();
+
+        $this->dashboard_duplicator->shouldReceive('duplicate')->once();
+
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('isError')->andReturns(false);
+        $this->project_manager->shouldReceive('getProject')->andReturn($project);
+
+        $this->rule_short_name->shouldReceive('isValid')->andReturn(true);
+        $this->rule_project_full_name->shouldReceive('isValid')->andReturn(true);
+
+        $this->event_manager->shouldReceive('processEvent')->twice();
+
+        $this->reference_manager->shouldReceive('addSystemReferencesWithoutService')->once();
+        $this->synchronized_project_membership_duplicator->shouldReceive('duplicate')->once();
+        $this->ugroup_duplicator->shouldReceive('duplicateOnProjectCreation')->once();
+
+        $this->label_dao->shouldReceive('duplicateLabelsIfNeededBetweenProjectsId')->once();
+
+        $this->creator->shouldReceive('autoActivateProject')->never();
+
+        $this->creator->createFromRest(
+            'shortname',
+            'public name',
+            TemplateFromProjectForCreation::fromGlobalProjectAdminTemplate(),
+            []
+        );
+    }
+
+    /**
+     * @return ProjectCreator|Mockery\LegacyMockInterface|Mockery\MockInterface|
+     */
+    private function buildProjectCreator(bool $force_activation): void
+    {
+        $this->creator = Mockery::mock(
+            ProjectCreator::class,
+            [
+                $this->project_manager,
+                $this->reference_manager,
+                $this->user_manager,
+                $this->ugroup_duplicator,
+                false,
+                Mockery::mock(FRSPermissionCreator::class),
+                Mockery::mock(LicenseAgreementFactory::class),
+                $this->dashboard_duplicator,
+                Mockery::mock(ServiceCreator::class),
+                $this->label_dao,
+                new DefaultProjectVisibilityRetriever(),
+                $this->synchronized_project_membership_duplicator,
+                $this->rule_short_name,
+                $this->rule_project_full_name,
+                $this->event_manager,
+                $force_activation
+            ]
+        )->makePartial()->shouldAllowMockingProtectedMethods();
     }
 }

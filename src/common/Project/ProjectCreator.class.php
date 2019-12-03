@@ -140,6 +140,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * @var \Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory
      */
     private $frs_license_agreement_factory;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         ProjectManager $projectManager,
@@ -156,6 +160,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         SynchronizedProjectMembershipDuplicator $synchronized_project_membership_duplicator,
         Rule_ProjectName $rule_short_name,
         Rule_ProjectFullName $rule_full_name,
+        EventManager $event_manager,
         $force_activation = false
     ) {
         $this->send_notifications                   = $send_notifications;
@@ -173,6 +178,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->default_project_visibility_retriever = $default_project_visibility_retriever;
         $this->synchronized_project_membership_duplicator  = $synchronized_project_membership_duplicator;
         $this->frs_license_agreement_factory = $frs_license_agreement_factory;
+        $this->event_manager = $event_manager;
     }
 
     public static function buildSelfByPassValidation(): self
@@ -182,7 +188,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
     public static function buildSelfRegularValidation(): self
     {
-        return self::buildSelf(false, true);
+        return self::buildSelf(
+            (bool)ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, true) === false,
+            true
+        );
     }
 
     private static function buildSelf(bool $force_activation, bool $send_notifications): self
@@ -238,6 +247,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
             new \Rule_ProjectName(),
             new \Rule_ProjectFullName(),
+            EventManager::instance(),
             $force_activation
         );
     }
@@ -309,7 +319,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return $this->processProjectCreation($creation_data);
     }
 
-    private function fakeGroupIdIntoHTTPParams($group_id)
+    /**
+     * protected for testing purpose
+     */
+    protected function fakeGroupIdIntoHTTPParams($group_id)
     {
         $_REQUEST['group_id'] = $_GET['group_id'] = $group_id;
         $request = HTTPRequest::instance();
@@ -366,13 +379,12 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         $template_group = $data->getBuiltFromTemplateProject()->getProject();
 
-        $em     = EventManager::instance();
         $legacy = array(
             Service::SVN       => true,
             Service::TRACKERV3 => true
         );
 
-        $em->processEvent(self::PROJECT_CREATION_REMOVE_LEGACY_SERVICES, array(
+        $this->event_manager->processEvent(self::PROJECT_CREATION_REMOVE_LEGACY_SERVICES, array(
             'template'              => $template_group,
             'project_creation_data' => &$data,
             'use_legacy_services'   => &$legacy
@@ -416,7 +428,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->label_dao->duplicateLabelsIfNeededBetweenProjectsId($template_group->getID(), $group_id);
 
         // Raise an event for plugin configuration
-        $em->processEvent(Event::REGISTER_PROJECT_CREATION, array(
+        $this->event_manager->processEvent(Event::REGISTER_PROJECT_CREATION, array(
             'reportMapping'         => $report_mapping, // Trackers v3
             'trackerMapping'        => $tracker_mapping, // Trackers v3
             'ugroupsMapping'        => $ugroup_mapping,
@@ -431,15 +443,18 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $this->initLayoutFromTemplate($group, $template_group);
         }
 
-        $this->autoActivateProject($group);
+        if ($this->force_activation) {
+            $this->autoActivateProject($group);
+        }
 
         return $group_id;
     }
 
     /**
+     * for testing purpose
      * @return int, the group id created
      */
-    private function createGroupEntry(ProjectCreationData $data)
+    protected function createGroupEntry(ProjectCreationData $data)
     {
         srand((double)microtime()*1000000);
         $random_num=rand(0, 1000000);
@@ -486,9 +501,11 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
     }
 
-    // insert descriptions
-    // insert trove categories
-    private function setCategories($data, $group_id)
+    /**
+     * insert descriptions, insert trove categories
+     * protected for testing purpose
+     */
+    protected function setCategories($data, $group_id)
     {
         $fields_factory = new DescriptionFieldsFactory(new DescriptionFieldsDao());
         $descfieldsinfos = $fields_factory->getAllDescriptionFields();
@@ -514,8 +531,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
     }
 
-    // define a module
-    private function initFileModule($group_id)
+    /**
+     * protected for testing purpose
+     */
+    protected function initFileModule($group_id)
     {
         $result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".$this->project_manager->getProject($group_id)->getUnixName()."')");
         if (!$result) {
@@ -524,9 +543,11 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
     }
 
-    // make the current user a project admin as well as admin
-    // on all Tuleap services
-    private function setProjectAdmin($group_id, PFUser $user)
+    /**
+     * make the current user a project admin as well as admin on all Tuleap services
+     * protected for testing purpose
+     */
+    protected function setProjectAdmin($group_id, PFUser $user)
     {
         $result=db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,file_flags,wiki_flags,svn_flags,news_flags) VALUES ("
             . $user->getId() . ","
@@ -564,9 +585,11 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return "SELECT * FROM service WHERE group_id=$template_id AND is_active=1 $additional_where";
     }
 
-    // Activate the same services on $group_id than those activated on
-    // $template_group
-    private function activateServicesFromTemplate(Project $group, Group $template_group, ProjectCreationData $data, array $legacy)
+    /**
+     * Activate the same services on $group_id than those activated on $template_group
+     * protected for testing purpose
+     */
+    protected function activateServicesFromTemplate(Project $group, Group $template_group, ProjectCreationData $data, array $legacy)
     {
         $group_id    = $group->getID();
         $template_id = $template_group->getID();
@@ -602,8 +625,11 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         EventManager::instance()->processEvent($event);
     }
 
-    //Add the import of the message to requester from the parent project if defined
-    private function setMessageToRequesterFromTemplate($group_id, $template_id)
+    /**
+     * Add the import of the message to requester from the parent project if defined
+     * protected for testing purpose
+     */
+    protected function setMessageToRequesterFromTemplate($group_id, $template_id)
     {
         $dar = $this->project_manager->getMessageToRequesterForAccessProject($template_id);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
@@ -617,7 +643,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
     }
 
-    private function initForumModuleFromTemplate($group_id, $template_id)
+    /**
+     * protected for testing purpose
+     */
+    protected function initForumModuleFromTemplate($group_id, $template_id)
     {
         $sql = "SELECT forum_name, is_public, description FROM forum_group_list WHERE group_id=$template_id ";
         $result=db_query($sql);
@@ -636,7 +665,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
     }
 
-    private function initCVSModuleFromTemplate($group_id, $template_id)
+    /**
+     * protected for testing purpose
+     */
+    protected function initCVSModuleFromTemplate($group_id, $template_id)
     {
         $sql = "SELECT cvs_tracker, cvs_watch_mode, cvs_preamble, cvs_is_private FROM groups WHERE group_id=$template_id ";
         $result = db_query($sql);
@@ -654,7 +686,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
     }
 
-    private function initSVNModuleFromTemplate($group_id, $template_id)
+    /**
+     * protected for testing purpose
+     */
+    protected function initSVNModuleFromTemplate($group_id, $template_id)
     {
         $current_timestamp = db_escape_int($_SERVER['REQUEST_TIME']);
 
@@ -684,7 +719,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
     }
 
-    private function initFRSModuleFromTemplate(Project $project, Project $template_project, $ugroup_mapping)
+    /**
+     * protected for testing purpose
+     */
+    protected function initFRSModuleFromTemplate(Project $project, Project $template_project, $ugroup_mapping)
     {
         $sql_ugroup_mapping = ' ugroup_id ';
         if (is_array($ugroup_mapping) && count($ugroup_mapping)) {
@@ -732,8 +770,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         );
     }
 
-    // Generic Trackers Creation
-    private function initTrackerV3ModuleFromTemplate(Group $group, Group $template_group, $ugroup_mapping)
+    /**
+     * protected for testing purpose
+     */
+    protected function initTrackerV3ModuleFromTemplate(Group $group, Group $template_group, $ugroup_mapping)
     {
         $group_id = $group->getID();
         $tracker_mapping = array();
@@ -780,8 +820,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return array($tracker_mapping, $report_mapping);
     }
 
-    // Clone wiki from the template
-    private function initWikiModuleFromTemplate($group_id, $template_id)
+    /**
+     * protected for testing purpose
+     */
+    protected function initWikiModuleFromTemplate($group_id, $template_id)
     {
         $clone = new WikiCloner($template_id, $group_id);
 
@@ -798,8 +840,11 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->dashboard_duplicator->duplicate($template, $new_project);
     }
 
-    // Copy Truncated email option
-    private function copyEmailOptionsFromTemplate($group_id, $template_id)
+    /**
+     * Copy Truncated email option
+     * protected for testing support
+     */
+    protected function copyEmailOptionsFromTemplate($group_id, $template_id)
     {
         $sql = "UPDATE groups AS g1
                 JOIN groups AS g2
@@ -813,8 +858,11 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         }
     }
 
-    //Verify if the approbation of the new project is automatic or not
-    private function autoActivateProject($group)
+   /**
+    * Verify if the approbation of the new project is automatic or not
+    * protected for testing purpose
+    */
+    protected function autoActivateProject($group)
     {
         $auto_approval = ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, 1) ? PROJECT_APPROVAL_BY_ADMIN : PROJECT_APPROVAL_AUTO;
 
@@ -867,7 +915,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         return $this->project_manager->getProject($id);
     }
 
-    private function getProjectCreationData($short_name, $public_name, TemplateFromProjectForCreation $template_from_project_for_creation, array $data)
+    /**
+     * protected for testing purpose
+     */
+    protected function getProjectCreationData($short_name, $public_name, TemplateFromProjectForCreation $template_from_project_for_creation, array $data): ProjectCreationData
     {
         $creation_data = ProjectCreationData::buildFromFormArray(
             $this->default_project_visibility_retriever,

@@ -137,7 +137,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $this->XML_file_content_retriever          = $XML_file_content_retriever;
     }
 
-    public static function build(\User\XML\Import\IFindUserFromXMLReference $user_finder): self
+    public static function build(\User\XML\Import\IFindUserFromXMLReference $user_finder, ProjectCreator $project_creator): self
     {
         $event_manager           = EventManager::instance();
         $user_manager            = UserManager::instance();
@@ -178,7 +178,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
                 new UGroupManager()
             ),
             ProjectMemberAdderWithoutStatusCheckAndNotifications::build(),
-            ProjectCreator::buildSelfByPassValidation(),
+            $project_creator,
             new UploadedLinksUpdater(new UploadedLinksDao(), FRSLog::instance()),
             new ProjectDashboardXMLImporter(
                 new ProjectDashboardSaver(

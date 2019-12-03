@@ -1718,7 +1718,8 @@ class ProjectResource extends AuthenticatedResource
             \BackendLogger::getDefaultLogger(),
             new XML_RNGValidator(),
             ProjectXMLImporter::build(
-                new XMLImportHelper(UserManager::instance())
+                new XMLImportHelper(UserManager::instance()),
+                ProjectCreator::buildSelfRegularValidation()
             ),
             TemplateFactory::build(),
             new ProjectRegistrationUserPermissionChecker(

@@ -85,62 +85,8 @@ class ProjectCreationTest extends TestCase
 
     public function testItCreatesAProject(): void
     {
-        $send_notifications = true;
-        $ugroup_user_dao    = new UGroupUserDao();
-        $ugroup_manager     = new UGroupManager();
-        $ugroup_binding     = new UGroupBinding($ugroup_user_dao, $ugroup_manager);
-        $ugroup_duplicator  = new UgroupDuplicator(
-            new UGroupDao(),
-            $ugroup_manager,
-            $ugroup_binding,
-            MemberAdder::build(ProjectMemberAdderWithoutStatusCheckAndNotifications::build()),
-            EventManager::instance()
-        );
-
-        $user_manager   = UserManager::instance();
-        $widget_factory = new WidgetFactory(
-            $user_manager,
-            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-            EventManager::instance()
-        );
-
-        $widget_dao        = new DashboardWidgetDao($widget_factory);
-        $project_dao       = new ProjectDashboardDao($widget_dao);
-        $project_retriever = new ProjectDashboardRetriever($project_dao);
-        $widget_retriever  = new DashboardWidgetRetriever($widget_dao);
-        $duplicator        = new ProjectDashboardDuplicator(
-            $project_dao,
-            $project_retriever,
-            $widget_dao,
-            $widget_retriever,
-            $widget_factory
-        );
-
-        $force_activation = false;
-
         ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
-
-        $projectCreator = new ProjectCreator(
-            ProjectManager::instance(),
-            ReferenceManager::instance(),
-            $user_manager,
-            $ugroup_duplicator,
-            $send_notifications,
-            new FRSPermissionCreator(
-                new FRSPermissionDao(),
-                new UGroupDao(),
-                new ProjectHistoryDao()
-            ),
-            new LicenseAgreementFactory(new LicenseAgreementDao()),
-            $duplicator,
-            new ServiceCreator(new ServiceDao()),
-            new LabelDao(),
-            new DefaultProjectVisibilityRetriever(),
-            new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
-            new \Rule_ProjectName(),
-            new \Rule_ProjectFullName(),
-            $force_activation
-        );
+        $projectCreator = ProjectCreator::buildSelfRegularValidation();
 
         $projectCreator->create(
             'short-name',
