@@ -55,3 +55,19 @@
         color: $tlp-ui-dimmed;
     }
 }
+
+.project-short-name-hidden-section {
+    display: none;
+}
+
+.tlp-form-element {
+    .project-short-name-edit-section {
+        display: block;
+        margin: $tlp-half-spacing 0 0 0;
+    }
+}
+
+.project-shortname-edit-icon {
+    margin: 0 0 0 5px;
+    cursor: pointer;
+}

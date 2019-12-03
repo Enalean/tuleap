@@ -24,26 +24,19 @@ import { Store } from "vuex-mock-store";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
 import ProjectName from "./ProjectName.vue";
 import { DefaultData } from "vue/types/options";
-import { ProjectNameProperties } from "../../../type";
+import EventBus from "../../../helpers/event-bus";
 
 describe("ProjectName", () => {
     let wrapper: Wrapper<ProjectName>,
         store: Store,
         component_options: ShallowMountOptions<ProjectName>;
     beforeEach(async () => {
-        const name_properties: ProjectNameProperties = {
-            slugified_name: "",
-            name: "",
-            is_valid: true
-        };
-
         component_options = {
             data(): DefaultData<ProjectName> {
                 return {
                     error: ""
                 };
             },
-            propsData: { name_properties },
             localVue: await createProjectRegistrationLocalVue(),
             mocks: { $store: store }
         };
@@ -53,86 +46,22 @@ describe("ProjectName", () => {
         wrapper = shallowMount(ProjectName, component_options);
     });
 
-    it(`Display an error when shortname has less than 3 characters`, () => {
-        wrapper.find("[data-test=new-project-name]").setValue("My");
+    it(`Displays an error if project name has less than minimal requried size`, () => {
+        wrapper = shallowMount(ProjectName, component_options);
+        wrapper.find("[data-test=new-project-name]").setValue("t");
+        expect(wrapper.vm.$data.has_error).toBe(true);
 
-        expect(wrapper.vm.$data.slugified_project_name).toBe("My");
-        expect(wrapper.vm.$data.error.length).toBeGreaterThan(1);
-
-        expect(wrapper.emitted().input).toEqual([
-            [
-                {
-                    slugified_name: wrapper.vm.$data.slugified_project_name,
-                    name: "My",
-                    is_valid: wrapper.vm.$data.error === ""
-                }
-            ]
-        ]);
+        expect(wrapper.contains("[data-test=project-name-is-invalid]")).toBe(true);
     });
 
-    it(`Display an error when shortname start by a numerical character`, () => {
-        wrapper.find("[data-test=new-project-name]").setValue("0My project");
+    it(`Emit a named event`, () => {
+        const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
-        expect(wrapper.vm.$data.slugified_project_name).toBe("0My-project");
-        expect(wrapper.vm.$data.error.length).toBeGreaterThan(1);
+        wrapper = shallowMount(ProjectName, component_options);
+        wrapper.find("[data-test=new-project-name]").setValue("test");
 
-        expect(wrapper.emitted().input).toEqual([
-            [
-                {
-                    slugified_name: wrapper.vm.$data.slugified_project_name,
-                    name: "0My project",
-                    is_valid: wrapper.vm.$data.error === ""
-                }
-            ]
-        ]);
-    });
+        expect(wrapper.contains("[data-test=project-project-name-is-invalid]")).toBe(false);
 
-    it(`Display an error when shortname contains invalid characters`, () => {
-        wrapper.find("[data-test=new-project-name]").setValue("******");
-
-        expect(wrapper.vm.$data.slugified_project_name).toBe("******");
-        expect(wrapper.vm.$data.error.length).toBeGreaterThan(1);
-
-        expect(wrapper.emitted().input).toEqual([
-            [
-                {
-                    slugified_name: wrapper.vm.$data.slugified_project_name,
-                    name: "******",
-                    is_valid: wrapper.vm.$data.error === ""
-                }
-            ]
-        ]);
-    });
-
-    it(`Store and validate the project name`, () => {
-        wrapper.find("[data-test=new-project-name]").setValue("My project name");
-        expect(wrapper.vm.$data.slugified_project_name).toBe("My-project-name");
-        expect(wrapper.vm.$data.error.length).toBe(0);
-
-        expect(wrapper.emitted().input).toEqual([
-            [
-                {
-                    slugified_name: wrapper.vm.$data.slugified_project_name,
-                    name: "My project name",
-                    is_valid: wrapper.vm.$data.error === ""
-                }
-            ]
-        ]);
-    });
-
-    it(`Slugified project name handle correctly the accents`, () => {
-        wrapper.find("[data-test=new-project-name]").setValue("Accentué ç è é ù ë");
-        expect(wrapper.vm.$data.slugified_project_name).toBe("Accentue-c-e-e-u-e");
-        expect(wrapper.vm.$data.error.length).toBe(0);
-
-        expect(wrapper.emitted().input).toEqual([
-            [
-                {
-                    slugified_name: wrapper.vm.$data.slugified_project_name,
-                    name: "Accentué ç è é ù ë",
-                    is_valid: wrapper.vm.$data.error === ""
-                }
-            ]
-        ]);
+        expect(event_bus_emit).toHaveBeenCalledWith("slugify-project-name", "test");
     });
 });

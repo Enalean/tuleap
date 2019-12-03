@@ -19,7 +19,6 @@
 
 <template>
     <div class="project-registration" data-test="project-registration">
-        <h1 class="project-registration-title" v-translate>Start a new project</h1>
         <router-view/>
     </div>
 </template>

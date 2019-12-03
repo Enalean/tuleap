@@ -22,6 +22,8 @@
     <div>
         <div class="tlp-alert-danger" v-if="has_error" data-test="project-creation-failed">{{ error }}</div>
 
+        <h1 class="project-registration-title" v-translate>Start a new project</h1>
+
         <div class="register-new-project-section">
             <project-information-svg/>
             <div class="register-new-project-list">
@@ -66,6 +68,7 @@ import ProjectInformationInputPrivacySwitch from "./Input/ProjectInformationInpu
 import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
 import { ProjectNameProperties } from "../../type";
 import { Getter, State } from "vuex-class";
+import EventBus from "../../helpers/event-bus";
 
 @Component({
     components: {
@@ -94,14 +97,22 @@ export default class ProjectInformation extends Vue {
 
     name_properties: ProjectNameProperties = {
         slugified_name: "",
-        name: "",
-        is_valid: false
+        name: ""
     };
 
     is_private = false;
 
     mounted(): void {
         this.selected_visibility = this.project_default_visibility;
+        EventBus.$on("update-project-name", this.updateProjectName);
+    }
+
+    beforeDestroy(): void {
+        EventBus.$off("update-project-name", this.updateProjectName);
+    }
+
+    updateProjectName(event: ProjectNameProperties): void {
+        this.name_properties = event;
     }
 }
 </script>
