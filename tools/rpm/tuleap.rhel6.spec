@@ -567,6 +567,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/hudson_svn/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/ldap/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openidconnectclient/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
@@ -1307,6 +1308,7 @@ fi
 %files plugin-openidconnectclient
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/openidconnectclient
+%{APP_DIR}/src/www/assets/openidconnectclient
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_openid_connect_client
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_openid_connect_client
 

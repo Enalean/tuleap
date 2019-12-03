@@ -22,6 +22,7 @@ use FastRoute\RouteCollector;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\OpenIDConnectClient\AccountLinker\RegisterPresenter;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountDao;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountManager;
@@ -121,7 +122,7 @@ class openidconnectclientPlugin extends Plugin
     public function cssfile()
     {
         if (strpos($_SERVER['REQUEST_URI'], '/account') === 0 || strpos($_SERVER['REQUEST_URI'], '/plugins/openidconnectclient') === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
+            echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemeIncludeAssets()->getFileURL('fp-style.css') .'" />';
         }
     }
 
@@ -130,7 +131,16 @@ class openidconnectclientPlugin extends Plugin
         if ($this->isInBurningParrotCompatiblePage()) {
             $variant = $params['variant'];
             $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
+            $params['stylesheets'][] = $this->getThemeIncludeAssets()->getFileURL('bp-style-' . $variant->getName() . '.css');
         }
+    }
+
+    private function getThemeIncludeAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/openidconnectclient/themes',
+            '/assets/openidconnectclient/themes'
+        );
     }
 
     public function burning_parrot_get_javascript_files($params)
