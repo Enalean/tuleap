@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,12 @@ namespace Tuleap\OpenIDConnectClient\Provider;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderDao;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
+use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProvider;
+use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderDao;
+use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderManager;
 
 require_once(__DIR__ . '/../bootstrap.php');
 
@@ -31,102 +37,104 @@ class ProviderManagerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testItCreatesNewProvider(): void
+    /**
+     * @var GenericProviderManager|\Mockery\MockInterface|GenericProviderDao
+     */
+    private $generic_provider_manager;
+    /**
+     * @var AzureADProviderManager|\Mockery\MockInterface|AzureADProviderDao
+     */
+    private $azure_provider_manager;
+    /**
+     * @var ProviderManager
+     */
+    private $provider_manager;
+    /**
+     * @var ProviderDao|\Mockery\MockInterface|ProviderDao
+     */
+    private $provider_dao;
+
+    /**
+     * @var AzureADProvider
+     */
+    private $azure_provider;
+    /**
+     * @var GenericProvider
+     */
+    private $generic_provider;
+
+    public function setUp(): void
     {
-        $generic_provider_dao = \Mockery::mock(GenericProviderDao::class);
-        $provider_dao         = \Mockery::mock(ProviderDao::class);
-        $provider_manager     = new ProviderManager($provider_dao, $generic_provider_dao);
+        $this->generic_provider_manager = \Mockery::mock(GenericProviderManager::class);
+        $this->azure_provider_manager   = \Mockery::mock(AzureADProviderManager::class);
+        $this->provider_dao             = \Mockery::mock(ProviderDao::class);
+        $this->provider_manager         = new ProviderManager(
+            $this->provider_dao,
+            $this->generic_provider_manager,
+            $this->azure_provider_manager
+        );
 
-        $generic_provider_dao->shouldReceive('create')->andReturn(1)->once();
+        $this->azure_provider = new AzureADProvider(
+            42,
+            'Provider',
+            'Id Client',
+            'secret',
+            false,
+            'github',
+            'fiesta_red',
+            'tenant'
+        );
 
-        $provider_manager->createGenericProvider(
+        $this->generic_provider = new GenericProvider(
+            42,
             'Provider',
             'https://example.com/auth',
             'https://example.com/token',
             'https://example.com/userinfo',
-            'ID',
-            'Secret',
-            'github',
-            'fiesta_red'
-        );
-    }
-
-    public function testItCreatesNewProviderWithAnEmptyUserInfoEndpoint(): void
-    {
-        $generic_provider_dao = \Mockery::mock(GenericProviderDao::class);
-        $provider_dao         = \Mockery::mock(ProviderDao::class);
-        $provider_manager     = new ProviderManager($provider_dao, $generic_provider_dao);
-
-        $generic_provider_dao->shouldReceive('create')->andReturn(1)->once();
-
-        $provider_manager->createGenericProvider(
-            'Provider',
-            'https://example.com/auth',
-            'https://example.com/token',
-            '',
-            'ID',
-            'Secret',
-            'github',
-            'fiesta_red'
-        );
-    }
-
-    public function testItUpdatesProvider(): void
-    {
-        $generic_provider_dao = \Mockery::mock(GenericProviderDao::class);
-        $provider_dao         = \Mockery::mock(ProviderDao::class);
-        $provider_manager     = new ProviderManager($provider_dao, $generic_provider_dao);
-        $provider             = new GenericProvider(
-            0,
-            'Provider',
-            'https://example.com/auth',
-            'https://example.com/token',
-            'https://example.com/userinfo',
-            'ID',
-            'Secret',
+            'Id Client',
+            'secret',
             false,
             'github',
             'fiesta_red'
         );
-
-        $generic_provider_dao->shouldReceive('save')->once()->andReturns(true);
-
-        $provider_manager->update($provider);
     }
 
-    public function testItChecksDataBeforeManipulatingAProvider(): void
+    public function testGetByIdCallAzureADProvider(): void
     {
-        $generic_provider_dao = \Mockery::mock(GenericProviderDao::class);
-        $provider_dao         = \Mockery::mock(ProviderDao::class);
-        $provider_manager     = new ProviderManager($provider_dao, $generic_provider_dao);
+        $data_row =    [
+            'id' => 42,
+            'tenant_id' => 'tenant'
+        ];
+        $this->provider_dao->shouldReceive('searchById')->withArgs([42])->andReturn($data_row);
+        $this->azure_provider_manager
+            ->shouldReceive('instantiateAzureProviderFromRow')
+            ->withArgs([$data_row])
+            ->andReturn($this->azure_provider);
 
-        $generic_provider_dao->shouldReceive('create')->never();
-        $generic_provider_dao->shouldReceive('save')->never();
-        $this->expectException('Tuleap\OpenIDConnectClient\Provider\ProviderMalformedDataException');
+        $this->provider_manager->getById(42);
+    }
 
-        $provider = new GenericProvider(
-            0,
-            'Provider',
-            'Not A URL',
-            'Not A URL',
-            'Not A URL',
-            'ID',
-            'Secret',
-            false,
-            'github',
-            'fiesta_red'
-        );
+    public function testGetByIdCallGenericProvider(): void
+    {
+        $data_row =    [
+            'id' => 42,
+            'pas tenant id' => 'pas tenant'
+        ];
 
-        $provider_manager->createGenericProvider(
-            $provider->getName(),
-            $provider->getAuthorizationEndpoint(),
-            $provider->getTokenEndpoint(),
-            $provider->getUserInfoEndpoint(),
-            $provider->getClientId(),
-            $provider->getClientSecret(),
-            $provider->getIcon(),
-            $provider->getColor()
-        );
-        $provider_manager->update($provider);
+        $this->provider_dao->shouldReceive('searchById')->withArgs([42])->andReturn($data_row);
+        $this->generic_provider_manager
+            ->shouldReceive('instantiateGenericProviderFromRow')
+            ->withArgs([$data_row])
+            ->andReturn($this->generic_provider);
+
+        $this->provider_manager->getById(42);
+    }
+
+    public function testGetByIdCallTrowErrorIfInvalidParameters(): void
+    {
+        $this->provider_dao->shouldReceive('searchById')->withArgs([42])->andReturn(false);
+
+        $this->expectException('Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException');
+        $this->provider_manager->getById(42);
     }
 }

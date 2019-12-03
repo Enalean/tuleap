@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OpenIDConnectClient\Provider;
+namespace Tuleap\OpenIDConnectClient\Provider\GenericProvider;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;

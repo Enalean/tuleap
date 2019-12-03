@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,7 @@ use ForgeConfig;
 class Presenter
 {
     /**
-     * @var ProviderPresenter[]
+     * @var GenericProviderPresenter[]
      */
     public $providers_presenters;
 
@@ -69,6 +69,11 @@ class Presenter
         return dgettext('tuleap-openidconnectclient', 'OpenID Connect');
     }
 
+    public function isAzureOptionEnabled() : bool
+    {
+        return ForgeConfig::get('open_id_azure_option');
+    }
+
     public function title_provider_configuration()
     {
         return dgettext('tuleap-openidconnectclient', 'OpenID Connect providers');
@@ -82,6 +87,11 @@ class Presenter
     public function authorization_endpoint()
     {
         return dgettext('tuleap-openidconnectclient', 'Authorization endpoint');
+    }
+
+    public function tenant_id()
+    {
+        return dgettext('tuleap-openidconnectclient', 'Tenant ID');
     }
 
     public function token_endpoint()

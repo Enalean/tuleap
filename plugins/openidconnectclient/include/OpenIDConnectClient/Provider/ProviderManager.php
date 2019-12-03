@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Provider;
 
-use Valid_HTTPSURI;
-use Valid_String;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
+use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderManager;
 
 class ProviderManager
 {
@@ -33,14 +33,23 @@ class ProviderManager
     private $dao;
 
     /**
-     * @var GenericProviderDao
+     * @var GenericProviderManager
      */
-    private $generic_provider_dao;
+    private $generic_provider_manager;
 
-    public function __construct(ProviderDao $dao, GenericProviderDao $generic_provider_dao)
-    {
-        $this->dao                  = $dao;
-        $this->generic_provider_dao = $generic_provider_dao;
+    /**
+     * @var AzureADProviderManager
+     */
+    private $azure_provider_manager;
+
+    public function __construct(
+        ProviderDao $dao,
+        GenericProviderManager $generic_provider_manager,
+        AzureADProviderManager $azure_provider_manager
+    ) {
+        $this->dao                      = $dao;
+        $this->generic_provider_manager = $generic_provider_manager;
+        $this->azure_provider_manager   = $azure_provider_manager;
     }
 
     /**
@@ -52,97 +61,11 @@ class ProviderManager
         if ($row === false) {
             throw new ProviderNotFoundException();
         }
-        return $this->instantiateFromRow($row);
-    }
-
-    /**
-     * @throws ProviderMalformedDataException
-     */
-    public function createGenericProvider(
-        string $name,
-        string $authorization_endpoint,
-        string $token_endpoint,
-        string $user_info_endpoint,
-        string $client_id,
-        string $client_secret,
-        string $icon,
-        string $color
-    ) : GenericProvider {
-        $is_unique_authentication_endpoint = false;
-        $is_data_valid                     = $this->isDataValid(
-            $name,
-            $authorization_endpoint,
-            $token_endpoint,
-            $user_info_endpoint,
-            $is_unique_authentication_endpoint,
-            $client_id,
-            $client_secret,
-            $icon,
-            $color
-        );
-
-        if (! $is_data_valid) {
-            throw new ProviderMalformedDataException();
+        if (isset($row['tenant_id'])) {
+            return $this->azure_provider_manager->instantiateAzureProviderFromRow($row);
         }
 
-        $id = $this->generic_provider_dao->create(
-            $name,
-            $authorization_endpoint,
-            $token_endpoint,
-            $user_info_endpoint,
-            $client_id,
-            $client_secret,
-            $icon,
-            $color
-        );
-
-        return new GenericProvider(
-            $id,
-            $name,
-            $authorization_endpoint,
-            $token_endpoint,
-            $user_info_endpoint,
-            $client_id,
-            $client_secret,
-            $is_unique_authentication_endpoint,
-            $icon,
-            $color
-        );
-    }
-
-    /**
-     * @throws ProviderMalformedDataException
-     */
-    public function update(Provider $provider): void
-    {
-        $is_data_valid = $this->isDataValid(
-            $provider->getName(),
-            $provider->getAuthorizationEndpoint(),
-            $provider->getTokenEndpoint(),
-            $provider->getUserInfoEndpoint(),
-            $provider->isUniqueAuthenticationEndpoint(),
-            $provider->getClientId(),
-            $provider->getClientSecret(),
-            $provider->getIcon(),
-            $provider->getColor()
-        );
-
-        if (! $is_data_valid) {
-            throw new ProviderMalformedDataException();
-        }
-
-        $this->generic_provider_dao->save(
-            $provider->getId(),
-            $provider->getName(),
-            $provider->getAuthorizationEndpoint(),
-            $provider->getTokenEndpoint(),
-            $provider->getUserInfoEndpoint(),
-            $provider->isUniqueAuthenticationEndpoint(),
-            $provider->getClientId(),
-            $provider->getClientSecret(),
-            $provider->getIcon(),
-            $provider->getColor()
-        );
+        return $this->generic_provider_manager->instantiateGenericProviderFromRow($row);
     }
 
     public function remove(Provider $provider): void
@@ -161,11 +84,7 @@ class ProviderManager
             return $providers;
         }
 
-        foreach ($rows as $row) {
-            $providers[] = $this->instantiateFromRow($row);
-        }
-
-        return $providers;
+        return $this->extractProviderFromRows($rows, $providers);
     }
 
     /**
@@ -179,11 +98,7 @@ class ProviderManager
             return $providers;
         }
 
-        foreach ($rows as $row) {
-            $providers[] = $this->instantiateFromRow($row);
-        }
-
-        return $providers;
+        return $this->extractProviderFromRows($rows, $providers);
     }
 
     public function isAProviderConfiguredAsUniqueAuthenticationEndpoint(): bool
@@ -191,43 +106,20 @@ class ProviderManager
         return $this->dao->isAProviderConfiguredAsUniqueEndPointProvider();
     }
 
-    private function instantiateFromRow(array $row) : GenericProvider
+    /**
+     * @param $rows
+     * @param array $providers
+     * @return array
+     */
+    private function extractProviderFromRows($rows, array $providers): array
     {
-        return new GenericProvider(
-            (int)$row['id'],
-            $row['name'],
-            $row['authorization_endpoint'],
-            $row['token_endpoint'],
-            $row['user_info_endpoint'],
-            $row['client_id'],
-            $row['client_secret'],
-            (bool)$row['unique_authentication_endpoint'],
-            $row['icon'],
-            $row['color']
-        );
-    }
-
-    private function isDataValid(
-        string $name,
-        string $authorization_endpoint,
-        string $token_endpoint,
-        string $userinfo_endpoint,
-        bool $is_unique_authentication_endpoint,
-        string $client_id,
-        string $client_secret,
-        string $icon,
-        string $color
-    ): bool {
-        $string_validator            = new Valid_String();
-        $http_uri_validator          = new Valid_HTTPSURI();
-        $http_uri_validator->required();
-        $userinfo_endpoint_validator = new Valid_HTTPSURI();
-
-        return $string_validator->validate($name) && $string_validator->validate($client_id) &&
-            $string_validator->validate($client_secret) && $http_uri_validator->validate($authorization_endpoint) &&
-            $http_uri_validator->validate($token_endpoint) &&
-            $userinfo_endpoint_validator->validate($userinfo_endpoint) &&
-            is_bool($is_unique_authentication_endpoint) &&
-            $string_validator->validate($icon) && $string_validator->validate($color);
+        foreach ($rows as $row) {
+            if (isset($row['tenant_id'])) {
+                $providers[] = $this->azure_provider_manager->instantiateAzureProviderFromRow($row);
+                continue;
+            }
+            $providers[] = $this->generic_provider_manager->instantiateGenericProviderFromRow($row);
+        }
+        return $providers;
     }
 }

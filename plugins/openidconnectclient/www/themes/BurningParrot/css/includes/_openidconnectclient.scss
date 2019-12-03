@@ -7,10 +7,15 @@
     display: flex;
     align-items: flex-end;
     margin: 0 0 $tlp-title-spacing;
+}
 
-    > .add-provider-button {
-        margin: 0 0 0 $tlp-spacing;
-    }
+.add-provider-button {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.tlp-creation-dropdown {
+    margin: 0 0 0 $tlp-spacing;
 }
 
 #providers-configuration-header-title {

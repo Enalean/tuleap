@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-
+            {{^ isAzureAD }}
             <div class="tlp-form-element">
                 <label class="tlp-label" for="authorization_endpoint-{{ getId }}">
                     {{ authorization_endpoint }} <i class="fa fa-asterisk"></i>
@@ -114,6 +114,7 @@
                     value="{{ getUserInfoEndpoint }}"
                 >
             </div>
+            {{/ isAzureAD }}
 
             <div class="tlp-form-element {{^ can_user_enable_unique_authentication_endpoint }}tlp-form-element-disabled{{/ can_user_enable_unique_authentication_endpoint }}">
                 <label class="tlp-label tlp-checkbox">

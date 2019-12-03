@@ -45,8 +45,11 @@ use Tuleap\OpenIDConnectClient\Login\IncoherentDataUniqueProviderException;
 use Tuleap\OpenIDConnectClient\LoginController;
 use Tuleap\OpenIDConnectClient\OpenIDConnectClientLogger;
 use Tuleap\OpenIDConnectClient\OpenIDConnectClientPluginInfo;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderDao;
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\EnableUniqueAuthenticationEndpointVerifier;
-use Tuleap\OpenIDConnectClient\Provider\GenericProviderDao;
+use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderDao;
+use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\ProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Router;
@@ -153,7 +156,11 @@ class openidconnectclientPlugin extends Plugin
      */
     private function getProviderManager()
     {
-        return new ProviderManager(new ProviderDao(), new GenericProviderDao());
+        return new ProviderManager(
+            new ProviderDao(),
+            new GenericProviderManager(new GenericProviderDao()),
+            new AzureADProviderManager(new AzureADProviderDao())
+        );
     }
 
     /**
@@ -422,6 +429,8 @@ class openidconnectclientPlugin extends Plugin
     public function routeAdminIndex() : DispatchableWithRequest
     {
         $provider_manager                               = $this->getProviderManager();
+        $generic_provider_manager                       = new GenericProviderManager(new GenericProviderDao());
+        $azure_provider_manager                         = new AzureADProviderManager(new AzureADProviderDao());
         $user_mapping_manager                           = new UserMappingManager(new UserMappingDao());
         $enable_unique_authentication_endpoint_verifier = new EnableUniqueAuthenticationEndpointVerifier(
             $user_mapping_manager
@@ -431,6 +440,8 @@ class openidconnectclientPlugin extends Plugin
         $admin_page_renderer                            = new AdminPageRenderer();
         $controller                                     = new Administration\Controller(
             $provider_manager,
+            $generic_provider_manager,
+            $azure_provider_manager,
             $enable_unique_authentication_endpoint_verifier,
             $icon_presenter_factory,
             $color_presenter_factory,

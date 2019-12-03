@@ -20,13 +20,13 @@
 
 namespace Tuleap\OpenIDConnectClient\Administration;
 
+use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
-class ProviderPresenter
+class AzureProviderPresenter
 {
-
     /**
-     * @var Provider
+     * @var AzureADProvider
      */
     private $provider;
 
@@ -45,9 +45,8 @@ class ProviderPresenter
      */
     public $can_user_enable_unique_authentication_endpoint;
 
-
     public function __construct(
-        Provider $provider,
+        AzureADProvider $provider,
         $can_user_enable_unique_authentication_endpoint,
         array $icons_presenters,
         array $colors_presenters
@@ -66,21 +65,6 @@ class ProviderPresenter
     public function getName()
     {
         return $this->provider->getName();
-    }
-
-    public function getAuthorizationEndpoint()
-    {
-        return $this->provider->getAuthorizationEndpoint();
-    }
-
-    public function getTokenEndpoint()
-    {
-        return $this->provider->getTokenEndpoint();
-    }
-
-    public function getUserInfoEndpoint()
-    {
-        return $this->provider->getUserInfoEndpoint();
     }
 
     public function getClientId()
@@ -106,5 +90,15 @@ class ProviderPresenter
     public function isUniqueAuthenticationEndpoint()
     {
         return $this->provider->isUniqueAuthenticationEndpoint();
+    }
+
+    public function getTenantId()
+    {
+        return $this->provider->getTenantId();
+    }
+
+    public function isAzureAD()
+    {
+        return true;
     }
 }
