@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Project\Admin\Categories;
 
-final class MissingMandatoryCategoriesException extends ProjectCategoriesException
+final class InvalidValueForRootCategoryException extends ProjectCategoriesException
 {
 
 }

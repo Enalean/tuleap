@@ -66,7 +66,29 @@ class TroveCatFactory
         return $trove_cats;
     }
 
-    public function getTopCategories()
+    /**
+     * @psalm-return array<int, TroveCat>
+     */
+    public function getTree(): array
+    {
+        $trove_cats = [];
+        foreach ($this->dao->getParentCategoriesUnderRoot() as $row) {
+            $trove_cat = $this->getTroveCatWithChildrenRecursively($row);
+            $trove_cats[(int) $trove_cat->getId()] = $trove_cat;
+        }
+        return $trove_cats;
+    }
+
+    private function getTroveCatWithChildrenRecursively(array $row): TroveCat
+    {
+        $trove_cat = $this->getInstanceFromRow($row);
+        foreach ($this->dao->getCategoryChildren($row['trove_cat_id']) as $child_row) {
+            $trove_cat->addChildren($this->getTroveCatWithChildrenRecursively($child_row));
+        }
+        return $trove_cat;
+    }
+
+    public function getTopCategoriesWithNbMaxCategories()
     {
         return $this->dao->getTopCategories();
     }

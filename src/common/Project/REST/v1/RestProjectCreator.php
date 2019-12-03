@@ -29,6 +29,7 @@ use Project;
 use ProjectCreationData;
 use Tuleap\Project\Admin\Categories\CategoryCollection;
 use Tuleap\Project\Admin\Categories\MissingMandatoryCategoriesException;
+use Tuleap\Project\Admin\Categories\ProjectCategoriesException;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
@@ -121,21 +122,19 @@ class RestProjectCreator
     {
         try {
             $this->permission_checker->checkUserCreateAProject($user);
+            $category_collection = $this->getCategoryCollection($post_representation);
+            $this->categories_updater->checkCollectionConsistency($category_collection);
+
+            $project = $this->createProjectWithSelectedTemplate($user, $post_representation);
+            $this->categories_updater->update($project, $category_collection);
+            return $project;
         } catch (MaxNumberOfProjectReachedException $exception) {
             throw new RestException(429, 'Too many projects were created');
         } catch (RegistrationForbiddenException $exception) {
             throw new RestException(403, 'You are not allowed to create new projects');
+        } catch (ProjectCategoriesException $exception) {
+            throw new RestException(400, $exception->getMessage());
         }
-
-        $project = $this->createProjectWithSelectedTemplate($user, $post_representation);
-        if ($post_representation->categories !== null) {
-            try {
-                $this->updateProjectCategories($project, $post_representation->categories);
-            } catch (MissingMandatoryCategoriesException $exception) {
-                throw new RestException(400, $exception->getMessage());
-            }
-        }
-        return $project;
     }
 
     public function createProjectWithSelectedTemplate(PFUser $user, ProjectPostRepresentation $post_representation): Project
@@ -224,18 +223,16 @@ class RestProjectCreator
         );
     }
 
-    /**
-     * @param Project $project
-     * @param CategoryPostRepresentation[] $categories
-     */
-    private function updateProjectCategories(Project $project, array $categories_representation): void
+    private function getCategoryCollection(ProjectPostRepresentation $project_post_representation): CategoryCollection
     {
         $categories = [];
-        foreach ($categories_representation as $category_representation) {
-            $category = new \TroveCat($category_representation->category_id, '', '');
-            $category->addChildren(new \TroveCat($category_representation->value_id, '', ''));
-            $categories[] = $category;
+        if ($project_post_representation->categories !== null) {
+            foreach ($project_post_representation->categories as $category_representation) {
+                $category = new \TroveCat($category_representation->category_id, '', '');
+                $category->addChildren(new \TroveCat($category_representation->value_id, '', ''));
+                $categories[] = $category;
+            }
         }
-        $this->categories_updater->update($project, new CategoryCollection(...$categories));
+        return new CategoryCollection(...$categories);
     }
 }

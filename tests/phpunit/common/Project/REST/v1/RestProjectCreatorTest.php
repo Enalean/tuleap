@@ -39,6 +39,7 @@ use ServiceManager;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\Admin\Categories\CategoryCollection;
+use Tuleap\Project\Admin\Categories\MissingMandatoryCategoriesException;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
@@ -94,6 +95,8 @@ class RestProjectCreatorTest extends TestCase
         $this->permissions_checker->shouldReceive('checkUserCreateAProject')->byDefault();
         $this->template_dao       = M::mock(TemplateDao::class);
         $this->categories_updater = M::mock(ProjectCategoriesUpdater::class);
+        $this->categories_updater->shouldReceive('update')->byDefault();
+        $this->categories_updater->shouldReceive('checkCollectionConsistency')->byDefault();
 
         $this->creator              = new RestProjectCreator(
             $this->project_manager,
@@ -270,13 +273,43 @@ class RestProjectCreatorTest extends TestCase
         $this->project_manager->shouldReceive('getProject')->with($this->project->template_id)->andReturn($template_project);
         $this->project_creator->shouldReceive('createFromRest')->with('gpig', 'Guinea Pig', M::andAnyOtherArgs())->once()->andReturn($new_project);
 
-        $this->categories_updater->shouldReceive('update')->once()->with($new_project, M::on(static function (CategoryCollection $categories) {
+        $verify_category_collection = static function (CategoryCollection $categories) {
             [$category1, $category2] = $categories->getRootCategories();
             $category1_child1 = $category1->getChildren()[0];
             $category2_child1 = $category2->getChildren()[0];
             return $category1->getId() === 14 && $category2->getId() === 18 &&
                 $category1_child1->getId() === 89 && $category2_child1->getId() === 53;
-        }));
+        };
+
+        $this->categories_updater->shouldReceive('checkCollectionConsistency')->once()->with(M::on($verify_category_collection));
+        $this->categories_updater->shouldReceive('update')->once()->with($new_project, M::on($verify_category_collection));
+
+        $this->creator->create($this->user, $this->project);
+    }
+
+
+    public function testItThrowsAnExceptionWhenMandatoryCategoryIsMissing()
+    {
+        $this->project->template_id = 100;
+        $this->project->shortname = 'gpig';
+        $this->project->label = 'Guinea Pig';
+        $this->project->description = 'foo';
+        $this->project->is_public = false;
+        $this->project->allow_restricted = false;
+        $this->project->categories = [
+            CategoryPostRepresentation::build(14, 89),
+            CategoryPostRepresentation::build(18, 53)
+        ];
+
+        $template_project = M::mock(Project::class, ['isError' => false, 'isActive' => false, 'isTemplate' => true]);
+
+        $this->project_manager->shouldReceive('getProject')->with($this->project->template_id)->andReturn($template_project);
+        $this->project_creator->shouldNotReceive('createFromRest');
+
+        $this->categories_updater->shouldReceive('checkCollectionConsistency')->once()->andThrow(new MissingMandatoryCategoriesException());
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $this->creator->create($this->user, $this->project);
     }
