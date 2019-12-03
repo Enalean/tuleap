@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -64,6 +64,16 @@ class TroveCatFactory
         }
 
         return $trove_cats;
+    }
+
+    public function getTopCategories()
+    {
+        return $this->dao->getTopCategories();
+    }
+
+    public function removeProjectTopCategoryValue(Project $project, int $root_id): void
+    {
+        $this->dao->removeProjectTopCategoryValue($project->getID(), $root_id);
     }
 
     /**

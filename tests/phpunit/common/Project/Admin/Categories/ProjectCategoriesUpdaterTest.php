@@ -27,7 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectHistoryDao;
-use TroveCatDao;
+use TroveCatFactory;
 
 class ProjectCategoriesUpdaterTest extends TestCase
 {
@@ -46,9 +46,9 @@ class ProjectCategoriesUpdaterTest extends TestCase
      */
     private $set_node_facade;
     /**
-     * @var Mockery\MockInterface|TroveCatDao
+     * @var Mockery\MockInterface|TroveCatFactory
      */
-    private $dao;
+    private $factory;
     /**
      * @var Mockery\MockInterface|ProjectHistoryDao
      */
@@ -57,21 +57,21 @@ class ProjectCategoriesUpdaterTest extends TestCase
     /** @before */
     public function instantiateMocks(): void
     {
-        $this->project         = Mockery::mock(Project::class);
-        $this->dao             = Mockery::mock(TroveCatDao::class);
-        $this->history_dao     = Mockery::mock(ProjectHistoryDao::class);
+        $this->project     = Mockery::mock(Project::class);
+        $this->factory     = Mockery::mock(TroveCatFactory::class);
+        $this->history_dao = Mockery::mock(ProjectHistoryDao::class);
         $this->set_node_facade = Mockery::mock(TroveSetNodeFacade::class);
 
         $this->project->shouldReceive('getID')->andReturn(42);
 
-        $this->dao->shouldReceive('getTopCategories')->andReturn(
+        $this->factory->shouldReceive('getTopCategories')->andReturn(
             [
                 ['trove_cat_id' => 1, 'nb_max_values' => 3],
                 ['trove_cat_id' => 2, 'nb_max_values' => 1]
             ]
         );
 
-        $this->updater = new ProjectCategoriesUpdater($this->dao, $this->history_dao, $this->set_node_facade);
+        $this->updater = new ProjectCategoriesUpdater($this->factory, $this->history_dao, $this->set_node_facade);
     }
 
     public function testAddEntryInProjectHistory(): void
@@ -81,48 +81,48 @@ class ProjectCategoriesUpdaterTest extends TestCase
             ->once()
             ->with('changed_trove', "", 42);
 
-        $this->updater->update($this->project, []);
+        $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([]));
     }
 
-    public function testItUdpatesCategoriesValues(): void
+    public function testItUpdatesCategoriesValues(): void
     {
         $this->history_dao->shouldReceive('groupAddHistory');
 
-        $this->dao->shouldReceive('removeProjectTopCategoryValue')->with(42, 2);
-        $this->dao->shouldReceive('removeProjectTopCategoryValue')->with(42, 1);
-        $this->set_node_facade->shouldReceive('setNode')->with($this->project, 11, 1);
-        $this->set_node_facade->shouldReceive('setNode')->with($this->project, 12, 1);
-        $this->set_node_facade->shouldReceive('setNode')->with($this->project, 21, 2);
+        $this->factory->shouldReceive('removeProjectTopCategoryValue')->with($this->project, 2)->once();
+        $this->factory->shouldReceive('removeProjectTopCategoryValue')->with($this->project, 1)->once();
+        $this->set_node_facade->shouldReceive('setNode')->with($this->project, 11, 1)->once();
+        $this->set_node_facade->shouldReceive('setNode')->with($this->project, 12, 1)->once();
+        $this->set_node_facade->shouldReceive('setNode')->with($this->project, 21, 2)->once();
 
-        $this->updater->update($this->project, [1 => ['', '11', '12'], 2 => ['', '21']]);
+        $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => ['', '11', '12'], 2 => ['', '21']]));
     }
 
     public function testItRespectsNbMaxValues(): void
     {
         $this->history_dao->shouldReceive('groupAddHistory');
-        $this->dao->shouldReceive('removeProjectTopCategoryValue');
+        $this->factory->shouldReceive('removeProjectTopCategoryValue');
         $this->set_node_facade->shouldReceive('setNode');
 
         $this->set_node_facade->shouldNotReceive('setNode')->with($this->project, 14, 1);
         $this->set_node_facade->shouldNotReceive('setNode')->with($this->project, 22, 2);
 
-        $this->updater->update($this->project, [1 => ['', '11', '12', '13', '14'], 2 => ['', '21', '22']]);
+        $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => ['', '11', '12', '13', '14'], 2 => ['', '21', '22']]));
     }
 
     public function testItIgnoresSubmittedCategoryIfItIsNotInTopLevelOnes(): void
     {
         $this->history_dao->shouldReceive('groupAddHistory');
-        $this->dao->shouldNotReceive('removeProjectTopCategoryValue')->with(42, 3);
+        $this->factory->shouldNotReceive('removeProjectTopCategoryValue');
 
-        $this->updater->update($this->project, [3 => []]);
+        $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([3 => []]));
     }
 
     public function testItIgnoresSubmittedCategoryIfValueIsNotAnArray(): void
     {
         $this->history_dao->shouldReceive('groupAddHistory');
-        $this->dao->shouldNotReceive('removeProjectTopCategoryValue')->with(42, 1);
+        $this->factory->shouldNotReceive('removeProjectTopCategoryValue');
         $this->set_node_facade->shouldNotReceive('setNode')->with($this->project, 23, 1);
 
-        $this->updater->update($this->project, [1 => '23']);
+        $this->updater->update($this->project, CategoryCollection::buildFromWebPayload([1 => '23']));
     }
 }
