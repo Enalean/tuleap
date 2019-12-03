@@ -27,7 +27,7 @@ export function getPutArtifactBody(payload: UpdateCardPayload): PutBody {
 
     let value: string | TextValue;
     if (payload.tracker.title_field.is_string_field) {
-        value = payload.label;
+        value = payload.label.replace(/(\r\n|\n|\r)+/gm, " ");
     } else {
         value = forceTextFormatForTextField(payload);
     }

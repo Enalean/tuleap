@@ -44,6 +44,22 @@ describe("update-artifact", () => {
             });
         });
 
+        it("Remove linebreak characters for string field", () => {
+            const body = getPutArtifactBody({
+                tracker: { title_field: { id: 123, is_string_field: true } },
+                label: "Lorem\n\nipsum\n"
+            } as UpdateCardPayload);
+
+            expect(body).toStrictEqual({
+                values: [
+                    {
+                        field_id: 123,
+                        value: "Lorem ipsum "
+                    }
+                ]
+            });
+        });
+
         it("Sets the value of a text field", () => {
             const body = getPutArtifactBody({
                 tracker: { title_field: { id: 123, is_string_field: false } },
@@ -56,6 +72,25 @@ describe("update-artifact", () => {
                         field_id: 123,
                         value: {
                             content: "Lorem ipsum",
+                            format: "text"
+                        }
+                    }
+                ]
+            });
+        });
+
+        it("Keeps linebreak characters for text field", () => {
+            const body = getPutArtifactBody({
+                tracker: { title_field: { id: 123, is_string_field: false } },
+                label: "Lorem\n\nipsum\n"
+            } as UpdateCardPayload);
+
+            expect(body).toStrictEqual({
+                values: [
+                    {
+                        field_id: 123,
+                        value: {
+                            content: "Lorem\n\nipsum\n",
                             format: "text"
                         }
                     }
