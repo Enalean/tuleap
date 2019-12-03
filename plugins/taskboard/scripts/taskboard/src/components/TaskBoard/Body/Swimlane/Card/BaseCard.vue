@@ -20,7 +20,7 @@
 
 <template>
     <div class="taskboard-card" v-bind:class="additional_classnames">
-        <span v-if="can_user_update_title" class="taskboard-card-edit-trigger" v-on:click="switchToEditMode">
+        <span v-if="can_user_update_card" class="taskboard-card-edit-trigger" v-on:click="switchToEditMode">
             <i class="fa fa-pencil"></i>
         </span>
         <div class="taskboard-card-content">
@@ -152,15 +152,15 @@ export default class BaseCard extends Vue {
             classnames.push("taskboard-card-is-just-saved");
         }
 
-        if (this.can_user_update_title && !this.card.is_being_saved) {
+        if (this.can_user_update_card) {
             classnames.push("taskboard-card-editable");
         }
 
         return classnames.join(" ");
     }
 
-    get can_user_update_title(): boolean {
-        return this.tracker.title_field_id !== null;
+    get can_user_update_card(): boolean {
+        return this.tracker.title_field_id !== null && !this.card.is_being_saved;
     }
 
     get show_accessibility_pattern(): boolean {
