@@ -26,16 +26,18 @@ import UnderConstructionInformation from "../UnderConstructionInformation.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectInformationInputPrivacySwitch from "./Input/ProjectInformationInputPrivacySwitch.vue";
 import ProjectName from "./Input/ProjectName.vue";
+import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
 import { State } from "../../store/type";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
-import { Store } from "vuex-mock-store";
 
-describe("ProjectInformation", () => {
-    let factory: Wrapper<ProjectInformation>, state: State, store: Store;
+describe("ProjectInformation - ", () => {
+    let factory: Wrapper<ProjectInformation>;
     beforeEach(async () => {
-        state = {
+        const state: State = {
             selected_template: null,
             tuleap_templates: [],
+            are_restricted_users_allowed: false,
+            project_default_visibility: "",
             error: null,
             is_creating_project: false
         };
@@ -50,7 +52,7 @@ describe("ProjectInformation", () => {
             getters
         };
 
-        store = createStoreMock(store_options);
+        const store = createStoreMock(store_options);
 
         factory = shallowMount(ProjectInformation, {
             localVue: await createProjectRegistrationLocalVue(),
@@ -80,8 +82,34 @@ describe("ProjectInformation", () => {
         expect(wrapper.contains(UnderConstructionInformation)).toBe(true);
         expect(wrapper.contains(ProjectInformationFooter)).toBe(true);
         expect(wrapper.contains(ProjectInformationInputPrivacySwitch)).toBe(true);
+        expect(wrapper.contains(ProjectInformationInputPrivacyList)).toBe(false);
         expect(wrapper.contains(ProjectName)).toBe(true);
 
         expect(wrapper.contains("[data-test=project-creation-failed]")).toBe(true);
+    });
+    it("displays the switch when restricted users are NOT allowed in the plateform", () => {
+        const wrapper = factory;
+
+        wrapper.vm.$store.state.are_restricted_users_allowed = false;
+
+        expect(wrapper.contains("[data-test=register-new-project-information-switch]")).toBe(true);
+
+        const form = wrapper.find("[data-test=register-new-project-information-form]");
+        expect(
+            form.classes("register-new-project-information-form-container-restricted-allowed")
+        ).toBe(false);
+        expect(wrapper.contains("[data-test=register-new-project-information-list]")).toBe(false);
+    });
+    it("displays the privacy list when restricted users are allowed in the plateform", () => {
+        const wrapper = factory;
+        wrapper.vm.$store.state.are_restricted_users_allowed = true;
+
+        expect(wrapper.contains("[data-test=register-new-project-information-switch]")).toBe(false);
+
+        const form = wrapper.find("[data-test=register-new-project-information-form]");
+        expect(
+            form.classes("register-new-project-information-form-container-restricted-allowed")
+        ).toBe(true);
+        expect(wrapper.contains("[data-test=register-new-project-information-list]")).toBe(true);
     });
 });

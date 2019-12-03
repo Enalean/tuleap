@@ -28,8 +28,22 @@ msgstr "Suivant"
 msgid "Privacy"
 msgstr "Visibilité"
 
+msgid "Private"
+msgstr "Privé"
+
+msgid "Private incl. restricted"
+msgstr "Privé incl. les utilisateurs restreints"
+
 msgid "Project information"
 msgstr "Information sur le projet"
+
+msgid ""
+"Project privacy set to private including restricted. Only project members "
+"can access its content. Restricted users are allowed in this project."
+msgstr ""
+"La visibilité du projet est : privé incluant les utilisateurs restreints. "
+"Seuls les membres du projet peuvent accéder à son contenu. Les utilisateurs "
+"restreints sont autorisés dans ce projet."
 
 msgid ""
 "Project privacy set to private. Only project members can access its content. "
@@ -40,12 +54,22 @@ msgstr ""
 "dans ce projet."
 
 msgid ""
+"Project privacy set to public including restricted. By default, its content "
+"is available to all authenticated users. Please note that more restrictive "
+"permissions might exist on some items."
+msgstr ""
+"La visibilité du projet est : publique incluant les utilisateurs restreints. "
+"Par défaut, son contenu est accessible à tout utilisateur authentifié. "
+"Veuillez noter que des permissions plus restrictives peuvent être apposées "
+"sur certains items."
+
+msgid ""
 "Project privacy set to public. By default, its content is available to all "
 "authenticated, but not restricted, users. Please note that more restrictive "
 "permissions might exist on some items."
 msgstr ""
 "La visibilité du projet est : publique. Par défaut, son contenu est "
-"accessible à tout utilisateur authentifié non restraint. Veuillez noter que "
+"accessible à tout utilisateur authentifié non restreint. Veuillez noter que "
 "des permissions plus restrictives peuvent être apposées sur certains items."
 
 msgid ""
@@ -58,6 +82,12 @@ msgstr ""
 
 msgid "Project shortname:"
 msgstr "Nom court de projet :"
+
+msgid "Public"
+msgstr "Publique"
+
+msgid "Public incl. restricted"
+msgstr "Publique incl. les utilisateurs restreints"
 
 msgid "Start a new project"
 msgstr "Démarrer un nouveau projet"

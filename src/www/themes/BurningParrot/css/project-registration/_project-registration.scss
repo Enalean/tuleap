@@ -58,6 +58,9 @@ $title-margin-left: $illustration-width + $illustration-spacing;
     display: flex;
 }
 
+.register-new-project-information-form-container-restricted-allowed {
+    align-items: baseline;
+}
 @media screen and (max-width: 1200px) {
     .register-new-project-section {
         display: flex;

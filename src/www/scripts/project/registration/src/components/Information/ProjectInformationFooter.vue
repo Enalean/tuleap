@@ -44,9 +44,15 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { ProjectProperties, TemplateData, ProjectNameProperties } from "../../type";
+import { ProjectNameProperties, ProjectProperties, TemplateData } from "../../type";
 import { Getter, State } from "vuex-class";
 import { redirectToUrl } from "../../helpers/location-helper";
+import {
+    ACCESS_PRIVATE,
+    ACCESS_PRIVATE_WO_RESTRICTED,
+    ACCESS_PUBLIC,
+    ACCESS_PUBLIC_UNRESTRICTED
+} from "../../constant";
 
 @Component
 export default class ProjectInformationFooter extends Vue {
@@ -65,6 +71,14 @@ export default class ProjectInformationFooter extends Vue {
     @Prop({ required: true })
     readonly is_public!: boolean;
 
+    @Prop({ required: true })
+    readonly privacy!: string;
+
+    @State
+    are_restricted_users_allowed!: boolean;
+
+    is_loading = false;
+
     get getIcon(): string {
         if (!this.is_creating_project || this.has_error) {
             return "fa tlp-button-icon-right fa-arrow-circle-o-right";
@@ -78,17 +92,53 @@ export default class ProjectInformationFooter extends Vue {
     }
 
     async createProject(): Promise<void> {
-        const project_properties: ProjectProperties = {
-            shortname: this.project_name_properties.slugified_name,
-            label: this.project_name_properties.name,
-            is_public: this.is_public,
-            allow_restricted: true,
-            xml_template_name: this.selected_template.name
-        };
+        const project_properties: ProjectProperties = this.buildProjectPropertyDetailedPrivacy();
 
         await this.$store.dispatch("createProject", project_properties);
 
         redirectToUrl("/my");
+    }
+
+    buildProjectPropertyDetailedPrivacy(): ProjectProperties {
+        if (!this.are_restricted_users_allowed) {
+            return {
+                shortname: this.project_name_properties.slugified_name,
+                label: this.project_name_properties.name,
+                is_public: this.is_public,
+                xml_template_name: this.selected_template.name
+            };
+        }
+
+        let is_public_project = null;
+        let is_restricted_allowed_for_the_project = null;
+        switch (this.privacy) {
+            case ACCESS_PUBLIC:
+                is_public_project = true;
+                is_restricted_allowed_for_the_project = false;
+                break;
+            case ACCESS_PRIVATE:
+                is_public_project = false;
+                is_restricted_allowed_for_the_project = true;
+                break;
+            case ACCESS_PUBLIC_UNRESTRICTED:
+                is_public_project = true;
+                is_restricted_allowed_for_the_project = true;
+                break;
+            case ACCESS_PRIVATE_WO_RESTRICTED:
+                is_public_project = false;
+                is_restricted_allowed_for_the_project = false;
+                break;
+            default:
+                throw new Error("Unable to build the project privacy properties");
+        }
+
+        return {
+            shortname: this.project_name_properties.slugified_name,
+            label: this.project_name_properties.name,
+            is_public: is_public_project,
+            allow_restricted: is_restricted_allowed_for_the_project,
+            xml_template_name: this.selected_template.name
+        };
     }
 }
 </script>

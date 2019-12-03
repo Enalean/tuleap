@@ -28,7 +28,7 @@ export interface ProjectProperties {
     shortname: string;
     label: string;
     is_public: boolean;
-    allow_restricted: boolean;
+    allow_restricted?: boolean;
     xml_template_name: string;
 }
 

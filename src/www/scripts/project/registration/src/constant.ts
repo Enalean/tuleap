@@ -14,19 +14,11 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
-import { State } from "./type";
-import { ACCESS_PRIVATE } from "../constant";
-
-const state: State = {
-    tuleap_templates: [],
-    selected_template: null,
-    are_restricted_users_allowed: false,
-    project_default_visibility: ACCESS_PRIVATE,
-    error: null,
-    is_creating_project: false
-};
-
-export default state;
+export const ACCESS_PRIVATE = "private";
+export const ACCESS_PRIVATE_WO_RESTRICTED = "private-wo-restr";
+export const ACCESS_PUBLIC_UNRESTRICTED = "unrestricted";
+export const ACCESS_PUBLIC = "public";

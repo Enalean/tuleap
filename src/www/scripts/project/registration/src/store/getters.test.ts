@@ -26,6 +26,8 @@ describe("getters", () => {
             const state: State = {
                 selected_template: null,
                 tuleap_templates: [],
+                are_restricted_users_allowed: false,
+                project_default_visibility: "",
                 error: null,
                 is_creating_project: false
             };
@@ -40,6 +42,8 @@ describe("getters", () => {
                     svg: "<svg></svg>"
                 },
                 tuleap_templates: [],
+                are_restricted_users_allowed: false,
+                project_default_visibility: "",
                 error: null,
                 is_creating_project: false
             };
@@ -52,6 +56,8 @@ describe("getters", () => {
             const state: State = {
                 selected_template: null,
                 tuleap_templates: [],
+                are_restricted_users_allowed: false,
+                project_default_visibility: "",
                 error: null,
                 is_creating_project: false
             };
@@ -61,6 +67,8 @@ describe("getters", () => {
             const state: State = {
                 selected_template: null,
                 tuleap_templates: [],
+                are_restricted_users_allowed: false,
+                project_default_visibility: "",
                 error: "Ho snap!",
                 is_creating_project: false
             };

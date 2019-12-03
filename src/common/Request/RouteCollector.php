@@ -58,9 +58,9 @@ use Tuleap\FRS\FRSFileDownloadController;
 use Tuleap\FRS\FRSFileDownloadOldURLRedirectionController;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\Admin\AddLicenseAgreementController;
+use Tuleap\FRS\LicenseAgreement\Admin\EditLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\Admin\LicenseAgreementControllersHelper;
 use Tuleap\FRS\LicenseAgreement\Admin\ListLicenseAgreementsController;
-use Tuleap\FRS\LicenseAgreement\Admin\EditLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\Admin\SaveLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\Admin\SetDefaultLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
@@ -89,6 +89,7 @@ use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
 use Tuleap\Project\Banner\BannerAdministrationController;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerRetriever;
+use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Home;
 use Tuleap\Project\Registration\ProjectRegistrationController;
 use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
@@ -605,7 +606,8 @@ class RouteCollector
                 new \ProjectDao()
             ),
             new ProjectRegistrationPresenterBuilder(
-                TemplateFactory::build()
+                TemplateFactory::build(),
+                new DefaultProjectVisibilityRetriever()
             )
         );
     }

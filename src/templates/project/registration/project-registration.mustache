@@ -20,7 +20,11 @@
 }}
 
 {{# has_templates }}
-    <div id="project-registration" data-available-tuleap-templates="{{ tuleap_templates }}"></div>
+    <div id="project-registration"
+         data-available-tuleap-templates="{{ tuleap_templates }}"
+         data-are-restricted-users-allowed="{{ are_restricted_users_allowed }}"
+         data-project-default-visibility="{{ project_default_visibility }}">
+    </div>
 {{/has_templates}}
 
 {{^ has_templates }}
