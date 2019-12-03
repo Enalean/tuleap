@@ -1,34 +1,35 @@
 <?php
 /**
- * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
- * Originally written by Manuel VACELET, 2006.
+ * This file is a part of Tuleap.
  *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  *
  */
 
-require_once 'bootstrap.php';
+declare(strict_types = 1);
 
-class MetadataTest extends TuleapTestCase
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class MetadataTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    function testCloneOneMetadata()
+    public function testCloneOneMetadata(): void
     {
         // Parameters
         $dstGroupId = '321';
@@ -54,10 +55,10 @@ class MetadataTest extends TuleapTestCase
         $srcMdF->shouldReceive('_getListOfValuesElementFactory')->never();
 
         $srcMdF->_cloneOneMetadata($dstGroupId, $srcMd, $metadataMapping);
-        $this->assertEqual($metadataMapping['md'][301], 401);
+        $this->assertEquals(401, $metadataMapping['md'][301]);
     }
 
-    function testCloneOneMetadataList()
+    public function testCloneOneMetadataList(): void
     {
         // Parameters
         $dstGroupId = '321';
@@ -86,15 +87,15 @@ class MetadataTest extends TuleapTestCase
         $srcMdF->shouldReceive('_getListOfValuesElementFactory')->with(301)->once()->andReturns($dstLoveF);
 
         $srcMdF->_cloneOneMetadata($dstGroupId, $srcMd, $metadataMapping);
-        $this->assertEqual($metadataMapping['md'][301], 401);
-        $this->assertEqual($metadataMapping['love'][101], 201);
-        $this->assertEqual($metadataMapping['love'][102], 202);
+        $this->assertEquals(401, $metadataMapping['md'][301]);
+        $this->assertEquals(201, $metadataMapping['love'][101]);
+        $this->assertEquals(202, $metadataMapping['love'][102]);
     }
 
     /**
      * Ensure that data from one call doesn't override data of the second call
      */
-    function testTwoCallsOfCloneOneMetadataList()
+    public function testTwoCallsOfCloneOneMetadataList(): void
     {
         // Common params
         $dstGroupId = '321';
@@ -142,15 +143,15 @@ class MetadataTest extends TuleapTestCase
         $srcMdF->_cloneOneMetadata($dstGroupId, $srcMd1, $metadataMapping);
         $srcMdF->_cloneOneMetadata($dstGroupId, $srcMd2, $metadataMapping);
 
-        $this->assertEqual($metadataMapping['md'][301], 401);
-        $this->assertEqual($metadataMapping['md'][302], 402);
-        $this->assertEqual($metadataMapping['love'][101], 201);
-        $this->assertEqual($metadataMapping['love'][102], 202);
-        $this->assertEqual($metadataMapping['love'][103], 203);
-        $this->assertEqual($metadataMapping['love'][104], 204);
+        $this->assertEquals(401, $metadataMapping['md'][301]);
+        $this->assertEquals(402, $metadataMapping['md'][302]);
+        $this->assertEquals(201, $metadataMapping['love'][101]);
+        $this->assertEquals(202, $metadataMapping['love'][102]);
+        $this->assertEquals(203, $metadataMapping['love'][103]);
+        $this->assertEquals(204, $metadataMapping['love'][104]);
     }
 
-    function testCloneRealMetadata()
+    public function testCloneRealMetadata(): void
     {
         // Parameters
         $dstGroupId = '321';

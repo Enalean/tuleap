@@ -1,32 +1,35 @@
 <?php
 /**
- * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
- * Originally written by Manuel Vacelet, 2008
+ * This file is a part of Tuleap.
  *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
-require_once 'bootstrap.php';
+declare(strict_types = 1);
 
-class MetadataListOfValuesElementFactoryTest extends TuleapTestCase
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class MetadataListOfValuesElementFactoryTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    function testCloneValues()
+    public function testCloneValues(): void
     {
         // Factory to test
         $srcLoveF = \Mockery::mock(Docman_MetadataListOfValuesElementFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -55,15 +58,15 @@ class MetadataListOfValuesElementFactoryTest extends TuleapTestCase
 
         // Run the test
         $valuesMapping = $srcLoveF->cloneValues($srcMd, $dstMd);
-        $this->assertEqual($valuesMapping[101], 201);
-        $this->assertEqual($valuesMapping[102], 202);
+        $this->assertEquals(201, $valuesMapping[101]);
+        $this->assertEquals(202, $valuesMapping[102]);
     }
 
     /**
      * 2 values + None in the source, no values in the destination.
      * 2 values must be created in the dest
      */
-    function testExportValuesWithEmptyDest()
+    public function testExportValuesWithEmptyDest(): void
     {
         // Factory to test
         $srcLoveF = \Mockery::mock(Docman_MetadataListOfValuesElementFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -96,7 +99,7 @@ class MetadataListOfValuesElementFactoryTest extends TuleapTestCase
      * 2 values + None in the source, one already exists in destination.
      * 1 value must be create and 1 updated
      */
-    function testExportValuesWithNonEmptyDest()
+    public function testExportValuesWithNonEmptyDest(): void
     {
         // Factory to test
         $srcLoveF = \Mockery::mock(Docman_MetadataListOfValuesElementFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
