@@ -27,15 +27,20 @@ declare(strict_types=1);
 namespace Tuleap\LDAP;
 
 use ForgeConfig;
-use LDAPResultExpectation;
+use LDAPResultIterator;
 use Mockery;
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
+use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\GlobalLanguageMock;
 use UserManager;
 
 require_once __DIR__.'/bootstrap.php';
 
-final class UserManagerAuthenticateTest extends TuleapTestCase
+final class UserManagerAuthenticateTest extends TestCase
 {
+    use MockeryPHPUnitIntegration, ForgeConfigSandbox, GlobalLanguageMock;
 
     private $username    = 'toto';
     private $password    = 'welcome0';
@@ -71,27 +76,24 @@ final class UserManagerAuthenticateTest extends TuleapTestCase
      */
     private $ldap_user_manager;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
-        ForgeConfig::store();
         ForgeConfig::set('sys_logger_level', 'debug');
-        $this->empty_ldap_result_iterator   = aLDAPResultIterator()->build();
-        $this->john_mc_lane_result_iterator = aLDAPResultIterator()
-            ->withParams($this->ldap_params)
-            ->withInfo(
-                array(
-                    array(
-                        'cn'   => 'John Mac Lane',
-                        'uid'  => 'john_lane',
-                        'mail' => 'john.mc.lane@nypd.gov',
-                        'uuid' => 'ed1234',
-                        'dn'   => 'uid=john_lane,ou=people,dc=tuleap,dc=local'
-                    )
-                )
-            )
-            ->build();
+        $this->empty_ldap_result_iterator   = $this->buildLDAPIterator([], []);
+        $this->john_mc_lane_result_iterator = $this->buildLDAPIterator(
+            [
+                [
+                    'cn'   => 'John Mac Lane',
+                    'uid'  => 'john_lane',
+                    'mail' => 'john.mc.lane@nypd.gov',
+                    'uuid' => 'ed1234',
+                    'dn'   => 'uid=john_lane,ou=people,dc=tuleap,dc=local'
+                ]
+            ],
+            $this->ldap_params
+        );
+
         $this->ldap = \Mockery::mock(
             \LDAP::class,
             [$this->ldap_params, Mockery::mock(\Logger::class)]
@@ -111,12 +113,6 @@ final class UserManagerAuthenticateTest extends TuleapTestCase
         $this->ldap_user_manager->shouldReceive('getUserManager')->andReturns($this->user_manager);
     }
 
-    public function tearDown()
-    {
-        ForgeConfig::restore();
-        parent::tearDown();
-    }
-
     public function testItDelegatesAuthenticateToLDAP(): void
     {
         $this->user_sync->shouldReceive('getSyncAttributes')->andReturns(array());
@@ -124,7 +120,7 @@ final class UserManagerAuthenticateTest extends TuleapTestCase
 
         $this->ldap->shouldReceive('authenticate')->with($this->username, $this->password)->once()->andReturnTrue();
 
-        $this->user_manager->shouldReceive('getUserByLdapId')->once()->andReturn(Mockery::mock(\PFUser::class));
+        $this->user_manager->shouldReceive('getUserByLdapId')->once()->andReturn(Mockery::mock(PFUser::class));
         $this->ldap_user_manager->shouldReceive('synchronizeUser')->once();
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
@@ -149,7 +145,7 @@ final class UserManagerAuthenticateTest extends TuleapTestCase
             ->once()
             ->andReturns($this->john_mc_lane_result_iterator);
 
-        $this->user_manager->shouldReceive('getUserByLdapId')->once()->andReturn(Mockery::mock(\PFUser::class));
+        $this->user_manager->shouldReceive('getUserByLdapId')->once()->andReturn(Mockery::mock(PFUser::class));
         $this->ldap_user_manager->shouldReceive('synchronizeUser')->once();
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
@@ -166,7 +162,7 @@ final class UserManagerAuthenticateTest extends TuleapTestCase
             ->once()
             ->andReturns($this->john_mc_lane_result_iterator);
 
-        $this->user_manager->shouldReceive('getUserByLdapId')->once()->andReturn(Mockery::mock(\PFUser::class));
+        $this->user_manager->shouldReceive('getUserByLdapId')->once()->andReturn(Mockery::mock(PFUser::class));
         $this->ldap_user_manager->shouldReceive('synchronizeUser')->once();
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
@@ -184,7 +180,7 @@ final class UserManagerAuthenticateTest extends TuleapTestCase
             ->once()
             ->andReturns($this->john_mc_lane_result_iterator);
 
-        $this->user_manager->shouldReceive('getUserByLdapId')->once()->andReturn(Mockery::mock(\PFUser::class));
+        $this->user_manager->shouldReceive('getUserByLdapId')->once()->andReturn(Mockery::mock(PFUser::class));
         $this->ldap_user_manager->shouldReceive('synchronizeUser')->once();
 
         $this->ldap_user_manager->authenticate($this->username, $this->password);
@@ -199,7 +195,7 @@ final class UserManagerAuthenticateTest extends TuleapTestCase
         $this->user_manager->shouldReceive('getUserByLdapId')
             ->with('ed1234')
             ->once()
-            ->andReturn(Mockery::mock(\PFUser::class));
+            ->andReturn(Mockery::mock(PFUser::class));
 
         $this->ldap_user_manager->shouldReceive('synchronizeUser')->once();
 
@@ -212,8 +208,8 @@ final class UserManagerAuthenticateTest extends TuleapTestCase
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
         $this->ldap->shouldReceive('searchLogin')->andReturns($this->empty_ldap_result_iterator);
 
-        $this->user_manager->shouldReceive('getUserByLdapId')->once()->andReturn(Mockery::mock(\PFUser::class));
-        $this->ldap_user_manager->shouldReceive('synchronizeUser')->once();
+        $this->user_manager->shouldReceive('getUserByLdapId')->never();
+        $this->ldap_user_manager->shouldReceive('synchronizeUser')->never();
 
         $this->expectException('LDAP_UserNotFoundException');
 
@@ -224,27 +220,25 @@ final class UserManagerAuthenticateTest extends TuleapTestCase
     {
         $this->user_sync->shouldReceive('getSyncAttributes')->andReturns(array());
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
-        $this->ldap->shouldReceive('searchLogin')->andReturns(aLDAPResultIterator()
-            ->withParams($this->ldap_params)
-            ->withInfo(
-                array(
-                    array(
-                        'cn'   => 'John Mac Lane',
-                        'uid'  => 'john_lane',
-                        'mail' => 'john.mc.lane@nypd.gov',
-                        'uuid' => 'ed1234',
-                        'dn'   => 'uid=john_lane,ou=people,dc=tuleap,dc=local'
-                    ),
-                    array(
-                        'cn'   => 'William Wallas',
-                        'uid'  => 'will_wall',
-                        'mail' => 'will_wall@edimburgh.co.uk',
-                        'uuid' => 'ed5432',
-                        'dn'   => 'uid=will_wall,ou=people,dc=tuleap,dc=local'
-                    )
-                )
-            )
-            ->build());
+        $this->ldap->shouldReceive('searchLogin')->andReturns($this->buildLDAPIterator(
+            [
+                [
+                    'cn'   => 'John Mac Lane',
+                    'uid'  => 'john_lane',
+                    'mail' => 'john.mc.lane@nypd.gov',
+                    'uuid' => 'ed1234',
+                    'dn'   => 'uid=john_lane,ou=people,dc=tuleap,dc=local'
+                ],
+                [
+                    'cn'   => 'William Wallas',
+                    'uid'  => 'will_wall',
+                    'mail' => 'will_wall@edimburgh.co.uk',
+                    'uuid' => 'ed5432',
+                    'dn'   => 'uid=will_wall,ou=people,dc=tuleap,dc=local'
+                ]
+            ],
+            $this->ldap_params
+        ));
 
         $this->expectException('LDAP_UserNotFoundException');
 
@@ -265,7 +259,7 @@ final class UserManagerAuthenticateTest extends TuleapTestCase
 
     public function testItReturnsUserOnAccountCreation(): void
     {
-        $expected_user = aUser()->withId(123)->build();
+        $expected_user = $this->buildUser();
         $this->user_sync->shouldReceive('getSyncAttributes')->andReturns(array());
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
         $this->ldap->shouldReceive('searchLogin')->andReturns($this->john_mc_lane_result_iterator);
@@ -277,12 +271,12 @@ final class UserManagerAuthenticateTest extends TuleapTestCase
             ->once();
 
         $user = $this->ldap_user_manager->authenticate($this->username, $this->password);
-        $this->assertIdentical($user, $expected_user);
+        $this->assertSame($expected_user, $user);
     }
 
     public function testItUpdateUserAccountsIfAlreadyExists(): void
     {
-        $expected_user = aUser()->withId(123)->build();
+        $expected_user = $this->buildUser();
         $this->user_sync->shouldReceive('getSyncAttributes')->andReturns(array());
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
         $this->ldap->shouldReceive('searchLogin')->andReturns($this->john_mc_lane_result_iterator);
@@ -297,7 +291,7 @@ final class UserManagerAuthenticateTest extends TuleapTestCase
 
     public function testItReturnsUserOnAccountUpdate(): void
     {
-        $expected_user = aUser()->withId(123)->build();
+        $expected_user = $this->buildUser();
         $this->user_sync->shouldReceive('getSyncAttributes')->andReturns(array());
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
         $this->ldap->shouldReceive('searchLogin')->andReturns($this->john_mc_lane_result_iterator);
@@ -306,6 +300,41 @@ final class UserManagerAuthenticateTest extends TuleapTestCase
         $this->ldap_user_manager->shouldReceive('synchronizeUser')->andReturns(true);
 
         $user = $this->ldap_user_manager->authenticate($this->username, $this->password);
-        $this->assertIdentical($expected_user, $user);
+        $this->assertSame($expected_user, $user);
+    }
+
+    private function buildUser(): PFUser
+    {
+        return new PFUser(['user_id' => 123]);
+    }
+
+    private function buildLDAPIterator(array $info, array $ldap_params): LDAPResultIterator
+    {
+        $ldap_info = array(
+            'count' => count($info),
+        );
+        $i = 0;
+        foreach ($info as $people) {
+            $nb_params_excluding_dn = count($people) - 1;
+            $ldap_info[$i] = array(
+                'dn'    => $people['dn'],
+                'count' => $nb_params_excluding_dn
+            );
+            $j = 0;
+            foreach ($people as $param => $value) {
+                if ($param == 'dn') {
+                    continue;
+                }
+                $ldap_info[$i][$param] = array(
+                    'count' => 1,
+                    0       => $value,
+                );
+                $ldap_info[$i][$j] = $param;
+                $j++;
+            }
+            $i++;
+        }
+
+        return new LDAPResultIterator($ldap_info, $ldap_params);
     }
 }
