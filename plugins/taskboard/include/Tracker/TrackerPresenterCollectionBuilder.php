@@ -54,22 +54,22 @@ class TrackerPresenterCollectionBuilder
         return $this->trackers_retriever->getTrackersForMilestone($milestone)->map(
             function (TaskboardTracker $taskboard_tracker) use ($user) {
                 $mapped_field = $this->mapped_field_retriever->getField($taskboard_tracker);
-                $title_field_id = $this->getTitleFieldId($taskboard_tracker, $user);
+                $title_field = $this->getTitleField($taskboard_tracker, $user);
 
                 if (! $mapped_field) {
-                    return new TrackerPresenter($taskboard_tracker, false, $title_field_id);
+                    return new TrackerPresenter($taskboard_tracker, false, $title_field);
                 }
-                return new TrackerPresenter($taskboard_tracker, $mapped_field->userCanUpdate($user), $title_field_id);
+                return new TrackerPresenter($taskboard_tracker, $mapped_field->userCanUpdate($user), $title_field);
             }
         );
     }
 
-    private function getTitleFieldId(TaskboardTracker $taskboard_tracker, \PFUser $user): ?int
+    private function getTitleField(TaskboardTracker $taskboard_tracker, \PFUser $user): ?TitleFieldPresenter
     {
         $field_title = \Tracker_Semantic_Title::load($taskboard_tracker->getTracker())->getField();
 
         return ($field_title !== null && $field_title->userCanUpdate($user))
-            ? (int) $field_title->getId()
+            ? new TitleFieldPresenter($field_title)
             : null;
     }
 }

@@ -22,6 +22,7 @@ import { ErrorState } from "./error/type";
 import { FullscreenState } from "./fullscreen/type";
 import { SwimlaneState } from "./swimlane/type";
 import { ColumnState } from "./column/type";
+import { Tracker } from "../type";
 
 export interface State {
     admin_url: string;
@@ -31,12 +32,6 @@ export interface State {
     are_closed_items_displayed: boolean;
     card_being_dragged: DraggedCard | null;
     trackers: Tracker[];
-}
-
-export interface Tracker {
-    id: number;
-    can_update_mapped_field: boolean;
-    title_field_id: number | null;
 }
 
 export interface RootState extends State {
@@ -50,9 +45,4 @@ export interface RootState extends State {
 export interface DraggedCard {
     card_id: number;
     tracker_id: number;
-}
-
-export interface Tracker {
-    id: number;
-    can_update_mapped_field: boolean;
 }

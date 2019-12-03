@@ -23,10 +23,10 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createStore } from "./src/store";
 import App from "./src/components/App.vue";
 import { initVueGettext } from "../../../../src/www/scripts/tuleap/gettext/vue-gettext-init";
-import { ColumnDefinition } from "./src/type";
+import { ColumnDefinition, Tracker } from "./src/type";
 import Vuex from "vuex";
 import { UserState } from "./src/store/user/type";
-import { RootState, Tracker } from "./src/store/type";
+import { RootState } from "./src/store/type";
 import { ColumnState } from "./src/store/column/type";
 
 document.addEventListener("DOMContentLoaded", async () => {

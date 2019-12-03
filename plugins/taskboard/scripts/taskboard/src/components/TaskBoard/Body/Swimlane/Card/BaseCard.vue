@@ -41,12 +41,11 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import CardXrefLabel from "./CardXrefLabel.vue";
 import CardAssignees from "./CardAssignees.vue";
-import { Card, TaskboardEvent } from "../../../../../type";
-import { Tracker } from "../../../../../store/type";
+import { Card, TaskboardEvent, Tracker } from "../../../../../type";
 import { namespace, Getter } from "vuex-class";
 import EventBus from "../../../../../helpers/event-bus";
 import EditLabel from "./EditMode/Label/EditLabel.vue";
-import { NewCardPayload } from "../../../../../store/swimlane/card/type";
+import { UpdateCardPayload } from "../../../../../store/swimlane/card/type";
 
 const user = namespace("user");
 const swimlane = namespace("swimlane");
@@ -75,7 +74,7 @@ export default class BaseCard extends Vue {
     readonly removeCardFromEditMode!: (card: Card) => void;
 
     @swimlane.Action
-    readonly saveCard!: (payload: NewCardPayload) => Promise<void>;
+    readonly saveCard!: (payload: UpdateCardPayload) => Promise<void>;
 
     private label = "";
 
@@ -108,7 +107,7 @@ export default class BaseCard extends Vue {
             return;
         }
 
-        const payload: NewCardPayload = {
+        const payload: UpdateCardPayload = {
             card: this.card,
             label: this.label,
             tracker: this.tracker
@@ -160,7 +159,7 @@ export default class BaseCard extends Vue {
     }
 
     get can_user_update_card(): boolean {
-        return this.tracker.title_field_id !== null && !this.card.is_being_saved;
+        return this.tracker.title_field !== null && !this.card.is_being_saved;
     }
 
     get show_accessibility_pattern(): boolean {

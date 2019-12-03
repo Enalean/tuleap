@@ -53,6 +53,17 @@ export interface RemainingEffort {
     is_being_saved: boolean;
 }
 
+export interface TitleField {
+    readonly id: number;
+    readonly is_string_field: boolean;
+}
+
+export interface Tracker {
+    readonly id: number;
+    readonly can_update_mapped_field: boolean;
+    readonly title_field: TitleField | null;
+}
+
 export interface Card {
     id: number;
     tracker_id: number;

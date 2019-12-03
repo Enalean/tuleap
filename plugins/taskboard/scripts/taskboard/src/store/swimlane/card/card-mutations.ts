@@ -19,7 +19,7 @@
 
 import { Card, RemainingEffort } from "../../../type";
 import { SwimlaneState } from "../type";
-import { NewCardPayload, NewRemainingEffortPayload } from "./type";
+import { UpdateCardPayload, NewRemainingEffortPayload } from "./type";
 import { findCard } from "../swimlane-helpers";
 
 export function addCardToEditMode(state: SwimlaneState, card: Card): void {
@@ -40,7 +40,7 @@ export function resetSavingCard(state: SwimlaneState, card: Card): void {
     findCard(state, card).is_being_saved = false;
 }
 
-export function finishSavingCard(state: SwimlaneState, payload: NewCardPayload): void {
+export function finishSavingCard(state: SwimlaneState, payload: UpdateCardPayload): void {
     const state_card = findCard(state, payload.card);
     state_card.label = payload.label;
     state_card.is_being_saved = false;

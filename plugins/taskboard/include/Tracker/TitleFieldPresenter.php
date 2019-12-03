@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Tracker } from "../../../type";
+declare(strict_types=1);
 
-export interface NewRemainingEffortPayload {
-    readonly card: Card;
-    readonly value: number;
-}
+namespace Tuleap\Taskboard\Tracker;
 
-export interface UpdateCardPayload {
-    readonly card: Card;
-    readonly label: string;
-    readonly tracker: Tracker;
+final class TitleFieldPresenter
+{
+    /**
+     * @var int
+     */
+    public $id;
+    /**
+     * @var bool
+     */
+    public $is_string_field;
+
+    public function __construct(\Tracker_FormElement_Field_Text $field)
+    {
+        $this->id              = $field->getId();
+        $this->is_string_field = $field instanceof \Tracker_FormElement_Field_String;
+    }
 }

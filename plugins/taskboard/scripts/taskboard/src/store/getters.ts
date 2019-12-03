@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { RootState, Tracker } from "./type";
-import { ColumnDefinition, Swimlane, Card } from "../type";
+import { RootState } from "./type";
+import { ColumnDefinition, Swimlane, Card, Tracker } from "../type";
 
 export const column_of_cell = (root_state: RootState) => (
     cell: HTMLElement

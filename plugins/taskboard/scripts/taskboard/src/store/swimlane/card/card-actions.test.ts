@@ -18,11 +18,11 @@
  */
 
 import { ActionContext } from "vuex";
-import { RootState, Tracker } from "../../type";
-import { NewCardPayload, NewRemainingEffortPayload } from "./type";
+import { RootState } from "../../type";
+import { UpdateCardPayload, NewRemainingEffortPayload } from "./type";
 import * as tlp from "tlp";
 import { SwimlaneState } from "../type";
-import { Card } from "../../../type";
+import { Card, Tracker } from "../../../type";
 import * as actions from "./card-actions";
 import {
     mockFetchError,
@@ -103,8 +103,8 @@ describe("Card actions", () => {
     describe("saveCard", () => {
         it("saves the new value", async () => {
             const card: Card = { id: 123, tracker_id: 1 } as Card;
-            const tracker = { id: 1, title_field_id: 1355 } as Tracker;
-            const payload: NewCardPayload = {
+            const tracker = { id: 1, title_field: { id: 1355, is_string_field: true } } as Tracker;
+            const payload: UpdateCardPayload = {
                 card,
                 label: "Lorem",
                 tracker: tracker
@@ -133,8 +133,8 @@ describe("Card actions", () => {
 
         it("warns about error if any", async () => {
             const card: Card = { id: 123, tracker_id: 1 } as Card;
-            const tracker = { id: 1, title_field_id: 1355 } as Tracker;
-            const payload: NewCardPayload = {
+            const tracker = { id: 1, title_field: { id: 1355, is_string_field: true } } as Tracker;
+            const payload: UpdateCardPayload = {
                 card,
                 label: "Lorem",
                 tracker
