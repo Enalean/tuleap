@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\Notification;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
+use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationStrategy;
 
 final class EventSubjectToNotificationSynchronousDispatcher implements EventDispatcherInterface
 {
@@ -31,15 +32,10 @@ final class EventSubjectToNotificationSynchronousDispatcher implements EventDisp
      * @var ListenerProviderInterface
      */
     private $listener_provider;
-    /**
-     * @var PullRequestNotificationExecutor
-     */
-    private $executor;
 
-    public function __construct(ListenerProviderInterface $listener_provider, PullRequestNotificationExecutor $executor)
+    public function __construct(ListenerProviderInterface $listener_provider)
     {
         $this->listener_provider = $listener_provider;
-        $this->executor          = $executor;
     }
 
     public function dispatch(object $event): object
@@ -49,22 +45,23 @@ final class EventSubjectToNotificationSynchronousDispatcher implements EventDisp
         }
 
         foreach ($this->listener_provider->getListenersForEvent($event) as $listener_callable) {
-            $notification_to_process_builder = $listener_callable();
+            $listener = $listener_callable();
             // This is implied because are supposed to provide callable compatible with the event type
-            assert($notification_to_process_builder instanceof NotificationToProcessBuilder);
+            assert($listener instanceof EventSubjectToNotificationListener);
 
             $this->processNotifications(
-                ...$notification_to_process_builder->getNotificationsToProcess($event)
+                $listener->getNotificationStrategy(),
+                ...$listener->getNotificationToProcessBuilder()->getNotificationsToProcess($event)
             );
         }
 
         return $event;
     }
 
-    private function processNotifications(NotificationToProcess ...$notifications): void
+    private function processNotifications(PullRequestNotificationStrategy $strategy, NotificationToProcess ...$notifications): void
     {
         foreach ($notifications as $notification) {
-            $this->executor->execute($notification);
+            $strategy->execute($notification);
         }
     }
 }

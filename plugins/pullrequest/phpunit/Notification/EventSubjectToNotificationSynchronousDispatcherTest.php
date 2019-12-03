@@ -25,8 +25,9 @@ namespace Tuleap\PullRequest\Reviewer\Notification;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\ListenerProviderInterface;
-use Tuleap\PullRequest\Notification\PullRequestNotificationExecutor;
+use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationStrategy;
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
+use Tuleap\PullRequest\Notification\EventSubjectToNotificationListener;
 use Tuleap\PullRequest\Notification\EventSubjectToNotificationListenerProvider;
 use Tuleap\PullRequest\Notification\EventSubjectToNotificationSynchronousDispatcher;
 use Tuleap\PullRequest\Notification\NotificationToProcess;
@@ -40,44 +41,42 @@ final class EventSubjectToNotificationSynchronousDispatcherTest extends TestCase
     {
         $event = \Mockery::mock(EventSubjectToNotification::class);
 
+        $strategy_1 = \Mockery::mock(PullRequestNotificationStrategy::class);
         $builder_1  = \Mockery::mock(NotificationToProcessBuilder::class);
+        $listener_1 = new EventSubjectToNotificationListener($strategy_1, $builder_1);
+        $strategy_2 = \Mockery::mock(PullRequestNotificationStrategy::class);
         $builder_2  = \Mockery::mock(NotificationToProcessBuilder::class);
-
-        $executor = \Mockery::mock(PullRequestNotificationExecutor::class);
+        $listener_2 = new EventSubjectToNotificationListener($strategy_2, $builder_2);
 
         $dispatcher = new EventSubjectToNotificationSynchronousDispatcher(
             new EventSubjectToNotificationListenerProvider([
                 get_class($event) => [
-                    static function () use ($builder_1): NotificationToProcessBuilder {
-                        return $builder_1;
+                    static function () use ($listener_1): EventSubjectToNotificationListener {
+                        return $listener_1;
                     },
-                    static function () use ($builder_2): NotificationToProcessBuilder {
-                        return $builder_2;
+                    static function () use ($listener_2): EventSubjectToNotificationListener {
+                        return $listener_2;
                     }
                 ]
-            ]),
-            $executor
+            ])
         );
 
         $builder_1->shouldReceive('getNotificationsToProcess')->andReturn([
             \Mockery::mock(NotificationToProcess::class),
             \Mockery::mock(NotificationToProcess::class),
         ]);
-        $executor->shouldReceive('execute')->twice();
+        $strategy_1->shouldReceive('execute')->twice();
         $builder_2->shouldReceive('getNotificationsToProcess')->andReturn([]);
+        $strategy_2->shouldNotReceive('execute');
 
         $this->assertSame($event, $dispatcher->dispatch($event));
     }
 
     public function testNothingHappensWhenNoListenerRespondsToTheDispatchedEvent(): void
     {
-        $executor   = \Mockery::mock(PullRequestNotificationExecutor::class);
         $dispatcher = new EventSubjectToNotificationSynchronousDispatcher(
-            new EventSubjectToNotificationListenerProvider([]),
-            $executor
+            new EventSubjectToNotificationListenerProvider([])
         );
-
-        $executor->shouldNotReceive('execute');
 
         $event = \Mockery::mock(EventSubjectToNotification::class);
 
@@ -86,13 +85,7 @@ final class EventSubjectToNotificationSynchronousDispatcherTest extends TestCase
 
     public function testNothingHappenWhenProcessingSomethingThatIsNotAnEventSubjectToNotification(): void
     {
-        $executor   = \Mockery::mock(PullRequestNotificationExecutor::class);
-        $dispatcher = new EventSubjectToNotificationSynchronousDispatcher(
-            \Mockery::mock(ListenerProviderInterface::class),
-            $executor
-        );
-
-        $executor->shouldNotReceive('execute');
+        $dispatcher = new EventSubjectToNotificationSynchronousDispatcher(\Mockery::mock(ListenerProviderInterface::class));
 
         $event = new \stdClass();
 

@@ -24,12 +24,12 @@ namespace Tuleap\PullRequest\Reference;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\PullRequest\PullRequest;
 
-require_once __DIR__.'/../bootstrap.php';
-
-class HTMLURLBuilderTest extends TestCase
+final class HTMLURLBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
 
     /**
      * @var \GitRepositoryFactory
@@ -44,6 +44,11 @@ class HTMLURLBuilderTest extends TestCase
      */
     private $project_id;
 
+    /**
+     * @var HTMLURLBuilder
+     */
+    private $html_url_builder;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -55,22 +60,49 @@ class HTMLURLBuilderTest extends TestCase
         $project                      = \Mockery::spy(\Project::class, ['getID' => $this->project_id, 'getUnixName' => false, 'isPublic' => false]);
         $repository->shouldReceive('getProject')->andReturns($project);
         $this->git_repository_factory->shouldReceive('getRepositoryById')->with($this->repository_id)->andReturns($repository);
+
+        $this->html_url_builder = new HTMLURLBuilder(
+            $this->git_repository_factory
+        );
     }
 
     public function testItReturnsTheWebURLToPullRequestOverview(): void
     {
-        $pull_request = \Mockery::spy(\Tuleap\PullRequest\PullRequest::class);
-        $pull_request->shouldReceive('getId')->andReturns(27);
-        $pull_request->shouldReceive('getRepositoryId')->andReturns($this->repository_id);
-
-        $html_url_builder = new HTMLURLBuilder(
-            $this->git_repository_factory
-        );
-
-        $result = $html_url_builder->getPullRequestOverviewUrl($pull_request);
+        $result = $this->html_url_builder->getPullRequestOverviewUrl($this->buildPullRequest(27));
 
         $expected_url = '/plugins/git/?action=pull-requests&repo_id=8&group_id=109#/pull-requests/27/overview';
 
         $this->assertEquals($expected_url, $result);
+    }
+
+    public function testItReturnsTheAbsoluteWebURLInHTTPSToPullRequestOverview(): void
+    {
+        \ForgeConfig::set('sys_https_host', 'example.com');
+
+        $result = $this->html_url_builder->getAbsolutePullRequestOverviewUrl($this->buildPullRequest(28));
+
+        $expected_url = 'https://example.com/plugins/git/?action=pull-requests&repo_id=8&group_id=109#/pull-requests/28/overview';
+
+        $this->assertEquals($expected_url, $result);
+    }
+
+    public function testItReturnsTheAbsoluteWebURLInHTTPToPullRequestOverviewWhenHTTPSIsNotAvailable(): void
+    {
+        \ForgeConfig::set('sys_default_domain', 'cleartext.example.com');
+
+        $result = $this->html_url_builder->getAbsolutePullRequestOverviewUrl($this->buildPullRequest(28));
+
+        $expected_url = 'http://cleartext.example.com/plugins/git/?action=pull-requests&repo_id=8&group_id=109#/pull-requests/28/overview';
+
+        $this->assertEquals($expected_url, $result);
+    }
+
+    private function buildPullRequest(int $pull_request_id): PullRequest
+    {
+        $pull_request = \Mockery::mock(\Tuleap\PullRequest\PullRequest::class);
+        $pull_request->shouldReceive('getId')->andReturns($pull_request_id);
+        $pull_request->shouldReceive('getRepositoryId')->andReturns($this->repository_id);
+
+        return $pull_request;
     }
 }
