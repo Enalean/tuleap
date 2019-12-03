@@ -22,21 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Tracker;
 
-use Tracker;
-
 final class TrackerPresenter
 {
     /** @var int */
     public $id;
     /** @var bool */
     public $can_update_mapped_field;
-    /** @var int|null  */
-    public $title_field_id;
+    /** @var TitleFieldPresenter|null */
+    public $title_field;
 
-    public function __construct(TaskboardTracker $tracker, bool $can_update_mapped_field, ?int $title_field_id)
-    {
+    public function __construct(
+        TaskboardTracker $tracker,
+        bool $can_update_mapped_field,
+        ?TitleFieldPresenter $title_field
+    ) {
         $this->id                      = $tracker->getTrackerId();
         $this->can_update_mapped_field = $can_update_mapped_field;
-        $this->title_field_id          = $title_field_id;
+        $this->title_field             = $title_field;
     }
 }

@@ -17,15 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, Tracker } from "../../../type";
-
-export interface NewRemainingEffortPayload {
-    readonly card: Card;
-    readonly value: number;
+export enum TextFormat {
+    TEXT = "text",
+    HTML = "html"
 }
 
-export interface UpdateCardPayload {
-    readonly card: Card;
-    readonly label: string;
-    readonly tracker: Tracker;
+export interface TextValue {
+    readonly content: string;
+    readonly format: TextFormat;
+}
+
+export interface Field {
+    readonly field_id: number;
+    readonly value: TextValue | string;
+}
+
+export interface PutBody {
+    readonly values: Field[];
 }

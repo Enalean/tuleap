@@ -20,11 +20,10 @@
 import { shallowMount, Slots, Wrapper } from "@vue/test-utils";
 import BaseCard from "./BaseCard.vue";
 import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import { Card, TaskboardEvent, User } from "../../../../../type";
+import { Card, TaskboardEvent, Tracker, User } from "../../../../../type";
 import EventBus from "../../../../../helpers/event-bus";
 import EditLabel from "./EditMode/Label/EditLabel.vue";
-import { NewCardPayload } from "../../../../../store/swimlane/card/type";
-import { Tracker } from "plugins/taskboard/scripts/taskboard/src/store/type";
+import { UpdateCardPayload } from "../../../../../store/swimlane/card/type";
 
 jest.useFakeTimers();
 
@@ -32,7 +31,7 @@ function getWrapper(
     card: Card,
     slots: Slots = {},
     user_has_accessibility_mode = false,
-    tracker_of_card: Tracker = { title_field_id: 1212 } as Tracker
+    tracker_of_card: Tracker = { title_field: { id: 1212 } } as Tracker
 ): Wrapper<BaseCard> {
     return shallowMount(BaseCard, {
         mocks: {
@@ -148,7 +147,7 @@ describe("BaseCard", () => {
             Or the semantic title of the tracker is not set
             Then it won't display the edit mode trigger button`, () => {
             const card = getCard();
-            const wrapper = getWrapper(card, {}, false, { title_field_id: null } as Tracker);
+            const wrapper = getWrapper(card, {}, false, { title_field: null } as Tracker);
 
             expect(wrapper.contains(".taskboard-card-edit-trigger")).toBe(false);
             expect(wrapper.classes("taskboard-card-editable")).toBe(false);
@@ -208,8 +207,8 @@ describe("BaseCard", () => {
             expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveCard", {
                 card,
                 label,
-                tracker: { title_field_id: 1212 } as Tracker
-            } as NewCardPayload);
+                tracker: { title_field: { id: 1212 } } as Tracker
+            } as UpdateCardPayload);
         });
 
         it(`Saves the new label when user clicks on save button`, () => {
@@ -228,8 +227,8 @@ describe("BaseCard", () => {
             expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveCard", {
                 card,
                 label,
-                tracker: { title_field_id: 1212 } as Tracker
-            } as NewCardPayload);
+                tracker: { title_field: { id: 1212 } } as Tracker
+            } as UpdateCardPayload);
         });
 
         it(`Does not save the new label if it is identical to the former one`, () => {

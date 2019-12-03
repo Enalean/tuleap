@@ -55,7 +55,7 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
         );
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         \Tracker_Semantic_Title::clearInstances();
     }
@@ -94,7 +94,7 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
 
         $result = $this->trackers_builder->buildCollection($milestone, $user);
         $this->assertFalse($result[0]->can_update_mapped_field);
-        $this->assertNull($result[0]->title_field_id);
+        $this->assertNull($result[0]->title_field);
     }
 
     public function testBuildCollectionReturnsTrackerPresenters(): void
@@ -104,41 +104,51 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
         $milestone_tracker        = M::mock(Tracker::class);
         $first_tracker            = $this->mockTracker('27');
         $second_tracker           = $this->mockTracker('85');
+        $third_tracker            = $this->mockTracker('96');
         $first_taskboard_tracker  = new TaskboardTracker($milestone_tracker, $first_tracker);
         $second_taskboard_tracker = new TaskboardTracker($milestone_tracker, $second_tracker);
-        $this->trackers_retriever->shouldReceive('getTrackersForMilestone')
+        $third_taskboard_tracker  = new TaskboardTracker($milestone_tracker, $third_tracker);
+
+        $this->trackers_retriever
+            ->shouldReceive('getTrackersForMilestone')
             ->with($milestone)
             ->once()
-            ->andReturn(new TrackerCollection([$first_taskboard_tracker, $second_taskboard_tracker]));
-        $sb_field_can_update = M::mock(Tracker_FormElement_Field_Selectbox::class);
-        $sb_field_can_update->shouldReceive('userCanUpdate')
-            ->with($user)
-            ->once()
-            ->andReturnTrue();
-        $sb_field_cannot_update = M::mock(Tracker_FormElement_Field_Selectbox::class);
-        $sb_field_cannot_update->shouldReceive('userCanUpdate')
-            ->with($user)
-            ->once()
-            ->andReturnFalse();
-        $this->mapped_field_retriever->shouldReceive('getField')
-            ->with($first_taskboard_tracker)
-            ->once()
-            ->andReturn($sb_field_can_update);
-        $this->mapped_field_retriever->shouldReceive('getField')
-            ->with($second_taskboard_tracker)
-            ->once()
-            ->andReturn($sb_field_cannot_update);
+            ->andReturn(
+                new TrackerCollection(
+                    [$first_taskboard_tracker, $second_taskboard_tracker, $third_taskboard_tracker]
+                )
+            );
+
+        $this->mockMappedField($user, $first_taskboard_tracker, true);
+        $this->mockMappedField($user, $second_taskboard_tracker, false);
+        $this->mockMappedField($user, $third_taskboard_tracker, false);
 
         $this->mockSemanticTitle($first_taskboard_tracker, false, true);
         $this->mockSemanticTitle($second_taskboard_tracker, true, true);
+        $this->mockSemanticTitle($third_taskboard_tracker, true, true, \Tracker_FormElement_Field_String::class);
 
         $result = $this->trackers_builder->buildCollection($milestone, $user);
         $this->assertSame(27, $result[0]->id);
         $this->assertTrue($result[0]->can_update_mapped_field);
-        $this->assertNull($result[0]->title_field_id);
+        $this->assertNull($result[0]->title_field);
         $this->assertSame(85, $result[1]->id);
         $this->assertFalse($result[1]->can_update_mapped_field);
-        $this->assertEquals(1533, $result[1]->title_field_id);
+        $this->assertEquals(1533, $result[1]->title_field->id);
+        $this->assertFalse($result[1]->title_field->is_string_field);
+        $this->assertTrue($result[2]->title_field->is_string_field);
+    }
+
+    private function mockMappedField(PFUser $user, TaskboardTracker $taskboard_tracker, bool $can_user_update): void
+    {
+        $sb_field = M::mock(Tracker_FormElement_Field_Selectbox::class);
+        $sb_field->shouldReceive('userCanUpdate')
+            ->with($user)
+            ->once()
+            ->andReturn($can_user_update);
+        $this->mapped_field_retriever->shouldReceive('getField')
+            ->with($taskboard_tracker)
+            ->once()
+            ->andReturn($sb_field);
     }
 
     /**
@@ -151,14 +161,18 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
             ->getMock();
     }
 
-    private function mockSemanticTitle(TaskboardTracker $taskboard_tracker, bool $is_semantic_set, bool $can_user_update) : void
-    {
+    private function mockSemanticTitle(
+        TaskboardTracker $taskboard_tracker,
+        bool $is_semantic_set,
+        bool $can_user_update,
+        $classname = \Tracker_FormElement_Field_Text::class
+    ): void {
         \Tracker_Semantic_Title::setInstance($this->semantic_title, $taskboard_tracker->getTracker());
 
         $title_field = null;
 
         if ($is_semantic_set) {
-            $title_field = M::mock(\Tracker_FormElement_Field_Text::class);
+            $title_field = M::mock($classname);
             $title_field->shouldReceive('getId')->andReturn(1533);
             $title_field->shouldReceive('userCanUpdate')->andReturn($can_user_update);
         }

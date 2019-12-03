@@ -18,9 +18,10 @@
  */
 import { ActionContext } from "vuex";
 import { RootState } from "../../type";
-import { NewCardPayload, NewRemainingEffortPayload } from "./type";
+import { UpdateCardPayload, NewRemainingEffortPayload } from "./type";
 import { patch, put } from "tlp";
 import { SwimlaneState } from "../type";
+import { getPutArtifactBody } from "../../../helpers/update-artifact";
 
 const headers = {
     "Content-Type": "application/json"
@@ -45,21 +46,14 @@ export async function saveRemainingEffort(
 }
 export async function saveCard(
     context: ActionContext<SwimlaneState, RootState>,
-    payload: NewCardPayload
+    payload: UpdateCardPayload
 ): Promise<void> {
     const card = payload.card;
     context.commit("startSavingCard", card);
     try {
         await put(`/api/v1/artifacts/${encodeURIComponent(card.id)}`, {
             headers,
-            body: JSON.stringify({
-                values: [
-                    {
-                        field_id: payload.tracker.title_field_id,
-                        value: payload.label
-                    }
-                ]
-            })
+            body: JSON.stringify(getPutArtifactBody(payload))
         });
         context.commit("finishSavingCard", payload);
     } catch (error) {
