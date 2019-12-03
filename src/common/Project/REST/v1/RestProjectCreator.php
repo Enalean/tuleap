@@ -27,6 +27,9 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Project;
 use ProjectCreationData;
+use Tuleap\Project\Admin\Categories\CategoryCollection;
+use Tuleap\Project\Admin\Categories\MissingMandatoryCategoriesException;
+use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
@@ -77,6 +80,10 @@ class RestProjectCreator
      * @var ProjectRegistrationUserPermissionChecker
      */
     private $permission_checker;
+    /**
+     * @var ProjectCategoriesUpdater
+     */
+    private $categories_updater;
 
     public function __construct(
         \ProjectManager $project_manager,
@@ -87,7 +94,8 @@ class RestProjectCreator
         \XML_RNGValidator $validator,
         \ProjectXMLImporter $project_XML_importer,
         TemplateFactory $template_factory,
-        ProjectRegistrationUserPermissionChecker $permission_checker
+        ProjectRegistrationUserPermissionChecker $permission_checker,
+        ProjectCategoriesUpdater $categories_updater
     ) {
         $this->project_manager            = $project_manager;
         $this->project_creator            = $project_creator;
@@ -98,6 +106,7 @@ class RestProjectCreator
         $this->project_XML_importer       = $project_XML_importer;
         $this->template_factory           = $template_factory;
         $this->permission_checker         = $permission_checker;
+        $this->categories_updater         = $categories_updater;
     }
 
     /**
@@ -118,6 +127,19 @@ class RestProjectCreator
             throw new RestException(403, 'You are not allowed to create new projects');
         }
 
+        $project = $this->createProjectWithSelectedTemplate($user, $post_representation);
+        if ($post_representation->categories !== null) {
+            try {
+                $this->updateProjectCategories($project, $post_representation->categories);
+            } catch (MissingMandatoryCategoriesException $exception) {
+                throw new RestException(400, $exception->getMessage());
+            }
+        }
+        return $project;
+    }
+
+    public function createProjectWithSelectedTemplate(PFUser $user, ProjectPostRepresentation $post_representation): Project
+    {
         if ($post_representation->template_id !== null) {
             return $this->createProjectFromTemplateId($post_representation, $user);
         }
@@ -200,5 +222,20 @@ class RestProjectCreator
             ),
             $template,
         );
+    }
+
+    /**
+     * @param Project $project
+     * @param CategoryPostRepresentation[] $categories
+     */
+    private function updateProjectCategories(Project $project, array $categories_representation): void
+    {
+        $categories = [];
+        foreach ($categories_representation as $category_representation) {
+            $category = new \TroveCat($category_representation->category_id, '', '');
+            $category->addChildren(new \TroveCat($category_representation->value_id, '', ''));
+            $categories[] = $category;
+        }
+        $this->categories_updater->update($project, new CategoryCollection(...$categories));
     }
 }

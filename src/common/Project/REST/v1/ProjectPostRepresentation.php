@@ -59,4 +59,9 @@ class ProjectPostRepresentation
      * @var string Template name provided by the platform {@from body} {@required false} {@choice scrum}
      */
     public $xml_template_name;
+
+    /**
+     * @var array Categories to be set a project creation {@from body} {@required false} {@type \Tuleap\Project\REST\v1\CategoryPostRepresentation}
+     */
+    public $categories;
 }
