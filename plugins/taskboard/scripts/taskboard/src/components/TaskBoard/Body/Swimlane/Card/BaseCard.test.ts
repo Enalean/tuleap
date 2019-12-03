@@ -147,11 +147,28 @@ describe("BaseCard", () => {
         it(`Given the user has not the permission to edit the card title,
             Or the semantic title of the tracker is not set
             Then it won't display the edit mode trigger button`, () => {
-            const card = getCard({ is_in_edit_mode: false } as Card);
+            const card = getCard();
             const wrapper = getWrapper(card, {}, false, { title_field_id: null } as Tracker);
 
-            expect(wrapper.find(".taskboard-card-edit-trigger").exists()).toBe(false);
-            expect(wrapper.classes("taskboard-card-editable")).toBeFalsy();
+            expect(wrapper.contains(".taskboard-card-edit-trigger")).toBe(false);
+            expect(wrapper.classes("taskboard-card-editable")).toBe(false);
+        });
+
+        it(`Given the user has the permission to edit the card title
+            Then it will display the card as editable`, () => {
+            const wrapper = getWrapper(getCard());
+
+            expect(wrapper.contains(".taskboard-card-edit-trigger")).toBe(true);
+            expect(wrapper.classes("taskboard-card-editable")).toBe(true);
+        });
+
+        it(`Given the user has the permission to edit the card title
+            And the card is being saved
+            Then it won't display the card as editable`, () => {
+            const wrapper = getWrapper(getCard({ is_being_saved: true } as Card));
+
+            expect(wrapper.contains(".taskboard-card-edit-trigger")).toBe(false);
+            expect(wrapper.classes("taskboard-card-editable")).toBe(false);
         });
 
         it(`Cancels the edition of the card if user clicks on cancel button (that is outside of this component)`, () => {
