@@ -17,27 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@mixin ease-out-background-gradient($color) {
-    /* ease out gradients does not exist yet in css. https://github.com/w3c/csswg-drafts/issues/1332
-       Here we compute manually the various stops to simulate ease-out for a smooth transition.
-       Formula is: function (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t } with t ∈ [0, 1]
-     */
-    background: linear-gradient(to left,
-    transparentize($color, 0) 22px,
-    transparentize($color, .02) 25px,
-    transparentize($color, .08) 28px,
-    transparentize($color, .18) 30px,
-    transparentize($color, .32) 33px,
-    transparentize($color, .5) 36px,
-    transparentize($color, .68) 39px,
-    transparentize($color, .82) 42px,
-    transparentize($color, .92) 44px,
-    transparentize($color, .98) 47px,
-    transparentize($color, 1) 50px);
+@mixin pencil-background($color) {
+    background: $color;
+    box-shadow: 0 0 8px 2px $color;
 }
 
 :not(.gu-mirror) > .taskboard-card.taskboard-card-editable:not(.taskboard-card-edit-mode) {
     > .taskboard-card-edit-trigger {
+        @include pencil-background($tlp-ui-white);
         display: flex;
         position: absolute;
         z-index: 10;
@@ -49,8 +36,6 @@
         transition: opacity ease-in-out 100ms;
         border-radius: 50%;
         opacity: 0;
-        background: $tlp-ui-white;
-        box-shadow: 0 0 8px 2px $tlp-ui-white;
         color: $tlp-ui-dimmed;
         font-size: 14px;
         cursor: pointer;
@@ -76,26 +61,13 @@
     }
 
     @each $color-name, $colors in $tlp-swatch-color-map {
-        &.taskboard-card-background-#{$color-name}>.taskboard-card-edit-trigger {
-            background: map-get($colors, 'secondary');
-            box-shadow: 0 0 8px 2px map-get($colors, 'secondary');
+        &.taskboard-card-background-#{$color-name} > .taskboard-card-edit-trigger {
+            @include pencil-background(map-get($colors, 'secondary'));
             color: map-get($colors, 'text');
         }
 
         &.taskboard-card-#{$color-name}:not([class*='taskboard-card-background-']) > .taskboard-card-edit-trigger {
             color: map-get($colors, 'text');
-        }
-    }
-}
-
-.taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card.taskboard-card-editable:not(.taskboard-card-edit-mode) {
-    &:not([class*='taskboard-card-background-'])::after {
-        @include ease-out-background-gradient($tlp-theme-background-color);
-    }
-
-    @each $color-name, $colors in $tlp-swatch-color-map {
-        &.taskboard-card-background-#{$color-name}::after {
-            @include ease-out-background-gradient(mix(map-get($colors, 'secondary'), $tlp-theme-background-color));
         }
     }
 }
@@ -136,6 +108,10 @@
     }
 }
 
+.taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card:not([class*='taskboard-card-background-']) > .taskboard-card-edit-trigger {
+    @include pencil-background($tlp-theme-background-color);
+}
+
 .taskboard-cell:first-child > .taskboard-cell-parent-card > .taskboard-card,
 :not(.gu-mirror) > .taskboard-card {
     transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
@@ -150,11 +126,8 @@
         border-color: $tlp-ui-success;
         background: mix($tlp-ui-white, $tlp-ui-success, 90%);
 
-        &.taskboard-card-editable:not(.taskboard-card-edit-mode)::after {
-            @include ease-out-background-gradient(mix($tlp-ui-white, $tlp-ui-success, 90%));
-            top: 1px;
-            right: 1px;
-            height: calc(100% - #{$tlp-spacing} - 2px);
+        &.taskboard-card-editable:not(.taskboard-card-edit-mode) > .taskboard-card-edit-trigger {
+            @include pencil-background(mix($tlp-ui-white, $tlp-ui-success, 90%));
         }
     }
 }
