@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`EditLabel Displays a texteara with its mirror to edit the label 1`] = `
+exports[`LabelEditor Displays a texteara with its mirror to edit the label 1`] = `
 <div
   class="taskboard-card-label-editor"
 >
@@ -11,6 +11,7 @@ exports[`EditLabel Displays a texteara with its mirror to edit the label 1`] = `
    
   <textarea
     class="tlp-textarea taskboard-card-label-input"
+    placeholder="Card label…"
     rows="1"
   />
 </div>

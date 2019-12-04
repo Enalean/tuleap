@@ -17,36 +17,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
-import EditLabel from "./EditLabel.vue";
+import { shallowMount, Wrapper } from "@vue/test-utils";
+import LabelEditor from "./LabelEditor.vue";
+import { createTaskboardLocalVue } from "../../../../../../../helpers/local-vue-for-test";
 
-describe("EditLabel", () => {
-    it("Displays a texteara with its mirror to edit the label", () => {
-        const wrapper = shallowMount(EditLabel, {
-            propsData: {
-                value: "Lorem ipsum doloret"
-            }
-        });
+async function getWrapper(): Promise<Wrapper<LabelEditor>> {
+    return shallowMount(LabelEditor, {
+        localVue: await createTaskboardLocalVue(),
+        propsData: {
+            value: "Lorem ipsum doloret"
+        }
+    });
+}
+
+describe("LabelEditor", () => {
+    it("Displays a texteara with its mirror to edit the label", async () => {
+        const wrapper = await getWrapper();
 
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Saves the card if user hits enter", () => {
-        const wrapper = shallowMount(EditLabel, {
-            propsData: {
-                value: "Lorem ipsum doloret"
-            }
-        });
+    it("Saves the card if user hits enter", async () => {
+        const wrapper = await getWrapper();
+
         wrapper.find({ ref: "textarea" }).trigger("keydown.enter");
         expect(wrapper.emitted("save")).toBeTruthy();
     });
 
-    it("Saves the card if user hits shift + enter", () => {
-        const wrapper = shallowMount(EditLabel, {
-            propsData: {
-                value: "Lorem ipsum doloret"
-            }
-        });
+    it("Saves the card if user hits shift + enter", async () => {
+        const wrapper = await getWrapper();
+
         wrapper.find({ ref: "textarea" }).trigger("keydown.enter", { shiftKey: true });
         expect(wrapper.emitted("save")).toBeFalsy();
     });

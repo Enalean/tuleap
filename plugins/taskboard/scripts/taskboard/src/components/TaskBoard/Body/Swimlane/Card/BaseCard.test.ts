@@ -22,10 +22,8 @@ import BaseCard from "./BaseCard.vue";
 import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import { Card, TaskboardEvent, Tracker, User } from "../../../../../type";
 import EventBus from "../../../../../helpers/event-bus";
-import EditLabel from "./EditMode/Label/EditLabel.vue";
+import LabelEditor from "./Editor/Label/LabelEditor.vue";
 import { UpdateCardPayload } from "../../../../../store/swimlane/card/type";
-
-jest.useFakeTimers();
 
 function getWrapper(
     card: Card,
@@ -197,7 +195,7 @@ describe("BaseCard", () => {
 
             const label = "Lorem ipsum";
             wrapper.setData({ label });
-            const edit_label = wrapper.find(EditLabel);
+            const edit_label = wrapper.find(LabelEditor);
             edit_label.vm.$emit("save");
 
             expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
@@ -236,7 +234,7 @@ describe("BaseCard", () => {
             const wrapper = getWrapper(card);
 
             wrapper.setData({ label: "toto" });
-            const edit_label = wrapper.find(EditLabel);
+            const edit_label = wrapper.find(LabelEditor);
             edit_label.vm.$emit("save");
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(

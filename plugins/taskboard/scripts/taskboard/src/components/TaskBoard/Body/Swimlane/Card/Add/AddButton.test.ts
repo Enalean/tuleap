@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,29 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$button-size: 40px;
+import { shallowMount } from "@vue/test-utils";
+import AddButton from "./AddButton.vue";
+import { createTaskboardLocalVue } from "../../../../../../helpers/local-vue-for-test";
 
-.taskboard-add-card-form {
-    min-height: $button-size;
+describe("AddButon", () => {
+    it("propagates the click event", async () => {
+        const wrapper = shallowMount(AddButton, {
+            localVue: await createTaskboardLocalVue(),
+            propsData: {
+                label: "Lorem"
+            }
+        });
 
-    &:first-child > .taskboard-card-label-editor {
-        margin: 0;
-    }
-}
-
-.taskboard-add-in-place-button {
-    position: absolute;
-    z-index: 10;
-    bottom: $tlp-half-spacing;
-    left: 50%;
-    width: $button-size;
-    height: $button-size;
-    transform: translateX(-50%);
-    transition: opacity ease-in-out 100ms;
-    border-radius: 50%;
-    opacity: 0;
-}
-
-.taskboard-cell:hover > .taskboard-add-card-form > .taskboard-add-in-place-button {
-    opacity: 1;
-}
+        wrapper.trigger("click");
+        expect(wrapper.emitted().click).toBeTruthy();
+    });
+});
