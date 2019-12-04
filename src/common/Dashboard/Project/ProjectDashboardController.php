@@ -22,6 +22,7 @@ namespace Tuleap\Dashboard\Project;
 
 use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
+use EventManager;
 use Exception;
 use Feedback;
 use ForgeConfig;
@@ -37,6 +38,7 @@ use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\OwnerInfo;
+use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\TroveCat\TroveCatLinkDao;
 
 class ProjectDashboardController
@@ -81,6 +83,11 @@ class ProjectDashboardController
      */
     private $assets_includer;
 
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         Project $project,
@@ -90,7 +97,8 @@ class ProjectDashboardController
         DashboardWidgetPresenterBuilder $widget_presenter_builder,
         WidgetDeletor $widget_deletor,
         WidgetMinimizor $widget_minimizor,
-        AssetsIncluder $assets_includer
+        AssetsIncluder $assets_includer,
+        EventManager $event_manager
     ) {
         $this->csrf                     = $csrf;
         $this->project                  = $project;
@@ -101,6 +109,7 @@ class ProjectDashboardController
         $this->widget_deletor           = $widget_deletor;
         $this->widget_minimizor         = $widget_minimizor;
         $this->assets_includer          = $assets_includer;
+        $this->event_manager            = $event_manager;
     }
 
     /**
@@ -160,6 +169,10 @@ class ProjectDashboardController
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('tuleap_dir') . '/src/templates/dashboard'
         );
+
+        $event = new ProjectProviderEvent($this->project);
+        $this->event_manager->processEvent($event);
+
         $renderer->renderToPage(
             'project',
             new ProjectPagePresenter(

@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
  *
@@ -24,6 +24,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Userlog\UserlogAccess;
 use Tuleap\Userlog\UserLogBuilder;
 use Tuleap\Userlog\UserLogPresenter;
 
@@ -52,10 +53,19 @@ class UserLogManager
         return $dao;
     }
 
-    public function logAccess($time, $gid, $uid, $userAgent, $requestMethod, $requestUri, $remoteAddr, $httpReferer)
+    public function logAccess(UserlogAccess $userlog_access)
     {
         $dao = $this->getDao();
-        $dao->addRequest($time, $gid, $uid, $userAgent, $requestMethod, $requestUri, $remoteAddr, $httpReferer);
+        $dao->addRequest(
+            $userlog_access->getDate()->getTimestamp(),
+            $userlog_access->getProject()->getID(),
+            $userlog_access->getUser()->getId(),
+            $userlog_access->getUserAgent(),
+            $userlog_access->getRequestMethod(),
+            $userlog_access->getRequestUri(),
+            $userlog_access->getIpAddress(),
+            $userlog_access->getHttpReferer()
+        );
     }
 
     function displayNewOrIdem($key, $row, &$pval, $display = null)
