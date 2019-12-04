@@ -24,6 +24,7 @@ import ChildCard from "./Card/ChildCard.vue";
 import CardSkeleton from "./Skeleton/CardSkeleton.vue";
 import ColumnWithChildren from "./ColumnWithChildren.vue";
 import { RootState } from "../../../../store/type";
+import AddCard from "./Card/Add/AddCard.vue";
 
 function createWrapper(
     swimlane: Swimlane,
@@ -107,5 +108,16 @@ describe("ColumnWithChildren", () => {
 
         expect(wrapper.findAll(ChildCard).length).toBe(3);
         expect(wrapper.findAll(CardSkeleton).length).toBe(0);
+    });
+
+    it(`Displays AddCard component`, () => {
+        const swimlane: Swimlane = {
+            card: { id: 43 } as Card,
+            children_cards: [],
+            is_loading_children_cards: false
+        } as Swimlane;
+        const wrapper = createWrapper(swimlane, false, []);
+
+        expect(wrapper.contains(AddCard)).toBe(true);
     });
 });

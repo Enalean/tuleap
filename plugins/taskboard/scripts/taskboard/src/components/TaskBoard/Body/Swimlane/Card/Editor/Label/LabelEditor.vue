@@ -31,6 +31,7 @@
                   v-on:keydown.enter="enter"
                   v-on:keyup="keyup"
                   v-bind:rows="rows"
+                  v-bind:placeholder="$gettext('Card label…')"
                   ref="textarea"
         ></textarea>
     </div>
@@ -45,7 +46,7 @@ const LINE_HEIGHT_IN_PX = 18;
 const TOP_AND_BOTTOM_PADDING_IN_PX = 16;
 
 @Component
-export default class EditLabel extends Vue {
+export default class LabelEditor extends Vue {
     @Prop({ required: true })
     readonly value!: string;
 

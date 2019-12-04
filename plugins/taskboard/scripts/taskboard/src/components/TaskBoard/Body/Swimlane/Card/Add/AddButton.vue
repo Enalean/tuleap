@@ -23,6 +23,7 @@
             class="taskboard-add-in-place-button tlp-button-primary tlp-button-outline tlp-button-small tlp-tooltip tlp-tooltip-top"
             v-bind:data-tlp-tooltip="title"
             v-bind:aria-label="title"
+            v-on:click="$emit('click')"
     >
         <i class="fa fa-plus" aria-hidden="true"></i>
     </button>

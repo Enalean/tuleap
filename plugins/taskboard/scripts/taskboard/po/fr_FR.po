@@ -18,6 +18,9 @@ msgstr "Ajouter une nouvelle carte"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Card label…"
+msgstr "Label de la carte…"
+
 msgid "Close"
 msgstr "Fermer"
 
