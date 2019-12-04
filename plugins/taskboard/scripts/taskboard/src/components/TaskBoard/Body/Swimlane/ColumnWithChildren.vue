@@ -24,6 +24,7 @@
         <template v-if="swimlane.is_loading_children_cards">
             <card-skeleton v-for="i in nb_skeletons_to_display" v-bind:key="i"/>
         </template>
+        <add-button/>
     </drop-container-cell>
 </template>
 
@@ -35,11 +36,12 @@ import ChildCard from "./Card/ChildCard.vue";
 import CardSkeleton from "./Skeleton/CardSkeleton.vue";
 import SkeletonMixin from "./Skeleton/skeleton-mixin";
 import DropContainerCell from "./Cell/DropContainerCell.vue";
+import AddButton from "./Card/Add/AddButton.vue";
 
 const swimlane = namespace("swimlane");
 
 @Component({
-    components: { DropContainerCell, ChildCard, CardSkeleton }
+    components: { AddButton, DropContainerCell, ChildCard, CardSkeleton }
 })
 export default class ColumnWithChildren extends Mixins(SkeletonMixin) {
     @Prop({ required: true })
