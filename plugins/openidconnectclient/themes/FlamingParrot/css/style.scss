@@ -155,37 +155,37 @@
 
 body {
     &.FlamingParrot_Orange {
-        @import 'variables-orange';
+        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-orange';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_Blue {
-        @import 'variables-blue';
+        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-blue';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_Green {
-        @import 'variables-green';
+        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-green';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_BlueGrey {
-        @import 'variables-bluegrey';
+        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-bluegrey';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_Purple {
-        @import 'variables-purple';
+        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-purple';
 
         @include definitions($main, $color-name);
     }
 
     &.FlamingParrot_Red {
-        @import 'variables-red';
+        @import '../../../../../src/www/themes/FlamingParrot/css/utils/variables-red';
 
         @include definitions($main, $color-name);
     }
