@@ -73,6 +73,7 @@
     flex: 0 0 auto;
     width: 50px;
     min-width: unset;
+    min-height: 100px;
     overflow: hidden;
     background: $tlp-ui-white;
     cursor: pointer;
@@ -85,7 +86,8 @@
     > .gu-transit,
     > .gu-mirror,
     > .taskboard-draggable-item {
-        display: none;
+        opacity: 0;
+        white-space: nowrap;
     }
 }
 
