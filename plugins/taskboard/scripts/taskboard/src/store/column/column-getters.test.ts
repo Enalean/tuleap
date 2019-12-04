@@ -19,8 +19,23 @@
 
 import { ColumnDefinition, ListValue, Mapping } from "../../type";
 import * as getters from "./column-getters";
+import { ColumnState } from "./type";
+import { RootState } from "../type";
 
 describe("column-getters", () => {
+    let column_state: ColumnState, root_state: RootState;
+
+    beforeEach(() => {
+        column_state = {} as ColumnState;
+        root_state = {
+            trackers: [
+                { id: 11, can_update_mapped_field: true },
+                { id: 12, can_update_mapped_field: true },
+                { id: 13, can_update_mapped_field: false }
+            ]
+        } as RootState;
+    });
+
     describe("accepted_trackers_ids", () => {
         it("will return a list containing the ids of the trackers accepted by the column", () => {
             const column = {
@@ -36,7 +51,10 @@ describe("column-getters", () => {
                 ]
             } as ColumnDefinition;
 
-            expect(getters.accepted_trackers_ids()(column)).toEqual([11, 12]);
+            expect(getters.accepted_trackers_ids(column_state, [], root_state)(column)).toEqual([
+                11,
+                12
+            ]);
         });
 
         it("will return an empty array if the column does not accept any list values", () => {
@@ -53,7 +71,20 @@ describe("column-getters", () => {
                 ]
             } as ColumnDefinition;
 
-            expect(getters.accepted_trackers_ids()(column)).toEqual([]);
+            expect(getters.accepted_trackers_ids(column_state, [], root_state)(column)).toEqual([]);
+        });
+
+        it("will return an empty array when the user cannot update the mapped field", () => {
+            const column = {
+                mappings: [
+                    {
+                        tracker_id: 13,
+                        accepts: [{ id: 1 }] as ListValue[]
+                    }
+                ]
+            } as ColumnDefinition;
+
+            expect(getters.accepted_trackers_ids(column_state, [], root_state)(column)).toEqual([]);
         });
 
         it("will return an empty array if the column has no mapping", () => {
@@ -61,7 +92,7 @@ describe("column-getters", () => {
                 mappings: [] as Mapping[]
             } as ColumnDefinition;
 
-            expect(getters.accepted_trackers_ids()(column)).toEqual([]);
+            expect(getters.accepted_trackers_ids(column_state, [], root_state)(column)).toEqual([]);
         });
     });
 });

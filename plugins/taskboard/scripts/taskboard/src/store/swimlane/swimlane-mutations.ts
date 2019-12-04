@@ -26,7 +26,6 @@ import {
     SwimlaneState
 } from "./type";
 import { findCard, findSwimlane, replaceSwimlane } from "./swimlane-helpers";
-import Vue from "vue";
 
 export * from "./card/card-mutations";
 
@@ -146,22 +145,30 @@ function getFirstListValueId(mapping: Mapping): number {
     return mapping.accepts[0].id;
 }
 
-export function removeHighlightOnLastHoveredDropZone(state: SwimlaneState): void {
-    if (state.last_hovered_drop_zone) {
-        state.last_hovered_drop_zone.is_drop_rejected = false;
+export function unsetDropZoneRejectingDrop(state: SwimlaneState): void {
+    if (state.dropzone_rejecting_drop) {
+        state.dropzone_rejecting_drop.classList.remove("taskboard-drop-not-accepted");
+        state.dropzone_rejecting_drop = undefined;
     }
 }
 
-export function setHighlightOnLastHoveredDropZone(state: SwimlaneState): void {
-    if (state.last_hovered_drop_zone) {
-        state.last_hovered_drop_zone.is_drop_rejected = true;
-    }
+function isSameDropZone(dropzone: HTMLElement | undefined, target: HTMLElement): boolean {
+    return (
+        dropzone !== undefined &&
+        dropzone.dataset.swimlaneId === target.dataset.swimlaneId &&
+        dropzone.dataset.columnId === target.dataset.columnId
+    );
 }
 
-export function setLastHoveredDropZone(state: SwimlaneState, target: HTMLElement): void {
-    Vue.set(state, "last_hovered_drop_zone", {
-        column_id: Number(target.dataset.columnId),
-        swimlane_id: Number(target.dataset.swimlaneId),
-        is_drop_rejected: false
-    });
+export function setDropZoneRejectingDrop(state: SwimlaneState, target: HTMLElement): void {
+    const dropzone = state.dropzone_rejecting_drop;
+
+    if (isSameDropZone(dropzone, target)) {
+        return;
+    }
+
+    target.classList.add("taskboard-drop-not-accepted");
+
+    unsetDropZoneRejectingDrop(state);
+    state.dropzone_rejecting_drop = target;
 }

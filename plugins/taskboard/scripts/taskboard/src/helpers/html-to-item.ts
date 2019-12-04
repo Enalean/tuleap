@@ -19,7 +19,7 @@
 
 import { Card, Swimlane } from "../type";
 
-export function hasCardBeenDroppedInTheSameCell(
+export function isDraggedOverTheSourceCell(
     target_cell: HTMLElement,
     source_cell: HTMLElement
 ): boolean {
@@ -29,7 +29,7 @@ export function hasCardBeenDroppedInTheSameCell(
     );
 }
 
-export function hasCardBeenDroppedInAnotherSwimlane(
+export function isDraggedOverAnotherSwimlane(
     target_cell: HTMLElement,
     source_cell: HTMLElement
 ): boolean {

@@ -18,14 +18,14 @@
  */
 
 import {
-    hasCardBeenDroppedInTheSameCell,
+    isDraggedOverTheSourceCell,
     getCardFromSwimlane,
-    hasCardBeenDroppedInAnotherSwimlane
+    isDraggedOverAnotherSwimlane
 } from "./html-to-item";
 import { Card, Swimlane } from "../type";
 
 describe("html-to-item helper", () => {
-    describe("hasCardBeenDroppedInTheSameCell", () => {
+    describe("isDraggedOverTheSourceCell", () => {
         it("returns true if the target cell is also the source cell", (): void => {
             const { target_cell, source_cell } = getSourceAndTargetCellsAndCard();
 
@@ -35,7 +35,7 @@ describe("html-to-item helper", () => {
             source_cell.setAttribute("data-swimlane-id", "100");
             source_cell.setAttribute("data-column-id", "15");
 
-            expect(hasCardBeenDroppedInTheSameCell(target_cell, source_cell)).toBe(true);
+            expect(isDraggedOverTheSourceCell(target_cell, source_cell)).toBe(true);
         });
 
         it("returns false if the target cell and the source cell are two different cells of the same swimlane", () => {
@@ -47,7 +47,7 @@ describe("html-to-item helper", () => {
             source_cell.setAttribute("data-swimlane-id", "100");
             source_cell.setAttribute("data-column-id", "16");
 
-            expect(hasCardBeenDroppedInTheSameCell(target_cell, source_cell)).toBe(false);
+            expect(isDraggedOverTheSourceCell(target_cell, source_cell)).toBe(false);
         });
 
         it("returns false if the target cell and the source cell are two different cells from different swimlanes", () => {
@@ -59,7 +59,7 @@ describe("html-to-item helper", () => {
             source_cell.setAttribute("data-swimlane-id", "101");
             source_cell.setAttribute("data-column-id", "16");
 
-            expect(hasCardBeenDroppedInTheSameCell(target_cell, source_cell)).toBe(false);
+            expect(isDraggedOverTheSourceCell(target_cell, source_cell)).toBe(false);
         });
 
         it("returns false if the target cell and the source cell are in the same column but from different swimlanes", () => {
@@ -71,7 +71,7 @@ describe("html-to-item helper", () => {
             source_cell.setAttribute("data-swimlane-id", "101");
             source_cell.setAttribute("data-column-id", "15");
 
-            expect(hasCardBeenDroppedInTheSameCell(target_cell, source_cell)).toBe(false);
+            expect(isDraggedOverTheSourceCell(target_cell, source_cell)).toBe(false);
         });
     });
 
@@ -136,7 +136,7 @@ describe("html-to-item helper", () => {
         });
     });
 
-    describe("hasCardBeenDroppedInAnotherSwimlane", () => {
+    describe("isDraggedOverAnotherSwimlane", () => {
         it("returns false if the swimlane is the same in source and target", (): void => {
             const { target_cell, source_cell } = getSourceAndTargetCellsAndCard();
 
@@ -146,7 +146,7 @@ describe("html-to-item helper", () => {
             source_cell.setAttribute("data-swimlane-id", "100");
             source_cell.setAttribute("data-column-id", "16");
 
-            expect(hasCardBeenDroppedInAnotherSwimlane(target_cell, source_cell)).toBe(false);
+            expect(isDraggedOverAnotherSwimlane(target_cell, source_cell)).toBe(false);
         });
 
         it("returns true if the swimlame is different in source and target", (): void => {
@@ -158,7 +158,7 @@ describe("html-to-item helper", () => {
             source_cell.setAttribute("data-swimlane-id", "101");
             source_cell.setAttribute("data-column-id", "15");
 
-            expect(hasCardBeenDroppedInAnotherSwimlane(target_cell, source_cell)).toBe(true);
+            expect(isDraggedOverAnotherSwimlane(target_cell, source_cell)).toBe(true);
         });
     });
 });

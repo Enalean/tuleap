@@ -18,10 +18,20 @@
  */
 
 import { ColumnDefinition, Mapping } from "../../type";
+import { ColumnState } from "./type";
+import { RootState } from "../type";
 
-export const accepted_trackers_ids = () => (column: ColumnDefinition): number[] => {
+export const accepted_trackers_ids = (
+    column_state: ColumnState,
+    getters: [],
+    root_state: RootState
+) => (column: ColumnDefinition): number[] => {
+    const trackers = root_state.trackers;
+
     return column.mappings.reduce((trackers_ids: number[], mapping: Mapping) => {
-        if (mapping.accepts.length > 0) {
+        const tracker = trackers.find(tracker => tracker.id === mapping.tracker_id);
+
+        if (mapping.accepts.length > 0 && tracker && tracker.can_update_mapped_field) {
             trackers_ids.push(mapping.tracker_id);
         }
 
