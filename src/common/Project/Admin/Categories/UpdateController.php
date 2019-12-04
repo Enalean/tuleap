@@ -85,9 +85,13 @@ class UpdateController implements DispatchableWithRequest, DispatchableWithProje
         $csrf = new \CSRFSynchronizerToken($redirect_url);
         $csrf->check();
 
-        $this->updater->update($project, CategoryCollection::buildFromWebPayload($categories));
+        try {
+            $this->updater->update($project, CategoryCollection::buildFromWebPayload($categories));
+            $layout->addFeedback(\Feedback::INFO, gettext("Categories successfully updated."));
+        } catch (MissingMandatoryCategoriesException $exception) {
+            $layout->addFeedback(\Feedback::ERROR, _('Some mandatory categories are missing'));
+        }
 
-        $layout->addFeedback(\Feedback::INFO, gettext("Categories successfully updated."));
         $layout->redirect($redirect_url);
     }
 }

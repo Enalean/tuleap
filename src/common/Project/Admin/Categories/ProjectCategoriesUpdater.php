@@ -25,6 +25,7 @@ namespace Tuleap\Project\Admin\Categories;
 
 use Project;
 use ProjectHistoryDao;
+use TroveCat;
 use TroveCatFactory;
 
 class ProjectCategoriesUpdater
@@ -49,29 +50,69 @@ class ProjectCategoriesUpdater
         $this->set_node_facade = $set_node_facade;
     }
 
+    /**
+     * @throws MissingMandatoryCategoriesException
+     */
     public function update(Project $project, CategoryCollection $submitted_categories): void
     {
         $top_categories_nb_max_values = [];
         foreach ($this->factory->getTopCategories() as $row) {
-            $top_categories_nb_max_values[$row['trove_cat_id']] = $row['nb_max_values'];
+            $top_categories_nb_max_values[(int) $row['trove_cat_id']] = (int) $row['nb_max_values'];
         }
 
-        $this->history_dao->groupAddHistory('changed_trove', "", $project->getID());
+        $mandatory_categories = [];
+        foreach ($this->factory->getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren() as $category) {
+            $mandatory_categories[$category->getId()] = $category;
+        }
+
+        $categories_to_update = [];
         foreach ($submitted_categories->getRootCategories() as $root_category) {
             if (! isset($top_categories_nb_max_values[$root_category->getId()])) {
                 continue;
             }
 
-            $trove_cat_ids = $submitted_categories->getCategory($root_category)->getChildren();
-
-            $this->factory->removeProjectTopCategoryValue($project, $root_category->getId());
-
-            for ($i = 0; $i < $top_categories_nb_max_values[$root_category->getId()]; $i++) {
-                if (! isset($trove_cat_ids[$i])) {
-                    break;
-                }
-                $this->set_node_facade->setNode($project, $trove_cat_ids[$i]->getId(), $root_category->getId());
+            if (isset($mandatory_categories[$root_category->getId()])) {
+                unset($mandatory_categories[$root_category->getId()]);
             }
+
+            $categories_to_update[] = $root_category;
+        }
+
+        if (count($mandatory_categories) !== 0) {
+            throw new MissingMandatoryCategoriesException(
+                sprintf(
+                    'Mandatory categories where missing: %s',
+                    implode(
+                        ', ',
+                        array_map(
+                            static function (TroveCat $category) {
+                                return sprintf('%s (%d)', $category->getFullname(), $category->getId());
+                            },
+                            array_values($mandatory_categories)
+                        )
+                    )
+                )
+            );
+        }
+
+        foreach ($categories_to_update as $category) {
+            $this->doUpdate($project, $category, $top_categories_nb_max_values[$category->getId()]);
+        }
+    }
+
+    private function doUpdate(Project $project, TroveCat $root_category, int $nb_max_values): void
+    {
+        $this->history_dao->groupAddHistory('changed_trove', '', $project->getID());
+
+        $trove_cat_ids = $root_category->getChildren();
+
+        $this->factory->removeProjectTopCategoryValue($project, $root_category->getId());
+
+        for ($i = 0; $i < $nb_max_values; $i++) {
+            if (! isset($trove_cat_ids[$i])) {
+                break;
+            }
+            $this->set_node_facade->setNode($project, $trove_cat_ids[$i]->getId(), $root_category->getId());
         }
     }
 }
