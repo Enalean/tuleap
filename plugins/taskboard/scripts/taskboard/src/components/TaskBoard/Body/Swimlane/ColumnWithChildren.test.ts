@@ -29,7 +29,8 @@ import AddCard from "./Card/Add/AddCard.vue";
 function createWrapper(
     swimlane: Swimlane,
     is_collapsed: boolean,
-    cards_in_cell: Card[]
+    cards_in_cell: Card[],
+    can_add_in_place = false
 ): Wrapper<ColumnWithChildren> {
     const todo: ColumnDefinition = {
         id: 2,
@@ -53,7 +54,8 @@ function createWrapper(
                     swimlane: {}
                 } as RootState,
                 getters: {
-                    "swimlane/cards_in_cell": (): Card[] => cards_in_cell
+                    "swimlane/cards_in_cell": (): Card[] => cards_in_cell,
+                    can_add_in_place: (): boolean => can_add_in_place
                 }
             })
         },
@@ -110,14 +112,17 @@ describe("ColumnWithChildren", () => {
         expect(wrapper.findAll(CardSkeleton).length).toBe(0);
     });
 
-    it(`Displays AddCard component`, () => {
-        const swimlane: Swimlane = {
-            card: { id: 43 } as Card,
-            children_cards: [],
-            is_loading_children_cards: false
-        } as Swimlane;
-        const wrapper = createWrapper(swimlane, false, []);
+    describe("renders the AddCard component only when it is possible", () => {
+        it("renders the button when the tracker of the swimlane allows to add cards in place", () => {
+            const wrapper = createWrapper({} as Swimlane, false, [], true);
 
-        expect(wrapper.contains(AddCard)).toBe(true);
+            expect(wrapper.contains(AddCard)).toBe(true);
+        });
+
+        it("does not render the AddCard component when the tracker of the swimlane disallows to add cards in place", () => {
+            const wrapper = createWrapper({} as Swimlane, false, [], false);
+
+            expect(wrapper.contains(AddCard)).toBe(false);
+        });
     });
 });

@@ -24,14 +24,14 @@
         <template v-if="swimlane.is_loading_children_cards">
             <card-skeleton v-for="i in nb_skeletons_to_display" v-bind:key="i"/>
         </template>
-        <add-card/>
+        <add-card v-if="is_add_card_rendered"/>
     </drop-container-cell>
 </template>
 
 <script lang="ts">
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import { Card, ColumnDefinition, Swimlane } from "../../../../type";
-import { namespace } from "vuex-class";
+import { namespace, Getter } from "vuex-class";
 import ChildCard from "./Card/ChildCard.vue";
 import CardSkeleton from "./Skeleton/CardSkeleton.vue";
 import SkeletonMixin from "./Skeleton/skeleton-mixin";
@@ -50,6 +50,9 @@ export default class ColumnWithChildren extends Mixins(SkeletonMixin) {
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
 
+    @Getter
+    readonly can_add_in_place!: (swimlane: Swimlane) => boolean;
+
     @swimlane.Getter
     readonly cards_in_cell!: (
         current_swimlane: Swimlane,
@@ -66,6 +69,10 @@ export default class ColumnWithChildren extends Mixins(SkeletonMixin) {
         }
 
         return this.nb_skeletons;
+    }
+
+    get is_add_card_rendered(): boolean {
+        return this.can_add_in_place(this.swimlane);
     }
 }
 </script>

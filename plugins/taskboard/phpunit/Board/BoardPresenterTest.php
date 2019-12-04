@@ -107,7 +107,9 @@ final class BoardPresenterTest extends TestCase
         $title_field       = new TitleFieldPresenter(
             M::mock(\Tracker_FormElement_Field_Text::class)->shouldReceive(['getId' => 123])->getMock()
         );
-        $trackers          = [new TrackerPresenter($taskboard_tracker, true, $title_field)];
+
+        $add_in_place_tracker = M::mock(\Tracker::class)->shouldReceive(['getId' => 1533])->getMock();
+        $trackers             = [new TrackerPresenter($taskboard_tracker, true, $title_field, $add_in_place_tracker)];
 
         $presenter = new BoardPresenter(
             $this->milestone_presenter,

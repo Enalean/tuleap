@@ -32,18 +32,28 @@ class TrackerPresenterCollectionBuilder
     private $trackers_retriever;
     /** @var MappedFieldRetriever */
     private $mapped_field_retriever;
+    /** @var AddInPlaceTrackerRetriever*/
+    private $add_in_place_tracker_retriever;
 
     public function __construct(
         TrackerCollectionRetriever $trackers_retriever,
-        MappedFieldRetriever $mapped_field_retriever
+        MappedFieldRetriever $mapped_field_retriever,
+        AddInPlaceTrackerRetriever $add_in_place_tracker_retriever
     ) {
-        $this->trackers_retriever     = $trackers_retriever;
-        $this->mapped_field_retriever = $mapped_field_retriever;
+        $this->trackers_retriever             = $trackers_retriever;
+        $this->mapped_field_retriever         = $mapped_field_retriever;
+        $this->add_in_place_tracker_retriever = $add_in_place_tracker_retriever;
     }
 
     public static function build(): self
     {
-        return new self(TrackerCollectionRetriever::build(), MappedFieldRetriever::build());
+        return new self(
+            TrackerCollectionRetriever::build(),
+            MappedFieldRetriever::build(),
+            new AddInPlaceTrackerRetriever(
+                \Tracker_FormElementFactory::instance()
+            )
+        );
     }
 
     /**
@@ -53,13 +63,17 @@ class TrackerPresenterCollectionBuilder
     {
         return $this->trackers_retriever->getTrackersForMilestone($milestone)->map(
             function (TaskboardTracker $taskboard_tracker) use ($user) {
-                $mapped_field = $this->mapped_field_retriever->getField($taskboard_tracker);
-                $title_field = $this->getTitleField($taskboard_tracker, $user);
+                $mapped_field         = $this->mapped_field_retriever->getField($taskboard_tracker);
+                $title_field          = $this->getTitleField($taskboard_tracker, $user);
+                $add_in_place_tracker = $this->add_in_place_tracker_retriever->retrieveAddInPlaceTracker(
+                    $taskboard_tracker,
+                    $user
+                );
 
                 if (! $mapped_field) {
-                    return new TrackerPresenter($taskboard_tracker, false, $title_field);
+                    return new TrackerPresenter($taskboard_tracker, false, $title_field, $add_in_place_tracker);
                 }
-                return new TrackerPresenter($taskboard_tracker, $mapped_field->userCanUpdate($user), $title_field);
+                return new TrackerPresenter($taskboard_tracker, $mapped_field->userCanUpdate($user), $title_field, $add_in_place_tracker);
             }
         );
     }

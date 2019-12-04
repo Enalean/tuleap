@@ -38,7 +38,10 @@ describe("column_and_swimlane_of_cell", () => {
             swimlane: {
                 swimlanes: [swimlane_to_find]
             },
-            trackers: [{ id: 1 }]
+            trackers: [
+                { id: 1, add_in_place_tracker_id: 1533 },
+                { id: 2, add_in_place_tracker_id: null }
+            ]
         } as RootState;
     });
 
@@ -70,7 +73,7 @@ describe("column_and_swimlane_of_cell", () => {
     describe("tracker_of_card", () => {
         it("Given a card, it returns its tracker", () => {
             const card = { id: 100, tracker_id: 1 } as Card;
-            const expected_tracker = { id: 1 };
+            const expected_tracker = root_state.trackers[0];
 
             expect(getters.tracker_of_card(root_state)(card)).toEqual(expected_tracker);
         });
@@ -78,7 +81,21 @@ describe("column_and_swimlane_of_cell", () => {
         it("Throws an error when the tracker is not found", () => {
             const card = { id: 100, tracker_id: 3 } as Card;
 
-            expect(() => getters.tracker_of_card(root_state)(card)).toThrowError("not been found");
+            expect(() => getters.tracker_of_card(root_state)(card)).toThrow("not been found");
+        });
+    });
+
+    describe("can_add_in_place", () => {
+        it("returns true when the tracker of the given swimlane supports the add-in-place feature", () => {
+            const swimlane = { card: { id: 111, tracker_id: 1 } } as Swimlane;
+
+            expect(getters.can_add_in_place(root_state)(swimlane)).toBe(true);
+        });
+
+        it("returns false when the tracker of the given swimlane does not support the add-in-place feature", () => {
+            const swimlane = { card: { id: 111, tracker_id: 2 } } as Swimlane;
+
+            expect(getters.can_add_in_place(root_state)(swimlane)).toBe(false);
         });
     });
 });
