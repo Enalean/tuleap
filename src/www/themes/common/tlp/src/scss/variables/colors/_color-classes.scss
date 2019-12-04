@@ -1,0 +1,212 @@
+/**
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import 'common-colors';
+
+.tlp-swatch-inca-silver {
+    --primary-color: #{$tlp-swatch-inca-silver};
+    --secondary-color: #{$tlp-swatch-inca-silver-secondary};
+    --border-color: #{$tlp-swatch-inca-silver-border};
+    --text-color: #{$tlp-swatch-inca-silver-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAO0lEQVQoU2NkIBIwYlH3HyqGIoeuEKYIph8uj6wQXRGKYphCXIrgiklWCNJJlNUwK4jyDLpivMGDM/gBpiMIC2fsGi0AAAAASUVORK5CYII=');
+}
+
+.tlp-swatch-chrome-silver {
+    --primary-color: #{$tlp-swatch-chrome-silver};
+    --secondary-color: #{$tlp-swatch-chrome-silver-secondary};
+    --border-color: #{$tlp-swatch-chrome-silver-border};
+    --text-color: #{$tlp-swatch-chrome-silver-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAN0lEQVQoU2NkIBIwEqmOAZvC/1DNKHLoCmGKYBbB5ZEVoitCUUyWQpAJRFkNs4ooz+AMLaLDEQDzRQYLoXGuIgAAAABJRU5ErkJggg==');
+}
+
+.tlp-swatch-firemist-silver {
+    --primary-color: #{$tlp-swatch-firemist-silver};
+    --secondary-color: #{$tlp-swatch-firemist-silver-secondary};
+    --border-color: #{$tlp-swatch-firemist-silver-border};
+    --text-color: #{$tlp-swatch-firemist-silver-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAALklEQVQoU2NkIBIwEqmOgSKF/xkYMA1ANxGkCAZQ5LBZTZSJOP1GkWewmkq0iQC0cwMLy6sC+AAAAABJRU5ErkJggg==');
+}
+
+.tlp-swatch-red-wine {
+    --primary-color: #{$tlp-swatch-red-wine};
+    --secondary-color: #{$tlp-swatch-red-wine-secondary};
+    --border-color: #{$tlp-swatch-red-wine-border};
+    --text-color: #{$tlp-swatch-red-wine-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAKCAYAAAB8OZQwAAAAFElEQVQYV2NkgID/UBpEMTIOZUEAOBkKC6eV9MQAAAAASUVORK5CYII=');
+}
+
+.tlp-swatch-fiesta-red {
+    --primary-color: #{$tlp-swatch-fiesta-red};
+    --secondary-color: #{$tlp-swatch-fiesta-red-secondary};
+    --border-color: #{$tlp-swatch-fiesta-red-border};
+    --text-color: #{$tlp-swatch-fiesta-red-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAKCAYAAAB8OZQwAAAAE0lEQVQYV2NkQID/UCYj41AWBAAQQQoLL2tcTwAAAABJRU5ErkJggg==');
+}
+
+.tlp-swatch-coral-pink {
+    --primary-color: #{$tlp-swatch-coral-pink};
+    --secondary-color: #{$tlp-swatch-coral-pink-secondary};
+    --border-color: #{$tlp-swatch-coral-pink-border};
+    --text-color: #{$tlp-swatch-coral-pink-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAKCAYAAAB8OZQwAAAAGElEQVQYV2NkQID/DAwMjCAumICCIScIABBpCgsKzidJAAAAAElFTkSuQmCC');
+}
+
+.tlp-swatch-teddy-brown {
+    --primary-color: #{$tlp-swatch-teddy-brown};
+    --secondary-color: #{$tlp-swatch-teddy-brown-secondary};
+    --border-color: #{$tlp-swatch-teddy-brown-border};
+    --text-color: #{$tlp-swatch-teddy-brown-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJklEQVQoU2NkYGD4z0AEYKSJQiIsZmAAWU0UoI0biQ4eot1IlEIAK5wGBTsO21kAAAAASUVORK5CYII=');
+}
+
+.tlp-swatch-clockwork-orange {
+    --primary-color: #{$tlp-swatch-clockwork-orange};
+    --secondary-color: #{$tlp-swatch-clockwork-orange-secondary};
+    --border-color: #{$tlp-swatch-clockwork-orange-border};
+    --text-color: #{$tlp-swatch-clockwork-orange-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAJklEQVQoU2NkYGD4z0AEYCRFIRHmMTCATCQKkGQ10Z4h2mqiFAIAecMEBZ+4TpwAAAAASUVORK5CYII=');
+}
+
+.tlp-swatch-graffiti-yellow {
+    --primary-color: #{$tlp-swatch-graffiti-yellow};
+    --secondary-color: #{$tlp-swatch-graffiti-yellow-secondary};
+    --border-color: #{$tlp-swatch-graffiti-yellow-border};
+    --text-color: #{$tlp-swatch-graffiti-yellow-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAICAYAAADA+m62AAAAG0lEQVQoU2NkYGD4z0AEYCRCDVgJbRQOdjcCAOk3AgdaYQEOAAAAAElFTkSuQmCC');
+}
+
+.tlp-swatch-army-green {
+    --primary-color: #{$tlp-swatch-army-green};
+    --secondary-color: #{$tlp-swatch-army-green-secondary};
+    --border-color: #{$tlp-swatch-army-green-border};
+    --text-color: #{$tlp-swatch-army-green-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAJCAYAAAD+WDajAAAANUlEQVQoU2NkwAT/YUKMaHJwCQYGBkZkSRQJkCaYJIYETBKrBFE6YW7CaSdWBeheASmCmwAAqgwJCNMDfv0AAAAASUVORK5CYII=');
+}
+
+.tlp-swatch-neon-green {
+    --primary-color: #{$tlp-swatch-neon-green};
+    --secondary-color: #{$tlp-swatch-neon-green-secondary};
+    --border-color: #{$tlp-swatch-neon-green-border};
+    --text-color: #{$tlp-swatch-neon-green-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAJCAYAAAD+WDajAAAAMklEQVQoU2NkwAT/oUKMjGhycAmQOLIkigSyJIYETBKrBFE6YW7CaSdWBeheASmCmwAAqxIJCmDTh/IAAAAASUVORK5CYII=');
+}
+
+.tlp-swatch-acid-green {
+    --primary-color: #{$tlp-swatch-acid-green};
+    --secondary-color: #{$tlp-swatch-acid-green-secondary};
+    --border-color: #{$tlp-swatch-acid-green-border};
+    --text-color: #{$tlp-swatch-acid-green-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAJCAYAAAD+WDajAAAAM0lEQVQoU2NkwAT/GRgYGEHCYAIJwCXQJVEkkCUxJGCSWCWI0glzD047sSpA9wpIEdwEAKs2CQpUckTQAAAAAElFTkSuQmCC');
+}
+
+.tlp-swatch-sherwood-green {
+    --primary-color: #{$tlp-swatch-sherwood-green};
+    --secondary-color: #{$tlp-swatch-sherwood-green-secondary};
+    --border-color: #{$tlp-swatch-sherwood-green-border};
+    --text-color: #{$tlp-swatch-sherwood-green-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAKElEQVQoU2NkIBIwQtX9J6CekWyFMI0wC2A2YZg4gApxeZ50XxMMdgDcMAwL/F/cwAAAAABJRU5ErkJggg==');
+}
+
+.tlp-swatch-ocean-turquoise {
+    --primary-color: #{$tlp-swatch-ocean-turquoise};
+    --secondary-color: #{$tlp-swatch-ocean-turquoise-secondary};
+    --border-color: #{$tlp-swatch-ocean-turquoise-border};
+    --text-color: #{$tlp-swatch-ocean-turquoise-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAK0lEQVQoU2NkIBIwEqmOAVnhfxyawGrQFaLbANI82BRi8w+GG/GGFNHhCAARkQoLuHVJTgAAAABJRU5ErkJggg==');
+}
+
+.tlp-swatch-surf-green {
+    --primary-color: #{$tlp-swatch-surf-green};
+    --secondary-color: #{$tlp-swatch-surf-green-secondary};
+    --border-color: #{$tlp-swatch-surf-green-border};
+    --text-color: #{$tlp-swatch-surf-green-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAMUlEQVQoU2NkIBIwEqmOgWyF/9FsgBuEbiJIIUwMmY1hNUkKkW3HaTXOQCDb1zhNBADbdQYL29YF0gAAAABJRU5ErkJggg==');
+}
+
+.tlp-swatch-deep-blue {
+    --primary-color: #{$tlp-swatch-deep-blue};
+    --secondary-color: #{$tlp-swatch-deep-blue-secondary};
+    --border-color: #{$tlp-swatch-deep-blue-border};
+    --text-color: #{$tlp-swatch-deep-blue-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAARklEQVQoU2NkwAT/oUKMyFIoHAYGBpgimBq4PLJCdEUoimEKkRVhFQMJYlMEMw0uR5JCkG6irMawBi3EwG4mK3jQTUYxBABt4w4JizXljwAAAABJRU5ErkJggg==');
+}
+
+.tlp-swatch-lake-placid-blue {
+    --primary-color: #{$tlp-swatch-lake-placid-blue};
+    --secondary-color: #{$tlp-swatch-lake-placid-blue-secondary};
+    --border-color: #{$tlp-swatch-lake-placid-blue-border};
+    --text-color: #{$tlp-swatch-lake-placid-blue-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAARklEQVQoU2NkwAT/oUKMyFIoHAYGBpgimBq4PLJCdEUoimEKkRVhFQMJYlMEMw0uR5JCkG6irMawBi3EwG4mK3jQTUYxBABt4w4JizXljwAAAABJRU5ErkJggg==');
+}
+
+.tlp-swatch-daphne-blue {
+    --primary-color: #{$tlp-swatch-daphne-blue};
+    --secondary-color: #{$tlp-swatch-daphne-blue-secondary};
+    --border-color: #{$tlp-swatch-daphne-blue-border};
+    --text-color: #{$tlp-swatch-daphne-blue-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAO0lEQVQoU2NkIBIwEqmOAZvC/1DNKHLoCkGKYGLIbBQTUSSgpsLFkE0kWiHIEKKshgUAUZ7BGVpEhyMAAbEKCyJQyzEAAAAASUVORK5CYII=');
+}
+
+.tlp-swatch-plum-crazy {
+    --primary-color: #{$tlp-swatch-plum-crazy};
+    --secondary-color: #{$tlp-swatch-plum-crazy-secondary};
+    --border-color: #{$tlp-swatch-plum-crazy-border};
+    --text-color: #{$tlp-swatch-plum-crazy-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAMklEQVQoU2NkIBIwQtX9R1KPVYwihdgcwwgzESaJ7ASQGFyeZIXoJqFbD7ea+r4mGOwA3DAMC2da0w8AAAAASUVORK5CYII=');
+}
+
+.tlp-swatch-ultra-violet {
+    --primary-color: #{$tlp-swatch-ultra-violet};
+    --secondary-color: #{$tlp-swatch-ultra-violet-secondary};
+    --border-color: #{$tlp-swatch-ultra-violet-border};
+    --text-color: #{$tlp-swatch-ultra-violet-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAL0lEQVQoU2NkIBIwEqmOAVnhf6gmmBgKnyyFMFegmwwWx+ZGggpp50asIUZ0OAIAEZEKC7CvpQsAAAAASUVORK5CYII=');
+}
+
+.tlp-swatch-lilac-purple {
+    --primary-color: #{$tlp-swatch-lilac-purple};
+    --secondary-color: #{$tlp-swatch-lilac-purple-secondary};
+    --border-color: #{$tlp-swatch-lilac-purple-border};
+    --text-color: #{$tlp-swatch-lilac-purple-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAMUlEQVQoU2NkIBIwEqmOgWyF/xkYwJphNNxCbCZiKAKpRldIkolY/Ue2Z3CGFtEmAgB0kQULqk3wPgAAAABJRU5ErkJggg==');
+}
+
+.tlp-swatch-panther-pink {
+    --primary-color: #{$tlp-swatch-panther-pink};
+    --secondary-color: #{$tlp-swatch-panther-pink-secondary};
+    --border-color: #{$tlp-swatch-panther-pink-border};
+    --text-color: #{$tlp-swatch-panther-pink-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAFklEQVQYV2NkwAEYiZH4j6wIWQeFEgDL2QQDnNTt9AAAAABJRU5ErkJggg==');
+}
+
+.tlp-swatch-peggy-pink {
+    --primary-color: #{$tlp-swatch-peggy-pink};
+    --secondary-color: #{$tlp-swatch-peggy-pink-secondary};
+    --border-color: #{$tlp-swatch-peggy-pink-border};
+    --text-color: #{$tlp-swatch-peggy-pink-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAF0lEQVQYV2NkwAEYKZb4DzWBEd0ouAQALOQCBtacyWUAAAAASUVORK5CYII=');
+}
+
+.tlp-swatch-flamingo-pink {
+    --primary-color: #{$tlp-swatch-flamingo-pink};
+    --secondary-color: #{$tlp-swatch-flamingo-pink-secondary};
+    --border-color: #{$tlp-swatch-flamingo-pink-border};
+    --text-color: #{$tlp-swatch-flamingo-pink-text};
+    --accessibility-pattern: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAFCAYAAABmWJ3mAAAAFElEQVQYV2NkwAEYaSvxn4GBgREABvABBqnItn8AAAAASUVORK5CYII=');
+}
