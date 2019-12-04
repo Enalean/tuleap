@@ -169,18 +169,21 @@
     border-radius: 3px;
 }
 
-#provider-admin-modal-name-container {
+.provider-admin-modal-name-container {
     display: flex;
 }
 
-#provider-admin-modal-name {
+.provider-admin-modal-name {
     flex: 1 1 auto;
 }
 
-#provider-admin-modal-icon,
-#provider-admin-modal-color {
+.provider-admin-modal-icon,
+.provider-admin-modal-color,
+.provider-admin-modal-color:last-child {
     margin: 0 0 $tlp-spacing ($tlp-spacing * 2);
 }
+
+
 
 .provider-icon-selector,
 .provider-color-selector {
@@ -208,9 +211,9 @@
 }
 
 // Shim fa-circle-o from FontAwesome 4
-#provider-admin-modal-icon,
+.provider-admin-modal-icon,
 .provider-icon-results,
-#provider-admin-modal-provider-button {
+.provider-admin-modal-provider-button {
     .fa-circle-blank::before {
         font-family: FontAwesome;
         font-style: normal;
@@ -241,11 +244,11 @@
     }
 }
 
-#provider-admin-modal-userinfo-endpoint-container {
+.provider-admin-modal-userinfo-endpoint-container {
     margin: 0 0 ($tlp-spacing * 2);
 }
 
-#provider-admin-modal-provider-button-preview {
+.provider-admin-modal-provider-button-preview {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -253,12 +256,12 @@
     background-color: #f0f8ff;
 }
 
-#provider-admin-modal-preview-label {
+.provider-admin-modal-preview-label {
     font-weight: 600;
     line-height: 1.5;
 }
 
-#provider-admin-modal-provider-button {
+.provider-admin-modal-provider-button {
     @extend %color-list;
 
     transition: box-shadow 50ms linear;

@@ -89,11 +89,6 @@ class Presenter
         return dgettext('tuleap-openidconnectclient', 'Authorization endpoint');
     }
 
-    public function tenant_id()
-    {
-        return dgettext('tuleap-openidconnectclient', 'Tenant ID');
-    }
-
     public function token_endpoint()
     {
         return dgettext('tuleap-openidconnectclient', 'Token endpoint');
@@ -164,11 +159,6 @@ class Presenter
     public function unique_authentication_source_user_must_be_linked()
     {
         return dgettext('tuleap-openidconnectclient', 'You can only enable this provider as unique authentication method if you are yourself linked to it.');
-    }
-
-    public function add_new_provider()
-    {
-        return dgettext('tuleap-openidconnectclient', 'Add provider');
     }
 
     public function update_provider()

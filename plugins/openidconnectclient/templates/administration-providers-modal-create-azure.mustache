@@ -3,20 +3,20 @@
         class="tlp-modal siteadmin-config-providers-update-modal"
         tabindex="-1"
         role="dialog"
-        aria-labelledby="siteadmin-config-providers-modal-create-title"
+        aria-labelledby="siteadmin-config-providers-modal-create-azure-ad-title"
         aria-hidden="true"
 >
     <div class="tlp-modal-header">
         <h1
-                id="siteadmin-config-providers-modal-create-title"
+                id="siteadmin-config-providers-modal-create-azure-ad-title"
                 class="tlp-modal-title"
         >
-            <i class="fa fa-plus tlp-modal-title-icon"></i> {{ add_new_provider }}
+            <i class="fa fa-plus tlp-modal-title-icon"></i> {{# dgettext }} tuleap-openidconnectclient | Add Azure Active Directory provider {{/ dgettext }}
         </h1>
         <div
                 class="tlp-modal-close"
                 data-dismiss="modal"
-                aria-label="Close"
+                aria-label="{{# gettext }}Close{{/ gettext }}"
         >&times;</div>
     </div>
     <form method="post">
@@ -25,12 +25,50 @@
         {{/ csrf_token }}
         <input type="hidden" name="action" value="create-azure-provider">
         <div class="tlp-modal-body">
-            {{> administration-providers-create-form-begining}}
-            <div id="siteadmin-config-providers-modal-create-azure"
+            <div class="provider-admin-modal-name-container">
+                <div class="tlp-form-element provider-admin-modal-name">
+                    <label class="tlp-label" for="name-azure-ad">{{ name }} <i class="fa fa-asterisk"></i></label>
+                    <input
+                            type="text"
+                            class="tlp-input provider-name"
+                            id="name-azure-ad"
+                            name="name"
+                            placeholder="Azure Active Directory"
+                            required
+                    >
+                </div>
+                <div class="tlp-form-element provider-admin-modal-icon">
+                    <label class="tlp-label" for="icon">{{ icon }}</label>
+                    <select
+                            class="tlp-select provider-icon-selector"
+                            id="icon"
+                            name="icon"
+                    >
+                        <option value=""></option>
+                        {{# icons_presenters }}
+                            <option value="{{ icon }}"></option>
+                        {{/ icons_presenters }}
+                    </select>
+                </div>
+                <div class="tlp-form-element provider-admin-modal-color">
+                    <label class="tlp-label" for="color">{{ color }}</label>
+                    <select
+                            class="tlp-select provider-color-selector"
+                            id="color"
+                            name="color"
+                    >
+                        <option value=""></option>
+                        {{# colors_presenters }}
+                            <option value="{{ color }}"></option>
+                        {{/ colors_presenters }}
+                    </select>
+                </div>
+            </div>
+            <div
                  class="tlp-form-element">
                 <div class="tlp-form-element" id="tenant_id_container">
                     <label class="tlp-label" for="tenant_id">
-                        {{ tenant_id }} <i class="fa fa-asterisk"></i>
+                        {{# dgettext }} tuleap-openidconnectclient | Tenant ID {{/ dgettext }} <i class="fa fa-asterisk"></i>
                     </label>
                     <input
                             type="text"
@@ -41,7 +79,61 @@
                     >
                 </div>
             </div>
-            {{> administration-providers-create-form-ending}}
+            <div class="tlp-property">
+                <p class="tlp-text-info">
+                    <i class="fa fa-info-circle"></i> {{ client_help }} <br/>
+                    <b>{{ callback_url }}</b>
+                </p>
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="client_id">
+                    {{ client_id }} <i class="fa fa-asterisk"></i>
+                </label>
+                <input
+                        type="text"
+                        class="tlp-input"
+                        id="client_id"
+                        name="client_id"
+                        required
+                >
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="client_secret">
+                    {{ client_secret }} <i class="fa fa-asterisk"></i>
+                </label>
+                <input
+                        type="text"
+                        class="tlp-input"
+                        id="client_secret"
+                        name="client_secret"
+                        required
+                >
+            </div>
+            <div class="tlp-form-element">
+                <p class="tlp-label provider-admin-modal-preview-label">{{ preview }}</p>
+                <div class="provider-admin-modal-provider-button-preview">
+                    <button
+                            type="button"
+                            class="tlp-button-primary tlp-button-large provider-admin-modal-provider-button"
+                    >
+                        <i class="tlp-button-icon"></i>
+                        <span>{{ btn_preview }}</span>
+                    </button>
+                </div>
+            </div>
+            <div class="tlp-modal-footer">
+                <button
+                        type="button"
+                        class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                        data-dismiss="modal"
+                >{{ btn_cancel }}
+                </button>
+                <button type="submit" class="tlp-button-primary tlp-modal-action">
+                    <i class="fa fa-plus tlp-button-icon"></i> {{# dgettext }} tuleap-openidconnectclient | Add Azure Active Directory provider {{/ dgettext }}
+                </button>
+            </div>
         </div>
     </form>
 </div>

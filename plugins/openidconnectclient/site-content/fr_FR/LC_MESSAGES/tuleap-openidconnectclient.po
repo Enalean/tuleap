@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
+msgid "Add Azure Active Directory provider"
+msgstr "Ajouter un fournisseur s'appuyant sur Azure Active Directory"
+
 msgid "Add provider"
 msgstr "Ajouter un fournisseur"
 

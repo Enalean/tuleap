@@ -130,7 +130,6 @@ class openidconnectclientPlugin extends Plugin
     {
         if ($this->isInBurningParrotCompatiblePage()) {
             $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
             $params['stylesheets'][] = $this->getThemeIncludeAssets()->getFileURL('bp-style-' . $variant->getName() . '.css');
         }
     }
