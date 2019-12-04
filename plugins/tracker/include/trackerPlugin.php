@@ -136,6 +136,7 @@ use Tuleap\Tracker\Webhook\Actions\WebhookEditController;
 use Tuleap\Tracker\Webhook\Actions\WebhookURLValidator;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
+use Tuleap\Tracker\Widget\ProjectRendererWidgetXMLImporter;
 use Tuleap\Tracker\Workflow\WorkflowMenuTabPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowTransitionController;
 use Tuleap\Tracker\XMLTemplatesController;
@@ -145,6 +146,7 @@ use Tuleap\Upload\FileUploadController;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
+use Tuleap\Widget\Event\ConfigureAtXMLImport;
 use Tuleap\Widget\Event\GetPublicAreas;
 use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
@@ -250,6 +252,7 @@ class trackerPlugin extends Plugin
         $this->addHook(GetProjectWithTrackerAdministrationPermission::NAME);
 
         $this->addHook(CollectTuleapComputedMetrics::NAME);
+        $this->addHook(ConfigureAtXMLImport::NAME);
     }
 
     public function getHooksAndCallbacks()
@@ -2064,5 +2067,12 @@ class trackerPlugin extends Plugin
             'Number of tracker artifact changesets',
             (new Tracker_Artifact_ChangesetDao())->countChangesets()
         );
+    }
+
+    public function configureAtXMLImport(ConfigureAtXMLImport $event)
+    {
+        if ($event->getWidget()->getId() === Tracker_Widget_ProjectRenderer::ID) {
+            (new ProjectRendererWidgetXMLImporter())->import($event);
+        }
     }
 }

@@ -79,6 +79,11 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
         return $this->id;
     }
 
+    public function setId(int $id)
+    {
+        $this->id = $id;
+    }
+
     /**
      * @return string
      */
@@ -291,6 +296,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      */
     public function exportToXml(SimpleXMLElement $root, array $xmlMapping)
     {
+        $root->addAttribute('ID', 'R'.$this->id);
         $root->addAttribute('type', $this->getType());
         $root->addAttribute('rank', $this->rank);
         // if old ids are important, modify code here

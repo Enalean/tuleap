@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -248,13 +248,18 @@ class Tracker_ReportFactory
      * Creates a Tracker_Report Object
      *
      * @param SimpleXMLElement $xml         containing the structure of the imported report
-     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
+     * @param array            &$xmlMapping containing the newly created formElements indexed by their XML IDs
+     * @param array            &$renderers_xml_mapping containing the newly created renderers indexed by their XML IDs
      * @param int              $group_id    the Id of the project
      *
      * @return Tracker_Report Object
      */
-    public function getInstanceFromXML($xml, &$xmlMapping, $group_id)
-    {
+    public function getInstanceFromXML(
+        $xml,
+        &$xmlMapping,
+        array &$renderers_xml_mapping,
+        $group_id
+    ) {
         $att = $xml->attributes();
         $row = array('name' => (string)$xml->name,
                      'description' => (string)$xml->description);
@@ -293,7 +298,12 @@ class Tracker_ReportFactory
         foreach ($xml->renderers->renderer as $renderer) {
             $rend = $this->getRendererFactory()->getInstanceFromXML($renderer, $report, $xmlMapping);
             $report->renderers[] = $rend;
+
+            if (isset($renderer['ID'])) {
+                $renderers_xml_mapping[(string)$renderer['ID']] = $rend;
+            }
         }
+
         return $report;
     }
 
@@ -331,6 +341,7 @@ class Tracker_ReportFactory
             foreach ($report->renderers as $renderer) {
                 if ($renderer) {
                     $rendererId = $reportDB->addRenderer($renderer->name, $renderer->description, $renderer->getType());
+                    $renderer->setId($rendererId);
                     $rendererDB = Tracker_Report_RendererFactory::instance()->getReportRendererById($rendererId, $reportDB);
                     $rendererDB->afterSaveObject($renderer);
                 }
