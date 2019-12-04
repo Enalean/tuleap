@@ -21,8 +21,8 @@ import { ActionContext } from "vuex";
 import { RootState } from "../type";
 import { SwimlaneState, HandleDropPayload, ReorderCardsPayload, MoveCardsPayload } from "./type";
 import {
-    hasCardBeenDroppedInTheSameCell,
-    hasCardBeenDroppedInAnotherSwimlane,
+    isDraggedOverTheSourceCell,
+    isDraggedOverAnotherSwimlane,
     getCardFromSwimlane
 } from "../../helpers/html-to-item";
 import { getCardPosition } from "../../helpers/cards-reordering";
@@ -33,9 +33,9 @@ export function handleDrop(
     context: ActionContext<SwimlaneState, RootState>,
     payload: HandleDropPayload
 ): Promise<void> {
-    context.commit("removeHighlightOnLastHoveredDropZone");
+    context.commit("unsetDropZoneRejectingDrop");
 
-    if (hasCardBeenDroppedInAnotherSwimlane(payload.target_cell, payload.source_cell)) {
+    if (isDraggedOverAnotherSwimlane(payload.target_cell, payload.source_cell)) {
         return Promise.resolve();
     }
 
@@ -57,7 +57,7 @@ export function handleDrop(
     const sibling = getCardFromSwimlane(swimlane, payload.sibling_card);
     const cards_in_cell = context.getters.cards_in_cell(swimlane, column);
 
-    if (hasCardBeenDroppedInTheSameCell(payload.target_cell, payload.source_cell)) {
+    if (isDraggedOverTheSourceCell(payload.target_cell, payload.source_cell)) {
         if (isSoloCard(swimlane) || cards_in_cell.length <= 1) {
             return Promise.resolve();
         }

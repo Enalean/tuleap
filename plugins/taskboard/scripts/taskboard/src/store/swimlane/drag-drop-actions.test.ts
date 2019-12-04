@@ -58,7 +58,7 @@ describe(`drag-drop-actions`, () => {
         it(`When the dropped card has been dropped in another swimlane,
             it will do nothing`, async () => {
             const hasBeenDropped = jest
-                .spyOn(item_finder, "hasCardBeenDroppedInAnotherSwimlane")
+                .spyOn(item_finder, "isDraggedOverAnotherSwimlane")
                 .mockReturnValue(true);
 
             const payload = createPayload();
@@ -66,12 +66,12 @@ describe(`drag-drop-actions`, () => {
 
             expect(hasBeenDropped).toHaveBeenCalledWith(payload.target_cell, payload.source_cell);
             expect(context.dispatch).not.toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("removeHighlightOnLastHoveredDropZone");
+            expect(context.commit).toHaveBeenCalledWith("unsetDropZoneRejectingDrop");
         });
 
         it(`When the swimlane of the target cell can't be found,
             it will do nothing`, async () => {
-            jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(true);
+            jest.spyOn(item_finder, "isDraggedOverTheSourceCell").mockReturnValue(true);
 
             context.rootGetters.column_and_swimlane_of_cell.mockImplementation(() => {
                 return { swimlane: undefined, column: { id: 31 } as ColumnDefinition };
@@ -83,12 +83,12 @@ describe(`drag-drop-actions`, () => {
                 payload.target_cell
             );
             expect(context.dispatch).not.toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("removeHighlightOnLastHoveredDropZone");
+            expect(context.commit).toHaveBeenCalledWith("unsetDropZoneRejectingDrop");
         });
 
         it(`When the column of the target cell can't be found,
                 it will do nothing`, async () => {
-            jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(true);
+            jest.spyOn(item_finder, "isDraggedOverTheSourceCell").mockReturnValue(true);
 
             context.rootGetters.column_and_swimlane_of_cell.mockImplementation(() => {
                 return { swimlane: { card: { id: 543 } } as Swimlane, column: undefined };
@@ -100,12 +100,12 @@ describe(`drag-drop-actions`, () => {
                 payload.target_cell
             );
             expect(context.dispatch).not.toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("removeHighlightOnLastHoveredDropZone");
+            expect(context.commit).toHaveBeenCalledWith("unsetDropZoneRejectingDrop");
         });
 
         it(`When the dropped card can't be found in the state,
             it will do nothing`, async () => {
-            jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(true);
+            jest.spyOn(item_finder, "isDraggedOverTheSourceCell").mockReturnValue(true);
             const column = { id: 31, label: "Todo" } as ColumnDefinition;
             const swimlane = { card: { id: 543, has_children: true } } as Swimlane;
             context.rootGetters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
@@ -117,12 +117,12 @@ describe(`drag-drop-actions`, () => {
 
             expect(getCard).toHaveBeenCalledWith(swimlane, payload.dropped_card);
             expect(context.dispatch).not.toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("removeHighlightOnLastHoveredDropZone");
+            expect(context.commit).toHaveBeenCalledWith("unsetDropZoneRejectingDrop");
         });
 
         it(`When there is no sibling card,
             it will reorder cards in the cell`, async () => {
-            jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(true);
+            jest.spyOn(item_finder, "isDraggedOverTheSourceCell").mockReturnValue(true);
             const column = { id: 31, label: "Todo" } as ColumnDefinition;
             const swimlane = { card: { id: 543 } } as Swimlane;
             context.rootGetters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
@@ -148,12 +148,12 @@ describe(`drag-drop-actions`, () => {
                 column,
                 position
             });
-            expect(context.commit).toHaveBeenCalledWith("removeHighlightOnLastHoveredDropZone");
+            expect(context.commit).toHaveBeenCalledWith("unsetDropZoneRejectingDrop");
         });
 
         it(`Given a dropped card and a target cell,
             it will reorder cards in the cell`, async () => {
-            jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(true);
+            jest.spyOn(item_finder, "isDraggedOverTheSourceCell").mockReturnValue(true);
             const column = { id: 31, label: "Todo" } as ColumnDefinition;
             const swimlane = { card: { id: 543 } } as Swimlane;
             context.rootGetters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
@@ -179,7 +179,7 @@ describe(`drag-drop-actions`, () => {
                 column,
                 position
             });
-            expect(context.commit).toHaveBeenCalledWith("removeHighlightOnLastHoveredDropZone");
+            expect(context.commit).toHaveBeenCalledWith("unsetDropZoneRejectingDrop");
         });
 
         it(`Given a dropped card, a target cell but no children inside,
@@ -192,7 +192,7 @@ describe(`drag-drop-actions`, () => {
             const card = { id: 667, label: "Do the stuff" } as Card;
             const sibling = null;
 
-            jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(false);
+            jest.spyOn(item_finder, "isDraggedOverTheSourceCell").mockReturnValue(false);
             jest.spyOn(item_finder, "getCardFromSwimlane")
                 .mockReturnValueOnce(card)
                 .mockReturnValueOnce(sibling);
@@ -210,7 +210,7 @@ describe(`drag-drop-actions`, () => {
                 swimlane,
                 column
             });
-            expect(context.commit).toHaveBeenCalledWith("removeHighlightOnLastHoveredDropZone");
+            expect(context.commit).toHaveBeenCalledWith("unsetDropZoneRejectingDrop");
         });
 
         it(`Given a dropped card, a target cell with some children inside,
@@ -223,7 +223,7 @@ describe(`drag-drop-actions`, () => {
             const card = { id: 667, label: "Do the stuff" } as Card;
             const sibling = { id: 778, label: "Documentation" } as Card;
 
-            jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(false);
+            jest.spyOn(item_finder, "isDraggedOverTheSourceCell").mockReturnValue(false);
             jest.spyOn(item_finder, "getCardFromSwimlane")
                 .mockReturnValueOnce(card)
                 .mockReturnValueOnce(sibling);
@@ -248,7 +248,7 @@ describe(`drag-drop-actions`, () => {
                 column,
                 position
             });
-            expect(context.commit).toHaveBeenCalledWith("removeHighlightOnLastHoveredDropZone");
+            expect(context.commit).toHaveBeenCalledWith("unsetDropZoneRejectingDrop");
         });
 
         it(`Given a dropped card in a solo card swimlane,
@@ -259,7 +259,7 @@ describe(`drag-drop-actions`, () => {
 
             context.rootGetters.column_and_swimlane_of_cell.mockReturnValue({ column, swimlane });
 
-            jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(false);
+            jest.spyOn(item_finder, "isDraggedOverTheSourceCell").mockReturnValue(false);
             jest.spyOn(item_finder, "getCardFromSwimlane")
                 .mockReturnValueOnce(card)
                 .mockReturnValueOnce(null);
@@ -277,7 +277,7 @@ describe(`drag-drop-actions`, () => {
                 swimlane,
                 column
             });
-            expect(context.commit).toHaveBeenCalledWith("removeHighlightOnLastHoveredDropZone");
+            expect(context.commit).toHaveBeenCalledWith("unsetDropZoneRejectingDrop");
         });
 
         it(`
@@ -293,7 +293,7 @@ describe(`drag-drop-actions`, () => {
 
             const sibling = null;
 
-            jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(true);
+            jest.spyOn(item_finder, "isDraggedOverTheSourceCell").mockReturnValue(true);
             jest.spyOn(item_finder, "getCardFromSwimlane")
                 .mockReturnValueOnce(card)
                 .mockReturnValueOnce(sibling);
@@ -322,7 +322,7 @@ describe(`drag-drop-actions`, () => {
 
             const sibling = null;
 
-            jest.spyOn(item_finder, "hasCardBeenDroppedInTheSameCell").mockReturnValue(true);
+            jest.spyOn(item_finder, "isDraggedOverTheSourceCell").mockReturnValue(true);
             jest.spyOn(item_finder, "getCardFromSwimlane")
                 .mockReturnValueOnce(card)
                 .mockReturnValueOnce(sibling);

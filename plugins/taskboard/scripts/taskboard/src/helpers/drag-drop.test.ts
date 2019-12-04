@@ -90,7 +90,7 @@ describe(`drag-drop helper`, () => {
 
         beforeEach(() => {
             swimlane_state = {
-                last_hovered_drop_zone: undefined
+                dropzone_rejecting_drop: undefined
             } as SwimlaneState;
 
             store = ({
@@ -174,7 +174,7 @@ describe(`drag-drop helper`, () => {
             const target_cell = createElement();
             const source_cell = createElement();
 
-            jest.spyOn(item_finder, "hasCardBeenDroppedInAnotherSwimlane").mockReturnValue(true);
+            jest.spyOn(item_finder, "isDraggedOverAnotherSwimlane").mockReturnValue(true);
 
             expect(
                 drag_drop.checkCellAcceptsDrop(store, { dropped_card, target_cell, source_cell })
@@ -189,7 +189,7 @@ describe(`drag-drop helper`, () => {
             dropped_card.setAttribute("data-tracker-id", "10");
             target_cell.setAttribute("data-accepted-trackers-ids", "10,11,12");
 
-            jest.spyOn(item_finder, "hasCardBeenDroppedInAnotherSwimlane").mockReturnValue(false);
+            jest.spyOn(item_finder, "isDraggedOverAnotherSwimlane").mockReturnValue(false);
 
             expect(
                 drag_drop.checkCellAcceptsDrop(store, { dropped_card, target_cell, source_cell })
@@ -201,16 +201,38 @@ describe(`drag-drop helper`, () => {
             const target_cell = createElement();
             const source_cell = createElement();
 
-            jest.spyOn(item_finder, "hasCardBeenDroppedInAnotherSwimlane").mockReturnValue(false);
+            jest.spyOn(item_finder, "isDraggedOverAnotherSwimlane").mockReturnValue(false);
+
+            dropped_card.setAttribute("data-tracker-id", "9");
+            dropped_card.setAttribute("data-column-id", "1");
+            target_cell.setAttribute("data-accepted-trackers-ids", "10,11,12");
+            target_cell.setAttribute("data-column-id", "2");
+
+            expect(
+                drag_drop.checkCellAcceptsDrop(store, { dropped_card, target_cell, source_cell })
+            ).toBe(false);
+
+            expect(store.commit).toHaveBeenCalledWith(
+                "swimlane/setDropZoneRejectingDrop",
+                target_cell
+            );
+        });
+
+        it(`When the user has not the right to update the mapped field
+            And the target column is the source column,
+            Then it will return true`, () => {
+            const dropped_card = createElement();
+            const source_cell = createElement();
+            const target_cell = source_cell;
+
+            jest.spyOn(item_finder, "isDraggedOverAnotherSwimlane").mockReturnValue(false);
 
             dropped_card.setAttribute("data-tracker-id", "9");
             target_cell.setAttribute("data-accepted-trackers-ids", "10,11,12");
 
             expect(
                 drag_drop.checkCellAcceptsDrop(store, { dropped_card, target_cell, source_cell })
-            ).toBe(false);
-
-            expect(store.commit).toHaveBeenCalledWith("swimlane/setHighlightOnLastHoveredDropZone");
+            ).toBe(true);
         });
     });
 });

@@ -18,7 +18,7 @@
  */
 
 import { HandleDragPayload } from "../store/swimlane/type";
-import { hasCardBeenDroppedInAnotherSwimlane } from "./html-to-item";
+import { isDraggedOverAnotherSwimlane, isDraggedOverTheSourceCell } from "./html-to-item";
 import { Store } from "vuex";
 import { RootState } from "../store/type";
 
@@ -52,29 +52,37 @@ export function checkCellAcceptsDrop(store: Store<RootState>, payload: HandleDra
         !(payload.target_cell instanceof HTMLElement) ||
         !(payload.source_cell instanceof HTMLElement)
     ) {
-        store.commit("swimlane/removeHighlightOnLastHoveredDropZone");
-        return false;
-    }
-
-    if (hasCardBeenDroppedInAnotherSwimlane(payload.target_cell, payload.source_cell)) {
-        store.commit("swimlane/removeHighlightOnLastHoveredDropZone");
+        store.commit("swimlane/unsetDropZoneRejectingDrop");
 
         return false;
     }
 
-    store.commit("swimlane/removeHighlightOnLastHoveredDropZone");
-    store.commit("swimlane/setLastHoveredDropZone", payload.target_cell);
-
-    if (!isDropAcceptedInTarget(payload.dropped_card, payload.target_cell)) {
-        store.commit("swimlane/setHighlightOnLastHoveredDropZone");
+    if (isDraggedOverAnotherSwimlane(payload.target_cell, payload.source_cell)) {
+        store.commit("swimlane/unsetDropZoneRejectingDrop");
 
         return false;
     }
+
+    if (!isDropAcceptedInTarget(payload.dropped_card, payload.target_cell, payload.source_cell)) {
+        store.commit("swimlane/setDropZoneRejectingDrop", payload.target_cell);
+
+        return false;
+    }
+
+    store.commit("swimlane/unsetDropZoneRejectingDrop");
 
     return true;
 }
 
-function isDropAcceptedInTarget(dropped_card: HTMLElement, target_cell: HTMLElement): boolean {
+function isDropAcceptedInTarget(
+    dropped_card: HTMLElement,
+    target_cell: HTMLElement,
+    source_cell: HTMLElement
+): boolean {
+    if (isDraggedOverTheSourceCell(target_cell, source_cell)) {
+        return true; // Allow reordering
+    }
+
     const tracker_id: string | undefined = dropped_card.dataset.trackerId;
     const accepted_trackers_ids: string | undefined = target_cell.dataset.acceptedTrackersIds;
 

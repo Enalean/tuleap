@@ -55,6 +55,16 @@
     border-bottom: 3px solid $tlp-ui-border-normal;
     vertical-align: top;
 
+    &.taskboard-drop-not-accepted {
+        > .taskboard-drop-not-accepted-overlay {
+            display: flex;
+        }
+
+        >.taskboard-draggable-item {
+            display: none;
+        }
+    }
+
     &:first-child {
         background: mix($tlp-theme-background-color, $tlp-ui-white, 60%);
 

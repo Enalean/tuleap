@@ -33,16 +33,6 @@ describe("CellDisallowsDropOverlay", () => {
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Does not render if the drop is not rejected", async () => {
-        const wrapper = shallowMount(CellDisallowsDropOverlay, {
-            propsData: {
-                isDropRejected: false
-            },
-            localVue: await createTaskboardLocalVue()
-        });
-        expect(wrapper.isEmpty()).toBe(true);
-    });
-
     it("Does not render the error message when the column is collapsed", async () => {
         const wrapper = shallowMount(CellDisallowsDropOverlay, {
             propsData: {

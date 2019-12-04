@@ -20,17 +20,17 @@
 
 <template>
     <div class="taskboard-cell"
-         v-bind:class="[classes, dropzone_classes]"
+         v-bind:class="classes"
          v-on:mouseenter="mouseEntersCollapsedColumn"
          v-on:mouseout="mouseLeavesCollapsedColumn"
          v-on:click="expandCollapsedColumn"
-         v-bind:data-is-container="does_cell_allow_drop(swimlane, column)"
+         data-is-container="true"
          v-bind:data-swimlane-id="swimlane.card.id"
          v-bind:data-column-id="column.id"
          v-bind:data-accepted-trackers-ids="accepted_trackers_ids(column)"
     >
-        <slot v-if="!column.is_collapsed && ! is_overlay_displayed"></slot>
-        <cell-disallows-drop-overlay v-bind:is-column-collapsed="column.is_collapsed" v-bind:is-drop-rejected="is_overlay_displayed"/>
+        <slot class="content" v-if="!column.is_collapsed"></slot>
+        <cell-disallows-drop-overlay v-bind:is-column-collapsed="column.is_collapsed"/>
     </div>
 </template>
 
@@ -44,7 +44,6 @@ import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
 import { ColumnDefinition, Swimlane } from "../../../../../type";
 
 const column_store = namespace("column");
-const swimlane = namespace("swimlane");
 
 @Component({
     components: { CellDisallowsDropOverlay }
@@ -62,23 +61,5 @@ export default class DropContainerCell extends Mixins(
 
     @column_store.Getter
     readonly accepted_trackers_ids!: (column: ColumnDefinition) => number[];
-
-    @swimlane.Getter
-    readonly does_cell_reject_drop!: (swimlane: Swimlane, column: ColumnDefinition) => boolean;
-
-    @swimlane.Getter
-    readonly does_cell_allow_drop!: (swimlane: Swimlane, column: ColumnDefinition) => boolean;
-
-    get dropzone_classes(): string {
-        if (this.does_cell_reject_drop(this.swimlane, this.column)) {
-            return "taskboard-drop-not-accepted";
-        }
-
-        return "";
-    }
-
-    get is_overlay_displayed(): boolean {
-        return this.does_cell_reject_drop(this.swimlane, this.column);
-    }
 }
 </script>

@@ -85,7 +85,7 @@ export default class TaskBoard extends Vue {
     handleDrop!: (payload: HandleDropPayload) => void;
 
     @swimlane.Mutation
-    readonly removeHighlightOnLastHoveredDropZone!: () => void;
+    readonly unsetDropZoneRejectingDrop!: () => void;
 
     private drake!: Drake | undefined;
 
@@ -125,7 +125,7 @@ export default class TaskBoard extends Vue {
             ) => this.handleDrop({ dropped_card, target_cell, source_cell, sibling_card })
         );
 
-        this.drake.on("cancel", this.removeHighlightOnLastHoveredDropZone);
+        this.drake.on("cancel", this.unsetDropZoneRejectingDrop);
         this.drake.on("drag", this.setIdOfCardBeingDragged);
         this.drake.on("dragend", this.resetIdOfCardBeingDragged);
 
