@@ -22,6 +22,7 @@ namespace Tuleap\PullRequest\Reference;
 
 use ForgeConfig;
 use GitRepository;
+use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\PullRequest\PullRequest;
 
 class HTMLURLBuilder
@@ -30,10 +31,15 @@ class HTMLURLBuilder
      * @var \GitRepositoryFactory
      */
     private $git_repository_factory;
+    /**
+     * @var InstanceBaseURLBuilder
+     */
+    private $instance_base_url_builder;
 
-    public function __construct(\GitRepositoryFactory $git_repository_factory)
+    public function __construct(\GitRepositoryFactory $git_repository_factory, InstanceBaseURLBuilder $instance_base_url_builder)
     {
-        $this->git_repository_factory = $git_repository_factory;
+        $this->git_repository_factory    = $git_repository_factory;
+        $this->instance_base_url_builder = $instance_base_url_builder;
     }
 
     public function getPullRequestOverviewUrl(PullRequest $pull_request): string
@@ -47,13 +53,7 @@ class HTMLURLBuilder
 
     public function getAbsolutePullRequestOverviewUrl(PullRequest $pull_request): string
     {
-        if (empty(ForgeConfig::get('sys_https_host', ''))) {
-            $base_server_url = 'http://' . ForgeConfig::get('sys_default_domain');
-        } else {
-            $base_server_url = 'https://' . ForgeConfig::get('sys_https_host');
-        }
-
-        return $base_server_url . $this->getPullRequestOverviewUrl($pull_request);
+        return $this->instance_base_url_builder->build() . $this->getPullRequestOverviewUrl($pull_request);
     }
 
     public function getPullRequestDashboardUrl(GitRepository $repository)

@@ -20,23 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\Notification;
+namespace Tuleap;
 
-use Tuleap\PullRequest\PullRequest;
+use ForgeConfig;
 
-/**
- * @psalm-immutable
- */
-interface NotificationToProcess
+class InstanceBaseURLBuilder
 {
-    public function getPullRequest(): PullRequest;
-
-    /**
-     * @return \PFUser[]
-     */
-    public function getRecipients(): array;
-
-    public function asPlaintext(): string;
-
-    public function asEnhancedContent(): NotificationEnhancedContent;
+    public function build(): string
+    {
+        if (empty(ForgeConfig::get('sys_https_host', ''))) {
+            return 'http://' . ForgeConfig::get('sys_default_domain');
+        }
+        return 'https://' . ForgeConfig::get('sys_https_host');
+    }
 }

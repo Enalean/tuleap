@@ -34,6 +34,10 @@ class UserHelper
     var $_cache_by_id;
     var $_cache_by_username;
     var $_userdao;
+    /**
+     * @var \Tuleap\InstanceBaseURLBuilder
+     */
+    private $instance_base_url_builder;
 
     /**
      * Constructor
@@ -41,10 +45,11 @@ class UserHelper
      */
     public function __construct()
     {
-        $this->_username_display = $this->_getCurrentUserUsernameDisplayPreference();
-        $this->_cache_by_id = array();
-        $this->_cache_by_username = array();
-        $this->_userdao = $this->_getuserDao();
+        $this->_username_display         = $this->_getCurrentUserUsernameDisplayPreference();
+        $this->_cache_by_id              = array();
+        $this->_cache_by_username        = array();
+        $this->_userdao                  = $this->_getuserDao();
+        $this->instance_base_url_builder = new \Tuleap\InstanceBaseURLBuilder();
     }
 
     protected static $_instance;
@@ -308,6 +313,11 @@ class UserHelper
     public function getUserUrl(PFUser $user)
     {
         return "/users/".urlencode($user->getName());
+    }
+
+    public function getAbsoluteUserURL(PFUser $user): string
+    {
+        return $this->instance_base_url_builder->build() . $this->getUserUrl($user);
     }
 
     /**

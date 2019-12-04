@@ -20,23 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PullRequest\Notification;
+namespace Tuleap;
 
-use Tuleap\PullRequest\PullRequest;
+use PHPUnit\Framework\TestCase;
 
-/**
- * @psalm-immutable
- */
-interface NotificationToProcess
+final class InstanceBaseURLBuilderTest extends TestCase
 {
-    public function getPullRequest(): PullRequest;
+    use ForgeConfigSandbox;
 
-    /**
-     * @return \PFUser[]
-     */
-    public function getRecipients(): array;
+    public function testInstanceBaseURLIsHTTPSByDefault(): void
+    {
+        \ForgeConfig::set('sys_https_host', 'example.com');
 
-    public function asPlaintext(): string;
+        $instance_base_url_builder = new InstanceBaseURLBuilder();
 
-    public function asEnhancedContent(): NotificationEnhancedContent;
+        $this->assertEquals('https://example.com', $instance_base_url_builder->build());
+    }
+
+    public function testInstanceBaseURLFallbackToHTTPWhenHTTPSIsNotAvailable(): void
+    {
+        \ForgeConfig::set('sys_default_domain', 'cleartext.example.com');
+
+        $instance_base_url_builder = new InstanceBaseURLBuilder();
+
+        $this->assertEquals('http://cleartext.example.com', $instance_base_url_builder->build());
+    }
 }

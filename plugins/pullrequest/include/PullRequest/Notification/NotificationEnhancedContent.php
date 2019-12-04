@@ -22,21 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Notification;
 
-use Tuleap\PullRequest\PullRequest;
-
-/**
- * @psalm-immutable
- */
-interface NotificationToProcess
+interface NotificationEnhancedContent
 {
-    public function getPullRequest(): PullRequest;
-
-    /**
-     * @return \PFUser[]
-     */
-    public function getRecipients(): array;
-
-    public function asPlaintext(): string;
-
-    public function asEnhancedContent(): NotificationEnhancedContent;
+    public function toString(): string;
 }

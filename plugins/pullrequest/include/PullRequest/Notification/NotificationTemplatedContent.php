@@ -22,21 +22,35 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Notification;
 
-use Tuleap\PullRequest\PullRequest;
+use TemplateRenderer;
 
-/**
- * @psalm-immutable
- */
-interface NotificationToProcess
+final class NotificationTemplatedContent implements NotificationEnhancedContent
 {
-    public function getPullRequest(): PullRequest;
-
     /**
-     * @return \PFUser[]
+     * @var TemplateRenderer
      */
-    public function getRecipients(): array;
+    private $renderer;
+    /**
+     * @var string
+     */
+    private $template_name;
+    /**
+     * @var object
+     */
+    private $presenter;
 
-    public function asPlaintext(): string;
+    public function __construct(TemplateRenderer $renderer, string $template_name, object $presenter)
+    {
+        $this->renderer      = $renderer;
+        $this->template_name = $template_name;
+        $this->presenter     = $presenter;
+    }
 
-    public function asEnhancedContent(): NotificationEnhancedContent;
+    public function toString(): string
+    {
+        return $this->renderer->renderToString(
+            $this->template_name,
+            $this->presenter
+        );
+    }
 }

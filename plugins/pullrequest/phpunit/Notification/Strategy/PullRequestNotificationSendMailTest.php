@@ -26,10 +26,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
+use Tuleap\PullRequest\Notification\NotificationEnhancedContent;
 use Tuleap\PullRequest\Notification\NotificationToProcess;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
-use function Clue\StreamFilter\fun;
 
 final class PullRequestNotificationSendMailTest extends TestCase
 {
@@ -70,7 +70,6 @@ final class PullRequestNotificationSendMailTest extends TestCase
             $this->pull_request_permission_checker,
             $this->repository_factory,
             $this->html_url_builder,
-            \Codendi_HTMLPurifier::instance(),
         );
     }
 
@@ -178,7 +177,17 @@ final class PullRequestNotificationSendMailTest extends TestCase
 
             public function asPlaintext(): string
             {
-                return 'Mail body';
+                return 'Plaintext mail body';
+            }
+
+            public function asEnhancedContent(): NotificationEnhancedContent
+            {
+                return new class implements NotificationEnhancedContent {
+                    public function toString() : string
+                    {
+                        return 'Markup content mail body';
+                    }
+                };
             }
         };
     }
