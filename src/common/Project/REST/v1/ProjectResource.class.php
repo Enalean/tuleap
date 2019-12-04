@@ -37,6 +37,8 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
+use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
+use Tuleap\Project\Admin\Categories\TroveSetNodeFacade;
 use Tuleap\Project\Banner\BannerCreator;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerPermissionsChecker;
@@ -1723,6 +1725,13 @@ class ProjectResource extends AuthenticatedResource
             TemplateFactory::build(),
             new ProjectRegistrationUserPermissionChecker(
                 new \ProjectDao()
+            ),
+            new ProjectCategoriesUpdater(
+                new \TroveCatFactory(
+                    new \TroveCatDao(),
+                ),
+                new \ProjectHistoryDao(),
+                new TroveSetNodeFacade(),
             ),
         );
     }

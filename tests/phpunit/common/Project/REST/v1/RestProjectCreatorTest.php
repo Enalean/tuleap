@@ -38,6 +38,8 @@ use Service;
 use ServiceManager;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Project\Admin\Categories\CategoryCollection;
+use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
@@ -75,6 +77,10 @@ class RestProjectCreatorTest extends TestCase
      * @var M\LegacyMockInterface|M\MockInterface|TemplateDao
      */
     private $template_dao;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|ProjectCategoriesUpdater
+     */
+    private $categories_updater;
 
     protected function setUp(): void
     {
@@ -86,7 +92,8 @@ class RestProjectCreatorTest extends TestCase
         $this->project_XML_importer = M::mock(ProjectXMLImporter::class);
         $this->permissions_checker  = M::mock(ProjectRegistrationUserPermissionChecker::class);
         $this->permissions_checker->shouldReceive('checkUserCreateAProject')->byDefault();
-        $this->template_dao         = M::mock(TemplateDao::class);
+        $this->template_dao       = M::mock(TemplateDao::class);
+        $this->categories_updater = M::mock(ProjectCategoriesUpdater::class);
 
         $this->creator              = new RestProjectCreator(
             $this->project_manager,
@@ -107,7 +114,8 @@ class RestProjectCreatorTest extends TestCase
                 ),
                 $this->template_dao,
             ),
-            $this->permissions_checker
+            $this->permissions_checker,
+            $this->categories_updater,
         );
 
         $this->user = new \PFUser(['language_id' => 'en_US']);
@@ -241,5 +249,35 @@ class RestProjectCreatorTest extends TestCase
         $this->template_dao->shouldReceive('saveTemplate')->with($new_project, ScrumTemplate::NAME)->once();
 
         $this->assertSame($new_project, $this->creator->create($this->user, $this->project));
+    }
+
+    public function testItCreatesWithSelectedCategories()
+    {
+        $this->project->template_id = 100;
+        $this->project->shortname = 'gpig';
+        $this->project->label = 'Guinea Pig';
+        $this->project->description = 'foo';
+        $this->project->is_public = false;
+        $this->project->allow_restricted = false;
+        $this->project->categories = [
+            CategoryPostRepresentation::build(14, 89),
+            CategoryPostRepresentation::build(18, 53)
+        ];
+
+        $template_project = M::mock(Project::class, ['isError' => false, 'isActive' => false, 'isTemplate' => true]);
+        $new_project = new \Project(['group_id' => 201]);
+
+        $this->project_manager->shouldReceive('getProject')->with($this->project->template_id)->andReturn($template_project);
+        $this->project_creator->shouldReceive('createFromRest')->with('gpig', 'Guinea Pig', M::andAnyOtherArgs())->once()->andReturn($new_project);
+
+        $this->categories_updater->shouldReceive('update')->once()->with($new_project, M::on(static function (CategoryCollection $categories) {
+            [$category1, $category2] = $categories->getRootCategories();
+            $category1_child1 = $category1->getChildren()[0];
+            $category2_child1 = $category2->getChildren()[0];
+            return $category1->getId() === 14 && $category2->getId() === 18 &&
+                $category1_child1->getId() === 89 && $category2_child1->getId() === 53;
+        }));
+
+        $this->creator->create($this->user, $this->project);
     }
 }
