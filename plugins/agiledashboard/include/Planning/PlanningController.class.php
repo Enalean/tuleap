@@ -448,7 +448,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
 
     private function importConfiguration()
     {
-        $xml_importer = ProjectXMLImporter::build(new XMLImportHelper(UserManager::instance()));
+        $xml_importer = ProjectXMLImporter::build(new XMLImportHelper(UserManager::instance()), \ProjectCreator::buildSelfByPassValidation());
 
         try {
             $errors = $xml_importer->collectBlockingErrorsWithoutImporting(

@@ -102,6 +102,7 @@ class ProjectXMLImporterTest extends TestCase
             M::spy(\Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator::class),
             new \Rule_ProjectName(),
             new \Rule_ProjectFullName(),
+            Mockery::mock(EventManager::class),
             false
         );
 

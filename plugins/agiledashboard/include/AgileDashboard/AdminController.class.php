@@ -248,7 +248,8 @@ class AdminController extends BaseController
                     $this->planning_factory,
                     $this->tracker_factory,
                     ProjectXMLImporter::build(
-                        new XMLImportHelper(UserManager::instance())
+                        new XMLImportHelper(UserManager::instance()),
+                        \ProjectCreator::buildSelfByPassValidation()
                     )
                 ),
                 new ScrumForMonoMilestoneEnabler($scrum_mono_milestone_dao),
