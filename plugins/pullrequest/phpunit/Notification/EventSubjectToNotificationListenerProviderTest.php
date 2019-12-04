@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\Notification;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationStrategy;
 
 final class EventSubjectToNotificationListenerProviderTest extends TestCase
 {
@@ -35,11 +36,17 @@ final class EventSubjectToNotificationListenerProviderTest extends TestCase
 
         $listener_provider = new EventSubjectToNotificationListenerProvider([
             get_class($event_subject_notification_implementation) => [
-                static function (): NotificationToProcessBuilder {
-                    return \Mockery::mock(NotificationToProcessBuilder::class);
+                static function (): EventSubjectToNotificationListener {
+                    return new EventSubjectToNotificationListener(
+                        \Mockery::mock(PullRequestNotificationStrategy::class),
+                        \Mockery::mock(NotificationToProcessBuilder::class)
+                    );
                 },
-                static function (): NotificationToProcessBuilder {
-                    return \Mockery::mock(NotificationToProcessBuilder::class);
+                static function (): EventSubjectToNotificationListener {
+                    return new EventSubjectToNotificationListener(
+                        \Mockery::mock(PullRequestNotificationStrategy::class),
+                        \Mockery::mock(NotificationToProcessBuilder::class)
+                    );
                 }
             ]
         ]);

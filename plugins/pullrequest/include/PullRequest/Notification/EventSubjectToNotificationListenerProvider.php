@@ -31,13 +31,13 @@ final class EventSubjectToNotificationListenerProvider implements ListenerProvid
 {
     /**
      * @var callable[][]
-     * @psalm-var array<class-string<EventSubjectToNotification>,non-empty-array<callable():NotificationToProcessBuilder>>
+     * @psalm-var array<class-string<EventSubjectToNotification>,non-empty-array<callable():EventSubjectToNotificationListener>>
      */
     private $mapping;
 
     /**
      * @param callable[][] $mapping
-     * @psalm-param array<class-string<EventSubjectToNotification>,non-empty-array<callable():NotificationToProcessBuilder>>
+     * @psalm-param array<class-string<EventSubjectToNotification>,non-empty-array<callable():EventSubjectToNotificationListener>>
      */
     public function __construct(array $mapping)
     {
@@ -45,7 +45,7 @@ final class EventSubjectToNotificationListenerProvider implements ListenerProvid
     }
 
     /**
-     * @psalm-return array<callable():NotificationToProcessBuilder>
+     * @psalm-return array<callable():EventSubjectToNotificationListener>
      */
     public function getListenersForEvent(object $event): iterable
     {

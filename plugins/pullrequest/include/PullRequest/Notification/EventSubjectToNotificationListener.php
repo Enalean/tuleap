@@ -22,26 +22,35 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Notification;
 
-class PullRequestNotificationExecutor
+use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationStrategy;
+
+/**
+ * @psalm-immutable
+ */
+final class EventSubjectToNotificationListener
 {
     /**
-     * @var \Logger
+     * @var PullRequestNotificationStrategy
      */
-    private $logger;
+    private $strategy;
+    /**
+     * @var NotificationToProcessBuilder
+     */
+    private $builder;
 
-    public function __construct(\Logger $logger)
+    public function __construct(PullRequestNotificationStrategy $strategy, NotificationToProcessBuilder $builder)
     {
-        $this->logger = $logger;
+        $this->strategy = $strategy;
+        $this->builder  = $builder;
     }
 
-    public function execute(NotificationToProcess $notification): void
+    public function getNotificationStrategy(): PullRequestNotificationStrategy
     {
-        foreach ($notification->getRecipients() as $recipient) {
-            $this->logger->debug(sprintf(
-                'Will send mail to %s for %s',
-                $recipient->getEmail(),
-                $notification->asPlaintext()
-            ));
-        }
+        return $this->strategy;
+    }
+
+    public function getNotificationToProcessBuilder(): NotificationToProcessBuilder
+    {
+        return $this->builder;
     }
 }

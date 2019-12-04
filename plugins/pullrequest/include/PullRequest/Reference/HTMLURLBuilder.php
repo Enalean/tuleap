@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\PullRequest\Reference;
 
+use ForgeConfig;
 use GitRepository;
 use Tuleap\PullRequest\PullRequest;
 
@@ -35,13 +36,24 @@ class HTMLURLBuilder
         $this->git_repository_factory = $git_repository_factory;
     }
 
-    public function getPullRequestOverviewUrl(PullRequest $pull_request)
+    public function getPullRequestOverviewUrl(PullRequest $pull_request): string
     {
         $repository = $this->git_repository_factory->getRepositoryById($pull_request->getRepositoryId());
         $project_id = $repository->getProject()->getID();
         return '/plugins/git/?action=pull-requests&repo_id=' .
             urlencode($pull_request->getRepositoryId()) . '&group_id=' . urlencode($project_id) .
             '#/pull-requests/' . urlencode($pull_request->getId()) . '/overview';
+    }
+
+    public function getAbsolutePullRequestOverviewUrl(PullRequest $pull_request): string
+    {
+        if (empty(ForgeConfig::get('sys_https_host', ''))) {
+            $base_server_url = 'http://' . ForgeConfig::get('sys_default_domain');
+        } else {
+            $base_server_url = 'https://' . ForgeConfig::get('sys_https_host');
+        }
+
+        return $base_server_url . $this->getPullRequestOverviewUrl($pull_request);
     }
 
     public function getPullRequestDashboardUrl(GitRepository $repository)
