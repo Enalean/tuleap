@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 use Tuleap\Timetracking\Admin\AdminController;
 use Tuleap\Timetracking\Admin\AdminDao;
@@ -100,7 +101,14 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting // @codingStand
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0
         ) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+            $include_assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/timetracking/themes',
+                '/assets/timetracking/themes'
+            );
+
+            $style_css_url = $include_assets->getFileURL('style-fp.css');
+
+            echo '<link rel="stylesheet" type="text/css" href="'.$style_css_url.'" />';
         }
     }
 

@@ -137,10 +137,10 @@ class TimeTrackingOverview extends Widget
     public function getStylesheetDependencies()
     {
         $include_assets = new IncludeAssets(
-            __DIR__ . '/../../../www/themes/BurningParrot/assets',
-            TIMETRACKING_BASE_URL . '/themes/BurningParrot/assets'
+            __DIR__ . '/../../../../../src/www/assets/timetracking/themes',
+            '/assets/timetracking/themes'
         );
-        return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
+        return new CssAssetCollection([new CssAsset($include_assets, 'style-bp')]);
     }
 
     public function getUserPreferences(int $widget_id)

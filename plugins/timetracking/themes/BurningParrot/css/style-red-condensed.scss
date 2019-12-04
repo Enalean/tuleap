@@ -1,6 +1,5 @@
-<?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,5 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('TIMETRACKING_TEMPLATE_DIR', __DIR__.'/../templates');
-define('TIMETRACKING_BASE_URL', '/plugins/timetracking');
+@import '../../../../../src/www/themes/common/tlp/src/scss/variables/variables-red-condensed';
+
+@import 'widget';
