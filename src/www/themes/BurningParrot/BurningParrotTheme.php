@@ -75,7 +75,7 @@ class BurningParrotTheme extends BaseLayout
         $this->project_flags_builder    = new ProjectFlagsBuilder(new ProjectFlagsDao());
 
         $tlp_include_assets = new IncludeAssets(
-            ForgeConfig::get('tuleap_dir') . '/src/www/themes/common/tlp/dist',
+            __DIR__ . '/../../themes/common/tlp/dist',
             '/themes/common/tlp/dist'
         );
         $this->includeFooterJavascriptFile($tlp_include_assets->getFileURLWithFallback('tlp-' . $user->getLocale() . '.js', 'tlp-en_US.js'));

@@ -473,7 +473,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/tuleap-gulp-build.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/run_dev/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/php73/run.sh
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/common/tlp/webpack.config.js
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/FlamingParrot/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/themes/BurningParrot/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artifactsfolders/scripts/
@@ -844,6 +843,7 @@ fi
 %{APP_DIR}/src/www/assets/*.js
 %{APP_DIR}/src/www/assets/manifest.json
 %{APP_DIR}/src/www/assets/admindelegation
+%{APP_DIR}/src/www/assets/dashboards
 %{APP_DIR}/src/www/assets/statistics
 %{APP_DIR}/src/www/assets/projectlinks
 %{APP_DIR}/src/www/assets/ckeditor-*

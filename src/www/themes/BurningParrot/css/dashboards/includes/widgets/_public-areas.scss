@@ -17,5 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../common/tlp/src/scss/variables/variables-grey-condensed';
-@import './includes/dashboard';
+.dashboard-widget-content-projectpublicareas {
+    margin-right: $tlp-half-spacing / 2;
+}

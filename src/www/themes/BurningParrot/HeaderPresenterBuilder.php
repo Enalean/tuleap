@@ -22,14 +22,12 @@ namespace Tuleap\Theme\BurningParrot;
 
 use Event;
 use EventManager;
-use ForgeConfig;
 use HTTPRequest;
 use PFUser;
 use ThemeVariant;
 use ThemeVariantColor;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Layout\ThemeVariation;
@@ -171,27 +169,24 @@ class HeaderPresenterBuilder
 
     private function getStylesheets(ThemeVariation $theme_variation)
     {
-        $tlp_framework_base_css = new CssAssetWithoutVariantDeclinaisons(
+        $tlp_framework_css_asset = new CssAsset(
             new IncludeAssets(
-                __DIR__ . '/../../themes/common/tlp/dist/',
-                '/themes/common/tlp/dist/'
+                __DIR__ . '/../../themes/common/tlp/dist',
+                '/themes/common/tlp/dist'
             ),
-            'tlp' . $theme_variation->getFileColorCondensedSuffix()
+            'tlp'
         );
-
-        $stylesheets = [
-            $tlp_framework_base_css->getFileURL($theme_variation)
-        ];
-
-        $core_burning_parrot_css = new CssAsset(
+        $burning_parrot_css_asset = new CssAsset(
             new IncludeAssets(
-                ForgeConfig::get('tuleap_dir') . '/src/www/themes/BurningParrot/assets',
+                __DIR__ . '/assets',
                 '/themes/BurningParrot/assets'
             ),
             'burning-parrot'
         );
-        $stylesheets[] = $core_burning_parrot_css->getFileURL($theme_variation);
+        $css_assets = new CssAssetCollection([$tlp_framework_css_asset, $burning_parrot_css_asset]);
+        $this->css_assets = $css_assets->merge($this->css_assets);
 
+        $stylesheets = [];
         foreach ($this->css_assets->getDeduplicatedAssets() as $css_asset) {
             $stylesheets[] = $css_asset->getFileURL($theme_variation);
         }

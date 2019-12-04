@@ -7,44 +7,15 @@
                 "src/www/themes/common/css/style.scss"
             ],
             "target_dir": "src/www/themes/common/css"
-        },
-        "BurningParrot": {
-            "files": [
-                "src/www/themes/BurningParrot/css/burning-parrot-blue.scss",
-                "src/www/themes/BurningParrot/css/burning-parrot-blue-condensed.scss",
-                "src/www/themes/BurningParrot/css/burning-parrot-green.scss",
-                "src/www/themes/BurningParrot/css/burning-parrot-green-condensed.scss",
-                "src/www/themes/BurningParrot/css/burning-parrot-grey.scss",
-                "src/www/themes/BurningParrot/css/burning-parrot-grey-condensed.scss",
-                "src/www/themes/BurningParrot/css/burning-parrot-orange.scss",
-                "src/www/themes/BurningParrot/css/burning-parrot-orange-condensed.scss",
-                "src/www/themes/BurningParrot/css/burning-parrot-purple.scss",
-                "src/www/themes/BurningParrot/css/burning-parrot-purple-condensed.scss",
-                "src/www/themes/BurningParrot/css/burning-parrot-red.scss",
-                "src/www/themes/BurningParrot/css/burning-parrot-red-condensed.scss",
-                "src/www/themes/BurningParrot/css/dashboards-blue.scss",
-                "src/www/themes/BurningParrot/css/dashboards-blue-condensed.scss",
-                "src/www/themes/BurningParrot/css/dashboards-green.scss",
-                "src/www/themes/BurningParrot/css/dashboards-green-condensed.scss",
-                "src/www/themes/BurningParrot/css/dashboards-grey.scss",
-                "src/www/themes/BurningParrot/css/dashboards-grey-condensed.scss",
-                "src/www/themes/BurningParrot/css/dashboards-orange.scss",
-                "src/www/themes/BurningParrot/css/dashboards-orange-condensed.scss",
-                "src/www/themes/BurningParrot/css/dashboards-purple.scss",
-                "src/www/themes/BurningParrot/css/dashboards-purple-condensed.scss",
-                "src/www/themes/BurningParrot/css/dashboards-red.scss",
-                "src/www/themes/BurningParrot/css/dashboards-red-condensed.scss"
-            ],
-            "watched_includes": ["src/www/themes/BurningParrot/css/**/_*.scss"],
-            "target_dir": "src/www/themes/BurningParrot/assets",
-            "is_revisioned": true
         }
     },
     "components": [
         "src/www/themes/common/tlp/",
         "src/www/themes/FlamingParrot/",
         "src/www/scripts/",
-        "src/www/themes/BurningParrot/css/project-registration/"
+        "src/www/themes/BurningParrot/",
+        "src/www/themes/BurningParrot/css/project-registration/",
+        "src/www/themes/BurningParrot/css/dashboards/"
     ],
     "gettext-js": {
         "chart-builders": {
