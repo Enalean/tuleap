@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_provider (
     client_id TEXT NOT NULL DEFAULT '',
     client_secret TEXT NOT NULL DEFAULT '',
     unique_authentication_endpoint BOOLEAN DEFAULT FALSE,
-    icon VARCHAR(50) NULL,
-    color VARCHAR(20) NULL,
+    icon VARCHAR(50) NOT NULL,
+    color VARCHAR(20) NOT NULL,
     PRIMARY KEY(id)
 );
 
