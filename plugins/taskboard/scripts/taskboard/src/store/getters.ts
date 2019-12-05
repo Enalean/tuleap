@@ -44,12 +44,22 @@ export const column_and_swimlane_of_cell = (root_state: RootState) => (
     };
 };
 
-export const tracker_of_card = (root_state: RootState) => (card: Card): Tracker => {
-    const tracker = root_state.trackers.find(tracker => tracker.id === card.tracker_id);
+function findTracker(root_state: RootState, tracker_id: number): Tracker {
+    const tracker = root_state.trackers.find(tracker => tracker.id === tracker_id);
 
     if (!tracker) {
-        throw new Error(`Tracker ${card.tracker_id} has not been found in the store.`);
+        throw new Error(`Tracker ${tracker_id} has not been found in the store.`);
     }
 
     return tracker;
+}
+
+export const tracker_of_card = (root_state: RootState) => (card: Card): Tracker => {
+    return findTracker(root_state, card.tracker_id);
+};
+
+export const can_add_in_place = (root_state: RootState) => (swimlane: Swimlane): boolean => {
+    const tracker = findTracker(root_state, swimlane.card.tracker_id);
+
+    return tracker.add_in_place_tracker_id !== null;
 };

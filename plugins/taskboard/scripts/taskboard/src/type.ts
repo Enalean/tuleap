@@ -62,6 +62,7 @@ export interface Tracker {
     readonly id: number;
     readonly can_update_mapped_field: boolean;
     readonly title_field: TitleField | null;
+    readonly add_in_place_tracker_id: number | null;
 }
 
 export interface Card {
