@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class TroveCatDao extends DataAccessObject
+
+class TroveCatDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function getProjectCategories($project_id)
     {
@@ -55,12 +56,27 @@ class TroveCatDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function getParentCategoriesUnderRootWithChildren()
+    {
+        $root_id = $this->da->escapeInt(TroveCat::ROOT_ID);
+
+        $sql = "SELECT DISTINCT(parent.trove_cat_id), parent.shortname, parent.fullname
+                FROM trove_cat parent
+                  LEFT JOIN trove_cat children ON (parent.trove_cat_id = children.parent)
+                WHERE parent.parent = $root_id
+                  AND children.trove_cat_id IS NOT NULL";
+
+        return $this->retrieve($sql);
+    }
+
     public function getTopCategories()
     {
-        $sql = 'SELECT trove_cat_id, fullname, mandatory, nb_max_values
+        $root_id = $this->da->escapeInt(TroveCat::ROOT_ID);
+
+        $sql = "SELECT trove_cat_id, fullname, mandatory, nb_max_values
                 FROM trove_cat
-                WHERE parent = 0
-                ORDER BY fullname';
+                WHERE parent = $root_id
+                ORDER BY fullname";
 
         return $this->retrieve($sql);
     }

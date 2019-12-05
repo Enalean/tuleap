@@ -745,6 +745,9 @@ msgstr ""
 "Le nom du groupe %s est invalide. Merci d'utiliser uniquement des caractères "
 "alphanumériques."
 
+msgid "Invalid selection of categories"
+msgstr "La selection de catégories n'est pas valide"
+
 msgid "Is default?"
 msgstr "Par défaut ?"
 

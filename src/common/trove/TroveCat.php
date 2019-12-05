@@ -65,9 +65,10 @@ class TroveCat
         return $this->fullname;
     }
 
-    public function addChildren(TroveCat $trove_cat)
+    public function addChildren(TroveCat $trove_cat): self
     {
         $this->children[] = $trove_cat;
+        return $this;
     }
 
     public function getChildren()
