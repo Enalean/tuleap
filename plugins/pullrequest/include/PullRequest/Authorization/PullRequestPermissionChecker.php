@@ -26,10 +26,9 @@ use GitRepository;
 use GitRepositoryFactory;
 use PFUser;
 use Tuleap\Git\Permissions\AccessControlVerifier;
-use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
+use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
-use URLVerification;
 
 class PullRequestPermissionChecker
 {
@@ -38,9 +37,9 @@ class PullRequestPermissionChecker
      */
     private $git_repository_factory;
     /**
-     * @var URLVerification
+     * @var ProjectAccessChecker
      */
-    private $url_verification;
+    private $project_access_checker;
     /**
      * @var AccessControlVerifier
      */
@@ -48,11 +47,11 @@ class PullRequestPermissionChecker
 
     public function __construct(
         GitRepositoryFactory $git_repository_factory,
-        URLVerification $URL_verification,
+        ProjectAccessChecker $project_access_checker,
         AccessControlVerifier $access_control_verifier
     ) {
         $this->git_repository_factory  = $git_repository_factory;
-        $this->url_verification        = $URL_verification;
+        $this->project_access_checker  = $project_access_checker;
         $this->access_control_verifier = $access_control_verifier;
     }
 
@@ -100,7 +99,7 @@ class PullRequestPermissionChecker
      */
     private function checkUserCanReadRepository(PFUser $user, GitRepository $repository): void
     {
-        $this->url_verification->userCanAccessProject($user, $repository->getProject());
+        $this->project_access_checker->checkUserCanAccessProject($user, $repository->getProject());
 
         if (! $repository->userCanRead($user)) {
             throw new UserCannotReadGitRepositoryException();

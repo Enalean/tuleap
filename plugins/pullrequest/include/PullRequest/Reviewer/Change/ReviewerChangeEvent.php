@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Reviewer\Change;
 
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
+use Tuleap\PullRequest\Notification\InvalidWorkerEventPayloadException;
 
 /**
  * @psalm-immutable
  */
-final class ReviewerChangeEvent implements EventSubjectToNotification
+final class ReviewerChangeEvent implements EventSubjectToNotification, \JsonSerializable
 {
     /**
      * @var int
@@ -44,8 +45,24 @@ final class ReviewerChangeEvent implements EventSubjectToNotification
         return new self($change_id);
     }
 
+    public static function fromWorkerEventPayload(array $payload): EventSubjectToNotification
+    {
+        if (! isset($payload['change_id'])) {
+            throw new InvalidWorkerEventPayloadException(self::class, 'change_id not found in the payload');
+        }
+
+        return new self($payload['change_id']);
+    }
+
     public function getChangeID() : int
     {
         return $this->change_id;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'change_id' => $this->change_id
+        ];
     }
 }

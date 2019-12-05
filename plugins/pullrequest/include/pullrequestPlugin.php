@@ -52,6 +52,7 @@ use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\layout\ScriptAsset;
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\DefaultSettings\DefaultSettingsController;
@@ -74,6 +75,7 @@ use Tuleap\PullRequest\Logger;
 use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 use Tuleap\PullRequest\NavigationTab\NavigationTabPresenterBuilder;
+use Tuleap\PullRequest\Notification\PullRequestNotificationSupport;
 use Tuleap\PullRequest\PluginInfo;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullrequestDisplayer;
@@ -91,6 +93,7 @@ use Tuleap\PullRequest\Reviewer\Autocompleter\ReviewerAutocompleterController;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\PullRequest\Tooltip\Presenter;
+use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
@@ -125,6 +128,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(GetProjectHistoryEntryValue::NAME);
+        $this->addHook(WorkerEvent::NAME);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook(REST_GIT_PULL_REQUEST_ENDPOINTS);
@@ -361,7 +365,11 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     {
         return new PullRequestPermissionChecker(
             $this->getRepositoryFactory(),
-            new URLVerification(),
+            new \Tuleap\Project\ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier(),
+                EventManager::instance()
+            ),
             new AccessControlVerifier(
                 new FineGrainedRetriever(new FineGrainedDao()),
                 new \System_Command()
@@ -687,6 +695,11 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
 
         $builder = new NavigationTabPresenterBuilder($this->getHTMLBuilder(), $this->getPullRequestFactory());
         $event->addNewTab($builder->build($event->getRepository(), $event->getSelectedTab()));
+    }
+
+    public function workerEvent(WorkerEvent $event): void
+    {
+        PullRequestNotificationSupport::listen($event);
     }
 
     /**

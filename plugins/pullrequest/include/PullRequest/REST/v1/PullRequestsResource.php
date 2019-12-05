@@ -38,7 +38,6 @@ use Project_AccessProjectNotFoundException;
 use ProjectHistoryDao;
 use ProjectManager;
 use ReferenceManager;
-use TemplateRendererFactory;
 use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
 use Tuleap\Git\CommitStatus\CommitStatusDAO;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
@@ -49,7 +48,6 @@ use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\REST\v1\GitCommitRepresentationBuilder;
-use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
@@ -58,11 +56,7 @@ use Tuleap\Label\REST\LabelsUpdater;
 use Tuleap\Label\REST\UnableToAddAndRemoveSameLabelException;
 use Tuleap\Label\REST\UnableToAddEmptyLabelException;
 use Tuleap\Label\UnknownLabelException;
-use Tuleap\Language\LocaleSwitcher;
-use Tuleap\Mail\MailFilter;
-use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Label\LabelDao;
-use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\REST\UserRESTReferenceRetriever;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
@@ -98,23 +92,19 @@ use Tuleap\PullRequest\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
-use Tuleap\PullRequest\Notification\EventSubjectToNotificationListener;
-use Tuleap\PullRequest\Notification\EventSubjectToNotificationListenerProvider;
-use Tuleap\PullRequest\Notification\EventSubjectToNotificationSynchronousDispatcher;
-use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationSendMail;
+use Tuleap\PullRequest\Notification\EventDispatcherWithFallback;
+use Tuleap\PullRequest\Notification\EventSubjectToNotificationAsynchronousRedisDispatcher;
+use Tuleap\PullRequest\Notification\PullRequestNotificationSupport;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestWithGitReference;
-use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewerRepresentationInformationExtractor;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersPUTRepresentation;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersRepresentation;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeDAO;
-use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeEvent;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeRetriever;
-use Tuleap\PullRequest\Reviewer\Notification\ReviewerChangeNotificationToProcessBuilder;
 use Tuleap\PullRequest\Reviewer\ReviewerDAO;
 use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
 use Tuleap\PullRequest\Reviewer\ReviewersCannotBeUpdatedOnClosedPullRequestException;
@@ -123,6 +113,7 @@ use Tuleap\PullRequest\Reviewer\UserCannotBeAddedAsReviewerException;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
 use Tuleap\PullRequest\Timeline\Factory as TimelineFactory;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
+use Tuleap\Queue\QueueFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -285,7 +276,11 @@ class PullRequestsResource extends AuthenticatedResource
 
         $this->permission_checker = new PullRequestPermissionChecker(
             $this->git_repository_factory,
-            new URLVerification(),
+            new \Tuleap\Project\ProjectAccessChecker(
+                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                new RestrictedUserCanAccessProjectVerifier(),
+                $this->event_manager
+            ),
             $this->access_control_verifier
         );
 
@@ -1251,44 +1246,12 @@ class PullRequestsResource extends AuthenticatedResource
         $reviewer_updater = new ReviewerUpdater(
             new ReviewerDAO(),
             $this->permission_checker,
-            new EventSubjectToNotificationSynchronousDispatcher(
-                new EventSubjectToNotificationListenerProvider([
-                    ReviewerChangeEvent::class => [
-                        function (): EventSubjectToNotificationListener {
-                            $html_url_builder = new HTMLURLBuilder($this->git_repository_factory, new InstanceBaseURLBuilder());
-                            return new EventSubjectToNotificationListener(
-                                new PullRequestNotificationSendMail(
-                                    new \MailBuilder(
-                                        TemplateRendererFactory::build(),
-                                        new MailFilter(
-                                            $this->user_manager,
-                                            new ProjectAccessChecker(
-                                                PermissionsOverrider_PermissionsOverriderManager::instance(),
-                                                new RestrictedUserCanAccessProjectVerifier(),
-                                                $this->event_manager
-                                            ),
-                                            new MailLogger()
-                                        )
-                                    ),
-                                    new \MailEnhancer(),
-                                    $this->permission_checker,
-                                    $this->git_repository_factory,
-                                    $html_url_builder,
-                                    new LocaleSwitcher()
-                                ),
-                                new ReviewerChangeNotificationToProcessBuilder(
-                                    new ReviewerChangeRetriever(
-                                        new ReviewerChangeDAO(),
-                                        $this->pull_request_factory,
-                                        $this->user_manager
-                                    ),
-                                    \UserHelper::instance(),
-                                    $html_url_builder
-                                )
-                            );
-                        }
-                    ]
-                ])
+            new EventDispatcherWithFallback(
+                $this->logger,
+                new EventSubjectToNotificationAsynchronousRedisDispatcher(
+                    new QueueFactory($this->logger)
+                ),
+                PullRequestNotificationSupport::buildSynchronousDispatcher()
             )
         );
         try {
