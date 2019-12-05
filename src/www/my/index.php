@@ -1,7 +1,7 @@
 <?php
 /**
   * Copyright 1999-2000 (c) The SourceForge Crew
-  * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+  * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -76,7 +76,10 @@ $router                     = new UserDashboardRouter(
             new IncludeAssets(__DIR__ . '/../assets', '/assets'),
             new CssAssetCollection(
                 [new CssAsset(
-                    new IncludeAssets(__DIR__ . '/../themes/BurningParrot/assets', '/themes/BurningParrot/assets'),
+                    new IncludeAssets(
+                        __DIR__ . '/../assets/dashboards/themes',
+                        '/assets/dashboards/themes'
+                    ),
                     'dashboards'
                 )]
             )
