@@ -30,7 +30,8 @@ describe("getters", () => {
                 project_default_visibility: "",
                 error: null,
                 is_creating_project: false,
-                is_project_approval_required: false
+                is_project_approval_required: false,
+                trove_categories: []
             };
             expect(getters.is_template_selected(state)).toBe(false);
         });
@@ -47,7 +48,8 @@ describe("getters", () => {
                 project_default_visibility: "",
                 error: null,
                 is_creating_project: false,
-                is_project_approval_required: false
+                is_project_approval_required: false,
+                trove_categories: []
             };
             expect(getters.is_template_selected(state)).toBe(true);
         });
@@ -62,7 +64,8 @@ describe("getters", () => {
                 project_default_visibility: "",
                 error: null,
                 is_creating_project: false,
-                is_project_approval_required: false
+                is_project_approval_required: false,
+                trove_categories: []
             };
             expect(getters.has_error(state)).toBe(false);
         });
@@ -74,7 +77,8 @@ describe("getters", () => {
                 project_default_visibility: "",
                 error: "Ho snap!",
                 is_creating_project: false,
-                is_project_approval_required: false
+                is_project_approval_required: false,
+                trove_categories: []
             };
             expect(getters.has_error(state)).toBe(true);
         });

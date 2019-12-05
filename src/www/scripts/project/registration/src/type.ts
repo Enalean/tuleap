@@ -17,6 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export interface TroveCatData {
+    id: string;
+    shortname: string;
+    fullname: string;
+    children: Array<TroveCatData>;
+}
+
+export interface TroveCatProperties {
+    category_id: number;
+    value_id: number;
+}
+
 export interface TemplateData {
     title: string;
     description: string;
@@ -30,6 +42,7 @@ export interface ProjectProperties {
     is_public: boolean;
     allow_restricted?: boolean;
     xml_template_name: string;
+    categories: Array<TroveCatProperties>;
 }
 
 export interface ProjectNameProperties {

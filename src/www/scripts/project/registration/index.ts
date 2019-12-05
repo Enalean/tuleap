@@ -20,7 +20,7 @@
 import Vue from "vue";
 import { initVueGettext } from "../../tuleap/gettext/vue-gettext-init";
 import App from "./src/components/App.vue";
-import { TemplateData } from "./src/type";
+import { TemplateData, TroveCatData } from "./src/type";
 import { createStore } from "./src/store";
 import { State } from "./src/store/type";
 import VueDOMPurifyHTML from "vue-dompurify-html";
@@ -40,9 +40,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!tuleap_templates_json) {
         return;
     }
+
+    const trove_categories_json = vue_mount_point.dataset.troveCat;
+    let trove_categories: TroveCatData[] = [];
+    if (trove_categories_json) {
+        trove_categories = JSON.parse(trove_categories_json);
+    }
     const are_restricted_users_allowed = Boolean(vue_mount_point.dataset.areRestrictedUsersAllowed);
     const project_default_visibility = String(vue_mount_point.dataset.projectDefaultVisibility);
     const tuleap_templates: TemplateData[] = JSON.parse(tuleap_templates_json);
+
     const selected_template = null;
     const error = null;
     const is_creating_project = false;
@@ -55,7 +62,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         project_default_visibility,
         error,
         is_creating_project,
-        is_project_approval_required
+        is_project_approval_required,
+        trove_categories
     };
 
     Vue.use(VueDOMPurifyHTML);

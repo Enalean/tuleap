@@ -32,6 +32,7 @@ use ProjectManager;
 use ServiceDao;
 use ServiceManager;
 use TroveCatDao;
+use TroveCatFactory;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectCreation\ProjectCategoriesDisplayController;
 use Tuleap\Admin\ProjectCreation\ProjectFieldsDisplayController;
@@ -607,7 +608,8 @@ class RouteCollector
             ),
             new ProjectRegistrationPresenterBuilder(
                 TemplateFactory::build(),
-                new DefaultProjectVisibilityRetriever()
+                new DefaultProjectVisibilityRetriever(),
+                new TroveCatFactory(new TroveCatDao())
             )
         );
     }

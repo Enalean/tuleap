@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TroveCat
+class TroveCat implements JsonSerializable
 {
 
     public const ROOT_ID = 0;
@@ -41,7 +41,7 @@ class TroveCat
     /**
      * @var TroveCat[]
      */
-    private $children = array();
+    private $children = [];
 
     public function __construct($id, $shortname, $fullname)
     {
@@ -74,5 +74,18 @@ class TroveCat
     public function getChildren()
     {
         return $this->children;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'shortname' => $this->shortname,
+            'fullname' => $this->fullname,
+            'children' => $this->children
+        ];
     }
 }
