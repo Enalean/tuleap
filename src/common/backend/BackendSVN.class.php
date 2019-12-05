@@ -248,23 +248,20 @@ class BackendSVN extends Backend
             $filtered_layout[]      = escapeshellarg('file://' . $path_to_create_encoded);
         }
 
-        $current_ctype_locale    = setlocale(LC_CTYPE, 0);
-        $current_messages_locale = setlocale(LC_MESSAGES, 0);
-        $user_locale             = $user->getLocale();
-        setlocale(LC_CTYPE, "$user_locale.UTF-8");
-        setlocale(LC_MESSAGES, "$user_locale.UTF-8");
+        $locale_switcher = new \Tuleap\Language\LocaleSwitcher();
+        $locale_switcher->setLocaleForSpecificExecutionContext(
+            $user->getLocale(),
+            function () use ($project_id, $user, $filtered_layout): void {
+                $user_name = $this->getUsernameUsableInSVN($project_id, $user);
 
-        $user_name = $this->getUsernameUsableInSVN($project_id, $user);
+                $result = $this->system('svn mkdir --username=' . escapeshellarg($user_name) .
+                    ' --message ' . escapeshellarg(_('Initial layout creation')) . ' --parents ' . implode(' ', $filtered_layout));
 
-        $result = $this->system('svn mkdir --username=' . escapeshellarg($user_name) .
-            ' --message ' . escapeshellarg(_('Initial layout creation')) . ' --parents ' . implode(' ', $filtered_layout));
-
-        setlocale(LC_CTYPE, $current_ctype_locale);
-        setlocale(LC_MESSAGES, $current_messages_locale);
-
-        if ($result === false) {
-            throw new SVNRepositoryLayoutInitializationException(_('Could not commit repository initial layout'));
-        }
+                if ($result === false) {
+                    throw new SVNRepositoryLayoutInitializationException(_('Could not commit repository initial layout'));
+                }
+            }
+        );
     }
 
     /**
