@@ -30,12 +30,22 @@ class QueueFactory
     public const REDIS = 'redis';
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    public function __construct(Logger $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
      * @throws NoQueueSystemAvailableException
      */
-    public static function getPersistentQueue(Logger $logger, string $queue_name, string $favor = '') : PersistentQueue
+    public function getPersistentQueue(string $queue_name, string $favor = '') : PersistentQueue
     {
         if (RedisClientFactory::canClientBeBuiltFromForgeConfig()) {
-            return new Redis\RedisPersistentQueue($logger, $queue_name);
+            return new Redis\RedisPersistentQueue($this->logger, $queue_name);
         }
         if ($favor === self::REDIS) {
             throw new NoQueueSystemAvailableException();

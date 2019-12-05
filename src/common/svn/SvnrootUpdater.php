@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -49,7 +49,7 @@ class SvnrootUpdater
     public function __construct(Logger $logger)
     {
         $this->logger = new WrapperLogger($logger, 'svnroot_updater');
-        $this->queue  = QueueFactory::getPersistentQueue($this->logger, self::QUEUE_PREFIX);
+        $this->queue  = (new QueueFactory($this->logger))->getPersistentQueue(self::QUEUE_PREFIX);
     }
 
     public function push()

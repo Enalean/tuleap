@@ -1601,7 +1601,8 @@ class trackerPlugin extends Plugin
         $async_artifact_archive_runner = new AsynchronousArtifactsDeletionActionsRunner(
             new PendingArtifactRemovalDao(),
             $logger,
-            $this->getUserManager()
+            $this->getUserManager(),
+            new \Tuleap\Queue\QueueFactory($logger)
         );
         $async_artifact_archive_runner->addListener($event);
     }

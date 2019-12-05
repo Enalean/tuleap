@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,15 +43,21 @@ class AsynchronousArtifactsDeletionActionsRunner
      * @var \UserManager
      */
     private $user_manager;
+    /**
+     * @var QueueFactory
+     */
+    private $queue_factory;
 
     public function __construct(
         PendingArtifactRemovalDao $pending_artifact_removal_dao,
         Logger $logger,
-        \UserManager $user_manager
+        \UserManager $user_manager,
+        QueueFactory $queue_factory
     ) {
         $this->pending_artifact_removal_dao = $pending_artifact_removal_dao;
         $this->logger                       = $logger;
         $this->user_manager                 = $user_manager;
+        $this->queue_factory                = $queue_factory;
     }
 
     public function addListener(WorkerEvent $event)
@@ -85,7 +91,7 @@ class AsynchronousArtifactsDeletionActionsRunner
     public function executeArchiveAndArtifactDeletion(Tracker_Artifact $artifact, PFUser $user)
     {
         try {
-            $queue = QueueFactory::getPersistentQueue($this->logger, Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
+            $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
             $queue->pushSinglePersistentMessage(
                 AsynchronousArtifactsDeletionActionsRunner::TOPIC,
                 [
