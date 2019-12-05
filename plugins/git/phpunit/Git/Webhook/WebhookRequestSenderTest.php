@@ -26,23 +26,23 @@ use Tuleap\Webhook\Emitter;
 use TuleapTestCase;
 use UserHelper;
 
-class WebhookRequestSenderTest extends TuleapTestCase
+class WebhookRequestSenderTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp()
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         UserHelper::clearInstance();
         UserHelper::setInstance(\Mockery::spy(UserHelper::class));
     }
 
-    public function tearDown()
+    protected function tearDown() : void
     {
         UserHelper::clearInstance();
         parent::tearDown();
     }
 
-    public function itSendsWebhooks()
+    public function testItSendsWebhooks() : void
     {
         $webhook_factory = \Mockery::mock(WebhookFactory::class);
         $webhook_emitter = \Mockery::mock(Emitter::class);

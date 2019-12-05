@@ -24,18 +24,18 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Git_Hook_ParseLogTest extends TuleapTestCase
+class Git_Hook_ParseLogTest extends \PHPUnit\Framework\TestCase
 {
 
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     private $extract_cross_ref;
     private $log_pushes;
     private $parse_log;
     private $logger;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->extract_cross_ref = \Mockery::spy(\Git_Hook_ExtractCrossReferences::class);
         $this->log_pushes        = \Mockery::spy(\Git_Hook_LogPushes::class);
@@ -43,7 +43,7 @@ class Git_Hook_ParseLogTest extends TuleapTestCase
         $this->parse_log         = new Git_Hook_ParseLog($this->log_pushes, $this->extract_cross_ref, $this->logger);
     }
 
-    public function itExecutesExtractOnEachCommit()
+    public function testItExecutesExtractOnEachCommit() : void
     {
         $push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array('469eaa9'))->getMock();
 
@@ -52,7 +52,7 @@ class Git_Hook_ParseLogTest extends TuleapTestCase
         $this->parse_log->execute($push_details);
     }
 
-    public function itDoesntAttemptToExtractWhenBranchIsDeleted()
+    public function testItDoesntAttemptToExtractWhenBranchIsDeleted() : void
     {
         $push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array())->getMock();
 
@@ -61,7 +61,7 @@ class Git_Hook_ParseLogTest extends TuleapTestCase
         $this->parse_log->execute($push_details);
     }
 
-    public function itExecutesExtractEvenWhenThereAreErrors()
+    public function testItExecutesExtractEvenWhenThereAreErrors() : void
     {
         $push_details = \Mockery::spy(\Git_Hook_PushDetails::class);
         $push_details->shouldReceive('getRevisionList')->andReturns(array('0fb0737', '469eaa9'));
@@ -73,33 +73,6 @@ class Git_Hook_ParseLogTest extends TuleapTestCase
             ->with($push_details, '469eaa9')
             ->andThrows(new Git_Command_Exception('whatever', array('whatever'), '234'));
 
-        $this->parse_log->execute($push_details);
-    }
-}
-
-class Git_Hook_ParseLog_CountPushesTest extends TuleapTestCase
-{
-
-    private $extract_cross_ref;
-    private $log_pushes;
-    private $parse_log;
-    private $logger;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
-        $this->extract_cross_ref = \Mockery::spy(\Git_Hook_ExtractCrossReferences::class);
-        $this->log_pushes        = \Mockery::spy(\Git_Hook_LogPushes::class);
-        $this->logger            = \Mockery::spy(\Logger::class);
-        $this->parse_log         = new Git_Hook_ParseLog($this->log_pushes, $this->extract_cross_ref, $this->logger);
-    }
-
-    public function itLogPush()
-    {
-        $push_details = \Mockery::spy(\Git_Hook_PushDetails::class)->shouldReceive('getRevisionList')->andReturns(array('469eaa9'))->getMock();
-        $this->log_pushes->shouldReceive('executeForRepository')->with($push_details)->once();
         $this->parse_log->execute($push_details);
     }
 }

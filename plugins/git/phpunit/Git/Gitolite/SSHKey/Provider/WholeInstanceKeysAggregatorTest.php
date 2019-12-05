@@ -22,9 +22,10 @@ namespace Tuleap\Git\Gitolite\SSHKey\Provider;
 
 use Mockery;
 
-class WholeInstanceKeysAggregatorTest extends \TuleapTestCase
+class WholeInstanceKeysAggregatorTest extends \PHPUnit\Framework\TestCase
 {
-    public function itUsesAllKeyProviders()
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    public function testItUsesAllKeyProviders() : void
     {
         $gitolite_admin_key = Mockery::spy('Tuleap\Git\Gitolite\SSHKey\Provider\GitoliteAdmin');
         $gerrit_server_keys = Mockery::spy('Tuleap\Git\Gitolite\SSHKey\Provider\GerritServer');
@@ -32,9 +33,10 @@ class WholeInstanceKeysAggregatorTest extends \TuleapTestCase
 
         $whole_instance_keys = new WholeInstanceKeysAggregator($gitolite_admin_key, $gerrit_server_keys, $user_keys);
 
-        $gitolite_admin_key->expectAtLeastOnce('valid');
-        $gerrit_server_keys->expectAtLeastOnce('valid');
-        $user_keys->expectAtLeastOnce('valid');
+        $gitolite_admin_key->shouldReceive('valid')->atLeast();
+        $gerrit_server_keys->shouldReceive('valid')->atLeast();
+        $user_keys->shouldReceive('valid')->atLeast();
+
         iterator_to_array($whole_instance_keys);
     }
 }

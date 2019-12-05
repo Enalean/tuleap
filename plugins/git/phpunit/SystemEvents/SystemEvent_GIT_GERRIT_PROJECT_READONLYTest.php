@@ -21,10 +21,11 @@
 
 require_once __DIR__.'/../bootstrap.php';
 
-class SystemEvent_GIT_GERRIT_PROJECT_READONLYTest extends TuleapTestCase
+class SystemEvent_GIT_GERRIT_PROJECT_READONLYTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function itMakesGerritProjectReadOnly()
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    public function testItMakesGerritProjectReadOnly() : void
     {
         $repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
         $server_factory     = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);

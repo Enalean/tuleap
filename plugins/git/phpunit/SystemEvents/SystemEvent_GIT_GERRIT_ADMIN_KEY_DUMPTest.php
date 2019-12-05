@@ -26,8 +26,9 @@ use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
 require_once __DIR__.'/../bootstrap.php';
 
-class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase
+class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     /** @var SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP */
     private $event;
     /** @var Git_RemoteServer_GerritServerFactory */
@@ -35,17 +36,16 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase
     /** @var Git_Gitolite_SSHKeyDumper */
     private $ssh_key_dumper;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->ssh_key_dumper = \Mockery::spy(\Git_Gitolite_SSHKeyDumper::class);
         $this->gerrit_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
         $this->event = \Mockery::mock(\SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->event->injectDependencies($this->gerrit_server_factory, $this->ssh_key_dumper);
     }
 
-    public function itAddsKeyForAServer()
+    public function testItAddsKeyForAServer() : void
     {
         $gerrit_server_id = 7;
         $this->event->setParameters("$gerrit_server_id");
@@ -58,7 +58,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase
         $this->event->process();
     }
 
-    public function itDumpsTheNewKeyForServer()
+    public function testItDumpsTheNewKeyForServer() : void
     {
         $gerrit_server_id = 7;
         $this->event->setParameters("$gerrit_server_id");
@@ -96,7 +96,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase
         $this->event->process();
     }
 
-    public function itDeleteCorrespondingKeyWhenNoServer()
+    public function testItDeleteCorrespondingKeyWhenNoServer() : void
     {
         $gerrit_server_id = 7;
         $this->event->setParameters("$gerrit_server_id");
@@ -114,7 +114,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase
         $this->event->process();
     }
 
-    public function itMarkAsDoneWhenDumpWorks()
+    public function testItMarkAsDoneWhenDumpWorks() : void
     {
         $this->event->setParameters("7");
 
@@ -126,7 +126,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends TuleapTestCase
         $this->event->process();
     }
 
-    public function itMarkAsErrorWhenDumpDoesntWork()
+    public function testItMarkAsErrorWhenDumpDoesntWork() : void
     {
         $this->event->setParameters("7");
 

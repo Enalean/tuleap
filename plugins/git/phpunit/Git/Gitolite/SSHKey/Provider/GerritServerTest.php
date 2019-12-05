@@ -27,9 +27,10 @@ use TuleapTestCase;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
-class GerritServerTest extends TuleapTestCase
+class GerritServerTest extends \PHPUnit\Framework\TestCase
 {
-    public function itExtractsGerritServerSSHKey()
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    public function testItExtractsGerritServerSSHKey() : void
     {
         $replication_key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $replication_key->setGerritHostId(1);
@@ -53,18 +54,18 @@ class GerritServerTest extends TuleapTestCase
                 'ssh_key' => $server3_key->getKey()
             )
         ];
-        $gerrit_server_dao = safe_mock(Git_RemoteServer_Dao::class);
+        $gerrit_server_dao = \Mockery::mock(Git_RemoteServer_Dao::class);
         $gerrit_server_dao->shouldReceive('searchAllServersWithSSHKey')->andReturns($gerrit_server_access_result);
 
         $gerrit_server_provider = new GerritServer($gerrit_server_dao);
         $expected_result        = array($server1_key, $server3_key);
 
-        $this->assertEqual(array_values(iterator_to_array($gerrit_server_provider)), $expected_result);
+        $this->assertEquals($expected_result, array_values(iterator_to_array($gerrit_server_provider)));
     }
 
-    public function itThrowsAnExceptionIfGerritServerDataCanNotBeAccessed()
+    public function testItThrowsAnExceptionIfGerritServerDataCanNotBeAccessed() : void
     {
-        $gerrit_server_dao = safe_mock(Git_RemoteServer_Dao::class);
+        $gerrit_server_dao = \Mockery::mock(Git_RemoteServer_Dao::class);
         $gerrit_server_dao->shouldReceive('searchAllServersWithSSHKey')->andThrows(new \PDOException);
 
         $this->expectException('Tuleap\Git\Gitolite\SSHKey\Provider\AccessException');

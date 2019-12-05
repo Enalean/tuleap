@@ -26,9 +26,10 @@ use GitBackendLogger;
 use UserDao;
 use Tuleap\Git\History\Dao;
 
-class Gitolite3LogParserTest extends \TuleapTestCase
+class Gitolite3LogParserTest extends \PHPUnit\Framework\TestCase
 {
 
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     /** @var Gitolite3LogParser */
     private $parser;
 
@@ -46,10 +47,9 @@ class Gitolite3LogParserTest extends \TuleapTestCase
     private $user_manager;
     private $factory;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->logger         = \Mockery::spy(\GitBackendLogger::class);
         $this->factory        = \Mockery::spy(\GitRepositoryFactory::class);
         $this->user_manager   = \Mockery::spy(\UserManager::class);
@@ -74,7 +74,7 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         $this->user = \Mockery::spy(\PFUser::class)->shouldReceive('getId')->andReturns(101)->getMock();
     }
 
-    public function itDoesNotParseGitoliteAdministratorLogs()
+    public function testItDoesNotParseGitoliteAdministratorLogs() : void
     {
         $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
@@ -83,7 +83,7 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
-    public function itDoesNotParseGerritSystemUsers()
+    public function testItDoesNotParseGerritSystemUsers() : void
     {
         $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
@@ -92,7 +92,7 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-11.log');
     }
 
-    public function itDoesNotParseTwoTimesSameLines()
+    public function testItDoesNotParseTwoTimesSameLines() : void
     {
         $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
@@ -102,7 +102,7 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
-    public function itDoesNotParseWhenRepositoryIsDeleted()
+    public function testItDoesNotParseWhenRepositoryIsDeleted() : void
     {
         $this->factory->shouldReceive('getFromFullPath')->andReturns(null);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
@@ -111,7 +111,7 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
-    public function itParseLinesIfTheyAreNew()
+    public function testItParseLinesIfTheyAreNew() : void
     {
         $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->file_logs_dao->shouldReceive('getLastReadLine')->andReturns(array('end_line' => 1362));
@@ -121,7 +121,7 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
-    public function itAddsALineForAnonymousWhenUserIsNoMoreInDatabase()
+    public function testItAddsALineForAnonymousWhenUserIsNoMoreInDatabase() : void
     {
         $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns(null);
@@ -131,7 +131,7 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
-    public function itUpdatesTheCounterWhenThereAreAlreadyData()
+    public function testItUpdatesTheCounterWhenThereAreAlreadyData() : void
     {
         $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
@@ -140,13 +140,13 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
-    public function itParsesWronglyFormattedLogsWithoutErrors()
+    public function testItParsesWronglyFormattedLogsWithoutErrors() : void
     {
         $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->parser->parseLogs(__DIR__ . '/_fixtures/gitolite-2017-11-broken.log');
     }
 
-    public function itUpdatesLastAccessDateForUser()
+    public function testItUpdatesLastAccessDateForUser() : void
     {
         $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
@@ -156,7 +156,7 @@ class Gitolite3LogParserTest extends \TuleapTestCase
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
     }
 
-    public function itDoesNotUpdateLastAccessDateForAnonymousUser()
+    public function testItDoesNotUpdateLastAccessDateForAnonymousUser() : void
     {
         $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns(null);

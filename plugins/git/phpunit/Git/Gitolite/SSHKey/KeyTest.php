@@ -20,13 +20,15 @@
 
 namespace Tuleap\Git\Gitolite\SSHKey;
 
-use TuleapTestCase;
+use Tuleap\GlobalLanguageMock;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class KeyTest extends TuleapTestCase
+class KeyTest extends \PHPUnit\Framework\TestCase
 {
-    public function itChecksUsernameValidity()
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+
+    public function testItChecksUsernameValidity() : void
     {
         $this->expectException('\InvalidArgumentException');
         new Key(
@@ -35,7 +37,7 @@ class KeyTest extends TuleapTestCase
         );
     }
 
-    public function itCleansKey()
+    public function testItCleansKey() : void
     {
         $key = new Key(
             'user',
@@ -44,13 +46,13 @@ class KeyTest extends TuleapTestCase
             '
         );
 
-        $this->assertEqual(
-            $key->getKey(),
-            'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDgTGQXojsjAemABiCqPS9k7h5VLigeNhfJFc1Xx3DRZ0B1+eCAI7IT65VzYEHlkW8pTK9IZO6yFLM5aYiLF5GD1VoDxP7zuslCU5gTIl1eWJzMQY/5mc4IP+8dk+p4CoTlXwU5xnZatUWwiF8PnaM2evga4sAwLHBZ8QqiNIaHEQ=='
+        $this->assertEquals(
+            'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDgTGQXojsjAemABiCqPS9k7h5VLigeNhfJFc1Xx3DRZ0B1+eCAI7IT65VzYEHlkW8pTK9IZO6yFLM5aYiLF5GD1VoDxP7zuslCU5gTIl1eWJzMQY/5mc4IP+8dk+p4CoTlXwU5xnZatUWwiF8PnaM2evga4sAwLHBZ8QqiNIaHEQ==',
+            $key->getKey()
         );
     }
 
-    public function itAcceptsOnlyOneKey()
+    public function testItAcceptsOnlyOneKey() : void
     {
         $this->expectException('\InvalidArgumentException');
         new Key(

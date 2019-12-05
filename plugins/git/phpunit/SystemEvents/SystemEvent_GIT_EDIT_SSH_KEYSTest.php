@@ -24,9 +24,10 @@
 
 require_once __DIR__.'/../bootstrap.php';
 
-class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase
+class SystemEvent_GIT_EDIT_SSH_KEYSTest extends \PHPUnit\Framework\TestCase
 {
 
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalLanguageMock;
     private $event;
     private $user_account_manager;
     private $logger;
@@ -34,10 +35,9 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase
     private $user_manager;
     private $sshkey_dumper;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->user                 = \Mockery::spy(\PFUser::class);
         $this->user_manager         = \Mockery::spy(\UserManager::class);
@@ -49,7 +49,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase
         $this->user_manager->shouldReceive('getUserById')->with(105)->andReturns($this->user);
     }
 
-    public function testItLogsAnErrorIfNoUserIsPassed()
+    public function testItLogsAnErrorIfNoUserIsPassed() : void
     {
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '', '', '', '', '', '', '');
         $event->injectDependencies(
@@ -60,12 +60,12 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase
             $this->logger
         );
 
-        $this->expectException('UserNotExistException');
+        $this->expectException(\UserNotExistException::class);
 
         $event->process();
     }
 
-    public function testItLogsAnErrorIfUserIsInvalid()
+    public function testItLogsAnErrorIfUserIsInvalid() : void
     {
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', 'me', '', '', '', '', '', '');
         $event->injectDependencies(
@@ -76,12 +76,12 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase
             $this->logger
         );
 
-        $this->expectException('UserNotExistException');
+        $this->expectException(\UserNotExistException::class);
 
         $event->process();
     }
 
-    public function itTransformsEmptyKeyStringIntoArrayBeforeSendingToGitUserManager()
+    public function testItTransformsEmptyKeyStringIntoArrayBeforeSendingToGitUserManager() : void
     {
         $original_keys = array();
         $new_keys = array();
@@ -103,7 +103,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase
         $event->process();
     }
 
-    public function itTransformsNonEmptyKeyStringIntoArrayBeforeSendingToGitUserManager()
+    public function testItTransformsNonEmptyKeyStringIntoArrayBeforeSendingToGitUserManager() : void
     {
         $new_keys      = array();
         $original_keys = array(
@@ -128,7 +128,7 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase
          $event->process();
     }
 
-    public function itWarnsAdminsWhenSSHKeySynchFails()
+    public function testItWarnsAdminsWhenSSHKeySynchFails() : void
     {
         $event = new SystemEvent_GIT_EDIT_SSH_KEYS('', '', '', '105::', '', '', '', '', '', '');
         $event->injectDependencies(
@@ -145,6 +145,6 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase
 
         $event->process();
 
-        $this->assertEqual($event->getStatus(), SystemEvent::STATUS_WARNING);
+        $this->assertEquals(SystemEvent::STATUS_WARNING, $event->getStatus());
     }
 }
