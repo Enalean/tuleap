@@ -41,3 +41,11 @@ export function setIdOfCardBeingDragged(state: State, card: Element): void {
 export function resetIdOfCardBeingDragged(state: State): void {
     state.card_being_dragged = null;
 }
+
+export function setIsACellAddingInPlace(state: State): void {
+    state.is_a_cell_adding_in_place = true;
+}
+
+export function clearIsACellAddingInPlace(state: State): void {
+    state.is_a_cell_adding_in_place = false;
+}

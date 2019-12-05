@@ -32,6 +32,7 @@ export interface State {
     are_closed_items_displayed: boolean;
     card_being_dragged: DraggedCard | null;
     trackers: Tracker[];
+    is_a_cell_adding_in_place: boolean;
 }
 
 export interface RootState extends State {

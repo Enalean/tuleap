@@ -28,6 +28,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
+import { Mutation } from "vuex-class";
 import AddButton from "./AddButton.vue";
 import LabelEditor from "../Editor/Label/LabelEditor.vue";
 import EventBus from "../../../../../../helpers/event-bus";
@@ -53,6 +54,12 @@ export default class AddCard extends Vue {
     private is_in_add_mode = false;
     private label = "";
 
+    @Mutation
+    readonly setIsACellAddingInPlace!: () => void;
+
+    @Mutation
+    readonly clearIsACellAddingInPlace!: () => void;
+
     mounted(): void {
         EventBus.$on(TaskboardEvent.ESC_KEY_PRESSED, this.cancel);
     }
@@ -62,11 +69,15 @@ export default class AddCard extends Vue {
     }
 
     cancel(): void {
-        this.is_in_add_mode = false;
+        if (this.is_in_add_mode) {
+            this.is_in_add_mode = false;
+            this.clearIsACellAddingInPlace();
+        }
     }
 
     switchToAddMode(): void {
         this.is_in_add_mode = true;
+        this.setIsACellAddingInPlace();
     }
 
     save(): void {

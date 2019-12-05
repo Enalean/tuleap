@@ -60,6 +60,7 @@ describe("AddCard", () => {
 
         expect(wrapper.contains(LabelEditor)).toBe(true);
         expect(wrapper.contains(AddButton)).toBe(false);
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setIsACellAddingInPlace");
     });
 
     it("Given the esc key is pressed, Then it displays back the button and hide the editor", () => {
@@ -70,6 +71,15 @@ describe("AddCard", () => {
 
         expect(wrapper.contains(LabelEditor)).toBe(false);
         expect(wrapper.contains(AddButton)).toBe(true);
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("clearIsACellAddingInPlace");
+    });
+
+    it("Given the esc key is pressed while the editor was not in edit mode, Then it does trigger any mutation", () => {
+        const wrapper = getWrapper();
+
+        EventBus.$emit(TaskboardEvent.ESC_KEY_PRESSED);
+
+        expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
     });
 
     it(`Given the editor is displayed,
