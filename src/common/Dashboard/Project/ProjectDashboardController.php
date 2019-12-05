@@ -31,14 +31,17 @@ use PFUser;
 use Project;
 use ProjectManager;
 use TemplateRendererFactory;
-use Tuleap\Dashboard\DashboardDoesNotExistException;
 use Tuleap\Dashboard\AssetsIncluder;
+use Tuleap\Dashboard\DashboardDoesNotExistException;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
 use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\Dashboard\Widget\OwnerInfo;
 use Tuleap\Event\Events\ProjectProviderEvent;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\TroveCat\TroveCatLinkDao;
 
 class ProjectDashboardController
@@ -87,6 +90,18 @@ class ProjectDashboardController
      * @var EventManager
      */
     private $event_manager;
+    /**
+     * @var BaseLayout
+     */
+    private $layout;
+    /**
+     * @var IncludeAssets
+     */
+    private $javascript_assets;
+    /**
+     * @var CssAsset
+     */
+    private $css_asset;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -98,7 +113,10 @@ class ProjectDashboardController
         WidgetDeletor $widget_deletor,
         WidgetMinimizor $widget_minimizor,
         AssetsIncluder $assets_includer,
-        EventManager $event_manager
+        EventManager $event_manager,
+        BaseLayout $layout,
+        IncludeAssets $javascript_assets,
+        CssAsset $css_asset
     ) {
         $this->csrf                     = $csrf;
         $this->project                  = $project;
@@ -110,6 +128,9 @@ class ProjectDashboardController
         $this->widget_minimizor         = $widget_minimizor;
         $this->assets_includer          = $assets_includer;
         $this->event_manager            = $event_manager;
+        $this->layout                   = $layout;
+        $this->javascript_assets        = $javascript_assets;
+        $this->css_asset                = $css_asset;
     }
 
     /**
@@ -122,13 +143,19 @@ class ProjectDashboardController
         $dashboard_id       = $request->get('dashboard_id');
         $project_dashboards = $this->retriever->getAllProjectDashboards($this->project);
 
+        $should_display_project_created_modal = $request->get("should-display-created-project-modal");
+
+        if ($should_display_project_created_modal) {
+            $this->layout->includeFooterJavascriptFile($this->javascript_assets->getFileURL('project-registration-creation.js'));
+            $this->layout->addCssAsset($this->css_asset);
+        }
+
         if ($dashboard_id && ! $this->doesDashboardIdExist($dashboard_id, $project_dashboards)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 _('The requested dashboard does not exist.')
             );
         }
-
         $project_dashboards_presenter = $this->getProjectDashboardsPresenter(
             $user,
             $project,
@@ -185,7 +212,8 @@ class ProjectDashboardController
                     $trove_cats
                 ),
                 $project_dashboards_presenter,
-                $this->canUpdateDashboards($user, $project)
+                $this->canUpdateDashboards($user, $project),
+                $should_display_project_created_modal
             )
         );
         $GLOBALS['Response']->footer(array());

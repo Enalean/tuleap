@@ -106,7 +106,9 @@ describe("ProjectInformationFooter", () => {
 
         await factory.vm.$nextTick().then(() => {});
 
-        expect(redirect_to_url).toHaveBeenCalledWith("/my");
+        expect(redirect_to_url).toHaveBeenCalledWith(
+            "/projects/this-is-a-test/?should-display-created-project-modal=true"
+        );
     });
     it(`create the new private project`, async () => {
         const redirect_to_url = jest.spyOn(location_helper, "redirectToUrl").mockImplementation();
@@ -127,7 +129,9 @@ describe("ProjectInformationFooter", () => {
 
         await factory.vm.$nextTick().then(() => {});
 
-        expect(redirect_to_url).toHaveBeenCalledWith("/my");
+        expect(redirect_to_url).toHaveBeenCalledWith(
+            "/projects/this-is-a-test/?should-display-created-project-modal=true"
+        );
     });
 
     it(`creates the new private without restricted project`, async () => {
@@ -149,7 +153,9 @@ describe("ProjectInformationFooter", () => {
 
         await factory.vm.$nextTick().then(() => {});
 
-        expect(redirect_to_url).toHaveBeenCalledWith("/my");
+        expect(redirect_to_url).toHaveBeenCalledWith(
+            "/projects/this-is-a-test/?should-display-created-project-modal=true"
+        );
     });
 
     it(`creates the new public restricted project`, async () => {
@@ -171,7 +177,9 @@ describe("ProjectInformationFooter", () => {
 
         await factory.vm.$nextTick().then(() => {});
 
-        expect(redirect_to_url).toHaveBeenCalledWith("/my");
+        expect(redirect_to_url).toHaveBeenCalledWith(
+            "/projects/this-is-a-test/?should-display-created-project-modal=true"
+        );
     });
 
     it(`creates the new public including restricted restricted project`, async () => {
@@ -193,7 +201,9 @@ describe("ProjectInformationFooter", () => {
 
         await factory.vm.$nextTick().then(() => {});
 
-        expect(redirect_to_url).toHaveBeenCalledWith("/my");
+        expect(redirect_to_url).toHaveBeenCalledWith(
+            "/projects/this-is-a-test/?should-display-created-project-modal=true"
+        );
     });
 
     it(`Displays spinner when project is creating`, () => {

@@ -91,6 +91,19 @@ class Home implements DispatchableWithRequest
                     EventManager::instance()
                 );
 
+                $project_registration_creation_javascript_asset = new IncludeAssets(
+                    __DIR__ . '/../../www/assets/project-registration/creation/scripts',
+                    '/assets/project-registration/creation/scripts'
+                );
+
+                $project_registration_creation_css_assets = new CssAsset(
+                    new IncludeAssets(
+                        __DIR__ . '/../../www/assets/project-registration/creation/themes',
+                        '/assets/project-registration/creation/themes'
+                    ),
+                    'project-registration-creation'
+                );
+
                 $csrf_token                   = new CSRFSynchronizerToken('/project/');
                 $dashboard_widget_dao         = new DashboardWidgetDao($widget_factory);
                 $dashboard_widget_retriever   = new DashboardWidgetRetriever($dashboard_widget_dao);
@@ -120,7 +133,10 @@ class Home implements DispatchableWithRequest
                                 )]
                             )
                         ),
-                        EventManager::instance()
+                        EventManager::instance(),
+                        $layout,
+                        $project_registration_creation_javascript_asset,
+                        $project_registration_creation_css_assets
                     ),
                     new WidgetDashboardController(
                         $csrf_token,

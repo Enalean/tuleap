@@ -99,7 +99,11 @@ export default class ProjectInformationFooter extends Vue {
         await this.$store.dispatch("createProject", project_properties);
 
         if (!this.is_project_approval_required) {
-            redirectToUrl("/my");
+            redirectToUrl(
+                "/projects/" +
+                    encodeURIComponent(this.project_name_properties.slugified_name) +
+                    "/?should-display-created-project-modal=true"
+            );
         } else {
             this.$router.push("approval");
         }

@@ -193,6 +193,35 @@ const webpack_config_for_frs_admin = {
     }
 };
 
+const webpack_config_for_project_registration_modal = {
+    entry: {
+        "project-registration-creation": "./project/registration/index-for-modal.ts"
+    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(
+        assets_dir_path + "/project-registration/creation/scripts/"
+    ),
+    externals: {
+        tlp: "tlp"
+    },
+    module: {
+        rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.rule_mustache_files
+        ]
+    },
+    plugins: [
+        webpack_configurator.getManifestPlugin(),
+        webpack_configurator.getTypescriptCheckerPlugin(false)
+    ],
+    resolve: {
+        extensions: [".ts", ".js"]
+    }
+};
+
 const configs_with_manifest = [
     webpack_config_for_vue_components,
     webpack_config_for_rich_text_editor,
@@ -209,5 +238,6 @@ module.exports = [
     webpack_config_for_dashboards,
     webpack_config_for_flaming_parrot_code,
     webpack_config_for_burning_parrot_code,
-    ...configs_with_manifest
+    ...configs_with_manifest,
+    webpack_config_for_project_registration_modal
 ];

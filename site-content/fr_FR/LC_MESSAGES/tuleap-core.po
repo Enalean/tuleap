@@ -414,6 +414,9 @@ msgstr "Configurer les services"
 msgid "Confirm"
 msgstr "Confirmer"
 
+msgid "Congratulations!"
+msgstr "Félicitations !"
+
 msgid ""
 "Congratulations, you don't have any customisations in your language files!"
 msgstr "Félicitations, vous n'avez pas personnalisé vos fichiers de langue !"
@@ -1415,6 +1418,9 @@ msgstr "Gestion de code source"
 msgid "Start by choosing a widget"
 msgstr "Commencez par choisir un widget"
 
+msgid "Start working"
+msgstr "Commencer le travail"
+
 msgid "Status"
 msgstr "Statut"
 
@@ -1909,6 +1915,9 @@ msgstr "Bienvenue à bord"
 
 msgid "Welcome message and information for users"
 msgstr "Message de bienvenue et informations générales pour les utilisateurs"
+
+msgid "Welcome to your new project"
+msgstr "Bienvenue dans votre nouveau projet"
 
 msgid "Welcome, %s."
 msgstr "Bienvenue, %s"
