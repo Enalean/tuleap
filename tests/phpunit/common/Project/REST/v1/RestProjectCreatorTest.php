@@ -41,6 +41,7 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\Admin\Categories\CategoryCollection;
 use Tuleap\Project\Admin\Categories\MissingMandatoryCategoriesException;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
+use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\Template\InvalidXMLTemplateNameException;
@@ -59,6 +60,10 @@ class RestProjectCreatorTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox;
 
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|FieldUpdator
+     */
+    private $field_updator;
     private $project_manager;
     private $creator;
     private $user;
@@ -97,6 +102,8 @@ class RestProjectCreatorTest extends TestCase
         $this->categories_updater = M::mock(ProjectCategoriesUpdater::class);
         $this->categories_updater->shouldReceive('update')->byDefault();
         $this->categories_updater->shouldReceive('checkCollectionConsistency')->byDefault();
+        $this->field_updator = \Mockery::mock(FieldUpdator::class);
+        $this->field_updator->shouldReceive('updateFromArray')->byDefault();
 
         $this->creator              = new RestProjectCreator(
             $this->project_manager,
@@ -119,6 +126,7 @@ class RestProjectCreatorTest extends TestCase
             ),
             $this->permissions_checker,
             $this->categories_updater,
+            $this->field_updator
         );
 
         $this->user = new \PFUser(['language_id' => 'en_US']);

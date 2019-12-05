@@ -31,6 +31,7 @@ use ProjectCreator;
 use ProjectManager;
 use ProjectUGroup;
 use ProjectXMLImporter;
+use ProjectXMLImporterLogger;
 use ReferenceManager;
 use ServiceManager;
 use Tuleap\Glyph\GlyphFinder;
@@ -39,11 +40,15 @@ use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\Categories\TroveSetNodeFacade;
+use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
+use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\Project\Banner\BannerCreator;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerPermissionsChecker;
 use Tuleap\Project\Banner\BannerRemover;
 use Tuleap\Project\Banner\BannerRetriever;
+use Tuleap\Project\DescriptionFieldsDao;
+use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\Label\LabelDao;
@@ -1734,6 +1739,11 @@ class ProjectResource extends AuthenticatedResource
                 new \ProjectHistoryDao(),
                 new TroveSetNodeFacade(),
             ),
+            new FieldUpdator(
+                new DescriptionFieldsFactory(new DescriptionFieldsDao()),
+                new ProjectDetailsDAO(),
+                new ProjectXMLImporterLogger()
+            )
         );
     }
 }
