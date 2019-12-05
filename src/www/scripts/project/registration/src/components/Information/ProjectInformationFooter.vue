@@ -61,6 +61,9 @@ export default class ProjectInformationFooter extends Vue {
     @State
     is_creating_project!: boolean;
 
+    @State
+    is_project_approval_required!: boolean;
+
     @Getter
     has_error!: boolean;
 
@@ -95,7 +98,11 @@ export default class ProjectInformationFooter extends Vue {
 
         await this.$store.dispatch("createProject", project_properties);
 
-        redirectToUrl("/my");
+        if (!this.is_project_approval_required) {
+            redirectToUrl("/my");
+        } else {
+            this.$router.push("approval");
+        }
     }
 
     buildProjectPropertyDetailedPrivacy(): ProjectProperties {

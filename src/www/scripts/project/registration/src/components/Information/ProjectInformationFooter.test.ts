@@ -26,9 +26,11 @@ import { createStoreMock } from "../../../../../vue-components/store-wrapper-jes
 import { ProjectNameProperties } from "../../type";
 import { State } from "../../store/type";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
+import VueRouter from "vue-router";
 
 describe("ProjectInformationFooter", () => {
-    let factory: Wrapper<ProjectInformationFooter>, store: Store;
+    let factory: Wrapper<ProjectInformationFooter>, store: Store, router: VueRouter;
+
     beforeEach(async () => {
         const state: State = {
             selected_template: {
@@ -41,8 +43,26 @@ describe("ProjectInformationFooter", () => {
             are_restricted_users_allowed: false,
             project_default_visibility: "public",
             error: null,
-            is_creating_project: false
+            is_creating_project: false,
+            is_project_approval_required: false
         };
+
+        router = new VueRouter({
+            routes: [
+                {
+                    path: "/",
+                    name: "template"
+                },
+                {
+                    path: "/information",
+                    name: "information"
+                },
+                {
+                    path: "/approval",
+                    name: "approval"
+                }
+            ]
+        });
 
         const store_options = {
             state
@@ -61,7 +81,8 @@ describe("ProjectInformationFooter", () => {
                 is_public: true,
                 privacy: "public"
             },
-            mocks: { $store: store }
+            mocks: { $store: store },
+            router
         });
     });
 
@@ -196,5 +217,15 @@ describe("ProjectInformationFooter", () => {
             "tlp-button-icon-right",
             "fa-arrow-circle-o-right"
         ]);
+    });
+
+    it(`Redirects user on waiting for validation when project needs a site administrator approval`, async () => {
+        factory.vm.$store.state.is_project_approval_required = true;
+
+        factory.find("[data-test=project-registration-next-button]").trigger("click");
+
+        await factory.vm.$nextTick().then(() => {});
+
+        expect(factory.vm.$route.name).toBe("approval");
     });
 });
