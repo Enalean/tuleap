@@ -86,6 +86,8 @@ class ProjectCreationTest extends TestCase
     public function testItCreatesAProject(): void
     {
         ForgeConfig::set(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED, '1');
+        ForgeConfig::set('codendi_log', '/tmp');
+        ForgeConfig::set('sys_logger_level', 'error');
         $projectCreator = ProjectCreator::buildSelfRegularValidation();
 
         $projectCreator->create(

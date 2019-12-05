@@ -144,6 +144,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * @var EventManager
      */
     private $event_manager;
+    /**
+     * @var \Tuleap\Project\Admin\DescriptionFields\FieldUpdator
+     */
+    private $field_updator;
 
     public function __construct(
         ProjectManager $projectManager,
@@ -161,6 +165,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         Rule_ProjectName $rule_short_name,
         Rule_ProjectFullName $rule_full_name,
         EventManager $event_manager,
+        \Tuleap\Project\Admin\DescriptionFields\FieldUpdator $field_updator,
         $force_activation = false
     ) {
         $this->send_notifications                   = $send_notifications;
@@ -179,6 +184,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->synchronized_project_membership_duplicator  = $synchronized_project_membership_duplicator;
         $this->frs_license_agreement_factory = $frs_license_agreement_factory;
         $this->event_manager = $event_manager;
+        $this->field_updator = $field_updator;
     }
 
     public static function buildSelfByPassValidation(): self
@@ -248,6 +254,11 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             new \Rule_ProjectName(),
             new \Rule_ProjectFullName(),
             EventManager::instance(),
+            new \Tuleap\Project\Admin\DescriptionFields\FieldUpdator(
+                new DescriptionFieldsFactory(new DescriptionFieldsDao()),
+                new \Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO(),
+                new ProjectXMLImporterLogger()
+            ),
             $force_activation
         );
     }
@@ -365,6 +376,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             return;
         }
 
+        $this->field_updator->update($data, $group_id);
         $this->setCategories($data, $group_id);
         $this->initFileModule($group_id);
         $this->setProjectAdmin($group_id, $admin_user);
@@ -505,24 +517,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * insert descriptions, insert trove categories
      * protected for testing purpose
      */
-    protected function setCategories($data, $group_id)
+    protected function setCategories(ProjectCreationData $data, $group_id)
     {
-        $fields_factory = new DescriptionFieldsFactory(new DescriptionFieldsDao());
-        $descfieldsinfos = $fields_factory->getAllDescriptionFields();
-
-        for ($i=0; $i<sizeof($descfieldsinfos); $i++) {
-            $desc_id_val = $data->getField($descfieldsinfos[$i]["group_desc_id"]);
-            if ($desc_id_val !== null && $desc_id_val != '') {
-                $sql="INSERT INTO group_desc_value (group_id, group_desc_id, value) VALUES ('".db_ei($group_id)."','".db_ei($descfieldsinfos[$i]["group_desc_id"])."','".db_escape_string(trim($desc_id_val))."')";
-                $result=db_query($sql);
-
-                if (!$result) {
-                    [$host,$port] = explode(':', $GLOBALS['sys_default_domain']);
-                    exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'ins_desc_fail', array($host,db_error())));
-                }
-            }
-        }
-
         foreach ($data->getTroveData() as $root => $values) {
             foreach ($values as $value) {
                 db_query("INSERT INTO trove_group_link (trove_cat_id,trove_cat_version,"
