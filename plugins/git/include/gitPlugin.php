@@ -2690,7 +2690,8 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 $this->getGitDao(),
                 UserManager::instance()
             ),
-            $this->getIncludeAssets()
+            $this->getIncludeAssets(),
+            EventManager::instance()
         );
     }
 
@@ -2726,7 +2727,8 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 new GitPHPProjectRetriever(),
                 new CommitForCurrentTreeRetriever(),
                 $this->getGitRepositoryUrlManager()
-            )
+            ),
+            EventManager::instance()
         );
     }
 
