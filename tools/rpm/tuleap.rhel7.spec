@@ -459,7 +459,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/taskboard
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/tuleap_synchro
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/project-registration
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.json
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/composer.lock
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/tools/utils/autoload
@@ -846,6 +845,7 @@ fi
 %{APP_DIR}/src/www/assets/dashboards
 %{APP_DIR}/src/www/assets/statistics
 %{APP_DIR}/src/www/assets/projectlinks
+%{APP_DIR}/src/www/assets/project-registration
 %{APP_DIR}/src/www/assets/ckeditor-*
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/favicon.ico
