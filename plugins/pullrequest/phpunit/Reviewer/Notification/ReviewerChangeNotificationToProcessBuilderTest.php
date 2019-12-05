@@ -73,8 +73,8 @@ final class ReviewerChangeNotificationToProcessBuilderTest extends TestCase
         $pull_request  = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(12);
         $pull_request->shouldReceive('getTitle')->andReturn('PR Title');
-        $change_user   = \Mockery::mock(PFUser::class);
-        $new_reviewers = [\Mockery::mock(PFUser::class), \Mockery::mock(PFUser::class)];
+        $change_user   = $this->buildUser(102);
+        $new_reviewers = [$this->buildUser(103), $this->buildUser(104)];
 
         $reviewer_change_event = ReviewerChangeEvent::fromID(147);
 
@@ -134,5 +134,10 @@ final class ReviewerChangeNotificationToProcessBuilderTest extends TestCase
 
         $notifications = $this->builder->getNotificationsToProcess($reviewer_change_event);
         $this->assertEmpty($notifications);
+    }
+
+    private function buildUser(int $user_id): PFUser
+    {
+        return new PFUser(['user_id' => $user_id, 'language_id' => 'en']);
     }
 }
