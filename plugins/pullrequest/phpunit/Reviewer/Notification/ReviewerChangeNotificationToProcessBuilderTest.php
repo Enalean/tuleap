@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChange;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeEvent;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangePullRequestAssociation;
@@ -44,6 +45,10 @@ final class ReviewerChangeNotificationToProcessBuilderTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UserHelper
      */
     private $user_helper;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HTMLURLBuilder
+     */
+    private $html_url_builder;
 
     /**
      * @var ReviewerChangeNotificationToProcessBuilder
@@ -54,22 +59,28 @@ final class ReviewerChangeNotificationToProcessBuilderTest extends TestCase
     {
         $this->reviewer_change_retriever = \Mockery::mock(ReviewerChangeRetriever::class);
         $this->user_helper               = \Mockery::mock(UserHelper::class);
+        $this->html_url_builder          = \Mockery::mock(HTMLURLBuilder::class);
 
         $this->builder = new ReviewerChangeNotificationToProcessBuilder(
             $this->reviewer_change_retriever,
-            $this->user_helper
+            $this->user_helper,
+            $this->html_url_builder
         );
     }
 
     public function testBuildReviewerAddedNotificationFromReviewerChangeEvent(): void
     {
         $pull_request  = \Mockery::mock(PullRequest::class);
+        $pull_request->shouldReceive('getId')->andReturn(12);
+        $pull_request->shouldReceive('getTitle')->andReturn('PR Title');
         $change_user   = \Mockery::mock(PFUser::class);
         $new_reviewers = [\Mockery::mock(PFUser::class), \Mockery::mock(PFUser::class)];
 
         $reviewer_change_event = ReviewerChangeEvent::fromID(147);
 
         $this->user_helper->shouldReceive('getDisplayNameFromUser')->andReturn('Display name');
+        $this->user_helper->shouldReceive('getAbsoluteUserURL')->andReturn('https://example.com/users/foo');
+        $this->html_url_builder->shouldReceive('getAbsolutePullRequestOverviewUrl')->andReturn('https://example.com/link-to-pr');
         $this->reviewer_change_retriever->shouldReceive('getChangeWithTheAssociatedPullRequestByID')
             ->with($reviewer_change_event->getChangeID())
             ->andReturn(
@@ -85,7 +96,33 @@ final class ReviewerChangeNotificationToProcessBuilderTest extends TestCase
             );
 
         $notifications = $this->builder->getNotificationsToProcess($reviewer_change_event);
-        $this->assertCount(count($new_reviewers), $notifications);
+        $this->assertNotEmpty($notifications);
+    }
+
+    public function testNoAddedNotificationIsBuiltIfThereIsNoNewReviewer(): void
+    {
+        $pull_request  = \Mockery::mock(PullRequest::class);
+        $pull_request->shouldReceive('getId')->andReturn(12);
+        $change_user   = \Mockery::mock(PFUser::class);
+
+        $reviewer_change_event = ReviewerChangeEvent::fromID(148);
+
+        $this->reviewer_change_retriever->shouldReceive('getChangeWithTheAssociatedPullRequestByID')
+            ->with($reviewer_change_event->getChangeID())
+            ->andReturn(
+                new ReviewerChangePullRequestAssociation(
+                    new ReviewerChange(
+                        new \DateTimeImmutable('@20'),
+                        $change_user,
+                        [],
+                        []
+                    ),
+                    $pull_request
+                )
+            );
+
+        $notifications = $this->builder->getNotificationsToProcess($reviewer_change_event);
+        $this->assertEmpty($notifications);
     }
 
     public function testNoNotificationAreBuiltWhenTheCorrespondingChangeCannotBeFound(): void

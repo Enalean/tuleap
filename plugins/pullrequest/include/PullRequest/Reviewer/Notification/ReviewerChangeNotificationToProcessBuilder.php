@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\Reviewer\Notification;
 
 use Tuleap\PullRequest\Notification\EventSubjectToNotification;
 use Tuleap\PullRequest\Notification\NotificationToProcessBuilder;
+use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeRetriever;
 use UserHelper;
 
@@ -40,11 +41,19 @@ final class ReviewerChangeNotificationToProcessBuilder implements NotificationTo
      * @var UserHelper
      */
     private $user_helper;
+    /**
+     * @var HTMLURLBuilder
+     */
+    private $html_url_builder;
 
-    public function __construct(ReviewerChangeRetriever $reviewer_change_retriever, UserHelper $user_helper)
-    {
+    public function __construct(
+        ReviewerChangeRetriever $reviewer_change_retriever,
+        UserHelper $user_helper,
+        HTMLURLBuilder $html_url_builder
+    ) {
         $this->reviewer_change_retriever = $reviewer_change_retriever;
         $this->user_helper               = $user_helper;
+        $this->html_url_builder          = $html_url_builder;
     }
 
     public function getNotificationsToProcess(EventSubjectToNotification $event) : array
@@ -57,20 +66,23 @@ final class ReviewerChangeNotificationToProcessBuilder implements NotificationTo
             return [];
         }
 
-        $notifications = [];
-
         $pull_request    = $reviewer_change_pull_request_association->getPullRequest();
         $reviewer_change = $reviewer_change_pull_request_association->getReviewerChange();
         $change_user     = $reviewer_change->changedBy();
-        foreach ($reviewer_change->getAddedReviewers() as $added_reviewer) {
-            $notifications[] = ReviewerAddedNotification::fromReviewerChangeInformation(
-                $this->user_helper,
-                $pull_request,
-                $change_user,
-                $added_reviewer
-            );
+        $added_reviewers = $reviewer_change->getAddedReviewers();
+
+        if (empty($added_reviewers)) {
+            return [];
         }
 
-        return $notifications;
+        $notification = ReviewerAddedNotification::fromReviewerChangeInformation(
+            $this->user_helper,
+            $this->html_url_builder,
+            $pull_request,
+            $change_user,
+            $added_reviewers
+        );
+
+        return [$notification];
     }
 }

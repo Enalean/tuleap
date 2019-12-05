@@ -49,6 +49,7 @@ use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\REST\v1\GitCommitRepresentationBuilder;
+use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
@@ -1253,6 +1254,7 @@ class PullRequestsResource extends AuthenticatedResource
                 new EventSubjectToNotificationListenerProvider([
                     ReviewerChangeEvent::class => [
                         function (): EventSubjectToNotificationListener {
+                            $html_url_builder = new HTMLURLBuilder($this->git_repository_factory, new InstanceBaseURLBuilder());
                             return new EventSubjectToNotificationListener(
                                 new PullRequestNotificationSendMail(
                                     new \MailBuilder(
@@ -1270,8 +1272,7 @@ class PullRequestsResource extends AuthenticatedResource
                                     new \MailEnhancer(),
                                     $this->permission_checker,
                                     $this->git_repository_factory,
-                                    new HTMLURLBuilder($this->git_repository_factory),
-                                    \Codendi_HTMLPurifier::instance()
+                                    $html_url_builder
                                 ),
                                 new ReviewerChangeNotificationToProcessBuilder(
                                     new ReviewerChangeRetriever(
@@ -1279,7 +1280,8 @@ class PullRequestsResource extends AuthenticatedResource
                                         $this->pull_request_factory,
                                         $this->user_manager
                                     ),
-                                    \UserHelper::instance()
+                                    \UserHelper::instance(),
+                                    $html_url_builder
                                 )
                             );
                         }

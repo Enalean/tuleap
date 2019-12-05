@@ -57,25 +57,19 @@ final class PullRequestNotificationSendMail implements PullRequestNotificationSt
      * @var HTMLURLBuilder
      */
     private $url_builder;
-    /**
-     * @var Codendi_HTMLPurifier
-     */
-    private $html_purifier;
 
     public function __construct(
         MailBuilder $mail_builder,
         MailEnhancer $mail_enhancer,
         PullRequestPermissionChecker $pull_request_permission_checker,
         GitRepositoryFactory $repository_factory,
-        HTMLURLBuilder $url_builder,
-        Codendi_HTMLPurifier $html_purifier
+        HTMLURLBuilder $url_builder
     ) {
         $this->mail_builder                    = $mail_builder;
         $this->mail_enhancer                   = $mail_enhancer;
         $this->pull_request_permission_checker = $pull_request_permission_checker;
         $this->repository_factory              = $repository_factory;
         $this->url_builder                     = $url_builder;
-        $this->html_purifier                   = $html_purifier;
     }
 
     public function execute(NotificationToProcess $notification) : void
@@ -87,15 +81,13 @@ final class PullRequestNotificationSendMail implements PullRequestNotificationSt
             return;
         }
 
-        $notification_body = $notification->asPlaintext();
-
         $this->mail_builder->buildAndSendEmail(
             $destination_repository->getProject(),
             new Notification(
                 $this->getRecipientEmails($notification),
                 $this->getSubject($pull_request, $destination_repository),
-                $this->html_purifier->purify($notification_body),
-                $notification_body,
+                $notification->asEnhancedContent()->toString(),
+                $notification->asPlaintext(),
                 $this->url_builder->getAbsolutePullRequestOverviewUrl($pull_request),
                 dgettext('tuleap-pullrequest', 'Pull request')
             ),

@@ -24,26 +24,30 @@ namespace Tuleap\PullRequest\Reference;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\ForgeConfigSandbox;
+use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\PullRequest\PullRequest;
 
 final class HTMLURLBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
+    use MockeryPHPUnitIntegration;
 
     /**
      * @var \GitRepositoryFactory
      */
     private $git_repository_factory;
     /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|InstanceBaseURLBuilder
+     */
+    private $instance_base_url_builder;
+    /**
      * @var int
      */
     private $repository_id;
+
     /**
      * @var int
      */
     private $project_id;
-
     /**
      * @var HTMLURLBuilder
      */
@@ -60,9 +64,11 @@ final class HTMLURLBuilderTest extends TestCase
         $project                      = \Mockery::spy(\Project::class, ['getID' => $this->project_id, 'getUnixName' => false, 'isPublic' => false]);
         $repository->shouldReceive('getProject')->andReturns($project);
         $this->git_repository_factory->shouldReceive('getRepositoryById')->with($this->repository_id)->andReturns($repository);
+        $this->instance_base_url_builder = \Mockery::mock(InstanceBaseURLBuilder::class);
 
         $this->html_url_builder = new HTMLURLBuilder(
-            $this->git_repository_factory
+            $this->git_repository_factory,
+            $this->instance_base_url_builder
         );
     }
 
@@ -75,24 +81,13 @@ final class HTMLURLBuilderTest extends TestCase
         $this->assertEquals($expected_url, $result);
     }
 
-    public function testItReturnsTheAbsoluteWebURLInHTTPSToPullRequestOverview(): void
+    public function testItReturnsTheAbsoluteWebURLToPullRequestOverview(): void
     {
-        \ForgeConfig::set('sys_https_host', 'example.com');
+        $this->instance_base_url_builder->shouldReceive('build')->andReturn('https://example.com')->once();
 
         $result = $this->html_url_builder->getAbsolutePullRequestOverviewUrl($this->buildPullRequest(28));
 
         $expected_url = 'https://example.com/plugins/git/?action=pull-requests&repo_id=8&group_id=109#/pull-requests/28/overview';
-
-        $this->assertEquals($expected_url, $result);
-    }
-
-    public function testItReturnsTheAbsoluteWebURLInHTTPToPullRequestOverviewWhenHTTPSIsNotAvailable(): void
-    {
-        \ForgeConfig::set('sys_default_domain', 'cleartext.example.com');
-
-        $result = $this->html_url_builder->getAbsolutePullRequestOverviewUrl($this->buildPullRequest(28));
-
-        $expected_url = 'http://cleartext.example.com/plugins/git/?action=pull-requests&repo_id=8&group_id=109#/pull-requests/28/overview';
 
         $this->assertEquals($expected_url, $result);
     }

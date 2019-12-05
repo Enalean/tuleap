@@ -23,8 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Reviewer\Notification;
 
 use PFUser;
+use TemplateRendererFactory;
+use Tuleap\PullRequest\Notification\NotificationTemplatedContent;
+use Tuleap\PullRequest\Notification\NotificationEnhancedContent;
 use Tuleap\PullRequest\Notification\NotificationToProcess;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use UserHelper;
 
 /**
@@ -41,30 +45,56 @@ final class ReviewerAddedNotification implements NotificationToProcess
      */
     private $change_user_display_name;
     /**
-     * @var PFUser
+     * @var PFUser[]
      */
-    private $new_reviewer;
+    private $new_reviewers;
+    /**
+     * @var NotificationEnhancedContent
+     */
+    private $enhanced_content;
 
+    /**
+     * @param PFUser[] $new_reviewers
+     */
     private function __construct(
         PullRequest $pull_request,
         string $change_user_display_name,
-        PFUser $new_reviewer
+        array $new_reviewers,
+        NotificationEnhancedContent $enhanced_content
     ) {
         $this->pull_request              = $pull_request;
         $this->change_user_display_name  = $change_user_display_name;
-        $this->new_reviewer              = $new_reviewer;
+        $this->new_reviewers             = $new_reviewers;
+        $this->enhanced_content          = $enhanced_content;
     }
 
+    /**
+     * @psalm-param non-empty-array<PFUser> $new_reviewers
+     */
     public static function fromReviewerChangeInformation(
         UserHelper $user_helper,
+        HTMLURLBuilder $html_url_builder,
         PullRequest $pull_request,
         PFUser $change_user,
-        PFUser $new_reviewer
+        array $new_reviewers
     ): self {
+        $change_user_display_name = $user_helper->getDisplayNameFromUser($change_user) ?? '';
+
         return new self(
             $pull_request,
-            $user_helper->getDisplayNameFromUser($change_user) ?? '',
-            $new_reviewer
+            $change_user_display_name,
+            $new_reviewers,
+            new NotificationTemplatedContent(
+                TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/reviewer'),
+                'reviewer-added-mail-content',
+                new ReviewerAddedNotificationContentPresenter(
+                    $change_user_display_name,
+                    $user_helper->getAbsoluteUserURL($change_user),
+                    $pull_request->getId(),
+                    $pull_request->getTitle(),
+                    $html_url_builder->getAbsolutePullRequestOverviewUrl($pull_request)
+                )
+            )
         );
     }
 
@@ -75,7 +105,7 @@ final class ReviewerAddedNotification implements NotificationToProcess
 
     public function getRecipients(): array
     {
-        return [$this->new_reviewer];
+        return $this->new_reviewers;
     }
 
     public function asPlaintext(): string
@@ -86,5 +116,10 @@ final class ReviewerAddedNotification implements NotificationToProcess
             $this->pull_request->getId(),
             $this->pull_request->getTitle(),
         );
+    }
+
+    public function asEnhancedContent(): NotificationEnhancedContent
+    {
+        return $this->enhanced_content;
     }
 }

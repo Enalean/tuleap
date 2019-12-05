@@ -724,10 +724,11 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     /**
      * @return HTMLURLBuilder
      */
-    private function getHTMLBuilder()
+    private function getHTMLBuilder(): HTMLURLBuilder
     {
         return new HTMLURLBuilder(
-            $this->getRepositoryFactory()
+            $this->getRepositoryFactory(),
+            new \Tuleap\InstanceBaseURLBuilder()
         );
     }
 }
