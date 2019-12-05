@@ -78,12 +78,20 @@ final class ReviewerAddedNotification implements NotificationToProcess
         PFUser $change_user,
         array $new_reviewers
     ): self {
+        $reviewers_to_notify = [];
+
+        foreach ($new_reviewers as $new_reviewer) {
+            if ($new_reviewer->getId() !== $change_user->getId()) {
+                $reviewers_to_notify[] = $new_reviewer;
+            }
+        }
+
         $change_user_display_name = $user_helper->getDisplayNameFromUser($change_user) ?? '';
 
         return new self(
             $pull_request,
             $change_user_display_name,
-            $new_reviewers,
+            $reviewers_to_notify,
             new NotificationTemplatedContent(
                 TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/reviewer'),
                 'reviewer-added-mail-content',

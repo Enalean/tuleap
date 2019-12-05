@@ -37,8 +37,8 @@ final class ReviewerAddedNotificationTest extends TestCase
 
     public function testReviewerAddedNotificationCanBeBuiltFromReviewerChangeInformation(): void
     {
-        $change_user      = \Mockery::mock(PFUser::class);
-        $new_reviewers    = [\Mockery::mock(PFUser::class), \Mockery::mock(PFUser::class)];
+        $change_user      = $this->buildUser(102);
+        $new_reviewers    = [$this->buildUser(103), $this->buildUser(104)];
         $pull_request     = \Mockery::mock(PullRequest::class);
         $user_helper      = \Mockery::mock(UserHelper::class);
         $html_url_builder = \Mockery::mock(HTMLURLBuilder::class);
@@ -66,5 +66,37 @@ final class ReviewerAddedNotificationTest extends TestCase
             '<a href="https://example.com/users/usera">User A</a> requested your review on <a href="https://example.com/pr-link">#12</a>: My awesome contribution',
             $notification->asEnhancedContent()->toString()
         );
+    }
+
+    public function testUserAddingItselfAsReviewerDoesNotReceiveANotificationForItsOwnAction(): void
+    {
+        $change_user      = $this->buildUser(102);
+        $pull_request     = \Mockery::mock(PullRequest::class);
+        $user_helper      = \Mockery::mock(UserHelper::class);
+        $html_url_builder = \Mockery::mock(HTMLURLBuilder::class);
+
+        \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
+
+        $user_helper->shouldReceive('getDisplayNameFromUser')->with($change_user)->andReturn('User A');
+        $user_helper->shouldReceive('getAbsoluteUserURL')->with($change_user)->andReturn('https://example.com/users/usera');
+        $html_url_builder->shouldReceive('getAbsolutePullRequestOverviewUrl')->with($pull_request)->andReturn('https://example.com/pr-link');
+        $pull_request->shouldReceive('getId')->andReturn(12);
+        $pull_request->shouldReceive('getTitle')->andReturn('My awesome contribution');
+
+        $notification = ReviewerAddedNotification::fromReviewerChangeInformation(
+            $user_helper,
+            $html_url_builder,
+            $pull_request,
+            $change_user,
+            [$change_user]
+        );
+
+
+        $this->assertEmpty($notification->getRecipients());
+    }
+
+    private function buildUser(int $user_id): PFUser
+    {
+        return new PFUser(['user_id' => $user_id, 'language_id' => 'en']);
     }
 }
