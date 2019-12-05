@@ -26,7 +26,9 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Event\Events\HitEvent;
-use Tuleap\Userlog\ProjectDashboardUrlParser;
+use Tuleap\Event\Events\ProjectProviderEvent;
+use Tuleap\Userlog\UserlogAccess;
+use Tuleap\Userlog\UserlogAccessStorage;
 use Tuleap\Userlog\UserLogBuilder;
 use Tuleap\Userlog\UserLogExporter;
 use Tuleap\Userlog\UserLogRouter;
@@ -49,6 +51,7 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
+        $this->addHook(ProjectProviderEvent::NAME);
     }
 
     public function burning_parrot_get_stylesheets($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -106,28 +109,38 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
         }
 
         $request = $event->getRequest();
-        $project_id = $request->getProject()->getID();
-        if (! $project_id) {
-            $project_id = $this->deduceProjectIdFromURL($request);
-        }
 
         $userLogManager = new UserLogManager(new AdminPageRenderer(), UserManager::instance());
-        $userLogManager->logAccess(
-            $_SERVER['REQUEST_TIME'],
-            $project_id,
-            $request->getCurrentUser()->getId(),
-            $request->getFromServer('HTTP_USER_AGENT'),
-            $request->getFromServer('REQUEST_METHOD'),
-            $request->getFromServer('REQUEST_URI'),
-            HTTPRequest::instance()->getIPAddress(),
-            $request->getFromServer('HTTP_REFERER')
-        );
+        $userlog_access = UserlogAccess::buildFromRequest($request);
+
+        if ($userlog_access->hasProjectIdDefined()) {
+            $userLogManager->logAccess($userlog_access);
+            return;
+        }
+
+        $userlog_access_storage = UserlogAccessStorage::instance();
+        $userlog_access_storage->storeUserlogAccess($userlog_access);
+
+        register_shutdown_function(function () {
+            $userlog_access_storage = UserlogAccessStorage::instance();
+            $userlog_access = $userlog_access_storage->getUserlogAccess();
+
+            if ($userlog_access === null) {
+                return;
+            }
+
+            $user_log_manager = new UserLogManager(new AdminPageRenderer(), UserManager::instance());
+            $user_log_manager->logAccess($userlog_access);
+        });
     }
 
-    private function deduceProjectIdFromURL(HTTPRequest $request): ?int
+    public function projectProviderEvent(ProjectProviderEvent $event): void
     {
-        $parser = new ProjectDashboardUrlParser(ProjectManager::instance());
-        return $parser->getProjectIdFromProjectDashboardURL($request);
+        $userlog_access_storage = UserlogAccessStorage::instance();
+        $userlog_access = $userlog_access_storage->getUserlogAccess();
+
+        $userlog_access->setProject($event->getProject());
+        $userlog_access_storage->storeUserlogAccess($userlog_access);
     }
 
     public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables)

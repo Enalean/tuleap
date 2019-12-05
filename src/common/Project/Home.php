@@ -119,7 +119,8 @@ class Home implements DispatchableWithRequest
                                     'dashboards'
                                 )]
                             )
-                        )
+                        ),
+                        EventManager::instance()
                     ),
                     new WidgetDashboardController(
                         $csrf_token,
