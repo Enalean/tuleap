@@ -25,6 +25,8 @@ require_once __DIR__.'/../../../../bootstrap.php';
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Queue\PersistentQueue;
+use Tuleap\Queue\QueueFactory;
 
 class ActionsRunnerTest extends TestCase
 {
@@ -51,12 +53,12 @@ class ActionsRunnerTest extends TestCase
         \ForgeConfig::restore();
     }
 
-    public function testAllPostCreationTasksAreExecuted()
+    public function testAllPostCreationTasksAreExecuted(): void
     {
         $task_1 = \Mockery::mock(PostCreationTask::class);
         $task_2 = \Mockery::mock(PostCreationTask::class);
 
-        $actions_runner = new ActionsRunner($this->logger, $this->dao, $task_1, $task_2);
+        $actions_runner = new ActionsRunner($this->logger, $this->dao, new QueueFactory($this->logger), $task_1, $task_2);
 
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
 
@@ -66,11 +68,37 @@ class ActionsRunnerTest extends TestCase
         $actions_runner->executePostCreationActions($changeset);
     }
 
-    public function testAsyncPostCreationTasksFallbackInSyncProcessingInCaseOfError()
+    public function testPostCreationTaskCanBeExecutedAsynchronously(): void
+    {
+        $task = \Mockery::mock(PostCreationTask::class);
+
+        $queue_factory = \Mockery::mock(QueueFactory::class);
+        $queue         = \Mockery::mock(PersistentQueue::class);
+        $queue->shouldReceive('pushSinglePersistentMessage')->once();
+        $queue_factory->shouldReceive('getPersistentQueue')->andReturn($queue);
+
+        $actions_runner = new ActionsRunner($this->logger, $this->dao, $queue_factory, $task);
+
+        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive('getId');
+        $artifact = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact->shouldReceive('getId')->andReturn(753);
+        $changeset->shouldReceive('getArtifact')->andReturn($artifact);
+
+        \ForgeConfig::set('sys_async_emails', 'all');
+
+        $this->dao->shouldReceive('addNewPostCreationEvent')->once();
+        $this->dao->shouldNotReceive('addEndDate');
+        $task->shouldNotReceive('execute');
+
+        $actions_runner->executePostCreationActions($changeset);
+    }
+
+    public function testAsyncPostCreationTasksFallbackInSyncProcessingInCaseOfError(): void
     {
         $task   = \Mockery::mock(PostCreationTask::class);
 
-        $actions_runner = new ActionsRunner($this->logger, $this->dao, $task);
+        $actions_runner = new ActionsRunner($this->logger, $this->dao, new QueueFactory($this->logger), $task);
 
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getId');
@@ -86,13 +114,13 @@ class ActionsRunnerTest extends TestCase
         $actions_runner->executePostCreationActions($changeset);
     }
 
-    public function testTasksAreExecutedInOrder()
+    public function testTasksAreExecutedInOrder(): void
     {
         $task_1 = \Mockery::mock(PostCreationTask::class);
         $task_2 = \Mockery::mock(PostCreationTask::class);
         $task_3 = \Mockery::mock(PostCreationTask::class);
 
-        $actions_runner = new ActionsRunner($this->logger, $this->dao, $task_1, $task_2, $task_3);
+        $actions_runner = new ActionsRunner($this->logger, $this->dao, new QueueFactory($this->logger), $task_1, $task_2, $task_3);
 
         $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
 

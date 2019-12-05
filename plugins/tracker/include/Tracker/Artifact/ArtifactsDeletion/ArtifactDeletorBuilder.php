@@ -24,6 +24,7 @@ use BackendLogger;
 use EventManager;
 use ProjectHistoryDao;
 use Tracker_ArtifactDao;
+use Tuleap\Queue\QueueFactory;
 use WrapperLogger;
 
 class ArtifactDeletorBuilder
@@ -38,7 +39,8 @@ class ArtifactDeletorBuilder
         $async_artifact_archive_runner = new AsynchronousArtifactsDeletionActionsRunner(
             new PendingArtifactRemovalDao(),
             $logger,
-            \UserManager::instance()
+            \UserManager::instance(),
+            new QueueFactory($logger)
         );
 
         return new ArtifactDeletor(
