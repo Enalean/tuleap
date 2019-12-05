@@ -43,7 +43,7 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
     private $mapped_field_retriever;
     /** @var \Tracker_Semantic_Title */
     private $semantic_title;
-    /** @var AddInPlaceTrackerRetriever */
+    /** @var AddInPlaceRetriever */
     private $add_in_place_tracker_retriever;
 
     protected function setUp(): void
@@ -51,7 +51,7 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
         $this->trackers_retriever             = M::mock(TrackerCollectionRetriever::class);
         $this->mapped_field_retriever         = M::mock(MappedFieldRetriever::class);
         $this->semantic_title                 = M::mock(\Tracker_Semantic_Title::class);
-        $this->add_in_place_tracker_retriever = M::mock(AddInPlaceTrackerRetriever::class);
+        $this->add_in_place_tracker_retriever = M::mock(AddInPlaceRetriever::class);
         $this->trackers_builder               = new TrackerPresenterCollectionBuilder(
             $this->trackers_retriever,
             $this->mapped_field_retriever,
@@ -95,7 +95,11 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
             ->andReturnNull();
 
         $this->mockSemanticTitle($taskboard_tracker, true, false);
-        $this->add_in_place_tracker_retriever->shouldReceive('retrieveAddInPlaceTracker')->with($taskboard_tracker, $user)->andReturn(null);
+        $this->add_in_place_tracker_retriever
+            ->shouldReceive('retrieveAddInPlace')
+            ->with($taskboard_tracker, $user)
+            ->once()
+            ->andReturn(null);
 
         $result = $this->trackers_builder->buildCollection($milestone, $user);
         $this->assertFalse($result[0]->can_update_mapped_field);
@@ -110,9 +114,11 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
         $first_tracker            = $this->mockTracker('27');
         $second_tracker           = $this->mockTracker('85');
         $third_tracker            = $this->mockTracker('96');
+        $fourth_tracker           = $this->mockTracker('99');
         $first_taskboard_tracker  = new TaskboardTracker($milestone_tracker, $first_tracker);
         $second_taskboard_tracker = new TaskboardTracker($milestone_tracker, $second_tracker);
         $third_taskboard_tracker  = new TaskboardTracker($milestone_tracker, $third_tracker);
+        $fourth_taskboard_tracker = new TaskboardTracker($milestone_tracker, $fourth_tracker);
 
         $this->trackers_retriever
             ->shouldReceive('getTrackersForMilestone')
@@ -120,21 +126,51 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
             ->once()
             ->andReturn(
                 new TrackerCollection(
-                    [$first_taskboard_tracker, $second_taskboard_tracker, $third_taskboard_tracker]
+                    [
+                        $first_taskboard_tracker,
+                        $second_taskboard_tracker,
+                        $third_taskboard_tracker,
+                        $fourth_taskboard_tracker
+                    ]
                 )
             );
 
         $this->mockMappedField($user, $first_taskboard_tracker, true);
         $this->mockMappedField($user, $second_taskboard_tracker, false);
         $this->mockMappedField($user, $third_taskboard_tracker, false);
+        $this->mockMappedField($user, $fourth_taskboard_tracker, false);
 
         $this->mockSemanticTitle($first_taskboard_tracker, false, true);
         $this->mockSemanticTitle($second_taskboard_tracker, true, true);
         $this->mockSemanticTitle($third_taskboard_tracker, true, true, \Tracker_FormElement_Field_String::class);
+        $this->mockSemanticTitle($fourth_taskboard_tracker, true, true);
 
-        $this->add_in_place_tracker_retriever->shouldReceive('retrieveAddInPlaceTracker')->with($first_taskboard_tracker, $user)->andReturn(null)->once();
-        $this->add_in_place_tracker_retriever->shouldReceive('retrieveAddInPlaceTracker')->with($second_taskboard_tracker, $user)->andReturn(null)->once();
-        $this->add_in_place_tracker_retriever->shouldReceive('retrieveAddInPlaceTracker')->with($third_taskboard_tracker, $user)->andReturn(null)->once();
+        $this->add_in_place_tracker_retriever
+            ->shouldReceive('retrieveAddInPlace')
+            ->with($first_taskboard_tracker, $user)
+            ->once()
+            ->andReturn(null);
+        $this->add_in_place_tracker_retriever
+            ->shouldReceive('retrieveAddInPlace')
+            ->with($second_taskboard_tracker, $user)
+            ->once()
+            ->andReturn(null);
+        $this->add_in_place_tracker_retriever
+            ->shouldReceive('retrieveAddInPlace')
+            ->with($third_taskboard_tracker, $user)
+            ->once()
+            ->andReturn(null);
+
+        $this->add_in_place_tracker_retriever
+            ->shouldReceive('retrieveAddInPlace')
+            ->with($fourth_taskboard_tracker, $user)
+            ->once()
+            ->andReturn(
+                new AddInPlace(
+                    M::mock(\Tracker::class)->shouldReceive(['getId' => 666])->getMock(),
+                    M::mock(\Tracker_FormElement_Field_ArtifactLink::class)->shouldReceive(['getId' => 999])->getMock()
+                )
+            );
 
         $result = $this->trackers_builder->buildCollection($milestone, $user);
         $this->assertSame(27, $result[0]->id);
@@ -145,6 +181,11 @@ final class TrackerPresenterCollectionBuilderTest extends TestCase
         $this->assertEquals(1533, $result[1]->title_field->id);
         $this->assertFalse($result[1]->title_field->is_string_field);
         $this->assertTrue($result[2]->title_field->is_string_field);
+        $this->assertNull($result[0]->add_in_place);
+        $this->assertNull($result[1]->add_in_place);
+        $this->assertNull($result[2]->add_in_place);
+        $this->assertEquals(666, $result[3]->add_in_place->child_tracker_id);
+        $this->assertEquals(999, $result[3]->add_in_place->parent_artifact_link_field_id);
     }
 
     private function mockMappedField(PFUser $user, TaskboardTracker $taskboard_tracker, bool $can_user_update): void

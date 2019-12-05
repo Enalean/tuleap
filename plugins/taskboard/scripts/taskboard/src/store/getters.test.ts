@@ -39,8 +39,8 @@ describe("column_and_swimlane_of_cell", () => {
                 swimlanes: [swimlane_to_find]
             },
             trackers: [
-                { id: 1, add_in_place_tracker_id: 1533 },
-                { id: 2, add_in_place_tracker_id: null }
+                { id: 1, add_in_place: { child_tracker_id: 1533 } },
+                { id: 2, add_in_place: null }
             ]
         } as RootState;
     });

@@ -27,16 +27,29 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import AddButton from "./AddButton.vue";
 import LabelEditor from "../Editor/Label/LabelEditor.vue";
 import EventBus from "../../../../../../helpers/event-bus";
-import { TaskboardEvent } from "../../../../../../type";
+import { Card, ColumnDefinition, TaskboardEvent } from "../../../../../../type";
+import { namespace } from "vuex-class";
+import { NewCardPayload } from "../../../../../../store/swimlane/card/type";
+
+const swimlane = namespace("swimlane");
 
 @Component({
     components: { LabelEditor, AddButton }
 })
 export default class AddCard extends Vue {
+    @Prop({ required: true })
+    readonly column!: ColumnDefinition;
+
+    @Prop({ required: true })
+    readonly parent!: Card;
+
+    @swimlane.Action
+    readonly addCard!: (payload: NewCardPayload) => Promise<void>;
+
     private is_in_add_mode = false;
     private label = "";
 
@@ -57,6 +70,12 @@ export default class AddCard extends Vue {
     }
 
     save(): void {
+        const payload: NewCardPayload = {
+            parent: this.parent,
+            column: this.column,
+            label: this.label
+        };
+        this.addCard(payload);
         this.deferResetOfLabel();
     }
 

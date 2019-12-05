@@ -29,9 +29,36 @@ export interface TextValue {
 
 export interface Field {
     readonly field_id: number;
+}
+
+export interface TextField extends Field {
     readonly value: TextValue | string;
+}
+
+export interface ListField extends Field {
+    readonly bind_value_ids: number[];
+}
+
+export interface Link {
+    readonly id: number;
+    readonly type: string;
+}
+
+export interface LinkField extends Field {
+    readonly links: Link[];
 }
 
 export interface PutBody {
     readonly values: Field[];
+}
+
+export interface TrackerReference {
+    readonly id: number;
+}
+
+export type Values = Array<TextField | ListField | LinkField>;
+
+export interface PostBody {
+    readonly tracker: TrackerReference;
+    readonly values: Values;
 }

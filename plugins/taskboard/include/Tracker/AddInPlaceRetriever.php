@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Tracker;
 
-class AddInPlaceTrackerRetriever
+class AddInPlaceRetriever
 {
     /**
      * @var \Tracker_FormElementFactory
@@ -34,9 +34,11 @@ class AddInPlaceTrackerRetriever
         $this->form_element_factory = $form_element_factory;
     }
 
-    public function retrieveAddInPlaceTracker(TaskboardTracker $taskboard_tracker, \PFUser $user): ?\Tracker
-    {
-        $tracker        = $taskboard_tracker->getTracker();
+    public function retrieveAddInPlace(
+        TaskboardTracker $taskboard_tracker,
+        \PFUser $user
+    ): ?AddInPlace {
+        $tracker = $taskboard_tracker->getTracker();
         $child_trackers = $tracker->getChildren();
 
         if (count($child_trackers) !== 1) {
@@ -54,10 +56,18 @@ class AddInPlaceTrackerRetriever
             return null;
         }
 
-        return $child_tracker;
+        $parent_artifact_link_field = $this->form_element_factory->getAnArtifactLinkField($user, $tracker);
+        if (! $parent_artifact_link_field || ! $parent_artifact_link_field->userCanUpdate($user)) {
+            return null;
+        }
+
+        return new AddInPlace(
+            $child_tracker,
+            $parent_artifact_link_field
+        );
     }
 
-    private function isOnlyTitleRequired(\Tracker $tracker, \Tracker_FormElement_Field $field_title) : bool
+    private function isOnlyTitleRequired(\Tracker $tracker, \Tracker_FormElement_Field $field_title): bool
     {
         $title_field_id = $field_title->getId();
         $tracker_fields = $this->form_element_factory->getUsedFields($tracker);

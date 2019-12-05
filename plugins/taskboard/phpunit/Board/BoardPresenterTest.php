@@ -28,6 +28,8 @@ use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Taskboard\Column\ColumnPresenter;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenter;
+use Tuleap\Taskboard\Tracker\AddInPlace;
+use Tuleap\Taskboard\Tracker\AddInPlacePresenter;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Taskboard\Tracker\TitleFieldPresenter;
 use Tuleap\Taskboard\Tracker\TrackerPresenter;
@@ -108,8 +110,7 @@ final class BoardPresenterTest extends TestCase
             M::mock(\Tracker_FormElement_Field_Text::class)->shouldReceive(['getId' => 123])->getMock()
         );
 
-        $add_in_place_tracker = M::mock(\Tracker::class)->shouldReceive(['getId' => 1533])->getMock();
-        $trackers             = [new TrackerPresenter($taskboard_tracker, true, $title_field, $add_in_place_tracker)];
+        $trackers = [new TrackerPresenter($taskboard_tracker, true, $title_field, null)];
 
         $presenter = new BoardPresenter(
             $this->milestone_presenter,

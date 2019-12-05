@@ -19,8 +19,9 @@
  */
 
 export interface Mapping {
-    tracker_id: number;
-    accepts: Array<ListValue>;
+    readonly tracker_id: number;
+    readonly field_id: number | null;
+    readonly accepts: Array<ListValue>;
 }
 
 export interface ListValue {
@@ -53,16 +54,27 @@ export interface RemainingEffort {
     is_being_saved: boolean;
 }
 
+export interface ArtifactLinkField {
+    readonly id: number;
+}
+
 export interface TitleField {
     readonly id: number;
     readonly is_string_field: boolean;
+}
+
+export interface AddInPlace {
+    child_tracker_id: number;
+    parent_artifact_link_field_id: number;
 }
 
 export interface Tracker {
     readonly id: number;
     readonly can_update_mapped_field: boolean;
     readonly title_field: TitleField | null;
-    readonly add_in_place_tracker_id: number | null;
+    readonly artifact_link_field: ArtifactLinkField | null;
+    readonly add_in_place_tracker_id: AddInPlace | null;
+    readonly add_in_place: AddInPlace | null;
 }
 
 export interface Card {

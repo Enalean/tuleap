@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, ColumnDefinition, Tracker } from "../../../type";
+declare(strict_types=1);
 
-export interface NewRemainingEffortPayload {
-    readonly card: Card;
-    readonly value: number;
-}
+namespace Tuleap\Taskboard\Tracker;
 
-export interface UpdateCardPayload {
-    readonly card: Card;
-    readonly label: string;
-    readonly tracker: Tracker;
-}
+final class AddInPlacePresenter
+{
+    /**
+     * @var int
+     */
+    public $child_tracker_id;
+    /**
+     * @var int
+     */
+    public $parent_artifact_link_field_id;
 
-export interface NewCardPayload {
-    readonly label: string;
-    readonly parent: Card;
-    readonly column: ColumnDefinition;
+    public function __construct(AddInPlace $add_in_place)
+    {
+        $this->child_tracker_id              = (int) $add_in_place->getChildTracker()->getId();
+        $this->parent_artifact_link_field_id = (int) $add_in_place->getParentArtifactLinkField()->getId();
+    }
 }

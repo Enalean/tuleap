@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,20 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Tracker;
 
-final class TitleFieldPresenter
+use Tracker;
+use Tracker_FormElement_Field_ArtifactLink;
+
+class AddInPlace
 {
     /**
-     * @var int
+     * @var Tracker
      */
-    public $id;
+    private $child_tracker;
     /**
-     * @var bool
+     * @var Tracker_FormElement_Field_ArtifactLink
      */
-    public $is_string_field;
+    private $parent_artifact_link_field;
 
-    public function __construct(\Tracker_FormElement_Field_Text $field)
+    public function __construct(Tracker $child_tracker, Tracker_FormElement_Field_ArtifactLink $parent_artifact_link_field)
     {
-        $this->id              = (int) $field->getId();
-        $this->is_string_field = $field instanceof \Tracker_FormElement_Field_String;
+        $this->child_tracker              = $child_tracker;
+        $this->parent_artifact_link_field = $parent_artifact_link_field;
+    }
+
+    public function getChildTracker(): Tracker
+    {
+        return $this->child_tracker;
+    }
+
+    public function getParentArtifactLinkField(): Tracker_FormElement_Field_ArtifactLink
+    {
+        return $this->parent_artifact_link_field;
     }
 }
