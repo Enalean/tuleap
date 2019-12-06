@@ -123,7 +123,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
 
     /**
      * @param $group_desc_id int id of the description field to return
-     * @return the value of the field requested, null if the field isnt set
+     * @return ?string the value of the field requested, null if the field isnt set
      */
     public function getField($group_desc_id)
     {

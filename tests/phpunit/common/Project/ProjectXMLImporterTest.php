@@ -103,6 +103,7 @@ class ProjectXMLImporterTest extends TestCase
             new \Rule_ProjectName(),
             new \Rule_ProjectFullName(),
             Mockery::mock(EventManager::class),
+            Mockery::mock(\Tuleap\Project\Admin\DescriptionFields\FieldUpdator::class),
             false
         );
 

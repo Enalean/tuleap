@@ -37,6 +37,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\GlobalSVNPollution;
+use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
@@ -62,6 +63,10 @@ final class ProjectCreatorTest extends TestCase
      * @var ProjectCreator
      */
     public $creator;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FieldUpdator
+     */
+    private $field_updator;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectDashboardDuplicator
      */
@@ -110,6 +115,7 @@ final class ProjectCreatorTest extends TestCase
         $this->ugroup_duplicator                          = Mockery::mock(UgroupDuplicator::class);
         $this->label_dao                                  = Mockery::mock(LabelDao::class);
         $this->dashboard_duplicator                       = Mockery::mock(ProjectDashboardDuplicator::class);
+        $this->field_updator                              = Mockery::mock(FieldUpdator::class);
     }
 
     public function testMandatoryDescriptionNotSetRaiseException(): void
@@ -204,6 +210,7 @@ final class ProjectCreatorTest extends TestCase
         $this->creator->shouldReceive('copyEmailOptionsFromTemplate')->once();
 
         $this->dashboard_duplicator->shouldReceive('duplicate')->once();
+        $this->field_updator->shouldReceive('update')->once();
 
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('isError')->andReturns(false);
@@ -255,6 +262,7 @@ final class ProjectCreatorTest extends TestCase
         $this->creator->shouldReceive('copyEmailOptionsFromTemplate')->once();
 
         $this->dashboard_duplicator->shouldReceive('duplicate')->once();
+        $this->field_updator->shouldReceive('update')->once();
 
         $project = Mockery::mock(\Project::class);
         $project->shouldReceive('isError')->andReturns(false);
@@ -304,6 +312,7 @@ final class ProjectCreatorTest extends TestCase
                 $this->rule_short_name,
                 $this->rule_project_full_name,
                 $this->event_manager,
+                $this->field_updator,
                 $force_activation
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
