@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Admin\GlobalAdminController;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
@@ -98,6 +99,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         // Tracker related check
         $this->checkUserCanAccessTracker($object->getTracker(), $user, $request);
         $GLOBALS['group_id'] = $object->getTracker()->getGroupId();
+
+        $event = new ProjectProviderEvent($object->getTracker()->getProject());
+        EventManager::instance()->processEvent($event);
 
         // Need specific treatment for artifact
         // TODO: transfer in Tracker_Artifact::process

@@ -20,10 +20,12 @@
 
 namespace Tuleap\Git\RepositoryList;
 
+use EventManager;
 use GitPlugin;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
+use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
@@ -53,16 +55,23 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
      */
     private $list_presenter_builder;
 
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     public function __construct(
         \ProjectManager $project_manager,
         \GitRepositoryFactory $repository_factory,
         ListPresenterBuilder $list_presenter_builder,
-        IncludeAssets $include_assets
+        IncludeAssets $include_assets,
+        EventManager $event_manager
     ) {
         $this->project_manager        = $project_manager;
         $this->repository_factory     = $repository_factory;
         $this->list_presenter_builder = $list_presenter_builder;
         $this->include_assets         = $include_assets;
+        $this->event_manager          = $event_manager;
     }
 
     /**
@@ -97,6 +106,9 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
         }
 
         \Tuleap\Project\ServiceInstrumentation::increment('git');
+
+        $event = new ProjectProviderEvent($this->project);
+        $this->event_manager->processEvent($event);
 
         $layout->addCssAsset(
             new CssAsset(

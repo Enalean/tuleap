@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 
 namespace Tuleap\Git;
 
+use EventManager;
 use Git_URL;
 use GitPlugin;
 use GitRepository;
@@ -29,6 +30,7 @@ use GitViews_ShowRepo_Content;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
+use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Git\Repository\View\FilesHeaderPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
@@ -69,6 +71,11 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
      */
     private $files_header_presenter_builder;
 
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     public function __construct(
         \GitRepositoryFactory $repository_factory,
         \ProjectManager $project_manager,
@@ -76,7 +83,8 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         History\GitPhpAccessLogger $access_logger,
         \ThemeManager $theme_manager,
         GitRepositoryHeaderDisplayer $header_displayer,
-        FilesHeaderPresenterBuilder $files_header_presenter_builder
+        FilesHeaderPresenterBuilder $files_header_presenter_builder,
+        EventManager $event_manager
     ) {
         $this->repository_factory             = $repository_factory;
         $this->project_manager                = $project_manager;
@@ -85,6 +93,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         $this->theme_manager                  = $theme_manager;
         $this->header_displayer               = $header_displayer;
         $this->files_header_presenter_builder = $files_header_presenter_builder;
+        $this->event_manager                  = $event_manager;
     }
 
     /**
@@ -136,6 +145,9 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         $this->redirectOutdatedActions($request, $layout);
 
         \Tuleap\Project\ServiceInstrumentation::increment('git');
+
+        $event = new ProjectProviderEvent($project);
+        $this->event_manager->processEvent($event);
 
         $git_php_viewer = new GitViews_GitPhpViewer($repository, $request->getCurrentUser());
 
