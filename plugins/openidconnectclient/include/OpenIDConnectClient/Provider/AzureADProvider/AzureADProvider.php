@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Provider\AzureADProvider;
 
+use ForgeConfig;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 final class AzureADProvider implements Provider
@@ -141,5 +142,10 @@ final class AzureADProvider implements Provider
     public function getTenantId() : string
     {
         return $this->tenant_id;
+    }
+
+    public function getRedirectUri() : string
+    {
+        return 'https://'. ForgeConfig::get('sys_https_host') . '/plugins/openidconnectclient/azure/';
     }
 }

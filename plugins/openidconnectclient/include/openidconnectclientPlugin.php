@@ -19,19 +19,24 @@
  */
 
 use FastRoute\RouteCollector;
+use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\OpenIDConnectClient\AccountLinker;
 use Tuleap\OpenIDConnectClient\AccountLinker\RegisterPresenter;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountDao;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountManager;
-use Tuleap\OpenIDConnectClient\AccountLinker;
-use Tuleap\OpenIDConnectClient\AdminRouter;
-use Tuleap\OpenIDConnectClient\Administration\IconPresenterFactory;
+use Tuleap\OpenIDConnectClient\Administration;
 use Tuleap\OpenIDConnectClient\Administration\ColorPresenterFactory;
+use Tuleap\OpenIDConnectClient\Administration\IconPresenterFactory;
+use Tuleap\OpenIDConnectClient\AdminRouter;
 use Tuleap\OpenIDConnectClient\Authentication\Authorization\AuthorizationRequestCreator;
+use Tuleap\OpenIDConnectClient\Authentication\AzureADUserLinkController;
+use Tuleap\OpenIDConnectClient\Authentication\AzureProviderIssuerClaimValidator;
 use Tuleap\OpenIDConnectClient\Authentication\Flow;
+use Tuleap\OpenIDConnectClient\Authentication\GenericProviderIssuerClaimValidator;
 use Tuleap\OpenIDConnectClient\Authentication\IDTokenVerifier;
 use Tuleap\OpenIDConnectClient\Authentication\StateFactory;
 use Tuleap\OpenIDConnectClient\Authentication\StateManager;
@@ -40,8 +45,8 @@ use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestCreator;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestSender;
 use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestCreator;
 use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestSender;
-use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Login;
+use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Login\IncoherentDataUniqueProviderException;
 use Tuleap\OpenIDConnectClient\LoginController;
 use Tuleap\OpenIDConnectClient\OpenIDConnectClientLogger;
@@ -54,12 +59,10 @@ use Tuleap\OpenIDConnectClient\Provider\GenericProvider\GenericProviderManager;
 use Tuleap\OpenIDConnectClient\Provider\ProviderDao;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\Router;
+use Tuleap\OpenIDConnectClient\UserMapping;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingDao;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserPreferencesPresenter;
-use Tuleap\OpenIDConnectClient\UserMapping;
-use Tuleap\OpenIDConnectClient\Administration;
-use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\DispatchTemporaryRedirect;
@@ -224,13 +227,13 @@ class openidconnectclientPlugin extends Plugin
     /**
      * @return Flow
      */
-    private function getFlow(ProviderManager $provider_manager)
+    private function getFlow(ProviderManager $provider_manager, $audience_claim_validator)
     {
         $state_manager     = new StateManager(
             new StateStorage($_SESSION),
             new StateFactory(new RandomNumberGenerator())
         );
-        $id_token_verifier = new IDTokenVerifier();
+        $id_token_verifier = new IDTokenVerifier($audience_claim_validator);
         $request_factory   = HTTPFactoryBuilder::requestFactory();
         $stream_factory    = HTTPFactoryBuilder::streamFactory();
         $http_client       = HttpClientFactory::createClient();
@@ -388,6 +391,36 @@ class openidconnectclientPlugin extends Plugin
             $event->setIsInBurningParrotCompatiblePage();
         }
     }
+    public function routeAzureIndex() : DispatchableWithRequest
+    {
+        $user_manager             = UserManager::instance();
+        $user_mapping_manager     = new UserMappingManager(new UserMappingDao());
+        $unlinked_account_manager = new UnlinkedAccountManager(
+            new UnlinkedAccountDao(),
+            new RandomNumberGenerator()
+        );
+
+        $username_generator = new Login\Registration\UsernameGenerator(new Rule_UserName());
+        $provider_manager   = $this->getProviderManager();
+
+        $automatic_user_registration = new Login\Registration\AutomaticUserRegistration(
+            $user_manager,
+            $username_generator
+        );
+
+        $flow = $this->getFlow($provider_manager, new AzureProviderIssuerClaimValidator());
+
+        return new AzureADUserLinkController(
+            new Login\Controller(
+                $user_manager,
+                $user_mapping_manager,
+                $unlinked_account_manager,
+                $automatic_user_registration,
+                $flow,
+                new OpenIDConnectClientLogger()
+            )
+        );
+    }
 
     public function routeIndex() : DispatchableWithRequest
     {
@@ -407,7 +440,8 @@ class openidconnectclientPlugin extends Plugin
             $user_manager,
             $username_generator
         );
-        $flow                        = $this->getFlow($provider_manager);
+
+        $flow = $this->getFlow($provider_manager, new GenericProviderIssuerClaimValidator());
 
         $login_controller          = new Login\Controller(
             $user_manager,
@@ -483,6 +517,7 @@ class openidconnectclientPlugin extends Plugin
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeIndex'));
             $r->addRoute(['GET', 'POST'], '/admin[/[index.php]]', $this->getRouteHandler('routeAdminIndex'));
             $r->addRoute(['GET', 'POST'], '/login.php', $this->getRouteHandler('routeLogin'));
+            $r->get('/azure/', $this->getRouteHandler('routeAzureIndex'));
         });
     }
 }

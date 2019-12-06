@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,16 @@ use Tuleap\OpenIDConnectClient\Provider\Provider;
 class IDTokenVerifier
 {
     /**
+     * @var IssuerClaimValidator
+     */
+    private $issuer_claim_validator;
+
+    public function __construct(IssuerClaimValidator $issuer_claim_validator)
+    {
+        $this->issuer_claim_validator = $issuer_claim_validator;
+    }
+
+    /**
      * @return array
      * @throws MalformedIDTokenException
      */
@@ -34,7 +44,8 @@ class IDTokenVerifier
         $id_token = $this->getJWTPayload($encoded_id_token);
 
         if (! $this->isSubjectIdentifierClaimPresent($id_token) ||
-            ! $this->isIssuerClaimValid($provider->getAuthorizationEndpoint(), $id_token) ||
+            ! isset($id_token['iss']) ||
+            ! $this->issuer_claim_validator->isIssuerClaimValid($provider, $id_token['iss']) ||
             ! $this->isAudienceClaimValid($provider->getClientId(), $id_token) ||
             ! $this->isNonceValid($nonce, $id_token)
         ) {
@@ -69,20 +80,6 @@ class IDTokenVerifier
     private function isSubjectIdentifierClaimPresent(array $id_token)
     {
         return isset($id_token['sub']);
-    }
-
-    private function isIssuerClaimValid($provider_authorization_endpoint, array $id_token)
-    {
-        if (! isset($id_token['iss'])) {
-            return false;
-        }
-        /*
-         * OpenID Connect Core Standard said the issuer identifier must exactly match
-         * the iss claim. However, since we do not implement OpenID Connect Discovery
-         * the issuer identifier is not obtained so we do the next best things we can
-         * do for now: we check if the iss claim is present in the authorization endpoint
-         */
-        return strpos($provider_authorization_endpoint, $id_token['iss']) !== false;
     }
 
     /**

@@ -78,20 +78,11 @@ class Flow
     }
 
     /**
-     * @return string
-     */
-    private function getRedirectUri()
-    {
-        return 'https://'. ForgeConfig::get('sys_https_host') . '/plugins/openidconnectclient/';
-    }
-
-    /**
-     * @return FlowResponse
      * @throws MalformedIDTokenException
      * @throws \Http\Client\Exception
      * @throws \Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException
      */
-    public function process(\HTTPRequest $request)
+    public function process(\HTTPRequest $request) : FlowResponse
     {
         $authorization_response = AuthorizationResponse::buildFromHTTPRequest($request);
         $signed_state           = $authorization_response->getState();
@@ -101,7 +92,7 @@ class Flow
         $token_request  = $this->token_request_creator->createTokenRequest(
             $provider,
             $authorization_response,
-            $this->getRedirectUri()
+            $provider->getRedirectUri()
         );
         $token_response = $this->token_request_sender->sendTokenRequest($token_request);
         $id_token       = $this->id_token_verifier->validate(

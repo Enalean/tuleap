@@ -18,31 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\OpenIDConnectClient\Authentication;
 
-namespace Tuleap\OpenIDConnectClient\Provider;
+use Tuleap\OpenIDConnectClient\Provider\Provider;
 
-interface Provider
+/**
+ * @template P of \Tuleap\OpenIDConnectClient\Provider\Provider
+ */
+interface IssuerClaimValidator
 {
-    public function getId(): int;
-
-    public function getName() : string;
-
-    public function getClientId() : string;
-
-    public function getClientSecret() : string;
-
-    public function isUniqueAuthenticationEndpoint() : bool;
-
-    public function getIcon() : string;
-
-    public function getColor() : string;
-
-    public function getAuthorizationEndpoint() : string;
-
-    public function getTokenEndpoint() : string;
-
-    public function getUserInfoEndpoint() : string;
-
-    public function getRedirectUri() : string;
+    /**
+     * @psalm-param P $provider
+     */
+    public function isIssuerClaimValid(Provider $provider, string $iss_from_id_token) : bool;
 }

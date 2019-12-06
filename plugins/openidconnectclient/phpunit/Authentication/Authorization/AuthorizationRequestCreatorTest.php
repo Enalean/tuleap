@@ -53,6 +53,7 @@ class AuthorizationRequestCreatorTest extends TestCase
         $provider = \Mockery::mock(Provider::class);
         $provider->shouldReceive('getAuthorizationEndpoint')->andReturns($authorization_endpoint);
         $provider->shouldReceive('getClientId')->andReturns('1234');
+        $provider->shouldReceive('getRedirectUri')->andReturns('https://exemple.com');
         $provider->shouldReceive('isUniqueAuthenticationEndpoint')->andReturns(true);
 
         $authorization_request = $authorization_request_creator->createAuthorizationRequest($provider, 'return_to');
@@ -77,11 +78,13 @@ class AuthorizationRequestCreatorTest extends TestCase
         $provider_1 = \Mockery::mock(Provider::class);
         $provider_1->shouldReceive('getAuthorizationEndpoint')->andReturns($authorization_endpoint_1);
         $provider_1->shouldReceive('getClientId')->andReturns('1234');
+        $provider_1->shouldReceive('getRedirectUri')->andReturns('https://exemple.com');
         $provider_1->shouldReceive('isUniqueAuthenticationEndpoint')->andReturns(false);
 
         $provider_2 = \Mockery::mock(Provider::class);
         $provider_2->shouldReceive('getAuthorizationEndpoint')->andReturns($authorization_endpoint_2);
         $provider_2->shouldReceive('getClientId')->andReturns('5678');
+        $provider_2->shouldReceive('getRedirectUri')->andReturns('https://exemple.org');
         $provider_2->shouldReceive('isUniqueAuthenticationEndpoint')->andReturns(false);
 
         $authorization_request_1 = $authorization_request_creator->createAuthorizationRequest($provider_1, 'return_to');
