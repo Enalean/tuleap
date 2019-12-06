@@ -80,16 +80,22 @@ class ProjectDashboardXMLImporterBase extends TestCase
      */
     protected $event_manager;
 
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|DisabledProjectWidgetsChecker
+     */
+    protected $disabled_widgets_checker;
+
     protected function setUp(): void
     {
         $this->dao                     = \Mockery::spy(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
         $this->project_dashboard_saver = new ProjectDashboardSaver(
             $this->dao
         );
-        $this->widget_creator = \Mockery::spy(\Tuleap\Dashboard\Widget\WidgetCreator::class);
-        $this->widget_factory = \Mockery::spy(\Tuleap\Widget\WidgetFactory::class);
-        $this->widget_dao     = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
-        $this->event_manager  = \Mockery::spy(\EventManager::class);
+        $this->widget_creator            = \Mockery::spy(\Tuleap\Dashboard\Widget\WidgetCreator::class);
+        $this->widget_factory            = \Mockery::spy(\Tuleap\Widget\WidgetFactory::class);
+        $this->widget_dao                = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
+        $this->event_manager             = \Mockery::spy(\EventManager::class);
+        $this->disabled_widgets_checker  = \Mockery::mock(DisabledProjectWidgetsChecker::class);
 
         $this->logger                     = \Mockery::spy(\Logger::class);
         $this->project_dashboard_importer = new ProjectDashboardXMLImporter(
@@ -97,7 +103,8 @@ class ProjectDashboardXMLImporterBase extends TestCase
             $this->widget_factory,
             $this->widget_dao,
             $this->logger,
-            $this->event_manager
+            $this->event_manager,
+            $this->disabled_widgets_checker
         );
 
         $this->mappings_registry = new MappingsRegistry();

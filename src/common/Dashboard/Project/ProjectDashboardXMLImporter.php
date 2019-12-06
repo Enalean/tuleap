@@ -1,6 +1,6 @@
 <?php
 /**
- *  Copyright (c) Enalean, 2017. All Rights Reserved.
+ *  Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -55,13 +55,25 @@ class ProjectDashboardXMLImporter
      */
     private $event_manager;
 
-    public function __construct(ProjectDashboardSaver $project_dashboard_saver, WidgetFactory $widget_factory, DashboardWidgetDao $widget_dao, \Logger $logger, \EventManager $event_manager)
-    {
-        $this->project_dashboard_saver = $project_dashboard_saver;
-        $this->widget_factory          = $widget_factory;
-        $this->widget_dao              = $widget_dao;
-        $this->logger                  = new \WrapperLogger($logger, 'Dashboards');
-        $this->event_manager           = $event_manager;
+    /**
+     * @var DisabledProjectWidgetsChecker
+     */
+    private $disabled_project_widgets_checker;
+
+    public function __construct(
+        ProjectDashboardSaver $project_dashboard_saver,
+        WidgetFactory $widget_factory,
+        DashboardWidgetDao $widget_dao,
+        \Logger $logger,
+        \EventManager $event_manager,
+        DisabledProjectWidgetsChecker $disabled_project_widgets_checker
+    ) {
+        $this->project_dashboard_saver          = $project_dashboard_saver;
+        $this->widget_factory                   = $widget_factory;
+        $this->widget_dao                       = $widget_dao;
+        $this->logger                           = new \WrapperLogger($logger, 'Dashboards');
+        $this->event_manager                    = $event_manager;
+        $this->disabled_project_widgets_checker = $disabled_project_widgets_checker;
     }
 
     public function import(\SimpleXMLElement $xml_element, PFUser $user, Project $project, MappingsRegistry $mapping_registry)
@@ -185,6 +197,12 @@ class ProjectDashboardXMLImporter
             $this->logger->error("Impossible to instantiate widget named '".$widget_name."'.  Widget skipped");
             return [null, null];
         }
+
+        if ($this->disabled_project_widgets_checker->isWidgetDisabled($widget, ProjectDashboardController::DASHBOARD_TYPE)) {
+            $this->logger->error("The widget named '".$widget_name."' is disabled. Widget skipped");
+            return [null, null];
+        }
+
         $widget->setOwner($project->getID(), ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
         if ($widget->isUnique() && isset($all_widgets[$widget->getId()])) {
             $this->logger->warn("Impossible to instantiate twice widget named '".$widget_name."'.  Widget skipped");

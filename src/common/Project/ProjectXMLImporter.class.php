@@ -20,6 +20,8 @@
 
 require_once __DIR__ . '/../../www/include/account.php';
 
+use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
+use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardSaver;
 use Tuleap\Dashboard\Project\ProjectDashboardXMLImporter;
@@ -187,7 +189,8 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
                 $widget_factory,
                 $widget_dao,
                 $logger,
-                $event_manager
+                $event_manager,
+                new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao())
             ),
             $synchronized_project_membership_dao,
             new XMLFileContentRetriever()
