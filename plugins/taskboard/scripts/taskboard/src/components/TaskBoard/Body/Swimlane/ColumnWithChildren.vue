@@ -24,7 +24,7 @@
         <template v-if="swimlane.is_loading_children_cards">
             <card-skeleton v-for="i in nb_skeletons_to_display" v-bind:key="i"/>
         </template>
-        <add-card v-if="is_add_card_rendered"/>
+        <add-card v-if="is_add_card_rendered" v-bind:column="column" v-bind:parent="swimlane.card"/>
     </drop-container-cell>
 </template>
 

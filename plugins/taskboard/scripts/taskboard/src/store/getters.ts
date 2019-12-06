@@ -61,5 +61,5 @@ export const tracker_of_card = (root_state: RootState) => (card: Card): Tracker 
 export const can_add_in_place = (root_state: RootState) => (swimlane: Swimlane): boolean => {
     const tracker = findTracker(root_state, swimlane.card.tracker_id);
 
-    return tracker.add_in_place_tracker_id !== null;
+    return tracker.add_in_place !== null;
 };

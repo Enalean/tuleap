@@ -18,10 +18,14 @@
  */
 import { ActionContext } from "vuex";
 import { RootState } from "../../type";
-import { UpdateCardPayload, NewRemainingEffortPayload } from "./type";
-import { patch, put } from "tlp";
+import { UpdateCardPayload, NewRemainingEffortPayload, NewCardPayload } from "./type";
+import { get, patch, post, put } from "tlp";
 import { SwimlaneState } from "../type";
-import { getPutArtifactBody } from "../../../helpers/update-artifact";
+import {
+    getPostArtifactBody,
+    getPutArtifactBody,
+    getPutArtifactBodyToAddChild
+} from "../../../helpers/update-artifact";
 
 const headers = {
     "Content-Type": "application/json"
@@ -44,6 +48,7 @@ export async function saveRemainingEffort(
         await context.dispatch("error/handleModalError", error, { root: true });
     }
 }
+
 export async function saveCard(
     context: ActionContext<SwimlaneState, RootState>,
     payload: UpdateCardPayload
@@ -58,6 +63,39 @@ export async function saveCard(
         context.commit("finishSavingCard", payload);
     } catch (error) {
         context.commit("resetSavingCard", card);
+        await context.dispatch("error/handleModalError", error, { root: true });
+    }
+}
+
+export async function addCard(
+    context: ActionContext<SwimlaneState, RootState>,
+    payload: NewCardPayload
+): Promise<void> {
+    try {
+        const [new_artifact_response, parent_artifact_response] = await Promise.all([
+            post(`/api/v1/artifacts`, {
+                headers,
+                body: JSON.stringify(getPostArtifactBody(payload, context.rootState.trackers))
+            }),
+            get(`/api/v1/artifacts/${encodeURIComponent(payload.parent.id)}`)
+        ]);
+        const [new_artifact, { values }] = await Promise.all([
+            new_artifact_response.json(),
+            parent_artifact_response.json()
+        ]);
+
+        await put(`/api/v1/artifacts/${encodeURIComponent(payload.parent.id)}`, {
+            headers,
+            body: JSON.stringify(
+                getPutArtifactBodyToAddChild(
+                    payload,
+                    context.rootState.trackers,
+                    new_artifact.id,
+                    values
+                )
+            )
+        });
+    } catch (error) {
         await context.dispatch("error/handleModalError", error, { root: true });
     }
 }

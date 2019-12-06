@@ -17,25 +17,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, Wrapper } from "@vue/test-utils";
 import AddCard from "./AddCard.vue";
 import LabelEditor from "../Editor/Label/LabelEditor.vue";
 import AddButton from "./AddButton.vue";
 import EventBus from "../../../../../../helpers/event-bus";
-import { TaskboardEvent } from "../../../../../../type";
+import { Card, ColumnDefinition, TaskboardEvent } from "../../../../../../type";
+import { createStoreMock } from "../../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { RootState } from "../../../../../../store/type";
+import { NewCardPayload } from "../../../../../../store/swimlane/card/type";
 
 jest.useFakeTimers();
 
+function getWrapper(): Wrapper<AddCard> {
+    return shallowMount(AddCard, {
+        propsData: {
+            column: { id: 42 } as ColumnDefinition,
+            parent: { id: 69 } as Card
+        },
+        mocks: {
+            $store: createStoreMock({
+                state: {
+                    swimlane: {}
+                } as RootState
+            })
+        }
+    });
+}
+
 describe("AddCard", () => {
     it("Displays add button and no editor yet", () => {
-        const wrapper = shallowMount(AddCard);
+        const wrapper = getWrapper();
 
         expect(wrapper.contains(LabelEditor)).toBe(false);
         expect(wrapper.contains(AddButton)).toBe(true);
     });
 
     it("Given the button is clicked, Then it hides the button and show the editor ", () => {
-        const wrapper = shallowMount(AddCard);
+        const wrapper = getWrapper();
 
         wrapper.find(AddButton).vm.$emit("click");
 
@@ -44,7 +63,7 @@ describe("AddCard", () => {
     });
 
     it("Given the esc key is pressed, Then it displays back the button and hide the editor", () => {
-        const wrapper = shallowMount(AddCard);
+        const wrapper = getWrapper();
 
         wrapper.find(AddButton).vm.$emit("click");
         EventBus.$emit(TaskboardEvent.ESC_KEY_PRESSED);
@@ -55,15 +74,23 @@ describe("AddCard", () => {
 
     it(`Given the editor is displayed,
         And the user hits enter,
-        Then the editor is cleared to enter a new card.
+        Then the card is saved
+        And the editor is cleared to enter a new card.
         `, () => {
-        const wrapper = shallowMount(AddCard);
+        const wrapper = getWrapper();
 
         wrapper.find(AddButton).vm.$emit("click");
         wrapper.setData({ label: "Lorem ipsum" });
 
         expect(wrapper.vm.$data.label).toBe("Lorem ipsum");
         wrapper.find(LabelEditor).vm.$emit("save");
+
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/addCard", {
+            parent: wrapper.vm.$props.parent,
+            column: wrapper.vm.$props.column,
+            label: "Lorem ipsum"
+        } as NewCardPayload);
+
         jest.runAllTimers();
         expect(wrapper.vm.$data.label).toBe("");
 

@@ -19,7 +19,7 @@
 
 import { ActionContext } from "vuex";
 import { RootState } from "../../type";
-import { UpdateCardPayload, NewRemainingEffortPayload } from "./type";
+import { UpdateCardPayload, NewRemainingEffortPayload, NewCardPayload } from "./type";
 import * as tlp from "tlp";
 import { SwimlaneState } from "../type";
 import { Card, Tracker } from "../../../type";
@@ -43,7 +43,18 @@ describe("Card actions", () => {
                 milestone_id: 42,
                 user: {
                     user_id: 101
-                }
+                },
+                trackers: [
+                    {
+                        id: 42,
+                        add_in_place: { child_tracker_id: 69, parent_artifact_link_field_id: 103 }
+                    } as Tracker,
+                    {
+                        id: 69,
+                        title_field: { id: 123, is_string_field: true },
+                        artifact_link_field: { id: 111 }
+                    } as Tracker
+                ]
             } as RootState
         } as unknown) as ActionContext<SwimlaneState, RootState>;
     });
@@ -149,6 +160,103 @@ describe("Card actions", () => {
             expect(context.commit).toHaveBeenCalledWith("startSavingCard", card);
             expect(context.commit).not.toHaveBeenCalledWith("finishSavingCard", payload);
             expect(context.commit).toHaveBeenCalledWith("resetSavingCard", card);
+            expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
+                root: true
+            });
+        });
+    });
+
+    describe("addCard", () => {
+        it("saves the card", async () => {
+            const payload: NewCardPayload = {
+                parent: { id: 74, tracker_id: 42 },
+                column: {
+                    mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
+                },
+                label: "Lorem"
+            } as NewCardPayload;
+
+            const tlpPostMock = jest.spyOn(tlp, "post");
+
+            await actions.addCard(context, payload);
+
+            expect(tlpPostMock).toHaveBeenCalledWith("/api/v1/artifacts", {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    tracker: {
+                        id: 69
+                    },
+                    values: [
+                        {
+                            field_id: 123,
+                            value: "Lorem"
+                        },
+                        {
+                            field_id: 666,
+                            bind_value_ids: [101]
+                        }
+                    ]
+                })
+            });
+        });
+
+        it("attach the card to the parent", async () => {
+            const payload: NewCardPayload = {
+                parent: { id: 74, tracker_id: 42 },
+                column: {
+                    mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
+                },
+                label: "Lorem"
+            } as NewCardPayload;
+
+            const tlpPostMock = jest.spyOn(tlp, "post");
+            mockFetchSuccess(tlpPostMock, { return_json: { id: 1001 } });
+
+            const tlpGetMock = jest.spyOn(tlp, "get");
+            mockFetchSuccess(tlpGetMock, { return_json: { values: [] } });
+
+            const tlpPutMock = jest.spyOn(tlp, "put");
+
+            await actions.addCard(context, payload);
+
+            expect(tlpGetMock).toHaveBeenCalledWith("/api/v1/artifacts/74");
+            expect(tlpPutMock).toHaveBeenCalledWith("/api/v1/artifacts/74", {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    values: [
+                        {
+                            field_id: 103,
+                            links: [
+                                {
+                                    id: 1001,
+                                    type: "_is_child"
+                                }
+                            ]
+                        }
+                    ]
+                })
+            });
+        });
+
+        it("warns about error if any", async () => {
+            const payload: NewCardPayload = {
+                parent: { tracker_id: 42 },
+                column: {
+                    mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
+                },
+                label: "Lorem"
+            } as NewCardPayload;
+
+            const tlpPostMock = jest.spyOn(tlp, "post");
+            const error = new Error();
+            tlpPostMock.mockRejectedValue(error);
+
+            await actions.addCard(context, payload);
+
             expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
                 root: true
             });
