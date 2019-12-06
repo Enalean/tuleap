@@ -30,6 +30,7 @@ use Project_AccessException;
 use Project_AccessPrivateException;
 use Project_AccessProjectNotFoundException;
 use Tuleap\Git\Permissions\AccessControlVerifier;
+use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 
@@ -50,9 +51,9 @@ class PullRequestPermissionCheckerTest extends TestCase
      */
     private $pull_request;
     /**
-     * @var \URLVerification
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectAccessChecker
      */
-    private $url_verification;
+    private $project_access_checker;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessControlVerifier
      */
@@ -69,7 +70,7 @@ class PullRequestPermissionCheckerTest extends TestCase
         $this->pull_request            = \Mockery::spy(\Tuleap\PullRequest\PullRequest::class);
         $this->repository              = \Mockery::spy(\GitRepository::class);
         $this->git_repository_factory  = \Mockery::spy(\GitRepositoryFactory::class);
-        $this->url_verification        = \Mockery::spy(\URLVerification::class);
+        $this->project_access_checker  = \Mockery::spy(ProjectAccessChecker::class);
         $this->access_control_verifier = \Mockery::mock(AccessControlVerifier::class);
     }
 
@@ -90,7 +91,7 @@ class PullRequestPermissionCheckerTest extends TestCase
         $this->pull_request->shouldReceive('getRepositoryId')->andReturn(10);
         $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
         $this->repository->shouldReceive('getProject')->andReturns(\Mockery::mock(\Project::class));
-        $this->url_verification->shouldReceive('userCanAccessProject')->andThrows(new Project_AccessPrivateException());
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrows(new Project_AccessPrivateException());
 
         $permission_checker = $this->instantiatePermissionChecker();
 
@@ -104,7 +105,7 @@ class PullRequestPermissionCheckerTest extends TestCase
         $this->pull_request->shouldReceive('getRepositoryId')->andReturn(10);
         $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
         $this->repository->shouldReceive('getProject')->andReturns(\Mockery::mock(\Project::class));
-        $this->url_verification->shouldReceive('userCanAccessProject')->andThrows(new Project_AccessProjectNotFoundException());
+        $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->andThrows(new Project_AccessProjectNotFoundException());
 
         $permission_checker = $this->instantiatePermissionChecker();
 
@@ -157,7 +158,7 @@ class PullRequestPermissionCheckerTest extends TestCase
     {
         return new PullRequestPermissionChecker(
             $this->git_repository_factory,
-            $this->url_verification,
+            $this->project_access_checker,
             $this->access_control_verifier
         );
     }

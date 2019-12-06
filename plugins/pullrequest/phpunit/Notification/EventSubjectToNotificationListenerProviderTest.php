@@ -61,6 +61,10 @@ final class EventSubjectToNotificationListenerProviderTest extends TestCase
         $listener_provider = new EventSubjectToNotificationListenerProvider([]);
 
         $event_subject_to_notification = new class implements EventSubjectToNotification {
+            public static function fromWorkerEventPayload(array $payload) : EventSubjectToNotification
+            {
+                return new self();
+            }
         };
 
         $listeners = $listener_provider->getListenersForEvent($event_subject_to_notification);
