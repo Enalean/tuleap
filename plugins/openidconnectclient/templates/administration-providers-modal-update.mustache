@@ -26,8 +26,8 @@
         <input type="hidden" name="action" value="update-provider">
         <input type="hidden" name="id" value="{{ getId }}">
         <div class="tlp-modal-body">
-            <div id="provider-admin-modal-name-container">
-                <div class="tlp-form-element" id="provider-admin-modal-name">
+            <div class="provider-admin-modal-name-container">
+                <div class="tlp-form-element provider-admin-modal-name">
                     <label class="tlp-label" for="name-{{ getId }}">{{ name }} <i class="fa fa-asterisk"></i></label>
                     <input
                         type="text"
@@ -39,11 +39,11 @@
                         required
                     >
                 </div>
-                <div class="tlp-form-element" id="provider-admin-modal-icon">
-                    <label class="tlp-label" for="fa fa-{{ getId }}">{{ icon }}</label>
+                <div class="tlp-form-element provider-admin-modal-icon">
+                    <label class="tlp-label" for="icon-{{ getId }}">{{ icon }}</label>
                     <select
                         class="tlp-select provider-icon-selector"
-                        id="fa fa-{{ getId }}"
+                        id="icon-{{ getId }}"
                         name="icon"
                     >
                         <option value=""></option>
@@ -52,7 +52,7 @@
                         {{/ icons_presenters }}
                     </select>
                 </div>
-                <div class="tlp-form-element" id="provider-admin-modal-color">
+                <div class="tlp-form-element provider-admin-modal-color">
                     <label class="tlp-label" for="color-{{ getId }}">{{ color }}</label>
                     <select
                         class="tlp-select provider-color-selector"
@@ -100,7 +100,7 @@
                 >
             </div>
 
-            <div class="tlp-form-element" id="provider-admin-modal-userinfo-endpoint-container">
+            <div class="tlp-form-element provider-admin-modal-userinfo-endpoint-container">
                 <label class="tlp-label" for="userinfo_endpoint-{{ getId }}">
                     {{ userinfo_endpoint }}
                 </label>
@@ -167,12 +167,11 @@
             </div>
 
             <div class="tlp-form-element">
-                <p class="tlp-label" id="provider-admin-modal-preview-label">{{ preview }}</p>
-                <div id="provider-admin-modal-provider-button-preview">
+                <p class="tlp-label provider-admin-modal-preview-label">{{ preview }}</p>
+                <div class="provider-admin-modal-provider-button-preview">
                     <button
                         type="button"
-                        class="tlp-button-primary tlp-button-large {{ getColor }}"
-                        id="provider-admin-modal-provider-button"
+                        class="tlp-button-primary tlp-button-large {{ getColor }} provider-admin-modal-provider-button"
                     >
                         <i {{# getIcon }}class="tlp-button-icon fa fa-{{ getIcon }}"{{/ getIcon }}></i>
                         <span>{{ btn_preview }}</span>
