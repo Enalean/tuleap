@@ -720,6 +720,8 @@ class RouteCollector
         $r->get('/news/permissions-per-group', [self::class, 'getNewsPermissionsPerGroup']);
 
         $r->get('/project/new', [self::class, 'getProjectRegistrationController']);
+        $r->get('/project/new-information', [self::class, 'getProjectRegistrationController']);
+        $r->get('/project/approval', [self::class, 'getProjectRegistrationController']);
 
         $collect_routes = new CollectRoutesEvent($r);
         $this->event_manager->processEvent($collect_routes);
