@@ -32,7 +32,8 @@ describe("rest-querier", () => {
             label: "My project public name",
             is_public: true,
             allow_restricted: true,
-            xml_template_name: "scrum"
+            xml_template_name: "scrum",
+            categories: []
         };
 
         const tlpPost = jest.spyOn(tlp, "post");

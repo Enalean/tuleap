@@ -46,6 +46,7 @@
                                                               data-test="register-new-project-information-switch"
                     />
                 </div>
+                <trove-category-list v-model="trove_cats"/>
             </div>
         </div>
 
@@ -53,6 +54,7 @@
             v-bind:project_name_properties="name_properties"
             v-bind:is_public="is_private === false"
             v-bind:privacy="selected_visibility"
+            v-bind:trove_cats="trove_cats"
         />
     </div>
 </template>
@@ -66,12 +68,14 @@ import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
 import ProjectInformationInputPrivacySwitch from "./Input/ProjectInformationInputPrivacySwitch.vue";
 import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
-import { ProjectNameProperties } from "../../type";
+import { ProjectNameProperties, TroveCatProperties } from "../../type";
 import { Getter, State } from "vuex-class";
 import EventBus from "../../helpers/event-bus";
+import TroveCategoryList from "./TroveCat/TroveCategoryList.vue";
 
 @Component({
     components: {
+        TroveCategoryList,
         ProjectInformationInputPrivacyList,
         ProjectName,
         ProjectInformationInputPrivacySwitch,
@@ -100,19 +104,32 @@ export default class ProjectInformation extends Vue {
         name: ""
     };
 
+    trove_cats: Array<TroveCatProperties> = [];
+
     is_private = false;
 
     mounted(): void {
         this.selected_visibility = this.project_default_visibility;
         EventBus.$on("update-project-name", this.updateProjectName);
+        EventBus.$on("choose-trove-cat", this.updateTroveCat);
     }
 
     beforeDestroy(): void {
         EventBus.$off("update-project-name", this.updateProjectName);
+        EventBus.$off("choose-trove-cat", this.updateTroveCat);
     }
 
     updateProjectName(event: ProjectNameProperties): void {
         this.name_properties = event;
+    }
+
+    updateTroveCat(event: TroveCatProperties): void {
+        const index = this.trove_cats.findIndex(trove => trove.category_id === event.category_id);
+        if (index === -1) {
+            this.trove_cats.push(event);
+        } else {
+            this.trove_cats[index] = event;
+        }
     }
 }
 </script>

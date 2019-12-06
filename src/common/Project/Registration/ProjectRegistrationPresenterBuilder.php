@@ -38,11 +38,19 @@ class ProjectRegistrationPresenterBuilder
      * @var DefaultProjectVisibilityRetriever
      */
     private $default_project_visibility_retriever;
+    /**
+     * @var \TroveCatFactory
+     */
+    private $trove_cat_factory;
 
-    public function __construct(TemplateFactory $template_factory, DefaultProjectVisibilityRetriever $default_project_visibility_retriever)
-    {
+    public function __construct(
+        TemplateFactory $template_factory,
+        DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
+        \TroveCatFactory $trove_cat_factory
+    ) {
         $this->template_factory = $template_factory;
         $this->default_project_visibility_retriever = $default_project_visibility_retriever;
+        $this->trove_cat_factory = $trove_cat_factory;
     }
 
     public function buildPresenter(): ProjectRegistrationPresenter
@@ -50,6 +58,7 @@ class ProjectRegistrationPresenterBuilder
 
         return new ProjectRegistrationPresenter(
             $this->default_project_visibility_retriever->getDefaultProjectVisibility(),
+            $this->trove_cat_factory->getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren(),
             ...array_map(
                 static function (ProjectTemplate $project_template) {
                     return new TemplatePresenter($project_template);

@@ -29,6 +29,7 @@ import ProjectName from "./Input/ProjectName.vue";
 import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
 import { State } from "../../store/type";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
+import EventBus from "../../helpers/event-bus";
 
 describe("ProjectInformation - ", () => {
     let factory: Wrapper<ProjectInformation>;
@@ -40,7 +41,8 @@ describe("ProjectInformation - ", () => {
             project_default_visibility: "",
             error: null,
             is_creating_project: false,
-            is_project_approval_required: false
+            is_project_approval_required: false,
+            trove_categories: []
         };
 
         const getters = {
@@ -112,5 +114,27 @@ describe("ProjectInformation - ", () => {
             form.classes("register-new-project-information-form-container-restricted-allowed")
         ).toBe(true);
         expect(wrapper.contains("[data-test=register-new-project-information-list]")).toBe(true);
+    });
+
+    describe("TroveCatProperties update - ", () => {
+        it("build the trovecat object", () => {
+            const wrapper = factory;
+            expect(wrapper.vm.$data.trove_cats).toStrictEqual([]);
+
+            EventBus.$emit("choose-trove-cat", { category_id: 1, value_id: 10 });
+            expect(wrapper.vm.$data.trove_cats).toStrictEqual([{ category_id: 1, value_id: 10 }]);
+
+            EventBus.$emit("choose-trove-cat", { category_id: 2, value_id: 20 });
+            expect(wrapper.vm.$data.trove_cats).toStrictEqual([
+                { category_id: 1, value_id: 10 },
+                { category_id: 2, value_id: 20 }
+            ]);
+
+            EventBus.$emit("choose-trove-cat", { category_id: 1, value_id: 100 });
+            expect(wrapper.vm.$data.trove_cats).toStrictEqual([
+                { category_id: 1, value_id: 100 },
+                { category_id: 2, value_id: 20 }
+            ]);
+        });
     });
 });

@@ -44,7 +44,8 @@ describe("ProjectInformationFooter", () => {
             project_default_visibility: "public",
             error: null,
             is_creating_project: false,
-            is_project_approval_required: false
+            is_project_approval_required: false,
+            trove_categories: []
         };
 
         router = new VueRouter({
@@ -79,7 +80,8 @@ describe("ProjectInformationFooter", () => {
             propsData: {
                 project_name_properties: project_name_properties,
                 is_public: true,
-                privacy: "public"
+                privacy: "public",
+                trove_cats: []
             },
             mocks: { $store: store },
             router
@@ -98,6 +100,7 @@ describe("ProjectInformationFooter", () => {
             shortname: "this-is-a-test",
             label: "this is a test",
             is_public: true,
+            categories: [],
             xml_template_name: "scrum"
         };
 
@@ -119,6 +122,7 @@ describe("ProjectInformationFooter", () => {
             label: "this is a test",
             is_public: false,
             allow_restricted: true,
+            categories: [],
             xml_template_name: "scrum"
         };
 
@@ -141,6 +145,7 @@ describe("ProjectInformationFooter", () => {
             label: "this is a test",
             is_public: false,
             allow_restricted: false,
+            categories: [],
             xml_template_name: "scrum"
         };
 
@@ -163,6 +168,7 @@ describe("ProjectInformationFooter", () => {
             label: "this is a test",
             is_public: true,
             allow_restricted: false,
+            categories: [],
             xml_template_name: "scrum"
         };
 
@@ -185,6 +191,7 @@ describe("ProjectInformationFooter", () => {
             label: "this is a test",
             is_public: true,
             allow_restricted: true,
+            categories: [],
             xml_template_name: "scrum"
         };
 

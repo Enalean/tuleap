@@ -18,7 +18,7 @@
  *
  */
 
-import { TemplateData } from "../type";
+import { TroveCatData, TemplateData } from "../type";
 
 export interface State {
     tuleap_templates: TemplateData[];
@@ -28,6 +28,7 @@ export interface State {
     error: string | null;
     is_creating_project: boolean;
     is_project_approval_required: boolean;
+    trove_categories: TroveCatData[];
 }
 
 export interface Context {

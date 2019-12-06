@@ -43,7 +43,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { ProjectNameProperties, ProjectProperties, TemplateData } from "../../type";
+import {
+    ProjectNameProperties,
+    ProjectProperties,
+    TemplateData,
+    TroveCatProperties
+} from "../../type";
 import { Getter, State } from "vuex-class";
 import { redirectToUrl } from "../../helpers/location-helper";
 import {
@@ -75,6 +80,9 @@ export default class ProjectInformationFooter extends Vue {
 
     @Prop({ required: true })
     readonly privacy!: string;
+
+    @Prop({ required: true })
+    readonly trove_cats!: Array<TroveCatProperties>;
 
     @State
     are_restricted_users_allowed!: boolean;
@@ -111,7 +119,8 @@ export default class ProjectInformationFooter extends Vue {
                 shortname: this.project_name_properties.slugified_name,
                 label: this.project_name_properties.name,
                 is_public: this.is_public,
-                xml_template_name: this.selected_template.name
+                xml_template_name: this.selected_template.name,
+                categories: this.trove_cats
             };
         }
 
@@ -143,7 +152,8 @@ export default class ProjectInformationFooter extends Vue {
             label: this.project_name_properties.name,
             is_public: is_public_project,
             allow_restricted: is_restricted_allowed_for_the_project,
-            xml_template_name: this.selected_template.name
+            xml_template_name: this.selected_template.name,
+            categories: this.trove_cats
         };
     }
 }
