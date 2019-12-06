@@ -29,6 +29,7 @@ use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Mail\AutomaticMailsSender;
 use Tuleap\System\ServiceControl;
+use Widget_MyProjects;
 
 class GetWhitelistedKeys implements Dispatchable
 {
@@ -52,6 +53,7 @@ class GetWhitelistedKeys implements Dispatchable
         DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME => true,
         ServiceControl::FORGECONFIG_INIT_MODE => true,
         AutomaticMailsSender::CONFIG_NOTIFICATION_DELAY => true,
+        Widget_MyProjects::CONFIG_DISABLE_CONTACT => true
     ];
 
     public function addPluginsKeys($key_name)

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,15 @@
  */
 
 require_once __DIR__ . '/../include/pre.php';
+
+if ((bool) ForgeConfig::get(Widget_MyProjects::CONFIG_DISABLE_CONTACT) === true) {
+    $GLOBALS['Response']->addFeedback(
+        Feedback::ERROR,
+        _('Massmail to project members is disabled.')
+    );
+    $GLOBALS['Response']->redirect("/my");
+    exit();
+}
 
 $csrf = new CSRFSynchronizerToken('massmail_to_project_members.php');
 $csrf->check('/my/');
