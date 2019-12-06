@@ -1680,6 +1680,11 @@ CREATE TABLE project_dashboards (
   INDEX idx(project_id, name(5))
 );
 
+DROP TABLE IF EXISTS project_dashboards_disabled_widgets;
+CREATE TABLE project_dashboards_disabled_widgets (
+    name VARCHAR(255) PRIMARY KEY
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS dashboards_lines;
 CREATE TABLE dashboards_lines (
   id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,

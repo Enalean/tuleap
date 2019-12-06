@@ -1559,6 +1559,9 @@ msgstr "Le widget a correctement été ajouté"
 msgid "The widget is already used"
 msgstr "Le widget est déjà utilisé"
 
+msgid "The widget is disabled in project dashboard."
+msgstr "Le widget est désactivé dans les tableaux de bord de projet."
+
 msgid "The {{tuleap_server_name}} team."
 msgstr "L'équipe de {{tuleap_server_name}}."
 

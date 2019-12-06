@@ -25,6 +25,7 @@ use DataAccessException;
 use Exception;
 use Feedback;
 use HTTPRequest;
+use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
@@ -47,14 +48,21 @@ class AddWidgetController
      */
     private $creator;
 
+    /**
+     * @var DisabledProjectWidgetsChecker
+     */
+    private $disabled_project_widgets_checker;
+
     public function __construct(
         DashboardWidgetDao $dao,
         WidgetFactory $factory,
-        WidgetCreator $creator
+        WidgetCreator $creator,
+        DisabledProjectWidgetsChecker $disabled_project_widgets_checker
     ) {
-        $this->dao     = $dao;
-        $this->factory = $factory;
-        $this->creator = $creator;
+        $this->dao                              = $dao;
+        $this->factory                          = $factory;
+        $this->creator                          = $creator;
+        $this->disabled_project_widgets_checker = $disabled_project_widgets_checker;
     }
 
     public function display(HTTPRequest $request)
@@ -82,6 +90,15 @@ class AddWidgetController
         try {
             $this->checkThatDashboardBelongsToTheOwner($request, $dashboard_type, $dashboard_id);
             $widget = $this->factory->getInstanceByWidgetName($name);
+
+            if ($this->disabled_project_widgets_checker->isWidgetDisabled($widget, $dashboard_type) === true) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    _('The widget is disabled in project dashboard.')
+                );
+                $this->redirectToDashboard($request, $dashboard_id, $dashboard_type);
+                exit();
+            }
 
             if (! $widget->isUnique() || ! $this->isUniqueWidgetAlreadyAddedInDashboard($widget, $dashboard_id, $dashboard_type)) {
                 $this->creator->create(
