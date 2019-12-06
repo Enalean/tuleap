@@ -26,15 +26,18 @@ use Tuleap\Layout\IncludeAssets;
 *
 * PROJECT LIST
 */
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Widget_MyProjects extends Widget
 {
+    public const CONFIG_DISABLE_CONTACT = 'widget_myprojects_disable_contact';
 
     public function __construct()
     {
         parent::__construct('myprojects');
     }
 
-    function getTitle()
+    public function getTitle()
     {
         return $GLOBALS['Language']->getText('my_index', 'my_projects');
     }
@@ -88,7 +91,7 @@ class Widget_MyProjects extends Widget
             $html .= '<table cellspacing="0" class="tlp-table widget_my_projects">';
             $i     = 0;
             $prevIsPublic = -1;
-            $token = new CSRFSynchronizerToken('massmail_to_project_members.php');
+            $disable_contact = (bool) ForgeConfig::get(self::CONFIG_DISABLE_CONTACT);
             while ($row = db_fetch_array($result)) {
                 if ($row['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
                     ForgeConfig::areRestrictedUsersAllowed() &&
@@ -140,10 +143,12 @@ class Widget_MyProjects extends Widget
                 }
                 $html .= '</td>';
 
-                // Mailing tool
-                $html .= '<td class="'.$tdClass.'">';
-                $html .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="'.$row['group_id'].'" title="'.$GLOBALS['Language']->getText('my_index', 'send_mail', $row['group_name']).'" data-toggle="modal"><span class="fa fa-envelope-o fa fa-envelope-o"></span></a>';
-                $html .= '</td>';
+                if ($disable_contact === false) {
+                    // Mailing tool
+                    $html .= '<td class="'.$tdClass.'">';
+                    $html .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="'.$row['group_id'].'" title="'.$GLOBALS['Language']->getText('my_index', 'send_mail', $row['group_name']).'" data-toggle="modal"><span class="fa fa-envelope-o fa fa-envelope-o"></span></a>';
+                    $html .= '</td>';
+                }
 
                 // Remove from project
                 $html .= '<td class="widget_my_projects_remove'.$tdClass.'">';
@@ -187,17 +192,20 @@ class Widget_MyProjects extends Widget
 
             $html .= '</table>';
 
-            $html .= $this->fetchMassMailForm($token);
+            if ($disable_contact === false) {
+                $token = new CSRFSynchronizerToken('massmail_to_project_members.php');
+                $html .= $this->fetchMassMailForm($token);
+            }
         }
 
         return $html;
     }
 
-    function hasRss()
+    public function hasRss()
     {
         return true;
     }
-    function displayRss()
+    public function displayRss()
     {
         $server_url = HTTPRequest::instance()->getServerUrl();
         $rss        = new RSS(array(
@@ -246,7 +254,7 @@ class Widget_MyProjects extends Widget
         }
         $rss->display();
     }
-    function getDescription()
+    public function getDescription()
     {
         return $GLOBALS['Language']->getText('widget_description_my_projects', 'description');
     }
