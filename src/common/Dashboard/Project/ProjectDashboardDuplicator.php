@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -55,18 +55,25 @@ class ProjectDashboardDuplicator
      */
     private $widget_factory;
 
+    /**
+     * @var DisabledProjectWidgetsChecker
+     */
+    private $disabled_project_widgets_checker;
+
     public function __construct(
         ProjectDashboardDao $dao,
         ProjectDashboardRetriever $retriever,
         DashboardWidgetDao $widget_dao,
         DashboardWidgetRetriever $widget_retriever,
-        WidgetFactory $widget_factory
+        WidgetFactory $widget_factory,
+        DisabledProjectWidgetsChecker $disabled_project_widgets_checker
     ) {
-        $this->dao              = $dao;
-        $this->retriever        = $retriever;
-        $this->widget_dao       = $widget_dao;
-        $this->widget_retriever = $widget_retriever;
-        $this->widget_factory   = $widget_factory;
+        $this->dao                              = $dao;
+        $this->retriever                        = $retriever;
+        $this->widget_dao                       = $widget_dao;
+        $this->widget_retriever                 = $widget_retriever;
+        $this->widget_factory                   = $widget_factory;
+        $this->disabled_project_widgets_checker = $disabled_project_widgets_checker;
     }
 
     public function duplicate(Project $template_project, Project $new_project)
@@ -133,6 +140,11 @@ class ProjectDashboardDuplicator
     ) {
         foreach ($template_column->getWidgets() as $template_widget) {
             $widget = $this->widget_factory->getInstanceByWidgetName($template_widget->getName());
+
+            if ($widget && $this->disabled_project_widgets_checker->isWidgetDisabled($widget, ProjectDashboardController::DASHBOARD_TYPE)) {
+                continue;
+            }
+
             $widget->setOwner($template_project->getID(), ProjectDashboardController::LEGACY_DASHBOARD_TYPE);
             $new_content_id = $widget->cloneContent(
                 $template_project,

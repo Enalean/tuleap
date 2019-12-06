@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@ namespace Tuleap\Dashboard\Project;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Project;
 use Tuleap\Dashboard\Widget\DashboardWidget;
 use Tuleap\Dashboard\Widget\DashboardWidgetColumn;
 use Tuleap\Dashboard\Widget\DashboardWidgetLine;
@@ -45,6 +46,11 @@ class ProjectDashboardDuplicatorTest extends TestCase
      */
     private $new_project;
 
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|DisabledProjectWidgetsChecker
+     */
+    private $checker;
+
     protected function setUp(): void
     {
         $this->dao              = \Mockery::spy(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
@@ -52,13 +58,15 @@ class ProjectDashboardDuplicatorTest extends TestCase
         $this->widget_dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $this->widget_retriever = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetRetriever::class);
         $this->widget_factory   = \Mockery::spy(\Tuleap\Widget\WidgetFactory::class);
+        $this->checker          = \Mockery::mock(DisabledProjectWidgetsChecker::class);
 
         $this->duplicator = new ProjectDashboardDuplicator(
             $this->dao,
             $this->retriever,
             $this->widget_dao,
             $this->widget_retriever,
-            $this->widget_factory
+            $this->widget_factory,
+            $this->checker
         );
 
         $this->template_project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
@@ -150,6 +158,60 @@ class ProjectDashboardDuplicatorTest extends TestCase
         $this->widget_dao->shouldReceive('duplicateWidget')->times(2);
         $widget_instance_01->shouldReceive('cloneContent')->once();
         $widget_instance_02->shouldReceive('cloneContent')->once();
+
+        $this->checker->shouldReceive('isWidgetDisabled')
+            ->with($widget_instance_01, ProjectDashboardController::DASHBOARD_TYPE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->checker->shouldReceive('isWidgetDisabled')
+            ->with($widget_instance_02, ProjectDashboardController::DASHBOARD_TYPE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->duplicator->duplicate($this->template_project, $this->new_project);
+    }
+
+    public function testItDoesNotDuplicateDisabledProjectWidgetForAColumn()
+    {
+        $dashboard = new ProjectDashboard(1, 101, 'dashboard');
+
+        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns(array($dashboard));
+
+        $widget_01 = new DashboardWidget(1, 'projectimageviewer', 1, 1, 1, 0);
+        $widget_02 = new DashboardWidget(2, 'projectcontacts', 0, 1, 2, 0);
+
+        $column = new DashboardWidgetColumn(1, 1, 1, array($widget_01, $widget_02));
+        $line   = new DashboardWidgetLine(
+            1,
+            1,
+            'project',
+            'one-column',
+            1,
+            array($column)
+        );
+
+        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns(array($line));
+
+        $widget_instance_01 = \Mockery::spy(\Widget::class);
+        $widget_instance_02 = \Mockery::spy(\Widget::class);
+
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectimageviewer')->andReturns($widget_instance_01);
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectcontacts')->andReturns($widget_instance_02);
+
+        $this->widget_dao->shouldReceive('duplicateWidget')->once();
+        $widget_instance_01->shouldReceive('cloneContent')->once();
+        $widget_instance_02->shouldReceive('cloneContent')->never();
+
+        $this->checker->shouldReceive('isWidgetDisabled')
+            ->with($widget_instance_01, ProjectDashboardController::DASHBOARD_TYPE)
+            ->once()
+            ->andReturnFalse();
+
+        $this->checker->shouldReceive('isWidgetDisabled')
+            ->with($widget_instance_02, ProjectDashboardController::DASHBOARD_TYPE)
+            ->once()
+            ->andReturnTrue();
 
         $this->duplicator->duplicate($this->template_project, $this->new_project);
     }
