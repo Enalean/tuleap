@@ -27,6 +27,7 @@ const polyfills_for_fetch = require("../../../tools/utils/scripts/ie11-polyfill-
 const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
 const webpack_config_for_rich_text_editor = require("./webpack.richtext.js");
 const webpack_config_for_vue_components = require("./webpack.vue.js");
+const webpack_config_for_vue_components_with_manifest = require("./webpack.vue.with.manifest.js");
 
 const assets_dir_path = path.resolve(__dirname, "../assets");
 
@@ -205,6 +206,7 @@ const configs_with_manifest = [
 );
 
 module.exports = [
+    webpack_config_for_vue_components_with_manifest,
     webpack_config_for_ckeditor,
     webpack_config_for_dashboards,
     webpack_config_for_flaming_parrot_code,

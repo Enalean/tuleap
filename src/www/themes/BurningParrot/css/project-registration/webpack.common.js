@@ -24,8 +24,10 @@ let entry_points = {};
 
 const colors = ["orange", "blue", "green", "red", "grey", "purple"];
 for (const color of colors) {
-    entry_points[`tlp-${color}`] = `./project-registration-${color}.scss`;
-    entry_points[`tlp-${color}-condensed`] = `./project-registration-${color}-condensed.scss`;
+    entry_points[`project-registration-${color}`] = `./project-registration-${color}.scss`;
+    entry_points[
+        `project-registration-${color}-condensed`
+    ] = `./project-registration-${color}-condensed.scss`;
 }
 
 const project_registration_config = {

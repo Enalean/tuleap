@@ -20,21 +20,18 @@
 const path = require("path");
 const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
 
-const assets_dir_path = path.resolve(__dirname, "../assets");
-
+const assets_dir_path = path.resolve(__dirname, "../assets/project-registration/scripts");
 module.exports = {
     entry: {
-        "news-permissions": "./news/permissions-per-group/index.js",
-        "frs-permissions": "./frs/permissions-per-group/index.js",
-        "project-admin-services": "./project/admin/services/src/index-project-admin.js",
-        "site-admin-services": "./project/admin/services/src/index-site-admin.js",
-        "project-admin-banner": "./project/admin/banner/index-banner-project-admin.ts"
+        "project-registration": "./project/registration/index.ts"
     },
     context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(assets_dir_path, "/assets/"),
+    output: webpack_configurator.configureOutput(
+        assets_dir_path,
+        "/assets/project-registration/scripts"
+    ),
     externals: {
-        tlp: "tlp",
-        ckeditor: "CKEDITOR"
+        tlp: "tlp"
     },
     module: {
         rules: [
@@ -47,6 +44,7 @@ module.exports = {
         ]
     },
     plugins: [
+        webpack_configurator.getManifestPlugin(),
         webpack_configurator.getVueLoaderPlugin(),
         webpack_configurator.getTypescriptCheckerPlugin(true)
     ],
