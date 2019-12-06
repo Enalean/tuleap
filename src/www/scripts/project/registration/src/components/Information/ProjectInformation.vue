@@ -68,7 +68,7 @@ import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
 import ProjectInformationInputPrivacySwitch from "./Input/ProjectInformationInputPrivacySwitch.vue";
 import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
-import { ProjectNameProperties, TroveCatProperties } from "../../type";
+import { ProjectNameProperties, TroveCatProperties, TemplateData } from "../../type";
 import { Getter, State } from "vuex-class";
 import EventBus from "../../helpers/event-bus";
 import TroveCategoryList from "./TroveCat/TroveCategoryList.vue";
@@ -97,6 +97,9 @@ export default class ProjectInformation extends Vue {
     @State
     project_default_visibility!: string;
 
+    @State
+    selected_template!: TemplateData;
+
     selected_visibility = "public";
 
     name_properties: ProjectNameProperties = {
@@ -109,6 +112,11 @@ export default class ProjectInformation extends Vue {
     is_private = false;
 
     mounted(): void {
+        if (!this.selected_template) {
+            this.$router.push("new");
+            return;
+        }
+
         this.selected_visibility = this.project_default_visibility;
         EventBus.$on("update-project-name", this.updateProjectName);
         EventBus.$on("choose-trove-cat", this.updateTroveCat);

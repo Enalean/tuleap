@@ -30,12 +30,18 @@ import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputP
 import { State } from "../../store/type";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
 import EventBus from "../../helpers/event-bus";
+import VueRouter from "vue-router";
 
 describe("ProjectInformation - ", () => {
-    let factory: Wrapper<ProjectInformation>;
+    let factory: Wrapper<ProjectInformation>, router: VueRouter;
     beforeEach(async () => {
         const state: State = {
-            selected_template: null,
+            selected_template: {
+                title: "string",
+                description: "string",
+                name: "string",
+                svg: "string"
+            },
             tuleap_templates: [],
             are_restricted_users_allowed: false,
             project_default_visibility: "",
@@ -44,6 +50,19 @@ describe("ProjectInformation - ", () => {
             is_project_approval_required: false,
             trove_categories: []
         };
+
+        router = new VueRouter({
+            routes: [
+                {
+                    path: "/",
+                    name: "template"
+                },
+                {
+                    path: "/information",
+                    name: "information"
+                }
+            ]
+        });
 
         const getters = {
             has_error: false,
@@ -59,7 +78,8 @@ describe("ProjectInformation - ", () => {
 
         factory = shallowMount(ProjectInformation, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store }
+            mocks: { $store: store },
+            router
         });
     });
     it("Spawns the ProjectInformation component", () => {
@@ -114,6 +134,13 @@ describe("ProjectInformation - ", () => {
             form.classes("register-new-project-information-form-container-restricted-allowed")
         ).toBe(true);
         expect(wrapper.contains("[data-test=register-new-project-information-list]")).toBe(true);
+    });
+
+    it("redirects user on /template when he does not have all needed information to start his project creation", () => {
+        const wrapper = factory;
+        wrapper.vm.$store.state.selected_template = null;
+
+        expect(wrapper.vm.$route.name).toBe("template");
     });
 
     describe("TroveCatProperties update - ", () => {

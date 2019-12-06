@@ -41,10 +41,21 @@
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import ProjectApprovalSvg from "./ProjectApprovalSvg.vue";
+import { State } from "vuex-class";
+import { TemplateData } from "../../type";
 @Component({
     components: { ProjectApprovalSvg }
 })
 export default class ProjectApproval extends Vue {
+    @State
+    selected_template!: TemplateData;
+
+    mounted(): void {
+        if (!this.selected_template) {
+            this.$router.push("new");
+        }
+    }
+
     get message_admin_validation(): string {
         return this.$gettext(
             "<b>You will receive an email</b> when the administrator has validated it."
