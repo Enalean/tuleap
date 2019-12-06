@@ -173,10 +173,9 @@ $Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_
 $user_manager = UserManager::instance();
 $current_user = $user_manager->getCurrentUser();
 
-$current_locale = $current_user->getLocale();
-setlocale(LC_CTYPE, "$current_locale.UTF-8");
-setlocale(LC_MESSAGES, "$current_locale.UTF-8");
-setlocale(LC_TIME, "$current_locale.UTF-8");
+(static function () use ($current_user) {
+    (new \Tuleap\Language\LocaleSwitcher())->setLocale($current_user->getLocale());
+})();
 
 $hit_event = new HitEvent($request, IS_SCRIPT);
 $event_manager->processEvent($hit_event);

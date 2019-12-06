@@ -29,6 +29,7 @@ use MailBuilder;
 use MailEnhancer;
 use Notification;
 use Project_AccessException;
+use Tuleap\Language\LocaleSwitcher;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\Notification\NotificationToProcess;
@@ -57,19 +58,25 @@ final class PullRequestNotificationSendMail implements PullRequestNotificationSt
      * @var HTMLURLBuilder
      */
     private $url_builder;
+    /**
+     * @var LocaleSwitcher
+     */
+    private $locale_switcher;
 
     public function __construct(
         MailBuilder $mail_builder,
         MailEnhancer $mail_enhancer,
         PullRequestPermissionChecker $pull_request_permission_checker,
         GitRepositoryFactory $repository_factory,
-        HTMLURLBuilder $url_builder
+        HTMLURLBuilder $url_builder,
+        LocaleSwitcher $locale_switcher
     ) {
         $this->mail_builder                    = $mail_builder;
         $this->mail_enhancer                   = $mail_enhancer;
         $this->pull_request_permission_checker = $pull_request_permission_checker;
         $this->repository_factory              = $repository_factory;
         $this->url_builder                     = $url_builder;
+        $this->locale_switcher                 = $locale_switcher;
     }
 
     public function execute(NotificationToProcess $notification) : void
@@ -81,24 +88,32 @@ final class PullRequestNotificationSendMail implements PullRequestNotificationSt
             return;
         }
 
-        $this->mail_builder->buildAndSendEmail(
-            $destination_repository->getProject(),
-            new Notification(
-                $this->getRecipientEmails($notification),
-                $this->getSubject($pull_request, $destination_repository),
-                $notification->asEnhancedContent()->toString(),
-                $notification->asPlaintext(),
-                $this->url_builder->getAbsolutePullRequestOverviewUrl($pull_request),
-                dgettext('tuleap-pullrequest', 'Pull request')
-            ),
-            $this->mail_enhancer
-        );
+        foreach ($this->getRecipientEmailsPerLocale($notification) as $locale => $emails) {
+            $this->locale_switcher->setLocaleForSpecificExecutionContext(
+                $locale,
+                function () use ($destination_repository, $emails, $pull_request, $notification) {
+                    $this->mail_builder->buildAndSendEmail(
+                        $destination_repository->getProject(),
+                        new Notification(
+                            $emails,
+                            $this->getSubject($pull_request, $destination_repository),
+                            $notification->asEnhancedContent()->toString(),
+                            $notification->asPlaintext(),
+                            $this->url_builder->getAbsolutePullRequestOverviewUrl($pull_request),
+                            dgettext('tuleap-pullrequest', 'Pull request')
+                        ),
+                        $this->mail_enhancer
+                    );
+                }
+            );
+        }
     }
 
     /**
-     * @return string[]
+     * @return string[][]
+     * @psalm-return array<string,string[]>
      */
-    private function getRecipientEmails(NotificationToProcess $notification): array
+    private function getRecipientEmailsPerLocale(NotificationToProcess $notification): array
     {
         $recipients = [];
 
@@ -108,10 +123,16 @@ final class PullRequestNotificationSendMail implements PullRequestNotificationSt
             } catch (\GitRepoNotFoundException|Project_AccessException|UserCannotReadGitRepositoryException $e) {
                 continue;
             }
-            $recipients[] = $recipient->getEmail();
+            $recipients[$recipient->getEmail()] = $recipient->getLocale();
         }
 
-        return $recipients;
+        $recipients_per_locale = [];
+
+        foreach ($recipients as $email => $locale) {
+            $recipients_per_locale[$locale][] = $email;
+        }
+
+        return $recipients_per_locale;
     }
 
     private function getSubject(PullRequest $pull_request, GitRepository $destination_repository): string

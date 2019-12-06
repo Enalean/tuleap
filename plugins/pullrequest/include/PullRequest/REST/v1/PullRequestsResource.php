@@ -58,6 +58,7 @@ use Tuleap\Label\REST\LabelsUpdater;
 use Tuleap\Label\REST\UnableToAddAndRemoveSameLabelException;
 use Tuleap\Label\REST\UnableToAddEmptyLabelException;
 use Tuleap\Label\UnknownLabelException;
+use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Label\LabelDao;
@@ -1272,7 +1273,8 @@ class PullRequestsResource extends AuthenticatedResource
                                     new \MailEnhancer(),
                                     $this->permission_checker,
                                     $this->git_repository_factory,
-                                    $html_url_builder
+                                    $html_url_builder,
+                                    new LocaleSwitcher()
                                 ),
                                 new ReviewerChangeNotificationToProcessBuilder(
                                     new ReviewerChangeRetriever(

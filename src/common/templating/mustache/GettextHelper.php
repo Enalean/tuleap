@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,7 @@ class GettextHelper
     public const DGETTEXT  = 'dgettext';
     public const DNGETTEXT = 'dngettext';
 
-    private static $gettext_cache = array();
+    private static $gettext_cache = [];
 
     /**
      * @var GettextSectionContentTransformer
@@ -124,19 +124,13 @@ class GettextHelper
         return vsprintf($translated_text, $args);
     }
 
-    /**
-     * @return string|null
-     */
-    private function getGettextValueFromCache($text)
+    private function getGettextValueFromCache(string $text): ?string
     {
-        if (isset(self::$gettext_cache[$text])) {
-            return self::$gettext_cache[$text];
-        }
-        return null;
+        return self::$gettext_cache[setlocale(LC_MESSAGES, '0')][$text] ?? null;
     }
 
-    private function cacheGettextValue($text, $value)
+    private function cacheGettextValue(string $text, string $value): void
     {
-        self::$gettext_cache[$text] = $value;
+        self::$gettext_cache[setlocale(LC_MESSAGES, '0')][$text] = $value;
     }
 }
