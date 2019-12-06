@@ -1190,49 +1190,49 @@ EOS;
         if ($data_type&&$display_type) {
             $selected = "";
             if (($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
-                 &&($display_type == "SB") ) {
+                 &&($display_type == "SB")) {
                 $selected = " selected";
             }
             echo '<option value="1"'.$selected.'>'.$Language->getText('tracker_include_type', 'sb').'</option>';
 
             $selected = "";
             if (($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
-                 &&($display_type == "MB") ) {
+                 &&($display_type == "MB")) {
                 $selected = " selected";
             }
             echo '<option value="2"'.$selected.'>'.$Language->getText('tracker_include_type', 'mb').'</option>';
 
             $selected = "";
             if (($data_type == $af->DATATYPE_TEXT)
-                 &&($display_type == "TF") ) {
+                 &&($display_type == "TF")) {
                 $selected = " selected";
             }
             echo '<option value="3"'.$selected.'>'.$Language->getText('tracker_include_type', 'tf').'</option>';
 
             $selected = "";
             if (($data_type == $af->DATATYPE_TEXT)
-                 &&($display_type == "TA") ) {
+                 &&($display_type == "TA")) {
                 $selected = " selected";
             }
             echo '<option value="4"'.$selected.'>'.$Language->getText('tracker_include_type', 'ta').'</option>';
 
             $selected = "";
             if (($data_type == $af->DATATYPE_DATE)
-                 &&($display_type == "DF") ) {
+                 &&($display_type == "DF")) {
                 $selected = " selected";
             }
             echo '<option value="5"'.$selected.'>'.$Language->getText('tracker_include_type', 'df').'</option>';
 
             $selected = "";
             if (($data_type == $af->DATATYPE_FLOAT)
-                 &&($display_type == "TF") ) {
+                 &&($display_type == "TF")) {
                 $selected = " selected";
             }
             echo '<option value="6"'.$selected.'>'.$Language->getText('tracker_include_type', 'ff').'</option>';
 
             $selected = "";
             if (($data_type == $af->DATATYPE_INT)
-                 &&($display_type == "TF") ) {
+                 &&($display_type == "TF")) {
                 $selected = " selected";
             }
             echo '<option value="7"'.$selected.'>'.$Language->getText('tracker_include_type', 'if').'</option>';
@@ -1511,7 +1511,7 @@ EOS;
             foreach ($fields as $field) {
               // Special case for special fields (excluded comment_type_id)
                 if ((($field->getName() != "comment_type_id")&&($field->isSpecial())) ||
-                   (($field->getName() == "status_id") && !user_is_super_user()) ) {
+                   (($field->getName() == "status_id") && !user_is_super_user())) {
                     continue;
                 }
 
@@ -2123,7 +2123,7 @@ EOS;
                 $cbox_name = 'cb_'.$role_id.'_'.$event_id;
                 //echo "<BR>$role_label $role_id $event_label $event_id ".$arr_notif['$role_label']['$event_label'];
                 if ((($event_label == 'NEW_ARTIFACT') && ($role_label != 'ASSIGNEE') && ($role_label != 'SUBMITTER')) ||
-                    (($event_label == 'ROLE_CHANGE') && ($role_label != 'ASSIGNEE') && ($role_label != 'CC')) ) {
+                    (($event_label == 'ROLE_CHANGE') && ($role_label != 'ASSIGNEE') && ($role_label != 'CC'))) {
                     // if the user is not a member then the ASSIGNEE column cannot
                     // be set. If it's not an assignee or a submitter the new_artifact event is meaningless
                     echo '   <td align="center"><input type="hidden" name="'.$cbox_name.'" value="1">-</td>'."\n";

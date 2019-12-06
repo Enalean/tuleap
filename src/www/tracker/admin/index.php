@@ -255,7 +255,7 @@ if ($group_id && !$atid) {
                 $arh->fetchData($report_id);
             } elseif ($request->getValidated('delete_report')) {
                 if (($arh->scope == 'P') &&
-                 !$ath->userIsAdmin() ) {
+                 !$ath->userIsAdmin()) {
                     exit_permission_denied();
                 }
                 $arh->delete();
@@ -272,11 +272,11 @@ if ($group_id && !$atid) {
                 $arh->createReportForm();
             } elseif ($request->getValidated('show_report')) {
                 if (($arh->scope == 'P') &&
-                !$ath->userIsAdmin() ) {
+                !$ath->userIsAdmin()) {
                        exit_permission_denied();
                 }
                 if (($arh->scope == 'S') &&
-                !user_is_super_user() ) {
+                !user_is_super_user()) {
                        exit_permission_denied();
                 }
                 $arh->showReportForm();
@@ -500,7 +500,7 @@ if ($group_id && !$atid) {
                     $submit_instructions,
                     $browse_instructions,
                     $instantiate_for_new_projects
-                ) ) {
+                )) {
                         exit_error($Language->getText('global', 'error'), $ath->getErrorMessage());
                 } else {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index', 'update_success_title'));
@@ -750,7 +750,7 @@ if ($group_id && !$atid) {
                     $special,
                     $use_it,
                     $field_set_id
-                ) ) {
+                )) {
                             exit_error($Language->getText('global', 'error'), $art_field_fact->getErrorMessage());
                 } else {
                   // Reload the field factory
@@ -807,7 +807,7 @@ if ($group_id && !$atid) {
                         $special,
                         $use_it,
                         $field_set_id
-                    ) ) {
+                    )) {
                                exit_error($Language->getText('global', 'error'), $field->getErrorMessage());
                     } else {
                         if (!(isset($use_it) && $use_it)) {

@@ -190,7 +190,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
      */
     public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
-        /** @var Tracker_Artifact_ChangesetValue_Integer $old_value */
+        assert($old_value instanceof Tracker_Artifact_ChangesetValue_Integer);
         return (new ChangesChecker())->hasChanges($old_value, $new_value);
     }
 }

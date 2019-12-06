@@ -161,7 +161,7 @@ class DocmanWikiResource extends AuthenticatedResource
         $project           = $item_request->getProject();
         $validator = $this->getValidator($project, $current_user, $item_to_delete);
         $item_to_delete->accept($validator);
-        /** @var \Docman_Wiki $item_to_delete */
+        assert($item_to_delete instanceof Docman_Wiki);
 
         $event_adder = $this->getDocmanItemsEventAdder();
         $event_adder->addLogEvents();
@@ -503,7 +503,7 @@ class DocmanWikiResource extends AuthenticatedResource
                 'project'       => $project
             ]
         );
-        /** @var \Docman_Wiki $item */
+        assert($item instanceof Docman_Wiki);
 
         $docman_item_version_creator = $this->getWikiVersionCreator();
         $docman_item_version_creator->createWikiVersion(

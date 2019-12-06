@@ -71,7 +71,7 @@ class ErrorPlot extends Plot
             }
 
             if (!is_numeric($x) ||
-            !is_numeric($this->coords[0][$i*2]) || !is_numeric($this->coords[0][$i*2+1]) ) {
+            !is_numeric($this->coords[0][$i*2]) || !is_numeric($this->coords[0][$i*2+1])) {
                 continue;
             }
 

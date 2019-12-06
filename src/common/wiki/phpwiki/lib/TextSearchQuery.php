@@ -744,7 +744,7 @@ class TextSearchQuery_Parser
         }
 
         while (($expr = $this->get_expr())
-                || ($expr = $this->get_word($accept_as_words)) ) {
+                || ($expr = $this->get_word($accept_as_words))) {
             $list[] = $expr;
         }
 

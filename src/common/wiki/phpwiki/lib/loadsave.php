@@ -497,7 +497,7 @@ function SavePage(&$request, &$pageinfo, $source, $filename)
     $current = $page->getCurrentRevision();
     if ($current and (! $current->hasDefaultContents())
          && ($current->getPackedContent() != $content)
-         && ($merging == true) ) {
+         && ($merging == true)) {
         include_once('lib/editpage.php');
         $request->setArg('pagename', $pagename);
         $r = $current->getVersion();
@@ -530,7 +530,7 @@ function SavePage(&$request, &$pageinfo, $source, $filename)
         $isnew = true;
     } else {
         if ((! $current->hasDefaultContents())
-             && ($current->getPackedContent() != $content) ) {
+             && ($current->getPackedContent() != $content)) {
             if ($overwrite) {
                 $mesg->pushContent(
                     ' ',
@@ -830,7 +830,7 @@ function LoadFile(&$request, $filename, $text = false, $mtime = false)
         $text,
         $default_pagename,
         $request->getUser()
-    )) ) {
+    ))) {
         SavePage($request, $pageinfo, sprintf(
             _("Serialized file %s"),
             $filename
@@ -896,7 +896,7 @@ function LoadZip(&$request, $zipfile, $files = false, $exclude = false)
         // garbage sometimes.
         $fn = basename("/dummy/" . $fn);
         if (($files && !in_array($fn, $files))
-             || ($exclude && in_array($fn, $exclude)) ) {
+             || ($exclude && in_array($fn, $exclude))) {
             PrintXML(
                 HTML::dt(WikiLink($fn)),
                 HTML::dd(_("Skipping"))
@@ -925,7 +925,7 @@ class LimitedFileSet extends fileSet
         $excl = &$this->_exclude;
 
         if (($incl && !in_array($fn, $incl))
-             || ($excl && in_array($fn, $excl)) ) {
+             || ($excl && in_array($fn, $excl))) {
             $this->_skiplist[] = $fn;
             return false;
         } else {

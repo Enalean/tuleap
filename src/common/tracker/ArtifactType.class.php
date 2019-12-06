@@ -23,20 +23,19 @@ require_once __DIR__ . '/../../www/project/admin/permissions.php';
 
 class ArtifactType
 {
-
     /**
      * The Group object.
      *
      * @var        object    $Group.
      */
-    var $Group;
+    public $Group;
 
     /**
      * Current user permissions.
      *
      * @var        int        $current_user_perm.
      */
-    var $current_user_perm;
+    public $current_user_perm;
 
 
     /**
@@ -44,14 +43,14 @@ class ArtifactType
      *
      * @var        int        $cannecresponses_res.
      */
-    var $cannedresponses_res;
+    public $cannedresponses_res;
 
     /**
      * Array of artifact data.
      *
      * @var        array    $data_array.
      */
-    var $data_array;
+    public $data_array;
 
     /**
      * number of notification events
@@ -86,7 +85,7 @@ class ArtifactType
      *
      * @var        int        $admins_res.
      */
-       var $admins_res;
+       public $admins_res;
     /**
      * @var string
      */
@@ -1440,7 +1439,7 @@ class ArtifactType
         //----------------------------------------------------------
         //Check: PSS_CHANGE  (Priority,Status,Severity changes)
         if ($arr_notif[$role]['PSS_CHANGE'] &&
-        (isset($changes['priority']) || isset($changes['status_id']) || isset($changes['severity'])) ) {
+        (isset($changes['priority']) || isset($changes['status_id']) || isset($changes['severity']))) {
       // echo "DBG PSS_CHANGE notified<br>";
             return true;
         }
@@ -1453,14 +1452,14 @@ class ArtifactType
         // event seldomly happens
         if ($arr_notif['SUBMITTER']['ROLE_CHANGE'] &&
         isset($changes['submitted_by']) && (($changes['submitted_by']['add'] == $user_name) || ($changes['submitted_by']['del'] == $user_name)) &&
-        ($role == 'SUBMITTER') ) {
+        ($role == 'SUBMITTER')) {
       // echo "DBG ROLE_CHANGE for submitter notified<br>";
             return true;
         }
 
         if ($arr_notif['ASSIGNEE']['ROLE_CHANGE'] &&
         isset($changes['assigned_to']) && (($changes['assigned_to']['add'] == $user_name) || ($changes['assigned_to']['del'] == $user_name)) &&
-        ($role == 'ASSIGNEE') ) {
+        ($role == 'ASSIGNEE')) {
       // echo "DBG ROLE_CHANGE for role assignee notified<br>";
             return true;
         }

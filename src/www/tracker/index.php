@@ -427,7 +427,7 @@ if ($func == 'gotoid') {
                     // Check timestamp
                     $artifact_timestamp = $request->get('artifact_timestamp');
                 if (isset($artifact_timestamp) &&
-                         ($ah->getLastUpdateDate() > $artifact_timestamp) ) {
+                         ($ah->getLastUpdateDate() > $artifact_timestamp)) {
                     // Artifact was updated between the time it was sent to the user, and the time it was submitted
                     exit_error($Language->getText('tracker_index', 'artifact_has_changed_title'), $Language->getText('tracker_index', 'artifact_has_changed', "/tracker/?func=detail&aid=$aid&atid=$atid&group_id=$group_id"));
                 }

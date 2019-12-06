@@ -33,7 +33,7 @@ class Plugin implements PFO_Plugin
     var $id;
     var $pluginInfo;
     /** @var Map */
-    var $hooks;
+    public $hooks;
     protected $_scope;
 
     /** @var bool */

@@ -19,7 +19,7 @@ class ArtifactCanned
      *
      * @var        object    $ArtifactType.
      */
-    var $ArtifactType;
+    public $ArtifactType;
     var $atid;
 
     /**
@@ -27,7 +27,7 @@ class ArtifactCanned
      *
      * @var        array    $data_array.
      */
-    var $data_array;
+    public $data_array;
     /**
      * @var string
      */

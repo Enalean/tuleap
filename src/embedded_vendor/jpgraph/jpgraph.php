@@ -903,7 +903,7 @@ class Graph
 
         if (($cl instanceof Text) ||
             (class_exists('PlotLine', false) && ($cl instanceof PlotLine)) ||
-            (class_exists('PlotBand', false) && ($cl instanceof PlotBand)) ) {
+            (class_exists('PlotBand', false) && ($cl instanceof PlotBand))) {
             JpGraph::RaiseL(25013);//('You can only add standard plots to multiple Y-axis');
         } else {
             $this->ynplots[$aN][] = $aPlot;
@@ -1801,7 +1801,7 @@ class Graph
                 $this->yaxis->SetPos($this->xscale->GetMinVal());
             }
         } elseif ($this->xscale->IsSpecified() &&
-                ( $this->xscale->auto_ticks || !$this->xscale->ticks->IsSpecified()) ) {
+                ( $this->xscale->auto_ticks || !$this->xscale->ticks->IsSpecified())) {
             // The tick calculation will use the user suplied min/max values to determine
             // the ticks. If auto_ticks is false the exact user specifed min and max
             // values will be used for the scale.
@@ -2118,7 +2118,7 @@ class Graph
         // no other scale was given so we can't possible draw anything). If you use manual
         // scaling you also have to supply the tick steps as well.
         if ((!$this->yscale->IsSpecified() && count($this->plots)==0) ||
-            ($this->y2scale!=null && !$this->y2scale->IsSpecified() && count($this->y2plots)==0) ) {
+            ($this->y2scale!=null && !$this->y2scale->IsSpecified() && count($this->y2plots)==0)) {
             //$e = "n=".count($this->y2plots)."\n";
             // $e = "Can't draw unspecified Y-scale.<br>\nYou have either:<br>\n";
             // $e .= "1. Specified an Y axis for autoscaling but have not supplied any plots<br>\n";
@@ -2152,7 +2152,7 @@ class Graph
         // for 'text'
         if (($this->yaxis->pos==$this->xscale->GetMinVal() || (is_string($this->yaxis->pos) && $this->yaxis->pos=='min')) &&
             !is_numeric($this->xaxis->pos) && $this->yscale->GetMinVal() < 0 &&
-            substr($this->axtype, 0, 4) != 'text' && $this->xaxis->pos != 'min' ) {
+            substr($this->axtype, 0, 4) != 'text' && $this->xaxis->pos != 'min') {
             //$this->yscale->ticks->SupressZeroLabel(false);
             $this->xscale->ticks->SupressFirst();
             if ($this->y2axis != null) {
@@ -2554,7 +2554,7 @@ class Graph
             ( $ext == 'gif' && !($supported & IMG_GIF) ) ||
             ( $ext == 'png' && !($supported & IMG_PNG) ) ||
             ( $ext == 'bmp' && !($supported & IMG_WBMP) ) ||
-            ( $ext == 'xpm' && !($supported & IMG_XPM) ) ) {
+            ( $ext == 'xpm' && !($supported & IMG_XPM) )) {
             JpGraphError::RaiseL(25037, $aFile);//('The image format of your background image ('.$aFile.') is not supported in your system configuration. ');
         }
 
@@ -4341,7 +4341,7 @@ class Axis extends AxisPrototype
                     // We number the scale from 1 and not from 0 so increase by one
                     if ($this->scale->textscale &&
                         $this->scale->ticks->label_formfunc == '' &&
-                        ! $this->scale->ticks->HaveManualLabels() ) {
+                        ! $this->scale->ticks->HaveManualLabels()) {
                         ++$label;
                     }
                 }

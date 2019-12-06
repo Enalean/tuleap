@@ -109,7 +109,7 @@ class WikiRequest extends Request
             // need to update the lockfile filehandle
                 if (isa($this->_user, '_FilePassUser')
                      and $this->_user->_file->lockfile
-                     and !$this->_user->_file->fplock ) {
+                     and !$this->_user->_file->fplock) {
                     //$level = $this->_user->_level;
                     $this->_user = UpgradeUser(
                         $this->_user,

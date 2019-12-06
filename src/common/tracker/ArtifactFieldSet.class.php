@@ -34,28 +34,28 @@ class ArtifactFieldSet
      *
      * @var    int $field_set_id
      */
-    var $field_set_id;
+    public $field_set_id;
 
     /**
      * The name of this ArtifactFieldSet
      *
      * @var    string $name
      */
-    var $name;
+    public $name;
 
     /**
      * The description of this ArtifactFieldSet
      *
      * @var    string $description
      */
-    var $description;
+    public $description;
 
     /**
      * The rank of this ArtifactFieldSet
      *
      * @var    string $rank
      */
-    var $rank;
+    public $rank;
 
     /**
      * The array of ArtifactFields Object contained in this ArtifactFieldSet

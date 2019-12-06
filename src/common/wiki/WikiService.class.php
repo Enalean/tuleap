@@ -137,7 +137,7 @@ class WikiService extends Controler
         }
 
         if (isset($_REQUEST['format']) &&
-         ($_REQUEST['format'] == 'rss') ) {
+         ($_REQUEST['format'] == 'rss')) {
             $this->view = 'empty';
         }
 

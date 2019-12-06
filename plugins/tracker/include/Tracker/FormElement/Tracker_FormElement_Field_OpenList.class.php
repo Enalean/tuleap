@@ -166,7 +166,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values
     ) {
-        /** @var Tracker_Artifact_ChangesetValue_List $value */
+        assert($value instanceof Tracker_Artifact_ChangesetValue_List);
         $selected_values = $value ? $value->getListValues() : array();
         if (is_array($submitted_values) && isset($submitted_values[$this->id])) {
             return $this->fetchOpenList($this->toObj($submitted_values[$this->id]));

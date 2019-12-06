@@ -27,7 +27,7 @@ class ArtifactFactory
      *
      * @var     object  $ArtifactType.
      */
-    var $ArtifactType;
+    public $ArtifactType;
     /**
      * @var string
      */

@@ -468,7 +468,7 @@ class WikiUser
             return true;
         }
         if (!empty($passwd)
-             && crypt($passwd, $stored_passwd) == $stored_passwd ) {
+             && crypt($passwd, $stored_passwd) == $stored_passwd) {
             return true;
         } else {
             return false;

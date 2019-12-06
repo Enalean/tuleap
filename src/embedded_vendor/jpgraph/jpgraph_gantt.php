@@ -911,7 +911,7 @@ class GanttGraph extends Graph
 
             if (!$this->scale->IsDisplayDay() && !$this->scale->IsDisplayHour() &&
                 !( ($this->scale->week->iStyle==WEEKSTYLE_FIRSTDAYWNBR ||
-                    $this->scale->week->iStyle==WEEKSTYLE_FIRSTDAY2WNBR) && $this->scale->IsDisplayWeek() ) ) {
+                    $this->scale->week->iStyle==WEEKSTYLE_FIRSTDAY2WNBR) && $this->scale->IsDisplayWeek() )) {
                 // If we don't display the individual days we can shrink the
                 // scale a little bit. This is a little bit pragmatic at the
                 // moment and should be re-written to take into account
@@ -2901,7 +2901,7 @@ class GanttScale
             } elseif ($this->week->iStyle==WEEKSTYLE_FIRSTDAY  ||
                     $this->week->iStyle==WEEKSTYLE_FIRSTDAY2 ||
                     $this->week->iStyle==WEEKSTYLE_FIRSTDAYWNBR ||
-                    $this->week->iStyle==WEEKSTYLE_FIRSTDAY2WNBR ) {
+                    $this->week->iStyle==WEEKSTYLE_FIRSTDAY2WNBR) {
                 $img->SetTextAlign("left");
                 $txtOffset = 3;
             } else {
@@ -2915,17 +2915,17 @@ class GanttScale
                 if ($this->week->iStyle==WEEKSTYLE_WNBR) {
                     $txt = sprintf($this->week->iLabelFormStr, $weeknbr);
                 } elseif ($this->week->iStyle==WEEKSTYLE_FIRSTDAY ||
-                        $this->week->iStyle==WEEKSTYLE_FIRSTDAYWNBR ) {
+                        $this->week->iStyle==WEEKSTYLE_FIRSTDAYWNBR) {
                     $txt = date("j/n", $week);
                 } elseif ($this->week->iStyle==WEEKSTYLE_FIRSTDAY2 ||
-                        $this->week->iStyle==WEEKSTYLE_FIRSTDAY2WNBR ) {
+                        $this->week->iStyle==WEEKSTYLE_FIRSTDAY2WNBR) {
                     $monthnbr = date("n", $week)-1;
                     $shortmonth = $this->iDateLocale->GetShortMonthName($monthnbr);
                     $txt = Date("j", $week)." ".$shortmonth;
                 }
 
                 if ($this->week->iStyle==WEEKSTYLE_FIRSTDAYWNBR ||
-                $this->week->iStyle==WEEKSTYLE_FIRSTDAY2WNBR ) {
+                $this->week->iStyle==WEEKSTYLE_FIRSTDAY2WNBR) {
                     $w = sprintf($this->week->iLabelFormStr, $weeknbr);
                     $txt .= ' '.$w;
                 }
@@ -3005,7 +3005,7 @@ class GanttScale
             $year = 0+strftime("%Y", $this->iStartDate);
             $img->SetTextAlign("center");
             if ($this->GetMonthNbr($this->iStartDate) == $this->GetMonthNbr($this->iEndDate)
-                && $this->GetYear($this->iStartDate)==$this->GetYear($this->iEndDate) ) {
+                && $this->GetYear($this->iStartDate)==$this->GetYear($this->iEndDate)) {
                 $monthwidth=$this->GetDayWidth()*($this->GetMonthDayNbr($this->iEndDate) - $this->GetMonthDayNbr($this->iStartDate) + 1);
             } else {
                 $monthwidth=$this->GetDayWidth()*($this->GetNumDaysInMonth($monthnbr, $year)-$this->GetMonthDayNbr($this->iStartDate)+1);

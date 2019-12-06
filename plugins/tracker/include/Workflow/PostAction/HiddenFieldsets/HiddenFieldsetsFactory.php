@@ -115,7 +115,7 @@ class HiddenFieldsetsFactory implements \Transition_PostActionSubFactory
         $to_transition_id = (int) $post_action->getTransition()->getId();
 
         $fieldset_ids = [];
-        /** @var HiddenFieldsets $post_action */
+        assert($post_action instanceof HiddenFieldsets);
         foreach ($post_action->getFieldsets() as $fieldset) {
             $fieldset_ids[] = (int) $fieldset->getID();
         }

@@ -28,7 +28,7 @@ class ArtifactTypeFactory
      *
      * @var     object  $Group.
      */
-    var $Group;
+    public $Group;
 
     /**
      * The ArtifactTypes array.

@@ -86,7 +86,7 @@ class WikiPlugin_WikiAdminRename extends WikiPlugin_WikiAdminSelect
                          'icase' => @$post_args['icase']);
         foreach ($pages as $name) {
             if (($newname = $this->renameHelper($name, $from, $to, $options))
-                 and $newname != $name ) {
+                 and $newname != $name) {
                 if ($dbi->isWikiPage($newname)) {
                     $ul->pushContent(HTML::li(fmt(
                         "Page %s already exists. Ignored.",

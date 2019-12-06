@@ -897,7 +897,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
 
         $saver = new ChangesetValueFileSaver($this->getValueDao(), $attachment_creator);
 
-        /** @var Tracker_Artifact_ChangesetValue_File $previous_changesetvalue */
+        assert($previous_changesetvalue instanceof Tracker_Artifact_ChangesetValue_File);
         return $saver->saveValue(
             $this->getCurrentUser(),
             $this,

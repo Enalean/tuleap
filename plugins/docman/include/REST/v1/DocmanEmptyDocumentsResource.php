@@ -401,7 +401,7 @@ class DocmanEmptyDocumentsResource extends AuthenticatedResource
 
         $validator = $this->getDocumentBeforeModificationValidatorVisitor($project, $current_user, $item);
         $item->accept($validator);
-        /** @var Docman_Empty $item */
+        assert($item instanceof Docman_Empty);
 
         $docman_item_version_creator = $this->getLinkVersionCreator();
         $docman_item_version_creator->createLinkVersionFromEmpty(

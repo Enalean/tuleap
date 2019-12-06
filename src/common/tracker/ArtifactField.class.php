@@ -217,37 +217,37 @@ class ArtifactField
         global $Language;
 
         if (($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
-        &&($this->display_type == "SB") ) {
+        &&($this->display_type == "SB")) {
             return $Language->getText('tracker_include_type', 'sb');
         }
 
         if (($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
-        &&($this->display_type == "MB") ) {
+        &&($this->display_type == "MB")) {
             return $Language->getText('tracker_include_type', 'mb');
         }
 
         if (($this->data_type == $this->DATATYPE_TEXT)
-        &&($this->display_type == "TF") ) {
+        &&($this->display_type == "TF")) {
             return $Language->getText('tracker_include_type', 'tf');
         }
 
         if (($this->data_type == $this->DATATYPE_TEXT)
-        &&($this->display_type == "TA") ) {
+        &&($this->display_type == "TA")) {
             return $Language->getText('tracker_include_type', 'ta');
         }
 
         if (($this->data_type == $this->DATATYPE_DATE)
-        &&($this->display_type == "DF") ) {
+        &&($this->display_type == "DF")) {
             return $Language->getText('tracker_include_type', 'df');
         }
 
         if (($this->data_type == $this->DATATYPE_FLOAT)
-        &&($this->display_type == "TF") ) {
+        &&($this->display_type == "TF")) {
             return $Language->getText('tracker_include_type', 'ff');
         }
 
         if (($this->data_type == $this->DATATYPE_INT)
-        &&($this->display_type == "TF") ) {
+        &&($this->display_type == "TF")) {
             return $Language->getText('tracker_include_type', 'if');
         }
 
@@ -384,7 +384,7 @@ class ArtifactField
 
         $def_val = $this->default_value;
         if (($this->data_type == $this->DATATYPE_INT || $this->data_type == $this->DATATYPE_USER)
-        &&($this->display_type == "MB") ) {
+        &&($this->display_type == "MB")) {
             $res = explode(",", $def_val);
             return $res;
         }

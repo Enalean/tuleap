@@ -779,7 +779,7 @@ class ArtifactImport
             $i++;
             if (($i == 1) &&
             ( (count($comments) > 1) ||
-            (trim($comment) == $GLOBALS['Language']->getText('tracker_import_utils', 'no_followups')) ) ) {
+            (trim($comment) == $GLOBALS['Language']->getText('tracker_import_utils', 'no_followups')) )) {
          //skip first line
                 continue;
             }

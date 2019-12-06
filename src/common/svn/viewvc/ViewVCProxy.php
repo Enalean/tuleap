@@ -54,7 +54,7 @@ class ViewVCProxy
             strpos($request_uri, "view=graphimg") !== false ||
             strpos($request_uri, "view=redirect_path") !== false ||
             // ViewVC will redirect URLs with "&rev=" to "&revision=". This is needed by Hudson.
-            strpos($request_uri, "&rev=") !== false ) {
+            strpos($request_uri, "&rev=") !== false) {
             return false;
         }
 
