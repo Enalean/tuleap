@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { namespace, State } from "vuex-class";
+import { namespace, State, Getter } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import BoardWithoutAnyColumnsError from "./GlobalError/BoardWithoutAnyColumnsError.vue";
 import GlobalAppError from "./GlobalError/GlobalAppError.vue";
@@ -66,6 +66,9 @@ export default class App extends Vue {
     @swimlane.Getter
     readonly has_at_least_one_card_in_edit_mode!: boolean;
 
+    @Getter
+    readonly has_at_least_one_cell_in_add_mode!: boolean;
+
     get has_at_least_one_column(): boolean {
         return this.columns.length > 0;
     }
@@ -81,7 +84,7 @@ export default class App extends Vue {
     }
 
     beforeUnload(event: Event): void {
-        if (this.has_at_least_one_card_in_edit_mode) {
+        if (this.has_at_least_one_card_in_edit_mode || this.has_at_least_one_cell_in_add_mode) {
             event.preventDefault();
             event.returnValue = false;
         } else {

@@ -63,3 +63,7 @@ export const can_add_in_place = (root_state: RootState) => (swimlane: Swimlane):
 
     return tracker.add_in_place !== null;
 };
+
+export const has_at_least_one_cell_in_add_mode = (state: RootState): boolean => {
+    return state.is_a_cell_adding_in_place;
+};

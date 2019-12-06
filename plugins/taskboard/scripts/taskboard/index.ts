@@ -73,7 +73,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         milestone_title,
         are_closed_items_displayed,
         card_being_dragged: null,
-        trackers
+        trackers,
+        is_a_cell_adding_in_place: false
     } as RootState;
 
     const initial_user_state: UserState = {
