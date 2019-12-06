@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,6 +32,17 @@ class Dao extends DataAccessObject
                 WHERE pull_request_id = ?';
 
         return $this->getDB()->run($sql, $pull_request_id);
+    }
+
+    /**
+     * @psalm-return array<array{user_id:int}>
+     */
+    public function searchUserIDsByPullRequestIDAndEventType(int $pull_request_id, int $event_type): array
+    {
+        $sql = 'SELECT user_id
+                FROM plugin_pullrequest_timeline_event
+                WHERE pull_request_id = ? AND type = ?';
+        return $this->getDB()->run($sql, $pull_request_id, $event_type);
     }
 
     public function save($pull_request_id, $user_id, $post_date, $type)

@@ -13,8 +13,18 @@ msgstr ""
 "X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
+msgid "%s has closed the pull request #%d: %s"
+msgstr "%s a abandonné la pull request #%d: %s"
+
+#, php-format
 msgid "%s requested your review on #%d: %s"
 msgstr "%s a demandé une revue de votre part sur #%d: %s"
+
+msgid ""
+"<a href=\"%s\">%s</a> has closed the pull request <a href=\"%s\">#%s</a>: %s"
+msgstr ""
+"<a href=\"%s\">%s</a> a abandonné la pull request <a href=\"%s\">#"
+"%s</a>: %s"
 
 msgid ""
 "<a href=\"%s\">%s</a> requested your review on <a href=\"%s\">#%s</a>: %s"

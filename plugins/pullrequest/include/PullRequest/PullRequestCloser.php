@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use PFUser;
 use GitRepository;
+use Tuleap\PullRequest\StateStatus\PullRequestAbandonedEvent;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use User;
 
@@ -43,15 +45,21 @@ class PullRequestCloser
      * @var TimelineEventCreator
      */
     private $timeline_event_creator;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
     public function __construct(
         Dao $pull_request_dao,
         PullRequestMerger $pull_request_merger,
-        TimelineEventCreator $timeline_event_creator
+        TimelineEventCreator $timeline_event_creator,
+        EventDispatcherInterface $event_dispatcher
     ) {
         $this->pull_request_dao       = $pull_request_dao;
         $this->pull_request_merger    = $pull_request_merger;
         $this->timeline_event_creator = $timeline_event_creator;
+        $this->event_dispatcher       = $event_dispatcher;
     }
 
     /**
@@ -70,6 +78,10 @@ class PullRequestCloser
         }
         $this->pull_request_dao->markAsAbandoned($pull_request->getId());
         $this->timeline_event_creator->storeAbandonEvent($pull_request, $user_abandoning_the_pr);
+        $this->event_dispatcher->dispatch(PullRequestAbandonedEvent::fromPullRequestAndUserAbandoningThePullRequest(
+            $pull_request,
+            $user_abandoning_the_pr
+        ));
     }
 
     /**

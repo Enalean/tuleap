@@ -27,7 +27,7 @@ use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
 use Tuleap\PullRequest\PullRequest;
 use UserManager;
 
-final class ReviewerRetriever
+class ReviewerRetriever
 {
     /**
      * @var UserManager

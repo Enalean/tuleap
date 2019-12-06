@@ -46,6 +46,12 @@ use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeDAO;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeEvent;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChangeRetriever;
 use Tuleap\PullRequest\Reviewer\Notification\ReviewerChangeNotificationToProcessBuilder;
+use Tuleap\PullRequest\Reviewer\ReviewerDAO;
+use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
+use Tuleap\PullRequest\StateStatus\PullRequestAbandonedEvent;
+use Tuleap\PullRequest\StateStatus\PullRequestAbandonedNotificationToProcessBuilder;
+use Tuleap\PullRequest\Timeline\Dao as TimelineDAO;
+use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 
 final class PullRequestNotificationSupport
@@ -64,50 +70,16 @@ final class PullRequestNotificationSupport
         );
     }
 
-    public static function buildSynchronousDispatcher(): EventDispatcherInterface
+    private static function buildSynchronousDispatcher(): EventDispatcherInterface
     {
         return new EventSubjectToNotificationSynchronousDispatcher(
             new EventSubjectToNotificationListenerProvider([
                 ReviewerChangeEvent::class => [
                     static function (): EventSubjectToNotificationListener {
-                        $git_repository_factory = new GitRepositoryFactory(
-                            new GitDao(),
-                            ProjectManager::instance()
-                        );
-                        $user_manager           = \UserManager::instance();
-                        $html_url_builder       = new HTMLURLBuilder($git_repository_factory, new InstanceBaseURLBuilder());
-                        $event_manager          = \EventManager::instance();
+                        $git_repository_factory = self::buildGitRepositoryFactory();
+                        $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
                         return new EventSubjectToNotificationListener(
-                            new PullRequestNotificationSendMail(
-                                new \MailBuilder(
-                                    TemplateRendererFactory::build(),
-                                    new MailFilter(
-                                        $user_manager,
-                                        new ProjectAccessChecker(
-                                            PermissionsOverrider_PermissionsOverriderManager::instance(),
-                                            new RestrictedUserCanAccessProjectVerifier(),
-                                            $event_manager
-                                        ),
-                                        new MailLogger()
-                                    )
-                                ),
-                                new \MailEnhancer(),
-                                new PullRequestPermissionChecker(
-                                    $git_repository_factory,
-                                    new \Tuleap\Project\ProjectAccessChecker(
-                                        PermissionsOverrider_PermissionsOverriderManager::instance(),
-                                        new RestrictedUserCanAccessProjectVerifier(),
-                                        $event_manager
-                                    ),
-                                    new AccessControlVerifier(
-                                        new FineGrainedRetriever(new FineGrainedDao()),
-                                        new \System_Command()
-                                    )
-                                ),
-                                $git_repository_factory,
-                                $html_url_builder,
-                                new LocaleSwitcher()
-                            ),
+                            self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new ReviewerChangeNotificationToProcessBuilder(
                                 new ReviewerChangeRetriever(
                                     new ReviewerChangeDAO(),
@@ -115,15 +87,116 @@ final class PullRequestNotificationSupport
                                         new Dao(),
                                         \ReferenceManager::instance()
                                     ),
-                                    $user_manager
+                                    \UserManager::instance()
                                 ),
                                 \UserHelper::instance(),
                                 $html_url_builder
                             )
                         );
                     }
-                ]
+                ],
+                PullRequestAbandonedEvent::class => [
+                    static function (): EventSubjectToNotificationListener {
+                        $git_repository_factory = self::buildGitRepositoryFactory();
+                        $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
+                        $user_manager           = \UserManager::instance();
+                        return new EventSubjectToNotificationListener(
+                            self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
+                            new PullRequestAbandonedNotificationToProcessBuilder(
+                                $user_manager,
+                                new Factory(
+                                    new Dao(),
+                                    \ReferenceManager::instance()
+                                ),
+                                new OwnerRetriever(
+                                    $user_manager,
+                                    new ReviewerRetriever(
+                                        $user_manager,
+                                        new ReviewerDAO(),
+                                        new PullRequestPermissionChecker(
+                                            $git_repository_factory,
+                                            new \Tuleap\Project\ProjectAccessChecker(
+                                                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                                                new RestrictedUserCanAccessProjectVerifier(),
+                                                \EventManager::instance()
+                                            ),
+                                            new AccessControlVerifier(
+                                                new FineGrainedRetriever(new FineGrainedDao()),
+                                                new \System_Command()
+                                            )
+                                        )
+                                    ),
+                                    new TimelineDAO()
+                                ),
+                                new FilterUserFromCollection(),
+                                \UserHelper::instance(),
+                                $html_url_builder
+                            )
+                        );
+                    }
+                ],
             ])
+        );
+    }
+
+    private static function buildPullRequestNotificationSendMail(
+        GitRepositoryFactory $git_repository_factory,
+        HTMLURLBuilder $html_url_builder
+    ): PullRequestNotificationSendMail {
+        $event_manager = \EventManager::instance();
+        return new PullRequestNotificationSendMail(
+            new \MailBuilder(
+                TemplateRendererFactory::build(),
+                new MailFilter(
+                    \UserManager::instance(),
+                    new ProjectAccessChecker(
+                        PermissionsOverrider_PermissionsOverriderManager::instance(),
+                        new RestrictedUserCanAccessProjectVerifier(),
+                        $event_manager
+                    ),
+                    new MailLogger()
+                )
+            ),
+            new \MailEnhancer(),
+            new PullRequestPermissionChecker(
+                $git_repository_factory,
+                new \Tuleap\Project\ProjectAccessChecker(
+                    PermissionsOverrider_PermissionsOverriderManager::instance(),
+                    new RestrictedUserCanAccessProjectVerifier(),
+                    $event_manager
+                ),
+                new AccessControlVerifier(
+                    new FineGrainedRetriever(new FineGrainedDao()),
+                    new \System_Command()
+                )
+            ),
+            $git_repository_factory,
+            $html_url_builder,
+            new LocaleSwitcher()
+        );
+    }
+
+    private static function buildHTMLURLBuilder(GitRepositoryFactory $git_repository_factory): HTMLURLBuilder
+    {
+        return new HTMLURLBuilder($git_repository_factory, new InstanceBaseURLBuilder());
+    }
+
+    private static function buildGitRepositoryFactory(): GitRepositoryFactory
+    {
+        return new GitRepositoryFactory(
+            new GitDao(),
+            ProjectManager::instance()
+        );
+    }
+
+    public static function buildDispatcher(\Logger $logger): EventDispatcherInterface
+    {
+        return new EventDispatcherWithFallback(
+            $logger,
+            new EventSubjectToNotificationAsynchronousRedisDispatcher(
+                new QueueFactory($logger)
+            ),
+            self::buildSynchronousDispatcher()
         );
     }
 }
