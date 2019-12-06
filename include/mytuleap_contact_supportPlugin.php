@@ -68,8 +68,14 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
 
     private function getSendMailSupportController()
     {
+        $contact_support_email = $this->getPluginInfo()->getPropertyValueForName('contact_support_email');
+        if (! $contact_support_email) {
+            $contact_support_email = 'support@mytuleap.com';
+        }
+
         return new SendMailSupportController(
-            $this->getRenderer()
+            $this->getRenderer(),
+            $contact_support_email
         );
     }
     private function getRenderer()

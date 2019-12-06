@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,20 @@
 
 namespace Tuleap\MyTuleapContactSupport\Plugin;
 
-use PluginInfo;
+use Plugin;
+use PluginFileInfo;
 
-class Info extends PluginInfo
+class Info extends PluginFileInfo
 {
     public function __construct($plugin)
     {
-        parent::__construct($plugin);
+        parent::__construct($plugin, 'config');
 
         $this->setPluginDescriptor(new Descriptor());
+    }
+
+    protected function getDefaultConfPath(Plugin $plugin, $incname)
+    {
+        return $plugin->getFilesystemPath() .'/etc/'. $incname .'.inc.dist';
     }
 }
