@@ -24,11 +24,13 @@ import { Card, ColumnDefinition, Swimlane, User } from "../../../../type";
 import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
 import { RootState } from "../../../../store/type";
 import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
+import AddCard from "./Card/Add/AddCard.vue";
 
 async function createWrapper(
     columns: ColumnDefinition[],
     target_column: ColumnDefinition,
-    swimlane: Swimlane
+    swimlane: Swimlane,
+    can_add_in_place: boolean
 ): Promise<Wrapper<SoloSwimlane>> {
     return shallowMount(SoloSwimlane, {
         localVue: await createTaskboardLocalVue(),
@@ -38,7 +40,8 @@ async function createWrapper(
                     column: { columns }
                 } as RootState,
                 getters: {
-                    "column/accepted_trackers_ids": (): number[] => [101, 102]
+                    "column/accepted_trackers_ids": (): number[] => [101, 102],
+                    can_add_in_place: (): boolean => can_add_in_place
                 }
             })
         },
@@ -55,9 +58,23 @@ describe("SoloSwimlane", () => {
             done_column
         ];
         const swimlane = { card: { id: 43 } } as Swimlane;
-        const wrapper = await createWrapper(columns, done_column, swimlane);
+        const wrapper = await createWrapper(columns, done_column, swimlane, false);
 
         expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.contains(AddCard)).toBe(false);
+    });
+
+    it("Allows to add cards", async () => {
+        const done_column = { id: 3, label: "Done", is_collapsed: false } as ColumnDefinition;
+
+        const columns = [
+            { id: 2, label: "To do", is_collapsed: false } as ColumnDefinition,
+            done_column
+        ];
+        const swimlane = { card: { id: 43 } } as Swimlane;
+        const wrapper = await createWrapper(columns, done_column, swimlane, true);
+
+        expect(wrapper.contains(AddCard)).toBe(true);
     });
 
     it(`Given the parent card is in Done column
@@ -71,7 +88,7 @@ describe("SoloSwimlane", () => {
             done_column
         ];
         const swimlane = { card: { id: 43 } } as Swimlane;
-        const wrapper = await createWrapper(columns, done_column, swimlane);
+        const wrapper = await createWrapper(columns, done_column, swimlane, false);
 
         expect(wrapper.isEmpty()).toBe(true);
     });
@@ -102,7 +119,7 @@ describe("SoloSwimlane", () => {
         it("is draggable when the card is not in edit mode", async () => {
             card.is_in_edit_mode = false;
 
-            const wrapper = await createWrapper(columns, done_column, swimlane);
+            const wrapper = await createWrapper(columns, done_column, swimlane, false);
 
             const solo_card = wrapper.find(CardWithRemainingEffort);
 
@@ -113,7 +130,7 @@ describe("SoloSwimlane", () => {
         it("is not draggable when the card is in edit mode", async () => {
             card.is_in_edit_mode = true;
 
-            const wrapper = await createWrapper(columns, done_column, swimlane);
+            const wrapper = await createWrapper(columns, done_column, swimlane, false);
 
             const solo_card = wrapper.find(CardWithRemainingEffort);
 

@@ -36,6 +36,7 @@
                 v-bind:data-tracker-id="swimlane.card.tracker_id"
                 v-bind:data-is-draggable="! swimlane.card.is_in_edit_mode"
             />
+            <add-card v-if="is_add_card_rendered" v-bind:column="col" v-bind:swimlane="swimlane"/>
         </drop-container-cell>
     </div>
 </template>
@@ -43,16 +44,18 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+import { Getter, namespace } from "vuex-class";
 import { ColumnDefinition, Swimlane } from "../../../../type";
 import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
 import DropContainerCell from "./Cell/DropContainerCell.vue";
+import AddCard from "./Card/Add/AddCard.vue";
 
 const column_store = namespace("column");
 
 @Component({
     components: {
+        AddCard,
         CardWithRemainingEffort,
         DropContainerCell,
         SwimlaneHeader
@@ -68,8 +71,15 @@ export default class SoloSwimlane extends Vue {
     @column_store.State
     readonly columns!: Array<ColumnDefinition>;
 
+    @Getter
+    readonly can_add_in_place!: (swimlane: Swimlane) => boolean;
+
     get should_solo_card_be_displayed(): boolean {
         return !this.column.is_collapsed;
+    }
+
+    get is_add_card_rendered(): boolean {
+        return this.can_add_in_place(this.swimlane);
     }
 }
 </script>

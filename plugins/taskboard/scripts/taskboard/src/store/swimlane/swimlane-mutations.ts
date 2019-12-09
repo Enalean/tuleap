@@ -64,6 +64,9 @@ export function addChildrenToSwimlane(
         ...state_swimlane,
         children_cards: state_swimlane.children_cards.concat(payload.children_cards)
     };
+    if (new_swimlane.children_cards.length > 0) {
+        new_swimlane.card.has_children = true;
+    }
     new_swimlane.children_cards.sort(sortCardsByRank);
     replaceSwimlane(state, new_swimlane);
     state.swimlanes.sort(sortSwimlanesByRank);
