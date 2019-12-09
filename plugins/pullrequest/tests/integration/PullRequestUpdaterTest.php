@@ -24,7 +24,9 @@ namespace Tuleap\PullRequest;
 use GitRepositoryFactory;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use ReferenceManager;
+use Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedEvent;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use GitRepository;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDAO;
@@ -75,6 +77,10 @@ class PullRequestUpdaterTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TimelineEventCreator
      */
     private $timeline_event_creator;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
     protected function setUp(): void
     {
@@ -87,6 +93,7 @@ class PullRequestUpdaterTest extends TestCase
         $this->pr_reference_updater   = \Mockery::mock(GitPullRequestReferenceUpdater::class);
         $this->pr_merger              = \Mockery::mock(PullRequestMerger::class);
         $this->timeline_event_creator = \Mockery::mock(TimelineEventCreator::class);
+        $this->event_dispatcher       = \Mockery::mock(EventDispatcherInterface::class);
         $this->pull_request_updater   = new PullRequestUpdater(
             new Factory($this->dao, $reference_manager),
             $this->pr_merger,
@@ -96,17 +103,18 @@ class PullRequestUpdaterTest extends TestCase
             $this->timeline_event_creator,
             $this->git_repository_factory,
             $this->git_exec_factory,
-            $this->pr_reference_updater
+            $this->pr_reference_updater,
+            $this->event_dispatcher
         );
 
         $this->git_exec = \Mockery::mock(GitExec::class);
         $this->user     = \Mockery::mock(PFUser::class, ['getId' => 1337]);
     }
 
-    public function testItUpdatesSourceBranchInPRs()
+    public function testItUpdatesSourceBranchInPRs(): void
     {
         $this->pr_reference_updater->shouldReceive('updatePullRequestReference');
-        $this->git_exec->shouldReceive('getCommonAncestor');
+        $this->git_exec->shouldReceive('getCommonAncestor')->andReturn('sha2');
         $this->pr_merger->shouldReceive('detectMergeabilityStatus');
         $this->timeline_event_creator->shouldReceive('storeUpdateEvent');
 
@@ -121,6 +129,8 @@ class PullRequestUpdaterTest extends TestCase
         $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($git_repo);
         $this->git_exec_factory->shouldReceive('getGitExec')->with($git_repo)->andReturns($this->git_exec);
 
+        $this->event_dispatcher->shouldReceive('dispatch')->with(\Mockery::type(PullRequestUpdatedEvent::class))->atLeast()->once();
+
         $this->pull_request_updater->updatePullRequests($this->user, $git_repo, 'dev', 'sha1new');
 
         $pr1 = $this->dao->searchByPullRequestId($pr1_id);
@@ -132,10 +142,10 @@ class PullRequestUpdaterTest extends TestCase
         $this->assertEquals('sha1', $pr3['sha1_src']);
     }
 
-    public function testItDoesNotUpdateSourceBranchOfOtherRepositories()
+    public function testItDoesNotUpdateSourceBranchOfOtherRepositories(): void
     {
         $this->pr_reference_updater->shouldReceive('updatePullRequestReference');
-        $this->git_exec->shouldReceive('getCommonAncestor');
+        $this->git_exec->shouldReceive('getCommonAncestor')->andReturn('sha2');
         $this->pr_merger->shouldReceive('detectMergeabilityStatus');
         $this->timeline_event_creator->shouldReceive('storeUpdateEvent');
 
@@ -158,10 +168,10 @@ class PullRequestUpdaterTest extends TestCase
         $this->assertEquals('sha1', $pr2['sha1_src']);
     }
 
-    public function testItDoesNotUpdateClosedPRs()
+    public function testItDoesNotUpdateClosedPRs(): void
     {
         $this->pr_reference_updater->shouldReceive('updatePullRequestReference');
-        $this->git_exec->shouldReceive('getCommonAncestor');
+        $this->git_exec->shouldReceive('getCommonAncestor')->andReturn('sha2');
         $this->pr_merger->shouldReceive('detectMergeabilityStatus');
         $this->timeline_event_creator->shouldReceive('storeUpdateEvent');
 
@@ -177,6 +187,8 @@ class PullRequestUpdaterTest extends TestCase
 
         $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($git_repo);
         $this->git_exec_factory->shouldReceive('getGitExec')->with($git_repo)->andReturns($this->git_exec);
+
+        $this->event_dispatcher->shouldReceive('dispatch');
 
         $this->pull_request_updater->updatePullRequests($this->user, $git_repo, 'dev', 'sha1new');
 

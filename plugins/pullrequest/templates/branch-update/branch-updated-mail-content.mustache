@@ -1,0 +1,19 @@
+<p>
+    {{# dngettext }}
+        tuleap-pullrequest |
+        <a href="%s">%s</a> pushed %s commit updating the pull request <a href="%s">#%s</a>: %s. |
+        <a href="%s">%s</a> pushed %s commits updating the pull request <a href="%s">#%s</a>: %s. |
+        {{ nb_new_commits }} |
+        {{ change_user_profile_url }} |
+        {{ change_user_display_name }} |
+        {{ nb_new_commits }} |
+        {{ pull_request_url }} |
+        {{ pull_request_id }} |
+        {{ pull_request_title }}
+    {{/ dngettext }}
+</p>
+<ul>
+    {{# new_commits }}
+        <li>{{ short_reference }} {{ title }}</li>
+    {{/new_commits}}
+</ul>
