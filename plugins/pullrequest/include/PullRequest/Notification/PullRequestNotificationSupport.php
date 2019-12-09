@@ -50,6 +50,8 @@ use Tuleap\PullRequest\Reviewer\ReviewerDAO;
 use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
 use Tuleap\PullRequest\StateStatus\PullRequestAbandonedEvent;
 use Tuleap\PullRequest\StateStatus\PullRequestAbandonedNotificationToProcessBuilder;
+use Tuleap\PullRequest\StateStatus\PullRequestMergedEvent;
+use Tuleap\PullRequest\StateStatus\PullRequestMergedNotificationToProcessBuilder;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDAO;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
@@ -103,6 +105,46 @@ final class PullRequestNotificationSupport
                         return new EventSubjectToNotificationListener(
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new PullRequestAbandonedNotificationToProcessBuilder(
+                                $user_manager,
+                                new Factory(
+                                    new Dao(),
+                                    \ReferenceManager::instance()
+                                ),
+                                new OwnerRetriever(
+                                    $user_manager,
+                                    new ReviewerRetriever(
+                                        $user_manager,
+                                        new ReviewerDAO(),
+                                        new PullRequestPermissionChecker(
+                                            $git_repository_factory,
+                                            new \Tuleap\Project\ProjectAccessChecker(
+                                                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                                                new RestrictedUserCanAccessProjectVerifier(),
+                                                \EventManager::instance()
+                                            ),
+                                            new AccessControlVerifier(
+                                                new FineGrainedRetriever(new FineGrainedDao()),
+                                                new \System_Command()
+                                            )
+                                        )
+                                    ),
+                                    new TimelineDAO()
+                                ),
+                                new FilterUserFromCollection(),
+                                \UserHelper::instance(),
+                                $html_url_builder
+                            )
+                        );
+                    }
+                ],
+                PullRequestMergedEvent::class => [
+                    static function (): EventSubjectToNotificationListener {
+                        $git_repository_factory = self::buildGitRepositoryFactory();
+                        $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
+                        $user_manager           = \UserManager::instance();
+                        return new EventSubjectToNotificationListener(
+                            self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
+                            new PullRequestMergedNotificationToProcessBuilder(
                                 $user_manager,
                                 new Factory(
                                     new Dao(),

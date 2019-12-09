@@ -28,6 +28,7 @@ use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use PFUser;
 use GitRepository;
 use Tuleap\PullRequest\StateStatus\PullRequestAbandonedEvent;
+use Tuleap\PullRequest\StateStatus\PullRequestMergedEvent;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use User;
 
@@ -135,5 +136,9 @@ class PullRequestCloser
 
         $this->pull_request_dao->markAsMerged($pull_request->getId());
         $this->timeline_event_creator->storeMergeEvent($pull_request, $user);
+        $this->event_dispatcher->dispatch(PullRequestMergedEvent::fromPullRequestAndUserMergingThePullRequest(
+            $pull_request,
+            $user
+        ));
     }
 }

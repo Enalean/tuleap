@@ -34,7 +34,7 @@ use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use UserHelper;
 use UserManager;
 
-final class PullRequestAbandonedNotificationToProcessBuilderTest extends TestCase
+final class PullRequestMergedNotificationToProcessBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -72,7 +72,7 @@ final class PullRequestAbandonedNotificationToProcessBuilderTest extends TestCas
         $this->user_helper               = \Mockery::mock(UserHelper::class);
         $this->html_url_builder          = \Mockery::mock(HTMLURLBuilder::class);
 
-        $this->builder = new PullRequestAbandonedNotificationToProcessBuilder(
+        $this->builder = new PullRequestMergedNotificationToProcessBuilder(
             $this->user_manager,
             $this->pull_request_factory,
             $this->owner_retriever,
@@ -82,15 +82,16 @@ final class PullRequestAbandonedNotificationToProcessBuilderTest extends TestCas
         );
     }
 
-    public function testBuildAbandonNotificationFromPullRequestAbandonedEvent(): void
+    public function testBuildMergeNotificationFromPullRequestMergedEvent(): void
     {
         $pull_request  = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(12);
         $pull_request->shouldReceive('getTitle')->andReturn('PR Title');
+        $pull_request->shouldReceive('getBranchDest')->andReturn('master');
         $change_user   = $this->buildUser(102);
         $owners        = [$change_user, $this->buildUser(104), $this->buildUser(105)];
 
-        $event = PullRequestAbandonedEvent::fromPullRequestAndUserAbandoningThePullRequest($pull_request, $change_user);
+        $event = PullRequestMergedEvent::fromPullRequestAndUserMergingThePullRequest($pull_request, $change_user);
 
         $this->pull_request_factory->shouldReceive('getPullRequestById')
             ->with($pull_request->getId())->andReturn($pull_request);
@@ -103,7 +104,7 @@ final class PullRequestAbandonedNotificationToProcessBuilderTest extends TestCas
 
         $notifications = $this->builder->getNotificationsToProcess($event);
         $this->assertCount(1, $notifications);
-        $this->assertInstanceOf(PullRequestAbandonedNotification::class, $notifications[0]);
+        $this->assertInstanceOf(PullRequestMergedNotification::class, $notifications[0]);
     }
 
     public function testNoNotificationIsBuiltWhenThePullRequestCanNoBeFound(): void
@@ -112,7 +113,7 @@ final class PullRequestAbandonedNotificationToProcessBuilderTest extends TestCas
         $pull_request->shouldReceive('getId')->andReturn(404);
         $change_user = $this->buildUser(102);
 
-        $event = PullRequestAbandonedEvent::fromPullRequestAndUserAbandoningThePullRequest($pull_request, $change_user);
+        $event = PullRequestMergedEvent::fromPullRequestAndUserMergingThePullRequest($pull_request, $change_user);
 
         $this->pull_request_factory->shouldReceive('getPullRequestById')->andThrow(PullRequestNotFoundException::class);
 
@@ -126,7 +127,7 @@ final class PullRequestAbandonedNotificationToProcessBuilderTest extends TestCas
         $pull_request->shouldReceive('getId')->andReturn(13);
         $change_user = $this->buildUser(102);
 
-        $event = PullRequestAbandonedEvent::fromPullRequestAndUserAbandoningThePullRequest($pull_request, $change_user);
+        $event = PullRequestMergedEvent::fromPullRequestAndUserMergingThePullRequest($pull_request, $change_user);
 
         $this->pull_request_factory->shouldReceive('getPullRequestById')->andReturn($pull_request);
         $this->user_manager->shouldReceive('getUserById')
