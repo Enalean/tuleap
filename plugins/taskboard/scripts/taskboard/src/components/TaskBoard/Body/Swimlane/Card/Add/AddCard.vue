@@ -38,6 +38,8 @@ import { NewCardPayload } from "../../../../../../store/swimlane/card/type";
 
 const swimlane = namespace("swimlane");
 
+const NAVBAR_HEIGHT_AND_HEADER_HEIGHT_IN_PX = 95;
+
 @Component({
     components: { LabelEditor, AddButton }
 })
@@ -78,6 +80,12 @@ export default class AddCard extends Vue {
     switchToAddMode(): void {
         this.is_in_add_mode = true;
         this.setIsACellAddingInPlace();
+
+        const current_top = this.$el.getBoundingClientRect().top;
+        if (current_top < NAVBAR_HEIGHT_AND_HEADER_HEIGHT_IN_PX) {
+            const new_top = window.scrollY + current_top - NAVBAR_HEIGHT_AND_HEADER_HEIGHT_IN_PX;
+            setTimeout(() => window.scrollTo({ top: new_top, behavior: "smooth" }), 10);
+        }
     }
 
     save(): void {

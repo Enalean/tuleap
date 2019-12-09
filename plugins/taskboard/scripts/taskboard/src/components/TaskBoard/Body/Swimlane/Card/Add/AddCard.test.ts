@@ -101,10 +101,27 @@ describe("AddCard", () => {
             label: "Lorem ipsum"
         } as NewCardPayload);
 
+        jest.spyOn(window, "scrollTo").mockImplementation(() => {});
+
         jest.runAllTimers();
         expect(wrapper.vm.$data.label).toBe("");
 
         expect(wrapper.contains(LabelEditor)).toBe(true);
         expect(wrapper.contains(AddButton)).toBe(false);
+    });
+
+    it("Scrolls the viewport so that the form is visible", () => {
+        const wrapper = getWrapper();
+
+        wrapper.find(AddButton).vm.$emit("click");
+        wrapper.setData({ label: "Lorem ipsum" });
+
+        expect(wrapper.vm.$data.label).toBe("Lorem ipsum");
+        wrapper.find(LabelEditor).vm.$emit("save");
+
+        jest.spyOn(window, "scrollTo").mockImplementation(() => {});
+
+        jest.runAllTimers();
+        expect(window.scrollTo).toHaveBeenCalled();
     });
 });
