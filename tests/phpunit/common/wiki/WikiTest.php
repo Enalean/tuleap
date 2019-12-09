@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class WikiTest extends TuleapTestCase  // @codingStandardsIgnoreLine
+class WikiTest extends \PHPUnit\Framework\TestCase  // @codingStandardsIgnoreLine
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var Int
      */
@@ -37,40 +39,40 @@ class WikiTest extends TuleapTestCase  // @codingStandardsIgnoreLine
      */
     private $user;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $user_manager = mock('UserManager');
+        $user_manager = \Mockery::spy(\UserManager::class);
         UserManager::setInstance($user_manager);
 
         $this->group_id = 100;
         $this->wiki     = new Wiki($this->group_id);
 
         $this->user_id = 101;
-        $this->user    = mock('PFUser');
-        stub($this->user)->getId()->returns($this->user_id);
+        $this->user    = \Mockery::spy(\PFUser::class);
+        $this->user->shouldReceive('getId')->andReturns($this->user_id);
 
-        stub($user_manager)->getUserById($this->user_id)->returns($this->user);
+        $user_manager->shouldReceive('getUserById')->with($this->user_id)->andReturns($this->user);
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         UserManager::clearInstance();
 
         parent::tearDown();
     }
 
-    public function itReturnsTrueWhenUserIsProjectAdmin()
+    public function testItReturnsTrueWhenUserIsProjectAdmin(): void
     {
-        stub($this->user)->isMember($this->group_id, ProjectUGroup::PROJECT_ADMIN_PERMISSIONS)->returns(true);
+        $this->user->shouldReceive('isMember')->with($this->group_id, ProjectUGroup::PROJECT_ADMIN_PERMISSIONS)->andReturns(true);
 
         $this->assertTrue($this->wiki->isAutorized($this->user_id));
     }
 
-    public function itReturnsTrueWhenUserIsWikiAdmin()
+    public function testItReturnsTrueWhenUserIsWikiAdmin(): void
     {
-        stub($this->user)->isMember($this->group_id, ProjectUGroup::WIKI_ADMIN_PERMISSIONS)->returns(true);
+        $this->user->shouldReceive('isMember')->with($this->group_id, ProjectUGroup::WIKI_ADMIN_PERMISSIONS)->andReturns(true);
 
         $this->assertTrue($this->wiki->isAutorized($this->user_id));
     }
