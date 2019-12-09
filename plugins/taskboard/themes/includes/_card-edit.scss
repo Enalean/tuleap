@@ -189,13 +189,13 @@
         &.taskboard-card-remaining-effort-edit-mode,
         &:focus,
         &:hover {
-            &.taskboard-card-remaining-effort-#{$color-name}::after {
-                border-color: transparent transparent transparent darken(map-get($colors, 'primary'), 5%);
-            }
-
             &.tlp-badge-#{$color-name} {
                 border: 1px solid darken(map-get($colors, 'primary'), 5%);
                 background: darken(map-get($colors, 'primary'), 5%);
+
+                &::after {
+                    border-color: transparent transparent transparent darken(map-get($colors, 'primary'), 5%);
+                }
             }
         }
     }
