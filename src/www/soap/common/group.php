@@ -231,7 +231,7 @@ if (defined('NUSOAP')) {
             $my_groups = $gf->getMyGroups();
             return groups_to_soap($my_groups);
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session ', 'getMyProjects');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'getMyProjects');
         }
     }
 
@@ -256,7 +256,7 @@ if (defined('NUSOAP')) {
                 return $e;
             }
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'getGroupByName');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getGroupByName');
         }
     }
 
@@ -281,7 +281,7 @@ if (defined('NUSOAP')) {
                 return $e;
             }
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'getGroup');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getGroup');
         }
     }
 
@@ -301,7 +301,7 @@ if (defined('NUSOAP')) {
                 return $e;
             }
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'getGroupUgroups');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getGroupUgroups');
         }
     }
 

@@ -26,9 +26,9 @@ require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../../include/session.php';
 
 // define fault code constants
-define('invalid_package_fault', '3017');
-define('invalid_release_fault', '3018');
-define('invalid_file_fault', '3019');
+define('INVALID_PACKAGE_FAULT', '3017');
+define('INVALID_RELEASE_FAULT', '3018');
+define('INVALID_FILE_FAULT', '3019');
 
 if (defined('NUSOAP')) {
 // Type definition
@@ -491,7 +491,7 @@ if (defined('NUSOAP')) {
             $packages = $pkg_fact->getActiveFRSPackages($group_id);
             return packages_to_soap($packages);
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'getPackages');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getPackages');
         }
     }
 
@@ -557,7 +557,7 @@ if (defined('NUSOAP')) {
             if ($pkg_fact->userCanCreate($group_id)) {
                 // we check that the package name don't already exist
                 if ($pkg_fact->isPackageNameExist($package_name, $group_id)) {
-                    return new SoapFault(invalid_package_fault, 'Package name already exists in this project', 'addPackage');
+                    return new SoapFault(INVALID_PACKAGE_FAULT, 'Package name already exists in this project', 'addPackage');
                 } else {
                     $pkg_array = array('group_id'        => $group->getID(),
                                    'name'            => $package_name,
@@ -566,17 +566,17 @@ if (defined('NUSOAP')) {
                                    'approve_license' => $approve_license);
                     $dar = $pkg_fact->create($pkg_array);
                     if (!$dar) {
-                        return new SoapFault(invalid_package_fault, $dar->isError(), 'addPackage');
+                        return new SoapFault(INVALID_PACKAGE_FAULT, $dar->isError(), 'addPackage');
                     } else {
                         // if there is no error, $dar contains the package_id
                         return $dar;
                     }
                 }
             } else {
-                return new SoapFault(invalid_package_fault, 'User is not allowed to create a package', 'addPackage');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'User is not allowed to create a package', 'addPackage');
             }
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'addPackage');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addPackage');
         }
     }
 
@@ -601,11 +601,11 @@ if (defined('NUSOAP')) {
             $pkg_fact = new FRSPackageFactory();
             $package  = $pkg_fact->getFRSPackageFromDb($package_id);
             if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
-                return new SoapFault(invalid_package_fault, 'Invalid Package', 'getReleases');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getReleases');
             }
             // check access rights to this package
             if (! $package->userCanRead() || ! $package->isActive()) {
-                return new SoapFault(invalid_package_fault, 'Permission to this Package denied', 'getReleases');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Permission to this Package denied', 'getReleases');
             }
 
             $release_fact = new FRSReleaseFactory();
@@ -613,7 +613,7 @@ if (defined('NUSOAP')) {
             $releases = $release_fact->getActiveFRSReleases($package_id, $group_id);
             return releases_to_soap($releases);
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'getReleases');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getReleases');
         }
     }
 
@@ -688,13 +688,13 @@ if (defined('NUSOAP')) {
             $pkg_fact = new FRSPackageFactory();
             $package  = $pkg_fact->getFRSPackageFromDb($package_id);
             if (!$package || $package->getGroupID() != $group_id) {
-                return new SoapFault(invalid_package_fault, 'Invalid Package', 'addRelease');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'addRelease');
             }
 
             $release_fact = new FRSReleaseFactory();
             if ($release_fact->userCanCreate($group_id)) {
                 if ($release_fact->isReleaseNameExist($name, $package_id)) {
-                    return new SoapFault(invalid_release_fault, 'Release name already exists in this package', 'addRelease');
+                    return new SoapFault(INVALID_RELEASE_FAULT, 'Release name already exists in this package', 'addRelease');
                 } else {
                     $release_array = array ('package_id' => $package_id,
                                         'name' => $name,
@@ -704,7 +704,7 @@ if (defined('NUSOAP')) {
                                         'release_date' => $release_date);
                     $dar = $release_fact->create($release_array);
                     if (!$dar) {
-                        return new SoapFault(invalid_release_fault, $dar->isError(), 'addRelease');
+                        return new SoapFault(INVALID_RELEASE_FAULT, $dar->isError(), 'addRelease');
                     } else {
                         // if there is no error, $dar contains the release_id
                         //add the default permission inherited from package
@@ -714,15 +714,15 @@ if (defined('NUSOAP')) {
                         if ($release_fact->setDefaultPermissions($release)) {
                             return $dar;
                         } else {
-                            return new SoapFault(invalid_release_fault, 'Could not retrieve parent package permission', 'addRelease');
+                            return new SoapFault(INVALID_RELEASE_FAULT, 'Could not retrieve parent package permission', 'addRelease');
                         }
                     }
                 }
             } else {
-                return new SoapFault(invalid_release_fault, 'User is not allowed to create a release', 'addRelease');
+                return new SoapFault(INVALID_RELEASE_FAULT, 'User is not allowed to create a release', 'addRelease');
             }
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'addRelease');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addRelease');
         }
     }
 
@@ -748,7 +748,7 @@ if (defined('NUSOAP')) {
     function updateRelease($sessionKey, $group_id, $package_id, $release_id, $notes, $changes, $status_id)
     {
         if (! session_continue($sessionKey)) {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'updateRelease');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'updateRelease');
         }
 
         $project_manager = ProjectManager::instance();
@@ -761,16 +761,16 @@ if (defined('NUSOAP')) {
         $pkg_fact = new FRSPackageFactory();
         $package = $pkg_fact->getFRSPackageFromDb($package_id);
         if (!$package || $package->getGroupID() != $group_id) {
-            return new SoapFault(invalid_package_fault, 'Invalid Package', 'updateRelease');
+            return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'updateRelease');
         }
 
         $release_factory = new FRSReleaseFactory();
         if (! $release_factory->userCanUpdate($group_id, $release_id)) {
-            return new SoapFault(invalid_release_fault, 'User is not allowed to update a release', 'updateRelease');
+            return new SoapFault(INVALID_RELEASE_FAULT, 'User is not allowed to update a release', 'updateRelease');
         }
 
         if (! $release = $release_factory->getFRSReleaseFromDb($release_id)) {
-            return new SoapFault(invalid_release_fault, 'Release does not exist', 'updateRelease');
+            return new SoapFault(INVALID_RELEASE_FAULT, 'Release does not exist', 'updateRelease');
         }
 
         $release_array = array (
@@ -782,7 +782,7 @@ if (defined('NUSOAP')) {
         );
 
         if (! $release_factory->update($release_array)) {
-            return new SoapFault(invalid_release_fault, 'Update Failed', 'updateRelease');
+            return new SoapFault(INVALID_RELEASE_FAULT, 'Update Failed', 'updateRelease');
         }
 
         return true;
@@ -811,28 +811,28 @@ if (defined('NUSOAP')) {
             $pkg_fact = new FRSPackageFactory();
             $package  = $pkg_fact->getFRSPackageFromDb($package_id);
             if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
-                return new SoapFault(invalid_package_fault, 'Invalid Package', 'getFiles');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getFiles');
             }
             // check access rights to this package
             if (! $package->userCanRead() || ! $package->isActive()) {
-                return new SoapFault(invalid_package_fault, 'Permission to this Package denied', 'getFiles');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Permission to this Package denied', 'getFiles');
             }
 
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
             $release      = $release_fact->getFRSReleaseFromDb($release_id);
             if (!$release || $release->isDeleted() || $release->getPackageID() != $package_id) {
-                return new SoapFault(invalid_release_fault, 'Invalid Release', 'getFiles');
+                return new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'getFiles');
             }
             // check access rights to this release
             if (! $release->userCanRead() || ! $release->isActive()) {
-                return new SoapFault(invalid_release_fault, 'Permission to this Release denied', 'getFiles');
+                return new SoapFault(INVALID_RELEASE_FAULT, 'Permission to this Release denied', 'getFiles');
             }
 
             $files_arr = $release->getFiles();
             return files_to_soap($files_arr);
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'getFiles');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getFiles');
         }
     }
 
@@ -861,32 +861,32 @@ if (defined('NUSOAP')) {
             $pkg_fact = new FRSPackageFactory();
             $package = $pkg_fact->getFRSPackageFromDb($package_id);
             if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
-                return new SoapFault(invalid_package_fault, 'Invalid Package', 'getFileInfo');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getFileInfo');
             }
             // check access rights to this package
             if (! $package->userCanRead() || ! $package->isActive()) {
-                return new SoapFault(invalid_package_fault, 'Permission to this Package denied', 'getFileInfo');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Permission to this Package denied', 'getFileInfo');
             }
 
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
             $release = $release_fact->getFRSReleaseFromDb($release_id);
             if (!$release || $release->isDeleted() || $release->getPackageID() != $package_id) {
-                return new SoapFault(invalid_release_fault, 'Invalid Release', 'getFileInfo');
+                return new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'getFileInfo');
             }
             // check access rights to this release
             if (! $release->userCanRead() || ! $release->isActive()) {
-                return new SoapFault(invalid_release_fault, 'Permission to this Release denied', 'getFileInfo');
+                return new SoapFault(INVALID_RELEASE_FAULT, 'Permission to this Release denied', 'getFileInfo');
             }
 
             $file_fact = new FRSFileFactory();
             $file = $file_fact->getFRSFileFromDb($file_id);
             if (!$file || !$file->isActive() || $file->getReleaseID() != $release_id) {
-                return new SoapFault(invalid_file_fault, 'Invalid File', 'getFileInfo');
+                return new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'getFileInfo');
             }
             return file_to_soap($file);
         } else {
-            return new SoapFault(invalid_session_fault, 'getFileInfo', 'Invalid Session', 'getFileInfo');
+            return new SoapFault(INVALID_SESSION_FAULT, 'getFileInfo', 'Invalid Session', 'getFileInfo');
         }
     }
 
@@ -959,32 +959,32 @@ if (defined('NUSOAP')) {
             $pkg_fact = new FRSPackageFactory();
             $package  = $pkg_fact->getFRSPackageFromDb($package_id);
             if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
-                return new SoapFault(invalid_package_fault, 'Invalid Package', 'getFile');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getFile');
             }
             // check access rights to this package
             if (! $package->userCanRead() || ! $package->isActive()) {
-                return new SoapFault(invalid_package_fault, 'Permission to this Package denied', 'getFile');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Permission to this Package denied', 'getFile');
             }
 
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
             $release      = $release_fact->getFRSReleaseFromDb($release_id);
             if (!$release || $release->isDeleted() || $release->getPackageID() != $package_id) {
-                return new SoapFault(invalid_release_fault, 'Invalid Release', 'getFile');
+                return new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'getFile');
             }
             // check access rights to this release
             if (! $release->userCanRead() || ! $release->isActive()) {
-                return new SoapFault(invalid_release_fault, 'Permission to this Release denied', 'getFile');
+                return new SoapFault(INVALID_RELEASE_FAULT, 'Permission to this Release denied', 'getFile');
             }
 
             $file_fact = new FRSFileFactory();
             $file      = $file_fact->getFRSFileFromDb($file_id);
             if (!$file || !$file->isActive() || $file->getReleaseID() != $release_id) {
-                return new SoapFault(invalid_file_fault, 'Invalid File', 'getFile');
+                return new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'getFile');
             }
 
             if (!$file->fileExists()) {
-                return new SoapFault(invalid_file_fault, 'File doesn\'t exist on the server', 'getFile');
+                return new SoapFault(INVALID_FILE_FAULT, 'File doesn\'t exist on the server', 'getFile');
             }
 
             // Log the download action
@@ -993,7 +993,7 @@ if (defined('NUSOAP')) {
             $contents = $file->getContent();
             return base64_encode($contents);
         } else {
-            return new SoapFault(invalid_session_fault, 'getFile', 'Invalid Session', 'getFile');
+            return new SoapFault(INVALID_SESSION_FAULT, 'getFile', 'Invalid Session', 'getFile');
         }
     }
 
@@ -1027,32 +1027,32 @@ if (defined('NUSOAP')) {
             $pkg_fact = new FRSPackageFactory();
             $package  = $pkg_fact->getFRSPackageFromDb($package_id);
             if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
-                return new SoapFault(invalid_package_fault, 'Invalid Package', 'getFileChunk');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'getFileChunk');
             }
             // check access rights to this package
             if (! $package->userCanRead() || ! $package->isActive()) {
-                return new SoapFault(invalid_package_fault, 'Permission to this Package denied', 'getFileChunk');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Permission to this Package denied', 'getFileChunk');
             }
 
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
             $release      = $release_fact->getFRSReleaseFromDb($release_id);
             if (!$release || $release->isDeleted() || $release->getPackageID() != $package_id) {
-                return new SoapFault(invalid_release_fault, 'Invalid Release', 'getFileChunk');
+                return new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'getFileChunk');
             }
             // check access rights to this release
             if (! $release->userCanRead() || ! $release->isActive()) {
-                return new SoapFault(invalid_release_fault, 'Permission to this Release denied', 'getFileChunk');
+                return new SoapFault(INVALID_RELEASE_FAULT, 'Permission to this Release denied', 'getFileChunk');
             }
 
             $file_fact = new FRSFileFactory();
             $file      = $file_fact->getFRSFileFromDb($file_id);
             if (!$file || !$file->isActive() || $file->getReleaseID() != $release_id) {
-                return new SoapFault(invalid_file_fault, 'Invalid File', 'getFileChunk');
+                return new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'getFileChunk');
             }
 
             if (!$file->fileExists()) {
-                return new SoapFault(invalid_file_fault, 'File doesn\'t exist on the server', 'getFileChunk');
+                return new SoapFault(INVALID_FILE_FAULT, 'File doesn\'t exist on the server', 'getFileChunk');
             }
 
             // Log the download action
@@ -1061,7 +1061,7 @@ if (defined('NUSOAP')) {
             $contents = $file->getContent($offset, $size);
             return base64_encode($contents);
         } else {
-            return new SoapFault(invalid_session_fault, 'getFile', 'Invalid Session', 'getFileChunk');
+            return new SoapFault(INVALID_SESSION_FAULT, 'getFile', 'Invalid Session', 'getFileChunk');
         }
     }
 
@@ -1102,14 +1102,14 @@ if (defined('NUSOAP')) {
             $pkg_fact = new FRSPackageFactory();
             $package  = $pkg_fact->getFRSPackageFromDb($package_id);
             if (!$package || $package->getGroupID() != $group_id) {
-                return new SoapFault(invalid_package_fault, 'Invalid Package', 'addFile');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'addFile');
             }
 
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
             $release      = $release_fact->getFRSReleaseFromDb($release_id);
             if (!$release || $release->getPackageID() != $package_id) {
-                return new SoapFault(invalid_release_fault, 'Invalid Release', 'addFile');
+                return new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'addFile');
             }
 
             $file_fact = new FRSFileFactory();
@@ -1117,24 +1117,24 @@ if (defined('NUSOAP')) {
                 $tmpname = tempnam("/tmp", "codendi_soap_frs");
                 $fh = fopen($tmpname, "wb");
                 if (!$fh) {
-                    return new SoapFault(invalid_file_fault, 'Could not create temporary file in directory /tmp', 'addFile');
+                    return new SoapFault(INVALID_FILE_FAULT, 'Could not create temporary file in directory /tmp', 'addFile');
                 }
                 fwrite($fh, base64_decode($base64_contents));
                 fclose($fh);
 
                 // move the file in the incoming dir
                 if (! rename($tmpname, $GLOBALS['ftp_incoming_dir'].'/'.basename($filename))) {
-                    return new SoapFault(invalid_file_fault, 'Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir'], 'addFile');
+                    return new SoapFault(INVALID_FILE_FAULT, 'Impossible to move the file in the incoming dir: '.$GLOBALS['ftp_incoming_dir'], 'addFile');
                 }
 
                 // call addUploadedFile function
                 $uploaded_filename = basename($filename);
                 return addUploadedFile($sessionKey, $group_id, $package_id, $release_id, $uploaded_filename, $type_id, $processor_id, $reference_md5, $comment);
             } else {
-                return new SoapFault(invalid_file_fault, 'User is not allowed to add a file', 'addFile');
+                return new SoapFault(INVALID_FILE_FAULT, 'User is not allowed to add a file', 'addFile');
             }
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'addFile');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addFile');
         }
     }
 
@@ -1168,26 +1168,26 @@ if (defined('NUSOAP')) {
             $pkg_fact = new FRSPackageFactory();
             $package  = $pkg_fact->getFRSPackageFromDb($package_id);
             if (!$package || $package->getGroupID() != $group_id) {
-                return new SoapFault(invalid_package_fault, 'Invalid Package', 'updateFileComment');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'updateFileComment');
             }
 
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
             $release      = $release_fact->getFRSReleaseFromDb($release_id);
             if (!$release || $release->getPackageID() != $package_id) {
-                return new SoapFault(invalid_release_fault, 'Invalid Release', 'updateFileComment');
+                return new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'updateFileComment');
             }
 
             // retrieve the file
             $file_factory = new FRSFileFactory();
 
             if (! $file_factory->userCanAdd($group_id)) {
-                return new SoapFault(invalid_file_fault, 'User is not allowed to update file', 'updateFileComment');
+                return new SoapFault(INVALID_FILE_FAULT, 'User is not allowed to update file', 'updateFileComment');
             }
 
             $file = $file_factory->getFRSFileFromDb($file_id);
             if (! $file) {
-                return new SoapFault(invalid_file_fault, 'Invalid File', 'updateFileComment');
+                return new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'updateFileComment');
             }
 
             $data_array = array(
@@ -1197,10 +1197,10 @@ if (defined('NUSOAP')) {
             try {
                 $file_factory->update($data_array);
             } catch (Exception $e) {
-                return new SoapFault(invalid_file_fault, 'Unable to update: ' . $e->getMessage(), 'updateFileComment');
+                return new SoapFault(INVALID_FILE_FAULT, 'Unable to update: ' . $e->getMessage(), 'updateFileComment');
             }
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'updateFileComment');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'updateFileComment');
         }
 
         return true;
@@ -1220,7 +1220,7 @@ if (defined('NUSOAP')) {
     function addFileChunk($sessionKey, $filename, $contents, $first_chunk)
     {
         if (! session_continue($sessionKey)) {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'addFileChunk');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addFileChunk');
         }
         // if it's the first chunk overwrite the existing (if exists) file with the same name
         if ($first_chunk) {
@@ -1231,18 +1231,18 @@ if (defined('NUSOAP')) {
 
         $ftp_incoming_dir = ForgeConfig::get('ftp_incoming_dir');
         if ($ftp_incoming_dir === false) {
-            return new SoapFault(invalid_file_fault, 'Incoming directory is not set', 'addFileChunk');
+            return new SoapFault(INVALID_FILE_FAULT, 'Incoming directory is not set', 'addFileChunk');
         }
         $minimal_ftp_incoming_dir_path = URIModifier::removeDotSegments(URIModifier::removeEmptySegments($ftp_incoming_dir));
         if ($minimal_ftp_incoming_dir_path === '' || $minimal_ftp_incoming_dir_path === '/') {
-            return new SoapFault(invalid_file_fault, 'Incoming directory is misconfigured', 'addFileChunk');
+            return new SoapFault(INVALID_FILE_FAULT, 'Incoming directory is misconfigured', 'addFileChunk');
         }
         if (strpos($filename, '/') !== false) {
-            return new SoapFault(invalid_file_fault, 'Filename can not contain /', 'addFileChunk');
+            return new SoapFault(INVALID_FILE_FAULT, 'Filename can not contain /', 'addFileChunk');
         }
         $incoming_file_path = URIModifier::removeDotSegments(URIModifier::removeEmptySegments($ftp_incoming_dir . '/' . $filename));
         if (strpos($incoming_file_path, $ftp_incoming_dir) !== 0) {
-            return new SoapFault(invalid_file_fault, 'Filename is invalid', 'addFileChunk');
+            return new SoapFault(INVALID_FILE_FAULT, 'Filename is invalid', 'addFileChunk');
         }
 
         $fp = fopen($incoming_file_path, $mode);
@@ -1251,7 +1251,7 @@ if (defined('NUSOAP')) {
         $written = fwrite($fp, $chunk);
         fclose($fp);
         if ($written != $cLength) {
-            return new SoapFault(invalid_file_fault, 'Sent '.$cLength.' of data but only '.$written.' saved in the server', 'addFileChunk');
+            return new SoapFault(INVALID_FILE_FAULT, 'Sent '.$cLength.' of data but only '.$written.' saved in the server', 'addFileChunk');
         }
         return $written;
     }
@@ -1293,14 +1293,14 @@ if (defined('NUSOAP')) {
             $pkg_fact = new FRSPackageFactory();
             $package  = $pkg_fact->getFRSPackageFromDb($package_id);
             if (!$package || $package->getGroupID() != $group_id) {
-                return new SoapFault(invalid_package_fault, 'Invalid Package', 'addUploadedFile');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'addUploadedFile');
             }
 
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
             $release      = $release_fact->getFRSReleaseFromDb($release_id);
             if (!$release || $release->getPackageID() != $package_id) {
-                return new SoapFault(invalid_release_fault, 'Invalid Release', 'addUploadedFile');
+                return new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'addUploadedFile');
             }
 
             $file_fact = new FRSFileFactory();
@@ -1320,13 +1320,13 @@ if (defined('NUSOAP')) {
                     $release_fact->emailNotification($release);
                     return $file->getFileID();
                 } catch (Exception $e) {
-                    return new SoapFault(invalid_file_fault, $e->getMessage(), 'addUploadedFile');
+                    return new SoapFault(INVALID_FILE_FAULT, $e->getMessage(), 'addUploadedFile');
                 }
             } else {
-                return new SoapFault(invalid_file_fault, 'User is not allowed to add a file', 'addUploadedFile');
+                return new SoapFault(INVALID_FILE_FAULT, 'User is not allowed to add a file', 'addUploadedFile');
             }
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'addUploadedFile');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addUploadedFile');
         }
     }
 
@@ -1356,10 +1356,10 @@ if (defined('NUSOAP')) {
                 $file_names = $file_fact->getUploadedFileNames($project);
                 return $file_names;
             } else {
-                return new SoapFault(invalid_file_fault, 'User not allowed to see the uploaded files', 'getUploadedFiles');
+                return new SoapFault(INVALID_FILE_FAULT, 'User not allowed to see the uploaded files', 'getUploadedFiles');
             }
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'getUploadedFiles');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'getUploadedFiles');
         }
     }
 
@@ -1391,14 +1391,14 @@ if (defined('NUSOAP')) {
             $pkg_fact = new FRSPackageFactory();
             $package  = $pkg_fact->getFRSPackageFromDb($package_id);
             if (!$package || $package->getGroupID() != $group_id) {
-                return new SoapFault(invalid_package_fault, 'Invalid Package', 'deleteFile');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'deleteFile');
             }
 
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
             $release      = $release_fact->getFRSReleaseFromDb($release_id);
             if (!$release || $release->getPackageID() != $package_id) {
-                return new SoapFault(invalid_release_fault, 'Invalid Release', 'deleteFile');
+                return new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'deleteFile');
             }
 
             if ($release_fact->userCanUpdate($group_id, $release_id)) {
@@ -1406,20 +1406,20 @@ if (defined('NUSOAP')) {
                 $file_fact = new FRSFileFactory();
                 $file_info = $file_fact->getFRSFileInfoListFromDb($group_id, $file_id);
                 if (count($file_info) == 0) {
-                    return new SoapFault(invalid_file_fault, 'Invalid File', 'deleteFile');
+                    return new SoapFault(INVALID_FILE_FAULT, 'Invalid File', 'deleteFile');
                 }
 
                 // delete the file
                 if (! $file_fact->delete_file($group_id, $file_id)) {
-                    return new SoapFault(invalid_file_fault, 'Impossible to delete file', 'deleteFile');
+                    return new SoapFault(INVALID_FILE_FAULT, 'Impossible to delete file', 'deleteFile');
                 } else {
                     return true;
                 }
             } else {
-                return new SoapFault(invalid_release_fault, 'User does not have permission to delete a file in this release.', 'deleteFile');
+                return new SoapFault(INVALID_RELEASE_FAULT, 'User does not have permission to delete a file in this release.', 'deleteFile');
             }
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'deleteFile');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deleteFile');
         }
     }
 
@@ -1450,7 +1450,7 @@ if (defined('NUSOAP')) {
             if ($package_id && !$cleanup_all) {
                 $package = $packageFactory->getFRSPackageFromDb($package_id);
                 if (!$package || $package->getGroupID() != $group_id) {
-                    return new SoapFault(invalid_package_fault, 'Invalid Package', 'deletePackage');
+                    return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'deletePackage');
                 }
                 $packages[] = $package;
             } elseif ($cleanup_all) {
@@ -1465,16 +1465,16 @@ if (defined('NUSOAP')) {
                         if ($packageFactory->delete_package($group_id, $package->getPackageID())) {
                             $deleted[] = package_to_soap($package);
                         } else {
-                            return new SoapFault(invalid_package_fault, 'Package '.$package->getPackageID().' could not be deleted', 'deletePackage');
+                            return new SoapFault(INVALID_PACKAGE_FAULT, 'Package '.$package->getPackageID().' could not be deleted', 'deletePackage');
                         }
                     } else {
-                        return new SoapFault(invalid_package_fault, 'You don\'t have permission to delete package '.$package->getPackageID(), 'deletePackage');
+                        return new SoapFault(INVALID_PACKAGE_FAULT, 'You don\'t have permission to delete package '.$package->getPackageID(), 'deletePackage');
                     }
                 }
             }
             return $deleted;
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'deletePackage');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deletePackage');
         }
     }
 
@@ -1505,14 +1505,14 @@ if (defined('NUSOAP')) {
             $packageFactory = new FRSPackageFactory();
             $package = $packageFactory->getFRSPackageFromDb($package_id);
             if (!$package || $package->getGroupID() != $group_id) {
-                return new SoapFault(invalid_package_fault, 'Invalid Package', 'deleteRelease');
+                return new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'deleteRelease');
             }
             $releaseFactory = new FRSReleaseFactory();
             $releases = array();
             if ($release_id && !$cleanup_all) {
                 $release = $releaseFactory->getFRSReleaseFromDb($release_id);
                 if (!$release || $release->getPackageID() != $package_id) {
-                    return new SoapFault(invalid_release_fault, 'Invalid Release', 'deleteRelease');
+                    return new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'deleteRelease');
                 }
                 $releases[] = $release;
             } elseif ($cleanup_all) {
@@ -1530,16 +1530,16 @@ if (defined('NUSOAP')) {
                         if ($releaseFactory->delete_release($group_id, $release->getReleaseID())) {
                             $deleted[] = release_to_soap($release);
                         } else {
-                            return new SoapFault(invalid_package_fault, 'Release '.$release->getReleaseID().' could not be deleted', 'deleteRelease');
+                            return new SoapFault(INVALID_PACKAGE_FAULT, 'Release '.$release->getReleaseID().' could not be deleted', 'deleteRelease');
                         }
                     } else {
-                        return new SoapFault(invalid_package_fault, 'You don\'t have permission to delete package '.$release->getReleaseID(), 'deleteRelease');
+                        return new SoapFault(INVALID_PACKAGE_FAULT, 'You don\'t have permission to delete package '.$release->getReleaseID(), 'deleteRelease');
                     }
                 }
             }
             return $deleted;
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session', 'deleteRelease');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'deleteRelease');
         }
     }
 

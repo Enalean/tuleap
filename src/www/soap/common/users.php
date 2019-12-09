@@ -52,7 +52,7 @@ if (defined('NUSOAP')) {
     function getUserInfo($sessionKey, $user_id)
     {
         if (! session_continue($sessionKey)) {
-            return new SoapFault(invalid_session_fault, 'Invalid Session ', 'getUserInfo');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'getUserInfo');
         }
 
         $user_manager = UserManager::instance();
@@ -102,7 +102,7 @@ if (defined('NUSOAP')) {
                 return new SoapFault('0', $e->getMessage(), 'checkUsersExistence');
             }
         } else {
-            return new SoapFault(invalid_session_fault, 'Invalid Session ', 'checkUsersExistence');
+            return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session ', 'checkUsersExistence');
         }
     }
 

@@ -22,11 +22,11 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../../../src/www/include/session.php';
 
 // define fault code constants
-define('invalid_item_fault', '3017');
-define('invalid_document_fault', '3018');
-define('invalid_folder_fault', '3019');
+define('INVALID_ITEM_FAULT', '3017');
+define('INVALID_DOCUMENT_FAULT', '3018');
+define('INVALID_FOLDER_FAULT', '3019');
 define('PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN', '3020');
-define('invalid_operator', '3021');
+define('INVALID_OPERATOR', '3021');
 
 if (defined('NUSOAP')) {
 // Type definition
@@ -355,7 +355,7 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array())
             return new SoapFault(PLUGIN_DOCMAN_SOAP_FAULT_UNAVAILABLE_PLUGIN, 'Unavailable plugin', $actor);
         }
     } else {
-        return new SoapFault(invalid_session_fault, 'Invalid Session', $actor);
+        return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', $actor);
     }
 }
 
@@ -534,7 +534,7 @@ function searchDocmanItem($sessionKey, $group_id, $item_id, $criterias)
     foreach ($criterias as $criteria) {
         $params[$criteria->field_name.'_value'] = $criteria->field_value;
         if (!isValidOperator($criteria->operator)) {
-            return new SoapFault(invalid_operator, 'This operator is not valid. Only <, >, = are valid.', 'searchDocmanItem');
+            return new SoapFault(INVALID_OPERATOR, 'This operator is not valid. Only <, >, = are valid.', 'searchDocmanItem');
         }
         $params[$criteria->field_name.'_operator']  = operatorToValue($criteria->operator);
     }
@@ -627,7 +627,7 @@ function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $descripti
 {
     if ((int) $file_size >= (int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
         return new SoapFault(
-            invalid_item_fault,
+            INVALID_ITEM_FAULT,
             sprintf('Maximum file size is %s bytes, got %s bytes', ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING), $file_size)
         );
     }
@@ -636,7 +636,7 @@ function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $descripti
 
     if (strlen($content) !== (int) $file_size) {
         return new SoapFault(
-            invalid_item_fault,
+            INVALID_ITEM_FAULT,
             sprintf('Expected a file of %s bytes, got a file of %s bytes', $file_size, strlen($content))
         );
     }
@@ -724,7 +724,7 @@ function createDocmanFileVersion($sessionKey, $group_id, $item_id, $label, $chan
 {
     if ((int) $file_size >= (int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
         return new SoapFault(
-            invalid_item_fault,
+            INVALID_ITEM_FAULT,
             sprintf('Maximum file size is %s bytes, got %s bytes', ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING), $file_size)
         );
     }
@@ -733,7 +733,7 @@ function createDocmanFileVersion($sessionKey, $group_id, $item_id, $label, $chan
 
     if (strlen($content) !== (int) $file_size) {
         return new SoapFault(
-            invalid_item_fault,
+            INVALID_ITEM_FAULT,
             sprintf('Expected a file of %s bytes, got a file of %s bytes', $file_size, strlen($content))
         );
     }

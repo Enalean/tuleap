@@ -122,8 +122,8 @@ class ProjectManagerTest extends TuleapTestCase
 
     function testGetGroupByIdForSoapNoProject()
     {
-        if (!defined('get_group_fault')) {
-            define('get_group_fault', '3000');
+        if (!defined('GET_GROUP_FAULT')) {
+            define('GET_GROUP_FAULT', '3000');
         }
         $pm = new ProjectManagerTestVersion2();
         $pm->setReturnValue('getProject', null);
@@ -133,8 +133,8 @@ class ProjectManagerTest extends TuleapTestCase
 
     function testGetGroupByIdForSoapProjectError()
     {
-        if (!defined('get_group_fault')) {
-            define('get_group_fault', '3000');
+        if (!defined('GET_GROUP_FAULT')) {
+            define('GET_GROUP_FAULT', '3000');
         }
         $pm = new ProjectManagerTestVersion2();
         $project = new MockProject();
@@ -146,8 +146,8 @@ class ProjectManagerTest extends TuleapTestCase
 
     function testGetGroupByIdForSoapProjectNotActive()
     {
-        if (!defined('get_group_fault')) {
-            define('get_group_fault', '3000');
+        if (!defined('GET_GROUP_FAULT')) {
+            define('GET_GROUP_FAULT', '3000');
         }
         $pm = new ProjectManagerTestVersion2();
         $project = new MockProject();
@@ -160,8 +160,8 @@ class ProjectManagerTest extends TuleapTestCase
 
     function testGetGroupByIdForSoapRestricted()
     {
-        if (!defined('get_group_fault')) {
-            define('get_group_fault', '3000');
+        if (!defined('GET_GROUP_FAULT')) {
+            define('GET_GROUP_FAULT', '3000');
         }
         $pm = new ProjectManagerTestVersion2();
         $project = new MockProject();
@@ -175,8 +175,8 @@ class ProjectManagerTest extends TuleapTestCase
 
     function testGetGroupByIdForSoapPass()
     {
-        if (!defined('get_group_fault')) {
-            define('get_group_fault', '3000');
+        if (!defined('GET_GROUP_FAULT')) {
+            define('GET_GROUP_FAULT', '3000');
         }
         $pm = new ProjectManagerTestVersion2();
         $project = new MockProject();
