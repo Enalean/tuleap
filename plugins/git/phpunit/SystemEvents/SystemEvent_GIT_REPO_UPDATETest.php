@@ -23,15 +23,15 @@
  */
 require_once __DIR__.'/../bootstrap.php';
 
-class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase
+class SystemEvent_GIT_REPO_UPDATETest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     private $repository_id = 115;
     private $system_event_manager;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->backend    = \Mockery::spy(\Git_Backend_Gitolite::class);
 
@@ -52,7 +52,7 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase
         );
     }
 
-    public function itGetsTheRepositoryFromTheFactory()
+    public function testItGetsTheRepositoryFromTheFactory() : void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')
             ->with($this->repository_id)
@@ -62,14 +62,14 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase
         $this->event->process();
     }
 
-    public function itDelegatesToBackendRepositoryCreation()
+    public function testItDelegatesToBackendRepositoryCreation() : void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
         $this->backend->shouldReceive('updateRepoConf')->once();
         $this->event->process();
     }
 
-    public function itMarksTheEventAsDone()
+    public function testItMarksTheEventAsDone() : void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
         $this->backend->shouldReceive('updateRepoConf')->once()->andReturns(true);
@@ -77,14 +77,14 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase
         $this->event->process();
     }
 
-    public function itMarksTheEventAsWarningWhenTheRepoDoesNotExist()
+    public function testItMarksTheEventAsWarningWhenTheRepoDoesNotExist() : void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
         $this->event->shouldReceive('warning')->with('Unable to find repository, perhaps it was deleted in the mean time?')->once();
         $this->event->process();
     }
 
-    public function itMarksTheEventAsDoneWhenTheRepoIsFlaggedAsDeleted()
+    public function testItMarksTheEventAsDoneWhenTheRepoIsFlaggedAsDeleted() : void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
         $this->repository_factory->shouldReceive('getDeletedRepository')->andReturns($this->repository);
@@ -94,7 +94,7 @@ class SystemEvent_GIT_REPO_UPDATETest extends TuleapTestCase
         $this->event->process();
     }
 
-    public function itAskToUpdateGrokmirrorManifestFiles()
+    public function testItAskToUpdateGrokmirrorManifestFiles() : void
     {
         $this->repository_factory->shouldReceive('getRepositoryById')->andReturns($this->repository);
 

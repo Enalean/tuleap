@@ -25,8 +25,9 @@ use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 require_once __DIR__ .'/../bootstrap.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase
+class SystemEvent_GIT_REPO_DELETETest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     private $project_id;
     private $repository_id;
     private $repository;
@@ -40,10 +41,9 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase
      */
     private $event_manager;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->project_id    = 101;
         $this->repository_id = 69;
@@ -72,14 +72,14 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase
         );
     }
 
-    public function itDeletesTheRepository()
+    public function testItDeletesTheRepository() : void
     {
         $this->repository->shouldReceive('delete')->once();
 
         $this->event->process();
     }
 
-    public function itDeletesNotifications()
+    public function testItDeletesNotifications() : void
     {
         $this->ugroups_to_notify_dao->shouldReceive('deleteByRepositoryId')->with(69)->once();
         $this->users_to_notify_dao->shouldReceive('deleteByRepositoryId')->with(69)->once();
@@ -87,14 +87,14 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase
         $this->event->process();
     }
 
-    public function itAsksToDeleteRepositoryFromManifestFiles()
+    public function testItAsksToDeleteRepositoryFromManifestFiles() : void
     {
         $this->system_event_manager->shouldReceive('queueGrokMirrorManifestRepoDelete')->with($this->repository->getPath())->once();
 
         $this->event->process();
     }
 
-    public function itLaunchesAnEventToLetOthersDeleteStuffLinkedToTheRepository()
+    public function testItLaunchesAnEventToLetOthersDeleteStuffLinkedToTheRepository() : void
     {
         $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function ($param) {
             return $param instanceof \Tuleap\Git\GitRepositoryDeletionEvent;

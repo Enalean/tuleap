@@ -22,8 +22,9 @@ namespace Tuleap\Git\Notifications;
 
 use TuleapTestCase;
 
-class NotificationsForProjectMemberCleanerTest extends TuleapTestCase
+class NotificationsForProjectMemberCleanerTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     private $project;
     private $user;
     private $mails_to_notify_manager;
@@ -35,10 +36,9 @@ class NotificationsForProjectMemberCleanerTest extends TuleapTestCase
     /** @var NotificationsForProjectMemberCleaner */
     private $cleaner;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
         $this->user    = \Mockery::spy(\PFUser::class);
 
@@ -65,7 +65,7 @@ class NotificationsForProjectMemberCleanerTest extends TuleapTestCase
         );
     }
 
-    public function itDoesNotRemoveAnythingIfUserIsStillMemberOfTheProject()
+    public function testItDoesNotRemoveAnythingIfUserIsStillMemberOfTheProject() : void
     {
         $this->user->shouldReceive('isMember')->with($this->project->getID())->andReturns(true);
 
@@ -75,7 +75,7 @@ class NotificationsForProjectMemberCleanerTest extends TuleapTestCase
         $this->cleaner->cleanNotificationsAfterUserRemoval($this->project, $this->user);
     }
 
-    public function itRemovesNotificationForRepositoriesTheUserCannotAccess()
+    public function testItRemovesNotificationForRepositoriesTheUserCannotAccess() : void
     {
         $this->user->shouldReceive('isMember')->with($this->project)->andReturns(false);
 

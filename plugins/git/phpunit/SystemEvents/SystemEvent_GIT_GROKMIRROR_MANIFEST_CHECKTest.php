@@ -20,16 +20,16 @@
 
 require_once __DIR__.'/../bootstrap.php';
 
-class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECKTest extends TuleapTestCase
+class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECKTest extends \PHPUnit\Framework\TestCase
 {
 
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     /** @var SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK */
     private $event;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->manifest_manager = \Mockery::spy(\Git_Mirror_ManifestManager::class);
         $this->event = \Mockery::mock(\SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECK::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -39,7 +39,7 @@ class SystemEvent_GIT_GROKMIRROR_MANIFEST_CHECKTest extends TuleapTestCase
         );
     }
 
-    public function itChecksTheManifest()
+    public function testItChecksTheManifest() : void
     {
         $this->manifest_manager->shouldReceive('checkManifestFiles')->once();
 

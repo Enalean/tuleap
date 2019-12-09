@@ -22,47 +22,45 @@ namespace Tuleap\Git\Hook;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
+use GitRepository;
+use Mockery;
 use PFUser;
 use TuleapTestCase;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 
-class PostReceiveMailsRetrieverTest extends TuleapTestCase
+class PostReceiveMailsRetrieverTest extends \PHPUnit\Framework\TestCase
 {
-    /** @var \GitRepository */
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    /** @var GitRepository */
     private $repository;
 
     /** @var PostReceiveMailsRetriever */
     private $retriever;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $project = \Mockery::spy(\Project::class, ['getID' => 42, 'getUnixName' => false, 'isPublic' => false]);
 
-        $this->repository   = aGitRepository()
-            ->withId(101)
-            ->withProject($project)
-            ->withNotifiedEmails(array('jdoe@example.com', 'smith@example.com'))
-            ->build();
+        $this->repository = Mockery::mock(GitRepository::class);
+        $this->repository->shouldReceive('getId')->andReturn(101);
+        $this->repository->shouldReceive('getProject')->andReturn($project);
+        $this->repository->shouldReceive('getNotifiedMails')->andReturn(array('jdoe@example.com', 'smith@example.com'));
 
-        $notified_users_dao = safe_mock(UsersToNotifyDao::class);
+        $notified_users_dao = Mockery::mock(UsersToNotifyDao::class);
         $notified_users_dao->shouldReceive('searchUsersByRepositoryId')->with(101)->andReturns(\TestHelper::arrayToDar(array('email' => 'andrew@example.com'), array('email' => 'smith@example.com')));
 
-        $notified_ugroup_dao = safe_mock(UgroupsToNotifyDao::class);
+        $notified_ugroup_dao = Mockery::mock(UgroupsToNotifyDao::class);
         $notified_ugroup_dao->shouldReceive('searchUgroupsByRepositoryId')->with(101)->andReturns(\TestHelper::arrayToDar(array('ugroup_id' => 104, 'name' => 'Developers')));
 
-        $developers = aMockUGroup()
-            ->withMembers(
-                array(
-                    (new \UserTestBuilder())->withId(201)->withStatus(PFUser::STATUS_ACTIVE)->withEmail('jdoe@example.com')->build(),
-                    (new \UserTestBuilder())->withId(202)->withStatus(PFUser::STATUS_RESTRICTED)->withEmail('charles@example.com')->build(),
-                    (new \UserTestBuilder())->withId(203)->withStatus(PFUser::STATUS_SUSPENDED)->withEmail('suspended@example.com')->build()
-                )
-            )
-            ->build();
+        $developers = Mockery::mock(\ProjectUGroup::class);
+        $developers->shouldReceive('getMembers')->andReturn(array(
+            (new \UserTestBuilder())->withId(201)->withStatus(PFUser::STATUS_ACTIVE)->withEmail('jdoe@example.com')->build(),
+            (new \UserTestBuilder())->withId(202)->withStatus(PFUser::STATUS_RESTRICTED)->withEmail('charles@example.com')->build(),
+            (new \UserTestBuilder())->withId(203)->withStatus(PFUser::STATUS_SUSPENDED)->withEmail('suspended@example.com')->build()
+        ));
 
         $ugroup_manager = \Mockery::spy(\UGroupManager::class);
         $ugroup_manager->shouldReceive('getUGroup')->with($project, 104)->andReturns($developers);
@@ -70,7 +68,7 @@ class PostReceiveMailsRetrieverTest extends TuleapTestCase
         $this->retriever = new PostReceiveMailsRetriever($notified_users_dao, $notified_ugroup_dao, $ugroup_manager);
     }
 
-    public function itReturnsMailsForRepository()
+    public function testItReturnsMailsForRepository() : void
     {
         $emails = $this->retriever->getNotifiedMails($this->repository);
 
@@ -78,31 +76,31 @@ class PostReceiveMailsRetrieverTest extends TuleapTestCase
         $this->assertTrue(in_array('smith@example.com', $emails));
     }
 
-    public function itReturnsMailsOfUsersForRepository()
+    public function testItReturnsMailsOfUsersForRepository() : void
     {
         $emails = $this->retriever->getNotifiedMails($this->repository);
 
         $this->assertTrue(in_array('andrew@example.com', $emails));
     }
 
-    public function itReturnsMailsOfUgroupMembersForRepository()
+    public function testItReturnsMailsOfUgroupMembersForRepository() : void
     {
         $emails = $this->retriever->getNotifiedMails($this->repository);
 
         $this->assertTrue(in_array('charles@example.com', $emails));
     }
 
-    public function itRemovesGroupMembersThatAreNotAlive()
+    public function testItRemovesGroupMembersThatAreNotAlive() : void
     {
         $emails = $this->retriever->getNotifiedMails($this->repository);
 
         $this->assertTrue(! in_array('suspended@example.com', $emails));
     }
 
-    public function itRemovesDuplicates()
+    public function testItRemovesDuplicates() : void
     {
         $emails = $this->retriever->getNotifiedMails($this->repository);
 
-        $this->assertEqual($emails, array_unique($emails));
+        $this->assertEquals($emails, array_unique($emails));
     }
 }

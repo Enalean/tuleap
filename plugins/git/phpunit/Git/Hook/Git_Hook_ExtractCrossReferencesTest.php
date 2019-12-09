@@ -24,8 +24,9 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase
+class Git_Hook_ExtractCrossReferencesTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     private $git_exec_repo;
     private $user;
     private $repository;
@@ -34,10 +35,9 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase
     private $post_receive;
     private $push_details;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $project = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns(101)->getMock();
 
@@ -60,14 +60,14 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase
     }
 
 
-    public function itGetsEachRevisionContent()
+    public function testItGetsEachRevisionContent() : void
     {
         $this->git_exec_repo->shouldReceive('catFile')->with('469eaa9')->once();
 
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function itExtractCrossReferencesForGivenUser()
+    public function testItExtractCrossReferencesForGivenUser() : void
     {
         $this->git_exec_repo->shouldReceive('catFile')->andReturns('whatever');
 
@@ -76,7 +76,7 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function itExtractCrossReferencesOnGitCommit()
+    public function testItExtractCrossReferencesOnGitCommit() : void
     {
         $this->git_exec_repo->shouldReceive('catFile')->andReturns('whatever');
 
@@ -85,7 +85,7 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function itExtractCrossReferencesOnCommitMessage()
+    public function testItExtractCrossReferencesOnCommitMessage() : void
     {
         $this->git_exec_repo->shouldReceive('catFile')->andReturns('bla bla bla');
 
@@ -94,7 +94,7 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function itExtractCrossReferencesForProject()
+    public function testItExtractCrossReferencesForProject() : void
     {
         $this->git_exec_repo->shouldReceive('catFile')->andReturns('');
 
@@ -103,7 +103,7 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function itSetTheReferenceToTheRepository()
+    public function testItSetTheReferenceToTheRepository() : void
     {
         $this->git_exec_repo->shouldReceive('catFile')->andReturns('');
 
@@ -112,7 +112,7 @@ class Git_Hook_ExtractCrossReferencesTest extends TuleapTestCase
         $this->post_receive->execute($this->push_details, '469eaa9');
     }
 
-    public function itSetTheReferenceToTheRepositoryWithSubRepo()
+    public function testItSetTheReferenceToTheRepositoryWithSubRepo() : void
     {
         $this->git_exec_repo->shouldReceive('catFile')->andReturns('');
 
