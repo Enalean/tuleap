@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
+use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\Dashboard\Widget\Add\AddWidgetController;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Dashboard\Widget\PreferencesController;
@@ -46,7 +48,8 @@ $router = new Router(
     new AddWidgetController(
         $dao,
         $widget_factory,
-        new WidgetCreator(new DashboardWidgetDao($widget_factory))
+        new WidgetCreator(new DashboardWidgetDao($widget_factory)),
+        new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao())
     ),
     $widget_factory
 );
