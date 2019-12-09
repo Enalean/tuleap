@@ -24,6 +24,7 @@ declare(strict_types = 1);
 namespace Tuleap\Project\Registration;
 
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Registration\Template\ProjectTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\Registration\Template\TemplatePresenter;
@@ -42,15 +43,21 @@ class ProjectRegistrationPresenterBuilder
      * @var \TroveCatFactory
      */
     private $trove_cat_factory;
+    /**
+     * @var DescriptionFieldsFactory
+     */
+    private $fields_factory;
 
     public function __construct(
         TemplateFactory $template_factory,
         DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
-        \TroveCatFactory $trove_cat_factory
+        \TroveCatFactory $trove_cat_factory,
+        DescriptionFieldsFactory $fields_factory
     ) {
-        $this->template_factory = $template_factory;
+        $this->template_factory                     = $template_factory;
         $this->default_project_visibility_retriever = $default_project_visibility_retriever;
-        $this->trove_cat_factory = $trove_cat_factory;
+        $this->trove_cat_factory                    = $trove_cat_factory;
+        $this->fields_factory                       = $fields_factory;
     }
 
     public function buildPresenter(): ProjectRegistrationPresenter
@@ -59,6 +66,7 @@ class ProjectRegistrationPresenterBuilder
         return new ProjectRegistrationPresenter(
             $this->default_project_visibility_retriever->getDefaultProjectVisibility(),
             $this->trove_cat_factory->getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren(),
+            $this->fields_factory->getAllDescriptionFields(),
             ...array_map(
                 static function (ProjectTemplate $project_template) {
                     return new TemplatePresenter($project_template);

@@ -32,7 +32,8 @@ describe("getters", () => {
                 is_creating_project: false,
                 is_project_approval_required: false,
                 trove_categories: [],
-                is_description_required: false
+                is_description_required: false,
+                project_fields: []
             };
             expect(getters.is_template_selected(state)).toBe(false);
         });
@@ -51,7 +52,8 @@ describe("getters", () => {
                 is_creating_project: false,
                 is_project_approval_required: false,
                 trove_categories: [],
-                is_description_required: false
+                is_description_required: false,
+                project_fields: []
             };
             expect(getters.is_template_selected(state)).toBe(true);
         });
@@ -68,7 +70,8 @@ describe("getters", () => {
                 is_creating_project: false,
                 is_project_approval_required: false,
                 trove_categories: [],
-                is_description_required: false
+                is_description_required: false,
+                project_fields: []
             };
             expect(getters.has_error(state)).toBe(false);
         });
@@ -82,7 +85,8 @@ describe("getters", () => {
                 is_creating_project: false,
                 is_project_approval_required: false,
                 trove_categories: [],
-                is_description_required: false
+                is_description_required: false,
+                project_fields: []
             };
             expect(getters.has_error(state)).toBe(true);
         });

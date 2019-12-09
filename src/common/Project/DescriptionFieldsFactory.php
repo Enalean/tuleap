@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016 - present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -33,7 +33,7 @@ class DescriptionFieldsFactory
         $this->dao = $dao;
     }
 
-    public function getAllDescriptionFields()
+    public function getAllDescriptionFields(): array
     {
         $description_fields = array();
         foreach ($this->dao->searchAll() as $row) {

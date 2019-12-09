@@ -19,39 +19,36 @@
   -->
 
 <template>
-    <div>
-        <div class="tlp-form-element" v-for="trovecat in trove_categories" v-bind:key="trovecat.id">
-            <label class="tlp-label" for="trovecat"> {{ trovecat.fullname }}<i class="fa fa-asterisk"/></label>
-            <select class="tlp-select"
-                    id="trovecat"
-                    name="trovecat"
-                    required
-                    v-on:change="updateTroveCategories(trovecat.id, $event.target.value)"
-                    data-test="trove-category-list"
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="trovecat"> {{ trovecat.fullname }}<i class="fa fa-asterisk"/></label>
+        <select class="tlp-select"
+                id="trovecat"
+                name="trovecat"
+                required
+                v-on:change="updateTroveCategories(trovecat.id, $event.target.value)"
+                data-test="trove-category-list"
+        >
+            <option value="0"></option>
+            <option v-for="children in trovecat.children"
+                    v-bind:value="children.id"
+                    v-bind:key="children.id"
             >
-                <option value="0"></option>
-                <option v-for="children in trovecat.children"
-                        v-bind:value="children.id"
-                        v-bind:key="children.id"
-                >
-                    {{ children.fullname }}
-                </option>
-            </select>
-        </div>
+                {{ children.fullname }}
+            </option>
+        </select>
     </div>
 </template>
 
 <script lang="ts">
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
-import { State } from "vuex-class";
 import { TroveCatData } from "../../../type";
 import EventBus from "../../../helpers/event-bus";
 
 @Component({})
 export default class TroveCategoryList extends Vue {
-    @State
-    trove_categories!: Array<TroveCatData>;
+    @Prop({ required: true })
+    readonly trovecat!: TroveCatData;
 
     updateTroveCategories(category_id: number, value_id: number): void {
         EventBus.$emit("choose-trove-cat", { category_id: category_id, value_id: value_id });

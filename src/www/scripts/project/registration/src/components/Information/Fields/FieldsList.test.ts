@@ -20,36 +20,23 @@
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
-import TroveCategoryList from "./TroveCategoryList.vue";
+import FieldsList from "./FieldsList.vue";
 import EventBus from "../../../helpers/event-bus";
 
-describe("TroveCategoryList - ", () => {
-    let factory: Wrapper<TroveCategoryList>;
+describe("FieldsList - ", () => {
+    let factory: Wrapper<FieldsList>;
     beforeEach(async () => {
-        const trove_categories = {
-            id: "1",
-            shortname: "licence",
-            fullname: "licence",
-            children: [
-                {
-                    id: "10",
-                    shortname: "MIT",
-                    fullname: "MIT Licence",
-                    children: []
-                },
-                {
-                    id: "20",
-                    shortname: "GPL",
-                    fullname: "GNU General Public License ",
-                    children: []
-                }
-            ],
-            is_description_required: false
+        const field = {
+            group_desc_id: "1",
+            desc_name: "custom field",
+            desc_type: "text",
+            desc_description: "a helpful description",
+            desc_required: true
         };
 
-        factory = shallowMount(TroveCategoryList, {
+        factory = shallowMount(FieldsList, {
             localVue: await createProjectRegistrationLocalVue(),
-            propsData: { trovecat: trove_categories }
+            propsData: { field: field }
         });
     });
 
@@ -63,13 +50,12 @@ describe("TroveCategoryList - ", () => {
         const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
         const wrapper = factory;
-        (wrapper.findAll("option").at(2).element as HTMLOptionElement).selected = true;
 
-        wrapper.find("[data-test=trove-category-list]").trigger("change");
+        wrapper.find("[data-test=project-field-text]").setValue("my new value");
 
-        expect(event_bus_emit).toHaveBeenCalledWith("choose-trove-cat", {
-            category_id: "1",
-            value_id: "20"
+        expect(event_bus_emit).toHaveBeenCalledWith("update-field-list", {
+            field_id: "1",
+            value: "my new value"
         });
     });
 });

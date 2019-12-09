@@ -38,7 +38,8 @@ describe("TemplateFooter", () => {
             is_creating_project: false,
             is_project_approval_required: false,
             trove_categories: [],
-            is_description_required: false
+            is_description_required: false,
+            project_fields: []
         };
         const getters = {
             is_template_selected: false

@@ -46,6 +46,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (trove_categories_json) {
         trove_categories = JSON.parse(trove_categories_json);
     }
+
+    const field_list_json = vue_mount_point.dataset.fieldList;
+    if (!field_list_json) {
+        return;
+    }
+    const project_fields = JSON.parse(field_list_json);
+
     const are_restricted_users_allowed = Boolean(vue_mount_point.dataset.areRestrictedUsersAllowed);
     const project_default_visibility = String(vue_mount_point.dataset.projectDefaultVisibility);
     const tuleap_templates: TemplateData[] = JSON.parse(tuleap_templates_json);
@@ -65,7 +72,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         is_creating_project,
         is_project_approval_required,
         trove_categories,
-        is_description_required
+        is_description_required,
+        project_fields
     };
 
     Vue.use(VueDOMPurifyHTML);

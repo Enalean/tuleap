@@ -51,7 +51,8 @@ describe("ProjectInformation - ", () => {
             is_creating_project: false,
             is_project_approval_required: false,
             trove_categories: [],
-            is_description_required: false
+            is_description_required: false,
+            project_fields: []
         };
 
         router = new VueRouter({
@@ -181,7 +182,8 @@ describe("ProjectInformation - ", () => {
             is_public: true,
             description: "",
             categories: [],
-            xml_template_name: "scrum"
+            xml_template_name: "scrum",
+            fields: []
         };
 
         factory.vm.$data.name_properties = {
@@ -216,7 +218,8 @@ describe("ProjectInformation - ", () => {
             description: "",
             allow_restricted: true,
             categories: [],
-            xml_template_name: "scrum"
+            xml_template_name: "scrum",
+            fields: []
         };
 
         factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -246,7 +249,8 @@ describe("ProjectInformation - ", () => {
             description: "",
             allow_restricted: false,
             categories: [],
-            xml_template_name: "scrum"
+            xml_template_name: "scrum",
+            fields: []
         };
 
         factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -276,7 +280,8 @@ describe("ProjectInformation - ", () => {
             allow_restricted: false,
             description: "",
             categories: [],
-            xml_template_name: "scrum"
+            xml_template_name: "scrum",
+            fields: []
         };
 
         factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -306,7 +311,8 @@ describe("ProjectInformation - ", () => {
             allow_restricted: true,
             description: "",
             categories: [],
-            xml_template_name: "scrum"
+            xml_template_name: "scrum",
+            fields: []
         };
 
         factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -327,5 +333,29 @@ describe("ProjectInformation - ", () => {
         await factory.vm.$nextTick().then(() => {});
 
         expect(factory.vm.$route.name).toBe("approval");
+    });
+
+    describe("Field list update - ", () => {
+        it("build the field list object", () => {
+            const wrapper = factory;
+            expect(wrapper.vm.$data.field_list).toStrictEqual([]);
+
+            EventBus.$emit("update-field-list", { field_id: 1, value: "test value" });
+            expect(wrapper.vm.$data.field_list).toStrictEqual([
+                { field_id: 1, value: "test value" }
+            ]);
+
+            EventBus.$emit("update-field-list", { field_id: 2, value: "other value" });
+            expect(wrapper.vm.$data.field_list).toStrictEqual([
+                { field_id: 1, value: "test value" },
+                { field_id: 2, value: "other value" }
+            ]);
+
+            EventBus.$emit("update-field-list", { field_id: 1, value: "updated value" });
+            expect(wrapper.vm.$data.field_list).toStrictEqual([
+                { field_id: 1, value: "updated value" },
+                { field_id: 2, value: "other value" }
+            ]);
+        });
     });
 });

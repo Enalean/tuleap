@@ -91,6 +91,8 @@ use Tuleap\Project\Banner\BannerAdministrationController;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerRetriever;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\DescriptionFieldsDao;
+use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Home;
 use Tuleap\Project\Registration\ProjectRegistrationController;
 use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
@@ -610,7 +612,8 @@ class RouteCollector
             new ProjectRegistrationPresenterBuilder(
                 TemplateFactory::build(),
                 new DefaultProjectVisibilityRetriever(),
-                new TroveCatFactory(new TroveCatDao())
+                new TroveCatFactory(new TroveCatDao()),
+                new DescriptionFieldsFactory(new DescriptionFieldsDao())
             )
         );
     }

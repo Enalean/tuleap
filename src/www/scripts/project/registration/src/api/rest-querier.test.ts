@@ -34,7 +34,8 @@ describe("rest-querier", () => {
             allow_restricted: true,
             xml_template_name: "scrum",
             categories: [],
-            description: ""
+            description: "",
+            fields: []
         };
 
         const tlpPost = jest.spyOn(tlp, "post");
