@@ -40,14 +40,23 @@ export function resetSavingCard(state: SwimlaneState, card: Card): void {
     findCard(state, card).is_being_saved = false;
 }
 
+export function startCreatingCard(state: SwimlaneState): void {
+    state.is_card_creation_blocked_due_to_ongoing_creation = true;
+}
+
+export function cardIsHalfwayCreated(state: SwimlaneState): void {
+    state.is_card_creation_blocked_due_to_ongoing_creation = false;
+}
+
 export function finishSavingCard(state: SwimlaneState, payload: UpdateCardPayload): void {
     const state_card = findCard(state, payload.card);
     state_card.label = payload.label;
-    state_card.is_being_saved = false;
-    state_card.is_just_saved = true;
-    setTimeout(() => {
-        state_card.is_just_saved = false;
-    }, 1000);
+    setSavedFlagsOnCard(state_card);
+}
+
+export function finishCreatingCard(state: SwimlaneState, card: Card): void {
+    const state_card = findCard(state, card);
+    setSavedFlagsOnCard(state_card);
 }
 
 export function startSavingRemainingEffort(state: SwimlaneState, card: Card): void {
@@ -78,4 +87,12 @@ export function finishSavingRemainingEffort(
 function switchRemainingEffortToReadOnlyMode(remaining_effort: RemainingEffort): void {
     remaining_effort.is_being_saved = false;
     remaining_effort.is_in_edit_mode = false;
+}
+
+function setSavedFlagsOnCard(card: Card): void {
+    card.is_being_saved = false;
+    card.is_just_saved = true;
+    setTimeout(() => {
+        card.is_just_saved = false;
+    }, 1000);
 }

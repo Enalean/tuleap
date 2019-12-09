@@ -26,6 +26,8 @@ import {
     getPutArtifactBody,
     getPutArtifactBodyToAddChild
 } from "../../../helpers/update-artifact";
+import { injectDefaultPropertiesInCard } from "../../../helpers/card-default";
+import { Card, Swimlane } from "../../../type";
 
 const headers = {
     "Content-Type": "application/json"
@@ -71,31 +73,65 @@ export async function addCard(
     context: ActionContext<SwimlaneState, RootState>,
     payload: NewCardPayload
 ): Promise<void> {
+    context.commit("startCreatingCard");
     try {
         const [new_artifact_response, parent_artifact_response] = await Promise.all([
             post(`/api/v1/artifacts`, {
                 headers,
                 body: JSON.stringify(getPostArtifactBody(payload, context.rootState.trackers))
             }),
-            get(`/api/v1/artifacts/${encodeURIComponent(payload.parent.id)}`)
+            get(`/api/v1/artifacts/${encodeURIComponent(payload.swimlane.card.id)}`)
         ]);
-        const [new_artifact, { values }] = await Promise.all([
-            new_artifact_response.json(),
-            parent_artifact_response.json()
-        ]);
+        const new_artifact = await new_artifact_response.json();
 
-        await put(`/api/v1/artifacts/${encodeURIComponent(payload.parent.id)}`, {
-            headers,
-            body: JSON.stringify(
-                getPutArtifactBodyToAddChild(
-                    payload,
-                    context.rootState.trackers,
-                    new_artifact.id,
-                    values
-                )
-            )
-        });
+        const [new_card] = await Promise.all([
+            injectNewCardInStore(context, new_artifact.id, payload.swimlane),
+            linkCardToItsParent(context, new_artifact.id, payload, parent_artifact_response)
+        ]);
+        context.commit("finishCreatingCard", new_card);
     } catch (error) {
         await context.dispatch("error/handleModalError", error, { root: true });
     }
+}
+
+async function injectNewCardInStore(
+    context: ActionContext<SwimlaneState, RootState>,
+    new_artifact_id: number,
+    swimlane: Swimlane
+): Promise<Card> {
+    const card_response = await get(
+        `/api/v1/taskboard_cards/${encodeURIComponent(
+            new_artifact_id
+        )}?milestone_id=${encodeURIComponent(context.rootState.milestone_id)}`
+    );
+    const card: Card = await card_response.json();
+    injectDefaultPropertiesInCard(card);
+    card.is_being_saved = true;
+    context.commit("addChildrenToSwimlane", {
+        swimlane,
+        children_cards: [card]
+    });
+    context.commit("cardIsHalfwayCreated");
+
+    return card;
+}
+
+async function linkCardToItsParent(
+    context: ActionContext<SwimlaneState, RootState>,
+    new_artifact_id: number,
+    payload: NewCardPayload,
+    parent_artifact_response: Response
+): Promise<void> {
+    const { values } = await parent_artifact_response.json();
+    await put(`/api/v1/artifacts/${encodeURIComponent(payload.swimlane.card.id)}`, {
+        headers,
+        body: JSON.stringify(
+            getPutArtifactBodyToAddChild(
+                payload,
+                context.rootState.trackers,
+                new_artifact_id,
+                values
+            )
+        )
+    });
 }

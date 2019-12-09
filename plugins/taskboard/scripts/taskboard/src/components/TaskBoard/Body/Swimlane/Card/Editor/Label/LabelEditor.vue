@@ -32,6 +32,7 @@
                   v-on:keyup="keyup"
                   v-bind:rows="rows"
                   v-bind:placeholder="$gettext('Card label…')"
+                  v-bind:readonly="readonly"
                   ref="textarea"
         ></textarea>
     </div>
@@ -49,6 +50,9 @@ const TOP_AND_BOTTOM_PADDING_IN_PX = 16;
 export default class LabelEditor extends Vue {
     @Prop({ required: true })
     readonly value!: string;
+
+    @Prop({ required: false, default: false })
+    readonly readonly!: boolean;
 
     rows = 1;
     mirror!: HTMLTextAreaElement;

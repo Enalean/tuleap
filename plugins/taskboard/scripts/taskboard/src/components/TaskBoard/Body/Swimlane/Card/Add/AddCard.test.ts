@@ -22,23 +22,24 @@ import AddCard from "./AddCard.vue";
 import LabelEditor from "../Editor/Label/LabelEditor.vue";
 import AddButton from "./AddButton.vue";
 import EventBus from "../../../../../../helpers/event-bus";
-import { Card, ColumnDefinition, TaskboardEvent } from "../../../../../../type";
+import { ColumnDefinition, Swimlane, TaskboardEvent } from "../../../../../../type";
 import { createStoreMock } from "../../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import { RootState } from "../../../../../../store/type";
 import { NewCardPayload } from "../../../../../../store/swimlane/card/type";
+import { SwimlaneState } from "../../../../../../store/swimlane/type";
 
 jest.useFakeTimers();
 
-function getWrapper(): Wrapper<AddCard> {
+function getWrapper(swimlane_state: SwimlaneState = {} as SwimlaneState): Wrapper<AddCard> {
     return shallowMount(AddCard, {
         propsData: {
             column: { id: 42 } as ColumnDefinition,
-            parent: { id: 69 } as Card
+            swimlane: { card: { id: 69 } } as Swimlane
         },
         mocks: {
             $store: createStoreMock({
                 state: {
-                    swimlane: {}
+                    swimlane: swimlane_state
                 } as RootState
             })
         }
@@ -59,6 +60,7 @@ describe("AddCard", () => {
         wrapper.find(AddButton).vm.$emit("click");
 
         expect(wrapper.contains(LabelEditor)).toBe(true);
+        expect(wrapper.find(LabelEditor).props("readonly")).toBe(false);
         expect(wrapper.contains(AddButton)).toBe(false);
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setIsACellAddingInPlace");
     });
@@ -96,7 +98,7 @@ describe("AddCard", () => {
         wrapper.find(LabelEditor).vm.$emit("save");
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/addCard", {
-            parent: wrapper.vm.$props.parent,
+            swimlane: wrapper.vm.$props.swimlane,
             column: wrapper.vm.$props.column,
             label: "Lorem ipsum"
         } as NewCardPayload);
@@ -123,5 +125,14 @@ describe("AddCard", () => {
 
         jest.runAllTimers();
         expect(window.scrollTo).toHaveBeenCalled();
+    });
+
+    it("Blocks the creation of a new card if one is ongoing", () => {
+        const wrapper = getWrapper({
+            is_card_creation_blocked_due_to_ongoing_creation: true
+        } as SwimlaneState);
+        wrapper.find(AddButton).vm.$emit("click");
+
+        expect(wrapper.find(LabelEditor).props("readonly")).toBe(true);
     });
 });

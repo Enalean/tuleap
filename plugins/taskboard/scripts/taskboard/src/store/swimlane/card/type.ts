@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, ColumnDefinition, Tracker } from "../../../type";
+import { Card, ColumnDefinition, Swimlane, Tracker } from "../../../type";
 
 export interface NewRemainingEffortPayload {
     readonly card: Card;
@@ -32,6 +32,6 @@ export interface UpdateCardPayload {
 
 export interface NewCardPayload {
     readonly label: string;
-    readonly parent: Card;
+    readonly swimlane: Swimlane;
     readonly column: ColumnDefinition;
 }
