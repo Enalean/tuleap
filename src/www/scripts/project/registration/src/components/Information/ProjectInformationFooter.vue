@@ -84,6 +84,9 @@ export default class ProjectInformationFooter extends Vue {
     @Prop({ required: true })
     readonly trove_cats!: Array<TroveCatProperties>;
 
+    @Prop({ required: true })
+    readonly field_description!: string;
+
     @State
     are_restricted_users_allowed!: boolean;
 
@@ -124,7 +127,8 @@ export default class ProjectInformationFooter extends Vue {
                 label: this.project_name_properties.name,
                 is_public: this.is_public,
                 xml_template_name: this.selected_template.name,
-                categories: this.trove_cats
+                categories: this.trove_cats,
+                description: this.field_description
             };
         }
 
@@ -157,7 +161,8 @@ export default class ProjectInformationFooter extends Vue {
             is_public: is_public_project,
             allow_restricted: is_restricted_allowed_for_the_project,
             xml_template_name: this.selected_template.name,
-            categories: this.trove_cats
+            categories: this.trove_cats,
+            description: this.field_description
         };
     }
 }

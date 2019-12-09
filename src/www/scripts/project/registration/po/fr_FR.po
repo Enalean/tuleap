@@ -21,6 +21,9 @@ msgstr "Précédent"
 msgid "Between %{ min } and %{ max } characters length"
 msgstr "Entre %{ min } et %{ max } caractères"
 
+msgid "Description"
+msgstr "Description"
+
 msgid "Go to my home page"
 msgstr "Aller à ma page personnelle"
 
@@ -29,6 +32,9 @@ msgstr "Doit commencer par une lettre, éviter les espaces et la ponctuation."
 
 msgid "My new project"
 msgstr "Mon nouveau projet"
+
+msgid "My useful project description"
+msgstr "Ma description de projet utile"
 
 msgid "Name"
 msgstr "Nom"

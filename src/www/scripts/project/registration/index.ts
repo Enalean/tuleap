@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const error = null;
     const is_creating_project = false;
     const is_project_approval_required = Boolean(vue_mount_point.dataset.projectsMustBeApproved);
+    const is_description_required = Boolean(vue_mount_point.dataset.isDescriptionMandatory);
 
     const root_state: State = {
         tuleap_templates,
@@ -63,7 +64,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         error,
         is_creating_project,
         is_project_approval_required,
-        trove_categories
+        trove_categories,
+        is_description_required
     };
 
     Vue.use(VueDOMPurifyHTML);

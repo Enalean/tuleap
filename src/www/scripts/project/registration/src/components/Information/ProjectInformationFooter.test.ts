@@ -45,7 +45,8 @@ describe("ProjectInformationFooter", () => {
             error: null,
             is_creating_project: false,
             is_project_approval_required: false,
-            trove_categories: []
+            trove_categories: [],
+            is_description_required: false
         };
 
         router = new VueRouter({
@@ -81,7 +82,8 @@ describe("ProjectInformationFooter", () => {
                 project_name_properties: project_name_properties,
                 is_public: true,
                 privacy: "public",
-                trove_cats: []
+                trove_cats: [],
+                field_description: "useful description"
             },
             mocks: { $store: store },
             router
@@ -101,7 +103,8 @@ describe("ProjectInformationFooter", () => {
             label: "this is a test",
             is_public: true,
             categories: [],
-            xml_template_name: "scrum"
+            xml_template_name: "scrum",
+            description: "useful description"
         };
 
         factory.find("[data-test=project-registration-next-button]").trigger("click");
@@ -125,7 +128,8 @@ describe("ProjectInformationFooter", () => {
             is_public: false,
             allow_restricted: true,
             categories: [],
-            xml_template_name: "scrum"
+            xml_template_name: "scrum",
+            description: "useful description"
         };
 
         factory.find("[data-test=project-registration-next-button]").trigger("click");
@@ -150,7 +154,8 @@ describe("ProjectInformationFooter", () => {
             is_public: false,
             allow_restricted: false,
             categories: [],
-            xml_template_name: "scrum"
+            xml_template_name: "scrum",
+            description: "useful description"
         };
 
         factory.find("[data-test=project-registration-next-button]").trigger("click");
@@ -175,7 +180,8 @@ describe("ProjectInformationFooter", () => {
             is_public: true,
             allow_restricted: false,
             categories: [],
-            xml_template_name: "scrum"
+            xml_template_name: "scrum",
+            description: "useful description"
         };
 
         factory.find("[data-test=project-registration-next-button]").trigger("click");
@@ -200,7 +206,8 @@ describe("ProjectInformationFooter", () => {
             is_public: true,
             allow_restricted: true,
             categories: [],
-            xml_template_name: "scrum"
+            xml_template_name: "scrum",
+            description: "useful description"
         };
 
         factory.find("[data-test=project-registration-next-button]").trigger("click");

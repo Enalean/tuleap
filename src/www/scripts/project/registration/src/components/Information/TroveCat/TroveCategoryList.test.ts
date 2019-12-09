@@ -56,7 +56,8 @@ describe("TroveCategoryList - ", () => {
                         }
                     ]
                 }
-            ]
+            ],
+            is_description_required: false
         };
 
         const store_options = {

@@ -20,13 +20,12 @@
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
-import ProjectApproval from "./ProjectApproval.vue";
+import FieldDescription from "./FieldDescription.vue";
 import { State } from "../../store/type";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
-import VueRouter from "vue-router";
 
-describe("ProjectApproval - ", () => {
-    let factory: Wrapper<ProjectApproval>, router: VueRouter;
+describe("FieldDescription - ", () => {
+    let factory: Wrapper<FieldDescription>;
     beforeEach(async () => {
         const state: State = {
             selected_template: {
@@ -45,19 +44,6 @@ describe("ProjectApproval - ", () => {
             is_description_required: false
         };
 
-        router = new VueRouter({
-            routes: [
-                {
-                    path: "/",
-                    name: "template"
-                },
-                {
-                    path: "/information",
-                    name: "information"
-                }
-            ]
-        });
-
         const getters = {
             has_error: false,
             is_template_selected: false
@@ -70,22 +56,28 @@ describe("ProjectApproval - ", () => {
 
         const store = createStoreMock(store_options);
 
-        factory = shallowMount(ProjectApproval, {
+        factory = shallowMount(FieldDescription, {
             localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
-            router
+            mocks: { $store: store }
         });
     });
-    it("Spawns the ProjectApproval component", () => {
+    it("add correct attribute when description is required", () => {
         const wrapper = factory;
+        wrapper.vm.$store.state.is_description_required = true;
 
-        expect(wrapper).toMatchSnapshot();
+        const description = wrapper.find("[data-test=project-description]")
+            .element as HTMLTextAreaElement;
+
+        expect(description.required).toBe(true);
     });
 
-    it("redirects user on /template when he does not have all needed information to start his project creation", () => {
+    it("add correct attribute when description is NOT requried", () => {
         const wrapper = factory;
-        wrapper.vm.$store.state.selected_template = null;
+        wrapper.vm.$store.state.is_description_required = false;
 
-        expect(wrapper.vm.$route.name).toBe("template");
+        const description = wrapper.find("[data-test=project-description]")
+            .element as HTMLTextAreaElement;
+
+        expect(description.required).toBe(false);
     });
 });

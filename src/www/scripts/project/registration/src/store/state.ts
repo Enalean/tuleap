@@ -28,7 +28,8 @@ const state: State = {
     error: null,
     is_creating_project: false,
     is_project_approval_required: false,
-    trove_categories: []
+    trove_categories: [],
+    is_description_required: false
 };
 
 export default state;

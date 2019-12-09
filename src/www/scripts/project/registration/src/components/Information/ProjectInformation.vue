@@ -46,6 +46,7 @@
                                                               data-test="register-new-project-information-switch"
                     />
                 </div>
+                <field-description v-model="field_description"/>
                 <trove-category-list v-model="trove_cats"/>
             </div>
         </div>
@@ -55,6 +56,7 @@
             v-bind:is_public="is_private === false"
             v-bind:privacy="selected_visibility"
             v-bind:trove_cats="trove_cats"
+            v-bind:field_description="field_description"
         />
     </div>
 </template>
@@ -72,9 +74,11 @@ import { ProjectNameProperties, TroveCatProperties, TemplateData } from "../../t
 import { Getter, State } from "vuex-class";
 import EventBus from "../../helpers/event-bus";
 import TroveCategoryList from "./TroveCat/TroveCategoryList.vue";
+import FieldDescription from "../Field/FieldDescription.vue";
 
 @Component({
     components: {
+        FieldDescription,
         TroveCategoryList,
         ProjectInformationInputPrivacyList,
         ProjectName,
@@ -106,6 +110,8 @@ export default class ProjectInformation extends Vue {
         slugified_name: "",
         name: ""
     };
+
+    field_description = "";
 
     trove_cats: Array<TroveCatProperties> = [];
 
