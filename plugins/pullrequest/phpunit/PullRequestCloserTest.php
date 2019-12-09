@@ -26,8 +26,10 @@ use GitRepository;
 use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
+use Tuleap\PullRequest\StateStatus\PullRequestAbandonedEvent;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 
 final class PullRequestCloserTest extends TestCase
@@ -46,6 +48,10 @@ final class PullRequestCloserTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TimelineEventCreator
      */
     private $timeline_event_creator;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
     /**
      * @var PullRequestCloser
@@ -57,11 +63,13 @@ final class PullRequestCloserTest extends TestCase
         $this->dao                    = Mockery::mock(Dao::class);
         $this->pull_request_merger    = Mockery::mock(PullRequestMerger::class);
         $this->timeline_event_creator = Mockery::mock(TimelineEventCreator::class);
+        $this->event_dispatcher       = Mockery::mock(EventDispatcherInterface::class);
 
         $this->pull_request_closer = new PullRequestCloser(
             $this->dao,
             $this->pull_request_merger,
-            $this->timeline_event_creator
+            $this->timeline_event_creator,
+            $this->event_dispatcher
         );
     }
 
@@ -71,8 +79,13 @@ final class PullRequestCloserTest extends TestCase
 
         $this->dao->shouldReceive('markAsAbandoned')->once();
         $this->timeline_event_creator->shouldReceive('storeAbandonEvent')->once();
+        $this->event_dispatcher->shouldReceive('dispatch')
+            ->with(Mockery::type(PullRequestAbandonedEvent::class))->once();
 
-        $this->pull_request_closer->abandon($pull_request, Mockery::mock(PFUser::class));
+        $user = Mockery::mock(PFUser::class);
+        $user->shouldReceive('getId')->andReturn(102);
+
+        $this->pull_request_closer->abandon($pull_request, $user);
     }
 
     public function testAnAbandonedPullRequestCanBeRequestedToBeAbandonedAgainWithoutSideEffect(): void

@@ -340,7 +340,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             new PullRequestMerger(
                 new MergeSettingRetriever(new MergeSettingDAO())
             ),
-            $this->getTimelineEventCreator()
+            $this->getTimelineEventCreator(),
+            PullRequestNotificationSupport::buildDispatcher(new Logger())
         );
     }
 

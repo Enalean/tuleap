@@ -253,12 +253,13 @@ class PullRequestsResource extends AuthenticatedResource
                 new GitPullRequestReferenceNamespaceAvailabilityChecker
             )
         );
+        $this->logger               = new BackendLogger();
         $this->pull_request_closer  = new PullRequestCloser(
             $pull_request_dao,
             $this->pull_request_merger,
-            new TimelineEventCreator(new TimelineDao())
+            new TimelineEventCreator(new TimelineDao()),
+            PullRequestNotificationSupport::buildDispatcher($this->logger)
         );
-        $this->logger               = new BackendLogger();
 
         $dao = new \Tuleap\PullRequest\InlineComment\Dao();
         $this->inline_comment_creator = new InlineCommentCreator($dao, $reference_manager);
@@ -1246,13 +1247,7 @@ class PullRequestsResource extends AuthenticatedResource
         $reviewer_updater = new ReviewerUpdater(
             new ReviewerDAO(),
             $this->permission_checker,
-            new EventDispatcherWithFallback(
-                $this->logger,
-                new EventSubjectToNotificationAsynchronousRedisDispatcher(
-                    new QueueFactory($this->logger)
-                ),
-                PullRequestNotificationSupport::buildSynchronousDispatcher()
-            )
+            PullRequestNotificationSupport::buildDispatcher($this->logger)
         );
         try {
             $reviewer_updater->updatePullRequestReviewers(
