@@ -21,7 +21,7 @@
 
 require_once 'bootstrap.php';
 
-class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase
+class Git_ExecTest extends TuleapTestCase
 {
     private $fixture_dir;
     private $git_exec;
@@ -43,9 +43,10 @@ class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase
 
     public function tearDown()
     {
-        parent::tearDown();
         system("rm -rf $this->fixture_dir");
         unlink($this->symlink_repo);
+
+        parent::tearDown();
     }
 
     public function testThereIsSomethingToCommitWhenStuffIsAdded()
@@ -120,34 +121,6 @@ class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase
     {
         file_put_contents("$this->fixture_dir/toto", "stuff");
         $this->git_exec->rm("$this->fixture_dir/toto");
-    }
-}
-
-class Git_Exec_ObjectExists extends TuleapTestCase
-{
-    private $fixture_dir;
-    private $git_exec;
-    private $symlink_repo;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
-        $this->symlink_repo = '/tmp/tuleap-git-exec-test_'.rand(0, 99999999);
-        $this->fixture_dir = '/tmp/tuleap-git-exec-test_'.rand(0, 99999999);
-        mkdir($this->fixture_dir);
-        symlink($this->fixture_dir, $this->symlink_repo);
-        system("cd $this->fixture_dir && git init 2>&1 >/dev/null");
-
-        $this->git_exec = new Git_Exec($this->fixture_dir);
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        system("rm -rf $this->fixture_dir");
-        unlink($this->symlink_repo);
     }
 
     public function itReturnsTrueWhenTheRevExists()

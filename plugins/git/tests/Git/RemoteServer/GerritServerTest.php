@@ -20,7 +20,7 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Git_RemoteServer_GerritServerTest extends TuleapTestCase
+class GerritServerTest extends TuleapTestCase
 {
 
     public function itDoesNotNeedToCustomizeSSHConfigOfCodendiadmOrRoot()
@@ -219,16 +219,9 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase
 
         $this->assertEqual($server->getReplicationKey('gerrit_project_name'), $replication_key);
     }
-}
 
-class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase
-{
-
-    public function setUp()
+    public function itGivesTheCloneUrlForTheEndUserWhoWantToCloneRepository()
     {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-
         $id                   = 1;
         $host                 = 'le_host';
         $http_port            = '8080';
@@ -242,7 +235,7 @@ class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase
         $auth_type            = 'Digest';
         $replication_password = '';
 
-        $this->server = new Git_RemoteServer_GerritServer(
+        $server = new Git_RemoteServer_GerritServer(
             $id,
             $host,
             $ssh_port,
@@ -256,11 +249,8 @@ class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase
             $replication_password,
             $auth_type
         );
-    }
 
-    public function itGivesTheCloneUrlForTheEndUserWhoWantToCloneRepository()
-    {
         $user = \Mockery::spy(\Git_Driver_Gerrit_User::class)->shouldReceive('getSshUserName')->andReturns('blurp')->getMock();
-        $this->assertEqual($this->server->getEndUserCloneUrl('gerrit_project_name', $user), 'ssh://blurp@le_host:29418/gerrit_project_name.git');
+        $this->assertEqual($server->getEndUserCloneUrl('gerrit_project_name', $user), 'ssh://blurp@le_host:29418/gerrit_project_name.git');
     }
 }

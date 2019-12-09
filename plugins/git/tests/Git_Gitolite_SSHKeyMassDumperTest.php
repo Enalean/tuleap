@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,23 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once 'Git_Gitolite_SSHKeyDumperTest.php';
+
+require_once __DIR__.'/Git_GitoliteTestCase.class.php';
 require_once 'bootstrap.php';
 
-class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
+class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_GitoliteTestCase
 {
     protected $mass_dumper;
+    protected $key1;
+    protected $key2;
 
     public function setUp()
     {
         parent::setUp();
+        $this->key1 = 'ssh-rsa AAAAYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
+        $this->key2 = 'ssh-rsa AAAAXYiTICSgWURDPDGW/HeNUYZIRcznQ== marcel@shanon.net';
+        chdir('/var');
+
         $this->mass_dumper = new Git_Gitolite_SSHKeyMassDumper($this->dumper, $this->user_manager);
     }
 
