@@ -49,18 +49,24 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
     /**
      * @var IncludeAssets
      */
-    private $registration_assets;
+    private $javascript_assets;
+    /**
+     * @var IncludeAssets
+     */
+    private $css_assets;
 
     public function __construct(
         TemplateRendererFactory $template_renderer_factory,
-        IncludeAssets $registration_assets,
+        IncludeAssets $javascript_assets,
+        IncludeAssets $css_assets,
         ProjectRegistrationUserPermissionChecker $permission_checker,
         ProjectRegistrationPresenterBuilder $presenter_builder
     ) {
         $this->template_renderer_factory = $template_renderer_factory;
         $this->presenter_builder         = $presenter_builder;
         $this->permission_checker        = $permission_checker;
-        $this->registration_assets       = $registration_assets;
+        $this->javascript_assets       = $javascript_assets;
+        $this->css_assets = $css_assets;
     }
 
     /**
@@ -74,16 +80,8 @@ final class ProjectRegistrationController implements DispatchableWithRequest, Di
             throw new ForbiddenException();
         }
 
-        $layout->includeFooterJavascriptFile($this->registration_assets->getFileURL('project-registration.js'));
-        $layout->addCssAsset(
-            new CssAsset(
-                new IncludeAssets(
-                    __DIR__ . '/../../../../src/www/assets/project-registration/themes',
-                    '/assets/project-registration/themes'
-                ),
-                'tlp'
-            )
-        );
+        $layout->includeFooterJavascriptFile($this->javascript_assets->getFileURL('project-registration.js'));
+        $layout->addCssAsset(new CssAsset($this->css_assets, 'project-registration'));
 
         $layout->header(["title" => _("Project Registration")]);
 
