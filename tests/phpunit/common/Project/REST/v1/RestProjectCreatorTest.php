@@ -104,6 +104,7 @@ class RestProjectCreatorTest extends TestCase
         $this->categories_updater->shouldReceive('checkCollectionConsistency')->byDefault();
         $this->field_updator = \Mockery::mock(FieldUpdator::class);
         $this->field_updator->shouldReceive('updateFromArray')->byDefault();
+        $this->field_updator->shouldReceive('checkFieldConsistency')->byDefault();
 
         $this->creator              = new RestProjectCreator(
             $this->project_manager,
@@ -146,6 +147,7 @@ class RestProjectCreatorTest extends TestCase
     public function testCreateThrowExceptionWhenNeitherTemplateIdNorTemplateNameIsProvided()
     {
         $this->expectException(InvalidXMLTemplateNameException::class);
+
 
         $this->creator->create($this->user, $this->project);
     }
@@ -297,6 +299,32 @@ class RestProjectCreatorTest extends TestCase
 
 
     public function testItThrowsAnExceptionWhenMandatoryCategoryIsMissing()
+    {
+        $this->project->template_id = 100;
+        $this->project->shortname = 'gpig';
+        $this->project->label = 'Guinea Pig';
+        $this->project->description = 'foo';
+        $this->project->is_public = false;
+        $this->project->allow_restricted = false;
+        $this->project->categories = [
+            CategoryPostRepresentation::build(14, 89),
+            CategoryPostRepresentation::build(18, 53)
+        ];
+
+        $template_project = M::mock(Project::class, ['isError' => false, 'isActive' => false, 'isTemplate' => true]);
+
+        $this->project_manager->shouldReceive('getProject')->with($this->project->template_id)->andReturn($template_project);
+        $this->project_creator->shouldNotReceive('createFromRest');
+
+        $this->categories_updater->shouldReceive('checkCollectionConsistency')->once()->andThrow(new MissingMandatoryCategoriesException());
+
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+
+        $this->creator->create($this->user, $this->project);
+    }
+
+    public function testItThrowsAnExceptionWhenFieldCollectionIsInvalid()
     {
         $this->project->template_id = 100;
         $this->project->shortname = 'gpig';

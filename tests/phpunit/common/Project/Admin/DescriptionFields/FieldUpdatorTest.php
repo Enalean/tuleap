@@ -26,7 +26,9 @@ namespace Tuleap\common\Project\Admin\DescriptionFields;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use ProjectCreationData;
+use Tuleap\Project\Admin\DescriptionFields\FieldDoesNotExistException;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
+use Tuleap\Project\Admin\DescriptionFields\MissingMandatoryFieldException;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
@@ -170,5 +172,47 @@ final class FieldUpdatorTest extends TestCase
         $this->logger->shouldReceive('debug')->once();
 
         $this->updater->updateFromArray($fields, $project);
+    }
+
+    public function testExceptionIsThrownWhenSomeFieldsAreMissing(): void
+    {
+        $this->field_factory->shouldReceive('getAllDescriptionFields')->andReturn(
+            [
+                ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => "field_name"]
+            ]
+        );
+
+        $field_collection = [];
+
+        $this->expectException(MissingMandatoryFieldException::class);
+        $this->updater->checkFieldConsistency($field_collection);
+    }
+
+    public function testExceptionIsThrownWhenUserProvidesFieldsWhoDoesNotExists(): void
+    {
+        $this->field_factory->shouldReceive('getAllDescriptionFields')->andReturn(
+            [
+                ['group_desc_id' => 1, 'desc_required' => false, 'desc_name' => "field_name"]
+            ]
+        );
+
+        $field_collection[2] = 'test';
+
+        $this->expectException(FieldDoesNotExistException::class);
+        $this->updater->checkFieldConsistency($field_collection);
+    }
+
+    public function testFieldConsistencyIsValidWhenEverythingIsOk(): void
+    {
+        $this->field_factory->shouldReceive('getAllDescriptionFields')->andReturn(
+            [
+                ['group_desc_id' => 1, 'desc_required' => true, 'desc_name' => "field_name"],
+                ['group_desc_id' => 2, 'desc_required' => false, 'desc_name' => "other_field_name"]
+            ]
+        );
+
+        $field_collection[1] = 'test';
+
+        $this->updater->checkFieldConsistency($field_collection);
     }
 }
