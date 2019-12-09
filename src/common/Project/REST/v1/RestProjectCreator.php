@@ -31,6 +31,7 @@ use Tuleap\Project\Admin\Categories\CategoryCollection;
 use Tuleap\Project\Admin\Categories\MissingMandatoryCategoriesException;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesException;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
+use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
@@ -85,6 +86,10 @@ class RestProjectCreator
      * @var ProjectCategoriesUpdater
      */
     private $categories_updater;
+    /**
+     * @var FieldUpdator
+     */
+    private $fields_updater;
 
     public function __construct(
         \ProjectManager $project_manager,
@@ -96,7 +101,8 @@ class RestProjectCreator
         \ProjectXMLImporter $project_XML_importer,
         TemplateFactory $template_factory,
         ProjectRegistrationUserPermissionChecker $permission_checker,
-        ProjectCategoriesUpdater $categories_updater
+        ProjectCategoriesUpdater $categories_updater,
+        FieldUpdator $fields_updater
     ) {
         $this->project_manager            = $project_manager;
         $this->project_creator            = $project_creator;
@@ -108,6 +114,7 @@ class RestProjectCreator
         $this->template_factory           = $template_factory;
         $this->permission_checker         = $permission_checker;
         $this->categories_updater         = $categories_updater;
+        $this->fields_updater = $fields_updater;
     }
 
     /**
@@ -125,8 +132,11 @@ class RestProjectCreator
             $category_collection = $this->getCategoryCollection($post_representation);
             $this->categories_updater->checkCollectionConsistency($category_collection);
 
+            $field_collection = $this->getFieldCollection($post_representation);
+
             $project = $this->createProjectWithSelectedTemplate($user, $post_representation);
             $this->categories_updater->update($project, $category_collection);
+            $this->fields_updater->updateFromArray($field_collection, $project);
             return $project;
         } catch (MaxNumberOfProjectReachedException $exception) {
             throw new RestException(429, 'Too many projects were created');
@@ -234,5 +244,18 @@ class RestProjectCreator
             }
         }
         return new CategoryCollection(...$categories);
+    }
+
+    private function getFieldCollection(ProjectPostRepresentation $post_representation): array
+    {
+        $fields = [];
+
+        if ($post_representation->fields !== null) {
+            foreach ($post_representation->fields as $field_representation) {
+                $fields[$field_representation->field_id] = $field_representation->value;
+            }
+        }
+
+        return $fields;
     }
 }

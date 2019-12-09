@@ -64,4 +64,9 @@ class ProjectPostRepresentation
      * @var array Categories to be set a project creation {@from body} {@required false} {@type \Tuleap\Project\REST\v1\CategoryPostRepresentation}
      */
     public $categories;
+
+    /**
+     * @var array Custom fields to be set a project creation {@from body} {@required false} {@type \Tuleap\Project\REST\v1\FieldsPostRepresentation}
+     */
+    public $fields;
 }

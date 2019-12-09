@@ -23,6 +23,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Project\Admin\DescriptionFields;
 
+use Project;
 use ProjectCreationData;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\Project\DescriptionFieldsFactory;
@@ -57,14 +58,33 @@ class FieldUpdator
         $description_fields = $this->fields_factory->getAllDescriptionFields();
 
         foreach ($description_fields as $field) {
-            $desc_id_val = $data->getField($field["group_desc_id"]);
-            if ($desc_id_val !== null && $desc_id_val !== '') {
-                $result = $this->dao->createGroupDescription($group_id, $field["group_desc_id"], $desc_id_val);
-                if (! $result) {
-                    $this->logger->debug(
-                        sprintf("Impossible to create field %s with value %s", $field["group_desc_id"], $desc_id_val)
-                    );
-                }
+            $field_id    = $field["group_desc_id"];
+            $desc_id_val = $data->getField($field_id);
+            $this->storeFieldValue($group_id, $desc_id_val, (int)$field_id);
+        }
+    }
+
+    public function updateFromArray(array $submitted_fields, Project $project): void
+    {
+        $description_fields = $this->fields_factory->getAllDescriptionFields();
+
+        foreach ($description_fields as $field) {
+            $field_id        = $field["group_desc_id"];
+            if (isset($submitted_fields[$field_id])) {
+                $submitted_value = $submitted_fields[$field_id];
+                $this->storeFieldValue((int) $project->getID(), $submitted_value, (int)$field_id);
+            }
+        }
+    }
+
+    private function storeFieldValue(int $group_id, ?string $submitted_value, int $field_id): void
+    {
+        if ($submitted_value !== null && $submitted_value !== '') {
+            $result = $this->dao->createGroupDescription($group_id, $field_id, $submitted_value);
+            if (! $result) {
+                $this->logger->debug(
+                    sprintf("Impossible to create field %s with value %s", $field_id, $submitted_value)
+                );
             }
         }
     }
