@@ -1,8 +1,7 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
- *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -12,25 +11,23 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
-require_once 'bootstrap.php';
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-class Docman_FilterFactoryTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class Docman_FilterFactoryTest extends TestCase
 {
-    public function tearDown()
-    {
-        parent::tearDown();
-        Mockery::close();
-    }
+    use MockeryPHPUnitIntegration;
 
-    public function testCloneFilter()
+    public function testCloneFilter(): void
     {
         $mdFactory =  \Mockery::spy(Docman_MetadataFactory::class);
         $mdFactory->allows(['isRealMetadata' => false]);

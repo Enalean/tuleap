@@ -1,10 +1,9 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2006.
- *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -14,17 +13,16 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  *
  */
 
-require_once 'bootstrap.php';
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test how items are copied.
@@ -41,10 +39,12 @@ require_once 'bootstrap.php';
  *       - same type
  *     - for list of values, the same value exist in both projects.
  */
-class CopyItemsTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class CopyItemsTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    function testDocumentCopyWithinTheSameProject()
+    public function testDocumentCopyWithinTheSameProject(): void
     {
         $srcGroupId = $dstGroupId = 1789;
 
@@ -93,7 +93,7 @@ class CopyItemsTest extends TuleapTestCase
         $cloneItemsVisitor->visitLink($item_to_clone, array(
             'parentId'        => $dest_folder->getId(),
             'srcRootId'       => 66,
-            'user'            => mock('PFUser'),
+            'user'            => \Mockery::spy(\PFUser::class),
             'metadataMapping' => array(),
             'ugroupsMapping'  => array(),
             'data_root'       => '/tmp'));
