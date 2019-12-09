@@ -30,6 +30,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use Tuleap\PullRequest\StateStatus\PullRequestAbandonedEvent;
+use Tuleap\PullRequest\StateStatus\PullRequestMergedEvent;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 
 final class PullRequestCloserTest extends TestCase
@@ -113,11 +114,16 @@ final class PullRequestCloserTest extends TestCase
         $this->pull_request_merger->shouldReceive('doMergeIntoDestination')->once();
         $this->dao->shouldReceive('markAsMerged')->once();
         $this->timeline_event_creator->shouldReceive('storeMergeEvent')->once();
+        $this->event_dispatcher->shouldReceive('dispatch')
+            ->with(Mockery::type(PullRequestMergedEvent::class))->once();
+
+        $user = Mockery::mock(PFUser::class);
+        $user->shouldReceive('getId')->andReturn(102);
 
         $this->pull_request_closer->doMerge(
             Mockery::mock(GitRepository::class),
             $pull_request,
-            Mockery::mock(PFUser::class)
+            $user
         );
     }
 
@@ -154,10 +160,15 @@ final class PullRequestCloserTest extends TestCase
 
         $this->dao->shouldReceive('markAsMerged')->once();
         $this->timeline_event_creator->shouldReceive('storeMergeEvent')->once();
+        $this->event_dispatcher->shouldReceive('dispatch')
+            ->with(Mockery::type(PullRequestMergedEvent::class))->once();
+
+        $user = Mockery::mock(PFUser::class);
+        $user->shouldReceive('getId')->andReturn(102);
 
         $this->pull_request_closer->closeManuallyMergedPullRequest(
             $pull_request,
-            Mockery::mock(PFUser::class)
+            $user
         );
     }
 

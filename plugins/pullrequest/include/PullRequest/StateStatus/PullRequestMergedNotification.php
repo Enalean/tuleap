@@ -35,7 +35,7 @@ use UserHelper;
 /**
  * @psalm-immutable
  */
-final class PullRequestAbandonedNotification implements NotificationToProcess
+final class PullRequestMergedNotification implements NotificationToProcess
 {
     /**
      * @var PullRequest
@@ -89,13 +89,14 @@ final class PullRequestAbandonedNotification implements NotificationToProcess
             $owners_without_change_user,
             new NotificationTemplatedContent(
                 TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/state-status'),
-                'pull-request-abandoned-mail-content',
-                new PullRequestAbandonedContentPresenter(
+                'pull-request-merged-mail-content',
+                new PullRequestMergedContentPresenter(
                     $change_user_display_name,
                     $user_helper->getAbsoluteUserURL($change_user),
                     $pull_request->getId(),
                     $pull_request->getTitle(),
-                    $html_url_builder->getAbsolutePullRequestOverviewUrl($pull_request)
+                    $html_url_builder->getAbsolutePullRequestOverviewUrl($pull_request),
+                    $pull_request->getBranchDest()
                 )
             )
         );
@@ -114,10 +115,11 @@ final class PullRequestAbandonedNotification implements NotificationToProcess
     public function asPlaintext(): string
     {
         return sprintf(
-            dgettext('tuleap-pullrequest', '%s has abandoned the pull request #%d: %s'),
+            dgettext('tuleap-pullrequest', '%s has merged the pull request #%d: %s into %s'),
             $this->change_user_display_name,
             $this->pull_request->getId(),
             $this->pull_request->getTitle(),
+            $this->pull_request->getBranchDest(),
         );
     }
 

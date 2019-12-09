@@ -32,11 +32,11 @@ use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\TemporaryTestDirectory;
 use UserHelper;
 
-final class PullRequestAbandonedNotificationTest extends TestCase
+final class PullRequestMergedNotificationTest extends TestCase
 {
     use MockeryPHPUnitIntegration, ForgeConfigSandbox, TemporaryTestDirectory;
 
-    public function testAbandonedNotificationCanBeBuiltFromTheOwnersOfThePullRequest(): void
+    public function testMergedNotificationCanBeBuiltFromTheOwnersOfThePullRequest(): void
     {
         $change_user      = $this->buildUser(102);
         $user_103         = $this->buildUser(103);
@@ -50,10 +50,11 @@ final class PullRequestAbandonedNotificationTest extends TestCase
         $user_helper->shouldReceive('getDisplayNameFromUser')->with($change_user)->andReturn('User A');
         $user_helper->shouldReceive('getAbsoluteUserURL')->with($change_user)->andReturn('https://example.com/users/usera');
         $html_url_builder->shouldReceive('getAbsolutePullRequestOverviewUrl')->with($pull_request)->andReturn('https://example.com/pr-link');
-        $pull_request->shouldReceive('getId')->andReturn(13);
-        $pull_request->shouldReceive('getTitle')->andReturn('Broken contribution');
+        $pull_request->shouldReceive('getId')->andReturn(14);
+        $pull_request->shouldReceive('getTitle')->andReturn('Good contribution');
+        $pull_request->shouldReceive('getBranchDest')->andReturn('master');
 
-        $notification = PullRequestAbandonedNotification::fromOwners(
+        $notification = PullRequestMergedNotification::fromOwners(
             $user_helper,
             $html_url_builder,
             new FilterUserFromCollection(),
@@ -64,9 +65,9 @@ final class PullRequestAbandonedNotificationTest extends TestCase
 
         $this->assertEqualsCanonicalizing([$user_103], $notification->getRecipients());
         $this->assertSame($pull_request, $notification->getPullRequest());
-        $this->assertEquals('User A has abandoned the pull request #13: Broken contribution', $notification->asPlaintext());
+        $this->assertEquals('User A has merged the pull request #14: Good contribution into master', $notification->asPlaintext());
         $this->assertEquals(
-            '<a href="https://example.com/users/usera">User A</a> has abandoned the pull request <a href="https://example.com/pr-link">#13</a>: Broken contribution',
+            '<a href="https://example.com/users/usera">User A</a> has merged the pull request <a href="https://example.com/pr-link">#14</a>: Good contribution into master',
             $notification->asEnhancedContent()->toString()
         );
     }
