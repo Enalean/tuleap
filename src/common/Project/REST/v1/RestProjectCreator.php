@@ -31,7 +31,9 @@ use Tuleap\Project\Admin\Categories\CategoryCollection;
 use Tuleap\Project\Admin\Categories\MissingMandatoryCategoriesException;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesException;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
+use Tuleap\Project\Admin\DescriptionFields\FieldDoesNotExistException;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
+use Tuleap\Project\Admin\DescriptionFields\MissingMandatoryFieldException;
 use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\RegistrationForbiddenException;
@@ -133,6 +135,7 @@ class RestProjectCreator
             $this->categories_updater->checkCollectionConsistency($category_collection);
 
             $field_collection = $this->getFieldCollection($post_representation);
+            $this->fields_updater->checkFieldConsistency($field_collection);
 
             $project = $this->createProjectWithSelectedTemplate($user, $post_representation);
             $this->categories_updater->update($project, $category_collection);
@@ -143,6 +146,10 @@ class RestProjectCreator
         } catch (RegistrationForbiddenException $exception) {
             throw new RestException(403, 'You are not allowed to create new projects');
         } catch (ProjectCategoriesException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (FieldDoesNotExistException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (MissingMandatoryFieldException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
     }
