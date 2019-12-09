@@ -37,7 +37,8 @@ describe("TemplateFooter", () => {
             error: null,
             is_creating_project: false,
             is_project_approval_required: false,
-            trove_categories: []
+            trove_categories: [],
+            is_description_required: false
         };
         const getters = {
             is_template_selected: false

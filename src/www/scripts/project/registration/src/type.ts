@@ -43,6 +43,7 @@ export interface ProjectProperties {
     allow_restricted?: boolean;
     xml_template_name: string;
     categories: Array<TroveCatProperties>;
+    description: string;
 }
 
 export interface ProjectNameProperties {

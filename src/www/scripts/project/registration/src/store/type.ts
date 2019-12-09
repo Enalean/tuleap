@@ -29,6 +29,7 @@ export interface State {
     is_creating_project: boolean;
     is_project_approval_required: boolean;
     trove_categories: TroveCatData[];
+    is_description_required: boolean;
 }
 
 export interface Context {
