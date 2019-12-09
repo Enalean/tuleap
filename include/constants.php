@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,4 +19,3 @@
  */
 
 define('MYTULEAP_CONTACT_SUPPORT_BASE_DIR', realpath(__DIR__.'/..'));
-define('MYTULEAP_CONTACT_SUPPORT_EMAIL_TO', 'support@mytuleap.com');
