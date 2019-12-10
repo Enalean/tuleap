@@ -69,11 +69,6 @@ class Presenter
         return dgettext('tuleap-openidconnectclient', 'OpenID Connect');
     }
 
-    public function isAzureOptionEnabled() : bool
-    {
-        return ForgeConfig::get('open_id_azure_option');
-    }
-
     public function title_provider_configuration()
     {
         return dgettext('tuleap-openidconnectclient', 'OpenID Connect providers');
