@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\BranchUpdate;
 
+use Git_GitRepositoryUrlManager;
 use GitRepository;
 use GitRepositoryFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -67,6 +68,10 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends TestCase
      */
     private $html_url_builder;
     /**
+     * @var Git_GitRepositoryUrlManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    private $url_manager;
+    /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PullRequestUpdateCommitDiff
      */
     private $commits_differ;
@@ -84,6 +89,7 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends TestCase
         $this->owner_retriever           = \Mockery::mock(OwnerRetriever::class);
         $this->user_helper               = \Mockery::mock(UserHelper::class);
         $this->html_url_builder          = \Mockery::mock(HTMLURLBuilder::class);
+        $this->url_manager               = \Mockery::mock(Git_GitRepositoryUrlManager::class);
         $this->commits_differ            = \Mockery::mock(PullRequestUpdateCommitDiff::class);
 
         $this->builder = new PullRequestUpdatedNotificationToProcessBuilder(
@@ -94,6 +100,7 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends TestCase
             new FilterUserFromCollection(),
             $this->user_helper,
             $this->html_url_builder,
+            $this->url_manager,
             $this->commits_differ
         );
     }
@@ -169,6 +176,7 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends TestCase
         $this->user_helper->shouldReceive('getDisplayNameFromUser')->andReturn('Display name');
         $this->user_helper->shouldReceive('getAbsoluteUserURL')->andReturn('https://example.com/users/foo');
         $this->html_url_builder->shouldReceive('getAbsolutePullRequestOverviewUrl')->andReturn('https://example.com/link-to-pr');
+        $this->url_manager->shouldReceive('getAbsoluteCommitURL')->andReturn('https://example.com/link-to-commit');
 
         return $event;
     }

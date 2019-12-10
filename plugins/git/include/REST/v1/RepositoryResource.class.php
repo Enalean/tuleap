@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -185,7 +185,7 @@ class RepositoryResource extends AuthenticatedResource
         );
 
         $git_plugin  = \PluginFactory::instance()->getPluginByName('git');
-        $url_manager = new \Git_GitRepositoryUrlManager($git_plugin);
+        $url_manager = new \Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
 
         $this->representation_builder = new RepositoryRepresentationBuilder(
             $this->git_permission_manager,
@@ -327,7 +327,10 @@ class RepositoryResource extends AuthenticatedResource
 
         $status_retriever   = new CommitStatusRetriever(new CommitStatusDAO);
         $metadata_retriever = new CommitMetadataRetriever($status_retriever, $this->user_manager);
-        $url_manager        = new Git_GitRepositoryUrlManager(PluginFactory::instance()->getPluginByName('git'));
+        $url_manager        = new Git_GitRepositoryUrlManager(
+            PluginFactory::instance()->getPluginByName('git'),
+            new \Tuleap\InstanceBaseURLBuilder()
+        );
 
         $this->commit_representation_builder = new GitCommitRepresentationBuilder($metadata_retriever, $url_manager);
     }

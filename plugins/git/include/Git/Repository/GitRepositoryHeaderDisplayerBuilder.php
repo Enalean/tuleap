@@ -126,7 +126,7 @@ class GitRepositoryHeaderDisplayerBuilder
 
     private function getGitRepositoryUrlManager(Plugin $git_plugin)
     {
-        return new Git_GitRepositoryUrlManager($git_plugin);
+        return new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
     }
 
     private function getRepositoryHeaderPresenterBuilder(Plugin $git_plugin, $selected_tab)

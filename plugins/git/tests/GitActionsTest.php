@@ -36,7 +36,7 @@ class GitActionsTest extends TuleapTestCase
         $GLOBALS['Language']->shouldReceive('getText')->with('plugin_git', 'successfully_forked', '*')->andReturns('successfully_forked');
 
         $git_plugin        = mockery_stub(\GitPlugin::class)->areFriendlyUrlsActivated()->returns(false);
-        $url_manager       = new Git_GitRepositoryUrlManager($git_plugin);
+        $url_manager       = new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
 
         $this->gitAction = \Mockery::mock(\GitActions::class, array(
             mock('Git'),

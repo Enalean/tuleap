@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\BranchUpdate;
 
+use Git_GitRepositoryUrlManager;
 use GitRepositoryFactory;
 use Tuleap\Git\GitPHP\ProjectProvider;
 use Tuleap\Git\GitPHP\RepositoryAccessException;
@@ -69,6 +70,10 @@ final class PullRequestUpdatedNotificationToProcessBuilder implements Notificati
      */
     private $html_url_builder;
     /**
+     * @var Git_GitRepositoryUrlManager
+     */
+    private $url_manager;
+    /**
      * @var PullRequestUpdateCommitDiff
      */
     private $commit_diff;
@@ -81,6 +86,7 @@ final class PullRequestUpdatedNotificationToProcessBuilder implements Notificati
         FilterUserFromCollection $filter_user_from_collection,
         UserHelper $user_helper,
         HTMLURLBuilder $html_url_builder,
+        Git_GitRepositoryUrlManager $url_manager,
         PullRequestUpdateCommitDiff $commit_diff
     ) {
         $this->user_manager                = $user_manager;
@@ -90,6 +96,7 @@ final class PullRequestUpdatedNotificationToProcessBuilder implements Notificati
         $this->filter_user_from_collection = $filter_user_from_collection;
         $this->user_helper                 = $user_helper;
         $this->html_url_builder            = $html_url_builder;
+        $this->url_manager                 = $url_manager;
         $this->commit_diff                 = $commit_diff;
     }
 
@@ -134,6 +141,8 @@ final class PullRequestUpdatedNotificationToProcessBuilder implements Notificati
             return [];
         }
 
+        $url_builder = new RepositoryURLToCommitBuilder($this->url_manager, $git_repository);
+
         $pull_request_owners = $this->owner_retriever->getOwners($pull_request);
 
         return array_filter([
@@ -145,6 +154,7 @@ final class PullRequestUpdatedNotificationToProcessBuilder implements Notificati
                 $change_user,
                 $pull_request_owners,
                 $git_resource_accessor_provider->GetProject(),
+                $url_builder,
                 $new_commits
             )
         ]);

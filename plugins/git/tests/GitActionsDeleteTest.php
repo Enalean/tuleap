@@ -44,13 +44,13 @@ class GitActionsDeleteTests extends TuleapTestCase
         stub($this->repository)->getProjectId()->returns($this->project_id);
 
         $this->git_system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
-        $controler                  = mockery_stub(\Git::class)->getPlugin()->returns(\Mockery::spy(\gitPlugin::class));
+        $controler                  = mockery_stub(\Git::class)->getPlugin()->returns(\Mockery::spy(\GitPlugin::class));
         $git_repository_factory     = \Mockery::spy(\GitRepositoryFactory::class);
 
         stub($git_repository_factory)->getRepositoryById($this->repository_id)->returns($this->repository);
 
         $git_plugin  = mockery_stub(\GitPlugin::class)->areFriendlyUrlsActivated()->returns(false);
-        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+        $url_manager = new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
 
         $this->git_actions = new GitActions(
             $controler,

@@ -380,7 +380,7 @@ class Git extends PluginController
     {
         return new GitViews(
             $this,
-            new Git_GitRepositoryUrlManager($this->getPlugin()),
+            new Git_GitRepositoryUrlManager($this->getPlugin(), new \Tuleap\InstanceBaseURLBuilder()),
             $this->mirror_data_mapper,
             $this->permissions_manager,
             $this->fine_grained_permission_factory,

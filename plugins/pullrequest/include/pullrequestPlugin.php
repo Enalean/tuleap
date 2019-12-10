@@ -500,7 +500,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             new GitRepositoryFactory(new GitDao(), ProjectManager::instance()),
             UserManager::instance(),
             new UserHelper(),
-            new Git_GitRepositoryUrlManager($git_plugin),
+            new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder()),
             $this->getTemplateRenderer()
         );
 

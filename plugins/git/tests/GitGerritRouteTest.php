@@ -80,7 +80,7 @@ class GitGerritRouteTest extends TuleapTestCase
 
         $git_plugin = \Mockery::mock(GitPlugin::class);
         $git_plugin->shouldReceive('areFriendlyUrlsActivated')->andReturns(false);
-        $url_manager           = new Git_GitRepositoryUrlManager($git_plugin);
+        $url_manager           = new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
         $server                = mock('Git_RemoteServer_GerritServer');
         $gerrit_server_factory = stub('Git_RemoteServer_GerritServerFactory')->getServerById()->returns($server);
         $can_migrate_checker   = stub('Tuleap\Git\GerritCanMigrateChecker')->canMigrate()->returns(true);

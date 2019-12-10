@@ -34,7 +34,7 @@ class GitActionsForkTests extends TuleapTestCase
         $this->manager = \Mockery::spy(\GitRepositoryManager::class);
 
         $git_plugin  = mockery_stub(\GitPlugin::class)->areFriendlyUrlsActivated()->returns(false);
-        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+        $url_manager = new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
 
         $this->actions = new GitActions(
             \Mockery::spy(\Git::class),

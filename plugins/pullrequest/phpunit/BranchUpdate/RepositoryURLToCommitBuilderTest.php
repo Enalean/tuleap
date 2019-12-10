@@ -22,16 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\BranchUpdate;
 
+use Git_GitRepositoryUrlManager;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-final class CommitPresenterTest extends TestCase
+final class RepositoryURLToCommitBuilderTest extends TestCase
 {
-    public function test12HexDigitsAreKeptForShortReferences(): void
-    {
-        $presenter = new CommitPresenter('230549fc4be136fcae6ea6ed574c2f5c7b922346', 'My title', 'https://example.com/commit-link');
+    use MockeryPHPUnitIntegration;
 
-        $this->assertEquals('230549fc4be1', $presenter->short_reference);
-        $this->assertEquals('My title', $presenter->title);
-        $this->assertEquals('https://example.com/commit-link', $presenter->url);
+    public function testBuildsURLToCommitForASpecificGitRepository(): void
+    {
+        $repository  = \Mockery::mock(\GitRepository::class);
+        $url_manager = \Mockery::mock(Git_GitRepositoryUrlManager::class);
+
+        $builder = new RepositoryURLToCommitBuilder($url_manager, $repository);
+
+        $url_manager->shouldReceive('getAbsoluteCommitURL')->with($repository, \Mockery::any())
+            ->andReturn('https://example.com/my-commit-link');
+
+        $this->assertEquals(
+            'https://example.com/my-commit-link',
+            $builder->buildURLForReference('0000000000000000000000000000000000000000')
+        );
     }
 }

@@ -185,6 +185,10 @@ final class PullRequestNotificationSupport
                         $git_repository_factory = self::buildGitRepositoryFactory();
                         $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
                         $user_manager           = \UserManager::instance();
+
+                        $git_plugin = \PluginFactory::instance()->getPluginByName('git');
+                        assert($git_plugin instanceof \GitPlugin);
+
                         return new EventSubjectToNotificationListener(
                             self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
                             new PullRequestUpdatedNotificationToProcessBuilder(
@@ -217,6 +221,10 @@ final class PullRequestNotificationSupport
                                 new FilterUserFromCollection(),
                                 \UserHelper::instance(),
                                 $html_url_builder,
+                                new \Git_GitRepositoryUrlManager(
+                                    $git_plugin,
+                                    new InstanceBaseURLBuilder()
+                                ),
                                 new PullRequestUpdateCommitDiff()
                             )
                         );
