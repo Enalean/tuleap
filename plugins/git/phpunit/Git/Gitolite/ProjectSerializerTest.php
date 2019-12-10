@@ -32,6 +32,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
+use Tuleap\InstanceBaseURLBuilder;
 
 require_once __DIR__.'/../../bootstrap.php';
 
@@ -48,7 +49,7 @@ class ProjectSerializerTest extends TestCase
     private $url_manager;
     private $gitolite_permissions_serializer;
     private $logger;
-    private $_fixDir;
+    private $fix_dir;
     private $permissions_manager;
     private $gerrit_project_status;
     private $big_object_authorization_manager;
@@ -58,7 +59,7 @@ class ProjectSerializerTest extends TestCase
     {
         parent::setUp();
 
-        $this->_fixDir = __DIR__.'/_fixtures';
+        $this->fix_dir = __DIR__.'/_fixtures';
 
         $this->http_request = Mockery::spy(\HTTPRequest::class);
         HTTPRequest::setInstance($this->http_request);
@@ -73,7 +74,7 @@ class ProjectSerializerTest extends TestCase
         $git_plugin = Mockery::spy(\GitPlugin::class);
         $git_plugin->shouldReceive('areFriendlyUrlsActivated')->andReturn(false);
 
-        $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+        $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin, new InstanceBaseURLBuilder());
 
         $mirror_data_mapper = Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
         $mirror_data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturn(array());
@@ -126,7 +127,7 @@ class ProjectSerializerTest extends TestCase
         $repo->setProject($prj);
         $repo->setName('test_default');
         $this->assertSame(
-            file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev.txt'),
+            file_get_contents($this->fix_dir .'/gitolite-mail-config/mailhook-rev.txt'),
             $this->project_serializer->fetchMailHookConfig($prj, $repo)
         );
 
@@ -137,7 +138,7 @@ class ProjectSerializerTest extends TestCase
         $repo->setName('test_default');
         $repo->setMailPrefix('[KOIN] ');
         $this->assertSame(
-            file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev-mail-prefix.txt'),
+            file_get_contents($this->fix_dir .'/gitolite-mail-config/mailhook-rev-mail-prefix.txt'),
             $this->project_serializer->fetchMailHookConfig($prj, $repo)
         );
 
@@ -148,7 +149,7 @@ class ProjectSerializerTest extends TestCase
         $repo->setName('test_default');
         $repo->setMailPrefix('["\_o<"] \t');
         $this->assertSame(
-            file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev-mail-prefix-quote.txt'),
+            file_get_contents($this->fix_dir .'/gitolite-mail-config/mailhook-rev-mail-prefix-quote.txt'),
             $this->project_serializer->fetchMailHookConfig($prj, $repo)
         );
     }
@@ -197,7 +198,7 @@ class ProjectSerializerTest extends TestCase
 
         // Ensure file is correct
         $result     = $this->project_serializer->dumpProjectRepoConf($prj);
-        $expected   = file_get_contents($this->_fixDir .'/perms/project1-full.conf');
+        $expected   = file_get_contents($this->fix_dir .'/perms/project1-full.conf');
 
         $this->assertSame($expected, $result);
     }
@@ -242,7 +243,7 @@ class ProjectSerializerTest extends TestCase
 
         // Ensure file is correct
         $result     = $this->project_serializer->dumpProjectRepoConf($prj);
-        $expected = file_get_contents($this->_fixDir .'/perms/migrated_to_gerrit.conf');
+        $expected = file_get_contents($this->fix_dir .'/perms/migrated_to_gerrit.conf');
 
         $this->assertSame($expected, $result);
     }
@@ -349,7 +350,7 @@ EOS;
 
         // Ensure file is correct
         $result     = $this->project_serializer->dumpProjectRepoConf($prj);
-        $expected   = file_get_contents($this->_fixDir .'/perms/bigobject.conf');
+        $expected   = file_get_contents($this->fix_dir .'/perms/bigobject.conf');
 
         $this->assertSame($expected, $result);
     }
@@ -393,7 +394,7 @@ EOS;
 
         // Ensure file is correct
         $result     = $this->project_serializer->dumpProjectRepoConf($prj);
-        $expected   = file_get_contents($this->_fixDir .'/perms/notgitolite3.conf');
+        $expected   = file_get_contents($this->fix_dir .'/perms/notgitolite3.conf');
 
         $this->assertSame($expected, $result);
     }

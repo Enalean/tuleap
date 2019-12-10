@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\BranchUpdate;
 
+use Git_GitRepositoryUrlManager;
 use PFUser;
 use TemplateRendererFactory;
 use Tuleap\Git\GitPHP\Project as GitResourceAccessor;
@@ -95,9 +96,10 @@ final class PullRequestUpdatedNotification implements NotificationToProcess
         PFUser $change_user,
         array $owners,
         GitResourceAccessor $git_resource_accessor,
+        RepositoryURLToCommitBuilder $repository_url_to_commit_builder,
         array $new_commit_references
     ): ?self {
-        $commit_presenters = self::buildCommitPresenters($git_resource_accessor, ...$new_commit_references);
+        $commit_presenters = self::buildCommitPresenters($git_resource_accessor, $repository_url_to_commit_builder, ...$new_commit_references);
         if (empty($commit_presenters)) {
             return null;
         }
@@ -130,8 +132,11 @@ final class PullRequestUpdatedNotification implements NotificationToProcess
      *
      * @psalm-param non-empty-array<string> $commit_references
      */
-    private static function buildCommitPresenters(GitResourceAccessor $git_resource_accessor, string ...$commit_references): array
-    {
+    private static function buildCommitPresenters(
+        GitResourceAccessor $git_resource_accessor,
+        RepositoryURLToCommitBuilder $repository_url_to_commit_builder,
+        string ...$commit_references
+    ): array {
         $presenters = [];
         foreach ($commit_references as $commit_reference) {
             $commit = $git_resource_accessor->GetCommit($commit_reference);
@@ -140,7 +145,8 @@ final class PullRequestUpdatedNotification implements NotificationToProcess
             }
             $presenters[] = new CommitPresenter(
                 $commit_reference,
-                $commit->GetTitle() ?? ''
+                $commit->GetTitle() ?? '',
+                $repository_url_to_commit_builder->buildURLForReference($commit_reference)
             );
         }
 

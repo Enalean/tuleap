@@ -22,28 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\BranchUpdate;
 
-/**
- * @psalm-immutable
- */
-final class CommitPresenter
+use Git_GitRepositoryUrlManager;
+use GitRepository;
+
+class RepositoryURLToCommitBuilder
 {
     /**
-     * @var string
+     * @var Git_GitRepositoryUrlManager
      */
-    public $short_reference;
+    private $repository_url_manager;
     /**
-     * @var string
+     * @var GitRepository
      */
-    public $title;
-    /**
-     * @var string
-     */
-    public $url;
+    private $git_repository;
 
-    public function __construct(string $reference, string $title, string $url)
+    public function __construct(Git_GitRepositoryUrlManager $repository_url_manager, GitRepository $git_repository)
     {
-        $this->short_reference = substr($reference, 0, 12);
-        $this->title           = $title;
-        $this->url             = $url;
+        $this->repository_url_manager = $repository_url_manager;
+        $this->git_repository         = $git_repository;
+    }
+
+    public function buildURLForReference(string $commit_reference): string
+    {
+        return $this->repository_url_manager->getAbsoluteCommitURL($this->git_repository, $commit_reference);
     }
 }

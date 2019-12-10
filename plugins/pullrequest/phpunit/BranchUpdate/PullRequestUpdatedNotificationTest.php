@@ -67,6 +67,11 @@ final class PullRequestUpdatedNotificationTest extends TestCase
             ->with('fbe4dade4f744aa203ec35bf09f71475ecc3f9d6')->andReturn($commit_b);
         $git_resource_accessor->shouldReceive('GetCommit')
             ->with('a7d1692502252a5ec18bfcae4184498b1459810c')->andReturn(null);
+        $url_to_commit_builder = \Mockery::mock(RepositoryURLToCommitBuilder::class);
+        $url_to_commit_builder->shouldReceive('buildURLForReference')
+            ->with('230549fc4be136fcae6ea6ed574c2f5c7b922346')->andReturn('https://example.com/230549');
+        $url_to_commit_builder->shouldReceive('buildURLForReference')
+            ->with('fbe4dade4f744aa203ec35bf09f71475ecc3f9d6')->andReturn('https://example.com/fbe4da');
 
         $notification = PullRequestUpdatedNotification::fromOwnersAndReferences(
             $user_helper,
@@ -76,6 +81,7 @@ final class PullRequestUpdatedNotificationTest extends TestCase
             $change_user,
             $owners,
             $git_resource_accessor,
+            $url_to_commit_builder,
             ['230549fc4be136fcae6ea6ed574c2f5c7b922346', 'fbe4dade4f744aa203ec35bf09f71475ecc3f9d6', 'a7d1692502252a5ec18bfcae4184498b1459810c']
         );
 
@@ -95,9 +101,10 @@ final class PullRequestUpdatedNotificationTest extends TestCase
             <p>
             <a href="https://example.com/users/usera">User A</a> pushed 2 commits updating the pull request <a href="https://example.com/pr-link">#14</a>: A contribution.</p>
             <ul>
-                    <li>230549fc4be1 Commit A</li>
-                    <li>fbe4dade4f74 Commit B</li>
+                    <li><a href="https://example.com/230549">230549fc4be1</a> Commit A</li>
+                    <li><a href="https://example.com/fbe4da">fbe4dade4f74</a> Commit B</li>
             </ul>
+
             EOF,
             $notification->asEnhancedContent()->toString()
         );
@@ -119,6 +126,7 @@ final class PullRequestUpdatedNotificationTest extends TestCase
             $change_user,
             $owners,
             $git_resource_accessor,
+            \Mockery::mock(RepositoryURLToCommitBuilder::class),
             ['a7d1692502252a5ec18bfcae4184498b1459810c']
         );
 

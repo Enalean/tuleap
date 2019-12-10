@@ -55,7 +55,7 @@ $git_plugin                 = PluginManager::instance()->getPluginByName('git');
 $logger                     = $git_plugin->getLogger();
 $repository_path            = $argv[1];
 $git_exec                   = new Git_Exec($repository_path, $repository_path);
-$git_repository_url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+$git_repository_url_manager = new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
 
 $user_name = getenv('GL_USER');
 if ($user_name === false) {

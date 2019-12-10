@@ -64,7 +64,7 @@ class GitActionsFetchConfigTest extends TuleapTestCase
         stub($this->controller)->getRequest()->returns($this->request);
 
         $git_plugin  = mockery_stub(\GitPlugin::class)->areFriendlyUrlsActivated()->returns(false);
-        $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+        $url_manager = new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
 
         $this->actions = new GitActions(
             $this->controller,

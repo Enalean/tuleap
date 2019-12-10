@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -88,7 +88,7 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase
 
         $git_plugin = \Mockery::mock(GitPlugin::class);
         $git_plugin->shouldReceive('areFriendlyUrlsActivated')->andReturns(false);
-        $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+        $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
 
         $this->mirror_data_mapper = mock('Git_Mirror_MirrorDataMapper');
         stub($this->mirror_data_mapper)->fetchAllRepositoryMirrors()->returns(array());
