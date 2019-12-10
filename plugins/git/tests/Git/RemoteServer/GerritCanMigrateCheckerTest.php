@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Tuleap\Git;
 
 use TuleapTestCase;
@@ -24,6 +25,7 @@ use EventManager;
 
 require_once __DIR__.'/../../bootstrap.php';
 
+//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
 class GerritCanMigrateCheckerTest extends TuleapTestCase
 {
     private $can_migrate_checker;
@@ -41,7 +43,7 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
             $this->gerrit_server_factory
         );
 
-        $this->project    = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
     }
 
     public function tearDown()
@@ -52,7 +54,7 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
 
     public function testCanMigrateReturnsFalseIfPlatformCannotUseGerritAndGerritServersNotSet()
     {
-        $plugin = new GerritCanMigrateCheckerTest_LDAP_FakePlugin();
+        $plugin = $this->buildGerritCanMigrateCheckerTestLDAPFakePlugin();
         EventManager::instance()->addListener(
             GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
             $plugin,
@@ -68,7 +70,7 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
 
     public function testCanMigrateReturnsFalseIfPlatformCannotUseGerritAndGerritServersSet()
     {
-        $plugin = new GerritCanMigrateCheckerTest_LDAP_FakePlugin();
+        $plugin = $this->buildGerritCanMigrateCheckerTestLDAPFakePlugin();
         EventManager::instance()->addListener(
             GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
             $plugin,
@@ -84,7 +86,7 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
 
     public function testCanMigrateReturnsFalseIfPlatformCanUseGerritAndGerritServersNotSet()
     {
-        $plugin = new GerritCanMigrateCheckerTest_LDAP_FakePlugin();
+        $plugin = $this->buildGerritCanMigrateCheckerTestLDAPFakePlugin();
         EventManager::instance()->addListener(
             GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
             $plugin,
@@ -100,7 +102,7 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
 
     public function testCanMigrateReturnsTrueIfPlatformCanUseGerritAndGerritServersSet()
     {
-        $plugin = new GerritCanMigrateCheckerTest_LDAP_FakePlugin();
+        $plugin = $this->buildGerritCanMigrateCheckerTestLDAPFakePlugin();
         EventManager::instance()->addListener(
             GIT_EVENT_PLATFORM_CAN_USE_GERRIT,
             $plugin,
@@ -113,18 +115,22 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
 
         $this->assertTrue($this->can_migrate_checker->canMigrate($this->project));
     }
-}
 
-class GerritCanMigrateCheckerTest_LDAP_FakePlugin
-{
-
-    public function git_event_platform_cannot_use_gerrit($params)
+    private function buildGerritCanMigrateCheckerTestLDAPFakePlugin()
     {
-        $params['platform_can_use_gerrit'] = false;
-    }
+        return new class
+        {
+            //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+            public function git_event_platform_cannot_use_gerrit($params)
+            {
+                $params['platform_can_use_gerrit'] = false;
+            }
 
-    public function git_event_platform_can_use_gerrit($params)
-    {
-        $params['platform_can_use_gerrit'] = true;
+            //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+            public function git_event_platform_can_use_gerrit($params)
+            {
+                $params['platform_can_use_gerrit'] = true;
+            }
+        };
     }
 }

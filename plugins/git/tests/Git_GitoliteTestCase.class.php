@@ -144,14 +144,4 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase
         $this->assertEqual($output, array());
         $this->assertEqual($ret_val, 0);
     }
-
-    public function assertNotEmptyGitStatus()
-    {
-        $cwd = getcwd();
-        chdir($this->_glAdmDir);
-        exec('git status --porcelain', $output, $ret_val);
-        chdir($cwd);
-        $this->assertArrayNotEmpty($output);
-        $this->assertEqual($ret_val, 0);
-    }
 }

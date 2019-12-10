@@ -24,9 +24,8 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Git_Mirror_ManifestFileGenerator_BaseTest extends TuleapTestCase
+class ManifestFileGeneratorTest extends TuleapTestCase
 {
-
     protected $current_time;
     protected $manifest_directory;
     protected $fixture_dir;
@@ -99,10 +98,6 @@ class Git_Mirror_ManifestFileGenerator_BaseTest extends TuleapTestCase
             '{"\/gitolite-admin.git":{"owner":null,"description":"","reference":null,"modified":'. $this->time_in_the_past .'},"\/linux\/kernel.git":{"owner":null,"description":"Linux4ever","reference":null,"modified":'. $this->time_in_the_past .'}}'
         );
     }
-}
-
-class Git_Mirror_ManifestFileGenerator_removeTest extends Git_Mirror_ManifestFileGenerator_BaseTest
-{
 
     public function itDoesNotCreateManifestFileIfItDoesNotExist()
     {
@@ -132,10 +127,6 @@ class Git_Mirror_ManifestFileGenerator_removeTest extends Git_Mirror_ManifestFil
 
         $this->generator->removeRepositoryFromManifestFile($this->singapour_mirror, $this->kernel_repository->getPath());
     }
-}
-
-class Git_Mirror_ManifestFileGenerator_addTest extends Git_Mirror_ManifestFileGenerator_BaseTest
-{
 
     public function itCreatesManifestFileIfItDoesNotExist()
     {
@@ -263,10 +254,6 @@ class Git_Mirror_ManifestFileGenerator_addTest extends Git_Mirror_ManifestFileGe
 
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
     }
-}
-
-class Git_Mirror_ManifestFileGenerator_ensureManifestContainsLatestInfoOfRepositoriesTest extends Git_Mirror_ManifestFileGenerator_BaseTest
-{
 
     public function itAddsAMissingRepository()
     {
@@ -302,26 +289,6 @@ class Git_Mirror_ManifestFileGenerator_ensureManifestContainsLatestInfoOfReposit
 
         $content_after = $this->getManifestContent($this->manifest_file_for_singapour);
         $this->assertFalse(isset($content_after["/linux/kernel.git"]));
-    }
-}
-
-class Git_Mirror_ManifestFileGenerator_updateCurrentTimeOfRepositoryTest extends Git_Mirror_ManifestFileGenerator_BaseTest
-{
-
-    public function itUpdatesDateToCurrentDateIfRepoAlreadyInManifest()
-    {
-        $this->forgeExistingManifestFileWithGitoliteAdmin($this->manifest_file_for_singapour);
-
-        $this->generator->updateCurrentTimeOfRepository($this->singapour_mirror, $this->kernel_repository);
-
-        $content = $this->getManifestContent($this->manifest_file_for_singapour);
-
-        $this->assertEqual($content["/linux/kernel.git"], array(
-            "owner"       => null,
-            "description" => "Linux4ever",
-            "reference"   => null,
-            "modified"    => $this->current_time
-        ));
     }
 
     public function itDoesNotUpdateCurrentDateOfGitoliteAdmin()

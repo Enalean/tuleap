@@ -28,9 +28,8 @@ use Git_RemoteServer_NotFoundException;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class MigrationHandlerBaseTest extends TuleapTestCase
+class MigrationHandlerTest extends TuleapTestCase
 {
-
     /**
      * @var Git_SystemEventManager
      */
@@ -64,16 +63,6 @@ class MigrationHandlerBaseTest extends TuleapTestCase
             $this->project_creator_status,
             $this->project_manager
         );
-    }
-}
-
-class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest
-{
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->user   = \Mockery::spy(\PFUser::class);
         $this->server = aGerritServer()->withId(1)->build();
@@ -198,10 +187,6 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest
 
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
-}
-
-class MigrationHandlerDisconnectTest extends MigrationHandlerBaseTest
-{
 
     public function itThrowsAnExceptionIfRepositoryIsNotMigrated()
     {

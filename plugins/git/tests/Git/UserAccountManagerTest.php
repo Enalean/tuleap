@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase
+class UserAccountManagerTest extends TuleapTestCase
 {
     private $user;
     private $gerrit_driver_factory;
@@ -78,36 +78,6 @@ class Git_UserAccountManager_SynchroniseSSHKeysTest extends TuleapTestCase
             $this->new_keys,
             $this->user
         );
-    }
-}
-
-class Git_UserAccountManager_PushSSHKeysTest extends TuleapTestCase
-{
-    /** @var PFUser */
-    private $user;
-    private $gerrit_driver_factory;
-    private $remote_gerrit_factory;
-    /**
-     * @var Git_UserAccountManager
-     */
-    private $user_account_manager;
-    /**
-     * @var Git_Driver_Gerrit_UserAccountManager
-     */
-    private $gerrit_user_account_manager;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->user = aUser()->withLdapId("testUser")->build();
-
-        $this->gerrit_driver_factory        = mock('Git_Driver_Gerrit_GerritDriverFactory');
-        $this->remote_gerrit_factory        = mock('Git_RemoteServer_GerritServerFactory');
-        $this->user_account_manager         = new Git_UserAccountManager($this->gerrit_driver_factory, $this->remote_gerrit_factory);
-        $this->gerrit_user_account_manager  = mock('Git_Driver_Gerrit_UserAccountManager');
-
-        $this->user_account_manager->setGerritUserAccountManager($this->gerrit_user_account_manager);
     }
 
     public function itThrowsAnExceptionIfGerritPushFails()

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,10 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once 'Git_GitoliteTestCase.class.php';
 
-class Git_Gitolite_SshKeyTestCase extends Git_GitoliteTestCase
+require_once __DIR__.'/Git_GitoliteTestCase.class.php';
+
+class Git_Gitolite_SSHKeyDumperTest extends Git_GitoliteTestCase
 {
     protected $key1;
     protected $key2;
@@ -32,10 +33,6 @@ class Git_Gitolite_SshKeyTestCase extends Git_GitoliteTestCase
         $this->key2 = 'ssh-rsa AAAAXYiTICSgWURDPDGW/HeNUYZIRcznQ== marcel@shanon.net';
         chdir('/var');
     }
-}
-
-class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase
-{
 
     public function testAddUserKey()
     {
