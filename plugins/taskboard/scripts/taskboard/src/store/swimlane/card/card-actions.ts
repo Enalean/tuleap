@@ -18,7 +18,7 @@
  */
 import { ActionContext } from "vuex";
 import { RootState } from "../../type";
-import { UpdateCardPayload, NewRemainingEffortPayload, NewCardPayload } from "./type";
+import { NewCardPayload, NewRemainingEffortPayload, UpdateCardPayload } from "./type";
 import { get, patch, post, put } from "tlp";
 import { SwimlaneState } from "../type";
 import {
@@ -28,9 +28,16 @@ import {
 } from "../../../helpers/update-artifact";
 import { injectDefaultPropertiesInCard } from "../../../helpers/card-default";
 import { Card, Swimlane } from "../../../type";
+import pRetry from "p-retry";
 
 const headers = {
     "Content-Type": "application/json"
+};
+
+const retry_options = {
+    minTimeout: 100,
+    maxTimeout: 10000,
+    randomize: true
 };
 
 export async function saveRemainingEffort(
@@ -75,18 +82,15 @@ export async function addCard(
 ): Promise<void> {
     context.commit("startCreatingCard");
     try {
-        const [new_artifact_response, parent_artifact_response] = await Promise.all([
-            post(`/api/v1/artifacts`, {
-                headers,
-                body: JSON.stringify(getPostArtifactBody(payload, context.rootState.trackers))
-            }),
-            get(`/api/v1/artifacts/${encodeURIComponent(payload.swimlane.card.id)}`)
-        ]);
+        const new_artifact_response = await post(`/api/v1/artifacts`, {
+            headers,
+            body: JSON.stringify(getPostArtifactBody(payload, context.rootState.trackers))
+        });
         const new_artifact = await new_artifact_response.json();
 
         const [new_card] = await Promise.all([
             injectNewCardInStore(context, new_artifact.id, payload.swimlane),
-            linkCardToItsParent(context, new_artifact.id, payload, parent_artifact_response)
+            linkCardToItsParent(context, new_artifact.id, payload)
         ]);
         context.commit("finishCreatingCard", new_card);
     } catch (error) {
@@ -116,15 +120,42 @@ async function injectNewCardInStore(
     return card;
 }
 
-async function linkCardToItsParent(
+function linkCardToItsParent(
     context: ActionContext<SwimlaneState, RootState>,
     new_artifact_id: number,
-    payload: NewCardPayload,
-    parent_artifact_response: Response
+    payload: NewCardPayload
 ): Promise<void> {
+    return pRetry(
+        () =>
+            tryToLinkCardToItsParent(context, new_artifact_id, payload).catch(error => {
+                if (error.response.status !== 412) {
+                    throw new pRetry.AbortError(error);
+                }
+
+                throw error;
+            }),
+        retry_options
+    );
+}
+
+async function tryToLinkCardToItsParent(
+    context: ActionContext<SwimlaneState, RootState>,
+    new_artifact_id: number,
+    payload: NewCardPayload
+): Promise<void> {
+    const parent_artifact_response = await get(
+        `/api/v1/artifacts/${encodeURIComponent(payload.swimlane.card.id)}`
+    );
     const { values } = await parent_artifact_response.json();
+
+    const put_headers: Record<string, string> = { ...headers };
+    const last_modified = parent_artifact_response.headers.get("Last-Modified");
+    if (last_modified) {
+        put_headers["If-Unmodified-Since"] = last_modified;
+    }
+
     await put(`/api/v1/artifacts/${encodeURIComponent(payload.swimlane.card.id)}`, {
-        headers,
+        headers: put_headers,
         body: JSON.stringify(
             getPutArtifactBodyToAddChild(
                 payload,
