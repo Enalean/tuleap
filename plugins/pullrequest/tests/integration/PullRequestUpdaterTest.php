@@ -159,6 +159,8 @@ class PullRequestUpdaterTest extends TestCase
         $this->git_repository_factory->shouldReceive('getRepositoryById')->andReturns($git_repo);
         $this->git_exec_factory->shouldReceive('getGitExec')->with($git_repo)->andReturns($this->git_exec);
 
+        $this->event_dispatcher->shouldReceive('dispatch');
+
         $this->pull_request_updater->updatePullRequests($this->user, $git_repo, 'dev', 'sha1new');
 
         $pr1 = $this->dao->searchByPullRequestId($pr1_id);
