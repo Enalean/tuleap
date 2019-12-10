@@ -1,33 +1,4 @@
 {
-  "name": "tuleap_synchro",
-  "themes": {
-    "BurningParrot": {
-      "files": [
-        "themes/BurningParrot/css/tuleap-synchro-blue.scss",
-        "themes/BurningParrot/css/tuleap-synchro-blue-condensed.scss",
-        "themes/BurningParrot/css/tuleap-synchro-green.scss",
-        "themes/BurningParrot/css/tuleap-synchro-green-condensed.scss",
-        "themes/BurningParrot/css/tuleap-synchro-grey.scss",
-        "themes/BurningParrot/css/tuleap-synchro-grey-condensed.scss",
-        "themes/BurningParrot/css/tuleap-synchro-orange.scss",
-        "themes/BurningParrot/css/tuleap-synchro-orange-condensed.scss",
-        "themes/BurningParrot/css/tuleap-synchro-purple.scss",
-        "themes/BurningParrot/css/tuleap-synchro-purple-condensed.scss",
-        "themes/BurningParrot/css/tuleap-synchro-red.scss",
-        "themes/BurningParrot/css/tuleap-synchro-red-condensed.scss"
-      ],
-      "includes": [
-        "../../src/www/themes/common/tlp/src/scss",
-        "../../src/www/themes/BurningParrot/css/includes"
-      ],
-      "watched_includes": [
-        "themes/BurningParrot/css/**/_*.scss"
-      ],
-      "target_dir": "../../src/www/assets/tuleap_synchro/BurningParrot",
-      "is_revisioned": true
-    }
-  },
-  "components": [
-    "scripts"
-  ]
+    "name": "tuleap_synchro",
+    "components": ["scripts", "themes"]
 }

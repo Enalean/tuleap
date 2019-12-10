@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace Tuleap\TuleapSynchro\ListEndpoints;
@@ -76,8 +75,8 @@ class ListEndpointsController implements DispatchableWithRequest, DispatchableWi
         $layout->addCssAsset(
             new CssAsset(
                 new IncludeAssets(
-                    TULEAP_SYNCHRO_BASE_DIR . '/../../../src/www/assets/tuleap_synchro/BurningParrot',
-                    '/assets/tuleap_synchro/BurningParrot'
+                    __DIR__ . '/../../../../../src/www/assets/tuleap_synchro/themes',
+                    '/assets/tuleap_synchro/themes'
                 ),
                 'tuleap-synchro'
             )
