@@ -139,6 +139,10 @@ class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRe
         $userlog_access_storage = UserlogAccessStorage::instance();
         $userlog_access = $userlog_access_storage->getUserlogAccess();
 
+        if ($userlog_access === null) {
+            return;
+        }
+
         $userlog_access->setProject($event->getProject());
         $userlog_access_storage->storeUserlogAccess($userlog_access);
     }

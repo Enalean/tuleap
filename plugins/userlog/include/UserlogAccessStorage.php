@@ -50,10 +50,7 @@ class UserlogAccessStorage
         $this->userlog_access = $userlog_access;
     }
 
-    /**
-     * @return UserlogAccess
-     */
-    public function getUserlogAccess(): UserlogAccess
+    public function getUserlogAccess(): ?UserlogAccess
     {
         return $this->userlog_access;
     }
