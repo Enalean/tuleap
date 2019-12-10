@@ -19,18 +19,19 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Plugin\PluginWithLegacyInternalRouting;
 
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
 {
 
     public function __construct($id)
     {
         parent::__construct($id);
-        $this->addHook('cssfile', 'cssFile', false);
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
@@ -45,7 +46,7 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    function &getPluginInfo()
+    public function &getPluginInfo()
     {
         if (!is_a($this->pluginInfo, 'PluginsAdministrationPluginInfo')) {
             require_once('PluginsAdministrationPluginInfo.class.php');
@@ -54,24 +55,17 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
         return $this->pluginInfo;
     }
 
-    function cssFile($params)
+    public function burning_parrot_get_stylesheets($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        // Only show the stylesheet if we're actually in the PluginsAdministration pages.
-        // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+            $assets = $this->getThemesIncludeAssets();
+            /** @var ThemeVariantColor $variant */
+            $variant                 = $params['variant'];
+            $params['stylesheets'][] = $assets->getFileURL('style-' . $variant->getName() . '.css');
         }
     }
 
-    public function burning_parrot_get_stylesheets($params)
-    {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
-        }
-    }
-
-    public function burning_parrot_get_javascript_files(array $params)
+    public function burning_parrot_get_javascript_files(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
@@ -79,10 +73,18 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    function process() : void
+    public function process() : void
     {
         require_once('PluginsAdministration.class.php');
         $controler = new PluginsAdministration();
         $controler->process();
+    }
+
+    private function getThemesIncludeAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . "/../../../src/www/assets/pluginsadministration/themes",
+            "/assets/pluginsadministration/themes"
+        );
     }
 }
