@@ -436,9 +436,6 @@ plugin_docman	error_field_title_required	The Title is required.
 plugin_docman	error_field_wiki_required	The page name is required.
 plugin_docman	error_invalid_md	Invalid property
 plugin_docman	error_item_not_deleted	Can't delete item.
-plugin_docman	error_item_not_deleted_nonfile_version	Cannot delete a version on something that is not a file.
-plugin_docman	error_item_not_deleted_last_file_version	Cannot delete last version of a file. If you want to continue, please delete the document itself.
-plugin_docman	error_item_not_deleted_unknown_version	Cannot delete a version that doesn't exist.
 plugin_docman	error_item_not_moved	Can't move item.
 plugin_docman	error_item_deleted	Unable to retrieve item. Perhaps it was removed.
 plugin_docman	error_md_or_love	There is an error in parameters. Back to previous screen.
@@ -534,7 +531,6 @@ plugin_docman	info_create_newversion	New version successfully created.
 plugin_docman	info_document_created	Document successfully created.
 plugin_docman	info_folder_created	Folder successfully created.
 plugin_docman	info_item_deleted	Item successfully deleted.
-plugin_docman	info_item_version_deleted	Version $1 ($2) successfully deleted
 plugin_docman	info_item_updated	Item successfully updated.
 plugin_docman	info_item_moved	Item successfully moved form <a href="?group_id=$1&amp;action=show&amp;id=$2">$3</a> to <a href="?group_id=$1&amp;action=show&amp;id=$4">$5</a>.
 plugin_docman	info_news_created	News successfully created.
@@ -648,21 +644,14 @@ plugin_docman	new_view_change	view/change
 
 plugin_docman	notifications_off	Your monitoring on '$1' has been removed.
 plugin_docman	notifications_on	You're monitoring '$1'.
-plugin_docman	notifications_not_removed_user	Unable to remove monitoring for user '$1'
 plugin_docman	notifications_not_removed_ugroup	Unable to remove monitoring for group '$1'
-plugin_docman	notifications_not_present_user	Monitoring was not active for user '$1'
 plugin_docman	notifications_not_present_ugroup	Monitoring was not active for group '$1'
-plugin_docman	notifications_removed_user	Removed monitoring for user(s) '$1'
 plugin_docman	notifications_removed_ugroup	Removed monitoring for group(s) '$1'
-plugin_docman	notifications_added_user	Monitoring for user(s) '$1' has been added
 plugin_docman	notifications_added_ugroup	Monitoring for group(s) '$1' has been added
 plugin_docman	notifications_cascade_not_added_user	Monitoring for the whole sub-hierarchy for user(s) '$1' has not been added
 plugin_docman	notifications_cascade_not_added_ugroup	Monitoring for the whole sub-hierarchy for group(s) '$1' has not been added
-plugin_docman	notifications_not_added_user	Monitoring for user(s) '$1' has not been added
 plugin_docman	notifications_not_added_ugroup	Monitoring for group(s) '$1' has not been added
-plugin_docman	notifications_already_exists_user	Monitoring for user(s) '$1' already exists
 plugin_docman	notifications_already_exists_ugroup	Monitoring for group(s) '$1' already exists
-plugin_docman	notifications_no_access_rights_user	Insufficient permissions for user(s) '$1'
 plugin_docman	notifications_no_element	No element selected
 plugin_docman	notifications_no_element_added	No element added
 plugin_docman	notifications_no_emails_supported	You cannot add emails
