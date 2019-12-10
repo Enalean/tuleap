@@ -29,10 +29,9 @@
                 <i class="fa fa-long-arrow-left"/>
                 <span v-translate>Back</span>
             </router-link>
-            <button type="button"
+            <button type="submit"
                     class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
                     data-test="project-registration-next-button"
-                    v-on:click="createProject"
             >
                 <span v-translate>Start my project</span> <i v-bind:class="get_icon" data-test="project-submission-icon"/>
             </button>
@@ -42,50 +41,16 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import {
-    ProjectNameProperties,
-    ProjectProperties,
-    TemplateData,
-    TroveCatProperties
-} from "../../type";
-import { Getter, State } from "vuex-class";
-import { redirectToUrl } from "../../helpers/location-helper";
-import {
-    ACCESS_PRIVATE,
-    ACCESS_PRIVATE_WO_RESTRICTED,
-    ACCESS_PUBLIC,
-    ACCESS_PUBLIC_UNRESTRICTED
-} from "../../constant";
+import { Component } from "vue-property-decorator";
+import { State } from "vuex-class";
 
 @Component
 export default class ProjectInformationFooter extends Vue {
-    @State
-    selected_template!: TemplateData;
-
     @State
     is_creating_project!: boolean;
 
     @State
     is_project_approval_required!: boolean;
-
-    @Getter
-    has_error!: boolean;
-
-    @Prop({ required: true })
-    readonly project_name_properties!: ProjectNameProperties;
-
-    @Prop({ required: true })
-    readonly is_public!: boolean;
-
-    @Prop({ required: true })
-    readonly privacy!: string;
-
-    @Prop({ required: true })
-    readonly trove_cats!: Array<TroveCatProperties>;
-
-    @Prop({ required: true })
-    readonly field_description!: string;
 
     @State
     are_restricted_users_allowed!: boolean;
@@ -102,68 +67,6 @@ export default class ProjectInformationFooter extends Vue {
 
     resetSelectedTemplate(): void {
         this.$store.dispatch("setSelectedTemplate", null);
-    }
-
-    async createProject(): Promise<void> {
-        const project_properties: ProjectProperties = this.buildProjectPropertyDetailedPrivacy();
-
-        await this.$store.dispatch("createProject", project_properties);
-
-        if (!this.is_project_approval_required) {
-            redirectToUrl(
-                "/projects/" +
-                    encodeURIComponent(this.project_name_properties.slugified_name) +
-                    "/?should-display-created-project-modal=true"
-            );
-        } else {
-            this.$router.push("approval");
-        }
-    }
-
-    buildProjectPropertyDetailedPrivacy(): ProjectProperties {
-        if (!this.are_restricted_users_allowed) {
-            return {
-                shortname: this.project_name_properties.slugified_name,
-                label: this.project_name_properties.name,
-                is_public: this.is_public,
-                xml_template_name: this.selected_template.name,
-                categories: this.trove_cats,
-                description: this.field_description
-            };
-        }
-
-        let is_public_project = null;
-        let is_restricted_allowed_for_the_project = null;
-        switch (this.privacy) {
-            case ACCESS_PUBLIC:
-                is_public_project = true;
-                is_restricted_allowed_for_the_project = false;
-                break;
-            case ACCESS_PRIVATE:
-                is_public_project = false;
-                is_restricted_allowed_for_the_project = true;
-                break;
-            case ACCESS_PUBLIC_UNRESTRICTED:
-                is_public_project = true;
-                is_restricted_allowed_for_the_project = true;
-                break;
-            case ACCESS_PRIVATE_WO_RESTRICTED:
-                is_public_project = false;
-                is_restricted_allowed_for_the_project = false;
-                break;
-            default:
-                throw new Error("Unable to build the project privacy properties");
-        }
-
-        return {
-            shortname: this.project_name_properties.slugified_name,
-            label: this.project_name_properties.name,
-            is_public: is_public_project,
-            allow_restricted: is_restricted_allowed_for_the_project,
-            xml_template_name: this.selected_template.name,
-            categories: this.trove_cats,
-            description: this.field_description
-        };
     }
 }
 </script>

@@ -27,6 +27,9 @@ msgstr "Description"
 msgid "Go to my home page"
 msgstr "Aller à ma page personnelle"
 
+msgid "I agree to the <a href=\"/tos/tos.php\">policy agreement</a>"
+msgstr "J'accepte les <a href=\"/tos/tos.php\">conditions d'utilisation</a>"
+
 msgid "Must start with a letter, avoid spaces and punctuation."
 msgstr "Doit commencer par une lettre, éviter les espaces et la ponctuation."
 
