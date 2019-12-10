@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,7 +36,6 @@ class AuthorizationRequestCreator
         $this->state_manager        = $state_manager;
     }
 
-
     /**
      * @return AuthorizationRequest
      */
@@ -46,7 +45,7 @@ class AuthorizationRequestCreator
 
         $url = $provider->getAuthorizationEndpoint() . '?' . http_build_query([
                 'client_id'     => $provider->getClientId(),
-                'redirect_uri'  => $this->getRedirectUri(),
+                'redirect_uri'  => $provider->getRedirectUri(),
                 'response_type' => 'code',
                 'scope'         => $this->getScope($provider),
                 'state'         => $state->getSignedState(),
@@ -54,14 +53,6 @@ class AuthorizationRequestCreator
             ]);
 
         return new AuthorizationRequest($url);
-    }
-
-    /**
-     * @return string
-     */
-    private function getRedirectUri()
-    {
-        return 'https://'. ForgeConfig::get('sys_https_host') . '/plugins/openidconnectclient/';
     }
 
     /**

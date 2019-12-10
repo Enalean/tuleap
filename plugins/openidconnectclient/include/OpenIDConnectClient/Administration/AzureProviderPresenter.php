@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -100,5 +100,10 @@ class AzureProviderPresenter
     public function isAzureAD()
     {
         return true;
+    }
+
+    public function getCallbackUrl()
+    {
+        return strtolower($this->provider->getRedirectUri());
     }
 }

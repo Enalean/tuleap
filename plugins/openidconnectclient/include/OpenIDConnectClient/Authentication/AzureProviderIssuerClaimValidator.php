@@ -20,29 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\OpenIDConnectClient\Provider;
+namespace Tuleap\OpenIDConnectClient\Authentication;
 
-interface Provider
+use Tuleap\OpenIDConnectClient\Provider\Provider;
+
+/**
+ * @template-implements IssuerClaimValidator<\Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider>
+ */
+final class AzureProviderIssuerClaimValidator implements IssuerClaimValidator
 {
-    public function getId(): int;
-
-    public function getName() : string;
-
-    public function getClientId() : string;
-
-    public function getClientSecret() : string;
-
-    public function isUniqueAuthenticationEndpoint() : bool;
-
-    public function getIcon() : string;
-
-    public function getColor() : string;
-
-    public function getAuthorizationEndpoint() : string;
-
-    public function getTokenEndpoint() : string;
-
-    public function getUserInfoEndpoint() : string;
-
-    public function getRedirectUri() : string;
+    public function isIssuerClaimValid(Provider $provider, string $iss_from_id_token) : bool
+    {
+        return $iss_from_id_token === "https://login.microsoftonline.com/".urlencode($provider->getTenantId())."/v2.0";
+    }
 }

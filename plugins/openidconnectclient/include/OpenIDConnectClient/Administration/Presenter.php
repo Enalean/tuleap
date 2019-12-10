@@ -114,11 +114,18 @@ class Presenter
         return dgettext('tuleap-openidconnectclient', 'Following information have to be generated on the OpenID Connect provider side. You\'ll need to give a callback url to do that, here it is:');
     }
 
-    public function callback_url()
+    public function callback_generic_url()
     {
         $host = urlencode(ForgeConfig::get('sys_default_domain'));
 
         return strtolower('https://' . $host . OPENIDCONNECTCLIENT_BASE_URL . '/');
+    }
+
+    public function callback_azure_url()
+    {
+        $host = urlencode(ForgeConfig::get('sys_default_domain'));
+
+        return strtolower('https://' . $host . OPENIDCONNECTCLIENT_BASE_URL . '/azure/');
     }
 
     public function icon()

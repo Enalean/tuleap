@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,6 @@ use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class GenericProviderPresenter
 {
-
     /**
      * @var GenericProvider
      */
@@ -112,5 +111,10 @@ class GenericProviderPresenter
     public function isAzureAD()
     {
         return false;
+    }
+
+    public function getCallbackUrl() : string
+    {
+        return strtolower($this->provider->getRedirectUri());
     }
 }

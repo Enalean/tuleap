@@ -25,6 +25,7 @@ namespace Tuleap\OpenIDConnectClient\Authentication;
 use Firebase\JWT\JWT;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 require_once(__DIR__ . '/../bootstrap.php');
 
@@ -48,9 +49,9 @@ class IDTokenVerifierTest extends TestCase
 
     public function testItRejectsIDTokenIfPartsAreMissingInTheJWT(): void
     {
-        $provider          = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider          = \Mockery::mock(Provider::class);
         $nonce             = 'random_string';
-        $id_token_verifier = new IDTokenVerifier();
+        $id_token_verifier = new IDTokenVerifier($this->generateIssuerValidatorValid());
         $fake_id_token     = 'aaaaa.aaaaa';
 
         $this->expectException('Tuleap\OpenIDConnectClient\Authentication\MalformedIDTokenException');
@@ -59,9 +60,9 @@ class IDTokenVerifierTest extends TestCase
 
     public function testItRejectsIDTokenIfPayloadCantBeRead(): void
     {
-        $provider          = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider          = \Mockery::mock(Provider::class);
         $nonce             = 'random_string';
-        $id_token_verifier = new IDTokenVerifier();
+        $id_token_verifier = new IDTokenVerifier($this->generateIssuerValidatorValid());
         $fake_id_token     = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.' .
             'fail.' .
             'EkN-DOsnsuRjRO6BxXemmJDm3HbxrbRzXglbN2S4sOkopdU4IsDxTI8jO19W_A4K8ZPJijNLis4EZsHeY559a4DFOd50_OqgHGuERTqY' .
@@ -73,12 +74,12 @@ class IDTokenVerifierTest extends TestCase
 
     public function testItRejectsIDTokenIfSubjectIdentifierIsNotPresent(): void
     {
-        $provider = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider = \Mockery::mock(Provider::class);
         $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
         $provider->shouldReceive('getClientId')->andReturns('client_id');
         $nonce    = 'random_string';
 
-        $id_token_verifier = new IDTokenVerifier();
+        $id_token_verifier = new IDTokenVerifier($this->generateIssuerValidatorValid());
         $id_token          = JWT::encode(
             array(
                 'iss' => 'example.com',
@@ -94,12 +95,12 @@ class IDTokenVerifierTest extends TestCase
 
     public function testItRejectsIDTokenIfAudienceClaimIsInvalid(): void
     {
-        $provider = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider = \Mockery::mock(Provider::class);
         $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
         $provider->shouldReceive('getClientId')->andReturns('client_id');
         $nonce    = 'random_string';
 
-        $id_token_verifier = new IDTokenVerifier();
+        $id_token_verifier = new IDTokenVerifier($this->generateIssuerValidatorValid());
         $id_token          = JWT::encode(
             array(
                 'iss' => 'example.com',
@@ -116,12 +117,12 @@ class IDTokenVerifierTest extends TestCase
 
     public function testItRejectsIDTokenIfAudienceClaimIsNotPresentInTheList(): void
     {
-        $provider = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider = \Mockery::mock(Provider::class);
         $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
         $provider->shouldReceive('getClientId')->andReturns('client_id');
         $nonce    = 'random_string';
 
-        $id_token_verifier = new IDTokenVerifier();
+        $id_token_verifier = new IDTokenVerifier($this->generateIssuerValidatorValid());
         $id_token          = JWT::encode(
             array(
                 'iss' => 'example.com',
@@ -138,12 +139,12 @@ class IDTokenVerifierTest extends TestCase
 
     public function testItRejectsIDTokenIfIssuerIdentifierIsInvalid(): void
     {
-        $provider = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider = \Mockery::spy(Provider::class);
         $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
         $provider->shouldReceive('getClientId')->andReturns('client_id');
         $nonce    = 'random_string';
 
-        $id_token_verifier = new IDTokenVerifier();
+        $id_token_verifier = new IDTokenVerifier($this->generateIssuerValidatorInvalid());
         $id_token          = JWT::encode(
             array(
                 'nonce' => $nonce,
@@ -161,12 +162,12 @@ class IDTokenVerifierTest extends TestCase
 
     public function testItRejectsIDTokenIfNonceIsInvalid(): void
     {
-        $provider = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider = \Mockery::mock(Provider::class);
         $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
         $provider->shouldReceive('getClientId')->andReturns('client_id');
         $nonce    = 'random_string';
 
-        $id_token_verifier = new IDTokenVerifier();
+        $id_token_verifier = new IDTokenVerifier($this->generateIssuerValidatorValid());
         $id_token          = JWT::encode(
             array(
                 'nonce' => 'different_random_string',
@@ -184,12 +185,13 @@ class IDTokenVerifierTest extends TestCase
 
     public function testItAcceptsAValidIDToken(): void
     {
-        $provider = \Mockery::spy(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
+        $provider = \Mockery::mock(\Tuleap\OpenIDConnectClient\Provider\Provider::class);
         $provider->shouldReceive('getAuthorizationEndpoint')->andReturns('https://example.com/oauth2/auth');
         $provider->shouldReceive('getClientId')->andReturns('client_id_2');
         $nonce    = 'random_string';
 
-        $id_token_verifier = new IDTokenVerifier();
+        $id_token_verifier = new IDTokenVerifier($this->generateIssuerValidatorValid());
+
         $id_token_content  = array(
             'nonce' => $nonce,
             'iss'   => 'example.com',
@@ -204,5 +206,27 @@ class IDTokenVerifierTest extends TestCase
 
         $verified_id_token = $id_token_verifier->validate($provider, $nonce, $id_token);
         $this->assertSame($verified_id_token, $id_token_content);
+    }
+
+    private function generateIssuerValidatorValid() : IssuerClaimValidator
+    {
+        return new class implements IssuerClaimValidator
+        {
+            public function isIssuerClaimValid(Provider $provider, string $iss_from_id_token): bool
+            {
+                return true;
+            }
+        };
+    }
+
+    private function generateIssuerValidatorInvalid() : IssuerClaimValidator
+    {
+        return new class implements IssuerClaimValidator
+        {
+            public function isIssuerClaimValid(Provider $provider, string $iss_from_id_token): bool
+            {
+                return false;
+            }
+        };
     }
 }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Provider\GenericProvider;
 
+use ForgeConfig;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 final class GenericProvider implements Provider
@@ -148,5 +149,10 @@ final class GenericProvider implements Provider
     public function getColor() : string
     {
         return $this->color;
+    }
+
+    public function getRedirectUri() : string
+    {
+        return 'https://'. ForgeConfig::get('sys_https_host') . '/plugins/openidconnectclient/';
     }
 }
