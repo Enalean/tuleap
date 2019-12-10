@@ -120,6 +120,10 @@
             }
         }
     }
+
+    &:last-child {
+        margin-bottom: $tlp-double-spacing;
+    }
 }
 
 .taskboard-cell {

@@ -28,12 +28,11 @@ $button-size: 40px;
 }
 
 .taskboard-add-in-place-button {
-    position: absolute;
     z-index: 10;
-    bottom: $tlp-half-spacing;
     left: 50%;
     width: $button-size;
     height: $button-size;
+    margin: $tlp-half-spacing 0;
     transform: translateX(-50%);
     transition: opacity ease-in-out 100ms;
     border-radius: 50%;
