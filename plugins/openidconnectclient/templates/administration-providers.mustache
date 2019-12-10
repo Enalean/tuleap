@@ -119,9 +119,34 @@
     {{^ there_are_providers }}
         <div class="empty-page">
             <p class="empty-page-text">{{ empty_providers_text_start }}<br>{{ empty_providers_text_end }}</p>
-            <button type="button" class="tlp-button-primary tlp-button-large add-provider-button">
-                <i class="fa fa-plus tlp-button-icon"></i> {{# dgettext }} tuleap-openidconnectclient | Add provider {{/ dgettext }}
-            </button>
+            <div class="tlp-dropdow tlp-creation-dropdown">
+                <div class="tlp-dropdown-split-button">
+                    <button type="button"
+                            class="tlp-button-primary tlp-button-large add-provider-button add-generic-provider-button">
+                        <i class="fa fa-plus tlp-button-icon"></i> {{# dgettext }}
+                        tuleap-openidconnectclient | Add provider {{/ dgettext }}
+                    </button>
+                    {{# isAzureOptionEnabled }}
+                        <button class="tlp-button-primary
+                                       tlp-button-large
+                                       tlp-append
+                                       tlp-dropdown-split-button-caret"
+                                id="dropdown-specific-providers">
+                            <i class="fa fa-caret-down"></i>
+                        </button>
+                    {{/ isAzureOptionEnabled }}
+                </div>
+                {{# isAzureOptionEnabled }}
+                    <div id="dropdown-specific-providers-menu" class="tlp-dropdown-menu"
+                         role="menu">
+                        <a class="tlp-dropdown-menu-item ng-binding add-azure-provider-button" role="menuitem">
+                            <i class="tlp-dropdown-menu-item-icon fa fa-windows"></i>
+                            Azure Active Directory
+                        </a>
+                    </div>
+                {{/ isAzureOptionEnabled }}
+            </div>
+        </div>
         </div>
     {{/ there_are_providers}}
 
