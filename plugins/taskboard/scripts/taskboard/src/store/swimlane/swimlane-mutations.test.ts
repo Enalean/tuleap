@@ -109,6 +109,37 @@ describe(`Swimlane state mutations`, () => {
             const second_swimlane = findSwimlane(state, unrelated_swimlane);
             expect(second_swimlane.children_cards.length).toBe(0);
         });
+
+        it(`Given a swimlane with no children, it adds children and updates the card property to inform that now there are children`, () => {
+            const swimlane: Swimlane = {
+                card: { id: 42, has_children: false },
+                children_cards: [] as Card[]
+            } as Swimlane;
+            const state: SwimlaneState = {
+                swimlanes: [swimlane]
+            } as SwimlaneState;
+            mutations.addChildrenToSwimlane(state, {
+                swimlane,
+                children_cards: [{ id: 1001 } as Card]
+            });
+
+            const state_swimlane = findSwimlane(state, swimlane);
+            expect(state_swimlane.card.has_children).toBe(true);
+        });
+
+        it(`Given a swimlane with no children, it does not update the card if the new children list is empty`, () => {
+            const swimlane: Swimlane = {
+                card: { id: 42, has_children: false },
+                children_cards: [] as Card[]
+            } as Swimlane;
+            const state: SwimlaneState = {
+                swimlanes: [swimlane]
+            } as SwimlaneState;
+            mutations.addChildrenToSwimlane(state, { swimlane, children_cards: [] });
+
+            const state_swimlane = findSwimlane(state, swimlane);
+            expect(state_swimlane.card.has_children).toBe(false);
+        });
     });
 
     describe(`refreshCard`, () => {
