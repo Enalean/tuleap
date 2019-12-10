@@ -290,7 +290,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
                     new GitPullRequestReferenceUpdater(
                         new GitPullRequestReferenceDAO(),
                         new GitPullRequestReferenceNamespaceAvailabilityChecker()
-                    )
+                    ),
+                    PullRequestNotificationSupport::buildDispatcher(new Logger())
                 );
                 $pull_request_updater->updatePullRequests($user, $repository, $branch_name, $new_rev);
             }

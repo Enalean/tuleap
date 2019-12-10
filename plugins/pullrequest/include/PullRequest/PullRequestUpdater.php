@@ -21,6 +21,8 @@
 namespace Tuleap\PullRequest;
 
 use GitRepository;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedEvent;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
@@ -73,6 +75,10 @@ class PullRequestUpdater
      * @var GitPullRequestReferenceUpdater
      */
     private $git_pull_request_reference_updater;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
     public function __construct(
         Factory $pull_request_factory,
@@ -83,7 +89,8 @@ class PullRequestUpdater
         TimelineEventCreator $timeline_event_creator,
         GitRepositoryFactory $git_repository_factory,
         GitExecFactory $git_exec_factory,
-        GitPullRequestReferenceUpdater $git_pull_request_reference_updater
+        GitPullRequestReferenceUpdater $git_pull_request_reference_updater,
+        EventDispatcherInterface $event_dispatcher
     ) {
         $this->pull_request_factory               = $pull_request_factory;
         $this->pull_request_merger                = $pull_request_merger;
@@ -94,6 +101,7 @@ class PullRequestUpdater
         $this->git_repository_factory             = $git_repository_factory;
         $this->git_exec_factory                   = $git_exec_factory;
         $this->git_pull_request_reference_updater = $git_pull_request_reference_updater;
+        $this->event_dispatcher                   = $event_dispatcher;
     }
 
     public function updatePullRequests(PFUser $user, GitRepository $repository, $branch_name, $new_rev)
@@ -136,6 +144,16 @@ class PullRequestUpdater
             if ($ancestor_rev !== $pr->getSha1Dest()) {
                 $this->pull_request_factory->updateDestRev($pr, $ancestor_rev);
             }
+            $this->event_dispatcher->dispatch(
+                PullRequestUpdatedEvent::fromPullRequestUserAndReferences(
+                    $pr,
+                    $user,
+                    $pr->getSha1Src(),
+                    $new_rev,
+                    $pr->getBranchDest(),
+                    $ancestor_rev
+                )
+            );
 
             $merge_status = $this->pull_request_merger->detectMergeabilityStatus(
                 $executor_repository_destination,
