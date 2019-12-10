@@ -57,6 +57,10 @@ class ProjectRegistrationPresenter
      */
     public $trove_categories;
     /**
+     * @var string
+     */
+    public $field_list;
+    /**
      * @var bool
      */
     public $is_description_mandatory;
@@ -64,6 +68,7 @@ class ProjectRegistrationPresenter
     public function __construct(
         string $project_default_visibility,
         array $trove_categories,
+        array $field_list,
         TemplatePresenter ...$tuleap_templates
     ) {
         $this->tuleap_templates             = json_encode($tuleap_templates);
@@ -73,5 +78,6 @@ class ProjectRegistrationPresenter
         $this->projects_must_be_approved    = (bool) ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL, true);
         $this->trove_categories             = json_encode($trove_categories, JSON_THROW_ON_ERROR);
         $this->is_description_mandatory     = ProjectDescriptionUsageRetriever::isDescriptionMandatory();
+        $this->field_list                   = json_encode($field_list);
     }
 }

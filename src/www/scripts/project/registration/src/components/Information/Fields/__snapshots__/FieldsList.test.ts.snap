@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FieldsList -  Display correctly the component 1`] = `
+<div class="tlp-form-element"><label for="input-1" class="tlp-label">
+    custom field
+    <!----></label> <textarea placeholder="a helpful description" id="textaarea-1" data-test="project-field-text" class="tlp-textarea"></textarea></div>
+`;

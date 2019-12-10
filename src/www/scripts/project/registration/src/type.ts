@@ -24,6 +24,19 @@ export interface TroveCatData {
     children: Array<TroveCatData>;
 }
 
+export interface FieldData {
+    group_desc_id: string;
+    desc_name: string;
+    desc_type: string;
+    desc_description: string;
+    desc_required: string;
+}
+
+export interface FieldProperties {
+    field_id: string;
+    value: string;
+}
+
 export interface TroveCatProperties {
     category_id: number;
     value_id: number;
@@ -44,6 +57,7 @@ export interface ProjectProperties {
     xml_template_name: string;
     categories: Array<TroveCatProperties>;
     description: string;
+    fields: Array<FieldProperties>;
 }
 
 export interface ProjectNameProperties {

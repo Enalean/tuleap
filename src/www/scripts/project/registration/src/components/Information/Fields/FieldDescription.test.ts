@@ -19,10 +19,10 @@
  */
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
+import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import FieldDescription from "./FieldDescription.vue";
-import { State } from "../../store/type";
-import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
+import { State } from "../../../store/type";
+import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
 
 describe("FieldDescription - ", () => {
     let factory: Wrapper<FieldDescription>;
@@ -41,7 +41,8 @@ describe("FieldDescription - ", () => {
             is_creating_project: false,
             is_project_approval_required: false,
             trove_categories: [],
-            is_description_required: false
+            is_description_required: false,
+            project_fields: []
         };
 
         const getters = {

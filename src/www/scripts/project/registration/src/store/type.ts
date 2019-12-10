@@ -18,7 +18,7 @@
  *
  */
 
-import { TroveCatData, TemplateData } from "../type";
+import { TroveCatData, TemplateData, FieldData } from "../type";
 
 export interface State {
     tuleap_templates: TemplateData[];
@@ -30,6 +30,7 @@ export interface State {
     is_project_approval_required: boolean;
     trove_categories: TroveCatData[];
     is_description_required: boolean;
+    project_fields: FieldData[];
 }
 
 export interface Context {

@@ -49,8 +49,16 @@
                         />
                     </div>
                     <field-description v-model="field_description"/>
-                    <trove-category-list/>
+                    <trove-category-list v-model="trove_cats"
+                                         v-for="trovecat in trove_categories"
+                                         v-bind:key="trovecat.id"
+                                         v-bind:trovecat="trovecat"
+                    />
+                    <fields-list v-for="field in project_fields"
+                                 v-bind:key="field.group_desc_id + field.desc_name"
+                                 v-bind:field="field"
 
+                    />
                     <policy-agreement/>
                 </div>
             </div>
@@ -72,13 +80,17 @@ import {
     ProjectNameProperties,
     TroveCatProperties,
     TemplateData,
-    ProjectProperties
+    ProjectProperties,
+    FieldProperties,
+    TroveCatData,
+    FieldData
 } from "../../type";
 import { Getter, State } from "vuex-class";
 import EventBus from "../../helpers/event-bus";
 import TroveCategoryList from "./TroveCat/TroveCategoryList.vue";
-import FieldDescription from "../Field/FieldDescription.vue";
+import FieldDescription from "./Fields/FieldDescription.vue";
 import PolicyAgreement from "./Agreement/PolicyAgreement.vue";
+import FieldsList from "./Fields/FieldsList.vue";
 import { redirectToUrl } from "../../helpers/location-helper";
 import {
     ACCESS_PRIVATE,
@@ -91,6 +103,7 @@ import {
     components: {
         PolicyAgreement,
         FieldDescription,
+        FieldsList,
         TroveCategoryList,
         ProjectInformationInputPrivacyList,
         ProjectName,
@@ -119,6 +132,12 @@ export default class ProjectInformation extends Vue {
     @State
     is_project_approval_required!: boolean;
 
+    @State
+    trove_categories!: Array<TroveCatData>;
+
+    @State
+    project_fields!: Array<FieldData>;
+
     selected_visibility = "public";
 
     name_properties: ProjectNameProperties = {
@@ -132,6 +151,8 @@ export default class ProjectInformation extends Vue {
 
     is_private = false;
 
+    field_list: Array<FieldProperties> = [];
+
     mounted(): void {
         if (!this.selected_template) {
             this.$router.push("new");
@@ -141,11 +162,13 @@ export default class ProjectInformation extends Vue {
         this.selected_visibility = this.project_default_visibility;
         EventBus.$on("update-project-name", this.updateProjectName);
         EventBus.$on("choose-trove-cat", this.updateTroveCat);
+        EventBus.$on("update-field-list", this.updateFieldList);
     }
 
     beforeDestroy(): void {
         EventBus.$off("update-project-name", this.updateProjectName);
         EventBus.$off("choose-trove-cat", this.updateTroveCat);
+        EventBus.$off("update-field-list", this.updateFieldList);
     }
 
     updateProjectName(event: ProjectNameProperties): void {
@@ -158,6 +181,15 @@ export default class ProjectInformation extends Vue {
             this.trove_cats.push(event);
         } else {
             this.trove_cats[index] = event;
+        }
+    }
+
+    updateFieldList(event: FieldProperties): void {
+        const index = this.field_list.findIndex(field => field.field_id === event.field_id);
+        if (index === -1) {
+            this.field_list.push(event);
+        } else {
+            this.field_list[index] = event;
         }
     }
 
@@ -185,7 +217,8 @@ export default class ProjectInformation extends Vue {
                 label: this.name_properties.name,
                 is_public: !this.is_private,
                 xml_template_name: this.selected_template.name,
-                categories: this.trove_cats
+                categories: this.trove_cats,
+                fields: this.field_list
             };
         }
 
@@ -219,7 +252,8 @@ export default class ProjectInformation extends Vue {
             is_public: is_public_project,
             allow_restricted: is_restricted_allowed_for_the_project,
             xml_template_name: this.selected_template.name,
-            categories: this.trove_cats
+            categories: this.trove_cats,
+            fields: this.field_list
         };
     }
 }
