@@ -86,7 +86,8 @@ describe("ProjectInformationInputPrivacyList", () => {
                 "Project privacy set to public. By default, its content is available to all authenticated, but not restricted, users. Please note that more restrictive permissions might exist on some items."
             );
 
-            (wrapper.findAll("option").at(2).element as HTMLOptionElement).selected = true;
+            (wrapper.find("[data-test=private-wo-restr]")
+                .element as HTMLOptionElement).selected = true;
 
             wrapper.find("[data-test=project-information-input-privacy-list]").trigger("change");
 
@@ -107,7 +108,7 @@ describe("ProjectInformationInputPrivacyList", () => {
                 "Project privacy set to public. By default, its content is available to all authenticated, but not restricted, users. Please note that more restrictive permissions might exist on some items."
             );
 
-            (wrapper.findAll("option").at(3).element as HTMLOptionElement).selected = true;
+            (wrapper.find("[data-test=private]").element as HTMLOptionElement).selected = true;
 
             wrapper.find("[data-test=project-information-input-privacy-list]").trigger("change");
 
@@ -128,7 +129,7 @@ describe("ProjectInformationInputPrivacyList", () => {
                 "Project privacy set to public. By default, its content is available to all authenticated, but not restricted, users. Please note that more restrictive permissions might exist on some items."
             );
 
-            (wrapper.findAll("option").at(1).element as HTMLOptionElement).selected = true;
+            (wrapper.find("[data-test=unrestricted]").element as HTMLOptionElement).selected = true;
 
             wrapper.find("[data-test=project-information-input-privacy-list]").trigger("change");
 
@@ -145,9 +146,7 @@ describe("ProjectInformationInputPrivacyList", () => {
                 "[data-test=project-information-input-privacy-tooltip]"
             ).element;
 
-            (wrapper.findAll("option").at(1).element as HTMLOptionElement).selected = true;
-
-            (wrapper.findAll("option").at(0).element as HTMLOptionElement).selected = true;
+            (wrapper.find("[data-test=public]").element as HTMLOptionElement).selected = true;
 
             wrapper.find("[data-test=project-information-input-privacy-list]").trigger("change");
 
@@ -172,9 +171,7 @@ describe("ProjectInformationInputPrivacyList", () => {
             };
             const wrapper = getProjectInformationInstance(store_options);
 
-            expect((wrapper.findAll("option").at(0).element as HTMLOptionElement).selected).toBe(
-                true
-            );
+            (wrapper.find("[data-test=public]").element as HTMLOptionElement).selected = true;
         });
         it("Should select the  'Public incl. restricted' by default", () => {
             store_options = {
@@ -189,9 +186,7 @@ describe("ProjectInformationInputPrivacyList", () => {
             };
             const wrapper = getProjectInformationInstance(store_options);
 
-            expect((wrapper.findAll("option").at(1).element as HTMLOptionElement).selected).toBe(
-                true
-            );
+            (wrapper.find("[data-test=unrestricted]").element as HTMLOptionElement).selected = true;
         });
 
         it("Should select the  'Private' by default", () => {
@@ -207,9 +202,8 @@ describe("ProjectInformationInputPrivacyList", () => {
             };
             const wrapper = getProjectInformationInstance(store_options);
 
-            expect((wrapper.findAll("option").at(2).element as HTMLOptionElement).selected).toBe(
-                true
-            );
+            (wrapper.find("[data-test=private-wo-restr]")
+                .element as HTMLOptionElement).selected = true;
         });
 
         it("Should select the  'Private incl. restricted' by default", () => {
@@ -225,9 +219,7 @@ describe("ProjectInformationInputPrivacyList", () => {
             };
             const wrapper = getProjectInformationInstance(store_options);
 
-            expect((wrapper.findAll("option").at(3).element as HTMLOptionElement).selected).toBe(
-                true
-            );
+            (wrapper.find("[data-test=private]").element as HTMLOptionElement).selected = true;
         });
     });
 });
