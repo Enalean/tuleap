@@ -67,13 +67,15 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
         $next_numeric     = $this->getValue();
         if ($previous_numeric !== $next_numeric) {
             if ($previous_numeric === null) {
-                return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to') . ' ' . $this->format($next_numeric, $format);
+                return sprintf(dgettext('tuleap-tracker', 'set to %s'), $this->format($next_numeric, $format));
             } elseif ($next_numeric === null) {
-                return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'cleared');
+                return dgettext('tuleap-tracker', 'cleared');
             } else {
-                return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from'). ' ' .
-                    $this->format($previous_numeric, $format) . ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') .
-                    ' ' . $this->format($next_numeric, $format);
+                return sprintf(
+                    dgettext('tuleap-tracker', 'changed from %s to %s'),
+                    $this->format($previous_numeric, $format),
+                    $this->format($next_numeric, $format)
+                );
             }
         }
         return false;

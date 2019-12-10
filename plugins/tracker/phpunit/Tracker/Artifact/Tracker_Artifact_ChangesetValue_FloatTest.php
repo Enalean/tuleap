@@ -32,7 +32,7 @@ use Tuleap\GlobalLanguageMock;
 
 final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:ignore
 {
-    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
 
     private $changeset;
     private $field;
@@ -88,11 +88,6 @@ final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:
 
     public function testDiff() : void
     {
-        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_tracker_artifact', 'changed_from')->andReturns('changed from');
-        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_tracker_artifact', 'to')->andReturns('to');
-        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_tracker_artifact', 'cleared')->andReturns('cleared');
-        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_tracker_artifact', 'set_to')->andReturns('set to');
-
         $float_1 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987.321);
         $float_2 = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 987);
 
