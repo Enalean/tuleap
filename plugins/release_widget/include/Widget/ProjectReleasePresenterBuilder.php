@@ -116,7 +116,7 @@ class ProjectReleasePresenterBuilder
         $this->root_planning                                                     = $root_planning;
     }
 
-    public static function build(): ProjectReleasePresenterBuilder
+    public static function build(Planning $root_planning): ProjectReleasePresenterBuilder
     {
         $planning_factory = new PlanningFactory(
             new PlanningDao(),
@@ -146,12 +146,6 @@ class ProjectReleasePresenterBuilder
             new TimeframeBuilder(Tracker_FormElementFactory::instance(), new SemanticTimeframeBuilder(new SemanticTimeframeDao(), Tracker_FormElementFactory::instance()), new \BackendLogger()),
             new MilestoneBurndownFieldChecker(Tracker_FormElementFactory::instance())
         );
-
-        $root_planning = $planning_factory->getRootPlanning(HTTPRequest::instance()->getCurrentUser(), HTTPRequest::instance()->getProject()->getID());
-
-        if (!$root_planning) {
-            throw new \Exception("Root Planning does not exist.");
-        }
 
         return new self(
             HTTPRequest::instance(),

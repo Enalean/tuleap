@@ -69,10 +69,6 @@ class release_widgetPlugin extends Plugin // phpcs:ignore
     {
         $project = HTTPRequest::instance()->getProject();
 
-        if (! $this->rootPlanningExists($project)) {
-            return;
-        }
-
         if (! PluginManager::instance()->getPluginByName('agiledashboard')->isAllowed($project->getID())) {
             return;
         }
@@ -85,21 +81,5 @@ class release_widgetPlugin extends Plugin // phpcs:ignore
     public function getDependencies()
     {
         return ['agiledashboard'];
-    }
-
-    private function rootPlanningExists(Project $project): bool
-    {
-        $user = HTTPRequest::instance()->getCurrentUser();
-
-        $planning_factory = new PlanningFactory(
-            new PlanningDao(),
-            TrackerFactory::instance(),
-            new PlanningPermissionsManager()
-        );
-
-        return $planning_factory->getRootPlanning(
-            $user,
-            $project->getID()
-        ) instanceof Planning;
     }
 }

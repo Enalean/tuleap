@@ -17,3 +17,6 @@ msgstr "Tableau de bord agile"
 
 msgid "Milestone Widget"
 msgstr "Jalon Widget"
+
+msgid "No root planning is defined."
+msgstr "Aucun planning racine n'est défini."

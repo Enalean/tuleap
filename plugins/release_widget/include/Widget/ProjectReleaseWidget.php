@@ -39,9 +39,13 @@ class ProjectReleaseWidget extends Widget
 {
     public const NAME = 'release';
     /**
-     * @var string
+     * @var null|string
      */
     private $label_tracker_backlog;
+    /**
+     * @var false|\Planning
+     */
+    private $root_planning;
 
     public function __construct()
     {
@@ -54,25 +58,33 @@ class ProjectReleaseWidget extends Widget
         $http       = HTTPRequest::instance();
         $project_id = $http->getProject()->getID();
 
-        $root_planning = $planning_factory->getRootPlanning($http->getCurrentUser(), $project_id);
+        $this->root_planning = $planning_factory->getRootPlanning($http->getCurrentUser(), $project_id);
 
-        if (!$root_planning) {
-            throw new Exception('Root planning does not exist');
+        if (! $this->root_planning) {
+            return;
         }
 
-        $this->label_tracker_backlog = $root_planning->getPlanningTracker()->getName();
+        $this->label_tracker_backlog = $this->root_planning->getPlanningTracker()->getName();
 
         parent::__construct(self::NAME);
     }
 
     public function getTitle() : string
     {
-        return sprintf(dgettext('tuleap-release_widget', '%s Widget'), $this->label_tracker_backlog);
+        if ($this->label_tracker_backlog) {
+            return sprintf(dgettext('tuleap-release_widget', '%s Widget'), $this->label_tracker_backlog);
+        }
+
+        return dgettext('tuleap-release_widget', 'Milestone Widget');
     }
 
     public function getDescription() : string
     {
-        return sprintf(dgettext('tuleap-release_widget', 'A widget for %s monitoring.'), $this->label_tracker_backlog);
+        if ($this->label_tracker_backlog) {
+            return sprintf(dgettext('tuleap-release_widget', 'A widget for %s monitoring.'), $this->label_tracker_backlog);
+        }
+
+        return dgettext('tuleap-release_widget', 'A widget for milestone monitoring.');
     }
 
     public function getIcon()
@@ -82,7 +94,15 @@ class ProjectReleaseWidget extends Widget
 
     public function getContent() : string
     {
-        $builder = ProjectReleasePresenterBuilder::build();
+        if (! $this->root_planning) {
+            $message_error = '<p class="tlp-alert-danger">';
+            $message_error .= dgettext('tuleap-release_widget', 'No root planning is defined.');
+            $message_error .= '</p>';
+
+            return $message_error;
+        }
+
+        $builder = ProjectReleasePresenterBuilder::build($this->root_planning);
 
         $renderer = $this->getRenderer(__DIR__ . '/../../templates');
 
