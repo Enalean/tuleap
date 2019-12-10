@@ -20,7 +20,7 @@
 
 <template>
     <form class="taskboard-add-card-form">
-        <label-editor v-model="label" v-if="is_in_add_mode" v-on:save="save"/>
+        <label-editor v-model="label" v-if="is_in_add_mode" v-on:save="save" v-bind:readonly="readonly"/>
         <add-button v-if="!is_in_add_mode" v-on:click="switchToAddMode"/>
     </form>
 </template>
@@ -32,7 +32,7 @@ import { Mutation } from "vuex-class";
 import AddButton from "./AddButton.vue";
 import LabelEditor from "../Editor/Label/LabelEditor.vue";
 import EventBus from "../../../../../../helpers/event-bus";
-import { Card, ColumnDefinition, TaskboardEvent } from "../../../../../../type";
+import { ColumnDefinition, Swimlane, TaskboardEvent } from "../../../../../../type";
 import { namespace } from "vuex-class";
 import { NewCardPayload } from "../../../../../../store/swimlane/card/type";
 
@@ -48,10 +48,13 @@ export default class AddCard extends Vue {
     readonly column!: ColumnDefinition;
 
     @Prop({ required: true })
-    readonly parent!: Card;
+    readonly swimlane!: Swimlane;
 
     @swimlane.Action
     readonly addCard!: (payload: NewCardPayload) => Promise<void>;
+
+    @swimlane.State
+    readonly is_card_creation_blocked_due_to_ongoing_creation!: boolean;
 
     private is_in_add_mode = false;
     private label = "";
@@ -90,7 +93,7 @@ export default class AddCard extends Vue {
 
     save(): void {
         const payload: NewCardPayload = {
-            parent: this.parent,
+            swimlane: this.swimlane,
             column: this.column,
             label: this.label
         };
@@ -102,6 +105,10 @@ export default class AddCard extends Vue {
         setTimeout(() => {
             this.label = "";
         }, 10);
+    }
+
+    get readonly(): boolean {
+        return this.is_card_creation_blocked_due_to_ongoing_creation;
     }
 }
 </script>

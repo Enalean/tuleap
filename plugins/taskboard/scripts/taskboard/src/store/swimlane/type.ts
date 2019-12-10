@@ -23,6 +23,7 @@ export interface SwimlaneState {
     swimlanes: Array<Swimlane>;
     is_loading_swimlanes: boolean;
     dropzone_rejecting_drop?: HTMLElement;
+    is_card_creation_blocked_due_to_ongoing_creation: boolean;
 }
 
 export interface AddChildrenToSwimlanePayload {

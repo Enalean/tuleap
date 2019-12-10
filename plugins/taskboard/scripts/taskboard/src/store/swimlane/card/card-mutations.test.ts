@@ -160,4 +160,51 @@ describe(`Card mutations`, () => {
             expect(state.swimlanes[0].card.is_just_saved).toBe(false);
         });
     });
+
+    describe("startCreatingCard", () => {
+        it("Informs the store that the process of creating a new card has begun", () => {
+            const state: SwimlaneState = {
+                is_card_creation_blocked_due_to_ongoing_creation: false
+            } as SwimlaneState;
+
+            mutations.startCreatingCard(state);
+
+            expect(state.is_card_creation_blocked_due_to_ongoing_creation).toBe(true);
+        });
+    });
+
+    describe("cardIsHalfwayCreated", () => {
+        it("Informs the store that the process of creating a new card is advanced enough to allow creation of another one", () => {
+            const state: SwimlaneState = {
+                is_card_creation_blocked_due_to_ongoing_creation: true
+            } as SwimlaneState;
+
+            mutations.cardIsHalfwayCreated(state);
+
+            expect(state.is_card_creation_blocked_due_to_ongoing_creation).toBe(false);
+        });
+    });
+
+    describe("finishCreatingCard", () => {
+        it("sets the saved flags on the card", () => {
+            const card: Card = {
+                label: "Lorem ipsum",
+                is_being_saved: true,
+                is_just_saved: false
+            } as Card;
+            const state: SwimlaneState = {
+                swimlanes: [{ card } as Swimlane],
+                is_card_creation_blocked_due_to_ongoing_creation: true
+            } as SwimlaneState;
+
+            mutations.finishCreatingCard(state, card);
+
+            expect(state.swimlanes[0].card.is_being_saved).toBe(false);
+            expect(state.swimlanes[0].card.is_just_saved).toBe(true);
+
+            jest.advanceTimersByTime(1000);
+
+            expect(state.swimlanes[0].card.is_just_saved).toBe(false);
+        });
+    });
 });

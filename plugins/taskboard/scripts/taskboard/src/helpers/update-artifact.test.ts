@@ -110,7 +110,7 @@ describe("update-artifact", () => {
             expect(() =>
                 getPostArtifactBody(
                     {
-                        parent: { tracker_id: 42 }
+                        swimlane: { card: { tracker_id: 42 } }
                     } as NewCardPayload,
                     [] as Tracker[]
                 )
@@ -121,7 +121,7 @@ describe("update-artifact", () => {
             expect(() =>
                 getPostArtifactBody(
                     {
-                        parent: { tracker_id: 42 }
+                        swimlane: { card: { tracker_id: 42 } }
                     } as NewCardPayload,
                     [{ id: 42, add_in_place: null } as Tracker]
                 )
@@ -132,7 +132,7 @@ describe("update-artifact", () => {
             expect(() =>
                 getPostArtifactBody(
                     {
-                        parent: { tracker_id: 42 }
+                        swimlane: { card: { tracker_id: 42 } }
                     } as NewCardPayload,
                     [
                         {
@@ -151,7 +151,7 @@ describe("update-artifact", () => {
             expect(() =>
                 getPostArtifactBody(
                     {
-                        parent: { tracker_id: 42 }
+                        swimlane: { card: { tracker_id: 42 } }
                     } as NewCardPayload,
                     [
                         {
@@ -171,7 +171,7 @@ describe("update-artifact", () => {
             expect(() =>
                 getPostArtifactBody(
                     {
-                        parent: { tracker_id: 42 },
+                        swimlane: { card: { tracker_id: 42 } },
                         column: {
                             mappings: [] as Mapping[]
                         }
@@ -194,7 +194,7 @@ describe("update-artifact", () => {
             expect(() =>
                 getPostArtifactBody(
                     {
-                        parent: { tracker_id: 42 },
+                        swimlane: { card: { tracker_id: 42 } },
                         column: {
                             mappings: [] as Mapping[]
                         }
@@ -221,7 +221,7 @@ describe("update-artifact", () => {
             expect(() =>
                 getPostArtifactBody(
                     {
-                        parent: { tracker_id: 42 },
+                        swimlane: { card: { tracker_id: 42 } },
                         column: {
                             mappings: [{ tracker_id: 69, field_id: null }]
                         }
@@ -248,7 +248,7 @@ describe("update-artifact", () => {
             expect(() =>
                 getPostArtifactBody(
                     {
-                        parent: { tracker_id: 42 },
+                        swimlane: { card: { tracker_id: 42 } },
                         column: {
                             mappings: [
                                 { tracker_id: 69, field_id: 666, accepts: [] as ListValue[] }
@@ -276,7 +276,7 @@ describe("update-artifact", () => {
         it("Returns the body with string label and mapped field value", () => {
             const body = getPostArtifactBody(
                 {
-                    parent: { id: 74, tracker_id: 42 },
+                    swimlane: { card: { id: 74, tracker_id: 42 } },
                     column: {
                         mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
                     },
@@ -315,7 +315,7 @@ describe("update-artifact", () => {
         it("Remove linebreak characters for string field", () => {
             const body = getPostArtifactBody(
                 {
-                    parent: { id: 74, tracker_id: 42 },
+                    swimlane: { card: { id: 74, tracker_id: 42 } },
                     column: {
                         mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
                     },
@@ -354,7 +354,7 @@ describe("update-artifact", () => {
         it("Returns the body with text label and mapped field value", () => {
             const body = getPostArtifactBody(
                 {
-                    parent: { id: 74, tracker_id: 42 },
+                    swimlane: { card: { id: 74, tracker_id: 42 } },
                     column: {
                         mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
                     },
@@ -396,7 +396,7 @@ describe("update-artifact", () => {
         it("Remove linebreak characters for text field", () => {
             const body = getPostArtifactBody(
                 {
-                    parent: { id: 74, tracker_id: 42 },
+                    swimlane: { card: { id: 74, tracker_id: 42 } },
                     column: {
                         mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
                     },
@@ -441,7 +441,7 @@ describe("update-artifact", () => {
             expect(() =>
                 getPutArtifactBodyToAddChild(
                     {
-                        parent: { tracker_id: 42 }
+                        swimlane: { card: { tracker_id: 42 } }
                     } as NewCardPayload,
                     [] as Tracker[],
                     1001,
@@ -454,7 +454,7 @@ describe("update-artifact", () => {
             expect(() =>
                 getPutArtifactBodyToAddChild(
                     {
-                        parent: { tracker_id: 42 }
+                        swimlane: { card: { tracker_id: 42 } }
                     } as NewCardPayload,
                     [{ id: 42, add_in_place: null } as Tracker],
                     1001,
@@ -466,7 +466,7 @@ describe("update-artifact", () => {
         it("Sets the value for artifact link field", () => {
             const body = getPutArtifactBodyToAddChild(
                 {
-                    parent: { tracker_id: 42 }
+                    swimlane: { card: { tracker_id: 42 } }
                 } as NewCardPayload,
                 [
                     {
@@ -496,7 +496,7 @@ describe("update-artifact", () => {
         it("Keeps the existing links so that we don't loose them while updating the artifact", () => {
             const body = getPutArtifactBodyToAddChild(
                 {
-                    parent: { tracker_id: 42 }
+                    swimlane: { card: { tracker_id: 42 } }
                 } as NewCardPayload,
                 [
                     {

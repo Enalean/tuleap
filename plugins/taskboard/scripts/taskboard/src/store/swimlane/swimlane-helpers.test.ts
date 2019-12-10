@@ -161,7 +161,7 @@ describe(`swimlane-helpers`, () => {
                 swimlanes: [
                     {
                         card: { id: 99, label: "Unrelated swimlane" } as Card,
-                        children_cards: [],
+                        children_cards: [] as Card[],
                         is_loading_children_cards: false
                     }
                 ],

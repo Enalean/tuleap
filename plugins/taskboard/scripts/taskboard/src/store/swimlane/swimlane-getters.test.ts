@@ -42,7 +42,7 @@ describe("Swimlane state getters", () => {
                     { is_loading_children_cards: true } as Swimlane,
                     { is_loading_children_cards: false } as Swimlane
                 ]
-            };
+            } as SwimlaneState;
 
             expect(getters.is_loading_cards(state)).toBe(true);
         });
@@ -55,7 +55,7 @@ describe("Swimlane state getters", () => {
                     { is_loading_children_cards: false } as Swimlane,
                     { is_loading_children_cards: false } as Swimlane
                 ]
-            };
+            } as SwimlaneState;
 
             expect(getters.is_loading_cards(state)).toBe(false);
         });

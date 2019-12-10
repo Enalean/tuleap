@@ -22,7 +22,7 @@ import { RootState } from "../../type";
 import { UpdateCardPayload, NewRemainingEffortPayload, NewCardPayload } from "./type";
 import * as tlp from "tlp";
 import { SwimlaneState } from "../type";
-import { Card, Tracker } from "../../../type";
+import { Card, Swimlane, Tracker } from "../../../type";
 import * as actions from "./card-actions";
 import {
     mockFetchError,
@@ -167,9 +167,23 @@ describe("Card actions", () => {
     });
 
     describe("addCard", () => {
+        it("Start the creation of a card", async () => {
+            const payload: NewCardPayload = {
+                swimlane: { card: { id: 74, tracker_id: 42 } },
+                column: {
+                    mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
+                },
+                label: "Lorem"
+            } as NewCardPayload;
+
+            await actions.addCard(context, payload);
+
+            expect(context.commit).toHaveBeenCalledWith("startCreatingCard");
+        });
+
         it("saves the card", async () => {
             const payload: NewCardPayload = {
-                parent: { id: 74, tracker_id: 42 },
+                swimlane: { card: { id: 74, tracker_id: 42 } },
                 column: {
                     mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
                 },
@@ -202,9 +216,56 @@ describe("Card actions", () => {
             });
         });
 
+        it("Inject new card in store", async () => {
+            const swimlane: Swimlane = { card: { id: 74, tracker_id: 42 } } as Swimlane;
+            const payload: NewCardPayload = {
+                swimlane: swimlane,
+                column: {
+                    mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
+                },
+                label: "Lorem"
+            } as NewCardPayload;
+
+            const tlpPostMock = jest.spyOn(tlp, "post");
+            mockFetchSuccess(tlpPostMock, { return_json: { id: 1001 } });
+
+            const tlpGetMock = jest.spyOn(tlp, "get");
+            tlpGetMock.mockImplementation(
+                (uri: string): Promise<Response> => {
+                    if (uri === "/api/v1/artifacts/74") {
+                        return Promise.resolve({
+                            json: () => Promise.resolve({ values: [] })
+                        } as Response);
+                    }
+                    if (uri === "/api/v1/taskboard_cards/1001?milestone_id=42") {
+                        return Promise.resolve({
+                            json: () => Promise.resolve({ id: 1001, color: "fiesta-red" })
+                        } as Response);
+                    }
+                    throw new Error();
+                }
+            );
+
+            await actions.addCard(context, payload);
+
+            expect(context.commit).toHaveBeenNthCalledWith(2, "addChildrenToSwimlane", {
+                swimlane,
+                children_cards: [
+                    {
+                        id: 1001,
+                        color: "fiesta-red",
+                        is_being_saved: true,
+                        is_in_edit_mode: false,
+                        is_just_saved: false
+                    } as Card
+                ]
+            });
+            expect(context.commit).toHaveBeenNthCalledWith(3, "cardIsHalfwayCreated");
+        });
+
         it("attach the card to the parent", async () => {
             const payload: NewCardPayload = {
-                parent: { id: 74, tracker_id: 42 },
+                swimlane: { card: { id: 74, tracker_id: 42 } },
                 column: {
                     mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
                 },
@@ -244,7 +305,7 @@ describe("Card actions", () => {
 
         it("warns about error if any", async () => {
             const payload: NewCardPayload = {
-                parent: { tracker_id: 42 },
+                swimlane: { card: { tracker_id: 42 } },
                 column: {
                     mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
                 },

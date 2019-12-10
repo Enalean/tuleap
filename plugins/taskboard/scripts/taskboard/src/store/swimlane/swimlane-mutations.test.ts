@@ -75,7 +75,10 @@ describe(`Swimlane state mutations`, () => {
             { id: 190, rank: 21 } as Card
         ];
         beforeEach(() => {
-            state = { is_loading_swimlanes: false, swimlanes: [swimlane, unrelated_swimlane] };
+            state = {
+                is_loading_swimlanes: false,
+                swimlanes: [swimlane, unrelated_swimlane]
+            } as SwimlaneState;
         });
 
         it(`given a swimlane and children cards,
@@ -221,7 +224,10 @@ describe(`Swimlane state mutations`, () => {
             is_loading_children_cards: false
         } as Swimlane;
         beforeEach(() => {
-            state = { is_loading_swimlanes: false, swimlanes: [swimlane, unrelated_swimlane] };
+            state = {
+                is_loading_swimlanes: false,
+                swimlanes: [swimlane, unrelated_swimlane]
+            } as SwimlaneState;
         });
 
         it(`given a swimlane, it will set its loading flag to true`, () => {
@@ -247,7 +253,10 @@ describe(`Swimlane state mutations`, () => {
         } as Swimlane;
         const swimlane = { card: { id: 86 }, is_loading_children_cards: true } as Swimlane;
         beforeEach(() => {
-            state = { is_loading_swimlanes: false, swimlanes: [unrelated_swimlane, swimlane] };
+            state = {
+                is_loading_swimlanes: false,
+                swimlanes: [unrelated_swimlane, swimlane]
+            } as SwimlaneState;
         });
 
         it(`given a swimlane, it will set its loading flag to false`, () => {
@@ -305,7 +314,7 @@ describe(`Swimlane state mutations`, () => {
         } as Swimlane;
 
         beforeEach(() => {
-            state = { is_loading_swimlanes: false, swimlanes: [swimlane] };
+            state = { is_loading_swimlanes: false, swimlanes: [swimlane] } as SwimlaneState;
         });
 
         it("changes the position of the card", () => {
@@ -339,7 +348,7 @@ describe(`Swimlane state mutations`, () => {
                 card: card_to_move,
                 children_cards: [] as Card[]
             } as Swimlane;
-            state = { is_loading_swimlanes: false, swimlanes: [swimlane] };
+            state = { is_loading_swimlanes: false, swimlanes: [swimlane] } as SwimlaneState;
         });
 
         it(`When I move the card in an empty column

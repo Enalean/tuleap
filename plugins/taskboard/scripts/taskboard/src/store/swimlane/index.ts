@@ -31,7 +31,8 @@ const swimlane_module_default: Module<SwimlaneState, RootState> = {
     getters,
     state: {
         swimlanes: [],
-        is_loading_swimlanes: false
+        is_loading_swimlanes: false,
+        is_card_creation_blocked_due_to_ongoing_creation: false
     }
 };
 export default swimlane_module_default;

@@ -47,7 +47,7 @@ export function getPutArtifactBodyToAddChild(
     child_id: number,
     parent_artifact_values: Values
 ): PutBody {
-    const parent_tracker = getParentTracker(payload.parent, trackers);
+    const parent_tracker = getParentTracker(payload.swimlane.card, trackers);
     if (!parent_tracker.add_in_place) {
         throw new Error("Unable to add in place");
     }
@@ -58,7 +58,7 @@ export function getPutArtifactBodyToAddChild(
 }
 
 export function getPostArtifactBody(payload: NewCardPayload, trackers: Tracker[]): PostBody {
-    const parent_tracker = getParentTracker(payload.parent, trackers);
+    const parent_tracker = getParentTracker(payload.swimlane.card, trackers);
     if (!parent_tracker.add_in_place) {
         throw new Error("Unable to add in place");
     }
