@@ -96,22 +96,18 @@
                 modal_generic_providers_config.toggle();
             });
 
-        if (document.getElementById("siteadmin-config-providers-modal-create-azure")) {
-            var modal_azure_providers_config_element = document.getElementById(
-                "siteadmin-config-providers-modal-create-azure"
-            );
+        var modal_azure_providers_config_element = document.getElementById(
+            "siteadmin-config-providers-modal-create-azure"
+        );
 
-            var modal_azure_providers_config = tlp.modal(modal_azure_providers_config_element);
+        var modal_azure_providers_config = tlp.modal(modal_azure_providers_config_element);
 
-            document
-                .querySelector(".add-azure-provider-button")
-                .addEventListener("click", function() {
-                    modal_azure_providers_config.toggle();
-                });
-            tlp.dropdown(document.getElementById("dropdown-specific-providers"), {
-                dropdown_menu: document.getElementById("dropdown-specific-providers-menu")
-            });
-        }
+        document.querySelector(".add-azure-provider-button").addEventListener("click", function() {
+            modal_azure_providers_config.toggle();
+        });
+        tlp.dropdown(document.getElementById("dropdown-specific-providers"), {
+            dropdown_menu: document.getElementById("dropdown-specific-providers-menu")
+        });
     }
 
     function initUpdateModals() {

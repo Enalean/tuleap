@@ -8,113 +8,110 @@
                         <i class="fa fa-plus tlp-button-icon"></i>
                         {{# dgettext }} tuleap-openidconnectclient | Add provider {{/ dgettext }}
                     </button>
-                    {{# isAzureOptionEnabled }}
-                        <button class="tlp-button-primary tlp-append tlp-dropdown-split-button-caret"
-                                id="dropdown-specific-providers">
-                            <i class="fa fa-caret-down"></i>
-                        </button>
-                    {{/ isAzureOptionEnabled }}
+                    <button class="tlp-button-primary tlp-append tlp-dropdown-split-button-caret"
+                            id="dropdown-specific-providers">
+                        <i class="fa fa-caret-down"></i>
+                    </button>
                 </div>
-                {{# isAzureOptionEnabled }}
-                    <div id="dropdown-specific-providers-menu" class="tlp-dropdown-menu" role="menu">
-                        <a class="tlp-dropdown-menu-item ng-binding add-azure-provider-button" role="menuitem">
-                            <i class="tlp-dropdown-menu-item-icon fa fa-windows"></i>
-                            Azure Active Directory
-                        </a>
-                    </div>
-                {{/ isAzureOptionEnabled }}
+                <div id="dropdown-specific-providers-menu" class="tlp-dropdown-menu" role="menu">
+                    <a class="tlp-dropdown-menu-item ng-binding add-azure-provider-button" role="menuitem">
+                        <i class="tlp-dropdown-menu-item-icon fa fa-windows"></i>
+                        Azure Active Directory
+                    </a>
+                </div>
 
             </div>
         {{/ there_are_providers }}
     </div>
     {{# providers_presenters }}
-    <section class="tlp-pane">
-        <div class="tlp-pane-container">
-            <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title">
-                    {{# getIcon }}<i class="fa fa-{{ getIcon }} tlp-pane-title-icon"></i>{{/ getIcon }} {{ getName }}
-                    {{# is_a_provider_configured_as_unique_authentication_endpoint }}
-                        {{# isUniqueAuthenticationEndpoint }}
-                            <span class="tlp-badge-success provider-configuration-unique-authentication-source">
-                                {{ unique_authentication_source }}
-                            </span>
-                        {{/ isUniqueAuthenticationEndpoint }}
-                        {{^ isUniqueAuthenticationEndpoint }}
-                            <span class="tlp-badge-secondary tlp-badge-outline provider-configuration-unique-authentication-source">
-                                {{ unique_authentication_source_disabled }}
-                            </span>
-                        {{/ isUniqueAuthenticationEndpoint }}
-                    {{/ is_a_provider_configured_as_unique_authentication_endpoint }}
-                </h1>
-            </div>
-            <section class="tlp-pane-section provider-info">
-                {{^ isAzureAD}}
-                    {{> administration-providers-generic-data }}
-                {{/ isAzureAD}}
-                {{# isAzureAD}}
-                    {{> administration-providers-azure-data }}
-                {{/ isAzureAD}}
-                <div class="provider-client">
-                    <div class="tlp-property">
-                        <label class="tlp-label">
-                            {{ client_id }}
-                        </label>
-                        {{# getClientId }}
-                        <p>{{ getClientId }}</p>
-                        {{/ getClientId }}
-                        {{^ getClientId }}
-                        <p class="tlp-property-empty">{{ empty_content }}</p>
-                        {{/ getClientId }}
-                    </div>
-                    <div class="tlp-property">
-                        <label class="tlp-label">
-                            {{ client_secret }}
-                        </label>
-                        {{# getClientSecret }}
-                        <p>{{ getClientSecret }}</p>
-                        {{/ getClientSecret }}
-                        {{^ getClientSecret }}
-                        <p class="tlp-property-empty">{{ empty_content }}</p>
-                        {{/ getClientSecret }}
-                    </div>
+        <section class="tlp-pane">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        {{# getIcon }}
+                            <i class="fa fa-{{ getIcon }} tlp-pane-title-icon"></i>{{/ getIcon }} {{ getName }}
+                        {{# is_a_provider_configured_as_unique_authentication_endpoint }}
+                            {{# isUniqueAuthenticationEndpoint }}
+                                <span class="tlp-badge-success provider-configuration-unique-authentication-source">
+                                    {{ unique_authentication_source }}
+                                </span>
+                            {{/ isUniqueAuthenticationEndpoint }}
+                            {{^ isUniqueAuthenticationEndpoint }}
+                                <span class="tlp-badge-secondary tlp-badge-outline provider-configuration-unique-authentication-source">
+                                    {{ unique_authentication_source_disabled }}
+                                </span>
+                            {{/ isUniqueAuthenticationEndpoint }}
+                        {{/ is_a_provider_configured_as_unique_authentication_endpoint }}
+                    </h1>
                 </div>
-            </section>
-        </div>
-        <div class="tlp-pane-container provider-action-container">
-            <section class="tlp-pane-section provider-action">
-                {{^ isAzureAd }}
-                <button
-                    type="button"
-                    class="tlp-button-primary tlp-button-outline provider-action-edit-button"
-                    data-edit-modal-id="siteadmin-config-providers-modal-update-{{ getId }}"
-                >
-                {{/ isAzureAd }}
-                {{# isAzureAd }}
+                <section class="tlp-pane-section provider-info">
+                    {{^ isAzureAD}}
+                        {{> administration-providers-generic-data }}
+                    {{/ isAzureAD}}
+                    {{# isAzureAD}}
+                        {{> administration-providers-azure-data }}
+                    {{/ isAzureAD}}
+                    <div class="provider-client">
+                        <div class="tlp-property">
+                            <label class="tlp-label">
+                                {{ client_id }}
+                            </label>
+                            {{# getClientId }}
+                                <p>{{ getClientId }}</p>
+                            {{/ getClientId }}
+                            {{^ getClientId }}
+                                <p class="tlp-property-empty">{{ empty_content }}</p>
+                            {{/ getClientId }}
+                        </div>
+                        <div class="tlp-property">
+                            <label class="tlp-label">
+                                {{ client_secret }}
+                            </label>
+                            {{# getClientSecret }}
+                                <p>{{ getClientSecret }}</p>
+                            {{/ getClientSecret }}
+                            {{^ getClientSecret }}
+                                <p class="tlp-property-empty">{{ empty_content }}</p>
+                            {{/ getClientSecret }}
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="tlp-pane-container provider-action-container">
+                <section class="tlp-pane-section provider-action">
+                    {{^ isAzureAd }}
                     <button
-                    type="button"
-                    class="tlp-button-primary tlp-button-outline provider-action-edit-button tlp-form-element-disabled"
-                    data-edit-modal-id="siteadmin-config-providers-modal-update-{{ getId }}"
-                    disabled
-                >
-                {{/ isAzureAd }}
+                            type="button"
+                            class="tlp-button-primary tlp-button-outline provider-action-edit-button"
+                            data-edit-modal-id="siteadmin-config-providers-modal-update-{{ getId }}"
+                    >
+                    {{/ isAzureAd }}
+                    {{# isAzureAd }}
+                    <button
+                            type="button"
+                            class="tlp-button-primary tlp-button-outline provider-action-edit-button tlp-form-element-disabled"
+                            data-edit-modal-id="siteadmin-config-providers-modal-update-{{ getId }}"
+                            disabled
+                    >
+                    {{/ isAzureAd }}
 
-                <i class="fa fa-pencil tlp-button-icon"></i>
+                    <i class="fa fa-pencil tlp-button-icon"></i>
                     {{ btn_edit }}
                 </button>
-                <button type="button"
-                    class="tlp-button-danger tlp-button-outline provider-action-delete-button"
-                    data-delete-modal-id="siteadmin-config-providers-modal-delete-{{ getId }}"
-                >
-                    <i class="fa fa-trash-o tlp-button-icon"></i>
-                    {{ btn_delete }}
-                </button>
-            </section>
-        </div>
+                    <button type="button"
+                            class="tlp-button-danger tlp-button-outline provider-action-delete-button"
+                            data-delete-modal-id="siteadmin-config-providers-modal-delete-{{ getId }}"
+                    >
+                        <i class="fa fa-trash-o tlp-button-icon"></i>
+                        {{ btn_delete }}
+                    </button>
+                </section>
+            </div>
 
-        {{> administration-providers-modal-delete }}
+            {{> administration-providers-modal-delete }}
 
-        {{> administration-providers-modal-update }}
-    </section>
+            {{> administration-providers-modal-update }}
+        </section>
     {{/ providers_presenters }}
     {{^ there_are_providers }}
         <div class="empty-page">
@@ -126,31 +123,25 @@
                         <i class="fa fa-plus tlp-button-icon"></i> {{# dgettext }}
                         tuleap-openidconnectclient | Add provider {{/ dgettext }}
                     </button>
-                    {{# isAzureOptionEnabled }}
-                        <button class="tlp-button-primary
+                    <button class="tlp-button-primary
                                        tlp-button-large
                                        tlp-append
                                        tlp-dropdown-split-button-caret"
-                                id="dropdown-specific-providers">
-                            <i class="fa fa-caret-down"></i>
-                        </button>
-                    {{/ isAzureOptionEnabled }}
+                            id="dropdown-specific-providers">
+                        <i class="fa fa-caret-down"></i>
+                    </button>
                 </div>
-                {{# isAzureOptionEnabled }}
-                    <div id="dropdown-specific-providers-menu" class="tlp-dropdown-menu"
-                         role="menu">
-                        <a class="tlp-dropdown-menu-item ng-binding add-azure-provider-button" role="menuitem">
-                            <i class="tlp-dropdown-menu-item-icon fa fa-windows"></i>
-                            Azure Active Directory
-                        </a>
-                    </div>
-                {{/ isAzureOptionEnabled }}
+                <div id="dropdown-specific-providers-menu" class="tlp-dropdown-menu"
+                     role="menu">
+                    <a class="tlp-dropdown-menu-item ng-binding add-azure-provider-button" role="menuitem">
+                        <i class="tlp-dropdown-menu-item-icon fa fa-windows"></i>
+                        Azure Active Directory
+                    </a>
+                </div>
             </div>
         </div>
     {{/ there_are_providers}}
 
     {{> administration-providers-modal-create-generic}}
-    {{# isAzureOptionEnabled }}
-        {{> administration-providers-modal-create-azure}}
-    {{/ isAzureOptionEnabled }}
+    {{> administration-providers-modal-create-azure}}
 </div>
