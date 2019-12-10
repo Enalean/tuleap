@@ -1,0 +1,158 @@
+<div
+    id="siteadmin-config-providers-modal-update-{{ getId }}"
+    class="tlp-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="siteadmin-config-providers-modal-update-{{ getId }}-title"
+    aria-hidden="true"
+>
+    <div class="tlp-modal-header">
+        <h1
+            id="siteadmin-config-providers-modal-update-{{ getId }}-title"
+            class="tlp-modal-title"
+        >
+            <i class="fa fa-pencil tlp-modal-title-icon"></i> {{ update_provider }}
+        </h1>
+        <div
+            class="tlp-modal-close"
+            data-dismiss="modal"
+            aria-label="Close"
+        >&times;</div>
+    </div>
+    <form method="post">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <input type="hidden" name="action" value="update-azure-provider">
+        <input type="hidden" name="id" value="{{ getId }}">
+        <div class="tlp-modal-body">
+            <div class="provider-admin-modal-name-container">
+                <div class="tlp-form-element provider-admin-modal-name">
+                    <label class="tlp-label" for="name-{{ getId }}">{{ name }} <i class="fa fa-asterisk"></i></label>
+                    <input
+                        type="text"
+                        class="tlp-input provider-name"
+                        id="name-{{ getId }}"
+                        name="name"
+                        value="{{ getName }}"
+                        placeholder="Github"
+                        required
+                    >
+                </div>
+                <div class="tlp-form-element provider-admin-modal-icon">
+                    <label class="tlp-label" for="icon-{{ getId }}">{{ icon }}</label>
+                    <select
+                        class="tlp-select provider-icon-selector"
+                        id="icon-{{ getId }}"
+                        name="icon"
+                    >
+                        <option value=""></option>
+                        {{# icons_presenters }}
+                        <option value="{{ icon }}" {{# is_selected }}selected{{/ is_selected }}></option>
+                        {{/ icons_presenters }}
+                    </select>
+                </div>
+                <div class="tlp-form-element provider-admin-modal-color">
+                    <label class="tlp-label" for="color-{{ getId }}">{{ color }}</label>
+                    <select
+                        class="tlp-select provider-color-selector"
+                        id="color-{{ getId }}"
+                        name="color"
+                    >
+                        <option value=""></option>
+                        {{# colors_presenters }}
+                        <option value="{{ color }}" {{# is_selected }}selected{{/ is_selected }}></option>
+                        {{/ colors_presenters }}
+                    </select>
+                </div>
+            </div>
+            <div class="tlp-form-element">
+                <div class="tlp-form-element" id="tenant_id_container">
+                    <label class="tlp-label" for="tenant_id">
+                        {{# dgettext }} tuleap-openidconnectclient | Tenant ID {{/ dgettext }} <i class="fa fa-asterisk"></i>
+                    </label>
+                    <input
+                            type="text"
+                            class="tlp-input"
+                            id="tenant_id"
+                            name="tenant_id"
+                            value="{{ getTenantId }}"
+                            required
+                    >
+                </div>
+            </div>
+            <div class="tlp-form-element {{^ can_user_enable_unique_authentication_endpoint }}tlp-form-element-disabled{{/ can_user_enable_unique_authentication_endpoint }}">
+                <label class="tlp-label tlp-checkbox">
+                    <input type="checkbox" name="unique_authentication_endpoint"
+                        {{# isUniqueAuthenticationEndpoint }}checked{{/ isUniqueAuthenticationEndpoint }}
+                        {{^ can_user_enable_unique_authentication_endpoint }}disabled{{/ can_user_enable_unique_authentication_endpoint }}>
+                    {{ unique_authentication_source_form_description }}
+                </label>
+                {{# can_user_enable_unique_authentication_endpoint }}
+                    <p class="tlp-text-warning">{{ unique_authentication_source_prerequisites }}</p>
+                {{/ can_user_enable_unique_authentication_endpoint }}
+                {{^ can_user_enable_unique_authentication_endpoint }}
+                    <p class="tlp-text-info">{{ unique_authentication_source_user_must_be_linked }}</p>
+                {{/ can_user_enable_unique_authentication_endpoint }}
+            </div>
+
+            <div class="tlp-property">
+                <p class="tlp-text-info">
+                    <i class="fa fa-info-circle"></i> {{ client_help }} <br/>
+                    <b>{{ getCallbackUrl }}</b>
+                </p>
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="client_id-{{ getId }}">
+                    {{ client_id }} <i class="fa fa-asterisk"></i>
+                </label>
+                <input
+                    type="text"
+                    class="tlp-input"
+                    id="client_id-{{ getId }}"
+                    name="client_id"
+                    value="{{ getClientId }}"
+                    required
+                >
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="client_secret-{{ getId }}">
+                    {{ client_secret }} <i class="fa fa-asterisk"></i>
+                </label>
+                <input
+                    type="text"
+                    class="tlp-input"
+                    id="client_secret-{{ getId }}"
+                    name="client_secret"
+                    value="{{ getClientSecret }}"
+                    required
+                >
+            </div>
+
+            <div class="tlp-form-element">
+                <p class="tlp-label provider-admin-modal-preview-label">{{ preview }}</p>
+                <div class="provider-admin-modal-provider-button-preview">
+                    <button
+                        type="button"
+                        class="tlp-button-primary tlp-button-large {{ getColor }} provider-admin-modal-provider-button"
+                    >
+                        <i {{# getIcon }}class="tlp-button-icon fa fa-{{ getIcon }}"{{/ getIcon }}></i>
+                        <span>{{ btn_preview }}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button
+                type="button"
+                class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                data-dismiss="modal"
+            >{{ btn_cancel }}</button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action">
+                <i class="fa fa-pencil tlp-button-icon"></i> {{ btn_update }}
+            </button>
+        </div>
+    </form>
+</div>

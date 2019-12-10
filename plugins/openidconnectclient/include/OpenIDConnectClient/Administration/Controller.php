@@ -206,7 +206,7 @@ class Controller
         $GLOBALS['Response']->redirect(OPENIDCONNECTCLIENT_BASE_URL . '/admin');
     }
 
-    public function updateProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request)
+    public function updateGenericProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request)
     {
         $csrf_token->check();
 
@@ -255,6 +255,64 @@ class Controller
 
         try {
             $this->generic_provider_manager->updateGenericProvider($updated_provider);
+        } catch (ProviderMalformedDataException $ex) {
+            $this->redirectAfterFailure(
+                dgettext('tuleap-openidconnectclient', 'The data you provided are not valid.')
+            );
+        }
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            sprintf(dgettext('tuleap-openidconnectclient', 'The provider %1$s have been successfully updated.'), $updated_provider->getName())
+        );
+        $this->showAdministration($csrf_token, $request->getCurrentUser());
+    }
+
+    public function updateAzureProvider(CSRFSynchronizerToken $csrf_token, HTTPRequest $request)
+    {
+        $csrf_token->check();
+
+        $id                                = $request->get('id');
+        $is_unique_authentication_endpoint = $request->existAndNonEmpty('unique_authentication_endpoint');
+        try {
+            $provider = $this->provider_manager->getById($id);
+        } catch (ProviderNotFoundException $ex) {
+            $this->redirectAfterFailure(
+                dgettext('tuleap-openidconnectclient', 'The data you provided are not valid.')
+            );
+        }
+
+        if ($is_unique_authentication_endpoint &&
+            ! $this->enable_unique_authentication_endpoint_verifier->canBeEnabledBy(
+                $provider,
+                $request->getCurrentUser()
+            )
+        ) {
+            $this->redirectAfterFailure(
+                dgettext('tuleap-openidconnectclient', 'The data you provided are not valid.')
+            );
+        }
+
+        $name          = $request->get('name');
+        $client_id     = $request->get('client_id');
+        $client_secret = $request->get('client_secret');
+        $icon          = $request->get('icon');
+        $color         = $request->get('color');
+        $tenant_id     = $request->get('tenant_id');
+
+        $updated_provider = new AzureADProvider(
+            $id,
+            $name,
+            $client_id,
+            $client_secret,
+            $is_unique_authentication_endpoint,
+            $icon,
+            $color,
+            $tenant_id
+        );
+
+        try {
+            $this->azure_provider_manager->updateAzureADProvider($updated_provider);
         } catch (ProviderMalformedDataException $ex) {
             $this->redirectAfterFailure(
                 dgettext('tuleap-openidconnectclient', 'The data you provided are not valid.')

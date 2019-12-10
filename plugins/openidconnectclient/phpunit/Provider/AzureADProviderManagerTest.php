@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\OpenIDConnectClient\Provider;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -58,5 +60,27 @@ class AzureADProviderManagerTest extends TestCase
         );
 
         $this->assertEquals($azure_provider, $res);
+    }
+
+    public function testItUpdatesProvider(): void
+    {
+        $generic_provider_dao     = \Mockery::mock(AzureADProviderDao::class);
+        $generic_provider_manager = new AzureADProviderManager(
+            $generic_provider_dao
+        );
+
+        $provider = new AzureADProvider(
+            0,
+            'Provider',
+            'ID',
+            'Secret',
+            false,
+            'github',
+            'fiesta_red',
+            'tenant id'
+        );
+
+        $generic_provider_dao->shouldReceive('save')->once();
+        $generic_provider_manager->updateAzureADProvider($provider);
     }
 }

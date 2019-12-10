@@ -59,4 +59,56 @@ class AzureADProviderDao extends DataAccessObject
             }
         );
     }
+
+    private function disableUniqueAuthenticationProvider(): bool
+    {
+        $sql = "UPDATE plugin_openidconnectclient_provider SET unique_authentication_endpoint = FALSE";
+        return $this->getDB()->run($sql);
+    }
+
+    public function save(
+        int $id,
+        string $name,
+        bool $is_unique_authentication_endpoint,
+        string $client_id,
+        string $client_secret,
+        string $icon,
+        string $color,
+        string $tenant_id
+    ) : void {
+        $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use (
+                $id,
+                $name,
+                $is_unique_authentication_endpoint,
+                $client_id,
+                $client_secret,
+                $icon,
+                $color,
+                $tenant_id
+            ) : void {
+
+                if ($is_unique_authentication_endpoint) {
+                    $this->disableUniqueAuthenticationProvider();
+                }
+
+                $sql = "UPDATE plugin_openidconnectclient_provider SET
+                        name = ?,
+                        client_id = ?,
+                        client_secret = ?,
+                        unique_authentication_endpoint = ?,
+                        icon = ?,
+                        color = ?
+                    WHERE id = ?";
+
+                $db->run($sql, $name, $client_id, $client_secret, $is_unique_authentication_endpoint, $icon, $color, $id);
+
+                $sql = "UPDATE plugin_openidconnectclient_provider_azure_ad SET
+                        tenant_id = ?
+                    WHERE provider_id = ?";
+
+                $db->run($sql, $tenant_id, $id);
+            }
+        );
+    }
 }

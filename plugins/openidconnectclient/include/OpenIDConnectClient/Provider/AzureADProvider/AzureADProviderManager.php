@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Provider\AzureADProvider;
 
+use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderMalformedDataException;
 use Valid_String;
 
@@ -113,5 +114,35 @@ class AzureADProviderManager
             && $string_validator->validate($tenant_id)
             && $string_validator->validate($icon)
             && $string_validator->validate($color);
+    }
+
+    /**
+     * @throws ProviderMalformedDataException
+     */
+    public function updateAzureADProvider(AzureADProvider $provider) : void
+    {
+        $is_data_valid = $this->isAzureProviderDataValid(
+            $provider->getName(),
+            $provider->getClientId(),
+            $provider->getClientSecret(),
+            $provider->getIcon(),
+            $provider->getColor(),
+            $provider->getTenantId()
+        );
+
+        if (! $is_data_valid) {
+            throw new ProviderMalformedDataException();
+        }
+
+        $this->azure_provider_dao->save(
+            $provider->getId(),
+            $provider->getName(),
+            $provider->isUniqueAuthenticationEndpoint(),
+            $provider->getClientId(),
+            $provider->getClientSecret(),
+            $provider->getIcon(),
+            $provider->getColor(),
+            $provider->getTenantId()
+        );
     }
 }

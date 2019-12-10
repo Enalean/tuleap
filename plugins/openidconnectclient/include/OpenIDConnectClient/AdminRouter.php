@@ -58,8 +58,11 @@ class AdminRouter implements DispatchableWithRequest
             case 'create-azure-provider':
                 $this->controller->createAzureADProvider($this->csrf_token, $request);
                 break;
-            case 'update-provider':
-                $this->controller->updateProvider($this->csrf_token, $request);
+            case 'update-generic-provider':
+                $this->controller->updateGenericProvider($this->csrf_token, $request);
+                break;
+            case 'update-azure-provider':
+                $this->controller->updateAzureProvider($this->csrf_token, $request);
                 break;
             case 'delete-provider':
                 $this->controller->removeProvider($this->csrf_token, $request->get('provider_id'), $current_user);
