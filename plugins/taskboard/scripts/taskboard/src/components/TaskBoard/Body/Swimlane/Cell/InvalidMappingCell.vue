@@ -23,19 +23,36 @@
          v-on:mouseenter="mouseEntersCollapsedColumn"
          v-on:mouseout="mouseLeavesCollapsedColumn"
          v-on:click="expandCollapsedColumn"
-    ></div>
+    >
+        <add-card v-if="is_add_card_rendered" v-bind:column="column" v-bind:swimlane="swimlane"/>
+    </div>
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from "vue-property-decorator";
+import { Component, Mixins, Prop } from "vue-property-decorator";
+import { Getter } from "vuex-class";
 import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
 import ExpandCollapsedColumnMixin from "./expand-collapsed-column-mixin";
 import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
+import AddCard from "../Card/Add/AddCard.vue";
+import { Swimlane } from "plugins/taskboard/scripts/taskboard/src/type";
 
-@Component({})
+@Component({
+    components: { AddCard }
+})
 export default class InvalidMappingCell extends Mixins(
     HoveringStateForCollapsedColumnMixin,
     ExpandCollapsedColumnMixin,
     ClassesForCollapsedColumnMixin
-) {}
+) {
+    @Prop({ required: true })
+    readonly swimlane!: Swimlane;
+
+    @Getter
+    readonly can_add_in_place!: (swimlane: Swimlane) => boolean;
+
+    get is_add_card_rendered(): boolean {
+        return this.can_add_in_place(this.swimlane);
+    }
+}
 </script>

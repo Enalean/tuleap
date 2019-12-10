@@ -22,8 +22,13 @@ import { createStoreMock } from "../../../../../../../../../../src/www/scripts/v
 import { Card, ColumnDefinition, Swimlane } from "../../../../../type";
 import { RootState } from "../../../../../store/type";
 import InvalidMappingCell from "./InvalidMappingCell.vue";
+import AddCard from "../Card/Add/AddCard.vue";
 
-function createWrapper(swimlane: Swimlane, is_collapsed: boolean): Wrapper<InvalidMappingCell> {
+function createWrapper(
+    swimlane: Swimlane,
+    is_collapsed: boolean,
+    can_add_in_place = false
+): Wrapper<InvalidMappingCell> {
     const column_done = { id: 3, label: "Done", is_collapsed } as ColumnDefinition;
 
     return shallowMount(InvalidMappingCell, {
@@ -34,7 +39,8 @@ function createWrapper(swimlane: Swimlane, is_collapsed: boolean): Wrapper<Inval
                         columns: [column_done]
                     },
                     swimlane: {}
-                } as RootState
+                } as RootState,
+                getters: { can_add_in_place: (): boolean => can_add_in_place }
             })
         },
         propsData: { swimlane, column: column_done }
@@ -92,5 +98,11 @@ describe(`InvalidMappingCell`, () => {
 
         wrapper.trigger("click");
         expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
+    });
+
+    it(`Allows to add cards`, () => {
+        const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false, true);
+
+        expect(wrapper.contains(AddCard)).toBe(true);
     });
 });
