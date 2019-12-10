@@ -19,11 +19,28 @@
 
 import { getFormattedDates } from "../../../../../src/www/scripts/charts-builders/chart-dates-service";
 import { PointsWithDate } from "../../../../../src/www/scripts/charts-builders/type";
+import { PointsNotNullWithDate } from "../src/type";
 
-export { getDisplayableData };
+export { getDisplayableData, getLastData };
 
-function getDisplayableData(dataset: PointsWithDate[]): PointsWithDate[] {
-    const filtered_data = dataset.filter(({ remaining_effort }) => remaining_effort !== null);
+function getDisplayableData(dataset: PointsWithDate[]): PointsNotNullWithDate[] {
+    const formatted_data = getFormattedDates(dataset);
+    const points_not_null: PointsNotNullWithDate[] = [];
 
-    return getFormattedDates(filtered_data);
+    formatted_data.forEach(point => {
+        const remaining_effort = point.remaining_effort;
+        if (remaining_effort !== null) {
+            points_not_null.push({ ...point, remaining_effort });
+        }
+    });
+
+    return points_not_null;
+}
+
+function getLastData(dataset: PointsNotNullWithDate[]): PointsNotNullWithDate | null {
+    if (!dataset.length) {
+        return null;
+    }
+
+    return dataset[dataset.length - 1];
 }
