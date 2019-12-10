@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="taskboard-card-cancel-save-buttons" v-if="should_display_buttons" data-not-drag-handle="true">
+    <div class="taskboard-card-cancel-save-buttons" data-not-drag-handle="true">
         <button type="button"
                 class="tlp-button tlp-button-primary tlp-button-small taskboard-card-save-button"
                 v-on:click="save"
@@ -41,27 +41,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import { Card, TaskboardEvent } from "../../../../../../type";
+import { Component } from "vue-property-decorator";
+import { TaskboardEvent } from "../../../../../../type";
 import EventBus from "../../../../../../helpers/event-bus";
 
 @Component
 export default class CancelSaveButtons extends Vue {
-    @Prop({ required: true })
-    readonly card!: Card;
-
-    get should_display_buttons(): boolean {
-        if (this.card.is_in_edit_mode) {
-            return true;
-        }
-
-        if (!this.card.remaining_effort) {
-            return false;
-        }
-
-        return this.card.remaining_effort.is_in_edit_mode;
-    }
-
     mounted(): void {
         EventBus.$on(TaskboardEvent.ESC_KEY_PRESSED, this.cancel);
     }
@@ -71,11 +56,11 @@ export default class CancelSaveButtons extends Vue {
     }
 
     cancel(): void {
-        EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, this.card);
+        this.$emit("cancel");
     }
 
     save(): void {
-        EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, this.card);
+        this.$emit("save");
     }
 }
 </script>

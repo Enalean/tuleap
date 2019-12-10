@@ -20,7 +20,13 @@
 
 <template>
     <form class="taskboard-add-card-form">
-        <label-editor v-model="label" v-if="is_in_add_mode" v-on:save="save" v-bind:readonly="readonly"/>
+        <template v-if="is_in_add_mode">
+            <label-editor v-model="label" v-on:save="save" v-bind:readonly="readonly"/>
+            <cancel-save-buttons
+                v-on:cancel="cancel"
+                v-on:save="save"
+            />
+        </template>
         <add-button v-if="!is_in_add_mode" v-on:click="switchToAddMode"/>
     </form>
 </template>
@@ -31,17 +37,17 @@ import { Component, Prop } from "vue-property-decorator";
 import { Mutation } from "vuex-class";
 import AddButton from "./AddButton.vue";
 import LabelEditor from "../Editor/Label/LabelEditor.vue";
-import EventBus from "../../../../../../helpers/event-bus";
-import { ColumnDefinition, Swimlane, TaskboardEvent } from "../../../../../../type";
+import { ColumnDefinition, Swimlane } from "../../../../../../type";
 import { namespace } from "vuex-class";
 import { NewCardPayload } from "../../../../../../store/swimlane/card/type";
+import CancelSaveButtons from "../EditMode/CancelSaveButtons.vue";
 
 const swimlane = namespace("swimlane");
 
 const NAVBAR_HEIGHT_AND_HEADER_HEIGHT_IN_PX = 95;
 
 @Component({
-    components: { LabelEditor, AddButton }
+    components: { LabelEditor, AddButton, CancelSaveButtons }
 })
 export default class AddCard extends Vue {
     @Prop({ required: true })
@@ -64,14 +70,6 @@ export default class AddCard extends Vue {
 
     @Mutation
     readonly clearIsACellAddingInPlace!: () => void;
-
-    mounted(): void {
-        EventBus.$on(TaskboardEvent.ESC_KEY_PRESSED, this.cancel);
-    }
-
-    beforeDestroy(): void {
-        EventBus.$off(TaskboardEvent.ESC_KEY_PRESSED, this.cancel);
-    }
 
     cancel(): void {
         if (this.is_in_add_mode) {

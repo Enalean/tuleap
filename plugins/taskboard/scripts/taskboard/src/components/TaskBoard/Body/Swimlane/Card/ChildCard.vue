@@ -29,7 +29,7 @@
         <base-card
             v-bind:card="card"
         />
-        <cancel-save-buttons class="taskboard-card-cancel-save-buttons-for-child" v-bind:card="card"/>
+        <edit-card-buttons class="taskboard-card-cancel-save-buttons-for-child" v-bind:card="card"/>
     </div>
 </template>
 
@@ -39,10 +39,10 @@ import { Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
 import BaseCard from "./BaseCard.vue";
 import { Card } from "../../../../../type";
-import CancelSaveButtons from "./EditMode/CancelSaveButtons.vue";
+import EditCardButtons from "./EditMode/EditCardButtons.vue";
 
 @Component({
-    components: { CancelSaveButtons, BaseCard }
+    components: { EditCardButtons, BaseCard }
 })
 export default class ChildCard extends Vue {
     @State

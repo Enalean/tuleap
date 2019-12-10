@@ -21,7 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import CardWithRemainingEffort from "./CardWithRemainingEffort.vue";
 import ParentCardRemainingEffort from "./ParentCardRemainingEffort.vue";
 import ParentCard from "./ParentCard.vue";
-import CancelSaveButtons from "./EditMode/CancelSaveButtons.vue";
+import EditCardButtons from "./EditMode/EditCardButtons.vue";
 
 describe("CardWithRemainingEffort", () => {
     it("displays the solo card in its own cell", () => {
@@ -36,6 +36,6 @@ describe("CardWithRemainingEffort", () => {
 
         expect(wrapper.contains(ParentCard)).toBe(true);
         expect(wrapper.contains(ParentCardRemainingEffort)).toBe(true);
-        expect(wrapper.contains(CancelSaveButtons)).toBe(true);
+        expect(wrapper.contains(EditCardButtons)).toBe(true);
     });
 });
