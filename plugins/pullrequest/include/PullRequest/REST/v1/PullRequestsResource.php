@@ -213,8 +213,12 @@ class PullRequestsResource extends AuthenticatedResource
         $reference_manager          = ReferenceManager::instance();
         $this->pull_request_factory = new PullRequestFactory($pull_request_dao, $reference_manager);
 
+        $this->logger               = new BackendLogger();
+
+        $event_dispatcher = PullRequestNotificationSupport::buildDispatcher($this->logger);
+
         $comment_dao           = new CommentDao();
-        $this->comment_factory = new CommentFactory($comment_dao, $reference_manager);
+        $this->comment_factory = new CommentFactory($comment_dao, $reference_manager, $event_dispatcher);
 
         $this->user_manager         = UserManager::instance();
 
@@ -253,12 +257,11 @@ class PullRequestsResource extends AuthenticatedResource
                 new GitPullRequestReferenceNamespaceAvailabilityChecker
             )
         );
-        $this->logger               = new BackendLogger();
         $this->pull_request_closer  = new PullRequestCloser(
             $pull_request_dao,
             $this->pull_request_merger,
             new TimelineEventCreator(new TimelineDao()),
-            PullRequestNotificationSupport::buildDispatcher($this->logger)
+            $event_dispatcher
         );
 
         $dao = new \Tuleap\PullRequest\InlineComment\Dao();

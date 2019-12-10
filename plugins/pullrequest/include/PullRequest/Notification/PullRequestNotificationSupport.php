@@ -41,6 +41,8 @@ use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\BranchUpdate\PullRequestUpdateCommitDiff;
 use Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedEvent;
 use Tuleap\PullRequest\BranchUpdate\PullRequestUpdatedNotificationToProcessBuilder;
+use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentEvent;
+use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentNotificationToProcessBuilder;
 use Tuleap\PullRequest\Dao;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationSendMail;
@@ -218,6 +220,52 @@ final class PullRequestNotificationSupport
                                 \UserHelper::instance(),
                                 $html_url_builder,
                                 new PullRequestUpdateCommitDiff()
+                            )
+                        );
+                    }
+                ],
+                PullRequestNewCommentEvent::class => [
+                    static function (): EventSubjectToNotificationListener {
+                        $git_repository_factory = self::buildGitRepositoryFactory();
+                        $html_url_builder       = self::buildHTMLURLBuilder($git_repository_factory);
+                        $user_manager           = \UserManager::instance();
+                        $reference_manager      = \ReferenceManager::instance();
+                        return new EventSubjectToNotificationListener(
+                            self::buildPullRequestNotificationSendMail($git_repository_factory, $html_url_builder),
+                            new PullRequestNewCommentNotificationToProcessBuilder(
+                                $user_manager,
+                                new Factory(
+                                    new Dao(),
+                                    $reference_manager
+                                ),
+                                new \Tuleap\PullRequest\Comment\Factory(
+                                    new \Tuleap\PullRequest\Comment\Dao(),
+                                    $reference_manager,
+                                    self::buildSynchronousDispatcher()
+                                ),
+                                new OwnerRetriever(
+                                    $user_manager,
+                                    new ReviewerRetriever(
+                                        $user_manager,
+                                        new ReviewerDAO(),
+                                        new PullRequestPermissionChecker(
+                                            $git_repository_factory,
+                                            new \Tuleap\Project\ProjectAccessChecker(
+                                                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                                                new RestrictedUserCanAccessProjectVerifier(),
+                                                \EventManager::instance()
+                                            ),
+                                            new AccessControlVerifier(
+                                                new FineGrainedRetriever(new FineGrainedDao()),
+                                                new \System_Command()
+                                            )
+                                        )
+                                    ),
+                                    new TimelineDAO()
+                                ),
+                                new FilterUserFromCollection(),
+                                \UserHelper::instance(),
+                                $html_url_builder
                             )
                         );
                     }

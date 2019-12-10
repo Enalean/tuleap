@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,26 +20,35 @@
 
 namespace Tuleap\PullRequest\Comment;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use ReferenceManager;
 use pullrequestPlugin;
 use PFUser;
+use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentEvent;
 
 class Factory
 {
-
     /**
      * @var ReferenceManager
      */
     private $reference_manager;
 
-    /** @var Tuleap\PullRequest\Comment\Dao */
+    /** @var Dao */
     private $dao;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
 
-    public function __construct(Dao $dao, ReferenceManager $reference_manager)
-    {
+    public function __construct(
+        Dao $dao,
+        ReferenceManager $reference_manager,
+        EventDispatcherInterface $event_dispatcher
+    ) {
         $this->dao               = $dao;
         $this->reference_manager = $reference_manager;
+        $this->event_dispatcher  = $event_dispatcher;
     }
 
     public function save(Comment $comment, PFUser $user, $project_id)
@@ -60,6 +69,8 @@ class Factory
             pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
         );
 
+        $this->event_dispatcher->dispatch(PullRequestNewCommentEvent::fromCommentID($saved));
+
         return $saved;
     }
 
@@ -72,6 +83,17 @@ class Factory
         }
 
         return new PaginatedComments($comments, $this->dao->foundRows());
+    }
+
+    public function getCommentByID(int $comment_id): ?Comment
+    {
+        $row = $this->dao->searchByCommentID($comment_id);
+
+        if ($row === null) {
+            return null;
+        }
+
+        return $this->instantiateFromRow($row);
     }
 
     private function instantiateFromRow($row)
