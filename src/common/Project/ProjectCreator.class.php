@@ -25,6 +25,8 @@ require_once __DIR__ . '/../../common/wiki/lib/WikiCloner.class.php';
 define('PROJECT_APPROVAL_BY_ADMIN', 'P');
 define('PROJECT_APPROVAL_AUTO', 'A');
 
+use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
+use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
@@ -231,7 +233,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             $project_retriever,
             $widget_dao,
             $widget_retriever,
-            $widget_factory
+            $widget_factory,
+            new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao())
         );
 
         return new self(
