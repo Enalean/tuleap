@@ -31,6 +31,8 @@ import {
 import { addScaleLines } from "./burndown-scale-drawer";
 import { drawIdealLine } from "../../../../../src/www/scripts/charts-builders/chart-lines-service";
 import { buildChartLayout } from "../../../../../src/www/scripts/charts-builders/chart-layout-builder";
+import { TimeScaleLabelsFormatter } from "../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter";
+import { removeAllLabelsOverlapsOthersLabels } from "./burndown-time-scale-label-formatter";
 
 const DEFAULT_REMAINING_EFFORT = 5;
 
@@ -105,6 +107,14 @@ function createBurndownChart(
             .remove();
 
         addScaleLines(svg_burndown, coordinates_scale_lines);
+
+        new TimeScaleLabelsFormatter({
+            layout: svg_burndown,
+            first_date: x_axis_tick_values[0],
+            last_date: x_axis_tick_values[x_axis_tick_values.length - 1]
+        }).formatTicks();
+
+        removeAllLabelsOverlapsOthersLabels(svg_burndown);
     }
 }
 

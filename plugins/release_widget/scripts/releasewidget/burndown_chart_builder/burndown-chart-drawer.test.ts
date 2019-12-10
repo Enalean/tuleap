@@ -21,6 +21,8 @@ import { createBurndownChart, getMaxRemainingEffort } from "./burndown-chart-dra
 
 import { BurndownData, PointsWithDate } from "../src/type";
 import { ChartPropsBurndownWhithoutTooltip } from "../../../../../src/www/scripts/charts-builders/type";
+jest.mock("../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter");
+jest.mock("./burndown-time-scale-label-formatter");
 
 describe("BurndownChartDrawer - ", () => {
     describe("getMaxRemainingEffort - ", () => {

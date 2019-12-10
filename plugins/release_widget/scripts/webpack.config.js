@@ -40,7 +40,16 @@ const webpack_config = {
             ...webpack_configurator.configureTypescriptRules(
                 webpack_configurator.babel_options_chrome_firefox
             ),
-            webpack_configurator.rule_easygettext_loader,
+            {
+                test: /\.po$/,
+                include: /scripts\/charts-builders\/po/,
+                use: [{ loader: "json-loader" }, { loader: "po-gettext-loader" }]
+            },
+            {
+                test: /\.po$/,
+                include: /releasewidget\/po\//,
+                use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }]
+            },
             webpack_configurator.rule_vue_loader
         ]
     },

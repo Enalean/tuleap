@@ -44,8 +44,8 @@ export default class BurndownChartDisplayer extends Vue {
             graph_height: container_height,
             margins: {
                 top: 5,
-                right: 5,
-                bottom: 5,
+                right: 20,
+                bottom: 30,
                 left: 35
             }
         };
