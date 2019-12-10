@@ -250,7 +250,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->trove_data    = array();
         $this->data_services = array();
         $this->data_fields   = array(
-            'form_101' => $xml->$long_description_tagname
+            'form_101' => (string)$xml->$long_description_tagname
         );
 
         switch ($attrs['access']) {
