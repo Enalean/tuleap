@@ -25,39 +25,16 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .project-release-infos-badges {
     display: flex;
-    flex-wrap: wrap;
-    margin: 0 $tlp-spacing $tlp-half-spacing 0;
+    flex-direction: row;
+    margin: 0 0 $tlp-half-spacing 0;
+}
+
+.on-open-sprints-details {
+    flex-direction: column;
 }
 
 .project-release-infos-badges .project-release-info-badge {
     margin: 0 $tlp-half-spacing $tlp-half-spacing 0;
-}
-
-.project-release-infos-badges .toggle-sprints {
-    position: relative;
-}
-
-.project-release-infos-badges .toggle-sprints::before {
-    content: '';
-    position: absolute;
-    z-index: 2;
-    top: round(($tlp-half-spacing - 1) / 2);
-    left: -31px;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: $tlp-theme-color;
-}
-
-.project-release-infos-badges .toggle-sprints::after {
-    content: '';
-    position: absolute;
-    z-index: 2;
-    top: round($tlp-half-spacing) + 1;
-    left: -20px;
-    width: 20px;
-    height: 2px;
-    background: $tlp-theme-color;
 }
 
 .release-content-description {

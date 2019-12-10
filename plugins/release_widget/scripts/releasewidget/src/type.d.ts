@@ -41,11 +41,9 @@ export interface MilestoneData {
         };
         milestones: {
             accept: {
-                trackers: [
-                    {
-                        label: string;
-                    }
-                ];
+                trackers: {
+                    label: string;
+                }[];
             };
         };
         additional_panes: Pane[];
