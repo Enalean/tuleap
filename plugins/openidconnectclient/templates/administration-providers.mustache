@@ -19,7 +19,6 @@
                         Azure Active Directory
                     </a>
                 </div>
-
             </div>
         {{/ there_are_providers }}
     </div>
@@ -91,7 +90,6 @@
                             type="button"
                             class="tlp-button-primary tlp-button-outline provider-action-edit-button tlp-form-element-disabled"
                             data-edit-modal-id="siteadmin-config-providers-modal-update-{{ getId }}"
-                            disabled
                     >
                     {{/ isAzureAd }}
 
@@ -109,8 +107,12 @@
             </div>
 
             {{> administration-providers-modal-delete }}
-
-            {{> administration-providers-modal-update }}
+            {{^ isAzureAd }}
+                {{> administration-providers-modal-update-generic }}
+            {{/ isAzureAd }}
+            {{# isAzureAd }}
+                {{> administration-providers-modal-update-azure }}
+            {{/ isAzureAd }}
         </section>
     {{/ providers_presenters }}
     {{^ there_are_providers }}
@@ -141,7 +143,6 @@
             </div>
         </div>
     {{/ there_are_providers}}
-
     {{> administration-providers-modal-create-generic}}
     {{> administration-providers-modal-create-azure}}
 </div>
