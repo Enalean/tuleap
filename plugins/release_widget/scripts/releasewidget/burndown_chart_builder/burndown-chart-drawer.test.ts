@@ -87,7 +87,7 @@ describe("BurndownChartDrawer - ", () => {
             expect(chart_svg_element).toMatchSnapshot();
         });
 
-        it("When there isn't points with date in burndownData, Then there is no graph", () => {
+        it("When there isn't points with date in burndownData, Then there is an empty graph", () => {
             const chart_svg_element = getDocument();
             createBurndownChart(
                 chart_svg_element,
@@ -95,7 +95,7 @@ describe("BurndownChartDrawer - ", () => {
                 getBurndownDataWithoutPointsWithDate()
             );
 
-            expect(chart_svg_element.childElementCount).toEqual(0);
+            expect(chart_svg_element.childElementCount).toEqual(1);
         });
 
         function getDocument(): HTMLElement {
