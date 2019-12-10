@@ -105,6 +105,15 @@ describe("Store actions", () => {
                                         }
                                     ]
                                 }
+                            },
+                            milestones: {
+                                accept: {
+                                    trackers: [
+                                        {
+                                            label: "Sprints"
+                                        }
+                                    ]
+                                }
                             }
                         },
                         number_of_artifact_by_trackers: []
@@ -165,6 +174,15 @@ describe("Store actions", () => {
                                 {
                                     id: 2,
                                     label: "two"
+                                }
+                            ]
+                        }
+                    },
+                    milestones: {
+                        accept: {
+                            trackers: [
+                                {
+                                    label: "Sprints"
                                 }
                             ]
                         }

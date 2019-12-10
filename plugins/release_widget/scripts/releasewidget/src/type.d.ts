@@ -39,6 +39,15 @@ export interface MilestoneData {
                 trackers: TrackerProjectWithoutColor[];
             };
         };
+        milestones: {
+            accept: {
+                trackers: [
+                    {
+                        label: string;
+                    }
+                ];
+            };
+        };
     };
     number_of_artifact_by_trackers: TrackerNumberArtifacts[];
 }
