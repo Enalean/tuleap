@@ -1445,6 +1445,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                             }
                         }
                     }
+                    $GLOBALS['Response']->redirect('?'. http_build_query(array(
+                        'report' => $this->id
+                    )));
                 }
                 break;
             case self::ACTION_DEFAULT:
