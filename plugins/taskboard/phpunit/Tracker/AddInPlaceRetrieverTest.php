@@ -18,14 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Tracker;
 
+use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Mockery as M;
 
 class AddInPlaceRetrieverTest extends TestCase
 {
@@ -39,14 +39,21 @@ class AddInPlaceRetrieverTest extends TestCase
     private $semantic_title;
 
     private const SEMANTIC_TITLE_FIELD_ID = 1533;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|\Tracker_FormElement_Field_Selectbox
+     */
+    private $mapped_field;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->semantic_title                 = M::mock(\Tracker_Semantic_Title::class);
-        $this->form_element_factory           = M::mock(\Tracker_FormElementFactory::class);
+        $this->semantic_title         = M::mock(\Tracker_Semantic_Title::class);
+        $this->form_element_factory   = M::mock(\Tracker_FormElementFactory::class);
+        $this->mapped_field           = M::mock(\Tracker_FormElement_Field_Selectbox::class);
         $this->add_in_place_retriever = new AddInPlaceRetriever(
             $this->form_element_factory
         );
+
+        $this->mapped_field->shouldReceive('getId')->andReturn(1001);
     }
 
     protected function tearDown(): void
@@ -58,16 +65,19 @@ class AddInPlaceRetrieverTest extends TestCase
     {
         $taskboard_tracker = $this->getTaskboardTracker();
 
-        $user                  = M::mock(\PFUser::class);
-        $tracker               = $taskboard_tracker->getTracker();
-        $tracker->shouldReceive('getChildren')->andReturn([
-            M::mock(Tracker::class),
-            M::mock(Tracker::class)
-        ]);
+        $user    = M::mock(\PFUser::class);
+        $tracker = $taskboard_tracker->getTracker();
+        $tracker->shouldReceive('getChildren')->andReturn(
+            [
+                M::mock(Tracker::class),
+                M::mock(Tracker::class)
+            ]
+        );
 
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
-            $user
+            $user,
+            []
         );
 
         $this->assertNull($add_in_place);
@@ -77,13 +87,58 @@ class AddInPlaceRetrieverTest extends TestCase
     {
         $taskboard_tracker = $this->getTaskboardTracker();
 
-        $user                  = M::mock(\PFUser::class);
-        $tracker               = $taskboard_tracker->getTracker();
+        $user    = M::mock(\PFUser::class);
+        $tracker = $taskboard_tracker->getTracker();
         $tracker->shouldReceive('getChildren')->andReturn([]);
 
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
-            $user
+            $user,
+            []
+        );
+
+        $this->assertNull($add_in_place);
+    }
+
+    public function testItReturnsNullWhenThereIsNoMappedFieldForChildTracker(): void
+    {
+        $taskboard_tracker = $this->getTaskboardTracker();
+
+        $user    = M::mock(\PFUser::class);
+        $tracker = $taskboard_tracker->getTracker();
+
+        $child_tracker = M::mock(Tracker::class);
+        $child_tracker->shouldReceive('getId')->andReturn(42);
+
+        $tracker->shouldReceive('getChildren')->andReturn([$child_tracker]);
+
+        $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
+            $taskboard_tracker,
+            $user,
+            []
+        );
+
+        $this->assertNull($add_in_place);
+    }
+
+    public function testItReturnsNullWhenMappeFieldIsNotSubmitable(): void
+    {
+        $this->mapped_field->shouldReceive(['userCanSubmit' => false])->once();
+
+        $taskboard_tracker = $this->getTaskboardTracker();
+
+        $user    = M::mock(\PFUser::class);
+        $tracker = $taskboard_tracker->getTracker();
+
+        $child_tracker = M::mock(Tracker::class);
+        $child_tracker->shouldReceive('getId')->andReturn(42);
+
+        $tracker->shouldReceive('getChildren')->andReturn([$child_tracker]);
+
+        $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
+            $taskboard_tracker,
+            $user,
+            [42 => $this->mapped_field]
         );
 
         $this->assertNull($add_in_place);
@@ -91,10 +146,12 @@ class AddInPlaceRetrieverTest extends TestCase
 
     public function testItReturnsNullWhenTitleSemanticIsNotDefinedOnChildTracker(): void
     {
+        $this->mapped_field->shouldReceive(['userCanSubmit' => true])->once();
+
         $taskboard_tracker = $this->getTaskboardTracker();
 
-        $user                  = M::mock(\PFUser::class);
-        $tracker               = $taskboard_tracker->getTracker();
+        $user    = M::mock(\PFUser::class);
+        $tracker = $taskboard_tracker->getTracker();
 
         $child_tracker = M::mock(Tracker::class);
         $child_tracker->shouldReceive('getId')->andReturn(42);
@@ -105,7 +162,8 @@ class AddInPlaceRetrieverTest extends TestCase
 
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
-            $user
+            $user,
+            [42 => $this->mapped_field]
         );
 
         $this->assertNull($add_in_place);
@@ -113,10 +171,12 @@ class AddInPlaceRetrieverTest extends TestCase
 
     public function testItReturnsNullWhenUserCannotUpdateFieldBoundToSemanticTitle(): void
     {
+        $this->mapped_field->shouldReceive(['userCanSubmit' => true])->once();
+
         $taskboard_tracker = $this->getTaskboardTracker();
 
-        $user                  = M::mock(\PFUser::class);
-        $tracker               = $taskboard_tracker->getTracker();
+        $user    = M::mock(\PFUser::class);
+        $tracker = $taskboard_tracker->getTracker();
 
         $child_tracker = M::mock(Tracker::class);
         $child_tracker->shouldReceive('getId')->andReturn(42);
@@ -127,18 +187,21 @@ class AddInPlaceRetrieverTest extends TestCase
 
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
-            $user
+            $user,
+            [42 => $this->mapped_field]
         );
 
         $this->assertNull($add_in_place);
     }
 
-    public function testItReturnsNullWhenSemanticTitleFieldIsNotTheOnlyFieldRequiredAtArtifactSubmission(): void
+    public function testItReturnsNullWhenSemanticTitleAndMappedFieldAreNotTheOnlyFieldRequiredAtArtifactSubmission(): void
     {
+        $this->mapped_field->shouldReceive(['userCanSubmit' => true])->once();
+
         $taskboard_tracker = $this->getTaskboardTracker();
 
-        $user                  = M::mock(\PFUser::class);
-        $tracker               = $taskboard_tracker->getTracker();
+        $user    = M::mock(\PFUser::class);
+        $tracker = $taskboard_tracker->getTracker();
 
         $child_tracker = M::mock(Tracker::class);
         $child_tracker->shouldReceive('getId')->andReturn(42);
@@ -146,11 +209,12 @@ class AddInPlaceRetrieverTest extends TestCase
         $tracker->shouldReceive('getChildren')->andReturn([$child_tracker]);
 
         $this->mockSemanticTitle($child_tracker, true, true);
-        $this->mockTrackerFields($child_tracker, true, true);
+        $this->mockTrackerFields($child_tracker, true, true, true);
 
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
-            $user
+            $user,
+            [42 => $this->mapped_field]
         );
 
         $this->assertNull($add_in_place);
@@ -158,10 +222,12 @@ class AddInPlaceRetrieverTest extends TestCase
 
     public function testItReturnsNullWhenParentTrackerDoesNotHaveAnArtifactLinkField(): void
     {
+        $this->mapped_field->shouldReceive(['userCanSubmit' => true])->once();
+
         $taskboard_tracker = $this->getTaskboardTracker();
 
-        $user                  = M::mock(\PFUser::class);
-        $tracker               = $taskboard_tracker->getTracker();
+        $user    = M::mock(\PFUser::class);
+        $tracker = $taskboard_tracker->getTracker();
 
         $child_tracker = M::mock(Tracker::class);
         $child_tracker->shouldReceive('getId')->andReturn(42);
@@ -169,7 +235,7 @@ class AddInPlaceRetrieverTest extends TestCase
         $tracker->shouldReceive('getChildren')->andReturn([$child_tracker]);
 
         $this->mockSemanticTitle($child_tracker, true, true);
-        $this->mockTrackerFields($child_tracker, true, false);
+        $this->mockTrackerFields($child_tracker, true, false, true);
 
         $this->form_element_factory
             ->shouldReceive('getAnArtifactLinkField')
@@ -179,7 +245,8 @@ class AddInPlaceRetrieverTest extends TestCase
 
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
-            $user
+            $user,
+            [42 => $this->mapped_field]
         );
 
         $this->assertNull($add_in_place);
@@ -187,10 +254,12 @@ class AddInPlaceRetrieverTest extends TestCase
 
     public function testItReturnsNullWhenParentTrackerDoesNotHaveAnUpdatableArtifactLinkField(): void
     {
+        $this->mapped_field->shouldReceive(['userCanSubmit' => true])->once();
+
         $taskboard_tracker = $this->getTaskboardTracker();
 
-        $user                  = M::mock(\PFUser::class);
-        $tracker               = $taskboard_tracker->getTracker();
+        $user    = M::mock(\PFUser::class);
+        $tracker = $taskboard_tracker->getTracker();
 
         $child_tracker = M::mock(Tracker::class);
         $child_tracker->shouldReceive('getId')->andReturn(42);
@@ -198,7 +267,7 @@ class AddInPlaceRetrieverTest extends TestCase
         $tracker->shouldReceive('getChildren')->andReturn([$child_tracker]);
 
         $this->mockSemanticTitle($child_tracker, true, true);
-        $this->mockTrackerFields($child_tracker, true, false);
+        $this->mockTrackerFields($child_tracker, true, false, true);
 
         $artifact_link_field = M::mock(\Tracker_FormElement_Field_ArtifactLink::class);
         $this->form_element_factory
@@ -214,7 +283,8 @@ class AddInPlaceRetrieverTest extends TestCase
 
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
-            $user
+            $user,
+            [42 => $this->mapped_field]
         );
 
         $this->assertNull($add_in_place);
@@ -222,10 +292,12 @@ class AddInPlaceRetrieverTest extends TestCase
 
     public function testItReturnsAnAddInPlaceObject(): void
     {
+        $this->mapped_field->shouldReceive(['userCanSubmit' => true])->once();
+
         $taskboard_tracker = $this->getTaskboardTracker();
 
-        $user                  = M::mock(\PFUser::class);
-        $tracker               = $taskboard_tracker->getTracker();
+        $user    = M::mock(\PFUser::class);
+        $tracker = $taskboard_tracker->getTracker();
 
         $child_tracker = M::mock(Tracker::class);
         $child_tracker->shouldReceive('getId')->andReturn(42);
@@ -233,7 +305,7 @@ class AddInPlaceRetrieverTest extends TestCase
         $tracker->shouldReceive('getChildren')->andReturn([$child_tracker]);
 
         $this->mockSemanticTitle($child_tracker, true, true);
-        $this->mockTrackerFields($child_tracker, true, false);
+        $this->mockTrackerFields($child_tracker, true, false, true);
 
         $artifact_link_field = M::mock(\Tracker_FormElement_Field_ArtifactLink::class);
         $this->form_element_factory
@@ -253,7 +325,8 @@ class AddInPlaceRetrieverTest extends TestCase
 
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
-            $user
+            $user,
+            [42 => $this->mapped_field]
         );
 
         $this->assertSame($child_tracker, $add_in_place->getChildTracker());
@@ -278,7 +351,7 @@ class AddInPlaceRetrieverTest extends TestCase
     /**
      * @return array
      */
-    private function getTaskboardTracker() : TaskboardTracker
+    private function getTaskboardTracker(): TaskboardTracker
     {
         $milestone_tracker = M::mock(Tracker::class);
         $tracker           = M::mock(Tracker::class)->shouldReceive('getId')->andReturn("12")->getMock();
@@ -292,8 +365,12 @@ class AddInPlaceRetrieverTest extends TestCase
     /**
      * @return array
      */
-    private function mockTrackerFields(\Tracker $tracker, bool $is_title_field_required, bool $is_desc_field_required): void
-    {
+    private function mockTrackerFields(
+        \Tracker $tracker,
+        bool $is_title_field_required,
+        bool $is_desc_field_required,
+        bool $is_mapped_field_required
+    ): void {
         $title_field = M::mock(\Tracker_FormElement_Field_String::class);
         $title_field->shouldReceive('isRequired')->andReturn($is_title_field_required);
         $title_field->shouldReceive('getId')->andReturn(self::SEMANTIC_TITLE_FIELD_ID);
@@ -302,6 +379,10 @@ class AddInPlaceRetrieverTest extends TestCase
         $desc_field->shouldReceive('isRequired')->andReturn($is_desc_field_required);
         $desc_field->shouldReceive('getId')->andReturn(1534);
 
-        $this->form_element_factory->shouldReceive('getUsedFields')->with($tracker)->andReturn([$title_field, $desc_field]);
+        $this->mapped_field->shouldReceive('isRequired')->andReturn($is_mapped_field_required);
+
+        $this->form_element_factory->shouldReceive('getUsedFields')->with($tracker)->andReturn(
+            [$title_field, $desc_field, $this->mapped_field]
+        );
     }
 }

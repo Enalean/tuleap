@@ -50,4 +50,15 @@ final class TrackerCollection
         }
         return $new;
     }
+
+    /**
+     * @template     U
+     * @psalm-param  Closure(mixed, TaskboardTracker):U $closure
+     * @psalm-param  mixed $initial
+     * @psalm-return list<U>
+     */
+    public function reduce(Closure $closure, $initial): array
+    {
+        return array_reduce($this->trackers, $closure, $initial);
+    }
 }
