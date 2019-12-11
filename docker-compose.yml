@@ -78,6 +78,14 @@ services:
       - ./src/etc/tuleap-mysql57-dev.cnf:/etc/mysql/mysql.conf.d/tuleap.cnf:ro,cached
       - db57-data:/var/lib/mysql
 
+  db-maria-10.3:
+     image: mariadb:10.3
+     env_file:
+       - .env
+     volumes:
+       - ./src/etc/tuleap-mysql57-dev.cnf:/etc/mysql/mariadb.conf.d/tuleap.cnf:ro,cached
+       - mariadb103-data:/var/lib/mysql
+
   redis:
     image: redis:3.2
     volumes:
@@ -106,6 +114,7 @@ volumes:
   gerrit-data:
   db-data:
   db57-data:
+  mariadb103-data:
   redis-data:
   realtime-conf:
   realtime-cert:

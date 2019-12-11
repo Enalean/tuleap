@@ -34,10 +34,10 @@ def runJestTests(String name, String path) {
     """
 }
 
-def runRESTTests(String version) {
+def runRESTTests(String db, String php) {
     sh """
-    mkdir -p results/api-rest/${version}
-    docker run --rm -v \$WORKSPACE/sources:/usr/share/tuleap:ro --mount type=tmpfs,destination=/tmp -v \$WORKSPACE/results/api-rest/${version}:/output --network none \$DOCKER_REGISTRY/enalean/tuleap-test-rest:${version}
+    mkdir -p \$WORKSPACE/results/api-rest/php${php}-${db}
+    TESTS_RESULT=\$WORKSPACE/results/api-rest/php${php}-${db} sources/tests/rest/bin/run-compose.sh "${db}"
     """
 }
 

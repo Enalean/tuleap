@@ -60,6 +60,14 @@ pipeline {
                         junit 'results/e2e/distlp/*.xml'
                     }
                 }
+                stage('REST') {
+                    stages {
+                        stage('REST CentOS 6 PHP 7.3 MariaDB 10.3') {
+                            steps { script { actions.runRESTTests('mariadb103', '73') } }
+                        }
+                    }
+                    post { always { junit 'results/api-rest/*/rest_tests.xml' } }
+                }
             }
             post {
                 always {
