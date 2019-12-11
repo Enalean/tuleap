@@ -50,8 +50,20 @@ class ProjectReleasePresenter
      * @var string
      */
     public $label_tracker_planning;
+    /**
+     * @var bool
+     */
+    public $is_timeframe_duration;
+    /**
+     * @var string
+     */
+    public $label_start_date;
+    /**
+     * @var string
+     */
+    public $label_timeframe;
 
-    public function __construct(Project $project, bool $is_IE11, int $nb_upcoming_releases, int $nb_backlog_items, array $trackers_id, string $label_tracker_planning)
+    public function __construct(Project $project, bool $is_IE11, int $nb_upcoming_releases, int $nb_backlog_items, array $trackers_id, string $label_tracker_planning, bool $is_timeframe_duration, string $label_start_date, string $label_timeframe)
     {
         $this->project_id                    = $project->getID();
         $this->is_IE11                       = $is_IE11;
@@ -59,5 +71,8 @@ class ProjectReleasePresenter
         $this->nb_backlog_items              = $nb_backlog_items;
         $this->json_trackers_agile_dashboard = (string)json_encode($trackers_id, JSON_THROW_ON_ERROR);
         $this->label_tracker_planning        = $label_tracker_planning;
+        $this->is_timeframe_duration         = $is_timeframe_duration;
+        $this->label_start_date              = $label_start_date;
+        $this->label_timeframe               = $label_timeframe;
     }
 }

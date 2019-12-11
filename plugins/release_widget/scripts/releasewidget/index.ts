@@ -50,6 +50,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const nb_backlog_items_dataset = vue_mount_point.dataset.nbBacklogItems;
     const trackers_agile_dashboard_dataset = vue_mount_point.dataset.jsonTrackersAgileDashboard;
     const label_tracker_planning = vue_mount_point.dataset.labelTrackerPlanning;
+    const is_timeframe_duration_dataset = vue_mount_point.dataset.isTimeframeDuration;
+    const label_start_date = vue_mount_point.dataset.labelStartDate;
+    const label_timeframe = vue_mount_point.dataset.labelTimeframe;
 
     if (!project_id_dataset) {
         throw new Error("Project Id is missing.");
@@ -71,6 +74,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         throw new Error("Label Tracker Planning is missing.");
     }
 
+    if (!label_start_date) {
+        throw new Error("Label Start Date is missing.");
+    }
+
+    if (!label_timeframe) {
+        throw new Error("Label Timeframe is missing.");
+    }
+
     const project_id = Number.parseInt(project_id_dataset, 10);
     const nb_upcoming_releases = Number.parseInt(nb_upcoming_releases_dataset, 10);
     const nb_backlog_items = Number.parseInt(nb_backlog_items_dataset, 10);
@@ -78,6 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         trackers_agile_dashboard_dataset
     );
     const is_browser_IE11 = Boolean(is_browser_IE11_dataset);
+    const is_timeframe_duration = Boolean(is_timeframe_duration_dataset);
 
     const AppComponent = Vue.extend(App);
 
@@ -88,7 +100,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             nb_backlog_items,
             trackers_agile_dashboard,
             is_browser_IE11,
-            label_tracker_planning
+            label_tracker_planning,
+            is_timeframe_duration,
+            label_start_date,
+            label_timeframe
         )
     }).$mount(vue_mount_point);
 });

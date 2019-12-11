@@ -22,11 +22,8 @@ msgid_plural "%{nb_upcoming_releases} upcoming %{label_tracker}."
 msgstr[0] "%{nb_upcoming_releases} prochain(e) %{label_tracker}."
 msgstr[1] "%{nb_upcoming_releases} prochain(e)s %{label_tracker}."
 
-msgid "'duration' field is empty or invalid."
-msgstr "Le champs 'duration' est vide ou invalide."
-
-msgid "'start date' field is empty or invalid."
-msgstr "Le champs 'start date' est vide ou invalide."
+msgid "'%s' field is empty or invalid."
+msgstr "Le champs '%s' est vide ou invalide."
 
 msgid "Burndown"
 msgstr "Burndown"
