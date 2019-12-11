@@ -11,12 +11,14 @@
         | <a href="{{ gerrit_url }}">{{ gerrit_project }}</a>
     {{/ dgettext }}
 </div>
+{{# is_migrated_to_unsupported_gerrit_version }}
 <div class="tlp-alert-danger git-repository-gerrit-status">
     {{# dgettext }}
         tuleap-git
         | This repository is managed by a Gerrit server running an unsupported version. Please, reach out to your site administrators to fix the issue.
     {{/ dgettext }}
 </div>
+{{/ is_migrated_to_unsupported_gerrit_version }}
 {{/ is_migrated_to_gerrit }}
 {{# has_migration_error }}
 <div class="tlp-alert-danger git-repository-gerrit-status">
