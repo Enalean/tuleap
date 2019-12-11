@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,7 +32,7 @@ if ($argc !== 3) {
 
 /** @var GitPlugin $git_plugin */
 $git_plugin  = PluginManager::instance()->getPluginByName('git');
-$url_manager = new Git_GitRepositoryUrlManager($git_plugin);
+$url_manager = new Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder());
 $driver      = new Git_GitoliteDriver(
     $git_plugin->getLogger(),
     $git_plugin->getGitSystemEventManager(),
