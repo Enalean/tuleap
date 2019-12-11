@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DaysDisplayingBurndownData } from "./type";
+import { DaysDisplayingBurndownData, PointsWithDate } from "./type";
 
 export function getDaysToDisplay({
     opening_days,
@@ -25,3 +25,5 @@ export function getDaysToDisplay({
     points_with_date,
     start_date
 }: DaysDisplayingBurndownData): string[] | [];
+
+export function getFormattedDates(dataset: PointsWithDate[]): PointsWithDate[];

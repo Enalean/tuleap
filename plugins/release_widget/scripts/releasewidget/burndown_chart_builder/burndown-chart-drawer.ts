@@ -29,10 +29,14 @@ import {
     XYScale
 } from "../../../../../src/www/scripts/charts-builders/type";
 import { addScaleLines } from "./burndown-scale-drawer";
-import { drawIdealLine } from "../../../../../src/www/scripts/charts-builders/chart-lines-service";
+import {
+    drawCurve,
+    drawIdealLine
+} from "../../../../../src/www/scripts/charts-builders/chart-lines-service";
 import { buildChartLayout } from "../../../../../src/www/scripts/charts-builders/chart-layout-builder";
 import { TimeScaleLabelsFormatter } from "../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter";
 import { removeAllLabelsOverlapsOthersLabels } from "./burndown-time-scale-label-formatter";
+import { getDisplayableData } from "./chart-data-service";
 
 const DEFAULT_REMAINING_EFFORT = 5;
 
@@ -44,6 +48,7 @@ function createBurndownChart(
     burndown_data: BurndownData
 ): void {
     const x_axis_tick_values = getDaysToDisplay(burndown_data),
+        displayable_data = getDisplayableData(burndown_data.points_with_date),
         y_axis_maximum = getMaxRemainingEffort(burndown_data);
 
     const properties: PropertiesBuilderGraph = {
@@ -111,6 +116,7 @@ function createBurndownChart(
         }).formatTicks();
 
         removeAllLabelsOverlapsOthersLabels(svg_burndown);
+        drawCurve(svg_burndown, { x_scale, y_scale }, displayable_data, "remaining_effort");
     }
 }
 

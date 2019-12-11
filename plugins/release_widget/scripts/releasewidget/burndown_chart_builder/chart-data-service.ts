@@ -17,18 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PointsWithDate, XYScale } from "./type";
-import { Selection } from "d3-selection";
+import { getFormattedDates } from "../../../../../src/www/scripts/charts-builders/chart-dates-service";
+import { PointsWithDate } from "../../../../../src/www/scripts/charts-builders/type";
 
-export function drawIdealLine(
-    container: Selection<SVGSVGElement, unknown, null, undefined>,
-    { x_scale, y_scale }: XYScale,
-    { line_start, line_end }: { line_start: number; line_end: number }
-): void;
+export { getDisplayableData };
 
-export function drawCurve(
-    container: Selection<SVGSVGElement, unknown, null, undefined>,
-    { x_scale, y_scale }: XYScale,
-    dataset: PointsWithDate[],
-    line_name: string
-): void;
+function getDisplayableData(dataset: PointsWithDate[]): PointsWithDate[] {
+    const filtered_data = dataset.filter(({ remaining_effort }) => remaining_effort !== null);
+
+    return getFormattedDates(filtered_data);
+}
