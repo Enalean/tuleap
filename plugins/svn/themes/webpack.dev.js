@@ -1,5 +1,5 @@
-/*!
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'variables/variables-blue-condensed';
+const common = require("./webpack.common.js");
+const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
 
-@import 'svn';
+module.exports = webpack_configurator.extendDevConfiguration(common);
