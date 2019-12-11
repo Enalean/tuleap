@@ -200,7 +200,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
 
     private function getGitRepositoryUrlManager()
     {
-        return new Git_GitRepositoryUrlManager(PluginManager::instance()->getPluginByName('git'));
+        return new Git_GitRepositoryUrlManager(PluginManager::instance()->getPluginByName('git'), new \Tuleap\InstanceBaseURLBuilder());
     }
 
     private function getGitRepositoryFactory()
