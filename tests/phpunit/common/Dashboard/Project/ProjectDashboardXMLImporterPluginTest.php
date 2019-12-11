@@ -39,7 +39,8 @@ class ProjectDashboardXMLImporterPluginTest extends ProjectDashboardXMLImporterB
             $this->widget_factory,
             $this->widget_dao,
             $this->logger,
-            $this->event_manager
+            $this->event_manager,
+            $this->disabled_widgets_checker
         );
     }
 
@@ -85,6 +86,8 @@ class ProjectDashboardXMLImporterPluginTest extends ProjectDashboardXMLImporterB
         $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('plugin_agiledashboard_projects_kanban')->andReturns($widget);
 
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('kanban', 35, 122, 1)->once();
+
+        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }

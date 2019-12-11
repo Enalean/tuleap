@@ -57,6 +57,8 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
 
         $this->widget_dao->shouldReceive('createLine')->with(10001, ProjectDashboardController::DASHBOARD_TYPE, 1)->once();
 
+        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
@@ -86,6 +88,8 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
 
         $this->widget_dao->shouldReceive('createLine')->andReturns(12);
         $this->widget_dao->shouldReceive('createColumn')->with(12, 1)->once();
+
+        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -120,6 +124,8 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
 
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1)->once();
 
+        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
@@ -148,6 +154,8 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
         $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectmembers')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getId')->andReturns('projectmembers')->getMock());
 
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1)->once();
+
+        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -183,6 +191,39 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
+    public function testItErrorsWhenWidgetIsDisabled()
+    {
+        $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
+        $this->dao->shouldReceive('searchByProjectIdAndName')->andReturns(\TestHelper::arrayToDar());
+
+        $xml = new SimpleXMLElement(
+            '<?xml version="1.0" encoding="UTF-8"?>
+            <project>
+              <dashboards>
+                <dashboard name="dashboard 1">
+                  <line>
+                    <column>
+                      <widget name="projectmembers"></widget>
+                    </column>
+                  </line>
+                </dashboard>
+              </dashboards>
+              </project>'
+        );
+
+        $this->widget_dao->shouldReceive('createLine')->never();
+        $this->widget_dao->shouldReceive('createColumn')->never();
+        $this->widget_factory->shouldReceive('getInstanceByWidgetName')->andReturns(\Mockery::spy(\Widget::class)->shouldReceive('getInstanceId')->andReturns(false)->getMock());
+
+        $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
+
+        $this->logger->shouldReceive('error')->once();
+
+        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnTrue();
+
+        $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
+    }
+
     public function testItErrorsWhenWidgetContentCannotBeCreated()
     {
         $this->user->shouldReceive('isAdmin')->with(101)->andReturns(true);
@@ -210,6 +251,8 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
 
         $this->logger->shouldReceive('error')->once();
+
+        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -245,6 +288,8 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(2);
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectmembers', 0, 122, 1)->ordered();
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 122, 2)->ordered();
+
+        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -284,6 +329,8 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
         $this->logger->shouldReceive('warn')->once();
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(1);
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 122, 1);
+
+        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -327,6 +374,8 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->times(2);
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 122, 1)->ordered();
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 222, 1)->ordered();
+
+        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -387,6 +436,8 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
         $this->logger->shouldReceive('error')->once();
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->never();
 
+        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
@@ -426,6 +477,8 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectheartbeat', 0, 124, 1)->ordered();
 
         $this->widget_dao->shouldReceive('adjustLayoutAccordinglyToNumberOfWidgets')->with(2, 12)->once();
+
+        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -469,6 +522,8 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
 
         $this->widget_dao->shouldReceive('updateLayout')->with(12, 'two-columns-small-big')->once();
 
+        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
+
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
 
@@ -510,6 +565,8 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
 
         $this->widget_dao->shouldReceive('updateLayout')->never();
         $this->widget_dao->shouldReceive('adjustLayoutAccordinglyToNumberOfWidgets')->once();
+
+        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
@@ -555,6 +612,8 @@ class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImporterBa
         $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectrss')->andReturns($widget);
 
         $this->widget_dao->shouldReceive('insertWidgetInColumnWithRank')->with('projectrss', 35, 122, 1)->once();
+
+        $this->disabled_widgets_checker->shouldReceive('isWidgetDisabled')->andReturnFalse();
 
         $this->project_dashboard_importer->import($xml, $this->user, $this->project, $this->mappings_registry);
     }
