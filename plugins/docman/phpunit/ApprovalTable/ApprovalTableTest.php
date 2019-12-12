@@ -1,5 +1,6 @@
 <?php
 /*
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
@@ -22,12 +23,13 @@
  *
  */
 
-require_once 'bootstrap.php';
+use PHPUnit\Framework\TestCase;
 
-class ApprovalTableTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class ApprovalTableTest extends TestCase
 {
 
-    function testTableStateRejected()
+    function testTableStateRejected(): void
     {
         // Std case
         $row['nb_reviewers'] = 5;
@@ -36,7 +38,7 @@ class ApprovalTableTest extends TuleapTestCase
         $row['nb_declined'] = 0;
         $t1 = new Docman_ApprovalTableItem();
         $t1->initFromRow($row);
-        $this->assertEqual($t1->getApprovalState(), PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
+        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED, $t1->getApprovalState());
 
         // Even if some dummy things are returned
         $row['nb_reviewers'] = 5;
@@ -45,7 +47,7 @@ class ApprovalTableTest extends TuleapTestCase
         $row['nb_declined'] = 0;
         $t2 = new Docman_ApprovalTableItem();
         $t2->initFromRow($row);
-        $this->assertEqual($t2->getApprovalState(), PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
+        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED, $t2->getApprovalState());
 
         $row['nb_reviewers'] = 0;
         $row['rejected'] = 1;
@@ -53,10 +55,10 @@ class ApprovalTableTest extends TuleapTestCase
         $row['nb_declined'] = 0;
         $t3 = new Docman_ApprovalTableItem();
         $t3->initFromRow($row);
-        $this->assertEqual($t3->getApprovalState(), PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
+        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED, $t3->getApprovalState());
     }
 
-    function testTableStateApproved()
+    function testTableStateApproved(): void
     {
         // Std case
         $row['nb_reviewers'] = 5;
@@ -65,7 +67,7 @@ class ApprovalTableTest extends TuleapTestCase
         $row['nb_declined'] = 0;
         $t1 = new Docman_ApprovalTableItem();
         $t1->initFromRow($row);
-        $this->assertEqual($t1->getApprovalState(), PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED, $t1->getApprovalState());
 
         // Std case with only one person
         $row['nb_reviewers'] = 1;
@@ -74,7 +76,7 @@ class ApprovalTableTest extends TuleapTestCase
         $row['nb_declined'] = 0;
         $t1 = new Docman_ApprovalTableItem();
         $t1->initFromRow($row);
-        $this->assertEqual($t1->getApprovalState(), PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED, $t1->getApprovalState());
 
         // Std case with 2 people
         $row['nb_reviewers'] = 2;
@@ -83,7 +85,7 @@ class ApprovalTableTest extends TuleapTestCase
         $row['nb_declined'] = 1;
         $t1 = new Docman_ApprovalTableItem();
         $t1->initFromRow($row);
-        $this->assertEqual($t1->getApprovalState(), PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED, $t1->getApprovalState());
 
         // Will not review
         $row['nb_reviewers'] = 5;
@@ -92,10 +94,10 @@ class ApprovalTableTest extends TuleapTestCase
         $row['nb_declined'] = 2;
         $t1 = new Docman_ApprovalTableItem();
         $t1->initFromRow($row);
-        $this->assertEqual($t1->getApprovalState(), PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED, $t1->getApprovalState());
     }
 
-    function testTableStateNotYet()
+    function testTableStateNotYet(): void
     {
         // Std case
         $row['nb_reviewers'] = 0;
@@ -104,7 +106,7 @@ class ApprovalTableTest extends TuleapTestCase
         $row['nb_declined'] = 0;
         $t1 = new Docman_ApprovalTableItem();
         $t1->initFromRow($row);
-        $this->assertEqual($t1->getApprovalState(), PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
+        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET, $t1->getApprovalState());
 
         // Almost everybody approved
         $row['nb_reviewers'] = 5;
@@ -113,7 +115,7 @@ class ApprovalTableTest extends TuleapTestCase
         $row['nb_declined'] = 0;
         $t2 = new Docman_ApprovalTableItem();
         $t2->initFromRow($row);
-        $this->assertEqual($t2->getApprovalState(), PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
+        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET, $t2->getApprovalState());
 
         // Some approved and some declined
         $row['nb_reviewers'] = 5;
@@ -122,7 +124,7 @@ class ApprovalTableTest extends TuleapTestCase
         $row['nb_declined'] = 1;
         $t1 = new Docman_ApprovalTableItem();
         $t1->initFromRow($row);
-        $this->assertEqual($t1->getApprovalState(), PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
+        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET, $t1->getApprovalState());
 
         // All declined
         $row['nb_reviewers'] = 5;
@@ -131,7 +133,7 @@ class ApprovalTableTest extends TuleapTestCase
         $row['nb_declined'] = 5;
         $t1 = new Docman_ApprovalTableItem();
         $t1->initFromRow($row);
-        $this->assertEqual($t1->getApprovalState(), PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
+        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET, $t1->getApprovalState());
 
         // One reviewer declined
         $row['nb_reviewers'] = 1;
@@ -140,50 +142,50 @@ class ApprovalTableTest extends TuleapTestCase
         $row['nb_declined'] = 1;
         $t1 = new Docman_ApprovalTableItem();
         $t1->initFromRow($row);
-        $this->assertEqual($t1->getApprovalState(), PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
+        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET, $t1->getApprovalState());
     }
 
-    function testNoData()
+    function testNoData(): void
     {
         // Std case
         $row = array();
         $t1 = new Docman_ApprovalTableItem();
         $t1->initFromRow($row);
-        $this->assertIdentical($t1->getApprovalState(), null);
+        $this->assertNull($t1->getApprovalState());
 
         $row = array('nb_reviewers');
         $t2 = new Docman_ApprovalTableItem();
         $t2->initFromRow($row);
-        $this->assertIdentical($t2->getApprovalState(), null);
+        $this->assertNull($t2->getApprovalState());
 
         $row = array('nb_reviewers', 'rejected');
         $t3 = new Docman_ApprovalTableItem();
         $t3->initFromRow($row);
-        $this->assertIdentical($t3->getApprovalState(), null);
+        $this->assertNull($t3->getApprovalState());
 
         $row = array('nb_reviewers', 'rejected', 'nb_approved');
         $t4 = new Docman_ApprovalTableItem();
         $t4->initFromRow($row);
-        $this->assertIdentical($t4->getApprovalState(), null);
+        $this->assertNull($t4->getApprovalState());
 
         $row = array('nb_reviewers', 'rejected' => 0, 'nb_approved');
         $t5 = new Docman_ApprovalTableItem();
         $t5->initFromRow($row);
-        $this->assertIdentical($t5->getApprovalState(), null);
+        $this->assertNull($t5->getApprovalState());
 
         $row = array('nb_reviewers' => 0, 'rejected' => 0, 'nb_approved');
         $t6 = new Docman_ApprovalTableItem();
         $t6->initFromRow($row);
-        $this->assertIdentical($t6->getApprovalState(), null);
+        $this->assertNull($t6->getApprovalState());
 
         $row = array('nb_reviewers', 'rejected' => 0, 'nb_approved' => 0);
         $t7 = new Docman_ApprovalTableItem();
         $t7->initFromRow($row);
-        $this->assertIdentical($t7->getApprovalState(), null);
+        $this->assertNull($t7->getApprovalState());
 
         $row = array('nb_reviewers' => 0, 'rejected', 'nb_approved' => 0);
         $t8 = new Docman_ApprovalTableItem();
         $t8->initFromRow($row);
-        $this->assertIdentical($t8->getApprovalState(), null);
+        $this->assertNull($t8->getApprovalState());
     }
 }

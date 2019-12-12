@@ -1,5 +1,6 @@
 <?php
 /*
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2008
@@ -22,18 +23,20 @@
  *
  */
 
-require_once 'bootstrap.php';
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-
-class ApprovalTableNotificationCycleTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class ApprovalTableNotificationCycleTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
     /**
      * first:  approve
      * second: reject
      * last: approve
      */
-    function testGetTableStateReject()
+    public function testGetTableStateReject(): void
     {
         $reviewers[0] = \Mockery::spy(Docman_ApprovalReviewer::class);
         $reviewers[0]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
@@ -52,7 +55,7 @@ class ApprovalTableNotificationCycleTest extends TuleapTestCase
         $cycle = \Mockery::mock(Docman_ApprovalTableNotificationCycle::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $cycle->setTable($table);
 
-        $this->assertEqual($cycle->getTableState(), PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
+        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED, $cycle->getTableState());
     }
 
     /**
@@ -60,7 +63,7 @@ class ApprovalTableNotificationCycleTest extends TuleapTestCase
      * second: notyet
      * last: approve
      */
-    function testGetTableStateNotYet()
+    public function testGetTableStateNotYet(): void
     {
         $reviewers[0] = \Mockery::spy(Docman_ApprovalReviewer::class);
         $reviewers[0]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
@@ -79,7 +82,7 @@ class ApprovalTableNotificationCycleTest extends TuleapTestCase
         $cycle = \Mockery::mock(Docman_ApprovalTableNotificationCycle::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $cycle->setTable($table);
 
-        $this->assertEqual($cycle->getTableState(), PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
+        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET, $cycle->getTableState());
     }
 
     /**
@@ -87,7 +90,7 @@ class ApprovalTableNotificationCycleTest extends TuleapTestCase
      * second: will not review
      * last: approve
      */
-    function testGetTableStateWillNotReview()
+    public function testGetTableStateWillNotReview(): void
     {
         $reviewers[0] = \Mockery::spy(Docman_ApprovalReviewer::class);
         $reviewers[0]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
@@ -106,10 +109,10 @@ class ApprovalTableNotificationCycleTest extends TuleapTestCase
         $cycle = \Mockery::mock(Docman_ApprovalTableNotificationCycle::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $cycle->setTable($table);
 
-        $this->assertEqual($cycle->getTableState(), PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED, $cycle->getTableState());
     }
 
-    function testLastReviewerApprove()
+    public function testLastReviewerApprove(): void
     {
         $cycle = \Mockery::mock(Docman_ApprovalTableNotificationCycle::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $mail = \Mockery::spy(Mail::class);
