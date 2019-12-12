@@ -23,14 +23,16 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 module.exports = [
     {
         entry: {
-            "autocompleter": "./scripts/autocompleter.js",
-            "modal": "./scripts/modal.js"
+            autocompleter: "./scripts/autocompleter.js",
+            modal: "./scripts/modal.js"
         },
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(path.resolve(__dirname, "../../src/www/assets/botmattermost_agiledashboard/")),
+        output: webpack_configurator.configureOutput(
+            path.resolve(__dirname, "../../src/www/assets/botmattermost_agiledashboard/")
+        ),
         module: {
             rules: [
-                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)
             ]
         },
         externals: {

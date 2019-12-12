@@ -21,8 +21,8 @@ import { select2 } from "tlp";
 import { render } from "mustache";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const select_bot      = document.getElementById("select_bot"),
-          inputs_channels = document.getElementById("channels");
+    const select_bot = document.getElementById("select_bot"),
+        inputs_channels = document.getElementById("channels");
 
     if (select_bot) {
         select2(select_bot, {
@@ -49,22 +49,23 @@ document.addEventListener("DOMContentLoaded", () => {
             placeholder: inputs_channels.dataset.placeholder,
             tags: [],
             minimumResultsForSearch: Infinity,
-            initSelection: (container, callback) => callback(selected_channels),
+            initSelection: (container, callback) => callback(selected_channels)
         });
     }
 
     function formatBot(item) {
         if (item.element) {
             const src_image = item.element.dataset.image,
-                  label     = item.text;
+                label = item.text;
 
             if (src_image) {
-                const format_item = '<img src="{{ src_image }}" class="tlp-avatar-mini"> {{ label }}';
+                const format_item =
+                    '<img src="{{ src_image }}" class="tlp-avatar-mini"> {{ label }}';
 
                 return render(format_item, { src_image, label });
             }
         }
 
-        return render('{{ text }}', { text: item.text });
+        return render("{{ text }}", { text: item.text });
     }
 });
