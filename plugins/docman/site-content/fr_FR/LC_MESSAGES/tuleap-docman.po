@@ -67,6 +67,17 @@ msgstr "Approuvé"
 msgid "Can't delete folder %s because it is not empty."
 msgstr "Impossible de supprimer le dossier %s car il n'est pas vide."
 
+msgid "Cannot delete a version on something that is not a file."
+msgstr "Impossible de supprimer une version d'un element qui n'est pas un fichier."
+
+msgid "Cannot delete a version that doesn't exist."
+msgstr "Impossible de supprimer une version qui n'existe pas."
+
+msgid ""
+"Cannot delete last version of a file. If you want to continue, please delete "
+"the document itself."
+msgstr "Impossible de supprimer la dernière version d'un fichier. Si vous souhaîtez continuer, veuillez supprimer le document lui-même."
+
 msgid ""
 "Cannot delete this item because it contains items you are not allowed to "
 "modify (no 'Write' access, you may even not be able to read them). Please "
@@ -125,6 +136,10 @@ msgstr "Groupes autorisés"
 msgid "Initial version"
 msgstr "Version initiale"
 
+#, php-format
+msgid "Insufficient permissions for user(s) \"%s\""
+msgstr "Les permissions ne sont pas suffisantes pour le(s) utilisateur(s) \"%s\""
+
 msgid "It is not possible to update a wiki page with approval table."
 msgstr ""
 "Impossible de mettre à jour un wiki qui possède une table d'approbation."
@@ -137,6 +152,22 @@ msgstr "Taille maximum des fichiers  (en Octets)"
 
 msgid "Maximum number of files"
 msgstr "Nombre maximum de fichiers"
+
+#, php-format
+msgid "Monitoring for user(s) \"%s\" already exists"
+msgstr "Le monitoring pour le(s) utilisateur(s) \"%s\" existe déjà"
+
+#, php-format
+msgid "Monitoring for user(s) \"%s\" has been added"
+msgstr "Le monitoring a été ajouté pour le(s) utilisateur(s) \"%s\""
+
+#, php-format
+msgid "Monitoring for user(s) \"%s\" has not been added"
+msgstr "Le monitoring n'a pas pu être ajouté pour le(s) utilisateur(s) \"%s\""
+
+#, php-format
+msgid "Monitoring was not active for user \"%s\""
+msgstr "Le monitoring n'était pas activé pour l'utilisateur \"%s\""
 
 msgid "Moved"
 msgstr "Déplacé"
@@ -156,6 +187,10 @@ msgstr "Permission"
 
 msgid "Rejected"
 msgstr "Rejecté"
+
+#, php-format
+msgid "Removed monitoring for user(s) \"%s\""
+msgstr "Le monitoring a été supprimé pour le(s) utilisateur(s) \"%s\""
 
 msgid "Removed:"
 msgstr "Supprimé :"
@@ -281,11 +316,19 @@ msgstr "Pour restaurer le monitoring, veuillez visiter :"
 msgid "To stop monitoring, please visit:"
 msgstr "Pour arrêter le monitoring, veuillez visiter :"
 
+#, php-format
+msgid "Unable to remove monitoring for user \"%s\""
+msgstr "Impossible de supprimer le monitoring pour l'utilisateur \"%s\""
+
 msgid "User, group"
 msgstr "Utilisateur, groupe"
 
 msgid "Validate"
 msgstr "Valider"
+
+#, php-format
+msgid "Version %s (%s) successfully deleted"
+msgstr "Version %s (%s) supprimée."
 
 #, php-format
 msgid "You are not allowed to write on folder with id '%d'"

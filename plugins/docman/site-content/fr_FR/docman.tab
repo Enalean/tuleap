@@ -436,9 +436,6 @@ plugin_docman	error_field_title_required	Le titre est requis.
 plugin_docman	error_field_wiki_required	Le nom de la page wiki est requis.
 plugin_docman	error_invalid_md	Propriété invalide
 plugin_docman	error_item_not_deleted	Impossible de supprimer l'élément.
-plugin_docman	error_item_not_deleted_nonfile_version	Impossible de supprimer une version d'un element qui n'est pas un fichier.
-plugin_docman	error_item_not_deleted_last_file_version	Impossible de supprimer la dernière version d'un fichier. Si vous souhaîtez continuer, veuillez supprimer le document lui même.
-plugin_docman	error_item_not_deleted_unknown_version	Impossible de supprimer une version qui n'existe pas.
 plugin_docman	error_item_not_moved	Impossible de déplacer l'élément.
 plugin_docman	error_item_deleted	Impossible de récupérer l'élément. Il a peut-être été supprimé.
 plugin_docman	error_md_or_love	Il y a une erreur dans les paramètres. Retour vers l'écran précédent.
@@ -534,7 +531,6 @@ plugin_docman	info_create_newversion	Nouvelle version créée.
 plugin_docman	info_document_created	Document créé.
 plugin_docman	info_folder_created	Dossier créé.
 plugin_docman	info_item_deleted	Elément supprimé.
-plugin_docman	info_item_version_deleted	Version $1 ($2) supprimée.
 plugin_docman	info_item_updated	Elément mis à jour.
 plugin_docman	info_item_moved	Elément déplacé de <a href="?group_id=$1&amp;action=show&amp;id=$2">$3</a> vers <a href="?group_id=$1&amp;action=show&amp;id=$4">$5</a>.
 plugin_docman	info_news_created	News créée.
@@ -648,21 +644,14 @@ plugin_docman	new_view_change	voir/changer
 
 plugin_docman	notifications_off	Vous ne surveillez plus '$1'.
 plugin_docman	notifications_on	Vous surveillez désormais '$1'.
-plugin_docman	notifications_not_removed_user	Impossible de supprimer le monitoring pour l'utilisateur '$1'
 plugin_docman	notifications_not_removed_ugroup	Impossible de supprimer le monitoring pour le groupe '$1'
-plugin_docman	notifications_not_present_user	Le monitoring n'était pas activé pour l'utilisateur '$1'
 plugin_docman	notifications_not_present_ugroup	Le monitoring n'était pas activé pour le groupe '$1'
-plugin_docman	notifications_removed_user	Le monitoring a été supprimé pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_removed_ugroup	Le monitoring a été supprimé pour le(s) groupe(s) '$1'
-plugin_docman	notifications_added_user	Le monitoring a été ajouté pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_added_ugroup	Le monitoring a été ajouté pour le(s) groupe(s) '$1'
-plugin_docman	notifications_not_added_user	Le monitoring n'a pas pu être ajouté pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_not_added_ugroup	Le monitoring n'a pas pu être ajouté pour le(s) groupe(s) '$1'
 plugin_docman	notifications_cascade_not_added_user	Le monitoring de la sous-hiérarchie n'a pas pu être ajouté pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_cascade_not_added_ugroup	Le monitoring de la sous-hiérarchie n'a pas pu être ajouté pour le(s) groupe(s) '$1'
-plugin_docman	notifications_already_exists_user	Le monitoring pour le(s) utilisateur(s) '$1' existe déjà
 plugin_docman	notifications_already_exists_ugroup	Le monitoring pour le(s) groupe(s) '$1' existe déjà
-plugin_docman	notifications_no_access_rights_user	Les permissions ne sont pas suffisantes pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_no_element	Aucun élément séléctionné
 plugin_docman	notifications_no_element_added	Aucun élément ajouté
 plugin_docman	notifications_no_emails_supported	Vous ne pouvez pas ajouter de mails

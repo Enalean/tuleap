@@ -23,8 +23,8 @@
 
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\DestinationCloneItem;
-use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
 use Tuleap\Docman\Metadata\ItemImpactedByMetadataChangeCollection;
+use Tuleap\Docman\Metadata\MetadataRecursiveUpdator;
 use Tuleap\Docman\Metadata\Owner\OwnerRetriever;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
 
@@ -1126,19 +1126,44 @@ class Docman_Actions extends Actions
                         $deletor = $this->_getActionsDeleteVisitor();
                         try {
                             if ($item->accept($deletor, array('user' => $user, 'version' => $version))) {
-                                $this->_controler->feedback->log(Feedback::INFO, $GLOBALS['Language']->getText('plugin_docman', 'info_item_version_deleted', array($version->getNumber(), $version->getLabel())));
+                                $this->_controler->feedback->log(
+                                    Feedback::INFO,
+                                    sprintf(
+                                        dgettext('tuleap-docman', 'Version %s (%s) successfully deleted'),
+                                        $version->getNumber(),
+                                        $version->getLabel()
+                                    )
+                                );
                             }
                         } catch (DeleteFailedException $exception) {
                             $this->_controler->feedback->log(Feedback::ERROR, $exception->getI18NExceptionMessage());
                         }
                     } else {
-                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_unknown_version'));
+                        $this->_controler->feedback->log(
+                            'error',
+                            dgettext(
+                                'tuleap-docman',
+                                'Cannot delete a version that doesn\'t exist.'
+                            )
+                        );
                     }
                 } else {
-                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_last_file_version'));
+                    $this->_controler->feedback->log(
+                        'error',
+                        dgettext(
+                            'tuleap-docman',
+                            'Cannot delete last version of a file. If you want to continue, please delete the document itself.'
+                        )
+                    );
                 }
             } else {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_nonfile_version'));
+                $this->_controler->feedback->log(
+                    Feedback::ERROR,
+                    dgettext(
+                        'tuleap-docman',
+                        'Cannot delete a version on something that is not a file.'
+                    )
+                );
             }
         }
         $this->_getEventManager()->processEvent('send_notifications', array());
@@ -2016,10 +2041,22 @@ class Docman_Actions extends Actions
                     && $this->_controler->notificationsManager->removeUser($user->getId(), $item->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
                     $users[] = $user;
                 } else {
-                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_removed_user', array($user->getName())));
+                    $this->_controler->feedback->log(
+                        Feedback::ERROR,
+                        sprintf(
+                            dgettext('tuleap-docman', 'Unable to remove monitoring for user "%s"'),
+                            $user->getName()
+                        )
+                    );
                 }
             } else {
-                $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_present_user', array($user->getName())));
+                $this->_controler->feedback->log(
+                    Feedback::WARN,
+                    sprintf(
+                        dgettext('tuleap-docman', 'Monitoring was not active for user "%s"'),
+                        $user->getName()
+                    )
+                );
             }
         }
 
@@ -2028,7 +2065,13 @@ class Docman_Actions extends Actions
             foreach ($users as $user) {
                 $removed_users[] = $user->getName();
             }
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed_user', array(implode(',', $removed_users))));
+            $this->_controler->feedback->log(
+                Feedback::INFO,
+                vsprintf(
+                    dgettext('tuleap-docman', 'Removed monitoring for user(s) "%s"'),
+                    $removed_users
+                )
+            );
             $this->_raiseMonitoringListEvent($item, $users, 'plugin_docman_remove_monitoring');
         }
     }
@@ -2066,33 +2109,24 @@ class Docman_Actions extends Actions
         foreach ($users_to_add as $user) {
             if ($this->_controler->notificationsManager->userExists($user->getId(), $item->getId())) {
                 $this->_controler->feedback->log(
-                    'warning',
-                    $GLOBALS['Language']->getText(
-                        'plugin_docman',
-                        'notifications_already_exists_user',
-                        array($user->getName())
-                    )
+                    Feedback::WARN,
+                    sprintf(dgettext('tuleap-docman', 'Monitoring for user(s) "%s" already exists'), $user->getName())
                 );
                 continue;
             }
             if (! $dpm->userCanRead($user, $item->getId())) {
                 $this->_controler->feedback->log(
-                    'warning',
-                    $GLOBALS['Language']->getText(
-                        'plugin_docman',
-                        'notifications_no_access_rights_user',
-                        array($user->getName())
-                    )
+                    Feedback::WARN,
+                    sprintf(dgettext('tuleap-docman', 'Insufficient permissions for user(s) "%s"'), $user->getName())
                 );
                 continue;
             }
             if (! $this->_controler->notificationsManager->addUser($user->getId(), $item->getId())) {
                 $this->_controler->feedback->log(
-                    'error',
-                    $GLOBALS['Language']->getText(
-                        'plugin_docman',
-                        'notifications_not_added_user',
-                        array($user->getName())
+                    Feedback::ERROR,
+                    sprintf(
+                        dgettext('tuleap-docman', 'Monitoring for user(s) "%s" has not been added'),
+                        $user->getName()
                     )
                 );
                 continue;
@@ -2117,8 +2151,8 @@ class Docman_Actions extends Actions
 
         if (! empty($users)) {
             $this->_controler->feedback->log(
-                'info',
-                $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_user', array(implode(',', $users)))
+                Feedback::INFO,
+                vsprintf(dgettext('tuleap-docman', 'Monitoring for user(s) "%s" has been added'), $users)
             );
             $this->_raiseMonitoringListEvent(
                 $item,
