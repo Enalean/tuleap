@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Tracker;
 
+use Tracker_FormElement_Field_Selectbox;
+
 class AddInPlaceRetriever
 {
     /**
@@ -34,11 +36,17 @@ class AddInPlaceRetriever
         $this->form_element_factory = $form_element_factory;
     }
 
+    /**
+     * @psalm-param array<int, Tracker_FormElement_Field_Selectbox> $mapped_fields_by_tracker_id
+     *
+     * @param Tracker_FormElement_Field_Selectbox[] $mapped_fields_by_tracker_id
+     */
     public function retrieveAddInPlace(
         TaskboardTracker $taskboard_tracker,
-        \PFUser $user
+        \PFUser $user,
+        array $mapped_fields_by_tracker_id
     ): ?AddInPlace {
-        $tracker = $taskboard_tracker->getTracker();
+        $tracker        = $taskboard_tracker->getTracker();
         $child_trackers = $tracker->getChildren();
 
         if (count($child_trackers) !== 1) {
@@ -46,13 +54,20 @@ class AddInPlaceRetriever
         }
 
         $child_tracker = $child_trackers[0];
-        $field_title   = \Tracker_Semantic_Title::load($child_tracker)->getField();
+        if (empty($mapped_fields_by_tracker_id[$child_tracker->getId()])) {
+            return null;
+        }
+        $mapped_field = $mapped_fields_by_tracker_id[$child_tracker->getId()];
+        if (! $mapped_field->userCanSubmit($user)) {
+            return null;
+        }
 
+        $field_title = \Tracker_Semantic_Title::load($child_tracker)->getField();
         if (! $field_title || ! $field_title->userCanSubmit($user)) {
             return null;
         }
 
-        if (! $this->isOnlyTitleRequired($child_tracker, $field_title)) {
+        if (! $this->areTitleAndMappedFieldTheOnlyRequiredField($child_tracker, $field_title, $mapped_field)) {
             return null;
         }
 
@@ -67,14 +82,24 @@ class AddInPlaceRetriever
         );
     }
 
-    private function isOnlyTitleRequired(\Tracker $tracker, \Tracker_FormElement_Field $field_title): bool
-    {
-        $title_field_id = $field_title->getId();
-        $tracker_fields = $this->form_element_factory->getUsedFields($tracker);
+    private function areTitleAndMappedFieldTheOnlyRequiredField(
+        \Tracker $tracker,
+        \Tracker_FormElement_Field $field_title,
+        \Tracker_FormElement_Field_Selectbox $mapped_field
+    ): bool {
+        $title_field_id  = $field_title->getId();
+        $mapped_field_id = $mapped_field->getId();
+        $tracker_fields  = $this->form_element_factory->getUsedFields($tracker);
 
         /** @var \Tracker_FormElement_Field $field */
         foreach ($tracker_fields as $field) {
-            if ($field->isRequired() && $field->getId() !== $title_field_id) {
+            if ($field->getId() === $title_field_id) {
+                continue;
+            }
+            if ($field->getId() === $mapped_field_id) {
+                continue;
+            }
+            if ($field->isRequired()) {
                 return false;
             }
         }
