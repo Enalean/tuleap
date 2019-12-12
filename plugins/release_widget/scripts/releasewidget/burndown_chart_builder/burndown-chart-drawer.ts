@@ -43,10 +43,6 @@ function createBurndownChart(
     chart_props: ChartPropsBurndownWhithoutTooltip,
     burndown_data: BurndownData
 ): void {
-    if (!burndown_data.points_with_date.length) {
-        return;
-    }
-
     const x_axis_tick_values = getDaysToDisplay(burndown_data),
         y_axis_maximum = getMaxRemainingEffort(burndown_data);
 
