@@ -1038,12 +1038,13 @@ fi
 %{APP_DIR}/src/www/assets/*.js
 %{APP_DIR}/src/www/assets/manifest.json
 %{APP_DIR}/src/www/assets/admindelegation
+%{APP_DIR}/src/www/assets/ckeditor-*
 %{APP_DIR}/src/www/assets/dashboards
 %{APP_DIR}/src/www/assets/docman
-%{APP_DIR}/src/www/assets/statistics
-%{APP_DIR}/src/www/assets/projectlinks
+%{APP_DIR}/src/www/assets/pluginsadministration
 %{APP_DIR}/src/www/assets/project-registration
-%{APP_DIR}/src/www/assets/ckeditor-*
+%{APP_DIR}/src/www/assets/projectlinks
+%{APP_DIR}/src/www/assets/statistics
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/favicon.ico
 %{APP_DIR}/src/www/file
