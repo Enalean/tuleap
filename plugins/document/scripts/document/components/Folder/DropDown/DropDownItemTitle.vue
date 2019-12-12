@@ -17,7 +17,6 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-
 <template functional>
     <span class="tlp-dropdown-menu-title document-dropdown-menu-title" role="menuitem">
         {{ props.item.title }}

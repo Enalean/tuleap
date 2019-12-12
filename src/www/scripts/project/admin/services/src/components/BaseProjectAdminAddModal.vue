@@ -18,13 +18,9 @@
   -->
 
 <template>
-    <add-modal
-        v-bind:form_url="form_url"
-        ref="modal"
-        v-on:reset-modal="resetModal"
-    >
+    <add-modal v-bind:form_url="form_url" ref="modal" v-on:reset-modal="resetModal">
         <template slot="content">
-            <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token">
+            <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token" />
             <sidebar-previewer
                 v-bind:label="preview_label"
                 v-bind:icon_name="service.icon_name"

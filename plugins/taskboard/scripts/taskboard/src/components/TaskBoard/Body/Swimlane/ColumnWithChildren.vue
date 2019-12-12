@@ -20,11 +20,16 @@
 
 <template>
     <drop-container-cell v-bind:column="column" v-bind:swimlane="swimlane">
-        <child-card v-for="card of cards" v-bind:key="card.id" v-bind:card="card"/>
+        <child-card v-for="card of cards" v-bind:key="card.id" v-bind:card="card" />
         <template v-if="swimlane.is_loading_children_cards">
-            <card-skeleton v-for="i in nb_skeletons_to_display" v-bind:key="i"/>
+            <card-skeleton v-for="i in nb_skeletons_to_display" v-bind:key="i" />
         </template>
-        <add-card v-if="is_add_card_rendered" v-bind:column="column" v-bind:swimlane="swimlane" v-bind:parent="swimlane.card"/>
+        <add-card
+            v-if="is_add_card_rendered"
+            v-bind:column="column"
+            v-bind:swimlane="swimlane"
+            v-bind:parent="swimlane.card"
+        />
     </drop-container-cell>
 </template>
 

@@ -20,7 +20,7 @@
 <template>
     <div class="cross-tracker-artifacts-table">
         <div class="tlp-table-actions" v-if="should_show_export_button">
-            <export-button/>
+            <export-button />
         </div>
         <table class="tlp-table">
             <thead>
@@ -54,11 +54,12 @@
             </tbody>
         </table>
         <div class="tlp-pagination">
-            <button class="tlp-button-primary tlp-button-outline tlp-button-small"
-                    type="button"
-                    v-if="is_load_more_displayed === true"
-                    v-on:click="loadMoreArtifacts()"
-                    v-bind:disabled="is_loading_more"
+            <button
+                class="tlp-button-primary tlp-button-outline tlp-button-small"
+                type="button"
+                v-if="is_load_more_displayed === true"
+                v-on:click="loadMoreArtifacts()"
+                v-bind:disabled="is_loading_more"
             >
                 <i v-if="is_loading_more" class="tlp-button-icon fa fa-circle-o-notch fa-spin"></i>
                 <translate>Load more</translate>

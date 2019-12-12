@@ -20,7 +20,7 @@
   -->
 
 <template>
-    <folder-container/>
+    <folder-container />
 </template>
 
 <script>

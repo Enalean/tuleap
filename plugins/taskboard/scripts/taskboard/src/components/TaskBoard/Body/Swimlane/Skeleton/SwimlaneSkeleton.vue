@@ -21,13 +21,16 @@
 <template>
     <div class="taskboard-swimlane">
         <div class="taskboard-cell">
-            <div class="tlp-card tlp-skeleton-card taskboard-card-parent taskboard-card-skeleton"></div>
+            <div
+                class="tlp-card tlp-skeleton-card taskboard-card-parent taskboard-card-skeleton"
+            ></div>
         </div>
         <columns-skeleton
             v-for="(col, index) of columns"
             v-bind:key="col.id"
             v-bind:column_index="index"
-            v-bind:column="col"/>
+            v-bind:column="col"
+        />
     </div>
 </template>
 

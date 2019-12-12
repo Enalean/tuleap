@@ -19,25 +19,27 @@
 
 <template>
     <section class="tlp-pane-section tracker-workflow-transition-configuration-header">
-        <workflow-field-change/>
-        <workflow-mode-switch/>
-        <div class="tlp-form-element tracker-workflow-transition-configuration-form-item"
-             v-bind:class="{'tlp-form-element-disabled': is_operation_running}"
+        <workflow-field-change />
+        <workflow-mode-switch />
+        <div
+            class="tlp-form-element tracker-workflow-transition-configuration-form-item"
+            v-bind:class="{ 'tlp-form-element-disabled': is_operation_running }"
         >
             <label class="tlp-label" for="workflow-transitions-enabled" v-translate>
                 Enable transition rules
             </label>
             <div class="tlp-switch">
-                <input type="checkbox"
-                       id="workflow-transitions-enabled"
-                       class="tlp-switch-checkbox"
-                       v-model="transition_rules_enforcement"
-                       v-bind:disabled="is_operation_running"
-                >
+                <input
+                    type="checkbox"
+                    id="workflow-transitions-enabled"
+                    class="tlp-switch-checkbox"
+                    v-model="transition_rules_enforcement"
+                    v-bind:disabled="is_operation_running"
+                />
                 <label
                     for="workflow-transitions-enabled"
                     class="tlp-switch-button"
-                    v-bind:class="{ 'loading': is_rules_enforcement_running }"
+                    v-bind:class="{ loading: is_rules_enforcement_running }"
                     aria-hidden=""
                 ></label>
             </div>

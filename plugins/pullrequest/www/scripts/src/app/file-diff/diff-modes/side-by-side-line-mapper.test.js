@@ -115,7 +115,10 @@ describe("side-by-side line mapper", () => {
                     unidiff_offsets: [2, 3],
                     type: ADDED_GROUP
                 };
-                const line_to_group_map = new Map([[2, added_group], [3, added_group]]);
+                const line_to_group_map = new Map([
+                    [2, added_group],
+                    [3, added_group]
+                ]);
 
                 const map = buildLineToLineHandlesMap(
                     lines,
@@ -162,7 +165,10 @@ describe("side-by-side line mapper", () => {
                     unidiff_offsets: [1, 2],
                     type: ADDED_GROUP
                 };
-                const line_to_group_map = new Map([[1, added_group], [2, added_group]]);
+                const line_to_group_map = new Map([
+                    [1, added_group],
+                    [2, added_group]
+                ]);
 
                 const map = buildLineToLineHandlesMap(
                     lines,
@@ -224,7 +230,10 @@ describe("side-by-side line mapper", () => {
                     unidiff_offsets: [2, 3],
                     type: DELETED_GROUP
                 };
-                const line_to_group_map = new Map([[2, deleted_group], [3, deleted_group]]);
+                const line_to_group_map = new Map([
+                    [2, deleted_group],
+                    [3, deleted_group]
+                ]);
 
                 const map = buildLineToLineHandlesMap(
                     lines,
@@ -275,7 +284,10 @@ describe("side-by-side line mapper", () => {
                     unidiff_offsets: [1, 2],
                     type: DELETED_GROUP
                 };
-                const line_to_group_map = new Map([[1, deleted_group], [2, deleted_group]]);
+                const line_to_group_map = new Map([
+                    [1, deleted_group],
+                    [2, deleted_group]
+                ]);
 
                 const map = buildLineToLineHandlesMap(
                     lines,
@@ -322,7 +334,10 @@ describe("side-by-side line mapper", () => {
                     unidiff_offsets: [1, 2],
                     type: DELETED_GROUP
                 };
-                const line_to_group_map = new Map([[1, deleted_group], [2, deleted_group]]);
+                const line_to_group_map = new Map([
+                    [1, deleted_group],
+                    [2, deleted_group]
+                ]);
 
                 const map = buildLineToLineHandlesMap(
                     lines,

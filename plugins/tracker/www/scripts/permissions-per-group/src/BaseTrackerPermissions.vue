@@ -24,10 +24,13 @@
         </div>
 
         <div class="permission-per-group-load-button" v-if="isButtonLoadAllDisplayed">
-            <button class="tlp-button-primary tlp-button-outline"
-                    v-on:click="loadAll()"
-                    v-translate
-            >See all tracker permissions</button>
+            <button
+                class="tlp-button-primary tlp-button-outline"
+                v-on:click="loadAll()"
+                v-translate
+            >
+                See all tracker permissions
+            </button>
         </div>
 
         <div class="permission-per-group-loader" v-if="is_loading"></div>

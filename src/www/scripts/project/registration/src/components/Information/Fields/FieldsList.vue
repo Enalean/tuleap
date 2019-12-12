@@ -21,22 +21,26 @@
 <template>
     <div class="tlp-form-element">
         <label class="tlp-label" v-bind:for="`input-${field.group_desc_id}`">
-            {{ field.desc_name }}<i class="fa fa-asterisk" v-if="isRequired"/>
+            {{ field.desc_name }}
+            <i class="fa fa-asterisk" v-if="isRequired" />
         </label>
-        <input type="text"
-               class="tlp-input"
-               v-bind:placeholder="field.desc_description"
-               v-bind:id="`input-${field.group_desc_id}`"
-               v-if="field.desc_type ==='line'"
-               v-bind:required="isRequired"
-               v-on:input="updateField(field.group_desc_id, $event.target.value)">
-        <textarea class="tlp-textarea"
-                  v-bind:placeholder="field.desc_description"
-                  v-bind:id="`textaarea-${field.group_desc_id}`"
-                  v-bind:required="isRequired"
-                  v-else-if="field.desc_type ==='text'"
-                  v-on:input="updateField(field.group_desc_id, $event.target.value)"
-                  data-test="project-field-text"
+        <input
+            type="text"
+            class="tlp-input"
+            v-bind:placeholder="field.desc_description"
+            v-bind:id="`input-${field.group_desc_id}`"
+            v-if="field.desc_type === 'line'"
+            v-bind:required="isRequired"
+            v-on:input="updateField(field.group_desc_id, $event.target.value)"
+        />
+        <textarea
+            class="tlp-textarea"
+            v-bind:placeholder="field.desc_description"
+            v-bind:id="`textaarea-${field.group_desc_id}`"
+            v-bind:required="isRequired"
+            v-else-if="field.desc_type === 'text'"
+            v-on:input="updateField(field.group_desc_id, $event.target.value)"
+            data-test="project-field-text"
         ></textarea>
     </div>
 </template>

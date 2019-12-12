@@ -20,16 +20,23 @@
 <template>
     <section class="git-repository-branch-tag-selector-refs" v-if="is_displaying_branches">
         <div class="git-repository-branch-tag-selector-is-loading" v-if="is_loading_branches"></div>
-        <div class="git-repository-branch-tag-selector-filter" v-if="! is_loading_branches && branches.length">
-            <refs-filter v-model="filter_text" v-bind:placeholder="placeholder"/>
-        </div>
-        <a v-for="branch in filtered_branches"
-           v-bind:key="branch.commit.id"
-           v-bind:href="url(branch.name)"
-           class="tlp-dropdown-menu-item"
-           role="menuitem"
+        <div
+            class="git-repository-branch-tag-selector-filter"
+            v-if="!is_loading_branches && branches.length"
         >
-            <i class="fa fa-check fa-fw tlp-dropdown-menu-item-icon" v-if="! is_tag && branch.name === current_ref_name"></i>
+            <refs-filter v-model="filter_text" v-bind:placeholder="placeholder" />
+        </div>
+        <a
+            v-for="branch in filtered_branches"
+            v-bind:key="branch.commit.id"
+            v-bind:href="url(branch.name)"
+            class="tlp-dropdown-menu-item"
+            role="menuitem"
+        >
+            <i
+                class="fa fa-check fa-fw tlp-dropdown-menu-item-icon"
+                v-if="!is_tag && branch.name === current_ref_name"
+            ></i>
             {{ branch.name }}
         </a>
         <div class="tlp-dropdown-menu-item" v-if="has_error_while_loading_branches">
@@ -37,15 +44,17 @@
                 An error occurred while loading branches
             </div>
         </div>
-        <div class="git-repository-branch-tag-selector-empty"
-             v-if="are_branches_loaded && ! branches.length && ! has_error_while_loading_branches"
-             v-translate
+        <div
+            class="git-repository-branch-tag-selector-empty"
+            v-if="are_branches_loaded && !branches.length && !has_error_while_loading_branches"
+            v-translate
         >
             There isn't any branches defined yet
         </div>
-        <div class="git-repository-branch-tag-selector-empty"
-             v-if="are_branches_loaded && branches.length && ! filtered_branches.length"
-             v-translate
+        <div
+            class="git-repository-branch-tag-selector-empty"
+            v-if="are_branches_loaded && branches.length && !filtered_branches.length"
+            v-translate
         >
             There isn't any matching branches
         </div>

@@ -18,21 +18,24 @@
   -->
 
 <template>
-    <div class="document-file-upload-progress" v-bind:class="{'document-file-upload-progress-canceled': is_canceled}">
-        <span class="document-file-upload-progress-value">
-            {{ item.progress }}%
-        </span>
-        <progress class="document-file-upload-progress-bar"
-                  max="100"
-                  v-bind:value="item.progress"
+    <div
+        class="document-file-upload-progress"
+        v-bind:class="{ 'document-file-upload-progress-canceled': is_canceled }"
+    >
+        <span class="document-file-upload-progress-value">{{ item.progress }}%</span>
+        <progress
+            class="document-file-upload-progress-bar"
+            max="100"
+            v-bind:value="item.progress"
         ></progress>
-        <a class="document-file-upload-progress-cancel tlp-tooltip tlp-tooltip-left"
-           href="#"
-           v-bind:aria-label="cancel_title"
-           v-bind:data-tlp-tooltip="cancel_title"
-           role="button"
-           v-on:click.prevent="cancel"
-           data-test="cancel-upload"
+        <a
+            class="document-file-upload-progress-cancel tlp-tooltip tlp-tooltip-left"
+            href="#"
+            v-bind:aria-label="cancel_title"
+            v-bind:data-tlp-tooltip="cancel_title"
+            role="button"
+            v-on:click.prevent="cancel"
+            data-test="cancel-upload"
         >
             <i class="fa fa-times-circle"></i>
         </a>

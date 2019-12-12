@@ -22,21 +22,31 @@
     <div class="tlp-form-element">
         <label class="tlp-label" for="project-information-input-privacy-switch-label">
             <span v-translate>Privacy</span>
-            <span class="tlp-tooltip tlp-tooltip-top" v-bind:data-tlp-tooltip="translated_tooltip" data-test="project-information-input-privacy-tooltip">
-                <i class="fa fa-question-circle project-information-input-privacy-icon" aria-hidden="true"></i>
+            <span
+                class="tlp-tooltip tlp-tooltip-top"
+                v-bind:data-tlp-tooltip="translated_tooltip"
+                data-test="project-information-input-privacy-tooltip"
+            >
+                <i
+                    class="fa fa-question-circle project-information-input-privacy-icon"
+                    aria-hidden="true"
+                ></i>
             </span>
         </label>
         <div class="tlp-switch">
-            <input type="checkbox"
-                   id="project-information-input-privacy-switch-label"
-                   class="tlp-switch-checkbox project-information-input-privacy-switch-checkbox"
-                   v-model="is_checked"
-                   v-on:click="$emit('input', ! is_checked)"
-                   data-test="project-information-input-privacy-switch"
-            >
-            <label for="project-information-input-privacy-switch-label"
-                   class="tlp-switch-button project-information-input-privacy-switch-button" aria-hidden>
-            </label>
+            <input
+                type="checkbox"
+                id="project-information-input-privacy-switch-label"
+                class="tlp-switch-checkbox project-information-input-privacy-switch-checkbox"
+                v-model="is_checked"
+                v-on:click="$emit('input', !is_checked)"
+                data-test="project-information-input-privacy-switch"
+            />
+            <label
+                for="project-information-input-privacy-switch-label"
+                class="tlp-switch-button project-information-input-privacy-switch-button"
+                aria-hidden
+            ></label>
         </div>
     </div>
 </template>

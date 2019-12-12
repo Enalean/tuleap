@@ -20,28 +20,33 @@
 <template>
     <nav class="breadcrumb">
         <div class="breadcrumb-switchable breadcrumb-item">
-            <a class="breadcrumb-link"
-               v-bind:href="repository_list_url"
-               v-bind:title="repositories_title"
+            <a
+                class="breadcrumb-link"
+                v-bind:href="repository_list_url"
+                v-bind:title="repositories_title"
             >
                 <i class="breadcrumb-link-icon fa fa-fw fa-tlp-versioning-git"></i>
                 <translate>Git repositories</translate>
             </a>
             <nav class="breadcrumb-switch-menu">
                 <span class="breadcrumb-dropdown-item" v-if="is_admin">
-                    <a class="breadcrumb-dropdown-link"
-                       v-bind:href="repository_admin_url"
-                       v-bind:title="administration_title"
+                    <a
+                        class="breadcrumb-dropdown-link"
+                        v-bind:href="repository_admin_url"
+                        v-bind:title="administration_title"
                     >
-                        <i class="fa fa-cog fa-fw"></i> <translate>Administration</translate>
+                        <i class="fa fa-cog fa-fw"></i>
+                        <translate>Administration</translate>
                     </a>
                 </span>
                 <span class="breadcrumb-dropdown-item">
-                    <a class="breadcrumb-dropdown-link"
-                       v-bind:href="repository_fork_url"
-                       v-bind:title="fork_title"
+                    <a
+                        class="breadcrumb-dropdown-link"
+                        v-bind:href="repository_fork_url"
+                        v-bind:title="fork_title"
                     >
-                        <i class="fa fa-code-fork fa-fw"></i> <translate>Fork repositories</translate>
+                        <i class="fa fa-code-fork fa-fw"></i>
+                        <translate>Fork repositories</translate>
                     </a>
                 </span>
             </nav>

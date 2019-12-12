@@ -18,11 +18,15 @@
   -->
 
 <template>
-    <div class="document-metadata" v-if="should_display_other_information" data-test="document-other-information">
-        <hr class="tlp-modal-separator">
+    <div
+        class="document-metadata"
+        v-if="should_display_other_information"
+        data-test="document-other-information"
+    >
+        <hr class="tlp-modal-separator" />
         <div class="document-modal-other-information-title-container">
             <div
-                v-if="! has_loaded_metadata"
+                v-if="!has_loaded_metadata"
                 class="document-modal-other-information-title-container-spinner"
                 data-test="document-other-information-spinner"
             >
@@ -31,8 +35,11 @@
             <h2 class="tlp-modal-subtitle" v-translate>Other information</h2>
         </div>
         <template v-if="has_loaded_metadata">
-            <obsolescence-date-metadata-for-update v-if="is_obsolescence_date_metadata_used" v-model="date_value"/>
-            <custom-metadata v-bind:item-metadata="metadataToUpdate"/>
+            <obsolescence-date-metadata-for-update
+                v-if="is_obsolescence_date_metadata_used"
+                v-model="date_value"
+            />
+            <custom-metadata v-bind:item-metadata="metadataToUpdate" />
         </template>
     </div>
 </template>

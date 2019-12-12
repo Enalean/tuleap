@@ -65,9 +65,10 @@ describe("BacklogItemController -", function() {
             BacklogItemService = _BacklogItemService_;
             jest.spyOn(BacklogItemService, "getBacklogItemChildren").mockImplementation(() => {});
             jest.spyOn(BacklogItemService, "getBacklogItem").mockImplementation(() => {});
-            jest.spyOn(BacklogItemService, "removeAddBacklogItemChildren").mockImplementation(
-                () => {}
-            );
+            jest.spyOn(
+                BacklogItemService,
+                "removeAddBacklogItemChildren"
+            ).mockImplementation(() => {});
 
             DroppedService = _DroppedService_;
             jest.spyOn(DroppedService, "reorderBacklogItemChildren").mockImplementation(() => {});
@@ -78,9 +79,10 @@ describe("BacklogItemController -", function() {
             CardFieldsService = _CardFieldsService_;
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
-            jest.spyOn(BacklogItemCollectionService, "refreshBacklogItem").mockImplementation(
-                () => {}
-            );
+            jest.spyOn(
+                BacklogItemCollectionService,
+                "refreshBacklogItem"
+            ).mockImplementation(() => {});
             jest.spyOn(
                 BacklogItemCollectionService,
                 "addOrReorderBacklogItemsInCollection"

@@ -20,11 +20,11 @@
 <template>
     <tbody>
         <git-repository-table-simple-permissions
-            v-if="! repository.has_fined_grained_permissions && ! is_hidden"
+            v-if="!repository.has_fined_grained_permissions && !is_hidden"
             v-bind:repository-permission="repository"
         />
 
-        <template v-if="repository.has_fined_grained_permissions && ! is_hidden">
+        <template v-if="repository.has_fined_grained_permissions && !is_hidden">
             <git-repository-table-fine-grained-permissions-repository
                 v-bind:repository-permission="repository"
             />

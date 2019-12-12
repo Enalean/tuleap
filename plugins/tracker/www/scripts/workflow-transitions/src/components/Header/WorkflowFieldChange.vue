@@ -25,7 +25,10 @@
         >
             <label class="tlp-label">
                 <span v-translate>Field</span>
-                <span class="tlp-tooltip tlp-tooltip-top" v-bind:data-tlp-tooltip="$gettext('Transitions based field')">
+                <span
+                    class="tlp-tooltip tlp-tooltip-top"
+                    v-bind:data-tlp-tooltip="$gettext('Transitions based field')"
+                >
                     <i class="fa fa-question-circle"></i>
                 </span>
             </label>

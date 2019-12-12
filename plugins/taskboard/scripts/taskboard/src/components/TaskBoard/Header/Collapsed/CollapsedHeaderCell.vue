@@ -19,8 +19,8 @@
   -->
 <template>
     <div class="taskboard-header taskboard-header-collapsed" v-bind:class="classes">
-        <expand-button v-bind:column="column"/>
-        <collapsed-label v-bind:column="column"/>
+        <expand-button v-bind:column="column" />
+        <collapsed-label v-bind:column="column" />
     </div>
 </template>
 <script lang="ts">

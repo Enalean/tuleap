@@ -20,18 +20,19 @@
 
 <template>
     <div class="tlp-dropdown document-dropdown-menu-button">
-        <button class="tlp-button-primary"
-                v-bind:class="{
-                    'tlp-button-large': isInLargeMode,
-                    'tlp-button-small tlp-button-outline': isInQuickLookMode,
-                    'tlp-append tlp-dropdown-split-button-caret': isAppended
-                }"
-                ref="dropdownButton"
-                type="button"
-                data-test="document-drop-down-button"
+        <button
+            class="tlp-button-primary"
+            v-bind:class="{
+                'tlp-button-large': isInLargeMode,
+                'tlp-button-small tlp-button-outline': isInQuickLookMode,
+                'tlp-append tlp-dropdown-split-button-caret': isAppended
+            }"
+            ref="dropdownButton"
+            type="button"
+            data-test="document-drop-down-button"
         >
-            <i class="fa fa-ellipsis-h" v-if="! isAppended"></i>
-            <i class="fa fa-caret-down" v-bind:class="{ 'tlp-button-icon-right': ! isAppended }"></i>
+            <i class="fa fa-ellipsis-h" v-if="!isAppended"></i>
+            <i class="fa fa-caret-down" v-bind:class="{ 'tlp-button-icon-right': !isAppended }"></i>
         </button>
         <slot></slot>
     </div>

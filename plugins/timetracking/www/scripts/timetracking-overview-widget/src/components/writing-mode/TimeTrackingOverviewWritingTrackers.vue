@@ -18,22 +18,26 @@
   -->
 <template>
     <div class="timetracking-writing-mode-selected-tracker">
-        <div class="tlp-form-element timetracking-writing-mode-selected-project"
-             v-bind:class="{ 'tlp-form-element-disabled': is_project_select_disabled }"
+        <div
+            class="tlp-form-element timetracking-writing-mode-selected-project"
+            v-bind:class="{ 'tlp-form-element-disabled': is_project_select_disabled }"
         >
             <label class="tlp-label">
                 <translate>Project</translate>
                 <i class="fa fa-asterisk"></i>
             </label>
-            <time-tracking-overview-project-option v-bind:projects="projects"/>
+            <time-tracking-overview-project-option v-bind:projects="projects" />
         </div>
-        <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': is_project_select_disabled }">
+        <div
+            class="tlp-form-element"
+            v-bind:class="{ 'tlp-form-element-disabled': is_project_select_disabled }"
+        >
             <label class="tlp-label">
                 <translate>Tracker</translate>
                 <i class="fa fa-asterisk"></i>
             </label>
             <div class="tlp-form-element tlp-form-element-append">
-                <time-tracking-overview-trackers-options v-on:input="trackerSelected($event)"/>
+                <time-tracking-overview-trackers-options v-on:input="trackerSelected($event)" />
                 <button
                     type="button"
                     class="tlp-append tlp-button-primary tlp-button-outline"
@@ -41,8 +45,16 @@
                     v-on:click="addTracker()"
                     data-test="add-tracker-button"
                 >
-                    <i v-if="is_tracker_or_project_select_disabled" class="tlp-button-icon fa fa-spinner fa-spin" data-test="icon-spinner"></i>
-                    <i v-else-if="is_tracker_available" class="tlp-button-icon fa fa-plus" data-test="icon-plus"></i>
+                    <i
+                        v-if="is_tracker_or_project_select_disabled"
+                        class="tlp-button-icon fa fa-spinner fa-spin"
+                        data-test="icon-spinner"
+                    ></i>
+                    <i
+                        v-else-if="is_tracker_available"
+                        class="tlp-button-icon fa fa-plus"
+                        data-test="icon-plus"
+                    ></i>
                     <i v-else class="tlp-button-icon fa fa-ban" data-test="icon-ban"></i>
                     <translate>Add</translate>
                 </button>

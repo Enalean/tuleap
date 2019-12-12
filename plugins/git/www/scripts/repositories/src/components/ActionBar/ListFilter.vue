@@ -25,7 +25,7 @@
         type="search"
         v-model="filter"
         size="30"
-    >
+    />
 </template>
 <script>
 export default {

@@ -78,39 +78,55 @@ export default {
 
             if (this.error_modal_shown === this.MAX_SIZE_ERROR) {
                 return () =>
-                    import(/* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./MaxSizeDragndropErrorModal.vue");
+                    import(
+                        /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./MaxSizeDragndropErrorModal.vue"
+                    );
             }
 
             if (this.error_modal_shown === this.ALREADY_EXISTS_ERROR) {
                 return () =>
-                    import(/* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./FileAlreadyExistsDragndropErrorModal.vue");
+                    import(
+                        /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./FileAlreadyExistsDragndropErrorModal.vue"
+                    );
             }
 
             if (this.error_modal_shown === this.CREATION_ERROR) {
                 return () =>
-                    import(/* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./CreationErrorDragndropErrorModal.vue");
+                    import(
+                        /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./CreationErrorDragndropErrorModal.vue"
+                    );
             }
 
             if (this.error_modal_shown === this.EDITION_LOCKED) {
                 return () =>
-                    import(/* webpackChunkName: "document-edition-locked-error-modal" */ "./DocumentLockedForEditionErrorModal.vue");
+                    import(
+                        /* webpackChunkName: "document-edition-locked-error-modal" */ "./DocumentLockedForEditionErrorModal.vue"
+                    );
             }
             if (this.error_modal_shown === this.DOCUMENT_NEEDS_APPROVAL) {
                 return () =>
-                    import(/* webpackChunkName: "document-needs-approval-error-modal" */ "./DocumentNeedsApprovalErrorModal.vue");
+                    import(
+                        /* webpackChunkName: "document-needs-approval-error-modal" */ "./DocumentNeedsApprovalErrorModal.vue"
+                    );
             }
             if (this.error_modal_shown === this.IE11_NOT_SUPPORTED) {
                 return () =>
-                    import(/* webpackChunkName: "document-needs-approval-error-modal" */ "./BrowserNotSupported.vue");
+                    import(
+                        /* webpackChunkName: "document-needs-approval-error-modal" */ "./BrowserNotSupported.vue"
+                    );
             }
 
             if (this.error_modal_shown === this.DROPPED_ITEM_IS_NOT_A_FILE) {
                 return () =>
-                    import(/* webpackChunkName: "document-droppped-item-is-folder-error" */ "./DroppedItemIsAFolderErrorModal.vue");
+                    import(
+                        /* webpackChunkName: "document-droppped-item-is-folder-error" */ "./DroppedItemIsAFolderErrorModal.vue"
+                    );
             }
 
             return () =>
-                import(/* webpackChunkName: "document-max-files-dragndrop-error-modal" */ "./MaxFilesDragndropErrorModal.vue");
+                import(
+                    /* webpackChunkName: "document-max-files-dragndrop-error-modal" */ "./MaxFilesDragndropErrorModal.vue"
+                );
         }
     },
     created() {

@@ -19,17 +19,18 @@
 
 <template>
     <div class="colorpicker-row">
-        <span class="colorpicker-circular-color"
-              v-for="color_name in colors"
-              v-bind:key="color_name"
-              v-bind:class="[
-                  'colorpicker-circular-color-' + color_name,
-                  {
-                      'fa fa-check': isCurrentColor(color_name)
-                  }
-              ]"
-              v-bind:title="color_name"
-              v-on:click="updateColor(color_name)"
+        <span
+            class="colorpicker-circular-color"
+            v-for="color_name in colors"
+            v-bind:key="color_name"
+            v-bind:class="[
+                'colorpicker-circular-color-' + color_name,
+                {
+                    'fa fa-check': isCurrentColor(color_name)
+                }
+            ]"
+            v-bind:title="color_name"
+            v-on:click="updateColor(color_name)"
         ></span>
     </div>
 </template>

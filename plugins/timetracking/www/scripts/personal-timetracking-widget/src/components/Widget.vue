@@ -19,9 +19,9 @@
 
 <template>
     <div class="timetracking-widget">
-        <widget-reading-mode v-if="reading_mode"/>
-        <widget-writing-mode v-else/>
-        <widget-artifact-table/>
+        <widget-reading-mode v-if="reading_mode" />
+        <widget-writing-mode v-else />
+        <widget-artifact-table />
     </div>
 </template>
 

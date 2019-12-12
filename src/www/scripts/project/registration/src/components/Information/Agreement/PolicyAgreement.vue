@@ -21,7 +21,8 @@
 <template>
     <div class="tlp-form-element">
         <label class="tlp-label tlp-checkbox">
-            <input type="checkbox" value="1" required> <span v-dompurify-html="agreement"></span>
+            <input type="checkbox" value="1" required />
+            <span v-dompurify-html="agreement"></span>
         </label>
     </div>
 </template>

@@ -28,7 +28,9 @@ exports[`WrongColorPopover initiates a popover to inform user that the chosen co
         class="tlp-popover-title"
         tag="h1"
       >
-        Incompatible usage of color
+        
+                Incompatible usage of color
+            
       </translate-stub>
     </div>
      

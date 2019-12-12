@@ -18,13 +18,9 @@
   -->
 
 <template>
-    <add-modal
-        v-bind:form_url="form_url"
-        ref="modal"
-        v-on:reset-modal="resetModal"
-    >
+    <add-modal v-bind:form_url="form_url" ref="modal" v-on:reset-modal="resetModal">
         <template slot="content">
-            <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token">
+            <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token" />
             <sidebar-previewer
                 v-bind:label="preview_label"
                 v-bind:icon_name="service.icon_name"
@@ -36,10 +32,16 @@
                 v-bind:allowed_icons="allowed_icons"
             >
                 <template slot="is_active">
-                    <service-is-active id="project-service-add-modal-active" v-bind:value="service.is_active"/>
+                    <service-is-active
+                        id="project-service-add-modal-active"
+                        v-bind:value="service.is_active"
+                    />
                 </template>
                 <template slot="shortname" v-if="is_default_template">
-                    <service-shortname id="project-service-add-modal-shortname" v-bind:value="service.short_name"/>
+                    <service-shortname
+                        id="project-service-add-modal-shortname"
+                        v-bind:value="service.short_name"
+                    />
                 </template>
             </in-creation-custom-service>
         </template>

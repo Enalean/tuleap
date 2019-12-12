@@ -21,11 +21,19 @@
     <div class="tlp-modal-body project-admin-services-modal-preview">
         <div class="project-admin-services-modal-preview-sidebar">
             <div class="project-sidebar-nav-item active">
-                <i class="fa fa-fw project-sidebar-nav-item-icon" v-bind:class="[props.icon_name]"></i>
-                <span class="project-sidebar-nav-item-label project-admin-services-modal-preview-label">
+                <i
+                    class="fa fa-fw project-sidebar-nav-item-icon"
+                    v-bind:class="[props.icon_name]"
+                ></i>
+                <span
+                    class="project-sidebar-nav-item-label project-admin-services-modal-preview-label"
+                >
                     {{ props.label }}
                 </span>
-                <i v-if="props.is_in_new_tab" class="fa fa-arrow-right project-sidebar-nav-item-new-tab"></i>
+                <i
+                    v-if="props.is_in_new_tab"
+                    class="fa fa-arrow-right project-sidebar-nav-item-new-tab"
+                ></i>
             </div>
         </div>
     </div>

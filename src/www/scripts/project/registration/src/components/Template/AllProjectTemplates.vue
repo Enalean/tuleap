@@ -23,7 +23,7 @@
         <h1 class="project-registration-title" v-translate>Start a new project</h1>
 
         <div class="register-new-project-section">
-            <new-project-boxes/>
+            <new-project-boxes />
             <div class="register-new-project-list">
                 <h2>
                     <span class="tlp-badge-primary register-new-project-section-badge">1</span>
@@ -31,14 +31,15 @@
                 </h2>
 
                 <p v-translate>
-                    The project template you will select provides some services. Don’t worry, you can always modify your project workspace after your project has been created.
+                    The project template you will select provides some services. Don’t worry, you
+                    can always modify your project workspace after your project has been created.
                 </p>
 
-                <under-construction-information/>
-                <tuleap-template-list/>
+                <under-construction-information />
+                <tuleap-template-list />
             </div>
         </div>
-        <template-footer/>
+        <template-footer />
     </div>
 </template>
 

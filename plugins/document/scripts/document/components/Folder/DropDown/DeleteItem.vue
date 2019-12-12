@@ -17,7 +17,6 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-
 <template>
     <button
         type="button"

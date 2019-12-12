@@ -22,7 +22,8 @@
     <post-action v-bind:post_action="post_action">
         <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
             <label v-bind:for="job_url_input_id" class="tlp-label">
-                <translate>Job url</translate> <i class="fa fa-asterisk"></i>
+                <translate>Job url</translate>
+                <i class="fa fa-asterisk"></i>
             </label>
             <input
                 v-bind:id="job_url_input_id"
@@ -34,7 +35,7 @@
                 data-test-type="job-url"
                 required
                 v-bind:disabled="is_modal_save_running"
-            >
+            />
             <p class="tlp-text-info" v-translate>
                 Tuleap will automatically pass the following parameters to the job:
             </p>
@@ -52,7 +53,8 @@
                     artifactId: identifier of the artifact where the transition happens (integer)
                 </li>
                 <li v-translate="{ transition_id: current_transition.id }">
-                    triggerFieldValue: value of current transition target (ie. %{ transition_id }) (string)
+                    triggerFieldValue: value of current transition target (ie. %{ transition_id })
+                    (string)
                 </li>
             </ul>
         </div>

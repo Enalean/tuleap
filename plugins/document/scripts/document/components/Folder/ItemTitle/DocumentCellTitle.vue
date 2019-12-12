@@ -21,7 +21,7 @@
 
 <template>
     <div>
-        <fake-caret v-bind:item="item"/>
+        <fake-caret v-bind:item="item" />
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
         {{ title }}
     </div>

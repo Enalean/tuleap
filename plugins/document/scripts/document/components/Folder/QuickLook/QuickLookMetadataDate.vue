@@ -19,31 +19,36 @@
 
 <template>
     <div>
-        <div class="tlp-tooltip tlp-tooltip-left"
-             v-bind:data-tlp-tooltip="getFormattedDate"
-             v-if="is_obsolescence_date_today"
-             data-test="metadata-date-today"
-             v-translate
+        <div
+            class="tlp-tooltip tlp-tooltip-left"
+            v-bind:data-tlp-tooltip="getFormattedDate"
+            v-if="is_obsolescence_date_today"
+            data-test="metadata-date-today"
+            v-translate
         >
             Today
         </div>
-        <div class="tlp-tooltip tlp-tooltip-left"
-             v-bind:data-tlp-tooltip="getFormattedDate"
-             v-else-if="is_date_valid"
-             data-test="metadata-date-formatted-display"
+        <div
+            class="tlp-tooltip tlp-tooltip-left"
+            v-bind:data-tlp-tooltip="getFormattedDate"
+            v-else-if="is_date_valid"
+            data-test="metadata-date-formatted-display"
         >
             {{ getFormattedDateForDisplay(metadata.value) }}
         </div>
-        <span class="document-quick-look-property-empty"
-              data-test="metadata-date-permanent"
-              v-else-if="has_obsolescence_date_metadata_unlimited_validity"
-              v-translate
+        <span
+            class="document-quick-look-property-empty"
+            data-test="metadata-date-permanent"
+            v-else-if="has_obsolescence_date_metadata_unlimited_validity"
+            v-translate
         >
             Permanent
         </span>
-        <span class="document-quick-look-property-empty"
-              data-test="metadata-date-empty"
-              v-else v-translate
+        <span
+            class="document-quick-look-property-empty"
+            data-test="metadata-date-empty"
+            v-else
+            v-translate
         >
             Empty
         </span>

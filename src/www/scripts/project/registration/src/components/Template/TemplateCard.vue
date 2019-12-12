@@ -20,25 +20,31 @@
 
 <template>
     <div class="project-registration-template-card">
-        <input type="radio"
-               v-bind:id="'project-registration-tuleap-template-'+template.name"
-               v-bind:value="template.name"
-               class="project-registration-selected-template"
-               name="selected-template"
-               data-test="project-registration-radio"
-               v-on:change="storeSelectedTemplate(template)"
-        >
+        <input
+            type="radio"
+            v-bind:id="'project-registration-tuleap-template-' + template.name"
+            v-bind:value="template.name"
+            class="project-registration-selected-template"
+            name="selected-template"
+            data-test="project-registration-radio"
+            v-on:change="storeSelectedTemplate(template)"
+        />
 
-        <label class="tlp-card project-registration-template-label"
-               data-test="project-registration-card-label"
-               v-bind:for="'project-registration-tuleap-template-'+template.name"
+        <label
+            class="tlp-card project-registration-template-label"
+            data-test="project-registration-card-label"
+            v-bind:for="'project-registration-tuleap-template-' + template.name"
         >
-            <div class="project-registration-template-glyph"
-                 v-dompurify-html:svg="template.glyph"
-                 data-test="scrum-template-svg"/>
+            <div
+                class="project-registration-template-glyph"
+                v-dompurify-html:svg="template.glyph"
+                data-test="scrum-template-svg"
+            />
             <div class="project-registration-template-content">
                 <h4 class="project-registration-template-card-title">{{ template.title }}</h4>
-                <span class="project-registration-template-card-description">{{ template.description }}</span>
+                <span class="project-registration-template-card-description">
+                    {{ template.description }}
+                </span>
             </div>
         </label>
     </div>

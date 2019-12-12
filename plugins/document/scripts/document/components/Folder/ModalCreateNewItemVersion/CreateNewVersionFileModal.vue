@@ -19,21 +19,35 @@
   -->
 
 <template>
-    <form class="tlp-modal" role="dialog" v-bind:aria-labelled-by="aria_labelled_by" v-on:submit="createNewFileVersion">
-        <modal-header v-bind:modal-title="modal_title"
-                      v-bind:aria-labelled-by="aria_labelled_by"
-                      v-bind:icon-header-class="'fa-plus'"
+    <form
+        class="tlp-modal"
+        role="dialog"
+        v-bind:aria-labelled-by="aria_labelled_by"
+        v-on:submit="createNewFileVersion"
+    >
+        <modal-header
+            v-bind:modal-title="modal_title"
+            v-bind:aria-labelled-by="aria_labelled_by"
+            v-bind:icon-header-class="'fa-plus'"
         />
-        <modal-feedback/>
+        <modal-feedback />
         <div class="tlp-modal-body">
-            <item-update-properties v-bind:version="version" v-bind:item="item" v-on:approvalTableActionChange="setApprovalUpdateAction">
-                <file-properties v-model="uploaded_item.file_properties" v-bind:item="uploaded_item"/>
+            <item-update-properties
+                v-bind:version="version"
+                v-bind:item="item"
+                v-on:approvalTableActionChange="setApprovalUpdateAction"
+            >
+                <file-properties
+                    v-model="uploaded_item.file_properties"
+                    v-bind:item="uploaded_item"
+                />
             </item-update-properties>
         </div>
-        <modal-footer v-bind:is-loading="is_loading"
-                      v-bind:submit-button-label="submit_button_label"
-                      v-bind:aria-labelled-by="aria_labelled_by"
-                      v-bind:icon-submit-button-class="'fa-plus'"
+        <modal-footer
+            v-bind:is-loading="is_loading"
+            v-bind:submit-button-label="submit_button_label"
+            v-bind:aria-labelled-by="aria_labelled_by"
+            v-bind:icon-submit-button-class="'fa-plus'"
         />
     </form>
 </template>

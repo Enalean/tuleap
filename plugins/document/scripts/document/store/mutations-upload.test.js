@@ -110,7 +110,10 @@ describe("Store mutations", () => {
             };
 
             const state = {
-                folder_content: [{ id: 2, title: "titi.txt" }, { id: 1, title: "tutu.txt" }]
+                folder_content: [
+                    { id: 2, title: "titi.txt" },
+                    { id: 1, title: "tutu.txt" }
+                ]
             };
 
             mutations.initializeFolderProperties(state, folder);
@@ -128,7 +131,10 @@ describe("Store mutations", () => {
             };
 
             const state = {
-                folder_content: [{ id: 2, title: "titi.txt" }, { id: 1, title: "tutu.txt" }]
+                folder_content: [
+                    { id: 2, title: "titi.txt" },
+                    { id: 1, title: "tutu.txt" }
+                ]
             };
 
             mutations.initializeFolderProperties(state, folder);
@@ -153,7 +159,10 @@ describe("Store mutations", () => {
             };
 
             const state = {
-                folder_content: [{ id: 2, title: "titi.txt" }, { id: 1, title: "tutu.txt" }]
+                folder_content: [
+                    { id: 2, title: "titi.txt" },
+                    { id: 1, title: "tutu.txt" }
+                ]
             };
 
             mutations.toggleCollapsedFolderHasUploadingContent(state, [folder, true]);
@@ -171,7 +180,10 @@ describe("Store mutations", () => {
             };
 
             const state = {
-                folder_content: [{ id: 2, title: "titi.txt" }, { id: 1, title: "tutu.txt" }]
+                folder_content: [
+                    { id: 2, title: "titi.txt" },
+                    { id: 1, title: "tutu.txt" }
+                ]
             };
 
             mutations.toggleCollapsedFolderHasUploadingContent(state, [folder, true]);
@@ -191,7 +203,10 @@ describe("Store mutations", () => {
             };
 
             const state = {
-                folder_content: [{ id: 2, title: "titi.txt" }, { id: 1, title: "tutu.txt" }]
+                folder_content: [
+                    { id: 2, title: "titi.txt" },
+                    { id: 1, title: "tutu.txt" }
+                ]
             };
 
             mutations.updateFolderProgressbar(state, folder);
@@ -231,7 +246,10 @@ describe("Store mutations", () => {
             };
 
             const state = {
-                folder_content: [{ id: 2, title: "titi.txt" }, { id: 1, title: "tutu.txt" }]
+                folder_content: [
+                    { id: 2, title: "titi.txt" },
+                    { id: 1, title: "tutu.txt" }
+                ]
             };
 
             mutations.resetFolderIsUploading(state, folder);

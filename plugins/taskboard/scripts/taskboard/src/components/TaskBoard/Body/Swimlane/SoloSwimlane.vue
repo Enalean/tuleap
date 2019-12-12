@@ -20,7 +20,7 @@
 
 <template>
     <div class="taskboard-swimlane" v-if="should_solo_card_be_displayed">
-        <swimlane-header v-bind:swimlane="swimlane"/>
+        <swimlane-header v-bind:swimlane="swimlane" />
         <drop-container-cell
             v-for="col of columns"
             v-bind:key="col.id"
@@ -31,12 +31,12 @@
                 v-if="column.id === col.id"
                 v-bind:card="swimlane.card"
                 class="taskboard-cell-solo-card"
-                v-bind:class="{'taskboard-draggable-item': ! swimlane.card.is_in_edit_mode}"
+                v-bind:class="{ 'taskboard-draggable-item': !swimlane.card.is_in_edit_mode }"
                 v-bind:data-card-id="swimlane.card.id"
                 v-bind:data-tracker-id="swimlane.card.tracker_id"
-                v-bind:data-is-draggable="! swimlane.card.is_in_edit_mode"
+                v-bind:data-is-draggable="!swimlane.card.is_in_edit_mode"
             />
-            <add-card v-if="is_add_card_rendered" v-bind:column="col" v-bind:swimlane="swimlane"/>
+            <add-card v-if="is_add_card_rendered" v-bind:column="col" v-bind:swimlane="swimlane" />
         </drop-container-cell>
     </div>
 </template>

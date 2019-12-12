@@ -19,7 +19,10 @@
 
 <template>
     <span class="breadcrumb-item" v-bind:title="item.title">
-        <router-link v-bind:to="{ name: 'folder', params: { item_id: item.id }}" class="breadcrumb-link">
+        <router-link
+            v-bind:to="{ name: 'folder', params: { item_id: item.id } }"
+            class="breadcrumb-link"
+        >
             {{ item.title }}
         </router-link>
     </span>

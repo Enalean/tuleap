@@ -18,11 +18,12 @@
   -->
 
 <template>
-    <div class="document-notification tlp-alert-success"
-         v-bind:class="{
-             'document-notification-fadeout': is_fadeout
-         }"
-         v-if="is_displayed"
+    <div
+        class="document-notification tlp-alert-success"
+        v-bind:class="{
+            'document-notification-fadeout': is_fadeout
+        }"
+        v-if="is_displayed"
     >
         <translate>The item has been deleted successfully.</translate>
     </div>

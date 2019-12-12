@@ -19,32 +19,14 @@
   -->
 
 <template>
-    <select
-        class="tlp-select"
-        v-model="field_value"
-        v-bind:disabled="disabled"
-        required
-    >
-        <option
-            data-test-type="placeholder"
-            v-bind:value="null"
-            v-translate
-            disabled
-        >
+    <select class="tlp-select" v-model="field_value" v-bind:disabled="disabled" required>
+        <option data-test-type="placeholder" v-bind:value="null" v-translate disabled>
             Please choose
         </option>
-        <option
-            data-test-type="clear"
-            v-bind:value="DATE_FIELD_VALUE.CLEAR"
-            v-translate
-        >
+        <option data-test-type="clear" v-bind:value="DATE_FIELD_VALUE.CLEAR" v-translate>
             Clear
         </option>
-        <option
-            data-test-type="current"
-            v-bind:value="DATE_FIELD_VALUE.CURRENT"
-            v-translate
-        >
+        <option data-test-type="current" v-bind:value="DATE_FIELD_VALUE.CURRENT" v-translate>
             Current time
         </option>
     </select>

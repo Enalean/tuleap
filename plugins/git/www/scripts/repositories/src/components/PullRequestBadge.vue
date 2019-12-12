@@ -18,12 +18,16 @@
   -->
 
 <template>
-    <a v-bind:href="pullrequest_url"
-       class="git-pullrequest-badge-link"
-       v-if="numberPullRequest > 0"
+    <a
+        v-bind:href="pullrequest_url"
+        class="git-pullrequest-badge-link"
+        v-if="numberPullRequest > 0"
     >
         <span class="tlp-badge-primary git-pullrequest-badge">
-            <translate v-bind:translate-n="numberPullRequest" translate-plural="%{ numberPullRequest } pull requests">
+            <translate
+                v-bind:translate-n="numberPullRequest"
+                translate-plural="%{ numberPullRequest } pull requests"
+            >
                 %{ numberPullRequest } pull request
             </translate>
         </span>

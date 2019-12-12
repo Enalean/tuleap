@@ -19,14 +19,15 @@
   -->
 
 <template>
-    <input type="text"
-           class="taskboard-card-remaining-effort-input"
-           v-bind:class="classes"
-           v-model="value"
-           v-on:keyup.enter="save"
-           pattern="[0-9]*(\.[0-9]+)?"
-           v-bind:aria-label="$gettext('New remaining effort')"
-    >
+    <input
+        type="text"
+        class="taskboard-card-remaining-effort-input"
+        v-bind:class="classes"
+        v-model="value"
+        v-on:keyup.enter="save"
+        pattern="[0-9]*(\.[0-9]+)?"
+        v-bind:aria-label="$gettext('New remaining effort')"
+    />
 </template>
 
 <script lang="ts">

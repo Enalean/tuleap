@@ -20,22 +20,18 @@
 
 <template>
     <div class="tlp-form-element" v-show="is_displayed">
-        <label
-            class="tlp-label"
-            for="document-new-item-embedded"
-            v-translate
-        >
+        <label class="tlp-label" for="document-new-item-embedded" v-translate>
             Content
         </label>
         <div class="tlp-form-element">
-            <textarea class="tlp-textarea"
-                      id="document-new-item-embedded"
-                      name="embedded-content"
-                      ref="embedded_editor"
-                      v-bind:placeholder="placeholder"
-                      v-bind:value="value.content"
-            >
-            </textarea>
+            <textarea
+                class="tlp-textarea"
+                id="document-new-item-embedded"
+                name="embedded-content"
+                ref="embedded_editor"
+                v-bind:placeholder="placeholder"
+                v-bind:value="value.content"
+            ></textarea>
         </div>
     </div>
 </template>

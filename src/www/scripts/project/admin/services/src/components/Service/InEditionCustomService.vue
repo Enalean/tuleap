@@ -19,9 +19,9 @@
 
 <template>
     <div class="tlp-modal-body">
-        <service-id v-bind:value="service.id"/>
+        <service-id v-bind:value="service.id" />
         <div class="project-admin-services-modals-top-fields">
-            <service-label id="project-service-edit-modal-label" v-model="service.label"/>
+            <service-label id="project-service-edit-modal-label" v-model="service.label" />
             <service-is-used
                 id="project-service-edit-modal-enabled"
                 v-bind:value="service.is_used"
@@ -34,7 +34,7 @@
                 v-bind:allowed_icons="allowed_icons"
             />
             <slot name="is_active">
-                <hidden-service-is-active v-bind:value="service.is_active"/>
+                <hidden-service-is-active v-bind:value="service.is_active" />
             </slot>
         </div>
 
@@ -43,7 +43,7 @@
             v-bind:minimal_rank="minimal_rank"
             v-bind:value="service.rank"
         />
-        <service-link id="project-service-edit-modal-link" v-bind:value="service.link"/>
+        <service-link id="project-service-edit-modal-link" v-bind:value="service.link" />
         <service-description
             id="project-service-edit-modal-description"
             v-bind:value="service.description"
@@ -73,7 +73,7 @@
                     v-model="service.is_in_iframe"
                     v-bind:disabled="service.is_in_new_tab"
                     data-test="iframe-switch"
-                >
+                />
                 <label
                     class="tlp-switch-button"
                     for="project-service-edit-modal-iframe"

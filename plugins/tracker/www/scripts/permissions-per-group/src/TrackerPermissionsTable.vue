@@ -27,8 +27,7 @@
             </tr>
         </thead>
 
-        <table-content v-bind="$props"/>
-
+        <table-content v-bind="$props" />
     </table>
 </template>
 <script>

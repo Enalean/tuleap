@@ -70,7 +70,10 @@ describe("TaskBoard", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }],
+                        columns: [
+                            { id: 2, label: "To do" },
+                            { id: 3, label: "Done" }
+                        ],
                         error: { has_modal_error: false, modal_error_message: "" }
                     }
                 })
@@ -84,7 +87,10 @@ describe("TaskBoard", () => {
             mocks: {
                 $store: createStoreMock({
                     state: {
-                        columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }],
+                        columns: [
+                            { id: 2, label: "To do" },
+                            { id: 3, label: "Done" }
+                        ],
                         error: { has_modal_error: true, modal_error_message: "Ooooops" }
                     }
                 })

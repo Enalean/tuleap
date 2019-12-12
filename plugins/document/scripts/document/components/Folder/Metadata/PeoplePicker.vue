@@ -27,8 +27,10 @@
         v-bind:value="value"
         v-on:input="$emit('input', parseInt($event.target.value), 10)"
     >
-        <option selected v-bind:value="currently_selected_user.id">{{ currently_selected_user.display_name }}</option>
-        <slot/>
+        <option selected v-bind:value="currently_selected_user.id">
+            {{ currently_selected_user.display_name }}
+        </option>
+        <slot />
     </select>
 </template>
 

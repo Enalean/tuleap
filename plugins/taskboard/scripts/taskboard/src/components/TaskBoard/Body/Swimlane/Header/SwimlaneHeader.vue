@@ -20,13 +20,14 @@
 
 <template>
     <div class="taskboard-cell taskboard-cell-swimlane-header" v-bind:class="fullscreen_class">
-        <i class="fa fa-minus-square taskboard-swimlane-toggle"
-           v-bind:class="additional_classnames"
-           role="button"
-           v-bind:title="title"
-           v-on:click="collapseSwimlane(swimlane)"
+        <i
+            class="fa fa-minus-square taskboard-swimlane-toggle"
+            v-bind:class="additional_classnames"
+            role="button"
+            v-bind:title="title"
+            v-on:click="collapseSwimlane(swimlane)"
         ></i>
-        <slot/>
+        <slot />
     </div>
 </template>
 

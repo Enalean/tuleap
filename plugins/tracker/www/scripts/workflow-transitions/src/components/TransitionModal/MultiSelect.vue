@@ -25,7 +25,7 @@ Do not use data attribute in configuration.
 -->
 <template>
     <select v-bind:disabled="disabled">
-        <slot/>
+        <slot />
     </select>
 </template>
 <script>

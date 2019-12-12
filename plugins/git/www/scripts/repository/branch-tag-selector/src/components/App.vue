@@ -20,18 +20,24 @@
 <template>
     <div class="tlp-dropdown-menu tlp-dropdown-with-tabs-on-top" role="menu">
         <nav class="tlp-tabs git-repository-branch-tag-selector-tabs">
-            <a href=""
-               class="tlp-tab"
-               v-bind:class="{'tlp-tab-active': is_displaying_branches}"
-               v-on:click.prevent="is_displaying_branches = true"
-               v-translate
-            >Branches</a>
-            <a href=""
-               class="tlp-tab"
-               v-bind:class="{'tlp-tab-active': ! is_displaying_branches}"
-               v-on:click.prevent="is_displaying_branches = false"
-               v-translate
-            >Tags</a>
+            <a
+                href=""
+                class="tlp-tab"
+                v-bind:class="{ 'tlp-tab-active': is_displaying_branches }"
+                v-on:click.prevent="is_displaying_branches = true"
+                v-translate
+            >
+                Branches
+            </a>
+            <a
+                href=""
+                class="tlp-tab"
+                v-bind:class="{ 'tlp-tab-active': !is_displaying_branches }"
+                v-on:click.prevent="is_displaying_branches = false"
+                v-translate
+            >
+                Tags
+            </a>
         </nav>
         <branches-section
             v-bind:repository_id="repository_id"

@@ -21,7 +21,9 @@
     <div>
         <div v-if="is_loading" class="release-loader" data-test="loading-data"></div>
         <burndown-chart-error
-            v-else-if="has_error_rest || has_error_duration || has_error_start_date || is_under_calculation"
+            v-else-if="
+                has_error_rest || has_error_duration || has_error_start_date || is_under_calculation
+            "
             v-bind:has_error_rest="has_error_rest"
             v-bind:message_error_rest="message_error_rest"
             v-bind:has_error_duration="has_error_duration"
@@ -29,9 +31,11 @@
             v-bind:has_error_start_date="has_error_start_date"
             v-bind:message_error_start_date="$gettext('\'start date\' field is empty or invalid.')"
             v-bind:is_under_calculation="is_under_calculation"
-            v-bind:message_error_under_calculation="$gettext('Burndown is under calculation. It will be available in a few minutes.')"
+            v-bind:message_error_under_calculation="
+                $gettext('Burndown is under calculation. It will be available in a few minutes.')
+            "
         />
-        <burndown-chart-displayer v-else v-bind:release_data="release_data"/>
+        <burndown-chart-displayer v-else v-bind:release_data="release_data" />
     </div>
 </template>
 

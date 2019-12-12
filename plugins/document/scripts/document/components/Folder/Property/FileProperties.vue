@@ -19,10 +19,7 @@
 
 <template>
     <div class="tlp-form-element" v-if="is_displayed">
-        <label
-            class="tlp-label"
-            for="document-new-file-upload"
-        >
+        <label class="tlp-label" for="document-new-file-upload">
             <translate>File</translate>
             <i class="fa fa-asterisk"></i>
         </label>
@@ -34,7 +31,7 @@
                 required
                 v-on:change="onFileChange"
                 ref="input"
-            >
+            />
             <p class="tlp-text-danger" v-if="error_message.length > 0">
                 {{ error_message }}
             </p>

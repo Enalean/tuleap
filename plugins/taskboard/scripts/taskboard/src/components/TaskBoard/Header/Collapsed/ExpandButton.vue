@@ -19,15 +19,14 @@
   -->
 
 <template>
-    <span class="taskboard-header-expand-column"
-          v-bind:title="title"
-    >
-        <i class="fa fa-plus-square"
-           role="button"
-           tabindex="0"
-           v-bind:aria-label="title"
-           v-on:click="expandColumn(column)"
-           data-test="button"
+    <span class="taskboard-header-expand-column" v-bind:title="title">
+        <i
+            class="fa fa-plus-square"
+            role="button"
+            tabindex="0"
+            v-bind:aria-label="title"
+            v-on:click="expandColumn(column)"
+            data-test="button"
         ></i>
     </span>
 </template>

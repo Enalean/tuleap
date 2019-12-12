@@ -30,7 +30,7 @@
                 name="is_used"
                 value="1"
                 v-bind:checked="props.value"
-            >
+            />
             <label
                 class="tlp-switch-button"
                 v-bind:for="props.id"

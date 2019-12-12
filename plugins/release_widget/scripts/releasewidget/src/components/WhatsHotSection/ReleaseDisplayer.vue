@@ -18,23 +18,27 @@
   -->
 
 <template>
-    <div class="project-release"
-         v-bind:class="{ 'project-release-toggle-closed': !is_open, 'tlp-tooltip tlp-tooltip-top': is_loading }"
-         v-bind:data-tlp-tooltip="$gettext('Loading data...')"
+    <div
+        class="project-release"
+        v-bind:class="{
+            'project-release-toggle-closed': !is_open,
+            'tlp-tooltip tlp-tooltip-top': is_loading
+        }"
+        v-bind:data-tlp-tooltip="$gettext('Loading data...')"
     >
         <release-header
             v-on:toggleReleaseDetails="toggleReleaseDetails()"
             v-bind:release_data="displayed_release"
             v-bind:is-loading="is_loading"
-            v-bind:class="{ 'project-release-toggle-closed': !is_open, 'disabled': is_loading}"
+            v-bind:class="{ 'project-release-toggle-closed': !is_open, disabled: is_loading }"
         />
         <div v-if="is_open" data-test="toggle-open" class="release-toggle">
             <div v-if="has_error" class="tlp-alert-danger" data-test="show-error-message">
                 {{ error_message }}
             </div>
             <div v-else data-test="display-release-data">
-                <release-badges v-bind:release_data="displayed_release"/>
-                <release-description v-bind:release_data="displayed_release"/>
+                <release-badges v-bind:release_data="displayed_release" />
+                <release-description v-bind:release_data="displayed_release" />
             </div>
         </div>
     </div>

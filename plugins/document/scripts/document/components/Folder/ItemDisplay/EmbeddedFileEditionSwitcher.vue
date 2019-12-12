@@ -20,35 +20,39 @@
 <template>
     <div class="tlp-button-bar document-view-switcher">
         <div class="tlp-button-bar-item" v-bind:title="large_view_title">
-            <input type="radio"
-                   name="view-switcher"
-                   id="view-switcher-large"
-                   class="tlp-button-bar-checkbox"
-                   value="large"
-                   v-bind:checked="is_embedded_in_large_view"
-                   v-on:click="switchToLargeView()"
-                   data-test="view-switcher-large"
-            >
-            <label for="view-switcher-large"
-                   class="tlp-button-primary tlp-button-outline tlp-button-small"
-                   v-bind:title="large_view_title"
+            <input
+                type="radio"
+                name="view-switcher"
+                id="view-switcher-large"
+                class="tlp-button-bar-checkbox"
+                value="large"
+                v-bind:checked="is_embedded_in_large_view"
+                v-on:click="switchToLargeView()"
+                data-test="view-switcher-large"
+            />
+            <label
+                for="view-switcher-large"
+                class="tlp-button-primary tlp-button-outline tlp-button-small"
+                v-bind:title="large_view_title"
             >
                 <i class="fa fa-tlp-text-large"></i>
             </label>
         </div>
         <div class="tlp-button-bar-item" v-bind:title="narrow_view_title">
-            <input type="radio"
-                   name="view-switcher"
-                   id="view-switcher-narrow"
-                   class="tlp-button-bar-checkbox"
-                   value="narrow"
-                   v-bind:checked="! is_embedded_in_large_view"
-                   data-test="view-switcher-narrow"
-                   v-on:click="switchToNarrowView()"
-            >
-            <label for="view-switcher-narrow"
-                   class="tlp-button-primary tlp-button-outline tlp-button-small"
-                   v-bind:title="narrow_view_title"
+            <input
+                type="radio"
+                name="view-switcher"
+                id="view-switcher-narrow"
+                class="tlp-button-bar-checkbox"
+                value="narrow"
+                v-bind:checked="!is_embedded_in_large_view"
+                data-test="view-switcher-narrow"
+                v-on:click="switchToNarrowView()"
+            />
+            <label
+                for="view-switcher-narrow"
+                class="tlp-button-primary tlp-button-outline tlp-button-small"
+                v-bind:title="narrow_view_title"
             >
                 <i class="fa fa-tlp-text-narrow"></i>
             </label>

@@ -21,17 +21,19 @@
 <template>
     <div class="tlp-form-element">
         <label class="tlp-label" for="field_description">
-            <span v-translate>Description</span> <i class="fa fa-asterisk" v-if="is_description_required"/>
+            <span v-translate>Description</span>
+            <i class="fa fa-asterisk" v-if="is_description_required" />
         </label>
 
-        <textarea type="text"
-                  class="tlp-textarea"
-                  id="field_description"
-                  name="description"
-                  v-bind:placeholder="$gettext('My useful project description')"
-                  v-bind:required="is_description_required"
-                  v-on:input="$emit('input', $event.target.value)"
-                  data-test="project-description"
+        <textarea
+            type="text"
+            class="tlp-textarea"
+            id="field_description"
+            name="description"
+            v-bind:placeholder="$gettext('My useful project description')"
+            v-bind:required="is_description_required"
+            v-on:input="$emit('input', $event.target.value)"
+            data-test="project-description"
         />
     </div>
 </template>

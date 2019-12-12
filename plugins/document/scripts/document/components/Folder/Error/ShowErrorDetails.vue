@@ -20,23 +20,30 @@
 <template>
     <div class="empty-page-text-with-small-text">
         <translate>Oops, there's an issue.</translate>
-        <div class="empty-page-small-text" v-translate v-if="! has_lock_error">
+        <div class="empty-page-small-text" v-translate v-if="!has_lock_error">
             It seems the content of this element can't be loaded.
         </div>
-        <div class="empty-page-small-text" v-translate v-else>It seems action you try to performed can't be done.</div>
+        <div class="empty-page-small-text" v-translate v-else>
+            It seems action you try to performed can't be done.
+        </div>
         <template v-if="has_any_loading_error">
             <div class="document-folder-error-link">
-                <a v-if="! is_more_shown"
-                   data-test="error-details-show-more-button"
-                   v-on:click="is_more_shown = true"
-                   href="javascript:void(0)"
-                   v-translate
-                >Show error details</a>
+                <a
+                    v-if="!is_more_shown"
+                    data-test="error-details-show-more-button"
+                    v-on:click="is_more_shown = true"
+                    href="javascript:void(0)"
+                    v-translate
+                >
+                    Show error details
+                </a>
             </div>
-            <pre v-if="is_more_shown"
-                 class="document-folder-error-details"
-                 data-test="show-more-error-message"
-            >{{ error_message }}</pre>
+            <pre
+                v-if="is_more_shown"
+                class="document-folder-error-details"
+                data-test="show-more-error-message"
+                >{{ error_message }}</pre
+            >
         </template>
     </div>
 </template>

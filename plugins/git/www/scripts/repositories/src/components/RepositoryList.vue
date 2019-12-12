@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="git-repository-list" v-if="! is_loading_initial">
+    <div class="git-repository-list" v-if="!is_loading_initial">
         <git-repository
             v-for="repository in filteredRepositoriesByLastUpdateDate"
             v-bind:repository="repository"

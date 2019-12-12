@@ -18,13 +18,14 @@
   -->
 
 <template>
-    <input type="search"
-           class="tlp-search tlp-search-small"
-           v-bind:placeholder="placeholder"
-           ref="filter"
-           v-bind:value="value"
-           v-on:input="$emit('input', $event.target.value)"
-    >
+    <input
+        type="search"
+        class="tlp-search tlp-search-small"
+        v-bind:placeholder="placeholder"
+        ref="filter"
+        v-bind:value="value"
+        v-on:input="$emit('input', $event.target.value)"
+    />
 </template>
 
 <script>

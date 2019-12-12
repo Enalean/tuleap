@@ -56,7 +56,9 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
                 language,
                 "artifact-additional-action",
                 locale =>
-                    import(/* webpackChunkName: "artifact-additional-action-po-" */ `../po/${locale}.po`)
+                    import(
+                        /* webpackChunkName: "artifact-additional-action-po-" */ `../po/${locale}.po`
+                    )
             );
 
             clearAllFeedbacks();

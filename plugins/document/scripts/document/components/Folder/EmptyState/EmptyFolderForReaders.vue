@@ -20,15 +20,18 @@
 <template>
     <div class="empty-page">
         <div class="empty-page-illustration">
-            <empty-folder-for-readers-svg/>
+            <empty-folder-for-readers-svg />
         </div>
         <div class="empty-page-text-with-small-text">
             <translate>This folder is empty</translate>
-            <div class="empty-page-small-text" v-translate>or you don't have permissions to see its items</div>
+            <div class="empty-page-small-text" v-translate>
+                or you don't have permissions to see its items
+            </div>
         </div>
-        <router-link v-bind:to="route_to"
-                     class="tlp-button-primary tlp-button-large"
-                     v-if="can_go_to_parent"
+        <router-link
+            v-bind:to="route_to"
+            class="tlp-button-primary tlp-button-large"
+            v-if="can_go_to_parent"
         >
             <i class="fa fa-reply tlp-button-icon"></i>
             <translate>Go to parent folder</translate>

@@ -61,9 +61,10 @@ describe("App", () => {
             mocks: {
                 $store: getStore(
                     true,
-                    [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] as Array<
-                        ColumnDefinition
-                    >,
+                    [
+                        { id: 2, label: "To do" },
+                        { id: 3, label: "Done" }
+                    ] as Array<ColumnDefinition>,
                     false,
                     false
                 )
@@ -76,9 +77,10 @@ describe("App", () => {
             mocks: {
                 $store: getStore(
                     false,
-                    [{ id: 2, label: "To do" }, { id: 3, label: "Done" }] as Array<
-                        ColumnDefinition
-                    >,
+                    [
+                        { id: 2, label: "To do" },
+                        { id: 3, label: "Done" }
+                    ] as Array<ColumnDefinition>,
                     false,
                     false
                 )

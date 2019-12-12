@@ -21,17 +21,20 @@
 <template>
     <div class="empty-page">
         <div class="empty-page-illustration">
-            <project-approval-svg/>
+            <project-approval-svg />
         </div>
 
         <div class="empty-page-text-with-small-text">
-            <span v-translate>Your project has been submitted to the administrators for validation</span>
+            <span v-translate>
+                Your project has been submitted to the administrators for validation
+            </span>
             <div class="empty-page-small-text" v-dompurify-html="message_admin_validation"></div>
         </div>
 
         <div>
             <a class="tlp-button-primary tlp-button-large" href="/my/">
-                <i class="fa fa-reply tlp-button-icon"></i> <span v-translate>Go to my home page</span>
+                <i class="fa fa-reply tlp-button-icon"></i>
+                <span v-translate>Go to my home page</span>
             </a>
         </div>
     </div>

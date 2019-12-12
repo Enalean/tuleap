@@ -19,23 +19,20 @@
 <template>
     <div class="timetracking-overview-writing-mode">
         <div class="timetracking-overview-selector">
-            <time-tracking-overview-writing-dates/>
-            <time-tracking-overview-writing-trackers/>
+            <time-tracking-overview-writing-dates />
+            <time-tracking-overview-writing-trackers />
         </div>
-        <time-tracking-overview-tracker-list/>
+        <time-tracking-overview-tracker-list />
         <div class="timetracking-writing-mode-actions">
-            <button class="tlp-button-primary tlp-button-outline timetracking-overview-writing-mode-actions-cancel"
-                    type="button"
-                    v-on:click="switchToReadingMode()"
-                    v-translate
+            <button
+                class="tlp-button-primary tlp-button-outline timetracking-overview-writing-mode-actions-cancel"
+                type="button"
+                v-on:click="switchToReadingMode()"
+                v-translate
             >
                 Cancel
             </button>
-            <button
-                class="tlp-button-primary"
-                v-on:click="loadTimes"
-                v-translate
-            >
+            <button class="tlp-button-primary" v-on:click="loadTimes" v-translate>
                 Search
             </button>
         </div>

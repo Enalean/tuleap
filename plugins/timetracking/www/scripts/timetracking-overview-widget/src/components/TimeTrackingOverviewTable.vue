@@ -22,14 +22,19 @@
         <div v-if="has_error" class="tlp-alert-danger" data-test="alert-danger">
             {{ error_message }}
         </div>
-        <div v-if="has_trackers_times && !has_error" class="tlp-table-actions" data-test="table-action">
-            <button class="tlp-button-small tlp-button-primary tlp-button-outline tlp-table-actions-element"
-                    v-on:click="setAreVoidTrackersHidden"
+        <div
+            v-if="has_trackers_times && !has_error"
+            class="tlp-table-actions"
+            data-test="table-action"
+        >
+            <button
+                class="tlp-button-small tlp-button-primary tlp-button-outline tlp-table-actions-element"
+                v-on:click="setAreVoidTrackersHidden"
             >
                 <i v-bind:class="[are_void_trackers_hidden ? 'fa fa-eye' : 'fa fa-eye-slash']"></i>
                 {{ display_button_text }}
             </button>
-            <time-tracking-overview-user-list v-if="has_users" data-test="user-list-component"/>
+            <time-tracking-overview-user-list v-if="has_users" data-test="user-list-component" />
         </div>
         <div v-if="is_loading" class="timetracking-loader" data-test="timetracking-loader"></div>
         <table v-if="can_results_be_displayed" class="tlp-table" data-test="overview-table">
@@ -42,10 +47,11 @@
                         Project
                     </th>
                     <th class="tlp-table-cell-numeric">
-                        <translate> Time </translate>
-                        <span class="tlp-tooltip tlp-tooltip-left timetracking-time-tooltip"
-                              v-bind:data-tlp-tooltip="time_format_tooltip"
-                              v-bind:aria-label="time_format_tooltip"
+                        <translate>Time</translate>
+                        <span
+                            class="tlp-tooltip tlp-tooltip-left timetracking-time-tooltip"
+                            v-bind:data-tlp-tooltip="time_format_tooltip"
+                            v-bind:aria-label="time_format_tooltip"
                         >
                             <i class="fa fa-question-circle"></i>
                         </span>
@@ -53,16 +59,17 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-if="! has_data_to_display">
+                <tr v-if="!has_data_to_display">
                     <td colspan="4" class="tlp-table-cell-empty" v-translate data-test="empty-cell">
                         No time have been found for this period and these trackers
                     </td>
                 </tr>
-                <time-tracking-overview-table-row v-else
-                                                  v-for="tracker_time in trackers_times"
-                                                  v-bind:key="tracker_time.id"
-                                                  v-bind:time="tracker_time"
-                                                  data-test="table-row"
+                <time-tracking-overview-table-row
+                    v-else
+                    v-for="tracker_time in trackers_times"
+                    v-bind:key="tracker_time.id"
+                    v-bind:time="tracker_time"
+                    data-test="table-row"
                 />
             </tbody>
             <tfoot v-if="has_data_to_display" data-test="tfoot">

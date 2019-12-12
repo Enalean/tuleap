@@ -21,15 +21,23 @@
 <template>
     <div class="taskboard-swimlane taskboard-swimlane-collapsed">
         <swimlane-header v-bind:swimlane="swimlane">
-            <i class="fa fa-plus-square taskboard-swimlane-toggle"
-               v-bind:class="additional_classnames"
-               role="button"
-               v-bind:title="title"
-               v-on:click="expandSwimlane(swimlane)"
+            <i
+                class="fa fa-plus-square taskboard-swimlane-toggle"
+                v-bind:class="additional_classnames"
+                role="button"
+                v-bind:title="title"
+                v-on:click="expandSwimlane(swimlane)"
             ></i>
-            <div class="taskboard-card taskboard-card-collapsed" v-bind:class="additional_card_classnames">
+            <div
+                class="taskboard-card taskboard-card-collapsed"
+                v-bind:class="additional_card_classnames"
+            >
                 <div class="taskboard-card-content">
-                    <card-xref-label v-bind:card="swimlane.card" v-bind:label="swimlane.card.label" class="taskboard-card-xref-label-collapsed"/>
+                    <card-xref-label
+                        v-bind:card="swimlane.card"
+                        v-bind:label="swimlane.card.label"
+                        class="taskboard-card-xref-label-collapsed"
+                    />
                 </div>
             </div>
         </swimlane-header>

@@ -25,7 +25,11 @@
         v-on:click="goToUpdate"
         data-test="document-new-item-version-button"
     >
-        <i v-if="is_loading_item" v-bind:class="iconClasses" class="fa fa-spin fa-circle-o-notch"></i>
+        <i
+            v-if="is_loading_item"
+            v-bind:class="iconClasses"
+            class="fa fa-spin fa-circle-o-notch"
+        ></i>
         <i v-else v-bind:class="iconClasses"></i>
         <translate>Create new version</translate>
     </a>

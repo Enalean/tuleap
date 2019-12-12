@@ -18,14 +18,32 @@
   -->
 
 <template>
-    <drop-down-menu v-bind:is-in-folder-empty-state="isInFolderEmptyState" v-bind:item="currently_previewed_item">
+    <drop-down-menu
+        v-bind:is-in-folder-empty-state="isInFolderEmptyState"
+        v-bind:item="currently_previewed_item"
+    >
         <template v-if="currently_previewed_item.user_can_write">
-            <lock-item v-bind:item="currently_previewed_item" data-test="document-dropdown-menu-lock-item" slot="lock-item"/>
-            <unlock-item v-bind:item="currently_previewed_item" data-test="document-dropdown-menu-unlock-item" slot="unlock-item"/>
-            <drop-down-separator slot="display-item-title-separator" data-test="document-dropdown-separator"/>
-            <update-properties v-bind:item="currently_previewed_item" data-test="document-update-properties" slot="update-properties"/>
-            <update-permissions v-bind:item="currently_previewed_item" slot="update-permissions"/>
-            <drop-down-separator slot="delete-item-separator"/>
+            <lock-item
+                v-bind:item="currently_previewed_item"
+                data-test="document-dropdown-menu-lock-item"
+                slot="lock-item"
+            />
+            <unlock-item
+                v-bind:item="currently_previewed_item"
+                data-test="document-dropdown-menu-unlock-item"
+                slot="unlock-item"
+            />
+            <drop-down-separator
+                slot="display-item-title-separator"
+                data-test="document-dropdown-separator"
+            />
+            <update-properties
+                v-bind:item="currently_previewed_item"
+                data-test="document-update-properties"
+                slot="update-properties"
+            />
+            <update-permissions v-bind:item="currently_previewed_item" slot="update-permissions" />
+            <drop-down-separator slot="delete-item-separator" />
             <delete-item
                 v-bind:item="currently_previewed_item"
                 role="menuitem"
@@ -35,7 +53,6 @@
             />
         </template>
     </drop-down-menu>
-
 </template>
 
 <script>

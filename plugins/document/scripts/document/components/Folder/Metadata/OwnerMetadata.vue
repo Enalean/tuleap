@@ -20,16 +20,14 @@
 
 <template>
     <div class="tlp-form-element">
-        <label
-            class="tlp-label"
-            for="document-item-owner"
-        >
+        <label class="tlp-label" for="document-item-owner">
             <translate>Owner</translate>
             <i class="fa fa-asterisk"></i>
         </label>
-        <people-picker v-bind:value="owner_id"
-                       id="document-item-owner"
-                       v-bind:currently_selected_user="currentlyUpdatedItem.owner"
+        <people-picker
+            v-bind:value="owner_id"
+            id="document-item-owner"
+            v-bind:currently_selected_user="currentlyUpdatedItem.owner"
         />
     </div>
 </template>

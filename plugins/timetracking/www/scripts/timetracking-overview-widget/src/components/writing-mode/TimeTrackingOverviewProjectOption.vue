@@ -24,10 +24,7 @@
         ref="select_project"
         v-on:change="getTrackers()"
     >
-        <option v-for="project in projects"
-                v-bind:key="project.id"
-                v-bind:value="project.id"
-        >
+        <option v-for="project in projects" v-bind:key="project.id" v-bind:value="project.id">
             {{ project.label }}
         </option>
     </select>

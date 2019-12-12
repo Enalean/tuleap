@@ -18,14 +18,20 @@
   -->
 
 <template>
-    <div class="tlp-modal tlp-modal-danger" role="dialog" aria-labelledby="document-confirm-deletion-modal-title">
+    <div
+        class="tlp-modal tlp-modal-danger"
+        role="dialog"
+        aria-labelledby="document-confirm-deletion-modal-title"
+    >
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="document-confirm-deletion-modal-title" v-translate>Hold on a second!</h1>
+            <h1 class="tlp-modal-title" id="document-confirm-deletion-modal-title" v-translate>
+                Hold on a second!
+            </h1>
             <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close">
                 ×
             </div>
         </div>
-        <modal-feedback/>
+        <modal-feedback />
         <div class="tlp-modal-body">
             <p>{{ modal_description }}</p>
             <div
@@ -43,24 +49,33 @@
                 v-bind:wiki-page-referencers="wiki_page_referencers"
             />
             <span class="document-confirm-deletion-modal-wiki-page-referencers-loading">
-                <i class="fa fa-spin fa-circle-o-notch" v-if="is_item_a_wiki(item) && wiki_page_referencers_loading"></i>
+                <i
+                    class="fa fa-spin fa-circle-o-notch"
+                    v-if="is_item_a_wiki(item) && wiki_page_referencers_loading"
+                ></i>
             </span>
         </div>
         <div class="tlp-modal-footer">
-            <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">Cancel</button>
+            <button
+                type="button"
+                class="tlp-button-danger tlp-button-outline tlp-modal-action"
+                data-dismiss="modal"
+            >
+                Cancel
+            </button>
             <button
                 type="button"
                 class="tlp-button-danger tlp-modal-action"
                 data-test="document-confirm-deletion-button"
                 v-on:click="deleteItem()"
-                v-bind:class="{'disabled': is_confirm_button_disabled}"
+                v-bind:class="{ disabled: is_confirm_button_disabled }"
                 v-bind:disabled="is_confirm_button_disabled"
             >
                 <i
                     class="fa tlp-button-icon"
                     v-bind:class="{
                         'fa-spin fa-circle-o-notch': is_an_action_on_going,
-                        'fa-trash-o': ! is_an_action_on_going
+                        'fa-trash-o': !is_an_action_on_going
                     }"
                 ></i>
                 <span v-translate>Delete</span>

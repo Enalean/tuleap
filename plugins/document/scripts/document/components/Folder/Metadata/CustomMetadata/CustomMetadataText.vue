@@ -18,12 +18,21 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-if="currentlyUpdatedItemMetadata.type === 'text'" data-test="document-custom-metadata-text">
-        <label class="tlp-label"
-               v-bind:for="`document-{{currentlyUpdatedItemMetadata.short_name}}`"
+    <div
+        class="tlp-form-element"
+        v-if="currentlyUpdatedItemMetadata.type === 'text'"
+        data-test="document-custom-metadata-text"
+    >
+        <label
+            class="tlp-label"
+            v-bind:for="`document-{{currentlyUpdatedItemMetadata.short_name}}`"
         >
             {{ currentlyUpdatedItemMetadata.name }}
-            <i class="fa fa-asterisk" v-if="currentlyUpdatedItemMetadata.is_required" data-test="document-custom-metadata-is-required"></i>
+            <i
+                class="fa fa-asterisk"
+                v-if="currentlyUpdatedItemMetadata.is_required"
+                data-test="document-custom-metadata-is-required"
+            ></i>
         </label>
         <textarea
             type="text"

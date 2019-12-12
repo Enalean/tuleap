@@ -23,9 +23,10 @@
         <h3 v-translate>Tuleap templates</h3>
 
         <section class="project-registration-default-templates-section">
-            <template-card v-for="template of tuleap_templates"
-                           v-bind:key="template.template_name"
-                           v-bind:template="template"
+            <template-card
+                v-for="template of tuleap_templates"
+                v-bind:key="template.template_name"
+                v-bind:template="template"
             />
         </section>
     </div>

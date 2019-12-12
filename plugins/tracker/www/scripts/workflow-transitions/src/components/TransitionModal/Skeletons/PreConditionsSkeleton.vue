@@ -35,7 +35,7 @@
             <select class="tlp-select tlp-skeleton-field" disabled></select>
         </template>
         <label class="tlp-label tlp-checkbox" slot="comment-not-empty">
-            <input type="checkbox" class="tlp-skeleton-field" disabled>
+            <input type="checkbox" class="tlp-skeleton-field" disabled />
             <span class="tlp-skeleton-text"></span>
         </label>
     </pre-conditions-section>

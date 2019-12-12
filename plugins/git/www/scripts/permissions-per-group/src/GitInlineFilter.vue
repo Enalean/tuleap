@@ -21,13 +21,14 @@
     <div class="tlp-table-actions">
         <div class="tlp-table-actions-spacer"></div>
         <div class="tlp-form-element tlp-table-actions-element">
-            <input type="search"
-                   class="tlp-search"
-                   autocomplete="off"
-                   v-bind:placeholder="placeholder"
-                   v-bind:value="value"
-                   v-on:keyup="search"
-            >
+            <input
+                type="search"
+                class="tlp-search"
+                autocomplete="off"
+                v-bind:placeholder="placeholder"
+                v-bind:value="value"
+                v-on:keyup="search"
+            />
         </div>
     </div>
 </template>

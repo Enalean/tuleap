@@ -18,30 +18,40 @@
   -->
 
 <template>
-    <div class="release-remaining tlp-tooltip tlp-tooltip-left"
-         v-bind:data-tlp-tooltip="get_tooltip_effort_points"
+    <div
+        class="release-remaining tlp-tooltip tlp-tooltip-left"
+        v-bind:data-tlp-tooltip="get_tooltip_effort_points"
     >
         <div class="release-remaining-header">
             <i class="release-remaining-icon fa fa-flag-checkered"></i>
-            <span class="release-remaining-value"
-                  v-bind:class="{ 'release-remaining-value-disabled': disabled_points, 'release-remaining-value-success': are_all_effort_defined}"
-                  data-test="points-remaining-value"
+            <span
+                class="release-remaining-value"
+                v-bind:class="{
+                    'release-remaining-value-disabled': disabled_points,
+                    'release-remaining-value-success': are_all_effort_defined
+                }"
+                data-test="points-remaining-value"
             >
                 {{ formatPoints(release_data.remaining_effort) }}
             </span>
-            <translate class="release-remaining-text" v-bind:translate-n="release_data.remaining_effort"
-                       translate-plural="pts to go"
+            <translate
+                class="release-remaining-text"
+                v-bind:translate-n="release_data.remaining_effort"
+                translate-plural="pts to go"
             >
                 pt to go
             </translate>
         </div>
         <div class="release-remaining-progress">
-            <div class="release-remaining-progress-value"
-                 v-bind:class="{ 'release-remaining-progress-value-success': are_all_effort_defined, 'release-remaining-progress-value-disabled': disabled_points }"
-                 v-bind:style="{ width: get_tooltip_effort_points }"
-                 data-test="points-progress-value"
-            >
-            </div>
+            <div
+                class="release-remaining-progress-value"
+                v-bind:class="{
+                    'release-remaining-progress-value-success': are_all_effort_defined,
+                    'release-remaining-progress-value-disabled': disabled_points
+                }"
+                v-bind:style="{ width: get_tooltip_effort_points }"
+                data-test="points-progress-value"
+            ></div>
         </div>
     </div>
 </template>

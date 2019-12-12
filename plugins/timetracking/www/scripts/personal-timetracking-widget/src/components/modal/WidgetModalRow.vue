@@ -26,19 +26,23 @@
     />
     <tr v-else>
         <td>{{ timeData.date }}</td>
-        <td class="timetracking-detail-modal-step" v-bind:title="timeData.step">{{ timeData.step }}</td>
+        <td class="timetracking-detail-modal-step" v-bind:title="timeData.step">
+            {{ timeData.step }}
+        </td>
         <td class="timetracking-details-modal-buttons">
             <span>{{ minutes }}</span>
             <span>
-                <button class="tlp-button-primary tlp-button-outline tlp-button-small"
-                        v-on:click="swapEditMode()"
+                <button
+                    class="tlp-button-primary tlp-button-outline tlp-button-small"
+                    v-on:click="swapEditMode()"
                 >
                     <i class="fa fa-pencil"></i>
                 </button>
-                <button class="tlp-button-outline tlp-button-small tlp-button-danger"
-                        ref="popover_button"
-                        data-placement="left"
-                        data-trigger="click"
+                <button
+                    class="tlp-button-outline tlp-button-small tlp-button-danger"
+                    ref="popover_button"
+                    data-placement="left"
+                    data-trigger="click"
                 >
                     <i class="fa fa-trash"></i>
                 </button>

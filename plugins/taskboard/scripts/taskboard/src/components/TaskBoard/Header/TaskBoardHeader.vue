@@ -20,10 +20,17 @@
 
 <template>
     <div class="taskboard-head">
-        <div class="taskboard-header taskboard-cell-swimlane-header" v-bind:class="fullscreen_class"></div>
+        <div
+            class="taskboard-header taskboard-cell-swimlane-header"
+            v-bind:class="fullscreen_class"
+        ></div>
         <template v-for="column of columns">
-            <collapsed-header-cell v-bind:key="column.id" v-if="column.is_collapsed" v-bind:column="column"/>
-            <expanded-header-cell v-bind:key="column.id" v-else v-bind:column="column"/>
+            <collapsed-header-cell
+                v-bind:key="column.id"
+                v-if="column.is_collapsed"
+                v-bind:column="column"
+            />
+            <expanded-header-cell v-bind:key="column.id" v-else v-bind:column="column" />
         </template>
     </div>
 </template>

@@ -18,7 +18,10 @@
   -->
 
 <template>
-    <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden" v-bind:body_class="'document-uploads-files-list'">
+    <error-modal
+        v-on:error-modal-hidden="bubbleErrorModalHidden"
+        v-bind:body_class="'document-uploads-files-list'"
+    >
         <translate
             slot="modal-title"
             v-bind:translate-n="reasons.length"
@@ -27,9 +30,10 @@
             Oops… Unable to upload file
         </translate>
 
-        <div v-for="reason of sorted_reasons"
-             v-bind:key="reason.filename"
-             class="tlp-pane-section document-dragndrop-file-upload document-dragndrop-file-upload-error"
+        <div
+            v-for="reason of sorted_reasons"
+            v-bind:key="reason.filename"
+            class="tlp-pane-section document-dragndrop-file-upload document-dragndrop-file-upload-error"
         >
             <div class="document-uploads-file">
                 <span class="document-uploads-file-title">{{ reason.filename }}</span>

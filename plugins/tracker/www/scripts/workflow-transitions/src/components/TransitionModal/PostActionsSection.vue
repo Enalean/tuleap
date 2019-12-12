@@ -20,10 +20,7 @@
 <template>
     <section class="tlp-modal-body-section tracker-workflow-transition-modal-actions-section">
         <h2 class="tlp-modal-subtitle" v-translate>Actions automatically performed</h2>
-        <post-action-skeleton
-            v-if="is_loading_modal"
-            data-test-type="skeleton"
-        />
+        <post-action-skeleton v-if="is_loading_modal" data-test-type="skeleton" />
         <template v-else-if="has_post_actions">
             <component
                 v-for="post_action in post_actions"
@@ -43,10 +40,7 @@
                 <translate>Add another action</translate>
             </button>
         </template>
-        <empty-post-action
-            v-else
-            data-test-type="empty-message"
-        />
+        <empty-post-action v-else data-test-type="empty-message" />
     </section>
 </template>
 <script>

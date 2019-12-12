@@ -34,7 +34,7 @@
                 ×
             </div>
         </div>
-        <slot name="content"/>
+        <slot name="content" />
         <div class="tlp-modal-footer">
             <button
                 type="reset"
@@ -44,10 +44,7 @@
             >
                 Cancel
             </button>
-            <button
-                type="submit"
-                class="tlp-button-primary tlp-modal-action"
-            >
+            <button type="submit" class="tlp-button-primary tlp-modal-action">
                 <i class="fa fa-plus tlp-button-icon"></i>
                 <translate>Add service</translate>
             </button>

@@ -18,20 +18,23 @@
   -->
 
 <template>
-    <section class="tlp-pane git-repository-card"
-             v-bind:class="{
-                 'git-repository-card-two-columns': ! isFolderDisplayMode,
-                 'git-repository-in-folder': isFolderDisplayMode && is_in_folder
-             }"
+    <section
+        class="tlp-pane git-repository-card"
+        v-bind:class="{
+            'git-repository-card-two-columns': !isFolderDisplayMode,
+            'git-repository-in-folder': isFolderDisplayMode && is_in_folder
+        }"
     >
         <div class="tlp-pane-container">
             <a v-bind:href="getRepositoryPath" class="git-repository-card-link">
                 <div class="tlp-pane-header git-repository-card-header">
-                    <h2 class="tlp-pane-title git-repository-card-title"
+                    <h2
+                        class="tlp-pane-title git-repository-card-title"
                         data-test="repository_name"
                     >
-                        <span v-if="is_in_folder && ! isFolderDisplayMode"
-                              class="git-repository-card-path"
+                        <span
+                            v-if="is_in_folder && !isFolderDisplayMode"
+                            class="git-repository-card-path"
                         >
                             {{ folder_path }}
                         </span>
@@ -46,9 +49,10 @@
                         <i class="fa fa-clock-o git-repository-card-last-update-icon"></i>
                         <translate>Last update %{ formatted_last_update_date }</translate>
                     </div>
-                    <a v-if="is_admin"
-                       v-bind:href="repository_admin_url"
-                       class="git-repository-card-admin-link"
+                    <a
+                        v-if="is_admin"
+                        v-bind:href="repository_admin_url"
+                        class="git-repository-card-admin-link"
                     >
                         <i class="fa fa-cog" v-bind:title="administration_link_title"></i>
                     </a>

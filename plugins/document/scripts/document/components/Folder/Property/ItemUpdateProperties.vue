@@ -21,12 +21,16 @@
 <template>
     <div class="docman-item-update-property">
         <div class="docman-item-title-update-property">
-            <version-title-property v-model="version.title"/>
-            <lock-property v-model="version.is_file_locked" v-bind:item="item"/>
+            <version-title-property v-model="version.title" />
+            <lock-property v-model="version.is_file_locked" v-bind:item="item" />
         </div>
-        <changelog-property v-model="version.changelog"/>
+        <changelog-property v-model="version.changelog" />
         <slot></slot>
-        <approval-update-properties v-if="item.has_approval_table" v-on:approvalTableActionChange="emitApprovalUpdateAction" data-test="update-approval-properties"/>
+        <approval-update-properties
+            v-if="item.has_approval_table"
+            v-on:approvalTableActionChange="emitApprovalUpdateAction"
+            data-test="update-approval-properties"
+        />
     </div>
 </template>
 

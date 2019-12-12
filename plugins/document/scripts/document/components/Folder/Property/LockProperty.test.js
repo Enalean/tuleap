@@ -41,7 +41,7 @@ describe("LockProperty", () => {
 
             const label_element = wrapper.find("[data-test='lock-property-label']");
 
-            expect(label_element.element.textContent).toEqual("Lock new version");
+            expect(label_element.element.textContent).toMatch("Lock new version");
         });
 
         it("displays the 'Keep lock?' label on update if the document does have a lock", () => {
@@ -57,7 +57,7 @@ describe("LockProperty", () => {
 
             const label_element = wrapper.find("[data-test='lock-property-label']");
 
-            expect(label_element.element.textContent).toEqual("Keep lock?");
+            expect(label_element.element.textContent).toMatch("Keep lock?");
         });
     });
 });

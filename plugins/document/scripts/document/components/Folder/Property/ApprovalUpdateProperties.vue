@@ -19,23 +19,24 @@
 
 <template>
     <div class="tlp-form-element">
-        <label
-            class="tlp-label"
-            for="document-new-file-upload-approval-table-action"
-        >
+        <label class="tlp-label" for="document-new-file-upload-approval-table-action">
             <translate>Approval table</translate>
             <i class="fa fa-asterisk"></i>
         </label>
         <div id="document-new-file-upload-approval-table-action">
             <div class="tlp-form-element">
-                <label class="tlp-label tlp-radio" for="document-new-file-upload-approval-table-action-copy">
-                    <input id="document-new-file-upload-approval-table-action-copy"
-                           type="radio"
-                           name="approval-update-action"
-                           value="copy"
-                           v-on:change="$emit('approvalTableActionChange',$event.target.value)"
-                           required
-                    >
+                <label
+                    class="tlp-label tlp-radio"
+                    for="document-new-file-upload-approval-table-action-copy"
+                >
+                    <input
+                        id="document-new-file-upload-approval-table-action-copy"
+                        type="radio"
+                        name="approval-update-action"
+                        value="copy"
+                        v-on:change="$emit('approvalTableActionChange', $event.target.value)"
+                        required
+                    />
                     <translate>Copy the previous approval table.</translate>
                 </label>
                 <p class="tlp-text-info">
@@ -43,27 +44,36 @@
                 </p>
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label tlp-radio" for="document-new-file-upload-approval-table-action-reset">
-                    <input id="document-new-file-upload-approval-table-action-reset"
-                           type="radio"
-                           name="approval-update-action"
-                           value="reset"
-                           v-on:change="$emit('approvalTableActionChange',$event.target.value)"
-                    >
+                <label
+                    class="tlp-label tlp-radio"
+                    for="document-new-file-upload-approval-table-action-reset"
+                >
+                    <input
+                        id="document-new-file-upload-approval-table-action-reset"
+                        type="radio"
+                        name="approval-update-action"
+                        value="reset"
+                        v-on:change="$emit('approvalTableActionChange', $event.target.value)"
+                    />
                     <translate>Reset the approval cycle.</translate>
                 </label>
                 <p class="tlp-text-info" v-translate>
-                    Only the table structure will be kept. Reviewer comments and commitments will be discarded.
+                    Only the table structure will be kept. Reviewer comments and commitments will be
+                    discarded.
                 </p>
             </div>
             <div class="tlp-form-element">
-                <label class="tlp-label tlp-radio" for="document-new-file-upload-approval-table-action-empty">
-                    <input id="document-new-file-upload-approval-table-action-empty"
-                           type="radio"
-                           name="approval-update-action"
-                           value="empty"
-                           v-on:change="$emit('approvalTableActionChange',$event.target.value)"
-                    >
+                <label
+                    class="tlp-label tlp-radio"
+                    for="document-new-file-upload-approval-table-action-empty"
+                >
+                    <input
+                        id="document-new-file-upload-approval-table-action-empty"
+                        type="radio"
+                        name="approval-update-action"
+                        value="empty"
+                        v-on:change="$emit('approvalTableActionChange', $event.target.value)"
+                    />
                     <translate>Create a new empty approval table.</translate>
                 </label>
                 <p class="tlp-text-info" v-translate>

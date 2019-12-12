@@ -21,7 +21,10 @@
     <div class="empty-page">
         <div class="empty-page-illustration">
             <svg xmlns="http://www.w3.org/2000/svg" width="364" height="150" fill="none">
-                <use href="../../images/illustrations.svg#board-without-any-columns-for-admin" class="tlp-illustration"/>
+                <use
+                    href="../../images/illustrations.svg#board-without-any-columns-for-admin"
+                    class="tlp-illustration"
+                />
             </svg>
         </div>
         <div class="empty-page-text-with-small-text">

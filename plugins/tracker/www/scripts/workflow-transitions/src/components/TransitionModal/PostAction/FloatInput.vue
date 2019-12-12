@@ -27,7 +27,7 @@
         v-on:input="onInput"
         v-bind:disabled="disabled"
         required
-    >
+    />
 </template>
 
 <script>

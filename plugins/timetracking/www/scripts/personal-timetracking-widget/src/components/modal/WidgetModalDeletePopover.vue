@@ -29,12 +29,22 @@
             </p>
         </div>
         <div class="tlp-popover-footer">
-            <button type="button" class="tlp-button-danger tlp-button-outline" data-dismiss="popover" v-translate>Cancel</button>
-            <button type="button"
-                    class="tlp-button-danger"
-                    v-on:click="removeTime"
-                    data-dismiss="popover"
-                    v-translate>Confirm deletion
+            <button
+                type="button"
+                class="tlp-button-danger tlp-button-outline"
+                data-dismiss="popover"
+                v-translate
+            >
+                Cancel
+            </button>
+            <button
+                type="button"
+                class="tlp-button-danger"
+                v-on:click="removeTime"
+                data-dismiss="popover"
+                v-translate
+            >
+                Confirm deletion
             </button>
         </div>
     </section>

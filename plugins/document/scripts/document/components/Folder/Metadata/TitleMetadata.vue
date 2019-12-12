@@ -18,14 +18,12 @@
   -->
 
 <template>
-    <div class="tlp-form-element document-metadata-title"
-         v-bind:class="{'tlp-form-element-disabled': is_root_folder}"
-         data-test="document-new-item-title-form-element"
+    <div
+        class="tlp-form-element document-metadata-title"
+        v-bind:class="{ 'tlp-form-element-disabled': is_root_folder }"
+        data-test="document-new-item-title-form-element"
     >
-        <label
-            class="tlp-label"
-            for="document-new-item-title"
-        >
+        <label class="tlp-label" for="document-new-item-title">
             <translate>Title</translate>
             <i class="fa fa-asterisk"></i>
         </label>
@@ -41,7 +39,7 @@
             v-on:input="$emit('input', $event.target.value)"
             ref="input"
             data-test="document-new-item-title"
-        >
+        />
         <p class="tlp-text-danger" v-if="error_message.length > 0" data-test="title-error-message">
             {{ error_message }}
         </p>

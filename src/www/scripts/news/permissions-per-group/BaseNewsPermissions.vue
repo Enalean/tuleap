@@ -19,22 +19,24 @@
 
 <template>
     <section class="tlp-pane-section">
-        <div v-if="hasRestError"
-             class="tlp-alert-danger"
-        >
+        <div v-if="hasRestError" class="tlp-alert-danger">
             {{ rest_error }}
         </div>
 
-        <div class="permission-per-group-load-button" v-if="! is_loaded">
-            <button class="tlp-button-primary tlp-button-outline"
-                    v-on:click="loadAll()"
-                    v-translate
-            >See all news</button>
+        <div class="permission-per-group-load-button" v-if="!is_loaded">
+            <button
+                class="tlp-button-primary tlp-button-outline"
+                v-on:click="loadAll()"
+                v-translate
+            >
+                See all news
+            </button>
         </div>
 
-        <div v-if="is_loading"
-             v-bind:aria-label="news_are_loading"
-             class="permission-per-group-loader"
+        <div
+            v-if="is_loading"
+            v-bind:aria-label="news_are_loading"
+            class="permission-per-group-loader"
         ></div>
 
         <table v-if="is_loaded" class="tlp-table">
@@ -51,23 +53,29 @@
                         <a v-bind:href="news.admin_quicklink">{{ news.news_name }}</a>
                     </td>
 
-                    <visibility-label v-bind:is-visibility-public="news.is_public"/>
+                    <visibility-label v-bind:is-visibility-public="news.is_public" />
                 </tr>
 
-                <tr v-if="! hasNewsToDisplay">
-                    <td v-if="hasASelectedUserGroup"
+                <tr v-if="!hasNewsToDisplay">
+                    <td
+                        v-if="hasASelectedUserGroup"
                         key="selected-ugroup"
                         colspan="2"
                         class="tlp-table-cell-empty"
                         v-translate="{ user_group: selectedUgroupName }"
-                    >%{ user_group } can't see any news</td>
+                    >
+                        %{ user_group } can't see any news
+                    </td>
 
-                    <td v-else
+                    <td
+                        v-else
                         key="no-selected-ugroup"
                         colspan="2"
                         class="tlp-table-cell-empty"
                         v-translate
-                    >The project hasn't any news</td>
+                    >
+                        The project hasn't any news
+                    </td>
                 </tr>
             </tbody>
         </table>

@@ -21,9 +21,9 @@
     <table class="tlp-table">
         <thead>
             <tr>
-                <th v-translate> Date </th>
-                <th v-translate> Steps </th>
-                <th v-translate> Times </th>
+                <th v-translate>Date</th>
+                <th v-translate>Steps</th>
+                <th v-translate>Times</th>
             </tr>
         </thead>
         <tbody v-if="has_times_on_artifact" data-test="table-body-with-row">
@@ -56,7 +56,9 @@
             <tr>
                 <th></th>
                 <th></th>
-                <th class="tlp-table-last-row timetracking-total-sum">∑ {{ get_formatted_aggregated_time(current_times) }}</th>
+                <th class="tlp-table-last-row timetracking-total-sum">
+                    ∑ {{ get_formatted_aggregated_time(current_times) }}
+                </th>
             </tr>
         </tfoot>
     </table>

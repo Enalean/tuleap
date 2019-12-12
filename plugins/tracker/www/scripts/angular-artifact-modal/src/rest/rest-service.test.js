@@ -100,7 +100,10 @@ describe("rest-service", () => {
             const tracker_id = 49;
             const limit = 30;
             const offset = 0;
-            const artifacts = [{ id: 21, title: "equationally" }, { id: 82, title: "brachiator" }];
+            const artifacts = [
+                { id: 21, title: "equationally" },
+                { id: 82, title: "brachiator" }
+            ];
             const tlpRecursiveGetSpy = jest.spyOn(tlp, "recursiveGet").mockReturnValue(artifacts);
 
             const values = await RestService.getAllOpenParentArtifacts(tracker_id, limit, offset);
@@ -143,7 +146,10 @@ describe("rest-service", () => {
 
     describe("searchUsers() -", () => {
         it("Given a query, when I search for a username containing the query, then a promise will be resolved with an array of user representations", async () => {
-            const return_json = [{ id: 629, label: "Blue" }, { id: 593, label: "Blurred" }];
+            const return_json = [
+                { id: 629, label: "Blue" },
+                { id: 593, label: "Blurred" }
+            ];
             const tlpGetSpy = jest.spyOn(tlp, "get");
             mockFetchSuccess(tlpGetSpy, { return_json });
 

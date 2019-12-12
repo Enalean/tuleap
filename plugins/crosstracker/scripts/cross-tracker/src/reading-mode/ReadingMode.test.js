@@ -85,9 +85,10 @@ describe("ReadingMode", () => {
 
         it("When I save the report, the backend report will be updated and an event will be emitted", async () => {
             jest.spyOn(backendCrossTrackerReport, "init").mockImplementation(() => {});
-            jest.spyOn(backendCrossTrackerReport, "duplicateFromReport").mockImplementation(
-                () => {}
-            );
+            jest.spyOn(
+                backendCrossTrackerReport,
+                "duplicateFromReport"
+            ).mockImplementation(() => {});
             const trackers = [{ id: 36 }, { id: 17 }];
             const expert_query = '@description != ""';
             updateReport.mockImplementation(() =>
@@ -143,9 +144,10 @@ describe("ReadingMode", () => {
 
     describe("cancelReport() -", () => {
         it("when I click on 'Cancel', then the reading report will be reset", () => {
-            jest.spyOn(readingCrossTrackerReport, "duplicateFromReport").mockImplementation(
-                () => {}
-            );
+            jest.spyOn(
+                readingCrossTrackerReport,
+                "duplicateFromReport"
+            ).mockImplementation(() => {});
             const vm = instantiateComponent();
             jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
 

@@ -19,7 +19,9 @@
 
 <template>
     <tr>
-        <td><a v-bind:href="repositoryPermission.url">{{ repositoryPermission.name }}</a></td>
+        <td>
+            <a v-bind:href="repositoryPermission.url">{{ repositoryPermission.name }}</a>
+        </td>
 
         <td colspan="2"></td>
 

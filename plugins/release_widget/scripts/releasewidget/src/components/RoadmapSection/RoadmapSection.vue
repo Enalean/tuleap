@@ -26,10 +26,21 @@
                 <i class="fa fa-angle-double-up"></i>
             </div>
             <a class="releases-link" v-bind:href="backlog_link" data-test="backlog-link">
-                <translate v-bind:translate-params="{nb_backlog_items: nb_backlog_items}" v-bind:translate-n="nb_backlog_items" translate-plural="%{ nb_backlog_items } items in the backlog.">
+                <translate
+                    v-bind:translate-params="{ nb_backlog_items: nb_backlog_items }"
+                    v-bind:translate-n="nb_backlog_items"
+                    translate-plural="%{ nb_backlog_items } items in the backlog."
+                >
                     %{nb_backlog_items} item in the backlog.
                 </translate>
-                <translate v-bind:translate-params="{nb_upcoming_releases: nb_upcoming_releases, label_tracker: label_tracker_planning}" v-bind:translate-n="nb_upcoming_releases" translate-plural="%{nb_upcoming_releases} upcoming %{label_tracker}.">
+                <translate
+                    v-bind:translate-params="{
+                        nb_upcoming_releases: nb_upcoming_releases,
+                        label_tracker: label_tracker_planning
+                    }"
+                    v-bind:translate-n="nb_upcoming_releases"
+                    translate-plural="%{nb_upcoming_releases} upcoming %{label_tracker}."
+                >
                     %{nb_upcoming_releases} upcoming %{label_tracker}.
                 </translate>
             </a>

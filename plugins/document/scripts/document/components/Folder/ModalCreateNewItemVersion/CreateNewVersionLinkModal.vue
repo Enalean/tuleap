@@ -18,30 +18,38 @@
   -->
 
 <template>
-    <form class="tlp-modal"
-          role="dialog"
-          v-bind:aria-labelled-by="aria_labelled_by"
-          v-on:submit="createNewLinkVersion"
-          data-test="document-new-item-version-modal"
+    <form
+        class="tlp-modal"
+        role="dialog"
+        v-bind:aria-labelled-by="aria_labelled_by"
+        v-on:submit="createNewLinkVersion"
+        data-test="document-new-item-version-modal"
     >
-        <modal-header v-bind:modal-title="modal_title"
-                      v-bind:aria-labelled-by="aria_labelled_by"
-                      v-bind:icon-header-class="'fa-plus'"
+        <modal-header
+            v-bind:modal-title="modal_title"
+            v-bind:aria-labelled-by="aria_labelled_by"
+            v-bind:icon-header-class="'fa-plus'"
         />
-        <modal-feedback/>
+        <modal-feedback />
         <div class="tlp-modal-body">
-            <item-update-properties v-bind:version="version" v-bind:item="item" v-on:approvalTableActionChange="setApprovalUpdateAction">
+            <item-update-properties
+                v-bind:version="version"
+                v-bind:item="item"
+                v-on:approvalTableActionChange="setApprovalUpdateAction"
+            >
                 <link-properties
                     v-if="link_model"
                     v-model="link_model"
                     v-bind:item="item"
-                    key="link-props"/>
+                    key="link-props"
+                />
             </item-update-properties>
         </div>
-        <modal-footer v-bind:is-loading="is_loading"
-                      v-bind:submit-button-label="submit_button_label"
-                      v-bind:aria-labelled-by="aria_labelled_by"
-                      v-bind:icon-submit-button-class="'fa-plus'"
+        <modal-footer
+            v-bind:is-loading="is_loading"
+            v-bind:submit-button-label="submit_button_label"
+            v-bind:aria-labelled-by="aria_labelled_by"
+            v-bind:icon-submit-button-class="'fa-plus'"
         />
     </form>
 </template>

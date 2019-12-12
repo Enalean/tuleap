@@ -26,13 +26,14 @@
         <table v-if="can_results_be_displayed" class="tlp-table" data-test="artifact-table">
             <thead>
                 <tr>
-                    <th v-translate> Artifact </th>
-                    <th v-translate> Project </th>
+                    <th v-translate>Artifact</th>
+                    <th v-translate>Project</th>
                     <th class="tlp-table-cell-numeric">
-                        <translate> Time </translate>
-                        <span class="tlp-tooltip tlp-tooltip-left timetracking-time-tooltip"
-                              v-bind:data-tlp-tooltip="time_format_tooltip"
-                              v-bind:aria-label="time_format_tooltip"
+                        <translate>Time</translate>
+                        <span
+                            class="tlp-tooltip tlp-tooltip-left timetracking-time-tooltip"
+                            v-bind:data-tlp-tooltip="time_format_tooltip"
+                            v-bind:aria-label="time_format_tooltip"
                         >
                             <i class="fa fa-question-circle"></i>
                         </span>
@@ -41,21 +42,24 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-if="! has_data_to_display">
+                <tr v-if="!has_data_to_display">
                     <td colspan="4" class="tlp-table-cell-empty" v-translate data-test="empty-tab">
                         No tracked time have been found for this period
                     </td>
                 </tr>
-                <artifact-table-row v-for="time in times"
-                                    v-bind:key="time.id"
-                                    v-bind:time-data="time"
+                <artifact-table-row
+                    v-for="time in times"
+                    v-bind:key="time.id"
+                    v-bind:time-data="time"
                 />
             </tbody>
             <tfoot v-if="has_data_to_display" data-test="table-foot">
                 <tr>
                     <th></th>
                     <th></th>
-                    <th class="tlp-table-cell-numeric timetracking-total-sum">∑ {{ get_formatted_total_sum }}</th>
+                    <th class="tlp-table-cell-numeric timetracking-total-sum">
+                        ∑ {{ get_formatted_total_sum }}
+                    </th>
                     <th></th>
                 </tr>
             </tfoot>
@@ -70,7 +74,7 @@
                 v-bind:disabled="is_loading_more"
             >
                 <i v-if="is_loading_more" class="tlp-button-icon fa fa-spinner fa-spin"></i>
-                <translate> Load more </translate>
+                <translate>Load more</translate>
             </button>
         </div>
     </div>

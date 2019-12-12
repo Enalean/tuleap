@@ -18,10 +18,7 @@
   -->
 
 <template>
-    <div class="tlp-modal"
-         role="dialog"
-         aria-labelledby="document-uploads-files-modal-title"
-    >
+    <div class="tlp-modal" role="dialog" aria-labelledby="document-uploads-files-modal-title">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="document-uploads-files-modal-title">
                 <i class="fa fa-upload tlp-modal-title-icon"></i>
@@ -36,7 +33,9 @@
                 class="tlp-pane-section document-dragndrop-file-upload"
                 v-for="file in files_uploads_list"
                 v-bind:key="file.id"
-                v-bind:class="{ 'document-dragndrop-file-upload-error': file.upload_error !== null }"
+                v-bind:class="{
+                    'document-dragndrop-file-upload-error': file.upload_error !== null
+                }"
             >
                 <div class="document-uploads-file">
                     <span class="document-uploads-file-title">{{ file.title }}</span>
@@ -44,7 +43,10 @@
                         {{ getUploadErrorMessage(file) }}
                     </span>
                 </div>
-                <upload-progress-bar v-if="file.is_uploading || file.is_uploading_new_version" v-bind:item="file"/>
+                <upload-progress-bar
+                    v-if="file.is_uploading || file.is_uploading_new_version"
+                    v-bind:item="file"
+                />
                 <span v-else-if="file.upload_error !== null" class="tlp-badge-danger" v-translate>
                     Upload error
                 </span>
@@ -56,10 +58,11 @@
             </div>
         </div>
         <div class="tlp-modal-footer">
-            <button type="submit"
-                    class="tlp-button-primary tlp-modal-action"
-                    data-dismiss="modal"
-                    v-translate
+            <button
+                type="submit"
+                class="tlp-button-primary tlp-modal-action"
+                data-dismiss="modal"
+                v-translate
             >
                 Close
             </button>

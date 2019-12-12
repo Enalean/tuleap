@@ -25,11 +25,7 @@
         ref="modal"
     >
         <div class="tlp-modal-header">
-            <h1
-                class="tlp-modal-title"
-                id="modal-confirm-workflow-mode-change-label"
-                v-translate
-            >
+            <h1 class="tlp-modal-title" id="modal-confirm-workflow-mode-change-label" v-translate>
                 Wait a minute...
             </h1>
             <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>

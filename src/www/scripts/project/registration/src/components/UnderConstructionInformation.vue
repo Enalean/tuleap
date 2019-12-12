@@ -20,7 +20,8 @@
 
 <template functional>
     <div class="tlp-alert-warning" v-translate>
-        This space is under construction. You can still use the current registration process in the meantime.
+        This space is under construction. You can still use the current registration process in the
+        meantime.
     </div>
 </template>
 

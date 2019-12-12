@@ -22,7 +22,9 @@
     <p class="tlp-text-warning taskboard-no-mapping">
         <i class="fa fa-warning"></i>
         <span v-dompurify-html="message"></span>
-        <translate>Please edit the card to change the status, or add children if possible.</translate>
+        <translate>
+            Please edit the card to change the status, or add children if possible.
+        </translate>
     </p>
 </template>
 

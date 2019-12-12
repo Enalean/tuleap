@@ -19,20 +19,22 @@
 
 <template>
     <section class="tlp-pane-section">
-        <div v-if="hasRestError"
-             class="tlp-alert-danger"
-        >{{ rest_error }}</div>
+        <div v-if="hasRestError" class="tlp-alert-danger">{{ rest_error }}</div>
 
-        <div class="permission-per-group-load-button" v-if="! is_loaded">
-            <button class="tlp-button-primary tlp-button-outline"
-                    v-on:click="loadAll()"
-                    v-translate
-            >See all packages permissions</button>
+        <div class="permission-per-group-load-button" v-if="!is_loaded">
+            <button
+                class="tlp-button-primary tlp-button-outline"
+                v-on:click="loadAll()"
+                v-translate
+            >
+                See all packages permissions
+            </button>
         </div>
 
-        <div v-if="is_loading"
-             v-bind:aria-label="packages_are_loading"
-             class="permission-per-group-loader"
+        <div
+            v-if="is_loading"
+            v-bind:aria-label="packages_are_loading"
+            class="permission-per-group-loader"
         ></div>
 
         <package-permissions-table

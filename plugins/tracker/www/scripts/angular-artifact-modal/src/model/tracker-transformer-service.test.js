@@ -243,13 +243,19 @@ describe("TuleapArtifactModalTrackerTransformerService", function() {
                                 field_id: 1,
                                 permissions: ["read", "update", "create"],
                                 type: "cb",
-                                values: [{ id: 80, is_hidden: false }, { id: 42, is_hidden: true }]
+                                values: [
+                                    { id: 80, is_hidden: false },
+                                    { id: 42, is_hidden: true }
+                                ]
                             },
                             {
                                 field_id: 8,
                                 permissions: ["read", "update", "create"],
                                 type: "rb",
-                                values: [{ id: 34, is_hidden: true }, { id: 63, is_hidden: false }]
+                                values: [
+                                    { id: 34, is_hidden: true },
+                                    { id: 63, is_hidden: false }
+                                ]
                             }
                         ]
                     };

@@ -20,31 +20,39 @@
 
 <template>
     <div class="tlp-form-element project-information-name">
-        <label class="tlp-label" for="project-name" v-translate>Name <i class="fa fa-asterisk"></i></label>
-        <input id="project-name"
-               type="text"
-               class="tlp-input"
-               data-test="new-project-name"
-               v-bind:placeholder="$gettext('My new project')"
-               v-bind:minlength="min_project_length"
-               v-bind:maxlength="max_project_length"
-               ref="name"
-               v-on:input="slugifiedProjectName()"
-               required
-        >
+        <label class="tlp-label" for="project-name" v-translate>
+            Name
+            <i class="fa fa-asterisk"></i>
+        </label>
+        <input
+            id="project-name"
+            type="text"
+            class="tlp-input"
+            data-test="new-project-name"
+            v-bind:placeholder="$gettext('My new project')"
+            v-bind:minlength="min_project_length"
+            v-bind:maxlength="max_project_length"
+            ref="name"
+            v-on:input="slugifiedProjectName()"
+            required
+        />
         <p class="tlp-text-info">
             <i class="fa fa-life-saver register-new-project-icon"></i>
-            <translate v-bind:translate-params="{min: min_project_length, max: max_project_length}">
+            <translate
+                v-bind:translate-params="{ min: min_project_length, max: max_project_length }"
+            >
                 Between %{ min } and %{ max } characters length
             </translate>
         </p>
         <p class="tlp-text-danger" v-if="has_error" data-test="project-name-is-invalid">
-            <translate v-bind:translate-params="{min: min_project_length, max: max_project_length}">
+            <translate
+                v-bind:translate-params="{ min: min_project_length, max: max_project_length }"
+            >
                 Project name must be between %{ min } and %{ max } characters length.
             </translate>
         </p>
 
-        <project-short-name/>
+        <project-short-name />
     </div>
 </template>
 <script lang="ts">

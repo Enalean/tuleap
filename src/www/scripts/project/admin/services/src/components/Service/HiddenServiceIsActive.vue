@@ -18,5 +18,5 @@
   -->
 
 <template functional>
-    <input type="hidden" name="is_active" v-bind:value="props.value ? '1' : '0'">
+    <input type="hidden" name="is_active" v-bind:value="props.value ? '1' : '0'" />
 </template>

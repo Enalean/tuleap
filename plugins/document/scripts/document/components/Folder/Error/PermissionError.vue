@@ -20,7 +20,7 @@
 <template>
     <div class="empty-page document-folder-with-error">
         <div class="empty-page-illustration">
-            <permission-error-svg/>
+            <permission-error-svg />
         </div>
         <div class="empty-page-text-with-small-text">
             <translate>This is a private folder.</translate>
@@ -29,7 +29,8 @@
             </div>
         </div>
         <a href="/my/" class="tlp-button-primary tlp-button-large">
-            <i class="fa fa-reply tlp-button-icon"></i><translate>Go to my home page</translate>
+            <i class="fa fa-reply tlp-button-icon"></i>
+            <translate>Go to my home page</translate>
         </a>
     </div>
 </template>

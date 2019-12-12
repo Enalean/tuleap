@@ -22,7 +22,8 @@
     <post-action v-bind:post_action="post_action">
         <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
             <label v-bind:for="field_id_input_id" class="tlp-label">
-                <translate>Choose a field</translate> <i class="fa fa-asterisk"></i>
+                <translate>Choose a field</translate>
+                <i class="fa fa-asterisk"></i>
             </label>
             <select
                 v-bind:id="field_id_input_id"
@@ -56,7 +57,8 @@
 
         <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
             <label v-bind:for="value_input_id" class="tlp-label">
-                <translate>New value</translate> <i class="fa fa-asterisk"></i>
+                <translate>New value</translate>
+                <i class="fa fa-asterisk"></i>
             </label>
             <component
                 v-bind:is="value_input_component"

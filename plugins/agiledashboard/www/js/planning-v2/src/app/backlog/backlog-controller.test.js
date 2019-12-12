@@ -91,16 +91,18 @@ describe("BacklogController - ", () => {
             };
 
             BacklogService = _BacklogService_;
-            jest.spyOn(BacklogService, "removeBacklogItemsFromBacklog").mockImplementation(
-                () => {}
-            );
+            jest.spyOn(
+                BacklogService,
+                "removeBacklogItemsFromBacklog"
+            ).mockImplementation(() => {});
             jest.spyOn(BacklogService, "appendBacklogItems").mockImplementation(() => {});
             jest.spyOn(BacklogService, "filterItems").mockImplementation(() => {});
             jest.spyOn(BacklogService, "loadProjectBacklog").mockImplementation(() => {});
             jest.spyOn(BacklogService, "loadMilestoneBacklog").mockImplementation(() => {});
-            jest.spyOn(BacklogService, "addOrReorderBacklogItemsInBacklog").mockImplementation(
-                () => {}
-            );
+            jest.spyOn(
+                BacklogService,
+                "addOrReorderBacklogItemsInBacklog"
+            ).mockImplementation(() => {});
 
             MilestoneService = _MilestoneService_;
             _([
@@ -129,9 +131,10 @@ describe("BacklogController - ", () => {
             ]).forEach(returnPromise, BacklogItemService);
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
-            jest.spyOn(BacklogItemCollectionService, "refreshBacklogItem").mockImplementation(
-                () => {}
-            );
+            jest.spyOn(
+                BacklogItemCollectionService,
+                "refreshBacklogItem"
+            ).mockImplementation(() => {});
 
             ProjectService = _ProjectService_;
             _([
@@ -142,9 +145,10 @@ describe("BacklogController - ", () => {
             ]).forEach(returnPromise, ProjectService);
 
             DroppedService = _DroppedService_;
-            jest.spyOn(DroppedService, "moveFromBacklogToSubmilestone").mockImplementation(
-                () => {}
-            );
+            jest.spyOn(
+                DroppedService,
+                "moveFromBacklogToSubmilestone"
+            ).mockImplementation(() => {});
             jest.spyOn(DroppedService, "defineComparedToBeFirstItem");
             jest.spyOn(DroppedService, "defineComparedToBeLastItem");
             jest.spyOn(DroppedService, "reorderBacklog").mockImplementation(() => {});
@@ -915,10 +919,9 @@ describe("BacklogController - ", () => {
                 BacklogItemSelectedService.areThereMultipleSelectedBaklogItems
             ).toHaveBeenCalled();
             expect(DroppedService.defineComparedToBeFirstItem).toHaveBeenCalled();
-            expect(BacklogController.reorderBacklogItems).toHaveBeenCalledWith(
-                selected_backlog_items,
-                { direction: "before", item_id: 61 }
-            );
+            expect(
+                BacklogController.reorderBacklogItems
+            ).toHaveBeenCalledWith(selected_backlog_items, { direction: "before", item_id: 61 });
         });
 
         it("move multiple items to the top of the backlog, even if the backlog is filtered", function() {
@@ -946,10 +949,9 @@ describe("BacklogController - ", () => {
                 BacklogItemSelectedService.areThereMultipleSelectedBaklogItems
             ).toHaveBeenCalled();
             expect(DroppedService.defineComparedToBeFirstItem).toHaveBeenCalled();
-            expect(BacklogController.reorderBacklogItems).toHaveBeenCalledWith(
-                selected_backlog_items,
-                { direction: "before", item_id: 61 }
-            );
+            expect(
+                BacklogController.reorderBacklogItems
+            ).toHaveBeenCalledWith(selected_backlog_items, { direction: "before", item_id: 61 });
         });
     });
 
@@ -1023,10 +1025,9 @@ describe("BacklogController - ", () => {
                 BacklogItemSelectedService.areThereMultipleSelectedBaklogItems
             ).toHaveBeenCalled();
             expect(DroppedService.defineComparedToBeLastItem).toHaveBeenCalled();
-            expect(BacklogController.reorderBacklogItems).toHaveBeenCalledWith(
-                selected_backlog_items,
-                { direction: "after", item_id: 88 }
-            );
+            expect(
+                BacklogController.reorderBacklogItems
+            ).toHaveBeenCalledWith(selected_backlog_items, { direction: "after", item_id: 88 });
         });
 
         it("move multiple items to the bottom of the not fully loaded backlog", function() {
@@ -1055,10 +1056,9 @@ describe("BacklogController - ", () => {
                 BacklogItemSelectedService.areThereMultipleSelectedBaklogItems
             ).toHaveBeenCalled();
             expect(DroppedService.defineComparedToBeLastItem).toHaveBeenCalled();
-            expect(BacklogController.reorderBacklogItems).toHaveBeenCalledWith(
-                selected_backlog_items,
-                { direction: "after", item_id: 88 }
-            );
+            expect(
+                BacklogController.reorderBacklogItems
+            ).toHaveBeenCalledWith(selected_backlog_items, { direction: "after", item_id: 88 });
         });
     });
 

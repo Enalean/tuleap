@@ -30,7 +30,7 @@
             v-bind:is-details-button-shown="!item.user_can_write"
         />
         <div class="document-header-spacer"></div>
-        <quick-look-delete-button v-bind:item="item"/>
+        <quick-look-delete-button v-bind:item="item" />
     </div>
 </template>
 

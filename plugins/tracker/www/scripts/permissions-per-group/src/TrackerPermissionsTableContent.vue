@@ -28,7 +28,10 @@
                 <td></td>
             </tr>
 
-            <tr v-for="permission in tracker.permissions" v-bind:key="tracker.tracker_name + permission.permission_name">
+            <tr
+                v-for="permission in tracker.permissions"
+                v-bind:key="tracker.tracker_name + permission.permission_name"
+            >
                 <td></td>
                 <td>{{ permission.permission_name }}</td>
 
@@ -45,8 +48,8 @@
             </tr>
         </template>
 
-        <tr v-if="! hasTrackerPermissions">
-            <empty-state v-bind:selected-ugroup-name="selectedUgroupName"/>
+        <tr v-if="!hasTrackerPermissions">
+            <empty-state v-bind:selected-ugroup-name="selectedUgroupName" />
         </tr>
     </tbody>
 </template>

@@ -22,9 +22,21 @@
     <div class="taskboard-body">
         <template v-for="swimlane of swimlanes">
             <template v-if="swimlane.card.is_open || are_closed_items_displayed">
-                <collapsed-swimlane v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-if="swimlane.card.is_collapsed"/>
-                <card-with-children v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-else-if="swimlane.card.has_children"/>
-                <invalid-mapping-swimlane v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-else-if="hasInvalidMapping(swimlane)"/>
+                <collapsed-swimlane
+                    v-bind:key="swimlane.card.id"
+                    v-bind:swimlane="swimlane"
+                    v-if="swimlane.card.is_collapsed"
+                />
+                <card-with-children
+                    v-bind:key="swimlane.card.id"
+                    v-bind:swimlane="swimlane"
+                    v-else-if="swimlane.card.has_children"
+                />
+                <invalid-mapping-swimlane
+                    v-bind:key="swimlane.card.id"
+                    v-bind:swimlane="swimlane"
+                    v-else-if="hasInvalidMapping(swimlane)"
+                />
                 <solo-swimlane
                     v-bind:key="swimlane.card.id"
                     v-bind:swimlane="swimlane"
@@ -33,7 +45,7 @@
                 />
             </template>
         </template>
-        <swimlane-skeleton v-if="is_loading_swimlanes"/>
+        <swimlane-skeleton v-if="is_loading_swimlanes" />
     </div>
 </template>
 

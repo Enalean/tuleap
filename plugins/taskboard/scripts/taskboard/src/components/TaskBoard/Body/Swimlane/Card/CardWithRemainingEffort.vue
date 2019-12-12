@@ -19,9 +19,9 @@
 
 <template>
     <div>
-        <parent-card v-bind:card="card"/>
-        <parent-card-remaining-effort v-bind:card="card"/>
-        <edit-card-buttons v-bind:card="card"/>
+        <parent-card v-bind:card="card" />
+        <parent-card-remaining-effort v-bind:card="card" />
+        <edit-card-buttons v-bind:card="card" />
     </div>
 </template>
 

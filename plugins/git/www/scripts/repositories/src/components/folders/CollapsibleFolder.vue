@@ -18,36 +18,39 @@
   -->
 
 <template>
-    <div v-bind:class="{
-        'git-repository-list-folder': ! isRootFolder,
-        'git-repository-list-base-folder': isBaseFolder
-    }"
+    <div
+        v-bind:class="{
+            'git-repository-list-folder': !isRootFolder,
+            'git-repository-list-base-folder': isBaseFolder
+        }"
     >
-        <div class="git-repository-list-collapsible-folder"
-             v-on:click="collapseFolder()"
-        >
-            <i v-if="! isRootFolder"
-               v-bind:class="{
-                   'fa fa-fw fa-caret-down': ! isFolderCollapsed,
-                   'fa fa-fw fa-caret-right': isFolderCollapsed
-               }"
+        <div class="git-repository-list-collapsible-folder" v-on:click="collapseFolder()">
+            <i
+                v-if="!isRootFolder"
+                v-bind:class="{
+                    'fa fa-fw fa-caret-down': !isFolderCollapsed,
+                    'fa fa-fw fa-caret-right': isFolderCollapsed
+                }"
             ></i>
-            <h2 class="git-repository-list-folder-label"
-                v-if="! isRootFolder"
-            ><i class="fa fa-folder-o"></i> {{ label }}</h2>
+            <h2 class="git-repository-list-folder-label" v-if="!isRootFolder">
+                <i class="fa fa-folder-o"></i>
+                {{ label }}
+            </h2>
         </div>
         <template v-for="child in children">
-            <git-repository v-if="! child.is_folder"
-                            v-show="! isFolderCollapsed"
-                            v-bind:key="child.id"
-                            v-bind:repository="child"
+            <git-repository
+                v-if="!child.is_folder"
+                v-show="!isFolderCollapsed"
+                v-bind:key="child.id"
+                v-bind:repository="child"
             />
-            <collapsible-folder v-else
-                                v-show="! isFolderCollapsed"
-                                v-bind:key="child.label"
-                                v-bind:label="child.label"
-                                v-bind:children="child.children"
-                                v-bind:is-base-folder="isRootFolder"
+            <collapsible-folder
+                v-else
+                v-show="!isFolderCollapsed"
+                v-bind:key="child.label"
+                v-bind:label="child.label"
+                v-bind:children="child.children"
+                v-bind:is-base-folder="isRootFolder"
             />
         </template>
     </div>

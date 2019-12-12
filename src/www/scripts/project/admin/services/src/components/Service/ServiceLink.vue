@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-bind:class="{'tlp-form-element-disabled': disabled }">
+    <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': disabled }">
         <label class="tlp-label" v-bind:for="id">
             <translate>Link</translate>
             <i class="fa fa-asterisk"></i>
@@ -35,7 +35,7 @@
             required
             v-bind:disabled="disabled"
             v-bind:value="value"
-        >
+        />
     </div>
 </template>
 <script>

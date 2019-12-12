@@ -43,17 +43,14 @@ export function allowToHideAndShowProjectBanner(
         );
     }
 
-    project_banner_navbar.addEventListener(
-        "click",
-        (event: Event): void => {
-            showProjectBannerMessage(
-                event,
-                mount_point.body,
-                project_banner_navbar,
-                full_project_banner
-            );
-        }
-    );
+    project_banner_navbar.addEventListener("click", (event: Event): void => {
+        showProjectBannerMessage(
+            event,
+            mount_point.body,
+            project_banner_navbar,
+            full_project_banner
+        );
+    });
     const project_id = project_banner_message_close_button.dataset.projectId;
     const user_id = project_banner_message_close_button.dataset.userId;
     if (project_id === undefined || user_id === undefined) {
@@ -78,22 +75,19 @@ export function allowToHideAndShowProjectBanner(
     let last_known_scroll_position = window.scrollY;
     let ticking = false;
     updateNavbarToBannerElementVisibility(project_banner_navbar, last_known_scroll_position);
-    window.addEventListener(
-        "scroll",
-        (): void => {
-            last_known_scroll_position = window.scrollY;
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    updateNavbarToBannerElementVisibility(
-                        project_banner_navbar,
-                        last_known_scroll_position
-                    );
-                    ticking = false;
-                });
-                ticking = true;
-            }
+    window.addEventListener("scroll", (): void => {
+        last_known_scroll_position = window.scrollY;
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                updateNavbarToBannerElementVisibility(
+                    project_banner_navbar,
+                    last_known_scroll_position
+                );
+                ticking = false;
+            });
+            ticking = true;
         }
-    );
+    });
 }
 
 function showProjectBannerMessage(

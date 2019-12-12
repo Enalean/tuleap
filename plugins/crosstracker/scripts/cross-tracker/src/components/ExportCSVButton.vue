@@ -18,14 +18,19 @@
   -->
 
 <template>
-    <button type="button"
-            class="tlp-button-primary tlp-button-small tlp-button-outline tlp-table-actions-element"
-            v-bind:disabled="is_loading"
-            v-if="should_display_export_button"
-            v-on:click="exportCSV()"
-    ><i class="tlp-button-icon fa fa-download"
-        v-bind:class="{'fa-spin fa-circle-o-notch': is_loading }"
-    ></i> <translate>Export CSV</translate></button>
+    <button
+        type="button"
+        class="tlp-button-primary tlp-button-small tlp-button-outline tlp-table-actions-element"
+        v-bind:disabled="is_loading"
+        v-if="should_display_export_button"
+        v-on:click="exportCSV()"
+    >
+        <i
+            class="tlp-button-icon fa fa-download"
+            v-bind:class="{ 'fa-spin fa-circle-o-notch': is_loading }"
+        ></i>
+        <translate>Export CSV</translate>
+    </button>
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";

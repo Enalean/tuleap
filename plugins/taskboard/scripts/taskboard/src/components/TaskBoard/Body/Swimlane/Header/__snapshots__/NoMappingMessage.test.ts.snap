@@ -19,7 +19,9 @@ exports[`NoMappingMessage displays a message when card has a status 1`] = `
   <translate-stub
     tag="span"
   >
-    Please edit the card to change the status, or add children if possible.
+    
+        Please edit the card to change the status, or add children if possible.
+    
   </translate-stub>
 </p>
 `;
@@ -39,7 +41,9 @@ exports[`NoMappingMessage displays another message when card has no status 1`] =
   <translate-stub
     tag="span"
   >
-    Please edit the card to change the status, or add children if possible.
+    
+        Please edit the card to change the status, or add children if possible.
+    
   </translate-stub>
 </p>
 `;

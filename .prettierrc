@@ -2,5 +2,7 @@
     "printWidth": 100,
     "useTabs": false,
     "tabWidth": 4,
-    "bracketSpacing": true
+    "bracketSpacing": true,
+    "htmlWhitespaceSensitivity": "ignore",
+    "vueIndentScriptAndStyle": false
 }

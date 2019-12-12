@@ -52,7 +52,10 @@ exports[`ItemPermissionError displays the error with a for to send custom email 
         <translate-stub
           tag="span"
         >
-          Write your message below and click on the button to send your request to the project administrators
+          
+                    Write your message below and click on the button to send your request to the
+                    project administrators
+                
         </translate-stub>
          
         <i

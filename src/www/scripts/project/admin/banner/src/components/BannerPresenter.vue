@@ -27,27 +27,39 @@
                     id="toggle"
                     class="tlp-switch-checkbox"
                     v-model="banner_is_activated"
-                >
-                <label
-                    for="toggle"
-                    class="tlp-switch-button"
-                    aria-hidden
-                ></label>
+                />
+                <label for="toggle" class="tlp-switch-button" aria-hidden></label>
             </div>
         </div>
         <div v-if="!banner_is_activated">
             <p v-translate>No banner defined</p>
         </div>
         <div v-show="banner_is_activated">
-            <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled' : loading }">
+            <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': loading }">
                 <label class="tlp-label" for="description" v-translate>Message</label>
-                <textarea type="text" ref="embedded_editor" class="tlp-textarea" id="description" name="description" v-model="current_message" v-bind:placeholder="$gettext('Choose a banner message')"></textarea>
+                <textarea
+                    type="text"
+                    ref="embedded_editor"
+                    class="tlp-textarea"
+                    id="description"
+                    name="description"
+                    v-model="current_message"
+                    v-bind:placeholder="$gettext('Choose a banner message')"
+                ></textarea>
                 <p class="tlp-text-muted" v-translate>Your message will be condensed to one line</p>
             </div>
         </div>
         <div class="tlp-pane-section-submit">
-            <button type="button" class="tlp-button-primary" v-on:click="save" v-bind:disabled="loading">
-                <i v-if="loading" class="tlp-button-icon fa fa-fw fa-spin fa-circle fa-circle-o-notch"></i>
+            <button
+                type="button"
+                class="tlp-button-primary"
+                v-on:click="save"
+                v-bind:disabled="loading"
+            >
+                <i
+                    v-if="loading"
+                    class="tlp-button-icon fa fa-fw fa-spin fa-circle fa-circle-o-notch"
+                ></i>
                 <i class="tlp-button-icon fa fa-save"></i>
                 &nbsp;
                 <span v-translate>Save</span>

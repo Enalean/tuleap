@@ -29,12 +29,9 @@
             class="tlp-textarea"
             v-bind:rows="rows"
         ></textarea>
-        <p
-            v-if="is_help_shown"
-            key="help"
-            data-test="help"
-            class="tlp-text-muted"
-        >{{ help_message }}</p>
+        <p v-if="is_help_shown" key="help" data-test="help" class="tlp-text-muted">
+            {{ help_message }}
+        </p>
     </div>
 </template>
 <script>

@@ -27,8 +27,12 @@
                             <th class="document-tree-head-name" v-translate>
                                 Name
                             </th>
-                            <template v-if="! toggle_quick_look">
-                                <th class="document-tree-head-owner" data-test="document-folder-owner-information" v-translate>
+                            <template v-if="!toggle_quick_look">
+                                <th
+                                    class="document-tree-head-owner"
+                                    data-test="document-folder-owner-information"
+                                    v-translate
+                                >
                                     Owner
                                 </th>
                                 <th class="document-tree-head-updatedate" v-translate>
@@ -49,9 +53,17 @@
                 </table>
             </div>
         </section>
-        <div v-if="should_display_preview" class="document-folder-right-container" data-test="document-quick-look">
-            <section class="tlp-pane document-quick-look-pane" v-bind:class="quick_look_dropzone_class" v-bind:data-item-id="item_id">
-                <quicklook-global v-on:closeQuickLookEvent="closeQuickLook"/>
+        <div
+            v-if="should_display_preview"
+            class="document-folder-right-container"
+            data-test="document-quick-look"
+        >
+            <section
+                class="tlp-pane document-quick-look-pane"
+                v-bind:class="quick_look_dropzone_class"
+                v-bind:data-item-id="item_id"
+            >
+                <quicklook-global v-on:closeQuickLookEvent="closeQuickLook" />
             </section>
         </div>
     </div>

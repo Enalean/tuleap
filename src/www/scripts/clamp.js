@@ -1,10 +1,10 @@
 /*!
-* Clamp.js 0.5.1
-*
-* Copyright 2011-2013, Joseph Schmitt http://joe.sh
-* Released under the WTFPL license
-* http://sam.zoy.org/wtfpl/
-*/
+ * Clamp.js 0.5.1
+ *
+ * Copyright 2011-2013, Joseph Schmitt http://joe.sh
+ * Released under the WTFPL license
+ * http://sam.zoy.org/wtfpl/
+ */
 (function() {
     window.$clamp = function(c, d) {
         function s(a, b) {
@@ -78,9 +78,12 @@
                         (q = f = null));
                 }
                 if (b.animate) {
-                    setTimeout(function() {
-                        p(a, d);
-                    }, !0 === b.animate ? 10 : b.animate);
+                    setTimeout(
+                        function() {
+                            p(a, d);
+                        },
+                        !0 === b.animate ? 10 : b.animate
+                    );
                 } else {
                     return p(a, d);
                 }

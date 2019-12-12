@@ -29,42 +29,74 @@
             </div>
         </div>
         <div class="tlp-modal-body">
-            <div class="tlp-alert-danger" v-if="create_error_message">{{ create_error_message }}</div>
+            <div class="tlp-alert-danger" v-if="create_error_message">
+                {{ create_error_message }}
+            </div>
 
             <div class="git-repository-actions-pullrequest-modal-body">
                 <div class="tlp-form-element git-repository-actions-pullrequest-modal-body-element">
-                    <label class="tlp-label" for="git-repository-actions-pullrequest-modal-body-source">
+                    <label
+                        class="tlp-label"
+                        for="git-repository-actions-pullrequest-modal-body-source"
+                    >
                         <translate>Source branch</translate>
                         <i class="fa fa-asterisk"></i>
                     </label>
-                    <select class="tlp-select" id="git-repository-actions-pullrequest-modal-body-source" required v-model="source_branch">
+                    <select
+                        class="tlp-select"
+                        id="git-repository-actions-pullrequest-modal-body-source"
+                        required
+                        v-model="source_branch"
+                    >
                         <option value="" selected disabled>Choose source branch…</option>
-                        <option v-for="branch of source_branches" v-bind:value="branch" v-bind:key="branch.display_name">{{ branch.display_name }}</option>
+                        <option
+                            v-for="branch of source_branches"
+                            v-bind:value="branch"
+                            v-bind:key="branch.display_name"
+                        >
+                            {{ branch.display_name }}
+                        </option>
                     </select>
                 </div>
                 <div class="tlp-form-element git-repository-actions-pullrequest-modal-body-element">
-                    <label class="tlp-label" for="git-repository-actions-pullrequest-modal-body-destination">
+                    <label
+                        class="tlp-label"
+                        for="git-repository-actions-pullrequest-modal-body-destination"
+                    >
                         <translate>Destination branch</translate>
                         <i class="fa fa-asterisk"></i>
                     </label>
-                    <select class="tlp-select" id="git-repository-actions-pullrequest-modal-body-destination" required v-model="destination_branch">
+                    <select
+                        class="tlp-select"
+                        id="git-repository-actions-pullrequest-modal-body-destination"
+                        required
+                        v-model="destination_branch"
+                    >
                         <option value="" selected disabled>Choose destination branch</option>
-                        <option v-for="branch of destination_branches" v-bind:value="branch" v-bind:key="branch.display_name">{{ branch.display_name }}</option>
+                        <option
+                            v-for="branch of destination_branches"
+                            v-bind:value="branch"
+                            v-bind:key="branch.display_name"
+                        >
+                            {{ branch.display_name }}
+                        </option>
                     </select>
                 </div>
             </div>
         </div>
         <div class="tlp-modal-footer tlp-modal-footer-large">
-            <button type="submit"
-                    class="tlp-button-primary tlp-button-outline tlp-modal-action"
-                    data-dismiss="modal"
+            <button
+                type="submit"
+                class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                data-dismiss="modal"
             >
                 <translate>Cancel</translate>
             </button>
-            <button type="submit"
-                    class="tlp-button-primary tlp-modal-action"
-                    v-on:click="create()"
-                    v-bind:disabled="is_button_disabled"
+            <button
+                type="submit"
+                class="tlp-button-primary tlp-modal-action"
+                v-on:click="create()"
+                v-bind:disabled="is_button_disabled"
             >
                 <i v-bind:class="is_creating_pullrequest_icon_class"></i>
                 <translate>Create the pull request</translate>

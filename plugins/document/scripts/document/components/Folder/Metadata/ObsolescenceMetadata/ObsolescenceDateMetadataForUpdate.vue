@@ -19,11 +19,13 @@
   -->
 
 <template>
-    <div class="tlp-form-element document-obsolescence-date-section" v-if="is_obsolescence_date_metadata_used" data-test="obsolescence-date-metadata">
-        <label class="tlp-label"
-               for="document-obsolescence-date-update"
-        >
-            <translate> Obsolescence date</translate>
+    <div
+        class="tlp-form-element document-obsolescence-date-section"
+        v-if="is_obsolescence_date_metadata_used"
+        data-test="obsolescence-date-metadata"
+    >
+        <label class="tlp-label" for="document-obsolescence-date-update">
+            <translate>Obsolescence date</translate>
             <i class="fa fa-asterisk"></i>
         </label>
         <div class="tlp-form-element document-obsolescence-date-metadata-select">
@@ -52,7 +54,11 @@
                 />
             </div>
         </div>
-        <p class="tlp-text-danger" v-if="error_message.length > 0" data-test="obsolescence-date-error-message">
+        <p
+            class="tlp-text-danger"
+            v-if="error_message.length > 0"
+            data-test="obsolescence-date-error-message"
+        >
             {{ error_message }}
         </p>
     </div>

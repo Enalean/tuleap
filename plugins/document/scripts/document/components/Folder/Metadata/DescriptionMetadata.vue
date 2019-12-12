@@ -20,11 +20,7 @@
 
 <template>
     <div class="tlp-form-element">
-        <label
-            class="tlp-label"
-            for="document-new-item-description"
-            v-translate
-        >
+        <label class="tlp-label" for="document-new-item-description" v-translate>
             Description
         </label>
         <textarea

@@ -20,47 +20,55 @@
     <tr>
         <td class="tlp-form-element">
             <span class="tlp-prepend"></span>
-            <input type="text"
-                   class="tlp-input tlp-input-date"
-                   v-model="date"
-                   ref="date_field"
-                   size="11"
-            >
+            <input
+                type="text"
+                class="tlp-input tlp-input-date"
+                v-model="date"
+                ref="date_field"
+                size="11"
+            />
         </td>
         <td>
-            <input type="text"
-                   class="tlp-input"
-                   id="timetracking-details-modal-add-step-field"
-                   size="11"
-                   placeholder="preparation"
-                   v-on:keyup.enter="validateNewTime()"
-                   v-model="step"
-            >
+            <input
+                type="text"
+                class="tlp-input"
+                id="timetracking-details-modal-add-step-field"
+                size="11"
+                placeholder="preparation"
+                v-on:keyup.enter="validateNewTime()"
+                v-model="step"
+            />
         </td>
         <td class="timetracking-details-modal-buttons">
-            <div class="tlp-form-element timetracking-details-form-element"
-                 v-bind:class="{'tlp-form-element-error': error_message}"
+            <div
+                class="tlp-form-element timetracking-details-form-element"
+                v-bind:class="{ 'tlp-form-element-error': error_message }"
             >
-                <input type="text"
-                       class="tlp-input"
-                       size="11"
-                       v-model="time"
-                       v-on:keyup.enter="validateNewTime()"
-                       placeholder="hh:mm"
-                       required
-                >
+                <input
+                    type="text"
+                    class="tlp-input"
+                    size="11"
+                    v-model="time"
+                    v-on:keyup.enter="validateNewTime()"
+                    placeholder="hh:mm"
+                    required
+                />
             </div>
-            <button class="tlp-button-primary"
-                    type="submit"
-                    v-bind:class="{'tlp-tooltip tlp-tooltip-bottom timetracking-tooltip': error_message}"
-                    v-bind:data-tlp-tooltip="error_message"
-                    v-on:click="validateNewTime()"
+            <button
+                class="tlp-button-primary"
+                type="submit"
+                v-bind:class="{
+                    'tlp-tooltip tlp-tooltip-bottom timetracking-tooltip': error_message
+                }"
+                v-bind:data-tlp-tooltip="error_message"
+                v-on:click="validateNewTime()"
             >
                 <i class="fa fa-check"></i>
             </button>
-            <button class="tlp-button-primary tlp-button-outline"
-                    type="button"
-                    v-on:click="swapMode()"
+            <button
+                class="tlp-button-primary tlp-button-outline"
+                type="button"
+                v-on:click="swapMode()"
             >
                 <i class="fa fa-times"></i>
             </button>

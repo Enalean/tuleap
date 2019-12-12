@@ -103,8 +103,9 @@ describe("Given a release widget", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.find("[data-test=is-IE11]").text()).toEqual(
-            'The plugin "Release Widget" is not supported under IE11. Please use a more recent browser.'
+        expect(wrapper.find("[data-test=is-IE11]").text()).toMatch(
+            `The plugin "Release Widget" is not supported under IE11. Please use a more recent
+        browser.`
         );
     });
 });

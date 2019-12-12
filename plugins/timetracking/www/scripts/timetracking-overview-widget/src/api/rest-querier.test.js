@@ -103,7 +103,10 @@ describe("Get Report's times() -", () => {
 
 describe("getProjects() -", () => {
     it("the REST route projects will be queried with with_time_tracking parameter and the projects returned", async () => {
-        const projects = [{ id: 765, label: "timetracking" }, { id: 239, label: "projectTest" }];
+        const projects = [
+            { id: 765, label: "timetracking" },
+            { id: 239, label: "projectTest" }
+        ];
         const tlpGet = jest.spyOn(tlp, "get");
         mockFetchSuccess(tlpGet, {
             return_json: projects
@@ -127,7 +130,10 @@ describe("getProjects() -", () => {
 
 describe("getTrackers() -", () => {
     it("the  REST route projects/id/trackers will be queried project id and with_time_tracking parameter and the trackers returned", async () => {
-        const trackers = [{ id: 16, label: "tracker_1" }, { id: 18, label: "tracker_2" }];
+        const trackers = [
+            { id: 16, label: "tracker_1" },
+            { id: 18, label: "tracker_2" }
+        ];
         const tlpGet = jest.spyOn(tlp, "get");
         mockFetchSuccess(tlpGet, {
             return_json: trackers
@@ -143,7 +149,10 @@ describe("getTrackers() -", () => {
                 query: JSON.stringify({ with_time_tracking: true })
             }
         });
-        expect(result).toEqual([{ id: 16, label: "tracker_1" }, { id: 18, label: "tracker_2" }]);
+        expect(result).toEqual([
+            { id: 16, label: "tracker_1" },
+            { id: 18, label: "tracker_2" }
+        ]);
     });
 });
 

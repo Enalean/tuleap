@@ -20,10 +20,10 @@
 
 <template>
     <div class="taskboard">
-        <taskboard-button-bar/>
-        <task-board-header/>
-        <task-board-body/>
-        <error-modal v-if="has_modal_error"/>
+        <taskboard-button-bar />
+        <task-board-header />
+        <task-board-body />
+        <error-modal v-if="has_modal_error" />
     </div>
 </template>
 
@@ -131,47 +131,41 @@ export default class TaskBoard extends Vue {
 
         EventBus.$on(TaskboardEvent.ESC_KEY_PRESSED, this.cancelDragOnEscape);
 
-        this.drake.on(
-            "over",
-            (element?: Element, target?: Element): void => {
-                if (
-                    !target ||
-                    !target.classList.contains("taskboard-cell-collapsed") ||
-                    !(target instanceof HTMLElement)
-                ) {
-                    return;
-                }
-
-                const column = this.column_of_cell(target);
-
-                if (!column) {
-                    return;
-                }
-
-                this.mouseEntersColumn(column);
+        this.drake.on("over", (element?: Element, target?: Element): void => {
+            if (
+                !target ||
+                !target.classList.contains("taskboard-cell-collapsed") ||
+                !(target instanceof HTMLElement)
+            ) {
+                return;
             }
-        );
 
-        this.drake.on(
-            "out",
-            (element?: Element, target?: Element): void => {
-                if (
-                    !target ||
-                    !target.classList.contains("taskboard-cell-collapsed") ||
-                    !(target instanceof HTMLElement)
-                ) {
-                    return;
-                }
+            const column = this.column_of_cell(target);
 
-                const column = this.column_of_cell(target);
-
-                if (!column) {
-                    return;
-                }
-
-                this.mouseLeavesColumn(column);
+            if (!column) {
+                return;
             }
-        );
+
+            this.mouseEntersColumn(column);
+        });
+
+        this.drake.on("out", (element?: Element, target?: Element): void => {
+            if (
+                !target ||
+                !target.classList.contains("taskboard-cell-collapsed") ||
+                !(target instanceof HTMLElement)
+            ) {
+                return;
+            }
+
+            const column = this.column_of_cell(target);
+
+            if (!column) {
+                return;
+            }
+
+            this.mouseLeavesColumn(column);
+        });
     }
 
     cancelDragOnEscape(): void {

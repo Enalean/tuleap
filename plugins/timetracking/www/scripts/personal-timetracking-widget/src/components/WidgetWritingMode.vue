@@ -20,48 +20,56 @@
 <template>
     <form class="timetracking-writing-mode">
         <div class="timetracking-writing-mode-selected-dates">
-
             <div class="tlp-form-element timetracking-writing-mode-selected-date">
-                <label for="timetracking-start-date" class="tlp-label"><translate> From </translate><i class="fa fa-asterisk"></i></label>
+                <label for="timetracking-start-date" class="tlp-label">
+                    <translate>From</translate>
+                    <i class="fa fa-asterisk"></i>
+                </label>
                 <div class="tlp-form-element tlp-form-element-prepend">
                     <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
-                    <input type="text"
-                           class="tlp-input tlp-input-date"
-                           id="timetracking-start-date"
-                           ref="start_date"
-                           v-model="start_date"
-                           size="11"
-                    >
+                    <input
+                        type="text"
+                        class="tlp-input tlp-input-date"
+                        id="timetracking-start-date"
+                        ref="start_date"
+                        v-model="start_date"
+                        size="11"
+                    />
                 </div>
             </div>
 
             <div class="tlp-form-element timetracking-writing-mode-selected-date">
-                <label for="timetracking-end-date" class="tlp-label"><translate> To </translate><i class="fa fa-asterisk"></i></label>
+                <label for="timetracking-end-date" class="tlp-label">
+                    <translate>To</translate>
+                    <i class="fa fa-asterisk"></i>
+                </label>
                 <div class="tlp-form-element tlp-form-element-prepend">
                     <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
-                    <input type="text"
-                           class="tlp-input tlp-input-date"
-                           id="timetracking-end-date"
-                           ref="end_date"
-                           v-model="end_date"
-                           size="11"
-                    >
+                    <input
+                        type="text"
+                        class="tlp-input tlp-input-date"
+                        id="timetracking-end-date"
+                        ref="end_date"
+                        v-model="end_date"
+                        size="11"
+                    />
                 </div>
             </div>
-
         </div>
         <div class="timetracking-writing-mode-actions">
-            <button class="tlp-button-primary tlp-button-outline"
-                    type="button"
-                    v-on:click="toggleReadingMode()"
-                    v-translate
+            <button
+                class="tlp-button-primary tlp-button-outline"
+                type="button"
+                v-on:click="toggleReadingMode()"
+                v-translate
             >
                 Cancel
             </button>
-            <button class="tlp-button-primary timetracking-writing-search"
-                    type="button"
-                    v-on:click="changeDates"
-                    v-translate
+            <button
+                class="tlp-button-primary timetracking-writing-search"
+                type="button"
+                v-on:click="changeDates"
+                v-translate
             >
                 Search
             </button>

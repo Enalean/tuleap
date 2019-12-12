@@ -29,10 +29,14 @@
             {{ formatDate(release_data.end_date) }}
         </span>
         <div class="release-spacer"></div>
-        <div v-if="isLoading" class="tlp-skeleton-text release-remaining-disabled" data-test="display-skeleton"></div>
+        <div
+            v-if="isLoading"
+            class="tlp-skeleton-text release-remaining-disabled"
+            data-test="display-skeleton"
+        ></div>
         <div v-else class="release-remaining-effort-badges">
-            <release-header-remaining-days v-bind:release_data="release_data"/>
-            <release-header-remaining-points v-bind:release_data="release_data"/>
+            <release-header-remaining-days v-bind:release_data="release_data" />
+            <release-header-remaining-points v-bind:release_data="release_data" />
         </div>
     </div>
 </template>

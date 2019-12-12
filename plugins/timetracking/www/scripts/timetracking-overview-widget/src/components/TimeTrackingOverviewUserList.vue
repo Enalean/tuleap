@@ -28,10 +28,7 @@
                 data-test="timetracking-overview-users-selector"
             >
                 <option v-bind:value="null" v-translate>All users</option>
-                <option v-for="user in users"
-                        v-bind:value="user.user_id"
-                        v-bind:key="user.user_id"
-                >
+                <option v-for="user in users" v-bind:value="user.user_id" v-bind:key="user.user_id">
                     {{ user.user_name }}
                 </option>
             </select>

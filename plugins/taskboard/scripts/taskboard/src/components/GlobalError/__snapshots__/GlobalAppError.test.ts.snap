@@ -32,9 +32,13 @@ exports[`GlobalAppError it warns user that something is wrong with a button to s
     <div
       class="empty-page-small-text"
       data-current-language="en_US"
-      data-msgid="It seems an action you tried to perform can't be done"
+      data-msgid="
+            It seems an action you tried to perform can't be done
+        "
     >
-      It seems an action you tried to perform can't be done
+      
+            It seems an action you tried to perform can't be done
+        
     </div>
      
     <div
@@ -42,10 +46,14 @@ exports[`GlobalAppError it warns user that something is wrong with a button to s
     >
       <a
         data-current-language="en_US"
-        data-msgid="Show error details"
+        data-msgid="
+                    Show error details
+                "
         data-test="show-details"
       >
-        Show error details
+        
+                    Show error details
+                
       </a>
     </div>
      

@@ -27,8 +27,11 @@
                 v-bind:is-in-update-context="false"
             />
         </div>
-        <description-metadata v-model="currentlyUpdatedItem.description"/>
-        <folder-default-properties-for-create v-bind:currently-updated-item="currentlyUpdatedItem" v-bind:parent="parent"/>
+        <description-metadata v-model="currentlyUpdatedItem.description" />
+        <folder-default-properties-for-create
+            v-bind:currently-updated-item="currentlyUpdatedItem"
+            v-bind:parent="parent"
+        />
     </div>
 </template>
 

@@ -26,7 +26,7 @@
             v-bind:title="assignee.display_name"
             v-bind:key="assignee.id"
         >
-            <img v-bind:src="assignee.avatar_url">
+            <img v-bind:src="assignee.avatar_url" />
         </div>
     </div>
 </template>

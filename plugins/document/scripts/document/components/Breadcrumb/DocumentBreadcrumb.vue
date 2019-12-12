@@ -20,41 +20,57 @@
 <template>
     <nav class="breadcrumb">
         <div v-bind:class="get_breadcrumb_class">
-            <router-link v-bind:to="{ name: 'root_folder'}" class="breadcrumb-link" v-bind:title="document_tree_title">
+            <router-link
+                v-bind:to="{ name: 'root_folder' }"
+                class="breadcrumb-link"
+                v-bind:title="document_tree_title"
+            >
                 <i class="breadcrumb-link-icon fa fa-folder-open"></i>
                 <translate>Documents</translate>
             </router-link>
             <nav class="breadcrumb-switch-menu" v-if="is_admin">
                 <span class="breadcrumb-dropdown-item">
-                    <a class="breadcrumb-dropdown-link"
-                       v-bind:href="document_administration_url"
-                       v-bind:title="document_administration_title"
-                       data-test="breadcrumb-administrator-link"
+                    <a
+                        class="breadcrumb-dropdown-link"
+                        v-bind:href="document_administration_url"
+                        v-bind:title="document_administration_title"
+                        data-test="breadcrumb-administrator-link"
                     >
-                        <i class="fa fa-cog fa-fw"></i> <translate>Administration</translate>
+                        <i class="fa fa-cog fa-fw"></i>
+                        <translate>Administration</translate>
                     </a>
                 </span>
             </nav>
         </div>
 
-        <span class="breadcrumb-item breadcrumb-item-disabled" v-if="is_ellipsis_displayed" data-test="breadcrumb-ellipsis">
+        <span
+            class="breadcrumb-item breadcrumb-item-disabled"
+            v-if="is_ellipsis_displayed"
+            data-test="breadcrumb-ellipsis"
+        >
             <span class="breadcrumb-link" v-bind:title="ellipsis_title">
                 ...
             </span>
         </span>
-        <document-breadcrumb-element v-for="parent in current_folder_ascendant_hierarchy_to_display"
-                                     v-bind:key="parent.id"
-                                     v-bind:item="parent"
+        <document-breadcrumb-element
+            v-for="parent in current_folder_ascendant_hierarchy_to_display"
+            v-bind:key="parent.id"
+            v-bind:item="parent"
         />
-        <span class="breadcrumb-item" v-if="is_loading_ascendant_hierarchy" data-test="document-breadcrumb-skeleton">
+        <span
+            class="breadcrumb-item"
+            v-if="is_loading_ascendant_hierarchy"
+            data-test="document-breadcrumb-skeleton"
+        >
             <a class="breadcrumb-link" href="#">
                 <span class="tlp-skeleton-text"></span>
             </a>
         </span>
-        <document-breadcrumb-document v-if="is_current_document_displayed"
-                                      v-bind:current_document="currently_previewed_item"
-                                      v-bind:parent_folder="current_folder"
-                                      data-test="breadcrumb-current-document"
+        <document-breadcrumb-document
+            v-if="is_current_document_displayed"
+            v-bind:current_document="currently_previewed_item"
+            v-bind:parent_folder="current_folder"
+            data-test="breadcrumb-current-document"
         />
     </nav>
 </template>

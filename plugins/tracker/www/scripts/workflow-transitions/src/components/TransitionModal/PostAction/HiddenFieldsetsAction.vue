@@ -22,7 +22,8 @@
     <post-action v-bind:post_action="post_action">
         <div class="tracker-workflow-transition-modal-action-details-element tlp-form-element">
             <label for="workflow-transition-modal-hidden-fieldsets" class="tlp-label">
-                <translate>Fieldsets that will be hidden by default</translate> <i class="fa fa-asterisk"></i>
+                <translate>Fieldsets that will be hidden by default</translate>
+                <i class="fa fa-asterisk"></i>
             </label>
             <multi-select
                 id="workflow-transition-modal-hidden-fieldsets"
@@ -45,7 +46,8 @@
                 </option>
             </multi-select>
             <p class="tlp-text-info" v-translate>
-                Selected fieldsets won't be displayed by default but users can make them visible if they want to. It's not an Access Control option.
+                Selected fieldsets won't be displayed by default but users can make them visible if
+                they want to. It's not an Access Control option.
             </p>
         </div>
     </post-action>

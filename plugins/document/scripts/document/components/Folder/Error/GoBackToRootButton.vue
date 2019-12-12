@@ -24,7 +24,8 @@
         v-if="can_go_to_root"
         data-test="item-can-go-to-root-button"
     >
-        <i class="fa fa-reply tlp-button-icon"></i><translate>Go to Document manager home page</translate>
+        <i class="fa fa-reply tlp-button-icon"></i>
+        <translate>Go to Document manager home page</translate>
     </router-link>
 </template>
 

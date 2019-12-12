@@ -24,10 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const PIE_CHART_LEGEND_MARGIN = 10;
 
     /*
-    * Given that the mount point is not in the DOM yet because the backend has to query the Jenkins server first,
-    * we need to observe the mutations of the widget content div. When its children are modified, then it means
-    * that the mount_point has been inserted so we can init the graph safely.
-    */
+     * Given that the mount point is not in the DOM yet because the backend has to query the Jenkins server first,
+     * we need to observe the mutations of the widget content div. When its children are modified, then it means
+     * that the mount_point has been inserted so we can init the graph safely.
+     */
     const widget_classname = window.location.href.includes("my")
         ? "plugin_hudson_my_jobtestresults"
         : "plugin_hudson_project_jobtestresults";

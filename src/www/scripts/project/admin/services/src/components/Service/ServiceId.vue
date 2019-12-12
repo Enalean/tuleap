@@ -18,5 +18,5 @@
   -->
 
 <template functional>
-    <input type="hidden" name="service_id" v-bind:value="props.value">
+    <input type="hidden" name="service_id" v-bind:value="props.value" />
 </template>
