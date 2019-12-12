@@ -20,11 +20,11 @@
 
 <template>
     <content-layout>
-        <comparison-header-skeleton slot="header"/>
-        <comparison-statistics-skeleton slot="statistics"/>
-        <comparison-content-filters-skeleton slot="filters"/>
+        <comparison-header-skeleton slot="header" />
+        <comparison-statistics-skeleton slot="statistics" />
+        <comparison-content-filters-skeleton slot="filters" />
 
-        <comparison-content-skeleton/>
+        <comparison-content-skeleton />
     </content-layout>
 </template>
 <script>

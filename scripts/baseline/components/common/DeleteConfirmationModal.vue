@@ -20,11 +20,7 @@
 <template>
     <div>
         <div class="tlp-modal-body">
-            <div
-                class="tlp-alert-danger"
-                data-test-type="error-message"
-                v-if="is_deleting_failed"
-            >
+            <div class="tlp-alert-danger" data-test-type="error-message" v-if="is_deleting_failed">
                 <template v-if="Boolean(failed_message)">
                     {{ failed_message }}
                 </template>
@@ -34,7 +30,7 @@
             </div>
             <p>
                 <slot></slot>
-                <br>
+                <br />
                 <span v-translate>
                     Please confirm your action.
                 </span>
@@ -62,10 +58,8 @@
                     v-if="is_deleting"
                     class="tlp-button-icon fa fa-fw fa-spinner fa-spin"
                     data-test-type="spinner"
-                >
-                </i>
-                <i class="fa fa-fw fa-trash-o tlp-button-icon" v-else>
-                </i>
+                ></i>
+                <i class="fa fa-fw fa-trash-o tlp-button-icon" v-else></i>
                 {{ submit_label }}
             </button>
         </div>

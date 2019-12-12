@@ -27,18 +27,10 @@
     >
         <template v-if="modal_content !== null">
             <div class="tlp-modal-header">
-                <h1
-                    id="modal-label"
-                    class="tlp-modal-title"
-                    data-test-type="modal-title"
-                >
+                <h1 id="modal-label" class="tlp-modal-title" data-test-type="modal-title">
                     {{ modal_content.title }}
                 </h1>
-                <div
-                    class="tlp-modal-close"
-                    v-bind:aria-label="close_label"
-                    data-dismiss="modal"
-                >
+                <div class="tlp-modal-close" v-bind:aria-label="close_label" data-dismiss="modal">
                     ×
                 </div>
             </div>

@@ -42,7 +42,10 @@ describe("ArrayUtils:", () => {
         it("returns specifics objects attribute", () => {
             expect(
                 ArrayUtils.mapAttribute(
-                    [{ id: 1, title: "Scra" }, { id: 2, title: "Jibidus" }],
+                    [
+                        { id: 1, title: "Scra" },
+                        { id: 2, title: "Jibidus" }
+                    ],
                     "id"
                 )
             ).toEqual([1, 2]);

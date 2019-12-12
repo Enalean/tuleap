@@ -21,13 +21,13 @@
 <template>
     <ol class="baseline-content-artifact-ol">
         <li class="baseline-content-artifact-li">
-            <artifact-skeleton class="baseline-content-artifact"/>
+            <artifact-skeleton class="baseline-content-artifact" />
         </li>
         <li class="baseline-content-artifact-li">
-            <artifact-skeleton class="baseline-content-artifact"/>
+            <artifact-skeleton class="baseline-content-artifact" />
         </li>
         <li class="baseline-content-artifact-li">
-            <artifact-skeleton class="baseline-content-artifact"/>
+            <artifact-skeleton class="baseline-content-artifact" />
         </li>
     </ol>
 </template>

@@ -71,8 +71,9 @@ describe("comparison :", () => {
                 description: "new description"
             });
 
-            beforeEach(() =>
-                (comparison = compareArtifacts([base_artifact], [compared_to_artifact])));
+            beforeEach(
+                () => (comparison = compareArtifacts([base_artifact], [compared_to_artifact]))
+            );
 
             it("#identical_or_modified returns old and new artifact", () => {
                 expect(comparison.identical_or_modified).toEqual([

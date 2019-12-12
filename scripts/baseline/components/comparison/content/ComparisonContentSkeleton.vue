@@ -22,13 +22,13 @@
     <div class="comparison-content">
         <ol class="comparison-content-artifact-ol">
             <li class="comparison-content-artifact-li">
-                <artifact-skeleton class="comparison-content-artifact-header"/>
+                <artifact-skeleton class="comparison-content-artifact-header" />
             </li>
             <li class="comparison-content-artifact-li">
-                <artifact-skeleton class="comparison-content-artifact-header"/>
+                <artifact-skeleton class="comparison-content-artifact-header" />
             </li>
             <li class="comparison-content-artifact-li">
-                <artifact-skeleton class="comparison-content-artifact-header"/>
+                <artifact-skeleton class="comparison-content-artifact-header" />
             </li>
         </ol>
     </div>

@@ -26,10 +26,8 @@
         </td>
         <td class="comparisons-table-column">
             <artifact-link class="baselines-table-column-milestone" v-bind:artifact="milestone">
-                <artifact-badge
-                    v-bind:artifact="milestone"
-                    v-bind:tracker="milestone_tracker"
-                />{{ milestone.title }}
+                <artifact-badge v-bind:artifact="milestone" v-bind:tracker="milestone_tracker" />
+                {{ milestone.title }}
             </artifact-link>
         </td>
         <td class="comparisons-table-column">
@@ -39,7 +37,10 @@
             {{ compared_to_baseline.name }}
         </td>
         <td class="tlp-table-cell-actions">
-            <consult-comparison-button class="tlp-table-cell-actions-button" v-bind:comparison="comparison"/>
+            <consult-comparison-button
+                class="tlp-table-cell-actions-button"
+                v-bind:comparison="comparison"
+            />
             <delete-comparison-button
                 class="tlp-table-cell-actions-button"
                 v-bind:comparison="comparison"

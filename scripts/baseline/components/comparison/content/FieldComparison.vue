@@ -21,7 +21,7 @@
 <template>
     <div>
         <h3 class="comparison-content-artifact-body-field-label">
-            <semantic-field-label v-bind:semantic="semantic" v-bind:tracker_id="tracker_id"/>
+            <semantic-field-label v-bind:semantic="semantic" v-bind:tracker_id="tracker_id" />
         </h3>
         <p v-dompurify-html="value_diff"></p>
     </div>

@@ -21,19 +21,12 @@
 <template>
     <div>
         <div class="tlp-avatar-small baseline-badge-avatar-img">
-            <img v-bind:src="user.avatar_url" v-if="user.has_avatar">
+            <img v-bind:src="user.avatar_url" v-if="user.has_avatar" />
         </div>
-        <span
-            v-if="user.is_anonymous"
-            class="baseline-user-badge-avatar-username"
-        >
+        <span v-if="user.is_anonymous" class="baseline-user-badge-avatar-username">
             {{ user.display_name }}
         </span>
-        <a
-            v-else
-            v-bind:href="user.user_url"
-            class="baseline-user-badge-avatar-username"
-        >
+        <a v-else v-bind:href="user.user_url" class="baseline-user-badge-avatar-username">
             {{ user.display_name }}
         </a>
     </div>

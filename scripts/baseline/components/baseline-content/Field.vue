@@ -21,9 +21,13 @@
 <template>
     <div>
         <h3 class="baseline-content-artifact-body-field-label">
-            <semantic-field-label v-bind:semantic="semantic" v-bind:tracker_id="tracker_id"/>
+            <semantic-field-label v-bind:semantic="semantic" v-bind:tracker_id="tracker_id" />
         </h3>
-        <p v-if="html_content" v-dompurify-html="value" class="baseline-content-artifact-body-field-value"></p>
+        <p
+            v-if="html_content"
+            v-dompurify-html="value"
+            class="baseline-content-artifact-body-field-value"
+        ></p>
         <p v-else class="baseline-content-artifact-body-field-value">{{ value }}</p>
     </div>
 </template>

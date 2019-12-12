@@ -253,10 +253,12 @@ describe("Global store:", () => {
 
         describe("#findUserById", () => {
             const user = create("user");
-            beforeEach(() =>
-                (state.users_by_id = {
-                    1: user
-                }));
+            beforeEach(
+                () =>
+                    (state.users_by_id = {
+                        1: user
+                    })
+            );
 
             it("returns user with given id", () => {
                 expect(store.getters.findUserById(state)(1)).toEqual(user);
@@ -265,10 +267,12 @@ describe("Global store:", () => {
 
         describe("#findArtifactById", () => {
             const artifact = create("artifact");
-            beforeEach(() =>
-                (state.artifacts_by_id = {
-                    1: artifact
-                }));
+            beforeEach(
+                () =>
+                    (state.artifacts_by_id = {
+                        1: artifact
+                    })
+            );
 
             it("returns artifact with given id", () => {
                 expect(store.getters.findArtifactById(state)(1)).toEqual(artifact);
@@ -277,10 +281,12 @@ describe("Global store:", () => {
 
         describe("#findTrackerById", () => {
             const tracker = create("tracker");
-            beforeEach(() =>
-                (state.trackers_by_id = {
-                    1: tracker
-                }));
+            beforeEach(
+                () =>
+                    (state.trackers_by_id = {
+                        1: tracker
+                    })
+            );
 
             it("returns tracker with given id", () => {
                 expect(store.getters.findTrackerById(state)(1)).toEqual(tracker);

@@ -34,15 +34,14 @@
                 <th class="comparisons-table-column" v-translate>
                     Compared to
                 </th>
-                <th>
-                </th>
+                <th></th>
             </tr>
         </thead>
 
         <tbody v-if="is_loading">
-            <comparison-skeleton/>
-            <comparison-skeleton/>
-            <comparison-skeleton/>
+            <comparison-skeleton />
+            <comparison-skeleton />
+            <comparison-skeleton />
         </tbody>
         <tbody v-else-if="are_some_available">
             <comparison

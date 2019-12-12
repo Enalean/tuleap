@@ -30,7 +30,7 @@
                 v-bind:class="{ 'fa-caret-right': is_collapsed, 'fa-caret-down': !is_collapsed }"
             ></i>
         </a>
-        <artifact-label v-bind:artifact="artifact" class="baseline-content-artifact-label"/>
+        <artifact-label v-bind:artifact="artifact" class="baseline-content-artifact-label" />
 
         <div v-show="!is_collapsed">
             <div class="baseline-content-artifact-body" data-test-type="artifact-fields">
@@ -51,7 +51,7 @@
                 />
             </div>
 
-            <depth-limit-reached-message v-if="is_limit_reached"/>
+            <depth-limit-reached-message v-if="is_limit_reached" />
 
             <artifacts-list
                 v-else-if="filtered_linked_artifacts.length > 0"

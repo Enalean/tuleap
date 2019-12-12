@@ -35,7 +35,7 @@
             <translate>All artifacts are hidden</translate>
         </div>
 
-        <artifacts-list v-bind:artifacts="filtered_artifacts"/>
+        <artifacts-list v-bind:artifacts="filtered_artifacts" />
     </div>
 </template>
 

@@ -21,28 +21,25 @@
 <template>
     <ol class="comparison-content-artifact-ol">
         <li
-            v-for="{base, compared_to} in comparison.identical_or_modified"
+            v-for="{ base, compared_to } in comparison.identical_or_modified"
             v-bind:key="base.id"
             class="comparison-content-artifact-li"
         >
-            <artifact-comparison
-                v-bind:base="base"
-                v-bind:compared_to="compared_to"
-            />
+            <artifact-comparison v-bind:base="base" v-bind:compared_to="compared_to" />
         </li>
         <li
             v-for="artifact in comparison.added"
             v-bind:key="artifact.id"
             class="comparison-content-artifact-li comparison-content-artifact-added"
         >
-            <artifact-label v-bind:artifact="artifact" class="comparison-content-artifact-header"/>
+            <artifact-label v-bind:artifact="artifact" class="comparison-content-artifact-header" />
         </li>
         <li
             v-for="artifact in comparison.removed"
             v-bind:key="artifact.id"
             class="comparison-content-artifact-li comparison-content-artifact-removed"
         >
-            <artifact-label v-bind:artifact="artifact" class="comparison-content-artifact-header"/>
+            <artifact-label v-bind:artifact="artifact" class="comparison-content-artifact-header" />
         </li>
     </ol>
 </template>

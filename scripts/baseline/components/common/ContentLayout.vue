@@ -20,9 +20,9 @@
 
 <template>
     <div>
-        <slot name="header"/>
+        <slot name="header" />
 
-        <slot name="statistics"/>
+        <slot name="statistics" />
 
         <div class="baseline-panes">
             <section class="tlp-pane baseline-content-filter-pane">
@@ -35,7 +35,7 @@
                     </div>
 
                     <section class="tlp-pane-section">
-                        <slot name="filters"/>
+                        <slot name="filters" />
                     </section>
                 </div>
             </section>
@@ -48,10 +48,10 @@
                         </h1>
                     </div>
                     <section v-if="has_comment_slot" class="tlp-pane-section comparison-comment">
-                        <slot name="comment"/>
+                        <slot name="comment" />
                     </section>
                     <section class="tlp-pane-section">
-                        <slot/>
+                        <slot />
                     </section>
                 </div>
             </section>

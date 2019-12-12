@@ -20,10 +20,10 @@
 
 <template>
     <div class="statistics">
-        <comparison-statistic-skeleton class="comparison-statistic-added-artifacts"/>
-        <comparison-statistic-skeleton class="comparison-statistic-deleted-artifacts"/>
-        <comparison-statistic-skeleton class="comparison-statistic-modified-artifacts"/>
-        <comparison-statistic-skeleton class="comparison-statistic-initial-effort"/>
+        <comparison-statistic-skeleton class="comparison-statistic-added-artifacts" />
+        <comparison-statistic-skeleton class="comparison-statistic-deleted-artifacts" />
+        <comparison-statistic-skeleton class="comparison-statistic-modified-artifacts" />
+        <comparison-statistic-skeleton class="comparison-statistic-initial-effort" />
     </div>
 </template>
 <script>

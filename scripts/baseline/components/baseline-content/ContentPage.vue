@@ -29,19 +29,19 @@
         </div>
 
         <content-layout v-else-if="is_loading">
-            <baseline-label-skeleton slot="header"/>
-            <statistics slot="statistics"/>
-            <baseline-content-filters-skeleton slot="filters"/>
+            <baseline-label-skeleton slot="header" />
+            <statistics slot="statistics" />
+            <baseline-content-filters-skeleton slot="filters" />
 
-            <content-body-skeleton/>
+            <content-body-skeleton />
         </content-layout>
 
         <content-layout v-else>
-            <baseline-label slot="header" v-bind:baseline="baseline"/>
-            <statistics slot="statistics"/>
-            <baseline-content-filters slot="filters"/>
+            <baseline-label slot="header" v-bind:baseline="baseline" />
+            <statistics slot="statistics" />
+            <baseline-content-filters slot="filters" />
 
-            <content-body/>
+            <content-body />
         </content-layout>
     </div>
 </template>

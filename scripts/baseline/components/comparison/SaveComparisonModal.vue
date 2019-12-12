@@ -20,11 +20,7 @@
 <template>
     <form v-on:submit.prevent="saveComparison()">
         <div class="tlp-modal-body">
-            <div
-                v-if="is_saving_failed"
-                class="tlp-alert-danger"
-                data-test-type="error-message"
-            >
+            <div v-if="is_saving_failed" class="tlp-alert-danger" data-test-type="error-message">
                 <translate>Cannot save comparison</translate>
             </div>
 
@@ -39,7 +35,7 @@
                     type="text"
                     name="name"
                     v-bind:disabled="is_saving"
-                >
+                />
             </div>
 
             <div class="tlp-form-element">
@@ -54,8 +50,7 @@
                     name="comment"
                     rows="5"
                     v-bind:disabled="is_saving"
-                >
-                </textarea>
+                ></textarea>
             </div>
         </div>
 
@@ -77,10 +72,8 @@
                     v-if="is_saving"
                     data-test-type="spinner"
                     class="tlp-button-icon fa fa-fw fa-spinner fa-spin"
-                >
-                </i>
-                <i v-else class="fa fa-fw fa-save tlp-button-icon">
-                </i>
+                ></i>
+                <i v-else class="fa fa-fw fa-save tlp-button-icon"></i>
                 <translate>Save comparison</translate>
             </button>
         </div>
