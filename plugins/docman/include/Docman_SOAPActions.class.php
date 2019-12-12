@@ -57,7 +57,10 @@ class Docman_SOAPActions extends Docman_Actions
         if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
             $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $item->getCurrentVersion()->getNumber(), $request->get('chunk_offset'), $request->get('chunk_size'));
             if (!$path) {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_append_filechunk'));
+                $this->_controler->feedback->log(
+                    'error',
+                    dgettext('tuleap-docman', 'Error while appending file chunk.')
+                );
             }
         }
     }
@@ -114,7 +117,7 @@ class Docman_SOAPActions extends Docman_Actions
                 $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'The file cannot be found.'));
             }
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_get_checksum'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Error while getting file checksum.'));
         }
     }
 
@@ -204,7 +207,7 @@ class Docman_SOAPActions extends Docman_Actions
 
             $this->_controler->_viewParams['action_result'] = $res;
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'missing_param', 'parent_id'));
+            $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Parameter parent_id is missing'));
         }
     }
 
@@ -274,7 +277,13 @@ class Docman_SOAPActions extends Docman_Actions
                             }
                         }
                     } else {
-                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_version_not_exist'));
+                        $this->_controler->feedback->log(
+                            'error',
+                            dgettext(
+                                'tuleap-docman',
+                                'Error: The given version of the item does not exist.'
+                            )
+                        );
                     }
                 } else {
                     $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_not_a_file'));

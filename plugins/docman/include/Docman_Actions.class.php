@@ -94,7 +94,10 @@ class Docman_Actions extends Actions
         if ($new_owner_id === null) {
             $this->_controler->feedback->log(
                 Feedback::WARN,
-                $GLOBALS['Language']->getText('plugin_docman', 'warning_missingowner')
+                dgettext(
+                    'tuleap-docman',
+                    'Specified owner does not exist. You are now the item owner. You can change owner in Item properties.'
+                )
             );
             return $change_requestor->getId();
         }
@@ -278,7 +281,32 @@ class Docman_Actions extends Actions
         } else {
             //TODO What should we do if upload failed ?
             //Maybe cancel item ?
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_'.$_action_type));
+            switch ($_action_type) {
+                case 'initversion':
+                    dgettext('tuleap-docman', 'Error while creating initial version.');
+                    break;
+                case 'newversion':
+                    dgettext('tuleap-docman', 'Error while creating new version.');
+                    break;
+                case 'news':
+                    dgettext(
+                        'tuleap-docman',
+                        'Error while creating news. Check that you have right permissions.'
+                    );
+                    break;
+                case 'news_details':
+                    dgettext(
+                        'tuleap-docman',
+                        'Error while creating news. Check that details field is not empty.'
+                    );
+                    break;
+                case 'news_summary':
+                    dgettext(
+                        'tuleap-docman',
+                        'Error while creating news. Check that subject field is not empty.'
+                    );
+                    break;
+            }
         }
         return $newVersion;
     }
@@ -402,7 +430,10 @@ class Docman_Actions extends Actions
                     if ($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FOLDER) {
                         $info_item_created = 'info_folder_created';
                     }
-                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_document_created'));
+                    $this->_controler->feedback->log(
+                        'info',
+                        dgettext('tuleap-docman', 'Document successfully created.')
+                    );
 
                     $new_version = null;
                     if ($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE ||
@@ -680,7 +711,7 @@ class Docman_Actions extends Actions
                 }
             }
 
-            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_updated'));
+            $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Item successfully updated'));
         }
         $this->event_manager->processEvent('send_notifications', array());
     }
