@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,27 +15,29 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
-require_once 'bootstrap.php';
+use PHPUnit\Framework\TestCase;
 
-class Docman_MIMETypeDetectorTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Docman_MIMETypeDetectorTest extends TestCase
 {
 
-    public function itReturnsTheRightOfficeMimeType()
+    public function testItReturnsTheRightOfficeMimeType(): void
     {
         $filename = 'test.docm';
         $detector = new Docman_MIMETypeDetector();
 
-        $this->assertEqual($detector->getRightOfficeType($filename), 'application/vnd.ms-word.document.macroEnabled.12');
+        $this->assertEquals('application/vnd.ms-word.document.macroEnabled.12', $detector->getRightOfficeType($filename));
     }
 
-    public function itReturnsNullIfTheFileIsNotAnOfficeOne()
+    public function testItReturnsNullIfTheFileIsNotAnOfficeOne(): void
     {
         $filename = 'image.jpg';
         $detector = new Docman_MIMETypeDetector();
 
-        $this->assertEqual($detector->getRightOfficeType($filename), null);
+        $this->assertEquals(null, $detector->getRightOfficeType($filename)) ;
     }
 }
