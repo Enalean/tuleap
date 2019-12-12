@@ -21,12 +21,12 @@ import { shallowMount, Wrapper } from "@vue/test-utils";
 import AddCard from "./AddCard.vue";
 import LabelEditor from "../Editor/Label/LabelEditor.vue";
 import AddButton from "./AddButton.vue";
-import EventBus from "../../../../../../helpers/event-bus";
-import { ColumnDefinition, Swimlane, TaskboardEvent } from "../../../../../../type";
+import { ColumnDefinition, Swimlane } from "../../../../../../type";
 import { createStoreMock } from "../../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import { RootState } from "../../../../../../store/type";
 import { NewCardPayload } from "../../../../../../store/swimlane/card/type";
 import { SwimlaneState } from "../../../../../../store/swimlane/type";
+import CancelSaveButtons from "../EditMode/CancelSaveButtons.vue";
 
 jest.useFakeTimers();
 
@@ -65,23 +65,15 @@ describe("AddCard", () => {
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setIsACellAddingInPlace");
     });
 
-    it("Given the esc key is pressed, Then it displays back the button and hide the editor", () => {
+    it("Given the cancel button is pressed, Then it displays back the button and hide the editor", () => {
         const wrapper = getWrapper();
 
         wrapper.find(AddButton).vm.$emit("click");
-        EventBus.$emit(TaskboardEvent.ESC_KEY_PRESSED);
+        wrapper.find(CancelSaveButtons).vm.$emit("cancel");
 
         expect(wrapper.contains(LabelEditor)).toBe(false);
         expect(wrapper.contains(AddButton)).toBe(true);
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("clearIsACellAddingInPlace");
-    });
-
-    it("Given the esc key is pressed while the editor was not in edit mode, Then it does trigger any mutation", () => {
-        const wrapper = getWrapper();
-
-        EventBus.$emit(TaskboardEvent.ESC_KEY_PRESSED);
-
-        expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
     });
 
     it(`Given the editor is displayed,
@@ -96,6 +88,34 @@ describe("AddCard", () => {
 
         expect(wrapper.vm.$data.label).toBe("Lorem ipsum");
         wrapper.find(LabelEditor).vm.$emit("save");
+
+        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/addCard", {
+            swimlane: wrapper.vm.$props.swimlane,
+            column: wrapper.vm.$props.column,
+            label: "Lorem ipsum"
+        } as NewCardPayload);
+
+        jest.spyOn(window, "scrollTo").mockImplementation(() => {});
+
+        jest.runAllTimers();
+        expect(wrapper.vm.$data.label).toBe("");
+
+        expect(wrapper.contains(LabelEditor)).toBe(true);
+        expect(wrapper.contains(AddButton)).toBe(false);
+    });
+
+    it(`Given the editor is displayed,
+        And the user clicks on the save button,
+        Then the card is saved
+        And the editor is cleared to enter a new card.
+        `, () => {
+        const wrapper = getWrapper();
+
+        wrapper.find(AddButton).vm.$emit("click");
+        wrapper.setData({ label: "Lorem ipsum" });
+
+        expect(wrapper.vm.$data.label).toBe("Lorem ipsum");
+        wrapper.find(CancelSaveButtons).vm.$emit("save");
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/addCard", {
             swimlane: wrapper.vm.$props.swimlane,

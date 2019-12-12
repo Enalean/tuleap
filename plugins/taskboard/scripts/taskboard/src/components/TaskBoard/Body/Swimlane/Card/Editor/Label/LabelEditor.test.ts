@@ -44,7 +44,7 @@ describe("LabelEditor", () => {
         expect(wrapper.emitted("save")).toBeTruthy();
     });
 
-    it("Saves the card if user hits shift + enter", async () => {
+    it("Does not save the card if user hits shift + enter", async () => {
         const wrapper = await getWrapper();
 
         wrapper.find({ ref: "textarea" }).trigger("keydown.enter", { shiftKey: true });
