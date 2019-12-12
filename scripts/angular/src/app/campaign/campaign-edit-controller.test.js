@@ -92,7 +92,10 @@ describe("CampaignEditController -", () => {
         });
 
         it("Given a selected report, then the definitions of that report will be loaded and set to selected and all other tests will be unselected", () => {
-            const definitions = [{ id: 85, summary: "AD test" }, { id: 3, summary: "Git test" }];
+            const definitions = [
+                { id: 85, summary: "AD test" },
+                { id: 3, summary: "Git test" }
+            ];
             DefinitionService.getDefinitions.mockReturnValue($q.when(definitions));
             $scope.filters = {
                 selected_report: "31"

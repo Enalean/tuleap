@@ -27,21 +27,20 @@
                 v-on:click="toggleIsDragging()"
             >
                 <i class="fa fa-refresh fa-rotate-90"></i>
-                <translate v-if="is_dragging" key="stop-reordering">Stop reordering steps</translate>
+                <translate v-if="is_dragging" key="stop-reordering">
+                    Stop reordering steps
+                </translate>
                 <translate v-else key="start-reordering">Reorder steps</translate>
             </button>
             <div class="ttm-definition-step-add-bar" v-show="!is_dragging">
-                <button type="button"
-                        class="btn btn-primary"
-                        v-on:click="addStep"
-                >
+                <button type="button" class="btn btn-primary" v-on:click="addStep">
                     <i class="fa fa-plus"></i>
                     <translate>Add step</translate>
                 </button>
             </div>
         </div>
-        <step-definition-drag-container/>
-        <step-definition-no-step v-if="! isThereAtLeastOneStep"/>
+        <step-definition-drag-container />
+        <step-definition-no-step v-if="!isThereAtLeastOneStep" />
     </div>
 </template>
 

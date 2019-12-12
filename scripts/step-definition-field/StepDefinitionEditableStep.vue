@@ -23,19 +23,18 @@
             type="hidden"
             v-bind:name="'artifact[' + field_id + '][id][]'"
             v-bind:value="step.id"
-        >
-        <step-definition-actions
-            v-bind:value="step.description_format"
-            v-on:input="toggleRTE"
-        >
+        />
+        <step-definition-actions v-bind:value="step.description_format" v-on:input="toggleRTE">
             <step-deletion-action-button-mark-as-deleted
                 v-bind:mark-as-deleted="markAsDeleted"
                 v-bind:is_deletion="true"
             />
         </step-definition-actions>
-        <input type="hidden" v-bind:name="'artifact[' + field_id + '][description_format][]'"
-               v-bind:value="step.description_format"
-        >
+        <input
+            type="hidden"
+            v-bind:name="'artifact[' + field_id + '][description_format][]'"
+            v-bind:value="step.description_format"
+        />
         <textarea
             ref="description"
             class="ttm-definition-step-description-textarea"
@@ -46,15 +45,17 @@
         ></textarea>
 
         <section class="ttm-definition-step-expected">
-            <step-definition-arrow-expected/>
+            <step-definition-arrow-expected />
             <div class="ttm-definition-step-expected-edit">
                 <div class="ttm-definition-step-expected-edit-title">
                     <translate>Expected results</translate>
                 </div>
 
-                <input type="hidden" v-bind:name="'artifact[' + field_id + '][expected_results_format][]'"
-                       v-bind:value="step.description_format"
-                >
+                <input
+                    type="hidden"
+                    v-bind:name="'artifact[' + field_id + '][expected_results_format][]'"
+                    v-bind:value="step.description_format"
+                />
                 <textarea
                     ref="expected_results"
                     class="ttm-definition-step-expected-results-textarea"

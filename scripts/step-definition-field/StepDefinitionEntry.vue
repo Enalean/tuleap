@@ -24,7 +24,8 @@
             v-bind:step="step"
             v-bind:dynamic_rank="dynamic_rank"
         />
-        <div v-show="!is_dragging" class="ttm-definition-step-rank ttm-execution-step-rank-edition">{{ dynamic_rank }}
+        <div v-show="!is_dragging" class="ttm-definition-step-rank ttm-execution-step-rank-edition">
+            {{ dynamic_rank }}
         </div>
         <div v-show="!is_dragging" class="ttm-definition-step-description">
             <step-definition-marked-as-deleted
@@ -33,7 +34,7 @@
                 v-on:unmarkDeletion="unmarkDeletion"
             />
             <step-definition-editable-step
-                v-show="! is_marked_as_deleted"
+                v-show="!is_marked_as_deleted"
                 v-bind:step="step"
                 v-on:markAsDeleted="markAsDeleted"
                 v-on:removeDeletedStepsOnFormSubmission="removeDeletedStepsOnFormSubmission"

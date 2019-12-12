@@ -20,10 +20,15 @@
 <template>
     <div class="ttm-definition-step draggable-step-definition">
         <i class="step-definition-drag-icon"></i>
-        <div class="ttm-definition-step-rank ttm-execution-step-rank-edition">{{ dynamic_rank }}</div>
-        <div v-dompurify-html="step.raw_description"
-             v-bind:class="{'ttm-definition-step-description-text': is_text(step.description_format)} "
-             class="draggable-step-description-text"
+        <div class="ttm-definition-step-rank ttm-execution-step-rank-edition">
+            {{ dynamic_rank }}
+        </div>
+        <div
+            v-dompurify-html="step.raw_description"
+            v-bind:class="{
+                'ttm-definition-step-description-text': is_text(step.description_format)
+            }"
+            class="draggable-step-description-text"
         ></div>
     </div>
 </template>
