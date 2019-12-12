@@ -21,7 +21,7 @@ const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
 
 let entry_points = {
-    'modals': "./scripts/modals.js"
+    modals: "./scripts/modals.js"
 };
 
 const colors = ["blue", "green", "grey", "orange", "purple", "red"];
@@ -33,7 +33,9 @@ module.exports = [
     {
         entry: entry_points,
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(path.resolve(__dirname, "../../src/www/assets/botmattermost/")),
+        output: webpack_configurator.configureOutput(
+            path.resolve(__dirname, "../../src/www/assets/botmattermost/")
+        ),
         module: {
             rules: [
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),

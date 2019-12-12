@@ -40,7 +40,9 @@
         [].forEach.call(modal_buttons, function(button) {
             var modal_element = document.getElementById(button.dataset.modalId);
             if (!modal_element) {
-                throw new Error("Bad reference to an unknown modal element: '" + button.dataset.modalId + "'");
+                throw new Error(
+                    "Bad reference to an unknown modal element: '" + button.dataset.modalId + "'"
+                );
             }
 
             var modal = tlp.modal(modal_element);
