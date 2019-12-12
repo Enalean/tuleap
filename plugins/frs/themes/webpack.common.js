@@ -23,14 +23,15 @@ const webpack_configurator = require("../../../tools/utils/scripts/webpack-confi
 module.exports = [
     {
         entry: {
-            "style-flamingparrot": "./FlamingParrot/style.scss"
+            "style-flamingparrot": "./FlamingParrot/style.scss",
+            "tuleap-frs": "./FlamingParrot/tuleap-frs.scss"
         },
         context: path.resolve(__dirname),
         output: webpack_configurator.configureOutput(
             path.resolve(__dirname, "../../../src/www/assets/frs/themes/")
         ),
         module: {
-            rules: [webpack_configurator.rule_scss_loader]
+            rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets]
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
