@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_user_mapping (
 CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_provider (
     id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    client_id TEXT NOT NULL DEFAULT '',
-    client_secret TEXT NOT NULL DEFAULT '',
+    client_id TEXT NOT NULL,
+    client_secret TEXT NOT NULL,
     unique_authentication_endpoint BOOLEAN DEFAULT FALSE,
     icon VARCHAR(50) NOT NULL,
     color VARCHAR(20) NOT NULL,
@@ -57,10 +57,11 @@ CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_unlinked_account (
     PRIMARY KEY(id)
 );
 
-INSERT INTO plugin_openidconnectclient_provider(name, authorization_endpoint, token_endpoint, user_info_endpoint)
-VALUES (
-    'Google',
-    'https://accounts.google.com/o/oauth2/v2/auth',
-    'https://oauth2.googleapis.com/token',
-    'https://www.googleapis.com/oauth2/v3/userinfo'
-);
+INSERT INTO plugin_openidconnectclient_provider(name, client_id, client_secret, icon, color)
+VALUES ('Google', '', '', '', '');
+
+INSERT INTO plugin_openidconnectclient_provider_generic(provider_id, authorization_endpoint, token_endpoint, user_info_endpoint)
+VALUES ((SELECT LAST_INSERT_ID() FROM plugin_openidconnectclient_provider),
+        'https://accounts.google.com/o/oauth2/v2/auth',
+        'https://oauth2.googleapis.com/token',
+        'https://www.googleapis.com/oauth2/v3/userinfo');
