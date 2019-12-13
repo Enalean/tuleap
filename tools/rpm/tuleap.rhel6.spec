@@ -568,6 +568,8 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openidconnectclient/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/svn/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pluginsadministration/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/proftpd/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
@@ -1319,6 +1321,7 @@ fi
 %files plugin-proftpd
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/proftpd
+%{APP_DIR}/src/www/assets/proftpd
 %dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/secure_ftp
 
 %files plugin-frs
