@@ -22,8 +22,8 @@ require_once 'constants.php';
 require_once __DIR__. '/../vendor/autoload.php';
 
 use FastRoute\RouteCollector;
-use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\BurningParrotCompatiblePageDetector;
+use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 use Tuleap\CVS\DiskUsage\FullHistoryDao;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
@@ -113,8 +113,6 @@ use Tuleap\SVN\ViewVC\AccessHistorySaver;
 use Tuleap\SVN\ViewVC\ViewVCProxy;
 use Tuleap\SVN\XMLImporter;
 use Tuleap\SVN\XMLSvnExporter;
-use Tuleap\System\ApacheServiceControl;
-use Tuleap\System\ServiceControl;
 
 /**
  * SVN plugin
@@ -510,7 +508,8 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function cssFile($params)
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+            $assets = $this->getThemesIncludeAssets();
+            echo '<link rel="stylesheet" type="text/css" href="' . $assets->getFileURL('style-fp.css') . '" />';
         }
     }
 
@@ -1174,12 +1173,8 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public function burningParrotGetStylesheets(array $params)
     {
         if (strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group') === 0) {
-            $theme_include_assets = new IncludeAssets(
-                SVN_BASE_DIR . '/../www/themes/BurningParrot/assets',
-                $this->getThemePath() . '/assets'
-            );
-            $variant = $params['variant'];
-            $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
+            $assets = $this->getThemesIncludeAssets();
+            $params['stylesheets'][] = $assets->getFileURL('style-bp.css');
         }
     }
 
@@ -1192,6 +1187,14 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         );
 
         $event->addJavascript($include_assets->getFileURL('permission-per-group.js'));
+    }
+
+    private function getThemesIncludeAssets(): IncludeAssets
+    {
+        return new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/svn/themes',
+            '/assets/svn/themes'
+        );
     }
 
     public function httpdPostRotate(PostRotateEvent $event)

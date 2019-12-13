@@ -491,6 +491,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/ldap/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki/themes/
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/openidconnectclient/themes/
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/svn/themes/
 
 # Link to local config for logo and themes images
 # Needed for nginx try_files
@@ -1042,6 +1043,7 @@ fi
 %files plugin-svn
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/svn
+%{APP_DIR}/src/www/assets/svn
 %attr(00750,%{APP_USER},%{APP_USER}) %dir %{APP_DATA_DIR}/svn_plugin
 
 %files plugin-tracker
