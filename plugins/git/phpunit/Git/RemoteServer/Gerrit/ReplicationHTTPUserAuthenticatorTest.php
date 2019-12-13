@@ -17,14 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Tuleap\Git\Gerrit;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tuleap\GlobalLanguageMock;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class ReplicationHTTPUserAuthenticatorTest extends TuleapTestCase
+class ReplicationHTTPUserAuthenticatorTest extends TestCase
 {
+    use MockeryPHPUnitIntegration, GlobalLanguageMock;
+
     /**
      * @var \PasswordHandler
      */
@@ -35,16 +40,15 @@ class ReplicationHTTPUserAuthenticatorTest extends TuleapTestCase
      */
     private $server_factory;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->password_handler = \Mockery::spy(\PasswordHandler::class);
         $this->server_factory   = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
         $this->user_validator   = \Mockery::spy(\Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator::class);
     }
 
-    public function itRejectsNonSpecificLogin()
+    public function testItRejectsNonSpecificLogin(): void
     {
         $repository                     = \Mockery::spy(\GitRepository::class);
         $replication_user_authenticator = new ReplicationHTTPUserAuthenticator(
@@ -57,7 +61,7 @@ class ReplicationHTTPUserAuthenticatorTest extends TuleapTestCase
         $replication_user_authenticator->authenticate($repository, 'login', 'password');
     }
 
-    public function itAcceptsSpecificLogin()
+    public function testItAcceptsSpecificLogin(): void
     {
         $user_login                     = 'forge__gerrit_1';
         $repository                     = \Mockery::spy(\GitRepository::class);
@@ -73,10 +77,10 @@ class ReplicationHTTPUserAuthenticatorTest extends TuleapTestCase
         $this->user_validator->shouldReceive('isLoginAnHTTPUserLogin')->andReturns(true);
 
         $replication_http_user = $replication_user_authenticator->authenticate($repository, $user_login, 'password');
-        $this->assertEqual($replication_http_user->getUnixName(), $user_login);
+        $this->assertEquals($user_login, $replication_http_user->getUnixName());
     }
 
-    public function itRejectsInvalidPassword()
+    public function testItRejectsInvalidPassword(): void
     {
         $user_login                     = 'forge__gerrit_1';
         $user_password                  = 'password';

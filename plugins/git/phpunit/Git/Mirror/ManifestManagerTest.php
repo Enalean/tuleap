@@ -22,10 +22,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__.'/../../bootstrap.php';
 
-class Git_Mirror_ManifestManagerTest extends TuleapTestCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class ManifestManagerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
     private $manifest_directory;
     /** @var Git_Mirror_ManifestManager */
@@ -44,22 +49,14 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase
     private $noida_mirror_id = 2;
     private $data_mapper;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $fixture_dir              = dirname(__FILE__) .'/_fixtures';
         $this->manifest_directory = $fixture_dir .'/manifests';
 
-        $this->repository = aGitRepository()
-            ->withPath('linux/kernel.git')
-            ->withDescription('Linux4ever')
-            ->build();
-
-        $this->another_repository = aGitRepository()
-            ->withPath('mozilla/firefox.git')
-            ->withDescription('free and open-source web browser')
-            ->build();
+        $this->repository = $this->buildMockedRepository('linux/kernel.git', 'Linux4ever');
+        $this->another_repository = $this->buildMockedRepository('mozilla/firefox.git', 'free and open-source web browser');
 
         $this->singapour_mirror = new Git_Mirror_Mirror(\Mockery::spy(\PFUser::class), $this->singapour_mirror_id, 'singapour.io', 'singapour', 'PLP');
         $this->noida_mirror = new Git_Mirror_Mirror(\Mockery::spy(\PFUser::class), $this->noida_mirror_id, 'noida.org', 'noida', 'test');
@@ -72,7 +69,16 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase
         $this->manager = new Git_Mirror_ManifestManager($this->data_mapper, $this->generator);
     }
 
-    public function itAsksToUpdateTheManifestsWhereTheRepositoryIsMirrored()
+    private function buildMockedRepository(string $path, string $description): GitRepository
+    {
+        $repositrory = Mockery::mock(GitRepository::class);
+        $repositrory->shouldReceive('getPath')->andReturn($path);
+        $repositrory->shouldReceive('getDescription')->andReturn($description);
+
+        return $repositrory;
+    }
+
+    public function testItAsksToUpdateTheManifestsWhereTheRepositoryIsMirrored(): void
     {
         $this->data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns(array($this->noida_mirror, $this->singapour_mirror));
 
@@ -83,7 +89,7 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase
         $this->manager->triggerUpdate($this->repository);
     }
 
-    public function itAsksToDeleteTheRepositoryFromTheManifestsWhereTheRepositoryIsNotMirrored()
+    public function testItAsksToDeleteTheRepositoryFromTheManifestsWhereTheRepositoryIsNotMirrored(): void
     {
         $this->data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns(array($this->noida_mirror));
 
@@ -93,7 +99,7 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase
         $this->manager->triggerUpdate($this->repository);
     }
 
-    public function itAsksToDeleteTheRepositoryFromAllManifests()
+    public function testItAsksToDeleteTheRepositoryFromAllManifests(): void
     {
         $this->generator->shouldReceive('removeRepositoryFromManifestFile')->with(\Mockery::any(), $this->repository->getPath())->times(2);
         $this->generator->shouldReceive('removeRepositoryFromManifestFile')->with($this->singapour_mirror, $this->repository->getPath())->ordered();
@@ -102,7 +108,7 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase
         $this->manager->triggerDelete($this->repository->getPath());
     }
 
-    public function itEnsuresThatManifestFilesOfMirrorsContainTheRepositories()
+    public function testItEnsuresThatManifestFilesOfMirrorsContainTheRepositories(): void
     {
         $this->data_mapper->shouldReceive('fetchRepositoriesForMirror')->with($this->singapour_mirror)->andReturns(array($this->repository));
         $this->data_mapper->shouldReceive('fetchRepositoriesForMirror')->with($this->noida_mirror)->andReturns(array($this->repository, $this->another_repository));
@@ -114,7 +120,7 @@ class Git_Mirror_ManifestManagerTest extends TuleapTestCase
         $this->manager->checkManifestFiles();
     }
 
-    public function itUpdatesTheCurrentTimeAfterAGitPush()
+    public function testItUpdatesTheCurrentTimeAfterAGitPush(): void
     {
         $this->data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns(array($this->singapour_mirror));
 

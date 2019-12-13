@@ -20,22 +20,24 @@
 
 namespace Tuleap\Git;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use EventManager;
 
 require_once __DIR__.'/../../bootstrap.php';
 
 //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-class GerritCanMigrateCheckerTest extends TuleapTestCase
+class GerritCanMigrateCheckerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     private $can_migrate_checker;
     private $gerrit_server_factory;
     private $project;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->gerrit_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
         $this->can_migrate_checker   = new GerritCanMigrateChecker(
@@ -46,7 +48,7 @@ class GerritCanMigrateCheckerTest extends TuleapTestCase
         $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         EventManager::clearInstance();
         parent::tearDown();
