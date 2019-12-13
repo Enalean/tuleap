@@ -625,7 +625,8 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
     public function getWidgetContent()
     {
-        $content  = $this->getContent();
+        $content = $this->fetchAdditionnalButton();
+        $content .= $this->getContent();
         $content .= $this->renderer->fetchWidgetGoToReport();
 
         return $content;
@@ -647,10 +648,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
     private function fetchContentD3Graph()
     {
-        $content = $this->fetchAdditionnalButton();
-        $content .= $this->fetchGraphAnchor('');
-
-        return $content;
+        return $this->fetchGraphAnchor('');
     }
 
     private function getAvailableDashboardsForUser(PFUser $user)
