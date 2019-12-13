@@ -42,7 +42,9 @@ export default {
         configuration: {
             // select2 configuration
             type: Object,
-            default: () => {}
+            default: () => {
+                return {};
+            }
         },
         disabled: {
             type: Boolean,

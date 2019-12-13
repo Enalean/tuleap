@@ -101,7 +101,7 @@ describe("TaskBoard", () => {
 
     it(`will cancel dragging on "Escape"`, async () => {
         const mock_drake = dragula.default();
-        jest.spyOn(mock_drake, "cancel").mockImplementation(() => {});
+        jest.spyOn(mock_drake, "cancel").mockImplementation();
 
         await createWrapper([], false);
         EventBus.$emit(TaskboardEvent.ESC_KEY_PRESSED);

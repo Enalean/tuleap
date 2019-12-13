@@ -95,7 +95,7 @@ describe("AddCard", () => {
             label: "Lorem ipsum"
         } as NewCardPayload);
 
-        jest.spyOn(window, "scrollTo").mockImplementation(() => {});
+        jest.spyOn(window, "scrollTo").mockImplementation();
 
         jest.runAllTimers();
         expect(wrapper.vm.$data.label).toBe("");
@@ -123,7 +123,7 @@ describe("AddCard", () => {
             label: "Lorem ipsum"
         } as NewCardPayload);
 
-        jest.spyOn(window, "scrollTo").mockImplementation(() => {});
+        jest.spyOn(window, "scrollTo").mockImplementation();
 
         jest.runAllTimers();
         expect(wrapper.vm.$data.label).toBe("");
@@ -141,7 +141,7 @@ describe("AddCard", () => {
         expect(wrapper.vm.$data.label).toBe("Lorem ipsum");
         wrapper.find(LabelEditor).vm.$emit("save");
 
-        jest.spyOn(window, "scrollTo").mockImplementation(() => {});
+        jest.spyOn(window, "scrollTo").mockImplementation();
 
         jest.runAllTimers();
         expect(window.scrollTo).toHaveBeenCalled();
