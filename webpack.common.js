@@ -23,11 +23,13 @@ const webpack_configurator = require("../../tools/utils/scripts/webpack-configur
 module.exports = [
     {
         entry: {
-            "autocompleter": "./scripts/autocompleter.js",
-            "style": "./themes/FlamingParrot/css/style.scss",
+            autocompleter: "./scripts/autocompleter.js",
+            style: "./themes/FlamingParrot/css/style.scss"
         },
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(path.resolve(__dirname, "../../src/www/assets/botmattermost_git/")),
+        output: webpack_configurator.configureOutput(
+            path.resolve(__dirname, "../../src/www/assets/botmattermost_git/")
+        ),
         module: {
             rules: [
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
