@@ -24,24 +24,24 @@
 
 <template>
     <div>
-        <div class="timetracking-reading-mode"
-             v-on:click="toggleReadingMode()">
-            <time-tracking-overview-reading-dates/>
-            <time-tracking-overview-tracker-list/>
+        <div class="timetracking-reading-mode" v-on:click="toggleReadingMode()">
+            <time-tracking-overview-reading-dates />
+            <time-tracking-overview-tracker-list />
         </div>
-        <div class="reading-mode-actions"
-             v-if="! is_report_saved"
-             data-test="reading-mode-actions"
-        >
-            <button class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
-                    v-translate
-                    v-on:click="discardReport()"
-            >Cancel
-            </button>
-            <button class="tlp-button-primary"
-                    v-on:click="saveReport()"
+        <div class="reading-mode-actions" v-if="!is_report_saved" data-test="reading-mode-actions">
+            <button
+                class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
+                v-translate
+                v-on:click="discardReport()"
             >
-                <i v-if="is_loading" class="tlp-button-icon fa fa-spinner fa-spin" data-test="icon-spinner"></i>
+                Cancel
+            </button>
+            <button class="tlp-button-primary" v-on:click="saveReport()">
+                <i
+                    v-if="is_loading"
+                    class="tlp-button-icon fa fa-spinner fa-spin"
+                    data-test="icon-spinner"
+                ></i>
                 <translate>Save report</translate>
             </button>
         </div>

@@ -221,7 +221,13 @@ describe("form-tree-builder", () => {
                     { field_id: 3, type: "int" }
                 ],
                 structure: [
-                    { id: 1, content: [{ id: 2, content: null }, { id: 3, content: null }] }
+                    {
+                        id: 1,
+                        content: [
+                            { id: 2, content: null },
+                            { id: 3, content: null }
+                        ]
+                    }
                 ]
             };
 

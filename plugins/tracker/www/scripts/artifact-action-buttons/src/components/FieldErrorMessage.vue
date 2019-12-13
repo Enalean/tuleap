@@ -20,11 +20,14 @@
 <template>
     <div>
         <ul class="move-artifact-display-more-fields-message">
-            <li v-for="field in fields_to_display" v-bind:key="field.field_id">{{ field.label }}</li>
+            <li v-for="field in fields_to_display" v-bind:key="field.field_id">
+                {{ field.label }}
+            </li>
         </ul>
-        <button v-on:click="is_minimal_display = false"
-                v-if="is_minimal_display && fields.length > 5"
-                v-bind:class="show_more_class"
+        <button
+            v-on:click="is_minimal_display = false"
+            v-if="is_minimal_display && fields.length > 5"
+            v-bind:class="show_more_class"
         >
             <translate>Show more</translate>
         </button>

@@ -20,14 +20,17 @@
 
 <template>
     <div>
-        <hr>
+        <hr />
         <div class="project-registration-button-container">
-            <button type="button"
-                    class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
-                    data-test="project-registration-next-button"
-                    v-bind:disabled="! is_template_selected "
-                    v-on:click.prevent="goToInformationPage">
-                <span v-translate>Next</span> <i class="fa fa-long-arrow-right tlp-button-icon-right"></i>
+            <button
+                type="button"
+                class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
+                data-test="project-registration-next-button"
+                v-bind:disabled="!is_template_selected"
+                v-on:click.prevent="goToInformationPage"
+            >
+                <span v-translate>Next</span>
+                <i class="fa fa-long-arrow-right tlp-button-icon-right"></i>
             </button>
         </div>
     </div>

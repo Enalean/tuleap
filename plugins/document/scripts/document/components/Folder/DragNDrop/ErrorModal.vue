@@ -18,9 +18,10 @@
   -->
 
 <template>
-    <div class="tlp-modal tlp-modal-danger"
-         role="dialog"
-         aria-labelledby="document-dragndrop-error-modal-title"
+    <div
+        class="tlp-modal tlp-modal-danger"
+        role="dialog"
+        aria-labelledby="document-dragndrop-error-modal-title"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="document-dragndrop-error-modal-title">
@@ -37,10 +38,11 @@
             <slot></slot>
         </div>
         <div class="tlp-modal-footer tlp-modal-footer-large">
-            <button type="submit"
-                    class="tlp-button-danger tlp-modal-action"
-                    data-dismiss="modal"
-                    v-translate
+            <button
+                type="submit"
+                class="tlp-button-danger tlp-modal-action"
+                data-dismiss="modal"
+                v-translate
             >
                 Close
             </button>

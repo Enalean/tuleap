@@ -26,16 +26,16 @@
         data-test="transition-modal"
     >
         <div class="tlp-modal-header">
-            <transition-modal-title/>
+            <transition-modal-title />
             <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
                 &times;
             </div>
         </div>
-        <modal-error-feedback/>
+        <modal-error-feedback />
         <div class="tlp-modal-body tlp-modal-body-with-sections">
-            <pre-conditions-skeleton v-if="is_loading_modal"/>
-            <filled-pre-conditions-section v-else/>
-            <post-actions-section/>
+            <pre-conditions-skeleton v-if="is_loading_modal" />
+            <filled-pre-conditions-section v-else />
+            <post-actions-section />
         </div>
         <div class="tlp-modal-footer">
             <button

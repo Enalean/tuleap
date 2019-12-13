@@ -18,10 +18,15 @@
   -->
 
 <template>
-    <form v-on:submit.prevent="createWorkflowTransitions()" data-test="tracker-workflow-first-configuration">
+    <form
+        v-on:submit.prevent="createWorkflowTransitions()"
+        data-test="tracker-workflow-first-configuration"
+    >
         <section class="tlp-pane-section">
             <p v-translate>
-                In order to configure transitions rules on this tracker, your first need to choose a list field. Once chosen, you will be able to configure transition using the configuration matrix.
+                In order to configure transitions rules on this tracker, your first need to choose a
+                list field. Once chosen, you will be able to configure transition using the
+                configuration matrix.
             </p>
 
             <div class="tlp-form-element">
@@ -49,7 +54,9 @@
                         v-for="field in selectbox_fields"
                         v-bind:key="field.id"
                         v-bind:value="field"
-                    >{{ field.label }}</option>
+                    >
+                        {{ field.label }}
+                    </option>
                 </select>
             </div>
         </section>

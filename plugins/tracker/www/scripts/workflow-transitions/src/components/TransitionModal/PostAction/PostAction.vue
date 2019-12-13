@@ -28,12 +28,35 @@
                 data-test="post-action-type-select"
             >
                 <optgroup v-bind:label="unique_actions_title">
-                    <option v-bind:value="POST_ACTION_TYPE.FROZEN_FIELDS" data-test="freeze_fields" v-bind:disabled="! frozen_fields_information.valid" v-bind:title="frozen_fields_information.title">{{ frozen_fields_information.option }}</option>
-                    <option v-bind:value="POST_ACTION_TYPE.HIDDEN_FIELDSETS" data-test="hide_fieldsets" v-bind:disabled="! hidden_fieldsets_information.valid" v-bind:title="hidden_fieldsets_information.title">{{ hidden_fieldsets_information.option }}</option>
+                    <option
+                        v-bind:value="POST_ACTION_TYPE.FROZEN_FIELDS"
+                        data-test="freeze_fields"
+                        v-bind:disabled="!frozen_fields_information.valid"
+                        v-bind:title="frozen_fields_information.title"
+                    >
+                        {{ frozen_fields_information.option }}
+                    </option>
+                    <option
+                        v-bind:value="POST_ACTION_TYPE.HIDDEN_FIELDSETS"
+                        data-test="hide_fieldsets"
+                        v-bind:disabled="!hidden_fieldsets_information.valid"
+                        v-bind:title="hidden_fieldsets_information.title"
+                    >
+                        {{ hidden_fieldsets_information.option }}
+                    </option>
                 </optgroup>
                 <optgroup v-bind:label="other_actions_title">
-                    <option v-bind:value="POST_ACTION_TYPE.RUN_JOB" v-translate>Launch a CI job</option>
-                    <option v-bind:value="POST_ACTION_TYPE.SET_FIELD_VALUE" data-test="set_field" v-bind:disabled="! set_field_value_information.valid" v-bind:title="set_field_value_information.title">{{ set_field_value_information.option }}</option>
+                    <option v-bind:value="POST_ACTION_TYPE.RUN_JOB" v-translate>
+                        Launch a CI job
+                    </option>
+                    <option
+                        v-bind:value="POST_ACTION_TYPE.SET_FIELD_VALUE"
+                        data-test="set_field"
+                        v-bind:disabled="!set_field_value_information.valid"
+                        v-bind:title="set_field_value_information.title"
+                    >
+                        {{ set_field_value_information.option }}
+                    </option>
                 </optgroup>
             </select>
             <a
@@ -46,7 +69,7 @@
             </a>
         </div>
         <div class="tracker-workflow-transition-modal-action-details">
-            <slot/>
+            <slot />
         </div>
     </div>
 </template>

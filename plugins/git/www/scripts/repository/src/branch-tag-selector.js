@@ -58,9 +58,9 @@ export default function initBranchTagSelector() {
         caret.classList.add("fa-spin", "fa-spinner");
         button.classList.add("disabled");
         try {
-            const {
-                init
-            } = await import(/* webpackChunkName: "branch-tag-selector" */ "../branch-tag-selector/src/index.js");
+            const { init } = await import(
+                /* webpackChunkName: "branch-tag-selector" */ "../branch-tag-selector/src/index.js"
+            );
             init(mount_point, button);
 
             button.classList.add("git-repository-branch-tag-selector-button-loaded");

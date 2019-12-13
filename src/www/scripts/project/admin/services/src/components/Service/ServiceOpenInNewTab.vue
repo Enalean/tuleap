@@ -31,12 +31,8 @@
                 value="1"
                 v-bind:checked="props.value"
                 v-on="listeners"
-            >
-            <label
-                class="tlp-switch-button"
-                v-bind:for="props.id"
-                aria-hidden
-            ></label>
+            />
+            <label class="tlp-switch-button" v-bind:for="props.id" aria-hidden></label>
         </div>
     </div>
 </template>

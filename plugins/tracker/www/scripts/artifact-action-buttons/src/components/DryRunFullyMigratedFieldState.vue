@@ -20,10 +20,13 @@
 <template>
     <div v-if="fully_migrated_fields_count > 0" class="alert alert-info">
         <i class="fa fa-info-circle move-artifact-icon"></i>
-        <translate v-bind:translate-n="fully_migrated_fields_count"
-                   translate-plural="%{ fully_migrated_fields_count } fields will be fully migrated:"
-        >1 field will be fully migrated:</translate>
-        <field-error-message v-bind:fields="fully_migrated_fields" v-bind:type="'fully-migrated'"/>
+        <translate
+            v-bind:translate-n="fully_migrated_fields_count"
+            translate-plural="%{ fully_migrated_fields_count } fields will be fully migrated:"
+        >
+            1 field will be fully migrated:
+        </translate>
+        <field-error-message v-bind:fields="fully_migrated_fields" v-bind:type="'fully-migrated'" />
     </div>
 </template>
 

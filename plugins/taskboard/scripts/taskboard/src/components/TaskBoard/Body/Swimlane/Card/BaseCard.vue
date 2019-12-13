@@ -20,19 +20,23 @@
 
 <template>
     <div class="taskboard-card" v-bind:class="additional_classnames">
-        <span v-if="can_user_update_card" class="taskboard-card-edit-trigger" v-on:click="switchToEditMode">
+        <span
+            v-if="can_user_update_card"
+            class="taskboard-card-edit-trigger"
+            v-on:click="switchToEditMode"
+        >
             <i class="fa fa-pencil"></i>
         </span>
         <div class="taskboard-card-content">
-            <card-xref-label v-bind:card="card" v-bind:label="label"/>
+            <card-xref-label v-bind:card="card" v-bind:label="label" />
             <div class="taskboard-card-info">
-                <slot name="initial_effort"/>
-                <card-assignees v-bind:assignees="card.assignees"/>
+                <slot name="initial_effort" />
+                <card-assignees v-bind:assignees="card.assignees" />
             </div>
         </div>
-        <label-editor v-model="label" v-if="card.is_in_edit_mode" v-on:save="save"/>
+        <label-editor v-model="label" v-if="card.is_in_edit_mode" v-on:save="save" />
         <div class="taskboard-card-accessibility" v-if="show_accessibility_pattern"></div>
-        <slot name="remaining_effort"/>
+        <slot name="remaining_effort" />
     </div>
 </template>
 

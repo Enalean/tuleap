@@ -31,10 +31,11 @@
         v-on:input="setSelected($event)"
     >
         <option v-bind:value="null" v-translate>Please choose...</option>
-        <option v-for="tracker in trackers"
-                v-bind:disabled="tracker.disabled"
-                v-bind:value="tracker.id"
-                v-bind:key="tracker.id"
+        <option
+            v-for="tracker in trackers"
+            v-bind:disabled="tracker.disabled"
+            v-bind:value="tracker.id"
+            v-bind:key="tracker.id"
         >
             {{ tracker.label }}
         </option>

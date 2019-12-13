@@ -24,16 +24,14 @@
                 <label for="document-id" class="tlp-label" v-translate>
                     Id
                 </label>
-                <p id="document-id">
-                    #{{ item.id }}
-                </p>
+                <p id="document-id">#{{ item.id }}</p>
             </div>
             <div class="tlp-property">
                 <label for="document-owner" class="tlp-label" v-translate>
                     Owner
                 </label>
                 <p id="document-owner">
-                    <user-badge v-bind:user="item.owner"/>
+                    <user-badge v-bind:user="item.owner" />
                 </p>
             </div>
             <template v-if="is_document">
@@ -50,7 +48,11 @@
                 <label for="document-creation-date" class="tlp-label" v-translate>
                     Creation
                 </label>
-                <p id="document-creation-date" class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="getFormattedDate(item.creation_date)">
+                <p
+                    id="document-creation-date"
+                    class="tlp-tooltip tlp-tooltip-left"
+                    v-bind:data-tlp-tooltip="getFormattedDate(item.creation_date)"
+                >
                     {{ getFormattedDateForDisplay(item.creation_date) }}
                 </p>
             </div>
@@ -58,15 +60,27 @@
                 <label for="document-last-update-date" class="tlp-label" v-translate>
                     Last update date
                 </label>
-                <p id="document-last-update-date" class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="getFormattedDate(item.last_update_date)">
+                <p
+                    id="document-last-update-date"
+                    class="tlp-tooltip tlp-tooltip-left"
+                    v-bind:data-tlp-tooltip="getFormattedDate(item.last_update_date)"
+                >
                     {{ getFormattedDateForDisplay(item.last_update_date) }}
                 </p>
             </div>
-            <div class="tlp-property" v-if="has_an_approval_table" data-test="docman-item-approval-table-status-badge">
+            <div
+                class="tlp-property"
+                v-if="has_an_approval_table"
+                data-test="docman-item-approval-table-status-badge"
+            >
                 <label for="document-approval-table-status" class="tlp-label" v-translate>
                     Approval table status
                 </label>
-                <approval-table-badge id="document-approval-table-status" v-bind:item="item" v-bind:is-in-folder-content-row="false"/>
+                <approval-table-badge
+                    id="document-approval-table-status"
+                    v-bind:item="item"
+                    v-bind:is-in-folder-content-row="false"
+                />
             </div>
             <div v-if="is_file" class="tlp-property">
                 <label for="document-file-size" class="tlp-label" v-translate>

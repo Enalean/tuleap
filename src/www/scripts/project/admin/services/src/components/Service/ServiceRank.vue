@@ -34,6 +34,6 @@
             v-bind:min="props.minimal_rank"
             required
             v-bind:value="props.value"
-        >
+        />
     </div>
 </template>

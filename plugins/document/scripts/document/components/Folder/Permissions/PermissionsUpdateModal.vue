@@ -18,22 +18,27 @@
   -
   -->
 <template>
-    <form class="tlp-modal"
-          role="dialog"
-          aria-labelledby="document-update-permissions-modal"
-          enctype="multipart/form-data"
-          v-on:submit.prevent="updatePermissions"
+    <form
+        class="tlp-modal"
+        role="dialog"
+        aria-labelledby="document-update-permissions-modal"
+        enctype="multipart/form-data"
+        v-on:submit.prevent="updatePermissions"
     >
-        <modal-header v-bind:modal-title="modal_title"
-                      v-bind:aria-labelled-by="aria_labelled_by"
-                      v-bind:icon-header-class="'fa-pencil'"
+        <modal-header
+            v-bind:modal-title="modal_title"
+            v-bind:aria-labelled-by="aria_labelled_by"
+            v-bind:icon-header-class="'fa-pencil'"
         />
-        <modal-feedback/>
+        <modal-feedback />
         <div class="tlp-modal-body document-item-modal-body">
             <div v-if="project_ugroups === null" class="document-permissions-modal-loading-state">
                 <i class="fa fa-spin fa-circle-o-notch"></i>
             </div>
-            <div v-else-if="item.permissions_for_groups" class="document-permissions-update-container">
+            <div
+                v-else-if="item.permissions_for_groups"
+                class="document-permissions-update-container"
+            >
                 <permissions-for-groups-selector
                     v-bind:project_ugroups="project_ugroups"
                     v-model="updated_permissions"
@@ -44,10 +49,11 @@
                 />
             </div>
         </div>
-        <modal-footer v-bind:is-loading="! can_be_submitted"
-                      v-bind:submit-button-label="submit_button_label"
-                      v-bind:aria-labelled-by="aria_labelled_by"
-                      v-bind:icon-submit-button-class="'fa-pencil'"
+        <modal-footer
+            v-bind:is-loading="!can_be_submitted"
+            v-bind:submit-button-label="submit_button_label"
+            v-bind:aria-labelled-by="aria_labelled_by"
+            v-bind:icon-submit-button-class="'fa-pencil'"
         />
     </form>
 </template>

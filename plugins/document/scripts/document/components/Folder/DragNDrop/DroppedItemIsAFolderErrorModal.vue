@@ -24,7 +24,8 @@
             v-bind:translate-n="nb_dropped_files"
             translate-plural="The items you have dropped contain an item which is not a file. If you want to upload a folder, we advise you to create a new folder first, then upload its content inside in a second time."
         >
-            The item you have dropped is not a file. If you want to upload a folder, we advise you to create a new folder first, then upload its content inside in a second time.
+            The item you have dropped is not a file. If you want to upload a folder, we advise you
+            to create a new folder first, then upload its content inside in a second time.
         </translate>
     </error-modal>
 </template>

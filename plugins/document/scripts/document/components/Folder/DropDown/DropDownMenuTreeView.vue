@@ -18,39 +18,60 @@
   -->
 <template>
     <drop-down-menu v-bind:item="item" v-bind:is-in-quick-look-mode="true" role="menu">
-        <drop-down-item-title slot="display-item-title" v-bind:item="item" data-test="document-folder-title"/>
+        <drop-down-item-title
+            slot="display-item-title"
+            v-bind:item="item"
+            data-test="document-folder-title"
+        />
 
         <template v-if="item.user_can_write && is_item_a_folder(item)">
-            <new-folder-secondary-action v-bind:item="item" slot="new-folder-secondary-action"
-                                         data-test="document-folder-content-creation"
+            <new-folder-secondary-action
+                v-bind:item="item"
+                slot="new-folder-secondary-action"
+                data-test="document-folder-content-creation"
             />
-            <new-document v-bind:item="item" slot="new-document"/>
+            <new-document v-bind:item="item" slot="new-document" />
         </template>
 
-        <template v-if="! is_item_a_folder(item)">
-            <lock-item v-bind:item="item" data-test="document-dropdown-menu-lock-item" slot="lock-item"/>
-            <unlock-item v-bind:item="item" data-test="document-dropdown-menu-unlock-item" slot="unlock-item"/>
+        <template v-if="!is_item_a_folder(item)">
+            <lock-item
+                v-bind:item="item"
+                data-test="document-dropdown-menu-lock-item"
+                slot="lock-item"
+            />
+            <unlock-item
+                v-bind:item="item"
+                data-test="document-dropdown-menu-unlock-item"
+                slot="unlock-item"
+            />
         </template>
 
-        <template v-if="item.user_can_write && ! is_item_a_folder(item)">
-            <create-new-item-version-button v-bind:item="item"
-                                            v-bind:button-classes="`tlp-dropdown-menu-item`"
-                                            v-bind:icon-classes="`fa fa-fw fa-mail-forward tlp-dropdown-menu-item-icon`"
-                                            v-if="! is_item_a_folder(item)"
-                                            data-test="document-dropdown-create-new-version-button"
-                                            slot="new-item-version"
+        <template v-if="item.user_can_write && !is_item_a_folder(item)">
+            <create-new-item-version-button
+                v-bind:item="item"
+                v-bind:button-classes="`tlp-dropdown-menu-item`"
+                v-bind:icon-classes="`fa fa-fw fa-mail-forward tlp-dropdown-menu-item-icon`"
+                v-if="!is_item_a_folder(item)"
+                data-test="document-dropdown-create-new-version-button"
+                slot="new-item-version"
             />
         </template>
 
         <template v-if="item.user_can_write">
-            <update-properties slot="update-properties"
-                               v-bind:item="item"
-                               v-if="item.user_can_write"
-                               data-test="document-update-properties"
+            <update-properties
+                slot="update-properties"
+                v-bind:item="item"
+                v-if="item.user_can_write"
+                data-test="document-update-properties"
             />
-            <update-permissions v-bind:item="item" slot="update-permissions"/>
-            <drop-down-separator slot="delete-item-separator"/>
-            <delete-item v-bind:item="item" role="menuitem" data-test="document-dropdown-delete" slot="delete-item"/>
+            <update-permissions v-bind:item="item" slot="update-permissions" />
+            <drop-down-separator slot="delete-item-separator" />
+            <delete-item
+                v-bind:item="item"
+                role="menuitem"
+                data-test="document-dropdown-delete"
+                slot="delete-item"
+            />
         </template>
     </drop-down-menu>
 </template>

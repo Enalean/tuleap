@@ -81,9 +81,10 @@ describe("PlanningController - ", () => {
             jest.spyOn(SharedPropertiesService, "getProjectId").mockReturnValue(736);
             jest.spyOn(SharedPropertiesService, "getMilestoneId").mockReturnValue(592);
             jest.spyOn(SharedPropertiesService, "getMilestone").mockReturnValue(undefined);
-            jest.spyOn(SharedPropertiesService, "getInitialMilestones").mockImplementation(
-                () => {}
-            );
+            jest.spyOn(
+                SharedPropertiesService,
+                "getInitialMilestones"
+            ).mockImplementation(() => {});
             jest.spyOn(SharedPropertiesService, "getViewMode").mockImplementation(() => {});
 
             var returnPromise = function(method) {
@@ -127,9 +128,10 @@ describe("PlanningController - ", () => {
             BacklogService = _BacklogService_;
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
-            jest.spyOn(BacklogItemCollectionService, "refreshBacklogItem").mockImplementation(
-                () => {}
-            );
+            jest.spyOn(
+                BacklogItemCollectionService,
+                "refreshBacklogItem"
+            ).mockImplementation(() => {});
 
             $filter = jest.fn(function() {
                 return function() {};

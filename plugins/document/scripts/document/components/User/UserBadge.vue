@@ -20,9 +20,13 @@
 <template>
     <div class="document-badge-avatar">
         <div class="tlp-avatar-small document-badge-avatar-img">
-            <img v-bind:src="user.avatar_url" v-if="user.has_avatar" data-test="document-user-avatar">
+            <img
+                v-bind:src="user.avatar_url"
+                v-if="user.has_avatar"
+                data-test="document-user-avatar"
+            />
         </div>
-        <user-name v-bind:user="user"/>
+        <user-name v-bind:user="user" />
     </div>
 </template>
 

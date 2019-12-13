@@ -20,7 +20,7 @@
 <template>
     <div class="tlp-modal-body">
         <div class="project-admin-services-modals-top-fields">
-            <service-label id="project-service-add-modal-label" v-model="service.label"/>
+            <service-label id="project-service-add-modal-label" v-model="service.label" />
             <service-is-used
                 id="project-service-add-modal-enabled"
                 v-bind:value="service.is_used"
@@ -33,7 +33,7 @@
                 v-bind:allowed_icons="allowed_icons"
             />
             <slot name="is_active">
-                <hidden-service-is-active v-bind:value="service.is_active"/>
+                <hidden-service-is-active v-bind:value="service.is_active" />
             </slot>
         </div>
 
@@ -42,8 +42,8 @@
             v-bind:minimal_rank="minimal_rank"
             v-bind:value="service.rank"
         />
-        <service-link id="project-service-add-modal-link" v-bind:value="service.link"/>
-        <slot name="shortname"/>
+        <service-link id="project-service-add-modal-link" v-bind:value="service.link" />
+        <slot name="shortname" />
         <service-description
             id="project-service-add-modal-description"
             v-bind:value="service.description"

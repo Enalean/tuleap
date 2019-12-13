@@ -18,8 +18,9 @@
   -->
 
 <template>
-    <collapsible-folder v-bind:is-root-folder="true"
-                        v-bind:children="filteredRepositoriesGroupedByPath.children"
+    <collapsible-folder
+        v-bind:is-root-folder="true"
+        v-bind:children="filteredRepositoriesGroupedByPath.children"
     />
 </template>
 <script>

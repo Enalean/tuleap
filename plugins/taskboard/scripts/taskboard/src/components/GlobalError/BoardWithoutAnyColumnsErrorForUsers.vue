@@ -21,13 +21,18 @@
     <div class="empty-page">
         <div class="empty-page-illustration">
             <svg xmlns="http://www.w3.org/2000/svg" width="364" height="189" fill="none">
-                <use href="../../images/illustrations.svg#board-without-any-columns-for-user" class="tlp-illustration"/>
+                <use
+                    href="../../images/illustrations.svg#board-without-any-columns-for-user"
+                    class="tlp-illustration"
+                />
             </svg>
         </div>
         <div class="empty-page-text-with-small-text">
             <translate>This taskboard is not ready to be used</translate>
             <div class="empty-page-small-text">
-                <translate>Your project administrator needs to finish the planning configuration</translate>
+                <translate>
+                    Your project administrator needs to finish the planning configuration
+                </translate>
             </div>
         </div>
     </div>

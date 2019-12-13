@@ -20,28 +20,24 @@
 <template>
     <div class="tlp-modal-body timetracking-details-modal-content">
         <div class="tlp-pane-section timetracking-details-modal-artifact-title">
-            <widget-link-to-artifact
-                v-bind:artifact="current_artifact"
-            />
+            <widget-link-to-artifact v-bind:artifact="current_artifact" />
         </div>
         <div class="timetracking-details-modal-artifact-details">
-            <widget-modal-artifact-info/>
+            <widget-modal-artifact-info />
             <div class="timetracking-details-modal-artefact-link-top-bottom-spacer">
-                <button class="tlp-button-primary"
-                        data-test="button-set-add-mode"
-                        v-on:click="setAddMode(!is_add_mode)"
+                <button
+                    class="tlp-button-primary"
+                    data-test="button-set-add-mode"
+                    v-on:click="setAddMode(!is_add_mode)"
                 >
                     <i class="fa fa-plus tlp-button-icon"></i>
-                    <translate> Add </translate>
+                    <translate>Add</translate>
                 </button>
             </div>
-            <div v-if="rest_feedback.type"
-                 v-bind:class="feedback_class"
-                 data-test="feedback"
-            >
+            <div v-if="rest_feedback.type" v-bind:class="feedback_class" data-test="feedback">
                 {{ feedback_message }}
             </div>
-            <widget-modal-table/>
+            <widget-modal-table />
         </div>
     </div>
 </template>

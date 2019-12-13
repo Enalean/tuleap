@@ -36,11 +36,10 @@
                 class="tlp-button-primary tlp-button-outline writing-mode-actions-cancel"
                 v-on:click="cancel"
                 v-translate
-            >Cancel</button>
-            <button
-                class="tlp-button-primary writing-mode-actions-search"
-                v-on:click="search"
             >
+                Cancel
+            </button>
+            <button class="tlp-button-primary writing-mode-actions-search" v-on:click="search">
                 <i class="fa fa-search tlp-button-icon"></i>
                 <translate>Search</translate>
             </button>

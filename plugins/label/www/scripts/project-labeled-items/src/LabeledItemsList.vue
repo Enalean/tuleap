@@ -18,23 +18,27 @@
   -->
 <template>
     <div class="labeled-items-list">
-        <div v-if="loading" class="labeled-items-loading"
-             v-bind:class="{ 'error': error !== false }"
+        <div
+            v-if="loading"
+            class="labeled-items-loading"
+            v-bind:class="{ error: error !== false }"
         ></div>
         <div v-if="error !== false" class="tlp-alert-danger labeled-items-error">
             <translate>Please select one or more labels by editing this widget</translate>
         </div>
-        <div class="empty-pane-text" v-if="empty && ! loading && error === false">
-            <translate v-if="are_there_items_user_cannot_see">There are no items you can see</translate>
-            <translate v-else
-                       v-bind:translate-n="labels_id.length"
-                       translate-plural="There isn't any item corresponding to labels"
-            >There isn't any item corresponding to label</translate>
+        <div class="empty-pane-text" v-if="empty && !loading && error === false">
+            <translate v-if="are_there_items_user_cannot_see">
+                There are no items you can see
+            </translate>
+            <translate
+                v-else
+                v-bind:translate-n="labels_id.length"
+                translate-plural="There isn't any item corresponding to labels"
+            >
+                There isn't any item corresponding to label
+            </translate>
         </div>
-        <labeled-item v-for="item in items"
-                      v-bind:item="item"
-                      v-bind:key="item.html_url"
-        />
+        <labeled-item v-for="item in items" v-bind:item="item" v-bind:key="item.html_url" />
         <div class="labeled-items-list-more" v-if="has_more_items">
             <button class="tlp-button-primary tlp-button-outline" v-on:click="loadMore">
                 <i class="tlp-button-icon fa fa-spinner fa-spin" v-if="is_loading_more"></i>

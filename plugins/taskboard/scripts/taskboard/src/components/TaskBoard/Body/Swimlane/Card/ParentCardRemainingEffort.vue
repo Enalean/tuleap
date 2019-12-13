@@ -19,18 +19,18 @@
 -->
 
 <template>
-    <span v-if="has_remaining_effort"
-          class="taskboard-card-remaining-effort taskboard-no-text-selection"
-          v-bind:class="additional_classes"
-          v-on:click="editRemainingEffort"
-          v-bind:tabindex="tabindex"
-          v-bind:role="role"
-          v-bind:aria-label="$gettext('Remaining effort')"
-          v-bind:title="$gettext('Remaining effort')"
-          data-not-drag-handle="true"
+    <span
+        v-if="has_remaining_effort"
+        class="taskboard-card-remaining-effort taskboard-no-text-selection"
+        v-bind:class="additional_classes"
+        v-on:click="editRemainingEffort"
+        v-bind:tabindex="tabindex"
+        v-bind:role="role"
+        v-bind:aria-label="$gettext('Remaining effort')"
+        v-bind:title="$gettext('Remaining effort')"
+        data-not-drag-handle="true"
     >
-        <edit-remaining-effort v-if="is_in_edit_mode"
-                               v-bind:card="card"/>
+        <edit-remaining-effort v-if="is_in_edit_mode" v-bind:card="card" />
         <template v-else>{{ card.remaining_effort.value }}</template>
         <i class="fa fa-long-arrow-right"></i>
         <i class="fa" v-bind:class="icon"></i>

@@ -19,7 +19,7 @@
 
 <template>
     <div class="project-registration" data-test="project-registration">
-        <router-view/>
+        <router-view />
     </div>
 </template>
 

@@ -20,7 +20,10 @@
 <template>
     <section class="tlp-pane-container">
         <div class="tlp-pane-header document-quick-look-header">
-            <h2 class="tlp-pane-title document-quick-look-title" v-bind:title="currently_previewed_item.title">
+            <h2
+                class="tlp-pane-title document-quick-look-title"
+                v-bind:title="currently_previewed_item.title"
+            >
                 <i class="tlp-pane-title-icon fa" v-bind:class="icon_class"></i>
                 {{ currently_previewed_item.title }}
             </h2>
@@ -29,21 +32,26 @@
             </div>
         </div>
         <section class="tlp-pane-section">
-            <quick-look-item-is-locked-message v-if="currently_previewed_item.lock_info !== null"/>
-            <quick-look-document-preview v-bind:icon-class="icon_class" v-bind:item="currently_previewed_item"/>
+            <quick-look-item-is-locked-message v-if="currently_previewed_item.lock_info !== null" />
+            <quick-look-document-preview
+                v-bind:icon-class="icon_class"
+                v-bind:item="currently_previewed_item"
+            />
             <component
                 v-bind:is="quick_look_component_action"
                 v-bind:item="currently_previewed_item"
             />
         </section>
-        <quick-look-document-metadata v-bind:item="currently_previewed_item"/>
+        <quick-look-document-metadata v-bind:item="currently_previewed_item" />
         <section class="tlp-pane-section" v-if="currently_previewed_item.description">
             <div class="tlp-property">
                 <label class="tlp-label" for="item-description" v-translate>
                     Description
                 </label>
-                <p id="item-description" v-dompurify-html="currently_previewed_item.post_processed_description">
-                </p>
+                <p
+                    id="item-description"
+                    v-dompurify-html="currently_previewed_item.post_processed_description"
+                ></p>
             </div>
         </section>
     </section>

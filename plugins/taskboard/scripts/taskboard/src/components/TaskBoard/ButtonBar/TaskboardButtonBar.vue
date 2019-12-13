@@ -20,11 +20,16 @@
 <template>
     <div class="taskboard-button-bar">
         <div class="taskboard-button-bar-left" v-bind:class="fullscreen_class">
-            <span class="taskboard-button-bar-milestone-title" v-if="is_taskboard_in_fullscreen_mode">{{ milestone_title }}</span>
+            <span
+                class="taskboard-button-bar-milestone-title"
+                v-if="is_taskboard_in_fullscreen_mode"
+            >
+                {{ milestone_title }}
+            </span>
         </div>
         <div class="taskboard-button-bar-right">
-            <open-closed-switcher/>
-            <switch-to-fullscreen/>
+            <open-closed-switcher />
+            <switch-to-fullscreen />
         </div>
     </div>
 </template>

@@ -18,10 +18,11 @@
   -->
 
 <template>
-    <a v-if="item.can_user_manage"
-       v-on:click.prevent="showUpdateModal"
-       class="tlp-dropdown-menu-item"
-       role="menuitem"
+    <a
+        v-if="item.can_user_manage"
+        v-on:click.prevent="showUpdateModal"
+        class="tlp-dropdown-menu-item"
+        role="menuitem"
     >
         <i class="fa fa-fw fa-lock tlp-dropdown-menu-item-icon"></i>
         <translate>

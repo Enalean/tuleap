@@ -19,7 +19,9 @@
   -->
 
 <template>
-    <span class="taskboard-header-count" v-bind:class="classes">{{ nb_cards_in_column(column) }}</span>
+    <span class="taskboard-header-count" v-bind:class="classes">
+        {{ nb_cards_in_column(column) }}
+    </span>
 </template>
 
 <script lang="ts">

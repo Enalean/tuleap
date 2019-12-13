@@ -20,11 +20,19 @@
 
 <template>
     <div class="tlp-modal-header">
-        <h1 class="tlp-modal-title document-modal-title" v-bind:id="ariaLabelledBy" v-bind:title="`${$gettext('Close')}`">
+        <h1
+            class="tlp-modal-title document-modal-title"
+            v-bind:id="ariaLabelledBy"
+            v-bind:title="`${$gettext('Close')}`"
+        >
             <i class="fa tlp-modal-title-icon" v-bind:class="iconHeaderClass"></i>
             {{ modalTitle }}
         </h1>
-        <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="`${$gettext('Close')}`">
+        <div
+            class="tlp-modal-close"
+            data-dismiss="modal"
+            v-bind:aria-label="`${$gettext('Close')}`"
+        >
             &times;
         </div>
     </div>

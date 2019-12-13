@@ -161,9 +161,7 @@ function CardFieldsService($sce, $filter) {
 
         display_name = highlight(value.display_name, filter_terms);
         return `<a data-nodrag="true" class="extra-card-field-user" href="${value.user_url}">
-                            <div class="tlp-avatar-mini"><img src="${
-                                value.avatar_url
-                            }" /></div><span>${display_name}</span>
+                            <div class="tlp-avatar-mini"><img src="${value.avatar_url}" /></div><span>${display_name}</span>
                         </a>`;
     }
 

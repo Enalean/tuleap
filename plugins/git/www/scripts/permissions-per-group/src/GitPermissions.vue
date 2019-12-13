@@ -24,25 +24,24 @@
         </div>
 
         <div class="permission-per-group-load-button" v-if="displayButtonLoadAll">
-            <button class="tlp-button-primary tlp-button-outline"
-                    v-on:click="loadAll()"
-                    v-translate
-            >See all repositories permissions</button>
+            <button
+                class="tlp-button-primary tlp-button-outline"
+                v-on:click="loadAll()"
+                v-translate
+            >
+                See all repositories permissions
+            </button>
         </div>
 
         <div class="permission-per-group-loader" v-if="is_loading"></div>
 
-        <h2 class="tlp-pane-subtitle"
+        <h2 class="tlp-pane-subtitle" v-if="is_loaded" v-translate>Repository permissions</h2>
+        <git-inline-filter v-if="is_loaded" v-model="filter" />
+        <git-permissions-table
             v-if="is_loaded"
-            v-translate
-        >Repository permissions</h2>
-        <git-inline-filter v-if="is_loaded"
-                           v-model="filter"
-        />
-        <git-permissions-table v-if="is_loaded"
-                               v-bind:repositories="repositories"
-                               v-bind:selected-ugroup-name="selectedUgroupName"
-                               v-bind:filter="filter"
+            v-bind:repositories="repositories"
+            v-bind:selected-ugroup-name="selectedUgroupName"
+            v-bind:filter="filter"
         />
     </section>
 </template>

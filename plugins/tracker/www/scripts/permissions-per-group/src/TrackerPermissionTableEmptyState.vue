@@ -18,19 +18,19 @@
   -->
 
 <template>
-    <td v-if="hasASelectedUserGroup"
+    <td
+        v-if="hasASelectedUserGroup"
         key="selected-ugroup"
         colspan="3"
         class="tlp-table-cell-empty"
         v-translate="{ user_group: selectedUgroupName }"
-    >%{ user_group } has no permission for trackers</td>
+    >
+        %{ user_group } has no permission for trackers
+    </td>
 
-    <td v-else
-        key="no-selected-ugroup"
-        colspan="3"
-        class="tlp-table-cell-empty"
-        v-translate
-    >Project has no tracker</td>
+    <td v-else key="no-selected-ugroup" colspan="3" class="tlp-table-cell-empty" v-translate>
+        Project has no tracker
+    </td>
 </template>
 <script>
 export default {

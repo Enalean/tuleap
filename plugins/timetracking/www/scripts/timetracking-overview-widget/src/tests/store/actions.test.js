@@ -152,7 +152,10 @@ describe("Store actions", () => {
 
     describe("GetTrackers - success", () => {
         it("Given a success response, When trackers are received, Then no message error is received", async () => {
-            const trackers = [{ id: 16, label: "tracker_1" }, { id: 18, label: "tracker_2" }];
+            const trackers = [
+                { id: 16, label: "tracker_1" },
+                { id: 18, label: "tracker_2" }
+            ];
 
             jest.spyOn(rest_querier, "getTrackersWithTimetracking").mockReturnValue(
                 Promise.resolve(trackers)

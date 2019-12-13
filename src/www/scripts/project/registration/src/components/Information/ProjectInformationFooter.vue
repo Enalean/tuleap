@@ -20,20 +20,24 @@
 
 <template>
     <div>
-        <hr>
+        <hr />
         <div class="project-registration-button-container">
-            <router-link to="/new"
-                         v-on:click.native="resetSelectedTemplate"
-                         class="project-registration-back-button"
-                         data-test="project-registration-back-button">
-                <i class="fa fa-long-arrow-left"/>
+            <router-link
+                to="/new"
+                v-on:click.native="resetSelectedTemplate"
+                class="project-registration-back-button"
+                data-test="project-registration-back-button"
+            >
+                <i class="fa fa-long-arrow-left" />
                 <span v-translate>Back</span>
             </router-link>
-            <button type="submit"
-                    class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
-                    data-test="project-registration-next-button"
+            <button
+                type="submit"
+                class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
+                data-test="project-registration-next-button"
             >
-                <span v-translate>Start my project</span> <i v-bind:class="get_icon" data-test="project-submission-icon"/>
+                <span v-translate>Start my project</span>
+                <i v-bind:class="get_icon" data-test="project-submission-icon" />
             </button>
         </div>
     </div>

@@ -23,13 +23,29 @@
             {{ props.message_error_rest }}
         </div>
         <div v-else>
-            <div v-if="props.has_error_duration" class="tlp-alert-warning" data-test="error-duration">
+            <div
+                v-if="props.has_error_duration"
+                class="tlp-alert-warning"
+                data-test="error-duration"
+            >
                 {{ props.message_error_duration }}
             </div>
-            <div v-if="props.has_error_start_date" class="tlp-alert-warning" data-test="error-start-date">
+            <div
+                v-if="props.has_error_start_date"
+                class="tlp-alert-warning"
+                data-test="error-start-date"
+            >
                 {{ props.message_error_start_date }}
             </div>
-            <div v-if="!props.has_error_duration && !props.has_error_start_date && props.is_under_calculation" class="tlp-alert-warning" data-test="error-calculation">
+            <div
+                v-if="
+                    !props.has_error_duration &&
+                        !props.has_error_start_date &&
+                        props.is_under_calculation
+                "
+                class="tlp-alert-warning"
+                data-test="error-calculation"
+            >
                 {{ props.message_error_under_calculation }}
             </div>
         </div>

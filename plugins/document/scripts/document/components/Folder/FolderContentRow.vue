@@ -26,8 +26,12 @@
         v-on:click="toggleQuickLookOnRow"
     >
         <td v-bind:colspan="colspan" v-bind:id="`document-folder-content-row-${item.id}`">
-            <div v-bind:class="{ 'document-folder-content-title': item_is_not_being_uploaded, 'document-folder-content-quick-look-and-item-uploading': is_item_uploading_in_quicklook_mode }"
-                 v-bind:id="`document-folder-content-row-div-${item.id}`"
+            <div
+                v-bind:class="{
+                    'document-folder-content-title': item_is_not_being_uploaded,
+                    'document-folder-content-quick-look-and-item-uploading': is_item_uploading_in_quicklook_mode
+                }"
+                v-bind:id="`document-folder-content-row-div-${item.id}`"
             >
                 <component
                     v-bind:is="cell_title_component_name"
@@ -36,15 +40,24 @@
                     v-bind:title="item.title"
                 />
                 <div class="document-tree-item-toggle-quicklook-spacer"></div>
-                <div class="tlp-dropdown tlp-table-cell-actions-button" v-if="item_is_not_being_uploaded">
+                <div
+                    class="tlp-dropdown tlp-table-cell-actions-button"
+                    v-if="item_is_not_being_uploaded"
+                >
                     <div class="tlp-dropdown-split-button">
                         <quick-look-button
                             class="quick-look-button"
                             data-test="quick-look-button"
                             v-bind:item="item"
                         />
-                        <drop-down-button v-bind:is-in-quick-look-mode="true" data-test="dropdown-button">
-                            <drop-down-menu-tree-view v-bind:item="item" data-test="dropdown-menu"/>
+                        <drop-down-button
+                            v-bind:is-in-quick-look-mode="true"
+                            data-test="dropdown-button"
+                        >
+                            <drop-down-menu-tree-view
+                                v-bind:item="item"
+                                data-test="dropdown-menu"
+                            />
                         </drop-down-button>
                     </div>
                 </div>
@@ -57,18 +70,26 @@
                     v-bind:item="item"
                     v-bind:is-displaying-in-header="false"
                 />
-                <approval-table-badge v-bind:item="item" v-bind:is-in-folder-content-row="true"/>
+                <approval-table-badge v-bind:item="item" v-bind:is-in-folder-content-row="true" />
             </div>
         </td>
         <template v-if="is_item_uploading_without_quick_look_mode">
-            <td><upload-progress-bar v-bind:item="item" data-test="progress-bar-quick-look-pane-closed"/></td>
+            <td>
+                <upload-progress-bar
+                    v-bind:item="item"
+                    data-test="progress-bar-quick-look-pane-closed"
+                />
+            </td>
             <td></td>
         </template>
         <template v-else-if="is_not_uploading_and_is_not_in_quicklook">
             <td class="document-tree-cell-owner">
-                <user-badge v-bind:user="item.owner"/>
+                <user-badge v-bind:user="item.owner" />
             </td>
-            <td class="document-tree-cell-updatedate tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="formatted_full_date">
+            <td
+                class="document-tree-cell-updatedate tlp-tooltip tlp-tooltip-left"
+                v-bind:data-tlp-tooltip="formatted_full_date"
+            >
                 {{ formatted_date }}
             </td>
         </template>
@@ -171,7 +192,9 @@ export default {
                     break;
             }
             return () =>
-                import(/* webpackChunkName: "document-cell-title-" */ `./ItemTitle/${name}CellTitle.vue`);
+                import(
+                    /* webpackChunkName: "document-cell-title-" */ `./ItemTitle/${name}CellTitle.vue`
+                );
         },
         colspan() {
             return this.item.is_uploading ? 4 : 1;

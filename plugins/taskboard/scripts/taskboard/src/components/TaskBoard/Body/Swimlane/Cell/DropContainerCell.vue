@@ -19,18 +19,19 @@
   -->
 
 <template>
-    <div class="taskboard-cell"
-         v-bind:class="classes"
-         v-on:mouseenter="mouseEntersCollapsedColumn"
-         v-on:mouseout="mouseLeavesCollapsedColumn"
-         v-on:click="expandCollapsedColumn"
-         data-is-container="true"
-         v-bind:data-swimlane-id="swimlane.card.id"
-         v-bind:data-column-id="column.id"
-         v-bind:data-accepted-trackers-ids="accepted_trackers_ids(column)"
+    <div
+        class="taskboard-cell"
+        v-bind:class="classes"
+        v-on:mouseenter="mouseEntersCollapsedColumn"
+        v-on:mouseout="mouseLeavesCollapsedColumn"
+        v-on:click="expandCollapsedColumn"
+        data-is-container="true"
+        v-bind:data-swimlane-id="swimlane.card.id"
+        v-bind:data-column-id="column.id"
+        v-bind:data-accepted-trackers-ids="accepted_trackers_ids(column)"
     >
         <slot class="content" v-if="!column.is_collapsed"></slot>
-        <cell-disallows-drop-overlay v-bind:is-column-collapsed="column.is_collapsed"/>
+        <cell-disallows-drop-overlay v-bind:is-column-collapsed="column.is_collapsed" />
     </div>
 </template>
 

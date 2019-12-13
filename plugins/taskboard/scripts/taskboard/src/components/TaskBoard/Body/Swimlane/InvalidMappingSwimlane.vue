@@ -19,7 +19,7 @@
 
 <template>
     <div class="taskboard-swimlane">
-        <parent-cell v-bind:swimlane="swimlane"/>
+        <parent-cell v-bind:swimlane="swimlane" />
         <invalid-mapping-cell
             v-for="col of columns"
             v-bind:key="col.id"

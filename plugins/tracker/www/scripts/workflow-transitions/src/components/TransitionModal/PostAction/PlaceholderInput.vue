@@ -19,5 +19,5 @@
   -->
 
 <template functional>
-    <input class="tlp-input" type="text">
+    <input class="tlp-input" type="text" />
 </template>

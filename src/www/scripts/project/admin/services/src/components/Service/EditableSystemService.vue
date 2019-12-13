@@ -19,11 +19,11 @@
 
 <template>
     <div class="tlp-modal-body">
-        <service-id v-bind:value="service.id"/>
-        <hidden-service-shortname v-if="service.short_name" v-bind:value="service.short_name"/>
+        <service-id v-bind:value="service.id" />
+        <hidden-service-shortname v-if="service.short_name" v-bind:value="service.short_name" />
 
         <div class="project-admin-services-modals-top-fields">
-            <service-label id="project-service-edit-modal-label" v-model="service.label"/>
+            <service-label id="project-service-edit-modal-label" v-model="service.label" />
             <service-is-used
                 v-if="can_update_is_used"
                 id="project-service-edit-modal-enabled"
@@ -31,7 +31,7 @@
             />
         </div>
         <div class="project-admin-services-modals-top-fields">
-            <read-only-service-icon v-bind:value="service.icon_name"/>
+            <read-only-service-icon v-bind:value="service.icon_name" />
             <service-is-active
                 id="project-service-edit-modal-active"
                 v-bind:value="service.is_active"
@@ -43,14 +43,14 @@
             <span>{{ service.short_name }}</span>
         </div>
 
-        <read-only-service-rank v-if="is_summary_service" v-bind:value="service.rank"/>
+        <read-only-service-rank v-if="is_summary_service" v-bind:value="service.rank" />
         <service-rank
             v-else
             id="project-service-edit-modal-rank"
             v-bind:minimal_rank="minimal_rank"
             v-bind:value="service.rank"
         />
-        <service-link id="project-service-edit-modal-link" v-bind:value="service.link"/>
+        <service-link id="project-service-edit-modal-link" v-bind:value="service.link" />
         <service-description
             id="project-service-edit-modal-description"
             v-bind:value="service.description"

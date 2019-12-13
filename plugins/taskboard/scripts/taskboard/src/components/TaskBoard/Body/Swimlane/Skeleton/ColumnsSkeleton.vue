@@ -21,7 +21,7 @@
 <template>
     <div class="taskboard-cell" v-bind:class="classes">
         <template v-if="!column.is_collapsed">
-            <card-skeleton v-for="i in nb_skeletons" v-bind:key="i"/>
+            <card-skeleton v-for="i in nb_skeletons" v-bind:key="i" />
         </template>
     </div>
 </template>

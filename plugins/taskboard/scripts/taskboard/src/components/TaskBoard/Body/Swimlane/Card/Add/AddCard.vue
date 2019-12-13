@@ -21,13 +21,10 @@
 <template>
     <form class="taskboard-add-card-form">
         <template v-if="is_in_add_mode">
-            <label-editor v-model="label" v-on:save="save" v-bind:readonly="readonly"/>
-            <cancel-save-buttons
-                v-on:cancel="cancel"
-                v-on:save="save"
-            />
+            <label-editor v-model="label" v-on:save="save" v-bind:readonly="readonly" />
+            <cancel-save-buttons v-on:cancel="cancel" v-on:save="save" />
         </template>
-        <add-button v-if="!is_in_add_mode" v-on:click="switchToAddMode"/>
+        <add-button v-if="!is_in_add_mode" v-on:click="switchToAddMode" />
     </form>
 </template>
 

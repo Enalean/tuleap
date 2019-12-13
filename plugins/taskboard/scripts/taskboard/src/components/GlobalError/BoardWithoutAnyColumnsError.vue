@@ -18,8 +18,8 @@
   -
   -->
 <template>
-    <board-without-any-columns-error-for-admin v-if="user_is_admin"/>
-    <board-without-any-columns-error-for-users v-else/>
+    <board-without-any-columns-error-for-admin v-if="user_is_admin" />
+    <board-without-any-columns-error-for-users v-else />
 </template>
 <script lang="ts">
 import Vue from "vue";

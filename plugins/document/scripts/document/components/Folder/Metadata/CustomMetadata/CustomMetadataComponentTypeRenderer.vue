@@ -30,7 +30,7 @@
         data-test="document-custom-metadata-string"
     />
     <custom-metadata-list-single-value
-        v-else-if="itemMetadata.type === 'list' && ! itemMetadata.is_multiple_value_allowed"
+        v-else-if="itemMetadata.type === 'list' && !itemMetadata.is_multiple_value_allowed"
         v-bind:currently-updated-item-metadata="itemMetadata"
         data-test="document-custom-metadata-list-single"
     />

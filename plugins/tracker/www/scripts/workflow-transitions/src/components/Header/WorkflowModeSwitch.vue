@@ -46,7 +46,7 @@
                     class="tlp-switch-checkbox"
                     v-bind:checked="is_workflow_advanced"
                     v-bind:disabled="is_operation_running"
-                >
+                />
                 <label
                     class="tlp-switch-button"
                     for="workflow-advanced-configuration"
@@ -61,27 +61,33 @@
         >
             <template slot="modal-body">
                 <p v-if="is_workflow_advanced" key="simple_text" v-translate>
-                    You're about to switch to simple configuration mode.
-                    The first configuration in the destination state column will be applied to the whole state.
-                    Please check that each state configuration is correct.
+                    You're about to switch to simple configuration mode. The first configuration in
+                    the destination state column will be applied to the whole state. Please check
+                    that each state configuration is correct.
                 </p>
                 <p v-else key="advanced_text" v-translate>
-                    You're about to switch to advanced configuration mode.
-                    Each transition will be configurable independently.
-                    They will copy their state configuration during the switch.
+                    You're about to switch to advanced configuration mode. Each transition will be
+                    configurable independently. They will copy their state configuration during the
+                    switch.
                 </p>
                 <p v-translate>Please confirm your action.</p>
-                <p v-translate
-                   class="tlp-alert-danger"
-                   v-if="! is_workflow_advanced"
-                   key="warning_switch"
+                <p
+                    v-translate
+                    class="tlp-alert-danger"
+                    v-if="!is_workflow_advanced"
+                    key="warning_switch"
                 >
-                    If you have any post actions of type "Frozen Fields" or "Hidden Fieldsets", they will be deleted.
+                    If you have any post actions of type "Frozen Fields" or "Hidden Fieldsets", they
+                    will be deleted.
                 </p>
             </template>
             <template slot="switch-button-label">
-                <translate v-if="is_workflow_advanced" key="switch_to_simple">Switch to simple configuration</translate>
-                <translate v-else key="switch_to_advanced">Switch to advanced configuration</translate>
+                <translate v-if="is_workflow_advanced" key="switch_to_simple">
+                    Switch to simple configuration
+                </translate>
+                <translate v-else key="switch_to_advanced">
+                    Switch to advanced configuration
+                </translate>
             </template>
         </workflow-mode-switch-modal>
     </div>

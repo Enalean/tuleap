@@ -18,18 +18,12 @@
   -->
 
 <template>
-    <td v-if="isVisibilityPublic"
-        key="public"
-        class="permission-per-group-public-news"
-    >
+    <td v-if="isVisibilityPublic" key="public" class="permission-per-group-public-news">
         <i class="fa fa-fw fa-unlock"></i>
         <translate>Public</translate>
     </td>
 
-    <td v-else
-        key="private"
-        class="permission-per-group-private-news"
-    >
+    <td v-else key="private" class="permission-per-group-private-news">
         <i class="fa fa-fw fa-lock"></i>
         <translate>Private</translate>
     </td>

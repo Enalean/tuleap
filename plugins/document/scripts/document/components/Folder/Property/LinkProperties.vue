@@ -20,10 +20,7 @@
 
 <template>
     <div class="tlp-form-element" v-if="is_displayed">
-        <label
-            class="tlp-label"
-            for="document-new-item-link-url"
-        >
+        <label class="tlp-label" for="document-new-item-link-url">
             <translate>URL</translate>
             <i class="fa fa-asterisk"></i>
         </label>
@@ -42,7 +39,7 @@
                 v-bind:value="value.link_url"
                 v-on:input="$emit('input', { link_url: $event.target.value })"
                 data-test="document-new-item-link-url"
-            >
+            />
         </div>
     </div>
 </template>

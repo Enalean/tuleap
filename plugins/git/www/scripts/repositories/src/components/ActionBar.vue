@@ -19,22 +19,23 @@
 
 <template>
     <div class="git-repository-list-actions" v-if="is_first_load_done">
-        <button type="button"
-                class="tlp-button-primary git-repository-list-create-repository-button"
-                v-if="show_create_repository_button"
-                v-on:click="showAddRepositoryModal()"
+        <button
+            type="button"
+            class="tlp-button-primary git-repository-list-create-repository-button"
+            v-if="show_create_repository_button"
+            v-on:click="showAddRepositoryModal()"
         >
             <i class="fa fa-plus tlp-button-icon"></i>
             <translate>Add project repository</translate>
         </button>
 
-        <select-owner/>
+        <select-owner />
 
         <div class="git-repository-list-actions-spacer"></div>
 
-        <template v-if="! isCurrentRepositoryListEmpty">
-            <display-mode-switcher/>
-            <list-filter/>
+        <template v-if="!isCurrentRepositoryListEmpty">
+            <display-mode-switcher />
+            <list-filter />
         </template>
     </div>
 </template>

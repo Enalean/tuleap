@@ -20,8 +20,8 @@
   -->
 
 <template>
-    <div class="tlp-framed" v-bind:class="classes" v-if="! does_folder_have_any_error">
-        <folder-view/>
+    <div class="tlp-framed" v-bind:class="classes" v-if="!does_folder_have_any_error">
+        <folder-view />
     </div>
 </template>
 <script>

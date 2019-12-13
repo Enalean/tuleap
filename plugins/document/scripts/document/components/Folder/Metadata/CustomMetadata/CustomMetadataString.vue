@@ -18,12 +18,18 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-if="currentlyUpdatedItemMetadata.type === 'string'" data-test="document-custom-metadata-string">
-        <label class="tlp-label"
-               v-bind:for="`document-${currentlyUpdatedItemMetadata.short_name}`"
-        >
+    <div
+        class="tlp-form-element"
+        v-if="currentlyUpdatedItemMetadata.type === 'string'"
+        data-test="document-custom-metadata-string"
+    >
+        <label class="tlp-label" v-bind:for="`document-${currentlyUpdatedItemMetadata.short_name}`">
             {{ currentlyUpdatedItemMetadata.name }}
-            <i class="fa fa-asterisk" v-if="currentlyUpdatedItemMetadata.is_required" data-test=document-custom-metadata-is-required></i>
+            <i
+                class="fa fa-asterisk"
+                v-if="currentlyUpdatedItemMetadata.is_required"
+                data-test="document-custom-metadata-is-required"
+            ></i>
         </label>
         <input
             type="text"
@@ -32,7 +38,7 @@
             v-bind:id="`document-{{currentlyUpdatedItemMetadata.short_name}}`"
             v-bind:required="currentlyUpdatedItemMetadata.is_required"
             v-model="currentlyUpdatedItemMetadata.value"
-        >
+        />
     </div>
 </template>
 

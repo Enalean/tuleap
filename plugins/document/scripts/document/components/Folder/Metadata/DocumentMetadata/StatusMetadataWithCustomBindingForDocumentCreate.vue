@@ -18,7 +18,11 @@
   -->
 
 <template>
-    <status-metadata v-model="status_value" v-if="is_item_status_metadata_used" data-test="document-status-metadata-for-item-create"/>
+    <status-metadata
+        v-model="status_value"
+        v-if="is_item_status_metadata_used"
+        data-test="document-status-metadata-for-item-create"
+    />
 </template>
 
 <script>

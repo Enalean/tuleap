@@ -18,11 +18,7 @@
   -->
 
 <template>
-    <cancel-save-buttons
-        v-if="should_display_buttons"
-        v-on:cancel="cancel"
-        v-on:save="save"
-    />
+    <cancel-save-buttons v-if="should_display_buttons" v-on:cancel="cancel" v-on:save="save" />
 </template>
 <script lang="ts">
 import Vue from "vue";

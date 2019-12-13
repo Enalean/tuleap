@@ -19,13 +19,23 @@
   -->
 <template>
     <div class="taskboard-header-wrong-color-container">
-        <span class="taskboard-header-wrong-color" ref="trigger" data-placement="bottom" data-trigger="click">
+        <span
+            class="taskboard-header-wrong-color"
+            ref="trigger"
+            data-placement="bottom"
+            data-trigger="click"
+        >
             <i class="fa fa-warning"></i>
         </span>
-        <section class="tlp-popover tlp-popover-warning taskboard-header-wrong-color-popover" ref="container">
+        <section
+            class="tlp-popover tlp-popover-warning taskboard-header-wrong-color-popover"
+            ref="container"
+        >
             <div class="tlp-popover-arrow"></div>
             <div class="tlp-popover-header">
-                <translate tag="h1" class="tlp-popover-title">Incompatible usage of color</translate>
+                <translate tag="h1" class="tlp-popover-title">
+                    Incompatible usage of color
+                </translate>
             </div>
             <div class="tlp-popover-body taskboard-header-wrong-color-body">
                 <p v-dompurify-html="legacy_palette_message"></p>
@@ -62,9 +72,7 @@ export default class TaskBoardHeaderCell extends Vue {
     get legacy_palette_message(): string {
         return sprintf(
             this.$gettext("The column is configured to use a color (%s) from the legacy palette."),
-            `<span class="taskboard-header-wrong-color-preview"><span class="taskboard-header-wrong-color-preview-color" style="background: ${
-                this.color
-            };"></span>
+            `<span class="taskboard-header-wrong-color-preview"><span class="taskboard-header-wrong-color-preview-color" style="background: ${this.color};"></span>
                 <code>${this.color}</code></span>`
         );
     }

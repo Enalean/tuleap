@@ -19,29 +19,32 @@
 
 <template>
     <div class="cross-tracker-reading-mode">
-        <div class="reading-mode-report"
-             v-bind:class="{'disabled': ! is_user_admin}"
-             v-on:click="switchToWritingMode"
+        <div
+            class="reading-mode-report"
+            v-bind:class="{ disabled: !is_user_admin }"
+            v-on:click="switchToWritingMode"
         >
             <tracker-list-reading-mode
                 v-bind:reading-cross-tracker-report="readingCrossTrackerReport"
             />
-            <div class="reading-mode-query"
-                 v-if="is_expert_query_not_empty"
-            >{{ readingCrossTrackerReport.expert_query }}</div>
+            <div class="reading-mode-query" v-if="is_expert_query_not_empty">
+                {{ readingCrossTrackerReport.expert_query }}
+            </div>
         </div>
-        <div class="reading-mode-actions"
-             v-if="! is_report_saved"
-        >
-            <button class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
-                    v-on:click="cancelReport()"
-                    v-translate
-            >Cancel</button>
-            <button class="tlp-button-primary"
-                    v-on:click="saveReport()"
-                    v-bind:class="{'disabled': is_save_disabled}"
+        <div class="reading-mode-actions" v-if="!is_report_saved">
+            <button
+                class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
+                v-on:click="cancelReport()"
+                v-translate
             >
-                <i v-if="! is_loading" class="tlp-button-icon fa fa-save"></i>
+                Cancel
+            </button>
+            <button
+                class="tlp-button-primary"
+                v-on:click="saveReport()"
+                v-bind:class="{ disabled: is_save_disabled }"
+            >
+                <i v-if="!is_loading" class="tlp-button-icon fa fa-save"></i>
                 <i v-if="is_loading" class="tlp-button-icon fa fa-circle-o-notch fa-spin"></i>
                 <translate>Save report</translate>
             </button>

@@ -18,12 +18,13 @@
   -->
 
 <template>
-    <form role="dialog"
-          aria-labelledby="create-repository-modal-title"
-          id="create-repository-modal"
-          class="tlp-modal"
-          ref="create_modal"
-          v-on:submit="createRepository"
+    <form
+        role="dialog"
+        aria-labelledby="create-repository-modal-title"
+        id="create-repository-modal"
+        class="tlp-modal"
+        ref="create_modal"
+        v-on:submit="createRepository"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
@@ -44,37 +45,44 @@
                     <translate>Repository name</translate>
                     <i class="fa fa-asterisk"></i>
                 </label>
-                <input type="text"
-                       class="tlp-input"
-                       id="repository_name"
-                       required
-                       v-model="repository_name"
-                       v-bind:placeholder="placeholder"
-                       pattern="[a-zA-Z0-9/_.-]{1,255}"
-                       maxlength="255"
-                       v-bind:title="repository_pattern"
-                       data-test="create_repository_name"
-                >
+                <input
+                    type="text"
+                    class="tlp-input"
+                    id="repository_name"
+                    required
+                    v-model="repository_name"
+                    v-bind:placeholder="placeholder"
+                    pattern="[a-zA-Z0-9/_.-]{1,255}"
+                    maxlength="255"
+                    v-bind:title="repository_pattern"
+                    data-test="create_repository_name"
+                />
                 <p class="tlp-text-info">
                     <i class="fa fa-info-circle"></i>
-                    <translate>Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning or the end, it also must not finish with ".git".</translate>
+                    <translate>
+                        Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the
+                        beginning or the end, it also must not finish with ".git".
+                    </translate>
                 </p>
             </div>
         </div>
         <div class="tlp-modal-footer">
-            <button type="reset"
-                    class="tlp-button-primary tlp-button-outline tlp-modal-action"
-                    data-dismiss="modal"
+            <button
+                type="reset"
+                class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                data-dismiss="modal"
             >
                 <translate>Cancel</translate>
             </button>
-            <button type="submit"
-                    class="tlp-button-primary tlp-modal-action"
-                    v-bind:disabled="is_loading"
-                    data-test="create_repository"
+            <button
+                type="submit"
+                class="tlp-button-primary tlp-modal-action"
+                v-bind:disabled="is_loading"
+                data-test="create_repository"
             >
-                <i class="fa fa-plus tlp-button-icon"
-                   v-bind:class="{'fa-spin fa-spinner': is_loading}"
+                <i
+                    class="fa fa-plus tlp-button-icon"
+                    v-bind:class="{ 'fa-spin fa-spinner': is_loading }"
                 ></i>
                 <translate>Add project repository</translate>
             </button>

@@ -20,20 +20,24 @@
 <template>
     <div class="timetracking-overview-reading-mode-trackers-list">
         <div class="timetracking-overview-reading-mode-trackers">
-            <div class="timetracking-overview-reading-mode-tracker"
-                 v-for="tracker of selected_trackers"
-                 v-bind:key="tracker.id"
+            <div
+                class="timetracking-overview-reading-mode-tracker"
+                v-for="tracker of selected_trackers"
+                v-bind:key="tracker.id"
             >
                 <span>{{ tracker.label }}</span>
                 <span class="timetracking-overview-reading-mode-tracker-project-name">
-                    <i class="fa fa-archive timetracking-archive"></i>{{ tracker.project.label }}
+                    <i class="fa fa-archive timetracking-archive"></i>
+                    {{ tracker.project.label }}
                 </span>
             </div>
         </div>
-        <div class="timetracking-overview-reading-mode-trackers-empty"
-             v-if="has_no_trackers_in_report"
-             data-test="timetracking-overview-reading-mode-trackers-empty"
-             v-translate>
+        <div
+            class="timetracking-overview-reading-mode-trackers-empty"
+            v-if="has_no_trackers_in_report"
+            data-test="timetracking-overview-reading-mode-trackers-empty"
+            v-translate
+        >
             No trackers selected
         </div>
     </div>

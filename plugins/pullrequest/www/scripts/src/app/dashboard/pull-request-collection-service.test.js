@@ -29,15 +29,18 @@ describe("PullRequestCollectionService -", function() {
             SharedPropertiesService = _SharedPropertiesService_;
         });
 
-        jest.spyOn(PullRequestCollectionRestService, "getAllPullRequests").mockImplementation(
-            () => {}
-        );
-        jest.spyOn(PullRequestCollectionRestService, "getAllOpenPullRequests").mockImplementation(
-            () => {}
-        );
-        jest.spyOn(PullRequestCollectionRestService, "getAllClosedPullRequests").mockImplementation(
-            () => {}
-        );
+        jest.spyOn(
+            PullRequestCollectionRestService,
+            "getAllPullRequests"
+        ).mockImplementation(() => {});
+        jest.spyOn(
+            PullRequestCollectionRestService,
+            "getAllOpenPullRequests"
+        ).mockImplementation(() => {});
+        jest.spyOn(
+            PullRequestCollectionRestService,
+            "getAllClosedPullRequests"
+        ).mockImplementation(() => {});
         jest.spyOn(SharedPropertiesService, "getRepositoryId").mockImplementation(() => {});
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
@@ -112,7 +115,10 @@ describe("PullRequestCollectionService -", function() {
         });
 
         it("When I load open pull requests, then the REST service will be called and the open pull requests will be progressively loaded", async function() {
-            const open_pull_requests = [{ id: 1, status: "review" }, { id: 2, status: "review" }];
+            const open_pull_requests = [
+                { id: 1, status: "review" },
+                { id: 2, status: "review" }
+            ];
             PullRequestCollectionRestService.getAllOpenPullRequests.mockImplementation(function(
                 repository_id,
                 callback
@@ -179,7 +185,10 @@ describe("PullRequestCollectionService -", function() {
                 { id: 1, status: "review" }
             ]);
 
-            const closed_pull_requests = [{ id: 3, status: "merge" }, { id: 4, status: "abandon" }];
+            const closed_pull_requests = [
+                { id: 3, status: "merge" },
+                { id: 4, status: "abandon" }
+            ];
             PullRequestCollectionRestService.getAllClosedPullRequests.mockImplementation(function(
                 repository_id,
                 callback

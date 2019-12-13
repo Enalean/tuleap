@@ -20,7 +20,11 @@
 <template>
     <table class="old-colorpicker-palette">
         <template v-for="(shades, index) in palette">
-            <old-color-picker-palette-row v-bind:shades="shades" v-bind:key="index" v-on:color-update="colorChanged"/>
+            <old-color-picker-palette-row
+                v-bind:shades="shades"
+                v-bind:key="index"
+                v-on:color-update="colorChanged"
+            />
         </template>
     </table>
 </template>

@@ -19,11 +19,7 @@
 
 <template>
     <div class="tlp-form-element">
-        <label
-            class="tlp-label"
-            v-bind:for="id"
-            v-translate
-        >
+        <label class="tlp-label" v-bind:for="id" v-translate>
             Description
         </label>
         <input
@@ -35,7 +31,7 @@
             size="70"
             maxlength="255"
             v-bind:value="value"
-        >
+        />
     </div>
 </template>
 <script>

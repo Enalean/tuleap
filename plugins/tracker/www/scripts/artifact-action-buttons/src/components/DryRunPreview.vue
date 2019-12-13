@@ -19,9 +19,9 @@
 
 <template>
     <div class="move-artifact-dry-run-messages">
-        <dry-run-not-migrated-field-state/>
-        <dry-run-partially-migrated-field-state/>
-        <dry-run-fully-migrated-field-state/>
+        <dry-run-not-migrated-field-state />
+        <dry-run-partially-migrated-field-state />
+        <dry-run-fully-migrated-field-state />
     </div>
 </template>
 

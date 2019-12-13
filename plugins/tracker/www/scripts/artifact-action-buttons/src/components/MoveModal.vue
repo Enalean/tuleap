@@ -18,42 +18,54 @@
   -->
 
 <template>
-    <div class="modal fade hide"
-         id="move-artifact-modal"
-         tabindex="-1"
-         role="dialog"
-         aria-labelledby="modal-move-artifact-choose-trackers"
-         aria-hidden="true"
+    <div
+        class="modal fade hide"
+        id="move-artifact-modal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="modal-move-artifact-choose-trackers"
+        aria-hidden="true"
     >
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <i class="tuleap-modal-close close" data-dismiss="modal">×</i>
-                    <move-modal-title/>
+                    <move-modal-title />
                 </div>
                 <div class="modal-body move-artifact-modal-body">
-                    <div v-if="is_loading_initial || is_processing_move" class="move-artifact-loader"></div>
-                    <div v-if="has_error" class="alert alert-error move-artifact-error">{{ error_message }}</div>
-                    <move-modal-selectors v-show="! is_processing_move"/>
-                    <dry-run-preview v-if="has_processed_dry_run && ! is_processing_move"/>
+                    <div
+                        v-if="is_loading_initial || is_processing_move"
+                        class="move-artifact-loader"
+                    ></div>
+                    <div v-if="has_error" class="alert alert-error move-artifact-error">
+                        {{ error_message }}
+                    </div>
+                    <move-modal-selectors v-show="!is_processing_move" />
+                    <dry-run-preview v-if="has_processed_dry_run && !is_processing_move" />
                 </div>
                 <div class="modal-footer">
-                    <button type="reset" class="btn btn-secondary" data-dismiss="modal"><translate>Close</translate></button>
-                    <button type="button"
-                            class="btn btn-primary"
-                            v-on:click="moveDryRunArtifact()"
-                            v-bind:disabled="has_no_selected_tracker || is_processing_move"
-                            v-show="! has_processed_dry_run"
-                    >
-                        <i class="fa fa-share"></i> <translate>Move artifact</translate>
+                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">
+                        <translate>Close</translate>
                     </button>
-                    <button type="button"
-                            class="btn btn-primary"
-                            v-on:click="moveArtifact()"
-                            v-bind:disabled="is_processing_move"
-                            v-show="has_processed_dry_run"
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        v-on:click="moveDryRunArtifact()"
+                        v-bind:disabled="has_no_selected_tracker || is_processing_move"
+                        v-show="!has_processed_dry_run"
                     >
-                        <i class="fa fa-check"></i> <translate>Confirm</translate>
+                        <i class="fa fa-share"></i>
+                        <translate>Move artifact</translate>
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        v-on:click="moveArtifact()"
+                        v-bind:disabled="is_processing_move"
+                        v-show="has_processed_dry_run"
+                    >
+                        <i class="fa fa-check"></i>
+                        <translate>Confirm</translate>
                     </button>
                 </div>
             </div>

@@ -22,25 +22,32 @@
     <div class="empty-page taskboard-error">
         <div class="empty-page-illustration">
             <svg xmlns="http://www.w3.org/2000/svg" width="360" height="150" fill="none">
-                <use href="../../images/illustrations.svg#global-error-state" class="tlp-illustration"/>
+                <use
+                    href="../../images/illustrations.svg#global-error-state"
+                    class="tlp-illustration"
+                />
             </svg>
         </div>
 
         <div class="empty-page-text-with-small-text">
             <translate>Oops, there's an issue</translate>
-            <div class="empty-page-small-text" v-translate>It seems an action you tried to perform can't be done</div>
+            <div class="empty-page-small-text" v-translate>
+                It seems an action you tried to perform can't be done
+            </div>
             <template v-if="has_more_details">
                 <div class="taskboard-error-link">
-                    <a v-if="! is_more_shown"
-                       v-on:click="is_more_shown = true"
-                       data-test="show-details"
-                       v-translate
-                    >Show error details</a>
+                    <a
+                        v-if="!is_more_shown"
+                        v-on:click="is_more_shown = true"
+                        data-test="show-details"
+                        v-translate
+                    >
+                        Show error details
+                    </a>
                 </div>
-                <pre v-if="is_more_shown"
-                     class="taskboard-error-details"
-                     data-test="details"
-                >{{ global_error_message }}</pre>
+                <pre v-if="is_more_shown" class="taskboard-error-details" data-test="details">{{
+                    global_error_message
+                }}</pre>
             </template>
         </div>
 

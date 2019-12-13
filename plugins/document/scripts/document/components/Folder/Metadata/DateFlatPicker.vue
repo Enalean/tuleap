@@ -19,14 +19,15 @@
   -->
 
 <template>
-    <input type="text"
-           class="tlp-input tlp-input-date"
-           size="12"
-           v-bind:id="id"
-           v-bind:required="required"
-           v-on:input="onDatePickerInput"
-           v-model="input_value"
-    >
+    <input
+        type="text"
+        class="tlp-input tlp-input-date"
+        size="12"
+        v-bind:id="id"
+        v-bind:required="required"
+        v-on:input="onDatePickerInput"
+        v-model="input_value"
+    />
 </template>
 <script>
 import { datePicker } from "tlp";

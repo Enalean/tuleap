@@ -20,20 +20,22 @@
 
 <template>
     <div class="taskboard-card-label-editor">
-        <textarea class="tlp-textarea taskboard-card-label-input-mirror"
-                  v-bind:value="value"
-                  rows="1"
-                  ref="mirror"
+        <textarea
+            class="tlp-textarea taskboard-card-label-input-mirror"
+            v-bind:value="value"
+            rows="1"
+            ref="mirror"
         ></textarea>
-        <textarea class="tlp-textarea taskboard-card-label-input"
-                  v-bind:value="value"
-                  v-on:input="$emit('input', $event.target.value)"
-                  v-on:keydown.enter="enter"
-                  v-on:keyup="keyup"
-                  v-bind:rows="rows"
-                  v-bind:placeholder="$gettext('Card label…')"
-                  v-bind:readonly="readonly"
-                  ref="textarea"
+        <textarea
+            class="tlp-textarea taskboard-card-label-input"
+            v-bind:value="value"
+            v-on:input="$emit('input', $event.target.value)"
+            v-on:keydown.enter="enter"
+            v-on:keyup="keyup"
+            v-bind:rows="rows"
+            v-bind:placeholder="$gettext('Card label…')"
+            v-bind:readonly="readonly"
+            ref="textarea"
         ></textarea>
     </div>
 </template>

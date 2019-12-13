@@ -18,10 +18,11 @@
   -->
 
 <template>
-    <button class="tlp-button-primary"
-            v-bind:disabled="is_button_disabled"
-            v-bind:title="button_title"
-            v-on:click="showModal"
+    <button
+        class="tlp-button-primary"
+        v-bind:disabled="is_button_disabled"
+        v-bind:title="button_title"
+        v-on:click="showModal"
     >
         <i class="fa fa-code-fork fa-rotate-270 tlp-button-icon"></i>
         <translate>Create pull request</translate>

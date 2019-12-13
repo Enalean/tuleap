@@ -20,11 +20,12 @@
 <template>
     <div class="tlp-form-element">
         <label class="tlp-label" v-bind:for="selector_id">{{ label }}</label>
-        <select v-bind:id="selector_id"
-                class="tlp-select"
-                multiple
-                v-model="selected_ugroup_ids"
-                v-on:change="updateSelectedUGroups"
+        <select
+            v-bind:id="selector_id"
+            class="tlp-select"
+            multiple
+            v-model="selected_ugroup_ids"
+            v-on:change="updateSelectedUGroups"
         >
             <option
                 v-for="ugroup in project_ugroups"
@@ -77,7 +78,10 @@ export default {
     },
     methods: {
         updateSelectedUGroups() {
-            this.$emit("input", this.selected_ugroup_ids.map(ugroup_id => ({ id: ugroup_id })));
+            this.$emit(
+                "input",
+                this.selected_ugroup_ids.map(ugroup_id => ({ id: ugroup_id }))
+            );
         }
     }
 };

@@ -46,7 +46,7 @@
         <template v-else-if="transition">
             <transition-deleter
                 v-bind:transition="transition"
-                v-bind:deleteTransition="deleteTransition"
+                v-bind:delete-transition="deleteTransition"
                 v-bind:is_transition_updated="is_transition_updated"
             />
             <button

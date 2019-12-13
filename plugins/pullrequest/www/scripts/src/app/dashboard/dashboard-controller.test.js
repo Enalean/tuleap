@@ -27,12 +27,14 @@ describe("DashboardController", function() {
         });
 
         jest.spyOn(PullRequestCollectionService, "loadOpenPullRequests").mockReturnValue($q.when());
-        jest.spyOn(PullRequestCollectionService, "loadClosedPullRequests").mockImplementation(
-            () => {}
-        );
-        jest.spyOn(PullRequestCollectionService, "loadAllPullRequests").mockImplementation(
-            () => {}
-        );
+        jest.spyOn(
+            PullRequestCollectionService,
+            "loadClosedPullRequests"
+        ).mockImplementation(() => {});
+        jest.spyOn(
+            PullRequestCollectionService,
+            "loadAllPullRequests"
+        ).mockImplementation(() => {});
         jest.spyOn(PullRequestCollectionService, "areAllPullRequestsFullyLoaded").mockReturnValue(
             false
         );

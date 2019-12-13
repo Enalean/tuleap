@@ -19,10 +19,11 @@
   -->
 
 <template>
-    <span v-if="has_initial_effort"
-          class="taskboard-card-inital-effort tlp-badge-outline taskboard-no-text-selection"
-          v-bind:class="color_classname"
-          v-bind:title="initial_effort_label"
+    <span
+        v-if="has_initial_effort"
+        class="taskboard-card-inital-effort tlp-badge-outline taskboard-no-text-selection"
+        v-bind:class="color_classname"
+        v-bind:title="initial_effort_label"
     >
         <i class="fa fa-flag-checkered fa-flip-horizontal tlp-badge-icon"></i>
         {{ card.initial_effort }}

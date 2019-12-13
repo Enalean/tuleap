@@ -466,7 +466,8 @@ function KanbanCtrl(
         return (
             (FilterTrackerReportService.areCardsAndWIPUpdated() ||
                 FilterTrackerReportService.isWIPUpdated()) &&
-            (column.limit && column.limit < column.content.length)
+            column.limit &&
+            column.limit < column.content.length
         );
     }
 

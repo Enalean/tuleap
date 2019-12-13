@@ -20,7 +20,9 @@
 <template>
     <tr>
         <td></td>
-        <td><a v-bind:href="release.release_url">{{ release.release_name }}</a></td>
+        <td>
+            <a v-bind:href="release.release_url">{{ release.release_name }}</a>
+        </td>
         <td>
             <ugroup-badge
                 v-for="ugroup in release.release_permissions"

@@ -23,9 +23,7 @@
 <template>
     <tr>
         <td class="timetracking-widget-artifact-cell">
-            <widget-link-to-artifact
-                v-bind:artifact="artifact"
-            />
+            <widget-link-to-artifact v-bind:artifact="artifact" />
         </td>
         <td>
             <a v-bind:href="/projects/ + project.shortname">{{ project.label }}</a>
@@ -34,13 +32,15 @@
             {{ get_formatted_aggregated_time(timeData) }}
         </td>
         <td class="tlp-table-cell-actions timetracking-details-link-to-open-modal">
-            <a v-on:click.prevent="show_modal" v-bind:href="link_to_artifact_timetracking" v-translate>
+            <a
+                v-on:click.prevent="show_modal"
+                v-bind:href="link_to_artifact_timetracking"
+                v-translate
+            >
                 Details
             </a>
         </td>
-        <widget-modal-times
-            ref="timetracking_modal"
-        />
+        <widget-modal-times ref="timetracking_modal" />
     </tr>
 </template>
 <script>

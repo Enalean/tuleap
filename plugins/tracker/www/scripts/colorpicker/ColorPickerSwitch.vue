@@ -18,11 +18,15 @@
   -->
 
 <template>
-    <div class="colorpicker-switch" v-bind:class="{ 'colorpicker-switch-to-old-palette': ! isOldPaletteShown }">
-        <a v-bind:class="{ 'colorpicker-switch-disabled': isSwitchDisabled }"
-           v-bind:title="switch_title"
-           v-on:click="switchPalette"
-           href="javascript:;"
+    <div
+        class="colorpicker-switch"
+        v-bind:class="{ 'colorpicker-switch-to-old-palette': !isOldPaletteShown }"
+    >
+        <a
+            v-bind:class="{ 'colorpicker-switch-disabled': isSwitchDisabled }"
+            v-bind:title="switch_title"
+            v-on:click="switchPalette"
+            href="javascript:;"
         >
             <i class="fa fa-random"></i>
             <span v-if="isOldPaletteShown" v-translate>

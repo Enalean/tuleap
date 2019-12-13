@@ -20,10 +20,11 @@
 <template>
     <div class="colorpicker-palette">
         <template v-for="(colors, index) in tlp_colors">
-            <color-picker-palette-row v-bind:colors="colors"
-                                      v-bind:selected-color="currentColor"
-                                      v-bind:key="index"
-                                      v-on:color-update="updateColor"
+            <color-picker-palette-row
+                v-bind:colors="colors"
+                v-bind:selected-color="currentColor"
+                v-bind:key="index"
+                v-on:color-update="updateColor"
             />
         </template>
         <color-picker-no-color-option

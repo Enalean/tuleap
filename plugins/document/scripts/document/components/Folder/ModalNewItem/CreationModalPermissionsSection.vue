@@ -19,7 +19,7 @@
   -->
 <template>
     <div class="document-permissions-creation-modal-section">
-        <hr class="tlp-modal-separator">
+        <hr class="tlp-modal-separator" />
         <div class="document-permissions-creation-modal-title">
             <div
                 v-if="project_ugroups === null"

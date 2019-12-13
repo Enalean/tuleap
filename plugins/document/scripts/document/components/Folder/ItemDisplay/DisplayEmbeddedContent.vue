@@ -20,24 +20,27 @@
 <template>
     <div class="embedded-document-container tlp-framed-vertically">
         <div class="document-header tlp-framed-horizontally">
-            <document-title-lock-info v-bind:item="currently_previewed_item"
-                                      v-bind:is-displaying-in-header="true"
+            <document-title-lock-info
+                v-bind:item="currently_previewed_item"
+                v-bind:is-displaying-in-header="true"
             />
 
             <h1 class="document-header-title">{{ currently_previewed_item.title }}</h1>
 
-            <actions-header v-bind:item="currently_previewed_item"/>
+            <actions-header v-bind:item="currently_previewed_item" />
 
-            <approval-table-badge v-bind:item="currently_previewed_item" v-bind:is-in-folder-content-row="false"/>
-
-            <embedded-file-edition-switcher
-                v-bind:is-in-large-view="is_embedded_in_large_view"
+            <approval-table-badge
+                v-bind:item="currently_previewed_item"
+                v-bind:is-in-folder-content-row="false"
             />
+
+            <embedded-file-edition-switcher v-bind:is-in-large-view="is_embedded_in_large_view" />
         </div>
 
-        <section class="tlp-pane embedded-document"
-                 v-bind:class="{ 'narrow': !is_embedded_in_large_view }"
-                 data-test="display-embedded-content"
+        <section
+            class="tlp-pane embedded-document"
+            v-bind:class="{ narrow: !is_embedded_in_large_view }"
+            data-test="display-embedded-content"
         >
             <div class="tlp-pane-container">
                 <section class="tlp-pane-section" v-dompurify-html="embedded_content"></section>
@@ -61,7 +64,7 @@
             v-bind:item="currently_previewed_item"
             v-on:update-metadata-modal-closed="hideUpdateMetadataModal"
         />
-        <update-permissions-modal v-bind:item="currently_previewed_item"/>
+        <update-permissions-modal v-bind:item="currently_previewed_item" />
     </div>
 </template>
 
@@ -85,11 +88,17 @@ export default {
         DocumentTitleLockInfo,
         ActionsHeader,
         "create-new-embedded-file-version-modal": () =>
-            import(/* webpackChunkName: "document-new-embedded-file-version-modal" */ "../ModalCreateNewItemVersion/CreateNewVersionEmbeddedFileModal.vue"),
+            import(
+                /* webpackChunkName: "document-new-embedded-file-version-modal" */ "../ModalCreateNewItemVersion/CreateNewVersionEmbeddedFileModal.vue"
+            ),
         "confirm-deletion-modal": () =>
-            import(/* webpackChunkName: "document-confirm-item-deletion-modal" */ "../ModalDeleteItem/ModalConfirmDeletion.vue"),
+            import(
+                /* webpackChunkName: "document-confirm-item-deletion-modal" */ "../ModalDeleteItem/ModalConfirmDeletion.vue"
+            ),
         "update-metadata-modal": () =>
-            import(/* webpackChunkName: "update-metadata-modal" */ "../ModalUpdateMetadata/UpdateMetadataModal.vue")
+            import(
+                /* webpackChunkName: "update-metadata-modal" */ "../ModalUpdateMetadata/UpdateMetadataModal.vue"
+            )
     },
     data() {
         return {

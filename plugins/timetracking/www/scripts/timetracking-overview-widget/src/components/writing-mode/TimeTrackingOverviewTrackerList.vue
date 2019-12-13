@@ -29,15 +29,18 @@
             v-bind:key="tracker.id"
         >
             <span>
-                <i class="fa fa-times tlp-badge-icon cross-tracker-remove-tracker"
-                   v-on:click="removeTracker(tracker)"
-                ></i> {{ tracker.tracker_label }}
+                <i
+                    class="fa fa-times tlp-badge-icon cross-tracker-remove-tracker"
+                    v-on:click="removeTracker(tracker)"
+                ></i>
+                {{ tracker.tracker_label }}
             </span>
             <span>
                 {{ tracker.label }}
             </span>
             <span>
-                <i class="fa fa-archive timetracking-archive"></i>{{ tracker.project.label }}
+                <i class="fa fa-archive timetracking-archive"></i>
+                {{ tracker.project.label }}
             </span>
         </span>
     </div>

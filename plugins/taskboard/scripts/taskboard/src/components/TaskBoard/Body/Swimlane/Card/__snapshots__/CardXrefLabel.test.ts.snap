@@ -10,7 +10,9 @@ exports[`CardXrefLabel displays the xref and the label of a card 1`] = `
     data-test="xref"
     href="/path/to/43"
   >
-    story #43
+    
+        story #43
+    
   </a>
    
   <span

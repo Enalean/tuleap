@@ -22,45 +22,54 @@
     <div class="tlp-form-element">
         <label class="tlp-label" for="project-information-input-privacy-list-label">
             <span v-translate>Privacy</span>
-            <span class="tlp-tooltip tlp-tooltip-top"
-                  v-bind:data-tlp-tooltip="translated_tooltip"
-                  data-test="project-information-input-privacy-tooltip"
+            <span
+                class="tlp-tooltip tlp-tooltip-top"
+                v-bind:data-tlp-tooltip="translated_tooltip"
+                data-test="project-information-input-privacy-tooltip"
             >
-                <i class="fa fa-question-circle project-information-input-privacy-icon" aria-hidden="true"></i>
+                <i
+                    class="fa fa-question-circle project-information-input-privacy-icon"
+                    aria-hidden="true"
+                ></i>
             </span>
         </label>
-        <select id="project-information-input-privacy-list-label"
-                class="tlp-select"
-                name="privacy"
-                v-on:change="$emit('input', selected_visibility)"
-                data-test="project-information-input-privacy-list"
-                v-model="selected_visibility"
+        <select
+            id="project-information-input-privacy-list-label"
+            class="tlp-select"
+            name="privacy"
+            v-on:change="$emit('input', selected_visibility)"
+            data-test="project-information-input-privacy-list"
+            v-model="selected_visibility"
         >
-            <option value="unrestricted"
-                    v-bind:selected="is_public_included_restricted_selected"
-                    v-translate
-                    data-test="unrestricted"
+            <option
+                value="unrestricted"
+                v-bind:selected="is_public_included_restricted_selected"
+                v-translate
+                data-test="unrestricted"
             >
                 Public incl. restricted
             </option>
-            <option value="public"
-                    v-bind:selected="is_public_selected"
-                    data-test="public"
-                    v-translate
+            <option
+                value="public"
+                v-bind:selected="is_public_selected"
+                data-test="public"
+                v-translate
             >
                 Public
             </option>
-            <option value="private"
-                    v-bind:selected="is_private_selected"
-                    data-test="private"
-                    v-translate
+            <option
+                value="private"
+                v-bind:selected="is_private_selected"
+                data-test="private"
+                v-translate
             >
                 Private incl. restricted
             </option>
-            <option value="private-wo-restr"
-                    v-bind:selected="is_private_without_restricted_selected"
-                    data-test="private-wo-restr"
-                    v-translate
+            <option
+                value="private-wo-restr"
+                v-bind:selected="is_private_without_restricted_selected"
+                data-test="private-wo-restr"
+                v-translate
             >
                 Private
             </option>

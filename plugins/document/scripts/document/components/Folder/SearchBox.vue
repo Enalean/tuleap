@@ -21,12 +21,16 @@
 
 <template>
     <div class="tlp-form-element document-header-filter-container">
-        <input type="search" class="tlp-search document-search-box"
-               v-bind:placeholder="placeholder_text"
-               v-model="search_query"
-               v-on:keyup.enter="searchUrl"
-        >
-        <a v-bind:title="advanced_title" class="document-advanced-link" v-bind:href="advanced_url">{{ advanced_title }}</a>
+        <input
+            type="search"
+            class="tlp-search document-search-box"
+            v-bind:placeholder="placeholder_text"
+            v-model="search_query"
+            v-on:keyup.enter="searchUrl"
+        />
+        <a v-bind:title="advanced_title" class="document-advanced-link" v-bind:href="advanced_url">
+            {{ advanced_title }}
+        </a>
     </div>
 </template>
 

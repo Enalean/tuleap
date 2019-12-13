@@ -19,19 +19,19 @@
 
 <template>
     <tr>
-        <td v-if="hasASelectedUserGroup"
+        <td
+            v-if="hasASelectedUserGroup"
             key="selected-ugroup"
             colspan="3"
             class="tlp-table-cell-empty"
             v-translate="{ user_group: selectedUgroupName }"
-        >%{ user_group } has no permissions for any package or release</td>
+        >
+            %{ user_group } has no permissions for any package or release
+        </td>
 
-        <td v-else
-            key="no-selected-ugroup"
-            colspan="3"
-            class="tlp-table-cell-empty"
-            v-translate
-        >No packages found for project</td>
+        <td v-else key="no-selected-ugroup" colspan="3" class="tlp-table-cell-empty" v-translate>
+            No packages found for project
+        </td>
     </tr>
 </template>
 <script>

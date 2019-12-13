@@ -32,15 +32,6 @@ describe("ModalConfirmDeletion", () => {
     let router, state, store_options, store;
 
     function getDeletionModal(props = {}) {
-        router = new VueRouter({
-            routes: [
-                {
-                    path: "folder/42",
-                    name: "folder"
-                }
-            ]
-        });
-
         return shallowMount(ConfirmationModal, {
             localVue,
             mocks: { $store: store },
@@ -55,6 +46,14 @@ describe("ModalConfirmDeletion", () => {
     }
 
     beforeEach(() => {
+        router = new VueRouter({
+            routes: [
+                {
+                    path: "folder/42",
+                    name: "folder"
+                }
+            ]
+        });
         state = {
             error: {
                 has_modal_error: false
@@ -159,6 +158,22 @@ describe("ModalConfirmDeletion", () => {
         expect(deletion_modal.contains("[data-test=checkbox]")).toBeFalsy();
     });
 
+    it(`when I click on the delete button, it deletes the item`, () => {
+        const item = {
+            id: 42,
+            title: "my folder",
+            type: "folder"
+        };
+
+        const additional_options = {};
+
+        const deletion_modal = getDeletionModal({ item, additional_options });
+        const deleteItem = jest.spyOn(deletion_modal.vm, "deleteItem");
+        deletion_modal.find("[data-test=document-confirm-deletion-button]").trigger("click");
+
+        expect(deleteItem).toHaveBeenCalled();
+    });
+
     it("Delete the item, and update the url link", async () => {
         const item = {
             id: 42,
@@ -171,11 +186,13 @@ describe("ModalConfirmDeletion", () => {
         store.getters.is_item_a_folder = () => true;
 
         const deletion_modal = getDeletionModal({ item, additional_options });
-        deletion_modal.find("[data-test=document-confirm-deletion-button]").trigger("click");
+        await deletion_modal.vm.deleteItem();
 
-        await deletion_modal.vm.$nextTick().then(() => {});
+        await deletion_modal.vm.$nextTick();
         expect(store.dispatch).toHaveBeenCalledWith("deleteItem", [item, additional_options]);
-        expect(store.commit).toHaveBeenCalledWith("showPostDeletionNotification");
+        expect(deletion_modal.vm.$store.commit).toHaveBeenCalledWith(
+            "showPostDeletionNotification"
+        );
         expect(deletion_modal.vm.$route.path).toBe("folder/42");
     });
 });

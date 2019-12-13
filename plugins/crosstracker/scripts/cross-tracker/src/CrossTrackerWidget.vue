@@ -19,8 +19,8 @@
 
 <template>
     <div>
-        <error-message/>
-        <error-inactive-project-message/>
+        <error-message />
+        <error-inactive-project-message />
         <div class="tlp-alert-info cross-tracker-report-success" v-if="has_success_message">
             {{ success_message }}
         </div>
@@ -33,12 +33,12 @@
             v-on:saved="reportSaved"
         />
         <writing-mode
-            v-if="! reading_mode"
+            v-if="!reading_mode"
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
             v-on:switchToReadingMode="switchToReadingMode"
         />
         <artifact-table
-            v-if="! is_loading"
+            v-if="!is_loading"
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
         />
     </div>

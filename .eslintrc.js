@@ -10,7 +10,7 @@ module.exports = {
     extends: [
         "eslint:recommended",
         "plugin:you-dont-need-lodash-underscore/all",
-        "plugin:vue/recommended",
+        "plugin:vue/essential", // We do not use "recommended" because it conflicts with Prettier formatting
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:import/typescript",
         "plugin:@typescript-eslint/recommended"
@@ -69,39 +69,34 @@ module.exports = {
         radix: "error",
         "require-await": "error",
         // Vue
-        "vue/attributes-order": "off",
-        "vue/component-name-in-template-casing": ["error", "kebab-case"],
+        // Priority B: Strongly Recommended (Improving Readability)
+        "vue/attribute-hyphenation": "error",
         "vue/html-self-closing": [
             "error",
             {
                 html: {
+                    void: "any",
                     normal: "any",
                     component: "always"
                 },
-                svg: "any"
+                svg: "any",
+                math: "any"
             }
         ],
-        "vue/html-closing-bracket-spacing": [
-            "error",
-            {
-                selfClosingTag: "never"
-            }
-        ],
-        "vue/html-indent": ["error", 4],
-        "vue/match-component-file-name": "error",
-        "vue/max-attributes-per-line": "off",
-        "vue/multiline-html-element-content-newline": "off", // Just annoying and would be better adressed with prettier
-        "vue/no-spaces-around-equal-signs-in-attribute": "error",
-        "vue/no-unused-components": "error",
-        "vue/order-in-components": "error",
+        "vue/name-property-casing": "error",
+        "vue/no-template-shadow": "error",
         "vue/prop-name-casing": "off", // This would be interesting, but the --fix does not rename all instances, which will silently break your code
-        "vue/require-component-is": "error",
-        "vue/require-default-prop": "off",
-        "vue/require-direct-export": "off",
-        "vue/singleline-html-element-content-newline": "off", // Just annoying and would be better adressed with prettier
-        "vue/html-closing-bracket-newline": "off",
+        "vue/require-prop-types": "error",
         "vue/v-bind-style": ["error", "longform"],
         "vue/v-on-style": ["error", "longform"],
+        // Priority C: Recommended (Minimizing Arbitrary Choices and Cognitive Overhead)
+        "vue/no-v-html": "error",
+        "vue/order-in-components": "error",
+        "vue/this-in-template": "error",
+        // Uncategorized
+        "vue/component-name-in-template-casing": ["error", "kebab-case"],
+        "vue/match-component-file-name": "error",
+        "vue/require-direct-export": "off",
         // Typescript
         "@typescript-eslint/camelcase": "off",
         "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],

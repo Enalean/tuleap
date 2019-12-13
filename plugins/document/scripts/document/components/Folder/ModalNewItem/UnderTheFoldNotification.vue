@@ -18,9 +18,10 @@
   -->
 
 <template>
-    <div class="document-notification tlp-alert-success"
-         v-bind:class="notification_class"
-         v-if="is_displayed"
+    <div
+        class="document-notification tlp-alert-success"
+        v-bind:class="notification_class"
+        v-if="is_displayed"
     >
         <translate v-if="is_folder">The folder has been created below.</translate>
         <translate v-else>The document has been created below.</translate>

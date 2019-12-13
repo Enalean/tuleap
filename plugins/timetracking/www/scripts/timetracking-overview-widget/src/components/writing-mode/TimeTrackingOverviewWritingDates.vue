@@ -27,31 +27,33 @@
                 <span class="tlp-prepend">
                     <i class="fa fa-calendar"></i>
                 </span>
-                <input type="text"
-                       class="tlp-input tlp-input-date"
-                       id="timetracking-start-date"
-                       ref="start_date"
-                       v-bind:value="start_date"
-                       size="11"
-                >
+                <input
+                    type="text"
+                    class="tlp-input tlp-input-date"
+                    id="timetracking-start-date"
+                    ref="start_date"
+                    v-bind:value="start_date"
+                    size="11"
+                />
             </div>
         </div>
         <div class="tlp-form-element timetracking-overview-writing-mode-selected-date">
             <label for="timetracking-end-date" class="tlp-label">
-                <translate> To</translate>
+                <translate>To</translate>
                 <i class="fa fa-asterisk"></i>
             </label>
             <div class="tlp-form-element tlp-form-element-prepend">
                 <span class="tlp-prepend">
                     <i class="fa fa-calendar"></i>
                 </span>
-                <input type="text"
-                       class="tlp-input tlp-input-date"
-                       id="timetracking-end-date"
-                       ref="end_date"
-                       v-bind:value="end_date"
-                       size="11"
-                >
+                <input
+                    type="text"
+                    class="tlp-input tlp-input-date"
+                    id="timetracking-end-date"
+                    ref="end_date"
+                    v-bind:value="end_date"
+                    size="11"
+                />
             </div>
         </div>
     </div>

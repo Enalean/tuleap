@@ -43,9 +43,7 @@ export default {
     methods: {
         goToDetails() {
             redirectToUrl(
-                `/plugins/docman/?group_id=${this.project_id}&id=${
-                    this.item.id
-                }&action=details&section=details`
+                `/plugins/docman/?group_id=${this.project_id}&id=${this.item.id}&action=details&section=details`
             );
         }
     }

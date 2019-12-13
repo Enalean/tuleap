@@ -18,31 +18,28 @@
   -->
 
 <template>
-    <label for="move-artifact-tracker-selector"
-           v-bind:title="selector_title"
-    >
+    <label for="move-artifact-tracker-selector" v-bind:title="selector_title">
         <translate>Destination tracker</translate>
         <span class="highlight">*</span>
-        <select id="move-artifact-tracker-selector"
-                name="move-artifact-tracker-selector"
-                v-bind:disabled="is_tracker_list_empty"
-                v-model="selected_tracker"
+        <select
+            id="move-artifact-tracker-selector"
+            name="move-artifact-tracker-selector"
+            v-bind:disabled="is_tracker_list_empty"
+            v-model="selected_tracker"
         >
-            <option disabled
-                    selected="selected"
-                    v-bind:value="{ tracker_id: null }"
-            >
+            <option disabled selected="selected" v-bind:value="{ tracker_id: null }">
                 <translate>Choose tracker...</translate>
             </option>
-            <option v-for="tracker of tracker_list_with_disabled_from"
-                    v-bind:key="tracker.id"
-                    v-bind:value="{
-                        tracker_id: tracker.id,
-                        label: tracker.label,
-                        project: tracker.project,
-                        color_name: tracker.color_name
-                    }"
-                    v-bind:disabled="tracker.disabled"
+            <option
+                v-for="tracker of tracker_list_with_disabled_from"
+                v-bind:key="tracker.id"
+                v-bind:value="{
+                    tracker_id: tracker.id,
+                    label: tracker.label,
+                    project: tracker.project,
+                    color_name: tracker.color_name
+                }"
+                v-bind:disabled="tracker.disabled"
             >
                 {{ tracker.label }}
             </option>

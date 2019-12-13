@@ -19,16 +19,18 @@
 
 <template>
     <div>
-        <div class="document-header-global-progress tlp-tooltip tlp-tooltip-left"
-             v-if="should_display_progress_bar"
-             v-bind:data-tlp-tooltip="progress_bar_tooltip"
-             v-on:click="modal.show()"
+        <div
+            class="document-header-global-progress tlp-tooltip tlp-tooltip-left"
+            v-if="should_display_progress_bar"
+            v-bind:data-tlp-tooltip="progress_bar_tooltip"
+            v-on:click="modal.show()"
         >
-            <global-upload-progress-bar v-bind:progress="global_upload_progress"
-                                        v-bind:nb_uploads_in_error="nb_uploads_in_error"
+            <global-upload-progress-bar
+                v-bind:progress="global_upload_progress"
+                v-bind:nb_uploads_in_error="nb_uploads_in_error"
             />
         </div>
-        <files-uploads-modal ref="uploads_modal"/>
+        <files-uploads-modal ref="uploads_modal" />
     </div>
 </template>
 <script>

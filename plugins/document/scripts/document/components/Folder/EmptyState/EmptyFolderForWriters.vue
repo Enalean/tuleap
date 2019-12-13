@@ -20,16 +20,19 @@
 <template>
     <div class="empty-page document-empty-folder-for-writers" data-test="document-empty-state">
         <div class="empty-page-illustration">
-            <empty-folder-for-writers-svg/>
+            <empty-folder-for-writers-svg />
         </div>
         <p class="empty-page-text" v-translate>
             It's time to add new documents!
         </p>
         <div class="tlp-dropdown">
             <div class="tlp-dropdown-split-button">
-                <new-item-button class="tlp-button-primary tlp-button-large tlp-dropdown-split-button-main" v-bind:item="current_folder"/>
+                <new-item-button
+                    class="tlp-button-primary tlp-button-large tlp-dropdown-split-button-main"
+                    v-bind:item="current_folder"
+                />
                 <drop-down-button v-bind:is-in-large-mode="true">
-                    <drop-down-current-folder v-bind:is-in-folder-empty-state="true"/>
+                    <drop-down-current-folder v-bind:is-in-folder-empty-state="true" />
                 </drop-down-button>
             </div>
         </div>

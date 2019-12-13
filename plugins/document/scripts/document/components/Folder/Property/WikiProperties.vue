@@ -20,10 +20,7 @@
 
 <template>
     <div class="tlp-form-element" v-if="is_displayed">
-        <label
-            class="tlp-label"
-            for="document-new-item-wiki-page-name"
-        >
+        <label class="tlp-label" for="document-new-item-wiki-page-name">
             <translate>Wiki page</translate>
             <i class="fa fa-asterisk"></i>
         </label>
@@ -41,7 +38,7 @@
                 v-bind:value="value.page_name"
                 v-on:input="$emit('input', { page_name: $event.target.value })"
                 data-test="document-new-item-wiki-page-name"
-            >
+            />
         </div>
     </div>
 </template>

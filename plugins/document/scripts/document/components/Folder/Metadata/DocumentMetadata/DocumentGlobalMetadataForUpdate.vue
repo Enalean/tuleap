@@ -26,9 +26,11 @@
                 v-bind:parent="parent"
                 v-bind:is-in-update-context="true"
             />
-            <status-metadata-with-custom-binding-for-document-update v-bind:currently-updated-item="currentlyUpdatedItem"/>
+            <status-metadata-with-custom-binding-for-document-update
+                v-bind:currently-updated-item="currentlyUpdatedItem"
+            />
         </div>
-        <description-metadata v-model="currentlyUpdatedItem.description"/>
+        <description-metadata v-model="currentlyUpdatedItem.description" />
         <slot></slot>
     </div>
 </template>

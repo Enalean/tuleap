@@ -22,9 +22,11 @@
         <div class="tlp-dropdown-split-button">
             <create-new-item-version-button
                 v-bind:item="item"
-                v-bind:button-classes="'tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main'"
+                v-bind:button-classes="
+                    'tlp-button-primary tlp-button-outline tlp-button-small tlp-dropdown-split-button-main'
+                "
                 v-bind:icon-classes="'fa fa-mail-forward tlp-button-icon'"
-                v-if="! is_item_a_wiki_with_approval_table && ! is_item_a_folder(item)"
+                v-if="!is_item_a_wiki_with_approval_table && !is_item_a_folder(item)"
                 data-test="document-quicklook-action-button-new-version"
             />
             <new-item-button
@@ -35,20 +37,30 @@
             />
             <drop-down-button
                 v-bind:is-in-quick-look-mode="true"
-                v-bind:is-appended="item.user_can_write && ! is_item_a_wiki_with_approval_table"
+                v-bind:is-appended="item.user_can_write && !is_item_a_wiki_with_approval_table"
             >
-                <drop-down-menu
-                    v-bind:item="item"
-                    v-bind:is-in-quick-look-mode="true"
-                >
-                    <template v-if="! is_item_a_folder(item) && item.user_can_write">
-                        <lock-item v-bind:item="item" data-test="document-dropdown-menu-lock-item" slot="lock-item"/>
-                        <unlock-item v-bind:item="item" data-test="document-dropdown-menu-unlock-item" slot="unlock-item"/>
-                        <drop-down-separator slot="display-item-title-separator"/>
+                <drop-down-menu v-bind:item="item" v-bind:is-in-quick-look-mode="true">
+                    <template v-if="!is_item_a_folder(item) && item.user_can_write">
+                        <lock-item
+                            v-bind:item="item"
+                            data-test="document-dropdown-menu-lock-item"
+                            slot="lock-item"
+                        />
+                        <unlock-item
+                            v-bind:item="item"
+                            data-test="document-dropdown-menu-unlock-item"
+                            slot="unlock-item"
+                        />
+                        <drop-down-separator slot="display-item-title-separator" />
                     </template>
 
-                    <update-properties slot="update-properties" data-test="document-dropdown-menu-update-properties" v-bind:item="item" v-if="item.user_can_write"/>
-                    <update-permissions slot="update-permissions" v-bind:item="item"/>
+                    <update-properties
+                        slot="update-properties"
+                        data-test="document-dropdown-menu-update-properties"
+                        v-bind:item="item"
+                        v-if="item.user_can_write"
+                    />
+                    <update-permissions slot="update-permissions" v-bind:item="item" />
                 </drop-down-menu>
             </drop-down-button>
         </div>

@@ -18,31 +18,35 @@
   -->
 
 <template>
-    <form class="tlp-modal"
-          role="dialog"
-          v-bind:aria-labelled-by="aria_labelled_by"
-          v-on:submit="createNewWikiVersion"
-          data-test="document-new-item-version-modal"
+    <form
+        class="tlp-modal"
+        role="dialog"
+        v-bind:aria-labelled-by="aria_labelled_by"
+        v-on:submit="createNewWikiVersion"
+        data-test="document-new-item-version-modal"
     >
-        <modal-header v-bind:modal-title="modal_title"
-                      v-bind:aria-labelled-by="aria_labelled_by"
-                      v-bind:icon-header-class="'fa-plus'"
+        <modal-header
+            v-bind:modal-title="modal_title"
+            v-bind:aria-labelled-by="aria_labelled_by"
+            v-bind:icon-header-class="'fa-plus'"
         />
-        <modal-feedback/>
+        <modal-feedback />
         <div class="tlp-modal-body">
             <div class="docman-item-update-property">
                 <div class="docman-item-title-update-property">
-                    <wiki-properties v-model="wiki_model.wiki_properties"
-                                     v-bind:item="wiki_model"
+                    <wiki-properties
+                        v-model="wiki_model.wiki_properties"
+                        v-bind:item="wiki_model"
                     />
-                    <lock-property v-model="version.is_file_locked" v-bind:item="item"/>
+                    <lock-property v-model="version.is_file_locked" v-bind:item="item" />
                 </div>
             </div>
         </div>
-        <modal-footer v-bind:is-loading="is_loading"
-                      v-bind:submit-button-label="submit_button_label"
-                      v-bind:aria-labelled-by="aria_labelled_by"
-                      v-bind:icon-submit-button-class="'fa-plus'"
+        <modal-footer
+            v-bind:is-loading="is_loading"
+            v-bind:submit-button-label="submit_button_label"
+            v-bind:aria-labelled-by="aria_labelled_by"
+            v-bind:icon-submit-button-class="'fa-plus'"
         />
     </form>
 </template>

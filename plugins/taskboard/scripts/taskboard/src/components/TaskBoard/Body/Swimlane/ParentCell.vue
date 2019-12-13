@@ -20,8 +20,14 @@
 
 <template>
     <swimlane-header v-bind:swimlane="swimlane">
-        <card-with-remaining-effort class="taskboard-cell-parent-card" v-bind:card="swimlane.card"/>
-        <no-mapping-message v-if="should_no_mapping_message_be_displayed" v-bind:card="swimlane.card"/>
+        <card-with-remaining-effort
+            class="taskboard-cell-parent-card"
+            v-bind:card="swimlane.card"
+        />
+        <no-mapping-message
+            v-if="should_no_mapping_message_be_displayed"
+            v-bind:card="swimlane.card"
+        />
     </swimlane-header>
 </template>
 

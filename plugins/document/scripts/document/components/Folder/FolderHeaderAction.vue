@@ -19,18 +19,20 @@
 
 <template>
     <div class="tlp-dropdown-split-button">
-        <new-item-button class="tlp-button-primary tlp-dropdown-split-button-main"
-                         v-bind:item="item"
-                         v-if="item.user_can_write"
-                         data-test="document-item-action-new-button"
+        <new-item-button
+            class="tlp-button-primary tlp-dropdown-split-button-main"
+            v-bind:item="item"
+            v-if="item.user_can_write"
+            data-test="document-item-action-new-button"
         />
-        <details-item-button v-bind:item="item"
-                             v-else
-                             data-test="document-item-action-details-button"
-                             v-bind:button-class="'tlp-dropdown-split-button-main'"
+        <details-item-button
+            v-bind:item="item"
+            v-else
+            data-test="document-item-action-details-button"
+            v-bind:button-class="'tlp-dropdown-split-button-main'"
         />
         <drop-down-button>
-            <drop-down-current-folder/>
+            <drop-down-current-folder />
         </drop-down-button>
     </div>
 </template>

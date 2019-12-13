@@ -26,8 +26,12 @@
             v-bind:class="['release-number-artifacts-tracker-' + tracker.color_name]"
             data-test="color-name-tracker"
         >
-            <span class="release-number-artifacts-value" data-test="total-artifact-tracker">{{ tracker.total_artifact }}</span>
-            <span class="release-number-artifacts-text" data-test="artifact-tracker-name">{{ tracker.label }}</span>
+            <span class="release-number-artifacts-value" data-test="total-artifact-tracker">
+                {{ tracker.total_artifact }}
+            </span>
+            <span class="release-number-artifacts-text" data-test="artifact-tracker-name">
+                {{ tracker.label }}
+            </span>
         </div>
     </div>
 </template>

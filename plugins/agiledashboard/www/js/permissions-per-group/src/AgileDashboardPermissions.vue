@@ -24,10 +24,13 @@
         </div>
 
         <div class="permission-per-group-load-button" v-if="displayButtonLoadAll">
-            <button class="tlp-button-primary tlp-button-outline"
-                    v-on:click="loadAll()"
-                    v-translate
-            >See all plannings permissions</button>
+            <button
+                class="tlp-button-primary tlp-button-outline"
+                v-on:click="loadAll()"
+                v-translate
+            >
+                See all plannings permissions
+            </button>
         </div>
 
         <div class="permission-per-group-loader" v-if="is_loading"></div>
@@ -41,7 +44,9 @@
             </thead>
             <tbody>
                 <tr v-for="permission in permissions" v-bind:key="permission.name">
-                    <td><a v-bind:href="permission.quick_link">{{ permission.name }}</a></td>
+                    <td>
+                        <a v-bind:href="permission.quick_link">{{ permission.name }}</a>
+                    </td>
                     <td>
                         <agile-dashboard-permissions-badge
                             v-for="group in permission.ugroups"
@@ -56,18 +61,24 @@
             </tbody>
             <tbody v-if="isEmpty">
                 <tr>
-                    <td v-if="has_a_selected_u_group"
+                    <td
+                        v-if="has_a_selected_u_group"
                         key="selected-ugroup"
                         colspan="2"
                         class="tlp-table-cell-empty"
                         v-translate="{ user_group: selectedUgroupName }"
-                    >%{ user_group } has no permission for agiledashboard plannings</td>
-                    <td v-else
+                    >
+                        %{ user_group } has no permission for agiledashboard plannings
+                    </td>
+                    <td
+                        v-else
                         key="no-selected-ugroup"
                         colspan="2"
                         class="tlp-table-cell-empty"
                         v-translate
-                    >Agiledashboard has no planning defined</td>
+                    >
+                        Agiledashboard has no planning defined
+                    </td>
                 </tr>
             </tbody>
         </table>

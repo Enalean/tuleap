@@ -20,18 +20,23 @@
 
 <template>
     <div class="tlp-form-element">
-        <label class="tlp-label" for="trovecat"> {{ trovecat.fullname }}<i class="fa fa-asterisk"/></label>
-        <select class="tlp-select"
-                id="trovecat"
-                name="trovecat"
-                required
-                v-on:change="updateTroveCategories(trovecat.id, $event.target.value)"
-                data-test="trove-category-list"
+        <label class="tlp-label" for="trovecat">
+            {{ trovecat.fullname }}
+            <i class="fa fa-asterisk" />
+        </label>
+        <select
+            class="tlp-select"
+            id="trovecat"
+            name="trovecat"
+            required
+            v-on:change="updateTroveCategories(trovecat.id, $event.target.value)"
+            data-test="trove-category-list"
         >
             <option value="0"></option>
-            <option v-for="children in trovecat.children"
-                    v-bind:value="children.id"
-                    v-bind:key="children.id"
+            <option
+                v-for="children in trovecat.children"
+                v-bind:value="children.id"
+                v-bind:key="children.id"
             >
                 {{ children.fullname }}
             </option>

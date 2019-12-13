@@ -19,19 +19,30 @@
 
 <template>
     <div class="release-content-description">
-        <release-description-badges-tracker v-bind:release_data="release_data"/>
+        <release-description-badges-tracker v-bind:release_data="release_data" />
         <div class="release-description-row">
-            <div v-if="release_data.description" class="tlp-tooltip tlp-tooltip-top" v-bind:data-tlp-tooltip="release_data.description" data-test="tooltip-description">
+            <div
+                v-if="release_data.description"
+                class="tlp-tooltip tlp-tooltip-top"
+                v-bind:data-tlp-tooltip="release_data.description"
+                data-test="tooltip-description"
+            >
                 <div class="release-description" v-dompurify-html="release_data.description"></div>
             </div>
-            <a v-if="get_overview_link !== null" v-bind:href="get_overview_link" data-test="overview-link">
+            <a
+                v-if="get_overview_link !== null"
+                v-bind:href="get_overview_link"
+                data-test="overview-link"
+            >
                 <i class="release-description-link-icon fa fa-long-arrow-right"></i>
-                <translate v-bind:translate-params="{label_tracker: label_tracker_planning}"> Go to %{label_tracker} overview </translate>
+                <translate v-bind:translate-params="{ label_tracker: label_tracker_planning }">
+                    Go to %{label_tracker} overview
+                </translate>
             </a>
         </div>
         <div class="release-chart-burndown-row">
             <h2 class="tlp-pane-subtitle" v-translate>Burndown</h2>
-            <burndown-chart v-bind:release_data="release_data"/>
+            <burndown-chart v-bind:release_data="release_data" />
         </div>
     </div>
 </template>

@@ -20,17 +20,19 @@
 
 <template>
     <div class="document-new-item-type-selector">
-        <div class="document-new-item-type"
-             v-for="type of supported_types"
-             v-bind:key="type.identifier"
-             v-bind:class="{'document-new-item-type-checked': type.is_checked}"
-             v-on:click="$emit('input', type.identifier)"
-             v-bind:data-test="`document-type-selector-${type.identifier}`"
+        <div
+            class="document-new-item-type"
+            v-for="type of supported_types"
+            v-bind:key="type.identifier"
+            v-bind:class="{ 'document-new-item-type-checked': type.is_checked }"
+            v-on:click="$emit('input', type.identifier)"
+            v-bind:data-test="`document-type-selector-${type.identifier}`"
         >
-            <i class="document-new-item-type-icon fa"
-               v-for="icon of type.icons"
-               v-bind:key="icon"
-               v-bind:class="icon"
+            <i
+                class="document-new-item-type-icon fa"
+                v-for="icon of type.icons"
+                v-bind:key="icon"
+                v-bind:class="icon"
             ></i>
             <span class="document-new-item-type-label">{{ type.label }}</span>
         </div>

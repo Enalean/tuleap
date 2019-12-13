@@ -32,11 +32,15 @@
             ></textarea>
             <p class="tlp-text-info">
                 <i class="fa fa-info-circle"></i>
-                <translate>You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + Space.</translate>
+                <translate>
+                    You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + Space.
+                </translate>
             </p>
         </div>
         <div class="tlp-form-element">
-            <label class="tlp-label" for="expert-query-allowed-fields" v-translate>Allowed fields</label>
+            <label class="tlp-label" for="expert-query-allowed-fields" v-translate>
+                Allowed fields
+            </label>
             <select
                 class="cross-tracker-expert-content-query-allowed-fields tlp-select"
                 name="allowed-fields"

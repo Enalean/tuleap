@@ -96,8 +96,8 @@ export default {
             return this.are_all_repositories_hidden
                 ? this.filter_empty_state
                 : this.has_a_selected_ugroup
-                    ? this.ugroup_empty_state
-                    : this.no_repo_empty_state;
+                ? this.ugroup_empty_state
+                : this.no_repo_empty_state;
         }
     },
     watch: {

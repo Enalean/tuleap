@@ -19,26 +19,25 @@
 
 <template>
     <div class="dropdown tracker-colorpicker">
-        <a class="dropdown-toggle"
-           href="javascript:;"
-           data-target="#"
-           data-toggle="dropdown"
-           v-on:click="showRightPalette"
+        <a
+            class="dropdown-toggle"
+            href="javascript:;"
+            data-target="#"
+            data-toggle="dropdown"
+            v-on:click="showRightPalette"
         >
-            <old-color-picker-preview v-if="show_old_preview" v-bind:color="color"/>
-            <color-picker-preview v-else v-bind:color="color"/>
+            <old-color-picker-preview v-if="show_old_preview" v-bind:color="color" />
+            <color-picker-preview v-else v-bind:color="color" />
         </a>
 
         <div class="dropdown-menu" role="menu">
-            <color-picker-palette v-if="! is_old_palette_shown"
-                                  v-on:color-update="setColor"
-                                  v-bind:current-color="color"
+            <color-picker-palette
+                v-if="!is_old_palette_shown"
+                v-on:color-update="setColor"
+                v-bind:current-color="color"
             />
 
-
-            <old-color-picker-palette v-if="is_old_palette_shown"
-                                      v-on:color-update="setColor"
-            />
+            <old-color-picker-palette v-if="is_old_palette_shown" v-on:color-update="setColor" />
 
             <!-- Set transparent when clicked -->
             <p v-if="is_old_palette_shown" class="old-color-preview">
@@ -47,10 +46,9 @@
                     class="colorpicker-transparent-preview"
                     v-on:color-update="setColor"
                 />
-                <span class="old-colorpicker-no-color-label"
-                      v-on:click="setColor()"
-                      v-translate
-                >No color</span>
+                <span class="old-colorpicker-no-color-label" v-on:click="setColor()" v-translate>
+                    No color
+                </span>
             </p>
 
             <color-picker-switch
@@ -59,14 +57,15 @@
                 v-on:switch-palette="switchPalettes"
             />
         </div>
-        <input class="colorpicker-input"
-               v-bind:id="inputId"
-               v-bind:name="inputName"
-               v-bind:value="color"
-               type="hidden"
-               size="6"
-               autocomplete="off"
-        >
+        <input
+            class="colorpicker-input"
+            v-bind:id="inputId"
+            v-bind:name="inputName"
+            v-bind:value="color"
+            type="hidden"
+            size="6"
+            autocomplete="off"
+        />
     </div>
 </template>
 

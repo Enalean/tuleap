@@ -18,13 +18,14 @@
   -->
 
 <template>
-    <img class="old-color-picker-preview"
-         v-bind:src="previewImage"
-         v-bind:style="{'background-color': color }"
-         v-on:click="setTransparent"
-         v-bind:title="color"
-         alt="/themes/FlamingParrot/images/blank16x16.png"
-    >
+    <img
+        class="old-color-picker-preview"
+        v-bind:src="previewImage"
+        v-bind:style="{ 'background-color': color }"
+        v-on:click="setTransparent"
+        v-bind:title="color"
+        alt="/themes/FlamingParrot/images/blank16x16.png"
+    />
 </template>
 
 <script>

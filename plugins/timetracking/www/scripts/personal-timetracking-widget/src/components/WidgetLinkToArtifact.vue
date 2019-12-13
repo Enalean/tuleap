@@ -18,13 +18,18 @@
   -->
 
 <template>
-    <a v-bind:href="artifact.html_url"
-       class="timetracking-widget-artifact-title"
-       v-bind:title="artifact.title">
-        <span class="tlp-badge-outline timetracking-badge-direct-link-to-artifact"
-              v-bind:class="badge_color"
-        >{{ artifact.xref }}
-        </span>{{ artifact.title }}
+    <a
+        v-bind:href="artifact.html_url"
+        class="timetracking-widget-artifact-title"
+        v-bind:title="artifact.title"
+    >
+        <span
+            class="tlp-badge-outline timetracking-badge-direct-link-to-artifact"
+            v-bind:class="badge_color"
+        >
+            {{ artifact.xref }}
+        </span>
+        {{ artifact.title }}
     </a>
 </template>
 <script>

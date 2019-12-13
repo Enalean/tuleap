@@ -21,28 +21,36 @@
 <template>
     <div class="tlp-button-bar taskboard-open-closed-switcher">
         <div class="tlp-button-bar-item">
-            <input type="radio"
-                   id="button-bar-show-closed"
-                   name="button-bar-open-closed-switcher"
-                   class="tlp-button-bar-checkbox"
-                   v-bind:checked="are_closed_items_displayed"
-                   v-on:change="displayClosedItems">
-            <label for="button-bar-show-closed"
-                   class="tlp-button-primary tlp-button-outline tlp-button-small"
-                   v-bind:title="view_closed_items_title">
+            <input
+                type="radio"
+                id="button-bar-show-closed"
+                name="button-bar-open-closed-switcher"
+                class="tlp-button-bar-checkbox"
+                v-bind:checked="are_closed_items_displayed"
+                v-on:change="displayClosedItems"
+            />
+            <label
+                for="button-bar-show-closed"
+                class="tlp-button-primary tlp-button-outline tlp-button-small"
+                v-bind:title="view_closed_items_title"
+            >
                 <i class="fa fa-eye tlp-button-icon"></i>
             </label>
         </div>
         <div class="tlp-button-bar-item">
-            <input type="radio"
-                   id="button-bar-hide-closed"
-                   name="button-bar-open-closed-switcher"
-                   class="tlp-button-bar-checkbox"
-                   v-bind:checked="!are_closed_items_displayed"
-                   v-on:change="hideClosedItems">
-            <label for="button-bar-hide-closed"
-                   class="tlp-button-primary tlp-button-outline tlp-button-small"
-                   v-bind:title="hide_closed_items_title">
+            <input
+                type="radio"
+                id="button-bar-hide-closed"
+                name="button-bar-open-closed-switcher"
+                class="tlp-button-bar-checkbox"
+                v-bind:checked="!are_closed_items_displayed"
+                v-on:change="hideClosedItems"
+            />
+            <label
+                for="button-bar-hide-closed"
+                class="tlp-button-primary tlp-button-outline tlp-button-small"
+                v-bind:title="hide_closed_items_title"
+            >
                 <i class="fa fa-eye-slash tlp-button-icon"></i>
             </label>
         </div>

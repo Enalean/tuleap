@@ -79,7 +79,10 @@ describe("TaskBoardHeader", () => {
                 $store: createStoreMock({
                     state: {
                         column: {
-                            columns: [{ id: 2, label: "To do" }, { id: 3, label: "Done" }]
+                            columns: [
+                                { id: 2, label: "To do" },
+                                { id: 3, label: "Done" }
+                            ]
                         },
                         fullscreen: {
                             is_taskboard_in_fullscreen_mode: true

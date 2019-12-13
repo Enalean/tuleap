@@ -18,16 +18,14 @@
   -->
 
 <template>
-    <div class="timetracking-reading-mode"
-         v-on:click="toggleReadingMode()"
-    >
+    <div class="timetracking-reading-mode" v-on:click="toggleReadingMode()">
         <div class="timetracking-reading-mode-dates">
             <div class="tlp-property timetracking-reading-date">
-                <label class="tlp-label" v-translate> From </label>
+                <label class="tlp-label" v-translate>From</label>
                 <span>{{ start_date }}</span>
             </div>
             <div class="tlp-property timetracking-reading-date">
-                <label class="tlp-label" v-translate> To </label>
+                <label class="tlp-label" v-translate>To</label>
                 <span>{{ end_date }}</span>
             </div>
         </div>

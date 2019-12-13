@@ -19,13 +19,22 @@
   -->
 
 <template>
-    <div class="tlp-modal tlp-modal-warning" role="dialog" aria-labelledby="taskboard-under-construction-modal-title">
+    <div
+        class="tlp-modal tlp-modal-warning"
+        role="dialog"
+        aria-labelledby="taskboard-under-construction-modal-title"
+    >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="taskboard-under-construction-modal-title">
                 <i class="fa fa-warning tlp-modal-title-icon"></i>
                 <translate>This feature is under construction</translate>
             </h1>
-            <div class="tlp-modal-close" data-dismiss="modal" v-bind:title="$gettext('Close')" role="button">
+            <div
+                class="tlp-modal-close"
+                data-dismiss="modal"
+                v-bind:title="$gettext('Close')"
+                role="button"
+            >
                 ×
             </div>
         </div>

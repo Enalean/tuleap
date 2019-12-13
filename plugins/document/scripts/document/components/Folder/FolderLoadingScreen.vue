@@ -18,14 +18,17 @@
   -->
 <template>
     <div class="tlp-card">
-        <skeleton-table v-bind:nb_rows="5"
-                        v-bind:nb_cols="3"
-                        v-bind:icons="['fa-folder', 'fa-folder', 'fa-file-o', 'fa-file-o', 'fa-file-o']"
-                        v-bind:cell_classes="['', 'document-tree-cell-owner', 'document-tree-cell-updatedate']"
+        <skeleton-table
+            v-bind:nb_rows="5"
+            v-bind:nb_cols="3"
+            v-bind:icons="['fa-folder', 'fa-folder', 'fa-file-o', 'fa-file-o', 'fa-file-o']"
+            v-bind:cell_classes="['', 'document-tree-cell-owner', 'document-tree-cell-updatedate']"
         >
             <th class="document-tree-head-name" v-translate>Name</th>
             <th class="document-tree-head-owner document-tree-head-skeleton" v-translate>Owner</th>
-            <th class="document-tree-head-updatedate document-tree-head-skeleton" v-translate>Last update date</th>
+            <th class="document-tree-head-updatedate document-tree-head-skeleton" v-translate>
+                Last update date
+            </th>
         </skeleton-table>
     </div>
 </template>

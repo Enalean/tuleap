@@ -79,7 +79,7 @@
                 v-model="transition_comment_not_empty"
                 v-bind:disabled="is_modal_save_running"
                 data-test="not-empty-comment-checkbox"
-            >
+            />
             <translate>Comment must not be empty</translate>
         </label>
     </pre-conditions-section>

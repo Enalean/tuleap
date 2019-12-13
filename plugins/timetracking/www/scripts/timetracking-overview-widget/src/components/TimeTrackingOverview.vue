@@ -19,12 +19,16 @@
 
 <template>
     <div class="cross-timetracking-widget">
-        <div class="tlp-alert-info cross-tracker-report-success" v-if="has_success_message" data-test="report-success">
+        <div
+            class="tlp-alert-info cross-tracker-report-success"
+            v-if="has_success_message"
+            data-test="report-success"
+        >
             {{ success_message }}
         </div>
-        <time-tracking-overview-reading-mode v-if="reading_mode" data-test="reading-mode"/>
-        <time-tracking-overview-writing-mode v-else data-test="writing-mode"/>
-        <time-tracking-overview-table/>
+        <time-tracking-overview-reading-mode v-if="reading_mode" data-test="reading-mode" />
+        <time-tracking-overview-writing-mode v-else data-test="writing-mode" />
+        <time-tracking-overview-table />
     </div>
 </template>
 

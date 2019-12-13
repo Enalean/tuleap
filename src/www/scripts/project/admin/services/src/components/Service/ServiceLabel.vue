@@ -33,7 +33,7 @@
             required
             v-bind:value="value"
             v-on:input="$emit('input', $event.target.value)"
-        >
+        />
     </div>
 </template>
 <script>

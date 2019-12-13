@@ -29,11 +29,24 @@
             </div>
         </div>
         <div class="tlp-modal-body">
-            <p><translate>An error occured while retrieving needed information to create a pull request.</translate></p>
-            <p><translate>Refresh the page and try again; if the error persists, contact your administrator.</translate></p>
+            <p>
+                <translate>
+                    An error occured while retrieving needed information to create a pull request.
+                </translate>
+            </p>
+            <p>
+                <translate>
+                    Refresh the page and try again; if the error persists, contact your
+                    administrator.
+                </translate>
+            </p>
         </div>
         <div class="tlp-modal-footer tlp-modal-footer-large">
-            <button type="submit" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            <button
+                type="submit"
+                class="tlp-button-danger tlp-button-outline tlp-modal-action"
+                data-dismiss="modal"
+            >
                 <translate>Close</translate>
             </button>
         </div>

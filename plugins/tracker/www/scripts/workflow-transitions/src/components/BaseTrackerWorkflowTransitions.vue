@@ -19,7 +19,7 @@
 
 <template>
     <div>
-        <transition-rules-enforcement-warning v-if="is_base_field_configured"/>
+        <transition-rules-enforcement-warning v-if="is_base_field_configured" />
         <div
             v-if="is_current_tracker_load_failed"
             class="tlp-alert-danger"
@@ -39,11 +39,11 @@
                     </div>
                     <template v-if="is_tracker_available">
                         <template v-if="is_base_field_configured">
-                            <header-section/>
-                            <transitions-matrix-section/>
+                            <header-section />
+                            <transitions-matrix-section />
                         </template>
-                        <first-configuration-sections v-else-if="has_selectbox_fields"/>
-                        <first-configuration-impossible-warning v-else/>
+                        <first-configuration-sections v-else-if="has_selectbox_fields" />
+                        <first-configuration-impossible-warning v-else />
                     </template>
                     <section class="tlp-pane-section" v-else>
                         <div
@@ -53,7 +53,7 @@
                     </section>
                 </div>
             </section>
-            <transition-modal/>
+            <transition-modal />
         </template>
     </div>
 </template>

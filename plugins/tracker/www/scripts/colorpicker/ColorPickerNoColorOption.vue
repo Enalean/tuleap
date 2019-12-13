@@ -18,16 +18,13 @@
   -->
 
 <template>
-    <div class="colorpicker-row-no-color"
-         v-on:click="updateColor"
-    >
-        <span class="colorpicker-circular-color colorpicker-circular-no-color"
-              v-bind:title="$gettext('No color')"
-              v-bind:class="{ 'colorpicker-no-color-selected fa fa-check': isSelected }"
+    <div class="colorpicker-row-no-color" v-on:click="updateColor">
+        <span
+            class="colorpicker-circular-color colorpicker-circular-no-color"
+            v-bind:title="$gettext('No color')"
+            v-bind:class="{ 'colorpicker-no-color-selected fa fa-check': isSelected }"
         ></span>
-        <span class="colorpicker-row-no-color-label"
-              v-translate
-        >No color</span>
+        <span class="colorpicker-row-no-color-label" v-translate>No color</span>
     </div>
 </template>
 

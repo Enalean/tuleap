@@ -35,7 +35,7 @@
                 ×
             </div>
         </div>
-        <slot name="content"/>
+        <slot name="content" />
         <div class="tlp-modal-footer">
             <button
                 type="reset"

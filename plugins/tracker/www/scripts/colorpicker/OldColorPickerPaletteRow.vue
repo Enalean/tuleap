@@ -19,7 +19,8 @@
 
 <template>
     <tr>
-        <td v-for="shade in shades"
+        <td
+            v-for="shade in shades"
             class="colorpicker-squared-shade"
             v-bind:style="getStyle(shade)"
             v-bind:title="shade"

@@ -19,11 +19,12 @@
 
 <template>
     <div>
-        <div v-for="item_metadata in itemMetadata"
-             v-bind:key="item_metadata.short_name"
-             class="document-metadata-properties-margin"
+        <div
+            v-for="item_metadata in itemMetadata"
+            v-bind:key="item_metadata.short_name"
+            class="document-metadata-properties-margin"
         >
-            <custom-metadata-component-type-renderer v-bind:item-metadata="item_metadata"/>
+            <custom-metadata-component-type-renderer v-bind:item-metadata="item_metadata" />
         </div>
     </div>
 </template>

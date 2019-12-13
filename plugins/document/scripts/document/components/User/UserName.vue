@@ -20,13 +20,14 @@
 
 <template functional>
     <span>
-        <a v-bind:href="props.user.user_url"
-           class="document-badge-avatar-username"
-           v-if="! props.user.is_anonymous"
-           data-test="document-user-profile-link"
-        >{{ props.user.display_name }}</a>
-        <span v-else
-              class="document-badge-avatar-username"
-        >{{ props.user.display_name }}</span>
+        <a
+            v-bind:href="props.user.user_url"
+            class="document-badge-avatar-username"
+            v-if="!props.user.is_anonymous"
+            data-test="document-user-profile-link"
+        >
+            {{ props.user.display_name }}
+        </a>
+        <span v-else class="document-badge-avatar-username">{{ props.user.display_name }}</span>
     </span>
 </template>

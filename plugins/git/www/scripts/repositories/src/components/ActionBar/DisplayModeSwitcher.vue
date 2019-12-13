@@ -19,18 +19,20 @@
 <template>
     <div class="tlp-button-bar git-repository-list-actions-display-switch">
         <div class="tlp-button-bar-item">
-            <input type="radio"
-                   name="display-mode-switch"
-                   id="git-repository-list-switch-last-update"
-                   class="tlp-button-bar-checkbox"
-                   v-bind:value="repositories_sorted_by_last_update"
-                   v-model="current_display_mode"
-                   v-bind:disabled="isLoading"
-            >
-            <label for="git-repository-list-switch-last-update"
-                   class="tlp-button-primary tlp-button-outline"
-                   v-bind:class="{ disabled: isLoading }"
-                   v-bind:title="sort_by_last_update_title"
+            <input
+                type="radio"
+                name="display-mode-switch"
+                id="git-repository-list-switch-last-update"
+                class="tlp-button-bar-checkbox"
+                v-bind:value="repositories_sorted_by_last_update"
+                v-model="current_display_mode"
+                v-bind:disabled="isLoading"
+            />
+            <label
+                for="git-repository-list-switch-last-update"
+                class="tlp-button-primary tlp-button-outline"
+                v-bind:class="{ disabled: isLoading }"
+                v-bind:title="sort_by_last_update_title"
             >
                 <span class="fa-stack">
                     <i class="fa fa-long-arrow-down"></i>
@@ -39,18 +41,20 @@
             </label>
         </div>
         <div class="tlp-button-bar-item">
-            <input type="radio"
-                   name="display-mode-switch"
-                   id="git-repository-list-switch-path"
-                   class="tlp-button-bar-checkbox"
-                   v-bind:value="repositories_sorted_by_path"
-                   v-model="current_display_mode"
-                   v-bind:disabled="isLoading"
-            >
-            <label for="git-repository-list-switch-path"
-                   class="tlp-button-primary tlp-button-outline git-repository-list-switch-path-label"
-                   v-bind:class="{ disabled: isLoading }"
-                   v-bind:title="sort_by_path_title"
+            <input
+                type="radio"
+                name="display-mode-switch"
+                id="git-repository-list-switch-path"
+                class="tlp-button-bar-checkbox"
+                v-bind:value="repositories_sorted_by_path"
+                v-model="current_display_mode"
+                v-bind:disabled="isLoading"
+            />
+            <label
+                for="git-repository-list-switch-path"
+                class="tlp-button-primary tlp-button-outline git-repository-list-switch-path-label"
+                v-bind:class="{ disabled: isLoading }"
+                v-bind:title="sort_by_path_title"
             >
                 <i class="fa fa-fw fa-sort-alpha-asc"></i>
             </label>

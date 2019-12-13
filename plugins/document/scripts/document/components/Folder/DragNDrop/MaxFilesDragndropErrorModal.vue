@@ -21,7 +21,7 @@
     <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden">
         <translate
             tag="p"
-            v-bind:translate-params="{nb: max_files_dragndrop}"
+            v-bind:translate-params="{ nb: max_files_dragndrop }"
             v-bind:translate-n="max_files_dragndrop"
             translate-plural="You are not allowed to drag 'n drop more than %{ nb } files at once."
         >

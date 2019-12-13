@@ -31,7 +31,9 @@ exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for regu
       class="empty-page-small-text"
     >
       <span>
-        Your project administrator needs to finish the planning configuration
+        
+                Your project administrator needs to finish the planning configuration
+            
       </span>
     </div>
   </div>

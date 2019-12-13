@@ -18,12 +18,13 @@
   -->
 
 <template>
-    <a href="#"
-       v-on:click.prevent="showNewFolderModal"
-       class="tlp-dropdown-menu-item"
-       role="menuitem"
-       v-if="is_item_a_folder(item) && item.user_can_write"
-       data-test="document-new-folder-creation-button"
+    <a
+        href="#"
+        v-on:click.prevent="showNewFolderModal"
+        class="tlp-dropdown-menu-item"
+        role="menuitem"
+        v-if="is_item_a_folder(item) && item.user_can_write"
+        data-test="document-new-folder-creation-button"
     >
         <i class="fa fa-fw fa-folder-open-o tlp-dropdown-menu-item-icon"></i>
         <translate>New folder</translate>

@@ -18,15 +18,15 @@
   -->
 
 <template functional>
-    <div class="document-file-upload-progress"
-         v-bind:class="{'document-file-upload-progress-error': props.nb_uploads_in_error > 0}"
+    <div
+        class="document-file-upload-progress"
+        v-bind:class="{ 'document-file-upload-progress-error': props.nb_uploads_in_error > 0 }"
     >
-        <span class="document-file-upload-progress-value">
-            {{ props.progress }}%
-        </span>
-        <progress class="document-file-upload-progress-bar"
-                  max="100"
-                  v-bind:value="props.progress"
+        <span class="document-file-upload-progress-value">{{ props.progress }}%</span>
+        <progress
+            class="document-file-upload-progress-bar"
+            max="100"
+            v-bind:value="props.progress"
         ></progress>
     </div>
 </template>

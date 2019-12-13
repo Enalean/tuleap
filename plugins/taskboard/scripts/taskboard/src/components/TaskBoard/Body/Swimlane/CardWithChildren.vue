@@ -20,8 +20,14 @@
 
 <template>
     <div class="taskboard-swimlane">
-        <parent-cell v-bind:swimlane="swimlane"/>
-        <column-with-children v-for="(col, index) of columns" v-bind:key="col.id" v-bind:column="col" v-bind:column_index="index" v-bind:swimlane="swimlane"/>
+        <parent-cell v-bind:swimlane="swimlane" />
+        <column-with-children
+            v-for="(col, index) of columns"
+            v-bind:key="col.id"
+            v-bind:column="col"
+            v-bind:column_index="index"
+            v-bind:swimlane="swimlane"
+        />
     </div>
 </template>
 

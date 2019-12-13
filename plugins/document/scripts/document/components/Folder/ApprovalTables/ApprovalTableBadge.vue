@@ -18,8 +18,13 @@
   -->
 
 <template>
-    <span v-bind:class="approval_data.badge_class" class="document-approval-badge" v-if="has_an_approval_table">
-        <i class="fa tlp-badge-icon" v-bind:class="approval_data.icon_badge"></i> {{ approval_data.badge_label }}
+    <span
+        v-bind:class="approval_data.badge_class"
+        class="document-approval-badge"
+        v-if="has_an_approval_table"
+    >
+        <i class="fa tlp-badge-icon" v-bind:class="approval_data.icon_badge"></i>
+        {{ approval_data.badge_label }}
     </span>
 </template>
 

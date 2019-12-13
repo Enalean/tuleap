@@ -18,10 +18,11 @@
   -->
 
 <template>
-    <span v-bind:class="get_additional_classes"
-          v-if="is_locked"
-          v-bind:title="document_lock_info_title"
-          data-test="document-lock-information"
+    <span
+        v-bind:class="get_additional_classes"
+        v-if="is_locked"
+        v-bind:title="document_lock_info_title"
+        data-test="document-lock-information"
     >
         <i class="fa fa-lock" v-bind:class="get_icon_additional_classes"></i>
     </span>

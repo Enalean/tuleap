@@ -24,30 +24,26 @@
         </div>
 
         <div class="permission-per-group-load-button" v-if="displayButtonLoadAll">
-            <button class="tlp-button-primary tlp-button-outline"
-                    v-on:click="loadAll()"
-                    v-translate
-            >See all repositories</button>
+            <button
+                class="tlp-button-primary tlp-button-outline"
+                v-on:click="loadAll()"
+                v-translate
+            >
+                See all repositories
+            </button>
         </div>
 
         <div class="permission-per-group-loader" v-if="is_loading"></div>
 
-        <h2 class="tlp-pane-subtitle"
-            v-if="is_loaded"
-            v-translate
-        >Repositories permissions</h2>
+        <h2 class="tlp-pane-subtitle" v-if="is_loaded" v-translate>Repositories permissions</h2>
         <table class="tlp-table" v-if="is_loaded">
             <thead>
                 <tr>
-                    <th class="svn-permission-per-group-repository"
-                        v-translate
-                    >Repository</th>
+                    <th class="svn-permission-per-group-repository" v-translate>Repository</th>
                 </tr>
             </thead>
-            <tbody v-if="! isEmpty" key="not-empty">
-                <tr v-for="permission in permissions"
-                    v-bind:key="permission.name"
-                >
+            <tbody v-if="!isEmpty" key="not-empty">
+                <tr v-for="permission in permissions" v-bind:key="permission.name">
                     <td>
                         <a v-bind:href="permission.url">
                             {{ permission.name }}

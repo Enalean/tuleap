@@ -19,9 +19,9 @@
 
 <template>
     <div v-bind:class="selector_class">
-        <project-selector v-if="! is_loading_initial"/>
+        <project-selector v-if="!is_loading_initial" />
         <div v-bind:class="spinner_class"></div>
-        <tracker-selector v-if="! is_loading_initial"/>
+        <tracker-selector v-if="!is_loading_initial" />
     </div>
 </template>
 

@@ -20,7 +20,11 @@
 
 <template>
     <div>
-        <div v-if="shouldDisplayErrorBanner" class="tlp-alert-danger" v-translate="{ error_message }">
+        <div
+            v-if="shouldDisplayErrorBanner"
+            class="tlp-alert-danger"
+            v-translate="{ error_message }"
+        >
             An error occurred: %{ error_message }
         </div>
         <div>

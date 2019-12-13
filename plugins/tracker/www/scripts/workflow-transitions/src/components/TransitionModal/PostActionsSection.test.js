@@ -75,12 +75,14 @@ describe("PostActionsSection", () => {
             });
         });
         describe("when some post actions", () => {
-            beforeEach(() =>
-                (store.getters["transitionModal/post_actions"] = createList(
-                    "post_action",
-                    2,
-                    "presented"
-                )));
+            beforeEach(
+                () =>
+                    (store.getters["transitionModal/post_actions"] = createList(
+                        "post_action",
+                        2,
+                        "presented"
+                    ))
+            );
 
             it("shows only post actions", () => {
                 expect(wrapper.contains(skeleton_selector)).toBeFalsy();

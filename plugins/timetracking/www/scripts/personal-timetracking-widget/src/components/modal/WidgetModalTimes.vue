@@ -22,16 +22,20 @@
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title">
                 <i class="fa fa-pencil tlp-modal-title-icon"></i>
-                <translate> Detailed times </translate>
+                <translate>Detailed times</translate>
             </h1>
             <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
                 &times;
             </div>
         </div>
-        <widget-modal-content v-if="current_artifact" data-test="modal-content"/>
+        <widget-modal-content v-if="current_artifact" data-test="modal-content" />
         <div class="tlp-modal-footer tlp-modal-footer-large">
-            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
-                <translate> Close </translate>
+            <button
+                type="button"
+                class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                data-dismiss="modal"
+            >
+                <translate>Close</translate>
             </button>
         </div>
     </div>

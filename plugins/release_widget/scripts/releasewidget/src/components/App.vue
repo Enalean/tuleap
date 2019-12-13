@@ -21,7 +21,8 @@
 <template>
     <section>
         <div v-if="is_browser_IE11" class="tlp-alert-danger" data-test="is-IE11" v-translate>
-            The plugin "Release Widget" is not supported under IE11. Please use a more recent browser.
+            The plugin "Release Widget" is not supported under IE11. Please use a more recent
+            browser.
         </div>
         <div v-else-if="has_rest_error" class="tlp-alert-danger" data-test="show-error-message">
             {{ error }}
@@ -29,8 +30,8 @@
         <div v-else-if="is_loading" class="release-loader" data-test="is-loading"></div>
         <div v-else>
             <div class="project-release-widget-content" data-test="widget-content">
-                <roadmap-section v-bind:label_tracker_planning="label_tracker_planning"/>
-                <whats-hot-section/>
+                <roadmap-section v-bind:label_tracker_planning="label_tracker_planning" />
+                <whats-hot-section />
             </div>
         </div>
     </section>
