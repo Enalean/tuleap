@@ -77,7 +77,7 @@ class AddInPlaceRetrieverTest extends TestCase
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
-            []
+            new MappedFieldsCollection()
         );
 
         $this->assertNull($add_in_place);
@@ -94,7 +94,7 @@ class AddInPlaceRetrieverTest extends TestCase
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
-            []
+            new MappedFieldsCollection()
         );
 
         $this->assertNull($add_in_place);
@@ -115,7 +115,7 @@ class AddInPlaceRetrieverTest extends TestCase
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
-            []
+            new MappedFieldsCollection()
         );
 
         $this->assertNull($add_in_place);
@@ -138,7 +138,7 @@ class AddInPlaceRetrieverTest extends TestCase
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
-            [42 => $this->mapped_field]
+            new MappedFieldsCollection([42 => $this->mapped_field])
         );
 
         $this->assertNull($add_in_place);
@@ -163,7 +163,7 @@ class AddInPlaceRetrieverTest extends TestCase
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
-            [42 => $this->mapped_field]
+            new MappedFieldsCollection([42 => $this->mapped_field])
         );
 
         $this->assertNull($add_in_place);
@@ -188,7 +188,7 @@ class AddInPlaceRetrieverTest extends TestCase
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
-            [42 => $this->mapped_field]
+            new MappedFieldsCollection([42 => $this->mapped_field])
         );
 
         $this->assertNull($add_in_place);
@@ -214,7 +214,7 @@ class AddInPlaceRetrieverTest extends TestCase
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
-            [42 => $this->mapped_field]
+            new MappedFieldsCollection([42 => $this->mapped_field])
         );
 
         $this->assertNull($add_in_place);
@@ -246,7 +246,7 @@ class AddInPlaceRetrieverTest extends TestCase
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
-            [42 => $this->mapped_field]
+            new MappedFieldsCollection([42 => $this->mapped_field])
         );
 
         $this->assertNull($add_in_place);
@@ -284,7 +284,7 @@ class AddInPlaceRetrieverTest extends TestCase
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
-            [42 => $this->mapped_field]
+            new MappedFieldsCollection([42 => $this->mapped_field])
         );
 
         $this->assertNull($add_in_place);
@@ -326,7 +326,7 @@ class AddInPlaceRetrieverTest extends TestCase
         $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
-            [42 => $this->mapped_field]
+            new MappedFieldsCollection([42 => $this->mapped_field])
         );
 
         $this->assertSame($child_tracker, $add_in_place->getChildTracker());

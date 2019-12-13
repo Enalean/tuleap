@@ -61,17 +61,21 @@ class TrackerPresenterCollectionBuilder
      */
     public function buildCollection(Planning_Milestone $milestone, PFUser $user): array
     {
-        $tracker_collection          = $this->trackers_retriever->getTrackersForMilestone($milestone);
-        $mapped_fields_by_tracker_id = $this->getMappedFieldsIndexedByTrackerId($tracker_collection);
+        $tracker_collection       = $this->trackers_retriever->getTrackersForMilestone($milestone);
+        $mapped_fields_collection = $this->getMappedFieldsIndexedByTrackerId($tracker_collection);
 
         return $tracker_collection->map(
-            function (TaskboardTracker $taskboard_tracker) use ($user, $mapped_fields_by_tracker_id) {
-                $mapped_field = $mapped_fields_by_tracker_id[$taskboard_tracker->getTracker()->getId()] ?? null;
+            function (TaskboardTracker $taskboard_tracker) use ($user, $mapped_fields_collection) {
+                $mapped_field = null;
+                $tracker_id   = (int) $taskboard_tracker->getTracker()->getId();
+                if ($mapped_fields_collection->hasKey($tracker_id)) {
+                    $mapped_field = $mapped_fields_collection->get($tracker_id);
+                }
                 $title_field  = $this->getTitleField($taskboard_tracker, $user);
                 $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
                     $taskboard_tracker,
                     $user,
-                    $mapped_fields_by_tracker_id
+                    $mapped_fields_collection
                 );
 
                 $add_in_place_presenter  = $add_in_place ? new AddInPlacePresenter($add_in_place) : null;
@@ -96,18 +100,18 @@ class TrackerPresenterCollectionBuilder
             : null;
     }
 
-    private function getMappedFieldsIndexedByTrackerId(TrackerCollection $tracker_collection): array
+    private function getMappedFieldsIndexedByTrackerId(TrackerCollection $tracker_collection): MappedFieldsCollection
     {
         return $tracker_collection->reduce(
-            function (array $carry, TaskboardTracker $taskboard_tracker) {
+            function (MappedFieldsCollection $collection, TaskboardTracker $taskboard_tracker) {
                 $mapped_field = $this->mapped_field_retriever->getField($taskboard_tracker);
                 if ($mapped_field) {
-                    $carry[$taskboard_tracker->getTracker()->getId()] = $mapped_field;
+                    $collection->put($taskboard_tracker->getTracker()->getId(), $mapped_field);
                 }
 
-                return $carry;
+                return $collection;
             },
-            []
+            new MappedFieldsCollection()
         );
     }
 }

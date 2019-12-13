@@ -251,7 +251,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     function getId()
     {
-        return $this->id;
+        return (int) $this->id;
     }
 
     /**
