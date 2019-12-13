@@ -100,7 +100,7 @@ describe("App", () => {
 
     describe(`mounted()`, () => {
         it(`will listen to the "keyup" event`, () => {
-            jest.spyOn(document, "addEventListener").mockImplementation(() => {});
+            jest.spyOn(document, "addEventListener").mockImplementation();
 
             shallowMount(App, {
                 mocks: {
@@ -114,7 +114,7 @@ describe("App", () => {
 
     describe(`destroy()`, () => {
         it(`will remove the "keyup" listener`, () => {
-            jest.spyOn(document, "removeEventListener").mockImplementation(() => {});
+            jest.spyOn(document, "removeEventListener").mockImplementation();
 
             const wrapper = shallowMount(App, {
                 mocks: {

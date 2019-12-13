@@ -24,6 +24,7 @@ module.exports = {
         es6: true,
         browser: true
     },
+    reportUnusedDisableDirectives: true,
     rules: {
         // Possible Errors
         "no-template-curly-in-string": "error",

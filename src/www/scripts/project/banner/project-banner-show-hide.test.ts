@@ -104,7 +104,7 @@ describe("Show and hide project banner", () => {
     });
 
     it("Can hide and show the project banner", () => {
-        const windowScrollToSpy = jest.spyOn(window, "scrollTo").mockImplementation(() => {});
+        const windowScrollToSpy = jest.spyOn(window, "scrollTo").mockImplementation();
         const local_document = getLocalDocumentWithProjectBannerAndNavbarInformation();
         const tlpPatchSpy = getTlpPatchSpy();
 

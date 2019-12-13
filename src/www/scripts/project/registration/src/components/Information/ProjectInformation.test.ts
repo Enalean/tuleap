@@ -194,7 +194,7 @@ describe("ProjectInformation - ", () => {
         factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
         expect(store.dispatch).toHaveBeenCalledWith("createProject", expected_project_properties);
 
-        await factory.vm.$nextTick().then(() => {});
+        await factory.vm.$nextTick();
 
         expect(redirect_to_url).toHaveBeenCalledWith(
             "/projects/this-is-a-test/?should-display-created-project-modal=true"
@@ -225,7 +225,7 @@ describe("ProjectInformation - ", () => {
         factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
         expect(store.dispatch).toHaveBeenCalledWith("createProject", expected_project_properties);
 
-        await factory.vm.$nextTick().then(() => {});
+        await factory.vm.$nextTick();
 
         expect(redirect_to_url).toHaveBeenCalledWith(
             "/projects/this-is-a-test/?should-display-created-project-modal=true"
@@ -256,7 +256,7 @@ describe("ProjectInformation - ", () => {
         factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
         expect(store.dispatch).toHaveBeenCalledWith("createProject", expected_project_properties);
 
-        await factory.vm.$nextTick().then(() => {});
+        await factory.vm.$nextTick();
 
         expect(redirect_to_url).toHaveBeenCalledWith(
             "/projects/this-is-a-test/?should-display-created-project-modal=true"
@@ -287,7 +287,7 @@ describe("ProjectInformation - ", () => {
         factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
         expect(store.dispatch).toHaveBeenCalledWith("createProject", expected_project_properties);
 
-        await factory.vm.$nextTick().then(() => {});
+        await factory.vm.$nextTick();
 
         expect(redirect_to_url).toHaveBeenCalledWith(
             "/projects/this-is-a-test/?should-display-created-project-modal=true"
@@ -318,7 +318,7 @@ describe("ProjectInformation - ", () => {
         factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
         expect(store.dispatch).toHaveBeenCalledWith("createProject", expected_project_properties);
 
-        await factory.vm.$nextTick().then(() => {});
+        await factory.vm.$nextTick();
 
         expect(redirect_to_url).toHaveBeenCalledWith(
             "/projects/this-is-a-test/?should-display-created-project-modal=true"
@@ -330,7 +330,7 @@ describe("ProjectInformation - ", () => {
 
         factory.find("[data-test=project-registration-form]").trigger("submit.prevent");
 
-        await factory.vm.$nextTick().then(() => {});
+        await factory.vm.$nextTick();
 
         expect(factory.vm.$route.name).toBe("approval");
     });
