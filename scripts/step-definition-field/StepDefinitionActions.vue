@@ -31,7 +31,7 @@
                 <option value="html" v-bind:selected="!is_text">HTML</option>
             </select>
         </span>
-        <slot/>
+        <slot />
     </div>
 </template>
 

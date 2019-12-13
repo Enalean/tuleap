@@ -19,13 +19,8 @@
 
 <template>
     <div>
-        <step-definition-actions
-            v-bind:value="step.description_format"
-            v-bind:disabled="true"
-        >
-            <step-deletion-action-button-unmark-deletion
-                v-bind:unmark-deletion="unmarkDeletion"
-            />
+        <step-definition-actions v-bind:value="step.description_format" v-bind:disabled="true">
+            <step-deletion-action-button-unmark-deletion v-bind:unmark-deletion="unmarkDeletion" />
         </step-definition-actions>
         <div class="ttm-definition-step-description-deleted">
             <div
@@ -33,13 +28,16 @@
                 v-bind:class="{ 'ttm-definition-step-description-text': is_text }"
             ></div>
             <section class="ttm-definition-step-expected">
-                <step-definition-arrow-expected/>
+                <step-definition-arrow-expected />
                 <div class="ttm-definition-step-expected-edit">
                     <div class="ttm-definition-step-expected-edit-title">
                         <translate>Expected results</translate>
                     </div>
-                    <div v-dompurify-html="step.raw_expected_results"
-                         v-bind:class="{ 'ttm-definition-step-description-text': is_text(step.description_format) }"
+                    <div
+                        v-dompurify-html="step.raw_expected_results"
+                        v-bind:class="{
+                            'ttm-definition-step-description-text': is_text(step.description_format)
+                        }"
                     ></div>
                 </div>
             </section>

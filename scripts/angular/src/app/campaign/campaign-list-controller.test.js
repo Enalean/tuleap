@@ -76,7 +76,10 @@ describe("CampaignListController -", () => {
 
     describe("init()", () => {
         it("When the controller is instatiated, then all the open campaigns will be loaded", async () => {
-            const open_campaigns = [{ id: 60, status: "open" }, { id: 80, status: "open" }];
+            const open_campaigns = [
+                { id: 60, status: "open" },
+                { id: 80, status: "open" }
+            ];
             getCampaigns.mockReturnValue($q.when(open_campaigns));
 
             const promise = $ctrl.$onInit();
@@ -116,10 +119,16 @@ describe("CampaignListController -", () => {
 
     describe("loadClosedCampaigns()", () => {
         it("The closed campaigns will be loaded", async () => {
-            const closed_campaigns = [{ id: 13, status: "closed" }, { id: 36, status: "closed" }];
+            const closed_campaigns = [
+                { id: 13, status: "closed" },
+                { id: 36, status: "closed" }
+            ];
             getCampaigns.mockReturnValue($q.when(closed_campaigns));
 
-            const open_campaigns = [{ id: 42, status: "open" }, { id: 7, status: "open" }];
+            const open_campaigns = [
+                { id: 42, status: "open" },
+                { id: 7, status: "open" }
+            ];
             $ctrl.open_campaigns = open_campaigns;
             $ctrl.campaigns = open_campaigns;
             $ctrl.filtered_campaigns = [];
@@ -315,7 +324,10 @@ describe("CampaignListController -", () => {
 
     describe("hideClosedCampaigns()", () => {
         it("the filtered campaigns will be updated and the boolean flag set to true", () => {
-            const open_campaigns = [{ id: 70, status: "open" }, { id: 10, status: "open" }];
+            const open_campaigns = [
+                { id: 70, status: "open" },
+                { id: 10, status: "open" }
+            ];
             $ctrl.open_campaigns = open_campaigns;
             $ctrl.campaigns = open_campaigns.concat([{ id: 78, status: "closed" }]);
 
