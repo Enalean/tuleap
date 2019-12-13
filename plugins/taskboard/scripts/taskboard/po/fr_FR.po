@@ -39,25 +39,8 @@ msgstr "Étendre"
 msgid "Expand \"%{ label }\" column"
 msgstr "Agrandir la colonne \"%{ label }\""
 
-msgid "Hello,"
-msgstr "Bonjour,"
-
 msgid "Hide closed items"
 msgstr "Cacher les éléments clos"
-
-msgid "I understand this is under construction"
-msgstr "Je comprends que c'est en cours de construction"
-
-msgid ""
-"If you have any questions or if you want to leave feedback, drop an email to "
-"<a href=\"mailto:feedback-taskboard@enalean.com\">feedback-taskboard@enalean."
-"com</a> or join us on <a href=\"https://chat.tuleap.org\">chat.tuleap.org</"
-"a>."
-msgstr ""
-"Si vous avez des questions ou si vous souhaitez faire un retour "
-"d'information, envoyez un courriel à <a href=\"mailto:feedback-"
-"taskboard@enalean.com\">feedback-taskboard@enalean.com</a> ou joignez-nous "
-"sur <a href=\"https://chat.tuleap.org\">chat.tuleap.org</a>."
 
 msgid "Incompatible usage of color"
 msgstr "Incompatibilité dans le choix de la couleur"
@@ -100,16 +83,6 @@ msgstr "Sauver"
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
 
-msgid ""
-"Thanks for your interest in Tuleap next features. You're about to test a new "
-"feature that is under construction. All the buttons, links, menus, … might "
-"not work. This application <strong>will not work on IE11</strong>."
-msgstr ""
-"Merci pour votre intérêt pour les nouvelles fonctionnalités de Tuleap. Vous "
-"êtes sur le point de tester une fonctionnalité actuellement en cours de "
-"construction. Les boutons, liens, menus, … peuvent ne pas marcher. Cette "
-"application <strong>ne fonctionne pas sur IE11</strong>."
-
 msgid "The column is configured to use a color (%s) from the legacy palette."
 msgstr ""
 "La colonne est configurée pour utiliser une couleur (%s) qui fait partie de "
@@ -127,9 +100,6 @@ msgstr ""
 
 msgid "This column does not allow to drop this card here."
 msgstr "Cette colonne ne permet pas de déposer cette carte ici."
-
-msgid "This feature is under construction"
-msgstr "Cette fonctionnalité est en cours de construction"
 
 msgid "This taskboard is empty"
 msgstr "Ce tableau des tâches est vide"

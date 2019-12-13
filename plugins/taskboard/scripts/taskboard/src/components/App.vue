@@ -20,7 +20,6 @@
 
 <template>
     <div class="taskboard-app">
-        <under-construction-modal />
         <global-app-error v-if="has_global_error" />
         <board-without-any-columns-error v-else-if="!has_at_least_one_column" />
         <task-board v-else-if="has_content" />
@@ -34,7 +33,6 @@ import { namespace, State, Getter } from "vuex-class";
 import { Component } from "vue-property-decorator";
 import BoardWithoutAnyColumnsError from "./GlobalError/BoardWithoutAnyColumnsError.vue";
 import GlobalAppError from "./GlobalError/GlobalAppError.vue";
-import UnderConstructionModal from "./UnderConstruction/UnderConstructionModal.vue";
 import { ColumnDefinition, TaskboardEvent } from "../type";
 import TaskBoard from "./TaskBoard/TaskBoard.vue";
 import NoContentEmptyState from "./EmptyState/NoContentEmptyState.vue";
@@ -49,8 +47,7 @@ const swimlane = namespace("swimlane");
         NoContentEmptyState,
         TaskBoard,
         BoardWithoutAnyColumnsError,
-        GlobalAppError,
-        UnderConstructionModal
+        GlobalAppError
     }
 })
 export default class App extends Vue {
