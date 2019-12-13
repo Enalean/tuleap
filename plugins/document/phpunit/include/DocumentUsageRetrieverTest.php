@@ -66,36 +66,11 @@ class DocumentUsageRetrieverTest extends TestCase
         $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
     }
 
-    public function testItShouldUseNewUIIfUserHasNewUIPreferences(): void
-    {
-        $user    = \Mockery::mock(\PFUser::class);
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->andReturn(102);
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn('1');
-
-        ForgeConfig::set('disable_new_document_ui_by_default', true);
-
-        $this->assertTrue($this->retriever->shouldUseDocument($user, $project));
-    }
-
     public function testItShouldUseOldUIIfUserIsUndefined(): void
     {
         $user    = null;
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getId')->andReturn(102);
-
-        $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
-    }
-
-    public function testItShouldUseOldUIIfPlatformDisabledBewUI(): void
-    {
-        $user    = \Mockery::mock(\PFUser::class);
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getId')->andReturn(102);
-
-        $user->shouldReceive('getPreference')->with('plugin_docman_display_new_ui_102')->andReturn(false);
-
-        ForgeConfig::set('disable_new_document_ui_by_default', true);
 
         $this->assertFalse($this->retriever->shouldUseDocument($user, $project));
     }
