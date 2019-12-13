@@ -21,14 +21,14 @@
 namespace Tuleap\Docman\Notifications;
 
 use Docman_ItemFactory;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Project;
-use TuleapTestCase;
 use UGroupManager;
 
-require_once __DIR__ . '/../bootstrap.php';
-
-class NotifiedPeopleRetrieverTest extends TuleapTestCase
+class NotifiedPeopleRetrieverTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
     /** @var  UsersRetriever */
     private $retriever;
     /** @var  UsersToNotifyDao */
@@ -45,17 +45,24 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
     private $user_id;
     private $item_id;
     private $parent_item_id;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ProjectUGroup
+     */
+    private $custom_ugroup;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->project = aMockProject()->build();
+        $this->project = \Mockery::spy(
+            \Project::class,
+            ['getID' => false, 'getUnixName' => false, 'isPublic' => false]
+        );
 
-        $this->notified_users_dao   = mock('Tuleap\Docman\Notifications\UsersToNotifyDao');
-        $this->notified_ugroups_dao = mock('Tuleap\Docman\Notifications\UgroupsToNotifyDao');
-        $this->ugroup_manager       = mock('UgroupManager');
-        $this->item_factory   = mock('Docman_ItemFactory');
+        $this->notified_users_dao   = \Mockery::spy(\Tuleap\Docman\Notifications\UsersToNotifyDao::class);
+        $this->notified_ugroups_dao = \Mockery::spy(\Tuleap\Docman\Notifications\UgroupsToNotifyDao::class);
+        $this->ugroup_manager       = \Mockery::spy(\UgroupManager::class);
+        $this->item_factory         = \Mockery::spy(\Docman_ItemFactory::class);
 
         $this->retriever = new NotifiedPeopleRetriever(
             $this->notified_users_dao,
@@ -68,12 +75,11 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
         $this->item_id        = 66;
         $this->parent_item_id = 65;
 
-        $user = aUser()->withId($this->user_id)->build();
-        $custom_ugroup = aMockUGroup()->withMembers(array($user))->build();
-        stub($this->ugroup_manager)->getUGroup($this->project, 169)->returns($custom_ugroup);
+        $this->custom_ugroup = \Mockery::mock(\ProjectUGroup::class);
+        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, 169)->andReturns($this->custom_ugroup);
     }
 
-    public function itNotifiesUsersListeningToItem()
+    public function testItNotifiesUsersListeningToItem(): void
     {
         $this->userDaoReturnsItemIdAndUser105($this->item_id);
         $this->ugroupDaoReturnsFalse($this->item_id);
@@ -91,10 +97,10 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
                 )
             )
         );
-        $this->assertEqual(iterator_to_array($result), iterator_to_array($expected_result));
+        $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
 
-    public function itNotifiesUsersListeningToParentOfItem()
+    public function testItNotifiesUsersListeningToParentOfItem(): void
     {
         $this->userDaoReturnsFalse($this->item_id);
         $this->ugroupDaoReturnsFalse($this->item_id);
@@ -116,10 +122,10 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
                 )
             )
         );
-        $this->assertEqual(iterator_to_array($result), iterator_to_array($expected_result));
+        $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
 
-    public function itDoesNotNotifyTwiceTheSameUser()
+    public function testItDoesNotNotifyTwiceTheSameUser(): void
     {
         $this->userDaoReturnsItemIdAndUser105($this->item_id);
         $this->ugroupDaoReturnsFalse($this->item_id);
@@ -141,16 +147,20 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
                 )
             )
         );
-        $this->assertEqual(iterator_to_array($result), iterator_to_array($expected_result));
+        $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
 
-    public function itNotifiesUgroupMembersListeningToItem()
+    public function testItNotifiesUgroupMembersListeningToItem(): void
     {
         $this->userDaoReturnsFalse($this->item_id);
         $this->ugroupDaoReturnsUgroup169($this->item_id);
 
         $this->itemExistsinDb();
 
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturn($this->user_id);
+        $this->custom_ugroup->shouldReceive('getMembers')->andReturn([$user]);
+
         $result = $this->retriever->getNotifiedUsers($this->project, $this->item_id);
 
         $expected_result = new \ArrayIterator(
@@ -162,10 +172,10 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
                 )
             )
         );
-        $this->assertEqual(iterator_to_array($result), iterator_to_array($expected_result));
+        $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
 
-    public function itNotifiesUgroupMembersListeningToParentOfItem()
+    public function testItNotifiesUgroupMembersListeningToParentOfItem(): void
     {
         $this->userDaoReturnsFalse($this->item_id);
         $this->ugroupDaoReturnsFalse($this->item_id);
@@ -174,6 +184,10 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
 
         $this->itemExistsinDb();
         $this->parentItemExistsInDb();
+
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturn($this->user_id);
+        $this->custom_ugroup->shouldReceive('getMembers')->andReturn([$user]);
 
         $result = $this->retriever->getNotifiedUsers($this->project, $this->item_id);
 
@@ -186,15 +200,19 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
                 )
             )
         );
-        $this->assertEqual(iterator_to_array($result), iterator_to_array($expected_result));
+        $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
 
-    public function itDoesNotNotifyTwiceTheSameUserInUgroupAndInList()
+    public function testItDoesNotNotifyTwiceTheSameUserInUgroupAndInList(): void
     {
         $this->userDaoReturnsItemIdAndUser105($this->item_id);
         $this->ugroupDaoReturnsUgroup169($this->item_id);
 
         $this->itemExistsinDb();
+
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturn($this->user_id);
+        $this->custom_ugroup->shouldReceive('getMembers')->andReturn([$user]);
 
         $result = $this->retriever->getNotifiedUsers($this->project, $this->item_id);
 
@@ -207,91 +225,93 @@ class NotifiedPeopleRetrieverTest extends TuleapTestCase
                 )
             )
         );
-        $this->assertEqual(iterator_to_array($result), iterator_to_array($expected_result));
+        $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
 
-    private function userDaoReturnsFalse($item_id)
+    private function userDaoReturnsFalse($item_id): void
     {
-        stub($this->notified_users_dao)->searchUserIdByObjectIdAndType(
+        $this->notified_users_dao->shouldReceive('searchUserIdByObjectIdAndType')->with(
             $item_id,
             PLUGIN_DOCMAN_NOTIFICATION
-        )->returnsDar(false);
+        )->andReturns(\TestHelper::arrayToDar(false));
     }
 
-    private function userDaoReturnsFalseByCascade($item_id)
+    private function userDaoReturnsFalseByCascade($item_id): void
     {
-        stub($this->notified_users_dao)->searchUserIdByObjectIdAndType(
+        $this->notified_users_dao->shouldReceive('searchUserIdByObjectIdAndType')->with(
             $item_id,
             PLUGIN_DOCMAN_NOTIFICATION_CASCADE
-        )->returnsDar(false);
+        )->andReturns(\TestHelper::arrayToDar(false));
     }
 
-    private function userDaoReturnsItemIdAndUser105($item_id)
+    private function userDaoReturnsItemIdAndUser105($item_id): void
     {
-        stub($this->notified_users_dao)->searchUserIdByObjectIdAndType(
+        $this->notified_users_dao->shouldReceive('searchUserIdByObjectIdAndType')->with(
             $item_id,
             PLUGIN_DOCMAN_NOTIFICATION
-        )->returnsDar(
-            array(
-                'item_id' => $item_id,
-                'user_id' => $this->user_id,
-                'type'    => PLUGIN_DOCMAN_NOTIFICATION
+        )->andReturns(
+            \TestHelper::arrayToDar(
+                array(
+                    'item_id' => $item_id,
+                    'user_id' => $this->user_id,
+                    'type'    => PLUGIN_DOCMAN_NOTIFICATION
+                )
             )
         );
     }
 
-    private function userDaoReturnsItemIdAndUser105ByCascade($item_id)
+    private function userDaoReturnsItemIdAndUser105ByCascade($item_id): void
     {
-        stub($this->notified_users_dao)->searchUserIdByObjectIdAndType(
+        $this->notified_users_dao->shouldReceive('searchUserIdByObjectIdAndType')->with(
             $item_id,
             PLUGIN_DOCMAN_NOTIFICATION_CASCADE
-        )->returnsDar(
-            array(
-                'item_id' => $item_id,
-                'user_id' => $this->user_id,
-                'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE
+        )->andReturns(
+            \TestHelper::arrayToDar(
+                array(
+                    'item_id' => $item_id,
+                    'user_id' => $this->user_id,
+                    'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE
+                )
             )
         );
     }
 
-    private function ugroupDaoReturnsFalse($item_id)
+    private function ugroupDaoReturnsFalse($item_id): void
     {
-        stub($this->notified_ugroups_dao)->searchUgroupsByItemIdAndType(
+        $this->notified_ugroups_dao->shouldReceive('searchUgroupsByItemIdAndType')->with(
             $item_id,
             PLUGIN_DOCMAN_NOTIFICATION
-        )->returnsDar(false);
+        )->andReturns(\TestHelper::arrayToDar(false));
     }
 
-    private function ugroupDaoReturnsUgroup169($item_id)
+    private function ugroupDaoReturnsUgroup169($item_id): void
     {
-        stub($this->notified_ugroups_dao)->searchUgroupsByItemIdAndType(
+        $this->notified_ugroups_dao->shouldReceive('searchUgroupsByItemIdAndType')->with(
             $item_id,
             PLUGIN_DOCMAN_NOTIFICATION
-        )->returnsDar(
-            array('ugroup_id' => 169)
-        );
+        )->andReturns(\TestHelper::arrayToDar(array('ugroup_id' => 169)));
     }
 
-    private function ugroupDaoReturnsUgroup169ByCascade($item_id)
+    private function ugroupDaoReturnsUgroup169ByCascade($item_id): void
     {
-        stub($this->notified_ugroups_dao)->searchUgroupsByItemIdAndType(
+        $this->notified_ugroups_dao->shouldReceive('searchUgroupsByItemIdAndType')->with(
             $item_id,
             PLUGIN_DOCMAN_NOTIFICATION_CASCADE
-        )->returnsDar(
-            array('ugroup_id' => 169)
+        )->andReturns(\TestHelper::arrayToDar(array('ugroup_id' => 169)));
+    }
+
+    private function itemExistsinDb(): void
+    {
+        $docman_item = \Mockery::spy(\Docman_Item::class);
+        $docman_item->shouldReceive('getParentId')->andReturns($this->parent_item_id);
+        $this->item_factory->shouldReceive('getItemFromDb')->with($this->item_id)->andReturns($docman_item);
+    }
+
+    private function parentItemExistsInDb(): void
+    {
+        $parent_docman_item = \Mockery::spy(\Docman_Item::class);
+        $this->item_factory->shouldReceive('getItemFromDb')->with($this->parent_item_id)->andReturns(
+            $parent_docman_item
         );
-    }
-
-    private function itemExistsinDb()
-    {
-        $docman_item = mock('Docman_Item');
-        stub($docman_item)->getParentId()->returns($this->parent_item_id);
-        stub($this->item_factory)->getItemFromDb($this->item_id)->returns($docman_item);
-    }
-
-    private function parentItemExistsInDb()
-    {
-        $parent_docman_item = mock('Docman_Item');
-        stub($this->item_factory)->getItemFromDb($this->parent_item_id)->returns($parent_docman_item);
     }
 }
