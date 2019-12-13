@@ -261,9 +261,9 @@ class Rule_Regexp extends Rule
         $this->pattern = $pattern;
     }
 
-    function isValid($val)
+    public function isValid($val): bool
     {
-        return preg_match($this->pattern, $val);
+        return (bool) preg_match($this->pattern, $val);
     }
 }
 
@@ -280,12 +280,13 @@ class Rule_Email extends Rule
 {
     var $separator;
 
-    function __construct($separator = null)
+    public function __construct($separator = null)
     {
+        parent::__construct();
         $this->separator = $separator;
     }
 
-    function isValid($val)
+    public function isValid($val): bool
     {
         if ($this->separator !== null) {
             // If separator is defined, split the string and check each email.
@@ -298,7 +299,7 @@ class Rule_Email extends Rule
             return true;
         }
         // $val must contains only one email address
-        return $this->validEmail($val);
+        return (bool) $this->validEmail($val);
     }
 
     /**

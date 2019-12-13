@@ -331,7 +331,7 @@ class ValidFactory
      * If $validator is a string and a validator exists (Valid_String for 'string', Valid_UInt for 'uint', ...) then creates an instance and returns it
      * Else returns null
      */
-    /* public static */ function getInstance($validator, $key = null)
+    public static function getInstance($validator, $key = null)
     {
         if (is_a($validator, 'Valid')) {
             return $validator;

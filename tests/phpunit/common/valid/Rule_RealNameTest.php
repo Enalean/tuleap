@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,17 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Rule_RealNameTest extends TuleapTestCase
+use PHPUnit\Framework\TestCase;
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Rule_RealNameTest extends TestCase
 {
     private $rule;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->rule = new Rule_RealName();
     }
 
-    public function itForbidsCRLFChar()
+    public function testItForbidsCRLFChar(): void
     {
         $this->assertFalse($this->rule->isValid("toto\ntata"));
         $this->assertFalse($this->rule->isValid("toto
@@ -36,29 +39,29 @@ tata"));
         $this->assertFalse($this->rule->isValid("\ntata"));
     }
 
-    public function itForbidsBackslashN()
+    public function testItForbidsBackslashN(): void
     {
         $this->assertFalse($this->rule->isValid('toto\ntata'));
     }
 
-    public function itForbidsBellChar()
+    public function testItForbidsBellChar(): void
     {
         $this->assertFalse($this->rule->isValid("toto\atard"));
         $this->assertFalse($this->rule->isValid('toto\atard'));
     }
 
-    public function itForbidsTabChar()
+    public function testItForbidsTabChar(): void
     {
         $this->assertFalse($this->rule->isValid("tot\tata"));
         $this->assertFalse($this->rule->isValid('tot\tata'));
     }
 
-    public function itAllowsValidNameWithSpace()
+    public function testItAllowsValidNameWithSpace(): void
     {
         $this->assertTrue($this->rule->isValid('John Doe'));
     }
 
-    public function itAllowsValidNameWithUTF8Chars()
+    public function testItAllowsValidNameWithUTF8Chars(): void
     {
         $this->assertTrue($this->rule->isValid('你hǎo 好'));
         $this->assertTrue($this->rule->isValid('いろはにほへとちりぬるを'));

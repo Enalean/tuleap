@@ -1,9 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
- * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
- *
- * Originally written by Manuel VACELET, 2008.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,31 +11,22 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Mock::generatePartial('Rule_UserName', 'Rule_UserNameTestVersion', array('_getProjectManager', '_getUserManager', '_getBackend'));
+use PHPUnit\Framework\TestCase;
+use Tuleap\GlobalLanguageMock;
 
-Mock::generate('UserManager');
-Mock::generate('PFUser');
-
-Mock::generate('ProjectManager');
-Mock::generate('Project');
-
-Mock::generate('Backend');
-
-Mock::generate('BaseLanguage');
-
-class Rule_UserNameTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Rule_UserNameTest extends TestCase
 {
+    use GlobalLanguageMock;
 
-    function testReservedNames()
+    public function testReservedNames(): void
     {
         $r = new Rule_UserName();
         $this->assertTrue($r->isReservedName("root"));
@@ -80,7 +68,7 @@ class Rule_UserNameTest extends TuleapTestCase
         $this->assertTrue($r->isReservedName("DUMMY"));
     }
 
-    function testReservedPrefix()
+    public function testReservedPrefix(): void
     {
         $r = new Rule_UserName();
         $this->assertTrue($r->isReservedName("forge__"));
@@ -89,7 +77,7 @@ class Rule_UserNameTest extends TuleapTestCase
         $this->assertFalse($r->isReservedName("forgeron"));
     }
 
-    function testCVSNames()
+    public function testCVSNames(): void
     {
         $r = new Rule_UserName();
         $this->assertTrue($r->isCvsAccount("anoncvs_"));
@@ -98,7 +86,7 @@ class Rule_UserNameTest extends TuleapTestCase
         $this->assertTrue($r->isCvsAccount("ANONCVS_TEST"));
     }
 
-    function testMinLen()
+    public function testMinLen(): void
     {
         $r = new Rule_UserName();
         $this->assertTrue($r->lessThanMin(""));
@@ -109,7 +97,7 @@ class Rule_UserNameTest extends TuleapTestCase
         $this->assertFalse($r->lessThanMin("abcd"));
     }
 
-    function testMaxLen()
+    public function testMaxLen(): void
     {
         $r = new Rule_UserName();
         $this->assertFalse($r->greaterThanMax("abcdefghijklmnopkrstuvwxyzabc"));
@@ -117,7 +105,7 @@ class Rule_UserNameTest extends TuleapTestCase
         $this->assertTrue($r->greaterThanMax("abcdefghijklmnopkrstuvwxyzabcde"));
     }
 
-    function testIllegalChars()
+    public function testIllegalChars(): void
     {
         $r = new Rule_UserName();
 
@@ -172,7 +160,7 @@ class Rule_UserNameTest extends TuleapTestCase
         $this->assertTrue($r->containsIllegalChars("userç"));
     }
 
-    function testBeginnigByAChar()
+    public function testBeginnigByAChar(): void
     {
         $r = new Rule_UserName();
 
@@ -181,7 +169,7 @@ class Rule_UserNameTest extends TuleapTestCase
         $this->assertTrue($r->atLeastOneChar("a1b"));
     }
 
-    function testNoSpaces()
+    public function testNoSpaces(): void
     {
         $r = new Rule_UserName();
 
@@ -192,98 +180,98 @@ class Rule_UserNameTest extends TuleapTestCase
         $this->assertTrue($r->noSpaces("user"));
     }
 
-    function testUserNameNotExists()
+    public function testUserNameNotExists(): void
     {
-        $um = new MockUserManager($this);
-        $um->setReturnValue('getUserByUserName', null);
+        $um = \Mockery::spy(\UserManager::class);
+        $um->shouldReceive('getUserByUserName')->andReturns(null);
 
-        $r = new Rule_UserNameTestVersion($this);
-        $r->setReturnValue('_getUserManager', $um);
+        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $r->shouldReceive('_getUserManager')->andReturns($um);
 
         $this->assertFalse($r->isAlreadyUserName("usertest"));
     }
 
-    function testUserNameExists()
+    public function testUserNameExists(): void
     {
-        $u = mock('PFUser');
+        $u = \Mockery::spy(\PFUser::class);
 
-        $um = new MockUserManager($this);
-        $um->setReturnValue('getUserByUserName', $u, array("usertest"));
+        $um = \Mockery::spy(\UserManager::class);
+        $um->shouldReceive('getUserByUserName')->with("usertest")->andReturns($u);
 
-        $r = new Rule_UserNameTestVersion($this);
-        $r->setReturnValue('_getUserManager', $um);
+        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $r->shouldReceive('_getUserManager')->andReturns($um);
 
         $this->assertTrue($r->isAlreadyUserName("usertest"));
     }
 
-    function testProjectNameNotExists()
+    public function testProjectNameNotExists(): void
     {
-        $pm = new MockProjectManager($this);
-        $pm->setReturnValue('getProjectByUnixName', null);
+        $pm = \Mockery::spy(\ProjectManager::class);
+        $pm->shouldReceive('getProjectByUnixName')->andReturns(null);
 
-        $r = new Rule_UserNameTestVersion($this);
-        $r->setReturnValue('_getProjectManager', $pm);
+        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $r->shouldReceive('_getProjectManager')->andReturns($pm);
 
         $this->assertFalse($r->isAlreadyProjectName("usertest"));
     }
 
-    function testProjectNameExists()
+    public function testProjectNameExists(): void
     {
-        $p = new MockProject($this);
+        $p = \Mockery::spy(\Project::class);
 
-        $pm = new MockProjectManager($this);
-        $pm->setReturnValue('getProjectByUnixName', $p, array("usertest"));
+        $pm = \Mockery::spy(\ProjectManager::class);
+        $pm->shouldReceive('getProjectByUnixName')->with("usertest")->andReturns($p);
 
-        $r = new Rule_UserNameTestVersion($this);
-        $r->setReturnValue('_getProjectManager', $pm);
+        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $r->shouldReceive('_getProjectManager')->andReturns($pm);
 
         $this->assertTrue($r->isAlreadyProjectName("usertest"));
     }
 
-    function testUnixUserExists()
+    public function testUnixUserExists(): void
     {
-        $backend = new MockBackend($this);
-        $backend->setReturnValue('unixUserExists', true);
-        $backend->setReturnValue('unixGroupExists', false);
+        $backend = \Mockery::spy(\Backend::class);
+        $backend->shouldReceive('unixUserExists')->andReturns(true);
+        $backend->shouldReceive('unixGroupExists')->andReturns(false);
 
-        $r = new Rule_UserNameTestVersion($this);
-        $r->setReturnValue('_getBackend', $backend);
+        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $r->shouldReceive('_getBackend')->andReturns($backend);
 
         $this->assertTrue($r->isSystemName("usertest"));
     }
 
-    function testUnixGroupExists()
+    public function testUnixGroupExists(): void
     {
-        $backend = new MockBackend($this);
-        $backend->setReturnValue('unixUserExists', false);
-        $backend->setReturnValue('unixGroupExists', true);
+        $backend = \Mockery::spy(\Backend::class);
+        $backend->shouldReceive('unixUserExists')->andReturns(false);
+        $backend->shouldReceive('unixGroupExists')->andReturns(true);
 
-        $r = new Rule_UserNameTestVersion($this);
-        $r->setReturnValue('_getBackend', $backend);
+        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $r->shouldReceive('_getBackend')->andReturns($backend);
 
         $this->assertTrue($r->isSystemName("usertest"));
     }
 
-    function testUnixUserAndGroupExists()
+    public function testUnixUserAndGroupExists(): void
     {
-        $backend = new MockBackend($this);
-        $backend->setReturnValue('unixUserExists', true);
-        $backend->setReturnValue('unixGroupExists', true);
+        $backend = \Mockery::spy(\Backend::class);
+        $backend->shouldReceive('unixUserExists')->andReturns(true);
+        $backend->shouldReceive('unixGroupExists')->andReturns(true);
 
-        $r = new Rule_UserNameTestVersion($this);
-        $r->setReturnValue('_getBackend', $backend);
+        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $r->shouldReceive('_getBackend')->andReturns($backend);
 
         $this->assertTrue($r->isSystemName("usertest"));
     }
 
-    function testNoUnixUserOrGroupExists()
+    public function testNoUnixUserOrGroupExists(): void
     {
-        $backend = new MockBackend($this);
-        $backend->setReturnValue('unixUserExists', false);
-        $backend->setReturnValue('unixGroupExists', false);
+        $backend = \Mockery::spy(\Backend::class);
+        $backend->shouldReceive('unixUserExists')->andReturns(false);
+        $backend->shouldReceive('unixGroupExists')->andReturns(false);
 
-        $r = new Rule_UserNameTestVersion($this);
-        $r->setReturnValue('_getBackend', $backend);
+        $r = \Mockery::mock(\Rule_UserName::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $r->shouldReceive('_getBackend')->andReturns($backend);
 
         $this->assertFalse($r->isSystemName("usertest"));
     }
