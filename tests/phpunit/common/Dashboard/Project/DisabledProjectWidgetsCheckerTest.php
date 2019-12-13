@@ -25,6 +25,7 @@ namespace Tuleap\Dashboard\Project;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Dashboard\User\UserDashboard;
 use Widget;
 
 class DisabledProjectWidgetsCheckerTest extends TestCase
@@ -59,23 +60,29 @@ class DisabledProjectWidgetsCheckerTest extends TestCase
     public function testItReturnsFalseIfDashboardTypeIsNotProject()
     {
         $this->dao->shouldNotReceive('isWidgetDisabled');
-
         $this->assertFalse($this->checker->isWidgetDisabled($this->widget, 'whatever'));
+
+        $dashboard = new UserDashboard(1, 101, 'dash');
+        $this->assertFalse($this->checker->checkWidgetIsDisabledFromDashboard($this->widget, $dashboard));
     }
 
     public function testItReturnsTrueIfDashboardTypeIsProjectAndWidgetIsInDB()
     {
         $this->dao->shouldReceive('isWidgetDisabled')->with('widget01')->andReturnTrue();
-
         $this->assertTrue($this->checker->isWidgetDisabled($this->widget, 'project'));
         $this->assertTrue($this->checker->isWidgetDisabled($this->widget, 'g'));
+
+        $dashboard = new ProjectDashboard(1, 101, 'dash');
+        $this->assertTrue($this->checker->checkWidgetIsDisabledFromDashboard($this->widget, $dashboard));
     }
 
     public function testItReturnsFalseIfDashboardTypeIsProjectAndWidgetIsNotInDB()
     {
         $this->dao->shouldReceive('isWidgetDisabled')->with('widget01')->andReturnFalse();
-
         $this->assertFalse($this->checker->isWidgetDisabled($this->widget, 'project'));
         $this->assertFalse($this->checker->isWidgetDisabled($this->widget, 'g'));
+
+        $dashboard = new UserDashboard(1, 101, 'dash');
+        $this->assertFalse($this->checker->checkWidgetIsDisabledFromDashboard($this->widget, $dashboard));
     }
 }

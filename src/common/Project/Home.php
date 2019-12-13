@@ -26,6 +26,8 @@ use EventManager;
 use HTTPRequest;
 use ProjectManager;
 use Tuleap\Dashboard\AssetsIncluder;
+use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
+use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
@@ -117,7 +119,10 @@ class Home implements DispatchableWithRequest
                         new DashboardWidgetRetriever(
                             $dashboard_widget_dao
                         ),
-                        new DashboardWidgetPresenterBuilder($widget_factory),
+                        new DashboardWidgetPresenterBuilder(
+                            $widget_factory,
+                            new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao())
+                        ),
                         new WidgetDeletor($dashboard_widget_dao),
                         new WidgetMinimizor($dashboard_widget_dao),
                         new AssetsIncluder(

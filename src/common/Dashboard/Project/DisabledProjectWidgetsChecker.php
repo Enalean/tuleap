@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Dashboard\Project;
 
+use Tuleap\Dashboard\Dashboard;
 use Widget;
 
 class DisabledProjectWidgetsChecker
@@ -34,6 +35,15 @@ class DisabledProjectWidgetsChecker
     public function __construct(DisabledProjectWidgetsDao $dao)
     {
         $this->dao = $dao;
+    }
+
+    public function checkWidgetIsDisabledFromDashboard(Widget $widget, Dashboard $dashboard): bool
+    {
+        if (get_class($dashboard) !== ProjectDashboard::class) {
+            return false;
+        }
+
+        return $this->dao->isWidgetDisabled((string) $widget->getId());
     }
 
     public function isWidgetDisabled(Widget $widget, string $dashboard_type): bool
