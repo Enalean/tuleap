@@ -187,11 +187,10 @@ class ProjectReleasePresenterBuilder
         );
     }
 
-    public function getProjectReleasePresenter(bool $is_IE11): ProjectReleasePresenter
+    public function getProjectReleasePresenter(): ProjectReleasePresenter
     {
         return new ProjectReleasePresenter(
             $this->request->getProject(),
-            $is_IE11,
             $this->getNumberUpcomingReleases(),
             $this->getNumberBacklogItems(),
             $this->getTrackersIdAgileDashboard(),

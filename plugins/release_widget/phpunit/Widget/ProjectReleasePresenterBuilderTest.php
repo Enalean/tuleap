@@ -192,7 +192,7 @@ class ProjectReleasePresenterBuilderTest extends TestCase
         $this->semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
         $this->semantic_timeframe->shouldReceive('getEndDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'end']));
 
-        $built_presenter = $this->builder->getProjectReleasePresenter(false);
+        $built_presenter = $this->builder->getProjectReleasePresenter();
 
         $this->assertEquals(0, $built_presenter->nb_upcoming_releases);
     }
@@ -229,7 +229,7 @@ class ProjectReleasePresenterBuilderTest extends TestCase
             ->once()
             ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
 
-        $built_presenter = $this->builder->getProjectReleasePresenter(false);
+        $built_presenter = $this->builder->getProjectReleasePresenter();
 
         $this->assertEquals(3, $built_presenter->nb_upcoming_releases);
     }
@@ -266,47 +266,9 @@ class ProjectReleasePresenterBuilderTest extends TestCase
             ->once()
             ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
 
-        $built_presenter = $this->builder->getProjectReleasePresenter(false);
+        $built_presenter = $this->builder->getProjectReleasePresenter();
 
         $this->assertEquals(5, $built_presenter->nb_backlog_items);
-    }
-
-    public function testIsIE11(): void
-    {
-        $this->planning_virtual_top_milestone
-            ->shouldReceive('getPlanning')
-            ->once()
-            ->andReturn(Mockery::mock(Planning::class, ['getBacklogTrackersIds' => []]));
-
-        $this->agiledashboard_milestone_backlog_factory
-            ->shouldReceive('getSelfBacklog')
-            ->withArgs([$this->planning_virtual_top_milestone])
-            ->andReturn($this->agiledashboard_milestone_backlog)
-            ->once();
-
-        $this->agiledashboard_milestone_backlog_item_collection_factory
-            ->shouldReceive('getUnassignedOpenCollection')
-            ->withArgs([$this->john_doe, $this->planning_virtual_top_milestone, $this->agiledashboard_milestone_backlog, false])
-            ->andReturn($this->agileDashboard_milestone_backlog_item_collection)
-            ->once();
-
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
-
-        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
-
-        $this->semantic_timeframe->shouldReceive('getDurationField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getLabel' => 'duration']));
-        $this->semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
-        $this->semantic_timeframe->shouldReceive('getEndDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'end']));
-
-        $this->planning_milestone_factory
-            ->shouldReceive('getAllFutureMilestones')
-            ->once()
-            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
-
-
-        $built_presenter = $this->builder->getProjectReleasePresenter(true);
-
-        $this->assertTrue($built_presenter->is_IE11);
     }
 
     public function testGetTrackersId(): void
@@ -345,7 +307,7 @@ class ProjectReleasePresenterBuilderTest extends TestCase
             ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
 
 
-        $built_presenter = $this->builder->getProjectReleasePresenter(false);
+        $built_presenter = $this->builder->getProjectReleasePresenter();
         $tracker_json = '[{"id":122,"color_name":"fiesta-red","label":"Bug"},{"id":124,"color_name":"deep-blue","label":"Story"}]';
 
         $this->assertEqualsCanonicalizing($tracker_json, $built_presenter->json_trackers_agile_dashboard);
@@ -384,7 +346,7 @@ class ProjectReleasePresenterBuilderTest extends TestCase
             ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
 
 
-        $built_presenter = $this->builder->getProjectReleasePresenter(false);
+        $built_presenter = $this->builder->getProjectReleasePresenter();
 
         $this->assertEquals(50, $built_presenter->nb_backlog_items);
     }
@@ -421,7 +383,7 @@ class ProjectReleasePresenterBuilderTest extends TestCase
             ->once()
             ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
 
-        $built_presenter = $this->builder->getProjectReleasePresenter(false);
+        $built_presenter = $this->builder->getProjectReleasePresenter();
 
         $this->assertEquals('Releases', $built_presenter->label_tracker_planning);
     }
