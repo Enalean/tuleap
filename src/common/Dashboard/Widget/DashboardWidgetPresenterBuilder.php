@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\Dashboard\Widget;
 
 use Tuleap\Dashboard\Dashboard;
+use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
 use Tuleap\Widget\WidgetFactory;
 
 class DashboardWidgetPresenterBuilder
@@ -30,9 +31,17 @@ class DashboardWidgetPresenterBuilder
      */
     private $widget_factory;
 
-    public function __construct(WidgetFactory $widget_factory)
-    {
+    /**
+     * @var DisabledProjectWidgetsChecker
+     */
+    private $disabled_project_widgets_checker;
+
+    public function __construct(
+        WidgetFactory $widget_factory,
+        DisabledProjectWidgetsChecker $disabled_project_widgets_checker
+    ) {
         $this->widget_factory = $widget_factory;
+        $this->disabled_project_widgets_checker = $disabled_project_widgets_checker;
     }
 
     /**
@@ -91,7 +100,10 @@ class DashboardWidgetPresenterBuilder
         $widgets_presenter = array();
         foreach ($column->getWidgets() as $dashboard_widget) {
             $widget = $this->widget_factory->getInstanceByWidgetName($dashboard_widget->getName());
-            if ($widget && $widget->isAvailable()) {
+            if ($widget &&
+                $widget->isAvailable() &&
+                $this->disabled_project_widgets_checker->checkWidgetIsDisabledFromDashboard($widget, $dashboard) === false
+            ) {
                 $widget->owner_id   = $owner_info->getId();
                 $widget->owner_type = $owner_info->getType();
                 $widget->loadContent($dashboard_widget->getContentId());
