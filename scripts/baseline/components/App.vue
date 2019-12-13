@@ -22,24 +22,15 @@
     <div>
         <nav class="breadcrumb">
             <div class="breadcrumb-item">
-                <router-link
-                    v-bind:to="{ name: 'IndexPage' }"
-                    class="breadcrumb-link"
-                >
+                <router-link v-bind:to="{ name: 'IndexPage' }" class="breadcrumb-link">
                     <i class="fa fa-tlp-baseline breadcrumb-link-icon"></i>
                     <translate>
                         Baselines
                     </translate>
                 </router-link>
             </div>
-            <div
-                v-if="!is_current_page_root"
-                class="breadcrumb-item"
-            >
-                <router-link
-                    to=""
-                    class="breadcrumb-link"
-                >
+            <div v-if="!is_current_page_root" class="breadcrumb-item">
+                <router-link to="" class="breadcrumb-link">
                     {{ current_page_title }}
                 </router-link>
             </div>
@@ -47,12 +38,12 @@
 
         <main class="tlp-framed-vertically">
             <div class="tlp-framed-horizontally">
-                <notification v-if="notification" v-bind:notification="notification"/>
-                <router-view v-bind:project_id="project_id" v-on:title="changeTitle"/>
+                <notification v-if="notification" v-bind:notification="notification" />
+                <router-view v-bind:project_id="project_id" v-on:title="changeTitle" />
             </div>
         </main>
 
-        <modal/>
+        <modal />
     </div>
 </template>
 

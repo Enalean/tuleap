@@ -146,9 +146,11 @@ describe("Artifact", () => {
         describe("when some linked artifacts are filtered", () => {
             const filtered_linked_artifacts = createList("baseline_artifact", 3);
 
-            beforeEach(() =>
-                ($store.getters["current_baseline/filterArtifacts"] = () =>
-                    filtered_linked_artifacts));
+            beforeEach(
+                () =>
+                    ($store.getters["current_baseline/filterArtifacts"] = () =>
+                        filtered_linked_artifacts)
+            );
 
             it("shows only visible linked artifacts", () => {
                 expect(wrapper.contains(ArtifactsList)).toBeTruthy();

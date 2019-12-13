@@ -28,21 +28,25 @@
         <td class="baselines-table-column-name">{{ baseline.name }}</td>
         <td class="baselines-table-column-milestone">
             <artifact-link class="baselines-table-column-milestone" v-bind:artifact="milestone">
-                <artifact-badge
-                    v-bind:artifact="milestone"
-                    v-bind:tracker="milestone_tracker"
-                />{{ milestone.title }}
+                <artifact-badge v-bind:artifact="milestone" v-bind:tracker="milestone_tracker" />
+                {{ milestone.title }}
             </artifact-link>
         </td>
         <td class="baselines-table-column-snapshot-date">
-            <humanized-date v-bind:date="baseline.snapshot_date" v-bind:start_with_capital="true"/>
+            <humanized-date v-bind:date="baseline.snapshot_date" v-bind:start_with_capital="true" />
         </td>
         <td class="baselines-table-column-author">
-            <user-badge v-bind:user="author" class="baseline-badge-avatar"/>
+            <user-badge v-bind:user="author" class="baseline-badge-avatar" />
         </td>
         <td class="tlp-table-cell-actions">
-            <consult-baseline-button class="tlp-table-cell-actions-button" v-bind:baseline="baseline"/>
-            <delete-baseline-button class="tlp-table-cell-actions-button" v-bind:baseline="baseline"/>
+            <consult-baseline-button
+                class="tlp-table-cell-actions-button"
+                v-bind:baseline="baseline"
+            />
+            <delete-baseline-button
+                class="tlp-table-cell-actions-button"
+                v-bind:baseline="baseline"
+            />
         </td>
     </tr>
 </template>

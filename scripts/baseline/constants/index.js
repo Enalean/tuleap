@@ -18,9 +18,9 @@
  */
 
 /*
-* Limiting the depth of the artifact tree.
-* It also prevents infinite loading of cyclically linked artifacts.
-*/
+ * Limiting the depth of the artifact tree.
+ * It also prevents infinite loading of cyclically linked artifacts.
+ */
 const ARTIFACTS_EXPLORATION_DEPTH_LIMIT = 20;
 
 export { ARTIFACTS_EXPLORATION_DEPTH_LIMIT };

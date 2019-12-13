@@ -62,11 +62,13 @@ describe("ContentBody", () => {
     });
 
     describe("when some first depth artifacts", () => {
-        beforeEach(() =>
-            ($store.state.current_baseline.first_depth_artifacts = createList(
-                "baseline_artifact",
-                2
-            )));
+        beforeEach(
+            () =>
+                ($store.state.current_baseline.first_depth_artifacts = createList(
+                    "baseline_artifact",
+                    2
+                ))
+        );
 
         describe("when all artifacts hidden", () => {
             beforeEach(() => ($store.getters["current_baseline/filterArtifacts"] = () => []));
@@ -78,8 +80,10 @@ describe("ContentBody", () => {
         describe("when some artifacts are visible", () => {
             const filtered_artifacts = createList("baseline_artifact", 2);
 
-            beforeEach(() =>
-                ($store.getters["current_baseline/filterArtifacts"] = () => filtered_artifacts));
+            beforeEach(
+                () =>
+                    ($store.getters["current_baseline/filterArtifacts"] = () => filtered_artifacts)
+            );
 
             it("shows all visible artifacts", () => {
                 expect(wrapper.contains(ArtifactsList)).toBeTruthy();

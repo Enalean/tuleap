@@ -36,15 +36,14 @@
                 <th class="baselines-table-column-header" v-translate>
                     Author
                 </th>
-                <th>
-                </th>
+                <th></th>
             </tr>
         </thead>
 
         <tbody v-if="are_baselines_loading">
-            <baseline-skeleton/>
-            <baseline-skeleton/>
-            <baseline-skeleton/>
+            <baseline-skeleton />
+            <baseline-skeleton />
+            <baseline-skeleton />
         </tbody>
 
         <tbody v-else-if="are_baselines_available">

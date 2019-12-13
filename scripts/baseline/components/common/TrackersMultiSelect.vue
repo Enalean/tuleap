@@ -19,19 +19,8 @@
   -->
 
 <template>
-    <select
-        class="tlp-select"
-        tabindex="-1"
-        aria-hidden="true"
-        ref="input"
-        width="100%"
-        multiple
-    >
-        <option
-            v-for="tracker in trackers"
-            v-bind:key="tracker.id"
-            v-bind:value="tracker.id"
-        >
+    <select class="tlp-select" tabindex="-1" aria-hidden="true" ref="input" width="100%" multiple>
+        <option v-for="tracker in trackers" v-bind:key="tracker.id" v-bind:value="tracker.id">
             {{ tracker.name }}
         </option>
     </select>

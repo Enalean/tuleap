@@ -18,9 +18,7 @@
   -
   -->
 <template>
-    <span class="baseline-artifact-badge tlp-badge-outline"
-          v-bind:class="tlp_badge_class"
-    >
+    <span class="baseline-artifact-badge tlp-badge-outline" v-bind:class="tlp_badge_class">
         {{ tracker.item_name }} #{{ artifact.id }}
     </span>
 </template>

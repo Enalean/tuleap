@@ -20,8 +20,8 @@
 
 <template>
     <div>
-        <comparison-page-skeleton v-if="is_fetching"/>
-        <comparison-page v-else v-bind:comparison="comparison"/>
+        <comparison-page-skeleton v-if="is_fetching" />
+        <comparison-page v-else v-bind:comparison="comparison" />
     </div>
 </template>
 

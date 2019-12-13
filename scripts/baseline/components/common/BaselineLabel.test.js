@@ -58,7 +58,7 @@ describe("BaselineLabel", () => {
 
     it("shows baseline information", () => {
         expect(wrapper.text()).toMatch(
-            /Baseline #1 - Baseline V1\s*Created by\s*Alita\s*on May 2, 2019 7:48 AM/
+            /Baseline #1 - Baseline V1\s*Created by\s*Alita\s*on\s*May 2, 2019 7:48 AM/
         );
     });
 });

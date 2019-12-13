@@ -30,10 +30,10 @@
                 v-bind:class="{ 'fa-caret-right': is_collapsed, 'fa-caret-down': !is_collapsed }"
             ></i>
         </a>
-        <slot name="header"/>
+        <slot name="header" />
 
         <div v-show="!is_collapsed">
-            <slot/>
+            <slot />
         </div>
     </div>
 </template>

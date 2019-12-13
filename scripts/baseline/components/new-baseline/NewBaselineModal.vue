@@ -20,18 +20,10 @@
 <template>
     <form v-on:submit.prevent="saveBaseline()">
         <div class="tlp-modal-body">
-            <div
-                class="tlp-alert-danger"
-                data-test-type="error-message"
-                v-if="is_loading_failed"
-            >
+            <div class="tlp-alert-danger" data-test-type="error-message" v-if="is_loading_failed">
                 <translate>Cannot fetch milestones</translate>
             </div>
-            <div
-                class="tlp-alert-danger"
-                data-test-type="error-message"
-                v-if="is_creating_failed"
-            >
+            <div class="tlp-alert-danger" data-test-type="error-message" v-if="is_creating_failed">
                 <translate>Cannot create baseline</translate>
             </div>
 
@@ -48,7 +40,7 @@
                     name="name"
                     id="name"
                     required
-                >
+                />
             </div>
 
             <div class="tlp-form-element">
@@ -59,12 +51,10 @@
                         class="tlp-tooltip tlp-tooltip-right"
                         v-bind:data-tlp-tooltip="milestone_tooltip"
                     >
-                        <i
-                            class="fa fa-question-circle baseline-tooltip-icon"
-                        ></i>
+                        <i class="fa fa-question-circle baseline-tooltip-icon"></i>
                     </span>
                 </label>
-                <milestones-select-skeleton v-if="is_loading"/>
+                <milestones-select-skeleton v-if="is_loading" />
                 <span
                     class="tlp-text-muted"
                     data-test-type="information_message"
@@ -86,9 +76,7 @@
                         class="tlp-tooltip tlp-tooltip-right"
                         v-bind:data-tlp-tooltip="snapshot_date_tooltip"
                     >
-                        <i
-                            class="fa fa-question-circle baseline-tooltip-icon-optional"
-                        ></i>
+                        <i class="fa fa-question-circle baseline-tooltip-icon-optional"></i>
                     </span>
                 </label>
                 <div class="tlp-form-element tlp-form-element-prepend">
@@ -102,7 +90,7 @@
                         class="tlp-input tlp-input-date"
                         data-enabletime="true"
                         size="19"
-                    >
+                    />
                 </div>
             </div>
         </div>
@@ -127,10 +115,8 @@
                     data-test-type="spinner"
                     class="tlp-button-icon fa fa-fw fa-spinner fa-spin"
                     v-if="is_creating"
-                >
-                </i>
-                <i class="fa fa-fw fa-save tlp-button-icon" v-else>
-                </i>
+                ></i>
+                <i class="fa fa-fw fa-save tlp-button-icon" v-else></i>
                 <translate>Create baseline</translate>
             </button>
         </div>

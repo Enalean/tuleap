@@ -29,15 +29,9 @@
             v-if="loading"
             class="fa fa-spinner fa-fw fa-spin tlp-button-icon"
             data-test-type="spinner"
-        >
-        </i>
-        <i
-            v-else
-            class="fa fa-fw tlp-button-icon"
-            v-bind:class="icon_class"
-        >
-        </i>
-        <slot/>
+        ></i>
+        <i v-else class="fa fa-fw tlp-button-icon" v-bind:class="icon_class"></i>
+        <slot />
     </button>
 </template>
 

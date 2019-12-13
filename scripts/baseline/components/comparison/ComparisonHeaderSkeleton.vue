@@ -20,7 +20,7 @@
 
 <template>
     <div>
-        <comparison-label-skeleton/>
+        <comparison-label-skeleton />
         <h2>
             <span class="tlp-skeleton-text" key="from"></span>
             <i class="fa fa-tlp-baseline-comparison baseline-comparison-separator"></i>

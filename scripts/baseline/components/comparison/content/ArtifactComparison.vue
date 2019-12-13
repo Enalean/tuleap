@@ -42,7 +42,7 @@
             />
         </div>
 
-        <depth-limit-reached-message v-if="is_depth_limit_reached"/>
+        <depth-limit-reached-message v-if="is_depth_limit_reached" />
 
         <artifacts-list-comparison
             v-else-if="are_linked_artifacts_available"

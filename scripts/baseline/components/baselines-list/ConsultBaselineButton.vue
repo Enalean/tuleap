@@ -18,10 +18,7 @@
   -
   -->
 <template>
-    <action-button
-        icon="eye"
-        v-on:click="showBaseline()"
-    >
+    <action-button icon="eye" v-on:click="showBaseline()">
         <span v-translate>Consult</span>
     </action-button>
 </template>

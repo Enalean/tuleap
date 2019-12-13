@@ -23,11 +23,9 @@
         Baseline #{{ baseline.id }} - {{ baseline.name }}
         <span class="baseline-label-author tlp-text-muted">
             <span v-translate>Created by</span>
-            <user-badge
-                v-bind:user="author"
-                class="baseline-label-author-badge"
-            />
-            <span v-translate>on</span> {{ humanized_snapshot_date }}
+            <user-badge v-bind:user="author" class="baseline-label-author-badge" />
+            <span v-translate>on</span>
+            {{ humanized_snapshot_date }}
         </span>
     </h2>
 </template>

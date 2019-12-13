@@ -18,10 +18,7 @@
   -->
 
 <template>
-    <span
-        class="tlp-tooltip tlp-tooltip-right"
-        v-bind:data-tlp-tooltip="formatted_date"
-    >
+    <span class="tlp-tooltip tlp-tooltip-right" v-bind:data-tlp-tooltip="formatted_date">
         {{ humanized_date }}
     </span>
 </template>

@@ -20,22 +20,19 @@
 
 <template>
     <div>
-        <div
-            v-if="is_loading_failed"
-            class="tlp-alert-danger"
-        >
+        <div v-if="is_loading_failed" class="tlp-alert-danger">
             <translate>Cannot fetch baseline artifacts</translate>
         </div>
 
-        <comparison-page-skeleton v-else-if="is_loading"/>
+        <comparison-page-skeleton v-else-if="is_loading" />
 
         <content-layout v-else>
-            <comparison-header v-bind:comparison="comparison" slot="header"/>
-            <comparison-statistics slot="statistics"/>
-            <comparison-content-filters slot="filters"/>
+            <comparison-header v-bind:comparison="comparison" slot="header" />
+            <comparison-statistics slot="statistics" />
+            <comparison-content-filters slot="filters" />
 
             <p slot="comment" v-if="has_comparison_comment">{{ comparison.comment }}</p>
-            <comparison-content/>
+            <comparison-content />
         </content-layout>
     </div>
 </template>

@@ -42,7 +42,8 @@ describe("Current comparison store:", () => {
 
         describe("#load", () => {
             beforeEach(() =>
-                store.actions.load(context, { base_baseline_id: 1, compared_to_baseline_id: 2 }));
+                store.actions.load(context, { base_baseline_id: 1, compared_to_baseline_id: 2 })
+            );
 
             it("commits 'startNewComparison'", () => {
                 expect(context.dispatch).toHaveBeenCalledWith("startNewComparison", {
@@ -73,7 +74,8 @@ describe("Current comparison store:", () => {
                 store.actions.startNewComparison(context, {
                     base_baseline_id: 1,
                     compared_to_baseline_id: 2
-                }));
+                })
+            );
 
             it("commit 'rest' on compared baseline", () => {
                 expect(context.commit).toHaveBeenCalledWith("base/reset", {

@@ -110,7 +110,6 @@
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
                 key="cancel"
-
             >
                 <translate>Cancel</translate>
             </button>

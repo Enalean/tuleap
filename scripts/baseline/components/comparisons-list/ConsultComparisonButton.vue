@@ -19,10 +19,7 @@
   -->
 
 <template>
-    <action-button
-        icon="eye"
-        v-on:click="showComparison()"
-    >
+    <action-button icon="eye" v-on:click="showComparison()">
         <span v-translate>
             Consult
         </span>

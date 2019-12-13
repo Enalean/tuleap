@@ -20,10 +20,7 @@
 
 <template>
     <div class="statistics">
-        <statistic
-            v-bind:label="added_artifact_label"
-            class="comparison-statistic-added-artifacts"
-        >
+        <statistic v-bind:label="added_artifact_label" class="comparison-statistic-added-artifacts">
             {{ added_artifacts_count }}
         </statistic>
 

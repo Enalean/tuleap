@@ -50,7 +50,7 @@
                             <translate>New baseline</translate>
                         </button>
                     </div>
-                    <baselines-list v-bind:project_id="project_id"/>
+                    <baselines-list v-bind:project_id="project_id" />
                 </section>
             </div>
         </section>
@@ -87,7 +87,7 @@
                             Compare baselines
                         </button>
                     </div>
-                    <comparisons-list v-bind:project_id="project_id"/>
+                    <comparisons-list v-bind:project_id="project_id" />
                 </section>
             </div>
         </section>
