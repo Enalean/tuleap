@@ -103,6 +103,7 @@
 }
 
 .steps-step-action {
+    position: relative;
     margin: 0 $tlp-spacing;
 }
 
@@ -111,10 +112,14 @@
     border-radius: 3px 0 0 3px;
 }
 
-.steps-step-action-dropdown {
+.steps-step-action-dropdown-trigger {
     width: 26px;
     padding: 0 5px;
     text-overflow: clip;
+}
+
+.tlp-dropdown-menu.steps-step-action-dropdown {
+    right: -8px;
 }
 
 .steps-step-action-fail {
