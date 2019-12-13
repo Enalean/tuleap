@@ -27,6 +27,10 @@ $button-size: 40px;
     }
 }
 
+.taskboard-drop-not-accepted > .taskboard-add-card-form {
+    display: none;
+}
+
 .taskboard-add-in-place-button {
     position: absolute;
     z-index: 10;
