@@ -43,7 +43,8 @@ $dao = new DashboardWidgetDao($widget_factory);
 $router = new Router(
     new PreferencesController(
         $dao,
-        $widget_factory
+        $widget_factory,
+        new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao())
     ),
     new AddWidgetController(
         $dao,

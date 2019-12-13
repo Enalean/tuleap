@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use CSRFSynchronizerToken;
 use HTTPRequest;
 use PFUser;
 use Feedback;
+use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
 use Tuleap\Widget\WidgetFactory;
 
 class PreferencesController
@@ -38,12 +39,19 @@ class PreferencesController
      */
     private $widget_factory;
 
+    /**
+     * @var DisabledProjectWidgetsChecker
+     */
+    private $disabled_project_widgets_checker;
+
     public function __construct(
         DashboardWidgetDao $dao,
-        WidgetFactory $widget_factory
+        WidgetFactory $widget_factory,
+        DisabledProjectWidgetsChecker $disabled_project_widgets_checker
     ) {
-        $this->dao            = $dao;
-        $this->widget_factory = $widget_factory;
+        $this->dao                              = $dao;
+        $this->widget_factory                   = $widget_factory;
+        $this->disabled_project_widgets_checker = $disabled_project_widgets_checker;
     }
 
     public function display(HTTPRequest $request)
@@ -73,7 +81,16 @@ class PreferencesController
         $this->forceContentIdToBePresentInRequest($request, $row);
 
         try {
-            $this->getWidget($row)->updatePreferences($request);
+            $widget = $this->getWidget($row);
+
+            if ($this->disabled_project_widgets_checker->isWidgetDisabled($widget, $row['dashboard_type'])) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    _('The widget is disabled in project dashboard.')
+                );
+            } else {
+                $widget->updatePreferences($request);
+            }
         } catch (\Exception $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
