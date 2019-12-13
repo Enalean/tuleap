@@ -24,21 +24,24 @@ let entry_points = {
     "style-flamingparrot": "./themes/FlamingParrot/css/style.scss",
     "help-page": "./scripts/help-page.js",
     "modal-burning-parrot": "./scripts/modal-burning-parrot.js",
-    "modal-flaming-parrot": "./scripts/modal-flaming-parrot.js",
+    "modal-flaming-parrot": "./scripts/modal-flaming-parrot.js"
 };
 
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
 for (const color of colors_burning_parrot) {
     entry_points[`style-burningparrot-${color}`] = `./themes/BurningParrot/css/style-${color}.scss`;
-    entry_points[`style-burningparrot-${color}-condensed`] = `./themes/BurningParrot/css/style-${color}-condensed.scss`;
-
+    entry_points[
+        `style-burningparrot-${color}-condensed`
+    ] = `./themes/BurningParrot/css/style-${color}-condensed.scss`;
 }
 
 module.exports = [
     {
         entry: entry_points,
         context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(path.resolve(__dirname, "../../src/www/assets/mytuleap_contact_support/")),
+        output: webpack_configurator.configureOutput(
+            path.resolve(__dirname, "../../src/www/assets/mytuleap_contact_support/")
+        ),
         externals: {
             jquery: "jQuery",
             tlp: "tlp"

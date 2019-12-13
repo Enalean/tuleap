@@ -40,10 +40,7 @@ import { contactSupportModalShown } from "./modal.js";
                 contact_support_modal = createModal(
                     document.body.querySelector(".contact-support-modal")
                 );
-                contact_support_modal.addEventListener(
-                    "tlp-modal-shown",
-                    contactSupportModalShown
-                );
+                contact_support_modal.addEventListener("tlp-modal-shown", contactSupportModalShown);
                 contact_support_modal.show();
             });
         } else {
