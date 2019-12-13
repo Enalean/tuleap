@@ -166,11 +166,6 @@ function appendSubFolderContent(state, [folder_id, sub_items]) {
             state.folded_by_map[folder[0]].push(...children_ids);
         }
     }
-
-    if (isFolderClosed(state, folder_id)) {
-        state.folded_items_ids.push(...children_ids);
-        state.folded_by_map[folder_id].push(...children_ids);
-    }
 }
 
 function findAncestorFoldingFolder(state, folder_id) {
@@ -181,10 +176,6 @@ function findAncestorFoldingFolder(state, folder_id) {
 
 function isParentFoldedByOnOfIsAncestors(state, parent_folder) {
     return state.folded_items_ids.find(folded_item_id => folded_item_id === parent_folder.id);
-}
-
-function isFolderClosed(state, folder_id) {
-    return Object.prototype.hasOwnProperty.call("state", folder_id);
 }
 
 function foldFolderContent(state, folder_id) {
