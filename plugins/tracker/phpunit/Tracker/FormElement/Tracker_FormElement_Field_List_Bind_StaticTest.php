@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List_Bind_Static;
+use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
 
@@ -100,5 +102,96 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase
             ->andReturn(['432']);
 
         $this->assertEmpty($this->bind->getNumericValues($changeset_value));
+    }
+
+    public function testGetBindValues(): void
+    {
+        $bv1    = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $bv2    = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $field  = $is_rank_alpha = $default_values = $decorators = '';
+        $values = [101 => $bv1, 102 => $bv2];
+        $static = new Tracker_FormElement_Field_List_Bind_Static($field, $is_rank_alpha, $values, $default_values, $decorators);
+        $this->assertEquals($values, $static->getBindValues());
+        $this->assertEquals([], $static->getBindValues([]), 'Dont give more than what we are asking');
+        $this->assertEquals([102 => $bv2], $static->getBindValues([102]));
+        $this->assertEquals([], $static->getBindValues([666]), 'What do we have to do with unknown value?');
+    }
+
+    public function testGetFieldData(): void
+    {
+        $bv1    = $this->getFieldValueListWithLabel('1 - Ordinary');
+        $bv2    = $this->getFieldValueListWithLabel('9 - Critical');
+        $values = [13564 => $bv1, 13987 => $bv2];
+        $f      = $this->getListFieldWIthBindValues($values);
+        $this->assertEquals('13564', $f->getFieldData('1 - Ordinary', false));
+    }
+
+    public function testGetFieldDataMultiple(): void
+    {
+        $bv1    = $this->getFieldValueListWithLabel('Admin');
+        $bv2    = $this->getFieldValueListWithLabel('Tracker');
+        $bv3    = $this->getFieldValueListWithLabel('User Interface');
+        $bv4    = $this->getFieldValueListWithLabel('Docman');
+        $values = [13564 => $bv1, 13987 => $bv2, 125 => $bv3, 666 => $bv4];
+
+        $res = ['13564', '125', '666'];
+        $f   = $this->getListFieldWIthBindValues($values);
+        $this->assertEquals($res, $f->getFieldData('Admin,User Interface,Docman', true));
+    }
+
+    public function testItAddsANewValue(): void
+    {
+        $value_dao = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static_ValueDao::class);
+        $value_dao->shouldReceive('propagateCreation');
+        $bind_static = $this->getListFieldWIthBindValues([]);
+
+        $bind_static->shouldReceive('getValueDao')->andReturn($value_dao);
+
+        $value_dao->shouldReceive(
+            'create'
+        )->withArgs(
+            [
+                101,
+                'intermodulation',
+                Mockery::any(),
+                Mockery::any(),
+                Mockery::any()
+            ]
+        )->once()->andReturn(321);
+
+        $new_id = $bind_static->addValue(' intermodulation	');
+
+        $this->assertEquals($new_id, 321);
+    }
+
+    public function testItDoesntCrashWhenInvalidValueShouldBePrinted(): void
+    {
+        $field = Mockery::mock(\Tracker_FormElement_Field_List::class);
+        $bind  = new Tracker_FormElement_Field_List_Bind_Static($field, 0, [], null, null);
+        $this->assertEquals('-', $bind->formatArtifactValue(0));
+    }
+
+    /**
+     * @return \Tracker_FormElement_Field_List_BindValue
+     */
+    protected function getFieldValueListWithLabel(string $label): \Tracker_FormElement_Field_List_BindValue
+    {
+        $value = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
+        $value->shouldReceive('getLabel')->andReturn($label);
+
+        return $value;
+    }
+
+    /**
+     * @return Mockery\Mock|Tracker_FormElement_Field_List_Bind_Static
+     */
+    protected function getListFieldWIthBindValues(array $values)
+    {
+        $field = Mockery::mock(\Tracker_FormElement_Field_List::class);
+        $field->shouldReceive('getId')->andReturn(101);
+
+        return Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class, [$field, true, $values, [], []])
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
     }
 }
