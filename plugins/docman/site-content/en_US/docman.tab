@@ -426,7 +426,6 @@ plugin_docman	docman_browserns4	Your browser (Netscape 4) is too old to access t
 
 plugin_docman	error_alreadyinstalled	Document Manager already installed.
 plugin_docman	error_cannot_delete_hc_md	You are not allowed to delete system properties.
-plugin_docman	error_create_initversion	Error while creating initial version.
 plugin_docman	error_create_newversion	Error while creating new version.
 plugin_docman	error_create_news	Error while creating news. Check that you have right permissions.
 plugin_docman	error_create_news_details	Error while creating news. Check that details field is not empty.
@@ -468,7 +467,6 @@ plugin_docman	error_not_a_file	The specified item is not a file.
 plugin_docman	error_get_checksum	Error while getting file checksum.
 plugin_docman	error_item_id_missing	Error: item ID is missing.
 plugin_docman	error_no_option	Please choose option for creating approval table
-plugin_docman	error_version_not_exist	Error: The given version of the item does not exist.
 plugin_docman	perm_denied	You do not have the permission to access the document
 plugin_docman	docman_no_perm	Permission denied set on documents. You can not view this documents unless administrator grant you access.
 plugin_docman	request_to_admin	<br><a href="/my/">Back to your personal page</a><em> or you can request it to him.</em></br> Write your message below and click on the button to send your request to the project administrators.
@@ -790,7 +788,6 @@ plugin_docman	view_Tree	Tree
 
 
 plugin_docman	warn_wiki_perms	<em>Warning: the <strong>permissions</strong> on the document you are creating <strong>may be different</strong> than the one set on the wiki page.</em>
-plugin_docman	warning_missingowner	Specified owner does not exist. You are now the item owner. You can change owner in Item properties.
 plugin_docman	warning_no_item_recurse	Impossible to apply recursively properties values: No item found.
 plugin_docman	warning_obsolete	The file is obsolete and no longer available in standard views (Tree, Table, ...)
 plugin_docman	warning_perms	Permissions for $1 has been ignored because $2 is $3.

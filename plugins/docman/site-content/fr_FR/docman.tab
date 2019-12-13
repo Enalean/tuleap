@@ -426,7 +426,6 @@ plugin_docman	docman_browserns4	Votre navigateur (Netscape 4) est trop vieux pou
 
 plugin_docman	error_alreadyinstalled	Gestionnaire de documents déjà installé.
 plugin_docman	error_cannot_delete_hc_md	Vous n'êtes pas autorisés à supprimer les propriétés systemes.
-plugin_docman	error_create_initversion	Erreur lors de la création de la version initiale.
 plugin_docman	error_create_newversion	Erreur lors de la création d'une nouvelle version.
 plugin_docman	error_create_news	Erreur lors de la création de la news. Vérifiez que vous avez les bonnes permissions.
 plugin_docman	error_create_news_details	Erreur lors de la création de la news. Vérifiez que vous avez rempli le champ détails.
@@ -468,7 +467,6 @@ plugin_docman	error_not_a_file	L'élément spécifié n'est pas un fichier.
 plugin_docman	error_get_checksum	Erreur lors de la récupération de la somme de contrôle du fichier.
 plugin_docman	error_item_id_missing	Erreur: pas d'élément à traiter (ID).
 plugin_docman	error_no_option	Veuillez choisir une option pour la création de la table d'approbation
-plugin_docman	error_version_not_exist	Erreur: La version passée en paramètre n'existe pas.
 plugin_docman	perm_denied	Vous n'avez pas les permissions pour visualiser ce document
 plugin_docman	docman_no_perm	Des permissions ont été appliquées à ce document. Vous ne pouvez le visualiser que si un des administrateurs vous donne les privilèges requis.
 plugin_docman	request_to_admin	<br><a href="/my/">Retourner à votre page personnelle.</a> <em> ou vous pouvez lui demanderla permission.</em><br /> Ajouter juste votre message puis envoyer.
@@ -789,7 +787,6 @@ plugin_docman	view_Table	Table
 plugin_docman	view_Tree	Arbre
 
 plugin_docman	warn_wiki_perms	<em>Attention : les <strong>permissions</strong> sur le document que vous allez créer <strong>peuvent être différent</strong>e que celles définies pour la page wiki.</em>
-plugin_docman	warning_missingowner	Le propriétaire n'existe pas. Vous êtes le propriétaire. Vous pouvez changer le propriétaire dans les propriétés de l'élément.
 plugin_docman	warning_no_item_recurse	Impossible d'appliquer récursivement les propriétés: pas d'élément.
 plugin_docman	warning_obsolete	Le fichier est obsolète et n'est plus disponible dans les vues standard (Arbre, Table, ...)
 plugin_docman	warning_perms	Les permissions pour $1 sont ignorées parce que $2 est $3.

@@ -120,9 +120,38 @@ msgstr "Administrateurs du gestionnaire de documents"
 msgid "Document settings"
 msgstr "Paramètres de documents"
 
+msgid "Document successfully created."
+msgstr "Document créé."
+
+msgid "Error while appending file chunk."
+msgstr "Une erreur est survenue durant l'ajout du morceau de fichier."
+
+msgid "Error while creating initial version."
+msgstr "Erreur lors de la création de la version initiale."
+
+msgid "Error while creating new version."
+msgstr "Erreur lors de la création d'une nouvelle version."
+
+msgid "Error while creating news. Check that details field is not empty."
+msgstr "Erreur lors de la création de la news. Vérifiez que vous avez rempli le champ détails."
+
+msgid "Error while creating news. Check that subject field is not empty."
+msgstr "Erreur lors de la création de la news. Vérifiez que vous avez rempli le champ sujet."
+
+msgid "Error while creating news. Check that you have right permissions."
+msgstr ""
+"Erreur lors de la création de la news. Vérifiez que vous avez les bonnes permissions."
+
+msgid "Error while getting file checksum."
+msgstr ""
+"Erreur lors de la récupération de la somme de contrôle du fichier."
+
 msgid "Error while trying to delete the wiki page from wiki service."
 msgstr ""
 "Erreur lors de la suppression de la page wiki à partir du service wiki."
+
+msgid "Error: The given version of the item does not exist."
+msgstr "Erreur: La version passée en paramètre n'existe pas."
 
 msgid "File upload limits"
 msgstr "Limites de téléversement"
@@ -143,6 +172,9 @@ msgstr "Les permissions ne sont pas suffisantes pour le(s) utilisateur(s) \"%s\"
 msgid "It is not possible to update a wiki page with approval table."
 msgstr ""
 "Impossible de mettre à jour un wiki qui possède une table d'approbation."
+
+msgid "Item successfully updated"
+msgstr "Elément mis à jour."
 
 msgid "Items permissions are not listed."
 msgstr "Les permissions des éléments ne sont pas listées."
@@ -182,6 +214,9 @@ msgstr "Pas encore"
 msgid "Notified people"
 msgstr "Personnes notifiées"
 
+msgid "Parameter parent_id is missing"
+msgstr "Le paramètre parent_id est manquant"
+
 msgid "Permission"
 msgstr "Permission"
 
@@ -203,6 +238,11 @@ msgstr "Les paramètres ont été sauvegardés avec succès"
 
 msgid "Something happen!"
 msgstr "Quelque chose a changé !"
+
+msgid ""
+"Specified owner does not exist. You are now the item owner. You can change "
+"owner in Item properties."
+msgstr "Le propriétaire n'existe pas. Vous êtes le propriétaire. Vous pouvez changer le propriétaire dans les propriétés de l'élément."
 
 msgid "Switch to the new user interface"
 msgstr "Basculer sur la nouvelle interface utilisateur"
