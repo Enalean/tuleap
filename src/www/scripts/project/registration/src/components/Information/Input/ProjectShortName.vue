@@ -48,8 +48,6 @@
                 v-bind:placeholder="$gettext('Project shortname')"
                 v-bind:minlength="min_project_length"
                 v-bind:maxlength="max_project_length"
-                v-bind:pattern="short_name_validation_pattern"
-                required
                 v-on:input="updateProjectShortName($refs.shortname.value)"
                 v-bind:value="slugified_project_name"
                 data-test="new-project-name"
@@ -77,7 +75,7 @@ import { Component } from "vue-property-decorator";
 import { Getter } from "vuex-class";
 
 @Component
-export default class ProjectName extends Vue {
+export default class ProjectShortName extends Vue {
     @Getter
     has_error!: boolean;
 
@@ -92,11 +90,6 @@ export default class ProjectName extends Vue {
 
     min_project_length = 3;
     max_project_length = 30;
-
-    get short_name_validation_pattern(): string {
-        const invalid_length = this.min_project_length - 1;
-        return `^[a-zA-Z][a-zA-Z0-9/-]{${invalid_length},${this.max_project_length}}`;
-    }
 
     get should_user_correct_shortname(): string {
         if (this.shouldDisplayEditShortName()) {
@@ -115,7 +108,7 @@ export default class ProjectName extends Vue {
     }
 
     slugifyProjectShortName(value: string): void {
-        if (this.is_in_edit_mode) {
+        if (this.has_error || this.is_in_edit_mode) {
             return;
         }
 
@@ -123,9 +116,7 @@ export default class ProjectName extends Vue {
         this.project_name = value;
 
         this.slugified_project_name = slugify(value);
-        if (!this.$refs.shortname.checkValidity()) {
-            this.has_slug_error = true;
-        }
+        this.checkValidity(this.slugified_project_name);
 
         this.$refs.shortname.value = this.slugified_project_name;
 
@@ -136,13 +127,29 @@ export default class ProjectName extends Vue {
     }
 
     updateProjectShortName(value: string): void {
-        this.has_slug_error = !this.$refs.shortname.checkValidity();
+        this.checkValidity(value);
         this.slugified_project_name = value;
 
         EventBus.$emit("update-project-name", {
             slugified_name: value,
             name: this.project_name
         });
+    }
+
+    checkValidity(value: string): void {
+        if (this.has_error) {
+            this.is_in_edit_mode = true;
+            this.has_slug_error = true;
+            this.$store.commit("resetError");
+        }
+
+        if (value.length < this.min_project_length || value.length > this.max_project_length) {
+            this.has_slug_error = true;
+            return;
+        }
+
+        const regexp = RegExp(/^[a-zA-Z][a-zA-Z0-9-]+$/);
+        this.has_slug_error = !regexp.test(value);
     }
 
     shouldDisplaySlug(): boolean {

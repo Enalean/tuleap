@@ -115,6 +115,50 @@ describe("ProjectShortName", () => {
             });
         });
 
+        it(`Has an  no error when shortname has exactly 30 characters`, async () => {
+            const event_bus_emit = jest.spyOn(EventBus, "$emit");
+
+            const data = {
+                slugified_project_name: "",
+                has_slug_error: false,
+                is_in_edit_mode: false
+            };
+            const wrapper = await createWrapper(data);
+
+            EventBus.$emit("slugify-project-name", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+            expect(wrapper.vm.$data.slugified_project_name).toBe("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+            expect(wrapper.vm.$data.has_slug_error).toBe(false);
+
+            expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
+                slugified_name: wrapper.vm.$data.slugified_project_name,
+                name: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            });
+        });
+
+        it(`Has an error when shortname has more than 30 characters`, async () => {
+            const event_bus_emit = jest.spyOn(EventBus, "$emit");
+
+            const data = {
+                slugified_project_name: "",
+                has_slug_error: false,
+                is_in_edit_mode: false
+            };
+            const wrapper = await createWrapper(data);
+
+            EventBus.$emit("slugify-project-name", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbb");
+
+            expect(wrapper.vm.$data.slugified_project_name).toBe(
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbb"
+            );
+            expect(wrapper.vm.$data.has_slug_error).toBe(true);
+
+            expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
+                slugified_name: wrapper.vm.$data.slugified_project_name,
+                name: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbb"
+            });
+        });
+
         it(`Has an error when shortname start by a numerical character`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
