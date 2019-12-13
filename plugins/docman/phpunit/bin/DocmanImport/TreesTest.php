@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  * Originally written by Clément Plantier, 2008
  *
  * This file is a part of Codendi.
@@ -19,15 +20,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once(__DIR__.'/../../../bin/DocmanImport/Trees.class.php');
+use PHPUnit\Framework\TestCase;
+
+require_once(__DIR__ . '/../../../bin/DocmanImport/Trees.class.php');
 
 /**
  * Unit tests for the Trees utility class
  */
-class TreesTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class TreesTest extends TestCase
 {
 
-    public function testNodeListToTree()
+    public function testNodeListToTree(): void
     {
         $nodes = array();
         $tree = Trees::nodeListToTree($nodes);
@@ -39,7 +43,7 @@ class TreesTest extends TuleapTestCase
 
         $nodes = array(0 => array(1));
         $tree = Trees::nodeListToTree($nodes);
-        $this->assertEqual(array(0 => array(1 => null)), $tree);
+        $this->assertEquals(array(0 => array(1 => null)), $tree);
 
         //     0
         //    / \
@@ -52,19 +56,19 @@ class TreesTest extends TuleapTestCase
                      2 => array(4, 5),
                  );
         $tree = Trees::nodeListToTree($nodes);
-        $this->assertEqual(array(0 => array(1 => array(3 => null), 2 => array(4 => null, 5 => null))), $tree);
+        $this->assertEquals(array(0 => array(1 => array(3 => null), 2 => array(4 => null, 5 => null))), $tree);
     }
 
-    public function testMergeTag()
+    public function testMergeTag(): void
     {
         $tree1 = array(0 => null);
         $res = Trees::mergeTag($tree1, $tree1);
-        $this->assertEqual(array('(root)' => null), $res);
+        $this->assertEquals(array('(root)' => null), $res);
 
         $tree1 = array(0 => null);
         $tree2 = array(1 => null);
         $res = Trees::mergeTag($tree1, $tree2);
-        $this->assertEqual(array('(root)' => null), $res);
+        $this->assertEquals(array('(root)' => null), $res);
 
         //     0
         //    / \
@@ -100,7 +104,7 @@ class TreesTest extends TuleapTestCase
                  );
 
         $res = Trees::mergeTag($tree1, $tree1);
-        $this->assertEqual($expected, $res);
+        $this->assertEquals($expected, $res);
 
         // Tree 1
         //
@@ -155,6 +159,6 @@ class TreesTest extends TuleapTestCase
                  );
 
          $res = Trees::mergeTag($tree1, $tree2);
-         $this->assertEqual($expected, $res);
+         $this->assertEquals($expected, $res);
     }
 }
