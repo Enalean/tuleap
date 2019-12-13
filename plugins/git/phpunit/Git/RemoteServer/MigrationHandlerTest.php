@@ -21,15 +21,20 @@
 
 namespace Tuleap\Git\RemoteServer\Gerrit;
 
+use GitRepository;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Project;
-use TuleapTestCase;
 use Git_SystemEventManager;
 use Git_RemoteServer_NotFoundException;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class MigrationHandlerTest extends TuleapTestCase
+class MigrationHandlerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var Git_SystemEventManager
      */
@@ -43,10 +48,9 @@ class MigrationHandlerTest extends TuleapTestCase
     protected $server_factory;
     protected $driver_factory;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->git_system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
         $this->server_factory           = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
@@ -65,10 +69,18 @@ class MigrationHandlerTest extends TuleapTestCase
         );
 
         $this->user   = \Mockery::spy(\PFUser::class);
-        $this->server = aGerritServer()->withId(1)->build();
+        $this->server = $this->buildMockedRepository(1);
     }
 
-    public function itThrowsAnExceptionIfRepositoryCannotBeMigrated()
+    private function buildMockedRepository(int $id): GitRepository
+    {
+        $repositrory = Mockery::mock(GitRepository::class);
+        $repositrory->shouldReceive('getId')->andReturn($id);
+
+        return $repositrory;
+    }
+
+    public function testItThrowsAnExceptionIfRepositoryCannotBeMigrated(): void
     {
         $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(false)->getMock();
         $this->project_manager->shouldReceive('getParentProject')->andReturns(null);
@@ -83,7 +95,7 @@ class MigrationHandlerTest extends TuleapTestCase
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
-    public function itThrowsAnExceptionIfRepositoryIsAlreadyInQueueForMigration()
+    public function testItThrowsAnExceptionIfRepositoryIsAlreadyInQueueForMigration(): void
     {
         $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(true)->getMock();
         $repository->shouldReceive('getProject')->andReturns(\Mockery::spy(Project::class));
@@ -99,7 +111,7 @@ class MigrationHandlerTest extends TuleapTestCase
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
-    public function itThrowsAnExceptionIfRepositoryWillBeMigratedIntoARestrictedGerritServer()
+    public function testItThrowsAnExceptionIfRepositoryWillBeMigratedIntoARestrictedGerritServer(): void
     {
         $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(true)->getMock();
         $this->project_manager->shouldReceive('getParentProject')->andReturns(null);
@@ -117,7 +129,7 @@ class MigrationHandlerTest extends TuleapTestCase
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
-    public function itThrowsAnExceptionIfParentProjectIsNotActive()
+    public function testItThrowsAnExceptionIfParentProjectIsNotActive(): void
     {
         $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(true)->getMock();
         $project = \Mockery::spy(Project::class);
@@ -137,7 +149,7 @@ class MigrationHandlerTest extends TuleapTestCase
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
-    public function itMigratesRepositoryWhenParentIsActive()
+    public function testItMigratesRepositoryWhenParentIsActive(): void
     {
         $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(true)->getMock();
         $project = \Mockery::spy(Project::class);
@@ -156,8 +168,7 @@ class MigrationHandlerTest extends TuleapTestCase
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
-
-    public function itMigratesRepository()
+    public function testItMigratesRepository(): void
     {
         $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(true)->getMock();
         $this->project_manager->shouldReceive('getParentProject')->andReturns(null);
@@ -174,7 +185,7 @@ class MigrationHandlerTest extends TuleapTestCase
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
-    public function itDoesNothingWhenServerDoesNotExist()
+    public function testItDoesNothingWhenServerDoesNotExist(): void
     {
         $repository         = \Mockery::spy(\GitRepository::class)->shouldReceive('canMigrateToGerrit')->andReturns(true)->getMock();
         $remote_server_id   = 1;
@@ -188,7 +199,7 @@ class MigrationHandlerTest extends TuleapTestCase
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
-    public function itThrowsAnExceptionIfRepositoryIsNotMigrated()
+    public function testItThrowsAnExceptionIfRepositoryIsNotMigrated(): void
     {
         $repository        = \Mockery::spy(\GitRepository::class)->shouldReceive('isMigratedToGerrit')->andReturns(false)->getMock();
         $disconnect_option = '';
@@ -198,7 +209,7 @@ class MigrationHandlerTest extends TuleapTestCase
         $this->handler->disconnect($repository, $disconnect_option);
     }
 
-    public function itDisconnectsWithoutOptionsIfTheRemoteServerDoesNotExist()
+    public function testItDisconnectsWithoutOptionsIfTheRemoteServerDoesNotExist(): void
     {
         $backend           = \Mockery::spy(\Git_Backend_Gitolite::class)->shouldReceive('disconnectFromGerrit')->andReturns(true)->getMock();
         $repository        = \Mockery::spy(\GitRepository::class)->shouldReceive('isMigratedToGerrit')->andReturns(true)->getMock();
@@ -213,7 +224,7 @@ class MigrationHandlerTest extends TuleapTestCase
         $this->handler->disconnect($repository, $disconnect_option);
     }
 
-    public function itDisconnectsWithtEmptyOption()
+    public function testItDisconnectsWithtEmptyOption(): void
     {
         $backend           = \Mockery::spy(\Git_Backend_Gitolite::class)->shouldReceive('disconnectFromGerrit')->andReturns(true)->getMock();
         $repository        = \Mockery::spy(\GitRepository::class)->shouldReceive('isMigratedToGerrit')->andReturns(true)->getMock();
@@ -232,7 +243,7 @@ class MigrationHandlerTest extends TuleapTestCase
         $this->handler->disconnect($repository, $disconnect_option);
     }
 
-    public function itDisconnectsWithtReadOnlyOption()
+    public function testItDisconnectsWithtReadOnlyOption(): void
     {
         $backend           = \Mockery::spy(\Git_Backend_Gitolite::class)->shouldReceive('disconnectFromGerrit')->andReturns(true)->getMock();
         $repository        = \Mockery::spy(\GitRepository::class)->shouldReceive('isMigratedToGerrit')->andReturns(true)->getMock();
@@ -251,7 +262,7 @@ class MigrationHandlerTest extends TuleapTestCase
         $this->handler->disconnect($repository, $disconnect_option);
     }
 
-    public function itDisconnectsWithtDeleteOption()
+    public function testItDisconnectsWithtDeleteOption(): void
     {
         $backend           = \Mockery::spy(\Git_Backend_Gitolite::class)->shouldReceive('disconnectFromGerrit')->andReturns(true)->getMock();
         $repository        = \Mockery::spy(\GitRepository::class)->shouldReceive('isMigratedToGerrit')->andReturns(true)->getMock();
@@ -271,7 +282,7 @@ class MigrationHandlerTest extends TuleapTestCase
         $this->handler->disconnect($repository, $disconnect_option);
     }
 
-    public function itThrowsAnExceptionIfDeletePluginNotInstalled()
+    public function testItThrowsAnExceptionIfDeletePluginNotInstalled(): void
     {
         $backend           = \Mockery::spy(\Git_Backend_Gitolite::class)->shouldReceive('disconnectFromGerrit')->andReturns(true)->getMock();
         $repository        = \Mockery::spy(\GitRepository::class)->shouldReceive('isMigratedToGerrit')->andReturns(true)->getMock();

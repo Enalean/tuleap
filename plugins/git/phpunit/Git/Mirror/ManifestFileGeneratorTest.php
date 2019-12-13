@@ -22,10 +22,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tuleap\TemporaryTestDirectory;
+
 require_once __DIR__.'/../../bootstrap.php';
 
-class ManifestFileGeneratorTest extends TuleapTestCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class ManifestFileGeneratorTest extends TestCase
 {
+    use MockeryPHPUnitIntegration, TemporaryTestDirectory;
+
     protected $current_time;
     protected $manifest_directory;
     protected $fixture_dir;
@@ -42,24 +49,17 @@ class ManifestFileGeneratorTest extends TuleapTestCase
     /** @var Logger */
     protected $logger;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->current_time       = $_SERVER['REQUEST_TIME'];
         $this->time_in_the_past   = 1414684049;
         $this->fixture_dir        = $this->getTmpDir();
         $this->manifest_directory = $this->fixture_dir .'/manifests';
         mkdir($this->manifest_directory);
 
-        $this->kernel_repository = aGitRepository()
-            ->withPath('linux/kernel.git')
-            ->withDescription('Linux4ever')
-            ->build();
-        $this->firefox_repository = aGitRepository()
-            ->withPath('mozilla/firefox.git')
-            ->withDescription('free and open-source web browser')
-            ->build();
+        $this->kernel_repository = $this->buildMockedRepository('linux/kernel.git', 'Linux4ever');
+        $this->firefox_repository = $this->buildMockedRepository('mozilla/firefox.git', 'free and open-source web browser');
 
         $this->singapour_mirror = new Git_Mirror_Mirror(\Mockery::spy(\PFUser::class), $this->singapour_mirror_id, 'singapour.com', 'singapour', 'SNP');
         $this->manifest_file_for_singapour = $this->manifest_directory
@@ -70,10 +70,19 @@ class ManifestFileGeneratorTest extends TuleapTestCase
         $this->generator = new Git_Mirror_ManifestFileGenerator($this->logger, $this->manifest_directory);
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         `rm -rf $this->manifest_directory`;
         parent::tearDown();
+    }
+
+    private function buildMockedRepository(string $path, string $description): GitRepository
+    {
+        $repositrory = Mockery::mock(GitRepository::class);
+        $repositrory->shouldReceive('getPath')->andReturn($path);
+        $repositrory->shouldReceive('getDescription')->andReturn($description);
+
+        return $repositrory;
     }
 
     protected function getManifestContent($path)
@@ -83,7 +92,7 @@ class ManifestFileGeneratorTest extends TuleapTestCase
         return json_decode($content, true);
     }
 
-    protected function forgeExistingManifestFile($path)
+    protected function forgeExistingManifestFile($path): void
     {
         file_put_contents(
             "compress.zlib://$path",
@@ -91,7 +100,7 @@ class ManifestFileGeneratorTest extends TuleapTestCase
         );
     }
 
-    protected function forgeExistingManifestFileWithGitoliteAdmin($path)
+    protected function forgeExistingManifestFileWithGitoliteAdmin($path): void
     {
         file_put_contents(
             "compress.zlib://$path",
@@ -99,7 +108,7 @@ class ManifestFileGeneratorTest extends TuleapTestCase
         );
     }
 
-    public function itDoesNotCreateManifestFileIfItDoesNotExist()
+    public function testItDoesNotCreateManifestFileIfItDoesNotExist(): void
     {
         $this->assertFalse(is_file($this->manifest_file_for_singapour));
 
@@ -108,17 +117,17 @@ class ManifestFileGeneratorTest extends TuleapTestCase
         $this->assertFalse(is_file($this->manifest_file_for_singapour));
     }
 
-    public function itRemovesRepositoryIfItIsInTheManifest()
+    public function testItRemovesRepositoryIfItIsInTheManifest(): void
     {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
 
         $this->generator->removeRepositoryFromManifestFile($this->singapour_mirror, $this->kernel_repository->getPath());
 
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
-        $this->assertFalse(isset($content["/linux/kernel.git"]));
+        $this->assertFalse(isset($content["/mozilla/firefox.git"]));
     }
 
-    public function itLogsDeletion()
+    public function testItLogsDeletion(): void
     {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
 
@@ -128,7 +137,7 @@ class ManifestFileGeneratorTest extends TuleapTestCase
         $this->generator->removeRepositoryFromManifestFile($this->singapour_mirror, $this->kernel_repository->getPath());
     }
 
-    public function itCreatesManifestFileIfItDoesNotExist()
+    public function testItCreatesManifestFileIfItDoesNotExist(): void
     {
         $this->assertFalse(is_file($this->manifest_file_for_singapour));
 
@@ -137,21 +146,24 @@ class ManifestFileGeneratorTest extends TuleapTestCase
         $this->assertTrue(is_file($this->manifest_file_for_singapour));
     }
 
-    public function itAddsANewRepoIfManifestDoesNotExist()
+    public function testItAddsANewRepoIfManifestDoesNotExist(): void
     {
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
 
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
 
-        $this->assertEqual($content["/linux/kernel.git"], array(
-            "owner"       => null,
-            "description" => "Linux4ever",
-            "reference"   => null,
-            "modified"    => $this->current_time
-        ));
+        $this->assertEquals(
+            array(
+                "owner"       => null,
+                "description" => "Linux4ever",
+                "reference"   => null,
+                "modified"    => $this->current_time
+            ),
+            $content["/linux/kernel.git"]
+        );
     }
 
-    public function itLogsAddition()
+    public function testItLogsAddition(): void
     {
         $this->logger->shouldReceive('debug')->times(2);
         $this->logger->shouldReceive('debug')->with('adding /linux/kernel.git to manifest of mirror singapour.com (id: 1)')->ordered();
@@ -159,21 +171,24 @@ class ManifestFileGeneratorTest extends TuleapTestCase
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
     }
 
-    public function itAddsGitoliteAdminRepositoryIfManifestDoesNotExist()
+    public function testItAddsGitoliteAdminRepositoryIfManifestDoesNotExist(): void
     {
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
 
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
 
-        $this->assertEqual($content["/gitolite-admin.git"], array(
-            "owner"       => null,
-            "description" => "",
-            "reference"   => null,
-            "modified"    => $this->current_time
-        ));
+        $this->assertEquals(
+            array(
+                "owner"       => null,
+                "description" => "",
+                "reference"   => null,
+                "modified"    => $this->current_time
+            ),
+            $content["/gitolite-admin.git"],
+        );
     }
 
-    public function itDoesNotUpdateExistingRepositoriesInformationIfManifestAlreadyExists()
+    public function testItDoesNotUpdateExistingRepositoriesInformationIfManifestAlreadyExists(): void
     {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
 
@@ -181,15 +196,18 @@ class ManifestFileGeneratorTest extends TuleapTestCase
 
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
 
-        $this->assertEqual($content["/linux/kernel.git"], array(
-            "owner"       => null,
-            "description" => "Linux4ever",
-            "reference"   => null,
-            "modified"    => 1414684049
-        ));
+        $this->assertEquals(
+            array(
+                "owner"       => null,
+                "description" => "Linux4ever",
+                "reference"   => null,
+                "modified"    => 1414684049
+            ),
+            $content["/linux/kernel.git"]
+        );
     }
 
-    public function itAddsANewRepoIfManifestAlreadyExists()
+    public function testItAddsANewRepoIfManifestAlreadyExists(): void
     {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
 
@@ -197,15 +215,18 @@ class ManifestFileGeneratorTest extends TuleapTestCase
 
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
 
-        $this->assertEqual($content["/mozilla/firefox.git"], array(
-            "owner"       => null,
-            "description" => "free and open-source web browser",
-            "reference"   => null,
-            "modified"    => $this->current_time
-        ));
+        $this->assertEquals(
+            array(
+                "owner"       => null,
+                "description" => "free and open-source web browser",
+                "reference"   => null,
+                "modified"    => $this->current_time
+            ),
+            $content["/mozilla/firefox.git"]
+        );
     }
 
-    public function itUpdatesDateToCurrentDateIfRepoAlreadyInManifest()
+    public function testItUpdatesDateToCurrentDateIfRepoAlreadyInManifest(): void
     {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
 
@@ -213,15 +234,18 @@ class ManifestFileGeneratorTest extends TuleapTestCase
 
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
 
-        $this->assertEqual($content["/linux/kernel.git"], array(
-            "owner"       => null,
-            "description" => "Linux4ever",
-            "reference"   => null,
-            "modified"    => $this->current_time
-        ));
+        $this->assertEquals(
+            array(
+                "owner"       => null,
+                "description" => "Linux4ever",
+                "reference"   => null,
+                "modified"    => $this->current_time
+            ),
+            $content["/linux/kernel.git"]
+        );
     }
 
-    public function itLogsUpdate()
+    public function testItLogsUpdate(): void
     {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
 
@@ -231,7 +255,7 @@ class ManifestFileGeneratorTest extends TuleapTestCase
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
     }
 
-    public function itDoesNotCrashIfFileDoesNotContainJson()
+    public function testItDoesNotCrashIfFileDoesNotContainJson(): void
     {
         file_put_contents(
             "compress.zlib://$this->manifest_file_for_singapour",
@@ -243,7 +267,7 @@ class ManifestFileGeneratorTest extends TuleapTestCase
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
     }
 
-    public function itDoesNotCrashIfFileIsCorrupted()
+    public function testItDoesNotCrashIfFileIsCorrupted(): void
     {
         file_put_contents(
             "$this->manifest_file_for_singapour",
@@ -255,7 +279,7 @@ class ManifestFileGeneratorTest extends TuleapTestCase
         $this->generator->addRepositoryToManifestFile($this->singapour_mirror, $this->kernel_repository);
     }
 
-    public function itAddsAMissingRepository()
+    public function testItAddsAMissingRepository(): void
     {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
 
@@ -266,15 +290,18 @@ class ManifestFileGeneratorTest extends TuleapTestCase
 
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
 
-        $this->assertEqual($content["/mozilla/firefox.git"], array(
-            "owner"       => null,
-            "description" => "free and open-source web browser",
-            "reference"   => null,
-            "modified"    => $this->current_time
-        ));
+        $this->assertEquals(
+            array(
+                "owner"       => null,
+                "description" => "free and open-source web browser",
+                "reference"   => null,
+                "modified"    => $this->current_time
+            ),
+            $content["/mozilla/firefox.git"],
+        );
     }
 
-    public function itRemovesANotNeededRepository()
+    public function testItRemovesANotNeededRepository(): void
     {
         $this->forgeExistingManifestFile($this->manifest_file_for_singapour);
         $content_before = $this->getManifestContent($this->manifest_file_for_singapour);
@@ -291,7 +318,7 @@ class ManifestFileGeneratorTest extends TuleapTestCase
         $this->assertFalse(isset($content_after["/linux/kernel.git"]));
     }
 
-    public function itDoesNotUpdateCurrentDateOfGitoliteAdmin()
+    public function testItDoesNotUpdateCurrentDateOfGitoliteAdmin(): void
     {
         $this->forgeExistingManifestFileWithGitoliteAdmin($this->manifest_file_for_singapour);
 
@@ -299,11 +326,14 @@ class ManifestFileGeneratorTest extends TuleapTestCase
 
         $content = $this->getManifestContent($this->manifest_file_for_singapour);
 
-        $this->assertEqual($content["/gitolite-admin.git"], array(
-            "owner"       => null,
-            "description" => "",
-            "reference"   => null,
-            "modified"    => $this->time_in_the_past
-        ));
+        $this->assertEquals(
+            array(
+                "owner"       => null,
+                "description" => "",
+                "reference"   => null,
+                "modified"    => $this->time_in_the_past
+            ),
+            $content["/gitolite-admin.git"]
+        );
     }
 }
