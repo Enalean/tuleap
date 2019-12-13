@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\REST\v1\AdditionalPanesForMilestoneEvent;
 use Tuleap\AgileDashboard\REST\v1\PaneInfoRepresentation;
 use Tuleap\Layout\IncludeAssets;
@@ -30,7 +31,6 @@ use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfoBuilder;
 use Tuleap\Taskboard\Board\BoardPresenterBuilder;
 use Tuleap\Taskboard\Column\ColumnPresenterCollectionRetriever;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenterBuilder;
 use Tuleap\Taskboard\REST\ResourcesInjector;
 use Tuleap\Taskboard\Routing\MilestoneExtractor;
 use Tuleap\Taskboard\Tracker\TrackerPresenterCollectionBuilder;
@@ -71,7 +71,7 @@ class taskboardPlugin extends Plugin
         $this->addHook(CollectRoutesEvent::NAME);
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
-            $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
+            $this->addHook(PaneInfoCollector::NAME);
             $this->addHook(AdditionalPanesForMilestoneEvent::NAME);
         }
 
@@ -128,23 +128,19 @@ class taskboardPlugin extends Plugin
         );
     }
 
-    /** @see AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE */
-    public function agiledashboardEventAdditionalPanesOnMilestone(array $params): void
+    public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector): void
     {
-        $milestone = $params['milestone'];
-        assert($milestone instanceof Planning_Milestone);
-
-        $pane_info = $this->getPaneInfoForMilestone($milestone);
+        $pane_info = $this->getPaneInfoForMilestone($collector->getMilestone());
         if ($pane_info === null) {
             return;
         }
 
         if (strpos($_SERVER['REQUEST_URI'], '/taskboard/') === 0) {
             $pane_info->setActive(true);
-            $params['active_pane'] = new TaskboardPane($pane_info);
+            $collector->setActivePane(new TaskboardPane($pane_info));
         }
 
-        $params['panes'][] = $pane_info;
+        $collector->addPane($pane_info);
     }
 
     private function getCardwallOnTopDao(): Cardwall_OnTop_Dao

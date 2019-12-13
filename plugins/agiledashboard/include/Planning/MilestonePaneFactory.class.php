@@ -40,13 +40,13 @@ class Planning_MilestonePaneFactory
     public const PRELOAD_SUBMILESTONES_FIELDS = Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation::SLIM;
     public const PRELOAD_MILESTONE_FIELDS     = Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation::ALL_FIELDS;
 
-    /** @var PaneInfo[] */
+    /** @var PaneInfo[][] */
     private $list_of_pane_info = array();
 
     /** @var PaneInfo[] */
     private $list_of_default_pane_info = array();
 
-    /** @var AgileDashboard_Pane */
+    /** @var array<AgileDashboard_Pane|null> */
     private $active_pane = array();
 
     /** @var Codendi_Request */
@@ -100,11 +100,14 @@ class Planning_MilestonePaneFactory
     /** @return AgileDashboard_Pane */
     public function getActivePane(Planning_Milestone $milestone)
     {
-        if (! isset($this->list_of_pane_info[$milestone->getArtifactId()])) {
+        $artifact_id = $milestone->getArtifactId();
+        if (! isset($this->list_of_pane_info[$artifact_id])) {
             $this->buildActivePane($milestone);
         }
 
-        return $this->active_pane[$milestone->getArtifactId()];
+        assert($this->active_pane[$artifact_id] !== null);
+
+        return $this->active_pane[$artifact_id];
     }
 
     /** @return PaneInfo[] */
@@ -255,17 +258,19 @@ class Planning_MilestonePaneFactory
     private function buildAdditionnalPanes(Planning_Milestone $milestone)
     {
         if ($milestone->getArtifact()) {
-            EventManager::instance()->processEvent(
-                AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
-                array(
-                    'milestone'         => $milestone,
-                    'request'           => $this->request,
-                    'user'              => $this->request->getCurrentUser(),
-                    'panes'             => &$this->list_of_pane_info[$milestone->getArtifactId()],
-                    'active_pane'       => &$this->active_pane[$milestone->getArtifactId()],
-                    'milestone_factory' => $this->milestone_factory,
-                )
+            $collector = new \Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector(
+                $milestone,
+                $this->request,
+                $this->request->getCurrentUser(),
+                $this->milestone_factory,
+                $this->list_of_pane_info[$milestone->getArtifactId()],
+                $this->active_pane[$milestone->getArtifactId()]
             );
+
+            EventManager::instance()->processEvent($collector);
+
+            $this->list_of_pane_info[$milestone->getArtifactId()] = $collector->getPanes();
+            $this->active_pane[$milestone->getArtifactId()] = $collector->getActivePane();
         }
     }
 

@@ -22,6 +22,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\AllowedFieldRetriever;
 use Tuleap\Cardwall\Semantic\BackgroundColorDao;
@@ -84,7 +85,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
-                $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
+                $this->addHook(PaneInfoCollector::NAME);
                 $this->addHook(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT);
                 $this->addHook(AGILEDASHBOARD_EVENT_PLANNING_CONFIG);
                 $this->addHook(AGILEDASHBOARD_EVENT_PLANNING_CONFIG_UPDATE);
@@ -376,19 +377,26 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         $parameters['card_fields_semantic'] = Cardwall_Semantic_CardFields::load($parameters['tracker']);
     }
 
-    public function agiledashboard_event_additional_panes_on_milestone($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector): void
     {
-        $pane_info = $this->getPaneInfo($params['milestone']);
+        $pane_info = $this->getPaneInfo($collector->getMilestone());
 
         if (! $pane_info) {
             return;
         }
 
-        if ($params['request']->get('pane') == CardwallPaneInfo::IDENTIFIER) {
+        if ($collector->getRequest()->get('pane') === CardwallPaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
-            $params['active_pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
+            $collector->setActivePane(
+                $this->getCardwallPane(
+                    $pane_info,
+                    $collector->getMilestone(),
+                    $collector->getUser(),
+                    $collector->getMilestoneFactory()
+                )
+            );
         }
-        $params['panes'][] = $pane_info;
+        $collector->addPane($pane_info);
     }
 
     private function getPaneInfo($milestone)
@@ -496,7 +504,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     private function appendCardwallParameter(Tracker_Artifact_Redirect $redirect, $cardwall)
     {
-        list($key, $value) = explode('=', urldecode(http_build_query(array('cardwall' => $cardwall))));
+        [$key, $value] = explode('=', urldecode(http_build_query(array('cardwall' => $cardwall))));
         $redirect->query_parameters[$key] = $value;
     }
 
