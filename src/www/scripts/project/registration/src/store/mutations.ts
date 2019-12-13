@@ -40,5 +40,9 @@ export default {
             state.error = "Internal server error";
             throw e;
         }
+    },
+
+    resetError(state: State): void {
+        state.error = null;
     }
 };
