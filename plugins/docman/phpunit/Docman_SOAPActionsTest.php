@@ -339,6 +339,7 @@ class Docman_SOAPActionsTest extends TestCase
         $item = \Mockery::mock(\Docman_Item::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $item->shouldReceive('getEventManager')->andReturns($action->event_manager);
         $this->itemFactory->shouldReceive('getItemFromDb')->andReturn($item);
+        $this->itemFactory->shouldReceive('getItemTypeForItem')->with($item)->andReturn(PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
 
         $this->permissionManager->shouldReceive('clonePermissions')->once();
         $action->event_manager->shouldReceive('processEvent')->with('plugin_docman_event_add', '*')->ordered();
@@ -381,6 +382,7 @@ class Docman_SOAPActionsTest extends TestCase
         $item = \Mockery::mock(\Docman_Item::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $item->shouldReceive('getEventManager')->andReturns($action->event_manager);
         $this->itemFactory->shouldReceive('getItemFromDb')->andReturn($item);
+        $this->itemFactory->shouldReceive('getItemTypeForItem')->with($item)->andReturn(PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
 
         $action->getControler()->request = $request;
 
