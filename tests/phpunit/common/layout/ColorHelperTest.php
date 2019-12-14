@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ColorHelperTest extends TuleapTestCase
+use PHPUnit\Framework\TestCase;
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class ColorHelperTest extends TestCase
 {
 
     private $colorSet = array(
@@ -31,17 +34,17 @@ class ColorHelperTest extends TuleapTestCase
         '#E025DC' => array(224, 37, 220)
     );
 
-    function testRGBToHexa()
+    public function testRGBToHexa(): void
     {
         foreach ($this->colorSet as $hexa => $rgb) {
-            $this->assertEqual($hexa, ColorHelper::RGBToHexa($rgb[0], $rgb[1], $rgb[2]));
+            $this->assertEquals($hexa, ColorHelper::RGBToHexa($rgb[0], $rgb[1], $rgb[2]));
         }
     }
 
-    function testHexaToRGB()
+    public function testHexaToRGB(): void
     {
         foreach ($this->colorSet as $hexa => $rgb) {
-            $this->assertEqual(array($rgb[0], $rgb[1], $rgb[2]), ColorHelper::HexaToRGB($hexa));
+            $this->assertEquals(array($rgb[0], $rgb[1], $rgb[2]), ColorHelper::HexaToRGB($hexa));
         }
     }
 }
