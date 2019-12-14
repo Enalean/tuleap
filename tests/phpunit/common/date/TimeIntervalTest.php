@@ -1,6 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,42 +15,42 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
-class TimeIntervalTest extends TuleapTestCase
+use PHPUnit\Framework\TestCase;
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class TimeIntervalTest extends TestCase
 {
 
-    public function itRefusesNegativeTimeStamps()
+    public function testItRefusesNegativeTimeStamps(): void
     {
         $this->assertInvalidIntervalTimestamps(-1, 1);
         $this->assertInvalidIntervalTimestamps(1, -1);
     }
 
-    public function itEnsuresStartIsStrictlyBeforeEnd()
+    public function testItEnsuresStartIsStrictlyBeforeEnd(): void
     {
         $this->assertInvalidIntervalTimestamps(2, 1);
         $this->assertInvalidIntervalTimestamps(2, 2);
     }
 
-    public function itHasAStartAndAnEnd()
+    public function testItHasAStartAndAnEnd(): void
     {
         $start = 1;
         $end   = 2;
 
         $interval = TimeInterval::fromUnixTimestamps($start, $end);
 
-        $this->assertEqual($start, $interval->getStartTimestamp());
-        $this->assertEqual($end, $interval->getEndTimestamp());
+        $this->assertEquals($start, $interval->getStartTimestamp());
+        $this->assertEquals($end, $interval->getEndTimestamp());
     }
 
-    private function assertInvalidIntervalTimestamps($start, $end)
+    private function assertInvalidIntervalTimestamps($start, $end): void
     {
-        try {
-            TimeInterval::fromUnixTimestamps($start, $end);
-            $this->fail('should have thrown exception');
-        } catch (Exception $exc) {
-        }
+        $this->expectException(Exception::class);
+        TimeInterval::fromUnixTimestamps($start, $end);
     }
 }
