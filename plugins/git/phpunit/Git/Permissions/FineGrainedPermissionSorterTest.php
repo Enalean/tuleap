@@ -20,13 +20,13 @@
 
 namespace Tuleap\Git\Permissions;
 
-use TuleapTestCase;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class FineGrainedPermissionSorterTest extends TuleapTestCase
+class FineGrainedPermissionSorterTest extends TestCase
 {
-    public function itSortsPermissions()
+    public function testItSortsPermissions()
     {
         $permission_01 = new FineGrainedPermission(
             0,
@@ -86,6 +86,6 @@ class FineGrainedPermissionSorterTest extends TuleapTestCase
 
         $sorter = new FineGrainedPermissionSorter();
 
-        $this->assertEqual($sorter->sort($permissions), $expected);
+        $this->assertEquals($expected, $sorter->sort($permissions));
     }
 }

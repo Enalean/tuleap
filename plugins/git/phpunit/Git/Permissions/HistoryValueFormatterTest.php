@@ -20,17 +20,30 @@
 
 namespace Tuleap\Git\Permissions;
 
-use TuleapTestCase;
+use GitRepository;
+use Mockery;
+use PHPUnit\Framework\TestCase;
 use Git;
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class HistoryValueFormatterTest extends TuleapTestCase
+class HistoryValueFormatterTest extends TestCase
 {
-    public function setUp()
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    /**
+     * @var GitRepository|Mockery\LegacyMockInterface|Mockery\MockInterface
+     */
+    private $repository;
+
+    /**
+     * @var GitRepository|Mockery\LegacyMockInterface|Mockery\MockInterface
+     */
+    private $migrated_repository;
+
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->ugroup_01 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(101)->getMock();
         $this->ugroup_02 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(102)->getMock();
@@ -40,13 +53,17 @@ class HistoryValueFormatterTest extends TuleapTestCase
         $this->ugroup_02->shouldReceive('getName')->andReturns('Developers');
         $this->ugroup_03->shouldReceive('getName')->andReturns('Admins');
 
-        $this->project             = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns(101)->getMock();
-        $this->repository          = aGitRepository()->withId(1)->withProject($this->project)->build();
-        $this->migrated_repository = aGitRepository()
-            ->withId(1)
-            ->withProject($this->project)
-            ->withRemoteServerId(1)
-            ->build();
+        $this->project    = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns(101)->getMock();
+        $this->repository = Mockery::mock(GitRepository::class);
+        $this->repository->shouldReceive('getId')->andReturn(1);
+        $this->repository->shouldReceive('getProject')->andReturn($this->project);
+        $this->repository->shouldReceive('isMigratedToGerrit')->andReturnFalse();
+
+        $this->migrated_repository = Mockery::mock(GitRepository::class);
+        $this->migrated_repository->shouldReceive('getId')->andReturn(1);
+        $this->migrated_repository->shouldReceive('getProject')->andReturn($this->project);
+        $this->migrated_repository->shouldReceive('getRemoteServerId')->andReturn(1);
+        $this->migrated_repository->shouldReceive('isMigratedToGerrit')->andReturnTrue();
 
         $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
         $this->ugroup_manager      = \Mockery::spy(\UGroupManager::class);
@@ -69,7 +86,7 @@ class HistoryValueFormatterTest extends TuleapTestCase
         ));
     }
 
-    public function itExportsValueWithoutFineGrainedPermissionsForRepository()
+    public function testItExportsValueWithoutFineGrainedPermissionsForRepository(): void
     {
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->andReturns(array(101));
 
@@ -85,10 +102,10 @@ EOS;
 
         $result = $this->formatter->formatValueForRepository($this->repository);
 
-        $this->assertEqual($result, $expected_result);
+        $this->assertEquals($expected_result, $result);
     }
 
-    public function itDoesNotExportWriteAndRewindIfRepositoryIsMigratedOnGerrit()
+    public function testItDoesNotExportWriteAndRewindIfRepositoryIsMigratedOnGerrit(): void
     {
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->andReturns(array(101));
 
@@ -98,10 +115,10 @@ EOS;
 
         $result = $this->formatter->formatValueForRepository($this->migrated_repository);
 
-        $this->assertEqual($result, $expected_result);
+        $this->assertEquals($expected_result, $result);
     }
 
-    public function itExportsValueWithoutFineGrainedPermissionsForProject()
+    public function testItExportsValueWithoutFineGrainedPermissionsForProject(): void
     {
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_READ)->andReturns(array(101));
 
@@ -117,10 +134,10 @@ EOS;
 
         $result = $this->formatter->formatValueForProject($this->project);
 
-        $this->assertEqual($result, $expected_result);
+        $this->assertEquals($expected_result, $result);
     }
 
-    public function itExportsValueWithFineGrainedPermissionsForRepository()
+    public function testItExportsValueWithFineGrainedPermissionsForRepository(): void
     {
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 1, Git::PERM_READ)->andReturns(array(101));
 
@@ -155,10 +172,10 @@ EOS;
 
         $result = $this->formatter->formatValueForRepository($this->migrated_repository);
 
-        $this->assertEqual($result, $expected_result);
+        $this->assertEquals($expected_result, $result);
     }
 
-    public function itExportsValueWithFineGrainedPermissionsForProject()
+    public function testItExportsValueWithFineGrainedPermissionsForProject(): void
     {
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->with($this->project, 101, Git::DEFAULT_PERM_READ)->andReturns(array(101));
 
@@ -193,6 +210,6 @@ EOS;
 
         $result = $this->formatter->formatValueForProject($this->project);
 
-        $this->assertEqual($result, $expected_result);
+        $this->assertEquals($expected_result, $result);
     }
 }

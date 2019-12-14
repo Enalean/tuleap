@@ -20,13 +20,16 @@
 
 namespace Tuleap\Git\Permissions;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use GitRepository;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class PatternValidatorTest extends TuleapTestCase
+class PatternValidatorTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var RegexpFineGrainedRetriever
      */
@@ -52,10 +55,9 @@ class PatternValidatorTest extends TuleapTestCase
      */
     private $validator;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->repository       = \Mockery::spy(\GitRepository::class);
         $this->regexp_retriever = \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class);
@@ -71,7 +73,7 @@ class PatternValidatorTest extends TuleapTestCase
         $this->repository->shouldReceive('getProject')->andReturns(\Mockery::spy(\Project::class));
     }
 
-    public function itValidPatternForRepositoryWithRegexpModeWhenRegexpAreActivated()
+    public function testItValidPatternForRepositoryWithRegexpModeWhenRegexpAreActivated(): void
     {
         $this->regexp_retriever->shouldReceive('areRegexpActivatedForRepository')->andReturns(true);
 
@@ -81,7 +83,7 @@ class PatternValidatorTest extends TuleapTestCase
         $this->pattern_validator->isValidForRepository($this->repository, 'master', true);
     }
 
-    public function itValidPatternForRepositoryWithStandardModeWhenRegexpAreNotAvailable()
+    public function testItValidPatternForRepositoryWithStandardModeWhenRegexpAreNotAvailable(): void
     {
         $this->regexp_retriever->shouldReceive('areRegexpActivatedForRepository')->andReturns(false);
 
@@ -91,7 +93,7 @@ class PatternValidatorTest extends TuleapTestCase
         $this->pattern_validator->isValidForRepository($this->repository, 'master', false);
     }
 
-    public function itValidsPatternForRepositoryWithRegexpModeWhenRegexpAreCurrentlyActivated()
+    public function testItValidsPatternForRepositoryWithRegexpModeWhenRegexpAreCurrentlyActivated(): void
     {
         $this->regexp_retriever->shouldReceive('areRegexpActivatedForRepository')->andReturns(false);
 
@@ -101,7 +103,7 @@ class PatternValidatorTest extends TuleapTestCase
         $this->pattern_validator->isValidForRepository($this->repository, 'master', true);
     }
 
-    public function itValidsPatternForRepositoryWithStandardModeWhenRegexpAreConflictingWithPlateform()
+    public function testItValidsPatternForRepositoryWithStandardModeWhenRegexpAreConflictingWithPlateform(): void
     {
         $this->regexp_retriever->shouldReceive('areRegexpActivatedForRepository')->andReturns(true);
         $this->regexp_retriever->shouldReceive('areRegexpRepositoryConflitingWithPlateform')->andReturns(true);
@@ -112,7 +114,7 @@ class PatternValidatorTest extends TuleapTestCase
         $this->pattern_validator->isValidForRepository($this->repository, 'master', true);
     }
 
-    public function itValidPatternForDefaultWithRegexpModeWhenRegexpAreActivated()
+    public function testItValidPatternForDefaultWithRegexpModeWhenRegexpAreActivated(): void
     {
         $this->regexp_retriever->shouldReceive('areRegexpActivatedForDefault')->andReturns(true);
 
@@ -122,7 +124,7 @@ class PatternValidatorTest extends TuleapTestCase
         $this->pattern_validator->isValidForDefault($this->repository->getProject(), 'master', true);
     }
 
-    public function itValidPatternForDefaultWithStandardModeWhenRegexpAreNotAvailable()
+    public function testItValidPatternForDefaultWithStandardModeWhenRegexpAreNotAvailable(): void
     {
         $this->regexp_retriever->shouldReceive('areRegexpActivatedForDefault')->andReturns(false);
 
@@ -132,7 +134,7 @@ class PatternValidatorTest extends TuleapTestCase
         $this->pattern_validator->isValidForDefault($this->repository->getProject(), 'master', false);
     }
 
-    public function itValidsPatternForDefaultWithRegexpModeWhenRegexpAreCurrentlyActivated()
+    public function testItValidsPatternForDefaultWithRegexpModeWhenRegexpAreCurrentlyActivated(): void
     {
         $this->regexp_retriever->shouldReceive('areRegexpActivatedForDefault')->andReturns(false);
 
@@ -142,7 +144,7 @@ class PatternValidatorTest extends TuleapTestCase
         $this->pattern_validator->isValidForDefault($this->repository->getProject(), 'master', true);
     }
 
-    public function itValidsPatternForDefaultWithStandardModeWhenRegexpAreConflictingWithPlateform()
+    public function testItValidsPatternForDefaultWithStandardModeWhenRegexpAreConflictingWithPlateform(): void
     {
         $this->regexp_retriever->shouldReceive('areRegexpActivatedForDefault')->andReturns(true);
         $this->regexp_retriever->shouldReceive('areDefaultRegexpConflitingWithPlateform')->andReturns(true);

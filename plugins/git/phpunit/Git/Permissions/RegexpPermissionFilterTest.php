@@ -20,15 +20,17 @@
 
 namespace Tuleap\Git\Permissions;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\User\UserGroup\NameTranslator;
-use TuleapTestCase;
-use User_ForgeUGroup;
 use GitRepository;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class RegexpPermissionFilterTest extends TuleapTestCase
+class RegexpPermissionFilterTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var RegexpPermissionFilter
      */
@@ -49,10 +51,9 @@ class RegexpPermissionFilterTest extends TuleapTestCase
      */
     private $permission_destructor;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $this->repository = \Mockery::spy(\GitRepository::class);
         $this->repository->shouldReceive('getId')->andReturns(1);
@@ -71,7 +72,7 @@ class RegexpPermissionFilterTest extends TuleapTestCase
         );
     }
 
-    public function itShouldKeepOnlyNonRegexpPattern()
+    public function testItShouldKeepOnlyNonRegexpPattern(): void
     {
         $patterns = $this->buildPatterns();
 
@@ -82,7 +83,7 @@ class RegexpPermissionFilterTest extends TuleapTestCase
         $this->permission_filter->filterNonRegexpPermissions($this->repository);
     }
 
-    private function buildPatterns()
+    private function buildPatterns(): array
     {
         $patterns = array(
             '*',
