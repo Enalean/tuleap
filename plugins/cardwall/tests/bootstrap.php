@@ -18,4 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once __DIR__ . '/../include/cardwallPlugin.php';
+require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
 require_once __DIR__ . '/../../tracker/tests/bootstrap.php';
