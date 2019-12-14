@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,67 +18,71 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class WrapperLoggerTest extends TuleapTestCase
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+class WrapperLoggerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
     private $logger;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->logger = mock('Logger');
+        $this->logger = \Mockery::spy(\Logger::class);
     }
 
-    public function itAppendAPrefix()
+    public function testItAppendAPrefix(): void
     {
         $wrapper = new WrapperLogger($this->logger, 'stuff');
 
-        expect($this->logger)->info('[stuff] bla')->once();
+        $this->logger->shouldReceive('info')->with('[stuff] bla')->once();
 
         $wrapper->info('bla');
     }
 
-    public function itWrapAWrapper()
+    public function testItWrapAWrapper(): void
     {
         $wrapper1 = new WrapperLogger($this->logger, 'tracker');
 
         $wrapper2 = new WrapperLogger($wrapper1, 'artifact');
 
-        expect($this->logger)->info('[tracker] [artifact] bla')->once();
+        $this->logger->shouldReceive('info')->with('[tracker] [artifact] bla')->once();
 
         $wrapper2->info('bla');
     }
 
-    public function itAddAPrefixDynamically()
+    public function testItAddAPrefixDynamically(): void
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        expect($this->logger)->info('[tracker][53] bla')->once();
+        $this->logger->shouldReceive('info')->with('[tracker][53] bla')->once();
 
         $wrapper->push('53');
         $wrapper->info('bla');
     }
 
-    public function itAddAPrefixDynamicallyAndItsKept()
+    public function testItAddAPrefixDynamicallyAndItsKept(): void
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        expect($this->logger)->info()->count(2);
-        expect($this->logger)->info('[tracker][53] bla')->at(0);
-        expect($this->logger)->info('[tracker][53] coin')->at(1);
+        $this->logger->shouldReceive('info')->times(2);
+        $this->logger->shouldReceive('info')->with('[tracker][53] bla')->ordered();
+        $this->logger->shouldReceive('info')->with('[tracker][53] coin')->ordered();
 
         $wrapper->push('53');
         $wrapper->info('bla');
         $wrapper->info('coin');
     }
 
-    public function testAddedPrefixAreStacked()
+    public function testAddedPrefixAreStacked(): void
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        expect($this->logger)->info()->count(2);
-        expect($this->logger)->info('[tracker][53] bla')->at(0);
-        expect($this->logger)->info('[tracker][53][field] coin')->at(1);
+        $this->logger->shouldReceive('info')->times(2);
+        $this->logger->shouldReceive('info')->with('[tracker][53] bla')->ordered();
+        $this->logger->shouldReceive('info')->with('[tracker][53][field] coin')->ordered();
 
         $wrapper->push('53');
         $wrapper->info('bla');
@@ -86,13 +90,13 @@ class WrapperLoggerTest extends TuleapTestCase
         $wrapper->info('coin');
     }
 
-    public function itPopPrefixes()
+    public function testItPopPrefixes(): void
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        expect($this->logger)->info()->count(2);
-        expect($this->logger)->info('[tracker][53] bla')->at(0);
-        expect($this->logger)->info('[tracker] coin')->at(1);
+        $this->logger->shouldReceive('info')->times(2);
+        $this->logger->shouldReceive('info')->with('[tracker][53] bla')->ordered();
+        $this->logger->shouldReceive('info')->with('[tracker] coin')->ordered();
 
         $wrapper->push('53');
         $wrapper->info('bla');
@@ -100,14 +104,14 @@ class WrapperLoggerTest extends TuleapTestCase
         $wrapper->info('coin');
     }
 
-    public function itPopPrefixes2()
+    public function testItPopPrefixes2(): void
     {
         $wrapper = new WrapperLogger($this->logger, 'tracker');
 
-        expect($this->logger)->info()->count(3);
-        expect($this->logger)->info('[tracker] stuff')->at(0);
-        expect($this->logger)->info('[tracker][53] bla')->at(1);
-        expect($this->logger)->info('[tracker][54] coin')->at(2);
+        $this->logger->shouldReceive('info')->times(3);
+        $this->logger->shouldReceive('info')->with('[tracker] stuff')->ordered();
+        $this->logger->shouldReceive('info')->with('[tracker][53] bla')->ordered();
+        $this->logger->shouldReceive('info')->with('[tracker][54] coin')->ordered();
 
         $wrapper->info('stuff');
         $wrapper->push('53');

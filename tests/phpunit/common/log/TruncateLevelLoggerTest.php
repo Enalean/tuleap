@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,25 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TruncateLevelLoggerTest extends TuleapTestCase
-{
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
+class TruncateLevelLoggerTest extends TestCase
+{
+    use MockeryPHPUnitIntegration;
     private $logger;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->logger = mock('Logger');
+        $this->logger = \Mockery::spy(\Logger::class);
     }
 
-    public function itLogEverythingByDefault()
+    public function testItLogEverythingByDefault(): void
     {
         $truncate_logger = new TruncateLevelLogger($this->logger, Logger::DEBUG);
 
-        expect($this->logger)->debug("debug message")->once();
-        expect($this->logger)->info("info message")->once();
-        expect($this->logger)->warn("warn message", '*')->once();
-        expect($this->logger)->error("error message", '*')->once();
+        $this->logger->shouldReceive('debug')->with("debug message")->once();
+        $this->logger->shouldReceive('info')->with("info message")->once();
+        $this->logger->shouldReceive('warn')->with("warn message", \Mockery::any())->once();
+        $this->logger->shouldReceive('error')->with("error message", \Mockery::any())->once();
 
         $truncate_logger->debug("debug message");
         $truncate_logger->info("info message");
@@ -44,14 +47,14 @@ class TruncateLevelLoggerTest extends TuleapTestCase
         $truncate_logger->error("error message");
     }
 
-    public function itSkipsDebugWhenLevelIsInfo()
+    public function testItSkipsDebugWhenLevelIsInfo(): void
     {
         $truncate_logger = new TruncateLevelLogger($this->logger, Logger::INFO);
 
-        expect($this->logger)->debug()->never();
-        expect($this->logger)->info("info message")->once();
-        expect($this->logger)->warn("warn message", '*')->once();
-        expect($this->logger)->error("error message", '*')->once();
+        $this->logger->shouldReceive('debug')->never();
+        $this->logger->shouldReceive('info')->with("info message")->once();
+        $this->logger->shouldReceive('warn')->with("warn message", \Mockery::any())->once();
+        $this->logger->shouldReceive('error')->with("error message", \Mockery::any())->once();
 
         $truncate_logger->debug("debug message");
         $truncate_logger->info("info message");
@@ -59,14 +62,14 @@ class TruncateLevelLoggerTest extends TuleapTestCase
         $truncate_logger->error("error message");
     }
 
-    public function itSkipsDebugAndInfoWhenLevelIsWarn()
+    public function testItSkipsDebugAndInfoWhenLevelIsWarn(): void
     {
         $truncate_logger = new TruncateLevelLogger($this->logger, Logger::WARN);
 
-        expect($this->logger)->debug()->never();
-        expect($this->logger)->info()->never();
-        expect($this->logger)->warn("warn message", '*')->once();
-        expect($this->logger)->error("error message", '*')->once();
+        $this->logger->shouldReceive('debug')->never();
+        $this->logger->shouldReceive('info')->never();
+        $this->logger->shouldReceive('warn')->with("warn message", \Mockery::any())->once();
+        $this->logger->shouldReceive('error')->with("error message", \Mockery::any())->once();
 
         $truncate_logger->debug("debug message");
         $truncate_logger->info("info message");
@@ -74,14 +77,14 @@ class TruncateLevelLoggerTest extends TuleapTestCase
         $truncate_logger->error("error message");
     }
 
-    public function itSkipsDebugInfoAndWarnWhenLevelIsWarn()
+    public function testItSkipsDebugInfoAndWarnWhenLevelIsWarn(): void
     {
         $truncate_logger = new TruncateLevelLogger($this->logger, Logger::ERROR);
 
-        expect($this->logger)->debug()->never();
-        expect($this->logger)->info()->never();
-        expect($this->logger)->warn()->never();
-        expect($this->logger)->error("error message", '*')->once();
+        $this->logger->shouldReceive('debug')->never();
+        $this->logger->shouldReceive('info')->never();
+        $this->logger->shouldReceive('warn')->never();
+        $this->logger->shouldReceive('error')->with("error message", \Mockery::any())->once();
 
         $truncate_logger->debug("debug message");
         $truncate_logger->info("info message");

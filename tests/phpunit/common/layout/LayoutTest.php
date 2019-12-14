@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,43 +18,49 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 /**
  * For all tests we have to use partial mock because there are sessions related stuff in Respone class.
  */
-class LayoutTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class LayoutTest extends TestCase
 {
-    public function setUp()
+    use MockeryPHPUnitIntegration;
+    protected function setUp(): void
     {
         parent::setUp();
         $GLOBALS['sys_user_theme'] = 'Stuff';
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         unset($GLOBALS['sys_user_theme']);
         parent::tearDown();
     }
 
-    public function testAddStyleSheet()
+    public function testAddStyleSheet(): void
     {
-        $l = TestHelper::getPartialMock('Layout', array('header'));
+        $l = \Mockery::mock(\Layout::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $l->addStylesheet('/theme/css/style.css');
-        $this->assertEqual($l->getAllStyleSheets(), array('/theme/css/style.css'));
+        $this->assertEquals(array('/theme/css/style.css'), $l->getAllStyleSheets());
     }
 
-    public function testAddedStyleSheetShouldBeRenderedInPageHeaders()
+    public function testAddedStyleSheetShouldBeRenderedInPageHeaders(): void
     {
-        $l = TestHelper::getPartialMock('Layout', array('header', 'getEventManager', 'getStylesheetTheme'));
-        $l->setReturnValue('getEventManager', \Mockery::spy(EventManager::class));
+        $l = \Mockery::mock(\Layout::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $l->shouldReceive('getEventManager')->andReturns(\Mockery::spy(EventManager::class));
 
         $css = '/vendor-css/styles.css';
 
         $l->addStylesheet($css);
+
         ob_start();
         $l->displayStylesheetElements(array());
         $content = ob_get_contents();
         ob_end_clean();
 
-        $this->assertTrue(strpos($content, '<link rel="stylesheet" type="text/css" href="'.$css.'" />'), "There should be a custom css here.");
+        $this->assertStringContainsString('<link rel="stylesheet" type="text/css" href="'.$css.'" />', $content);
     }
 }
