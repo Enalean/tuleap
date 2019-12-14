@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ .'/bootstrap.php';
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class CardInCellPresenterFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -91,7 +92,7 @@ class CardInCellPresenterFactoryTest extends TestCase
         $swimline_id = 112;
         $this->card_presenter->shouldReceive('getSwimlineId')->andReturns($swimline_id);
 
-        $mapping_collection = Mockery::spy(\Cardwall_MappingCollection::class)
+        $mapping_collection = Mockery::mock(\Cardwall_MappingCollection::class)
             ->shouldReceive('getSwimLineValues')
             ->with($this->field_id)
             ->andReturns(array(123, 456))
