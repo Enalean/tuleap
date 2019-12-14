@@ -20,6 +20,8 @@
   */
 
 use Tuleap\Dashboard\AssetsIncluder;
+use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
+use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardDeletor;
@@ -68,7 +70,10 @@ $router                     = new UserDashboardRouter(
         new UserDashboardDeletor($user_dashboard_dao),
         new UserDashboardUpdator($user_dashboard_dao),
         $dashboard_widget_retriever,
-        new DashboardWidgetPresenterBuilder($widget_factory),
+        new DashboardWidgetPresenterBuilder(
+            $widget_factory,
+            new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao())
+        ),
         new WidgetDeletor($dashboard_widget_dao),
         new WidgetMinimizor($dashboard_widget_dao),
         new AssetsIncluder(
