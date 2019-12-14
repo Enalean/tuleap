@@ -20,19 +20,32 @@
 
 namespace Tuleap\Git\Permissions;
 
-use TuleapTestCase;
+use Codendi_Request;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class FineGrainedPermissionFactoryTest extends TuleapTestCase
+class FineGrainedPermissionFactoryTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    public function setUp()
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ProjectManager
+     */
+    private $project_manager;
+
+    /**
+     * @var FineGrainedPermissionFactory
+     */
+    private $factory;
+
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
-        $this->dao            = safe_mock(FineGrainedDao::class);
+        $this->dao            = Mockery::mock(FineGrainedDao::class);
         $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
         $this->normalizer     = \Mockery::spy(\PermissionsNormalizer::class);
 
@@ -50,7 +63,7 @@ class FineGrainedPermissionFactoryTest extends TuleapTestCase
             \Mockery::spy(\Tuleap\Git\XmlUgroupRetriever::class)
         );
 
-        $this->repository = aGitRepository()->withId(43)->build();
+        $this->repository = Mockery::mock(\GitRepository::class)->shouldReceive('getId')->andReturn(43)->getMock();
 
         $project               = \Mockery::spy(\Project::class);
         $this->project_manager = \Mockery::spy(\ProjectManager::class);
@@ -92,43 +105,48 @@ class FineGrainedPermissionFactoryTest extends TuleapTestCase
         )));
     }
 
-    public function itRetrievesUpdatedPermissions()
+    private function buildRequest(array $params): Codendi_Request
     {
-        $request = aRequest()->with('edit-branch-write', array(
-            1 => array(101, 102),
-        ))->with('edit-branch-rewind', array(
-            1 => array(102),
-        ))->with('edit-tag-write', array(
-            2 => array(101),
-        ))->with('edit-tag-rewind', array(
-            2 => array(102),
-        ))->with('group_id', 101)
-          ->withProjectManager($this->project_manager)
-          ->build();
-
-        $updated = $this->factory->getUpdatedPermissionsFromRequest($request, $this->repository);
-
-        $this->assertArrayNotEmpty($updated);
-        $this->assertCount($updated, 1);
-        $this->assertEqual(array_keys($updated), array(1));
+        return new Codendi_Request(
+            $params,
+            $this->project_manager
+        );
     }
 
-    public function itDealsWithRemovedUgroups()
+    public function testItRetrievesUpdatedPermissions(): void
     {
-        $request = aRequest()->with('edit-branch-write', array(
-            1 => array(101, 102),
-        ))->with('edit-branch-rewind', array(
-            1 => array(103),
-        ))->with('edit-tag-rewind', array(
-            2 => array(102),
-        ))->with('group_id', 101)
-          ->withProjectManager($this->project_manager)
-          ->build();
+        $params = [
+            'edit-branch-write' => array(1 => array(101, 102)),
+            'edit-branch-rewind'=> array(1 => array(102)),
+            'edit-tag-write' => array(2 => array(101)),
+            'edit-tag-rewind' => array(2 => array(102)),
+            'group_id' => 101
+        ];
+
+        $request = $this->buildRequest($params);
 
         $updated = $this->factory->getUpdatedPermissionsFromRequest($request, $this->repository);
 
-        $this->assertArrayNotEmpty($updated);
-        $this->assertCount($updated, 1);
-        $this->assertEqual(array_keys($updated), array(2));
+        $this->assertNotEmpty($updated);
+        $this->assertCount(1, $updated);
+        $this->assertEquals(array(1), array_keys($updated));
+    }
+
+    public function testItDealsWithRemovedUgroups(): void
+    {
+        $params = [
+            'edit-branch-write' => array(1 => array(101, 102)),
+            'edit-branch-rewind'=> array(1 => array(103)),
+            'edit-tag-rewind' => array(2 => array(102)),
+            'group_id' => 101
+        ];
+
+        $request = $this->buildRequest($params);
+
+        $updated = $this->factory->getUpdatedPermissionsFromRequest($request, $this->repository);
+
+        $this->assertNotEmpty($updated);
+        $this->assertCount(1, $updated);
+        $this->assertEquals(array(2), array_keys($updated));
     }
 }

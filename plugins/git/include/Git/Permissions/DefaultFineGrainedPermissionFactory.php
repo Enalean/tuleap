@@ -345,7 +345,7 @@ class DefaultFineGrainedPermissionFactory
     }
 
     /**
-     * @return array
+     * @return ProjectUGroup[]
      */
     private function buildUgroups(Project $project, array $all_ugroup_ids, $index)
     {
@@ -393,7 +393,7 @@ class DefaultFineGrainedPermissionFactory
     }
 
     /**
-     * @return UGroups[]
+     * @return ProjectUGroup[]
      */
     private function getWritersForPermission($permission_id)
     {
@@ -407,7 +407,7 @@ class DefaultFineGrainedPermissionFactory
     }
 
     /**
-     * @return UGroups[]
+     * @return ProjectUGroup[]
      */
     private function getRewindersForPermission($permission_id)
     {

@@ -18,21 +18,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Permissions;
 
-use TuleapTestCase;
+use Codendi_Request;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-class DefaultFineGrainedPermissionFactoryTest extends TuleapTestCase
+class DefaultFineGrainedPermissionFactoryTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    public function setUp()
+    /**
+     * @var DefaultFineGrainedPermissionFactory
+     */
+    private $factory;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\ProjectManager
+     */
+    private $project_manager;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface
+     */
+    private $project;
+
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
-        $this->dao            = safe_mock(FineGrainedDao::class);
+        $this->dao            = Mockery::mock(FineGrainedDao::class);
         $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
         $this->normalizer     = \Mockery::spy(\PermissionsNormalizer::class);
 
@@ -47,15 +67,14 @@ class DefaultFineGrainedPermissionFactoryTest extends TuleapTestCase
                 \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class)
             ),
             new FineGrainedPermissionSorter(),
-            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class)
         );
 
         $this->project         = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns(101)->getMock();
         $this->project_manager = \Mockery::spy(\ProjectManager::class);
 
-        $ugroup_01 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(101)->getMock();
-        $ugroup_02 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(102)->getMock();
-        $ugroup_03 = \Mockery::spy(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(103)->getMock();
+        $ugroup_01 = \Mockery::mock(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(101)->getMock();
+        $ugroup_02 = \Mockery::mock(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(102)->getMock();
+        $ugroup_03 = \Mockery::mock(\ProjectUGroup::class)->shouldReceive('getId')->andReturns(103)->getMock();
 
         $this->ugroup_manager->shouldReceive('getById')->with(101)->andReturns($ugroup_01);
         $this->ugroup_manager->shouldReceive('getById')->with(102)->andReturns($ugroup_02);
@@ -90,43 +109,48 @@ class DefaultFineGrainedPermissionFactoryTest extends TuleapTestCase
         )));
     }
 
-    public function itRetrievesUpdatedPermissions()
+    private function buildRequest(array $params): Codendi_Request
     {
-        $request = aRequest()->with('edit-branch-write', array(
-            1 => array(101, 102),
-        ))->with('edit-branch-rewind', array(
-            1 => array(102),
-        ))->with('edit-tag-write', array(
-            2 => array(101),
-        ))->with('edit-tag-rewind', array(
-            2 => array(102),
-        ))->with('group_id', 101)
-          ->withProjectManager($this->project_manager)
-          ->build();
-
-        $updated = $this->factory->getUpdatedPermissionsFromRequest($request, $this->project);
-
-        $this->assertArrayNotEmpty($updated);
-        $this->assertCount($updated, 1);
-        $this->assertEqual(array_keys($updated), array(1));
+        return new Codendi_Request(
+            $params,
+            $this->project_manager
+        );
     }
 
-    public function itDealsWithRemovedUgroups()
+    public function testItRetrievesUpdatedPermissions(): void
     {
-        $request = aRequest()->with('edit-branch-write', array(
-            1 => array(101, 102),
-        ))->with('edit-branch-rewind', array(
-            1 => array(103),
-        ))->with('edit-tag-rewind', array(
-            2 => array(102),
-        ))->with('group_id', 101)
-          ->withProjectManager($this->project_manager)
-          ->build();
+        $params = [
+            'edit-branch-write' => array(1 => array(101, 102)),
+            'edit-branch-rewind'=> array(1 => array(102)),
+            'edit-tag-write' => array(2 => array(101)),
+            'edit-tag-rewind' => array(2 => array(102)),
+            'group_id' => 101
+        ];
+
+        $request = $this->buildRequest($params);
 
         $updated = $this->factory->getUpdatedPermissionsFromRequest($request, $this->project);
 
-        $this->assertArrayNotEmpty($updated);
-        $this->assertCount($updated, 1);
-        $this->assertEqual(array_keys($updated), array(2));
+        $this->assertNotEmpty($updated);
+        $this->assertCount(1, $updated);
+        $this->assertEquals(array(1), array_keys($updated));
+    }
+
+    public function testItDealsWithRemovedUgroups(): void
+    {
+        $params = [
+            'edit-branch-write' => array(1 => array(101, 102)),
+            'edit-branch-rewind'=> array(1 => array(103)),
+            'edit-tag-rewind' => array(2 => array(102)),
+            'group_id' => 101
+        ];
+
+        $request = $this->buildRequest($params);
+
+        $updated = $this->factory->getUpdatedPermissionsFromRequest($request, $this->project);
+
+        $this->assertNotEmpty($updated);
+        $this->assertCount(1, $updated);
+        $this->assertEquals(array(2), array_keys($updated));
     }
 }
