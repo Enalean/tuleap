@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,62 +22,85 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class CardInCellPresenterFactoryTest extends TuleapTestCase
-{
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-    public function setUp()
+require_once __DIR__ .'/bootstrap.php';
+
+class CardInCellPresenterFactoryTest extends TestCase
+{
+    use MockeryPHPUnitIntegration;
+
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
 
         $tracker        = \Mockery::spy(\Tracker::class);
         $this->field_id = 77777;
-        $this->field    = mockery_stub(\Tracker_FormElement_Field_MultiselectBox::class)->getId()->returns($this->field_id);
-        $this->artifact = aMockArtifact()->withTracker($tracker)->build();
+        $this->field    = Mockery::spy(\Tracker_FormElement_Field_MultiselectBox::class)
+            ->shouldReceive("getId")
+            ->andReturns($this->field_id)
+            ->getMock();
 
-        $this->card_presenter       = mockery_stub(\Cardwall_CardPresenter::class)->getArtifact()->returns($this->artifact);
+        $this->artifact = Mockery::spy(Tracker_Artifact::class)
+            ->shouldReceive('getTracker')
+            ->andReturn($tracker)
+            ->getMock();
 
-        $this->field_provider = mockery_stub(\Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class)->getField($tracker)->returns($this->field);
+        $this->card_presenter = Mockery::spy(\Cardwall_CardPresenter::class)
+            ->shouldReceive('getArtifact')
+            ->andReturns($this->artifact)
+            ->getMock();
+
+        $this->field_provider = Mockery::spy(\Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class)
+            ->shouldReceive('getField')
+            ->with($tracker)
+            ->andReturns($this->field)
+            ->getMock();
     }
 
-    public function itHasACardInCellPresenterWithASemanticStatusFieldId()
+    public function testItHasACardInCellPresenterWithASemanticStatusFieldId(): void
     {
         $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, new Cardwall_MappingCollection());
         $cell_presenter = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
 
-        $this->assertEqual(
+        $this->assertEquals(
             $cell_presenter,
             new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id)
         );
     }
 
-    public function itHasACardInCellPresenterWithSwimLineId()
+    public function testItHasACardInCellPresenterWithSwimLineId(): void
     {
         $swimline_id = 112;
-        stub($this->card_presenter)->getSwimlineId()->returns($swimline_id);
+        $this->card_presenter->shouldReceive('getSwimlineId')->andReturns($swimline_id);
 
         $mapping_collection = new Cardwall_MappingCollection();
 
         $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, $mapping_collection);
         $cell_presenter = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
 
-        $this->assertEqual(
+        $this->assertEquals(
             $cell_presenter,
             new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $swimline_id)
         );
     }
 
-    public function itHasACardInCellPresenterWithSwimLineValueCollection()
+    public function testItHasACardInCellPresenterWithSwimLineValueCollection(): void
     {
         $swimline_id = 112;
-        stub($this->card_presenter)->getSwimlineId()->returns($swimline_id);
+        $this->card_presenter->shouldReceive('getSwimlineId')->andReturns($swimline_id);
 
-        $mapping_collection = mockery_stub(\Cardwall_MappingCollection::class)->getSwimLineValues($this->field_id)->returns(array(123, 456));
+        $mapping_collection = Mockery::spy(\Cardwall_MappingCollection::class)
+            ->shouldReceive('getSwimLineValues')
+            ->with($this->field_id)
+            ->andReturns(array(123, 456))
+            ->getMock();
 
         $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, $mapping_collection);
         $cell_presenter = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
 
-        $this->assertEqual(
+        $this->assertEquals(
             $cell_presenter,
             new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $swimline_id, array(123, 456))
         );

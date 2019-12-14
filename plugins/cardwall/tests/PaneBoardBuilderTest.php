@@ -19,7 +19,6 @@
  */
 
 require_once dirname(__FILE__) .'/bootstrap.php';
-require_once dirname(__FILE__) .'/../../agiledashboard/include/AgileDashboard/BacklogItemDao.class.php';
 
 class Cardwall_PaneBuilderTest extends TuleapTestCase
 {

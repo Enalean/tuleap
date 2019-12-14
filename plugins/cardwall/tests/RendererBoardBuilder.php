@@ -22,7 +22,7 @@ use Tuleap\Cardwall\AccentColor\AccentColor;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 
 require_once dirname(__FILE__) .'/bootstrap.php';
-require_once 'common/TreeNode/TreeNodeMapper.class.php';
+require_once __DIR__.'/../../../src/common/TreeNode/TreeNodeMapper.class.php';
 
 class Cardwall_ArtifactNodeTreeProvider4Tests extends Cardwall_RendererBoardBuilder
 {
