@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011-present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,29 +22,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'HTML_TableTest.php';
+use PHPUnit\Framework\TestCase;
 
-class HTML_Table_BoostrapTest extends HTML_TableTest
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class HTML_Table_BoostrapTest extends TestCase
 {
 
     /**
-     * @var HTML_Table_Boostrap
+     * @var HTML_Table_Bootstrap
      */
     protected $html_table;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->html_table = new HTML_Table_Bootstrap();
     }
 
-    public function itBuildsATable()
+    public function testItBuildsATable(): void
     {
-        $this->assertPattern('%<table class="table">.*</table>%s', $this->html_table->render());
+        $this->assertRegExp('/<table class="table">\s*<\/table>/', $this->html_table->render());
     }
 
-    public function itHasTableClasses()
+    public function testItHasTableClasses(): void
     {
-        $this->assertPattern('%<table class="table bla">%', $this->html_table->addTableClass('bla')->render());
+        $this->assertRegExp('/<table class="table bla">/', $this->html_table->addTableClass('bla')->render());
     }
 }
