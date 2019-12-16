@@ -19,7 +19,7 @@
 
 import { ActionContext } from "vuex";
 import { RootState } from "../../type";
-import { UpdateCardPayload, NewRemainingEffortPayload, NewCardPayload } from "./type";
+import { NewCardPayload, NewRemainingEffortPayload, UpdateCardPayload } from "./type";
 import * as tlp from "tlp";
 import { SwimlaneState } from "../type";
 import { Card, Swimlane, Tracker } from "../../../type";
@@ -263,46 +263,6 @@ describe("Card actions", () => {
             expect(context.commit).toHaveBeenNthCalledWith(3, "cardIsHalfwayCreated");
         });
 
-        it("attach the card to the parent", async () => {
-            const payload: NewCardPayload = {
-                swimlane: { card: { id: 74, tracker_id: 42 } },
-                column: {
-                    mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
-                },
-                label: "Lorem"
-            } as NewCardPayload;
-
-            const tlpPostMock = jest.spyOn(tlp, "post");
-            mockFetchSuccess(tlpPostMock, { return_json: { id: 1001 } });
-
-            const tlpGetMock = jest.spyOn(tlp, "get");
-            mockFetchSuccess(tlpGetMock, { return_json: { values: [] } });
-
-            const tlpPutMock = jest.spyOn(tlp, "put");
-
-            await actions.addCard(context, payload);
-
-            expect(tlpGetMock).toHaveBeenCalledWith("/api/v1/artifacts/74");
-            expect(tlpPutMock).toHaveBeenCalledWith("/api/v1/artifacts/74", {
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    values: [
-                        {
-                            field_id: 103,
-                            links: [
-                                {
-                                    id: 1001,
-                                    type: "_is_child"
-                                }
-                            ]
-                        }
-                    ]
-                })
-            });
-        });
-
         it("warns about error if any", async () => {
             const payload: NewCardPayload = {
                 swimlane: { card: { tracker_id: 42 } },
@@ -320,6 +280,60 @@ describe("Card actions", () => {
 
             expect(context.dispatch).toHaveBeenCalledWith("error/handleModalError", error, {
                 root: true
+            });
+        });
+
+        describe(`Given the card creation succeeded`, () => {
+            let payload: NewCardPayload;
+            let tlpGetMock: jest.SpyInstance;
+
+            beforeEach(() => {
+                payload = {
+                    swimlane: { card: { id: 74, tracker_id: 42 } },
+                    column: {
+                        mappings: [{ tracker_id: 69, field_id: 666, accepts: [{ id: 101 }] }]
+                    },
+                    label: "Lorem"
+                } as NewCardPayload;
+                const tlpPostMock = jest.spyOn(tlp, "post");
+                mockFetchSuccess(tlpPostMock, { return_json: { id: 1001 } });
+                tlpGetMock = jest.spyOn(tlp, "get");
+                mockFetchSuccess(tlpGetMock, {
+                    headers: new Headers({ "Last-Modified": "Mon, 09 Dec 2019 10:11:35 GMT" }),
+                    return_json: { values: [] }
+                });
+            });
+
+            it("attach the card to the parent", async () => {
+                const tlpPutMock = jest.spyOn(tlp, "put");
+
+                await actions.addCard(context, payload);
+
+                expect(tlpGetMock).toHaveBeenCalledWith("/api/v1/artifacts/74");
+                expect(tlpPutMock).toHaveBeenCalledWith("/api/v1/artifacts/74", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "If-Unmodified-Since": "Mon, 09 Dec 2019 10:11:35 GMT"
+                    },
+                    body: JSON.stringify({
+                        values: [{ field_id: 103, links: [{ id: 1001, type: "_is_child" }] }]
+                    })
+                });
+            });
+
+            it(`when it could not attach the card to its parent due to any other error, it will show an error modal`, async () => {
+                const error = { response: { status: 500 } };
+                jest.spyOn(tlp, "put").mockRejectedValue(error);
+
+                await actions.addCard(context, payload);
+
+                expect(context.dispatch).toHaveBeenCalledWith(
+                    "error/handleModalError",
+                    expect.any(Error),
+                    {
+                        root: true
+                    }
+                );
             });
         });
     });
