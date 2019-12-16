@@ -1524,7 +1524,7 @@ class KanbanResource extends AuthenticatedResource
         if ($report === null) {
             throw new RestException(404, "The report was not found");
         }
-        if ($report->getTracker()->getId() !== $kanban->getTrackerId()) {
+        if ($report->getTracker()->getId() !== (int) $kanban->getTrackerId()) {
             throw new RestException(400, "The provided report does not belong to the kanban tracker");
         }
         if (! $report->isPublic()) {
