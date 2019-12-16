@@ -35,6 +35,7 @@ use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
+use Tuleap\Project\Admin\Service\ProjectServiceActivator;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
@@ -150,6 +151,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      * @var \Tuleap\Project\Admin\DescriptionFields\FieldUpdator
      */
     private $field_updator;
+    /**
+     * @var ProjectServiceActivator
+     */
+    private $project_service_activator;
 
     public function __construct(
         ProjectManager $projectManager,
@@ -160,7 +165,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         FRSPermissionCreator $frs_permissions_creator,
         \Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory $frs_license_agreement_factory,
         ProjectDashboardDuplicator $dashboard_duplicator,
-        ServiceCreator $service_creator,
         LabelDao $label_dao,
         DefaultProjectVisibilityRetriever $default_project_visibility_retriever,
         SynchronizedProjectMembershipDuplicator $synchronized_project_membership_duplicator,
@@ -168,6 +172,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         Rule_ProjectFullName $rule_full_name,
         EventManager $event_manager,
         \Tuleap\Project\Admin\DescriptionFields\FieldUpdator $field_updator,
+        ProjectServiceActivator $project_service_activator,
         $force_activation = false
     ) {
         $this->send_notifications                   = $send_notifications;
@@ -180,13 +185,13 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->frs_permissions_creator              = $frs_permissions_creator;
         $this->ugroup_duplicator                    = $ugroup_duplicator;
         $this->dashboard_duplicator                 = $dashboard_duplicator;
-        $this->service_creator                      = $service_creator;
         $this->label_dao                            = $label_dao;
         $this->default_project_visibility_retriever = $default_project_visibility_retriever;
         $this->synchronized_project_membership_duplicator  = $synchronized_project_membership_duplicator;
         $this->frs_license_agreement_factory = $frs_license_agreement_factory;
         $this->event_manager = $event_manager;
         $this->field_updator = $field_updator;
+        $this->project_service_activator = $project_service_activator;
     }
 
     public static function buildSelfByPassValidation(): self
@@ -204,23 +209,24 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
     private static function buildSelf(bool $force_activation, bool $send_notifications): self
     {
-        $ugroup_dao         = new UGroupDao();
-        $ugroup_user_dao    = new UGroupUserDao();
-        $ugroup_manager     = new UGroupManager();
-        $ugroup_binding     = new UGroupBinding($ugroup_user_dao, $ugroup_manager);
-        $ugroup_duplicator  = new Tuleap\Project\UgroupDuplicator(
+        $ugroup_dao        = new UGroupDao();
+        $ugroup_user_dao   = new UGroupUserDao();
+        $ugroup_manager    = new UGroupManager();
+        $ugroup_binding    = new UGroupBinding($ugroup_user_dao, $ugroup_manager);
+        $event_manager     = EventManager::instance();
+        $ugroup_duplicator = new Tuleap\Project\UgroupDuplicator(
             $ugroup_dao,
             $ugroup_manager,
             $ugroup_binding,
             MemberAdder::build(ProjectMemberAdderWithoutStatusCheckAndNotifications::build()),
-            EventManager::instance()
+            $event_manager
         );
 
         $user_manager   = UserManager::instance();
         $widget_factory = new WidgetFactory(
             $user_manager,
             new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-            EventManager::instance()
+            $event_manager
         );
 
         $widget_dao        = new DashboardWidgetDao($widget_factory);
@@ -237,6 +243,8 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             new DisabledProjectWidgetsChecker(new DisabledProjectWidgetsDao())
         );
 
+        $service_dao = new ServiceDao();
+
         return new self(
             ProjectManager::instance(),
             ReferenceManager::instance(),
@@ -250,18 +258,18 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             ),
             new LicenseAgreementFactory(new LicenseAgreementDao()),
             $duplicator,
-            new ServiceCreator(new ServiceDao()),
             new LabelDao(),
             new DefaultProjectVisibilityRetriever(),
             new SynchronizedProjectMembershipDuplicator(new SynchronizedProjectMembershipDao()),
             new \Rule_ProjectName(),
             new \Rule_ProjectFullName(),
-            EventManager::instance(),
+            $event_manager,
             new \Tuleap\Project\Admin\DescriptionFields\FieldUpdator(
                 new DescriptionFieldsFactory(new DescriptionFieldsDao()),
                 new \Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO(),
                 new ProjectXMLImporterLogger()
             ),
+            new ProjectServiceActivator(new ServiceCreator($service_dao), $event_manager, $service_dao),
             $force_activation
         );
     }
@@ -405,7 +413,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             'use_legacy_services'   => &$legacy
         ));
 
-        $this->activateServicesFromTemplate($group, $template_group, $data, $legacy);
+        $this->project_service_activator->activateServicesFromTemplate($group, $template_group, $data, $legacy);
         $this->setMessageToRequesterFromTemplate($group_id, $template_group->getID());
         $this->initForumModuleFromTemplate($group_id, $template_group->getID());
         $this->initCVSModuleFromTemplate($group_id, $template_group->getID());
@@ -567,61 +575,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
         // clear the user data to take into account this new group.
         $user->clearGroupData();
-    }
-
-    private function getServiceInfoQueryForNewProject(array $legacy, $template_id)
-    {
-        $template_id      = db_ei($template_id);
-        $additional_where = '';
-
-        foreach ($legacy as $service_shortname => $legacy_service_usage) {
-            if (! $legacy_service_usage) {
-                $service_shortname = db_es($service_shortname);
-                $additional_where .= " AND short_name <> '$service_shortname'";
-            }
-        }
-
-        return "SELECT * FROM service WHERE group_id=$template_id AND is_active=1 $additional_where";
-    }
-
-    /**
-     * Activate the same services on $group_id than those activated on $template_group
-     * protected for testing purpose
-     */
-    protected function activateServicesFromTemplate(Project $group, Group $template_group, ProjectCreationData $data, array $legacy)
-    {
-        $group_id    = $group->getID();
-        $template_id = $template_group->getID();
-        $sql         = $this->getServiceInfoQueryForNewProject($legacy, $template_id);
-        $result      = db_query($sql);
-
-        while ($arr = db_fetch_array($result)) {
-            $service_info = $data->getServiceInfo($arr['service_id']);
-            if (isset($service_info['is_used'])) {
-                 $is_used = $service_info['is_used'];
-            } else {
-                $is_used = '0';
-                if ($arr['short_name'] == 'admin' || $arr['short_name'] == 'summary') {
-                    $is_used = '1';
-                }
-            }
-
-            if (! $this->service_creator->createService(
-                $arr,
-                $group_id,
-                array(
-                    'system' => $template_group->isSystem(),
-                    'name' => $template_group->isSystem() ? '' : $template_group->getUnixName(),
-                    'id' => $template_id,
-                    'is_used' => $is_used,
-                )
-            )) {
-                exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_create_service') .'<br>'. db_error());
-            }
-        }
-
-        $event = new ProjectRegistrationActivateService($group, $template_group, $legacy);
-        EventManager::instance()->processEvent($event);
     }
 
     /**
