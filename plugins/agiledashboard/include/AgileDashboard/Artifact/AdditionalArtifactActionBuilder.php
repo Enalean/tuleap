@@ -121,7 +121,7 @@ class AdditionalArtifactActionBuilder
 
         if ($this->artifacts_in_explicit_backlog_dao->isArtifactInTopBacklogOfProject($artifact_id, $project_id)) {
             $link_label = dgettext('tuleap-agiledashboard', 'Remove from top backlog');
-            $icon       = 'fa-tlp-add-to-backlog';
+            $icon       = 'fa-tlp-remove-from-backlog';
             $action     = 'remove';
         }
 
