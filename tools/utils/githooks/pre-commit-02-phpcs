@@ -72,7 +72,8 @@ main() {
     local status_strict=$?
     if [[ ${status_strict} -ne 0 ]]
     then
-        echo "This command can be launched to fix some errors automatically:\n \`\033[32mmake phpcbf FILES='$files_list'\e[0m\`"
+        files_list=$(echo -n "$files_list" | tr '\n' ' ')
+        echo -e "This command can be launched to fix some errors automatically:\n\n\033[32mmake phpcbf FILES='$files_list'\e[0m\n"
         exit ${status_strict}
     fi
 
