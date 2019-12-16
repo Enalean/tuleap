@@ -23,6 +23,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
+use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\FRS\AdditionalInformationPresenter;
@@ -96,7 +97,7 @@ class frsPlugin extends \Plugin //phpcs:ignore
         }
 
         if (defined('AGILEDASHBOARD_BASE_DIR')) {
-            $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
+            $this->addHook(PaneInfoCollector::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -350,13 +351,12 @@ class frsPlugin extends \Plugin //phpcs:ignore
         }
     }
 
-    /** @see AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE */
-    public function agiledashboard_event_additional_panes_on_milestone($params) //phpcs:ignore
+    public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector): void
     {
-        $milestone  = $params['milestone'];
+        $milestone  = $collector->getMilestone();
         $release_id = $this->getLinkRetriever()->getLinkedReleaseId($milestone->getArtifact());
         if ($release_id) {
-            $params['panes'][] = new Tuleap\FRS\AgileDashboardPaneInfo($milestone, $release_id);
+            $collector->addPane(new Tuleap\FRS\AgileDashboardPaneInfo($milestone, $release_id));
         }
     }
 
