@@ -126,6 +126,7 @@ class FRSXMLImporterTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         FRSReleaseFactory::clearInstance();
         PermissionsManager::clearInstance();
         UserManager::clearInstance();
+        EventManager::clearInstance();
         if (isset($this->old_ftp_incoming_dir)) {
             $GLOBALS['ftp_incoming_dir'] = $this->old_ftp_incoming_dir;
         } else {
