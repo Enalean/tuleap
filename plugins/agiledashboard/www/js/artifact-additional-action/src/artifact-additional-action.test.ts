@@ -101,6 +101,7 @@ describe("Artifact additional action", () => {
         document: Document;
         link_element: HTMLAnchorElement;
         title_element: HTMLAnchorElement;
+        icon: HTMLElement;
     }
 
     function getLocalAddAction(): LocalAction {
@@ -110,6 +111,10 @@ describe("Artifact additional action", () => {
         link_element.dataset.projectId = "101";
         link_element.dataset.artifactId = "201";
         link_element.dataset.action = "add";
+
+        const icon = local_document.createElement("i");
+        link_element.appendChild(icon);
+
         const span_element = local_document.createElement("span");
         span_element.setAttribute("class", "additional-artifact-action-title");
         link_element.appendChild(span_element);
@@ -119,7 +124,8 @@ describe("Artifact additional action", () => {
         return {
             document: local_document,
             link_element: link_element,
-            title_element: link_element
+            title_element: link_element,
+            icon
         };
     }
 
@@ -153,6 +159,8 @@ describe("Artifact additional action", () => {
                 })
             });
             expect(current_button_title).not.toBe(local_action.title_element.textContent);
+            expect(local_action.icon.classList.contains("fa-tlp-add-to-backlog")).toBe(false);
+            expect(local_action.icon.classList.contains("fa-tlp-remove-from-backlog")).toBe(true);
             done();
         });
     });
@@ -180,6 +188,8 @@ describe("Artifact additional action", () => {
                 })
             });
             expect(current_button_title).not.toBe(local_action.title_element.textContent);
+            expect(local_action.icon.classList.contains("fa-tlp-add-to-backlog")).toBe(true);
+            expect(local_action.icon.classList.contains("fa-tlp-remove-from-backlog")).toBe(false);
             done();
         });
     });

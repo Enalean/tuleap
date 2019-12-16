@@ -42,10 +42,11 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
         throw new Error("Not able to find the user language.");
     }
 
+    const action_button_icon = action_button.querySelector("i");
     const action_button_title = action_button
         .getElementsByClassName("additional-artifact-action-title")
         .item(0);
-    if (action_button_title === null) {
+    if (action_button_title === null || action_button_icon === null) {
         throw new Error("Can not find the button title of the additional action");
     }
 
@@ -87,6 +88,8 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
                     "info",
                     gettext_provider.gettext("This artifact has been added to top backlog.")
                 );
+                action_button_icon.classList.remove("fa-tlp-add-to-backlog");
+                action_button_icon.classList.add("fa-tlp-remove-from-backlog");
                 action_button_title.textContent = gettext_provider.gettext(
                     "Remove from top backlog"
                 );
@@ -116,6 +119,8 @@ export function initArtifactAdditionalAction(mount_point: Document): void {
                     "info",
                     gettext_provider.gettext("This artifact has been removed from top backlog.")
                 );
+                action_button_icon.classList.remove("fa-tlp-remove-from-backlog");
+                action_button_icon.classList.add("fa-tlp-add-to-backlog");
                 action_button_title.textContent = gettext_provider.gettext("Add to top backlog");
                 // eslint-disable-next-line require-atomic-updates
                 action = "add";
