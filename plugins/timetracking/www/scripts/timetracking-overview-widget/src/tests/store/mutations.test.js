@@ -189,7 +189,7 @@ describe("Store mutations", () => {
                 mutations.setSelectedTrackers(state, trackers);
             });
 
-            it(" When no selected_trackers, no tracker are disabled", () => {
+            it("When no selected_trackers, no tracker are disabled", () => {
                 let trackers = [
                     { id: 1, label: "timetracking_tracker" },
                     { id: 2, label: "support_tracker" },
@@ -206,7 +206,7 @@ describe("Store mutations", () => {
                 expect(state.trackers).toEqual(tracker_temoin);
             });
 
-            it(" When selected_trackers, tracker identic is disabled", () => {
+            it("When selected_trackers, tracker identic is disabled", () => {
                 mutations.setSelectedTrackers(state, [{ id: 1, label: "timetracking_tracker" }]);
                 let trackers = [
                     { id: 1, label: "timetracking_tracker" },

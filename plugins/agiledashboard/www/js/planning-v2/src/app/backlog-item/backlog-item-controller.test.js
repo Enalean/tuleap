@@ -695,7 +695,7 @@ describe("BacklogItemController -", function() {
         });
     });
 
-    describe("reorderBacklogItemChildren() - ", function() {
+    describe("reorderBacklogItemChildren() -", function() {
         it("reorder backlog item's children", function() {
             var dropped_request = $q.defer(),
                 backlog_item_id = 8,

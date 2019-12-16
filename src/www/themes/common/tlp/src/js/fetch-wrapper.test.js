@@ -93,13 +93,9 @@ describe(`fetch-wrapper`, () => {
             };
             window.fetch.mockImplementation(() => Promise.resolve(expected_response));
 
-            expect.assertions(2);
-            try {
-                await wrapper.get(url);
-            } catch (error) {
-                expect(error.message).toEqual("Not found");
-                expect(error.response).toBe(expected_response);
-            }
+            const expected_error = new Error("Not found");
+            expected_error.response = expected_response;
+            await expect(wrapper.get(url)).rejects.toEqual(expected_error);
         });
     });
 
@@ -209,12 +205,9 @@ describe(`fetch-wrapper`, () => {
                 }
             );
 
-            expect.assertions(1);
-            try {
-                await wrapper.recursiveGet(url);
-            } catch (error) {
-                expect(error.message).toEqual("No X-PAGINATION-SIZE field in the header.");
-            }
+            await expect(wrapper.recursiveGet(url)).rejects.toThrow(
+                "No X-PAGINATION-SIZE field in the header."
+            );
         });
 
         it(`when the route fails, it will return a rejected promise with the error`, async () => {
@@ -224,13 +217,9 @@ describe(`fetch-wrapper`, () => {
             };
             window.fetch.mockImplementation(() => Promise.resolve(expected_response));
 
-            expect.assertions(2);
-            try {
-                await wrapper.recursiveGet(url);
-            } catch (error) {
-                expect(error.message).toEqual("Not found");
-                expect(error.response).toBe(expected_response);
-            }
+            const expected_error = new Error("Not found");
+            expected_error.response = expected_response;
+            await expect(wrapper.recursiveGet(url)).rejects.toEqual(expected_error);
         });
 
         describe(`when the route provides a X-PAGINATION-SIZE header
@@ -340,13 +329,9 @@ describe(`fetch-wrapper`, () => {
             };
             window.fetch.mockImplementation(() => Promise.resolve(expected_response));
 
-            expect.assertions(2);
-            try {
-                await wrapper.put(url);
-            } catch (error) {
-                expect(error.message).toEqual("Not found");
-                expect(error.response).toBe(expected_response);
-            }
+            const expected_error = new Error("Not found");
+            expected_error.response = expected_response;
+            await expect(wrapper.put(url)).rejects.toEqual(expected_error);
         });
     });
 
@@ -389,13 +374,9 @@ describe(`fetch-wrapper`, () => {
             };
             window.fetch.mockImplementation(() => Promise.resolve(expected_response));
 
-            expect.assertions(2);
-            try {
-                await wrapper.patch(url);
-            } catch (error) {
-                expect(error.message).toEqual("Not found");
-                expect(error.response).toBe(expected_response);
-            }
+            const expected_error = new Error("Not found");
+            expected_error.response = expected_response;
+            await expect(wrapper.patch(url)).rejects.toEqual(expected_error);
         });
     });
 
@@ -438,13 +419,9 @@ describe(`fetch-wrapper`, () => {
             };
             window.fetch.mockImplementation(() => Promise.resolve(expected_response));
 
-            expect.assertions(2);
-            try {
-                await wrapper.post(url);
-            } catch (error) {
-                expect(error.message).toEqual("Not found");
-                expect(error.response).toBe(expected_response);
-            }
+            const expected_error = new Error("Not found");
+            expected_error.response = expected_response;
+            await expect(wrapper.post(url)).rejects.toEqual(expected_error);
         });
     });
 
@@ -481,13 +458,9 @@ describe(`fetch-wrapper`, () => {
             };
             window.fetch.mockImplementation(() => Promise.resolve(expected_response));
 
-            expect.assertions(2);
-            try {
-                await wrapper.del(url);
-            } catch (error) {
-                expect(error.message).toEqual("Not found");
-                expect(error.response).toBe(expected_response);
-            }
+            const expected_error = new Error("Not found");
+            expected_error.response = expected_response;
+            await expect(wrapper.del(url)).rejects.toEqual(expected_error);
         });
     });
 
@@ -531,13 +504,9 @@ describe(`fetch-wrapper`, () => {
             };
             window.fetch.mockImplementation(() => Promise.resolve(expected_response));
 
-            expect.assertions(2);
-            try {
-                await wrapper.options(url);
-            } catch (error) {
-                expect(error.message).toEqual("Not found");
-                expect(error.response).toBe(expected_response);
-            }
+            const expected_error = new Error("Not found");
+            expected_error.response = expected_response;
+            await expect(wrapper.options(url)).rejects.toEqual(expected_error);
         });
     });
 });

@@ -23,7 +23,7 @@ import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-fo
 import FieldsList from "./FieldsList.vue";
 import EventBus from "../../../helpers/event-bus";
 
-describe("FieldsList - ", () => {
+describe("FieldsList -", () => {
     let factory: Wrapper<FieldsList>;
     beforeEach(async () => {
         const field = {

@@ -528,7 +528,7 @@ describe("Swimlane state actions", () => {
                 };
                 payload = { swimlane, card };
             });
-            it(`it will GET the card using the REST API and mutate the store with it
+            it(`will GET the card using the REST API and mutate the store with it
             and it will also GET the parent card using the REST API and mutate the store with it`, async () => {
                 const refreshed_child_card = { id: 59, label: "Refreshed child card" } as Card;
                 const refreshed_parent_card = {

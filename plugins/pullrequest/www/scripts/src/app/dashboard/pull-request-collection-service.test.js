@@ -215,7 +215,7 @@ describe("PullRequestCollectionService -", function() {
     });
 
     describe("search()", function() {
-        it("Given a pull request id stored in all the pull requests, when I search for it, then it will be returned ", function() {
+        it("Given a pull request id stored in all the pull requests, when I search for it, then it will be returned", function() {
             const pull_request = {
                 id: 75
             };

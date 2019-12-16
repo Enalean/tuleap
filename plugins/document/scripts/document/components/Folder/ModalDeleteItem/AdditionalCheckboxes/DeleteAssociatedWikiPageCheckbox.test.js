@@ -55,7 +55,7 @@ describe("ModalConfirmationDeletion", () => {
         };
     });
 
-    it("It shows the warning only when option is checked", () => {
+    it("shows the warning only when option is checked", () => {
         const wiki_checkbox = getWikiCheckbox(item, [
             {
                 id: 43,
@@ -80,7 +80,7 @@ describe("ModalConfirmationDeletion", () => {
         ).toBeFalsy();
     });
 
-    it("It does not show the warning when wikiPageReferencers is empty no matter if the option is checked or not", () => {
+    it("does not show the warning when wikiPageReferencers is empty no matter if the option is checked or not", () => {
         const wiki_checkbox = getWikiCheckbox(item, []);
         const checkbox_input = wiki_checkbox.find(
             "[data-test=delete-associated-wiki-page-checkbox]"
@@ -99,7 +99,7 @@ describe("ModalConfirmationDeletion", () => {
         ).toBeFalsy();
     });
 
-    it("It renders a list of links", () => {
+    it("renders a list of links", () => {
         const wiki_checkbox = getWikiCheckbox(item, [
             {
                 id: 43,

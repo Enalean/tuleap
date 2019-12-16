@@ -98,27 +98,29 @@ describe("Project banner clamp", () => {
         expect(banner_message.classList).toContain(PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS);
     });
 
-    it("Checks if an hint needs to be displayed to the user when classes on the message parent element changes", done => {
-        const local_document_with_banner = getLocalDocumentWithProjectBannerMessage();
-        const banner_message = local_document_with_banner.message;
-        allowUnclampingProjectBannerMessage(local_document_with_banner.document);
+    it("Checks if an hint needs to be displayed to the user when classes on the message parent element changes", () => {
+        return new Promise(done => {
+            const local_document_with_banner = getLocalDocumentWithProjectBannerMessage();
+            const banner_message = local_document_with_banner.message;
+            allowUnclampingProjectBannerMessage(local_document_with_banner.document);
 
-        expect(banner_message.classList).not.toContain(
-            PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
-        );
-
-        jest.spyOn(banner_message, "scrollWidth", "get").mockReturnValue(150);
-        jest.spyOn(banner_message, "clientWidth", "get").mockReturnValue(100);
-
-        if (banner_message.parentElement !== null) {
-            banner_message.parentElement.classList.add("new-class-on-the-project-banner");
-        }
-
-        setImmediate(() => {
-            expect(banner_message.classList).toContain(
+            expect(banner_message.classList).not.toContain(
                 PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
             );
-            done();
+
+            jest.spyOn(banner_message, "scrollWidth", "get").mockReturnValue(150);
+            jest.spyOn(banner_message, "clientWidth", "get").mockReturnValue(100);
+
+            if (banner_message.parentElement !== null) {
+                banner_message.parentElement.classList.add("new-class-on-the-project-banner");
+            }
+
+            setImmediate(() => {
+                expect(banner_message.classList).toContain(
+                    PROJECT_BANNER_MESSAGE_CAN_BE_UNCLAMPED_CLASS
+                );
+                done();
+            });
         });
     });
 });

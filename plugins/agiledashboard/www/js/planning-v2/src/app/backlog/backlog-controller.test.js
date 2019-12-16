@@ -17,7 +17,7 @@ function createElement(tag_name, class_name) {
     return element;
 }
 
-describe("BacklogController - ", () => {
+describe("BacklogController -", () => {
     let $q,
         $scope,
         $document,
@@ -216,7 +216,7 @@ describe("BacklogController - ", () => {
         BacklogController.$onInit();
     });
 
-    describe("$onInit() - ", function() {
+    describe("$onInit() -", function() {
         describe("Given we are in a top backlog context", function() {
             it("When I load the controller, then the project's backlog will be retrieved and the backlog updated", function() {
                 BacklogController.milestone_id = undefined;
@@ -845,7 +845,7 @@ describe("BacklogController - ", () => {
         });
     });
 
-    describe("reorderBacklogItems() - ", function() {
+    describe("reorderBacklogItems() -", function() {
         it("reorder the content of a milestone", function() {
             var dropped_request = $q.defer(),
                 backlog_items = [{ id: 1 }, { id: 2 }],

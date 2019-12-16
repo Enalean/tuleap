@@ -22,7 +22,7 @@ import { State } from "./type";
 
 describe("getters", () => {
     describe("is_template_selected", () => {
-        it(`Should return false when the selected template is null `, () => {
+        it(`Should return false when the selected template is null`, () => {
             const state: State = {
                 selected_template: null,
                 tuleap_templates: [],
@@ -37,7 +37,7 @@ describe("getters", () => {
             };
             expect(getters.is_template_selected(state)).toBe(false);
         });
-        it(`Should return true when a template is choosen `, () => {
+        it(`Should return true when a template is choosen`, () => {
             const state: State = {
                 selected_template: {
                     title: "scrum",
@@ -75,7 +75,7 @@ describe("getters", () => {
             };
             expect(getters.has_error(state)).toBe(false);
         });
-        it(`Should return true when a template is choosen `, () => {
+        it(`Should return true when a template is choosen`, () => {
             const state: State = {
                 selected_template: null,
                 tuleap_templates: [],

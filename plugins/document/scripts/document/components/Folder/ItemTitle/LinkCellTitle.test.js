@@ -25,7 +25,7 @@ import localVue from "../../../helpers/local-vue";
 import { TYPE_LINK } from "../../../constants.js";
 
 describe("LinkCellTitle", () => {
-    it(`It should render link title`, () => {
+    it(`should render link title`, () => {
         const item = {
             id: 42,
             title: "my link",

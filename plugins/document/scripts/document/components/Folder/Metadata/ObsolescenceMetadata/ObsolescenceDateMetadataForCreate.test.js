@@ -61,7 +61,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
     });
 
     describe(`Should link flat picker and select helper`, () => {
-        it(`Obsolescence date should be null if the option "permanent" is chosen by the user `, () => {
+        it(`Obsolescence date should be null if the option "permanent" is chosen by the user`, () => {
             const wrapper = metadata_factory({ value: "" });
             store.state.is_obsolescence_date_metadata_used = true;
 
@@ -71,7 +71,7 @@ describe("ObsolescenceDateMetadataForCreate", () => {
             expect(wrapper.vm.selected_value).toEqual("permanent");
             expect(wrapper.vm.obsolescence_date).toEqual(null);
         });
-        it(`Obsolescence date should be the current day + 3 months if the option "3months" is chosen by the user `, () => {
+        it(`Obsolescence date should be the current day + 3 months if the option "3months" is chosen by the user`, () => {
             const wrapper = metadata_factory({ value: "" });
             store.state.is_obsolescence_date_metadata_used = true;
 

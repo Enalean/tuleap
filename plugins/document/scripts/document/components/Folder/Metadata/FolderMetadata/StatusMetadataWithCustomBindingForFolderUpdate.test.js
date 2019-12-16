@@ -43,7 +43,7 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
         };
     });
 
-    it(`It display status selectbox only when status property is enabled for project`, () => {
+    it(`display status selectbox only when status property is enabled for project`, () => {
         const wrapper = status_metadata({
             currentlyUpdatedItem: {
                 metadata: [
@@ -69,7 +69,7 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
         ).toBeTruthy();
     });
 
-    it(`It does not display status if property is not available`, () => {
+    it(`does not display status if property is not available`, () => {
         const wrapper = status_metadata({
             currentlyUpdatedItem: {
                 metadata: [
@@ -95,7 +95,7 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
         ).toBeFalsy();
     });
 
-    it(`It updates the status`, () => {
+    it(`updates the status`, () => {
         const wrapper = status_metadata({
             currentlyUpdatedItem: {
                 metadata: [

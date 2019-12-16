@@ -24,7 +24,7 @@ import FieldDescription from "./FieldDescription.vue";
 import { State } from "../../../store/type";
 import { createStoreMock } from "../../../../../../vue-components/store-wrapper-jest";
 
-describe("FieldDescription - ", () => {
+describe("FieldDescription -", () => {
     let factory: Wrapper<FieldDescription>;
     beforeEach(async () => {
         const state: State = {

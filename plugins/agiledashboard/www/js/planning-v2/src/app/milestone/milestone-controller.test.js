@@ -424,7 +424,7 @@ describe("MilestoneController", function() {
         });
     });
 
-    describe("reorderMilestoneContent() - ", function() {
+    describe("reorderMilestoneContent() -", function() {
         it("reorder the content of a milestone", function() {
             var dropped_request = $q.defer(),
                 milestone_id = 12,

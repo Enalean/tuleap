@@ -280,11 +280,9 @@ describe(`drag-drop-actions`, () => {
             expect(context.commit).toHaveBeenCalledWith("unsetDropZoneRejectingDrop");
         });
 
-        it(`
-            Given a solo card
+        it(`Given a solo card
             When it has been dragged over some different containers and dropped in the source one
-            Then it should not try to reorder the cards
-        `, async () => {
+            Then it should not try to reorder the cards`, async () => {
             const column = { id: 31, label: "Todo" } as ColumnDefinition;
             const card = { id: 667, label: "Do the stuff", has_children: false } as Card;
             const swimlane = { card } as Swimlane;
@@ -309,11 +307,9 @@ describe(`drag-drop-actions`, () => {
             expect(context.dispatch).not.toHaveBeenCalledWith();
         });
 
-        it(`
-            Given a child card alone in a cell
+        it(`Given a child card alone in a cell
             When it has been dragged over some different containers and dropped in the source one
-            Then it should not try to reorder the cards
-        `, async () => {
+            Then it should not try to reorder the cards`, async () => {
             const column = { id: 31, label: "Todo" } as ColumnDefinition;
             const swimlane = { card: { id: 666, has_children: true } } as Swimlane;
             const card = { id: 667, label: "Do the stuff", has_children: false } as Card;

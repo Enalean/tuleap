@@ -48,7 +48,7 @@ describe("BannerPresenter", () => {
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("it sets 'activated' to false on save-banner if the switch is clicked when banner is set", async () => {
+    it("sets 'activated' to false on save-banner if the switch is clicked when banner is set", async () => {
         const wrapper = shallowMount(BannerPresenter, {
             localVue: await createProjectAdminBannerLocalVue(),
             propsData: {

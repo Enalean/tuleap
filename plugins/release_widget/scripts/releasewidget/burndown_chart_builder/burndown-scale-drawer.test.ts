@@ -20,8 +20,8 @@
 import { addScaleLines } from "./burndown-scale-drawer";
 import { Selection, select } from "d3-selection";
 
-describe("BurndownScaleDrawer - ", () => {
-    describe("addScaleLines - ", () => {
+describe("BurndownScaleDrawer -", () => {
+    describe("addScaleLines -", () => {
         it("When the scales are created, Then there are 2 line element with their attributes", () => {
             const chart_div = getDocument();
 

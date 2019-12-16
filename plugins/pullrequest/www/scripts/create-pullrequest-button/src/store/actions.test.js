@@ -146,7 +146,7 @@ describe("Store actions", () => {
             expect(createPullrequest).toHaveBeenCalledWith(102, "feature/branch", 101, "master");
         });
 
-        it("it does a full page reload to redirect to the created pull request", async () => {
+        it("does a full page reload to redirect to the created pull request", async () => {
             const created_pullrequest = { id: 1 };
             const createPullrequest = jest.spyOn(rest_querier, "createPullrequest");
             createPullrequest.mockReturnValue(Promise.resolve(created_pullrequest));

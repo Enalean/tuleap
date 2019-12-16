@@ -140,7 +140,7 @@ describe("Store mutations", () => {
                 { id: 66, parent_id: 42, level: 3, type: "wiki", title: "Document" }
             ]);
         });
-        it("it default to level=0 if parent is not found (should not happen)", () => {
+        it("default to level=0 if parent is not found (should not happen)", () => {
             const item = { id: 66, parent_id: 42, type: "wiki", title: "Document" };
             const state = {
                 folder_content: [
@@ -154,7 +154,7 @@ describe("Store mutations", () => {
                 { id: 66, parent_id: 42, level: 0, type: "wiki", title: "Document" }
             ]);
         });
-        it("it inserts DOCUMENT by respecting the natural sort order", () => {
+        it("inserts DOCUMENT by respecting the natural sort order", () => {
             const item = { id: 66, parent_id: 42, type: "wiki", title: "A.2.x" };
             const state = {
                 folder_content: [
@@ -172,7 +172,7 @@ describe("Store mutations", () => {
                 { id: 44, parent_id: 42, level: 3, type: "wiki", title: "A.10" }
             ]);
         });
-        it("it inserts DOCUMENT by respecting the natural sort order, and AFTER folders", () => {
+        it("inserts DOCUMENT by respecting the natural sort order, and AFTER folders", () => {
             const item = { id: 66, parent_id: 42, type: "wiki", title: "A.2.x" };
             const state = {
                 folder_content: [
@@ -192,7 +192,7 @@ describe("Store mutations", () => {
                 { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
             ]);
         });
-        it("it inserts FOLDER by respecting the natural sort order, and BEFORE items", () => {
+        it("inserts FOLDER by respecting the natural sort order, and BEFORE items", () => {
             const folder = { id: 66, parent_id: 42, type: "folder", title: "D folder" };
             const state = {
                 folder_content: [
@@ -211,7 +211,7 @@ describe("Store mutations", () => {
                 { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
             ]);
         });
-        it("it inserts FOLDER by respecting the natural sort order, and at the right level", () => {
+        it("inserts FOLDER by respecting the natural sort order, and at the right level", () => {
             const folder = { id: 66, parent_id: 43, type: "folder", title: "Z folder" };
             const state = {
                 folder_content: [
@@ -232,7 +232,7 @@ describe("Store mutations", () => {
                 { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
             ]);
         });
-        it("it inserts DOCUMENT by respecting the natural sort order, and at the right level", () => {
+        it("inserts DOCUMENT by respecting the natural sort order, and at the right level", () => {
             const item = { id: 66, parent_id: 43, type: "empty", title: "zzzzempty" };
             const state = {
                 folder_content: [
@@ -253,7 +253,7 @@ describe("Store mutations", () => {
                 { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
             ]);
         });
-        it("it inserts DOCUMENT by respecting the natural sort order, at the end of the folder", () => {
+        it("inserts DOCUMENT by respecting the natural sort order, at the end of the folder", () => {
             const item = { id: 66, parent_id: 42, type: "empty", title: "zzzzempty" };
             const state = {
                 folder_content: [
@@ -274,7 +274,7 @@ describe("Store mutations", () => {
                 { id: 66, parent_id: 42, level: 3, type: "empty", title: "zzzzempty" }
             ]);
         });
-        it("it inserts FOLDER by respecting the natural sort order, at the end of the folder", () => {
+        it("inserts FOLDER by respecting the natural sort order, at the end of the folder", () => {
             const folder = { id: 66, parent_id: 43, type: "folder", title: "zzzzfolder" };
             const state = {
                 folder_content: [
@@ -293,7 +293,7 @@ describe("Store mutations", () => {
                 { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
             ]);
         });
-        it("it inserts DOCUMENT by respecting the natural sort order, at the end of the folder 2", () => {
+        it("inserts DOCUMENT by respecting the natural sort order, at the end of the folder 2", () => {
             const item = { id: 66, parent_id: 43, type: "empty", title: "zzzzDOCUMENT" };
             const state = {
                 folder_content: [
@@ -312,7 +312,7 @@ describe("Store mutations", () => {
                 { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
             ]);
         });
-        it("it inserts a FOLDER at the right place, after the last children of its nearest sibling", () => {
+        it("inserts a FOLDER at the right place, after the last children of its nearest sibling", () => {
             const item = { id: 66, parent_id: 0, type: "folder", title: "B" };
             const state = {
                 folder_content: [
@@ -690,7 +690,7 @@ describe("Store mutations", () => {
     });
 
     describe("replaceUploadingFileWithActualFile", () => {
-        it("it should replace the fake item by the actual item in the folder content", () => {
+        it("should replace the fake item by the actual item in the folder content", () => {
             const fake_item = {
                 id: 46,
                 title: "toto.txt",
@@ -731,7 +731,7 @@ describe("Store mutations", () => {
     });
 
     describe("removeItemFromFolderContent", () => {
-        it("it should remove the item from the folder content", () => {
+        it("should remove the item from the folder content", () => {
             const item = {
                 id: 46,
                 title: "toto.txt",
@@ -758,7 +758,7 @@ describe("Store mutations", () => {
             ]);
         });
 
-        it("it should not remove any element if id is not found in array", () => {
+        it("should not remove any element if id is not found in array", () => {
             const item = {
                 id: 46,
                 title: "toto.txt",
@@ -780,7 +780,7 @@ describe("Store mutations", () => {
             ]);
         });
 
-        it("it should remove all its children (and subfolders' children) if the item is a folder and clear the folding maps", () => {
+        it("should remove all its children (and subfolders' children) if the item is a folder and clear the folding maps", () => {
             const folder_item = {
                 id: 46,
                 title: "trash folder",
@@ -875,11 +875,9 @@ describe("Store mutations", () => {
             ]);
         });
 
-        it(`
-            When the sub-folder is being folded by another folder
+        it(`When the sub-folder is being folded by another folder
             Then the sub-items next should be placed next to the parent in state.folder_content
-            And they should be marked as folded by the same folder than their parent.
-        `, () => {
+            And they should be marked as folded by the same folder than their parent.`, () => {
             const state = {
                 folder_content: [
                     { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },

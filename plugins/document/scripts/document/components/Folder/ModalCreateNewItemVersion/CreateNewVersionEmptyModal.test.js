@@ -55,7 +55,7 @@ describe("CreateNewVersionEmptyModal", () => {
 
         expect(wrapper.vm.new_item_version.type).toBe(TYPE_FILE);
     });
-    it("It should create a new link version from an empty document", () => {
+    it("should create a new link version from an empty document", () => {
         const wrapper = factory({
             item: { id: 10, type: TYPE_EMPTY }
         });

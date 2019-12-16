@@ -39,7 +39,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
         };
     });
 
-    describe("Component display - ", () => {
+    describe("Component display -", () => {
         it(`Given project uses status, default properties are rendered`, () => {
             store.state = {
                 is_item_status_metadata_used: true,

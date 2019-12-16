@@ -24,8 +24,8 @@ import { ChartPropsBurndownWhithoutTooltip } from "../../../../../src/www/script
 jest.mock("../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter");
 jest.mock("./burndown-time-scale-label-formatter");
 
-describe("BurndownChartDrawer - ", () => {
-    describe("getMaxRemainingEffort - ", () => {
+describe("BurndownChartDrawer -", () => {
+    describe("getMaxRemainingEffort -", () => {
         it("Returns the highest remaining effort if it is greater than the capacity", () => {
             const max_remaining_effort = getMaxRemainingEffort({
                 points_with_date: getPointsWithDateWithMaxIs15(),
@@ -81,7 +81,7 @@ describe("BurndownChartDrawer - ", () => {
         });
     });
 
-    describe("createBurndownChart - ", () => {
+    describe("createBurndownChart -", () => {
         it("When the chart is created, Then there are a G element and 2 lines scale", () => {
             const chart_svg_element = getDocument();
             createBurndownChart(chart_svg_element, getChartProps(), getBurndownData());

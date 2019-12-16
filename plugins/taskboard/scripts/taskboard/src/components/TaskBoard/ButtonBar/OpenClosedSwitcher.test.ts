@@ -23,7 +23,7 @@ import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-com
 import { createTaskboardLocalVue } from "../../../helpers/local-vue-for-test";
 
 describe("OpenClosedSwitcher", () => {
-    it("It toggles the right button when closed items should be displayed", async () => {
+    it("toggles the right button when closed items should be displayed", async () => {
         const wrapper = shallowMount(OpenClosedSwitcher, {
             localVue: await createTaskboardLocalVue(),
             mocks: {
@@ -43,7 +43,7 @@ describe("OpenClosedSwitcher", () => {
         expect(radio_hide.checked).toBe(false);
     });
 
-    it("It toggles the right button when closed items should not be displayed", async () => {
+    it("toggles the right button when closed items should not be displayed", async () => {
         const wrapper = shallowMount(OpenClosedSwitcher, {
             localVue: await createTaskboardLocalVue(),
             mocks: {

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ErrorModal it warns user that something is wrong with a button to show details 1`] = `
+exports[`ErrorModal warns user that something is wrong with a button to show details 1`] = `
 <div
   aria-labelledby="taskboard-error-modal-title"
   class="tlp-modal tlp-modal-danger tlp-modal-display tlp-modal-shown"

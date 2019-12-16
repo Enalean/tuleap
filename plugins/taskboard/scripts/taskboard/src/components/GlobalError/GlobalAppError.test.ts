@@ -30,7 +30,7 @@ describe("GlobalAppError", () => {
         local_vue = await createTaskboardLocalVue();
     });
 
-    it("it warns user that something is wrong with a button to show details", () => {
+    it("warns user that something is wrong with a button to show details", () => {
         const wrapper = shallowMount(GlobalAppError, {
             localVue: local_vue,
             mocks: {
@@ -42,7 +42,7 @@ describe("GlobalAppError", () => {
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("it display more details when user click on show error", () => {
+    it("display more details when user click on show error", () => {
         const error_message = "Full error message with details";
         const wrapper = shallowMount(GlobalAppError, {
             localVue: local_vue,
@@ -58,7 +58,7 @@ describe("GlobalAppError", () => {
         expect(wrapper.text()).toMatch(error_message);
     });
 
-    it("it warns user that something is wrong without any details", () => {
+    it("warns user that something is wrong without any details", () => {
         const wrapper = shallowMount(GlobalAppError, {
             localVue: local_vue,
             mocks: {

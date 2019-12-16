@@ -60,11 +60,11 @@ async function createWrapper(
     });
 }
 
-afterEach(() => {
-    jest.clearAllMocks();
-});
-
 describe("TaskBoardBody", () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it("displays swimlanes for solo cards or cards with children", async () => {
         const swimlanes = [
             {

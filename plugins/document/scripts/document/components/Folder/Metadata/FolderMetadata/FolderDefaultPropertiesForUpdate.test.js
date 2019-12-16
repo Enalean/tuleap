@@ -41,7 +41,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         };
     });
 
-    describe("Component loading - ", () => {
+    describe("Component loading -", () => {
         it("Load project metadata at first load", () => {
             store.state = {
                 is_item_status_metadata_used: true,
@@ -91,7 +91,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         });
     });
 
-    describe("Component display - ", () => {
+    describe("Component display -", () => {
         it(`Given project uses status, default properties are rendered`, () => {
             store.state = {
                 is_item_status_metadata_used: true,
@@ -191,7 +191,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         });
     });
 
-    describe("Apply bindings - ", () => {
+    describe("Apply bindings -", () => {
         it(`Given recursion option is updated Then the props used for document creation is updated`, () => {
             store.state = {
                 is_item_status_metadata_used: true,
@@ -286,9 +286,9 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             });
         });
     });
-    describe("The checkbox value according to the recursion option - ", () => {
+    describe("The checkbox value according to the recursion option -", () => {
         it(`Given "all_items" recursion option
-        then all metadata should be checked `, async () => {
+        then all metadata should be checked`, async () => {
             store.state = {
                 is_item_status_metadata_used: true,
                 metadata: {

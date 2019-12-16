@@ -97,12 +97,7 @@ describe("ReleaseRestService -", function() {
                 message: "Forbidden"
             });
 
-            expect.assertions(2);
-            try {
-                await promise;
-            } catch (e) {
-                expect(e).toBeDefined();
-            }
+            await expect(promise).rejects.toBeDefined();
         });
     });
 
@@ -163,12 +158,7 @@ describe("ReleaseRestService -", function() {
                 code: 403,
                 message: "Forbidden"
             });
-            expect.assertions(2);
-            try {
-                await promise;
-            } catch (e) {
-                expect(e).toBeDefined();
-            }
+            await expect(promise).rejects.toBeDefined();
         });
     });
 

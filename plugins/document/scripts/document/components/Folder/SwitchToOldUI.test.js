@@ -71,7 +71,7 @@ describe("SwitchToOldUI", () => {
     });
     it(`Given an user who browse a folder ( != root folder)
         The user wants to switch to old UI from this folder
-        Then he is redirected on the old UI into the good folder `, async () => {
+        Then he is redirected on the old UI into the good folder`, async () => {
         router.push({
             name: "folder",
             params: {
@@ -93,7 +93,7 @@ describe("SwitchToOldUI", () => {
 
     it(`Given an user toggle the quick look of an item
         The user wants to switch to old UI
-        Then he is redirected on the old UI into the current folder `, async () => {
+        Then he is redirected on the old UI into the current folder`, async () => {
         router.push({
             name: "preview",
             params: {
@@ -116,7 +116,7 @@ describe("SwitchToOldUI", () => {
     });
     it(`Given an user who browse the root folder
         The user wants to switch to old UI
-        Then he is redirected on the old UI into the root folder `, async () => {
+        Then he is redirected on the old UI into the root folder`, async () => {
         router.push({
             name: "root_folder"
         });

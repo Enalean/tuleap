@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`BurndownScaleDrawer -  addScaleLines -  When the scales are created, Then there are 2 line element with their attributes 1`] = `
+exports[`BurndownScaleDrawer - addScaleLines - When the scales are created, Then there are 2 line element with their attributes 1`] = `
 Selection {
   "_groups": Array [
     Array [

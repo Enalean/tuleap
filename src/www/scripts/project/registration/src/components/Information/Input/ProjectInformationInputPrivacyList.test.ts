@@ -62,7 +62,7 @@ describe("ProjectInformationInputPrivacyList", () => {
             mocks: { $store: store }
         });
     });
-    describe("The text displayed in the tooltip - ", () => {
+    describe("The text displayed in the tooltip -", () => {
         it("Spawns the ProjectInformationInputPrivacyList component", () => {
             const wrapper = factory;
             expect(wrapper.contains(ProjectInformationInputPrivacyList)).toBe(true);
@@ -157,7 +157,7 @@ describe("ProjectInformationInputPrivacyList", () => {
             );
         });
     });
-    describe("The selected default project visibility when the component is mounted - ", () => {
+    describe("The selected default project visibility when the component is mounted -", () => {
         it("Should select the  'Public' by default", () => {
             store_options = {
                 state: {

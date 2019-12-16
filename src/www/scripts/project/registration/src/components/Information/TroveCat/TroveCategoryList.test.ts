@@ -23,7 +23,7 @@ import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-fo
 import TroveCategoryList from "./TroveCategoryList.vue";
 import EventBus from "../../../helpers/event-bus";
 
-describe("TroveCategoryList - ", () => {
+describe("TroveCategoryList -", () => {
     let factory: Wrapper<TroveCategoryList>;
     beforeEach(async () => {
         const trove_categories = {

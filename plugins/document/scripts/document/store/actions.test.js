@@ -938,22 +938,16 @@ describe("Store actions", () => {
             const version_title = "My new version";
             const version_changelog = "Changed the version because...";
 
-            expect.assertions(3);
-            try {
-                await createNewFileVersionFromModal(context, [
-                    item,
-                    update_fail,
-                    version_title,
-                    version_changelog
-                ]);
-            } catch (e) {
-                expect(createNewVersion).toHaveBeenCalled();
-                expect(context.commit).toHaveBeenCalledWith(
-                    "error/setModalError",
-                    expect.anything()
-                );
-                expect(uploadVersion).not.toHaveBeenCalled();
-            }
+            const promise_create_new_file_version = createNewFileVersionFromModal(context, [
+                item,
+                update_fail,
+                version_title,
+                version_changelog
+            ]);
+            await expect(promise_create_new_file_version).rejects.toBeDefined();
+            expect(createNewVersion).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("error/setModalError", expect.anything());
+            expect(uploadVersion).not.toHaveBeenCalled();
         });
 
         it("throws an error when there is an error 400 with the version creation", async () => {
@@ -1025,22 +1019,16 @@ describe("Store actions", () => {
                 throw new Error("nope");
             });
 
-            expect.assertions(2);
-            try {
-                await createNewEmbeddedFileVersionFromModal(context, [
-                    item,
-                    new_html_content,
-                    version_title,
-                    version_changelog,
-                    is_version_locked
-                ]);
-            } catch (e) {
-                expect(postEmbeddedFile).toHaveBeenCalled();
-                expect(context.commit).toHaveBeenCalledWith(
-                    "error/setModalError",
-                    expect.anything()
-                );
-            }
+            const promise_new_embedded_file = createNewEmbeddedFileVersionFromModal(context, [
+                item,
+                new_html_content,
+                version_title,
+                version_changelog,
+                is_version_locked
+            ]);
+            await expect(promise_new_embedded_file).rejects.toBeDefined();
+            expect(postEmbeddedFile).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("error/setModalError", expect.anything());
         });
     });
 
@@ -1083,22 +1071,16 @@ describe("Store actions", () => {
                 throw new Error("nope");
             });
 
-            expect.assertions(2);
-            try {
-                await createNewWikiVersionFromModal(context, [
-                    item,
-                    page_name,
-                    version_title,
-                    version_changelog,
-                    is_version_locked
-                ]);
-            } catch (e) {
-                expect(postWiki).toHaveBeenCalled();
-                expect(context.commit).toHaveBeenCalledWith(
-                    "error/setModalError",
-                    expect.anything()
-                );
-            }
+            const promise_create_new_wiki = createNewWikiVersionFromModal(context, [
+                item,
+                page_name,
+                version_title,
+                version_changelog,
+                is_version_locked
+            ]);
+            await expect(promise_create_new_wiki).rejects.toBeDefined();
+            expect(postWiki).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("error/setModalError", expect.anything());
         });
     });
 
@@ -1143,22 +1125,16 @@ describe("Store actions", () => {
                 throw new Error("nope");
             });
 
-            expect.assertions(2);
-            try {
-                await createNewLinkVersionFromModal(context, [
-                    item,
-                    new_link_url,
-                    version_title,
-                    version_changelog,
-                    is_version_locked
-                ]);
-            } catch (e) {
-                expect(postLinkVersion).toHaveBeenCalled();
-                expect(context.commit).toHaveBeenCalledWith(
-                    "error/setModalError",
-                    expect.anything()
-                );
-            }
+            const promise_new_link_version = createNewLinkVersionFromModal(context, [
+                item,
+                new_link_url,
+                version_title,
+                version_changelog,
+                is_version_locked
+            ]);
+            await expect(promise_new_link_version).rejects.toBeDefined();
+            expect(postLinkVersion).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("error/setModalError", expect.anything());
         });
     });
 
@@ -1260,17 +1236,12 @@ describe("Store actions", () => {
                 throw new Error("nope");
             });
 
-            expect.assertions(2);
-            try {
-                await loadDocumentWithAscendentHierarchy(context, 42);
-            } catch (e) {
-                expect(loadAscendantHierarchy).not.toHaveBeenCalled();
-
-                expect(context.commit).toHaveBeenCalledWith(
-                    "error/setItemLoadingError",
-                    "Internal server error"
-                );
-            }
+            await expect(loadDocumentWithAscendentHierarchy(context, 42)).rejects.toBeDefined();
+            expect(loadAscendantHierarchy).not.toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith(
+                "error/setItemLoadingError",
+                "Internal server error"
+            );
         });
 
         it("throw error permission error if user does not have enough permissions", async () => {
@@ -1552,7 +1523,7 @@ describe("Store actions", () => {
             getParents = jest.spyOn(rest_querier, "getParents");
         });
 
-        it("it should return a collection of the items referencing the same wiki page", async () => {
+        it("should return a collection of the items referencing the same wiki page", async () => {
             const wiki_1 = {
                 item_name: "wiki 1",
                 item_id: 1
@@ -1606,7 +1577,7 @@ describe("Store actions", () => {
             ]);
         });
 
-        it("it should return null if there is a rest exception", async () => {
+        it("should return null if there is a rest exception", async () => {
             const wiki_1 = {
                 item_name: "wiki 1",
                 item_id: 1
@@ -1647,7 +1618,7 @@ describe("Store actions", () => {
             getItem = jest.spyOn(rest_querier, "getItem");
         });
 
-        it("it should lock a file and then update its information", async () => {
+        it("should lock a file and then update its information", async () => {
             const item_to_lock = {
                 id: 123,
                 title: "My file",
@@ -1673,7 +1644,7 @@ describe("Store actions", () => {
             ]);
         });
 
-        it("it should raise a translated exception when user can't lock a document", async () => {
+        it("should raise a translated exception when user can't lock a document", async () => {
             const item_to_lock = {
                 id: 123,
                 title: "My file",
@@ -1697,7 +1668,7 @@ describe("Store actions", () => {
             );
         });
 
-        it("it should raise a generic error message when no information is given when user can't lock a document", async () => {
+        it("should raise a generic error message when no information is given when user can't lock a document", async () => {
             const item_to_lock = {
                 id: 123,
                 title: "My file",
@@ -1708,18 +1679,14 @@ describe("Store actions", () => {
                 status: 400
             });
 
-            expect.assertions(1);
-            try {
-                await lockDocument(context, item_to_lock);
-            } catch (e) {
-                expect(context.commit).toHaveBeenCalledWith(
-                    "error/setLockError",
-                    "Internal server error"
-                );
-            }
+            await expect(lockDocument(context, item_to_lock)).rejects.toBeDefined();
+            expect(context.commit).toHaveBeenCalledWith(
+                "error/setLockError",
+                "Internal server error"
+            );
         });
 
-        it("it should lock an embedded file and then update its information", async () => {
+        it("should lock an embedded file and then update its information", async () => {
             const item_to_lock = {
                 id: 123,
                 title: "My file",
@@ -1757,7 +1724,7 @@ describe("Store actions", () => {
             getItem = jest.spyOn(rest_querier, "getItem");
         });
 
-        it("it should unlock a file and then update its information", async () => {
+        it("should unlock a file and then update its information", async () => {
             const item_to_lock = {
                 id: 123,
                 title: "My file",
@@ -1783,7 +1750,7 @@ describe("Store actions", () => {
             ]);
         });
 
-        it("it should unlock an embedded file and then update its information", async () => {
+        it("should unlock an embedded file and then update its information", async () => {
             const item_to_lock = {
                 id: 123,
                 title: "My file",
@@ -1827,7 +1794,7 @@ describe("Store actions", () => {
             );
         });
 
-        it("it should store in user preferences the new mode and then update the store value", async () => {
+        it("should store in user preferences the new mode and then update the store value", async () => {
             const item = {
                 id: 123,
                 title: "My embedded"
@@ -1856,7 +1823,7 @@ describe("Store actions", () => {
             );
         });
 
-        it("it should store in user preferences the new mode and then update the store value", async () => {
+        it("should store in user preferences the new mode and then update the store value", async () => {
             const item = {
                 id: 123,
                 title: "My embedded"
@@ -1880,8 +1847,8 @@ describe("Store actions", () => {
             getItem = jest.spyOn(rest_querier, "getItem");
         });
 
-        describe("Given item is not the current folder - ", () => {
-            it("it should send null when obsolesence date is permanent", async () => {
+        describe("Given item is not the current folder -", () => {
+            it("should send null when obsolesence date is permanent", async () => {
                 jest.spyOn(rest_querier, "putFileMetadata").mockReturnValue(Promise.resolve());
 
                 const item = {
@@ -1929,7 +1896,7 @@ describe("Store actions", () => {
                     item_to_update
                 );
             });
-            it("it should update file metadata", async () => {
+            it("should update file metadata", async () => {
                 jest.spyOn(rest_querier, "putFileMetadata").mockReturnValue(Promise.resolve());
 
                 const item = {
@@ -1977,7 +1944,7 @@ describe("Store actions", () => {
                     item_to_update
                 );
             });
-            it("it should update embedded file metadata", async () => {
+            it("should update embedded file metadata", async () => {
                 jest.spyOn(rest_querier, "putEmbeddedFileMetadata").mockReturnValue(
                     Promise.resolve()
                 );
@@ -2026,7 +1993,7 @@ describe("Store actions", () => {
                     item_to_update
                 );
             });
-            it("it should update link document metadata", async () => {
+            it("should update link document metadata", async () => {
                 jest.spyOn(rest_querier, "putLinkMetadata").mockReturnValue(Promise.resolve());
                 const item = {
                     id: 123,
@@ -2074,7 +2041,7 @@ describe("Store actions", () => {
                 );
             });
 
-            it("it should update wiki document metadata", async () => {
+            it("should update wiki document metadata", async () => {
                 jest.spyOn(rest_querier, "putWikiMetadata").mockReturnValue(Promise.resolve());
                 const item = {
                     id: 123,
@@ -2121,7 +2088,7 @@ describe("Store actions", () => {
                     item_to_update
                 );
             });
-            it("it should update empty document metadata", async () => {
+            it("should update empty document metadata", async () => {
                 jest.spyOn(rest_querier, "putEmptyDocumentMetadata").mockReturnValue(
                     Promise.resolve()
                 );
@@ -2171,7 +2138,7 @@ describe("Store actions", () => {
                 );
             });
 
-            it("it should update folder metadata", async () => {
+            it("should update folder metadata", async () => {
                 jest.spyOn(rest_querier, "putEmptyDocumentMetadata").mockReturnValue(
                     Promise.resolve()
                 );
@@ -2237,8 +2204,8 @@ describe("Store actions", () => {
             });
         });
 
-        describe("Given I'm updating current folder - ", () => {
-            it("it should update file metadata", async () => {
+        describe("Given I'm updating current folder -", () => {
+            it("should update file metadata", async () => {
                 jest.spyOn(rest_querier, "putFileMetadata").mockReturnValue(Promise.resolve());
 
                 const item = {
@@ -2557,7 +2524,7 @@ describe("Store actions", () => {
             expect(context.commit).toHaveBeenCalledWith("stopLoadingCurrentlyPreviewedItem");
         });
     });
-    describe("createNewVersionFromEmpty - ", () => {
+    describe("createNewVersionFromEmpty -", () => {
         let context,
             postNewLinkVersionFromEmpty,
             postNewEmbeddedFileVersionFromEmpty,
@@ -2727,27 +2694,24 @@ describe("Store actions", () => {
                 throw new Error("Failed to update");
             });
 
-            expect.assertions(6);
-            try {
-                await createNewVersionFromEmpty(context, [TYPE_LINK, item, item_to_update]);
-            } catch (e) {
-                expect(postNewLinkVersionFromEmpty).toHaveBeenCalled();
-                expect(handleErrorsForModal).toHaveBeenCalled();
-                expect(getItem).not.toHaveBeenCalled();
-                expect(context.commit).not.toHaveBeenCalledWith(
-                    "removeItemFromFolderContent",
-                    updated_item
-                );
-                expect(context.commit).not.toHaveBeenCalledWith(
-                    "addJustCreatedItemToFolderContent",
-                    updated_item
-                );
-
-                expect(context.commit).not.toHaveBeenCalledWith(
-                    "updateCurrentItemForQuickLokDisplay",
-                    updated_item
-                );
-            }
+            await expect(
+                createNewVersionFromEmpty(context, [TYPE_LINK, item, item_to_update])
+            ).rejects.toBeDefined();
+            expect(postNewLinkVersionFromEmpty).toHaveBeenCalled();
+            expect(handleErrorsForModal).toHaveBeenCalled();
+            expect(getItem).not.toHaveBeenCalled();
+            expect(context.commit).not.toHaveBeenCalledWith(
+                "removeItemFromFolderContent",
+                updated_item
+            );
+            expect(context.commit).not.toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                updated_item
+            );
+            expect(context.commit).not.toHaveBeenCalledWith(
+                "updateCurrentItemForQuickLokDisplay",
+                updated_item
+            );
         });
     });
 
@@ -2789,12 +2753,8 @@ describe("Store actions", () => {
 
             getItem = jest.spyOn(rest_querier, "getItem").mockReturnValue(Promise.reject("error"));
 
-            expect.assertions(1);
-            try {
-                await loadDocument(context, 3);
-            } catch (e) {
-                expect(getItem).toHaveBeenCalled();
-            }
+            await expect(loadDocument(context, 3)).rejects.toBeDefined();
+            expect(getItem).toHaveBeenCalled();
         });
     });
 });

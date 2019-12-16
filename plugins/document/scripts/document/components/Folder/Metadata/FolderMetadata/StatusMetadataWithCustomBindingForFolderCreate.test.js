@@ -46,7 +46,7 @@ describe("StatusMetadataWithCustomBindingForFolderCreate", () => {
         };
     });
 
-    it(`It display status selectbox only when status property is enabled for project`, () => {
+    it(`display status selectbox only when status property is enabled for project`, () => {
         const wrapper = status_metadata({
             currentlyUpdatedItem: {
                 status: 100,
@@ -75,7 +75,7 @@ describe("StatusMetadataWithCustomBindingForFolderCreate", () => {
         ).toBeTruthy();
     });
 
-    it(`It does not display status if property is not available`, () => {
+    it(`does not display status if property is not available`, () => {
         const wrapper = status_metadata({
             currentlyUpdatedItem: {
                 type: TYPE_FILE,

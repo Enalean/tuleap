@@ -32,7 +32,7 @@ describe("CustomMetadataText", () => {
         };
     });
 
-    it(`It renders an input with a required value`, () => {
+    it(`renders an input with a required value`, () => {
         const currentlyUpdatedItemMetadata = {
             value: "text value",
             is_required: true,
@@ -48,7 +48,7 @@ describe("CustomMetadataText", () => {
         expect(wrapper.contains("[data-test=document-custom-metadata-is-required]")).toBeTruthy();
     });
 
-    it(`It renders an input with an empty value`, () => {
+    it(`renders an input with an empty value`, () => {
         const currentlyUpdatedItemMetadata = {
             value: "",
             is_required: false,

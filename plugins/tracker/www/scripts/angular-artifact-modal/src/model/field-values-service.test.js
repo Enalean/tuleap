@@ -388,7 +388,7 @@ describe("TuleapArtifactFieldValuesService", () => {
         });
 
         describe("Given a tracker containing a date field", function() {
-            it("without the time displayed and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the formatted artifact value will be returned ", function() {
+            it("without the time displayed and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the formatted artifact value will be returned", function() {
                 var artifact_values = {
                     824: { field_id: 824, value: "2015-05-29T00:00:00+02:00" }
                 };

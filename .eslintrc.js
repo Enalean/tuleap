@@ -156,10 +156,12 @@ module.exports = {
             extends: ["plugin:jest/recommended"],
             rules: {
                 "jest/consistent-test-it": "error",
-                "jest/no-empty-title": "error",
+                "jest/valid-title": "error",
                 "jest/no-expect-resolves": "error",
                 "jest/no-large-snapshots": ["error", { maxSize: 100 }],
-                "jest/prefer-spy-on": "error"
+                "jest/prefer-spy-on": "error",
+                "jest/require-top-level-describe": "error",
+                "jest/prefer-hooks-on-top": "error"
             }
         },
         {

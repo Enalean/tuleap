@@ -21,7 +21,7 @@
 import * as getters from "./transition-getters.js";
 import { create } from "../../support/factories.js";
 
-describe("Transition getters: ", () => {
+describe("Transition getters:", () => {
     describe("is_transition_from_new_artifact()", () => {
         it("returns false when no current transition", () => {
             const state = { current_transition: null };

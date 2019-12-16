@@ -55,7 +55,7 @@ describe(`InvalidMappingCell`, () => {
         expect(wrapper.classes("taskboard-cell-collapsed")).toBe(true);
     });
 
-    it(`It informs the mouseenter when the column is collapsed`, () => {
+    it(`informs the mouseenter when the column is collapsed`, () => {
         const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, true);
         const column = wrapper.vm.$store.state.column.columns[0];
 
@@ -63,14 +63,14 @@ describe(`InvalidMappingCell`, () => {
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseEntersColumn", column);
     });
 
-    it(`It does not inform the mouseenter when the column is expanded`, () => {
+    it(`does not inform the mouseenter when the column is expanded`, () => {
         const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false);
 
         wrapper.trigger("mouseenter");
         expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
     });
 
-    it(`It informs the mouseout when the column is collapsed`, () => {
+    it(`informs the mouseout when the column is collapsed`, () => {
         const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, true);
         const column = wrapper.vm.$store.state.column.columns[0];
 
@@ -78,14 +78,14 @@ describe(`InvalidMappingCell`, () => {
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseLeavesColumn", column);
     });
 
-    it(`It does not inform the mouseout when the column is expanded`, () => {
+    it(`does not inform the mouseout when the column is expanded`, () => {
         const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false);
 
         wrapper.trigger("mouseout");
         expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
     });
 
-    it(`it expands the column when user clicks on the collapsed column cell`, () => {
+    it(`expands the column when user clicks on the collapsed column cell`, () => {
         const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, true);
         const column = wrapper.vm.$store.state.column.columns[0];
 
@@ -93,7 +93,7 @@ describe(`InvalidMappingCell`, () => {
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("column/expandColumn", column);
     });
 
-    it(`it does not expand the column when user clicks on the expanded column cell`, () => {
+    it(`does not expand the column when user clicks on the expanded column cell`, () => {
         const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false);
 
         wrapper.trigger("click");

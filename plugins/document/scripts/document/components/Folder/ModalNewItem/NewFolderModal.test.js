@@ -100,7 +100,7 @@ describe("NewFolderModal", () => {
         expect(store.dispatch).not.toHaveBeenCalledWith("metadata/loadProjectMetadata");
     });
 
-    it("It inherit default values from parent metadata", () => {
+    it("inherit default values from parent metadata", () => {
         const folder_to_create = {
             metadata: [
                 {

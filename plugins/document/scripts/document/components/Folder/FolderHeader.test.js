@@ -55,7 +55,7 @@ describe("FolderHeader", () => {
             });
         };
     });
-    describe("Component rendering - ", () => {
+    describe("Component rendering -", () => {
         it(`Does not display title information when folder is loading_ascendent_hierarchy`, () => {
             store.state.is_loading_ascendant_hierarchy = true;
 
@@ -72,7 +72,7 @@ describe("FolderHeader", () => {
             expect(wrapper.find("[data-test=document-folder-header-title]").classes()).toEqual([]);
         });
     });
-    describe("Search box - ", () => {
+    describe("Search box -", () => {
         it(`Does not display search box, when current folder has no content`, () => {
             store.state.is_loading_ascendant_hierarchy = false;
             store.state.current_folder = { id: 20 };
@@ -91,7 +91,7 @@ describe("FolderHeader", () => {
         });
     });
 
-    describe("Modal loading - ", () => {
+    describe("Modal loading -", () => {
         it(`Load new item version modal`, () => {
             store.state.is_loading_ascendant_hierarchy = false;
             store.state.current_folder = { id: 20 };

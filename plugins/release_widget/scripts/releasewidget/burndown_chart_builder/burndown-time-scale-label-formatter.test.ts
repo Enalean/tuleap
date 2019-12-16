@@ -20,7 +20,7 @@
 import { select, Selection } from "d3-selection";
 import { removeAllLabelsOverlapsOthersLabels } from "./burndown-time-scale-label-formatter";
 
-describe("BurndownTimeScaleLabelFormatter - ", () => {
+describe("BurndownTimeScaleLabelFormatter -", () => {
     it("When no ticks overlaps others ticks, Then there are all ticks", () => {
         const chart = getChart();
 

@@ -99,7 +99,7 @@ describe("NewItemModal", () => {
         expect(store.dispatch).not.toHaveBeenCalledWith("metadata/loadProjectMetadata");
     });
 
-    it("It inherit default values from parent metadata", async () => {
+    it("inherit default values from parent metadata", async () => {
         const item_to_create = {
             metadata: [
                 {

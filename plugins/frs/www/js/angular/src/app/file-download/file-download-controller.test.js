@@ -74,7 +74,7 @@ describe("FileDownloadController -", function() {
             });
         });
 
-        it("Given a file had been bound to the controller and license approval was not mandatory, when I download the file then a new window will be opened ", function() {
+        it("Given a file had been bound to the controller and license approval was not mandatory, when I download the file then a new window will be opened", function() {
             var file_download_url = "axilemma/ventrine?a=geoteuthis&b=autoxidizer#dithyramb";
             FileDownloadController.file_download_url = file_download_url;
             FileDownloadController.license_approval_mandatory = false;

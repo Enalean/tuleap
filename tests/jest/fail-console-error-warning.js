@@ -19,6 +19,7 @@
 
 let is_console_error_or_warning;
 
+// eslint-disable-next-line jest/require-top-level-describe
 beforeEach(() => {
     is_console_error_or_warning = false;
     const originalError = global.console.error;
@@ -33,6 +34,7 @@ beforeEach(() => {
     });
 });
 
+// eslint-disable-next-line jest/require-top-level-describe
 afterEach(() => {
     if (is_console_error_or_warning) {
         throw new Error("Console warnings and errors are not allowed");

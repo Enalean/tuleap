@@ -39,7 +39,7 @@ describe("Metadata actions", () => {
         handleErrors = jest.spyOn(handle_errors, "handleErrors").mockReturnValue(Promise.resolve());
     });
 
-    it(`It load project metadata definition`, async () => {
+    it(`load project metadata definition`, async () => {
         const metadata = [
             {
                 short_name: "text",

@@ -43,7 +43,7 @@ describe("StatusMetadataWithCustomBindingForDocumentUpdate", () => {
         };
     });
 
-    it(`It display status selectbox only when status property is enabled for project`, () => {
+    it(`display status selectbox only when status property is enabled for project`, () => {
         const wrapper = status_metadata({
             currentlyUpdatedItem: {
                 metadata: [
@@ -67,7 +67,7 @@ describe("StatusMetadataWithCustomBindingForDocumentUpdate", () => {
         expect(wrapper.contains("[data-test=document-status-for-item-update]")).toBeTruthy();
     });
 
-    it(`It does not display status if property is not available`, () => {
+    it(`does not display status if property is not available`, () => {
         const wrapper = status_metadata({
             currentlyUpdatedItem: {
                 metadata: [

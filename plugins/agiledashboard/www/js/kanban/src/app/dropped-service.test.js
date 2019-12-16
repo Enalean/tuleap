@@ -201,7 +201,7 @@ describe("DroppedService -", function() {
             expect(compared_to).toBe(null);
         });
 
-        it("Given an item list, when I drop an item before its first element, then an object with direction 'before' and item_id equal to the id of the second element will be returned ", function() {
+        it("Given an item list, when I drop an item before its first element, then an object with direction 'before' and item_id equal to the id of the second element will be returned", function() {
             var item_list = [{ id: 996 }, { id: 743 }];
             var index = 0;
 
