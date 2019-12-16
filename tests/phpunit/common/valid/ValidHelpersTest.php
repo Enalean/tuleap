@@ -1,9 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
- * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
- *
- * Originally written by Manuel VACELET, 2007.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,26 +11,22 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Mock::generatePartial('Valid', 'Valid_For_Inheritance', array());
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-class ValidHelperTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class ValidHelperTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    function UnitTestCase($name = 'ValidFactory test')
-    {
-        $this->UnitTestCase($name);
-    }
-
-    function testUInt()
+    public function testUInt(): void
     {
         $v = new Valid_UInt();
         $v->disableFeedback();
@@ -50,24 +43,22 @@ class ValidHelperTest extends TuleapTestCase
         $this->assertFalse($v->validate('toto'));
     }
 
-    function testValidFactory()
+    public function testValidFactory(): void
     {
-        $v = new Valid_For_Inheritance($this);
+        $v = \Mockery::mock(\Valid::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        //Does not work in php4 :(
-        //$this->assertReference(ValidFactory::getInstance($v), $v);
-        $this->assertIsA(ValidFactory::getInstance($v), 'Valid_For_Inheritance');
+        $this->assertInstanceOf('Valid', ValidFactory::getInstance($v));
 
-        $this->assertIsA(ValidFactory::getInstance('string'), 'Valid_String');
-        $this->assertIsA(ValidFactory::getInstance('uint'), 'Valid_UInt');
+        $this->assertInstanceOf('Valid_String', ValidFactory::getInstance('string'));
+        $this->assertInstanceOf('Valid_UInt', ValidFactory::getInstance('uint'));
         $this->assertNull(ValidFactory::getInstance('machinbidulechose'));
 
         $key = md5(uniqid(rand(), true));
         $w = ValidFactory::getInstance('string', $key);
-        $this->assertEqual($w->getKey(), $key);
+        $this->assertEquals($key, $w->getKey());
     }
 
-    public function itValidatesHTTPURI()
+    public function testItValidatesHTTPURI(): void
     {
         $validator = new Valid_HTTPURI();
 
@@ -80,7 +71,7 @@ class ValidHelperTest extends TuleapTestCase
         $this->assertFalse($validator->validate('Stringhttp://'));
     }
 
-    public function itValidatesHTTPSURI()
+    public function testItValidatesHTTPSURI(): void
     {
         $validator = new Valid_HTTPSURI();
 
@@ -92,7 +83,7 @@ class ValidHelperTest extends TuleapTestCase
         $this->assertFalse($validator->validate('Stringhttps://'));
     }
 
-    public function itValidatesLocalURI()
+    public function testItValidatesLocalURI(): void
     {
         $validator = new Valid_LocalURI();
 
@@ -108,7 +99,7 @@ class ValidHelperTest extends TuleapTestCase
         $this->assertFalse($validator->validate('Stringhttp://'));
     }
 
-    public function itValidatesFTPURI()
+    public function testItValidatesFTPURI(): void
     {
         $validator = new Valid_FTPURI();
 
@@ -120,7 +111,7 @@ class ValidHelperTest extends TuleapTestCase
         $this->assertFalse($validator->validate('ftp://'));
     }
 
-    public function itValidatesMailtoURI()
+    public function testItValidatesMailtoURI(): void
     {
         $validator = new Valid_MailtoURI();
 

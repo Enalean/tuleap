@@ -1,38 +1,34 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2004-2010. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Mock::generatePartial('Rule_ProjectName', 'Rule_ProjectNameTestVersion', array('_getBackend'));
+use PHPUnit\Framework\TestCase;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalSVNPollution;
 
-Mock::generate('BaseLanguage');
-
-Mock::generate('BackendSystem');
-
-Mock::generate('BackendSVN');
-
-Mock::generate('BackendCVS');
-
-
-class Rule_ProjectNameTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Rule_ProjectNameTest extends TestCase
 {
+    use GlobalLanguageMock, GlobalSVNPollution;
 
-    function testNoUnderscore()
+    public function testNoUnderscore(): void
     {
         $r = new Rule_ProjectName();
         $this->assertFalse($r->isDNSCompliant("group_test"));
@@ -41,7 +37,7 @@ class Rule_ProjectNameTest extends TuleapTestCase
         $this->assertFalse($r->isDNSCompliant("group_test_1"));
     }
 
-    function testNoSpaces()
+    public function testNoSpaces(): void
     {
         $r = new Rule_ProjectName();
         $this->assertFalse($r->noSpaces("group test"));
@@ -50,7 +46,7 @@ class Rule_ProjectNameTest extends TuleapTestCase
         $this->assertFalse($r->noSpaces("group test 1"));
     }
 
-    function testNoDot()
+    public function testNoDot(): void
     {
         $r = new Rule_ProjectName();
         $this->assertFalse($r->isValid("group.test"));
@@ -59,7 +55,7 @@ class Rule_ProjectNameTest extends TuleapTestCase
         $this->assertFalse($r->isValid("group.test.1"));
     }
 
-    function testReservedNames()
+    public function testReservedNames(): void
     {
         $r = new Rule_ProjectName();
         $this->assertTrue($r->isReservedName("www"));
@@ -95,7 +91,7 @@ class Rule_ProjectNameTest extends TuleapTestCase
         $this->assertTrue($r->isReservedName("gitolite"));
     }
 
-    function testReservedNamesUpperCase()
+    public function testReservedNamesUpperCase(): void
     {
         $r = new Rule_ProjectName();
         $this->assertTrue($r->isReservedName("WWW"));
@@ -129,79 +125,79 @@ class Rule_ProjectNameTest extends TuleapTestCase
         $this->assertTrue($r->isReservedName("MIRROR"));
     }
 
-    function testReservedPrefix()
+    public function testReservedPrefix(): void
     {
         $r = new Rule_UserName();
         $this->assertTrue($r->isReservedName("forge__"));
         $this->assertFalse($r->isReservedName("forgeron"));
     }
 
-    function testIsNameAvailableSuccess()
+    public function testIsNameAvailableSuccess(): void
     {
-        $r = new Rule_ProjectNameTestVersion();
+        $r = \Mockery::mock(\Rule_ProjectName::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $backendSVN = new MockBackendSVN($this);
-        $backendSVN->setReturnValue('isNameAvailable', true, array('foobar'));
-        $r->setReturnValue('_getBackend', $backendSVN, array('SVN'));
+        $backendSVN = \Mockery::spy(\BackendSVN::class);
+        $backendSVN->shouldReceive('isNameAvailable')->with('foobar')->andReturns(true);
+        $r->shouldReceive('_getBackend')->with('SVN')->andReturns($backendSVN);
 
-        $backendCVS = new MockBackendCVS($this);
-        $backendCVS->setReturnValue('isNameAvailable', true, array('foobar'));
-        $r->setReturnValue('_getBackend', $backendCVS, array('CVS'));
+        $backendCVS = \Mockery::spy(\BackendCVS::class);
+        $backendCVS->shouldReceive('isNameAvailable')->with('foobar')->andReturns(true);
+        $r->shouldReceive('_getBackend')->with('CVS')->andReturns($backendCVS);
 
-        $backendSystem = new MockBackendSystem($this);
-        $backendSystem->setReturnValue('isProjectNameAvailable', true, array('foobar'));
-        $r->setReturnValue('_getBackend', $backendSystem, array('System'));
+        $backendSystem = \Mockery::spy(\BackendSystem::class);
+        $backendSystem->shouldReceive('isProjectNameAvailable')->with('foobar')->andReturns(true);
+        $r->shouldReceive('_getBackend')->with('System')->andReturns($backendSystem);
 
         $this->assertTrue($r->isNameAvailable('foobar'));
     }
 
-    function testIsNameAvailableSVNFailure()
+    public function testIsNameAvailableSVNFailure(): void
     {
-        $r = new Rule_ProjectNameTestVersion();
+        $r = \Mockery::mock(\Rule_ProjectName::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $backendSVN = new MockBackendSVN($this);
-        $backendSVN->setReturnValue('isNameAvailable', false, array('foobar'));
-        $r->setReturnValue('_getBackend', $backendSVN, array('SVN'));
+        $backendSVN = \Mockery::spy(\BackendSVN::class);
+        $backendSVN->shouldReceive('isNameAvailable')->with('foobar')->andReturns(false);
+        $r->shouldReceive('_getBackend')->with('SVN')->andReturns($backendSVN);
 
-        $backendCVS = new MockBackendCVS($this);
-        $backendCVS->expectNever('isNameAvailable', array('foobar'));
+        $backendCVS = \Mockery::spy(\BackendCVS::class);
+        $backendCVS->shouldReceive('isNameAvailable')->never();
 
         $this->assertFalse($r->isNameAvailable('foobar'));
     }
 
-    function testIsNameAvailableCVSFailure()
+    public function testIsNameAvailableCVSFailure(): void
     {
-        $r = new Rule_ProjectNameTestVersion();
+        $r = \Mockery::mock(\Rule_ProjectName::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $backendSVN = new MockBackendSVN($this);
-        $backendSVN->setReturnValue('isNameAvailable', true, array('foobar'));
-        $r->setReturnValue('_getBackend', $backendSVN, array('SVN'));
+        $backendSVN = \Mockery::spy(\BackendSVN::class);
+        $backendSVN->shouldReceive('isNameAvailable')->with('foobar')->andReturns(true);
+        $r->shouldReceive('_getBackend')->with('SVN')->andReturns($backendSVN);
 
-        $backendCVS = new MockBackendCVS($this);
-        $backendCVS->setReturnValue('isNameAvailable', false, array('foobar'));
-        $r->setReturnValue('_getBackend', $backendCVS, array('CVS'));
+        $backendCVS = \Mockery::spy(\BackendCVS::class);
+        $backendCVS->shouldReceive('isNameAvailable')->with('foobar')->andReturns(false);
+        $r->shouldReceive('_getBackend')->with('CVS')->andReturns($backendCVS);
 
-        $backendSystem = new MockBackendSystem($this);
-        $backendSystem->expectNever('isProjectNameAvailable', array('foobar'));
+        $backendSystem = \Mockery::spy(\BackendSystem::class);
+        $backendSystem->shouldReceive('isProjectNameAvailable')->never();
 
         $this->assertFalse($r->isNameAvailable('foobar'));
     }
 
-    function testIsNameAvailableSystemFailure()
+    public function testIsNameAvailableSystemFailure(): void
     {
-        $r = new Rule_ProjectNameTestVersion();
+        $r = \Mockery::mock(\Rule_ProjectName::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $backendSVN = new MockBackendSVN($this);
-        $backendSVN->setReturnValue('isNameAvailable', true, array('foobar'));
-        $r->setReturnValue('_getBackend', $backendSVN, array('SVN'));
+        $backendSVN = \Mockery::spy(\BackendSVN::class);
+        $backendSVN->shouldReceive('isNameAvailable')->with('foobar')->andReturns(true);
+        $r->shouldReceive('_getBackend')->with('SVN')->andReturns($backendSVN);
 
-        $backendCVS = new MockBackendCVS($this);
-        $backendCVS->setReturnValue('isNameAvailable', true, array('foobar'));
-        $r->setReturnValue('_getBackend', $backendCVS, array('CVS'));
+        $backendCVS = \Mockery::spy(\BackendCVS::class);
+        $backendCVS->shouldReceive('isNameAvailable')->with('foobar')->andReturns(true);
+        $r->shouldReceive('_getBackend')->with('CVS')->andReturns($backendCVS);
 
-        $backendSystem = new MockBackendSystem($this);
-        $backendSystem->setReturnValue('isProjectNameAvailable', false, array('foobar'));
-        $r->setReturnValue('_getBackend', $backendSystem, array('System'));
+        $backendSystem = \Mockery::spy(\BackendSystem::class);
+        $backendSystem->shouldReceive('isProjectNameAvailable')->with('foobar')->andReturns(false);
+        $r->shouldReceive('_getBackend')->with('System')->andReturns($backendSystem);
 
         $this->assertFalse($r->isNameAvailable('foobar'));
     }

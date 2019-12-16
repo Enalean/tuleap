@@ -1,31 +1,34 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
  */
 
-require_once __DIR__ . '/../../../../src/www/include/utils.php';
+use PHPUnit\Framework\TestCase;
 
-class Rule_FRSFileNameTest extends TuleapTestCase
+require_once __DIR__ . '/../../bootstrap.php';
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Rule_FRSFileNameTest extends TestCase
 {
 
-    function testNameValid()
+    public function testNameValid(): void
     {
         $r = new Rule_FRSFileName();
         $this->assertTrue($r->isValid('toto.txt'));
@@ -33,7 +36,7 @@ class Rule_FRSFileNameTest extends TuleapTestCase
         $this->assertTrue($r->isValid('toto tutu.txt'));
     }
 
-    protected function _testStringWithChar($c)
+    private function assertStringWithChar($c): void
     {
         $r = new Rule_FRSFileName();
 
@@ -47,15 +50,15 @@ class Rule_FRSFileNameTest extends TuleapTestCase
         $this->assertFalse($r->isValid('tototutu'.$c), $c." is not allowed");
     }
 
-    function testNameContainsInvalidCharacterAnywhere()
+    public function testNameContainsInvalidCharacterAnywhere(): void
     {
         $str = "`!\"$%^,&*();=|{}<>?/";
         for ($i = 0; $i < strlen($str); $i++) {
-            $this->_testStringWithChar($str[$i]);
+            $this->assertStringWithChar($str[$i]);
         }
     }
 
-    function testNameContainsSpecialCharAtBeginning()
+    public function testNameContainsSpecialCharAtBeginning(): void
     {
         $r = new Rule_FRSFileName();
         $this->assertTrue($r->isValid('toto@tutu'));
@@ -67,7 +70,7 @@ class Rule_FRSFileNameTest extends TuleapTestCase
         $this->assertFalse($r->isValid('~toto'));
     }
 
-    function testNameContainsDot()
+    public function testNameContainsDot(): void
     {
         $r = new Rule_FRSFileName();
 

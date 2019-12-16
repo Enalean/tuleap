@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
@@ -20,18 +20,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
  */
 
-class Rule_NumericalTest extends TuleapTestCase
+use PHPUnit\Framework\TestCase;
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Rule_NumericalTest extends TestCase
 {
 
-    function UnitTestCase($name = 'Rule_Numerical test')
-    {
-        $this->UnitTestCase($name);
-    }
-
-    function testBiggerThan()
+    public function testBiggerThan(): void
     {
         $r = new Rule_GreaterThan(-1);
 
@@ -44,7 +41,7 @@ class Rule_NumericalTest extends TuleapTestCase
         $this->assertFalse($r->isValid('toto'));
     }
 
-    function testBiggerOrEqualThan()
+    public function testBiggerOrEqualThan(): void
     {
         $r = new Rule_GreaterOrEqual(0);
 
@@ -56,7 +53,7 @@ class Rule_NumericalTest extends TuleapTestCase
         $this->assertFalse($r->isValid('toto'));
     }
 
-    function testLesserThan()
+    public function testLesserThan(): void
     {
         $r = new Rule_LessThan(10);
 
@@ -71,7 +68,7 @@ class Rule_NumericalTest extends TuleapTestCase
         $this->assertFalse($r->isValid('toto'));
     }
 
-    function testLesserOrEqualThan()
+    public function testLesserOrEqualThan(): void
     {
         $r = new Rule_lessOrEqual(10);
 
@@ -84,7 +81,7 @@ class Rule_NumericalTest extends TuleapTestCase
         $this->assertFalse($r->isValid('toto'));
     }
 
-    function testWhiteList()
+    public function testWhiteList(): void
     {
         $r = new Rule_WhiteList(array('-1', '0', '42'));
 
@@ -95,51 +92,4 @@ class Rule_NumericalTest extends TuleapTestCase
         $this->assertFalse($r->isValid('100'));
         $this->assertFalse($r->isValid('toto'));
     }
-
-    /*function testRange() {
-        $r = new Valid_Numerical();
-        $r->biggerThan(-1);
-        $r->lesserThan(3);
-
-        $this->assertFalse($r->isValid('-1'));
-        $this->assertTrue($r->isValid('0'));
-        $this->assertTrue($r->isValid('1'));
-        $this->assertTrue($r->isValid('2'));
-        $this->assertFalse($r->isValid('3'));
-    }
-
-    function testMostRestrictive() {
-        $r = new Valid_Numerical();
-        $r->allowedValues(array('-1', '5', '42'));
-        $r->biggerThan(-1);
-        $r->lesserThan(6);
-
-        $this->assertTrue($r->isValid('5'));
-        $this->assertFalse($r->isValid('-1'));
-        $this->assertFalse($r->isValid('42'));
-    }
-
-    function testMinStrictAndMinEqual() {
-        $r = new Valid_Numerical();
-        $r->biggerOrEqual(0);
-        $r->biggerThan(0);
-
-        $this->assertTrue($r->isValid('1'));
-        $this->assertTrue($r->isValid('5'));
-        $this->assertFalse($r->isValid('0'));
-        $this->assertFalse($r->isValid('-9'));
-    }
-
-    function testMaxStrictAndMaxEqualThan() {
-        $r = new Valid_Numerical();
-        $r->lesserThan(10);
-        $r->lesserOrEqual(10);
-
-        $this->assertTrue($r->isValid('1'));
-        $this->assertTrue($r->isValid('-5'));
-        $this->assertTrue($r->isValid('0'));
-        $this->assertFalse($r->isValid('10'));
-        $this->assertFalse($r->isValid('11'));
-        $this->assertFalse($r->isValid('20'));
-    }*/
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,10 +19,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Rule_ArrayTest extends TuleapTestCase
-{
+use PHPUnit\Framework\TestCase;
 
-    function testTestsWetherTheArgumentIsAnArray()
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Rule_ArrayTest extends TestCase
+{
+    public function testTestsWetherTheArgumentIsAnArray(): void
     {
         $r = new Rule_Array();
         $this->assertTrue($r->isValid(array()));

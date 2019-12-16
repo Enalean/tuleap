@@ -1,44 +1,42 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
 
+use PHPUnit\Framework\TestCase;
 
-class Rule_DateTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Rule_DateTest extends TestCase
 {
 
-    function UnitTestCase($name = 'Rule_Date test')
-    {
-        $this->UnitTestCase($name);
-    }
-
-    function testBadDate()
+    public function testBadDate(): void
     {
         $r = new Rule_Date();
         $this->assertFalse($r->isValid('2007-13-5'));
         $this->assertFalse($r->isValid('2007-12-32'));
     }
 
-    function testBadFormat()
+    public function testBadFormat(): void
     {
         $r = new Rule_Date();
         $this->assertFalse($r->isValid('2007-12'));
@@ -48,7 +46,7 @@ class Rule_DateTest extends TuleapTestCase
         $this->assertTrue($r->isValid('2007-1-01'));
     }
 
-    function testGoodDate()
+    public function testGoodDate(): void
     {
         $r = new Rule_Date();
         $this->assertTrue($r->isValid('2007-11-30'));
@@ -57,7 +55,7 @@ class Rule_DateTest extends TuleapTestCase
         $this->assertTrue($r->isValid('200-1-5'));
     }
 
-    function testLeapYear()
+    public function testLeapYear(): void
     {
         $r = new Rule_Date();
         $this->assertFalse($r->isValid('2001-2-29'));

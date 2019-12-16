@@ -23,15 +23,13 @@
  *
  */
 
-class Rule_IntTest extends TuleapTestCase
+use PHPUnit\Framework\TestCase;
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Rule_IntTest extends TestCase
 {
 
-    function UnitTestCase($name = 'Rule_Int test')
-    {
-        $this->UnitTestCase($name);
-    }
-
-    function testIsInteger()
+    public function testIsInteger(): void
     {
         $r = new Rule_Int();
 
@@ -54,7 +52,7 @@ class Rule_IntTest extends TuleapTestCase
         $this->assertTrue($r->isValid($input));
     }
 
-    function testFloatingPoint()
+    public function testFloatingPoint(): void
     {
         $r = new Rule_Int();
 
@@ -64,7 +62,7 @@ class Rule_IntTest extends TuleapTestCase
         $this->assertFalse($r->isValid($input));
     }
 
-    function testStrings()
+    public function testStrings(): void
     {
         $r = new Rule_Int();
 
@@ -82,7 +80,7 @@ class Rule_IntTest extends TuleapTestCase
         $this->assertFalse($r->isValid($input));
     }
 
-    function testOctal()
+    public function testOctal(): void
     {
         $r = new Rule_Int();
 
@@ -94,7 +92,7 @@ class Rule_IntTest extends TuleapTestCase
         $this->assertFalse($r->isValid($input));
     }
 
-    function testIsBigInt()
+    public function testIsBigInt(): void
     {
         $r = new Rule_Int();
 
