@@ -19,6 +19,7 @@
  */
 
 use FastRoute\RouteCollector;
+use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
@@ -85,7 +86,7 @@ class testmanagementPlugin extends Plugin
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
-            $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
+            $this->addHook(PaneInfoCollector::NAME);
         }
 
         if (defined('TRACKER_BASE_URL')) {
@@ -342,14 +343,13 @@ class testmanagementPlugin extends Plugin
 
     /**
      * Add tab in Agile Dashboard Planning view to redirect to TestManagement
-     * @param mixed array $params
      */
-    public function agiledashboard_event_additional_panes_on_milestone($params)
+    public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector)
     {
-        $milestone = $params['milestone'];
+        $milestone = $collector->getMilestone();
         $project   = $milestone->getProject();
         if ($project->usesService($this->getServiceShortname())) {
-            $params['panes'][] = new Tuleap\TestManagement\AgileDashboardPaneInfo($milestone);
+            $collector->addPane(new Tuleap\TestManagement\AgileDashboardPaneInfo($milestone));
         }
     }
 
