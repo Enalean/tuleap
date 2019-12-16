@@ -35,7 +35,6 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .project-release-infos-badges .toggle-sprints {
     position: relative;
-    cursor: pointer;
 }
 
 .project-release-infos-badges .toggle-sprints::before {
@@ -65,7 +64,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
-    margin: 0 0 $tlp-double-spacing;
+    margin: 0 0 $tlp-half-spacing;
 }
 
 .release-description {
@@ -77,13 +76,21 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .release-description-link-icon {
-    margin: 0 5px 0 0;
     font-size: 12px;
+}
+
+.release-description-link {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.release-planning-link {
+    margin: 0 0 0 $tlp-spacing;
 }
 
 .release-description-row {
     flex: 1 0 0;
-    width: 20%;
     min-width: 200px;
     margin: 0 $tlp-spacing 0 0;
 }
