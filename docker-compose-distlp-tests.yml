@@ -83,11 +83,12 @@ services:
       - tuleap
 
   db:
-    image: mysql:5.5
+    image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: DumpPass4Tests
     volumes:
       - tests-db-data:/var/lib/mysql
+      - ./src/etc/tuleap-mysql57-dev.cnf:/etc/mysql/mysql.conf.d/tuleap.cnf:ro,cached
     networks:
       - tuleap
 
