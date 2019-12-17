@@ -26,8 +26,6 @@ use PHPUnit\Framework\TestCase;
 use Tracker_FormElementFactory;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 
-require_once(__DIR__ . '/../bootstrap.php');
-
 class AllowedFieldRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;

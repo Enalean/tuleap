@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,28 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ .'/../../../bootstrap.php';
-require_once __DIR__ .'/../../../../../../tests/simpletest/common/include/builders/aRequest.php';
+declare(strict_types=1);
 
-class Cardwall_OnTop_Config_Command_CreateColumnTest extends TuleapTestCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Cardwall_OnTop_Config_Command_CreateColumnTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalResponseMock, \Tuleap\GlobalLanguageMock;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
         $this->tracker_id = 666;
-        $tracker = mock('Tracker');
-        stub($tracker)->getId()->returns($this->tracker_id);
+        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker->shouldReceive('getId')->andReturns($this->tracker_id);
 
-        $this->dao     = mock('Cardwall_OnTop_ColumnDao');
+        $this->dao     = \Mockery::spy(\Cardwall_OnTop_ColumnDao::class);
         $this->command = new Cardwall_OnTop_Config_Command_CreateColumn($tracker, $this->dao);
     }
 
-    public function itCreatesANewColumn()
+    public function testItCreatesANewColumn() : void
     {
-        $request = aRequest()->with('new_column', 'On Going')->build();
-        stub($this->dao)->create($this->tracker_id, 'On Going')->once();
+        $request = new HTTPRequest();
+        $request->set('new_column', 'On Going');
+        $this->dao->shouldReceive('create')->with($this->tracker_id, 'On Going')->once();
         $this->command->execute($request);
     }
 }

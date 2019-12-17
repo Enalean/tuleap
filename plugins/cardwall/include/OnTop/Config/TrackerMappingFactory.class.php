@@ -80,7 +80,7 @@ class Cardwall_OnTop_Config_TrackerMappingFactory
     private function instantiateMappingFromRow(Tracker $tracker, array &$mappings, array $row, Cardwall_OnTop_Config_ColumnCollection $columns)
     {
         $mapping_tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
-        if ($mapping_tracker && $mapping_tracker != $tracker) {
+        if ($mapping_tracker && $mapping_tracker->getId() != $tracker->getId()) {
             //TODO: field is used?
             $available_fields = $this->element_factory->getUsedSbFields($mapping_tracker);
             $mapping_field    = $this->element_factory->getFieldById($row['field_id']);

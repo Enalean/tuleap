@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/bootstrap.php';
+declare(strict_types=1);
 
-class CardwallConfigXmlImportTest extends TuleapTestCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalResponseMock, \Tuleap\GlobalLanguageMock;
 
     private $default_xml_input;
     private $enhanced_xml_input;
     /**
-     * @var a|\Mockery\MockInterface|EventManager
+     * @var \Mockery\MockInterface|EventManager
      */
     private $event_manager;
+    /**
+     * @var Cardwall_OnTop_Dao|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    private $cardwall_ontop_dao;
+    /**
+     * @var CardwallConfigXmlImport
+     */
+    private $cardwall_config_xml_import;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->default_xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
@@ -131,11 +141,11 @@ class CardwallConfigXmlImportTest extends TuleapTestCase
               <agiledashboard/>
             </project>');
 
-        $field = stub('Tracker_FormElement_Field_List')->getId()->returns(1);
-        $value_01 = stub('Tracker_Artifact_ChangesetValue_List')->getId()->returns(401);
-        $value_02 = stub('Tracker_Artifact_ChangesetValue_List')->getId()->returns(402);
-        $value_03 = stub('Tracker_Artifact_ChangesetValue_List')->getId()->returns(403);
-        $value_04 = stub('Tracker_Artifact_ChangesetValue_List')->getId()->returns(404);
+        $field = \Mockery::spy(\Tracker_FormElement_Field_List::class)->shouldReceive('getId')->andReturns(1)->getMock();
+        $value_01 = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getId')->andReturns(401)->getMock();
+        $value_02 = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getId')->andReturns(402)->getMock();
+        $value_03 = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getId')->andReturns(403)->getMock();
+        $value_04 = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getId')->andReturns(404)->getMock();
 
         $this->mapping = array(
             "T101" => 444,
@@ -151,13 +161,13 @@ class CardwallConfigXmlImportTest extends TuleapTestCase
             "V4" => $value_04
         );
 
-        $this->cardwall_ontop_dao         = stub('Cardwall_OnTop_Dao')->enable()->returns(true);
-        $this->column_dao                 = mock('Cardwall_OnTop_ColumnDao');
-        $this->mapping_field_dao          = mock('Cardwall_OnTop_ColumnMappingFieldDao');
-        $this->mapping_field_value_dao    = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
+        $this->cardwall_ontop_dao         = \Mockery::spy(\Cardwall_OnTop_Dao::class);
+        $this->column_dao                 = \Mockery::spy(\Cardwall_OnTop_ColumnDao::class);
+        $this->mapping_field_dao          = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldDao::class);
+        $this->mapping_field_value_dao    = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldValueDao::class);
         $this->group_id                   = 145;
         $this->event_manager              = \Mockery::mock(\EventManager::class);
-        $this->xml_validator              = mock('XML_RNGValidator');
+        $this->xml_validator              = \Mockery::spy(\XML_RNGValidator::class);
         $this->cardwall_config_xml_import = new CardwallConfigXmlImport(
             $this->group_id,
             $this->mapping,
@@ -171,81 +181,86 @@ class CardwallConfigXmlImportTest extends TuleapTestCase
         );
     }
 
-    public function itStoresAllTheCardwallOnTop()
+    public function testItStoresAllTheCardwallOnTop() : void
     {
         $this->event_manager->shouldReceive('processEvent');
 
-        expect($this->cardwall_ontop_dao)->enable()->count(2);
-        expect($this->cardwall_ontop_dao)->enableFreestyleColumns()->count(2);
+        $this->cardwall_ontop_dao->shouldReceive('enable')->times(2)->andReturn(true);
+        $this->cardwall_ontop_dao->shouldReceive('enableFreestyleColumns')->times(2);
 
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
-    public function itCreatesTheFreestyleColumns()
+    public function testItCreatesTheFreestyleColumns() : void
     {
         $this->event_manager->shouldReceive('processEvent');
 
-        expect($this->column_dao)->createWithcolor()->count(4);
-        expect($this->column_dao)->createWithcolor(555, 'Todo', '', '', '')->at(0);
-        expect($this->column_dao)->createWithcolor(555, 'On going', '', '', '')->at(1);
-        expect($this->column_dao)->createWithcolor(555, 'Review', '', '', '')->at(2);
-        expect($this->column_dao)->createWithcolor(555, 'Done', '', '', '')->at(3);
+        $this->cardwall_ontop_dao->shouldReceive('enable')->andReturn(true);
+
+        $this->column_dao->shouldReceive('createWithcolor')->times(4);
+        $this->column_dao->shouldReceive('createWithcolor')->with(555, 'Todo', '', '', '')->ordered();
+        $this->column_dao->shouldReceive('createWithcolor')->with(555, 'On going', '', '', '')->ordered();
+        $this->column_dao->shouldReceive('createWithcolor')->with(555, 'Review', '', '', '')->ordered();
+        $this->column_dao->shouldReceive('createWithcolor')->with(555, 'Done', '', '', '')->ordered();
 
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
-    public function itCreatesTheFreestyleColumnsWithColor()
+    public function testItCreatesTheFreestyleColumnsWithColor() : void
     {
         $this->event_manager->shouldReceive('processEvent');
 
-        stub($this->column_dao)->createWithcolor()->returnsAt(0, 20);
-        stub($this->column_dao)->createWithcolor()->returnsAt(1, 21);
-        stub($this->column_dao)->createWithcolor()->returnsAt(2, 22);
-        stub($this->column_dao)->createWithTLPColor();
+        $this->cardwall_ontop_dao->shouldReceive('enable')->andReturn(true);
 
-        expect($this->column_dao)->createWithcolor()->count(3);
-        expect($this->column_dao)->createWithTLPColor()->count(1);
+        $this->column_dao->shouldReceive('createWithcolor')->andReturns(20)->ordered();
+        $this->column_dao->shouldReceive('createWithcolor')->andReturns(21)->ordered();
+        $this->column_dao->shouldReceive('createWithcolor')->andReturns(22)->ordered();
+        $this->column_dao->shouldReceive('createWithTLPColor')->once();
 
-        expect($this->column_dao)->createWithcolor(555, 'Todo', '', '', '')->at(0);
-        expect($this->column_dao)->createWithcolor(555, 'On going', 255, 255, 240)->at(1);
-        expect($this->column_dao)->createWithcolor(555, 'Review', '', '', '')->at(2);
+        $this->column_dao->shouldReceive('createWithcolor')->with(555, 'Todo', '', '', '')->ordered();
+        $this->column_dao->shouldReceive('createWithcolor')->with(555, 'On going', 255, 255, 240)->ordered();
+        $this->column_dao->shouldReceive('createWithcolor')->with(555, 'Review', '', '', '')->ordered();
 
-        expect($this->column_dao)->createWithTLPColor(555, 'Done', 'fiesta-red');
+        $this->column_dao->shouldReceive('createWithTLPColor')->with(555, 'Done', 'fiesta-red');
 
         $this->cardwall_config_xml_import->import($this->enhanced_xml_input);
     }
 
-    public function itDoesNotCreateMappingAndMappingValueinDefaultXML()
+    public function testItDoesNotCreateMappingAndMappingValueinDefaultXML() : void
     {
         $this->event_manager->shouldReceive('processEvent');
 
-        expect($this->mapping_field_dao)->create()->never();
-        expect($this->mapping_field_value_dao)->save()->never();
+        $this->cardwall_ontop_dao->shouldReceive('enable')->andReturn(true);
+
+        $this->mapping_field_dao->shouldReceive('create')->never();
+        $this->mapping_field_value_dao->shouldReceive('save')->never();
 
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
-    public function itCreatesMappingAndMappingValue()
+    public function testItCreatesMappingAndMappingValue() : void
     {
         $this->event_manager->shouldReceive('processEvent');
 
-        stub($this->column_dao)->createWithcolor()->returnsAt(0, 20);
-        stub($this->column_dao)->createWithcolor()->returnsAt(1, 21);
-        stub($this->column_dao)->createWithcolor()->returnsAt(2, 22);
-        stub($this->column_dao)->createWithTLPColor()->returnsAt(0, 23);
+        $this->cardwall_ontop_dao->shouldReceive('enable')->andReturn(true);
 
-        expect($this->mapping_field_dao)->create()->count(1);
-        expect($this->mapping_field_dao)->create(555, 666, 1)->at(0);
+        $this->column_dao->shouldReceive('createWithcolor')->andReturns(20)->ordered();
+        $this->column_dao->shouldReceive('createWithcolor')->andReturns(21)->ordered();
+        $this->column_dao->shouldReceive('createWithcolor')->andReturns(22)->ordered();
+        $this->column_dao->shouldReceive('createWithTLPColor')->andReturns(23)->ordered();
 
-        expect($this->mapping_field_value_dao)->save()->count(3);
-        expect($this->mapping_field_value_dao)->save(555, 666, 1, 401, '*')->at(0);
-        expect($this->mapping_field_value_dao)->save(555, 666, 1, 404, '*')->at(1);
-        expect($this->mapping_field_value_dao)->save(555, 666, 1, 100, '*')->at(2);
+        $this->mapping_field_dao->shouldReceive('create')->times(1);
+        $this->mapping_field_dao->shouldReceive('create')->with(555, 666, 1)->ordered();
+
+        $this->mapping_field_value_dao->shouldReceive('save')->times(3);
+        $this->mapping_field_value_dao->shouldReceive('save')->with(555, 666, 1, 401, \Mockery::any())->ordered();
+        $this->mapping_field_value_dao->shouldReceive('save')->with(555, 666, 1, 404, \Mockery::any())->ordered();
+        $this->mapping_field_value_dao->shouldReceive('save')->with(555, 666, 1, 100, \Mockery::any())->ordered();
 
         $this->cardwall_config_xml_import->import($this->enhanced_xml_input);
     }
 
-    public function itProcessesANewEventIfAllCardwallAreEnabled()
+    public function testItProcessesANewEventIfAllCardwallAreEnabled() : void
     {
         $this->event_manager->shouldReceive('processEvent')->with(
             Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
@@ -256,14 +271,15 @@ class CardwallConfigXmlImportTest extends TuleapTestCase
             )
         );
 
-        $this->cardwall_ontop_dao->expectCallCount('enable', 2);
+        $this->cardwall_ontop_dao->shouldReceive('enable')->times(2)->andReturn(true);
 
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
-    public function itDoesNotProcessAnEventIfAtLeastOneCardwallCannotBeEnabledAndThrowsAnException()
+    public function testItDoesNotProcessAnEventIfAtLeastOneCardwallCannotBeEnabledAndThrowsAnException() : void
     {
-        $cardwall_ontop_dao         = stub('Cardwall_OnTop_Dao')->enable()->returns(false);
+        $cardwall_ontop_dao         = \Mockery::spy(\Cardwall_OnTop_Dao::class);
+        $cardwall_ontop_dao->shouldReceive('enable')->andReturns(false)->once();
         $cardwall_config_xml_import = new CardwallConfigXmlImport(
             $this->group_id,
             $this->mapping,
@@ -278,15 +294,14 @@ class CardwallConfigXmlImportTest extends TuleapTestCase
 
         $this->event_manager->shouldNotReceive('processEvent')->with(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, \Mockery::any());
 
-        $this->expectException();
-        $cardwall_ontop_dao->expectCallCount('enable', 1);
-
+        $this->expectException(CardwallFromXmlImportCannotBeEnabledException::class);
         $cardwall_config_xml_import->import($this->default_xml_input);
     }
 
-    public function itThrowsAnExceptionIfXmlDoesNotMatchRNG()
+    public function testItThrowsAnExceptionIfXmlDoesNotMatchRNG() : void
     {
-        $xml_validator  = stub('XML_RNGValidator')->validate()->throws(new XML_ParseException('', array(), array()));
+        $xml_validator  = \Mockery::spy(\XML_RNGValidator::class);
+        $xml_validator->shouldReceive('validate')->andThrows(new XML_ParseException('', array(), array()));
 
         $cardwall_config_xml_import = new CardwallConfigXmlImport(
             $this->group_id,
@@ -300,7 +315,7 @@ class CardwallConfigXmlImportTest extends TuleapTestCase
             $xml_validator
         );
 
-        $this->expectException('XML_ParseException');
+        $this->expectException(\XML_ParseException::class);
 
         $cardwall_config_xml_import->import($this->default_xml_input);
     }

@@ -23,8 +23,6 @@ namespace Tuleap\Cardwall\Semantic;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../../tests/bootstrap.php';
-
 class FieldUsedInSemanticObjectCheckerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;

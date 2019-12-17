@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,9 +28,7 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_List;
 
-require_once __DIR__ . '/../../../tests/bootstrap.php';
-
-class CardFieldXmlExporterTest extends TestCase
+final class CardFieldXmlExporterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -96,8 +94,8 @@ class CardFieldXmlExporterTest extends TestCase
         $this->assertEquals($semantic->type, Cardwall_Semantic_CardFields::NAME);
 
         $fields = $this->xml_tree->semantic->field;
-        $this->assertEquals($fields[0]->attributes(), "F102");
-        $this->assertEquals($fields[1]->attributes(), "F103");
+        $this->assertEquals('F102', $fields[0]->attributes());
+        $this->assertEquals('F103', $fields[1]->attributes());
     }
 
     public function testItShouldExportBackgroundColor()
@@ -119,6 +117,6 @@ class CardFieldXmlExporterTest extends TestCase
         $this->assertEquals($semantic->type, Cardwall_Semantic_CardFields::NAME);
 
         $background_color_field = $this->xml_tree->semantic->{ 'background-color' };
-        $this->assertEquals($background_color_field[0]->attributes(), "F102");
+        $this->assertEquals('F102', $background_color_field[0]->attributes());
     }
 }

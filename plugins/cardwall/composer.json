@@ -6,6 +6,12 @@
     },
     "classmap": ["include/"]
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\Cardwall\\": "phpunit/"
+    },
+    "classmap": ["phpunit/"]
+  },
   "config": {
     "sort-packages": true
   }
