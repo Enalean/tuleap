@@ -23,15 +23,17 @@
         <button
             type="button"
             class="tlp-button tlp-button-primary tlp-button-small taskboard-card-save-button"
+            v-bind:disabled="is_action_ongoing"
             v-on:click="save"
             data-test="save"
         >
-            <i class="fa fa-tlp-enter-key tlp-button-icon"></i>
+            <i class="fa tlp-button-icon" v-bind:class="save_icon" data-test="save-icon"></i>
             <translate>Save</translate>
         </button>
         <button
             type="button"
             class="tlp-button tlp-button-primary tlp-button-outline tlp-button-small taskboard-card-cancel-button"
+            v-bind:disabled="is_action_ongoing"
             v-on:click="cancel"
             data-test="cancel"
         >
@@ -43,12 +45,19 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import { TaskboardEvent } from "../../../../../../type";
 import EventBus from "../../../../../../helpers/event-bus";
 
 @Component
 export default class CancelSaveButtons extends Vue {
+    @Prop({ required: false, default: false })
+    readonly is_action_ongoing!: boolean;
+
+    get save_icon(): string {
+        return this.is_action_ongoing ? "fa-circle-o-notch fa-spin" : "fa-tlp-enter-key";
+    }
+
     mounted(): void {
         EventBus.$on(TaskboardEvent.ESC_KEY_PRESSED, this.cancel);
     }
@@ -58,11 +67,15 @@ export default class CancelSaveButtons extends Vue {
     }
 
     cancel(): void {
-        this.$emit("cancel");
+        if (!this.is_action_ongoing) {
+            this.$emit("cancel");
+        }
     }
 
     save(): void {
-        this.$emit("save");
+        if (!this.is_action_ongoing) {
+            this.$emit("save");
+        }
     }
 }
 </script>

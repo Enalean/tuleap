@@ -21,8 +21,16 @@
 <template>
     <form class="taskboard-add-card-form">
         <template v-if="is_in_add_mode">
-            <label-editor v-model="label" v-on:save="save" v-bind:readonly="readonly" />
-            <cancel-save-buttons v-on:cancel="cancel" v-on:save="save" />
+            <label-editor
+                v-model="label"
+                v-on:save="save"
+                v-bind:readonly="is_card_creation_blocked_due_to_ongoing_creation"
+            />
+            <cancel-save-buttons
+                v-on:cancel="cancel"
+                v-on:save="save"
+                v-bind:is_action_ongoing="is_card_creation_blocked_due_to_ongoing_creation"
+            />
         </template>
         <add-button v-if="!is_in_add_mode" v-on:click="switchToAddMode" />
     </form>
@@ -100,10 +108,6 @@ export default class AddCard extends Vue {
         setTimeout(() => {
             this.label = "";
         }, 10);
-    }
-
-    get readonly(): boolean {
-        return this.is_card_creation_blocked_due_to_ongoing_creation;
     }
 }
 </script>
