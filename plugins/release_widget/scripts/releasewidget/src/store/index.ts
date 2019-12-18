@@ -32,7 +32,10 @@ export function createStore(
     nb_backlog_items: number,
     trackers_agile_dashboard: TrackerAgileDashboard[],
     is_browser_IE11: boolean,
-    label_tracker_planning: string
+    label_tracker_planning: string,
+    is_timeframe_duration: boolean,
+    label_start_date: string,
+    label_timeframe: string
 ): Store<State> {
     const state: State = {
         project_id,
@@ -45,7 +48,10 @@ export function createStore(
         limit: 50,
         is_loading: false,
         current_milestones: [],
-        label_tracker_planning
+        label_tracker_planning,
+        is_timeframe_duration,
+        label_start_date,
+        label_timeframe
     };
 
     return new Vuex.Store({

@@ -47,8 +47,10 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 class ProjectReleasePresenterBuilder
@@ -93,6 +95,10 @@ class ProjectReleasePresenterBuilder
      * @var Planning
      */
     private $root_planning;
+    /**
+     * @var SemanticTimeframe
+     */
+    private $semantic_timeframe;
 
     public function __construct(
         HTTPRequest $request,
@@ -102,7 +108,8 @@ class ProjectReleasePresenterBuilder
         TrackerFactory $tracker_factory,
         ExplicitBacklogDao $explicit_backlog_dao,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        Planning $root_planning
+        Planning $root_planning,
+        SemanticTimeframe $semantic_timeframe
     ) {
         $this->request                                                           = $request;
         $this->agile_dashboard_milestone_backlog_backlog_factory                 = $agile_dashboard_milestone_backlog_backlog_factory;
@@ -114,10 +121,15 @@ class ProjectReleasePresenterBuilder
         $this->explicit_backlog_dao                                              = $explicit_backlog_dao;
         $this->artifacts_in_explicit_backlog_dao                                 = $artifacts_in_explicit_backlog_dao;
         $this->root_planning                                                     = $root_planning;
+        $this->semantic_timeframe                                                = $semantic_timeframe;
     }
 
     public static function build(): ProjectReleasePresenterBuilder
     {
+        $semantic_timeframe_builder = new SemanticTimeframeBuilder(
+            new SemanticTimeframeDao(),
+            Tracker_FormElementFactory::instance()
+        );
         $planning_factory = new PlanningFactory(
             new PlanningDao(),
             TrackerFactory::instance(),
@@ -176,7 +188,8 @@ class ProjectReleasePresenterBuilder
             TrackerFactory::instance(),
             new ExplicitBacklogDao(),
             new ArtifactsInExplicitBacklogDao(),
-            $root_planning
+            $root_planning,
+            $semantic_timeframe_builder->getSemantic($root_planning->getPlanningTracker())
         );
     }
 
@@ -188,7 +201,10 @@ class ProjectReleasePresenterBuilder
             $this->getNumberUpcomingReleases(),
             $this->getNumberBacklogItems(),
             $this->getTrackersIdAgileDashboard(),
-            $this->getLabelTrackerPlanning()
+            $this->getLabelTrackerPlanning(),
+            $this->isTimeframeDurationField(),
+            $this->getLabelStartDateField(),
+            $this->getLabelTimeframeField()
         );
     }
 
@@ -240,5 +256,36 @@ class ProjectReleasePresenterBuilder
     private function getLabelTrackerPlanning(): string
     {
         return $this->root_planning->getPlanningTracker()->getName();
+    }
+
+    private function isTimeframeDurationField(): bool
+    {
+        return $this->semantic_timeframe->getDurationField() !== null;
+    }
+
+    private function getLabelTimeframeField(): string
+    {
+        $duration_field = $this->semantic_timeframe->getDurationField();
+        $end_date_field = $this->semantic_timeframe->getEndDateField();
+
+        if ($duration_field) {
+            return $duration_field->getLabel();
+        }
+        if ($end_date_field) {
+            return $end_date_field->getLabel();
+        }
+
+        throw new TimeframeBrokenConfigurationException($this->semantic_timeframe->getTracker());
+    }
+
+    private function getLabelStartDateField(): string
+    {
+        $start_date_field = $this->semantic_timeframe->getStartDateField();
+
+        if ($start_date_field) {
+            return $start_date_field->getLabel();
+        }
+
+        return 'start date';
     }
 }

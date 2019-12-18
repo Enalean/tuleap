@@ -27,9 +27,9 @@
             v-bind:has_error_rest="has_error_rest"
             v-bind:message_error_rest="message_error_rest"
             v-bind:has_error_duration="has_error_duration"
-            v-bind:message_error_duration="$gettext('\'duration\' field is empty or invalid.')"
+            v-bind:message_error_duration="message_error_duration"
             v-bind:has_error_start_date="has_error_start_date"
-            v-bind:message_error_start_date="$gettext('\'start date\' field is empty or invalid.')"
+            v-bind:message_error_start_date="message_error_start_date"
             v-bind:is_under_calculation="is_under_calculation"
             v-bind:message_error_under_calculation="
                 $gettext('Burndown is under calculation. It will be available in a few minutes.')
@@ -47,12 +47,20 @@ import BurndownChartError from "./BurndownChartError.vue";
 import BurndownChartDisplayer from "./BurndownChartDisplayer.vue";
 import { FetchWrapperError } from "tlp";
 import { getBurndownData } from "../../../../api/rest-querier";
+import { State } from "vuex-class";
+import { sprintf } from "sprintf-js";
 @Component({
     components: { BurndownChartError, BurndownChartDisplayer }
 })
 export default class BurndownChart extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
+    @State
+    readonly is_timeframe_duration!: boolean;
+    @State
+    readonly label_start_date!: string;
+    @State
+    readonly label_timeframe!: string;
 
     is_loading = true;
     message_error_rest: string | null = null;
@@ -78,7 +86,19 @@ export default class BurndownChart extends Vue {
         }
     }
 
+    get message_error_duration(): string {
+        return sprintf(this.$gettext("'%s' field is empty or invalid."), this.label_timeframe);
+    }
+
+    get message_error_start_date(): string {
+        return sprintf(this.$gettext("'%s' field is empty or invalid."), this.label_start_date);
+    }
+
     get has_error_duration(): boolean {
+        if (!this.is_timeframe_duration) {
+            return !this.release_data.end_date;
+        }
+
         if (!this.release_data.burndown_data) {
             return true;
         }

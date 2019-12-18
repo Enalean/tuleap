@@ -39,7 +39,10 @@ describe("Store actions", () => {
                 is_loading: false,
                 trackers_agile_dashboard: [],
                 is_browser_IE11: false,
-                label_tracker_planning: "Release"
+                label_tracker_planning: "Release",
+                is_timeframe_duration: true,
+                label_start_date: "start date",
+                label_timeframe: "duration"
             }
         };
     });
@@ -89,7 +92,10 @@ describe("Store actions", () => {
                     limit: 50,
                     trackers_agile_dashboard: trackers,
                     is_browser_IE11: false,
-                    label_tracker_planning: "Release"
+                    label_tracker_planning: "Release",
+                    is_timeframe_duration: true,
+                    label_start_date: "start date",
+                    label_timeframe: "duration"
                 };
 
                 const milestones: MilestoneData[] = [
@@ -158,7 +164,10 @@ describe("Store actions", () => {
                 limit: 50,
                 trackers_agile_dashboard: trackers,
                 is_browser_IE11: false,
-                label_tracker_planning: "Release"
+                label_tracker_planning: "Release",
+                is_timeframe_duration: true,
+                label_start_date: "start date",
+                label_timeframe: "duration"
             };
 
             const milestone: MilestoneData = {

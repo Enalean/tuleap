@@ -15,5 +15,9 @@ msgstr "Un widget pour le suivi de jalons."
 msgid "Agile dashboard"
 msgstr "Tableau de bord agile"
 
+msgid "Invalid Timeframe Semantic configuration."
+msgstr ""
+"Mauvaise configuration de sémantique plage de temps."
+
 msgid "Milestone Widget"
 msgstr "Jalon Widget"

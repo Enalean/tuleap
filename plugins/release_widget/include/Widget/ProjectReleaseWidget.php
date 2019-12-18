@@ -33,6 +33,7 @@ use TrackerFactory;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 use Widget;
 
 class ProjectReleaseWidget extends Widget
@@ -86,10 +87,18 @@ class ProjectReleaseWidget extends Widget
 
         $renderer = $this->getRenderer(__DIR__ . '/../../templates');
 
-        return $renderer->renderToString(
-            'releasewidget',
-            $builder->getProjectReleasePresenter($this->isIE11())
-        );
+        try {
+            return $renderer->renderToString(
+                'releasewidget',
+                $builder->getProjectReleasePresenter($this->isIE11())
+            );
+        } catch (TimeframeBrokenConfigurationException $e) {
+            $message_error = '<p class="tlp-alert-danger">';
+            $message_error .= dgettext('tuleap-release_widget', 'Invalid Timeframe Semantic configuration.');
+            $message_error .= '</p>';
+
+            return $message_error;
+        }
     }
 
     private function getRenderer(string $template_path) : TemplateRenderer

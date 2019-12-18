@@ -41,6 +41,8 @@ use Tracker;
 use TrackerFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
+use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 use Tuleap\Tracker\TrackerColor;
 
 class ProjectReleasePresenterBuilderTest extends TestCase
@@ -111,6 +113,10 @@ class ProjectReleasePresenterBuilderTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
      */
     private $tracker;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticTimeframe
+     */
+    private $semantic_timeframe;
 
     public function setUp(): void
     {
@@ -130,6 +136,7 @@ class ProjectReleasePresenterBuilderTest extends TestCase
         $this->artifacts_in_explicit_backlog_dao                        = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
         $this->root_planning                                            = Mockery::mock(Planning::class);
         $this->tracker                                                  = Mockery::mock(Tracker::class);
+        $this->semantic_timeframe                                       = Mockery::mock(SemanticTimeframe::class);
 
         $this->root_planning->shouldReceive('getPlanningTracker')->andReturn($this->tracker);
         $this->tracker->shouldReceive('getName')->andReturn("Releases");
@@ -151,7 +158,8 @@ class ProjectReleasePresenterBuilderTest extends TestCase
             $this->tracker_factory,
             $this->explicit_backlog_dao,
             $this->artifacts_in_explicit_backlog_dao,
-            $this->root_planning
+            $this->root_planning,
+            $this->semantic_timeframe
         );
     }
 
@@ -180,6 +188,10 @@ class ProjectReleasePresenterBuilderTest extends TestCase
 
         $this->planning_milestone_factory->shouldReceive('getAllFutureMilestones')->once()->andReturn([]);
 
+        $this->semantic_timeframe->shouldReceive('getDurationField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getLabel' => 'duration']));
+        $this->semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
+        $this->semantic_timeframe->shouldReceive('getEndDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'end']));
+
         $built_presenter = $this->builder->getProjectReleasePresenter(false);
 
         $this->assertEquals(0, $built_presenter->nb_upcoming_releases);
@@ -207,6 +219,10 @@ class ProjectReleasePresenterBuilderTest extends TestCase
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
 
         $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(5);
+
+        $this->semantic_timeframe->shouldReceive('getDurationField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getLabel' => 'duration']));
+        $this->semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
+        $this->semantic_timeframe->shouldReceive('getEndDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'end']));
 
         $this->planning_milestone_factory
             ->shouldReceive('getAllFutureMilestones')
@@ -241,6 +257,10 @@ class ProjectReleasePresenterBuilderTest extends TestCase
 
         $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->andReturn(5);
 
+        $this->semantic_timeframe->shouldReceive('getDurationField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getLabel' => 'duration']));
+        $this->semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
+        $this->semantic_timeframe->shouldReceive('getEndDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'end']));
+
         $this->planning_milestone_factory
             ->shouldReceive('getAllFutureMilestones')
             ->once()
@@ -273,6 +293,10 @@ class ProjectReleasePresenterBuilderTest extends TestCase
         $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
 
         $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+
+        $this->semantic_timeframe->shouldReceive('getDurationField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getLabel' => 'duration']));
+        $this->semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
+        $this->semantic_timeframe->shouldReceive('getEndDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'end']));
 
         $this->planning_milestone_factory
             ->shouldReceive('getAllFutureMilestones')
@@ -311,6 +335,10 @@ class ProjectReleasePresenterBuilderTest extends TestCase
 
         $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
 
+        $this->semantic_timeframe->shouldReceive('getDurationField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getLabel' => 'duration']));
+        $this->semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
+        $this->semantic_timeframe->shouldReceive('getEndDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'end']));
+
         $this->planning_milestone_factory
             ->shouldReceive('getAllFutureMilestones')
             ->once()
@@ -346,6 +374,10 @@ class ProjectReleasePresenterBuilderTest extends TestCase
 
         $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->andReturn(5);
 
+        $this->semantic_timeframe->shouldReceive('getDurationField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getLabel' => 'duration']));
+        $this->semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
+        $this->semantic_timeframe->shouldReceive('getEndDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'end']));
+
         $this->planning_milestone_factory
             ->shouldReceive('getAllFutureMilestones')
             ->once()
@@ -380,6 +412,10 @@ class ProjectReleasePresenterBuilderTest extends TestCase
 
         $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(5);
 
+        $this->semantic_timeframe->shouldReceive('getDurationField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getLabel' => 'duration']));
+        $this->semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
+        $this->semantic_timeframe->shouldReceive('getEndDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'end']));
+
         $this->planning_milestone_factory
             ->shouldReceive('getAllFutureMilestones')
             ->once()
@@ -388,6 +424,122 @@ class ProjectReleasePresenterBuilderTest extends TestCase
         $built_presenter = $this->builder->getProjectReleasePresenter(false);
 
         $this->assertEquals('Releases', $built_presenter->label_tracker_planning);
+    }
+
+    public function testIsNotTimeframeDurationField(): void
+    {
+        $this->planning_virtual_top_milestone
+            ->shouldReceive('getPlanning')
+            ->once()
+            ->andReturn(Mockery::mock(Planning::class, ['getBacklogTrackersIds' => []]));
+
+        $this->agiledashboard_milestone_backlog_factory
+            ->shouldReceive('getSelfBacklog')
+            ->withArgs([$this->planning_virtual_top_milestone])
+            ->andReturn($this->agiledashboard_milestone_backlog)
+            ->once();
+
+        $this->agiledashboard_milestone_backlog_item_collection_factory
+            ->shouldReceive('getUnassignedOpenCollection')
+            ->withArgs([$this->john_doe, $this->planning_virtual_top_milestone, $this->agiledashboard_milestone_backlog, false])
+            ->andReturn($this->agileDashboard_milestone_backlog_item_collection)
+            ->once();
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+
+        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+
+        $this->semantic_timeframe->shouldReceive('getDurationField')->andReturn(null);
+        $this->semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
+        $this->semantic_timeframe->shouldReceive('getEndDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'end']));
+
+        $this->planning_milestone_factory
+            ->shouldReceive('getAllFutureMilestones')
+            ->once()
+            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+
+
+        $built_presenter = $this->builder->getProjectReleasePresenter(true);
+
+        $this->assertFalse($built_presenter->is_timeframe_duration);
+        $this->assertEquals($built_presenter->label_timeframe, 'end');
+    }
+
+    public function testIsNotTimeframeEndDateField(): void
+    {
+        $this->planning_virtual_top_milestone
+            ->shouldReceive('getPlanning')
+            ->once()
+            ->andReturn(Mockery::mock(Planning::class, ['getBacklogTrackersIds' => []]));
+
+        $this->agiledashboard_milestone_backlog_factory
+            ->shouldReceive('getSelfBacklog')
+            ->withArgs([$this->planning_virtual_top_milestone])
+            ->andReturn($this->agiledashboard_milestone_backlog)
+            ->once();
+
+        $this->agiledashboard_milestone_backlog_item_collection_factory
+            ->shouldReceive('getUnassignedOpenCollection')
+            ->withArgs([$this->john_doe, $this->planning_virtual_top_milestone, $this->agiledashboard_milestone_backlog, false])
+            ->andReturn($this->agileDashboard_milestone_backlog_item_collection)
+            ->once();
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+
+        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+
+        $this->semantic_timeframe->shouldReceive('getDurationField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Numeric::class, ['getLabel' => 'duration']));
+        $this->semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
+        $this->semantic_timeframe->shouldReceive('getEndDateField')->andReturn(null);
+
+        $this->planning_milestone_factory
+            ->shouldReceive('getAllFutureMilestones')
+            ->once()
+            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+
+
+        $built_presenter = $this->builder->getProjectReleasePresenter(true);
+
+        $this->assertTrue($built_presenter->is_timeframe_duration);
+        $this->assertEquals($built_presenter->label_timeframe, 'duration');
+    }
+
+    public function testThrowExceptionWhenNoTimeframeEndDateAndDurationField(): void
+    {
+        $this->planning_virtual_top_milestone
+            ->shouldReceive('getPlanning')
+            ->once()
+            ->andReturn(Mockery::mock(Planning::class, ['getBacklogTrackersIds' => []]));
+
+        $this->agiledashboard_milestone_backlog_factory
+            ->shouldReceive('getSelfBacklog')
+            ->withArgs([$this->planning_virtual_top_milestone])
+            ->andReturn($this->agiledashboard_milestone_backlog)
+            ->once();
+
+        $this->agiledashboard_milestone_backlog_item_collection_factory
+            ->shouldReceive('getUnassignedOpenCollection')
+            ->withArgs([$this->john_doe, $this->planning_virtual_top_milestone, $this->agiledashboard_milestone_backlog, false])
+            ->andReturn($this->agileDashboard_milestone_backlog_item_collection)
+            ->once();
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturn(false)->once();
+
+        $this->agileDashboard_milestone_backlog_item_collection->shouldReceive('count')->once()->andReturn(0);
+
+        $this->semantic_timeframe->shouldReceive('getDurationField')->andReturn(null);
+        $this->semantic_timeframe->shouldReceive('getStartDateField')->andReturn(Mockery::mock(\Tracker_FormElement_Field_Date::class, ['getLabel' => 'start']));
+        $this->semantic_timeframe->shouldReceive('getEndDateField')->andReturn(null);
+        $this->semantic_timeframe->shouldReceive('getTracker')->once()->andReturn(Mockery::mock(Tracker::class, ['getId' => 100]));
+
+        $this->planning_milestone_factory
+            ->shouldReceive('getAllFutureMilestones')
+            ->once()
+            ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
+
+
+        $this->expectException(TimeframeBrokenConfigurationException::class);
+        $this->builder->getProjectReleasePresenter(true);
     }
 
     private function mockAnArtifact(string $name, string $color)

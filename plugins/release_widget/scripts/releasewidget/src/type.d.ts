@@ -87,6 +87,9 @@ export interface StoreOptions {
         error_message?: string;
         is_browser_IE11?: boolean;
         label_tracker_planning?: string;
+        is_timeframe_duration?: boolean;
+        label_start_date?: string;
+        label_timeframe?: string;
     };
     getters?: {
         has_rest_error?: boolean;
@@ -105,6 +108,9 @@ export interface State {
     trackers_agile_dashboard: TrackerAgileDashboard[];
     is_browser_IE11: boolean;
     label_tracker_planning: string;
+    is_timeframe_duration: boolean;
+    label_start_date: string;
+    label_timeframe: string;
 }
 
 export interface Context {
