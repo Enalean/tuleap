@@ -36,7 +36,12 @@
                 v-bind:data-tracker-id="swimlane.card.tracker_id"
                 v-bind:data-is-draggable="!swimlane.card.is_in_edit_mode"
             />
-            <add-card v-if="is_add_card_rendered" v-bind:column="col" v-bind:swimlane="swimlane" />
+            <add-card
+                v-if="is_add_card_rendered"
+                v-bind:column="col"
+                v-bind:swimlane="swimlane"
+                v-bind:button_label="$gettext('Add child')"
+            />
         </drop-container-cell>
     </div>
 </template>

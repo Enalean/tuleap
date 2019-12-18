@@ -21,23 +21,38 @@
 <template>
     <button
         type="button"
-        class="taskboard-add-in-place-button tlp-button-primary tlp-button-outline tlp-button-small tlp-tooltip tlp-tooltip-top"
+        class="taskboard-add-in-place-button tlp-button-primary tlp-button-outline"
+        v-bind:class="button_class"
         v-bind:data-tlp-tooltip="title"
         v-bind:aria-label="title"
         v-on:click="$emit('click')"
     >
-        <i class="fa fa-plus" aria-hidden="true"></i>
+        <i class="fa fa-plus" v-bind:class="icon_class" aria-hidden="true"></i>
+        <span v-if="label">{{ label }}</span>
     </button>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class AddButton extends Vue {
+    @Prop({ required: true })
+    readonly label!: string;
+
     get title(): string {
-        return this.$gettext("Add new card");
+        return this.label || this.$gettext("Add new card");
+    }
+
+    get icon_class(): string {
+        return this.label ? "tlp-button-icon" : "";
+    }
+
+    get button_class(): string {
+        return this.label
+            ? "taskboard-add-in-place-button-with-label"
+            : "tlp-tooltip tlp-tooltip-top";
     }
 }
 </script>

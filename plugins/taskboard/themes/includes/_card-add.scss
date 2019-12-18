@@ -17,14 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$button-size: 40px;
+$button-size: 38px;
 
 .taskboard-add-card-form {
-    min-height: $button-size;
+    display: flex;
+    justify-content: center;
 
-    &:first-child > .taskboard-card-label-editor {
-        margin: 0;
+    &:first-child > {
+        .taskboard-add-in-place-button {
+            margin: 0;
+        }
     }
+}
+
+.taskboard-add-card-form-editor-container {
+    width: 100%;
+}
+
+.taskboard-cell-solo-card + .taskboard-add-card-form > .taskboard-add-card-form-editor-container {
+    margin: $tlp-half-spacing 0 0;
 }
 
 .taskboard-drop-not-accepted > .taskboard-add-card-form {
@@ -32,14 +43,15 @@ $button-size: 40px;
 }
 
 .taskboard-add-in-place-button {
-    left: 50%;
-    width: $button-size;
-    height: $button-size;
     margin: $tlp-half-spacing 0;
-    transform: translateX(-50%);
     transition: opacity ease-in-out 100ms;
-    border-radius: 50%;
     opacity: 0;
+
+    &:not(.taskboard-add-in-place-button-with-label) {
+        width: $button-size;
+        padding: 0;
+        border-radius: 50%;
+    }
 }
 
 .taskboard-cell:hover > .taskboard-add-card-form > .taskboard-add-in-place-button {

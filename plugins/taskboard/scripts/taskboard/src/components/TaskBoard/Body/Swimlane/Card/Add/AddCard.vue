@@ -20,7 +20,7 @@
 
 <template>
     <form class="taskboard-add-card-form">
-        <template v-if="is_in_add_mode">
+        <div class="taskboard-add-card-form-editor-container" v-if="is_in_add_mode">
             <label-editor
                 v-model="label"
                 v-on:save="save"
@@ -31,8 +31,12 @@
                 v-on:save="save"
                 v-bind:is_action_ongoing="is_card_creation_blocked_due_to_ongoing_creation"
             />
-        </template>
-        <add-button v-if="!is_in_add_mode" v-on:click="switchToAddMode" />
+        </div>
+        <add-button
+            v-if="!is_in_add_mode"
+            v-on:click="switchToAddMode"
+            v-bind:label="button_label"
+        />
     </form>
 </template>
 
@@ -60,6 +64,9 @@ export default class AddCard extends Vue {
 
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
+
+    @Prop({ required: false, default: "" })
+    readonly button_label!: string;
 
     @swimlane.Action
     readonly addCard!: (payload: NewCardPayload) => Promise<void>;
