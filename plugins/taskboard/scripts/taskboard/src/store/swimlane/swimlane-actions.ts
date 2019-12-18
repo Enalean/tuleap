@@ -17,15 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, ColumnDefinition, Swimlane } from "../../type";
-import { recursiveGet, patch, get } from "tlp";
+import { Card, Swimlane } from "../../type";
+import { get, recursiveGet } from "tlp";
 import { ActionContext } from "vuex";
-import {
-    SwimlaneState,
-    MoveCardsPayload,
-    ReorderCardsPayload,
-    RefreshCardActionPayload
-} from "./type";
+import { RefreshCardActionPayload, SwimlaneState } from "./type";
 import { RootState } from "../type";
 import { UserPreference, UserPreferenceValue } from "../user/type";
 import { isSoloCard } from "./swimlane-helpers";
@@ -131,51 +126,6 @@ function getPreferenceName(
     return `plugin_taskboard_collapse_${context.rootState.milestone_id}_${swimlane.card.id}`;
 }
 
-export async function reorderCardsInCell(
-    context: ActionContext<SwimlaneState, RootState>,
-    payload: ReorderCardsPayload
-): Promise<void> {
-    try {
-        const url = getPATCHCellUrl(payload.swimlane, payload.column);
-
-        await patch(url, {
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ order: payload.position })
-        });
-
-        context.commit("changeCardPosition", payload);
-    } catch (error) {
-        await context.dispatch("error/handleModalError", error, { root: true });
-    }
-}
-
-export async function moveCardToCell(
-    context: ActionContext<SwimlaneState, RootState>,
-    payload: MoveCardsPayload
-): Promise<void> {
-    try {
-        const url = getPATCHCellUrl(payload.swimlane, payload.column);
-        const body = getMoveCardBody(payload);
-
-        await patch(url, {
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body
-        });
-
-        context.dispatch("refreshCardAndParent", {
-            swimlane: payload.swimlane,
-            card: payload.card
-        });
-        context.commit("moveCardToColumn", payload);
-    } catch (error) {
-        await context.dispatch("error/handleModalError", error, { root: true });
-    }
-}
-
 async function getUpdatedCard(card_id: number, milestone_id: number): Promise<Card> {
     const response = await get(`/api/v1/taskboard_cards/${card_id}`, {
         params: { milestone_id }
@@ -208,25 +158,4 @@ export function refreshCardAndParent(
     return Promise.all([refresh_parent_promise, refresh_child_promise]).catch(error =>
         context.dispatch("error/handleModalError", error, { root: true })
     );
-}
-
-function getMoveCardBody(payload: MoveCardsPayload): string {
-    const body = {
-        add: payload.card.id
-    };
-
-    if (payload.position) {
-        Object.assign(body, { order: payload.position });
-    }
-
-    return JSON.stringify(body);
-}
-
-function getPATCHCellUrl(swimlane: Swimlane, column: ColumnDefinition): string {
-    const swimlane_id = swimlane.card.id;
-    const column_id = column.id;
-
-    return `/api/v1/taskboard_cells/${encodeURIComponent(swimlane_id)}/column/${encodeURIComponent(
-        column_id
-    )}`;
 }
