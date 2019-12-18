@@ -380,7 +380,9 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                     $this->getMilestoneFactory(),
                     new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
                 ),
-                $this->getPlanningFactory()
+                $this->getPlanningFactory(),
+                new ExplicitBacklogDao(),
+                new ArtifactsInExplicitBacklogDao()
             );
 
             $params['result'][]         = $provider->getMatchingIds($milestone, $backlog_tracker, $user);
