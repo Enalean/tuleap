@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2019-present. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -17,18 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('bootstrap.php');
-class Tracker_FormElement_Field_List_Bind_StaticValueTest extends TuleapTestCase
-{
 
-    public function testGetLabel()
+final class Tracker_FormElement_Field_List_BindValueTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+{
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    public function testJSon(): void
     {
         $id          = 123;
         $label       = 'Reopen';
-        $description = 'The artifact has been re-opened';
-        $rank        = 200;
-        $is_hidden   = 0;
-        $bv = new Tracker_FormElement_Field_List_Bind_StaticValue($id, $label, $description, $rank, $is_hidden);
-        $this->assertEqual($bv->getLabel(), $label);
+        $value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $value->shouldReceive('getLabel')->andReturn($label);
+        $value->shouldReceive('getId')->andReturn($id);
+        $this->assertEquals('{"id":123,"value":"b123","caption":"Reopen","rest_value":"Reopen"}', json_encode($value->fetchForOpenListJson()));
     }
 }

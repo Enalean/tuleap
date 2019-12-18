@@ -1284,6 +1284,9 @@ msgstr "Récemment"
 msgid "References"
 msgstr "Références"
 
+msgid "Registered users"
+msgstr "Utilisateurs enregistrés"
+
 msgid "Removal from projects"
 msgstr "Retrait de projets"
 

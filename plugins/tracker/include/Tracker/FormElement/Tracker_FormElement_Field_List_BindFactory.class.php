@@ -183,7 +183,7 @@ class Tracker_FormElement_Field_List_BindFactory
 
     /**
      * @param array the row allowing the construction of a bind
-     * @return Field_List_Bind Object
+     * @return Tracker_FormElement_Field_List_Bind Object
      */
     public function getInstanceFromRow($row)
     {
@@ -209,7 +209,7 @@ class Tracker_FormElement_Field_List_BindFactory
                     $row['values'],
                     $row['default_values'],
                     $row['decorators'],
-                    $this->ugroup_manager,
+                    $this->getUgroupManager(),
                     $this->getUgroupsValueDao()
                 );
             default:
@@ -225,7 +225,7 @@ class Tracker_FormElement_Field_List_BindFactory
      * @param Tracker_FormElement_Field $field       to which the bind is attached
      * @param array                     &$xmlMapping where the newly created formElements indexed by their XML IDs are stored
      *
-     * @return Tooltip Object
+     * @return Tracker_FormElement_Field_List_Bind Object
      */
     public function getInstanceFromXML(
         $xml,
@@ -287,7 +287,7 @@ class Tracker_FormElement_Field_List_BindFactory
                 $values = array();
                 if ($xml->items->item) {
                     foreach ($xml->items->item as $item) {
-                        $ugroup = $this->ugroup_manager->getUGroupByName($field->getTracker()->getProject(), (string)$item['label']);
+                        $ugroup = $this->getUgroupManager()->getUGroupByName($field->getTracker()->getProject(), (string)$item['label']);
                         if ($ugroup) {
                             $ID              = (string)$item['ID'];
                             $is_hidden       = isset($item['is_hidden']) && (int)$item['is_hidden'] ? 1 : 0;
@@ -450,5 +450,13 @@ class Tracker_FormElement_Field_List_BindFactory
                 (is_a($bind, 'Tracker_FormElement_Field_List_Bind_Users') ? self::USERS :
                     (is_a($bind, 'Tracker_FormElement_Field_List_Bind_Ugroups') ? self::UGROUPS : '')
                 );
+    }
+
+    /**
+     * for testing purpose
+     */
+    protected function getUgroupManager(): UGroupManager
+    {
+        return $this->ugroup_manager;
     }
 }
