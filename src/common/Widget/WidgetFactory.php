@@ -196,7 +196,7 @@ class WidgetFactory
      * @param string $dashboard_type
      * @return Widget[]
      */
-    public function getWidgetsForOwnerType($dashboard_type)
+    public function getWidgetsForOwnerType($dashboard_type): array
     {
         if ($dashboard_type === UserDashboardController::DASHBOARD_TYPE) {
             $event = new GetUserWidgetList();
@@ -205,7 +205,14 @@ class WidgetFactory
         }
 
         $this->event_manager->dispatch($event);
-        return $event->getWidgets();
+        $widget_names = $event->getWidgets();
+
+        $widgets = [];
+        foreach ($widget_names as $widget_name) {
+            $widgets[] = $this->getInstanceByWidgetName($widget_name);
+        }
+
+        return array_filter($widgets);
     }
 
     /**
