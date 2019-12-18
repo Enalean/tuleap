@@ -53,6 +53,13 @@ class MappedFieldRetriever
         );
     }
 
+    /**
+     * A mapped field is either:
+     * - The field bound to the status semantic
+     * - The field chosen by the user to represent columns in the TaskBoard
+     *
+     * Since the this field can be a list field of any type, we cannot name if precisely.
+     */
     public function getField(TaskboardTracker $taskboard_tracker): ?Tracker_FormElement_Field_Selectbox
     {
         $mapped_field = $this->freestyle_mapping_factory->getMappedField($taskboard_tracker);
