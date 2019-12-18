@@ -55,6 +55,10 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilder implements N
      */
     private $owner_retriever;
     /**
+     * @var InlineCommentCodeContextExtractor
+     */
+    private $code_context_extractor;
+    /**
      * @var FilterUserFromCollection
      */
     private $filter_user_from_collection;
@@ -72,6 +76,7 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilder implements N
         Factory $pull_request_factory,
         InlineCommentRetriever $inline_comment_retriever,
         OwnerRetriever $owner_retriever,
+        InlineCommentCodeContextExtractor $code_context_extractor,
         FilterUserFromCollection $filter_user_from_collection,
         UserHelper $user_helper,
         HTMLURLBuilder $html_url_builder
@@ -80,6 +85,7 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilder implements N
         $this->pull_request_factory        = $pull_request_factory;
         $this->inline_comment_retriever    = $inline_comment_retriever;
         $this->owner_retriever             = $owner_retriever;
+        $this->code_context_extractor      = $code_context_extractor;
         $this->filter_user_from_collection = $filter_user_from_collection;
         $this->user_helper                 = $user_helper;
         $this->html_url_builder            = $html_url_builder;
@@ -106,16 +112,21 @@ final class PullRequestNewInlineCommentNotificationToProcessBuilder implements N
 
         $pull_request_owners = $this->owner_retriever->getOwners($pull_request);
 
-        return [
-            PullRequestNewInlineCommentNotification::fromOwnersAndInlineComment(
-                $this->user_helper,
-                $this->html_url_builder,
-                $this->filter_user_from_collection,
-                $pull_request,
-                $change_user,
-                $pull_request_owners,
-                $comment
-            )
-        ];
+        try {
+            return [
+                PullRequestNewInlineCommentNotification::fromOwnersAndInlineComment(
+                    $this->user_helper,
+                    $this->html_url_builder,
+                    $this->filter_user_from_collection,
+                    $pull_request,
+                    $change_user,
+                    $pull_request_owners,
+                    $comment,
+                    $this->code_context_extractor
+                )
+            ];
+        } catch (InlineCommentCodeContextException $exception) {
+            return [];
+        }
     }
 }

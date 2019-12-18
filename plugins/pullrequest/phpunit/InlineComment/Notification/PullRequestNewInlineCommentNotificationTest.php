@@ -39,12 +39,13 @@ final class PullRequestNewInlineCommentNotificationTest extends TestCase
 
     public function testNewInlinceCommentNotificationCanBeBuilt(): void
     {
-        $change_user      = $this->buildUser(102);
-        $user_103         = $this->buildUser(103);
-        $owners           = [$change_user, $user_103];
-        $pull_request     = \Mockery::mock(PullRequest::class);
-        $user_helper      = \Mockery::mock(UserHelper::class);
-        $html_url_builder = \Mockery::mock(HTMLURLBuilder::class);
+        $change_user            = $this->buildUser(102);
+        $user_103               = $this->buildUser(103);
+        $owners                 = [$change_user, $user_103];
+        $pull_request           = \Mockery::mock(PullRequest::class);
+        $user_helper            = \Mockery::mock(UserHelper::class);
+        $html_url_builder       = \Mockery::mock(HTMLURLBuilder::class);
+        $code_context_extractor = \Mockery::mock(InlineCommentCodeContextExtractor::class);
 
         \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
 
@@ -53,6 +54,7 @@ final class PullRequestNewInlineCommentNotificationTest extends TestCase
         $html_url_builder->shouldReceive('getAbsolutePullRequestOverviewUrl')->with($pull_request)->andReturn('https://example.com/pr-link');
         $pull_request->shouldReceive('getId')->andReturn(14);
         $pull_request->shouldReceive('getTitle')->andReturn('PR title');
+        $code_context_extractor->shouldReceive('getCodeContext')->andReturn('-Removed code');
 
         $notification = PullRequestNewInlineCommentNotification::fromOwnersAndInlineComment(
             $user_helper,
@@ -70,7 +72,8 @@ final class PullRequestNewInlineCommentNotificationTest extends TestCase
                 2,
                 'Foo comment',
                 false
-            )
+            ),
+            $code_context_extractor
         );
 
         $this->assertEqualsCanonicalizing([$user_103], $notification->getRecipients());
@@ -78,6 +81,8 @@ final class PullRequestNewInlineCommentNotificationTest extends TestCase
         $this->assertEquals(
             <<<EOF
             User A commented on #14: PR title in path/to/file:
+
+            -Removed code
 
             Foo comment
             EOF,
@@ -87,6 +92,7 @@ final class PullRequestNewInlineCommentNotificationTest extends TestCase
             <<<EOF
             <p>
             <a href="https://example.com/users/usera">User A</a> commented on <a href="https://example.com/pr-link">#14</a>: PR title in path/to/file:</p>
+            <pre style="color:#555"><code>-Removed code</code></pre>
             <p>
                 Foo comment
             </p>

@@ -55,6 +55,10 @@ final class PullRequestNewInlineCommentContentPresenter
      * @var string
      */
     public $file_path;
+    /**
+     * @var string
+     */
+    public $code_context;
 
     public function __construct(
         string $change_user_display_name,
@@ -63,7 +67,8 @@ final class PullRequestNewInlineCommentContentPresenter
         string $pull_request_title,
         string $pull_request_url,
         string $inline_comment,
-        string $file_path
+        string $file_path,
+        string $code_context
     ) {
         $this->change_user_display_name = $change_user_display_name;
         $this->change_user_profile_url  = $change_user_profile_url;
@@ -72,5 +77,6 @@ final class PullRequestNewInlineCommentContentPresenter
         $this->pull_request_url         = $pull_request_url;
         $this->inline_comment           = $inline_comment;
         $this->file_path                = $file_path;
+        $this->code_context             = $code_context;
     }
 }

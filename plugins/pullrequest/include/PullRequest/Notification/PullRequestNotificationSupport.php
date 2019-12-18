@@ -45,7 +45,9 @@ use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentEvent;
 use Tuleap\PullRequest\Comment\Notification\PullRequestNewCommentNotificationToProcessBuilder;
 use Tuleap\PullRequest\Dao;
 use Tuleap\PullRequest\Factory;
+use Tuleap\PullRequest\FileUniDiffBuilder;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
+use Tuleap\PullRequest\InlineComment\Notification\InlineCommentCodeContextExtractor;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
 use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentNotificationToProcessBuilder;
 use Tuleap\PullRequest\Notification\Strategy\PullRequestNotificationSendMail;
@@ -315,6 +317,10 @@ final class PullRequestNotificationSupport
                                         )
                                     ),
                                     new TimelineDAO()
+                                ),
+                                new InlineCommentCodeContextExtractor(
+                                    new FileUniDiffBuilder(),
+                                    $git_repository_factory
                                 ),
                                 new FilterUserFromCollection(),
                                 \UserHelper::instance(),
