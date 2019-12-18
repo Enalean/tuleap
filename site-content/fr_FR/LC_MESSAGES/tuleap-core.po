@@ -178,6 +178,9 @@ msgstr "Administrateur"
 msgid "Administrators"
 msgstr "Administrateurs"
 
+msgid "Agile ALM"
+msgstr "ALM Agile"
+
 msgid "Agile Dashboard"
 msgstr "Agile Dashboard"
 
@@ -760,9 +763,15 @@ msgstr "Par défaut ?"
 msgid "Is used?"
 msgstr "Utilisé ?"
 
+msgid "Issues tracking"
+msgstr "Suivi des tickets"
+
 #, php-format
 msgid "JpGraph error for graph \"%s\": %s"
 msgstr "Erreur JpGraph pour le graphique \"%s\": %s"
+
+msgid "Kanban"
+msgstr "Kanban"
 
 msgid "Label"
 msgstr "Label"
@@ -827,6 +836,16 @@ msgid ""
 msgstr ""
 "Gérez vos projets en utilisant des epics et des user stories dans des "
 "releases et des sprints"
+
+msgid "Manage your project with Agile ALM tools through Scrum methodology"
+msgstr ""
+"Gérez votre projet avec les outils ALM Agile au travers de la méthodologie Scrum"
+
+msgid ""
+"Manage your project with Kanban and track task time and work-in-progress"
+msgstr ""
+"Gérez votre projet avec Kanban et suivez le temps des tâches et les travaux "
+"en cours"
 
 msgid "Massmail to project members is disabled."
 msgstr "L'envoi de mails vers les membres du projet est désactivé."
@@ -1455,6 +1474,13 @@ msgstr "Groupes système"
 
 msgid "Template used by project"
 msgstr "Patron utilisé par ce projet"
+
+msgid ""
+"Template used to create a project providing an issue tracking, the best way "
+"to start your project with Tuleap."
+msgstr ""
+"Patron utilisé pour créer un projet fournissant un outil de suivi des tickets, "
+"la meilleure façon pour démarrer votre projet avec Tuleap."
 
 msgid "Templates"
 msgstr "Patrons de projet"

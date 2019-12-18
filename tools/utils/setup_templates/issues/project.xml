@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="issuetracking" full-name="Issue Tracking" description="Template used to create a project providing an issue tracking, the best way to start your project with Tuleap." access="public">
+  <long-description></long-description>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="admin" enabled="1"/>
+    <service shortname="docman" enabled="1"/>
+    <service shortname="plugin_git" enabled="1"/>
+    <service shortname="plugin_tracker" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_admins" description="Project administrators">
+      <members />
+    </ugroup>
+    <ugroup name="project_members" description="Project members">
+      <members />
+    </ugroup>
+  </ugroups>
+</project>
