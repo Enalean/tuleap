@@ -21,7 +21,7 @@
     <div>
         <div class="release-content-description">
             <release-description-badges-tracker v-bind:release_data="release_data" />
-            <div class="release-chart-burndown-row">
+            <div v-if="burndown_exits" class="release-chart-burndown-row">
                 <h2 class="tlp-pane-subtitle" v-translate>Burndown</h2>
                 <burndown-chart v-bind:release_data="release_data" />
             </div>
@@ -54,5 +54,13 @@ import ReleaseButtonsDescription from "./ReleaseButtonsDescription.vue";
 export default class ReleaseDescription extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
+
+    get burndown_exits(): boolean {
+        if (!this.release_data.resources) {
+            return false;
+        }
+
+        return this.release_data.resources.burndown !== null;
+    }
 }
 </script>

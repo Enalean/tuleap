@@ -77,7 +77,8 @@ describe("ReleaseButtonsDescription", () => {
                         uri: "/taskboard/project/6",
                         identifier: "taskboard"
                     }
-                ]
+                ],
+                burndown: null
             }
         };
 
@@ -170,7 +171,8 @@ describe("ReleaseButtonsDescription", () => {
                         icon_name: "fa-random",
                         uri: "/project/random"
                     }
-                ]
+                ],
+                burndown: null
             }
         };
 
