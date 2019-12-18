@@ -2676,7 +2676,8 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 new HttpUserValidator()
             ),
             $this->getPermissionsManager(),
-            $this->getUserDao()
+            $this->getUserDao(),
+            new \Tuleap\Git\HTTP\GitHTTPAskBasicAuthenticationChallenge(),
         );
     }
 

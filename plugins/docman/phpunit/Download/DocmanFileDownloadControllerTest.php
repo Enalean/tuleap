@@ -120,7 +120,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
         $this->response_generator->shouldReceive('generateResponse')->andThrow(new VersionNotFoundException($docman_file, 1));
 
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessageRegExp('/version/');
+        $this->expectExceptionMessageMatches('/version/');
         $controller->handle($request);
     }
 

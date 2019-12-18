@@ -33,7 +33,7 @@ class HTTPAccessControlTest extends TestCase
         unset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
     }
 
-    public function testHTTPReplicationUserCanBeAuthenticated()
+    public function testHTTPReplicationUserCanBeAuthenticated(): void
     {
         $logger                              = \Mockery::mock(\Logger::class);
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
@@ -48,7 +48,8 @@ class HTTPAccessControlTest extends TestCase
             $user_login_manager,
             $replication_http_user_authenticator,
             $permissions_manager,
-            $user_dao
+            $user_dao,
+            new GitHTTPAskBasicAuthenticationChallenge()
         );
 
         $git_repository   = \Mockery::mock(\GitRepository::class);
@@ -68,7 +69,7 @@ class HTTPAccessControlTest extends TestCase
         $this->assertSame($expected_user, $authenticated_user);
     }
 
-    public function testTuleapUserCanBeAuthenticated()
+    public function testTuleapUserCanBeAuthenticated(): void
     {
         $logger                              = \Mockery::mock(\Logger::class);
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
@@ -83,7 +84,8 @@ class HTTPAccessControlTest extends TestCase
             $user_login_manager,
             $replication_http_user_authenticator,
             $permissions_manager,
-            $user_dao
+            $user_dao,
+            new GitHTTPAskBasicAuthenticationChallenge()
         );
 
         $git_repository   = \Mockery::mock(\GitRepository::class);
@@ -107,10 +109,7 @@ class HTTPAccessControlTest extends TestCase
         $this->assertSame($expected_user, $authenticated_user);
     }
 
-    /**
-     * @runInSeparateProcess
-     */
-    public function testAuthenticationIsDeniedWhenNoValidUserIsFound()
+    public function testAuthenticationIsDeniedWhenNoValidUserIsFound(): void
     {
         $logger                              = \Mockery::mock(\Logger::class);
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
@@ -118,6 +117,7 @@ class HTTPAccessControlTest extends TestCase
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
         $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
         $user_dao                            = \Mockery::mock(\UserDao::class);
+        $ask_basic_authentication_challenge  = \Mockery::mock(GitHTTPAskBasicAuthenticationChallenge::class);
 
         $http_access_control = new HTTPAccessControl(
             $logger,
@@ -125,7 +125,8 @@ class HTTPAccessControlTest extends TestCase
             $user_login_manager,
             $replication_http_user_authenticator,
             $permissions_manager,
-            $user_dao
+            $user_dao,
+            $ask_basic_authentication_challenge
         );
 
         $git_repository   = \Mockery::mock(\GitRepository::class);
@@ -141,15 +142,15 @@ class HTTPAccessControlTest extends TestCase
         $user_login_manager->shouldReceive('authenticate')->
             andThrows(\Mockery::spy(\User_LoginException::class));
 
-        $http_access_control->getUser($git_repository, $git_operation);
+        $ask_auth_throwable_test = new \RuntimeException('Thrown exception for test purposes');
+        $ask_basic_authentication_challenge->shouldReceive('askBasicAuthenticationChallenge')->andThrow($ask_auth_throwable_test);
 
-        $this->fail('The test should have exited to request a valid basic authentication');
+        $this->expectExceptionObject($ask_auth_throwable_test);
+
+        $http_access_control->getUser($git_repository, $git_operation);
     }
 
-    /**
-     * @runInSeparateProcess
-     */
-    public function testAuthenticationIsRequestedWhenEmptyCredentialIsGiven()
+    public function testAuthenticationIsRequestedWhenEmptyCredentialIsGiven(): void
     {
         $logger                              = \Mockery::mock(\Logger::class);
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
@@ -157,6 +158,7 @@ class HTTPAccessControlTest extends TestCase
         $replication_http_user_authenticator = \Mockery::mock(ReplicationHTTPUserAuthenticator::class);
         $permissions_manager                 = \Mockery::mock(PermissionsManager::class);
         $user_dao                            = \Mockery::mock(\UserDao::class);
+        $ask_basic_authentication_challenge  = \Mockery::mock(GitHTTPAskBasicAuthenticationChallenge::class);
 
         $http_access_control = new HTTPAccessControl(
             $logger,
@@ -164,7 +166,8 @@ class HTTPAccessControlTest extends TestCase
             $user_login_manager,
             $replication_http_user_authenticator,
             $permissions_manager,
-            $user_dao
+            $user_dao,
+            $ask_basic_authentication_challenge
         );
 
         $git_repository   = \Mockery::mock(\GitRepository::class);
@@ -176,12 +179,15 @@ class HTTPAccessControlTest extends TestCase
         $_SERVER['PHP_AUTH_USER'] = '';
         $_SERVER['PHP_AUTH_PW']   = '';
 
-        $http_access_control->getUser($git_repository, $git_operation);
+        $ask_auth_throwable_test = new \RuntimeException('Thrown exception for test purposes');
+        $ask_basic_authentication_challenge->shouldReceive('askBasicAuthenticationChallenge')->andThrow($ask_auth_throwable_test);
 
-        $this->fail('The test should have exited to request a valid basic authentication');
+        $this->expectExceptionObject($ask_auth_throwable_test);
+
+        $http_access_control->getUser($git_repository, $git_operation);
     }
 
-    public function testNoAuthenticationIsRequiredForAReadAccessOfPublicRepoOnAnInstanceAccessibleToAnonymous()
+    public function testNoAuthenticationIsRequiredForAReadAccessOfPublicRepoOnAnInstanceAccessibleToAnonymous(): void
     {
         $logger                              = \Mockery::mock(\Logger::class);
         $forge_access                        = \Mockery::mock(\ForgeAccess::class);
@@ -196,7 +202,8 @@ class HTTPAccessControlTest extends TestCase
             $user_login_manager,
             $replication_http_user_authenticator,
             $permissions_manager,
-            $user_dao
+            $user_dao,
+            new GitHTTPAskBasicAuthenticationChallenge()
         );
 
         $git_repository   = \Mockery::mock(\GitRepository::class);
