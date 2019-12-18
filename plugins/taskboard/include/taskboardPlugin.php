@@ -23,6 +23,7 @@ declare(strict_types=1);
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\REST\v1\AdditionalPanesForMilestoneEvent;
 use Tuleap\AgileDashboard\REST\v1\PaneInfoRepresentation;
+use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
@@ -140,7 +141,7 @@ class taskboardPlugin extends Plugin
             $collector->setActivePane(new TaskboardPane($pane_info));
         }
 
-        $collector->addPane($pane_info);
+        $collector->addPaneAfter(CardwallPaneInfo::IDENTIFIER, $pane_info);
     }
 
     private function getCardwallOnTopDao(): Cardwall_OnTop_Dao

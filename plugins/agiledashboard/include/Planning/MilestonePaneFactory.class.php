@@ -40,7 +40,7 @@ class Planning_MilestonePaneFactory
     public const PRELOAD_SUBMILESTONES_FIELDS = Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation::SLIM;
     public const PRELOAD_MILESTONE_FIELDS     = Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation::ALL_FIELDS;
 
-    /** @var PaneInfo[][] */
+    /** @var array<int, array<PaneInfo>> */
     private $list_of_pane_info = array();
 
     /** @var PaneInfo[] */
@@ -131,7 +131,11 @@ class Planning_MilestonePaneFactory
         $this->active_pane[$milestone->getArtifactId()] = null;
 
         $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getDetailsPaneInfo($milestone);
-        $this->list_of_pane_info[$milestone->getArtifactId()][] = $this->getPlanningV2PaneInfo($milestone);
+
+        $planning_v2_pane_info = $this->getPlanningV2PaneInfo($milestone);
+        if ($planning_v2_pane_info) {
+            $this->list_of_pane_info[$milestone->getArtifactId()][] = $planning_v2_pane_info;
+        }
 
         $this->buildAdditionnalPanes($milestone);
         $this->list_of_pane_info[$milestone->getArtifactId()] = array_values(array_filter($this->list_of_pane_info[$milestone->getArtifactId()]));
@@ -176,11 +180,11 @@ class Planning_MilestonePaneFactory
         $this->active_pane[$milestone->getArtifactId()] = $this->getDetailsPane($pane_info, $milestone);
     }
 
-    private function getPlanningV2PaneInfo(Planning_Milestone $milestone)
+    private function getPlanningV2PaneInfo(Planning_Milestone $milestone): ?PaneInfo
     {
         $submilestone_tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($milestone);
         if (! $submilestone_tracker) {
-            return;
+            return null;
         }
 
         $pane_info = $this->pane_info_factory->getPlanningV2PaneInfo($milestone);

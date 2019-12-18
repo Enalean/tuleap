@@ -83,7 +83,24 @@ class PaneInfoCollector implements Dispatchable
 
     public function addPane(PaneInfo $pane): void
     {
-        $this->panes[] = $pane;
+        $this->panes[$pane->getIdentifier()] = $pane;
+    }
+
+    public function addPaneAfter(string $sibling_identifier, PaneInfo $pane): void
+    {
+        $sibling_position = 0;
+        foreach ($this->panes as $sibling_pane) {
+            $sibling_position++;
+            if ($sibling_identifier === $sibling_pane->getIdentifier()) {
+                break;
+            }
+        }
+
+        $this->panes = array_merge(
+            array_slice($this->panes, 0, $sibling_position),
+            [ $pane->getIdentifier() => $pane ],
+            array_slice($this->panes, $sibling_position)
+        );
     }
 
     public function getActivePane(): ?AgileDashboard_Pane
