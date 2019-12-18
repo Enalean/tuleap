@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ .'/../../bootstrap.php';
+declare(strict_types=1);
 
-class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
@@ -45,27 +47,27 @@ class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase
         );
     }
 
-    public function itReturnsAnEmptyLabelWhenThereIsNoValueMapping()
+    public function testItReturnsAnEmptyLabelWhenThereIsNoValueMapping() : void
     {
         $value_mappings = array();
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $value_mappings, aSelectBoxField()->build());
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), array(), $value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
         $column = new Cardwall_Column(0, 'whatever', 'white');
-        $this->assertEqual('', $mapping->getSelectedValueLabel($column));
+        $this->assertEquals('', $mapping->getSelectedValueLabel($column));
     }
 
-    public function itReturnsAnEmptyLabelWhenThereIsNoMappingForTheGivenColumn()
+    public function testItReturnsAnEmptyLabelWhenThereIsNoMappingForTheGivenColumn() : void
     {
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $this->value_mappings, aSelectBoxField()->build());
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), array(), $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
         $column_which_match      = new Cardwall_Column(11, 'Ongoing', 'white');
         $column_which_dont_match = new Cardwall_Column(13, 'Ship It', 'white');
-        $this->assertEqual('In Progress', $mapping->getSelectedValueLabel($column_which_match));
-        $this->assertEqual('', $mapping->getSelectedValueLabel($column_which_dont_match));
-        $this->assertEqual('Accept a default value', $mapping->getSelectedValueLabel($column_which_dont_match, 'Accept a default value'));
+        $this->assertEquals('In Progress', $mapping->getSelectedValueLabel($column_which_match));
+        $this->assertEquals('', $mapping->getSelectedValueLabel($column_which_dont_match));
+        $this->assertEquals('Accept a default value', $mapping->getSelectedValueLabel($column_which_dont_match, 'Accept a default value'));
     }
 
-    public function itIsMappedToAColumnWhenTheStatusValueMatchColumnMapping()
+    public function testItIsMappedToAColumnWhenTheStatusValueMatchColumnMapping() : void
     {
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $this->value_mappings, aSelectBoxField()->build());
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), array(), $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
 
         $column = new Cardwall_Column(11, 'Ongoing', '');
 
@@ -75,9 +77,9 @@ class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase
         $this->assertFalse($mapping->isMappedTo($column, null));
     }
 
-    public function itIsMappedToAColumnWhenStatusIsNullAndNoneIsMappedToColumn()
+    public function testItIsMappedToAColumnWhenStatusIsNullAndNoneIsMappedToColumn() : void
     {
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $this->value_mappings, aSelectBoxField()->build());
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), array(), $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
 
         $column = new Cardwall_Column(10, 'Todo', '');
 
@@ -86,9 +88,9 @@ class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase
         $this->assertFalse($mapping->isMappedTo($column, 'In Progress'));
     }
 
-    public function itDoesntMapOnNoneIfItsNotExplicitlyConfigured()
+    public function testItDoesntMapOnNoneIfItsNotExplicitlyConfigured() : void
     {
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $this->value_mappings, aSelectBoxField()->build());
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), array(), $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
 
         $column  = new Cardwall_Column(100, 'None', '');
 

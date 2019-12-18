@@ -21,14 +21,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 namespace Tuleap\Cardwall\Semantic;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use XML_Security;
-
-require_once __DIR__ . '/../../../tests/bootstrap.php';
 
 class CardFieldXmlExtractorTest extends TestCase
 {

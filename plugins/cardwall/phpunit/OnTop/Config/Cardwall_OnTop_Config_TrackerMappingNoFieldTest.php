@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__ .'/../../bootstrap.php';
 
-class Cardwall_OnTop_Config_TrackerMappingNoFieldTest extends TuleapTestCase
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Cardwall_OnTop_Config_TrackerMappingNoFieldTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function itHasAnEmptyValueMappings()
+    public function testItHasAnEmptyValueMappings() : void
     {
-        $tracker          = aMockTracker()->build();
+        $tracker          = Mockery::mock(Tracker::class);
         $available_fields = array();
         $mapping = new Cardwall_OnTop_Config_TrackerMappingNoField($tracker, $available_fields);
-        $this->assertEqual(array(), $mapping->getValueMappings());
+        $this->assertEquals(array(), $mapping->getValueMappings());
     }
 
-    public function itsFieldIsNull()
+    public function testItsFieldIsNull() : void
     {
-        $tracker          = aMockTracker()->build();
+        $tracker          = Mockery::mock(Tracker::class);
         $available_fields = array();
         $mapping = new Cardwall_OnTop_Config_TrackerMappingNoField($tracker, $available_fields);
         $this->assertNull($mapping->getField());

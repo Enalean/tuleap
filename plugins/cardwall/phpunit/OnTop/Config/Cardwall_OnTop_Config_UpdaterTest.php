@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once __DIR__ .'/../../bootstrap.php';
 
-class Cardwall_OnTop_Config_UpdaterTest extends TuleapTestCase
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Cardwall_OnTop_Config_UpdaterTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function itScheduleExecuteOnCommands()
+    public function testItScheduleExecuteOnCommands(): void
     {
-        $request  = mock('Codendi_Request');
-        $c1       = mock('Cardwall_OnTop_Config_Command');
-        $c2       = mock('Cardwall_OnTop_Config_Command');
+        $request  = \Mockery::spy(\Codendi_Request::class);
+        $c1       = \Mockery::spy(\Cardwall_OnTop_Config_Command::class);
+        $c2       = \Mockery::spy(\Cardwall_OnTop_Config_Command::class);
         $updater  = new Cardwall_OnTop_Config_Updater();
         $updater->addCommand($c1);
         $updater->addCommand($c2);
 
-        stub($c1)->execute($request)->once();
-        stub($c2)->execute($request)->once();
+        $c1->shouldReceive('execute')->with($request)->once();
+        $c2->shouldReceive('execute')->with($request)->once();
 
         $updater->process($request);
     }
