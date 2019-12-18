@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\ProFTPd\Admin\PermissionsManager as ProftpdPermissionsManager;
 use Tuleap\ProFTPd\PermissionsPerGroup\ProftpdPermissionsPerGroupPresenterBuilder;
 use Tuleap\ProFTPd\Plugin\ProftpdPluginInfo;
@@ -127,7 +128,11 @@ class proftpdPlugin extends Plugin
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
+            $assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/proftpd/themes',
+                '/assets/proftpd/themes'
+            );
+            echo '<link rel="stylesheet" type="text/css" href="'.$assets->getFileURL('style.css').'" />'."\n";
         }
     }
 

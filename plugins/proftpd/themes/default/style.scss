@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,49 +18,50 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-div.sftp_directory_listing {
-    $header-background-color: #F6F6F6;
-    $header-border-color: #E9E9E9;
+div.sftp_directory_listing { /* stylelint-disable-line selector-no-qualifying-type,selector-class-pattern */
+    $header-background-color: #f6f6f6;
+    $header-border-color: #e9e9e9;
     $header-text-color: #686868;
-    $hover-background-color: #E6F2F9;
-    $hover-border-color: #D1E7F3;
+    $hover-background-color: #e6f2f9;
+    $hover-border-color: #d1e7f3;
     $header-hover-radius: 3px;
 
-    .nav {
+    .nav { /* stylelint-disable-line selector-no-qualifying-type */
         margin: 10px 0 0;
 
         li > i {
+            margin: 0 10px;
             font-size: 1.2em;
             font-weight: bold;
             line-height: 2.1em;
-            margin: 0 10px;
         }
     }
 
     table {
-        cursor: default;
         border-collapse: separate;
+        cursor: default;
 
         thead {
             background-color: $header-background-color;
 
             tr {
                 td {
-                    font-size: 0.85em;
                     padding: 4px 5px;
-                    color: $header-text-color;
                     border-top: 1px solid $header-border-color;
                     border-bottom: 1px solid $header-border-color;
+                    color: $header-text-color;
+                    font-size: .85em;
 
-                    &:first-child {
+                    &:first-child { /* stylelint-disable-line max-nesting-depth */
+                        border-left: 1px solid $header-border-color;
                         border-top-left-radius: $header-hover-radius;
                         border-bottom-left-radius: $header-hover-radius;
-                        border-left: 1px solid $header-border-color;
                     }
-                    &:last-child {
+
+                    &:last-child { /* stylelint-disable-line max-nesting-depth */
+                        border-right: 1px solid $header-border-color;
                         border-top-right-radius: $header-hover-radius;
                         border-bottom-right-radius: $header-hover-radius;
-                        border-right: 1px solid $header-border-color;
                     }
                 }
             }
@@ -69,53 +70,54 @@ div.sftp_directory_listing {
         tbody {
             tr {
                 td {
-                    background-color: #FFFFFF;
-                    border: 1px solid #FFFFFF;
+                    border: 1px solid #ffffff;
+                    background-color: #ffffff;
                 }
 
                 &:nth-child(2n) {
-                    td {
-                        background-color: #F9F9F9;
-                        border: 1px solid #F9F9F9;
+                    td { /* stylelint-disable-line max-nesting-depth */
+                        border: 1px solid #f9f9f9;
+                        background-color: #f9f9f9;
                     }
                 }
 
                 &:hover {
-                    td {
-                        background-color: $hover-background-color;
+                    td { /* stylelint-disable-line max-nesting-depth */
                         border-top: 1px solid $hover-border-color;
+                        border-right: 1px solid $hover-background-color;
                         border-bottom: 1px solid $hover-border-color;
                         border-left: 1px solid $hover-background-color;
-                        border-right: 1px solid $hover-background-color;
+                        background-color: $hover-background-color;
 
-                        &:first-child {
+                        &:first-child { /* stylelint-disable-line max-nesting-depth */
+                            border-left: 1px solid $hover-border-color;
                             border-top-left-radius: $header-hover-radius;
                             border-bottom-left-radius: $header-hover-radius;
-                            border-left: 1px solid $hover-border-color;
                         }
-                        &:last-child {
+
+                        &:last-child { /* stylelint-disable-line max-nesting-depth */
+                            border-right: 1px solid $hover-border-color;
                             border-top-right-radius: $header-hover-radius;
                             border-bottom-right-radius: $header-hover-radius;
-                            border-right: 1px solid $hover-border-color;
                         }
                     }
                 }
 
-                td {
+                td { /* stylelint-disable-line no-duplicate-selectors */
                     padding: 4px 25px 4px 5px;
 
-                    &:first-child {
+                    &:first-child { /* stylelint-disable-line max-nesting-depth */
                         min-width: 400px;
                     }
 
-                    .fa-folder {
-                        color: #58A8D7;
+                    .fa-folder { /* stylelint-disable-line max-nesting-depth,selector-max-compound-selectors,selector-no-qualifying-type */
+                        color: #58a8d7;
                     }
 
-                    a {
-                        color: #1F8BCA;
+                    a { /* stylelint-disable-line max-nesting-depth,selector-max-compound-selectors */
+                        color: #1f8bca;
 
-                        &:hover {
+                        &:hover { /* stylelint-disable-line max-nesting-depth,selector-max-compound-selectors */
                             text-decoration: none;
                         }
                     }
