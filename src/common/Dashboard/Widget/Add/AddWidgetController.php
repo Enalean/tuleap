@@ -209,10 +209,9 @@ class AddWidgetController
     {
         $categories = array();
         $widgets    = $this->factory->getWidgetsForOwnerType($dashboard_type);
-        foreach ($widgets as $widget_name) {
-            $widget = $this->factory->getInstanceByWidgetName($widget_name);
+        foreach ($widgets as $widget) {
             if ($widget && $widget->isAvailable()) {
-                $categories[$widget->getCategory()][$widget_name] = $widget;
+                $categories[$widget->getCategory()][$widget->getId()] = $widget;
             }
         }
 

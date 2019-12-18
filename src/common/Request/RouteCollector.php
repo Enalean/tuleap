@@ -46,6 +46,7 @@ use Tuleap\Admin\ProjectCreation\WebhooksUpdateController;
 use Tuleap\Admin\ProjectCreationModerationDisplayController;
 use Tuleap\Admin\ProjectCreationModerationUpdateController;
 use Tuleap\Admin\ProjectTemplatesController;
+use Tuleap\Admin\ProjectWidgetsConfigurationDisplayController;
 use Tuleap\admin\SiteContentCustomisationController;
 use Tuleap\Core\RSS\News\LatestNewsController;
 use Tuleap\Core\RSS\Project\LatestProjectController;
@@ -244,6 +245,11 @@ class RouteCollector
     public static function getProjectCreationVisibility()
     {
         return new ProjectVisibilityConfigDisplayController();
+    }
+
+    public static function getProjectConfigurationWidgets(): ProjectWidgetsConfigurationDisplayController
+    {
+        return new ProjectWidgetsConfigurationDisplayController();
     }
 
     public static function postProjectCreationVisibility()
@@ -684,6 +690,8 @@ class RouteCollector
 
             $r->get('/project-creation/visibility', [self::class, 'getProjectCreationVisibility']);
             $r->post('/project-creation/visibility', [self::class, 'postProjectCreationVisibility']);
+
+            $r->get('/project-creation/widgets', [self::class, 'getProjectConfigurationWidgets']);
 
             $r->get('/site-content-customisations', [self::class, 'getAdminSiteContentCustomisation']);
         });

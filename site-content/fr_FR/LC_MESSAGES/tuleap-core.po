@@ -262,6 +262,9 @@ msgstr "Demander à rejoindre"
 msgid "Ask to join this project"
 msgstr "Demander à rejoindre ce projet"
 
+msgid "Available?"
+msgstr "Disponible ?"
+
 msgid "Back"
 msgstr "Retour"
 
@@ -1952,6 +1955,9 @@ msgstr "Le widget a correctement été supprimé."
 
 msgid "Widgets"
 msgstr "Widgets"
+
+msgid "Widgets availability"
+msgstr "Disponibilité des widgets"
 
 msgid "Wiki"
 msgstr "Wiki"
