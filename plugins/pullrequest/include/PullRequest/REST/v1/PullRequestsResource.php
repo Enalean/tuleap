@@ -265,7 +265,7 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $dao = new \Tuleap\PullRequest\InlineComment\Dao();
-        $this->inline_comment_creator = new InlineCommentCreator($dao, $reference_manager);
+        $this->inline_comment_creator = new InlineCommentCreator($dao, $reference_manager, $event_dispatcher);
 
         $this->access_control_verifier = new AccessControlVerifier(
             new FineGrainedRetriever(new FineGrainedDao()),

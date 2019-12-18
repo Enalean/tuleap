@@ -24,6 +24,19 @@ use Tuleap\DB\DataAccessObject;
 
 class Dao extends DataAccessObject
 {
+    /**
+     * @psalm-return array{id:int,pull_request_id:int,user_id:int,post_date:int,file_path:string,unidiff_offset:int,content:string,is_outdated:0|1}|null
+     */
+    public function searchByID(int $inline_comment_id): ?array
+    {
+        return $this->getDB()->row(
+            'SELECT id, pull_request_id, user_id, post_date, file_path, unidiff_offset, content, is_outdated
+            FROM plugin_pullrequest_inline_comments
+            WHERE id = ?',
+            $inline_comment_id
+        );
+    }
+
     public function searchUpToDateByFilePath($pull_request_id, $file_path)
     {
         $sql = 'SELECT * FROM plugin_pullrequest_inline_comments
@@ -50,7 +63,7 @@ class Dao extends DataAccessObject
         return $this->getDB()->run($sql, $pull_request_id);
     }
 
-    public function insert($pull_request_id, $user_id, $file_path, $post_date, $unidiff_offset, $content, $position)
+    public function insert($pull_request_id, $user_id, $file_path, $post_date, $unidiff_offset, $content, $position): int
     {
         $this->getDB()->insert(
             'plugin_pullrequest_inline_comments',
@@ -65,7 +78,7 @@ class Dao extends DataAccessObject
             ]
         );
 
-        return $this->getDB()->lastInsertId();
+        return (int) $this->getDB()->lastInsertId();
     }
 
     public function updateComment($comment_id, $unidiff_offset, $is_outdated)
