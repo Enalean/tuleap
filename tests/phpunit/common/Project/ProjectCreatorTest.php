@@ -38,10 +38,10 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\GlobalSVNPollution;
 use Tuleap\Project\Admin\DescriptionFields\FieldUpdator;
+use Tuleap\Project\Admin\Service\ProjectServiceActivator;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
-use Tuleap\Service\ServiceCreator;
 use UserManager;
 
 /**
@@ -63,6 +63,10 @@ final class ProjectCreatorTest extends TestCase
      * @var ProjectCreator
      */
     public $creator;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectServiceActivator
+     */
+    private $service_updator;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FieldUpdator
      */
@@ -116,6 +120,7 @@ final class ProjectCreatorTest extends TestCase
         $this->label_dao                                  = Mockery::mock(LabelDao::class);
         $this->dashboard_duplicator                       = Mockery::mock(ProjectDashboardDuplicator::class);
         $this->field_updator                              = Mockery::mock(FieldUpdator::class);
+        $this->service_updator                            = Mockery::mock(ProjectServiceActivator::class);
     }
 
     public function testMandatoryDescriptionNotSetRaiseException(): void
@@ -199,7 +204,6 @@ final class ProjectCreatorTest extends TestCase
         $this->creator->shouldReceive('initFileModule')->once();
         $this->creator->shouldReceive('setProjectAdmin')->once();
         $this->creator->shouldReceive('fakeGroupIdIntoHTTPParams')->once();
-        $this->creator->shouldReceive('activateServicesFromTemplate')->once();
         $this->creator->shouldReceive('setMessageToRequesterFromTemplate')->once();
         $this->creator->shouldReceive('initForumModuleFromTemplate')->once();
         $this->creator->shouldReceive('initCVSModuleFromTemplate')->once();
@@ -226,6 +230,8 @@ final class ProjectCreatorTest extends TestCase
         $this->ugroup_duplicator->shouldReceive('duplicateOnProjectCreation')->once();
 
         $this->label_dao->shouldReceive('duplicateLabelsIfNeededBetweenProjectsId')->once();
+
+        $this->service_updator->shouldReceive('activateServicesFromTemplate')->once();
 
         $this->creator->shouldReceive('autoActivateProject')->once();
 
@@ -251,7 +257,6 @@ final class ProjectCreatorTest extends TestCase
         $this->creator->shouldReceive('initFileModule')->once();
         $this->creator->shouldReceive('setProjectAdmin')->once();
         $this->creator->shouldReceive('fakeGroupIdIntoHTTPParams')->once();
-        $this->creator->shouldReceive('activateServicesFromTemplate')->once();
         $this->creator->shouldReceive('setMessageToRequesterFromTemplate')->once();
         $this->creator->shouldReceive('initForumModuleFromTemplate')->once();
         $this->creator->shouldReceive('initCVSModuleFromTemplate')->once();
@@ -278,6 +283,8 @@ final class ProjectCreatorTest extends TestCase
         $this->ugroup_duplicator->shouldReceive('duplicateOnProjectCreation')->once();
 
         $this->label_dao->shouldReceive('duplicateLabelsIfNeededBetweenProjectsId')->once();
+
+        $this->service_updator->shouldReceive('activateServicesFromTemplate')->once();
 
         $this->creator->shouldReceive('autoActivateProject')->never();
 
@@ -305,7 +312,6 @@ final class ProjectCreatorTest extends TestCase
                 Mockery::mock(FRSPermissionCreator::class),
                 Mockery::mock(LicenseAgreementFactory::class),
                 $this->dashboard_duplicator,
-                Mockery::mock(ServiceCreator::class),
                 $this->label_dao,
                 new DefaultProjectVisibilityRetriever(),
                 $this->synchronized_project_membership_duplicator,
@@ -313,6 +319,7 @@ final class ProjectCreatorTest extends TestCase
                 $this->rule_project_full_name,
                 $this->event_manager,
                 $this->field_updator,
+                $this->service_updator,
                 $force_activation
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Project\Admin\Service\ProjectServiceActivator;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;
 use Tuleap\Project\XML\XMLFileContentRetriever;
@@ -96,7 +97,6 @@ class ProjectXMLImporterTest extends TestCase
             $frs_permissions_creator,
             M::spy(\Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory::class),
             M::spy(\Tuleap\Dashboard\Project\ProjectDashboardDuplicator::class),
-            M::spy(\Tuleap\Service\ServiceCreator::class),
             M::spy(\Tuleap\Project\Label\LabelDao::class),
             new DefaultProjectVisibilityRetriever(),
             M::spy(\Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator::class),
@@ -104,6 +104,7 @@ class ProjectXMLImporterTest extends TestCase
             new \Rule_ProjectFullName(),
             Mockery::mock(EventManager::class),
             Mockery::mock(\Tuleap\Project\Admin\DescriptionFields\FieldUpdator::class),
+            Mockery::mock(ProjectServiceActivator::class),
             false
         );
 

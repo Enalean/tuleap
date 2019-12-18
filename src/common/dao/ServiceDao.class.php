@@ -230,4 +230,21 @@ class ServiceDao extends DataAccessObject // phpcs:ignore PSR1.Classes.ClassDecl
 
         return $this->retrieve($sql);
     }
+
+    public function getServiceInfoQueryForNewProject(array $legacy, int $template_id)
+    {
+        $template_id      = $this->da->escapeInt($template_id);
+        $additional_where = '';
+
+        foreach ($legacy as $service_shortname => $legacy_service_usage) {
+            if (! $legacy_service_usage) {
+                $service_shortname =  $this->da->quoteSmart($service_shortname);
+                $additional_where  .= " AND short_name <> $service_shortname";
+            }
+        }
+
+        $sql = "SELECT * FROM service WHERE group_id=$template_id AND is_active=1 $additional_where";
+
+        return $this->retrieve($sql);
+    }
 }
