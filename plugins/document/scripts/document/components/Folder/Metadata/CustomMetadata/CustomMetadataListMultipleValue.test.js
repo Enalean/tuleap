@@ -142,7 +142,7 @@ describe("CustomMetadataListMultipleValue", () => {
         );
     });
 
-    it(`It DOES NOT renders the component when there is only one value allowed for the list`, () => {
+    it(`DOES NOT renders the component when there is only one value allowed for the list`, () => {
         store.state.metadata = {
             project_metadata_list: [
                 {
@@ -170,7 +170,7 @@ describe("CustomMetadataListMultipleValue", () => {
         expect(wrapper.vm.$data.project_metadata_list_possible_values).toEqual([]);
     });
 
-    it(`It does not render the component when type does not match`, () => {
+    it(`does not render the component when type does not match`, () => {
         store.state.metadata = {
             project_metadata_list: [
                 {
@@ -197,7 +197,7 @@ describe("CustomMetadataListMultipleValue", () => {
         expect(wrapper.contains("[data-test=document-custom-metadata-list-multiple]")).toBeFalsy();
     });
 
-    it(`It throws an event when list value is changed`, () => {
+    it(`throws an event when list value is changed`, () => {
         store.state.metadata = {
             project_metadata_list: [
                 {

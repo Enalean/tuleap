@@ -90,7 +90,7 @@ describe("Given a release widget", () => {
         );
     });
 
-    it("When the browser is IE11, Then an error message is displayed instead of the content ", async () => {
+    it("When the browser is IE11, Then an error message is displayed instead of the content", async () => {
         store_options = {
             state: {
                 is_loading: false,

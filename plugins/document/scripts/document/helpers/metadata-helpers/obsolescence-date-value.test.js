@@ -28,7 +28,7 @@ describe("getObsolescenceDateValueInput", () => {
         expect(null).toEqual(date_result);
     });
     it(`Given a "today" date value
-    Then the returned date should be the current date `, () => {
+    Then the returned date should be the current date`, () => {
         const expected_date = moment().format("YYYY-MM-DD");
         const date_result = getObsolescenceDateValueInput("today");
         expect(expected_date).toEqual(date_result);

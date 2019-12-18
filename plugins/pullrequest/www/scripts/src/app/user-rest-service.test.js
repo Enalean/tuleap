@@ -79,12 +79,9 @@ describe("UserRestService -", function() {
             const promise = wrapPromise(UserRestService.getUser(user_id));
             $httpBackend.flush();
 
-            expect.assertions(2);
-            try {
-                await promise;
-            } catch (e) {
-                expect(e.status).toEqual(403);
-            }
+            await expect(promise).rejects.toMatchObject({
+                status: 403
+            });
             expect(ErrorModalService.showError).toHaveBeenCalledWith(
                 expect.objectContaining({
                     status: 403,
@@ -123,12 +120,9 @@ describe("UserRestService -", function() {
             const promise = wrapPromise(UserRestService.getPreference(user_id, "preferred_color"));
             $httpBackend.flush();
 
-            expect.assertions(2);
-            try {
-                await promise;
-            } catch (e) {
-                expect(e.status).toEqual(403);
-            }
+            await expect(promise).rejects.toMatchObject({
+                status: 403
+            });
             expect(ErrorModalService.showError).toHaveBeenCalledWith(
                 expect.objectContaining({
                     status: 403,

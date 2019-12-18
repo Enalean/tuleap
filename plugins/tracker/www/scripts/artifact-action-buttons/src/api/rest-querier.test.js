@@ -37,7 +37,7 @@ describe("API querier", () => {
     });
 
     describe("getProjectList", () => {
-        it("it will get all project user is tracker admin of", async () => {
+        it("will get all project user is tracker admin of", async () => {
             const return_json = [
                 {
                     id: 102,

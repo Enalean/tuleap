@@ -32,21 +32,21 @@ function getWrapper(column: ColumnDefinition): Wrapper<CollapsedLabel> {
 }
 
 describe("CollapsedLabel", () => {
-    it(`It displays the label of the column`, () => {
+    it(`displays the label of the column`, () => {
         const column: ColumnDefinition = { label: "Done", is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column);
 
         expect(wrapper.text()).toBe("Done");
     });
 
-    it(`It displays the number of cards in column`, () => {
+    it(`displays the number of cards in column`, () => {
         const column: ColumnDefinition = { label: "Done", is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column);
 
         expect(wrapper.contains(CardsInColumnCount)).toBe(true);
     });
 
-    it(`It informs the mouseover when the column is collapsed`, () => {
+    it(`informs the mouseover when the column is collapsed`, () => {
         const column: ColumnDefinition = { label: "Done", is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column);
 
@@ -54,7 +54,7 @@ describe("CollapsedLabel", () => {
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseEntersColumn", column);
     });
 
-    it(`It does not inform the mouseover when the column is expanded`, () => {
+    it(`does not inform the mouseover when the column is expanded`, () => {
         const column: ColumnDefinition = { label: "Done", is_collapsed: false } as ColumnDefinition;
         const wrapper = getWrapper(column);
 
@@ -65,7 +65,7 @@ describe("CollapsedLabel", () => {
         );
     });
 
-    it(`It informs the mouseout when the column is collapsed`, () => {
+    it(`informs the mouseout when the column is collapsed`, () => {
         const column: ColumnDefinition = { label: "Done", is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column);
 
@@ -73,7 +73,7 @@ describe("CollapsedLabel", () => {
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseLeavesColumn", column);
     });
 
-    it(`It does not inform the mouseout when the column is expanded`, () => {
+    it(`does not inform the mouseout when the column is expanded`, () => {
         const column: ColumnDefinition = { label: "Done", is_collapsed: false } as ColumnDefinition;
         const wrapper = getWrapper(column);
 
@@ -84,7 +84,7 @@ describe("CollapsedLabel", () => {
         );
     });
 
-    it(`it expands the column when use click on the collapsed label`, () => {
+    it(`expands the column when use click on the collapsed label`, () => {
         const column: ColumnDefinition = { label: "Done", is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column);
 

@@ -41,7 +41,7 @@ describe("CardWithChildren", () => {
         });
     }
 
-    it(`It display cards`, () => {
+    it(`display cards`, () => {
         const tuleap_template: TemplateData = {
             title: "scrum",
             description: "scrum desc",
@@ -53,7 +53,7 @@ describe("CardWithChildren", () => {
         expect(wrapper.contains("[data-test=scrum-template-svg")).toBeTruthy();
     });
 
-    it(`It checks the input`, () => {
+    it(`checks the input`, () => {
         const tuleap_template: TemplateData = {
             title: "scrum",
             description: "scrum desc",
@@ -69,7 +69,7 @@ describe("CardWithChildren", () => {
         expect(radio.checked).toBe(true);
     });
 
-    it(`It stores the template when the template is choosen`, () => {
+    it(`stores the template when the template is choosen`, () => {
         const tuleap_template: TemplateData = {
             title: "scrum",
             description: "scrum desc",

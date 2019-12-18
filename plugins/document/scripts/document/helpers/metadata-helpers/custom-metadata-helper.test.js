@@ -20,7 +20,7 @@
 import { getCustomMetadata } from "./custom-metadata-helper.js";
 
 describe("getCustomMetadata", () => {
-    it("It only returns custom metadata", () => {
+    it("only returns custom metadata", () => {
         const metadata = [
             { short_name: "title" },
             { short_name: "description" },

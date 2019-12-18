@@ -158,24 +158,20 @@ describe(`file-upload-handler-factory`, () => {
                 it(`will call the Error callback with an UploadError`, async () => {
                     jest.spyOn(tlp_fetch, "post").mockReturnValue(Promise.reject({}));
 
-                    expect.assertions(4);
                     const handler = handlerFactory();
-                    try {
-                        await handler(file_upload_event);
-                    } catch (exception) {
-                        expect(options.onErrorCallback).toHaveBeenCalled();
-                        const [error] = options.onErrorCallback.mock.calls[0];
+                    await expect(handler(file_upload_event)).rejects.toBeDefined();
+                    expect(options.onErrorCallback).toHaveBeenCalled();
+                    const [error] = options.onErrorCallback.mock.calls[0];
 
-                        expect(error instanceof UploadError).toBe(
-                            true,
-                            "Expected error to be an UploadError"
-                        );
-                        expect(error.loader).toBe(
-                            loader,
-                            "Expected error.loader to be the file loader"
-                        );
-                        expect(loader.changeStatus).toHaveBeenCalledWith("error");
-                    }
+                    expect(error instanceof UploadError).toBe(
+                        true,
+                        "Expected error to be an UploadError"
+                    );
+                    expect(error.loader).toBe(
+                        loader,
+                        "Expected error.loader to be the file loader"
+                    );
+                    expect(loader.changeStatus).toHaveBeenCalledWith("error");
                 });
 
                 it(`when the error is translated, then it will show the translated error`, async () => {
@@ -187,14 +183,10 @@ describe(`file-upload-handler-factory`, () => {
                         }
                     });
 
-                    expect.assertions(2);
                     const handler = handlerFactory();
-                    try {
-                        await handler(file_upload_event);
-                    } catch (exception) {
-                        expect(loader.message).toEqual("Problème durant le téléversement");
-                        expect(loader.changeStatus).toHaveBeenCalledWith("error");
-                    }
+                    await expect(handler(file_upload_event)).rejects.toBeDefined();
+                    expect(loader.message).toEqual("Problème durant le téléversement");
+                    expect(loader.changeStatus).toHaveBeenCalledWith("error");
                 });
 
                 it(`when the error is not translated, then it will show its message`, async () => {
@@ -206,14 +198,10 @@ describe(`file-upload-handler-factory`, () => {
                         }
                     });
 
-                    expect.assertions(2);
                     const handler = handlerFactory();
-                    try {
-                        await handler(file_upload_event);
-                    } catch (exception) {
-                        expect(loader.message).toEqual("Untranslated error message");
-                        expect(loader.changeStatus).toHaveBeenCalledWith("error");
-                    }
+                    await expect(handler(file_upload_event)).rejects.toBeDefined();
+                    expect(loader.message).toEqual("Untranslated error message");
+                    expect(loader.changeStatus).toHaveBeenCalledWith("error");
                 });
             });
 
@@ -363,16 +351,12 @@ describe(`file-upload-handler-factory`, () => {
                                 }
                             };
 
-                            expect.assertions(2);
                             const handler = handlerFactory();
-                            try {
-                                await handler(file_upload_event);
-                            } catch (exception) {
-                                expect(loader.message).toEqual("Translated error message");
-                                expect(options.onErrorCallback).toHaveBeenCalledWith(
-                                    new UploadError(loader)
-                                );
-                            }
+                            await expect(handler(file_upload_event)).rejects.toBe(error);
+                            expect(loader.message).toEqual("Translated error message");
+                            expect(options.onErrorCallback).toHaveBeenCalledWith(
+                                new UploadError(loader)
+                            );
                         });
 
                         it(`when CKEditor has no dedicated httpError message,
@@ -384,34 +368,27 @@ describe(`file-upload-handler-factory`, () => {
                                 }
                             };
 
-                            expect.assertions(2);
                             const handler = handlerFactory();
-                            try {
-                                await handler(file_upload_event);
-                            } catch (exception) {
-                                expect(loader.message).toEqual("Error 500");
-                                expect(options.onErrorCallback).toHaveBeenCalledWith(
-                                    new UploadError(loader)
-                                );
-                            }
+                            await expect(handler(file_upload_event)).rejects.toBe(error);
+                            expect(loader.message).toEqual("Error 500");
+                            expect(options.onErrorCallback).toHaveBeenCalledWith(
+                                new UploadError(loader)
+                            );
                         });
 
                         it(`will mark the upload as failed in the loader`, async () => {
+                            error = { originalRequest: { status: 500 } };
                             loader.lang = {
                                 filetools: {
                                     httpError: ""
                                 }
                             };
-                            expect.assertions(2);
                             const handler = handlerFactory();
-                            try {
-                                await handler(file_upload_event);
-                            } catch (exception) {
-                                expect(loader.changeStatus).toHaveBeenCalledWith("error");
-                                expect(options.onErrorCallback).toHaveBeenCalledWith(
-                                    new UploadError(loader)
-                                );
-                            }
+                            await expect(handler(file_upload_event)).rejects.toBe(error);
+                            expect(loader.changeStatus).toHaveBeenCalledWith("error");
+                            expect(options.onErrorCallback).toHaveBeenCalledWith(
+                                new UploadError(loader)
+                            );
                         });
                     });
                 });

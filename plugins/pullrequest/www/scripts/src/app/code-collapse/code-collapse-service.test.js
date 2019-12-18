@@ -118,7 +118,7 @@ describe("code-collapse-service", () => {
     });
 
     describe("getCollapsibleSectionsSideBySide", () => {
-        it("Given a file of 24 lines having a deleted line on l.12, then it should return the different sections (right/left) for each side. ", () => {
+        it("Given a file of 24 lines having a deleted line on l.12, then it should return the different sections (right/left) for each side.", () => {
             const side_by_side_collapsible_sections = getCollapsibleSectionsSideBySide(
                 file_modifications,
                 []

@@ -64,7 +64,7 @@ describe("ItemProgressController -", () => {
             expect(ItemProgressController.getStyle()).toEqual({ width: "0%" });
         });
 
-        it("Given value is negative, then it returns width 0% ", () => {
+        it("Given value is negative, then it returns width 0%", () => {
             ItemProgressController.value = -1;
             ItemProgressController.max_value = 3;
 

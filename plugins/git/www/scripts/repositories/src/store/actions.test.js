@@ -238,27 +238,15 @@ describe("Store actions", () => {
             };
             mockFetchError(getRepositories, { error_json });
 
-            try {
-                await getAsyncRepositoryList(commit, getRepositories);
-            } catch (e) {
-                expect(commit).toHaveBeenCalledWith(
-                    "setErrorMessageType",
-                    ERROR_TYPE_UNKNOWN_ERROR
-                );
-            }
+            await expect(getAsyncRepositoryList(commit, getRepositories)).rejects.toBeDefined();
+            expect(commit).toHaveBeenCalledWith("setErrorMessageType", ERROR_TYPE_UNKNOWN_ERROR);
         });
 
         it("When something else happens (no response), then the unknown error will be committed", async () => {
             mockFetchError(getRepositories, { status: 500 });
 
-            try {
-                await getAsyncRepositoryList(commit, getRepositories);
-            } catch (e) {
-                expect(commit).toHaveBeenCalledWith(
-                    "setErrorMessageType",
-                    ERROR_TYPE_UNKNOWN_ERROR
-                );
-            }
+            await expect(getAsyncRepositoryList(commit, getRepositories)).rejects.toBeDefined();
+            expect(commit).toHaveBeenCalledWith("setErrorMessageType", ERROR_TYPE_UNKNOWN_ERROR);
         });
     });
 });

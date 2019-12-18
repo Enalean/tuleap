@@ -21,7 +21,7 @@ import * as mutations from "./mutations-upload.js";
 
 describe("Store mutations", () => {
     describe("addFileInUploadsList", () => {
-        it("it should add the file at the beggining of the upload list", () => {
+        it("should add the file at the beggining of the upload list", () => {
             const file = {
                 id: 5,
                 title: "tyty.txt"
@@ -49,7 +49,7 @@ describe("Store mutations", () => {
     });
 
     describe("removeFileFromUploadsList", () => {
-        it("it should remove file from the upload list", () => {
+        it("should remove file from the upload list", () => {
             const file = {
                 id: 5,
                 title: "tyty.txt"
@@ -75,7 +75,7 @@ describe("Store mutations", () => {
             ]);
         });
 
-        it("it should toggle parent has uploading file if all items are canceled", () => {
+        it("should toggle parent has uploading file if all items are canceled", () => {
             const file = {
                 id: 5,
                 title: "tyty.txt",
@@ -103,7 +103,7 @@ describe("Store mutations", () => {
     });
 
     describe("initializeFolderProperties", () => {
-        it("it should not do anything if folder is not found", () => {
+        it("should not do anything if folder is not found", () => {
             const folder = {
                 id: 5,
                 title: "toto.txt"
@@ -124,7 +124,7 @@ describe("Store mutations", () => {
             ]);
         });
 
-        it("it should add new watchable properties for folder", () => {
+        it("should add new watchable properties for folder", () => {
             const folder = {
                 id: 1,
                 title: "tutu.txt"
@@ -152,7 +152,7 @@ describe("Store mutations", () => {
     });
 
     describe("toggleCollapsedFolderHasUploadingContent", () => {
-        it("it should not do anything if folder is not found", () => {
+        it("should not do anything if folder is not found", () => {
             const folder = {
                 id: 5,
                 title: "toto.txt"
@@ -173,7 +173,7 @@ describe("Store mutations", () => {
             ]);
         });
 
-        it("it should toggle upload is done in a collapsed folder", () => {
+        it("should toggle upload is done in a collapsed folder", () => {
             const folder = {
                 id: 1,
                 title: "tutu.txt"
@@ -196,7 +196,7 @@ describe("Store mutations", () => {
     });
 
     describe("updateFolderProgressbar", () => {
-        it("it should not do anything if folder is not found", () => {
+        it("should not do anything if folder is not found", () => {
             const folder = {
                 id: 5,
                 title: "toto.txt"
@@ -217,7 +217,7 @@ describe("Store mutations", () => {
             ]);
         });
 
-        it("it should store the progress of folder by computing the progress of its children", () => {
+        it("should store the progress of folder by computing the progress of its children", () => {
             const folder = {
                 id: 1,
                 title: "tutu.txt"
@@ -239,7 +239,7 @@ describe("Store mutations", () => {
     });
 
     describe("resetFolderIsUploading", () => {
-        it("it should not do anything if folder is not found", () => {
+        it("should not do anything if folder is not found", () => {
             const folder = {
                 id: 5,
                 title: "toto.txt"
@@ -260,7 +260,7 @@ describe("Store mutations", () => {
             ]);
         });
 
-        it("it resets uploading properties of folder", () => {
+        it("resets uploading properties of folder", () => {
             const folder = {
                 id: 1,
                 title: "tutu.txt"
@@ -288,7 +288,7 @@ describe("Store mutations", () => {
     });
 
     describe("replaceFileWithNewVersion", () => {
-        it("it should override item properties with the uploaded ones", () => {
+        it("should override item properties with the uploaded ones", () => {
             const random_item = {
                 id: 1,
                 title: "tutu.txt",

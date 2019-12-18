@@ -42,7 +42,7 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
             });
         };
     });
-    describe(`Metadata name `, () => {
+    describe(`Metadata name`, () => {
         it(`Given an Obsolescence Date metadata
              Then it displays "Validity" for the label`, () => {
             const metadata_date = {
@@ -64,7 +64,7 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
         });
     });
 
-    describe(`List type metadata `, () => {
+    describe(`List type metadata`, () => {
         it(`Given a list value with several value
              Then it displays the list value in a ul tag`, () => {
             const metadata_list = {

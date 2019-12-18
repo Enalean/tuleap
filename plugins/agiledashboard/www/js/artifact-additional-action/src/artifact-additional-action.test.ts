@@ -136,73 +136,85 @@ describe("Artifact additional action", () => {
         return local_action;
     }
 
-    it("Adds the artifact into top backlog", done => {
-        const local_action = getLocalAddAction();
-        const spyPatch = jest.spyOn(fetch_wrapper, "patch");
-        mockFetchSuccess(spyPatch, {});
-        const spyClearFeedbacks = jest.spyOn(feedbacks, "clearAllFeedbacks");
-        const spyAddFeedback = jest.spyOn(feedbacks, "addFeedback");
+    it("Adds the artifact into top backlog", () => {
+        return new Promise(done => {
+            const local_action = getLocalAddAction();
+            const spyPatch = jest.spyOn(fetch_wrapper, "patch");
+            mockFetchSuccess(spyPatch, {});
+            const spyClearFeedbacks = jest.spyOn(feedbacks, "clearAllFeedbacks");
+            const spyAddFeedback = jest.spyOn(feedbacks, "addFeedback");
 
-        initArtifactAdditionalAction(local_action.document);
+            initArtifactAdditionalAction(local_action.document);
 
-        const current_button_title = local_action.title_element.textContent;
+            const current_button_title = local_action.title_element.textContent;
 
-        local_action.link_element.click();
+            local_action.link_element.click();
 
-        setImmediate(() => {
-            expect(spyClearFeedbacks).toHaveBeenCalled();
-            expect(spyAddFeedback).toHaveBeenCalledWith("info", expect.anything());
-            expect(spyPatch).toHaveBeenCalledWith(expect.anything(), {
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    add: [{ id: 201 }]
-                })
+            setImmediate(() => {
+                expect(spyClearFeedbacks).toHaveBeenCalled();
+                expect(spyAddFeedback).toHaveBeenCalledWith("info", expect.anything());
+                expect(spyPatch).toHaveBeenCalledWith(expect.anything(), {
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        add: [{ id: 201 }]
+                    })
+                });
+                expect(current_button_title).not.toBe(local_action.title_element.textContent);
+                expect(local_action.icon.classList.contains("fa-tlp-add-to-backlog")).toBe(false);
+                expect(local_action.icon.classList.contains("fa-tlp-remove-from-backlog")).toBe(
+                    true
+                );
+                done();
             });
-            expect(current_button_title).not.toBe(local_action.title_element.textContent);
-            expect(local_action.icon.classList.contains("fa-tlp-add-to-backlog")).toBe(false);
-            expect(local_action.icon.classList.contains("fa-tlp-remove-from-backlog")).toBe(true);
-            done();
         });
     });
 
-    it("Removes the artifact from the top backlog", done => {
-        const local_action = getLocalRemoveAction();
-        const spyPatch = jest.spyOn(fetch_wrapper, "patch");
-        mockFetchSuccess(spyPatch, {});
-        const spyClearFeedbacks = jest.spyOn(feedbacks, "clearAllFeedbacks");
-        const spyAddFeedback = jest.spyOn(feedbacks, "addFeedback");
+    it("Removes the artifact from the top backlog", () => {
+        return new Promise(done => {
+            const local_action = getLocalRemoveAction();
+            const spyPatch = jest.spyOn(fetch_wrapper, "patch");
+            mockFetchSuccess(spyPatch, {});
+            const spyClearFeedbacks = jest.spyOn(feedbacks, "clearAllFeedbacks");
+            const spyAddFeedback = jest.spyOn(feedbacks, "addFeedback");
 
-        initArtifactAdditionalAction(local_action.document);
+            initArtifactAdditionalAction(local_action.document);
 
-        const current_button_title = local_action.title_element.textContent;
+            const current_button_title = local_action.title_element.textContent;
 
-        local_action.link_element.click();
+            local_action.link_element.click();
 
-        setImmediate(() => {
-            expect(spyClearFeedbacks).toHaveBeenCalled();
-            expect(spyAddFeedback).toHaveBeenCalledWith("info", expect.anything());
-            expect(spyPatch).toHaveBeenCalledWith(expect.anything(), {
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    remove: [{ id: 201 }]
-                })
+            setImmediate(() => {
+                expect(spyClearFeedbacks).toHaveBeenCalled();
+                expect(spyAddFeedback).toHaveBeenCalledWith("info", expect.anything());
+                expect(spyPatch).toHaveBeenCalledWith(expect.anything(), {
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        remove: [{ id: 201 }]
+                    })
+                });
+                expect(current_button_title).not.toBe(local_action.title_element.textContent);
+                expect(local_action.icon.classList.contains("fa-tlp-add-to-backlog")).toBe(true);
+                expect(local_action.icon.classList.contains("fa-tlp-remove-from-backlog")).toBe(
+                    false
+                );
+                done();
             });
-            expect(current_button_title).not.toBe(local_action.title_element.textContent);
-            expect(local_action.icon.classList.contains("fa-tlp-add-to-backlog")).toBe(true);
-            expect(local_action.icon.classList.contains("fa-tlp-remove-from-backlog")).toBe(false);
-            done();
         });
     });
 
-    it("Deals with error when trying to add the artifact into the top backlog", done => {
-        testActionErrorManagement(getLocalAddAction(), done);
+    it("Deals with error when trying to add the artifact into the top backlog", () => {
+        return new Promise(done => {
+            testActionErrorManagement(getLocalAddAction(), done);
+        });
     });
 
-    it("Deals with error when trying to remove the artifact from the top backlog", done => {
-        testActionErrorManagement(getLocalRemoveAction(), done);
+    it("Deals with error when trying to remove the artifact from the top backlog", () => {
+        return new Promise(done => {
+            testActionErrorManagement(getLocalRemoveAction(), done);
+        });
     });
 
-    function testActionErrorManagement(local_action: LocalAction, done: jest.DoneCallback): void {
+    function testActionErrorManagement(local_action: LocalAction, done: () => void): void {
         const spyPatch = jest.spyOn(fetch_wrapper, "patch");
         mockFetchError(spyPatch, {});
         const spyClearFeedbacks = jest.spyOn(feedbacks, "clearAllFeedbacks");

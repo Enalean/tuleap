@@ -76,7 +76,7 @@ describe("UpdateFolderMetadataModal", () => {
             hide: () => {}
         });
     });
-    describe("Events received by the modal - ", () => {
+    describe("Events received by the modal -", () => {
         it(`Receives the metadata-recursion-metadata-list event,
        Then the metadata_list_to_update  data is updated`, () => {
             const item = {

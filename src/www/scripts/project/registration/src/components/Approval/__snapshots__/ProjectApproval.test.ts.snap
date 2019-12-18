@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ProjectApproval -  Spawns the ProjectApproval component 1`] = `
+exports[`ProjectApproval - Spawns the ProjectApproval component 1`] = `
 <div class="empty-page">
   <div class="empty-page-illustration">
     <project-approval-svg-stub></project-approval-svg-stub>

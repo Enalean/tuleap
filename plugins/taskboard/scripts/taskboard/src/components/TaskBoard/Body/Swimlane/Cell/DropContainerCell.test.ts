@@ -64,7 +64,7 @@ describe("DropContainerCell", () => {
         expect(wrapper.contains(".my-slot-content")).toBe(false);
     });
 
-    it(`It informs the mouseenter when the column is collapsed`, () => {
+    it(`informs the mouseenter when the column is collapsed`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column);
 
@@ -72,7 +72,7 @@ describe("DropContainerCell", () => {
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseEntersColumn", column);
     });
 
-    it(`It does not inform the mouseenter when the column is expanded`, () => {
+    it(`does not inform the mouseenter when the column is expanded`, () => {
         const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
         const wrapper = getWrapper(column);
 
@@ -80,7 +80,7 @@ describe("DropContainerCell", () => {
         expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
     });
 
-    it(`It informs the mouseout when the column is collapsed`, () => {
+    it(`informs the mouseout when the column is collapsed`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column);
 
@@ -88,7 +88,7 @@ describe("DropContainerCell", () => {
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseLeavesColumn", column);
     });
 
-    it(`It does not inform the mouseout when the column is expanded`, () => {
+    it(`does not inform the mouseout when the column is expanded`, () => {
         const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
         const wrapper = getWrapper(column);
 
@@ -96,7 +96,7 @@ describe("DropContainerCell", () => {
         expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
     });
 
-    it(`it expands the column when user clicks on the collapsed column cell`, () => {
+    it(`expands the column when user clicks on the collapsed column cell`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column);
 
@@ -104,7 +104,7 @@ describe("DropContainerCell", () => {
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("column/expandColumn", column);
     });
 
-    it(`it does not expand the column when user clicks on the expanded column cell`, () => {
+    it(`does not expand the column when user clicks on the expanded column cell`, () => {
         const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
         const wrapper = getWrapper(column);
 

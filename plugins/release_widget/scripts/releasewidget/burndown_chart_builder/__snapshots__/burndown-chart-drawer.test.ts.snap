@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`BurndownChartDrawer -  createBurndownChart -  When the chart is created, Then there are a G element and 2 lines scale 1`] = `
+exports[`BurndownChartDrawer - createBurndownChart - When the chart is created, Then there are a G element and 2 lines scale 1`] = `
 <svg
   id="chart-100"
 >

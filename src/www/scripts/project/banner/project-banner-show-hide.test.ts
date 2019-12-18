@@ -82,12 +82,9 @@ describe("Show and hide project banner", () => {
 
         local_document.close_button.removeAttribute("data-user-id");
 
-        try {
+        expect(() => {
             allowToHideAndShowProjectBanner(local_document.document, getTlpPatchSpy());
-        } catch (e) {
-            expect(e).toBeDefined();
-        }
-        expect.hasAssertions();
+        }).toThrow();
     });
 
     it("Throws an error when the close button does not know the project ID", () => {
@@ -95,12 +92,9 @@ describe("Show and hide project banner", () => {
 
         local_document.close_button.removeAttribute("data-project-id");
 
-        try {
+        expect(() => {
             allowToHideAndShowProjectBanner(local_document.document, getTlpPatchSpy());
-        } catch (e) {
-            expect(e).toBeDefined();
-        }
-        expect.hasAssertions();
+        }).toThrow();
     });
 
     it("Can hide and show the project banner", () => {

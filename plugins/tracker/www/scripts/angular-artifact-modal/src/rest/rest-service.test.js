@@ -296,7 +296,7 @@ describe("rest-service", () => {
     });
 
     describe("getUserPreference() -", () => {
-        it(" Given a key, when I search for a preference, then a promise will be resolved with an object of user preference representation", async () => {
+        it("Given a key, when I search for a preference, then a promise will be resolved with an object of user preference representation", async () => {
             const return_json = {
                 key: "tracker_comment_invertorder_93",
                 value: "1"

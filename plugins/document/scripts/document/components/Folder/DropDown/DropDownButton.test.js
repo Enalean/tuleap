@@ -35,7 +35,7 @@ describe("DropDownButton", () => {
 
     it(`Given drop down button is appended (aka user has write permissions)
         When we display the button
-        Then it should display the button action and the dropdown option ( | update | v |) `, () => {
+        Then it should display the button action and the dropdown option ( | update | v |)`, () => {
         const wrapper = dropdown_factory({ isAppended: true, isInQuickLookMode: false });
 
         expect(wrapper.contains(".tlp-append")).toBeTruthy();

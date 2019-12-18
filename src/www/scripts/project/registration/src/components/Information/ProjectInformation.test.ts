@@ -34,7 +34,7 @@ import VueRouter from "vue-router";
 import * as location_helper from "../../helpers/location-helper";
 import { Store } from "vuex-mock-store";
 
-describe("ProjectInformation - ", () => {
+describe("ProjectInformation -", () => {
     let factory: Wrapper<ProjectInformation>, router: VueRouter, store: Store;
     beforeEach(async () => {
         const state: State = {
@@ -151,7 +151,7 @@ describe("ProjectInformation - ", () => {
         expect(wrapper.vm.$route.name).toBe("template");
     });
 
-    describe("TroveCatProperties update - ", () => {
+    describe("TroveCatProperties update -", () => {
         it("build the trovecat object", () => {
             const wrapper = factory;
             expect(wrapper.vm.$data.trove_cats).toStrictEqual([]);
@@ -335,7 +335,7 @@ describe("ProjectInformation - ", () => {
         expect(factory.vm.$route.name).toBe("approval");
     });
 
-    describe("Field list update - ", () => {
+    describe("Field list update -", () => {
         it("build the field list object", () => {
             const wrapper = factory;
             expect(wrapper.vm.$data.field_list).toStrictEqual([]);

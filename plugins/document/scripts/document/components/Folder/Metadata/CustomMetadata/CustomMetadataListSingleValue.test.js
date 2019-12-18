@@ -104,7 +104,7 @@ describe("CustomMetadataList", () => {
         expect(input.element.required).toBe(true);
     });
 
-    it(`It does not render the component when type does not match`, () => {
+    it(`does not render the component when type does not match`, () => {
         store.state.metadata = {
             project_metadata_list: [
                 {
@@ -126,7 +126,7 @@ describe("CustomMetadataList", () => {
         expect(wrapper.contains("[data-test=document-custom-metadata-list]")).toBeFalsy();
     });
 
-    it(`It does not render the component when list is multiple`, () => {
+    it(`does not render the component when list is multiple`, () => {
         store.state.metadata = {
             project_metadata_list: [
                 {

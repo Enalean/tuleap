@@ -50,7 +50,7 @@ describe("ErrorModal", () => {
         });
     }
 
-    it("it warns user that something is wrong with a button to show details", () => {
+    it("warns user that something is wrong with a button to show details", () => {
         const actual_tlp = jest.requireActual("tlp");
         jest.spyOn(tlp, "modal").mockImplementation(actual_tlp.modal);
         const wrapper = createWrapper("Full error message with details");
@@ -68,7 +68,7 @@ describe("ErrorModal", () => {
         expect(modal_show).toHaveBeenCalledTimes(1);
     });
 
-    it("it display more details when user click on show error", () => {
+    it("display more details when user click on show error", () => {
         const error_message = "Full error message with details";
         const wrapper = createWrapper(error_message);
 
@@ -78,7 +78,7 @@ describe("ErrorModal", () => {
         expect(details.text()).toEqual(error_message);
     });
 
-    it("it warns user that something is wrong without any details", () => {
+    it("warns user that something is wrong without any details", () => {
         const wrapper = createWrapper("");
         expect(wrapper.find("[data-test=show-details]").exists()).toBe(false);
         expect(wrapper.find("[data-test=details]").exists()).toBe(false);

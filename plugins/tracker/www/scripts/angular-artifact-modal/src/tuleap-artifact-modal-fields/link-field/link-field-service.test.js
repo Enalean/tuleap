@@ -71,7 +71,7 @@ describe("TuleapArtifactModalParentService -", () => {
             expect(result).toBe(false);
         });
 
-        it("Given a parent tracker and a linked_artifact that is malformed, then it will return false ", function() {
+        it("Given a parent tracker and a linked_artifact that is malformed, then it will return false", function() {
             const tracker = { id: 22 };
             const linked_artifact = {
                 artifact: {

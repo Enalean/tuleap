@@ -69,7 +69,7 @@ describe("ReleaseDescription", () => {
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("When there is a description, Then there is a tooltip to show the whole description ", async () => {
+    it("When there is a description, Then there is a tooltip to show the whole description", async () => {
         const description =
             "This is a big description, so I write some things, stuff, foo, bar. This is a big description, so I write some things, stuff, foo, bar.";
 

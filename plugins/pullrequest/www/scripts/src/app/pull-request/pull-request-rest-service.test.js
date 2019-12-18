@@ -92,12 +92,9 @@ describe("PullRequestRestService -", function() {
             var promise = wrapPromise(PullRequestRestService.getPullRequest(pull_request_id));
             $httpBackend.flush();
 
-            expect.assertions(2);
-            try {
-                await promise;
-            } catch (e) {
-                expect(e.status).toEqual(403);
-            }
+            await expect(promise).rejects.toMatchObject({
+                status: 403
+            });
             expect(ErrorModalService.showError).toHaveBeenCalledWith(
                 expect.objectContaining({
                     status: 403,

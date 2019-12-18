@@ -80,8 +80,8 @@ describe("DroppedService", () => {
         };
     });
 
-    describe("defineComparedTo() - ", function() {
-        describe("when only one element is dragged, ", function() {
+    describe("defineComparedTo() -", function() {
+        describe("when only one element is dragged,", function() {
             var dragged_item = { id: 4 };
             var dropped_items = [{ id: 4 }];
 
@@ -110,7 +110,7 @@ describe("DroppedService", () => {
             });
         });
 
-        describe("when multiple elements are dragged, ", function() {
+        describe("when multiple elements are dragged,", function() {
             var dragged_item = { id: 5 };
             var dropped_items = [{ id: 2 }, { id: 5 }];
 
@@ -140,7 +140,7 @@ describe("DroppedService", () => {
         });
     });
 
-    describe("defineComparedToBeFirstItem() - ", function() {
+    describe("defineComparedToBeFirstItem() -", function() {
         it("should return before the first item", function() {
             var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
             var moved_items = [{ id: 2 }, { id: 5 }];
@@ -171,7 +171,7 @@ describe("DroppedService", () => {
         });
     });
 
-    describe("defineComparedToBeLastItem() - ", function() {
+    describe("defineComparedToBeLastItem() -", function() {
         it("should return after the last item", function() {
             var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
             var moved_items = [{ id: 2 }, { id: 5 }];

@@ -173,7 +173,7 @@ describe("LinkFieldController -", () => {
             LinkFieldController.$onInit();
         });
 
-        it("it will return the first linked reverse _is_child artifact", async () => {
+        it("will return the first linked reverse _is_child artifact", async () => {
             LinkFieldController.artifact_id = 82;
             const parent_artifact = { id: 45 };
             getFirstReverseIsChildLink.mockReturnValue($q.when([parent_artifact]));
@@ -197,7 +197,7 @@ describe("LinkFieldController -", () => {
     });
 
     describe("loadParentArtifactsTitle() -", () => {
-        it("it will load all the possible parent artifacts and assign them to the controller, formatted", async () => {
+        it("will load all the possible parent artifacts and assign them to the controller, formatted", async () => {
             LinkFieldController.tracker = {
                 id: 37
             };

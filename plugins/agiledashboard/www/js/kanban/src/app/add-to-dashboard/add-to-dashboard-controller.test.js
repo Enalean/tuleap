@@ -28,7 +28,7 @@ describe("AddToDashboardController -", () => {
     });
 
     describe("showDashboardButton() -", () => {
-        it("displays the button for a non project admin because the user has two personal dashboards ", () => {
+        it("displays the button for a non project admin because the user has two personal dashboards", () => {
             AddToDashboardCtrl.dashboard_dropdown.user_dashboards = [
                 {
                     id: "10",
@@ -46,7 +46,7 @@ describe("AddToDashboardController -", () => {
             expect(showButton).toBe(true);
         });
 
-        it("displays the button for a project admin because the user has at least two project dashboards ", () => {
+        it("displays the button for a project admin because the user has at least two project dashboards", () => {
             AddToDashboardCtrl.dashboard_dropdown.project_dashboards = [
                 {
                     id: "20",
@@ -64,7 +64,7 @@ describe("AddToDashboardController -", () => {
             expect(showButton).toBe(true);
         });
 
-        it("displays the button for a project admin because the user admin has at least two personal dashboards ", () => {
+        it("displays the button for a project admin because the user admin has at least two personal dashboards", () => {
             AddToDashboardCtrl.dashboard_dropdown.user_dashboards = [
                 {
                     id: "10",

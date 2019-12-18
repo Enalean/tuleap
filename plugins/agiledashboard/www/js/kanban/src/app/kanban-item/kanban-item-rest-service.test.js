@@ -66,21 +66,17 @@ describe("KanbanItemRestService -", function() {
                 $q.reject({ data: { error: 404, message: "Error" } })
             );
 
-            var promise = KanbanItemRestService.getItem(410);
+            const promise = KanbanItemRestService.getItem(410);
 
-            expect.assertions(1);
-            try {
-                await wrapPromise(promise);
-            } catch (e) {
-                expect(RestErrorService.reload).toHaveBeenCalledWith(
-                    expect.objectContaining({
-                        data: {
-                            error: 404,
-                            message: "Error"
-                        }
-                    })
-                );
-            }
+            await expect(wrapPromise(promise)).rejects.toBe(undefined);
+            expect(RestErrorService.reload).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    data: {
+                        error: 404,
+                        message: "Error"
+                    }
+                })
+            );
         });
     });
 });

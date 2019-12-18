@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`GlobalAppError it warns user that something is wrong with a button to show details 1`] = `
+exports[`GlobalAppError warns user that something is wrong with a button to show details 1`] = `
 <div
   class="empty-page taskboard-error"
 >

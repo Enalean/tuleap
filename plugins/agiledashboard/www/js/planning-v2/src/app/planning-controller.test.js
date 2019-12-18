@@ -5,7 +5,7 @@ import "angular-mocks";
 import planning_module from "./app.js";
 import BaseController from "./planning-controller.js";
 
-describe("PlanningController - ", () => {
+describe("PlanningController -", () => {
     let $scope,
         $filter,
         $controller,

@@ -38,7 +38,7 @@ describe("DropDownMenu", () => {
         store.getters.is_item_an_empty_document = () => false;
     });
 
-    describe("Approval table menu option - ", () => {
+    describe("Approval table menu option -", () => {
         it(`Given item type is empty
             When we display the menu
             Then the approval table link should not be available`, () => {

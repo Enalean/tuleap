@@ -4,7 +4,7 @@ import "angular-mocks";
 import BaseController from "./app-kanban-controller.js";
 import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
 
-describe("KanbanCtrl - ", function() {
+describe("KanbanCtrl -", function() {
     let $rootScope,
         $scope,
         $controller,

@@ -78,7 +78,7 @@ async function startUpload(loader, onErrorCallback) {
         }
 
         try {
-            handleException(loader, exception);
+            await handleException(loader, exception);
         } finally {
             loader.changeStatus("error");
         }

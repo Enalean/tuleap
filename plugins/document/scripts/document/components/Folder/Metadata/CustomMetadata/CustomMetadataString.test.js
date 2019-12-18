@@ -32,7 +32,7 @@ describe("CustomMetadataString", () => {
         };
     });
 
-    it(`It renders an input with a required value`, () => {
+    it(`renders an input with a required value`, () => {
         const currentlyUpdatedItemMetadata = {
             value: "string value",
             is_required: true,
@@ -47,7 +47,7 @@ describe("CustomMetadataString", () => {
         expect(wrapper.contains("[data-test=document-custom-metadata-is-required]")).toBeTruthy();
     });
 
-    it(`It renders an input with an empty value`, () => {
+    it(`renders an input with an empty value`, () => {
         const currentlyUpdatedItemMetadata = {
             value: "",
             is_required: false,
@@ -62,7 +62,7 @@ describe("CustomMetadataString", () => {
         expect(wrapper.contains("[data-test=document-custom-metadata-is-required]")).toBeFalsy();
     });
 
-    it(`It does not render the component when type does not match`, () => {
+    it(`does not render the component when type does not match`, () => {
         const currentlyUpdatedItemMetadata = {
             value: "",
             is_required: false,

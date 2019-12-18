@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`LinkCellTitle It should render link title 1`] = `
+exports[`LinkCellTitle should render link title 1`] = `
 <div>
   <fake-caret-stub
     item="[object Object]"

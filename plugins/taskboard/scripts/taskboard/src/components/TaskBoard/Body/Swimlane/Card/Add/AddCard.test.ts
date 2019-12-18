@@ -54,7 +54,7 @@ describe("AddCard", () => {
         expect(wrapper.contains(AddButton)).toBe(true);
     });
 
-    it("Given the button is clicked, Then it hides the button and show the editor ", () => {
+    it("Given the button is clicked, Then it hides the button and show the editor", () => {
         const wrapper = getWrapper();
 
         wrapper.find(AddButton).vm.$emit("click");
@@ -79,8 +79,7 @@ describe("AddCard", () => {
     it(`Given the editor is displayed,
         And the user hits enter,
         Then the card is saved
-        And the editor is cleared to enter a new card.
-        `, () => {
+        And the editor is cleared to enter a new card`, () => {
         const wrapper = getWrapper();
 
         wrapper.find(AddButton).vm.$emit("click");
@@ -107,8 +106,7 @@ describe("AddCard", () => {
     it(`Given the editor is displayed,
         And the user clicks on the save button,
         Then the card is saved
-        And the editor is cleared to enter a new card.
-        `, () => {
+        And the editor is cleared to enter a new card`, () => {
         const wrapper = getWrapper();
 
         wrapper.find(AddButton).vm.$emit("click");

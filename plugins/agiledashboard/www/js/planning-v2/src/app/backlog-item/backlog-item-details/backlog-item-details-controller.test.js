@@ -135,7 +135,7 @@ describe("BacklogItemDetailsController -", function() {
         });
     });
 
-    describe("canBeAddedToBacklogItemChildren() - ", function() {
+    describe("canBeAddedToBacklogItemChildren() -", function() {
         it("Given that the current backlog item had no child, it appends the newly created child", function() {
             BacklogItemDetailsController.backlog_item = {
                 has_children: false,

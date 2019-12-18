@@ -25,7 +25,7 @@ import { State } from "../../store/type";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
 import VueRouter from "vue-router";
 
-describe("ProjectApproval - ", () => {
+describe("ProjectApproval -", () => {
     let factory: Wrapper<ProjectApproval>, router: VueRouter;
     beforeEach(async () => {
         const state: State = {

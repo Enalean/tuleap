@@ -25,64 +25,68 @@ jest.mock("tlp");
 
 describe("API querier", () => {
     describe("getRepositoryList", () => {
-        it("Given a project id and a callback, then it will recursively get all project repositories and call the callback for each batch", done => {
-            const repositories = [{ id: 37 }, { id: 91 }];
-            const tlpRecursiveGet = jest
-                .spyOn(tlp, "recursiveGet")
-                .mockImplementation((route, config) =>
-                    config.getCollectionCallback({ repositories })
+        it("Given a project id and a callback, then it will recursively get all project repositories and call the callback for each batch", () => {
+            return new Promise(done => {
+                const repositories = [{ id: 37 }, { id: 91 }];
+                const tlpRecursiveGet = jest
+                    .spyOn(tlp, "recursiveGet")
+                    .mockImplementation((route, config) =>
+                        config.getCollectionCallback({ repositories })
+                    );
+
+                function displayCallback(result) {
+                    expect(result).toEqual(repositories);
+                    done();
+                }
+                const project_id = 27;
+
+                getRepositoryList(project_id, "push_date", displayCallback);
+
+                expect(tlpRecursiveGet).toHaveBeenCalledWith(
+                    "/api/projects/27/git",
+                    expect.objectContaining({
+                        params: {
+                            query: '{"scope":"project"}',
+                            order_by: "push_date",
+                            limit: 50,
+                            offset: 0
+                        }
+                    })
                 );
-
-            function displayCallback(result) {
-                expect(result).toEqual(repositories);
-                done();
-            }
-            const project_id = 27;
-
-            getRepositoryList(project_id, "push_date", displayCallback);
-
-            expect(tlpRecursiveGet).toHaveBeenCalledWith(
-                "/api/projects/27/git",
-                expect.objectContaining({
-                    params: {
-                        query: '{"scope":"project"}',
-                        order_by: "push_date",
-                        limit: 50,
-                        offset: 0
-                    }
-                })
-            );
+            });
         });
     });
 
     describe("getForkedRepositoryList", () => {
-        it("Given a project id, an owner id and a callback, then it will recursively get all forks and call the callback for each batch", done => {
-            const repositories = [{ id: 88 }, { id: 57 }];
-            const tlpRecursiveGet = jest
-                .spyOn(tlp, "recursiveGet")
-                .mockImplementation((route, config) =>
-                    config.getCollectionCallback({ repositories })
+        it("Given a project id, an owner id and a callback, then it will recursively get all forks and call the callback for each batch", () => {
+            return new Promise(done => {
+                const repositories = [{ id: 88 }, { id: 57 }];
+                const tlpRecursiveGet = jest
+                    .spyOn(tlp, "recursiveGet")
+                    .mockImplementation((route, config) =>
+                        config.getCollectionCallback({ repositories })
+                    );
+                function displayCallback(result) {
+                    expect(result).toEqual(repositories);
+                    done();
+                }
+                const project_id = 5;
+                const owner_id = "477";
+
+                getForkedRepositoryList(project_id, owner_id, "push_date", displayCallback);
+
+                expect(tlpRecursiveGet).toHaveBeenCalledWith(
+                    "/api/projects/5/git",
+                    expect.objectContaining({
+                        params: {
+                            query: '{"scope":"individual","owner_id":477}',
+                            order_by: "push_date",
+                            limit: 50,
+                            offset: 0
+                        }
+                    })
                 );
-            function displayCallback(result) {
-                expect(result).toEqual(repositories);
-                done();
-            }
-            const project_id = 5;
-            const owner_id = "477";
-
-            getForkedRepositoryList(project_id, owner_id, "push_date", displayCallback);
-
-            expect(tlpRecursiveGet).toHaveBeenCalledWith(
-                "/api/projects/5/git",
-                expect.objectContaining({
-                    params: {
-                        query: '{"scope":"individual","owner_id":477}',
-                        order_by: "push_date",
-                        limit: 50,
-                        offset: 0
-                    }
-                })
-            );
+            });
         });
     });
 
