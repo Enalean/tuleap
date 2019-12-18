@@ -24,3 +24,8 @@ msgstr "Jalon Widget"
 
 msgid "No root planning is defined."
 msgstr "Aucun planning racine n'est défini."
+
+msgid ""
+"The plugin is not supported under IE11. Please use a more recent browser."
+msgstr ""
+"Le plugin n'est pas supporté pour IE11. Merci d'utiliser un navigateur plus récent."

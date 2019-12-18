@@ -95,6 +95,14 @@ class ProjectReleaseWidget extends Widget
 
     public function getContent() : string
     {
+        if ($this->isIE11()) {
+            $message_error = '<p class="tlp-alert-danger">';
+            $message_error .= dgettext('tuleap-release_widget', 'The plugin is not supported under IE11. Please use a more recent browser.');
+            $message_error .= '</p>';
+
+            return $message_error;
+        }
+
         if (! $this->root_planning) {
             $message_error = '<p class="tlp-alert-danger">';
             $message_error .= dgettext('tuleap-release_widget', 'No root planning is defined.');
@@ -110,7 +118,7 @@ class ProjectReleaseWidget extends Widget
         try {
             return $renderer->renderToString(
                 'releasewidget',
-                $builder->getProjectReleasePresenter($this->isIE11())
+                $builder->getProjectReleasePresenter()
             );
         } catch (TimeframeBrokenConfigurationException $e) {
             $message_error = '<p class="tlp-alert-danger">';

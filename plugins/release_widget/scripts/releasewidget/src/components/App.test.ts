@@ -89,23 +89,4 @@ describe("Given a release widget", () => {
             "Oops, an error occurred!"
         );
     });
-
-    it("When the browser is IE11, Then an error message is displayed instead of the content", async () => {
-        store_options = {
-            state: {
-                is_loading: false,
-                is_browser_IE11: true
-            },
-            getters: {
-                has_rest_error: false
-            }
-        };
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
-
-        expect(wrapper.find("[data-test=is-IE11]").text()).toMatch(
-            `The plugin "Release Widget" is not supported under IE11. Please use a more recent
-        browser.`
-        );
-    });
 });

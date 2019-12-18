@@ -85,7 +85,6 @@ export interface StoreOptions {
         is_loading?: boolean;
         current_milestones?: Array<MilestoneData>;
         error_message?: string;
-        is_browser_IE11?: boolean;
         label_tracker_planning?: string;
         is_timeframe_duration?: boolean;
         label_start_date?: string;
@@ -106,7 +105,6 @@ export interface State {
     is_loading: boolean;
     current_milestones: MilestoneData[];
     trackers_agile_dashboard: TrackerAgileDashboard[];
-    is_browser_IE11: boolean;
     label_tracker_planning: string;
     is_timeframe_duration: boolean;
     label_start_date: string;
