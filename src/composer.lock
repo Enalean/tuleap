@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "310833fa17358e09e21820e3b6327b33",
+    "content-hash": "a55683b69f9930628663e891512108aa",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -748,12 +748,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Enalean/mustache.php.git",
-                "reference": "fd1914163a899d598eb933a60afe3ba972fde70f"
+                "reference": "355139014ad7ba14c3e04a4244a53a256e7e6555"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Enalean/mustache.php/zipball/fd1914163a899d598eb933a60afe3ba972fde70f",
-                "reference": "fd1914163a899d598eb933a60afe3ba972fde70f",
+                "url": "https://api.github.com/repos/Enalean/mustache.php/zipball/355139014ad7ba14c3e04a4244a53a256e7e6555",
+                "reference": "355139014ad7ba14c3e04a4244a53a256e7e6555",
                 "shasum": ""
             },
             "require": {
@@ -785,9 +785,9 @@
                 "templating"
             ],
             "support": {
-                "source": "https://github.com/Enalean/mustache.php/tree/v2.9.0-20190905"
+                "source": "https://github.com/Enalean/mustache.php/tree/master-tuleap-20191219"
             },
-            "time": "2019-09-05T14:05:04+00:00"
+            "time": "2019-12-19T13:50:00+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -5393,7 +5393,7 @@
             ],
             "support": {
                 "issues": "https://github.com/simpletest/simpletest/issues",
-                "source": "https://github.com/Enalean/simpletest/tree/master-tuleap"
+                "source": "https://github.com/Enalean/simpletest/tree/20190916"
             },
             "time": "2019-09-14T14:51:34+00:00"
         },
@@ -5579,8 +5579,8 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "arne@blankerts.de"
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
