@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -278,6 +278,8 @@ class Tracker_Artifact_XMLExport_forceTest extends TuleapTestCase
 
         $archive = mock('Tuleap\Project\XML\Export\ArchiveInterface');
 
-        $exporter->export(mock('Tracker'), $xml_element, mock('PFUser'), $archive);
+        $tracker = Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(888);
+        $exporter->export($tracker, $xml_element, mock('PFUser'), $archive);
     }
 }

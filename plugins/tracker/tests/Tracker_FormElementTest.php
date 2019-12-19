@@ -20,7 +20,6 @@
 require_once('bootstrap.php');
 
 Mock::generate('Project');
-Mock::generate('Tracker');
 Mock::generate('Tracker_FormElement_Field_Selectbox');
 Mock::generate('Tracker_FormElementFactory');
 
@@ -30,8 +29,9 @@ class Tracker_FormElementTest extends TuleapTestCase
     function testGetOriginalProjectAndOriginalTracker()
     {
         $project = new MockProject();
-        $tracker = new MockTracker();
-        $tracker->setReturnValue('getProject', $project);
+        $tracker = Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(888);
+        $tracker->shouldReceive('getProject')->andReturn($project);
         $original = new MockTracker_FormElement_Field_Selectbox();
         $original->setReturnValue('getTracker', $tracker);
 
@@ -66,7 +66,9 @@ class Tracker_FormElementTest extends TuleapTestCase
         $factory = new MockTracker_FormElementFactory();
         $factory->setReturnValue('getUsedFormElementForTracker', array());
 
-        $formElement->setTracker(new MockTracker());
+        $tracker = Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(888);
+        $formElement->setTracker($tracker);
         $formElement->setFormElementFactory($factory);
 
         $content     = $this->WhenIDisplayAdminFormElement($formElement);

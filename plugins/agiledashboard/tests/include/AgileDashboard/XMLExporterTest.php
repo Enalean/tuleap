@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -56,11 +56,11 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase
         stub($this->planning1)->getBacklogTitle()->returns('p q r');
         stub($this->planning2)->getBacklogTitle()->returns('p q r');
 
-        $backlog_tracker1 = mock('Tracker');
-        $backlog_tracker2 = mock('Tracker');
+        $backlog_tracker1 = Mockery::spy(Tracker::class);
+        $backlog_tracker2 = Mockery::spy(Tracker::class);
 
-        stub($backlog_tracker1)->getId()->returns('stu vw x y   z');
-        stub($backlog_tracker2)->getId()->returns('stu vw x y   z');
+        $backlog_tracker1->shouldReceive('getId')->andReturn(888);
+        $backlog_tracker2->shouldReceive('getId')->andReturn(888);
 
         stub($this->planning1)->getBacklogTrackers()->returns(array($backlog_tracker1));
         stub($this->planning2)->getBacklogTrackers()->returns(array($backlog_tracker2));
@@ -121,7 +121,7 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase
             $this->assertEqual((string) $attributes[PlanningParameters::BACKLOG_TITLE], 'p q r');
 
             $expected_planning_tracker_id = AgileDashboard_XMLExporter::TRACKER_ID_PREFIX.'ijklmon';
-            $expected_backlog_tracker_id  = AgileDashboard_XMLExporter::TRACKER_ID_PREFIX.'stu vw x y   z';
+            $expected_backlog_tracker_id  = AgileDashboard_XMLExporter::TRACKER_ID_PREFIX . 888;
 
             $this->assertEqual((string) $attributes[PlanningParameters::PLANNING_TRACKER_ID], $expected_planning_tracker_id);
             foreach ($planning->{AgileDashboard_XMLExporter::NODE_BACKLOGS}->children() as $backlog) {
@@ -143,8 +143,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase
         stub($planning)->getPlanningTrackerId()->returns('ijklmon');
         stub($planning)->getBacklogTitle()->returns('p q r');
 
-        $backlog_tracker = mock('Tracker');
-        stub($backlog_tracker)->getId()->returns('stu vw x y   z');
+        $backlog_tracker = Mockery::spy(Tracker::class);
+        $backlog_tracker->shouldReceive('getId')->andReturn(888);
         stub($planning)->getBacklogTrackers()->returns(array($backlog_tracker));
 
         $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
@@ -166,8 +166,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase
         stub($planning)->getPlanningTrackerId()->returns('ijklmon');
         stub($planning)->getBacklogTitle()->returns('p q r');
 
-        $backlog_tracker = mock('Tracker');
-        stub($backlog_tracker)->getId()->returns('stu vw x y   z');
+        $backlog_tracker = Mockery::spy(Tracker::class);
+        $backlog_tracker->shouldReceive('getId')->andReturn(888);
         stub($planning)->getBacklogTrackers()->returns(array($backlog_tracker));
 
         $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
@@ -189,8 +189,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase
         stub($planning)->getPlanningTrackerId()->returns(45);
         stub($planning)->getBacklogTitle()->returns(null);
 
-        $backlog_tracker = mock('Tracker');
-        stub($backlog_tracker)->getId()->returns('stu vw x y   z');
+        $backlog_tracker = Mockery::spy(Tracker::class);
+        $backlog_tracker->shouldReceive('getId')->andReturn(888);
         stub($planning)->getBacklogTrackers()->returns(array($backlog_tracker));
 
         $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
@@ -212,8 +212,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase
         stub($planning)->getPlanningTrackerId()->returns(null);
         stub($planning)->getBacklogTitle()->returns('p q r');
 
-        $backlog_tracker = mock('Tracker');
-        stub($backlog_tracker)->getId()->returns('stu vw x y   z');
+        $backlog_tracker = Mockery::spy(Tracker::class);
+        $backlog_tracker->shouldReceive('getId')->andReturn(888);
         stub($planning)->getBacklogTrackers()->returns(array($backlog_tracker));
 
         $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
@@ -235,8 +235,8 @@ class AgileDashboard_XMLExporterTest extends TuleapTestCase
         stub($planning)->getPlanningTrackerId()->returns(78);
         stub($planning)->getBacklogTitle()->returns('p q r');
 
-        $backlog_tracker = mock('Tracker');
-        stub($backlog_tracker)->getId()->returns(null);
+        $backlog_tracker = Mockery::spy(Tracker::class);
+        $backlog_tracker->shouldReceive('getId')->andReturn(0);
         stub($planning)->getBacklogTrackers()->returns(array($backlog_tracker));
 
         $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');

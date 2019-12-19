@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -187,11 +187,16 @@ class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase
     private $user;
     private $changeset_id;
     private $changeset;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
+     */
+    private $tracker;
 
     public function setUp()
     {
         parent::setUp();
-        $this->tracker      = aMockTracker()->build();
+        $this->tracker      = Mockery::spy(Tracker::class);
+        $this->tracker->shouldReceive('getId')->andReturn(888);
         $artifact     = anArtifact()->withTracker($this->tracker)->build();
         $this->user         = stub('PFUser')->isSuperUser()->returns(true);
         $this->changeset_id = 1234;

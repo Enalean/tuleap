@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,11 @@ require_once __DIR__ . '/../bootstrap.php';
 class AgileDashboard_KanbanActionsCheckerTest extends TuleapTestCase
 {
 
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
+     */
+    private $tracker;
+
     public function setUp()
     {
         parent::setUp();
@@ -40,7 +45,8 @@ class AgileDashboard_KanbanActionsCheckerTest extends TuleapTestCase
         );
 
         $this->user           = mock('PFUser');
-        $this->tracker        = mock('Tracker');
+        $this->tracker        = Mockery::spy(Tracker::class);
+        $this->tracker->shouldReceive('getId')->andReturn(888);
         $this->semantic_title = mock('Tracker_Semantic_Title');
 
         Tracker_Semantic_Title::setInstance($this->semantic_title, $this->tracker);

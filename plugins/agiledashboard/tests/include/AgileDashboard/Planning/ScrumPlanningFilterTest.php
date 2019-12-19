@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,8 @@
  */
 
 namespace Tuleap\AgileDashboard\Planning;
+
+use Tracker;
 
 require_once dirname(__FILE__) . '/../../../bootstrap.php';
 
@@ -83,7 +85,9 @@ class ScrumPlanningFilterTest extends \TuleapTestCase
     {
         stub($this->mono_milestone_checker)->isMonoMilestoneEnabled(101)->returns(false);
         expect($this->planning_factory)->getAvailablePlanningTrackers()->once();
-        stub($this->planning_factory)->getAvailablePlanningTrackers()->returns(array(mock('Tracker')));
+        $tracker = \Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(888);
+        stub($this->planning_factory)->getAvailablePlanningTrackers()->returns([$tracker]);
 
         $this->scrum_planning_filter->getPlanningTrackersFiltered(
             $this->planning,

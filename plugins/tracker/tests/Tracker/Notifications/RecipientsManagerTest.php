@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -410,6 +410,7 @@ class RecipientsManagerTest extends \TuleapTestCase
         stub($artifact)->getStatus()->returns('On going');
 
         $tracker = Mock(Tracker::class);
+        stub($tracker)->getId()->returns(888);
         stub($tracker)->getRecipients()->returns(
             [
                 [
@@ -627,6 +628,7 @@ class RecipientsManagerTest extends \TuleapTestCase
         ];
 
         $tracker = mock(\Tracker::class);
+        stub($tracker)->getId()->returns(888);
         stub($tracker)->getRecipients()->returns($user_recipients_from_tracker);
         stub($this->user_manager)->getUserByEmail('noctali@example.com')->returns(aUser()->withId(101)->build());
         stub($this->user_manager)->getUserByEmail('aquali@example.com')->returns(aUser()->withId(102)->build());

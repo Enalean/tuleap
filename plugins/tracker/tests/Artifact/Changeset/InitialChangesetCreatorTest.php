@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,6 +50,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest extends Tuleap
         $this->changeset_factory  = mock('Tracker_Artifact_ChangesetFactory');
         stub($this->changeset_factory)->getChangeset()->returns(new Tracker_Artifact_Changeset_Null());
         $tracker        = stub('Tracker')->getWorkflow()->returns($this->workflow);
+        stub($tracker)->getId()->returns(888);
         $this->artifact = partial_mock('Tracker_Artifact', array('getChangesetDao','getChangesetCommentDao', 'getReferenceManager', 'getChangesetFactory'));
         $this->artifact->setId(42);
         $this->artifact->setTracker($tracker);

@@ -58,6 +58,8 @@ class Tracker_Artifact_MailGateway_MailGateway_BaseTest extends TuleapTestCase
             ->stripText($this->body)
             ->returns($this->stripped_body);
 
+        stub($this->tracker)->getId()->returns(888);
+
         $this->incoming_message = mock('Tracker_Artifact_MailGateway_IncomingMessage');
         stub($this->incoming_message)->getUser()->returns($this->user);
         stub($this->incoming_message)->getArtifact()->returns($this->artifact);

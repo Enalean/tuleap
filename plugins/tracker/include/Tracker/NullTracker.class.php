@@ -30,8 +30,9 @@ class NullTracker extends Tracker
         parent::__construct(null, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
     }
 
-    public function getId()
+    public function getId(): int
     {
+        return 0;
     }
     public function getName()
     {
