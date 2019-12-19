@@ -39,11 +39,16 @@ class PaneInfoRepresentation
      * @var string
      */
     public $uri;
+    /**
+     * @var string
+     */
+    public $identifier;
 
     public function build(PaneInfo $pane_info)
     {
-        $this->title     = $pane_info->getTitle();
-        $this->icon_name = $pane_info->getIconName();
-        $this->uri       = $pane_info->getUri();
+        $this->title      = $pane_info->getTitle();
+        $this->icon_name  = $pane_info->getIconName();
+        $this->uri        = $pane_info->getUri();
+        $this->identifier = $pane_info->getIdentifier();
     }
 }

@@ -12,6 +12,9 @@ msgstr ""
 "X-Generator: Poedit 2.2.4\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "%{label_submilestone} Planning"
+msgstr "Planification de %{label_submilestone}"
+
 msgid "%{nb_backlog_items} item in the backlog."
 msgid_plural "%{ nb_backlog_items } items in the backlog."
 msgstr[0] "%{nb_backlog_items} item dans le backlog."
@@ -38,8 +41,8 @@ msgstr "Capacité : %{capacity}"
 msgid "Capacity: N/A"
 msgstr "Capacité : N/A"
 
-msgid "Go to %{label_tracker} overview"
-msgstr "Aller au résumé de l'outils de suivi : %{label_tracker}"
+msgid "Cardwall"
+msgstr "Cardwall"
 
 msgid "Initial effort (%s) should be bigger or equal to remaining effort (%s)."
 msgstr ""
@@ -71,6 +74,9 @@ msgstr "Aucune date de début définie."
 
 msgid "Oops, an error occurred!"
 msgstr "Oups, une erreur s'est produite !"
+
+msgid "Overview"
+msgstr "Résumé"
 
 msgid "What's hot"
 msgstr "En cours"

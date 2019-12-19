@@ -118,7 +118,8 @@ describe("Store actions", () => {
                                         }
                                     ]
                                 }
-                            }
+                            },
+                            additional_panes: []
                         },
                         number_of_artifact_by_trackers: []
                     }
@@ -192,7 +193,8 @@ describe("Store actions", () => {
                                 }
                             ]
                         }
-                    }
+                    },
+                    additional_panes: []
                 },
                 number_of_artifact_by_trackers: []
             };

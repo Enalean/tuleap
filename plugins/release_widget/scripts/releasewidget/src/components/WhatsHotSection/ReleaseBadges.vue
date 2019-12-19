@@ -21,8 +21,7 @@
     <div class="project-release-infos-badges">
         <a
             class="project-release-info-badge tlp-badge-primary toggle-sprints"
-            v-if="tracker_submilestone_label !== '' && get_top_planning_link !== null"
-            v-bind:href="get_top_planning_link"
+            v-if="tracker_submilestone_label !== ''"
             data-test="planning-link"
         >
             <i class="fa fa-map-signs tlp-badge-icon"></i>
@@ -78,21 +77,6 @@ export default class ReleaseBadges extends Vue {
             return "";
         }
         return submilestone_tracker.label;
-    }
-
-    get get_top_planning_link(): string | null {
-        if (!this.release_data.planning) {
-            return null;
-        }
-        return (
-            "/plugins/agiledashboard/?group_id=" +
-            encodeURIComponent(this.project_id) +
-            "&planning_id=" +
-            encodeURIComponent(this.release_data.planning.id) +
-            "&action=show&aid=" +
-            encodeURIComponent(this.release_data.id) +
-            "&pane=planning-v2"
-        );
     }
 
     get capacity_exists(): boolean {

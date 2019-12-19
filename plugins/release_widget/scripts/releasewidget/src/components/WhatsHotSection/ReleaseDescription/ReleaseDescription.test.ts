@@ -23,9 +23,8 @@ import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-com
 import { MilestoneData, StoreOptions } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
-let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
+let release_data: MilestoneData;
 const component_options: ShallowMountOptions<ReleaseDescription> = {};
-const project_id = 102;
 
 describe("ReleaseDescription", () => {
     let store_options: StoreOptions;
@@ -48,25 +47,6 @@ describe("ReleaseDescription", () => {
                 label_tracker_planning: "Releases"
             }
         };
-
-        release_data = {
-            id: 2,
-            planning: {
-                id: "100"
-            },
-            number_of_artifact_by_trackers: []
-        };
-
-        component_options.propsData = {
-            release_data
-        };
-    });
-
-    it("Given user display widget, Then a good link to top planning of the release is rendered", async () => {
-        store_options.state.project_id = project_id;
-
-        const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.element).toMatchSnapshot();
     });
 
     it("When there is a description, Then there is a tooltip to show the whole description", async () => {

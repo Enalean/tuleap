@@ -48,8 +48,16 @@ export interface MilestoneData {
                 ];
             };
         };
+        additional_panes: Pane[];
     };
     number_of_artifact_by_trackers: TrackerNumberArtifacts[];
+}
+
+export interface Pane {
+    title: string;
+    icon_name: string;
+    uri: string;
+    identifier: string;
 }
 
 export interface TrackerNumberArtifacts {

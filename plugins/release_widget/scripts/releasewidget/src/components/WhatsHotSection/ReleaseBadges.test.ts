@@ -76,25 +76,12 @@ describe("ReleaseBadges", () => {
                     accept: {
                         trackers: []
                     }
-                }
+                },
+                additional_panes: []
             }
         };
 
         component_options.propsData = { release_data };
-    });
-
-    it("When the component is displayed, Then a good link to top planning of the release is rendered", async () => {
-        const wrapper = await getPersonalWidgetInstance(store_options);
-
-        expect(wrapper.find("[data-test=planning-link]").attributes("href")).toEqual(
-            "/plugins/agiledashboard/?group_id=" +
-                encodeURIComponent(project_id) +
-                "&planning_id=" +
-                encodeURIComponent(release_data.planning.id) +
-                "&action=show&aid=" +
-                encodeURIComponent(release_data.id) +
-                "&pane=planning-v2"
-        );
     });
 
     describe("Display points of initial effort", () => {
