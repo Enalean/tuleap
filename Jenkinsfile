@@ -13,8 +13,10 @@ pipeline {
                 dir ('sources') {
                     deleteDir()
                 }
-                checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CloneOption', depth: 1, noTags: true, reference: '', shallow: true],[$class: 'CleanBeforeCheckout'], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'sources']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'gitolite-tuleap-net', url: 'ssh://gitolite@tuleap.net/tuleap/tuleap/stable.git']]]
-                checkout scm
+                checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'sources']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://tuleap.net/plugins/git/tuleap/tuleap/stable.git']]]
+                dir ('sources') {
+                    sh 'git checkout adc93b2ad99c7f04b6e2c9aa6163e04fd9986955'
+                }
                 sh 'git clone sources_plugin/ sources/plugins/testmanagement/'
             }
         }
