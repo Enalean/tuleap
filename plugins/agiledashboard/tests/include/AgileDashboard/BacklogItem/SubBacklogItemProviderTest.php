@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,14 +19,32 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+
 require_once __DIR__.'/../../../bootstrap.php';
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCase
 {
-
     private $backlog_factory;
     private $backlog_item_collection_factory;
     private $user;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExplicitBacklogDao
+     */
+    private $explicit_backlog_dao;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactsInExplicitBacklogDao
+     */
+    private $artifact_in_explicit_backlog_dao;
+
+    /**
+     * @var AgileDashboard_BacklogItem_SubBacklogItemProvider
+     */
+    private $provider;
 
     public function setUp()
     {
@@ -48,11 +66,16 @@ class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCa
         $this->backlog_item_collection_factory = \Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class);
         $this->planning_factory                = \Mockery::spy(PlanningFactory::class);
 
+        $this->explicit_backlog_dao             = Mockery::mock(ExplicitBacklogDao::class);
+        $this->artifact_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
+
         $this->provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(
             $this->dao,
             $this->backlog_factory,
             $this->backlog_item_collection_factory,
-            $this->planning_factory
+            $this->planning_factory,
+            $this->explicit_backlog_dao,
+            $this->artifact_in_explicit_backlog_dao
         );
 
         $this->planning_factory->shouldReceive('getSubPlannings')->andReturn($sprint_planning);
@@ -72,7 +95,27 @@ class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCa
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker, $this->user);
 
-        $this->assertEqual(array_keys($result), array(7, 8, 11));
+        $this->assertEqual(array(7, 8, 11), array_keys($result));
+    }
+
+    public function itReturnsTheMatchingIdsInExplicitTopBacklogContext()
+    {
+        $milestone           = Mockery::mock(Planning_VirtualTopMilestone::class)->shouldReceive('getArtifactId')->andReturnNull()->getMock();
+        $top_backlog_tracker = Mockery::mock(Tracker::class);
+
+        $project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn(101)->getMock();
+        $milestone->shouldReceive('getProject')->andReturn($project);
+
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturnTrue();
+        $this->artifact_in_explicit_backlog_dao->shouldReceive('getAllTopBacklogItemsForProjectSortedByRank')->andReturn([
+            ['artifact_id' => 7],
+            ['artifact_id' => 8],
+            ['artifact_id' => 11],
+        ]);
+
+        $result = $this->provider->getMatchingIds($milestone, $top_backlog_tracker, $this->user);
+
+        $this->assertEqual(array(7, 8, 11), array_keys($result));
     }
 
     public function itReturnsAnEmptyResultIfThereIsNoMatchingId()
@@ -80,7 +123,7 @@ class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCa
         stub($this->dao)->getLinkedArtifactsByIds()->returnsEmptyDar();
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker, $this->user);
-        $this->assertEqual($result, array());
+        $this->assertEqual([], $result);
     }
 
     public function itDoesNotFilterFromArtifactsThatAreNotContentOfSubOrCurrentPlanning()
@@ -95,7 +138,7 @@ class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCa
         stub($this->dao)->getLinkedArtifactsByIds(array(7, 8, 11), array(3, 7, 8, 11, 158))->returnsEmptyDar();
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker, $this->user);
-        $this->assertEqual(array_keys($result), array(7, 8, 11));
+        $this->assertEqual(array(7, 8, 11), array_keys($result));
     }
 
     public function itFiltersFromArtifactsThatAreChildOfContentOfSubOrCurrentPlanning()
@@ -116,6 +159,6 @@ class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCa
         stub($this->dao)->getLinkedArtifactsByIds(array(200, 201), array(3, 7, 8, 11, 158, 200, 201, 159))->returnsEmptyDar();
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->task_tracker, $this->user);
-        $this->assertEqual(array_keys($result), array(200, 201));
+        $this->assertEqual(array(200, 201), array_keys($result));
     }
 }

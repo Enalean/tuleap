@@ -2006,23 +2006,14 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             $contributor_field_id
         );
         if ($matching_ids_result) {
-            $matching_ids = $matching_ids_result->getRow();
-            if ($matching_ids) {
-                if (substr($matching_ids['id'], -1) === ',') {
-                    $matching_ids['id'] = substr($matching_ids['id'], 0, -1);
-                }
-                if (substr($matching_ids['last_changeset_id'], -1) === ',') {
-                    $matching_ids['last_changeset_id'] = substr($matching_ids['last_changeset_id'], 0, -1);
-                    return $matching_ids;
-                }
-                return $matching_ids;
-            }
-            return $matching_ids;
+            $matching_ids['id'] = implode(',', array_column(iterator_to_array($matching_ids_result), 'id'));
+            $matching_ids['last_changeset_id'] = implode(',', array_column(iterator_to_array($matching_ids_result), 'last_changeset_id'));
         }
+
         return $matching_ids;
     }
 
-    private function getNoMatchingIds()
+    private function getNoMatchingIds(): array
     {
         return array('id' => '', 'last_changeset_id' => '');
     }

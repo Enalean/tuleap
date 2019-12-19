@@ -51,6 +51,18 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
         return $this->getDB()->run($sql, $project_id, $limit, $offset);
     }
 
+    public function getAllTopBacklogItemsForProjectSortedByRank(int $project_id)
+    {
+        $sql = "SELECT SQL_CALC_FOUND_ROWS plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id
+                FROM plugin_agiledashboard_planning_artifacts_explicit_backlog
+                INNER JOIN tracker_artifact_priority_rank
+                    ON plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id = tracker_artifact_priority_rank.artifact_id
+                WHERE project_id = ?
+                ORDER BY tracker_artifact_priority_rank.rank";
+
+        return $this->getDB()->run($sql, $project_id);
+    }
+
     public function removeArtifactFromExplicitBacklog(int $artifact_id): void
     {
         $sql = 'DELETE FROM plugin_agiledashboard_planning_artifacts_explicit_backlog
