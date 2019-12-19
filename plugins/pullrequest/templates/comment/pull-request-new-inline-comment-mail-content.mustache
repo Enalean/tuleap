@@ -1,0 +1,15 @@
+<p>
+    {{# dgettext }}
+        tuleap-pullrequest |
+        <a href="%s">%s</a> commented on <a href="%s">#%s</a>: %s in %s: |
+        {{ change_user_profile_url }} |
+        {{ change_user_display_name }} |
+        {{ pull_request_url }} |
+        {{ pull_request_id }} |
+        {{ pull_request_title }} |
+        {{ file_path }}
+    {{/ dgettext }}
+</p>
+<p>
+    {{ inline_comment }}
+</p>

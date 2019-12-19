@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
 
 namespace Tuleap\PullRequest\InlineComment;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\PullRequest\InlineComment\Notification\PullRequestNewInlineCommentEvent;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation;
 use PFUser;
@@ -33,15 +35,23 @@ class InlineCommentCreator
      */
     private $dao;
 
-    /*
+    /**
      * @var ReferenceManager
      */
     private $reference_manager;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
 
-    public function __construct(Dao $dao, ReferenceManager $reference_manager)
-    {
+    public function __construct(
+        Dao $dao,
+        ReferenceManager $reference_manager,
+        EventDispatcherInterface $event_dispatcher
+    ) {
         $this->dao               = $dao;
         $this->reference_manager = $reference_manager;
+        $this->event_dispatcher  = $event_dispatcher;
     }
 
     public function insert(
@@ -50,7 +60,7 @@ class InlineCommentCreator
         PullRequestInlineCommentPOSTRepresentation $comment_data,
         $post_date,
         $project_id
-    ) {
+    ): int {
         $pull_request_id = $pull_request->getId();
 
         $inserted = $this->dao->insert(
@@ -71,6 +81,8 @@ class InlineCommentCreator
             $user->getId(),
             pullrequestPlugin::PULLREQUEST_REFERENCE_KEYWORD
         );
+
+        $this->event_dispatcher->dispatch(PullRequestNewInlineCommentEvent::fromInlineCommentID($inserted));
 
         return $inserted;
     }
