@@ -1953,6 +1953,15 @@ msgstr ""
 msgid "Widget has been successfully deleted."
 msgstr "Le widget a correctement été supprimé."
 
+msgid "Widget not found."
+msgstr "Widget non trouvé."
+
+msgid "Widget successfully disabled."
+msgstr "Le widget a été désactivé avec succès."
+
+msgid "Widget successfully enabled."
+msgstr "Le widget a été activé avec succès."
+
 msgid "Widgets"
 msgstr "Widgets"
 

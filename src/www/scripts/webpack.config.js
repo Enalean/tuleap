@@ -129,6 +129,7 @@ const webpack_config_for_burning_parrot_code = {
         "site-admin-project-configuration": "./admin/project-configuration.js",
         "site-admin-project-history": "./admin/project-history.js",
         "site-admin-project-list": "./admin/project-list.js",
+        "site-admin-project-widgets": "./admin/project-widgets-configuration/index.ts",
         "site-admin-system-events": "./admin/system-events.js",
         "site-admin-system-events-admin-homepage": "./admin/system-events-admin-homepage.js",
         "site-admin-system-events-notifications": "./admin/system-events-notifications.js",
@@ -147,12 +148,18 @@ const webpack_config_for_burning_parrot_code = {
     },
     module: {
         rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_po_files,
             webpack_configurator.rule_mustache_files
         ]
     },
-    plugins: [manifest_plugin]
+    plugins: [manifest_plugin],
+    resolve: {
+        extensions: [".ts", ".js"]
+    }
 };
 
 const webpack_config_for_project_banner = {

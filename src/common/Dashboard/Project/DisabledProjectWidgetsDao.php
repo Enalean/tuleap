@@ -33,4 +33,20 @@ class DisabledProjectWidgetsDao extends DataAccessObject
 
         return count($rows) > 0;
     }
+
+    public function enableWidget(string $widget_name): void
+    {
+        $this->getDB()->delete(
+            'project_dashboards_disabled_widgets',
+            ['name' => $widget_name]
+        );
+    }
+
+    public function disableWidget(string $widget_name): void
+    {
+        $this->getDB()->insertIgnore(
+            'project_dashboards_disabled_widgets',
+            ['name' => $widget_name]
+        );
+    }
 }
