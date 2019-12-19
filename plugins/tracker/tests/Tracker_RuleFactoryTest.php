@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -23,8 +23,6 @@ require_once('bootstrap.php');
 Mock::generate('Tracker_RuleDao');
 
 Mock::generate('DataAccessResult');
-
-Mock::generate('Tracker');
 
 Mock::generate('Tracker_FormElement_Field_List');
 
@@ -203,7 +201,8 @@ XML;
             'date_rules' => $date_rules,
         );
 
-        $tracker = mock('Tracker');
+        $tracker = Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(888);
 
         $date_factory = mock('Tracker_Rule_Date_Factory');
         stub($date_factory)->insert($date)->once();
@@ -230,7 +229,8 @@ XML;
             'date_rules' => $date_rules,
         );
 
-        $tracker = mock('Tracker');
+        $tracker = Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(888);
 
         $date_factory = mock('Tracker_Rule_Date_Factory');
         stub($date_factory)->insert($date)->once();
@@ -254,7 +254,8 @@ XML;
             'list_rules' => $list_rules,
         );
 
-        $tracker = mock('Tracker');
+        $tracker = Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(888);
 
         $list_factory = mock('Tracker_Rule_List_Factory');
         stub($list_factory)->insert($list)->once();

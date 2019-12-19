@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,12 +32,14 @@ class Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommandTest 
     protected $user;
     protected $trigger_rules_manager;
     protected $nature_factory;
+    private $tracker;
 
     public function setUp()
     {
         parent::setUp();
         $this->trigger_rules_manager = mock('Tracker_Workflow_Trigger_RulesManager');
         $this->tracker               = mock('Tracker');
+        stub($this->tracker)->getId()->returns(888);
         $this->field                 = anArtifactLinkField()->withTracker($this->tracker)->build();
         $this->artifact              = anArtifact()->build();
         $this->user                  = aUser()->build();

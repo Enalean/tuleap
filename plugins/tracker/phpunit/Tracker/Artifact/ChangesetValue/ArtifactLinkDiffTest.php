@@ -206,7 +206,7 @@ class ArtifactLinkDiffTest extends TestCase
 
     private function getTrackerArtifactLinkInfo(int $artifact_id, string $keyword, string $nature): Tracker_ArtifactLinkInfo
     {
-        $tracker = M::mock(Tracker::class, ['getItemName' => $keyword, 'getGroupId' => '*', 'getId' => '*']);
+        $tracker = M::mock(Tracker::class, ['getItemName' => $keyword, 'getGroupId' => '*', 'getId' => 888]);
         $changeset = M::mock(\Tracker_Artifact_Changeset::class, ['getId' => '*']);
         $artifact = M::mock(
             \Tracker_Artifact::class,

@@ -54,8 +54,10 @@ class PlanningFactoryTest_getPlanningTest extends PlanningFactoryTest
 
         $planning_dao                 = mock('PlanningDao');
         $tracker_factory              = mock('TrackerFactory');
-        $planning_tracker             = mock('Tracker');
-        $backlog_tracker              = mock('Tracker');
+        $planning_tracker             = Mockery::spy(Tracker::class);
+        $planning_tracker->shouldReceive('getId')->andReturn($planning_tracker_id);
+        $backlog_tracker              = Mockery::spy(Tracker::class);
+        $backlog_tracker->shouldReceive('getId')->andReturn($backlog_tracker_id);
         $planning_permissions_manager = stub('PlanningPermissionsManager')->savePlanningPermissionForUgroups()->returns(true);
         $planning_factory             = aPlanningFactory()->withDao($planning_dao)
                                                           ->withTrackerFactory($tracker_factory)

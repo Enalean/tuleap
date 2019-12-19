@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -55,6 +55,7 @@ class XMLImportFieldStrategyArtifactLinkTest extends TuleapTestCase
         $this->nature_dao       = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao');
         $this->nature_creator   = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureCreator');
         $this->artifact         = mock('Tracker_Artifact');
+        stub($this->artifact)->getTrackerId()->returns(888);
 
         $this->artlink_strategy = partial_mock(
             'Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink',

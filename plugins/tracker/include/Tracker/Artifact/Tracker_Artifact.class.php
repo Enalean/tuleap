@@ -1167,12 +1167,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     /**
      * Returns the tracker Id this artifact belongs to
-     *
-     * @return int The tracker Id this artifact belongs to
      */
-    public function getTrackerId()
+    public function getTrackerId(): int
     {
-        return $this->tracker_id;
+        return (int) $this->tracker_id;
     }
 
     /**

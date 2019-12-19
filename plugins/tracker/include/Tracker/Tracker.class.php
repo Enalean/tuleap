@@ -244,12 +244,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->group_id = $project->getID();
     }
 
-    /**
-     * getId - get this Tracker Id.
-     *
-     * @return int The id
-     */
-    function getId()
+    public function getId(): int
     {
         return (int) $this->id;
     }

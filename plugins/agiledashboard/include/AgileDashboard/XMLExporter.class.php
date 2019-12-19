@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All rights reserved
+ * Copyright (c) Enalean, 2013 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -121,14 +121,12 @@ class AgileDashboard_XMLExporter
         }
     }
 
-    /**
-     *
-     * @param int $tracker_id
-     * @return string
-     */
-    private function getFormattedTrackerId($tracker_id)
+    private function getFormattedTrackerId($tracker_id): string
     {
-        return self::TRACKER_ID_PREFIX . (string) $tracker_id ;
+        if (! $tracker_id) {
+            return self::TRACKER_ID_PREFIX;
+        }
+        return self::TRACKER_ID_PREFIX . $tracker_id ;
     }
 
     private function checkString($value, $value_denomination)
