@@ -67,9 +67,9 @@ class TrackerPresenterCollectionBuilder
         return $tracker_collection->map(
             function (TaskboardTracker $taskboard_tracker) use ($user, $mapped_fields_collection) {
                 $mapped_field = null;
-                $tracker_id   = (int) $taskboard_tracker->getTracker()->getId();
-                if ($mapped_fields_collection->hasKey($tracker_id)) {
-                    $mapped_field = $mapped_fields_collection->get($tracker_id);
+                $tracker      = $taskboard_tracker->getTracker();
+                if ($mapped_fields_collection->hasKey($tracker)) {
+                    $mapped_field = $mapped_fields_collection->get($tracker);
                 }
                 $title_field  = $this->getTitleField($taskboard_tracker, $user);
                 $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
@@ -106,7 +106,7 @@ class TrackerPresenterCollectionBuilder
             function (MappedFieldsCollection $collection, TaskboardTracker $taskboard_tracker) {
                 $mapped_field = $this->mapped_field_retriever->getField($taskboard_tracker);
                 if ($mapped_field) {
-                    $collection->put($taskboard_tracker->getTracker()->getId(), $mapped_field);
+                    $collection->put($taskboard_tracker->getTracker(), $mapped_field);
                 }
 
                 return $collection;

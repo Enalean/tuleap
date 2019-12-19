@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Tracker;
 
+use Tracker;
 use Tracker_FormElement_Field_Selectbox;
 
 class MappedFieldsCollection
@@ -40,22 +41,23 @@ class MappedFieldsCollection
         $this->mapped_fields = $mapped_fields;
     }
 
-    public function put(int $tracker_id, Tracker_FormElement_Field_Selectbox $field): void
+    public function put(Tracker $tracker, Tracker_FormElement_Field_Selectbox $field): void
     {
-        $this->mapped_fields[$tracker_id] = $field;
+        $this->mapped_fields[$tracker->getId()] = $field;
     }
 
-    public function get(int $tracker_id): Tracker_FormElement_Field_Selectbox
+    public function get(Tracker $tracker): Tracker_FormElement_Field_Selectbox
     {
-        if (! $this->hasKey($tracker_id)) {
+        $tracker_id = $tracker->getId();
+        if (! $this->hasKey($tracker)) {
             throw new \OutOfBoundsException("There is no mapped field for tracker $tracker_id");
         }
 
         return $this->mapped_fields[$tracker_id];
     }
 
-    public function hasKey(int $tracker_id): bool
+    public function hasKey(Tracker $tracker): bool
     {
-        return isset($this->mapped_fields[$tracker_id]);
+        return isset($this->mapped_fields[$tracker->getId()]);
     }
 }

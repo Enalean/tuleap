@@ -49,10 +49,10 @@ class AddInPlaceRetriever
         }
 
         $child_tracker = $child_trackers[0];
-        if (! $mapped_fields_collection->hasKey($child_tracker->getId())) {
+        if (! $mapped_fields_collection->hasKey($child_tracker)) {
             return null;
         }
-        $mapped_field = $mapped_fields_collection->get($child_tracker->getId());
+        $mapped_field = $mapped_fields_collection->get($child_tracker);
         if (! $mapped_field->userCanSubmit($user)) {
             return null;
         }

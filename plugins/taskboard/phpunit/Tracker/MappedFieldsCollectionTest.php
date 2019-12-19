@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Tracker;
 
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
@@ -34,27 +35,32 @@ class MappedFieldsCollectionTest extends TestCase
         $field = \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class);
 
         $collection = new MappedFieldsCollection();
-        $collection->put(12, $field);
+        $tracker    = Mockery::mock(\Tracker::class)->shouldReceive(['getId' => 12])->getMock();
+        $collection->put($tracker, $field);
 
-        $this->assertSame($field, $collection->get(12));
+        $this->assertSame($field, $collection->get($tracker));
     }
 
     public function testItThrowExceptionIfNoMappedFieldForTracker(): void
     {
-        $collection = new MappedFieldsCollection();
-        $collection->put(12, \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class));
+        $collection      = new MappedFieldsCollection();
+        $tracker         = Mockery::mock(\Tracker::class)->shouldReceive(['getId' => 12])->getMock();
+        $another_tracker = Mockery::mock(\Tracker::class)->shouldReceive(['getId' => 42])->getMock();
+        $collection->put($tracker, \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class));
 
         $this->expectException(\OutOfBoundsException::class);
 
-        $collection->get(42);
+        $collection->get($another_tracker);
     }
 
     public function testItDeterminesIfKeyIsPartOfCollection(): void
     {
-        $collection = new MappedFieldsCollection();
-        $collection->put(12, \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class));
+        $collection      = new MappedFieldsCollection();
+        $tracker         = Mockery::mock(\Tracker::class)->shouldReceive(['getId' => 12])->getMock();
+        $another_tracker = Mockery::mock(\Tracker::class)->shouldReceive(['getId' => 42])->getMock();
+        $collection->put($tracker, \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class));
 
-        $this->assertTrue($collection->hasKey(12));
-        $this->assertFalse($collection->hasKey(42));
+        $this->assertTrue($collection->hasKey($tracker));
+        $this->assertFalse($collection->hasKey($another_tracker));
     }
 }
