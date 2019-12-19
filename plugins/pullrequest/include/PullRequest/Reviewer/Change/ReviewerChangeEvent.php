@@ -28,7 +28,7 @@ use Tuleap\PullRequest\Notification\InvalidWorkerEventPayloadException;
 /**
  * @psalm-immutable
  */
-final class ReviewerChangeEvent implements EventSubjectToNotification, \JsonSerializable
+final class ReviewerChangeEvent implements EventSubjectToNotification
 {
     /**
      * @var int
@@ -59,7 +59,7 @@ final class ReviewerChangeEvent implements EventSubjectToNotification, \JsonSeri
         return $this->change_id;
     }
 
-    public function jsonSerialize(): array
+    public function toWorkerEventPayload(): array
     {
         return [
             'change_id' => $this->change_id

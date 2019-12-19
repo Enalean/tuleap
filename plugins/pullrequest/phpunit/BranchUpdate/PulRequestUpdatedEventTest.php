@@ -32,7 +32,7 @@ final class PulRequestUpdatedEventTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testEventCanBeJSONSerialized(): void
+    public function testEventCanBeTransformedToAWorkerEventPayload(): void
     {
         $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(12);
@@ -47,16 +47,16 @@ final class PulRequestUpdatedEventTest extends TestCase
             '4682f1f1fb9ee3cf6ca518547ae5525c9768a319',
         );
 
-        $this->assertJsonStringEqualsJsonString(
-            '{
-                "user_id":147,
-                "pr_id":12,
-                "old_src":"a7d1692502252a5ec18bfcae4184498b1459810c",
-                "new_src":"fbe4dade4f744aa203ec35bf09f71475ecc3f9d6",
-                "old_dst":"4682f1f1fb9ee3cf6ca518547ae5525c9768a319",
-                "new_dst":"4682f1f1fb9ee3cf6ca518547ae5525c9768a319"
-            }',
-            json_encode($event, JSON_THROW_ON_ERROR)
+        $this->assertEquals(
+            [
+                'user_id' => $user->getId(),
+                'pr_id'   => $pull_request->getId(),
+                'old_src' => 'a7d1692502252a5ec18bfcae4184498b1459810c',
+                'new_src' => 'fbe4dade4f744aa203ec35bf09f71475ecc3f9d6',
+                'old_dst' => '4682f1f1fb9ee3cf6ca518547ae5525c9768a319',
+                'new_dst' => '4682f1f1fb9ee3cf6ca518547ae5525c9768a319'
+            ],
+            $event->toWorkerEventPayload()
         );
     }
 

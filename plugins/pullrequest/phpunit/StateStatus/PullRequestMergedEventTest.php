@@ -25,13 +25,14 @@ namespace Tuleap\PullRequest\StateStatus;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Tuleap\PullRequest\Notification\InvalidWorkerEventPayloadException;
 use Tuleap\PullRequest\PullRequest;
 
 final class PullRequestMergedEventTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testEventCanBeJSONSerialized(): void
+    public function testEventCanBeTransformedToAWorkerEventPayload(): void
     {
         $pull_request = \Mockery::mock(PullRequest::class);
         $pull_request->shouldReceive('getId')->andReturn(12);
@@ -39,7 +40,10 @@ final class PullRequestMergedEventTest extends TestCase
         $user->shouldReceive('getId')->andReturn(147);
         $event = PullRequestMergedEvent::fromPullRequestAndUserMergingThePullRequest($pull_request, $user);
 
-        $this->assertJsonStringEqualsJsonString('{"user_id":147,"pr_id":12}', json_encode($event, JSON_THROW_ON_ERROR));
+        $this->assertEquals(
+            ['user_id' => $user->getId(), 'pr_id' => $pull_request->getId()],
+            $event->toWorkerEventPayload()
+        );
     }
 
     public function testEventCanBeBuiltFromWorkerEventPayload(): void
@@ -63,5 +67,11 @@ final class PullRequestMergedEventTest extends TestCase
             PullRequestMergedEvent::fromPullRequestAndUserMergingThePullRequest($pull_request, $user),
             $event
         );
+    }
+
+    public function testBuildingFromAnInvalidPayloadIsRejected(): void
+    {
+        $this->expectException(InvalidWorkerEventPayloadException::class);
+        PullRequestMergedEvent::fromWorkerEventPayload([]);
     }
 }

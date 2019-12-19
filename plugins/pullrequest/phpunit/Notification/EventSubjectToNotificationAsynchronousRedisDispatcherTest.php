@@ -55,6 +55,11 @@ final class EventSubjectToNotificationAsynchronousRedisDispatcherTest extends Te
             {
                 return new self();
             }
+
+            public function toWorkerEventPayload(): array
+            {
+                return [];
+            }
         };
 
         $queue = \Mockery::mock(PersistentQueue::class);
