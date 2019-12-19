@@ -283,6 +283,9 @@ msgstr "Cet outil de suivi n'est pas un outil de suivi lié à un planning"
 msgid "Tracker semantic done"
 msgstr "Sémantique fini"
 
+msgid "Unplanned"
+msgstr "Non planifié"
+
 msgid "Update of planning assignment may lead to errors in:"
 msgstr "La mise à jour des plannings peut causer des erreurs dans :"
 

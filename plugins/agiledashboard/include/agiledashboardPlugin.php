@@ -25,6 +25,10 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedCriterionOptionsProvider;
+use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionChecker;
+use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionMatchingIdsRetriever;
+use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionProjectNotUsingExplicitBacklogException;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\ProjectsCountModeDao;
@@ -348,7 +352,9 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                 $planning_factory,
                 TrackerFactory::instance(),
                 Tracker_ArtifactFactory::instance()
-            )
+            ),
+            new UnplannedCriterionOptionsProvider(new ExplicitBacklogDao()),
+            new UnplannedReportCriterionChecker($params['additional_criteria'])
         );
         $additional_criterion = $provider->getCriterion($backlog_tracker, $user);
 
@@ -368,6 +374,25 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
         $user    = $params['user'];
         $project = $backlog_tracker->getProject();
+
+        $unplanned_report_criterion_checker = new UnplannedReportCriterionChecker($params['additional_criteria']);
+        if ($unplanned_report_criterion_checker->isUnplannedValueSelected()) {
+            $retriever = new UnplannedReportCriterionMatchingIdsRetriever(
+                new ExplicitBacklogDao(),
+                new ArtifactsInExplicitBacklogDao(),
+                new PlannedArtifactDao(),
+                $this->getArtifactFactory()
+            );
+
+            try {
+                $params['result'][]         = $retriever->getMatchingIds($backlog_tracker, $user);
+                $params['search_performed'] = true;
+            } catch (UnplannedReportCriterionProjectNotUsingExplicitBacklogException $exception) {
+                //Does nothing
+            } finally {
+                return;
+            }
+        }
 
         $milestone_provider = new AgileDashboard_Milestone_SelectedMilestoneProvider($params['additional_criteria'], $this->getMilestoneFactory(), $user, $project);
         $milestone          = $milestone_provider->getMilestone();
@@ -399,8 +424,13 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $project = $params['report']->getTracker()->getProject();
         $user    = $this->getCurrentUser();
 
-        $milestone_provider = new AgileDashboard_Milestone_SelectedMilestoneProvider($params['additional_criteria'], $this->getMilestoneFactory(), $user, $project);
+        $unplanned_report_criterion_checker = new UnplannedReportCriterionChecker($params['additional_criteria']);
+        if ($unplanned_report_criterion_checker->isUnplannedValueSelected()) {
+            $dao->save($params['report']->getId(), AgileDashboard_Milestone_MilestoneReportCriterionProvider::UNPLANNED);
+            return;
+        }
 
+        $milestone_provider = new AgileDashboard_Milestone_SelectedMilestoneProvider($params['additional_criteria'], $this->getMilestoneFactory(), $user, $project);
         if ($milestone_provider->getMilestone()) {
             $dao->save($params['report']->getId(), $milestone_provider->getMilestoneId());
         } else {
