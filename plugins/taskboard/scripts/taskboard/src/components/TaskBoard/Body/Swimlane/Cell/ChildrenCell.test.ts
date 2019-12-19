@@ -18,20 +18,18 @@
  */
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
-import { Card, ColumnDefinition, Swimlane } from "../../../../type";
-import ChildCard from "./Card/ChildCard.vue";
-import CardSkeleton from "./Skeleton/CardSkeleton.vue";
-import ColumnWithChildren from "./ColumnWithChildren.vue";
-import { RootState } from "../../../../store/type";
-import AddCard from "./Card/Add/AddCard.vue";
+import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
+import { Card, ColumnDefinition, Swimlane } from "../../../../../type";
+import ChildCard from "../Card/ChildCard.vue";
+import CardSkeleton from "../Skeleton/CardSkeleton.vue";
+import ChildrenCell from "./ChildrenCell.vue";
+import { RootState } from "../../../../../store/type";
 
 function createWrapper(
     swimlane: Swimlane,
     is_collapsed: boolean,
-    cards_in_cell: Card[],
-    can_add_in_place = false
-): Wrapper<ColumnWithChildren> {
+    cards_in_cell: Card[]
+): Wrapper<ChildrenCell> {
     const todo: ColumnDefinition = {
         id: 2,
         label: "To do",
@@ -46,7 +44,7 @@ function createWrapper(
         is_collapsed
     } as ColumnDefinition;
 
-    return shallowMount(ColumnWithChildren, {
+    return shallowMount(ChildrenCell, {
         mocks: {
             $store: createStoreMock({
                 state: {
@@ -54,8 +52,7 @@ function createWrapper(
                     swimlane: {}
                 } as RootState,
                 getters: {
-                    "swimlane/cards_in_cell": (): Card[] => cards_in_cell,
-                    can_add_in_place: (): boolean => can_add_in_place
+                    "swimlane/cards_in_cell": (): Card[] => cards_in_cell
                 }
             })
         },
@@ -63,7 +60,7 @@ function createWrapper(
     });
 }
 
-describe("ColumnWithChildren", () => {
+describe("ChildrenCell", () => {
     it(`when the swimlane is loading children cards,
         and there isn't any card yet,
         it displays many skeletons`, () => {
@@ -110,19 +107,5 @@ describe("ColumnWithChildren", () => {
 
         expect(wrapper.findAll(ChildCard).length).toBe(3);
         expect(wrapper.findAll(CardSkeleton).length).toBe(0);
-    });
-
-    describe("renders the AddCard component only when it is possible", () => {
-        it("renders the button when the tracker of the swimlane allows to add cards in place", () => {
-            const wrapper = createWrapper({} as Swimlane, false, [], true);
-
-            expect(wrapper.contains(AddCard)).toBe(true);
-        });
-
-        it("does not render the AddCard component when the tracker of the swimlane disallows to add cards in place", () => {
-            const wrapper = createWrapper({} as Swimlane, false, [], false);
-
-            expect(wrapper.contains(AddCard)).toBe(false);
-        });
     });
 });

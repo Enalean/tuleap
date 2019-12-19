@@ -28,20 +28,6 @@ import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
 import { RootState } from "../../../store/type";
 import { Swimlane, ColumnDefinition } from "../../../type";
 
-interface FakeDrake {
-    on: jest.SpyInstance;
-    destroy: jest.SpyInstance;
-}
-
-jest.mock("dragula", () => {
-    const fake_drake = {
-        on: jest.fn(),
-        destroy: jest.fn(),
-        cancel: jest.fn()
-    };
-    return jest.fn((): FakeDrake => fake_drake);
-});
-
 async function createWrapper(
     swimlanes: Swimlane[],
     are_closed_items_displayed: boolean
