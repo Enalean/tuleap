@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,8 +19,6 @@
  */
 
 namespace Tuleap\OpenIDConnectClient\Authentication\Token;
-
-require_once __DIR__ . '/../../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -46,7 +44,7 @@ class TokenResponseTest extends TestCase
         $http_response->shouldReceive('getBody')->andReturns(json_encode(['id_token' => 'token']));
 
         $this->expectException(IncorrectlyFormattedTokenResponseException::class);
-        $this->expectExceptionMessageRegExp('{"id_token":"token"}');
+        $this->expectExceptionMessageMatches('{"id_token":"token"}');
 
         TokenResponse::buildFromHTTPResponse($http_response);
     }

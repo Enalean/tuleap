@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -58,6 +58,10 @@ class HTTPAccessControl
      * @var UserDao
      */
     private $user_dao;
+    /**
+     * @var GitHTTPAskBasicAuthenticationChallenge
+     */
+    private $ask_basic_authentication_challenge;
 
     public function __construct(
         Logger $logger,
@@ -65,7 +69,8 @@ class HTTPAccessControl
         User_LoginManager $login_manager,
         ReplicationHTTPUserAuthenticator $replication_http_user_authenticator,
         PermissionsManager $permissions_manager,
-        UserDao $user_dao
+        UserDao $user_dao,
+        GitHTTPAskBasicAuthenticationChallenge $ask_basic_authentication_challenge
     ) {
         $this->logger                              = $logger;
         $this->forge_access                        = $forge_access;
@@ -73,6 +78,7 @@ class HTTPAccessControl
         $this->replication_http_user_authenticator = $replication_http_user_authenticator;
         $this->permissions_manager                 = $permissions_manager;
         $this->user_dao                            = $user_dao;
+        $this->ask_basic_authentication_challenge  = $ask_basic_authentication_challenge;
     }
 
     /**
@@ -112,11 +118,12 @@ class HTTPAccessControl
         return false;
     }
 
-    private function basicAuthenticationChallenge()
+    /**
+     * @psalm-return never-return
+     */
+    private function basicAuthenticationChallenge(): void
     {
-        header('WWW-Authenticate: Basic realm="'.\ForgeConfig::get('sys_name').' git authentication"');
-        header('HTTP/1.0 401 Unauthorized');
-        exit;
+        $this->ask_basic_authentication_challenge->askBasicAuthenticationChallenge();
     }
 
     /**
