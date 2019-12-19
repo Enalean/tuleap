@@ -40,8 +40,8 @@ export default function controller($element, gettextCatalog, ExecutionRestServic
             : {
                   status: "notrun"
               };
-        const $trigger = $element.find(".steps-step-action-dropdown");
-        const $dropdown_menu = $element.find(".tlp-dropdown-menu");
+        const $trigger = $element.find(".steps-step-action-dropdown-trigger");
+        const $dropdown_menu = $element.find(".steps-step-action-dropdown");
 
         self.dropdown = dropdown($trigger[0], {
             dropdown_menu: $dropdown_menu[0]
