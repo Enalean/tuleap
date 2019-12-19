@@ -153,7 +153,7 @@ describe("CampaignService", () => {
             return wrapPromise(promise);
         });
 
-        it("When the server responds with code 500, then a promise will be rejected ", () => {
+        it("When the server responds with code 500, then a promise will be rejected", () => {
             mockBackend
                 .expectPOST("/api/v1/testmanagement_campaigns/31/automated_tests")
                 .respond(500, {

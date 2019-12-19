@@ -78,35 +78,35 @@ describe("ExecutionListFilter", function() {
         }
     ];
 
-    it("it has a CampaignListFilter filter", function() {
+    it("has a CampaignListFilter filter", function() {
         expect(ngFilter("ExecutionListFilter")).not.toBeNull();
     });
 
-    it("it filters on category", function() {
+    it("filters on category", function() {
         var results = ngFilter("ExecutionListFilter")(list, "soap", {}, null);
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(expect.objectContaining({ id: 24606 }));
     });
 
-    it("it filters on summary", function() {
+    it("filters on summary", function() {
         var results = ngFilter("ExecutionListFilter")(list, "workflow", {}, null);
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(expect.objectContaining({ id: 24605 }));
     });
 
-    it("it filters on test def id", function() {
+    it("filters on test def id", function() {
         var results = ngFilter("ExecutionListFilter")(list, "24601", {}, null);
         expect(results.length).toEqual(1);
         expect(results[0]).toEqual(expect.objectContaining({ id: 24606 }));
     });
 
-    it("it filters on execution status", function() {
+    it("filters on execution status", function() {
         var results = ngFilter("ExecutionListFilter")(list, "", { passed: true }, null);
         expect(results.length).toEqual(2);
         expect(results[0]).toEqual(expect.objectContaining({ id: 24605 }));
     });
 
-    it("it filters on execution multiple status", function() {
+    it("filters on execution multiple status", function() {
         var results = ngFilter("ExecutionListFilter")(
             list,
             "",
@@ -119,7 +119,7 @@ describe("ExecutionListFilter", function() {
         expect(results[2]).toEqual(expect.objectContaining({ id: 24607 }));
     });
 
-    it("it filters on summary and execution status", function() {
+    it("filters on summary and execution status", function() {
         var results = ngFilter("ExecutionListFilter")(list, "tracker", { passed: true }, null);
         expect(results.length).toEqual(1);
     });

@@ -22,11 +22,11 @@ describe("InPropertiesFilter", () => {
             { id: 6, label: "Valid 9", status: "Plop" }
         ];
 
-    it("it has a InPropertiesFilter filter", function() {
+    it("has a InPropertiesFilter filter", function() {
         expect(ngFilter("InPropertiesFilter")).not.toBeNull();
     });
 
-    it("it filters on campaign label", function() {
+    it("filters on campaign label", function() {
         expect(ngFilter("InPropertiesFilter")(list, "beta", properties)).toContainEqual({
             id: 4,
             label: "Valid 8 beta",
@@ -34,7 +34,7 @@ describe("InPropertiesFilter", () => {
         });
     });
 
-    it("it filters on campaign status", function() {
+    it("filters on campaign status", function() {
         expect(ngFilter("InPropertiesFilter")(list, "First", properties)).toContainEqual({
             id: 1,
             label: "Valid 7.11",
@@ -57,7 +57,7 @@ describe("InPropertiesFilter", () => {
         });
     });
 
-    it("it filters on both status", function() {
+    it("filters on both status", function() {
         expect(ngFilter("InPropertiesFilter")(list, "status", properties)).toContainEqual({
             id: 1,
             label: "Valid 7.11",
