@@ -17,16 +17,15 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  *
  */
-import * as getters from "./getters";
-import { State } from "./type";
 
-describe("getters", () => {
-    describe("is_template_selected", () => {
-        it(`Should return false when there is no selected template`, () => {
-            const state: State = {
+import mutations from "./mutations";
+
+describe("mutation", () => {
+    describe("setSelectedTemplate()", () => {
+        it(`stores the tuleap template and make sure the company template is null`, () => {
+            const state = {
                 selected_tuleap_template: null,
                 tuleap_templates: [],
-                company_templates: [],
                 are_restricted_users_allowed: false,
                 project_default_visibility: "",
                 error: null,
@@ -35,17 +34,35 @@ describe("getters", () => {
                 trove_categories: [],
                 is_description_required: false,
                 project_fields: [],
-                selected_company_template: null,
+                company_templates: [],
+                selected_company_template: {
+                    title: "Whole lot company",
+                    description: "I have got whole lot",
+                    id: "10",
+                    svg: "<svg></svg>",
+                    is_built_in: false
+                },
                 company_name: ""
             };
-            expect(getters.is_template_selected(state)).toBe(false);
+
+            const selected_template = {
+                title: "scrum template",
+                description: "scrum desc",
+                id: "scrum",
+                svg: "<svg></svg>",
+                is_built_in: true
+            };
+            mutations.setSelectedTemplate(state, selected_template);
+            expect(state.selected_tuleap_template).toStrictEqual(selected_template);
+            expect(state.selected_company_template).toBeNull();
         });
-        it(`Should return true when a tuleap template is choosen`, () => {
-            const state: State = {
+
+        it(`stores the company template and make sure the tuleap template is null`, () => {
+            const state = {
                 selected_tuleap_template: {
-                    title: "scrum",
+                    title: "scrum template",
                     description: "scrum desc",
-                    id: "scrum_template",
+                    id: "scrum",
                     svg: "<svg></svg>",
                     is_built_in: true
                 },
@@ -62,11 +79,29 @@ describe("getters", () => {
                 selected_company_template: null,
                 company_name: ""
             };
-            expect(getters.is_template_selected(state)).toBe(true);
+
+            const selected_template = {
+                title: "Whole lot company",
+                description: "I have got whole lot",
+                id: "10",
+                svg: "<svg></svg>",
+                is_built_in: false
+            };
+            mutations.setSelectedTemplate(state, selected_template);
+            expect(state.selected_company_template).toStrictEqual(selected_template);
+            expect(state.selected_tuleap_template).toBeNull();
         });
-        it(`Should return true when a company template is choosen`, () => {
-            const state: State = {
-                selected_tuleap_template: null,
+    });
+    describe("resetSelectedTemplate() -", () => {
+        it("reset the selected templates", () => {
+            const state = {
+                selected_tuleap_template: {
+                    title: "scrum template",
+                    description: "scrum desc",
+                    id: "scrum",
+                    svg: "<svg></svg>",
+                    is_built_in: true
+                },
                 tuleap_templates: [],
                 are_restricted_users_allowed: false,
                 project_default_visibility: "",
@@ -78,54 +113,18 @@ describe("getters", () => {
                 project_fields: [],
                 company_templates: [],
                 selected_company_template: {
-                    title: "scrum",
-                    description: "scrum desc",
+                    title: "Whole lot company",
+                    description: "I have got whole lot",
                     id: "10",
                     svg: "<svg></svg>",
                     is_built_in: false
                 },
                 company_name: ""
             };
-            expect(getters.is_template_selected(state)).toBe(true);
-        });
-    });
 
-    describe("has_error", () => {
-        it(`Should return false when no error message is stored`, () => {
-            const state: State = {
-                selected_tuleap_template: null,
-                tuleap_templates: [],
-                are_restricted_users_allowed: false,
-                project_default_visibility: "",
-                error: null,
-                is_creating_project: false,
-                is_project_approval_required: false,
-                trove_categories: [],
-                is_description_required: false,
-                project_fields: [],
-                company_templates: [],
-                selected_company_template: null,
-                company_name: ""
-            };
-            expect(getters.has_error(state)).toBe(false);
-        });
-        it(`Should return true when a template is choosen`, () => {
-            const state: State = {
-                selected_tuleap_template: null,
-                tuleap_templates: [],
-                are_restricted_users_allowed: false,
-                project_default_visibility: "",
-                error: "Ho snap!",
-                is_creating_project: false,
-                is_project_approval_required: false,
-                trove_categories: [],
-                is_description_required: false,
-                project_fields: [],
-                company_templates: [],
-                selected_company_template: null,
-                company_name: ""
-            };
-            expect(getters.has_error(state)).toBe(true);
+            mutations.resetSelectedTemplate(state);
+            expect(state.selected_tuleap_template).toBeNull();
+            expect(state.selected_company_template).toBeNull();
         });
     });
 });

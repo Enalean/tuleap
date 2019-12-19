@@ -25,6 +25,8 @@ namespace Tuleap\Project\Registration;
 
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
+use Tuleap\Project\Registration\Template\CompanyTemplate;
+use Tuleap\Project\Registration\Template\CompanyTemplatePresenter;
 use Tuleap\Project\Registration\Template\ProjectTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\Registration\Template\TemplatePresenter;
@@ -62,11 +64,17 @@ class ProjectRegistrationPresenterBuilder
 
     public function buildPresenter(): ProjectRegistrationPresenter
     {
-
+        $company_templates = array_map(
+            static function (CompanyTemplate $project_template) {
+                return new TemplatePresenter($project_template);
+            },
+            $this->template_factory->getCompanyTemplateList()
+        );
         return new ProjectRegistrationPresenter(
             $this->default_project_visibility_retriever->getDefaultProjectVisibility(),
             $this->trove_cat_factory->getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren(),
             $this->fields_factory->getAllDescriptionFields(),
+            $company_templates,
             ...array_map(
                 static function (ProjectTemplate $project_template) {
                     return new TemplatePresenter($project_template);

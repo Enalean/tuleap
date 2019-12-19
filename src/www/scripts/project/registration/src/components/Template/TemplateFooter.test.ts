@@ -30,7 +30,7 @@ describe("TemplateFooter", () => {
     let factory: Wrapper<TemplateFooter>, router: VueRouter, store: Store, state: State;
     beforeEach(async () => {
         state = {
-            selected_template: null,
+            selected_tuleap_template: null,
             tuleap_templates: [],
             are_restricted_users_allowed: false,
             project_default_visibility: "public",
@@ -39,7 +39,10 @@ describe("TemplateFooter", () => {
             is_project_approval_required: false,
             trove_categories: [],
             is_description_required: false,
-            project_fields: []
+            project_fields: [],
+            selected_company_template: null,
+            company_templates: [],
+            company_name: ""
         };
         const getters = {
             is_template_selected: false

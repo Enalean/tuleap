@@ -64,11 +64,20 @@ class ProjectRegistrationPresenter
      * @var bool
      */
     public $is_description_mandatory;
+    /**
+     * @var string
+     */
+    public $company_templates;
+    /**
+     * @var string
+     */
+    public $company_name;
 
     public function __construct(
         string $project_default_visibility,
         array $trove_categories,
         array $field_list,
+        array $company_templates,
         TemplatePresenter ...$tuleap_templates
     ) {
         $this->tuleap_templates             = json_encode($tuleap_templates);
@@ -79,5 +88,7 @@ class ProjectRegistrationPresenter
         $this->trove_categories             = json_encode($trove_categories, JSON_THROW_ON_ERROR);
         $this->is_description_mandatory     = ProjectDescriptionUsageRetriever::isDescriptionMandatory();
         $this->field_list                   = json_encode($field_list);
+        $this->company_templates            = json_encode($company_templates);
+        $this->company_name                 = ForgeConfig::get('sys_org_name');
     }
 }

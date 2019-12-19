@@ -57,15 +57,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     const project_default_visibility = String(vue_mount_point.dataset.projectDefaultVisibility);
     const tuleap_templates: TemplateData[] = JSON.parse(tuleap_templates_json);
 
-    const selected_template = null;
+    const selected_tuleap_template = null;
+    const selected_company_template = null;
     const error = null;
     const is_creating_project = false;
     const is_project_approval_required = Boolean(vue_mount_point.dataset.projectsMustBeApproved);
     const is_description_required = Boolean(vue_mount_point.dataset.isDescriptionMandatory);
 
+    const company_templates_json = vue_mount_point.dataset.companyTemplates;
+    if (!company_templates_json) {
+        return;
+    }
+    const company_templates = JSON.parse(company_templates_json);
+
+    const company_name = String(vue_mount_point.dataset.companyName);
+
     const root_state: State = {
         tuleap_templates,
-        selected_template,
+        selected_tuleap_template,
+        selected_company_template,
         are_restricted_users_allowed,
         project_default_visibility,
         error,
@@ -73,7 +83,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         is_project_approval_required,
         trove_categories,
         is_description_required,
-        project_fields
+        project_fields,
+        company_templates,
+        company_name
     };
 
     Vue.use(VueDOMPurifyHTML);

@@ -41,7 +41,7 @@ describe("ProjectInformationInputPrivacyList", () => {
     beforeEach(async () => {
         local_vue = await createProjectRegistrationLocalVue();
         const state: State = {
-            selected_template: null,
+            selected_tuleap_template: null,
             are_restricted_users_allowed: false,
             project_default_visibility: "public",
             tuleap_templates: [],
@@ -50,7 +50,10 @@ describe("ProjectInformationInputPrivacyList", () => {
             is_project_approval_required: false,
             trove_categories: [],
             is_description_required: false,
-            project_fields: []
+            project_fields: [],
+            selected_company_template: null,
+            company_templates: [],
+            company_name: ""
         };
 
         const store_options = { state };

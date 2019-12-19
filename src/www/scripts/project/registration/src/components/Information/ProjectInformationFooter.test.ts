@@ -30,11 +30,12 @@ describe("ProjectInformationFooter", () => {
 
     beforeEach(async () => {
         const state: State = {
-            selected_template: {
+            selected_tuleap_template: {
                 title: "scrum",
                 description: "scrum desc",
-                name: "scrum",
-                svg: "<svg></svg>"
+                id: "scrum",
+                svg: "<svg></svg>",
+                is_built_in: false
             },
             tuleap_templates: [],
             are_restricted_users_allowed: false,
@@ -44,7 +45,10 @@ describe("ProjectInformationFooter", () => {
             is_project_approval_required: false,
             trove_categories: [],
             is_description_required: false,
-            project_fields: []
+            project_fields: [],
+            selected_company_template: null,
+            company_templates: [],
+            company_name: ""
         };
 
         const store_options = {
@@ -60,7 +64,7 @@ describe("ProjectInformationFooter", () => {
 
     it(`reset the selected template when the 'Back' button is clicked`, () => {
         factory.find("[data-test=project-registration-back-button]").trigger("click");
-        expect(store.dispatch).toHaveBeenCalledWith("setSelectedTemplate", null);
+        expect(store.dispatch).toHaveBeenCalledWith("resetSelectedTemplate");
     });
 
     it(`Displays spinner when project is creating`, () => {

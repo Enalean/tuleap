@@ -36,6 +36,7 @@
                 </p>
 
                 <under-construction-information />
+                <company-templates-list />
                 <tuleap-template-list />
             </div>
         </div>
@@ -50,9 +51,11 @@ import TuleapTemplateList from "./Tuleap/TuleapTemplateList.vue";
 import UnderConstructionInformation from "../UnderConstructionInformation.vue";
 import NewProjectBoxes from "./NewProjectBoxesSvg.vue";
 import TemplateFooter from "./TemplateFooter.vue";
+import CompanyTemplatesList from "./Company/CompanyTemplateList.vue";
 
 @Component({
     components: {
+        CompanyTemplatesList,
         TemplateFooter,
         NewProjectBoxes,
         UnderConstructionInformation,

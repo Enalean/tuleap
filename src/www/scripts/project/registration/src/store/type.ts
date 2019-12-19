@@ -18,11 +18,12 @@
  *
  */
 
-import { TroveCatData, TemplateData, FieldData } from "../type";
+import { FieldData, TemplateData, TroveCatData } from "../type";
 
 export interface State {
     tuleap_templates: TemplateData[];
-    selected_template: TemplateData | null;
+    selected_tuleap_template: TemplateData | null;
+    selected_company_template: TemplateData | null;
     are_restricted_users_allowed: boolean;
     project_default_visibility: string;
     error: string | null;
@@ -31,6 +32,8 @@ export interface State {
     trove_categories: TroveCatData[];
     is_description_required: boolean;
     project_fields: FieldData[];
+    company_templates: TemplateData[];
+    company_name: string;
 }
 
 export interface Context {

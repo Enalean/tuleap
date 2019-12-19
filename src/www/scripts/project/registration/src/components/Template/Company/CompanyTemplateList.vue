@@ -1,7 +1,7 @@
 <!--
   - Copyright (c) Enalean, 2019 - present. All Rights Reserved.
   -
-  -  This file is a part of Tuleap.
+  - This file is a part of Tuleap.
   -
   - Tuleap is free software; you can redistribute it and/or modify
   - it under the terms of the GNU General Public License as published by
@@ -14,17 +14,19 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
   -
   -->
 
 <template>
     <div>
-        <h3 v-translate>Tuleap templates</h3>
+        <h3 data-test="project-registration-company-template-title">
+            {{ platform_template_name }}
+        </h3>
 
         <section class="project-registration-default-templates-section">
             <template-card
-                v-for="template of tuleap_templates"
+                v-for="template of company_templates"
                 v-bind:key="template.id"
                 v-bind:template="template"
             />
@@ -38,16 +40,23 @@ import { Component } from "vue-property-decorator";
 import TemplateCard from "../TemplateCard.vue";
 import { State } from "vuex-class";
 import { TemplateData } from "../../../type";
+import { sprintf } from "sprintf-js";
 
 @Component({
     components: { TemplateCard }
 })
-export default class TuleapTemplateList extends Vue {
+export default class TuleapCompanyTemplateList extends Vue {
     @State
-    tuleap_templates!: TemplateData[];
+    company_templates!: TemplateData[];
 
-    storeSelectedTemplate(template: TemplateData): void {
-        this.$store.dispatch("setSelectedTuleapTemplate", template);
+    @State
+    company_name!: string;
+
+    get platform_template_name(): string {
+        if (this.company_name === "Tuleap") {
+            return this.$gettext("Custom templates");
+        }
+        return sprintf(this.$gettext("%s templates"), this.company_name);
     }
 }
 </script>

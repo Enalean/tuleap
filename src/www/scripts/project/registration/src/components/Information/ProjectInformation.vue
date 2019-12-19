@@ -85,13 +85,13 @@ import ProjectName from "./Input/ProjectName.vue";
 import ProjectInformationInputPrivacySwitch from "./Input/ProjectInformationInputPrivacySwitch.vue";
 import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
 import {
-    ProjectNameProperties,
-    TroveCatProperties,
-    TemplateData,
-    ProjectProperties,
+    FieldData,
     FieldProperties,
+    ProjectNameProperties,
+    ProjectProperties,
+    TemplateData,
     TroveCatData,
-    FieldData
+    TroveCatProperties
 } from "../../type";
 import { Getter, State } from "vuex-class";
 import EventBus from "../../helpers/event-bus";
@@ -125,6 +125,9 @@ export default class ProjectInformation extends Vue {
     @Getter
     has_error!: boolean;
 
+    @Getter
+    is_template_selected!: boolean;
+
     @State
     error!: string;
 
@@ -135,7 +138,7 @@ export default class ProjectInformation extends Vue {
     project_default_visibility!: string;
 
     @State
-    selected_template!: TemplateData;
+    selected_tuleap_template!: TemplateData;
 
     @State
     is_project_approval_required!: boolean;
@@ -145,6 +148,9 @@ export default class ProjectInformation extends Vue {
 
     @State
     project_fields!: Array<FieldData>;
+
+    @State
+    selected_company_template!: TemplateData;
 
     selected_visibility = "public";
 
@@ -162,7 +168,7 @@ export default class ProjectInformation extends Vue {
     field_list: Array<FieldProperties> = [];
 
     mounted(): void {
-        if (!this.selected_template) {
+        if (!this.is_template_selected) {
             this.$router.push("new");
             return;
         }
@@ -218,16 +224,22 @@ export default class ProjectInformation extends Vue {
     }
 
     buildProjectPropertyDetailedPrivacy(): ProjectProperties {
+        const project_properties: ProjectProperties = {
+            shortname: this.name_properties.slugified_name,
+            description: this.field_description,
+            label: this.name_properties.name,
+            is_public: !this.is_private,
+            categories: this.trove_cats,
+            fields: this.field_list
+        };
+        if (this.selected_tuleap_template) {
+            project_properties.xml_template_name = this.selected_tuleap_template.id;
+        }
+        if (this.selected_company_template) {
+            project_properties.template_id = parseInt(this.selected_company_template.id, 10);
+        }
         if (!this.are_restricted_users_allowed) {
-            return {
-                shortname: this.name_properties.slugified_name,
-                description: this.field_description,
-                label: this.name_properties.name,
-                is_public: !this.is_private,
-                xml_template_name: this.selected_template.name,
-                categories: this.trove_cats,
-                fields: this.field_list
-            };
+            return project_properties;
         }
 
         let is_public_project = null;
@@ -252,17 +264,9 @@ export default class ProjectInformation extends Vue {
             default:
                 throw new Error("Unable to build the project privacy properties");
         }
-
-        return {
-            shortname: this.name_properties.slugified_name,
-            description: this.field_description,
-            label: this.name_properties.name,
-            is_public: is_public_project,
-            allow_restricted: is_restricted_allowed_for_the_project,
-            xml_template_name: this.selected_template.name,
-            categories: this.trove_cats,
-            fields: this.field_list
-        };
+        project_properties.is_public = is_public_project;
+        project_properties.allow_restricted = is_restricted_allowed_for_the_project;
+        return project_properties;
     }
 }
 </script>

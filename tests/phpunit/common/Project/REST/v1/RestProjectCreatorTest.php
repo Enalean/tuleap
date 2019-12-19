@@ -124,6 +124,7 @@ class RestProjectCreatorTest extends TestCase
                     new XMLFileContentRetriever(),
                 ),
                 $this->template_dao,
+                M::mock(ProjectManager::class)
             ),
             $this->permissions_checker,
             $this->categories_updater,

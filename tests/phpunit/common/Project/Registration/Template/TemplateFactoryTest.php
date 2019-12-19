@@ -43,6 +43,10 @@ class TemplateFactoryTest extends TestCase
      * @var M\LegacyMockInterface|M\MockInterface|ConsistencyChecker
      */
     private $consistency_checker;
+    /**
+     * @var M\LegacyMockInterface|M\MockInterface|\ProjectManager
+     */
+    private $project_manager;
 
     protected function setUp(): void
     {
@@ -50,11 +54,15 @@ class TemplateFactoryTest extends TestCase
 
         $this->consistency_checker = M::mock(ConsistencyChecker::class);
         $this->consistency_checker->shouldReceive('areAllServicesAvailable')->andReturnTrue()->byDefault();
+
+        $this->project_manager = M::mock(\ProjectManager::class);
+
         $this->factory  = new TemplateFactory(
             new GlyphFinder(new \EventManager()),
             new ProjectXMLMerger(),
             $this->consistency_checker,
             M::mock(TemplateDao::class),
+            $this->project_manager
         );
     }
 
@@ -104,5 +112,39 @@ class TemplateFactoryTest extends TestCase
         $this->expectException(InvalidXMLTemplateNameException::class);
 
         $this->factory->getTemplate(ScrumTemplate::NAME);
+    }
+
+    public function testItReturnsCompanyTemplateWhenTheTemplateIdIsNot100(): void
+    {
+        $template100 = \Mockery::mock(\Project::class);
+        $template100->shouldReceive('getGroupId')->andReturn("100")->once();
+        $template100->shouldReceive('getUnixNameLowerCase')->never();
+        $template100->shouldReceive('getDescription')->never();
+        $template100->shouldReceive('getUnconvertedPublicName')->never();
+
+
+        $template110 = \Mockery::mock(\Project::class);
+        $template110->shouldReceive('getGroupId')->andReturn("110")->atLeast()->twice();
+        $template110->shouldReceive('getUnixNameLowerCase')->andReturn("hustler-company");
+        $template110->shouldReceive('getDescription')->andReturn("New Jack City");
+        $template110->shouldReceive('getUnconvertedPublicName')->andReturn("Hustler Company");
+
+        $template120 = \Mockery::mock(\Project::class);
+        $template120->shouldReceive('getGroupId')->andReturn("120")->atLeast()->twice();
+        $template120->shouldReceive('getUnixNameLowerCase')->andReturn("lyudi-invalidy-company");
+        $template120->shouldReceive('getDescription')->andReturn("All about us");
+        $template120->shouldReceive('getUnconvertedPublicName')->andReturn("Lyudi Invalidy Company");
+
+        $site_templates = [$template100, $template110, $template120];
+        $this->project_manager->shouldReceive('getSiteTemplates')->andReturn($site_templates);
+
+
+        $glyph_finder      = new GlyphFinder(\Mockery::mock(\EventManager::class));
+        $hustler_template  = new CompanyTemplate($template110, $glyph_finder);
+        $invalidy_template = new CompanyTemplate($template120, $glyph_finder);
+
+        $expected_company_templates = [$hustler_template, $invalidy_template];
+
+        $this->assertEquals($expected_company_templates, $this->factory->getCompanyTemplateList());
     }
 }

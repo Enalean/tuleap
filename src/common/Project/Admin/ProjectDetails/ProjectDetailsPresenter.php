@@ -131,7 +131,7 @@ class ProjectDetailsPresenter
         $this->template_project_label = _('Template used by project');
         if ($template) {
             $this->built_from_xml_template = [
-                'name' => $template->getName(),
+                'name' => $template->getId(),
             ];
         } else {
             $this->built_from_project = [

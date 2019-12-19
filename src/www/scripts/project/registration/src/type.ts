@@ -45,8 +45,9 @@ export interface TroveCatProperties {
 export interface TemplateData {
     title: string;
     description: string;
-    name: string;
+    id: string;
     svg: string;
+    is_built_in: boolean;
 }
 
 export interface ProjectProperties {
@@ -54,7 +55,8 @@ export interface ProjectProperties {
     label: string;
     is_public: boolean;
     allow_restricted?: boolean;
-    xml_template_name: string;
+    xml_template_name?: string | null;
+    template_id?: number | null;
     categories: Array<TroveCatProperties>;
     description: string;
     fields: Array<FieldProperties>;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,25 +15,15 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  *
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\Project\Registration\Template;
 
-use Tuleap\Glyph\Glyph;
-
-interface ProjectTemplate
+interface TuleapTemplate extends ProjectTemplate
 {
-    public function getId(): string;
+    public function getXMLPath(): string;
 
-    public function getTitle(): string;
-
-    public function getDescription(): string;
-
-    public function getGlyph(): Glyph;
-
-    public function isBuiltIn(): bool;
+    public function isAvailable(): bool;
 }

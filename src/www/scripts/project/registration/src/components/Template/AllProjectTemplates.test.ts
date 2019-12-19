@@ -25,6 +25,7 @@ import UnderConstructionInformation from "../UnderConstructionInformation.vue";
 import NewProjectBoxes from "./NewProjectBoxesSvg.vue";
 import TuleapTemplateList from "./Tuleap/TuleapTemplateList.vue";
 import TemplateFooter from "./TemplateFooter.vue";
+import CompanyTemplateList from "./Company/CompanyTemplateList.vue";
 
 describe("ProjectList", () => {
     let factory: Wrapper<ProjectList>;
@@ -40,5 +41,6 @@ describe("ProjectList", () => {
         expect(wrapper.contains(NewProjectBoxes)).toBe(true);
         expect(wrapper.contains(TuleapTemplateList)).toBe(true);
         expect(wrapper.contains(TemplateFooter)).toBe(true);
+        expect(wrapper.contains(CompanyTemplateList)).toBe(true);
     });
 });

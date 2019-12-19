@@ -20,6 +20,7 @@
 
 import { State } from "./type";
 
-export const is_template_selected = (state: State): boolean => state.selected_template !== null;
+export const is_template_selected = (state: State): boolean =>
+    state.selected_tuleap_template !== null || state.selected_company_template !== null;
 
 export const has_error = (state: State): boolean => state.error !== null;

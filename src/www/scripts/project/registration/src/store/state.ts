@@ -22,7 +22,8 @@ import { ACCESS_PRIVATE } from "../constant";
 
 const state: State = {
     tuleap_templates: [],
-    selected_template: null,
+    selected_tuleap_template: null,
+    selected_company_template: null,
     are_restricted_users_allowed: false,
     project_default_visibility: ACCESS_PRIVATE,
     error: null,
@@ -30,7 +31,9 @@ const state: State = {
     is_project_approval_required: false,
     trove_categories: [],
     is_description_required: false,
-    project_fields: []
+    project_fields: [],
+    company_templates: [],
+    company_name: ""
 };
 
 export default state;
