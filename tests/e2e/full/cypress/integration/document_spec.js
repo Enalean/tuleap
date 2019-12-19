@@ -17,27 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe("Document new UI and wiki service", () => {
-    it("Project admin must enable deprecated wiki service", () => {
-        cy.clearCookie("__Host-TULEAP_session_hash");
-        cy.ProjectAdministratorLogin();
-        cy.visitProjectService("document-project", "Admin");
-        cy.contains("Services").click();
-
-        cy.get('[data-test="edit-service-wiki"]').click();
-        cy.get("[data-test=service-edit-modal]").within(() => {
-            cy.get("[data-test=service-is-used]").click();
-            cy.get("[data-test=save-service-modifications]").click();
-        });
-
-        cy.get("[data-test=feedback]").contains("Successfully Updated Service", {
-            timeout: 40000
-        });
-
-        cy.userLogout();
-    });
-});
-
 function disableSpecificErrorThrownByCkeditor() {
     cy.on("uncaught:exception", err => {
         // the message bellow is only thown by ckeditor, if any other js exception is thrown
