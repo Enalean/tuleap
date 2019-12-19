@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -56,24 +56,49 @@ class Config
         );
     }
 
+    /**
+     * @return int|false
+     */
     public function getCampaignTrackerId(Project $project)
     {
-        return $this->getProperty($project, 'campaign_tracker_id');
+        return $this->getTrackerID($project, 'campaign_tracker_id');
     }
 
+    /**
+     * @return int|false
+     */
     public function getTestExecutionTrackerId(Project $project)
     {
-        return $this->getProperty($project, 'test_execution_tracker_id');
+        return $this->getTrackerID($project, 'test_execution_tracker_id');
     }
 
+    /**
+     * @return int|false
+     */
     public function getTestDefinitionTrackerId(Project $project)
     {
-        return $this->getProperty($project, 'test_definition_tracker_id');
+        return $this->getTrackerID($project, 'test_definition_tracker_id');
     }
 
+    /**
+     * @return int|false
+     */
     public function getIssueTrackerId(Project $project)
     {
-        return $this->getProperty($project, 'issue_tracker_id');
+        return $this->getTrackerID($project, 'issue_tracker_id');
+    }
+
+    /**
+     * @return int|false
+     */
+    private function getTrackerID(Project $project, string $key)
+    {
+        $id = $this->getProperty($project, $key);
+        if ($id === false) {
+            return $id;
+        }
+
+        return (int) $id;
     }
 
     public function isConfigNeeded(Project $project)
