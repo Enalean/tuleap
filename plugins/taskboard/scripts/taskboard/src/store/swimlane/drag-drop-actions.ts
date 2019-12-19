@@ -17,16 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { patch } from "tlp";
 import { ActionContext } from "vuex";
 import { RootState } from "../type";
-import { SwimlaneState, HandleDropPayload, ReorderCardsPayload, MoveCardsPayload } from "./type";
+import { HandleDropPayload, MoveCardsPayload, ReorderCardsPayload, SwimlaneState } from "./type";
 import {
-    isDraggedOverTheSourceCell,
+    getCardFromSwimlane,
     isDraggedOverAnotherSwimlane,
-    getCardFromSwimlane
+    isDraggedOverTheSourceCell
 } from "../../helpers/html-to-item";
 import { getCardPosition } from "../../helpers/cards-reordering";
-import { ColumnDefinition, Swimlane, Card } from "../../type";
+import { Card, ColumnDefinition, Swimlane } from "../../type";
 import { isSoloCard } from "./swimlane-helpers";
 
 export function handleDrop(
@@ -112,4 +113,62 @@ function getMoveCardsPayload(
         swimlane,
         position
     };
+}
+
+export async function reorderCardsInCell(
+    context: ActionContext<SwimlaneState, RootState>,
+    payload: ReorderCardsPayload
+): Promise<void> {
+    context.commit("changeCardPosition", payload);
+    try {
+        const url = getPATCHCellUrl(payload.swimlane, payload.column);
+        await patch(url, {
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ order: payload.position })
+        });
+    } catch (error) {
+        await context.dispatch("error/handleModalError", error, { root: true });
+    }
+}
+
+export async function moveCardToCell(
+    context: ActionContext<SwimlaneState, RootState>,
+    payload: MoveCardsPayload
+): Promise<void> {
+    context.commit("moveCardToColumn", payload);
+    try {
+        const url = getPATCHCellUrl(payload.swimlane, payload.column);
+        const body = getMoveCardBody(payload);
+        await patch(url, {
+            headers: { "Content-Type": "application/json" },
+            body
+        });
+        await context.dispatch("refreshCardAndParent", {
+            swimlane: payload.swimlane,
+            card: payload.card
+        });
+    } catch (error) {
+        await context.dispatch("error/handleModalError", error, { root: true });
+    }
+}
+
+function getMoveCardBody(payload: MoveCardsPayload): string {
+    const body = {
+        add: payload.card.id
+    };
+
+    if (payload.position) {
+        Object.assign(body, { order: payload.position });
+    }
+
+    return JSON.stringify(body);
+}
+
+function getPATCHCellUrl(swimlane: Swimlane, column: ColumnDefinition): string {
+    const swimlane_id = swimlane.card.id;
+    const column_id = column.id;
+
+    return `/api/v1/taskboard_cells/${encodeURIComponent(swimlane_id)}/column/${encodeURIComponent(
+        column_id
+    )}`;
 }
