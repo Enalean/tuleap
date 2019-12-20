@@ -87,10 +87,10 @@ class FieldUsedInSupportedSemanticsVisitorTest extends TestCase
 
     public function testVisitRadiobutton()
     {
-        $checkbox_field = Mockery::mock(\Tracker_FormElement_Field_Checkbox::class);
-        $this->status_semantic->shouldReceive('isUsedInSemantics')->with($checkbox_field)->andReturns(true);
+        $radio_button = Mockery::mock(\Tracker_FormElement_Field_Radiobutton::class);
+        $this->status_semantic->shouldReceive('isUsedInSemantics')->with($radio_button)->andReturns(true);
 
-        $this->assertTrue($this->visitor->visitSelectbox($checkbox_field));
+        $this->assertTrue($this->visitor->visitSelectbox($radio_button));
     }
 
     public function testVisitDate()
