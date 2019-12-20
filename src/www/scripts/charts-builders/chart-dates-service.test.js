@@ -33,10 +33,42 @@ describe("chartDatesServices", () => {
             expect(dataset_modified_twice[1].date).toEqual("2019-08-13");
         });
 
+        it("When the dataset is formatted, Then all attributes still exists and only dates change", () => {
+            const dataset = getDatasetWithSomeAttributes();
+
+            const dataset_modified = getFormattedDates(dataset);
+
+            expect(dataset_modified).toEqual(getDatasetWithSomeAttributesAndFormattedDates());
+        });
+
         function getDataset() {
             return [
                 { date: "2019-08-12T21:59:59+00:00", remaining_effort: 10 },
                 { date: "2019-08-13T12:30:41+00:00", remaining_effort: 10 }
+            ];
+        }
+
+        function getDatasetWithSomeAttributes() {
+            return [
+                {
+                    date: "2019-08-12T21:59:59+00:00",
+                    remaining_effort: 10,
+                    total: 20,
+                    progression: 30
+                },
+                {
+                    date: "2019-08-13T12:30:41+00:00",
+                    remaining_effort: 100,
+                    total: 500,
+                    progression: 200
+                }
+            ];
+        }
+
+        function getDatasetWithSomeAttributesAndFormattedDates() {
+            return [
+                { date: "2019-08-12", remaining_effort: 10, total: 20, progression: 30 },
+                { date: "2019-08-13", remaining_effort: 100, total: 500, progression: 200 }
             ];
         }
     });
