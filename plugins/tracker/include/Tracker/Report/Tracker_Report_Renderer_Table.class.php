@@ -844,7 +844,13 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $html .= ' class="tracker_report_table table tlp-table '. $classnames .'"';
 
         $html .= '>';
-        $html .= '<thead>';
+
+        if (! HTTPRequest::instance()->getBrowser()->isIE11()) {
+            $html .= '<thead class="table-sticky-header">';
+        } else {
+            $html .= '<thead>';
+        }
+
         $html .= '<tr>';
 
         if ($extracolumn) {

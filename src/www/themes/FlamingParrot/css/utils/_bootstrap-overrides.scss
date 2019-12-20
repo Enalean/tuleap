@@ -603,6 +603,15 @@ legend {
         border-bottom: 2px solid $main;
     }
 
+    > .table-sticky-header > tr > th {
+        position: sticky;
+        top: $navbar-height;
+        border-bottom: 0;
+        background: $white;
+        background-clip: padding-box;
+        box-shadow: inset 0 -2px 0 0 $main;
+    }
+
     > tfoot > tr > th {
         @extend %tlp-table-th;
 
