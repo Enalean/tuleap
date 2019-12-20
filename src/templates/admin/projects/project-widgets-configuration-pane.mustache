@@ -1,12 +1,6 @@
 <div class="tlp-framed-vertically">
     {{> creation-settings-tabs }}
 
-    <form action="" method="POST" id="site-admin-project-widgets-form">
-        <input type="hidden" name="update" value="1">
-        {{# csrf_token }}
-            {{> csrf_token_input }}
-        {{/ csrf_token }}
-
         <div class="tlp-framed-horizontally">
             <div class="tlp-pane">
                 <div class="tlp-pane-container">
@@ -28,15 +22,20 @@
                                     <td>{{ id }}</td>
                                     <td>{{ title }}</td>
                                     <td>
-                                        <div class="tlp-switch tlp-table-cell-actions-button">
-                                            <input type="checkbox"
-                                                   id="{{ id }}"
-                                                   class="tlp-switch-checkbox"
-                                                   {{^ is_disabled }}checked="checked"{{/ is_disabled }}
-                                                   disabled
-                                            >
-                                            <label for="{{ id }}" class="tlp-switch-button"></label>
-                                        </div>
+                                        <form action="{{ form_url }}" method="POST" id="project-widgets-form-{{ id }}">
+                                            {{# csrf_token }}
+                                                {{> csrf_token_input }}
+                                            {{/ csrf_token }}
+                                            <div class="tlp-switch tlp-table-cell-actions-button">
+                                                <input type="checkbox"
+                                                       id="{{ id }}"
+                                                       class="tlp-switch-checkbox"
+                                                       data-form-id="project-widgets-form-{{ id }}"
+                                                       {{^ is_disabled }}checked="checked"{{/ is_disabled }}
+                                                >
+                                                <label for="{{ id }}" class="tlp-switch-button"></label>
+                                            </div>
+                                        </form>
                                     </td>
                                 </tr>
                             {{/ project_widgets }}

@@ -24,11 +24,13 @@ namespace Tuleap\Admin;
 
 use CSRFSynchronizerToken;
 use EventManager;
+use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Widget\WidgetFactory;
@@ -40,6 +42,16 @@ class ProjectWidgetsConfigurationDisplayController implements DispatchableWithRe
 {
     public const TAB_NAME = 'widgets';
 
+    /**
+     * @var WidgetFactory
+     */
+    private $widget_factory;
+
+    public function __construct(WidgetFactory $widget_factory)
+    {
+        $this->widget_factory = $widget_factory;
+    }
+
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
@@ -48,18 +60,18 @@ class ProjectWidgetsConfigurationDisplayController implements DispatchableWithRe
 
         $csrf_token = new CSRFSynchronizerToken('/admin/project-creation/widgets');
 
-        $widget_factory = new WidgetFactory(
-            UserManager::instance(),
-            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-            EventManager::instance()
-        );
-
-        $project_widgets = $widget_factory->getWidgetsForOwnerType(ProjectDashboardController::DASHBOARD_TYPE);
+        $project_widgets = $this->widget_factory->getWidgetsForOwnerType(ProjectDashboardController::DASHBOARD_TYPE);
 
         $presenter = new ProjectWidgetsConfigurationPresenter(
             new ProjectCreationNavBarPresenter(self::TAB_NAME),
             $csrf_token,
             $this->buildWidgetPresenters($project_widgets)
+        );
+
+        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+        $include_assets = new IncludeAssets($assets_path, '/assets');
+        $layout->includeFooterJavascriptFile(
+            $include_assets->getFileURL('site-admin-project-widgets.js')
         );
 
         $admin_renderer = new AdminPageRenderer();

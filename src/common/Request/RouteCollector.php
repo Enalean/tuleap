@@ -47,10 +47,13 @@ use Tuleap\Admin\ProjectCreationModerationDisplayController;
 use Tuleap\Admin\ProjectCreationModerationUpdateController;
 use Tuleap\Admin\ProjectTemplatesController;
 use Tuleap\Admin\ProjectWidgetsConfigurationDisplayController;
+use Tuleap\Admin\ProjectWidgetsConfigurationPOSTDisableController;
+use Tuleap\Admin\ProjectWidgetsConfigurationPOSTEnableController;
 use Tuleap\admin\SiteContentCustomisationController;
 use Tuleap\Core\RSS\News\LatestNewsController;
 use Tuleap\Core\RSS\Project\LatestProjectController;
 use Tuleap\Core\RSS\Project\LatestProjectDao;
+use Tuleap\Dashboard\Project\DisabledProjectWidgetsDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Error\PermissionDeniedPrivateProjectMailSender;
@@ -131,10 +134,13 @@ use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
+use Tuleap\Widget\WidgetFactory;
 use UGroupBinding;
 use UGroupManager;
 use UGroupUserDao;
 use URLVerification;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
 use UserHelper;
 use UserImport;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
@@ -249,7 +255,34 @@ class RouteCollector
 
     public static function getProjectConfigurationWidgets(): ProjectWidgetsConfigurationDisplayController
     {
-        return new ProjectWidgetsConfigurationDisplayController();
+        return new ProjectWidgetsConfigurationDisplayController(
+            self::getWidgetFactory()
+        );
+    }
+
+    public static function getProjectConfigurationPOSTWidgetsEnable(): ProjectWidgetsConfigurationPOSTEnableController
+    {
+        return new ProjectWidgetsConfigurationPOSTEnableController(
+            self::getWidgetFactory(),
+            new DisabledProjectWidgetsDao()
+        );
+    }
+
+    public static function getProjectConfigurationPOSTWidgetsDisable(): ProjectWidgetsConfigurationPOSTDisableController
+    {
+        return new ProjectWidgetsConfigurationPOSTDisableController(
+            self::getWidgetFactory(),
+            new DisabledProjectWidgetsDao()
+        );
+    }
+
+    private static function getWidgetFactory(): WidgetFactory
+    {
+        return new WidgetFactory(
+            \UserManager::instance(),
+            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+            EventManager::instance()
+        );
     }
 
     public static function postProjectCreationVisibility()
@@ -692,6 +725,8 @@ class RouteCollector
             $r->post('/project-creation/visibility', [self::class, 'postProjectCreationVisibility']);
 
             $r->get('/project-creation/widgets', [self::class, 'getProjectConfigurationWidgets']);
+            $r->post('/project-creation/widgets/{widget-id}/enable', [self::class, 'getProjectConfigurationPOSTWidgetsEnable']);
+            $r->post('/project-creation/widgets/{widget-id}/disable', [self::class, 'getProjectConfigurationPOSTWidgetsDisable']);
 
             $r->get('/site-content-customisations', [self::class, 'getAdminSiteContentCustomisation']);
         });

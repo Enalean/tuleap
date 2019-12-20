@@ -40,10 +40,27 @@ class ProjectWidgetsPresenter
      */
     public $is_disabled;
 
+    /**
+     * @var string
+     */
+    public $form_url;
+
     public function __construct(Widget $widget, DisabledProjectWidgetsChecker $checker)
     {
         $this->id           = (string) $widget->getId();
         $this->title        = (string) $widget->getTitle();
         $this->is_disabled  = $checker->isWidgetDisabled($widget, ProjectDashboardController::DASHBOARD_TYPE);
+        $this->form_url     = $this->buildFormUrl();
+    }
+
+    private function buildFormUrl(): string
+    {
+        $base_url = '/admin/project-creation/widgets/'.urlencode($this->id);
+
+        if ($this->is_disabled) {
+            return $base_url . '/enable';
+        } else {
+            return $base_url . '/disable';
+        }
     }
 }
