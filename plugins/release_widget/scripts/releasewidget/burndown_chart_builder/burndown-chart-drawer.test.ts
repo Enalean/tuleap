@@ -82,7 +82,7 @@ describe("BurndownChartDrawer -", () => {
     });
 
     describe("createBurndownChart -", () => {
-        it("When the chart is created, Then there are a G element and 2 lines scale", () => {
+        it("When the chart is created, Then there are a G element and 2 lines scale and curve", () => {
             const chart_svg_element = getDocument();
             createBurndownChart(chart_svg_element, getChartProps(), getBurndownData());
 

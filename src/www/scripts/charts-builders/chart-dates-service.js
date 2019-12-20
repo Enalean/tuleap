@@ -69,11 +69,12 @@ function getDifference(start_date, end_date) {
 }
 
 function getFormattedDates(dataset) {
-    dataset.forEach(data => {
-        data.date = moment(data.date, moment.ISO_8601)
-            .utc()
-            .format("YYYY-MM-DD");
+    return dataset.map(data => {
+        return {
+            date: moment(data.date, moment.ISO_8601)
+                .utc()
+                .format("YYYY-MM-DD"),
+            remaining_effort: data.remaining_effort
+        };
     });
-
-    return dataset;
 }
