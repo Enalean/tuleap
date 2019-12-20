@@ -55,6 +55,10 @@ final class PullRequestNewInlineCommentNotification implements NotificationToPro
      */
     private $inline_comment;
     /**
+     * @var string
+     */
+    private $code_context;
+    /**
      * @var NotificationEnhancedContent
      */
     private $enhanced_content;
@@ -67,17 +71,21 @@ final class PullRequestNewInlineCommentNotification implements NotificationToPro
         string $change_user_display_name,
         array $owners_without_change_user,
         InlineComment $inline_comment,
+        string $code_context,
         NotificationEnhancedContent $enhanced_content
     ) {
         $this->pull_request              = $pull_request;
         $this->change_user_display_name  = $change_user_display_name;
         $this->owners                    = $owners_without_change_user;
         $this->inline_comment            = $inline_comment;
+        $this->code_context              = $code_context;
         $this->enhanced_content          = $enhanced_content;
     }
 
     /**
      * @param PFUser[] $owners
+     *
+     * @throws InlineCommentCodeContextException
      */
     public static function fromOwnersAndInlineComment(
         UserHelper $user_helper,
@@ -86,8 +94,11 @@ final class PullRequestNewInlineCommentNotification implements NotificationToPro
         PullRequest $pull_request,
         PFUser $change_user,
         array $owners,
-        InlineComment $inline_comment
+        InlineComment $inline_comment,
+        InlineCommentCodeContextExtractor $code_context_extractor
     ): self {
+        $code_context = $code_context_extractor->getCodeContext($inline_comment, $pull_request);
+
         $change_user_display_name   = $user_helper->getDisplayNameFromUser($change_user) ?? '';
         $owners_without_change_user = $filter_user_from_collection->filter($change_user, ...$owners);
 
@@ -96,6 +107,7 @@ final class PullRequestNewInlineCommentNotification implements NotificationToPro
             $change_user_display_name,
             $owners_without_change_user,
             $inline_comment,
+            $code_context,
             new NotificationTemplatedContent(
                 TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/comment'),
                 'pull-request-new-inline-comment-mail-content',
@@ -106,7 +118,8 @@ final class PullRequestNewInlineCommentNotification implements NotificationToPro
                     $pull_request->getTitle(),
                     $html_url_builder->getAbsolutePullRequestOverviewUrl($pull_request),
                     $inline_comment->getContent(),
-                    $inline_comment->getFilePath()
+                    $inline_comment->getFilePath(),
+                    $code_context
                 )
             )
         );
@@ -125,11 +138,12 @@ final class PullRequestNewInlineCommentNotification implements NotificationToPro
     public function asPlaintext(): string
     {
         return sprintf(
-            dgettext('tuleap-pullrequest', "%s commented on #%d: %s in %s:\n\n%s"),
+            dgettext('tuleap-pullrequest', "%s commented on #%d: %s in %s:\n\n%s\n\n%s"),
             $this->change_user_display_name,
             $this->pull_request->getId(),
             $this->pull_request->getTitle(),
             $this->inline_comment->getFilePath(),
+            $this->code_context,
             $this->inline_comment->getContent()
         );
     }
