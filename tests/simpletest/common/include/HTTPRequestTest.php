@@ -502,6 +502,22 @@ class HTTPRequest_BrowserTests extends TuleapTestCase
 
         $this->assertNoPattern('/disable ie warning/', $browser->getDeprecatedMessage());
     }
+
+    public function testItReturnsTrueIfBrowserIsIE11()
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)';
+        $browser = $this->request->getBrowser();
+
+        $this->assertTrue($browser->isIE11());
+    }
+
+    public function testItReturnsFalseIfBrowserIsNotIE11()
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0';
+        $browser = $this->request->getBrowser();
+
+        $this->assertFalse($browser->isIE11());
+    }
 }
 
 abstract class HTTPRequest_getServerURLTests extends TuleapTestCase
