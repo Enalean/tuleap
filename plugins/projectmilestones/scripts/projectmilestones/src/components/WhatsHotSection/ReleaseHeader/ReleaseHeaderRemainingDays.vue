@@ -27,7 +27,8 @@
             <span
                 class="release-remaining-value"
                 v-bind:class="{
-                    'release-remaining-value-danger': are_dates_correctly_set,
+                    'release-remaining-value-danger': date_close_to_end,
+                    'release-remaining-value-success': are_dates_correctly_set,
                     'release-remaining-value-disabled': disabled_date
                 }"
                 data-test="display-remaining-day-text"
@@ -46,7 +47,8 @@
             <div
                 class="release-remaining-progress-value"
                 v-bind:class="{
-                    'release-remaining-progress-value-danger': are_dates_correctly_set,
+                    'release-remaining-progress-value-danger': date_close_to_end,
+                    'release-remaining-progress-value-success': are_dates_correctly_set,
                     'release-remaining-progress-value-disabled': disabled_date
                 }"
                 v-bind:style="{ width: get_tooltip_effort_date }"
@@ -86,8 +88,32 @@ export default class ReleaseHeaderRemainingDays extends Vue {
         }
         return (
             this.release_data.number_days_since_start >= 0 &&
-            this.release_data.number_days_until_end > 0
+            this.release_data.number_days_until_end > 0 &&
+            this.dates_progress < 80
         );
+    }
+
+    get date_close_to_end(): boolean {
+        return this.dates_progress >= 80 && this.dates_progress < 100;
+    }
+
+    get dates_progress(): number {
+        const days_since_start = this.release_data.number_days_since_start;
+        const days_until_end = this.release_data.number_days_until_end;
+
+        if (typeof days_since_start !== "number" || typeof days_until_end !== "number") {
+            return 0;
+        }
+
+        if (days_since_start < 0) {
+            return 0;
+        }
+
+        if (days_since_start > 0 && days_until_end < 0) {
+            return 100;
+        }
+
+        return (days_since_start / (days_since_start + days_until_end)) * 100;
     }
 
     get get_tooltip_effort_date(): string {
@@ -102,18 +128,7 @@ export default class ReleaseHeaderRemainingDays extends Vue {
             return this.$gettext("No end date defined.");
         }
 
-        if (days_since_start < 0) {
-            return "0.00%";
-        }
-
-        if (days_since_start > 0 && days_until_end < 0) {
-            return "100.00%";
-        }
-
-        return (
-            ((days_since_start / (days_since_start + days_until_end)) * 100).toFixed(2).toString() +
-            "%"
-        );
+        return this.dates_progress.toFixed(2).toString() + "%";
     }
 }
 </script>
