@@ -276,19 +276,23 @@ a.taskboard-card-xref {
 .taskboard-drop-not-accepted-overlay {
     display: none;
     flex-direction: column;
-    align-items: center;
     color: $tlp-ui-danger;
     text-align: center;
 
+    > .taskboard-drop-not-accepted-overlay-content {
+        position: sticky;
+        top: 50%;
+        margin: $tlp-spacing 0;
+
+        >.taskboard-drop-not-accepted-icon {
+            font-size: 2em;
+        }
+    }
 }
 
-.taskboard-drop-not-accepted-icon {
-    font-size: 2em;
-}
 
 .taskboard-drop-not-accepted {
     display: flex;
-    align-items: center;
     justify-content: center;
     background-color: transparentize($tlp-ui-danger, .9);
 }

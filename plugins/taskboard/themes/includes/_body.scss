@@ -57,7 +57,7 @@
 
     &.taskboard-drop-not-accepted {
         > .taskboard-drop-not-accepted-overlay {
-            display: flex;
+            display: block;
         }
 
         >.taskboard-draggable-item {
@@ -84,7 +84,6 @@
     width: 50px;
     min-width: unset;
     min-height: 100px;
-    overflow: hidden;
     background: $tlp-ui-white;
     cursor: pointer;
 
