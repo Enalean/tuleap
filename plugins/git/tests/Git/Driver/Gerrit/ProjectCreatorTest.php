@@ -108,7 +108,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TuleapTes
 
         $host  = $this->tmpdir;
         $login = $this->gerrit_admin_instance;
-        $id = $ssh_port = $http_port = $identity_file = $replication_key = $use_ssl = $gerrit_version = $http_password = $auth_type = 0;
+        $id = $ssh_port = $http_port = $identity_file = $replication_key = $use_ssl = $gerrit_version = $http_password = 0;
         $this->server = partial_mock(
             'Git_RemoteServer_GerritServer',
             array('getCloneSSHUrl'),
@@ -123,8 +123,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TuleapTes
                 $use_ssl,
                 $gerrit_version,
                 $http_password,
-                '',
-                $auth_type
+                ''
             )
         );
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,7 +35,7 @@ class Test_GerritServer_Builder
 
     public function build()
     {
-        $host = $ssh_port = $http_port = $login = $identity_file = $replication_key = $use_ssl = $gerrit_version = $http_password = $auth_type = $replication_password = 0;
+        $host = $ssh_port = $http_port = $login = $identity_file = $replication_key = $use_ssl = $gerrit_version = $http_password = $replication_password = 0;
         return new Git_RemoteServer_GerritServer(
             $this->id,
             $host,
@@ -47,8 +47,7 @@ class Test_GerritServer_Builder
             $use_ssl,
             $gerrit_version,
             $http_password,
-            $replication_password,
-            $auth_type
+            $replication_password
         );
     }
 }

@@ -33,8 +33,6 @@ class Git_RemoteServer_GerritServerPresenter
     public $is_used;
     public $http_password;
     public $replication_password;
-    public $is_digest;
-    public $is_basic;
     public $replication_key_ellipsis_value;
     public $edit_title;
     public $delete_title;
@@ -54,8 +52,6 @@ class Git_RemoteServer_GerritServerPresenter
         $this->is_used                        = $is_used;
         $this->http_password                  = $server->getHTTPPassword();
         $this->replication_password           = $server->getReplicationPassword();
-        $this->is_digest                      = $server->getAuthType() === Git_RemoteServer_GerritServer::AUTH_TYPE_DIGEST;
-        $this->is_basic                       = $server->getAuthType() === Git_RemoteServer_GerritServer::AUTH_TYPE_BASIC;
         $this->replication_key_ellipsis_value = substr($this->replication_key, 0, 40).'...'.substr($this->replication_key, -40);
 
         $this->edit_title           = sprintf(dgettext('tuleap-git', 'Edit %1$s'), $server->getHost());
@@ -65,16 +61,6 @@ class Git_RemoteServer_GerritServerPresenter
             sprintf(dgettext('tuleap-git', 'Wow, wait a minute. You are about to delete the <b>%1$s</b> server. Please confirm your action.'), $server->getHost()),
             CODENDI_PURIFIER_LIGHT
         );
-    }
-
-    public function auth_type_digest_checked()
-    {
-        return $this->is_digest ? 'checked' : '';
-    }
-
-    public function auth_type_basic_checked()
-    {
-        return $this->is_basic ? 'checked' : '';
     }
 
     public function use_ssl_checked()

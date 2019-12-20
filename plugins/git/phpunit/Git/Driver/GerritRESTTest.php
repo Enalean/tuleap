@@ -56,7 +56,7 @@ class GerritRESTTest extends TestCase
             ]
         );
 
-        $driver = new Git_Driver_GerritREST($guzzle_client, $logger, 'Digest');
+        $driver = new Git_Driver_GerritREST($guzzle_client, $logger);
         $this->assertTrue($driver->isDeletePluginEnabled($server));
     }
 
@@ -85,7 +85,7 @@ class GerritRESTTest extends TestCase
             ]
         );
 
-        $driver = new Git_Driver_GerritREST($guzzle_client, $logger, 'Digest');
+        $driver = new Git_Driver_GerritREST($guzzle_client, $logger);
         $this->assertTrue($driver->isDeletePluginEnabled($server));
     }
 
@@ -114,7 +114,7 @@ class GerritRESTTest extends TestCase
             ]
         );
 
-        $driver = new Git_Driver_GerritREST($guzzle_client, $logger, 'Digest');
+        $driver = new Git_Driver_GerritREST($guzzle_client, $logger);
         $this->assertFalse($driver->isDeletePluginEnabled($server));
     }
 }

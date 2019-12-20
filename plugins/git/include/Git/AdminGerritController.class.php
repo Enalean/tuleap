@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -196,9 +196,6 @@ class Git_AdminGerritController
     private function addServer($request_gerrit_server)
     {
         if ($this->allGerritServerParamsRequiredExist($request_gerrit_server) && $this->isHTTPPasswordDefined($request_gerrit_server)) {
-            // Starting gerrit 2.16 support, enforce BasicAuth for new servers.
-            $request_gerrit_server['auth_type'] = 'Basic';
-
             $gerrit_server = $this->admin_gerrit_builder->buildFromRequest($request_gerrit_server);
             $server = new Git_RemoteServer_GerritServer(
                 0,
@@ -211,8 +208,7 @@ class Git_AdminGerritController
                 $gerrit_server['use_ssl'],
                 $gerrit_server['gerrit_version'],
                 $gerrit_server['http_password'],
-                '',
-                $gerrit_server['auth_type']
+                ''
             );
 
             $this->gerrit_server_factory->save($server);
@@ -237,10 +233,6 @@ class Git_AdminGerritController
         if (isset($server_id)) {
             $server = $this->gerrit_server_factory->getServerById($server_id);
 
-            if (! isset($request_gerrit_server['auth_type'])) {
-                $request_gerrit_server['auth_type'] = "Basic";
-            }
-
             if ($this->allGerritServerParamsRequiredExist($request_gerrit_server)) {
                 $gerrit_server = $this->admin_gerrit_builder->buildFromRequest($request_gerrit_server);
                 if ($gerrit_server['host'] != $server->getHost() ||
@@ -251,8 +243,7 @@ class Git_AdminGerritController
                     $gerrit_server['replication_ssh_key'] != $server->getReplicationKey() ||
                     $gerrit_server['use_ssl'] != $server->usesSSL() ||
                     $gerrit_server['gerrit_version'] != $server->getGerritVersion() ||
-                    $gerrit_server['http_password'] != $server->getHTTPPassword() ||
-                    $gerrit_server['auth_type'] != $server->getAuthType()
+                    $gerrit_server['http_password'] != $server->getHTTPPassword()
                 ) {
                     $server
                         ->setHost($gerrit_server['host'])
@@ -262,8 +253,7 @@ class Git_AdminGerritController
                         ->setIdentityFile($gerrit_server['identity_file'])
                         ->setReplicationKey($gerrit_server['replication_ssh_key'])
                         ->setUseSSL($gerrit_server['use_ssl'])
-                        ->setGerritVersion($gerrit_server['gerrit_version'])
-                        ->setAuthType($gerrit_server['auth_type']);
+                        ->setGerritVersion($gerrit_server['gerrit_version']);
 
                     if ($gerrit_server['http_password'] !== "") {
                         $server->setHTTPPassword($gerrit_server['http_password']);

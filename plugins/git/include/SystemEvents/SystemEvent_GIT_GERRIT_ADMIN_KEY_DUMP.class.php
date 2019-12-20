@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2011 - 2017. All rights reserved.
+ * Copyright Enalean (c) 2011 - Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -25,6 +25,7 @@
 use Tuleap\Git\Gitolite\SSHKey\Dumper;
 use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent
 {
     public const NAME = 'GIT_GERRIT_ADMIN_KEY_DUMP';
@@ -50,7 +51,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMP extends SystemEvent
         try {
             return $this->gerrit_server_factory->getServerById($this->getServerId());
         } catch (Git_RemoteServer_NotFoundException $e) {
-            return new Git_RemoteServer_GerritServer($this->getServerId(), '', '', '', '', '', '', false, '', '', '', '');
+            return new Git_RemoteServer_GerritServer($this->getServerId(), '', '', '', '', '', '', false, '', '', '');
         }
     }
 

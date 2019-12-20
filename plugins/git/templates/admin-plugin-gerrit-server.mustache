@@ -91,17 +91,6 @@
                                     <p class="tlp-property-empty">{{ empty_content }}</p>
                                 {{/ identity_file }}
                             </div>
-                            <div class="tlp-property">
-                                <label class="tlp-label">
-                                    {{ gerrit_label_auth_type }}
-                                </label>
-                                {{# is_digest }}
-                                    <span class="tlp-badge-secondary">{{ digest }}</span>
-                                {{/ is_digest }}
-                                {{# is_basic }}
-                                    <span class="tlp-badge-secondary">{{ basic }}</span>
-                                {{/ is_basic }}
-                            </div>
                             <div class="tlp-property git-info-two-ssh-key">
                                 <label class="tlp-label">
                                     {{ gerrit_label_replication_key }}
