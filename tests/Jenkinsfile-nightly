@@ -60,21 +60,6 @@ pipeline {
                         junit 'results/e2e/distlp/*.xml'
                     }
                 }
-                stage('Psalm static analysis') {
-                    agent {
-                        dockerfile {
-                            dir 'sources/tests/psalm/'
-                            reuseNode true
-                            args '--network none'
-                        }
-                    }
-                    steps {
-                        script {
-                            actions.runPsalm('tests/psalm/psalm.xml', '')
-                        }
-                    }
-                    post { always { recordIssues enabledForFailure: true, minimumSeverity: 'NORMAL', tools: [checkStyle(pattern: 'results/psalm/checkstyle.xml')] } }
-                }
             }
             post {
                 always {
