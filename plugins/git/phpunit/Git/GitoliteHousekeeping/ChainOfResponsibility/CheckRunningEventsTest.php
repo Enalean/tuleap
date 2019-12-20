@@ -18,15 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->process_manager = \Mockery::spy(\SystemEventProcessManager::class);
         $this->process         = \Mockery::spy(\SystemEventProcess::class);
         $this->response        = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
@@ -36,7 +40,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest exte
         $this->command->setNextCommand($this->next);
     }
 
-    public function itExecuteTheNextCommandIfThereIsNoRunningEvents()
+    public function testItExecuteTheNextCommandIfThereIsNoRunningEvents(): void
     {
         $this->process_manager->shouldReceive('isAlreadyRunning')->with($this->process)->andReturns(false);
 
@@ -45,7 +49,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest exte
         $this->command->execute();
     }
 
-    public function itDoesNotExectuteTheNextCommandIfThereIsARunningEvent()
+    public function testItDoesNotExectuteTheNextCommandIfThereIsARunningEvent(): void
     {
         $this->process_manager->shouldReceive('isAlreadyRunning')->with($this->process)->andReturns(true);
 
@@ -54,7 +58,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEventsTest exte
         $this->command->execute();
     }
 
-    public function itStopsTheExecutionWhenThereIsARemainingSystemEventRunning()
+    public function testItStopsTheExecutionWhenThereIsARemainingSystemEventRunning(): void
     {
         $this->process_manager->shouldReceive('isAlreadyRunning')->with($this->process)->andReturns(true);
 

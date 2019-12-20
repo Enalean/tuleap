@@ -18,22 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopperTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopperTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->response         = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
         $this->backend_service  = \Mockery::spy(\BackendService::class);
 
         $this->command = new Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopper($this->response, $this->backend_service);
     }
 
-    public function itStopsTheService()
+    public function testItStopsTheService(): void
     {
         $this->response->shouldReceive('info')->with('Stopping service')->once();
         $this->backend_service->shouldReceive('stop')->once();
@@ -41,7 +45,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopperTest extends 
         $this->command->execute();
     }
 
-    public function itExecutesTheNextCommand()
+    public function testItExecutesTheNextCommand(): void
     {
         $next = \Mockery::spy(\Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
         $next->shouldReceive('execute')->once();
