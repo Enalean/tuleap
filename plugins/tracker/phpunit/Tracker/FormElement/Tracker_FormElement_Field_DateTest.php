@@ -33,6 +33,10 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Value_DateDao;
+use Tracker_FormElement_RESTValueByField_NotImplementedException;
+use Tracker_Report;
+use Tracker_Report_Criteria;
+use Tracker_Report_REST;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
@@ -611,5 +615,211 @@ final class Tracker_FormElement_Field_DateTest extends TestCase //phpcs:ignore S
 
         $this->assertEquals('-', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'text'));
         $this->assertEquals('-', $date->fetchMailArtifactValue($artifact, $user, false, $value, 'html'));
+    }
+
+    public function testItThrowsAnExceptionWhenReturningValueIndexedByFieldName(): void
+    {
+        $field = $this->getDateField();
+
+        $this->expectException(Tracker_FormElement_RESTValueByField_NotImplementedException::class);
+
+        $value = ['some_value'];
+
+        $field->getFieldDataFromRESTValueByField($value);
+    }
+
+    public function testItReturnsTheCorrectCriteriaForBetween(): void
+    {
+        $is_advanced = true;
+        $column      = 'my_date_column';
+        $from        = strtotime('2014-07-05');
+        $to          = strtotime('2014-07-07');
+
+        $field      = $this->getDateField();
+        $reflection = new \ReflectionClass(get_class($field));
+        $method     = $reflection->getMethod('getSQLCompareDate');
+        $method->setAccessible(true);
+
+        $field = $this->getDateField();
+        $sql   = $method->invokeArgs($field, [$is_advanced, "=", $from, $to, $column]);
+        $this->makeStringCheckable($sql);
+        $this->assertEquals("my_date_column BETWEEN $from AND $to + 86400 - 1", $sql);
+    }
+
+    public function testItReturnsTheCorrectCriteriaForBeforeIncludingTheToDay(): void
+    {
+        $is_advanced = true;
+        $column      = 'my_date_column';
+        $to          = strtotime('2014-07-07');
+
+        $field      = $this->getDateField();
+        $reflection = new \ReflectionClass(get_class($field));
+        $method     = $reflection->getMethod('getSQLCompareDate');
+        $method->setAccessible(true);
+
+        $sql = $method->invokeArgs($field, [$is_advanced, "=", null, $to, $column]);
+        $this->makeStringCheckable($sql);
+        $this->assertEquals("my_date_column <= $to + 86400 - 1", $sql);
+    }
+
+    public function testItReturnsTheCorrectCriteriaForEquals(): void
+    {
+        $is_advanced = false;
+        $column      = 'my_date_column';
+        $from        = null;
+        $to          = strtotime('2014-07-07');
+
+        $field      = $this->getDateField();
+        $reflection = new \ReflectionClass(get_class($field));
+        $method     = $reflection->getMethod('getSQLCompareDate');
+        $method->setAccessible(true);
+
+        $sql = $method->invokeArgs($field, [$is_advanced, "=", $from, $to, $column]);
+        $this->makeStringCheckable($sql);
+        $this->assertEquals("my_date_column BETWEEN $to AND $to + 86400 - 1", $sql);
+    }
+
+    public function testItReturnsTheCorrectCriteriaForBefore(): void
+    {
+        $is_advanced = false;
+        $column      = 'my_date_column';
+        $from        = null;
+        $to          = strtotime('2014-07-07');
+
+        $field      = $this->getDateField();
+        $reflection = new \ReflectionClass(get_class($field));
+        $method     = $reflection->getMethod('getSQLCompareDate');
+        $method->setAccessible(true);
+
+        $sql = $method->invokeArgs($field, [$is_advanced, "<", $from, $to, $column]);
+        $this->makeStringCheckable($sql);
+        $this->assertEquals("my_date_column < $to", $sql);
+    }
+
+    public function testItReturnsTheCorrectCriteriaForAfter(): void
+    {
+        $is_advanced = false;
+        $column      = 'my_date_column';
+        $from        = null;
+        $to          = strtotime('2014-07-07');
+
+        $field      = $this->getDateField();
+        $reflection = new \ReflectionClass(get_class($field));
+        $method     = $reflection->getMethod('getSQLCompareDate');
+        $method->setAccessible(true);
+
+        $sql = $method->invokeArgs($field, [$is_advanced, ">", $from, $to, $column]);
+        $this->makeStringCheckable($sql);
+        $this->assertEquals("my_date_column > $to + 86400", $sql);
+    }
+
+    private function makeStringCheckable(&$string)
+    {
+        $string = str_replace(PHP_EOL, ' ', trim($string));
+
+        while (strstr($string, '  ')) {
+            $string = str_replace('  ', ' ', $string);
+        }
+    }
+
+    public function testItAddsAnEqualsCrterion(): void
+    {
+        $date                 = '2014-04-05';
+        $criteria             = Mockery::mock(Tracker_Report_Criteria::class);
+        $criteria->report     = Mockery::mock(Tracker_Report::class);
+        $criteria->report->id = 1;
+        $values               = [
+            Tracker_Report_REST::VALUE_PROPERTY_NAME    => $date,
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_EQUALS
+        ];
+
+        $field = $this->getDateField();
+        $field->setCriteriaValueFromREST($criteria, $values);
+        $res = $field->getCriteriaValue($criteria);
+
+        $this->assertCount(3, $res);
+        $this->assertEquals('=', $res['op']);
+        $this->assertEquals(0, $res['from_date']);
+        $this->assertEquals(strtotime($date), $res['to_date']);
+    }
+
+    public function testItAddsAGreaterThanCrterion(): void
+    {
+        $date                 = '2014-04-05T00:00:00-05:00';
+        $criteria             = Mockery::mock(Tracker_Report_Criteria::class);
+        $criteria->report     = Mockery::mock(Tracker_Report::class);
+        $criteria->report->id = 1;
+        $values               = [
+            Tracker_Report_REST::VALUE_PROPERTY_NAME    => $date,
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_GREATER_THAN
+        ];
+
+        $field = $this->getDateField();
+        $field->setCriteriaValueFromREST($criteria, $values);
+        $res = $field->getCriteriaValue($criteria);
+
+        $this->assertCount(3, $res);
+        $this->assertEquals('>', $res['op']);
+        $this->assertEquals(0, $res['from_date']);
+        $this->assertEquals(strtotime($date), $res['to_date']);
+    }
+
+    public function testItAddsALessThanCrterion(): void
+    {
+        $date                 = '2014-04-05';
+        $criteria             = Mockery::mock(Tracker_Report_Criteria::class);
+        $criteria->report     = Mockery::mock(Tracker_Report::class);
+        $criteria->report->id = 1;
+        $values               = [
+            Tracker_Report_REST::VALUE_PROPERTY_NAME    => [$date],
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_LESS_THAN
+        ];
+
+        $field = $this->getDateField();
+        $field->setCriteriaValueFromREST($criteria, $values);
+        $res = $field->getCriteriaValue($criteria);
+
+        $this->assertCount(3, $res);
+        $this->assertEquals('<', $res['op']);
+        $this->assertEquals(0, $res['from_date']);
+        $this->assertEquals(strtotime($date), $res['to_date']);
+    }
+
+    public function testItAddsABetweenCrterion(): void
+    {
+        $from_date = '2014-04-05';
+        $to_date   = '2014-05-12';
+        $criteria  = Mockery::mock(Tracker_Report_Criteria::class);
+        $criteria->shouldReceive('setIsAdvanced')->andReturn(false);
+        $criteria->report     = Mockery::mock(Tracker_Report::class);
+        $criteria->report->id = 1;
+        $values               = [
+            Tracker_Report_REST::VALUE_PROPERTY_NAME    => [$from_date, $to_date],
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_BETWEEN
+        ];
+
+        $field = $this->getDateField();
+        $field->setCriteriaValueFromREST($criteria, $values);
+        $res = $field->getCriteriaValue($criteria);
+
+        $this->assertCount(3, $res);
+        $this->assertEquals('=', $res['op']);
+        $this->assertEquals(strtotime($from_date), $res['from_date']);
+        $this->assertEquals(strtotime($to_date), $res['to_date']);
+    }
+
+    public function testItIgnoresInvalidDates(): void
+    {
+        $date = 'christmas eve';
+
+        $criteria  = Mockery::mock(Tracker_Report_Criteria::class);
+        $values   = [
+            Tracker_Report_REST::VALUE_PROPERTY_NAME    => $date,
+            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_BETWEEN
+        ];
+
+        $field = $this->getDateField();
+        $res = $field->setCriteriaValueFromREST($criteria, $values);
+        $this->assertFalse($res);
     }
 }
