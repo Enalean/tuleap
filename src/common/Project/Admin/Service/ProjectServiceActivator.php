@@ -77,6 +77,9 @@ class ProjectServiceActivator
                 if ($template_service['short_name'] === 'admin' || $template_service['short_name'] === 'summary') {
                     $is_used = '1';
                 }
+                if ($template_service['short_name'] === 'tracker' || $template_service['short_name'] === 'svn') {
+                    $is_used = '0';
+                }
             }
 
             $this->service_creator->createService(
