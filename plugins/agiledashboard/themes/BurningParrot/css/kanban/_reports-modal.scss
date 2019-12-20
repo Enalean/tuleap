@@ -1,0 +1,72 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#reports-modal {
+    width: 60vw;
+
+    @media (max-width: 767px) {
+        width: auto;
+        margin-left: 0;
+    }
+
+    > .tlp-modal-body {
+        max-height: 100%;
+
+        > .chart {
+            box-sizing: border-box;
+            height: 50vmin;
+            max-height: 50vmin;
+
+            > .chart-content {
+                display: flex;
+            }
+        }
+
+        > .loading {
+            position: absolute;
+            left: 50%;
+            width: 20px;
+            min-height: 26px;
+            background: url('../images/loader-mini.gif') no-repeat center center;
+        }
+
+        > .params {
+            display: flex;
+            flex-direction: row-reverse;
+            margin: 0 15px 0 0;
+
+            > form > label {
+                max-width: 135px;
+                margin: 0;
+            }
+
+            #params-select {
+                max-width: 135px;
+                margin: 0;
+            }
+        }
+
+        > .chart-title {
+            margin-top: 20px;
+            color: #9c9c9c;
+            font: 400 20px Arial;
+            text-align: center;
+        }
+    }
+}

@@ -565,8 +565,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         );
 
         $include_assets_css = new IncludeAssets(
-            __DIR__ . '/../../www/themes/FlamingParrot/assets',
-            AGILEDASHBOARD_BASE_URL . '/themes/FlamingParrot/assets'
+            __DIR__ . '/../../../../src/www/assets/agiledashboard/themes',
+            '/assets/agiledashboard/themes'
         );
 
         $GLOBALS['HTML']->addStylesheet(

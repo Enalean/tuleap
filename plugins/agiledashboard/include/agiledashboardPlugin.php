@@ -707,10 +707,10 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     {
         if ($this->isAnAgiledashboardRequest()) {
             $theme_include_assets = new IncludeAssets(
-                AGILEDASHBOARD_BASE_DIR . '/../www/themes/FlamingParrot/assets',
-                $this->getThemePath() . '/assets'
+                __DIR__ . '/../../../src/www/assets/agiledashboard/themes',
+                '/assets/agiledashboard/themes'
             );
-            $css_file_url = $theme_include_assets->getFileURL('style.css');
+            $css_file_url = $theme_include_assets->getFileURL('style-fp.css');
             echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
         }
     }
@@ -733,8 +733,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
     public function burning_parrot_get_stylesheets(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $theme_include_assets = new IncludeAssets(
-            AGILEDASHBOARD_BASE_DIR . '/../www/themes/BurningParrot/assets',
-            AGILEDASHBOARD_BASE_URL . '/themes/BurningParrot/assets'
+            __DIR__ . '/../../../src/www/assets/agiledashboard/themes',
+            '/assets/agiledashboard/themes'
         );
 
         $variant = $params['variant'];
