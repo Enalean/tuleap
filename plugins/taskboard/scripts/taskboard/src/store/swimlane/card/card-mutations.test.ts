@@ -52,25 +52,32 @@ describe(`Card mutations`, () => {
     });
 
     describe("startSavingRemainingEffort", () => {
-        it("switch is_being_saved to true", () => {
-            const card: Card = { remaining_effort: { is_being_saved: false } } as Card;
+        it(`saves the new value
+            and switches is_being_saved to true
+            and is_in_edit_mode to false`, () => {
+            const card: Card = {
+                remaining_effort: { value: 3.14, is_being_saved: false, is_in_edit_mode: true }
+            } as Card;
             const state: SwimlaneState = {
                 swimlanes: [{ card } as Swimlane]
             } as SwimlaneState;
+            const payload: NewRemainingEffortPayload = { card, value: 42 };
 
-            mutations.startSavingRemainingEffort(state, card);
+            mutations.startSavingRemainingEffort(state, payload);
 
-            expect.assertions(1);
+            expect.assertions(3);
             if (state.swimlanes[0].card.remaining_effort) {
+                expect(state.swimlanes[0].card.remaining_effort.value).toBe(42);
                 expect(state.swimlanes[0].card.remaining_effort.is_being_saved).toBe(true);
+                expect(state.swimlanes[0].card.remaining_effort.is_in_edit_mode).toBe(false);
             }
         });
     });
 
     describe("resetSavingRemainingEffort", () => {
-        it("switch is_being_saved and is_in_edit_mode to false", () => {
+        it("switches is_being_saved to false", () => {
             const card: Card = {
-                remaining_effort: { is_being_saved: true, is_in_edit_mode: true }
+                remaining_effort: { is_being_saved: true, is_in_edit_mode: false }
             } as Card;
             const state: SwimlaneState = {
                 swimlanes: [{ card } as Swimlane]
@@ -86,26 +93,20 @@ describe(`Card mutations`, () => {
         });
     });
 
-    describe("finishSavingRemainingEffort", () => {
-        it("saves the new value and switch is_being_saved and is_in_edit_mode to false", () => {
-            const card: Card = {
-                remaining_effort: { value: 3.14, is_being_saved: true, is_in_edit_mode: true }
+    describe(`removeRemainingEffortFromEditMode`, () => {
+        it(`switches is_in_edit_mode to false`, () => {
+            const card = {
+                remaining_effort: { is_in_edit_mode: true, is_being_saved: false }
             } as Card;
-            const state: SwimlaneState = {
-                swimlanes: [{ card } as Swimlane]
-            } as SwimlaneState;
-            const payload: NewRemainingEffortPayload = {
-                card,
-                value: 42
-            };
+            const state = { swimlanes: [{ card } as Swimlane] } as SwimlaneState;
 
-            mutations.finishSavingRemainingEffort(state, payload);
+            mutations.removeRemainingEffortFromEditMode(state, card);
 
-            expect.assertions(3);
-            if (state.swimlanes[0].card.remaining_effort) {
-                expect(state.swimlanes[0].card.remaining_effort.value).toBe(42);
-                expect(state.swimlanes[0].card.remaining_effort.is_being_saved).toBe(false);
-                expect(state.swimlanes[0].card.remaining_effort.is_in_edit_mode).toBe(false);
+            expect.assertions(2);
+            const remaining_effort = state.swimlanes[0].card.remaining_effort;
+            if (remaining_effort) {
+                expect(remaining_effort.is_in_edit_mode).toBe(false);
+                expect(remaining_effort.is_being_saved).toBe(false);
             }
         });
     });

@@ -17,82 +17,113 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Card, RemainingEffort, TaskboardEvent } from "../../../../../../type";
+import { Card, TaskboardEvent } from "../../../../../../type";
 import { shallowMount, Wrapper } from "@vue/test-utils";
-import { createTaskboardLocalVue } from "../../../../../../helpers/local-vue-for-test";
 import EditCardButtons from "./EditCardButtons.vue";
 import CancelSaveButtons from "./CancelSaveButtons.vue";
 import EventBus from "../../../../../../helpers/event-bus";
 
-async function createWrapper(
-    is_in_edit_mode: boolean,
-    remaining_effort: RemainingEffort | null
-): Promise<Wrapper<EditCardButtons>> {
+function createWrapper(card: Card): Wrapper<EditCardButtons> {
     return shallowMount(EditCardButtons, {
-        localVue: await createTaskboardLocalVue(),
-        propsData: {
-            card: {
-                is_in_edit_mode,
-                remaining_effort
-            } as Card
-        }
+        propsData: { card }
     });
 }
 
 describe("EditCardButtons", () => {
     describe("Displays buttons", () => {
-        it("displays nothing if remaining effort is not in edit mode", async () => {
-            const wrapper = await createWrapper(false, {
-                is_in_edit_mode: false
-            } as RemainingEffort);
+        it("displays nothing if remaining effort is not in edit mode", () => {
+            const wrapper = createWrapper({
+                is_in_edit_mode: false,
+                remaining_effort: {
+                    is_in_edit_mode: false
+                }
+            } as Card);
 
             expect(wrapper.isEmpty()).toBe(true);
         });
 
-        it("displays nothing if there isn't any remaining effort", async () => {
-            const wrapper = await createWrapper(false, null);
+        it("displays nothing if there isn't any remaining effort", () => {
+            const wrapper = createWrapper({
+                is_in_edit_mode: false,
+                remaining_effort: null
+            } as Card);
 
             expect(wrapper.isEmpty()).toBe(true);
         });
 
-        it("displays buttons if remaining effort is in edit mode", async () => {
-            const wrapper = await createWrapper(false, {
-                is_in_edit_mode: true
-            } as RemainingEffort);
+        it("displays buttons if remaining effort is in edit mode", () => {
+            const wrapper = createWrapper({
+                is_in_edit_mode: false,
+                remaining_effort: { is_in_edit_mode: true }
+            } as Card);
 
             expect(wrapper.contains(CancelSaveButtons)).toBe(true);
         });
 
-        it("displays buttons if card is in edit mode", async () => {
-            const wrapper = await createWrapper(true, null);
+        it("displays buttons if card is in edit mode", () => {
+            const wrapper = createWrapper({
+                is_in_edit_mode: true,
+                remaining_effort: null
+            } as Card);
 
             expect(wrapper.contains(CancelSaveButtons)).toBe(true);
         });
     });
 
     describe("Broadcast events", () => {
-        it("Broadcasts cancel-card-edition event when buttons emit a cancel-card-edition event", async () => {
-            const wrapper = await createWrapper(true, null);
+        it("Broadcasts cancel-card-edition event when buttons emit a cancel event", () => {
+            const card = { is_in_edit_mode: true, remaining_effort: null } as Card;
+            const wrapper = createWrapper(card);
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
             wrapper.find(CancelSaveButtons).vm.$emit("cancel");
 
-            expect(event_bus_emit).toHaveBeenCalledWith(TaskboardEvent.CANCEL_CARD_EDITION, {
-                is_in_edit_mode: true,
-                remaining_effort: null
-            });
+            expect(event_bus_emit).toHaveBeenCalledWith(TaskboardEvent.CANCEL_CARD_EDITION, card);
         });
 
-        it("Broadcasts save-card-edition event when buttons emit a save-card-edition event", async () => {
-            const wrapper = await createWrapper(true, null);
+        it("Broadcasts save-card-edition event when buttons emit a save event", () => {
+            const card = {
+                is_in_edit_mode: true,
+                remaining_effort: null
+            } as Card;
+            const wrapper = createWrapper(card);
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
             wrapper.find(CancelSaveButtons).vm.$emit("save");
 
-            expect(event_bus_emit).toHaveBeenCalledWith(TaskboardEvent.SAVE_CARD_EDITION, {
-                is_in_edit_mode: true,
-                remaining_effort: null
-            });
+            expect(event_bus_emit).toHaveBeenCalledWith(TaskboardEvent.SAVE_CARD_EDITION, card);
         });
+    });
+
+    it(`when the card is being saved,
+        it will set the action ongoing flag to true`, () => {
+        const wrapper = createWrapper({
+            is_in_edit_mode: true,
+            is_being_saved: true
+        } as Card);
+        const buttons = wrapper.find(CancelSaveButtons);
+        expect(buttons.props("is_action_ongoing")).toBe(true);
+    });
+
+    it(`when the card is not being saved and has no remaining effort,
+        it will set the action ongoing flag to false`, () => {
+        const wrapper = createWrapper({
+            is_in_edit_mode: true,
+            remaining_effort: null,
+            is_being_saved: false
+        } as Card);
+        const buttons = wrapper.find(CancelSaveButtons);
+        expect(buttons.props("is_action_ongoing")).toBe(false);
+    });
+
+    it(`when the remaining effort is being saved,
+        it will set the action ongoing flag to true`, () => {
+        const wrapper = createWrapper({
+            is_in_edit_mode: false,
+            remaining_effort: { is_in_edit_mode: true, is_being_saved: true },
+            is_being_saved: false
+        } as Card);
+        const buttons = wrapper.find(CancelSaveButtons);
+        expect(buttons.props("is_action_ongoing")).toBe(true);
     });
 });

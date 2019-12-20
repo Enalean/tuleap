@@ -51,7 +51,7 @@ import EventBus from "../../../../../../helpers/event-bus";
 
 @Component
 export default class CancelSaveButtons extends Vue {
-    @Prop({ required: false, default: false })
+    @Prop({ required: true })
     readonly is_action_ongoing!: boolean;
 
     get save_icon(): string {

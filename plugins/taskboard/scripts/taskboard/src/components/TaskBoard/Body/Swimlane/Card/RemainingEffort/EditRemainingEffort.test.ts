@@ -25,7 +25,7 @@ import { RootState } from "../../../../../../store/type";
 import { Card, TaskboardEvent } from "../../../../../../type";
 import EventBus from "../../../../../../helpers/event-bus";
 
-async function getWrapper(): Promise<Wrapper<EditRemainingEffort>> {
+async function getWrapper(is_being_saved = false): Promise<Wrapper<EditRemainingEffort>> {
     return shallowMount(EditRemainingEffort, {
         localVue: await createTaskboardLocalVue(),
         propsData: {
@@ -34,7 +34,8 @@ async function getWrapper(): Promise<Wrapper<EditRemainingEffort>> {
                 color: "fiesta-red",
                 remaining_effort: {
                     value: 3.14,
-                    is_in_edit_mode: true
+                    is_in_edit_mode: true,
+                    is_being_saved
                 }
             } as Card
         },
@@ -61,10 +62,21 @@ describe("EditRemainingEffort", () => {
 
         wrapper.trigger("keyup.enter");
         expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
-        expect(wrapper.props("card").remaining_effort.is_in_edit_mode).toBe(false);
+        const card = wrapper.props("card");
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+            "swimlane/removeRemainingEffortFromEditMode",
+            card
+        );
     });
 
-    it("Saves the new value if user hits enter and it stays in edit mode to wait the REST call to be done", async () => {
+    it(`Does not save anything if the remaining effort is already being saved`, async () => {
+        const wrapper = await getWrapper(true);
+
+        wrapper.trigger("keyup.enter");
+        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
+    });
+
+    it("Saves the new value if the user hits enter", async () => {
         const wrapper = await getWrapper();
 
         const value = 42;
@@ -79,8 +91,7 @@ describe("EditRemainingEffort", () => {
         expect(card.remaining_effort.is_in_edit_mode).toBe(true);
     });
 
-    it(`Saves the new value if user clicks on save button (that is outside of this component)
-        and it stays in edit mode to wait the REST call to be done`, async () => {
+    it(`Saves the new value if the user clicks on save button (that is outside of this component)`, async () => {
         const wrapper = await getWrapper();
 
         const value = 42;
@@ -93,10 +104,9 @@ describe("EditRemainingEffort", () => {
             card,
             value
         });
-        expect(card.remaining_effort.is_in_edit_mode).toBe(true);
     });
 
-    it(`Cancels the edition of the remaining effort if user clicks on cancel button (that is outside of this componenet)`, async () => {
+    it(`Cancels the edition of the remaining effort if the user clicks on cancel button (that is outside of this component)`, async () => {
         const wrapper = await getWrapper();
 
         const value = 42;
@@ -105,7 +115,10 @@ describe("EditRemainingEffort", () => {
         const card = wrapper.props("card");
         EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, card);
 
-        expect(card.remaining_effort.is_in_edit_mode).toBe(false);
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+            "swimlane/removeRemainingEffortFromEditMode",
+            card
+        );
         expect(card.remaining_effort.value).toBe(3.14);
     });
 

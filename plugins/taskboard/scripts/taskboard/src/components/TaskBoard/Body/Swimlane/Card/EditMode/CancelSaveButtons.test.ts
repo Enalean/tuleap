@@ -33,16 +33,6 @@ async function createWrapper(is_action_ongoing: boolean): Promise<Wrapper<Cancel
 }
 
 describe("CancelSaveButtons", () => {
-    it(`is not disabled by default`, async () => {
-        const localVue = await createTaskboardLocalVue();
-        const wrapper = shallowMount(CancelSaveButtons, {
-            localVue
-            // Do not pass propsData to check default prop value
-        });
-
-        expect(wrapper.props("is_action_ongoing")).toBe(false);
-    });
-
     describe(`When there is no ongoing action`, () => {
         let wrapper: Wrapper<CancelSaveButtons>;
         beforeEach(async () => {
