@@ -21,8 +21,8 @@
     <div class="project-release-infos-badges">
         <a
             class="project-release-info-badge tlp-badge-primary toggle-sprints"
-            v-if="tracker_submilestone_label !== ''"
-            data-test="planning-link"
+            v-if="tracker_submilestone_label !== '' && release_data.total_sprint > 0"
+            data-test="badge-sprint"
         >
             <i class="fa fa-map-signs tlp-badge-icon"></i>
             {{ release_data.total_sprint }} {{ tracker_submilestone_label }}

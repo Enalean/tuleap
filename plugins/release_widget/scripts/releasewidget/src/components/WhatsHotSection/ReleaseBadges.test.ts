@@ -192,7 +192,7 @@ describe("ReleaseBadges", () => {
         it("When there is a tracker, Then number of sprint is displayed", async () => {
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.find("[data-test=planning-link]").text()).toEqual("10 Sprint1");
+            expect(wrapper.find("[data-test=badge-sprint]").text()).toEqual("10 Sprint1");
         });
 
         it("When there isn't tracker, Then there is no link", async () => {
@@ -213,7 +213,83 @@ describe("ReleaseBadges", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=planning-link]")).toBe(false);
+            expect(wrapper.contains("[data-test=badge-sprint]")).toBe(false);
+        });
+
+        it("When there are not sprints, Then there is no badge", async () => {
+            release_data = {
+                label: "mile",
+                id: 2,
+                planning: {
+                    id: "100"
+                },
+                total_sprint: 0,
+                initial_effort,
+                number_of_artifact_by_trackers: [],
+                resources: {
+                    milestones: {
+                        accept: {
+                            trackers: [
+                                {
+                                    label: "Sprint1"
+                                }
+                            ]
+                        }
+                    },
+                    content: {
+                        accept: {
+                            trackers: []
+                        }
+                    },
+                    additional_panes: []
+                }
+            };
+
+            component_options.propsData = {
+                release_data
+            };
+
+            const wrapper = await getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.contains("[data-test=badge-sprint]")).toBe(false);
+        });
+
+        it("When total_sprints is null, Then ReleaseBadgesSprints is not rendered", async () => {
+            release_data = {
+                label: "mile",
+                id: 2,
+                planning: {
+                    id: "100"
+                },
+                total_sprint: null,
+                initial_effort,
+                number_of_artifact_by_trackers: [],
+                resources: {
+                    milestones: {
+                        accept: {
+                            trackers: [
+                                {
+                                    label: "Sprint1"
+                                }
+                            ]
+                        }
+                    },
+                    content: {
+                        accept: {
+                            trackers: []
+                        }
+                    },
+                    additional_panes: []
+                }
+            };
+
+            component_options.propsData = {
+                release_data
+            };
+
+            const wrapper = await getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.contains("[data-test=badge-sprint]")).toBe(false);
         });
     });
 });
