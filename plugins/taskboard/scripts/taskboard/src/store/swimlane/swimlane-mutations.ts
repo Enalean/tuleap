@@ -44,7 +44,11 @@ export function addSwimlanes(state: SwimlaneState, swimlanes: Array<Swimlane>): 
 
 export function refreshCard(state: SwimlaneState, payload: RefreshCardMutationPayload): void {
     const state_card = findCard(state, payload.refreshed_card);
-    Object.assign(state_card, payload.refreshed_card);
+    const remaining_effort = Object.assign(
+        state_card.remaining_effort,
+        payload.refreshed_card.remaining_effort
+    );
+    Object.assign(state_card, payload.refreshed_card, { remaining_effort });
 }
 
 export function beginLoadingSwimlanes(state: SwimlaneState): void {

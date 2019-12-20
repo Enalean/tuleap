@@ -229,7 +229,7 @@ describe(`Swimlane state mutations`, () => {
             };
             const state = {
                 swimlanes: [
-                    { card: { id: 21, label: "Unrelated swimlane " }, children_cards: [] },
+                    { card: { id: 21, label: "Unrelated swimlane" }, children_cards: [] },
                     swimlane
                 ]
             } as SwimlaneState;
@@ -244,6 +244,53 @@ describe(`Swimlane state mutations`, () => {
             mutations.refreshCard(state, { swimlane, refreshed_card: card });
 
             expect(state.swimlanes[1].card).toStrictEqual(card);
+        });
+
+        it(`When the user is editing the remaining effort of the swimlane,
+            it does not erase remaining effort's edit flags`, () => {
+            const swimlane = {
+                card: {
+                    id: 78,
+                    label: "Parent card",
+                    has_children: true,
+                    mapped_list_value: { id: 1234, label: "Todo" },
+                    initial_effort: 2,
+                    remaining_effort: {
+                        value: 1.5,
+                        is_in_edit_mode: true,
+                        is_being_saved: false,
+                        can_update: true
+                    }
+                } as Card,
+                children_cards: [{ id: 61, label: "Unrelated card" } as Card],
+                is_loading_children_cards: false
+            };
+            const state = {
+                swimlanes: [
+                    { card: { id: 21, label: "Unrelated swimlane" }, children_cards: [] },
+                    swimlane
+                ]
+            } as SwimlaneState;
+            const card = {
+                id: 78,
+                label: "Refreshed parent card",
+                has_children: true,
+                mapped_list_value: { id: 3456, label: "Done" },
+                initial_effort: 2,
+                remaining_effort: { value: 0, can_update: true }
+            } as Card;
+            mutations.refreshCard(state, { swimlane, refreshed_card: card });
+
+            const state_swimlane = state.swimlanes[1];
+            expect(state_swimlane.card.remaining_effort).not.toBeNull();
+            if (state_swimlane.card.remaining_effort) {
+                expect(state_swimlane.card.remaining_effort).toStrictEqual({
+                    value: 0,
+                    can_update: true,
+                    is_in_edit_mode: true,
+                    is_being_saved: false
+                });
+            }
         });
     });
 
