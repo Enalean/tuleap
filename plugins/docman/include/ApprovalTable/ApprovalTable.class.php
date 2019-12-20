@@ -35,8 +35,6 @@ abstract class Docman_ApprovalTable
     var $customizable;
     var $reviewers;
 
-    private $is_potentially_corrupted = false;
-
     function __construct()
     {
         $this->id                 = null;
@@ -137,11 +135,6 @@ abstract class Docman_ApprovalTable
         return $this->approvalState;
     }
 
-    public function isPotentiallyCorrupted()
-    {
-        return (bool) $this->is_potentially_corrupted;
-    }
-
     function initFromRow($row)
     {
         if (isset($row['table_id'])) {
@@ -164,9 +157,6 @@ abstract class Docman_ApprovalTable
         }
         if (isset($row['notification_occurence'])) {
             $this->notificationOccurence = $row['notification_occurence'];
-        }
-        if (isset($row['might_be_corrupted'])) {
-            $this->is_potentially_corrupted = $row['might_be_corrupted'];
         }
         $this->approvalState = $this->computeApprovalState($row);
     }

@@ -21,7 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Docman\ApprovalTable\HasPotentiallyCorruptedApprovalTable;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSection
@@ -507,19 +506,6 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
 
         // Show toolbar
         $html .= $this->getToolbar();
-
-        if ($this->item->accept(
-            new HasPotentiallyCorruptedApprovalTable(new Docman_ApprovalTableFileDao(), new Docman_LinkVersionFactory()),
-            ['approval_table' => $this->table, 'version_number' => $this->version]
-        )
-        ) {
-            $html .= '<div class="feedback_warning">' .
-                dgettext(
-                    'tuleap-docman',
-                    'This approval table has been detected has potentially corrupted, please reach out to the site administrators if you notice inconsistencies.'
-                )
-                . '</div>';
-        }
 
         // Show Content
         if ($this->table === null) {
