@@ -24,6 +24,7 @@ require_once('HTML_Element_Option.class.php');
 /**
  * Define a html selectbox
  */
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class HTML_Element_Selectbox extends HTML_Element
 {
     protected $options;
@@ -35,7 +36,7 @@ class HTML_Element_Selectbox extends HTML_Element
 
         $this->onchange = $onchange;
         if ($with_none) {
-            $this->addOption(new HTML_Element_Option($GLOBALS['Language']->getText('global', 'none_dashed'), "", ($this->value === "" || $this->value === null)));
+            $this->addOption(new HTML_Element_Option(dgettext('tuleap-core', '-- None --'), "", ($this->value === "" || $this->value === null)));
         }
     }
     public function renderValue()

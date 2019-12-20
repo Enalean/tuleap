@@ -67,7 +67,6 @@ global	on	On
 global	off	Off
 global	any	Any
 global	none	None
-global	none_dashed	-- None --
 global	please_choose_dashed	-- Please choose
 global	begin	Begin
 global	end	End

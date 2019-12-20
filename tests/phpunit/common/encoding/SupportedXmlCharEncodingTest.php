@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2016. All rights reserved
+ * Copyright (c) Enalean, 2012 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -11,26 +11,30 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
-class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest extends TuleapTestCase
+use PHPUnit\Framework\TestCase;
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest extends TestCase
 {
 
-    public function itStripsVerticalSpaces()
+    public function testItStripsVerticalSpaces(): void
     {
         $bad_text = 'blockingment visiblesLe guidage de';
 
         $returned = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($bad_text);
 
-        $this->assertEqual($returned, 'blockingment visibles Le guidage de');
+        $this->assertEquals($returned, 'blockingment visibles Le guidage de');
     }
 
-    public function itReplacesOtherBadCharacters()
+    public function testItReplacesOtherBadCharacters(): void
     {
         $bad_chars =  array(
            "\x01" => ' ',
@@ -54,25 +58,25 @@ class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest extends Tulea
             $str      = mb_convert_encoding($bad_char, 'ISO-8859-15', 'UTF-8');
             $returned = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($str);
 
-            $this->assertEqual($returned, $replace);
+            $this->assertEquals($replace, $returned);
         }
     }
 
-    public function itDoesntRemoveGoodChars()
+    public function testItDoesntRemoveGoodChars(): void
     {
         $str = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789¶²&é"\'(-è_çà)=~#{[|`\^@]}£$ù%*µ,;:!?./§\'<>œÇêÊàÀÉ`È¡';
-        $this->assertEqual($str, Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($str));
+        $this->assertEquals($str, Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($str));
     }
 
-    public function itDoesntRemoveGoodCharsInAnotherEncoding()
+    public function testItDoesntRemoveGoodCharsInAnotherEncoding(): void
     {
         $str = 'REPLACEabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789¶²&é"\'(-è_çà)=~#{[|`\^@]}£$ù%*µ,;:!?./§\'<>œÇêÊàÀÉ`È¡';
         $str = mb_convert_encoding($str, 'ISO-8859-1', 'ISO-8859-1');
 
-        $this->assertEqual($str, Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($str));
+        $this->assertEquals($str, Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($str));
     }
 
-    public function itReplacesBadCharacters()
+    public function testItReplacesBadCharacters()
     {
         $bad_chars =  array(
             "\x01" => ' ',
@@ -96,7 +100,7 @@ class Encoding_SupportedXmlCharEncoding_getXMLCompatibleStringTest extends Tulea
             $bad_text = html_entity_decode($string, ENT_IGNORE, 'ISO-8859-1');
             $returned = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($bad_text);
 
-            $this->assertEqual($returned, $replace);
+            $this->assertEquals($replace, $returned);
         }
     }
 }

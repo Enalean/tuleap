@@ -61,6 +61,9 @@ msgstr "Annonces site %s"
 msgid "%s project news highlights"
 msgstr "Annonces phares des projets %s"
 
+msgid "-- None --"
+msgstr "-- Aucun --"
+
 msgid ""
 "A non available service cannot be enabled. To enable this service, switch it "
 "to available before."

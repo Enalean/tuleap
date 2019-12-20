@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics 2011. All rights reserved
+ * Copyright Enalean (c) 2019-present. All rights reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,34 +17,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Mock::generate('BaseLanguage');
+use PHPUnit\Framework\TestCase;
+use Tuleap\GlobalLanguageMock;
 
-class HTML_Element_SelectboxTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class HTML_Element_SelectboxTest extends TestCase
 {
+    use GlobalLanguageMock;
 
-    public function setup()
-    {
-        parent::setUp();
-        $GLOBALS['Language']->setReturnValue('getText', 'none');
-    }
-
-    function testWithNone()
+    public function testWithNone(): void
     {
         $selectbox = new HTML_Element_Selectbox('label', 'name', 'value', true);
-        $this->assertEqual('<select id="customfield_0" name="name" ><option value="" >none</option></select>', $selectbox->renderValue());
+        $selectbox->setId('id-none-test');
+        $this->assertEquals(
+            '<select id="id-none-test" name="name" ><option value="" >-- None --</option></select>',
+            $selectbox->renderValue()
+        );
     }
 
-    function testSetId()
+    public function testSetId(): void
     {
         $selectbox = new HTML_Element_Selectbox('label', 'name', 'value', false);
         $selectbox->setId('id');
-        $this->assertEqual('<select id="id" name="name" ></select>', $selectbox->renderValue());
+        $this->assertEquals('<select id="id" name="name" ></select>', $selectbox->renderValue());
     }
 
-    function testAddMultipleOptions()
+    public function testAddMultipleOptions(): void
     {
         $selectbox = new HTML_Element_Selectbox('label', 'name', 'value', false);
+        $selectbox->setId('id-add-options-test');
         $selectbox->addMultipleOptions(array('one' => '1', 'two' => '2'), 'two');
-         $this->assertEqual('<select id="customfield_3" name="name" ><option value="one" >1</option><option value="two" selected="selected">2</option></select>', $selectbox->renderValue());
+        $this->assertEquals(
+            '<select id="id-add-options-test" name="name" ><option value="one" >1</option><option value="two" selected="selected">2</option></select>',
+            $selectbox->renderValue()
+        );
     }
 }
