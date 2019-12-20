@@ -23,14 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Reviewer\Change;
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\PullRequest\Notification\InvalidWorkerEventPayloadException;
 
 final class ReviewerChangeEventTest extends TestCase
 {
-    public function testEventCanBeJSONSerialized(): void
+    public function testEventCanBeTransformedToAWorkerEventPayload(): void
     {
         $event = ReviewerChangeEvent::fromID(74);
 
-        $this->assertJsonStringEqualsJsonString('{"change_id":74}', json_encode($event, JSON_THROW_ON_ERROR));
+        $this->assertEquals(['change_id' => 74], $event->toWorkerEventPayload());
     }
 
     public function testEventCanBeBuiltFromWorkerEventPayload(): void
@@ -42,5 +43,11 @@ final class ReviewerChangeEventTest extends TestCase
         $event = ReviewerChangeEvent::fromWorkerEventPayload($payload);
 
         $this->assertEquals(ReviewerChangeEvent::fromID(75), $event);
+    }
+
+    public function testBuildingFromAnInvalidPayloadIsRejected(): void
+    {
+        $this->expectException(InvalidWorkerEventPayloadException::class);
+        ReviewerChangeEvent::fromWorkerEventPayload([]);
     }
 }

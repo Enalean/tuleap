@@ -30,7 +30,7 @@ use Tuleap\PullRequest\PullRequest;
 /**
  * @psalm-immutable
  */
-final class PullRequestMergedEvent implements EventSubjectToNotification, \JsonSerializable
+final class PullRequestMergedEvent implements EventSubjectToNotification
 {
     /**
      * @var int
@@ -71,7 +71,7 @@ final class PullRequestMergedEvent implements EventSubjectToNotification, \JsonS
         return $this->pull_request_id;
     }
 
-    public function jsonSerialize(): array
+    public function toWorkerEventPayload(): array
     {
         return [
             'user_id' => $this->user_id,

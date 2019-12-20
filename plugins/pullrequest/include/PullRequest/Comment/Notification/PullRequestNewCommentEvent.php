@@ -28,7 +28,7 @@ use Tuleap\PullRequest\Notification\InvalidWorkerEventPayloadException;
 /**
  * @psalm-immutable
  */
-final class PullRequestNewCommentEvent implements EventSubjectToNotification, \JsonSerializable
+final class PullRequestNewCommentEvent implements EventSubjectToNotification
 {
     /**
      * @var int
@@ -59,7 +59,7 @@ final class PullRequestNewCommentEvent implements EventSubjectToNotification, \J
         return $this->comment_id;
     }
 
-    public function jsonSerialize(): array
+    public function toWorkerEventPayload(): array
     {
         return [
             'comment_id' => $this->comment_id

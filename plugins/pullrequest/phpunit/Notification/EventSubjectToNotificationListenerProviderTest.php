@@ -65,6 +65,11 @@ final class EventSubjectToNotificationListenerProviderTest extends TestCase
             {
                 return new self();
             }
+
+            public function toWorkerEventPayload() : array
+            {
+                return [];
+            }
         };
 
         $listeners = $listener_provider->getListenersForEvent($event_subject_to_notification);

@@ -55,7 +55,7 @@ final class EventSubjectToNotificationAsynchronousRedisDispatcher implements Eve
             self::TOPIC,
             [
                 'event_class' => get_class($event),
-                'content'     => $event,
+                'content'     => $event->toWorkerEventPayload(),
             ]
         );
 

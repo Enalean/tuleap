@@ -27,11 +27,11 @@ use Tuleap\PullRequest\Notification\InvalidWorkerEventPayloadException;
 
 final class PullRequestNewCommentEventTest extends TestCase
 {
-    public function testEventCanBeJSONSerialized(): void
+    public function testEventCanBeTransformedToAWorkerEventPayload(): void
     {
         $event = PullRequestNewCommentEvent::fromCommentID(951);
 
-        $this->assertJsonStringEqualsJsonString('{"comment_id":951}', json_encode($event, JSON_THROW_ON_ERROR));
+        $this->assertEquals(['comment_id' => 951], $event->toWorkerEventPayload());
     }
 
     public function testEventCanBeBuiltFromWorkerEventPayload(): void

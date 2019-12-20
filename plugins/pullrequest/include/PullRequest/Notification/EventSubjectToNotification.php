@@ -28,4 +28,6 @@ interface EventSubjectToNotification
      * @throws InvalidWorkerEventPayloadException
      */
     public static function fromWorkerEventPayload(array $payload): self;
+
+    public function toWorkerEventPayload(): array;
 }
