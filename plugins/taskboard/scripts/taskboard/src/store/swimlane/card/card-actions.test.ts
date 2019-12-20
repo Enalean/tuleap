@@ -71,7 +71,10 @@ describe("Card actions", () => {
             mockFetchSuccess(tlpPatchMock, {});
 
             await actions.saveRemainingEffort(context, new_remaining_effort);
-            expect(context.commit).toHaveBeenCalledWith("startSavingRemainingEffort", card);
+            expect(context.commit).toHaveBeenCalledWith(
+                "startSavingRemainingEffort",
+                new_remaining_effort
+            );
             expect(tlpPatchMock).toHaveBeenCalledWith(`/api/v1/taskboard_cards/123`, {
                 headers: {
                     "Content-Type": "application/json"
@@ -80,10 +83,7 @@ describe("Card actions", () => {
                     remaining_effort: 42
                 })
             });
-            expect(context.commit).toHaveBeenCalledWith(
-                "finishSavingRemainingEffort",
-                new_remaining_effort
-            );
+            expect(context.commit).toHaveBeenCalledWith("resetSavingRemainingEffort", card);
         });
 
         it("warns about error if any", async () => {
@@ -98,10 +98,6 @@ describe("Card actions", () => {
 
             await actions.saveRemainingEffort(context, new_remaining_effort);
 
-            expect(context.commit).not.toHaveBeenCalledWith(
-                "finishSavingRemainingEffort",
-                new_remaining_effort
-            );
             expect(context.commit).toHaveBeenCalledWith("resetSavingRemainingEffort", card);
             expect(context.dispatch).toHaveBeenCalledWith(
                 "error/handleModalError",

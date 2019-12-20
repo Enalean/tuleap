@@ -18,7 +18,12 @@
   -->
 
 <template>
-    <cancel-save-buttons v-if="should_display_buttons" v-on:cancel="cancel" v-on:save="save" />
+    <cancel-save-buttons
+        v-if="should_display_buttons"
+        v-bind:is_action_ongoing="is_action_ongoing"
+        v-on:cancel="cancel"
+        v-on:save="save"
+    />
 </template>
 <script lang="ts">
 import Vue from "vue";
@@ -44,6 +49,18 @@ export default class EditCardButtons extends Vue {
         }
 
         return this.card.remaining_effort.is_in_edit_mode;
+    }
+
+    get is_action_ongoing(): boolean {
+        if (this.card.is_being_saved) {
+            return true;
+        }
+
+        if (!this.card.remaining_effort) {
+            return false;
+        }
+
+        return this.card.remaining_effort.is_being_saved;
     }
 
     cancel(): void {

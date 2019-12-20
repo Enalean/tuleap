@@ -45,13 +45,13 @@ export async function saveRemainingEffort(
     new_remaining_effort: NewRemainingEffortPayload
 ): Promise<void> {
     const card = new_remaining_effort.card;
-    context.commit("startSavingRemainingEffort", card);
+    context.commit("startSavingRemainingEffort", new_remaining_effort);
     try {
         await patch(`/api/v1/taskboard_cards/${encodeURIComponent(card.id)}`, {
             headers,
             body: JSON.stringify({ remaining_effort: new_remaining_effort.value })
         });
-        context.commit("finishSavingRemainingEffort", new_remaining_effort);
+        context.commit("resetSavingRemainingEffort", card);
     } catch (error) {
         context.commit("resetSavingRemainingEffort", card);
         await context.dispatch("error/handleModalError", error, { root: true });

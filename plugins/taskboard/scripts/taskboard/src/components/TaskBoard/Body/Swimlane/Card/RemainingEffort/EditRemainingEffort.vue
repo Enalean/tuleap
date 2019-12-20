@@ -55,6 +55,9 @@ export default class EditRemainingEffort extends Vue {
         new_remaining_effort: NewRemainingEffortPayload
     ) => Promise<void>;
 
+    @swimlane.Mutation
+    readonly removeRemainingEffortFromEditMode!: (card: Card) => void;
+
     value = "";
 
     get classes(): Array<string> {
@@ -104,9 +107,7 @@ export default class EditRemainingEffort extends Vue {
     }
 
     cancel(): void {
-        if (this.card.remaining_effort) {
-            this.card.remaining_effort.is_in_edit_mode = false;
-        }
+        this.removeRemainingEffortFromEditMode(this.card);
     }
 
     save(): void {
@@ -120,6 +121,10 @@ export default class EditRemainingEffort extends Vue {
         }
 
         if (!this.card.remaining_effort) {
+            return;
+        }
+
+        if (this.card.remaining_effort.is_being_saved) {
             return;
         }
 
