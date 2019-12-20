@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -73,8 +73,8 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
         $layout->addCssAsset(
             new CssAsset(
                 new IncludeAssets(
-                    __DIR__ . '/../../../../src/www/assets/project_ownership/BurningParrot',
-                    '/assets/project_ownership/BurningParrot'
+                    __DIR__ . '/../../../../src/www/assets/project_ownership/themes',
+                    '/assets/project_ownership/themes'
                 ),
                 'project-ownership-project-admin'
             )
