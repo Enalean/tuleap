@@ -56,7 +56,7 @@ class ProjectPostRepresentation
     public $template_id;
 
     /**
-     * @var string Template name provided by the platform {@from body} {@required false} {@choice scrum}
+     * @var string Template name provided by the platform {@from body} {@required false} {@choice agile_alm,scrum,kanban,issues}
      */
     public $xml_template_name;
 

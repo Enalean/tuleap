@@ -27,7 +27,7 @@ $card-border-margin: 150px;
 .project-registration-template-card {
     display: flex;
     width: calc(50% - #{$tlp-half-spacing});
-    height: 100%;
+    height: 120px;
     margin: 0 $tlp-half-spacing $tlp-spacing 0;
 
     &:nth-child(even) {
@@ -53,6 +53,14 @@ $card-border-margin: 150px;
     line-height: 18px;
 }
 
+.project-registration-template-card-svg {
+    fill: $tlp-ui-border-dark;
+}
+
+.project-registration-template-card-svg-stroke {
+    stroke: $tlp-ui-border-dark;
+}
+
 .project-registration-selected-template {
     display: none;
 
@@ -70,6 +78,10 @@ $card-border-margin: 150px;
 
             > div > svg > .project-registration-template-card-svg {
                 fill: $tlp-theme-color;
+            }
+
+            > div > svg > .project-registration-template-card-svg-stroke {
+                stroke: $tlp-theme-color;
             }
         }
     }
