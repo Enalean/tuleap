@@ -46,11 +46,11 @@ export default class AddButton extends Vue {
     }
 
     get icon_class(): string {
-        return this.label ? "tlp-button-icon" : "";
+        return this.label !== "" ? "tlp-button-icon" : "";
     }
 
     get button_class(): string {
-        return this.label
+        return this.label !== ""
             ? "taskboard-add-in-place-button-with-label"
             : "tlp-tooltip tlp-tooltip-top";
     }

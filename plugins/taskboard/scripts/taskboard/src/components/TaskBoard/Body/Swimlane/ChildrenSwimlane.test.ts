@@ -18,13 +18,13 @@
  */
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
-import CardWithChildren from "./CardWithChildren.vue";
+import ChildrenSwimlane from "./ChildrenSwimlane.vue";
 import { createStoreMock } from "../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import { Card, ColumnDefinition, Swimlane } from "../../../../type";
 import { RootState } from "../../../../store/type";
 
-function createWrapper(swimlane: Swimlane): Wrapper<CardWithChildren> {
-    return shallowMount(CardWithChildren, {
+function createWrapper(swimlane: Swimlane): Wrapper<ChildrenSwimlane> {
+    return shallowMount(ChildrenSwimlane, {
         mocks: {
             $store: createStoreMock({
                 state: {
@@ -49,9 +49,8 @@ function createWrapper(swimlane: Swimlane): Wrapper<CardWithChildren> {
     });
 }
 
-describe("CardWithChildren", () => {
-    it(`when the swimlane is loading children cards,
-        it displays the parent card in its own cell with columns skeletons`, () => {
+describe("ChildrenSwimlane", () => {
+    it(`displays the parent card in its own cell and children in cells`, () => {
         const swimlane: Swimlane = {
             card: { id: 43 } as Card,
             children_cards: [],

@@ -21,7 +21,7 @@
 <template>
     <div class="taskboard-swimlane">
         <parent-cell v-bind:swimlane="swimlane" />
-        <column-with-children
+        <children-cell
             v-for="(col, index) of columns"
             v-bind:key="col.id"
             v-bind:column="col"
@@ -37,14 +37,14 @@ import { Component, Prop } from "vue-property-decorator";
 import { ColumnDefinition, Swimlane } from "../../../../type";
 import { namespace } from "vuex-class";
 import ParentCell from "./ParentCell.vue";
-import ColumnWithChildren from "./ColumnWithChildren.vue";
+import ChildrenCell from "./Cell/ChildrenCell.vue";
 
 const column = namespace("column");
 
 @Component({
-    components: { ColumnWithChildren, ParentCell }
+    components: { ChildrenCell, ParentCell }
 })
-export default class CardWithChildren extends Vue {
+export default class ChildrenSwimlane extends Vue {
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
 

@@ -1,7 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CardWithChildren when the swimlane is loading children cards,
-        it displays the parent card in its own cell with columns skeletons 1`] = `
+exports[`ChildrenSwimlane displays the parent card in its own cell and children in cells 1`] = `
 <div
   class="taskboard-swimlane"
 >
@@ -9,12 +8,12 @@ exports[`CardWithChildren when the swimlane is loading children cards,
     swimlane="[object Object]"
   />
    
-  <column-with-children-stub
+  <children-cell-stub
     column="[object Object]"
     column_index="0"
     swimlane="[object Object]"
   />
-  <column-with-children-stub
+  <children-cell-stub
     column="[object Object]"
     column_index="1"
     swimlane="[object Object]"

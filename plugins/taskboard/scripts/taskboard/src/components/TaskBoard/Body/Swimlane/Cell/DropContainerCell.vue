@@ -31,23 +31,31 @@
         v-bind:data-accepted-trackers-ids="accepted_trackers_ids(column)"
     >
         <slot class="content" v-if="!column.is_collapsed"></slot>
+        <add-card
+            v-if="is_add_card_rendered"
+            v-bind:column="column"
+            v-bind:swimlane="swimlane"
+            v-bind:button_label="add_button_label"
+        />
         <cell-disallows-drop-overlay v-bind:is-column-collapsed="column.is_collapsed" />
     </div>
 </template>
 
 <script lang="ts">
-import { namespace } from "vuex-class";
+import { Getter, namespace } from "vuex-class";
 import { Component, Mixins, Prop } from "vue-property-decorator";
 import HoveringStateForCollapsedColumnMixin from "./hovering-state-for-collapsed-column-mixin";
 import ExpandCollapsedColumnMixin from "./expand-collapsed-column-mixin";
 import ClassesForCollapsedColumnMixin from "./classes-for-collapsed-column-mixin";
+import AddCard from "../Card/Add/AddCard.vue";
 import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
 import { ColumnDefinition, Swimlane } from "../../../../../type";
+import { isSoloCard } from "../../../../../store/swimlane/swimlane-helpers";
 
 const column_store = namespace("column");
 
 @Component({
-    components: { CellDisallowsDropOverlay }
+    components: { AddCard, CellDisallowsDropOverlay }
 })
 export default class DropContainerCell extends Mixins(
     HoveringStateForCollapsedColumnMixin,
@@ -62,5 +70,16 @@ export default class DropContainerCell extends Mixins(
 
     @column_store.Getter
     readonly accepted_trackers_ids!: (column: ColumnDefinition) => number[];
+
+    @Getter
+    readonly can_add_in_place!: (swimlane: Swimlane) => boolean;
+
+    get is_add_card_rendered(): boolean {
+        return this.can_add_in_place(this.swimlane) && !this.column.is_collapsed;
+    }
+
+    get add_button_label(): string {
+        return isSoloCard(this.swimlane) ? this.$gettext("Add child") : "";
+    }
 }
 </script>

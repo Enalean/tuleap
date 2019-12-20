@@ -22,8 +22,13 @@ import DropContainerCell from "./DropContainerCell.vue";
 import { ColumnDefinition, Swimlane } from "../../../../../type";
 import { createStoreMock } from "../../../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import { RootState } from "../../../../../store/type";
+import AddCard from "../Card/Add/AddCard.vue";
 
-function getWrapper(column: ColumnDefinition, slots: Slots = {}): Wrapper<DropContainerCell> {
+function getWrapper(
+    column: ColumnDefinition,
+    can_add_in_place: boolean,
+    slots: Slots = {}
+): Wrapper<DropContainerCell> {
     const swimlane = { card: { id: 1 } } as Swimlane;
 
     return shallowMount(DropContainerCell, {
@@ -35,7 +40,8 @@ function getWrapper(column: ColumnDefinition, slots: Slots = {}): Wrapper<DropCo
             $store: createStoreMock({
                 state: { column: {}, swimlane: {} } as RootState,
                 getters: {
-                    "column/accepted_trackers_ids": (): number[] => []
+                    "column/accepted_trackers_ids": (): number[] => [],
+                    can_add_in_place: (): boolean => can_add_in_place
                 }
             })
         },
@@ -46,7 +52,7 @@ function getWrapper(column: ColumnDefinition, slots: Slots = {}): Wrapper<DropCo
 describe("DropContainerCell", () => {
     it(`Given the column is expanded, it displays the content of the cell`, () => {
         const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
-        const wrapper = getWrapper(column, {
+        const wrapper = getWrapper(column, false, {
             default: '<div class="my-slot-content"></div>'
         });
 
@@ -56,7 +62,7 @@ describe("DropContainerCell", () => {
 
     it(`Given the column is collapsed, it does not display the content of the cell`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
-        const wrapper = getWrapper(column, {
+        const wrapper = getWrapper(column, false, {
             default: '<div class="my-slot-content"></div>'
         });
 
@@ -66,7 +72,7 @@ describe("DropContainerCell", () => {
 
     it(`informs the mouseenter when the column is collapsed`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
-        const wrapper = getWrapper(column);
+        const wrapper = getWrapper(column, false);
 
         wrapper.trigger("mouseenter");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseEntersColumn", column);
@@ -74,7 +80,7 @@ describe("DropContainerCell", () => {
 
     it(`does not inform the mouseenter when the column is expanded`, () => {
         const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
-        const wrapper = getWrapper(column);
+        const wrapper = getWrapper(column, false);
 
         wrapper.trigger("mouseenter");
         expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
@@ -82,7 +88,7 @@ describe("DropContainerCell", () => {
 
     it(`informs the mouseout when the column is collapsed`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
-        const wrapper = getWrapper(column);
+        const wrapper = getWrapper(column, false);
 
         wrapper.trigger("mouseout");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/mouseLeavesColumn", column);
@@ -90,7 +96,7 @@ describe("DropContainerCell", () => {
 
     it(`does not inform the mouseout when the column is expanded`, () => {
         const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
-        const wrapper = getWrapper(column);
+        const wrapper = getWrapper(column, false);
 
         wrapper.trigger("mouseout");
         expect(wrapper.vm.$store.commit).not.toHaveBeenCalled();
@@ -98,7 +104,7 @@ describe("DropContainerCell", () => {
 
     it(`expands the column when user clicks on the collapsed column cell`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
-        const wrapper = getWrapper(column);
+        const wrapper = getWrapper(column, false);
 
         wrapper.trigger("click");
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("column/expandColumn", column);
@@ -106,9 +112,33 @@ describe("DropContainerCell", () => {
 
     it(`does not expand the column when user clicks on the expanded column cell`, () => {
         const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
-        const wrapper = getWrapper(column);
+        const wrapper = getWrapper(column, false);
 
         wrapper.trigger("click");
         expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
+    });
+
+    describe("renders the AddCard component only when it is possible", () => {
+        it(`renders the button when the tracker of the swimlane allows to add cards in place`, () => {
+            const column = { is_collapsed: false } as ColumnDefinition;
+            const wrapper = getWrapper(column, true);
+
+            expect(wrapper.contains(AddCard)).toBe(true);
+        });
+
+        it(`does not render the AddCard component
+            when the tracker of the swimlane disallows to add cards in place`, () => {
+            const column = { is_collapsed: false } as ColumnDefinition;
+            const wrapper = getWrapper(column, false);
+
+            expect(wrapper.contains(AddCard)).toBe(false);
+        });
+
+        it(`does not render the AddCard component when the column is collapsed`, () => {
+            const column = { is_collapsed: true } as ColumnDefinition;
+            const wrapper = getWrapper(column, true);
+
+            expect(wrapper.contains(AddCard)).toBe(false);
+        });
     });
 });

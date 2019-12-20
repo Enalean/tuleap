@@ -24,39 +24,29 @@
         <template v-if="swimlane.is_loading_children_cards">
             <card-skeleton v-for="i in nb_skeletons_to_display" v-bind:key="i" />
         </template>
-        <add-card
-            v-if="is_add_card_rendered"
-            v-bind:column="column"
-            v-bind:swimlane="swimlane"
-            v-bind:parent="swimlane.card"
-        />
     </drop-container-cell>
 </template>
 
 <script lang="ts">
 import { Component, Mixins, Prop } from "vue-property-decorator";
-import { Card, ColumnDefinition, Swimlane } from "../../../../type";
-import { namespace, Getter } from "vuex-class";
-import ChildCard from "./Card/ChildCard.vue";
-import CardSkeleton from "./Skeleton/CardSkeleton.vue";
-import SkeletonMixin from "./Skeleton/skeleton-mixin";
-import DropContainerCell from "./Cell/DropContainerCell.vue";
-import AddCard from "./Card/Add/AddCard.vue";
+import { Card, ColumnDefinition, Swimlane } from "../../../../../type";
+import { namespace } from "vuex-class";
+import ChildCard from "../Card/ChildCard.vue";
+import CardSkeleton from "../Skeleton/CardSkeleton.vue";
+import SkeletonMixin from "../Skeleton/skeleton-mixin";
+import DropContainerCell from "./DropContainerCell.vue";
 
 const swimlane = namespace("swimlane");
 
 @Component({
-    components: { AddCard, DropContainerCell, ChildCard, CardSkeleton }
+    components: { DropContainerCell, ChildCard, CardSkeleton }
 })
-export default class ColumnWithChildren extends Mixins(SkeletonMixin) {
+export default class ChildrenCell extends Mixins(SkeletonMixin) {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
 
     @Prop({ required: true })
     readonly swimlane!: Swimlane;
-
-    @Getter
-    readonly can_add_in_place!: (swimlane: Swimlane) => boolean;
 
     @swimlane.Getter
     readonly cards_in_cell!: (
@@ -74,10 +64,6 @@ export default class ColumnWithChildren extends Mixins(SkeletonMixin) {
         }
 
         return this.nb_skeletons;
-    }
-
-    get is_add_card_rendered(): boolean {
-        return this.can_add_in_place(this.swimlane);
     }
 }
 </script>

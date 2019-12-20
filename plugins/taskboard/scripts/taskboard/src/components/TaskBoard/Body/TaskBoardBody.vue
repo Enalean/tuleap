@@ -27,7 +27,7 @@
                     v-bind:swimlane="swimlane"
                     v-if="swimlane.card.is_collapsed"
                 />
-                <card-with-children
+                <children-swimlane
                     v-bind:key="swimlane.card.id"
                     v-bind:swimlane="swimlane"
                     v-else-if="swimlane.card.has_children"
@@ -37,12 +37,7 @@
                     v-bind:swimlane="swimlane"
                     v-else-if="hasInvalidMapping(swimlane)"
                 />
-                <solo-swimlane
-                    v-bind:key="swimlane.card.id"
-                    v-bind:swimlane="swimlane"
-                    v-bind:column="getColumnOfSoloCard(swimlane)"
-                    v-else
-                />
+                <solo-swimlane v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-else />
             </template>
         </template>
         <swimlane-skeleton v-if="is_loading_swimlanes" />
@@ -53,9 +48,9 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
-import { Swimlane, ColumnDefinition } from "../../../type";
+import { ColumnDefinition, Swimlane } from "../../../type";
 import CollapsedSwimlane from "./Swimlane/CollapsedSwimlane.vue";
-import CardWithChildren from "./Swimlane/CardWithChildren.vue";
+import ChildrenSwimlane from "./Swimlane/ChildrenSwimlane.vue";
 import SwimlaneSkeleton from "./Swimlane/Skeleton/SwimlaneSkeleton.vue";
 import SoloSwimlane from "./Swimlane/SoloSwimlane.vue";
 import InvalidMappingSwimlane from "./Swimlane/InvalidMappingSwimlane.vue";
@@ -66,10 +61,10 @@ const swimlane = namespace("swimlane");
 
 @Component({
     components: {
+        ChildrenSwimlane,
         InvalidMappingSwimlane,
         SoloSwimlane,
         SwimlaneSkeleton,
-        CardWithChildren,
         CollapsedSwimlane
     }
 })
@@ -91,14 +86,6 @@ export default class TaskBoardBody extends Vue {
 
     created(): void {
         this.loadSwimlanes();
-    }
-
-    getColumnOfSoloCard(swimlane: Swimlane): ColumnDefinition {
-        const column = getColumnOfCard(this.columns, swimlane.card);
-        if (column === undefined) {
-            throw new Error("Solo card must have a mapping");
-        }
-        return column;
     }
 
     hasInvalidMapping(swimlane: Swimlane): boolean {
