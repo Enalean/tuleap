@@ -18,22 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__ .'/../../../bootstrap.php';
 
-class Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGcTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGcTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->response = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
         $this->dao      = \Mockery::spy(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
 
         $this->command = new Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGc($this->response, $this->dao);
     }
 
-    public function itEnablesGitGc()
+    public function testItEnablesGitGc(): void
     {
         $this->response->shouldReceive('info')->with('Enabling git gc')->once();
         $this->dao->shouldReceive('enableGitGc')->once();
@@ -41,7 +45,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGcTest extends Tul
         $this->command->execute();
     }
 
-    public function itExecutesTheNextCommand()
+    public function testItExecutesTheNextCommand(): void
     {
         $next = \Mockery::spy(\Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
         $next->shouldReceive('execute')->once();

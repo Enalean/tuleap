@@ -18,18 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__ .'/../../bootstrap.php';
 
-class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->process_manager  = \Mockery::spy(\SystemEventProcessManager::class);
         $this->process          = \Mockery::spy(\SystemEventProcess::class);
-        $this->housekeeping_dao = safe_mock(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
+        $this->housekeeping_dao = Mockery::mock(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
         $this->response         = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
         $this->backend_service  = \Mockery::spy(\BackendService::class);
 
@@ -47,7 +51,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends TuleapTest
         );
     }
 
-    public function itLoadsAllCommandsInTheRightOrder()
+    public function testItLoadsAllCommandsInTheRightOrder(): void
     {
         $expected_commands = array(
             'Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopper',
@@ -61,7 +65,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunnerTest extends TuleapTest
         $chain = $this->runner->getChain();
 
         foreach ($expected_commands as $expected_command) {
-            $this->assertIsA($chain, $expected_command);
+            $this->assertInstanceOf($expected_command, $chain);
             $chain = $chain->getNextCommand();
         }
     }

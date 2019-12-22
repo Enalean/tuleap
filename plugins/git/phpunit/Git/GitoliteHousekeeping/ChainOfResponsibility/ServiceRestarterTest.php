@@ -18,22 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__.'/../../../bootstrap.php';
 
-class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarterTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarterTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->response         = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
         $this->backend_service  = \Mockery::spy(\BackendService::class);
 
         $this->command = new Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarter($this->response, $this->backend_service);
     }
 
-    public function itRestartsTheService()
+    public function testItRestartsTheService(): void
     {
         $this->response->shouldReceive('info')->with('Restarting service')->once();
         $this->backend_service->shouldReceive('start')->once();
@@ -41,7 +45,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarterTest extend
         $this->command->execute();
     }
 
-    public function itEndsWithSuccess()
+    public function testItEndsWithSuccess(): void
     {
         $this->response->shouldReceive('success')->once();
 

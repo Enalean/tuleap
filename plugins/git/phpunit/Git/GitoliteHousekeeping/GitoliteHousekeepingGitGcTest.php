@@ -18,15 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__ .'/../../bootstrap.php';
 
-class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGcTest extends TuleapTestCase
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGcTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->setUpGlobalsMockery();
         $this->dao    = Mockery::spy(Git_GitoliteHousekeeping_GitoliteHousekeepingDao::class);
         $this->logger = \Mockery::spy(\Logger::class);
 
@@ -42,7 +46,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGcTest extends TuleapTestC
             ->shouldAllowMockingProtectedMethods();
     }
 
-    public function itRunsGitGcIfItIsAllowed()
+    public function testItRunsGitGcIfItIsAllowed(): void
     {
         $this->dao->shouldReceive('isGitGcEnabled')->andReturns(true);
 
@@ -52,7 +56,7 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGcTest extends TuleapTestC
         $this->gitgc->cleanUpGitoliteAdminWorkingCopy();
     }
 
-    public function itDoesNotRunGitGcIfItIsNotAllowed()
+    public function testItDoesNotRunGitGcIfItIsNotAllowed(): void
     {
         $this->dao->shouldReceive('isGitGcEnabled')->andReturns(false);
 
