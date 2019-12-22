@@ -23,8 +23,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 use Tuleap\TemporaryTestDirectory;
 
-require_once __DIR__.'/../../../bootstrap.php';
-
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTest extends TestCase
 {
@@ -35,23 +33,35 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTes
      * @var Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo
      */
     private $command;
+    /**
+     * @var Git_GitoliteHousekeeping_GitoliteHousekeepingResponse|\Mockery\LegacyMockInterface|\Mockery\MockInterface
+     */
+    private $response;
+    /**
+     * @var string
+     */
+    private $remote_admin_repository;
+    /**
+     * @var string
+     */
+    private $expected_file_in_old_dir;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->response = \Mockery::spy(\Git_GitoliteHousekeeping_GitoliteHousekeepingResponse::class);
         $this->fixtures = $this->getTmpDir();
-        copy(dirname(__FILE__) . '/_fixtures/gitolite_admin.tgz', $this->fixtures . '/gitolite_admin.tgz');
+        copy(__DIR__ . '/_fixtures/gitolite_admin.tgz', $this->fixtures . '/gitolite_admin.tgz');
 
         $this->remote_admin_repository = 'gitolite_admin';
 
-        $tar_command = new Process(['tar', '-xzf', "$this->fixtures/gitolite_admin.tgz", "--directory", $this->fixtures]);
+        $tar_command = new Process(['tar', '-xzf', "$this->fixtures/gitolite_admin.tgz", '--directory', $this->fixtures]);
         $tar_command->mustRun();
 
-        $clone_command = new Process(['git', 'clone', "gitolite_admin", "admin"], $this->fixtures);
+        $clone_command = new Process(['git', 'clone', 'gitolite_admin', 'admin'], $this->fixtures);
         $clone_command->mustRun();
 
-        $this->expected_file_in_old_dir = md5(uniqid(rand(), true));
+        $this->expected_file_in_old_dir = bin2hex(random_bytes(16));
         touch($this->fixtures .'/admin/'. $this->expected_file_in_old_dir);
 
         $this->command = new Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo(
@@ -65,7 +75,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepoTes
     public function testItAbortsIfThereIsAlreadyABackupDir(): void
     {
         $next = \Mockery::spy(\Git_GitoliteHousekeeping_ChainOfResponsibility_Command::class);
-        `(cd $this->fixtures && cp -r admin admin.old)`;
+        (new Process(['cp', '-r', 'admin', 'admin.old'], $this->fixtures))->mustRun();
         $this->command->setNextCommand($next);
 
         $this->response->shouldReceive('error')->with("The gitolite backup dir $this->fixtures/admin.old already exists. Please remove it.")->once();
