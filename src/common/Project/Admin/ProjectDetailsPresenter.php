@@ -122,7 +122,7 @@ class ProjectDetailsPresenter
         $xml_template = $template_factory->getTemplateForProject($project);
         if ($xml_template) {
             $this->built_from_xml_template = [
-                'name' => $xml_template->getName(),
+                'name' => $xml_template->getId(),
             ];
         } else {
             $template                 = ProjectManager::instance()->getProject($project->getTemplate());

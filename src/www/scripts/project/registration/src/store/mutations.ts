@@ -24,7 +24,18 @@ import { FetchWrapperError } from "tlp";
 
 export default {
     setSelectedTemplate(state: State, selected_template: TemplateData): void {
-        state.selected_template = selected_template;
+        if (selected_template.is_built_in) {
+            state.selected_tuleap_template = selected_template;
+            state.selected_company_template = null;
+        } else {
+            state.selected_tuleap_template = null;
+            state.selected_company_template = selected_template;
+        }
+    },
+
+    resetSelectedTemplate(state: State): void {
+        state.selected_tuleap_template = null;
+        state.selected_company_template = null;
     },
 
     setIsCreatingProject(state: State, is_creating_project: boolean): void {

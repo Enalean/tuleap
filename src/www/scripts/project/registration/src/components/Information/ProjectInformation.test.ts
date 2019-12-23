@@ -38,11 +38,12 @@ describe("ProjectInformation -", () => {
     let factory: Wrapper<ProjectInformation>, router: VueRouter, store: Store;
     beforeEach(async () => {
         const state: State = {
-            selected_template: {
+            selected_tuleap_template: {
                 title: "string",
                 description: "string",
-                name: "scrum",
-                svg: "string"
+                id: "scrum",
+                svg: "string",
+                is_built_in: true
             },
             tuleap_templates: [],
             are_restricted_users_allowed: false,
@@ -52,13 +53,16 @@ describe("ProjectInformation -", () => {
             is_project_approval_required: false,
             trove_categories: [],
             is_description_required: false,
-            project_fields: []
+            project_fields: [],
+            selected_company_template: null,
+            company_templates: [],
+            company_name: ""
         };
 
         router = new VueRouter({
             routes: [
                 {
-                    path: "/",
+                    path: "/new",
                     name: "template"
                 },
                 {
@@ -74,7 +78,7 @@ describe("ProjectInformation -", () => {
 
         const getters = {
             has_error: false,
-            is_template_selected: false
+            is_template_selected: true
         };
 
         const store_options = {
@@ -144,9 +148,18 @@ describe("ProjectInformation -", () => {
         expect(wrapper.contains("[data-test=register-new-project-information-list]")).toBe(true);
     });
 
-    it("redirects user on /template when he does not have all needed information to start his project creation", () => {
-        const wrapper = factory;
-        wrapper.vm.$store.state.selected_template = null;
+    it("redirects user on /new when he does not have all needed information to start his project creation", async () => {
+        const getters = {
+            has_error: false,
+            is_template_selected: false
+        };
+
+        store = createStoreMock({ getters });
+        const wrapper = shallowMount(ProjectInformation, {
+            localVue: await createProjectRegistrationLocalVue(),
+            mocks: { $store: store },
+            router
+        });
 
         expect(wrapper.vm.$route.name).toBe("template");
     });

@@ -39,18 +39,24 @@ class TemplatePresenter
      * @var string
      * @readonly
      */
-    public $name;
+    public $id;
     /**
      * @var string
      * @readonly
      */
     public $glyph;
+    /**
+     * @var bool
+     * @readonly
+     */
+    public $is_built_in;
 
     public function __construct(ProjectTemplate $template)
     {
         $this->title       = $template->getTitle();
         $this->description = $template->getDescription();
-        $this->name        = $template->getName();
+        $this->id          = $template->getId();
         $this->glyph       = $template->getGlyph()->getInlineString();
+        $this->is_built_in = $template->isBuiltIn();
     }
 }

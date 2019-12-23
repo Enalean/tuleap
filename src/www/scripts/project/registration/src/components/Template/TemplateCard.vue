@@ -22,8 +22,8 @@
     <div class="project-registration-template-card">
         <input
             type="radio"
-            v-bind:id="'project-registration-tuleap-template-' + template.name"
-            v-bind:value="template.name"
+            v-bind:id="'project-registration-tuleap-template-' + template.id"
+            v-bind:value="template.id"
             class="project-registration-selected-template"
             name="selected-template"
             data-test="project-registration-radio"
@@ -33,7 +33,7 @@
         <label
             class="tlp-card project-registration-template-label"
             data-test="project-registration-card-label"
-            v-bind:for="'project-registration-tuleap-template-' + template.name"
+            v-bind:for="'project-registration-tuleap-template-' + template.id"
         >
             <div
                 class="project-registration-template-glyph"
@@ -56,7 +56,7 @@ import { Component, Prop } from "vue-property-decorator";
 import { TemplateData } from "../../type";
 
 @Component({})
-export default class TuleapTemplateCard extends Vue {
+export default class TemplateCard extends Vue {
     @Prop({ required: true })
     readonly template!: TemplateData;
 

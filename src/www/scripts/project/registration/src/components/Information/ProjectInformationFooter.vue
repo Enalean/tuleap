@@ -70,7 +70,7 @@ export default class ProjectInformationFooter extends Vue {
     }
 
     resetSelectedTemplate(): void {
-        this.$store.dispatch("setSelectedTemplate", null);
+        this.$store.dispatch("resetSelectedTemplate");
     }
 }
 </script>

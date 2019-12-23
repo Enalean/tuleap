@@ -28,7 +28,7 @@ use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\XML\ConsistencyChecker;
 use Tuleap\XML\ProjectXMLMerger;
 
-class KanbanTemplate implements ProjectTemplate
+class KanbanTemplate implements TuleapTemplate
 {
     public const NAME = 'kanban';
 
@@ -110,7 +110,7 @@ class KanbanTemplate implements ProjectTemplate
         return $this->glyph_finder->get(self::NAME);
     }
 
-    public function getName(): string
+    public function getId(): string
     {
         return self::NAME;
     }
@@ -121,5 +121,10 @@ class KanbanTemplate implements ProjectTemplate
             $this->available = $this->consistency_checker->areAllServicesAvailable($this->getXMLPath());
         }
         return $this->available;
+    }
+
+    public function isBuiltIn(): bool
+    {
+        return true;
     }
 }

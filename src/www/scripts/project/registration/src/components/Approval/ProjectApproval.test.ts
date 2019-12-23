@@ -18,75 +18,57 @@
  *
  */
 
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import ProjectApproval from "./ProjectApproval.vue";
-import { State } from "../../store/type";
 import { createStoreMock } from "../../../../../vue-components/store-wrapper-jest";
 import VueRouter from "vue-router";
 
 describe("ProjectApproval -", () => {
-    let factory: Wrapper<ProjectApproval>, router: VueRouter;
-    beforeEach(async () => {
-        const state: State = {
-            selected_template: {
-                title: "string",
-                description: "string",
-                name: "string",
-                svg: "string"
-            },
-            tuleap_templates: [],
-            are_restricted_users_allowed: false,
-            project_default_visibility: "",
-            error: null,
-            is_creating_project: false,
-            is_project_approval_required: false,
-            trove_categories: [],
-            is_description_required: false,
-            project_fields: []
-        };
-
+    let router: VueRouter;
+    beforeEach(() => {
         router = new VueRouter({
             routes: [
                 {
-                    path: "/",
+                    path: "/new",
                     name: "template"
-                },
-                {
-                    path: "/information",
-                    name: "information"
                 }
             ]
         });
-
+    });
+    it("Spawns the ProjectApproval component", async () => {
         const getters = {
             has_error: false,
-            is_template_selected: false
+            is_template_selected: true
         };
 
         const store_options = {
-            state,
             getters
         };
 
         const store = createStoreMock(store_options);
 
-        factory = shallowMount(ProjectApproval, {
+        const wrapper = shallowMount(ProjectApproval, {
             localVue: await createProjectRegistrationLocalVue(),
             mocks: { $store: store },
             router
         });
-    });
-    it("Spawns the ProjectApproval component", () => {
-        const wrapper = factory;
 
         expect(wrapper).toMatchSnapshot();
     });
 
-    it("redirects user on /template when he does not have all needed information to start his project creation", () => {
-        const wrapper = factory;
-        wrapper.vm.$store.state.selected_template = null;
+    it("redirects user on /new when he does not have all needed information to start his project creation", async () => {
+        const getters = {
+            has_error: false,
+            is_template_selected: false
+        };
 
+        const store = createStoreMock({ getters });
+        const wrapper = shallowMount(ProjectApproval, {
+            localVue: await createProjectRegistrationLocalVue(),
+            mocks: { $store: store },
+            router
+        });
         expect(wrapper.vm.$route.name).toBe("template");
     });
 });

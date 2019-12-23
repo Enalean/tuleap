@@ -44,17 +44,16 @@
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import ProjectApprovalSvg from "./ProjectApprovalSvg.vue";
-import { State } from "vuex-class";
-import { TemplateData } from "../../type";
+import { Getter } from "vuex-class";
 @Component({
     components: { ProjectApprovalSvg }
 })
 export default class ProjectApproval extends Vue {
-    @State
-    selected_template!: TemplateData;
+    @Getter
+    is_template_selected!: boolean;
 
     mounted(): void {
-        if (!this.selected_template) {
+        if (!this.is_template_selected) {
             this.$router.push("new");
         }
     }

@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2.4\n"
 
+msgid "%s templates"
+msgstr "Patrons de projet %s"
+
 msgid ""
 "<b>You will receive an email</b> when the administrator has validated it."
 msgstr ""
@@ -22,6 +25,9 @@ msgstr "Précédent"
 
 msgid "Between %{ min } and %{ max } characters length"
 msgstr "Entre %{ min } et %{ max } caractères"
+
+msgid "Custom templates"
+msgstr "Patrons de projet personnalisés"
 
 msgid "Description"
 msgstr "Description"
