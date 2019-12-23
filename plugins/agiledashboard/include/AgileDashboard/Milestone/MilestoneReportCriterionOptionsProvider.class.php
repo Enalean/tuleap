@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,9 +21,8 @@
 /**
  * I am a helper to build selectbox options of all milestones of a given tracker
  */
-class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider extends DataAccessObject
+class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
 {
-
     public const TOP_BACKLOG_IDENTIFIER   = "0";
     public const TOP_BACKLOG_OPTION_ENTRY = "Top Backlog";
 

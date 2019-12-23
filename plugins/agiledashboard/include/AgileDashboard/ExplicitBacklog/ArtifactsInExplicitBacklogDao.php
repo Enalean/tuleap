@@ -63,6 +63,18 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
         return $this->getDB()->run($sql, $project_id);
     }
 
+    public function getAllArtifactNotInTopBacklogInTracker(int $tracker_id)
+    {
+        $sql = "SELECT tracker_artifact.id as artifact_id
+                FROM tracker_artifact
+                LEFT JOIN plugin_agiledashboard_planning_artifacts_explicit_backlog
+                    ON (tracker_artifact.id = plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id)
+                WHERE tracker_artifact.tracker_id = ?
+                AND plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id IS NULL";
+
+        return $this->getDB()->run($sql, $tracker_id);
+    }
+
     public function removeArtifactFromExplicitBacklog(int $artifact_id): void
     {
         $sql = 'DELETE FROM plugin_agiledashboard_planning_artifacts_explicit_backlog

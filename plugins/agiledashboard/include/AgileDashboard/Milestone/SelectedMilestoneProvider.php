@@ -23,7 +23,6 @@
  */
 class AgileDashboard_Milestone_SelectedMilestoneProvider
 {
-
     public const FIELD_NAME             = AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME;
     public const ANY                    = AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY;
     public const TOP_BACKLOG_IDENTIFIER = AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::TOP_BACKLOG_IDENTIFIER;
@@ -40,7 +39,7 @@ class AgileDashboard_Milestone_SelectedMilestoneProvider
     /** @var Project */
     private $project;
 
-    /** @var Array */
+    /** @var array */
     private $additional_criteria;
 
     /** @var bool */
