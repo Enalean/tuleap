@@ -99,7 +99,7 @@ class TemplateFactory
     /**
      * @throws InvalidTemplateException
      */
-    public function getTemplate(string $name): ProjectTemplate
+    public function getTemplate(string $name): TuleapTemplate
     {
         if (! isset($this->templates[$name]) || ! $this->templates[$name]->isAvailable()) {
             throw new InvalidXMLTemplateNameException();
