@@ -39,7 +39,7 @@ describe("mutation", () => {
                     title: "Whole lot company",
                     description: "I have got whole lot",
                     id: "10",
-                    svg: "<svg></svg>",
+                    glyph: "<svg></svg>",
                     is_built_in: false
                 },
                 company_name: ""
@@ -49,7 +49,7 @@ describe("mutation", () => {
                 title: "scrum template",
                 description: "scrum desc",
                 id: "scrum",
-                svg: "<svg></svg>",
+                glyph: "<svg></svg>",
                 is_built_in: true
             };
             mutations.setSelectedTemplate(state, selected_template);
@@ -63,7 +63,7 @@ describe("mutation", () => {
                     title: "scrum template",
                     description: "scrum desc",
                     id: "scrum",
-                    svg: "<svg></svg>",
+                    glyph: "<svg></svg>",
                     is_built_in: true
                 },
                 tuleap_templates: [],
@@ -84,7 +84,7 @@ describe("mutation", () => {
                 title: "Whole lot company",
                 description: "I have got whole lot",
                 id: "10",
-                svg: "<svg></svg>",
+                glyph: "<svg></svg>",
                 is_built_in: false
             };
             mutations.setSelectedTemplate(state, selected_template);
@@ -99,7 +99,7 @@ describe("mutation", () => {
                     title: "scrum template",
                     description: "scrum desc",
                     id: "scrum",
-                    svg: "<svg></svg>",
+                    glyph: "<svg></svg>",
                     is_built_in: true
                 },
                 tuleap_templates: [],
@@ -116,7 +116,7 @@ describe("mutation", () => {
                     title: "Whole lot company",
                     description: "I have got whole lot",
                     id: "10",
-                    svg: "<svg></svg>",
+                    glyph: "<svg></svg>",
                     is_built_in: false
                 },
                 company_name: ""

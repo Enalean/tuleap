@@ -46,7 +46,7 @@ describe("getters", () => {
                     title: "scrum",
                     description: "scrum desc",
                     id: "scrum_template",
-                    svg: "<svg></svg>",
+                    glyph: "<svg></svg>",
                     is_built_in: true
                 },
                 tuleap_templates: [],
@@ -81,7 +81,7 @@ describe("getters", () => {
                     title: "scrum",
                     description: "scrum desc",
                     id: "10",
-                    svg: "<svg></svg>",
+                    glyph: "<svg></svg>",
                     is_built_in: false
                 },
                 company_name: ""

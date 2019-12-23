@@ -46,7 +46,7 @@ export interface TemplateData {
     title: string;
     description: string;
     id: string;
-    svg: string;
+    glyph: string;
     is_built_in: boolean;
 }
 

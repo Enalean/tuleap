@@ -37,14 +37,14 @@ describe("TuleapTemplateList", () => {
                 title: "scrum",
                 description: "scrum desc",
                 id: "scrum",
-                svg: "<svg></svg>",
+                glyph: "<svg></svg>",
                 is_built_in: true
             },
             {
                 title: "kanban",
                 description: "kanban desc",
                 id: "kanban",
-                svg: "<svg>kanban</svg>",
+                glyph: "<svg>kanban</svg>",
                 is_built_in: true
             }
         ];

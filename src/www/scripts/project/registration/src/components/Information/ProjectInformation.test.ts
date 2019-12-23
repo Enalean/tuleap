@@ -42,7 +42,7 @@ describe("ProjectInformation -", () => {
                 title: "string",
                 description: "string",
                 id: "scrum",
-                svg: "string",
+                glyph: "string",
                 is_built_in: true
             },
             tuleap_templates: [],
