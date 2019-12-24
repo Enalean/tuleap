@@ -22,10 +22,11 @@
 use Tuleap\FRS\FRSPermission;
 use Tuleap\FRS\UploadedLinksUpdater;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class FRSPackageFactoryMock extends FRSPackageFactory
 {
     // bypass it for the tests as it calls global functions which access to the db
-    function setDefaultPermissions(FRSPackage $package)
+    public function setDefaultPermissions(FRSPackage $package)
     {
     }
 
@@ -34,17 +35,18 @@ class FRSPackageFactoryMock extends FRSPackageFactory
     }
 }
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,PSR1.Classes.ClassDeclaration.MultipleClasses,Squiz.Classes.ValidClassName.NotCamelCaps
 class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory
 {
-
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->fileforge = '/bin/true';
     }
 }
 
-class FRSXMLImporterTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,PSR1.Classes.ClassDeclaration.MultipleClasses
+class FRSXMLImporterTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\TemporaryTestDirectory, \Tuleap\GlobalLanguageMock;
 
@@ -269,9 +271,9 @@ XML;
         $this->assertSame($frs_mapping[47], 'A101');
     }
 
-    public function testItShouldImportOnePackageWithOneReleaseWithOneFile()
+    public function testItShouldImportOnePackageWithOneReleaseWithOneFile(): void
     {
-        $extraction_path = sys_get_temp_dir();
+        $extraction_path = $this->getTmpDir();
         $temp_file = tempnam($extraction_path, 'thefile_');
         fwrite(fopen($temp_file, 'w+'), 'such file, wow');
         $file_name = basename($temp_file);
@@ -369,9 +371,9 @@ XML;
         $this->frs_importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $project, $xml_element, $extraction_path, $frs_mapping);
     }
 
-    public function testItShouldImportReleaseWithLinks()
+    public function testItShouldImportReleaseWithLinks(): void
     {
-        $extraction_path = sys_get_temp_dir();
+        $extraction_path = $this->getTmpDir();
         $project_manager = ProjectManager::instance();
         $project = $project_manager->getProjectFromDbRow(array('group_id' => 123, 'unix_group_name' => 'test_project'));
         $xml = <<<XML
