@@ -67,7 +67,7 @@ class ScrumTemplate implements TuleapTemplate
     public function __construct(GlyphFinder $glyph_finder, ProjectXMLMerger $project_xml_merger, ConsistencyChecker $consistency_checker)
     {
         $this->title              = _('Scrum');
-        $this->description        = _('Manage your project using epics and user stories in releases and sprints');
+        $this->description        = _('Collect stories, plan releases, monitor sprints with a ready-to-use Scrum area');
         $this->glyph_finder       = $glyph_finder;
         $this->project_xml_merger = $project_xml_merger;
         $this->consistency_checker = $consistency_checker;

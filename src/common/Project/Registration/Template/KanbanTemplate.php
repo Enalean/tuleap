@@ -67,7 +67,7 @@ class KanbanTemplate implements TuleapTemplate
     public function __construct(GlyphFinder $glyph_finder, ProjectXMLMerger $project_xml_merger, ConsistencyChecker $consistency_checker)
     {
         $this->title               = _('Kanban');
-        $this->description         = _('Manage your project with Kanban and track task time and work-in-progress');
+        $this->description         = _('Streamline your workflow and focus on what\'s hot with an easy-to-use board');
         $this->glyph_finder       = $glyph_finder;
         $this->project_xml_merger = $project_xml_merger;
         $this->consistency_checker = $consistency_checker;

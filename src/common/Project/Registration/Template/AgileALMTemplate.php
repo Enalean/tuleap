@@ -67,7 +67,7 @@ class AgileALMTemplate implements TuleapTemplate
     public function __construct(GlyphFinder $glyph_finder, ProjectXMLMerger $project_xml_merger, ConsistencyChecker $consistency_checker)
     {
         $this->title               = _('Agile ALM');
-        $this->description         = _('Manage your project with Agile ALM tools through Scrum methodology');
+        $this->description         = _('The most complete project workspace to plan, build and ship quality products. Include Tuleap Test Management, Time Tracking and Cross-Tracker Search. Reach end-to-end traceability.');
         $this->glyph_finder       = $glyph_finder;
         $this->project_xml_merger = $project_xml_merger;
         $this->consistency_checker = $consistency_checker;
