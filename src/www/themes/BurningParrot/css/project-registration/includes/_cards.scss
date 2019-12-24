@@ -37,7 +37,6 @@ $card-border-margin: 150px;
 
 .project-registration-template-card:hover {
     border-color: $tlp-theme-color;
-    cursor: pointer;
 }
 
 .project-registration-template-card-description {
@@ -91,6 +90,7 @@ $card-border-margin: 150px;
     display: flex;
     position: relative;
     width: 100%;
+    cursor: pointer;
 }
 
 .project-registration-template-content {
