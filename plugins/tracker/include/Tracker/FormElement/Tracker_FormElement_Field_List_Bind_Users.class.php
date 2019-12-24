@@ -61,7 +61,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     {
         $import_spotter = Spotter::instance();
         if ($import_spotter->isImportRunning()) {
-            $user = $this->userManager->getUserById($value_id);
+            $user = $this->getUserManager()->getUserById($value_id);
             return $user !== null;
         }
         return parent::isExistingValue($value_id);
@@ -563,6 +563,14 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function getDao()
     {
         return new Tracker_FormElement_Field_List_Bind_UsersDao();
+    }
+
+    /**
+     * for testing purpose
+     */
+    protected function getUserManager(): UserManager
+    {
+        return $this->userManager;
     }
 
     private function getOpenValueDao()

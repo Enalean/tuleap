@@ -63,7 +63,7 @@ class NameTranslator
             case self::REGISTERED:
                 $label = ForgeConfig::get(self::CONFIG_REGISTERED_LABEL);
                 if ($label == false) {
-                    $label = $GLOBALS['Language']->getText('project_ugroup', 'ugroup_registered_users');
+                    $label = _('Registered users');
                 }
 
                 return $label;

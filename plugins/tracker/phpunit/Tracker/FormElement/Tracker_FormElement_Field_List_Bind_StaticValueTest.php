@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +19,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Field_List_Bind_UsersTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
+use PHPUnit\Framework\TestCase;
+
+final class Tracker_FormElement_Field_List_Bind_StaticValueTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testRetrievingDefaultRESTValuesDoesNotHitTheDBWhenNoDefaultValuesIsSet()
+    public function testGetLabel(): void
     {
-        $list_field     = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $default_values = [];
-
-        $bind_users = new Tracker_FormElement_Field_List_Bind_Users($list_field, '', $default_values, []);
-
-        $this->assertEmpty($bind_users->getDefaultValues());
-        $this->assertEmpty($bind_users->getDefaultRESTValues());
+        $id          = 123;
+        $label       = 'Reopen';
+        $description = 'The artifact has been re-opened';
+        $rank        = 200;
+        $is_hidden   = 0;
+        $bv = new Tracker_FormElement_Field_List_Bind_StaticValue($id, $label, $description, $rank, $is_hidden);
+        $this->assertEquals($label, $bv->getLabel());
     }
 }
