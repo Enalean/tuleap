@@ -252,9 +252,6 @@ msgstr ""
 msgid "As personal fork"
 msgstr "En tant que fork personnel"
 
-msgid "Authentication type"
-msgstr "Type d'identification"
-
 msgid "Authorize"
 msgstr "Autoriser"
 
@@ -272,9 +269,6 @@ msgstr "Id du dépôt Git non valide"
 
 msgid "Bad request."
 msgstr "La requête n'est pas valide."
-
-msgid "Basic"
-msgstr "Basique"
 
 msgid "Branches"
 msgstr "Branches"
@@ -414,9 +408,6 @@ msgstr "Description"
 
 msgid "Details"
 msgstr "Détails"
-
-msgid "Digest"
-msgstr "Digest"
 
 msgid "Disconnect"
 msgstr "Déconnexion"
@@ -1769,13 +1760,6 @@ msgstr "Vous n'avez pas la permission de voir les groupes utilisateur."
 
 msgid "You may need to log into Gerrit first"
 msgstr "Cela nécessite parfois une connexion à Gerrit au préalable"
-
-msgid ""
-"You should consider switching to Basic Auth (here and, of course in gerrit."
-"config). Recent version of gerrit no longer support Digest."
-msgstr ""
-"Vous devriez passer à l'authentification Basic Auth (ici et sur gerrit dans "
-"gerrit.config). Les versions récentes de gerrit ne supportent plus Digest."
 
 #, php-format
 msgid ""

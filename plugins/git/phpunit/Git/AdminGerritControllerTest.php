@@ -70,7 +70,6 @@ class AdminGerritControllerTest extends TestCase
             'use_ssl'              => 0,
             'http_password'        => 'azerty',
             'replication_password' => 'replication_password',
-            'auth_type'            => 'Basic'
         );
 
         $this->a_brand_new_server = new Git_RemoteServer_GerritServer(
@@ -85,7 +84,6 @@ class AdminGerritControllerTest extends TestCase
             '2.8+',
             'azerty',
             '',
-            'Basic'
         );
 
         $this->an_existing_server = new Git_RemoteServer_GerritServer(
@@ -100,7 +98,6 @@ class AdminGerritControllerTest extends TestCase
             '2.8+',
             'azerty',
             'azerty',
-            'Basic'
         );
 
         $this->factory             = \Mockery::spy(
@@ -152,7 +149,6 @@ class AdminGerritControllerTest extends TestCase
         $this->request->set('use_ssl', '');
         $this->request->set('http_password', '');
         $this->request->set('replication_password', '');
-        $this->request->set('auth_type', 'Basic');
         $this->factory->shouldReceive('save')->never();
         $this->admin->process($this->request);
     }
@@ -172,7 +168,6 @@ class AdminGerritControllerTest extends TestCase
         $this->request->set('use_ssl', 0);
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
-        $this->request->set('auth_type', 'Basic');
         $this->factory->shouldReceive('save')->never();
         $this->admin->process($this->request);
     }
@@ -192,7 +187,6 @@ class AdminGerritControllerTest extends TestCase
         $this->request->set('use_ssl', '');
         $this->request->set('http_password', '');
         $this->request->set('replication_password', '');
-        $this->request->set('auth_type', '');
         $this->factory->shouldReceive('save')->never();
         $this->admin->process($this->request);
     }
@@ -212,7 +206,6 @@ class AdminGerritControllerTest extends TestCase
         $this->request->set('use_ssl', 1);
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
-        $this->request->set('auth_type', 'Basic');
         $this->csrf->shouldReceive('check')->once();
         $this->admin->process($this->request);
     }
@@ -232,7 +225,6 @@ class AdminGerritControllerTest extends TestCase
         $this->request->set('use_ssl', 1);
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
-        $this->request->set('auth_type', 'Basic');
         $s = $this->a_brand_new_server;
         $this->factory->shouldReceive('save')->with(\Mockery::on(function (Git_RemoteServer_GerritServer $param) use ($s) {
             return $s == $param;
@@ -266,7 +258,6 @@ class AdminGerritControllerTest extends TestCase
         $this->request->set('use_ssl', 1);
         $this->request->set('http_password', 'azerty');
         $this->request->set('replication_password', 'azerty');
-        $this->request->set('auth_type', 'Digest');
         $this->factory->shouldReceive('save')->with($this->an_existing_server)->once();
         $this->admin->process($this->request);
     }

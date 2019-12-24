@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,8 +27,6 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     public const DEFAULT_GERRIT_USERNAME = 'gerrit_username';
     public const GERRIT_VERSION_2_5      = '2.5';
     public const GERRIT_VERSION_2_8_PLUS = '2.8+';
-    public const AUTH_TYPE_DIGEST        = 'Digest';
-    public const AUTH_TYPE_BASIC         = 'Basic';
     public const GENERIC_USER_PREFIX     = 'gerrit_';
 
     private $id;
@@ -45,8 +43,6 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     /** @var String */
     private $gerrit_version;
     /** @var String */
-    private $auth_type;
-    /** @var String */
     private $replication_password;
 
     public function __construct(
@@ -60,8 +56,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         $use_ssl,
         $gerrit_version,
         $http_password,
-        $replication_password,
-        $auth_type
+        $replication_password
     ) {
         $this->id                   = $id;
         $this->host                 = $host;
@@ -74,7 +69,6 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         $this->http_password        = $http_password;
         $this->replication_password = $replication_password;
         $this->gerrit_version       = $gerrit_version;
-        $this->auth_type            = $auth_type;
     }
 
     public function __toString()
@@ -117,11 +111,6 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         return $this->use_ssl;
     }
 
-    public function getAuthType()
-    {
-        return $this->auth_type;
-    }
-
     public function setId($id)
     {
         $this->id = $id;
@@ -160,12 +149,6 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     public function setUseSSL($use_ssl)
     {
         $this->use_ssl = $use_ssl;
-        return $this;
-    }
-
-    public function setAuthType($auth_type)
-    {
-        $this->auth_type = $auth_type;
         return $this;
     }
 

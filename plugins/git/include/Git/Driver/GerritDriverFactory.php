@@ -48,8 +48,7 @@ class Git_Driver_Gerrit_GerritDriverFactory
             require_once '/usr/share/php/Guzzle/autoload.php';
             return new Git_Driver_GerritREST(
                 new Guzzle\Http\Client('', array('ssl.certificate_authority' => 'system')),
-                $this->logger,
-                $server->getAuthType()
+                $this->logger
             );
         }
 

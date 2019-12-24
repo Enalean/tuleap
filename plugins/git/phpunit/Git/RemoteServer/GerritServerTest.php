@@ -23,7 +23,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__.'/../../bootstrap.php';
 
-//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MissingNamespace
 class GerritServerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -40,7 +40,6 @@ class GerritServerTest extends TestCase
         $use_ssl              = false;
         $gerrit_version       = '2.5';
         $http_password        = '1234';
-        $auth_type            = 'Digest';
         $replication_password = '';
 
         $server = new Git_RemoteServer_GerritServer(
@@ -54,8 +53,7 @@ class GerritServerTest extends TestCase
             $use_ssl,
             $gerrit_version,
             $http_password,
-            $replication_password,
-            $auth_type
+            $replication_password
         );
 
         $expected = 'ext::ssh -p le_ssh_port -i le_identity_file le_login@le_host %S le_project';
@@ -74,7 +72,6 @@ class GerritServerTest extends TestCase
         $use_ssl              = false;
         $gerrit_version       = '2.5';
         $http_password        = '1234';
-        $auth_type            = 'Digest';
         $replication_password = '';
 
         $server = new Git_RemoteServer_GerritServer(
@@ -88,8 +85,7 @@ class GerritServerTest extends TestCase
             $use_ssl,
             $gerrit_version,
             $http_password,
-            $replication_password,
-            $auth_type
+            $replication_password
         );
 
         $this->assertEquals(
@@ -110,7 +106,6 @@ class GerritServerTest extends TestCase
         $use_ssl              = false;
         $gerrit_version       = '2.5';
         $http_password        = '1234';
-        $auth_type            = 'Digest';
         $replication_password = '';
 
         $server = new Git_RemoteServer_GerritServer(
@@ -124,8 +119,7 @@ class GerritServerTest extends TestCase
             $use_ssl,
             $gerrit_version,
             $http_password,
-            $replication_password,
-            $auth_type
+            $replication_password
         );
 
         $this->assertEquals(
@@ -146,7 +140,6 @@ class GerritServerTest extends TestCase
         $use_ssl              = false;
         $gerrit_version       = '2.5';
         $http_password        = '1234';
-        $auth_type            = 'Digest';
         $replication_password = '';
 
         $server = new Git_RemoteServer_GerritServer(
@@ -160,8 +153,7 @@ class GerritServerTest extends TestCase
             $use_ssl,
             $gerrit_version,
             $http_password,
-            $replication_password,
-            $auth_type
+            $replication_password
         );
 
         $this->assertEquals(
@@ -182,7 +174,6 @@ class GerritServerTest extends TestCase
         $use_ssl              = true;
         $gerrit_version       = '2.5';
         $http_password        = '1234';
-        $auth_type            = 'Digest';
         $replication_password = '';
 
         $server = new Git_RemoteServer_GerritServer(
@@ -196,8 +187,7 @@ class GerritServerTest extends TestCase
             $use_ssl,
             $gerrit_version,
             $http_password,
-            $replication_password,
-            $auth_type
+            $replication_password
         );
 
         $this->assertEquals(
@@ -218,7 +208,6 @@ class GerritServerTest extends TestCase
         $use_ssl              = false;
         $gerrit_version       = '2.5';
         $http_password        = '1234';
-        $auth_type            = 'Digest';
         $replication_password = '';
 
         $server = new Git_RemoteServer_GerritServer(
@@ -232,8 +221,7 @@ class GerritServerTest extends TestCase
             $use_ssl,
             $gerrit_version,
             $http_password,
-            $replication_password,
-            $auth_type
+            $replication_password
         );
 
         $this->assertEquals(
@@ -254,7 +242,6 @@ class GerritServerTest extends TestCase
         $use_ssl              = false;
         $gerrit_version       = '2.5';
         $http_password        = '1234';
-        $auth_type            = 'Digest';
         $replication_password = '';
 
         $server = new Git_RemoteServer_GerritServer(
@@ -268,8 +255,7 @@ class GerritServerTest extends TestCase
             $use_ssl,
             $gerrit_version,
             $http_password,
-            $replication_password,
-            $auth_type
+            $replication_password
         );
 
         $user = \Mockery::spy(\Git_Driver_Gerrit_User::class)->shouldReceive('getSshUserName')->andReturns('blurp')->getMock();

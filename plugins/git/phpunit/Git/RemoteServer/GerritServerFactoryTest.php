@@ -23,7 +23,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
 
-//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MissingNamespace
 class GerritServerFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -38,7 +38,6 @@ class GerritServerFactoryTest extends TestCase
     private $use_ssl            = false;
     private $gerrit_version     = '2.5';
     private $http_password      = 'azerty';
-    private $auth_type          = 'Digest';
 
     private $alternate_server_id      = 2;
     private $alternate_host           = 'h.tuleap.net';
@@ -70,7 +69,6 @@ class GerritServerFactoryTest extends TestCase
             'use_ssl'              => $this->use_ssl,
             'gerrit_version'       => $this->gerrit_version,
             'http_password'        => $this->http_password,
-            'auth_type'            => $this->auth_type,
             'replication_password' => '',
         );
         $this->dar_2 = array(
@@ -84,7 +82,6 @@ class GerritServerFactoryTest extends TestCase
             'use_ssl'           => $this->use_ssl,
             'gerrit_version'    => $this->alternate_gerrit_version,
             'http_password'     => $this->http_password,
-            'auth_type'         => $this->auth_type,
             'replication_password' => '',
         );
 
@@ -111,8 +108,7 @@ class GerritServerFactoryTest extends TestCase
             $this->use_ssl,
             $this->gerrit_version,
             $this->http_password,
-            '',
-            $this->auth_type
+            ''
         );
         $this->alternate_gerrit_server  = new Git_RemoteServer_GerritServer(
             $this->alternate_server_id,
@@ -125,8 +121,7 @@ class GerritServerFactoryTest extends TestCase
             $this->use_ssl,
             $this->alternate_gerrit_version,
             $this->http_password,
-            '',
-            $this->auth_type
+            ''
         );
         $git_dao->shouldReceive('isRemoteServerUsed')->with($this->server_id)->andReturns(true);
         $git_dao->shouldReceive('isRemoteServerUsed')->with($this->alternate_server_id)->andReturns(false);
@@ -232,7 +227,7 @@ class GerritServerFactoryTest extends TestCase
     public function testItSavesAnExistingServer(): void
     {
         $this->main_gerrit_server->setLogin('new_login');
-        $this->dao->shouldReceive('save')->with($this->server_id, $this->host, $this->ssh_port, $this->http_port, 'new_login', $this->identity_file, $this->replication_key, $this->use_ssl, $this->gerrit_version, $this->http_password, $this->auth_type)->once();
+        $this->dao->shouldReceive('save')->with($this->server_id, $this->host, $this->ssh_port, $this->http_port, 'new_login', $this->identity_file, $this->replication_key, $this->use_ssl, $this->gerrit_version, $this->http_password)->once();
         $this->factory->save($this->main_gerrit_server);
     }
 
@@ -256,8 +251,7 @@ class GerritServerFactoryTest extends TestCase
             $this->use_ssl,
             $this->gerrit_version,
             $this->http_password,
-            '',
-            $this->auth_type
+            ''
         );
         $this->dao->shouldReceive('save')->andReturns(113);
         $this->factory->save($new_server);

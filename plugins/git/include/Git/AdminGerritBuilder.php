@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,7 +47,6 @@ class AdminGerritBuilder
         $gerrit_server['use_ssl']              = isset($request['use_ssl']) ? $request['use_ssl'] : false;
         $gerrit_server['http_password']        = $request['http_password'];
         $gerrit_server['replication_password'] = $request['replication_password'];
-        $gerrit_server['auth_type']            = $request['auth_type'];
         $gerrit_server['gerrit_version']       = Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS;
 
         return $gerrit_server;

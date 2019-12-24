@@ -68,7 +68,7 @@ class Git_DriverREST_Gerrit_groupExistsTest extends TuleapTestCase
         $this->guzzle_client  = mock('Guzzle\Http\Client');
         $this->guzzle_request = mock('Guzzle\Http\Message\EntityEnclosingRequest');
 
-        $this->driver = new Git_Driver_GerritREST($this->guzzle_client, $this->logger, 'Digest');
+        $this->driver = new Git_Driver_GerritREST($this->guzzle_client, $this->logger);
 
         $this->group         = 'contributors';
         $this->groupname     = $this->project_name.'/'.$this->namespace.'/'.$this->repository_name.'-'.$this->group;

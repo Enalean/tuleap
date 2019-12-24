@@ -62,13 +62,7 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter
 
     public $gerrit_label_replication_password;
 
-    public $gerrit_label_auth_type;
-
     public $btn_delete_title;
-
-    public $digest;
-
-    public $basic;
 
     public $gerrit_replication_information;
 
@@ -102,7 +96,6 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter
         $this->gerrit_label_identity_file        = dgettext('tuleap-git', 'Identity file');
         $this->gerrit_label_http_password        = dgettext('tuleap-git', 'HTTP password');
         $this->gerrit_label_replication_password = dgettext('tuleap-git', 'Replication password');
-        $this->gerrit_label_auth_type            = dgettext('tuleap-git', 'Authentication type');
         $this->gerrit_replication_information    = dgettext('tuleap-git', 'It is either SSH or password replication for replication');
 
         $this->gerrit_label_http_password_edit        = dgettext('tuleap-git', 'Change HTTP password');
@@ -110,8 +103,6 @@ class Git_AdminGerritPresenter extends Git_AdminPresenter
 
         $this->yes            = dgettext('tuleap-git', 'Yes');
         $this->no             = dgettext('tuleap-git', 'No');
-        $this->basic          = dgettext('tuleap-git', 'Basic');
-        $this->digest         = dgettext('tuleap-git', 'Digest');
         $this->btn_restrict   = $GLOBALS['Language']->getText('global', 'btn_restrict');
     }
 

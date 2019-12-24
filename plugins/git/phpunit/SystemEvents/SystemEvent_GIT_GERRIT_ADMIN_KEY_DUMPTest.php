@@ -2,7 +2,7 @@
 /**
  * Copyright Enalean (c) 2011 - Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -26,6 +26,7 @@ use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
 require_once __DIR__.'/../bootstrap.php';
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -67,7 +68,6 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \PHPUnit\Framework\TestC
         $use_ssl         = false;
         $gerrit_version  = '2.5';
         $http_password   = 'ikshjdshg';
-        $auth_type       = 'Digest';
 
         $gerrit_server = new Git_RemoteServer_GerritServer(
             $gerrit_server_id,
@@ -80,8 +80,7 @@ class SystemEvent_GIT_GERRIT_ADMIN_KEY_DUMPTest extends \PHPUnit\Framework\TestC
             $use_ssl,
             $gerrit_version,
             $http_password,
-            '',
-            $auth_type
+            ''
         );
         $this->gerrit_server_factory->shouldReceive('getServerById')->andReturns($gerrit_server);
 

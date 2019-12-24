@@ -42,17 +42,12 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
     /** @var Guzzle\Http\Client */
     private $guzzle_client;
 
-    /** @var String */
-    private $auth_type;
-
     public function __construct(
         $guzzle_client,
-        Logger $logger,
-        $auth_type
+        Logger $logger
     ) {
         $this->guzzle_client = $guzzle_client;
         $this->logger        = $logger;
-        $this->auth_type     = $auth_type;
     }
 
     public function createProject(
@@ -710,7 +705,7 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
      */
     private function sendRequest(Git_RemoteServer_GerritServer $server, Guzzle\Http\Message\RequestInterface $request)
     {
-        $request->setAuth($server->getLogin(), $server->getHTTPPassword(), $this->auth_type);
+        $request->setAuth($server->getLogin(), $server->getHTTPPassword());
         return $request->send();
     }
 

@@ -139,8 +139,7 @@ class Git_RemoteServer_Dao extends \Tuleap\DB\DataAccessObject
         $replication_key,
         $use_ssl,
         $gerrit_version,
-        $http_password,
-        $auth_type
+        $http_password
     ) {
         if ($id == 0) {
             $this->getDB()->insert(
@@ -155,8 +154,7 @@ class Git_RemoteServer_Dao extends \Tuleap\DB\DataAccessObject
                     'use_ssl'              => $use_ssl,
                     'gerrit_version'       => $gerrit_version,
                     'http_password'        => $http_password,
-                    'replication_password' => '',
-                    'auth_type'            => $auth_type
+                    'replication_password' => ''
                 ]
             );
         } else {
@@ -171,8 +169,7 @@ class Git_RemoteServer_Dao extends \Tuleap\DB\DataAccessObject
                     'ssh_key'        => $replication_key,
                     'use_ssl'        => $use_ssl,
                     'gerrit_version' => $gerrit_version,
-                    'http_password'  => $http_password,
-                    'auth_type'      => $auth_type
+                    'http_password'  => $http_password
                 ],
                 ['id' => $id]
             );
