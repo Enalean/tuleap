@@ -18,10 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+declare(strict_types=1);
 
-class UserAccountManagerTest extends TuleapTestCase
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class UserAccountManagerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     private $user;
     private $gerrit_driver_factory;
     private $remote_gerrit_factory;
@@ -35,13 +41,13 @@ class UserAccountManagerTest extends TuleapTestCase
      */
     private $gerrit_user_account_manager;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->user                         = aUser()->withLdapId("testUser")->build();
-        $this->gerrit_driver_factory        = mock('Git_Driver_Gerrit_GerritDriverFactory');
-        $this->remote_gerrit_factory        = mock('Git_RemoteServer_GerritServerFactory');
-        $this->gerrit_user_account_manager  = mock('Git_Driver_Gerrit_UserAccountManager');
+        $this->user                         = (new \UserTestBuilder())->withLdapId("testUser")->build();
+        $this->gerrit_driver_factory        = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class);
+        $this->remote_gerrit_factory        = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
+        $this->gerrit_user_account_manager  = \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class);
 
         $this->user_account_manager = new Git_UserAccountManager(
             $this->gerrit_driver_factory,
@@ -65,13 +71,11 @@ class UserAccountManagerTest extends TuleapTestCase
         );
     }
 
-    public function itThrowsAnExceptionIfGerritSynchFails()
+    public function testItThrowsAnExceptionIfGerritSynchFails(): void
     {
-        expect($this->gerrit_user_account_manager)->synchroniseSSHKeys()->once();
+        $this->gerrit_user_account_manager->shouldReceive('synchroniseSSHKeys')->once()->andThrows(new Git_UserSynchronisationException());
 
-        $this->gerrit_user_account_manager->throwOn('synchroniseSSHKeys', new Git_UserSynchronisationException());
-
-        $this->expectException('Git_UserSynchronisationException');
+        $this->expectException(\Git_UserSynchronisationException::class);
 
         $this->user_account_manager->synchroniseSSHKeys(
             $this->original_keys,
@@ -80,13 +84,11 @@ class UserAccountManagerTest extends TuleapTestCase
         );
     }
 
-    public function itThrowsAnExceptionIfGerritPushFails()
+    public function testItThrowsAnExceptionIfGerritPushFails(): void
     {
-        expect($this->gerrit_user_account_manager)->pushSSHKeys()->once();
+        $this->gerrit_user_account_manager->shouldReceive('pushSSHKeys')->once()->andThrows(new Git_UserSynchronisationException());
 
-        $this->gerrit_user_account_manager->throwOn('pushSSHKeys', new Git_UserSynchronisationException());
-
-        $this->expectException('Git_UserSynchronisationException');
+        $this->expectException(\Git_UserSynchronisationException::class);
 
         $this->user_account_manager->pushSSHKeys(
             $this->user
