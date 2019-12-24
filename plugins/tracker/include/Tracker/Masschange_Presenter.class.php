@@ -31,11 +31,24 @@ class Tracker_Masschange_Presenter
     /** @var string */
     public $javascript_rules;
 
-    public function __construct(array $masschange_aids, $form_elements, $javascript_rules)
+    /**
+     * @var string[]
+     */
+    public $external_actions;
+
+    /**
+     * @var bool
+     */
+    public $has_external_actions;
+
+    public function __construct(array $masschange_aids, $form_elements, $javascript_rules, array $external_actions)
     {
         $this->masschange_aids  = $masschange_aids;
         $this->form_elements    = $form_elements;
         $this->javascript_rules = $javascript_rules;
+        $this->external_actions = $external_actions;
+
+        $this->has_external_actions = (bool) count($external_actions) > 0;
     }
 
     public function changing_items()

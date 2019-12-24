@@ -1283,6 +1283,9 @@ msgstr "Type '%s' inexistant. Ce champ sera ignoré. (Nom : '%s', ID: '%s')."
 msgid "URL"
 msgstr "URL"
 
+msgid "Unchanged"
+msgstr "Inchangé"
+
 #, php-format
 msgid "Unknown post action '%s'."
 msgstr "Post action inconnue '%s'."

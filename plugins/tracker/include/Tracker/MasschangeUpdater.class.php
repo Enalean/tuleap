@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
+
 class Tracker_MasschangeUpdater
 {
 
@@ -48,6 +50,11 @@ class Tracker_MasschangeUpdater
      */
     private $artifact_dao;
 
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     public function __construct(
         Tracker $tracker,
         Tracker_Report $tracker_report,
@@ -55,7 +62,8 @@ class Tracker_MasschangeUpdater
         Tracker_RuleFactory $rule_factory,
         Tracker_FormElementFactory $form_element_factory,
         Tracker_ArtifactFactory $artifact_factory,
-        Tracker_ArtifactDao $artifact_dao
+        Tracker_ArtifactDao $artifact_dao,
+        EventManager $event_manager
     ) {
         $this->tracker                     = $tracker;
         $this->tracker_report              = $tracker_report;
@@ -64,6 +72,7 @@ class Tracker_MasschangeUpdater
         $this->form_element_factory        = $form_element_factory;
         $this->artifact_factory            = $artifact_factory;
         $this->artifact_dao                = $artifact_dao;
+        $this->event_manager               = $event_manager;
     }
 
     public function updateArtifacts(PFUser $user, Codendi_Request $request)
@@ -103,6 +112,14 @@ class Tracker_MasschangeUpdater
                     $comment_format
                 );
             }
+
+            $event = new TrackerMasschangeProcessExternalActionsEvent(
+                $user,
+                $this->tracker,
+                $request,
+                $masschange_aids
+            );
+            $this->event_manager->processEvent($event);
 
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId());
         } else {

@@ -49,6 +49,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
 use Tuleap\Tracker\Notifications\GlobalNotificationsAddressesBuilder;
@@ -1679,7 +1680,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->displayAdminFooter($layout);
     }
 
-    public function displayMasschangeForm(Tracker_IDisplayTrackerLayout $layout, $masschange_aids)
+    public function displayMasschangeForm(Tracker_IDisplayTrackerLayout $layout, PFUser $user, $masschange_aids)
     {
         $breadcrumbs = array(
             array(
@@ -1689,12 +1690,16 @@ class Tracker implements Tracker_Dispatchable_Interface
         );
         $this->displayHeader($layout, $this->name, $breadcrumbs, $this->getDefaultToolbar());
 
+        $event = new TrackerMasschangeGetExternalActionsEvent($this, $user);
+        EventManager::instance()->processEvent($event);
+
         $this->renderer->renderToPage(
             'masschange',
             new Tracker_Masschange_Presenter(
                 $masschange_aids,
                 $this->fetchFormElementsMasschange(),
-                $this->displayRulesAsJavascript()
+                $this->displayRulesAsJavascript(),
+                $event->getExternalActions()
             )
         );
 

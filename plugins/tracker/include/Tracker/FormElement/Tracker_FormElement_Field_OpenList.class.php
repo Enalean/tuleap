@@ -66,7 +66,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             $name = 'name="'. $hp->purify($name) .'"';
         }
         $html .= '<div class="textboxlist">
-                    <input id="tracker_field_'. $this->id .'" 
+                    <input id="tracker_field_'. $this->id .'"
                            '. $name .'
                            style="width:98%"
                            type="text"></div>';
@@ -116,7 +116,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         $html .= '<div class="default">'.  $hp->purify($this->getProperty('hint'), CODENDI_PURIFIER_LIGHT) .'</div>';
         $html .= '<ul class="feed">';
         $html .= '<li value="'.$hp->purify(BindStaticValueUnchanged::VALUE_ID).'">';
-        $html .= $GLOBALS['Language']->getText('global', 'unchanged');
+        $html .= dgettext('tuleap-tracker', 'Unchanged');
         $html .= '</li>';
         $html .= '</ul>';
         $html .= '</div>';
@@ -638,14 +638,14 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                     }
                     $statement .= "$b.bindvalue_id IN (". $this->getCriteriaDao()->getDa()->escapeIntImplode($bindvalues) . ")";
                 }
-                return " INNER JOIN tracker_changeset_value AS $a 
-                         ON ($a.changeset_id = c.id 
+                return " INNER JOIN tracker_changeset_value AS $a
+                         ON ($a.changeset_id = c.id
                              AND $a.field_id = ". $this->id ."
-                         ) 
+                         )
                          INNER JOIN tracker_changeset_value_openlist AS $b ON (
                             $b.changeset_value_id = $a.id
                             AND ($statement)
-                         ) 
+                         )
                          ";
             }
         }

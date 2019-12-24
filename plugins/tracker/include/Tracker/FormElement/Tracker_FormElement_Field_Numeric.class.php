@@ -197,10 +197,10 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         $html  = '';
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $hp    = Codendi_HTMLPurifier::instance();
-        $html .= '<input type="text" 
+        $html .= '<input type="text"
                          size="'. $this->getProperty('size') .'"
                          '. ($this->getProperty('maxchars') ? 'maxlength="'. $this->getProperty('maxchars') .'"' : '')  .'
-                         name="artifact['. $this->id .']" 
+                         name="artifact['. $this->id .']"
                          value="'.  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
         return $html;
     }
@@ -214,7 +214,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     protected function fetchSubmitValueMasschange()
     {
         $html = '';
-        $value = $GLOBALS['Language']->getText('global', 'unchanged');
+        $value = dgettext('tuleap-tracker', 'Unchanged');
         $hp = Codendi_HTMLPurifier::instance();
         $html .= '<input type="text"
                          size="'. $this->getProperty('size') .'"
@@ -247,10 +247,10 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
             }
         }
         $hp = Codendi_HTMLPurifier::instance();
-        $html .= '<input type="text" 
+        $html .= '<input type="text"
                          size="'. $this->getProperty('size') .'"
                          '. ($this->getProperty('maxchars') ? 'maxlength="'. $this->getProperty('maxchars') .'"' : '')  .'
-                         name="artifact['. $this->id .']" 
+                         name="artifact['. $this->id .']"
                          value="'.  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
         return $html;
     }
@@ -352,7 +352,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         if ($this->hasDefaultValue()) {
             $value = $this->getDefaultValue();
         }
-        $html .= '<input type="text" 
+        $html .= '<input type="text"
                          size="'. $this->getProperty('size') .'"
                          '. ($this->getProperty('maxchars') ? 'maxlength="'. $this->getProperty('maxchars') .'"' : '')  .'
                          value="'.  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML)  .'" autocomplete="off" />';

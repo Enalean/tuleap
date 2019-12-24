@@ -788,7 +788,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     protected function fetchSubmitValueMasschange()
     {
-        $unchanged = $GLOBALS['Language']->getText('global', 'unchanged');
+        $unchanged = dgettext('tuleap-tracker', 'Unchanged');
         $html      = $this->fetchComputedInputs($unchanged, false);
         $html     .= $this->fetchBackToAutocomputedButton(false);
         return $html;

@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker;
 
 use Codendi_Request;
+use EventManager;
 use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
@@ -44,16 +46,18 @@ use Tuleap\Layout\BaseLayout;
 
 final class MasschangeUpdaterTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, GlobalLanguageMock;
+    use MockeryPHPUnitIntegration, GlobalLanguageMock;
 
-    public function setUp() : void
+    protected function setUp() : void
     {
+        parent::setUp();
         $GLOBALS['Response'] = Mockery::spy(BaseLayout::class);
     }
 
-    public function tearDown() : void
+    protected function tearDown() : void
     {
         unset($GLOBALS['Response']);
+        parent::tearDown();
     }
 
     public function testUpdateArtifactsWithoutBeenUnsubscribedFromNotifications() : void
@@ -86,6 +90,9 @@ final class MasschangeUpdaterTest extends TestCase
         $artifact_202->shouldReceive('createNewChangeset')->once();
         $artifact_factory->shouldReceive('getArtifactById')->with(202)->andReturn($artifact_202);
 
+        $event_manager = Mockery::mock(EventManager::class);
+        $event_manager->shouldReceive('processEvent')->once();
+
         $masschange_updater = new Tracker_MasschangeUpdater(
             $tracker,
             Mockery::mock(Tracker_Report::class),
@@ -93,7 +100,8 @@ final class MasschangeUpdaterTest extends TestCase
             $rules_factory,
             Mockery::mock(Tracker_FormElementFactory::class),
             $artifact_factory,
-            Mockery::mock(Tracker_ArtifactDao::class)
+            Mockery::mock(Tracker_ArtifactDao::class),
+            $event_manager
         );
         $masschange_updater->updateArtifacts(Mockery::mock(PFUser::class), $request);
     }
@@ -134,6 +142,9 @@ final class MasschangeUpdaterTest extends TestCase
 
         $artifact_dao = Mockery::mock(Tracker_ArtifactDao::class);
 
+        $event_manager = Mockery::mock(EventManager::class);
+        $event_manager->shouldReceive('processEvent')->once();
+
         $masschange_updater = new Tracker_MasschangeUpdater(
             $tracker,
             Mockery::mock(Tracker_Report::class),
@@ -141,7 +152,8 @@ final class MasschangeUpdaterTest extends TestCase
             $rules_factory,
             Mockery::mock(Tracker_FormElementFactory::class),
             $artifact_factory,
-            $artifact_dao
+            $artifact_dao,
+            $event_manager
         );
 
         $user = Mockery::mock(PFUser::class);
@@ -221,6 +233,9 @@ final class MasschangeUpdaterTest extends TestCase
             Mockery::any()
         );
 
+        $event_manager = Mockery::mock(EventManager::class);
+        $event_manager->shouldReceive('processEvent')->once();
+
         $masschange_updater = new Tracker_MasschangeUpdater(
             $tracker,
             Mockery::mock(Tracker_Report::class),
@@ -228,7 +243,8 @@ final class MasschangeUpdaterTest extends TestCase
             $rules_factory,
             $form_element_factory,
             $artifact_factory,
-            Mockery::mock(Tracker_ArtifactDao::class)
+            Mockery::mock(Tracker_ArtifactDao::class),
+            $event_manager
         );
         $masschange_updater->updateArtifacts(Mockery::mock(PFUser::class), $request);
     }

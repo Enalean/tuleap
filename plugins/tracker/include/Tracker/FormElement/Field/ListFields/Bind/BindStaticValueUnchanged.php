@@ -30,7 +30,7 @@ class BindStaticValueUnchanged extends Tracker_FormElement_Field_List_Bind_Stati
     public function __construct()
     {
         $id          = self::VALUE_ID;
-        $label       = $GLOBALS['Language']->getText('global', 'unchanged');
+        $label       = dgettext('tuleap-tracker', 'Unchanged');
         $description = '';
         $rank        = 0;
         $is_hidden   = false;

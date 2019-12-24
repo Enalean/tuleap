@@ -97,8 +97,8 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $hp    = Codendi_HTMLPurifier::instance();
         $html .= '<input type="text" class="user-mention"
-                         name="artifact['. $this->id .']"  
-                         '. ($this->isRequired() ? 'required' : '') .' 
+                         name="artifact['. $this->id .']"
+                         '. ($this->isRequired() ? 'required' : '') .'
                          size="'. $this->getProperty('size') .'"
                          '. ($this->getProperty('maxchars') ? 'maxlength="'. $this->getProperty('maxchars') .'"' : '')  .'
                          value="'.  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
@@ -114,7 +114,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
     protected function fetchSubmitValueMasschange()
     {
         $html = '';
-        $value = $GLOBALS['Language']->getText('global', 'unchanged');
+        $value = dgettext('tuleap-tracker', 'Unchanged');
 
         if ($this->isSemanticTitle()) {
             $html .= '<input type="text" readonly="readonly" value="'.$value.'" title="'.$GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'cannot_masschange_title').'" />';
@@ -173,8 +173,8 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         }
         $hp = Codendi_HTMLPurifier::instance();
         $html .= '<input type="text" class="user-mention"
-                         name="artifact['. $this->id .']"  
-                         '. ($this->isRequired() ? 'required' : '') .' 
+                         name="artifact['. $this->id .']"
+                         '. ($this->isRequired() ? 'required' : '') .'
                          size="'. $this->getProperty('size') .'"
                          '. ($this->getProperty('maxchars') ? 'maxlength="'. $this->getProperty('maxchars') .'"' : '')  .'
                          value="'.  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
@@ -193,7 +193,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         if ($this->hasDefaultValue()) {
             $value = $this->getDefaultValue();
         }
-        $html .= '<input type="text" 
+        $html .= '<input type="text"
                          size="'. $this->getProperty('size') .'"
                          '. ($this->getProperty('maxchars') ? 'maxlength="'. $this->getProperty('maxchars') .'"' : '')  .'
                          value="'.  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) .'" autocomplete="off" />';
