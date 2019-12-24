@@ -38,7 +38,7 @@ class CardInCellPresenterFactoryTest extends TestCase
 
         $tracker        = \Mockery::spy(\Tracker::class);
         $this->field_id = 77777;
-        $this->field    = Mockery::spy(\Tracker_FormElement_Field_MultiselectBox::class)
+        $this->field    = Mockery::spy(\Tracker_FormElement_Field_MultiSelectbox::class)
             ->shouldReceive("getId")
             ->andReturns($this->field_id)
             ->getMock();
