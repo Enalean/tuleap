@@ -33,7 +33,7 @@ class Tracker_Semantic_StatusDao extends DataAccessObject
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
-                FROM $this->table_name
+                FROM tracker_semantic_status
                 WHERE tracker_id = $tracker_id";
         return $this->retrieve($sql);
     }

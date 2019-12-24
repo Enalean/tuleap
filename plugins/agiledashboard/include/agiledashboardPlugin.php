@@ -64,6 +64,7 @@ use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\MoveChangesetXMLUpdater;
 use Tuleap\AgileDashboard\Semantic\MoveSemanticInitialEffortChecker;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
+use Tuleap\AgileDashboard\Semantic\SemanticDoneDuplicator;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
 use Tuleap\AgileDashboard\Widget\MyKanban;
@@ -923,7 +924,11 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
      */
     public function tracker_event_get_semantic_duplicators($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $params['factories'][] = $this->getSemanticInitialEffortFactory();
+        $params['duplicators'][] = $this->getSemanticInitialEffortFactory();
+        $params['duplicators'][] = new SemanticDoneDuplicator(
+            new SemanticDoneDao(),
+            new Tracker_Semantic_StatusDao()
+        );
     }
 
     protected function getSemanticInitialEffortFactory()
