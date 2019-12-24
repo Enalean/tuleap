@@ -219,4 +219,15 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
         wrapper.setData({ open_sprints_details: true });
         expect(wrapper.contains(ReleaseBadgesClosedSprints)).toBe(true);
     });
+
+    it("When sprints details is open, Then there is button to close sprint details", async () => {
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        wrapper.setData({ open_sprints_details: true });
+        expect(wrapper.contains("[data-test=button-to-close-sprint-details]")).toBe(true);
+
+        wrapper.find("[data-test=button-to-close]").trigger("click");
+
+        expect(wrapper.contains("[data-test=button-to-close-sprint-details]")).toBe(false);
+    });
 });
