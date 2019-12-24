@@ -27,7 +27,7 @@
         v-bind:aria-label="title"
         v-on:click="$emit('click')"
     >
-        <i class="fa fa-plus" v-bind:class="icon_class" aria-hidden="true"></i>
+        <i class="fa" v-bind:class="icon_class" aria-hidden="true"></i>
         <span v-if="label">{{ label }}</span>
     </button>
 </template>
@@ -46,12 +46,12 @@ export default class AddButton extends Vue {
     }
 
     get icon_class(): string {
-        return this.label !== "" ? "tlp-button-icon" : "";
+        return this.label !== "" ? "fa-tlp-hierarchy-plus tlp-button-icon" : "fa-plus";
     }
 
     get button_class(): string {
         return this.label !== ""
-            ? "taskboard-add-in-place-button-with-label"
+            ? "tlp-button-small taskboard-add-in-place-button-with-label"
             : "tlp-tooltip tlp-tooltip-top";
     }
 }
