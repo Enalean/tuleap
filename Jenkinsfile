@@ -67,12 +67,12 @@ pipeline {
                 stage ('Jest') {
                     agent {
                         docker {
-                            image 'node:12.6-alpine'
+                            image 'node:13.3-alpine'
                             reuseNode true
                             args '--network none'
                         }
                     }
-                    steps { script { actions.runJestTests('Enalean Helpdesk', 'plugins/testmanagement/scripts/') } }
+                    steps { script { actions.runJestTests('TestManagement', 'plugins/testmanagement/scripts/') } }
                     post {
                         always {
                             junit 'results/jest/test-*-results.xml'
@@ -116,12 +116,19 @@ pipeline {
                             } }
                         }
                         stage('Javascript coding standards') {
+                            agent {
+                                docker {
+                                    image 'node:13.3-alpine'
+                                    reuseNode true
+                                    args '--network none'
+                                }
+                            }
                             steps { script { actions.runJavascriptCodingStandards() } }
                         }
                         stage('ESLint static analysis') {
                             agent {
                                 docker {
-                                    image 'node:12.6-alpine'
+                                    image 'node:13.3-alpine'
                                     reuseNode true
                                     args '--network none'
                                 }
