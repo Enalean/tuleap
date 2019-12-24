@@ -43,6 +43,7 @@ describe("ProjectInformationInputPrivacyList", () => {
         const state: State = {
             selected_tuleap_template: null,
             are_restricted_users_allowed: false,
+            are_anonymous_allowed: false,
             project_default_visibility: "public",
             tuleap_templates: [],
             error: null,
@@ -97,7 +98,7 @@ describe("ProjectInformationInputPrivacyList", () => {
             expect(wrapper.emitted().input).toEqual([["private-wo-restr"]]);
 
             expect(tooltip.getAttribute("data-tlp-tooltip")).toBe(
-                "Project privacy set to private including restricted. Only project members can access its content. Restricted users are allowed in this project."
+                "Project privacy set to private. Only project members can access its content. Restricted users are not allowed in this project."
             );
         });
 
@@ -118,7 +119,7 @@ describe("ProjectInformationInputPrivacyList", () => {
             expect(wrapper.emitted().input).toEqual([["private"]]);
 
             expect(tooltip.getAttribute("data-tlp-tooltip")).toBe(
-                "Project privacy set to private. Only project members can access its content. Restricted users are not allowed in this project."
+                "Project privacy set to private including restricted. Only project members can access its content. Restricted users are allowed in this project."
             );
         });
 
@@ -169,7 +170,8 @@ describe("ProjectInformationInputPrivacyList", () => {
                     project_default_visibility: "public",
                     error: null,
                     is_creating_project: false,
-                    is_project_approval_required: false
+                    is_project_approval_required: false,
+                    are_anonymous_allowed: false
                 }
             };
             const wrapper = getProjectInformationInstance(store_options);
@@ -184,7 +186,8 @@ describe("ProjectInformationInputPrivacyList", () => {
                     project_default_visibility: "unrestricted",
                     error: null,
                     is_creating_project: false,
-                    is_project_approval_required: false
+                    is_project_approval_required: false,
+                    are_anonymous_allowed: false
                 }
             };
             const wrapper = getProjectInformationInstance(store_options);
@@ -200,7 +203,8 @@ describe("ProjectInformationInputPrivacyList", () => {
                     project_default_visibility: "private-wo-restr",
                     error: null,
                     is_creating_project: false,
-                    is_project_approval_required: false
+                    is_project_approval_required: false,
+                    are_anonymous_allowed: false
                 }
             };
             const wrapper = getProjectInformationInstance(store_options);
@@ -217,7 +221,8 @@ describe("ProjectInformationInputPrivacyList", () => {
                     project_default_visibility: "private",
                     error: null,
                     is_creating_project: false,
-                    is_project_approval_required: false
+                    is_project_approval_required: false,
+                    are_anonymous_allowed: false
                 }
             };
             const wrapper = getProjectInformationInstance(store_options);

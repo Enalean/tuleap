@@ -54,19 +54,28 @@
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
+import { State } from "vuex-class";
 
 @Component
 export default class ProjectInformationInputPrivacySwitch extends Vue {
     is_checked = false;
 
+    @State
+    are_anonymous_allowed!: boolean;
+
     get translated_tooltip(): string {
         if (this.is_checked) {
             return this.$gettext(
-                "Project privacy set to private. Only project members can access its content. Restricted users are not allowed in this project."
+                "Project privacy set to private. Only project members can access its content."
+            );
+        }
+        if (this.are_anonymous_allowed) {
+            return this.$gettext(
+                "Project privacy set to public. By default, its content is available to everyone (authenticated or not). Please note that more restrictive permissions might exist on some items."
             );
         }
         return this.$gettext(
-            "Project privacy set to public. By default, its content is available to all authenticated, but not restricted, users. Please note that more restrictive permissions might exist on some items."
+            "Project privacy set to public. By default, its content is available to all authenticated. Please note that more restrictive permissions might exist on some items."
         );
     }
 }

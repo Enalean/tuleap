@@ -72,6 +72,10 @@ class ProjectRegistrationPresenter
      * @var string
      */
     public $company_name;
+    /**
+     * @var bool
+     */
+    public $are_anonymous_allowed;
 
     public function __construct(
         string $project_default_visibility,
@@ -90,5 +94,6 @@ class ProjectRegistrationPresenter
         $this->field_list                   = json_encode($field_list);
         $this->company_templates            = json_encode($company_templates);
         $this->company_name                 = ForgeConfig::get('sys_org_name');
+        $this->are_anonymous_allowed        = (bool)ForgeConfig::areAnonymousAllowed();
     }
 }
