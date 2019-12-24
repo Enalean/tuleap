@@ -34,7 +34,7 @@ describe("ProjectInformationFooter", () => {
                 title: "scrum",
                 description: "scrum desc",
                 id: "scrum",
-                svg: "<svg></svg>",
+                glyph: "<svg></svg>",
                 is_built_in: false
             },
             tuleap_templates: [],

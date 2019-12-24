@@ -46,7 +46,7 @@ describe("CardWithChildren", () => {
             title: "scrum",
             description: "scrum desc",
             id: "scrum_template",
-            svg: "<svg></svg>",
+            glyph: "<svg></svg>",
             is_built_in: true
         };
         const wrapper = createWrapper(tuleap_template);
@@ -59,7 +59,7 @@ describe("CardWithChildren", () => {
             title: "scrum",
             description: "scrum desc",
             id: "scrum_template",
-            svg: "<svg></svg>",
+            glyph: "<svg></svg>",
             is_built_in: true
         };
         const wrapper = createWrapper(tuleap_template);
@@ -76,7 +76,7 @@ describe("CardWithChildren", () => {
             title: "scrum",
             description: "scrum desc",
             id: "scrum_template",
-            svg: "<svg></svg>",
+            glyph: "<svg></svg>",
             is_built_in: true
         };
 

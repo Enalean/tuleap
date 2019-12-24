@@ -57,14 +57,14 @@ describe("CompanyTemplateList", () => {
                 id: "10",
                 title: "scrum",
                 description: "scrum desc",
-                svg: "<svg></svg>",
+                glyph: "<svg></svg>",
                 is_built_in: false
             },
             {
                 id: "11",
                 title: "kanban",
                 description: "kanban desc",
-                svg: "<svg>kanban</svg>",
+                glyph: "<svg>kanban</svg>",
                 is_built_in: false
             }
         ];

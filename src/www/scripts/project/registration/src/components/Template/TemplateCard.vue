@@ -27,7 +27,7 @@
             class="project-registration-selected-template"
             name="selected-template"
             data-test="project-registration-radio"
-            v-on:change="storeSelectedTemplate(template)"
+            v-on:change="storeSelectedTemplate()"
         />
 
         <label

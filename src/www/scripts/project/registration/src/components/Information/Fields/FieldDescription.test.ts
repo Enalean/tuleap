@@ -32,7 +32,7 @@ describe("FieldDescription -", () => {
                 title: "string",
                 description: "string",
                 id: "string",
-                svg: "string",
+                glyph: "string",
                 is_built_in: true
             },
             tuleap_templates: [],

@@ -88,7 +88,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         company_name
     };
 
-    Vue.use(VueDOMPurifyHTML);
+    Vue.use(VueDOMPurifyHTML, {
+        namedConfigurations: {
+            svg: {
+                USE_PROFILES: { svg: true }
+            }
+        }
+    });
 
     const AppComponent = Vue.extend(App);
     const store = createStore(root_state);
