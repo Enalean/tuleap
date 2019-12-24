@@ -41,10 +41,10 @@ def runRESTTests(String db, String php) {
     """
 }
 
-def runDBTests(String version) {
+def runDBTests(String db, String php) {
     sh """
-    mkdir -p results/db/${version}
-    docker run --rm -v \$WORKSPACE/sources:/usr/share/tuleap:ro --mount type=tmpfs,destination=/tmp -v \$WORKSPACE/results/db/${version}:/output --network none \$DOCKER_REGISTRY/enalean/tuleap-test-rest:${version} /usr/share/tuleap/tests/integration/bin/run.sh
+    mkdir -p \$WORKSPACE/results/db/php${php}-${db}
+    TESTS_RESULT=\$WORKSPACE/results/db/php${php}-${db} sources/tests/integration/bin/run-compose.sh "${db}"
     """
 }
 
