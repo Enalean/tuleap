@@ -2,10 +2,6 @@
 
 set -euxo pipefail
 
-if [ -z "$MYSQL_DAEMON" ]; then
-    MYSQL_DAEMON=mysqld
-fi
-
 if [ -z "$FPM_DAEMON" ]; then
     echo 'FPM_DAEMON environment variable must be specified' 1>&2
     exit 1
@@ -20,6 +16,7 @@ setup_tuleap() {
     echo "Setup Tuleap"
     cat /usr/share/tuleap/src/etc/database.inc.dist | \
         sed \
+         -e "s/localhost/$DB_HOST/" \
 	     -e "s/%sys_dbname%/tuleap/" \
 	     -e "s/%sys_dbuser%/tuleapadm/" \
 	     -e "s/%sys_dbpasswd%/welcome0/" > /etc/tuleap/conf/database.inc
@@ -50,21 +47,19 @@ setup_tuleap() {
 }
 
 setup_database() {
-    MYSQL_HOST=localhost
     MYSQL_USER=tuleapadm
     MYSQL_PASSWORD=welcome0
     MYSQL_DBNAME=tuleap
-    MYSQL="mysql -h$MYSQL_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD"
+    MYSQL="mysql -h$DB_HOST -u$MYSQL_USER -p$MYSQL_PASSWORD"
 
-    echo "Setup database $MYSQL_DAEMON"
-    if [ "$MYSQL_DAEMON" = "rh-mysql57-mysqld" ]; then
-        mkdir -p /tmp/mysql
-        chown mysql:mysql /tmp/mysql
-        cp /usr/share/tuleap/tests/rest/etc/mysql-server.cnf /etc/opt/rh/rh-mysql57/my.cnf.d/mysql-server.cnf
-    fi
+    MYSQLROOT="mysql -h$DB_HOST -uroot -pwelcome0"
+    echo "Use remote db $DB_HOST"
+    while ! $MYSQLROOT -e "show databases" >/dev/null; do
+        echo "Wait for the db";
+        sleep 1
+    done
 
-    service $MYSQL_DAEMON start
-    mysql -e "GRANT ALL PRIVILEGES on *.* to '$MYSQL_USER'@'$MYSQL_HOST' identified by '$MYSQL_PASSWORD'"
+    $MYSQLROOT -e "GRANT ALL PRIVILEGES on *.* to '$MYSQL_USER'@'%' identified by '$MYSQL_PASSWORD'"
     $MYSQL -e "DROP DATABASE IF EXISTS $MYSQL_DBNAME"
     $MYSQL -e "CREATE DATABASE $MYSQL_DBNAME CHARACTER SET utf8"
     $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/database_structure.sql"
@@ -75,11 +70,11 @@ setup_database() {
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-version' INTO TABLE wiki_version CHARACTER SET ascii"
     $MYSQL $MYSQL_DBNAME -e "LOAD DATA LOCAL INFILE '/usr/share/tuleap/tests/rest/_fixtures/phpwiki/rest-test-wiki-recent' INTO TABLE wiki_recent CHARACTER SET ascii"
 
-    mysql -e "GRANT SELECT ON $MYSQL_DBNAME.user to dbauthuser@'localhost' identified by '$MYSQL_PASSWORD';"
-    mysql -e "GRANT SELECT ON $MYSQL_DBNAME.groups to dbauthuser@'localhost';"
-    mysql -e "GRANT SELECT ON $MYSQL_DBNAME.user_group to dbauthuser@'localhost';"
-    mysql -e "GRANT SELECT,UPDATE ON $MYSQL_DBNAME.svn_token to dbauthuser@'localhost';"
-    mysql -e "FLUSH PRIVILEGES;"
+    $MYSQLROOT -e "GRANT SELECT ON $MYSQL_DBNAME.user to dbauthuser@'localhost' identified by '$MYSQL_PASSWORD';"
+    $MYSQLROOT -e "GRANT SELECT ON $MYSQL_DBNAME.groups to dbauthuser@'localhost';"
+    $MYSQLROOT -e "GRANT SELECT ON $MYSQL_DBNAME.user_group to dbauthuser@'localhost';"
+    $MYSQLROOT -e "GRANT SELECT,UPDATE ON $MYSQL_DBNAME.svn_token to dbauthuser@'localhost';"
+    $MYSQLROOT -e "FLUSH PRIVILEGES;"
 
     echo "Execute additional setup scripts"
     for setup_script in $(find /usr/share/tuleap/plugins/*/tests/rest/setup_db.sh -maxdepth 1 -type f)

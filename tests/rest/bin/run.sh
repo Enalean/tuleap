@@ -34,5 +34,6 @@ else
         PHPUNIT="$PHP_CLI $PHPUNIT"
     fi
     echo "Run tests manually with: "
-    echo "$PHPUNIT --configuration /usr/share/tuleap/tests/rest/phpunit.xml"
+    echo "$PHPUNIT --configuration /usr/share/tuleap/tests/rest/phpunit.xml --do-not-cache-result"
+    exec bash
 fi

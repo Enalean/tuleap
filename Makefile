@@ -102,8 +102,16 @@ generate-po: ## Generate translatable strings
 generate-mo: ## Compile translated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
 
-tests_rest_73: ## Run all REST tests with PHP FPM 7.3
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp --network none enalean/tuleap-test-rest:c6-php73-mysql57
+tests_rest_php73:
+	$(MAKE) tests-rest DB=mysql57
+
+tests_rest_setup_73:
+	$(MAKE) tests-rest DB=mysql57 SETUP_ONLY=1
+
+tests-rest: ## Run all REST tests with PHP 7.3. SETUP_ONLY=1 to disable auto run. DB to select the database to use (mysql57, mariadb103)
+	$(eval DB ?= mysql57)
+	$(eval SETUP_ONLY ?= 0)
+	SETUP_ONLY="$(SETUP_ONLY)" tests/rest/bin/run-compose.sh "$(DB)"
 
 tests_soap_73: ## Run all SOAP tests in PHP 7.3
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp --network none enalean/tuleap-test-soap:5
@@ -120,9 +128,6 @@ tests_cypress_dev: ## Start cypress container to launch tests manually
 
 tests_cypress_distlp: ## Run Cypress distlp tests
 	@tests/e2e/distlp/wrap.sh
-
-tests_rest_setup_73: ## Start REST tests (PHP FPM 7.3) container to launch tests manually
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:cached --mount type=tmpfs,destination=/tmp --network none -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php73-mysql57 /bin/bash -c "/usr/share/tuleap/tests/rest/bin/run.sh setup && scl enable php73 bash"
 
 phpunit-ci-run:
 	$(PHP) -d pcov.directory=. src/vendor/bin/phpunit \
@@ -362,3 +367,11 @@ switch-to-mysql57:
 	$(DOCKER_COMPOSE) exec db55 sh -c 'exec mysqldump --all-databases  -uroot -p"$$MYSQL_ROOT_PASSWORD"' | $(DOCKER) exec -i $(DB57) sh -c 'exec mysql -uroot -p"$$MYSQL_ROOT_PASSWORD"'
 	$(DOCKER_COMPOSE) exec db sh -c 'mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"'
 	@echo "Data were migrated to MySQL 5.7"
+
+load-mariadb: # Works only with tuleap DB ATM (not mediawiki)
+	$(eval MARIADB := $(shell $(DOCKER_COMPOSE) ps -q db-maria-10.3))
+	$(DOCKER_COMPOSE) exec db57 sh -c 'exec mysqldump -uroot -p"$$MYSQL_ROOT_PASSWORD" tuleap' 2>/dev/null 1>all.sql
+	$(DOCKER) exec -i $(MARIADB) sh -c 'exec mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -e "Create database tuleap DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"'
+	$(DOCKER) exec -i $(MARIADB) sh -c 'exec mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" tuleap' < all.sql
+	$(DOCKER_COMPOSE) exec db-maria-10.3 sh -c 'mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" -e "FLUSH PRIVILEGES;"'
+	@echo "Data were migrated to MariaDB 10.3, you now need to update /etc/tuleap/conf/database.inc in web container to set `sys_dbhost` to 'db-maria-10.3'"

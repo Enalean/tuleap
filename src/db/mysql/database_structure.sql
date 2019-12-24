@@ -496,7 +496,7 @@ CREATE TABLE groups (
   new_bug_address text NOT NULL,
   new_patch_address text NOT NULL,
   new_support_address text NOT NULL,
-  new_task_address text NOT NULL,
+  new_task_address text default '',
   type int(11) NOT NULL default '1',
   built_from_template int(11) NOT NULL default '100',
   send_all_bugs int(11) NOT NULL default '0',

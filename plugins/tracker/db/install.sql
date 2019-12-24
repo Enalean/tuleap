@@ -157,7 +157,7 @@ DROP TABLE IF EXISTS tracker_field_text;
 CREATE TABLE tracker_field_text(
     field_id INT(11) NOT NULL PRIMARY KEY,
     default_value TEXT NULL,
-    rows INT(11) NOT NULL,
+    `rows` INT(11) NOT NULL,
     cols INT(11) NOT NULL
 ) ENGINE=InnoDB;
 

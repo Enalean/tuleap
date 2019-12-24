@@ -13,10 +13,10 @@
 # * Basic Settings
 #
 user                                = mysql
-pid_file                            = /var/run/rh-mysql57-mysqld/mysqld.pid
-socket                              = /var/lib/mysql/mysql.sock
+pid_file                            = /tmp/mysqld.pid
+socket                              = /tmp/mysql.sock
 port                                = 3306
-datadir                             = /tmp/mysql
+datadir                             = /tmp
 tmpdir                              = /tmp
 skip_external_locking
 bind_address                        = 0.0.0.0
@@ -32,16 +32,15 @@ max_allowed_packet                  = 32M  # default: 4M
 thread_cache_size                   = -1    # default: -1
 skip_name_resolve
 
-innodb_data_home_dir                = /tmp/mysql
+innodb_data_home_dir                = /tmp
 innodb_data_file_path               = ibdata1:32M:autoextend # default 12M
 innodb_buffer_pool_size             = 512M # default: 128M
 #innodb_additional_mem_pool_size     = 8M    # default: 8M
-innodb_log_group_home_dir           = /tmp/mysql
+innodb_log_group_home_dir           = /tmp
 innodb_log_files_in_group           = 2    # default: 2
 innodb_log_file_size                = 128M # default: 50M
 innodb_log_buffer_size              = 16M  # default: 8M
 innodb_flush_log_at_trx_commit      = 2    # default: 1
-innodb_support_xa                   = 1    # default: 1
 innodb_lock_wait_timeout            = 30   # default: 50
 innodb_flush_method                 = O_DIRECT  # default: NULL
 innodb_thread_concurrency           = 0   # default: 0
