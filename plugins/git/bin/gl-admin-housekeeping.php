@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,6 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\Store\SemaphoreStore;
+
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../include/gitPlugin.php';
 
@@ -29,7 +32,7 @@ $git_plugin = PluginManager::instance()->getPluginByName('git');
 $logger     = $git_plugin->getLogger();
 
 $runner = new Git_GitoliteHousekeeping_GitoliteHousekeepingRunner(
-    new SystemEventProcessManager(),
+    new SystemEventProcessManager(new LockFactory(new SemaphoreStore())),
     new SystemEventProcessRootDefaultQueue(),
     new Git_GitoliteHousekeeping_GitoliteHousekeepingDao(),
     new Git_GitoliteHousekeeping_GitoliteHousekeepingResponse($logger),
