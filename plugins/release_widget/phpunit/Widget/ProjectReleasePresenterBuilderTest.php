@@ -106,7 +106,7 @@ class ProjectReleasePresenterBuilderTest extends TestCase
      */
     private $artifacts_in_explicit_backlog_dao;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning
      */
     private $root_planning;
     /**
@@ -421,7 +421,7 @@ class ProjectReleasePresenterBuilderTest extends TestCase
             ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
 
 
-        $built_presenter = $this->builder->getProjectReleasePresenter(true);
+        $built_presenter = $this->builder->getProjectReleasePresenter();
 
         $this->assertFalse($built_presenter->is_timeframe_duration);
         $this->assertEquals($built_presenter->label_timeframe, 'end');
@@ -460,7 +460,7 @@ class ProjectReleasePresenterBuilderTest extends TestCase
             ->andReturn([Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class), Mockery::mock(Planning_Milestone::class)]);
 
 
-        $built_presenter = $this->builder->getProjectReleasePresenter(true);
+        $built_presenter = $this->builder->getProjectReleasePresenter();
 
         $this->assertTrue($built_presenter->is_timeframe_duration);
         $this->assertEquals($built_presenter->label_timeframe, 'duration');
@@ -501,7 +501,7 @@ class ProjectReleasePresenterBuilderTest extends TestCase
 
 
         $this->expectException(TimeframeBrokenConfigurationException::class);
-        $this->builder->getProjectReleasePresenter(true);
+        $this->builder->getProjectReleasePresenter();
     }
 
     private function mockAnArtifact(string $name, string $color)
