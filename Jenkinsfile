@@ -59,7 +59,7 @@ pipeline {
                 stage('REST') {
                     stages {
                         stage('REST CentOS 6 PHP 7.3 MySQL 5.7') {
-                            steps { script { actions.runRESTTests('c6-php73-mysql57') } }
+                            steps { script { actions.runRESTTests('mysql57', '73') } }
                         }
                     }
                     post { always { junit 'results/api-rest/*/rest_tests.xml' } }
