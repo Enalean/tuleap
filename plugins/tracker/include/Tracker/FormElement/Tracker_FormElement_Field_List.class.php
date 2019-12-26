@@ -928,7 +928,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $required = '';
         if ($this->isMultiple()) {
             $multiple = 'multiple="multiple"';
-            $size     = 'size="'. min($this->getMaxSize(), count($this->getBind()->getAllValuesWithActiveUsersOnly()) + 2) .'"';
+            $size     = 'size="'. min($this->getMaxSize(), count($this->getBind()->getBindValues()) + 2) .'"';
         }
         if ($this->isRequired()) {
             $required = 'required';
