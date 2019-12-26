@@ -38,6 +38,7 @@ use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 
 /**
@@ -226,9 +227,9 @@ class AgileDashboardRouter
      */
     public function route(Codendi_Request $request)
     {
-        $planning_controller = $this->buildPlanningController($request);
-        $xml_rng_validator   = new XML_RNGValidator();
-
+        $planning_controller            = $this->buildPlanningController($request);
+        $xml_rng_validator              = new XML_RNGValidator();
+        $external_field_extractor       = new ExternalFieldsExtractor($this->event_manager);
         $agile_dashboard_xml_controller = new AgileDashboard_XMLController(
             $request,
             $this->planning_factory,
@@ -245,7 +246,8 @@ class AgileDashboardRouter
                 ),
                 new ArtifactsInExplicitBacklogDao()
             ),
-            $this->plugin->getThemePath()
+            $this->plugin->getThemePath(),
+            $external_field_extractor
         );
 
         switch ($request->get('action')) {

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
@@ -27,11 +29,10 @@ use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerFromXmlImportCannotBeUpdatedException;
 use Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker;
-use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
+use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\XML\MappingsRegistry;
-use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\XML\PHPCast;
 
 class TrackerXmlImport
@@ -123,6 +124,11 @@ class TrackerXmlImport
      */
     private $existing_tracker_field_mapping;
 
+    /**
+     * @var ExternalFieldsExtractor
+     */
+    private $external_fields_extractor;
+
     public function __construct(
         TrackerFactory $tracker_factory,
         EventManager $event_manager,
@@ -142,27 +148,29 @@ class TrackerXmlImport
         ArtifactLinksUsageUpdater $artifact_links_usage_updater,
         ArtifactLinksUsageDao $artifact_links_usage_dao,
         WebhookFactory $webhook_factory,
-        TrackerXMLFieldMappingFromExistingTracker $tracker_XML_field_mapping_from_existing_tracker
+        TrackerXMLFieldMappingFromExistingTracker $tracker_XML_field_mapping_from_existing_tracker,
+        ExternalFieldsExtractor $external_fields_extractor
     ) {
-        $this->tracker_factory              = $tracker_factory;
-        $this->event_manager                = $event_manager;
-        $this->hierarchy_dao                = $hierarchy_dao;
-        $this->canned_response_factory      = $canned_response_factory;
-        $this->formelement_factory          = $formelement_factory;
-        $this->semantic_factory             = $semantic_factory;
-        $this->rule_factory                 = $rule_factory;
-        $this->report_factory               = $report_factory;
-        $this->workflow_factory             = $workflow_factory;
-        $this->rng_validator                = $rng_validator;
-        $this->trigger_rulesmanager         = $trigger_rulesmanager;
-        $this->xml_import                   = $xml_import;
-        $this->user_finder                  = $user_finder;
-        $this->ugroup_manager               = $ugroup_manager;
-        $this->logger                       = $logger;
-        $this->artifact_links_usage_updater = $artifact_links_usage_updater;
-        $this->artifact_links_usage_dao     = $artifact_links_usage_dao;
-        $this->webhook_factory              = $webhook_factory;
+        $this->tracker_factory                = $tracker_factory;
+        $this->event_manager                  = $event_manager;
+        $this->hierarchy_dao                  = $hierarchy_dao;
+        $this->canned_response_factory        = $canned_response_factory;
+        $this->formelement_factory            = $formelement_factory;
+        $this->semantic_factory               = $semantic_factory;
+        $this->rule_factory                   = $rule_factory;
+        $this->report_factory                 = $report_factory;
+        $this->workflow_factory               = $workflow_factory;
+        $this->rng_validator                  = $rng_validator;
+        $this->trigger_rulesmanager           = $trigger_rulesmanager;
+        $this->xml_import                     = $xml_import;
+        $this->user_finder                    = $user_finder;
+        $this->ugroup_manager                 = $ugroup_manager;
+        $this->logger                         = $logger;
+        $this->artifact_links_usage_updater   = $artifact_links_usage_updater;
+        $this->artifact_links_usage_dao       = $artifact_links_usage_dao;
+        $this->webhook_factory                = $webhook_factory;
         $this->existing_tracker_field_mapping = $tracker_XML_field_mapping_from_existing_tracker;
+        $this->external_fields_extractor      = $external_fields_extractor;
     }
 
     /**
@@ -181,10 +189,11 @@ class TrackerXmlImport
 
         $artifact_links_usage_dao     = new ArtifactLinksUsageDao();
         $artifact_links_usage_updater = new ArtifactLinksUsageUpdater($artifact_links_usage_dao);
+        $event_manager                = EventManager::instance();
 
         return new TrackerXmlImport(
             $tracker_factory,
-            EventManager::instance(),
+            $event_manager,
             new HierarchyDAO(),
             Tracker_CannedResponseFactory::instance(),
             Tracker_FormElementFactory::instance(),
@@ -206,7 +215,8 @@ class TrackerXmlImport
             $artifact_links_usage_updater,
             $artifact_links_usage_dao,
             new WebhookFactory(new WebhookDao()),
-            new TrackerXMLFieldMappingFromExistingTracker()
+            new TrackerXMLFieldMappingFromExistingTracker(),
+            new ExternalFieldsExtractor($event_manager)
         );
     }
 
@@ -261,7 +271,13 @@ class TrackerXmlImport
             return;
         }
 
-        $this->rng_validator->validate($xml_input->trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');
+        $partial_element = clone $xml_input;
+        $this->external_fields_extractor->extractExternalFieldFromProjectElement($partial_element);
+
+        $this->rng_validator->validate(
+            $partial_element->trackers,
+            dirname(TRACKER_BASE_DIR) . '/www/resources/trackers.rng'
+        );
 
         $this->activateArtlinkV2($project, $xml_input->trackers);
 
@@ -400,8 +416,10 @@ class TrackerXmlImport
         if (! $xml_input->trackers) {
             return '';
         }
+        $partial_element = clone $xml_input;
+        $this->external_fields_extractor->extractExternalFieldFromProjectElement($partial_element);
 
-        $this->rng_validator->validate($xml_input->trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');
+        $this->rng_validator->validate($partial_element->trackers, dirname(TRACKER_BASE_DIR).'/www/resources/trackers.rng');
 
         $xml_trackers = $this->getAllXmlTrackers($xml_input);
         $trackers = array();
@@ -703,11 +721,15 @@ class TrackerXmlImport
     public function createFromXML(SimpleXMLElement $xml_element, Project $project, $name, $description, $itemname)
     {
         $tracker = null;
+        $partial_element = clone $xml_element;
         if ($this->tracker_factory->validMandatoryInfoOnCreate($name, $itemname, $project->getId())) {
+            $this->external_fields_extractor->extractExternalFieldsFromFormElements($partial_element->formElements);
+
             $this->rng_validator->validate(
-                $xml_element,
+                $partial_element,
                 realpath(dirname(TRACKER_BASE_DIR) . '/www/resources/tracker.rng')
             );
+
             $feedback_collector = new TrackerXmlImportFeedbackCollector($this->logger);
             $tracker = $this->getInstanceFromXML(
                 $xml_element,

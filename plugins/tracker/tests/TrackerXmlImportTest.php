@@ -20,6 +20,7 @@
 
 require_once 'bootstrap.php';
 
+use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
@@ -66,6 +67,10 @@ class TrackerXmlImportTest extends TuleapTestCase
     private $tracker_xml_importer;
     private $extraction_path;
     private $configuration;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExternalFieldsExtractor
+     */
+    private $extract_external_fields;
 
     public function setUp()
     {
@@ -100,6 +105,7 @@ class TrackerXmlImportTest extends TuleapTestCase
 
         $this->group_id = 145;
         $this->project = \Mockery::spy(\Project::class);
+        $this->extract_external_fields = \Mockery::mock(ExternalFieldsExtractor::class);
         stub($this->project)->getID()->returns($this->group_id);
 
         $this->xml_tracker1 = new SimpleXMLElement(
@@ -146,6 +152,9 @@ class TrackerXmlImportTest extends TuleapTestCase
         $this->formelement_factory            = \Mockery::spy(Tracker_FormElementFactory::class);
         $this->existing_tracker_field_mapping = \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class);
 
+        $this->extract_external_fields = \Mockery::mock(ExternalFieldsExtractor::class);
+        $this->extract_external_fields->shouldReceive('extractExternalFieldFromProjectElement');
+
         $class_parameters = array(
             $this->tracker_factory,
             $this->event_manager,
@@ -165,7 +174,8 @@ class TrackerXmlImportTest extends TuleapTestCase
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
             \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
-            $this->existing_tracker_field_mapping
+            $this->existing_tracker_field_mapping,
+            $this->extract_external_fields,
         );
 
         $this->tracker_xml_importer = \Mockery::mock(\TrackerXmlImportTestInstance::class, $class_parameters)
@@ -348,7 +358,8 @@ class TrackerXmlImportTest extends TuleapTestCase
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
             \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
-            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class),
+            $this->extract_external_fields,
         );
 
         $tracker_xml_importer = \Mockery::mock(\TrackerXmlImportTestInstance::class, $class_parameters)
@@ -388,7 +399,8 @@ class TrackerXmlImportTest extends TuleapTestCase
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             $artifact_links_usage_dao,
             \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
-            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class),
+            $this->extract_external_fields,
         );
 
         $tracker_xml_importer = \Mockery::mock(\TrackerXmlImportTestInstance::class, $class_parameters)
@@ -412,6 +424,10 @@ class TrackerXmlImportTest extends TuleapTestCase
 class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase
 {
     private $configuration;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExternalFieldsExtractor
+     */
+    private $extract_external_fields;
 
     public function setUp()
     {
@@ -444,6 +460,9 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase
         $this->xml_import      = \Mockery::spy(\Tracker_Artifact_XMLImport::class);
         $this->ugroup_manager  = \Mockery::spy(\UGroupManager::class);
 
+        $this->extract_external_fields = \Mockery::mock(ExternalFieldsExtractor::class);
+        $this->extract_external_fields->shouldReceive('extractExternalFieldFromProjectElement');
+
         $class_parameters = array(
             $this->tracker_factory,
             $this->event_manager,
@@ -463,7 +482,8 @@ class TrackerXmlImport_WithArtifactsTest extends TuleapTestCase
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
             \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
-            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class),
+            $this->extract_external_fields,
         );
 
         $this->tracker_xml_importer = \Mockery::mock(\TrackerXmlImportTestInstance::class, $class_parameters)
@@ -515,6 +535,10 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase
      * @var \Mockery\MockInterface|TrackerXmlImportFeedbackCollector
      */
     private $error_logger;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExternalFieldsExtractor
+     */
+    private $extract_external_fields;
 
     public function setUp()
     {
@@ -523,6 +547,8 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase
 
         $tracker_factory = \Mockery::mock(\TrackerFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->error_logger = \Mockery::mock(TrackerXmlImportFeedbackCollector::class);
+        $this->extract_external_fields = \Mockery::mock(ExternalFieldsExtractor::class);
+        $this->extract_external_fields->shouldReceive('extractExternalFieldFromProjectElement');
 
         $this->tracker_xml_importer = new TrackerXmlImportTestInstance(
             $tracker_factory,
@@ -543,7 +569,8 @@ class TrackerXmlImport_InstanceTest extends TuleapTestCase
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
             \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
-            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class),
+            $this->extract_external_fields,
         );
 
         $this->xml_security = new XML_Security();
@@ -604,6 +631,8 @@ XML;
         $tracker      = \Mockery::spy(\Tracker::class);
 
         $error_logger = \Mockery::mock(TrackerXmlImportFeedbackCollector::class);
+        $extract_external_fields = \Mockery::mock(ExternalFieldsExtractor::class);
+        $extract_external_fields->shouldReceive('extractExternalFieldFromTrackerElement');
 
         $tracker_xml_importer = new TrackerXmlImportTestInstance(
             mockery_stub(\TrackerFactory::class)->getInstanceFromRow()->returns($tracker),
@@ -624,7 +653,8 @@ XML;
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
             \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
-            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class),
+            $extract_external_fields,
         );
 
         //create data passed
@@ -701,6 +731,11 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase
     private $trigger_rulesmanager;
     private $xmlFieldMapping;
     private $configuration;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExternalFieldsExtractor
+     */
+    private $external_validator;
 
     public function setUp()
     {
@@ -851,6 +886,7 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase
         );
 
         $this->trigger_rulesmanager = \Mockery::spy(\Tracker_Workflow_Trigger_RulesManager::class);
+        $this->external_validator         = \Mockery::mock(ExternalFieldsExtractor::class);
 
         $this->tracker_xml_importer = new TrackerXmlImport(
             $this->tracker_factory,
@@ -871,8 +907,12 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
             \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
-            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class),
+            $this->external_validator
         );
+
+        $this->external_validator->shouldReceive('extractExternalFieldFromProjectElement')->andReturn($this->xml_input);
+        $this->external_validator->shouldReceive('extractExternalFieldsFromFormElements');
 
         $this->project = \Mockery::spy(\Project::class);
         stub($this->project)->getId()->returns($this->group_id);
@@ -909,6 +949,10 @@ class TrackerXmlImport_TriggersTest extends TuleapTestCase
 class TrackerXmlImport_PermissionsTest extends TuleapTestCase
 {
     private $configuration;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExternalFieldsExtractor
+     */
+    private $external_validator;
 
     public function setUp()
     {
@@ -936,6 +980,8 @@ class TrackerXmlImport_PermissionsTest extends TuleapTestCase
 
         $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
 
+        $this->external_validator   = \Mockery::mock(ExternalFieldsExtractor::class);
+
         $this->tracker_xml_importer = new TrackerXmlImport(
             $this->tracker_factory,
             \Mockery::spy(\EventManager::class),
@@ -955,7 +1001,8 @@ class TrackerXmlImport_PermissionsTest extends TuleapTestCase
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class),
             \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class),
             \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
-            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class),
+            $this->external_validator
         );
 
         $this->group_id = 123;
@@ -1013,6 +1060,9 @@ class TrackerXmlImport_PermissionsTest extends TuleapTestCase
             </project>
 XML;
         $xml_input = new SimpleXMLElement($xml);
+        $this->external_validator->shouldReceive('extractExternalFieldFromProjectElement')->andReturn($xml_input);
+        $this->external_validator->shouldReceive('extractExternalFieldsFromFormElements')->andReturn($xml_input);
+
         stub($this->tracker)->testImport()->returns(true);
         stub($this->tracker_factory)->validMandatoryInfoOnCreate()->returns(true);
         stub($this->tracker_factory)->getInstanceFromRow()->returns($this->tracker);
@@ -1031,6 +1081,10 @@ XML;
 class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase
 {
     private $configuration;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExternalFieldsExtractor
+     */
+    private $external_validator;
 
     public function setUp()
     {
@@ -1040,6 +1094,7 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase
         $this->artifact_link_usage_updater = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater::class);
         $this->artifact_link_usage_dao     = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
         $this->event_manager               = \Mockery::spy(\EventManager::class);
+        $this->external_validator          = \Mockery::mock(ExternalFieldsExtractor::class);
 
         $this->tracker_xml_importer = new TrackerXmlImport(
             \Mockery::spy(\TrackerFactory::class),
@@ -1060,8 +1115,12 @@ class TrackerXmlImport_ArtifactLinkV2Activation extends TuleapTestCase
             $this->artifact_link_usage_updater,
             $this->artifact_link_usage_dao,
             \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class),
-            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class)
+            \Mockery::spy(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class),
+            $this->external_validator
         );
+
+        $this->external_validator->shouldReceive('extractExternalFieldFromProjectElement');
+        $this->external_validator->shouldReceive('extractExternalFieldsFromFormElements');
 
         $this->project = aMockProject()->withId(201)->build();
 

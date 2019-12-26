@@ -62,6 +62,7 @@
                         </items>
                     </bind>
                 </formElement>
+                <externalField></externalField>
                 <formElement type="tbl" ID="F35241" rank="3">
                     <name>usersol</name>
                     <label><![CDATA[UsersOL]]></label>
