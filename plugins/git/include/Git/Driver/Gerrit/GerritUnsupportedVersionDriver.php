@@ -47,12 +47,12 @@ final class GerritUnsupportedVersionDriver implements Git_Driver_Gerrit
         throw new UnsupportedGerritVersionException();
     }
 
-    public function doesTheParentProjectExist(Git_RemoteServer_GerritServer $server, $project_name)
+    public function doesTheParentProjectExist(Git_RemoteServer_GerritServer $server, $project_name): bool
     {
         throw new UnsupportedGerritVersionException();
     }
 
-    public function doesTheProjectExist(Git_RemoteServer_GerritServer $server, $project_name)
+    public function doesTheProjectExist(Git_RemoteServer_GerritServer $server, $project_name): bool
     {
         throw new UnsupportedGerritVersionException();
     }

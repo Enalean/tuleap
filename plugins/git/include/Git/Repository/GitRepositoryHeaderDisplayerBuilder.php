@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -51,6 +51,7 @@ use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Repository\View\DefaultCloneURLSelector;
 use Tuleap\Git\Repository\View\RepositoryHeaderPresenterBuilder;
+use Tuleap\Http\HttpClientFactory;
 use Tuleap\Layout\IncludeAssets;
 use UserManager;
 
@@ -148,7 +149,12 @@ class GitRepositoryHeaderDisplayerBuilder
 
     private function getGerritDriverFactory()
     {
-        return new Git_Driver_Gerrit_GerritDriverFactory(new GitBackendLogger());
+        return new Git_Driver_Gerrit_GerritDriverFactory(
+            new \Tuleap\Git\Driver\GerritHTTPClientFactory(HttpClientFactory::createClient()),
+            \Tuleap\Http\HTTPFactoryBuilder::requestFactory(),
+            \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
+            new GitBackendLogger()
+        );
     }
 
     private function getProjectCreatorStatus()

@@ -124,7 +124,7 @@ Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
 Requires(pre): shadow-utils
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, sclo-git212-git, gitolite3
-Requires: php-guzzle-Guzzle, sudo, openssh-server
+Requires: sudo, openssh-server
 %description plugin-git
 Integration of git distributed software configuration management tool together
 with Tuleap.
