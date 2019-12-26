@@ -20,6 +20,7 @@
 
 use FastRoute\RouteCollector;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
+use Tuleap\Event\Events\ImportValidateExternalFields;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
@@ -39,6 +40,7 @@ use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\TestManagement\TrackerComesFromLegacyEngineException;
 use Tuleap\TestManagement\TrackerNotCreatedException;
 use Tuleap\TestManagement\XML\Exporter;
+use Tuleap\TestManagement\XML\ImportXMLFromTracker;
 use Tuleap\TestManagement\XML\XMLImport;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
@@ -80,6 +82,7 @@ class testmanagementPlugin extends Plugin
         $this->addHook(NaturePresenterFactory::EVENT_GET_ARTIFACTLINK_NATURES);
         $this->addHook(NaturePresenterFactory::EVENT_GET_NATURE_PRESENTER);
         $this->addHook(ProjectServiceBeforeActivation::NAME);
+        $this->addHook(ImportValidateExternalFields::NAME);
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
@@ -471,6 +474,15 @@ class testmanagementPlugin extends Plugin
             if (! $project->usesService($this->getServiceShortname())) {
                 $event->setTypeIsUnusable();
             }
+        }
+    }
+
+    public function importValidateExternalFields(ImportValidateExternalFields $validate_external_fields)
+    {
+        $xml = $validate_external_fields->getXml();
+        if ((string)$xml->attributes()['type'] === 'ttmstepdef') {
+            $validator = new ImportXMLFromTracker(new XML_RNGValidator());
+            $validator->validateXMLImport($xml);
         }
     }
 
