@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git;
 
 require_once __DIR__ .'/../bootstrap.php';
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tuleap\Project\HeartbeatsEntryCollection;
-use TuleapTestCase;
 
-class LatestHeartbeatsCollectorTest extends TuleapTestCase
+class LatestHeartbeatsCollectorTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /** @var \Tracker_ArtifactFactory */
     public $factory;
 
@@ -39,15 +44,15 @@ class LatestHeartbeatsCollectorTest extends TuleapTestCase
     /** @var \PFUser */
     public $user;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $glyph_finder = mock('Tuleap\\Glyph\\GlyphFinder');
-        stub($glyph_finder)->get()->returns(mock('Tuleap\\Glyph\\Glyph'));
+        $glyph_finder = \Mockery::spy(\Tuleap\Glyph\GlyphFinder::class);
+        $glyph_finder->shouldReceive('get')->andReturns(\Mockery::spy(\Tuleap\Glyph\Glyph::class));
 
-        $this->project = aMockProject()->withId(101)->build();
-        $this->user    = aUser()->withId(200)->build();
+        $this->project = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
+        $this->user    = (new \UserTestBuilder())->withId(200)->build();
 
         $dao = \Mockery::mock(\Git_LogDao::class);
         $dao->shouldReceive('searchLatestPushesInProject')
@@ -58,7 +63,7 @@ class LatestHeartbeatsCollectorTest extends TuleapTestCase
                 ['repository_id' => 3, 'user_id' => 101, 'push_date' => 1234, 'commits_number' => 1]
             ]);
 
-        $this->factory = mock('GitRepositoryFactory');
+        $this->factory = \Mockery::spy(\GitRepositoryFactory::class);
         $this->declareRepository(1, true);
         $this->declareRepository(2, false);
         $this->declareRepository(3, true);
@@ -66,34 +71,32 @@ class LatestHeartbeatsCollectorTest extends TuleapTestCase
         $this->collector = new LatestHeartbeatsCollector(
             $this->factory,
             $dao,
-            mock('Git_GitRepositoryUrlManager'),
+            \Mockery::spy(\Git_GitRepositoryUrlManager::class),
             $glyph_finder,
-            mock('UserManager'),
-            mock('UserHelper')
+            \Mockery::spy(\UserManager::class),
+            \Mockery::spy(\UserHelper::class)
         );
     }
 
-    private function declareRepository($id, $user_can_read)
+    private function declareRepository($id, $user_can_read): void
     {
-        $repository = stub('GitRepository')->getId()->returns($id);
+        $repository = \Mockery::spy(\GitRepository::class)->shouldReceive('getId')->andReturns($id)->getMock();
 
-        stub($repository)->userCanRead()->returns($user_can_read);
-        stub($repository)->getProject()->returns($this->project);
+        $repository->shouldReceive('userCanRead')->andReturns($user_can_read);
+        $repository->shouldReceive('getProject')->andReturns($this->project);
 
-        stub($this->factory)->getRepositoryById($id)->returns($repository);
+        $this->factory->shouldReceive('getRepositoryById')->with($id)->andReturns($repository);
     }
 
-    public function itCollectsOnlyPushesForRepositoriesUserCanView()
+    public function testItCollectsOnlyPushesForRepositoriesUserCanView(): void
     {
-        expect($this->factory)->getRepositoryById()->count(3);
-
         $collection = new HeartbeatsEntryCollection($this->project, $this->user);
         $this->collector->collect($collection);
 
-        $this->assertCount($collection->getLatestEntries(), 2);
+        $this->assertCount(2, $collection->getLatestEntries());
     }
 
-    public function itInformsThatThereIsAtLeastOneActivityThatUserCannotRead()
+    public function testItInformsThatThereIsAtLeastOneActivityThatUserCannotRead(): void
     {
         $collection = new HeartbeatsEntryCollection($this->project, $this->user);
         $this->collector->collect($collection);
