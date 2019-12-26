@@ -7,7 +7,7 @@ MAX_TEST_EXECUTION_TIME='30m'
 BASEDIR="$(dirname "$(readlink -f "$0")")/../../../"
 export BASEDIR
 pushd "$BASEDIR"
-DOCKERCOMPOSE="docker-compose -f tests/integration/docker-compose.yml"
+DOCKERCOMPOSE="docker-compose --project-name db-${BUILD_TAG:-$RANDOM} -f tests/integration/docker-compose.yml"
 
 function cleanup {
     if [ -n "${TESTS_RESULT:-}" ]; then
