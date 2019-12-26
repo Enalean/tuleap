@@ -86,7 +86,7 @@ pipeline {
                 stage('DB Integration') {
                     stages {
                         stage('DB CentOS 6 PHP 7.3 MySQL 5.7') {
-                            steps { script { actions.runDBTests('c6-php73-mysql57') } }
+                            steps { script { actions.runDBTests('mysql57', '73') } }
                         }
                     }
                     post { always { junit 'results/db/*/db_tests.xml' } }

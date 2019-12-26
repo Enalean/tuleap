@@ -20,7 +20,7 @@
 
 require_once __DIR__ . '/../lib/bootstrap.php';
 
-ForgeConfig::set('sys_dbhost', 'localhost');
+ForgeConfig::set('sys_dbhost', getenv('DB_HOST'));
 ForgeConfig::set('sys_dbuser', 'tuleapadm');
 ForgeConfig::set('sys_dbpasswd', 'welcome0');
 ForgeConfig::set('sys_dbname', 'tuleap');

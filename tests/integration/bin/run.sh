@@ -26,8 +26,9 @@ setup_runner_account
 /usr/share/tuleap/tests/integration/bin/setup.sh
 
 if [ -n "$SETUP_ONLY" ] && [ "$SETUP_ONLY" != "0" ]; then
-  echo "Command to launch: $PHP_CLI /usr/share/tuleap/src/vendor/bin/phpunit --configuration /usr/share/tuleap/tests/integration/phpunit.xml --do-not-cache-result"
-  exec bash
+    set +x
+    echo "Command to launch: $PHP_CLI /usr/share/tuleap/src/vendor/bin/phpunit --configuration /usr/share/tuleap/tests/integration/phpunit.xml --do-not-cache-result"
+    exec bash
 else
     sudo -E -u runner $PHP_CLI /usr/share/tuleap/src/vendor/bin/phpunit --configuration /usr/share/tuleap/tests/integration/phpunit.xml --do-not-cache-result --log-junit /output/db_tests.xml
 fi

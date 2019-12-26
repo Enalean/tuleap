@@ -116,9 +116,13 @@ tests-rest: ## Run all REST tests with PHP 7.3. SETUP_ONLY=1 to disable auto run
 tests_soap_73: ## Run all SOAP tests in PHP 7.3
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp --network none enalean/tuleap-test-soap:5
 
-tests_db_73: ## Run all DB integration tests (SETUP_ONLY=1 to disable auto run)
+tests_db_73:
+	$(MAKE) tests-rest DB=mysql57
+
+tests-db: ## Run all DB integration tests with PHP 7.3. SETUP_ONLY=1 to disable auto run. DB to select the database to use (mysql57, mariadb103)
+	$(eval DB ?= mysql57)
 	$(eval SETUP_ONLY ?= 0)
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp --network none -e SETUP_ONLY=$(SETUP_ONLY) enalean/tuleap-test-rest:c6-php73-mysql57 /usr/share/tuleap/tests/integration/bin/run.sh
+	SETUP_ONLY="$(SETUP_ONLY)" tests/integration/bin/run-compose.sh "$(DB)"
 
 tests_cypress: ## Run Cypress tests
 	@tests/e2e/full/wrap.sh
