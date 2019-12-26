@@ -43,3 +43,13 @@
     stroke: $tlp-ui-border-normal;
     fill: transparent;
 }
+
+.release-chart-badge-container {
+    fill: $remaining-effort-color;
+}
+
+.release-chart-badge-value {
+    fill: $tlp-ui-white;
+    font-size: 13px;
+    font-weight: 600;
+}

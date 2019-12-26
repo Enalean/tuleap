@@ -36,7 +36,8 @@ import {
 import { buildChartLayout } from "../../../../../src/www/scripts/charts-builders/chart-layout-builder";
 import { TimeScaleLabelsFormatter } from "../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter";
 import { removeAllLabelsOverlapsOthersLabels } from "./burndown-time-scale-label-formatter";
-import { getDisplayableData } from "./chart-data-service";
+import { getDisplayableData, getLastData } from "./chart-data-service";
+import { addBadgeCaption } from "./chart-badge-generator";
 
 const DEFAULT_REMAINING_EFFORT = 5;
 
@@ -45,7 +46,8 @@ export { createBurndownChart, getMaxRemainingEffort };
 function createBurndownChart(
     chart_container: HTMLElement,
     chart_props: ChartPropsBurndownWhithoutTooltip,
-    burndown_data: BurndownData
+    burndown_data: BurndownData,
+    id_milestone: number
 ): void {
     const x_axis_tick_values = getDaysToDisplay(burndown_data),
         displayable_data = getDisplayableData(burndown_data.points_with_date),
@@ -117,6 +119,29 @@ function createBurndownChart(
 
         removeAllLabelsOverlapsOthersLabels(svg_burndown);
         drawCurve(svg_burndown, { x_scale, y_scale }, displayable_data, "remaining_effort");
+
+        const last_point = getLastData(displayable_data);
+        if (!last_point) {
+            return;
+        }
+
+        const x_scale_last_date = x_scale(last_point.date);
+
+        if (!x_scale_last_date) {
+            return;
+        }
+
+        if (last_point.remaining_effort === 0) {
+            return;
+        }
+
+        addBadgeCaption(
+            y_scale(last_point.remaining_effort),
+            x_scale_last_date,
+            last_point.remaining_effort,
+            svg_burndown,
+            id_milestone
+        );
     }
 }
 

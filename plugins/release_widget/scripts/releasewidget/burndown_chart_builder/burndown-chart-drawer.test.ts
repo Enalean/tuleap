@@ -21,10 +21,17 @@ import { createBurndownChart, getMaxRemainingEffort } from "./burndown-chart-dra
 
 import { BurndownData, PointsWithDate } from "../src/type";
 import { ChartPropsBurndownWhithoutTooltip } from "../../../../../src/www/scripts/charts-builders/type";
+import * as chart_badge_generator from "./chart-badge-generator";
+
 jest.mock("../../../../../src/www/scripts/charts-builders/time-scale-labels-formatter");
 jest.mock("./burndown-time-scale-label-formatter");
+jest.mock("./chart-badge-generator", () => ({
+    addBadgeCaption: jest.fn()
+}));
 
 describe("BurndownChartDrawer -", () => {
+    beforeEach(() => jest.clearAllMocks());
+
     describe("getMaxRemainingEffort -", () => {
         it("Returns the highest remaining effort if it is greater than the capacity", () => {
             const max_remaining_effort = getMaxRemainingEffort({
@@ -84,9 +91,10 @@ describe("BurndownChartDrawer -", () => {
     describe("createBurndownChart -", () => {
         it("When the chart is created, Then there are a G element and 2 lines scale and curve", () => {
             const chart_svg_element = getDocument();
-            createBurndownChart(chart_svg_element, getChartProps(), getBurndownData());
+            createBurndownChart(chart_svg_element, getChartProps(), getBurndownData(), 101);
 
             expect(chart_svg_element).toMatchSnapshot();
+            expect(chart_badge_generator.addBadgeCaption).toBeCalled();
         });
 
         it("When there isn't points with date in burndownData, Then there is an empty graph", () => {
@@ -94,9 +102,24 @@ describe("BurndownChartDrawer -", () => {
             createBurndownChart(
                 chart_svg_element,
                 getChartProps(),
-                getBurndownDataWithoutPointsWithDate()
+                getBurndownDataWithoutPointsWithDate(),
+                101
             );
 
+            expect(chart_badge_generator.addBadgeCaption).not.toBeCalled();
+            expect(chart_svg_element.childElementCount).toEqual(1);
+        });
+
+        it("When the last point has 0 remaining effort, Then there isn't badge", () => {
+            const chart_svg_element = getDocument();
+            createBurndownChart(
+                chart_svg_element,
+                getChartProps(),
+                getBurndownDataWith0RemainingEffort(),
+                101
+            );
+
+            expect(chart_badge_generator.addBadgeCaption).not.toBeCalled();
             expect(chart_svg_element.childElementCount).toEqual(1);
         });
 
@@ -142,6 +165,18 @@ describe("BurndownChartDrawer -", () => {
             is_under_calculation: false,
             points: [],
             points_with_date: []
+        };
+    }
+
+    function getBurndownDataWith0RemainingEffort(): BurndownData {
+        return {
+            opening_days: [1, 2, 3, 4, 5],
+            duration: 1,
+            start_date: "2019-07-01T00:00:00+00:00",
+            capacity: null,
+            is_under_calculation: false,
+            points: [0],
+            points_with_date: getPointsWithDateWithMaxIsZero()
         };
     }
 
