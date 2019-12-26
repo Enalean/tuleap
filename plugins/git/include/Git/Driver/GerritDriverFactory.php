@@ -19,20 +19,41 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Tuleap\Git\Driver\Gerrit\GerritUnsupportedVersionDriver;
+use Tuleap\Git\Driver\GerritHTTPClientFactory;
 
 /**
  * I build Git_Driver_Gerrit objects
  */
 class Git_Driver_Gerrit_GerritDriverFactory
 {
-
     /** @var Logger */
     private $logger;
+    /**
+     * @var GerritHTTPClientFactory
+     */
+    private $gerrit_http_client_factory;
+    /**
+     * @var RequestFactoryInterface
+     */
+    private $request_factory;
+    /**
+     * @var StreamFactoryInterface
+     */
+    private $stream_factory;
 
-    public function __construct(Logger $logger)
-    {
-        $this->logger = $logger;
+    public function __construct(
+        GerritHTTPClientFactory $gerrit_http_client_factory,
+        RequestFactoryInterface $request_factory,
+        StreamFactoryInterface $stream_factory,
+        Logger $logger
+    ) {
+        $this->gerrit_http_client_factory = $gerrit_http_client_factory;
+        $this->request_factory            = $request_factory;
+        $this->stream_factory             = $stream_factory;
+        $this->logger                     = $logger;
     }
 
     /**
@@ -45,9 +66,10 @@ class Git_Driver_Gerrit_GerritDriverFactory
     public function getDriver(Git_RemoteServer_GerritServer $server)
     {
         if ($server->getGerritVersion() === Git_RemoteServer_GerritServer::GERRIT_VERSION_2_8_PLUS) {
-            require_once '/usr/share/php/Guzzle/autoload.php';
             return new Git_Driver_GerritREST(
-                new Guzzle\Http\Client('', array('ssl.certificate_authority' => 'system')),
+                $this->gerrit_http_client_factory,
+                $this->request_factory,
+                $this->stream_factory,
                 $this->logger
             );
         }

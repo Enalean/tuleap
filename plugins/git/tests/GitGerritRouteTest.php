@@ -87,13 +87,17 @@ class GitGerritRouteTest extends TuleapTestCase
         $mirror_data_mapper    = Mockery::mock(Git_Mirror_MirrorDataMapper::class);
         $mirror_data_mapper->shouldReceive('fetchAllForProject')->andReturns([]);
 
+        $gerrit_driver = Mockery::mock(Git_Driver_Gerrit::class);
+        $gerrit_driver->shouldReceive('doesTheProjectExist')->andReturn(false);
+        $gerrit_driver->shouldReceive('getGerritProjectName');
+
         $git = partial_mock(
             Git::class,
             array('_informAboutPendingEvents', 'addAction', 'addView', 'addError', 'checkSynchronizerToken', 'redirect'),
             array(
                 \Mockery::mock(GitPlugin::class),
                 $gerrit_server_factory,
-                stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns(mock('Git_Driver_Gerrit')),
+                stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns($gerrit_driver),
                 mock('GitRepositoryManager'),
                 mock('Git_SystemEventManager'),
                 mock('Git_Driver_Gerrit_UserAccountManager'),

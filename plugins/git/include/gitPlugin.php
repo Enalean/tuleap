@@ -126,6 +126,7 @@ use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\GitBundle;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
+use Tuleap\Http\HttpClientFactory;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
@@ -1952,7 +1953,12 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
      */
     private function getGerritDriverFactory()
     {
-        return new Git_Driver_Gerrit_GerritDriverFactory($this->getLogger());
+        return new Git_Driver_Gerrit_GerritDriverFactory(
+            new \Tuleap\Git\Driver\GerritHTTPClientFactory(HttpClientFactory::createClient()),
+            \Tuleap\Http\HTTPFactoryBuilder::requestFactory(),
+            \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
+            $this->getLogger()
+        );
     }
 
     protected function getPermissionsManager()
@@ -2416,7 +2422,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         if ($user->getStatus() == PFUser::STATUS_SUSPENDED) {
             $factory = $this->getGerritServerFactory();
             $gerrit_servers = $factory->getServers();
-            $gerritDriverFactory = new Git_Driver_Gerrit_GerritDriverFactory($this->getLogger());
+            $gerritDriverFactory = $this->getGerritDriverFactory();
             foreach ($gerrit_servers as $server) {
                 $gerritDriver = $gerritDriverFactory->getDriver($server);
                 $gerritDriver->setUserAccountInactive($server, $user);

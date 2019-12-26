@@ -181,7 +181,7 @@ Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, git > 1.7.4, gitolite = 2.3.1
-Requires: php-guzzle-Guzzle, sudo
+Requires: sudo
 Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git-gitolite3
 %description plugin-git
@@ -197,7 +197,7 @@ Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
 Requires(pre): shadow-utils
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, sclo-git212-git, gitolite3
-Requires: php-guzzle-Guzzle, sudo
+Requires: sudo
 Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git
 %description plugin-git-gitolite3

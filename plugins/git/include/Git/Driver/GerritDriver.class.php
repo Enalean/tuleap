@@ -62,18 +62,18 @@ interface Git_Driver_Gerrit
      *
      * @param Git_RemoteServer_GerritServer $server
      * @param string $project_name
-     * @return true if the gerrit project exists, else return false
+     * @return bool true if the gerrit project exists, else return false
      */
-    public function doesTheParentProjectExist(Git_RemoteServer_GerritServer $server, $project_name);
+    public function doesTheParentProjectExist(Git_RemoteServer_GerritServer $server, $project_name): bool;
 
     /**
      * @param Git_RemoteServer_GerritServer $server
      * @param string $project_name
-     * @return true if the gerrit project exists, else return false
+     * @return bool true if the gerrit project exists, else return false
      *
      * @throws Git_Driver_Gerrit_Exception
      */
-    public function doesTheProjectExist(Git_RemoteServer_GerritServer $server, $project_name);
+    public function doesTheProjectExist(Git_RemoteServer_GerritServer $server, $project_name): bool;
 
     /**
      * @param Git_RemoteServer_GerritServer $server

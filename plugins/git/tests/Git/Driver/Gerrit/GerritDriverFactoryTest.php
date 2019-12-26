@@ -31,7 +31,12 @@ class GerritDriverFactoryTest extends TuleapTestCase
         parent::setUp();
 
         $logger                      = new BackendLogger();
-        $this->gerrit_driver_factory = new Git_Driver_Gerrit_GerritDriverFactory($logger);
+        $this->gerrit_driver_factory = new Git_Driver_Gerrit_GerritDriverFactory(
+            new \Tuleap\Git\Driver\GerritHTTPClientFactory(\Tuleap\Http\HttpClientFactory::createClient()),
+            \Tuleap\Http\HTTPFactoryBuilder::requestFactory(),
+            \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
+            $logger
+        );
     }
 
     public function itReturnsAGerritUnsupportedVersionDriverObjectIfServerIsIn25Version()

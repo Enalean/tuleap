@@ -90,6 +90,7 @@ use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Repository\GitRepositoryNameIsInvalidException;
 use Tuleap\Git\Repository\RepositoryCreator;
 use Tuleap\Git\XmlUgroupRetriever;
+use Tuleap\Http\HttpClientFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
@@ -199,7 +200,12 @@ class RepositoryResource extends AuthenticatedResource
         $this->migration_handler = new MigrationHandler(
             $this->git_system_event_manager,
             $this->gerrit_server_factory,
-            new Git_Driver_Gerrit_GerritDriverFactory(new GitBackendLogger()),
+            new Git_Driver_Gerrit_GerritDriverFactory(
+                new \Tuleap\Git\Driver\GerritHTTPClientFactory(HttpClientFactory::createClient()),
+                \Tuleap\Http\HTTPFactoryBuilder::requestFactory(),
+                \Tuleap\Http\HTTPFactoryBuilder::streamFactory(),
+                new GitBackendLogger()
+            ),
             $project_history_dao,
             new Git_Driver_Gerrit_ProjectCreatorStatus(new Git_Driver_Gerrit_ProjectCreatorStatusDao()),
             $this->project_manager
