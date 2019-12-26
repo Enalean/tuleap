@@ -1186,7 +1186,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     protected function fetchSubmitValueMasschange()
     {
         $html = '';
-        $prefill_new_values     = $GLOBALS['Language']->getText('global', 'unchanged');
+        $prefill_new_values     = dgettext('tuleap-tracker', 'Unchanged');
         $read_only              = false;
         $name                   = 'artifact['. $this->id .']';
         $artifact_links         = array();

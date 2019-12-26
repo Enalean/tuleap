@@ -49,6 +49,7 @@ use Tuleap\AgileDashboard\Kanban\RecentlyVisited\VisitRetriever;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportUpdater;
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
+use Tuleap\AgileDashboard\Masschange\AdditionalMasschangeActionProcessor;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
@@ -99,6 +100,8 @@ use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
+use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
+use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
@@ -221,6 +224,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(StatisticsCollectionCollector::NAME);
             $this->addHook('project_is_deleted');
             $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
+            $this->addHook(TrackerMasschangeGetExternalActionsEvent::NAME);
+            $this->addHook(TrackerMasschangeProcessExternalActionsEvent::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -2086,5 +2091,34 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         if ($action !== null) {
             $event->addAction($action);
         }
+    }
+
+    public function trackerMasschangeGetExternalActionsEvent(TrackerMasschangeGetExternalActionsEvent $event): void
+    {
+        $builder = new \Tuleap\AgileDashboard\Masschange\AdditionalMasschangeActionBuilder(
+            new ExplicitBacklogDao(),
+            $this->getPlanningFactory(),
+            TemplateRendererFactory::build()->getRenderer(__DIR__.'/../templates/masschange')
+        );
+
+        $additional_action = $builder->buildMasschangeAction($event->getTracker(), $event->getUser());
+        if ($additional_action !== null) {
+            $event->addExternalActions($additional_action);
+        }
+    }
+
+    public function trackerMasschangeProcessExternalActionsEvent(TrackerMasschangeProcessExternalActionsEvent $event): void
+    {
+        $processor = new AdditionalMasschangeActionProcessor(
+            new ArtifactsInExplicitBacklogDao(),
+            new PlannedArtifactDao()
+        );
+
+        $processor->processAction(
+            $event->getUser(),
+            $event->getTracker(),
+            $event->getRequest(),
+            $event->getMasschangeAids()
+        );
     }
 }

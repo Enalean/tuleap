@@ -1266,7 +1266,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
                         $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
                     }
-                    $tracker->displayMasschangeForm($layout, $masschange_aids);
+                    $tracker->displayMasschangeForm($layout, $current_user, $masschange_aids);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
@@ -1281,7 +1281,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                     new Tracker_RuleFactory(new Tracker_RuleDao()),
                     $form_element_factory,
                     Tracker_ArtifactFactory::instance(),
-                    new Tracker_ArtifactDao()
+                    new Tracker_ArtifactDao(),
+                    EventManager::instance()
                 );
                 $masschange_updater->updateArtifacts($current_user, $request);
                 break;

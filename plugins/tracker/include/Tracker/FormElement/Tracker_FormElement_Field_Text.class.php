@@ -231,7 +231,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     protected function fetchSubmitValueMasschange()
     {
         $html = '';
-        $value = $GLOBALS['Language']->getText('global', 'unchanged');
+        $value = dgettext('tuleap-tracker', 'Unchanged');
 
         //check if this field is the title we do not allow to change it
         if ($this->isSemanticTitle()) {

@@ -67,6 +67,22 @@ msgstr "Une erreur est survenue lors de la suppression des valeurs finies."
 msgid "An error occurred while updating done values."
 msgstr "Une erreur est survenue lors de la mise à jour des valeurs finies."
 
+#, php-format
+msgid ""
+"Artifact #%d not added in the top backlog because it's already planned in a "
+"submilestone."
+msgstr ""
+"L'artéfact #%d n'a pas été ajouté à la planification générale car il est "
+"déjà présent dans un sous jalon."
+
+#, php-format
+msgid ""
+"Artifact #%d not removed from the top backlog because it's already planned "
+"in a submilestone."
+msgstr ""
+"L'artéfact #%d n'a pas été supprimé de la planification générale car il est "
+"déjà présent dans un sous jalon."
+
 msgid ""
 "Artifacts cannot be considered <strong>done</strong> because there is no "
 "value selected for this semantic."
@@ -130,6 +146,9 @@ msgstr "Les valeurs finies ont été supprimées avec succès."
 
 msgid "Done values successfully updated."
 msgstr "Les valeurs finies ont été mises à jour avec succès."
+
+msgid "Explicit backlog actions"
+msgstr "Actions de planification générale explicite"
 
 msgid "Explicit top backlog"
 msgstr "Planification générale explicite"
@@ -282,6 +301,9 @@ msgstr "Cet outil de suivi n'est pas un outil de suivi lié à un planning"
 
 msgid "Tracker semantic done"
 msgstr "Sémantique fini"
+
+msgid "Unknown masschange action."
+msgstr "L'action de modification en masse n'est pas connue."
 
 msgid "Unplanned"
 msgstr "Non planifié"

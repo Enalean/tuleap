@@ -28,6 +28,14 @@
             </label>
         </div>
 
+        {{# has_external_actions }}
+        <div class="masschange-external-actions">
+            {{# external_actions }}
+                {{{ . }}}
+            {{/ external_actions }}
+        </div>
+        {{/ has_external_actions }}
+
         <h3>{{ artifact_fields_title }}</h3>
 
             {{{ form_elements }}}
