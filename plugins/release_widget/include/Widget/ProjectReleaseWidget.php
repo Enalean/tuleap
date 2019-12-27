@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ReleaseWidget\Widget;
 
-use Exception;
 use HTTPRequest;
 use PlanningDao;
 use PlanningFactory;
@@ -48,6 +47,11 @@ class ProjectReleaseWidget extends Widget
      */
     private $root_planning;
 
+    /**
+     * @var bool
+     */
+    private $is_ie_11;
+
     public function __construct()
     {
         $planning_factory = new PlanningFactory(
@@ -56,8 +60,9 @@ class ProjectReleaseWidget extends Widget
             new PlanningPermissionsManager()
         );
 
-        $http       = HTTPRequest::instance();
-        $project_id = $http->getProject()->getID();
+        $http           = HTTPRequest::instance();
+        $this->is_ie_11 = $http->getBrowser()->isIE11();
+        $project_id     = $http->getProject()->getID();
 
         $this->root_planning = $planning_factory->getRootPlanning($http->getCurrentUser(), $project_id);
 
@@ -95,7 +100,7 @@ class ProjectReleaseWidget extends Widget
 
     public function getContent() : string
     {
-        if ($this->isIE11()) {
+        if ($this->is_ie_11) {
             $message_error = '<p class="tlp-alert-danger">';
             $message_error .= dgettext('tuleap-release_widget', 'The plugin is not supported under IE11. Please use a more recent browser.');
             $message_error .= '</p>';
@@ -158,12 +163,5 @@ class ProjectReleaseWidget extends Widget
     public function getCategory()
     {
         return dgettext('tuleap-release_widget', 'Agile dashboard');
-    }
-
-    private function isIE11(): bool
-    {
-        return preg_match('~MSIE|Internet Explorer~i', $_SERVER['HTTP_USER_AGENT'])
-            || (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0;') !== false
-                && strpos($_SERVER['HTTP_USER_AGENT'], 'rv:11.0') !== false);
     }
 }

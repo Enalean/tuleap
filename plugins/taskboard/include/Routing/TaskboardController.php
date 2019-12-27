@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Routing;
 
 use HTTPRequest;
-use Planning_MilestonePaneFactory;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\Layout\BaseLayout;
@@ -49,10 +48,6 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
      * @var AllBreadCrumbsForMilestoneBuilder
      */
     private $bread_crumbs_builder;
-    /**
-     * @var Planning_MilestonePaneFactory
-     */
-    private $pane_factory;
     /**
      * @var IncludeAssets
      */
@@ -116,7 +111,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
         $this->visit_recorder->record($user, $milestone->getArtifact());
 
         $layout->includeFooterJavascriptFile($this->agiledashboard_assets->getFileURL('scrum-header.js'));
-        $is_ie_11 = $this->isIE11();
+        $is_ie_11 = $request->getBrowser()->isIE11();
         if (! $is_ie_11) {
             $layout->includeFooterJavascriptFile($this->taskboard_js_assets->getFileURL('taskboard.js'));
         }
@@ -130,12 +125,5 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
         );
         $this->renderer->renderToPage('taskboard', $this->presenter_builder->getPresenter($milestone, $user, $is_ie_11));
         $service->displayFooter();
-    }
-
-    private function isIE11(): bool
-    {
-        return preg_match('~MSIE|Internet Explorer~i', $_SERVER['HTTP_USER_AGENT'])
-            || (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0;') !== false
-                && strpos($_SERVER['HTTP_USER_AGENT'], 'rv:11.0') !== false);
     }
 }
