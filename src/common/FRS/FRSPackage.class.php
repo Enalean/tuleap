@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -39,23 +39,23 @@ class FRSPackage
     /**
      * @var int $package_id the ID of this FRSPackage
      */
-    var $package_id;
+    public $package_id;
     /**
      * @var int $group_id the ID of the group this FRSPackage belong to
      */
-    var $group_id;
+    public $group_id;
     /**
      * @var string $name the name of this FRSPackage
      */
-    var $name;
+    public $name;
     /**
      * @var int $status_id the ID of the status of this FRSPackage
      */
-    var $status_id;
+    public $status_id;
     /**
      * @var int $rank the rank of this FRSPackage
      */
-    var $rank;
+    public $rank;
     /**
      * @var bool $approve_license true if the license has been approved, false otherwise
      */
@@ -197,7 +197,7 @@ class FRSPackage
      *
      * @var  array   $data_array.
      */
-    var $data_array;
+    public $data_array;
     var $package_releases;
 
 

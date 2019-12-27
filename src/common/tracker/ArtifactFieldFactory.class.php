@@ -579,37 +579,37 @@ class ArtifactFieldFactory
         $af = new ArtifactField();
 
         if (($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
-        &&($display_type == "SB") ) {
+        &&($display_type == "SB")) {
             return "100";
         }
 
         if (($data_type == $af->DATATYPE_INT || $data_type == $af->DATATYPE_USER)
-        &&($display_type == "MB") ) {
+        &&($display_type == "MB")) {
             return "100";
         }
 
         if (($data_type == $af->DATATYPE_TEXT)
-        &&($display_type == "TF") ) {
+        &&($display_type == "TF")) {
             return "";
         }
 
         if (($data_type == $af->DATATYPE_TEXT)
-        &&($display_type == "TA") ) {
+        &&($display_type == "TA")) {
             return "";
         }
 
         if (($data_type == $af->DATATYPE_DATE)
-        &&($display_type == "DF") ) {
+        &&($display_type == "DF")) {
             return "";
         }
 
         if (($data_type == $af->DATATYPE_FLOAT)
-        &&($display_type == "TF") ) {
+        &&($display_type == "TF")) {
             return "0.0";
         }
 
         if (($data_type == $af->DATATYPE_INT)
-        &&($display_type == "TF") ) {
+        &&($display_type == "TF")) {
             return "0";
         }
 

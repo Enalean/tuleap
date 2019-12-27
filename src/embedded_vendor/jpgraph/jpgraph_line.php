@@ -591,7 +591,7 @@ class AccLinePlot extends Plot
         // and hence doesn't contain any xlabel_offset)
 
         if (empty($graph->xaxis->scale->ticks->xlabel_offset) ||
-        $graph->xaxis->scale->ticks->xlabel_offset == 0 ) {
+        $graph->xaxis->scale->ticks->xlabel_offset == 0) {
             if ($this->center) {
                 ++$this->numpoints;
                 $a=0.5;

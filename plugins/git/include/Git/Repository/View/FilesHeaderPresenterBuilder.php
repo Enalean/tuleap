@@ -118,7 +118,6 @@ class FilesHeaderPresenterBuilder
      */
     private function getHeadNameForCurrentCommit(HTTPRequest $request, Commit $commit)
     {
-        /** @var Ref[] $refs */
         if (empty($commit->GetHeads()) && empty($commit->GetTags())) {
             return [$commit->GetHash(), false];
         }

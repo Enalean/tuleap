@@ -849,7 +849,7 @@ class BackendSVN extends Backend
             if (file_exists("$svnroot/$file")) {
                 $stat = stat("$svnroot/$file");
                 if (($stat['uid'] != $this->getHTTPUserUID())
-                     || ($stat['gid'] != $this->getSvnFilesUnixGroupId($project)) ) {
+                     || ($stat['gid'] != $this->getSvnFilesUnixGroupId($project))) {
                     $need_owner_update = true;
                 }
             }

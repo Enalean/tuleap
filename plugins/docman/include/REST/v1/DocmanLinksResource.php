@@ -508,7 +508,7 @@ class DocmanLinksResource extends AuthenticatedResource
                     'project'               => $project
                 ]
             );
-            /** @var \Docman_Link $item */
+            assert($item instanceof Docman_Link);
         } catch (ApprovalTableException $exception) {
             throw new I18NRestException(
                 400,

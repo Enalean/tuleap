@@ -804,7 +804,7 @@ class PiePlot
                     // for the cluster of one will cross the guide-line
                     if ($q1 == 0 && $cidx > -1 &&
                     $clusters[$cidx][1] == 1 &&
-                    $this->Quadrant($this->la[$clusters[$cidx][0]]) == 0 ) {
+                    $this->Quadrant($this->la[$clusters[$cidx][0]]) == 0) {
                         $clusters[$cidx][1]++;
                     } else {
                         $cidx++;

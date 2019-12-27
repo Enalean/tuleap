@@ -99,9 +99,6 @@ class BindListUserValueGetter
         }
 
         $sql = [];
-        /**
-         * @var \Tracker $tracker
-         */
         $tracker_id  = $da->escapeInt($tracker->getId());
         $user_id_sql = $bindvalue_ids ? 'WHERE user.user_id IN (' . $da->escapeIntImplode($bindvalue_ids) . ')' : '';
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,7 +28,6 @@ class Git_Driver_Gerrit_ProjectCreator
     public const NO_PERMISSIONS_MIGRATION      = 'none';
     public const DEFAULT_PERMISSIONS_MIGRATION = 'default';
 
-    /** @var array */
     static $MIGRATION_MINIMAL_PERMISSIONS = array(
         array(
             'reference'  => 'refs/tags',

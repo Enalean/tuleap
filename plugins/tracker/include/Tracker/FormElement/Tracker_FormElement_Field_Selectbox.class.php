@@ -64,7 +64,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      */
     public function fetchArtifactAdditionnalInfo(?Tracker_Artifact_ChangesetValue $value, array $submitted_values)
     {
-        /** @var Tracker_Artifact_ChangesetValue_List $value */
+        assert($value instanceof Tracker_Artifact_ChangesetValue_List);
         $html   = parent::fetchArtifactAdditionnalInfo($value, $submitted_values);
         $values = array();
         if (isset($submitted_values[$this->id])) {

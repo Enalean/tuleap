@@ -280,7 +280,7 @@ class ArtifactReportHtml extends ArtifactReport
                     $boxes .= $field_html->fieldDateOperator($val_op, $pv) . $field_html->fieldDate($val, $pv);
                 }
             } elseif ($field->isTextField() ||
-                       $field->isTextArea() ) {
+                       $field->isTextArea()) {
                 $val=isset($prefs[$field->getName()][0])?$prefs[$field->getName()][0]:"";
                 $boxes .=
                     ($pv != 0 ? $val : $field_html->fieldText(stripslashes($val), 15, 80)) ;
@@ -999,7 +999,7 @@ class ArtifactReportHtml extends ArtifactReport
              // Do not show some special fields any way
                 if ($field->isSpecial()) {
                     if (($field->getName() == 'group_id') ||
-                             ($field->getName() == 'comment_type_id') ) {
+                             ($field->getName() == 'comment_type_id')) {
                         continue;
                     }
                 }
@@ -1115,7 +1115,7 @@ class ArtifactReportHtml extends ArtifactReport
              // Do not show some special fields any way
                 if ($field->isSpecial()) {
                     if (($field->getName() == 'group_id') ||
-                             ($field->getName() == 'comment_type_id') ) {
+                             ($field->getName() == 'comment_type_id')) {
                         continue;
                     }
                 }

@@ -511,10 +511,10 @@ class PiePlot3D extends PiePlot
                 // one boundary (either 90 or 270) where it needs to be split
                 $split=-1; // no split
                 if (($da<=90 && ($a <= 90 && $ne > 90)) ||
-                (($da <= 180 && $da >90)  && (($a < 90 || $a >= 270) && $ne > 90)) ) {
+                (($da <= 180 && $da >90)  && (($a < 90 || $a >= 270) && $ne > 90))) {
                     $split = 90;
                 } elseif (($da<=90 && ($a <= 270 && $ne > 270)) ||
-                (($da<=180 && $da>90) && ($a >= 90 && $a < 270 && ($a+$da) > 270 )) ) {
+                (($da<=180 && $da>90) && ($a >= 90 && $a < 270 && ($a+$da) > 270 ))) {
                     $split = 270;
                 }
                 if ($split > 0) { // split in two

@@ -103,7 +103,7 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
             $this->required  = JsonCast::toBoolean($form_element->isRequired());
             $this->collapsed = false;
         } else {
-            /** @var Tracker_FormElement_Container $form_element */
+            assert($form_element instanceof Tracker_FormElement_Container);
             $this->required  = false;
             $this->collapsed = (bool) $form_element->isCollapsed();
         }

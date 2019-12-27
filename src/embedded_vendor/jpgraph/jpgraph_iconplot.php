@@ -89,7 +89,7 @@ class IconPlot
     function SetAnchor($aXAnchor = 'left', $aYAnchor = 'center')
     {
         if (!in_array($aXAnchor, $this->iAnchors) ||
-        !in_array($aYAnchor, $this->iAnchors) ) {
+        !in_array($aYAnchor, $this->iAnchors)) {
             JpGraphError::RaiseL(8002);//("Anchor position for icons must be one of 'top', 'bottom', 'left', 'right' or 'center'");
         }
         $this->iHorAnchor=$aXAnchor;
@@ -151,7 +151,7 @@ class IconPlot
     function StrokeWithScale($aImg, $axscale, $ayscale)
     {
         if ($this->iScalePosX === null || $this->iScalePosY === null ||
-            $axscale === null || $ayscale === null ) {
+            $axscale === null || $ayscale === null) {
             $this->_Stroke($aImg);
         } else {
             $this->_Stroke(

@@ -2054,7 +2054,7 @@ class Docman_Actions extends Actions
 
     function action_lock_del()
     {
-        /** @var Docman_Controller $this->_controler */
+        assert($this->_controler instanceof Docman_Controller);
         $item = $this->_controler->_actionParams['item'];
         $user = $this->_controler->getUser();
         $lockFactory = new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log());

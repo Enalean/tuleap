@@ -264,8 +264,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     ) {
         $content = '';
 
-        /** @var Tracker_Artifact_ChangesetValue_Text $value */
         if ($value) {
+            assert($value instanceof Tracker_Artifact_ChangesetValue);
             $format = $value->getFormat();
         } else {
             $default_value = $this->getDefaultValue();

@@ -3552,7 +3552,7 @@ class soap_server extends nusoap_base
             $instance = new $class();
             $call_arg = array(&$instance, $method);
         }
-        /** @var callable $call_arg */
+        /** @psalm-var callable $call_arg */
         $this->methodreturn = call_user_func_array($call_arg, $this->methodparams);
         $this->debug('in invoke_method, methodreturn:');
         $this->appendDebug($this->varDump($this->methodreturn));

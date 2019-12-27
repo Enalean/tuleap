@@ -43,14 +43,14 @@ class Artifact
      *
      * @var             object  $ArtifactType.
      */
-    var $ArtifactType;
+    public $ArtifactType;
 
     /**
      * Array of artifact data.
      *
      * @var             array   $data_array.
      */
-    var $data_array;
+    public $data_array;
     /**
      * @var string
      */

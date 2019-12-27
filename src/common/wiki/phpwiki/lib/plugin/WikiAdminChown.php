@@ -72,7 +72,7 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
         foreach ($pages as $name) {
             $page = $dbi->getPage($name);
             if (($owner = $page->getOwner()) and
-                 $newowner != $owner ) {
+                 $newowner != $owner) {
                 if (!mayAccessPage('change', $name)) {
                     $ul->pushContent(HTML::li(fmt(
                         "Access denied to change page '%s'.",

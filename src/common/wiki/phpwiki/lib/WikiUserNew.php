@@ -1866,7 +1866,7 @@ class UserPreferences
         /* do it here or outside? */
         if ($name == 'passwd' and
             defined('PASSWORD_LENGTH_MINIMUM') and
-            strlen($value) <= PASSWORD_LENGTH_MINIMUM ) {
+            strlen($value) <= PASSWORD_LENGTH_MINIMUM) {
             //TODO: How to notify the user?
             return false;
         }

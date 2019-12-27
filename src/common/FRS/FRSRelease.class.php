@@ -35,39 +35,39 @@ class FRSRelease
     /**
      * @var int $release_id the ID of this FRSRelease
      */
-    var $release_id;
+    public $release_id;
     /**
      * @var int $package_id the ID of the package this FRSRelease belong to
      */
-    var $package_id;
+    public $package_id;
     /**
      * @var string $name the name of this FRSRelease
      */
-    var $name;
+    public $name;
     /**
      * @var string $notes the notes of this FRSRelease
      */
-    var $notes;
+    public $notes;
     /**
      * @var int $changes the changes of this FRSRelease
      */
-    var $changes;
+    public $changes;
     /**
      * @var int $status_id the ID of the status of this FRSRelease
      */
-    var $status_id;
+    public $status_id;
     /**
      * @var int $preformatted 1 if the text is preformatted, 0 otherwise
      */
-    var $preformatted;
+    public $preformatted;
     /**
      * @var int $release_date the creation date of this FRSRelease
      */
-    var $release_date;
+    public $release_date;
     /**
      * @var int $released_by the ID of the user who creates this FRSRelease
      */
-    var $released_by;
+    public $released_by;
 
 
     /**
@@ -324,7 +324,7 @@ class FRSRelease
      *
      * @var  array   $data_array.
      */
-    var $data_array;
+    public $data_array;
     var $release_files;
 
     /**

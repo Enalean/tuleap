@@ -37,9 +37,6 @@
 // type='TRACKER_ACCESS_FULL'      id='group_artifact_id'          table='artifact_group_list'
 // type='TRACKER_ARTIFACT_ACCESS'  id='artifact_id'                table='artifact'
 
-
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
 
 require_once __DIR__ . '/ugroup_utils.php';

@@ -55,7 +55,7 @@ class WikiPlugin_UserPreferences extends WikiPlugin
         $user = $request->getUser();
         if (isset($user->_prefs) and
              isset($user->_prefs->_prefs) and
-             isset($user->_prefs->_method) ) {
+             isset($user->_prefs->_method)) {
             $pref = $user->_prefs;
         } else {
             $pref = $user->getPreferences();

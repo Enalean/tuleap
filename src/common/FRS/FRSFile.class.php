@@ -36,59 +36,59 @@ class FRSFile
     /**
      * @var int $file_id the ID of this FRSFile
      */
-    var $file_id;
+    public $file_id;
     /**
      * @var String $filename the name of this FRSFile
      */
-    var $filename;
+    public $filename;
     /**
      * @var String $filepath the full path where the file is created
      */
-    var $filepath;
+    public $filepath;
     /**
      * @var int $release_id the ID of the release this FRSFile belong to
      */
-    var $release_id;
+    public $release_id;
     /**
      * @var int $type_id the ID of the type of this FRSFile
      */
-    var $type_id;
+    public $type_id;
     /**
      * @var int $processor_id the ID of the processor to use with this FRSFile
      */
-    var $processor_id;
+    public $processor_id;
     /**
      * @var int $release_time the ??? of this FRSFile
      */
-    var $release_time;
+    public $release_time;
     /**
      * @var int $file_size the size of this FRSFile
      */
-    var $file_size;
+    public $file_size;
     /**
      * @var int $post_date the ??? of this FRSFile
      */
-    var $post_date;
+    public $post_date;
     /**
      * @var string $status the status of this FRSFile (A=>Active; D=>Deleted)
      */
-    var $status;
+    public $status;
     /**
      * @var string $computed_md5 hash of the file computed in server side
      */
-    var $computed_md5;
+    public $computed_md5;
     /**
      * @var string $reference_md5 hash of the file submited by user (calculated in client side)
      */
-    var $reference_md5;
+    public $reference_md5;
     /**
      * @var int $user_id id of user that created the file
      */
-    var $user_id;
+    public $user_id;
     /**
      * @var string $file_location the full path of this FRSFile
      */
-    var $file_location;
+    public $file_location;
     /**
      * @var Group $group the project this file belong to
      */

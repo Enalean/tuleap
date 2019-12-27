@@ -338,7 +338,7 @@ function html_build_select_box_from_arrays(
         //  if it was shown above, otherwise do show it
         if ((($vals[$i] != '100') && ($vals[$i] != '0')) ||
         ($vals[$i] == '100' && !$show_100) ||
-        ($vals[$i] == '0' && !$show_any) ) {
+        ($vals[$i] == '0' && !$show_any)) {
             $return .= '
 				<OPTION VALUE="'.$hp->purify($vals[$i]).'"';
             if (is_array($checked_val)) {

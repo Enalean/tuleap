@@ -21,14 +21,14 @@ class ArtifactFile
      *
      * @var        object    $Artifact.
      */
-    var $Artifact; //object
+    public $Artifact; //object
 
     /**
      * Array of file data
      *
      * @var        array    $data_array
      */
-    var $data_array;
+    public $data_array;
     /**
      * @var string
      */

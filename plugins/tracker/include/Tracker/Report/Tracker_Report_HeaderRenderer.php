@@ -301,7 +301,7 @@ class Tracker_Report_HeaderRenderer
 
         $public_reports_exist = false;
         foreach ($reports as $report) {
-            /**@var $report Tracker_Report */
+            /** @var Tracker_Report $report */
             if ($report->isPublic()) {
                  $public_reports_exist = true;
             }

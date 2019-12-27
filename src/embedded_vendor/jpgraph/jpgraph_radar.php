@@ -799,7 +799,7 @@ class RadarGraph extends Graph
             list($min,$max) = $this->GetPlotsYMinMax($this->plots);
             $this->yscale->AutoScale($this->img, 0, $max, $this->len/$this->ytick_factor);
         } elseif ($this->yscale->IsSpecified() &&
-                ( $this->yscale->auto_ticks || !$this->yscale->ticks->IsSpecified()) ) {
+                ( $this->yscale->auto_ticks || !$this->yscale->ticks->IsSpecified())) {
             // The tick calculation will use the user suplied min/max values to determine
             // the ticks. If auto_ticks is false the exact user specifed min and max
             // values will be used for the scale.
