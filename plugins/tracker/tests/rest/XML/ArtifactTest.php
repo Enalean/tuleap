@@ -21,7 +21,6 @@
 namespace Tracker;
 
 use SimpleXMLElement;
-use RestBase;
 use Guzzle\Http\Client;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 

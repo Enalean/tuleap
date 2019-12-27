@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Tracker;
 
-use Tracker_FormElement_Field_Selectbox;
-
 class AddInPlaceRetriever
 {
     /**

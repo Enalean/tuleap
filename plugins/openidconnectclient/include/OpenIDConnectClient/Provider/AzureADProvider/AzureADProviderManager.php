@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\OpenIDConnectClient\Provider\AzureADProvider;
 
-use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderMalformedDataException;
 use Valid_String;
 

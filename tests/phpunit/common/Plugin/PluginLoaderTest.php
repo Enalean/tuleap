@@ -27,7 +27,6 @@ use ForgeConfig;
 use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use PluginFactory;
 use Tuleap\ForgeConfigSandbox;

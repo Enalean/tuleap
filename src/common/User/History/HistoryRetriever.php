@@ -20,8 +20,6 @@
 
 namespace Tuleap\User\History;
 
-use Event;
-
 class HistoryRetriever
 {
     public const MAX_LENGTH_HISTORY = 30;

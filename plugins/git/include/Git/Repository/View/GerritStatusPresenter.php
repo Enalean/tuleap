@@ -25,7 +25,6 @@ use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
 use GitRepository;
 use Tuleap\Git\Driver\Gerrit\GerritUnsupportedVersionDriver;
-use Tuleap\Git\Driver\Gerrit\UnsupportedGerritVersionException;
 
 class GerritStatusPresenter
 {

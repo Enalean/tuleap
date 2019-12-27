@@ -27,8 +27,6 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 use PFUser;
 use SystemEventDao;
 use Tracker_Artifact;
-use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
-use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 
 class ArtifactsDeletionManager
 {
@@ -62,7 +60,7 @@ class ArtifactsDeletionManager
      * @throws DeletionOfArtifactsIsNotAllowedException
      */
     public function deleteArtifact(
-        Tracker_artifact $artifact,
+        Tracker_Artifact $artifact,
         PFUser $user
     ) {
         $remaining_deletions = $this->deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user) -1;
@@ -80,7 +78,7 @@ class ArtifactsDeletionManager
      * @throws DeletionOfArtifactsIsNotAllowedException
      */
     public function deleteArtifactBeforeMoveOperation(
-        Tracker_artifact $artifact,
+        Tracker_Artifact $artifact,
         PFUser $user
     ) {
         $remaining_deletions = $this->deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user) -1;

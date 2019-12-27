@@ -25,7 +25,6 @@ require_once __DIR__ .'/../../bootstrap.php';
 use GitRepository;
 use Mockery;
 use PFUser;
-use TuleapTestCase;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 

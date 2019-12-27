@@ -26,7 +26,6 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Tuleap\GlobalLanguageMock;
 
 final class SynchronizedProjectMembershipDuplicatorTest extends TestCase
 {

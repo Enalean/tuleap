@@ -25,7 +25,6 @@ namespace Tuleap\Docman\REST\v1\Links;
 use Tuleap\Docman\REST\v1\CopyItem\CanContainACopyRepresentation;
 use Tuleap\Docman\REST\v1\CopyItem\DocmanCopyItemRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
-use Tuleap\Docman\REST\v1\Metadata\ItemStatusMapper;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsSetRepresentation;
 
 class DocmanLinkPOSTRepresentation implements CanContainACopyRepresentation

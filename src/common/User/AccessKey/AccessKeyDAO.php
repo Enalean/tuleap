@@ -20,7 +20,6 @@
 
 namespace Tuleap\User\AccessKey;
 
-use DateTimeImmutable;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 

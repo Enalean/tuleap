@@ -30,7 +30,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\State;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionUpdater;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
-use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
 
 class TransitionPatcherTest extends TestCase
 {

@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 
 use Tracker_Artifact;
 use Tracker_FormElement_Container_Fieldset;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;

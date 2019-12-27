@@ -35,7 +35,6 @@ use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\REST\v1\TimetrackingOverviewRepresentationsBuilder;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
-use Tuleap\Tracker\REST\TrackerRepresentation;
 use Tuleap\Tracker\TrackerColor;
 
 class TimetrackingOverviewRepresentationsBuilderTest extends TestCase

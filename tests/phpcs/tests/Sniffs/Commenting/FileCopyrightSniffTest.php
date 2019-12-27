@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace TuleapCodingStandard\Sniffs\Commenting;
 
-use PHP_CodeSniffer\Files\File;
 use SlevomatCodingStandard\Sniffs\TestCase;
 
 final class FileCopyrightSniffTest extends TestCase

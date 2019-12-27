@@ -21,7 +21,6 @@
 namespace Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\History;
 
 use PFUser;
-use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Presenter;
 
 class UserHistoryPresenter extends Presenter

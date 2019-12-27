@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\REST;
 
-use Tracker_FormElement;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_REST_FormElementRepresentation;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;

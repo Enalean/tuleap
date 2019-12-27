@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Permission\Fields\ByGroup;
 
-use Codendi_HTMLPurifier;
 use HTTPRequest;
 use Tracker_FormElementFactory;
 use Tuleap\Layout\BaseLayout;

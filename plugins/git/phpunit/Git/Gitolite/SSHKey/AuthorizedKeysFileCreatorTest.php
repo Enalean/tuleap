@@ -22,8 +22,6 @@ namespace Tuleap\Git\Gitolite\SSHKey;
 
 use Mockery;
 use Tuleap\Git\Gitolite\SSHKey\Provider\IProvideKey;
-use Tuleap\Git\Gitolite\SSHKey\Provider\TestProvider;
-use TuleapTestCase;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 

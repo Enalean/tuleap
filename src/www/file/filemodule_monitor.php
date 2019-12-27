@@ -20,8 +20,6 @@
  */
 
 use Tuleap\FRS\PackagePermissionManager;
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
 
 require_once __DIR__ . '/../include/pre.php';

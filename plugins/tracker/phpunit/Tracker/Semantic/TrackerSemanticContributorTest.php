@@ -29,7 +29,6 @@ use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_Semantic_Contributor;
 use Tuleap\GlobalLanguageMock;
-use XML_Security;
 
 class TrackerSemanticContributorTest extends TestCase
 {

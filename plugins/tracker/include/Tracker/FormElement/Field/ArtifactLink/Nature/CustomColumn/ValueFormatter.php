@@ -24,7 +24,6 @@ use Tracker_FormElementFactory;
 use PFUser;
 use Tracker_ArtifactLinkInfo;
 use Tracker_Artifact_Changeset;
-use Codendi_HTMLPurifier;
 
 /**
  * I am responsible of rendering ArtifactLink value in a Custom Column in table renderer

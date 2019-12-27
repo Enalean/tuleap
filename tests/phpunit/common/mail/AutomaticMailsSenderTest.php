@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Mail;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 use ForgeConfig;

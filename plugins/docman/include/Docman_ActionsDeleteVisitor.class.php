@@ -24,7 +24,6 @@
 use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\DocumentDeletion\DocmanWikiDeletor;
 use Tuleap\Docman\Item\ItemVisitor;
-use Tuleap\PHPWiki\WikiPage;
 
 class Docman_ActionsDeleteVisitor implements ItemVisitor
 {

@@ -20,8 +20,6 @@
 
 namespace Tuleap\Git\Notifications;
 
-use TuleapTestCase;
-
 class NotificationsForProjectMemberCleanerTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

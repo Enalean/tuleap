@@ -25,7 +25,6 @@ use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestCreator;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestSender;
 use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestCreator;
 use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestSender;
-use ForgeConfig;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 
 class Flow

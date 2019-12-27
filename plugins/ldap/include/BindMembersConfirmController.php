@@ -26,7 +26,6 @@ namespace Tuleap\LDAP;
 use HTTPRequest;
 use LDAP_GroupManager;
 use LDAP_ProjectGroupManager;
-use LDAP_UserGroupManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Request\DispatchableWithRequest;

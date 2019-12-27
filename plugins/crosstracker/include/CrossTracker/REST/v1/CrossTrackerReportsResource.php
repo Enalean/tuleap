@@ -57,7 +57,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotEqualComp
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\NotInComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status\EqualComparisonFromWhereBuilder as StatusEqualComparisonFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Status\NotEqualComparisonFromWhereBuilder as StatusNotEqualComparisonFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Title;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\SearchableVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
@@ -204,7 +205,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new EqualComparisonFromWhereBuilder(
                 new Title\EqualComparisonFromWhereBuilder(),
                 new Description\EqualComparisonFromWhereBuilder(),
-                new Status\EqualComparisonFromWhereBuilder(),
+                new StatusEqualComparisonFromWhereBuilder(),
                 new Date\EqualComparisonFromWhereBuilder(
                     $date_value_extractor,
                     $date_time_value_rounder,
@@ -233,7 +234,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             new NotEqualComparisonFromWhereBuilder(
                 new Title\NotEqualComparisonFromWhereBuilder(),
                 new Description\NotEqualComparisonFromWhereBuilder(),
-                new Status\NotEqualComparisonFromWhereBuilder(),
+                new StatusNotEqualComparisonFromWhereBuilder(),
                 new Date\NotEqualComparisonFromWhereBuilder(
                     $date_value_extractor,
                     $date_time_value_rounder,

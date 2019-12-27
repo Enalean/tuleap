@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\ReleaseWidget\Widget\ProjectReleaseWidget;
 use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetWidget;

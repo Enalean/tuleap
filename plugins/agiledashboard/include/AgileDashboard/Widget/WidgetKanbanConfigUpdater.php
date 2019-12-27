@@ -20,9 +20,7 @@
 
 namespace Tuleap\AgileDashboard\Widget;
 
-use PFUser;
 use Tracker_Report;
-use Tracker_ReportFactory;
 
 class WidgetKanbanConfigUpdater
 {

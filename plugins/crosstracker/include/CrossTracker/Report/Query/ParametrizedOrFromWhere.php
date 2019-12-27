@@ -19,8 +19,6 @@
 
 namespace Tuleap\CrossTracker\Report\Query;
 
-use Tuleap\Tracker\Report\Query\OrFromWhere;
-
 class ParametrizedOrFromWhere implements IProvideParametrizedFromAndWhereSQLFragments
 {
     /**

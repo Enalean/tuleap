@@ -22,16 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Routing;
 
-use Cardwall_OnTop_Dao;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
-use PluginManager;
 use Project;
-use taskboardPlugin;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;

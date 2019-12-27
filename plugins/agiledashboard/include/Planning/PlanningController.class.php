@@ -32,8 +32,6 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\XML\Import\ImportConfig;
-use Tuleap\Project\XML\XMLFileContentRetriever;
-use Tuleap\Service\ServiceCreator;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 
 /**

@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use FastRoute\RouteCollector;
 use Tuleap\Layout\IncludeAssets;
 
 /**

@@ -24,13 +24,9 @@ namespace Tuleap\Tracker\Rule;
 
 use Feedback;
 use Tracker;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElementFactory;
 use Tracker_Rule_List;
-use Tracker_RuleFactory;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
 class TrackerRulesListValidator
 {

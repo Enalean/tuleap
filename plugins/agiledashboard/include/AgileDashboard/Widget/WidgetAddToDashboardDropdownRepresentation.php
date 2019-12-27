@@ -23,8 +23,6 @@ namespace Tuleap\AgileDashboard\Widget;
 use PFUser;
 use Project;
 use Tuleap\Dashboard\DashboardRepresentation;
-use Tuleap\Dashboard\Project\ProjectDashboard;
-use Tuleap\Dashboard\User\UserDashboard;
 
 class WidgetAddToDashboardDropdownRepresentation
 {

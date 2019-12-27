@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\Notifications;
 
 use Tuleap\DB\DataAccessObject;
-use ParagonIE\EasyDB\EasyStatement;
 
 /**
  * This class is responsible for interfacing custom email sender formats with the database

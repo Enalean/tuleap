@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\LDAP;
 
 use Account_TimezonesCollection;
-use CodendiDataAccess;
 use HTTPRequest;
 use LDAP_UserDao;
 use PFUser;

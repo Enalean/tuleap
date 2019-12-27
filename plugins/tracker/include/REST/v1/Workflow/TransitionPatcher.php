@@ -26,10 +26,8 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionUpdater;
-use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdateException;
 use Tuleap\Tracker\Workflow\Transition\Condition\ConditionsUpdater;
-use Tuleap\Tracker\Workflow\Transition\NoSiblingTransitionException;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 
 class TransitionPatcher

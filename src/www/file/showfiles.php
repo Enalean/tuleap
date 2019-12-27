@@ -25,8 +25,6 @@ require_once __DIR__ . '/file_utils.php';
 define("FRS_EXPANDED_ICON", util_get_image_theme("ic/toggle_minus.png"));
 define("FRS_COLLAPSED_ICON", util_get_image_theme("ic/toggle_plus.png"));
 
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDisplay;

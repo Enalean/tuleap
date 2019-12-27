@@ -20,9 +20,6 @@
 
 namespace Tuleap\GitLFS\Lock\Response;
 
-use DateTimeInterface;
-use Tuleap\GitLFS\Lock\Lock;
-
 class LockResponseSuccessfulDestructionRepresentation implements LockResponse
 {
     /**

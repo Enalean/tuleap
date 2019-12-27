@@ -21,9 +21,7 @@
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use Transition;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
-use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 
 class HiddenFieldsetsValueRepository

@@ -29,7 +29,6 @@ use Tracker;
 use Tracker_Artifact;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElementFactory;
-use Transition;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 

@@ -21,7 +21,6 @@
 namespace Tuleap\PullRequest\NavigationTab;
 
 use GitRepository;
-use TemplateRendererFactory;
 use Tuleap\Git\Repository\View\TabPresenter;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;

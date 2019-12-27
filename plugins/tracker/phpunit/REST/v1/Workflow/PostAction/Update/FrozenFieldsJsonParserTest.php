@@ -27,7 +27,6 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
-use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
 use Workflow;
 
 class FrozenFieldsJsonParserTest extends TestCase

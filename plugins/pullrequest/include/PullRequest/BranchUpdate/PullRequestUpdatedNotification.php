@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\BranchUpdate;
 
-use Git_GitRepositoryUrlManager;
 use PFUser;
 use TemplateRendererFactory;
 use Tuleap\Git\GitPHP\Project as GitResourceAccessor;

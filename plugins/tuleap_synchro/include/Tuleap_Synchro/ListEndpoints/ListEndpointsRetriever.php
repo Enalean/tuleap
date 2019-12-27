@@ -44,7 +44,7 @@ class ListEndpointsRetriever
     }
 
     /**
-     * @return Endpoint[] | []
+     * @return Endpoint[]
      */
     public function getAllEndpoints()
     {

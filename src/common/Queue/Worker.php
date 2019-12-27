@@ -30,7 +30,6 @@ use ForgeConfig;
 use Exception;
 use Tuleap\Queue\TaskWorker\TaskWorkerProcess;
 use Tuleap\System\DaemonLocker;
-use System_Command;
 
 class Worker
 {

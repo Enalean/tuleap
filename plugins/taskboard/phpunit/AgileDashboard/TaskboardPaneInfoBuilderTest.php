@@ -22,14 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\AgileDashboard;
 
-use Cardwall_OnTop_Dao;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Planning_Milestone;
-use PluginManager;
-use Project;
-use taskboardPlugin;
 
 class TaskboardPaneInfoBuilderTest extends TestCase
 {

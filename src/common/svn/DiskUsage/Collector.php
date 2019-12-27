@@ -20,9 +20,7 @@
 
 namespace Tuleap\SVN\DiskUsage;
 
-use Statistics_DiskUsageManager;
 use SVN_LogDao;
-use ForgeConfig;
 use Project;
 use DateTime;
 

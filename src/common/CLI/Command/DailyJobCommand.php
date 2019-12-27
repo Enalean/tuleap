@@ -26,7 +26,6 @@ namespace Tuleap\CLI\Command;
 use EventManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\CLI\DelayExecution\ExecutionDelayedLauncher;
 use Tuleap\DB\DBConnection;

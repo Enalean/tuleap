@@ -43,7 +43,7 @@ class ParentTrackerRetriever
      */
     public function getCreatableParentTrackers(
         Planning_Milestone $milestone,
-        PFUSer $user,
+        PFUser $user,
         array $descendant_backlog_trackers
     ) {
         $parent_trackers                = [];

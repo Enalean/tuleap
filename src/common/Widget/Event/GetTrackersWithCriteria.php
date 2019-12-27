@@ -26,7 +26,6 @@
 namespace Tuleap\Widget\Event;
 
 use Project;
-use Tracker;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 

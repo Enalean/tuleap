@@ -20,9 +20,7 @@
 
 namespace Tuleap\Velocity\Semantic;
 
-use AgileDashBoard_Semantic_InitialEffort;
 use Tracker;
-use Tuleap\AgileDashboard\Semantic\SemanticDone;
 
 class BacklogRequiredTrackerCollectionFormatter
 {

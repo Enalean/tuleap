@@ -40,7 +40,6 @@ use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsController;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
 use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
 use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
-use Tuleap\Project\Admin\ServicesUsingTruncatedMailRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\TroveCat\TroveCatLinkDao;

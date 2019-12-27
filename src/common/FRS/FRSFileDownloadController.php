@@ -29,7 +29,6 @@ use Project_AccessException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use RuntimeException;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;

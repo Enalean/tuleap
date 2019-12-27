@@ -26,9 +26,7 @@ require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../file_utils.php';
 
 use Tuleap\FRS\ToolbarPresenter;
-use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
-use Tuleap\FRS\FRSPermissionDao;
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();

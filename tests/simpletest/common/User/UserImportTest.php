@@ -19,7 +19,6 @@
 
 namespace Tuleap\User;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use Project;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdder;

@@ -33,7 +33,6 @@ use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use Tracker_Semantic;
 use Tracker_SemanticManager;
-use TrackerFactory;
 use TrackerManager;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;

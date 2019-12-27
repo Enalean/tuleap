@@ -24,8 +24,6 @@ require_once __DIR__ . '/project_admin_utils.php';
 require_once __DIR__ . '/ugroup_utils.php';
 
 use Tuleap\FRS\FRSPermissionManager;
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\FRS\FRSPermissionFactory;
 
 //  get the Group object
 $pm = ProjectManager::instance();

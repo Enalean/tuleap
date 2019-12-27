@@ -22,7 +22,6 @@
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
-use Tuleap\Project\Admin\ProjectUGroup\SynchronizedProjectMembership\ActivationController;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupListPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;

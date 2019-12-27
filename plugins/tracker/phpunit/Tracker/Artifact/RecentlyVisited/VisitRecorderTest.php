@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class VisitRecorderTest extends TestCase

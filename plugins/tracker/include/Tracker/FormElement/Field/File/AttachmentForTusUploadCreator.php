@@ -26,7 +26,6 @@ use PFUser;
 use Tracker_FileInfo;
 use Tracker_FormElement_Field_File;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
-use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
 
 class AttachmentForTusUploadCreator implements AttachmentCreator
 {

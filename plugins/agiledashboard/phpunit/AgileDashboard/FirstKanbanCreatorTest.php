@@ -30,7 +30,6 @@ use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
-use Response;
 use Tracker;
 use Tracker_Report;
 use Tracker_ReportFactory;

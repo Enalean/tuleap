@@ -20,7 +20,6 @@
 
 namespace Tuleap\PullRequest\Reference;
 
-use ForgeConfig;
 use GitRepository;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\PullRequest\PullRequest;

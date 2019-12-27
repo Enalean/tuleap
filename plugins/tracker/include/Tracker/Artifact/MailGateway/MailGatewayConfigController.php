@@ -26,7 +26,6 @@ use EventManager;
 use CSRFSynchronizerToken;
 use Response;
 use Codendi_Request;
-use TemplateRendererFactory;
 use Feedback;
 use Event;
 use Tuleap\Admin\AdminPageRenderer;

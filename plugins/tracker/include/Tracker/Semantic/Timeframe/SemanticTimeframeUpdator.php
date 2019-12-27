@@ -25,10 +25,6 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use Codendi_Request;
 use Exception;
 use Tracker;
-use Tuleap\Tracker\Semantic\Timeframe\Exceptions\FieldDoesNotBelongToTrackerException;
-use Tuleap\Tracker\Semantic\Timeframe\Exceptions\FieldDoesNotHaveTheRightTypeException;
-use Tuleap\Tracker\Semantic\Timeframe\Exceptions\FieldIdIsNotAnIntegerException;
-use Tuleap\Tracker\Semantic\Timeframe\Exceptions\FieldStartDateMissingException;
 
 class SemanticTimeframeUpdator
 {

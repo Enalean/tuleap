@@ -20,7 +20,6 @@
 
 namespace Tuleap\SVN\Admin;
 
-use ProjectUGroup;
 use Project;
 use CSRFSynchronizerToken;
 

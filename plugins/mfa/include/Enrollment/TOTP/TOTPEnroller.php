@@ -25,7 +25,6 @@ use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\MFA\OTP\TOTP;
 use Tuleap\MFA\OTP\TOTPMode;
-use Tuleap\MFA\OTP\TOTPModeBuilder;
 use Tuleap\MFA\OTP\TOTPValidator;
 
 class TOTPEnroller

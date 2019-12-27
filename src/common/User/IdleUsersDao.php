@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\User;
 
-use ForgeConfig;
 use Tuleap\DB\DataAccessObject;
 
 class IdleUsersDao extends DataAccessObject

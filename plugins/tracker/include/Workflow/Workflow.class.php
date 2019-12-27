@@ -20,7 +20,6 @@
  */
 
 use Tuleap\Tracker\Workflow\BeforeEvent;
-use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
 class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace

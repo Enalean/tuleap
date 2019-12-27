@@ -22,7 +22,6 @@ namespace Tuleap\AgileDashboard\FormElement\Burnup;
 
 use ForgeConfig;
 use Project;
-use Tracker_Artifact;
 
 class CountElementsModeChecker
 {

@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\REST\JsonCast;
-use Tuleap\Tracker\REST\PermissionsForGroups;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 
 class Tracker_REST_FormElementRepresentation //phpcs:ignore

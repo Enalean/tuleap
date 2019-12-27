@@ -21,13 +21,11 @@
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use EventManager;
-use ForgeConfig;
 use Logger;
 use PFUser;
 use Tracker_Artifact;
 use Tuleap\DB\DBConnection;
 use Tuleap\Event\Events\ArchiveDeletedItemEvent;
-use Tuleap\Project\XML\Export\ZipArchive;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
 
 class ArchiveAndDeleteArtifactTask

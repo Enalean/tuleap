@@ -30,7 +30,6 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
-use Tuleap\Docman\Lock\LockUpdater;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Upload\FileAlreadyUploadedInformation;

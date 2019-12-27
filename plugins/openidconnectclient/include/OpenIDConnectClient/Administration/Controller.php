@@ -21,7 +21,6 @@
 namespace Tuleap\OpenIDConnectClient\Administration;
 
 use CSRFSynchronizerToken;
-use Embed\Providers\Provider;
 use Feedback;
 use HTTPRequest;
 use PFUser;

@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Git\Notifications\UgroupsToNotifyDao;
-use Tuleap\Git\Notifications\UsersToNotifyDao;
 
 require_once 'bootstrap.php';
 

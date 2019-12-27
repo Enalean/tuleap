@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1\CopyItem;
 
 use DateTimeImmutable;
-use Docman_Document;
 use Docman_EmbeddedFile;
 use Docman_Empty;
 use Docman_File;

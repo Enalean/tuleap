@@ -19,9 +19,6 @@
  */
 
 use Tuleap\AgileDashboard\BaseController;
-use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
-use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
-use Tuleap\AgileDashboard\BreadCrumbDropdown\VirtualTopMilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;

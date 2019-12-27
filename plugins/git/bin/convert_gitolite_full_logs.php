@@ -24,11 +24,6 @@
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../include/gitPlugin.php';
 
-use Tuleap\Git\Gitolite\Gitolite3LogParser;
-use Tuleap\Git\Gitolite\GitoliteFileLogsDao;
-use Tuleap\Git\Gitolite\VersionDetector;
-use Tuleap\Git\History\Dao;
-use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 
 $console    = new Log_ConsoleLogger();
 $logger     = new GitBackendLogger();

@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
-use ParagonIE\EasyDB\EasyDB;
-use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
 class FrozenFieldsDao extends DataAccessObject

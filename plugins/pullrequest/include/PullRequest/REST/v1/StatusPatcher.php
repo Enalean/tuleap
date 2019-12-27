@@ -33,7 +33,6 @@ use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestCloser;
-use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\REST\ProjectAuthorization;
 use URLVerification;
 

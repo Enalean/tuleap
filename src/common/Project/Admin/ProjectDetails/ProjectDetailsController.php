@@ -45,7 +45,6 @@ use Tuleap\Project\HierarchyDisplayer;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\ProjectVisibilityPresenterBuilder;
 use Tuleap\Project\Admin\ProjectVisibilityUserConfigurationPermissions;
-use Tuleap\Project\Admin\ServicesUsingTruncatedMailRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
 use Tuleap\Project\Registration\Template\TemplateFactory;

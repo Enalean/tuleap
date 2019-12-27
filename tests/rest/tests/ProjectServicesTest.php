@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace Tuleap\REST;
 
-use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 

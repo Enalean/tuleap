@@ -33,13 +33,6 @@ use Tuleap\CLI\ConsoleLogger;
 use Tuleap\Project\XML\Import;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Project\XML\Import\ImportNotValidException;
-use Tuleap\Project\XML\XMLFileContentRetriever;
-use Tuleap\Service\ServiceCreator;
-use Tuleap\Widget\WidgetFactory;
-use UGroupDao;
-use UGroupManager;
-use User_ForgeUserGroupPermissionsDao;
-use User_ForgeUserGroupPermissionsManager;
 use XML_RNGValidator;
 use XML_Security;
 

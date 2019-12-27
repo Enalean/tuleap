@@ -25,12 +25,10 @@ namespace Tuleap\Mail;
 use BaseLanguage;
 use BaseLanguageFactory;
 use Codendi_Mail;
-use DateHelper;
 use ForgeConfig;
 use MailPresenterFactory;
 use PFUser;
 use TemplateRenderer;
-use TemplateRendererFactory;
 use Tuleap\User\IdleUsersDao;
 use UserManager;
 

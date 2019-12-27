@@ -23,24 +23,17 @@ declare(strict_types=1);
 
 namespace Tuleap\WebDAV;
 
-use DataAccessResult;
 use Docman_ItemFactory;
 use FRSPackage;
 use FRSRelease;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use PHPUnit\Framework\TestCase;
-use Plugin;
-use ProjectDao;
-use Sabre_DAV_Exception_FileNotFound;
-use Sabre_DAV_Exception_Forbidden;
 use Tuleap\GlobalLanguageMock;
 use WebDAVDocmanFolder;
 use WebDAVFRSFile;
 use WebDAVFRSPackage;
 use WebDAVFRSRelease;
-use WebDAVRoot;
 use WebDAVTree;
 
 require_once __DIR__.'/bootstrap.php';

@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tests\Selenium\SVN;
 
 use PHPUnit\Framework\TestCase;
-use SimpleXmlElement;
+use SimpleXMLElement;
 
 class SVNCLITest extends TestCase
 {

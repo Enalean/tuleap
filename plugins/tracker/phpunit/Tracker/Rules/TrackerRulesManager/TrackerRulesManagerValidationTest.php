@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Rule;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Tracker_Rule_Date;
 use Tracker_Rule_List;
 use Tracker_RuleFactory;
 use Tracker_RulesManager;

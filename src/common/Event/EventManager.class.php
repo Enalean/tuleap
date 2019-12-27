@@ -20,9 +20,7 @@
  */
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
-use Tuleap\Event\EventManagerCannotDispatchException;
 
 class EventManager implements EventDispatcherInterface // phpcs:ignore
 {

@@ -28,7 +28,6 @@ use Tracker_Rule_Date_Factory;
 use Tracker_Rule_List;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
-use Tuleap\Layout\BaseLayout;
 
 class TrackerRulesListValidatorTest extends TestCase
 {

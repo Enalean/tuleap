@@ -25,7 +25,6 @@ use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPerm
 use Tuleap\User\ForgeUserGroupPermission\RetrieveSystemEventsInformationApi;
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
 use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
-use TuleapTestCase;
 use User_ForgeUGroup;
 use User_ForgeUserGroupPermission_ProjectApproval;
 use User_ForgeUserGroupPermission_RetrieveUserMembershipInformation;

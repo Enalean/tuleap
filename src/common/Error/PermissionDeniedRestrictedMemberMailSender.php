@@ -20,14 +20,6 @@
 
 namespace Tuleap\Error;
 
-use Error_PermissionDenied;
-use HTTPRequest;
-use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\DispatchableWithRequest;
-use UnexpectedValueException;
-use Url;
-use Valid_Text;
-
 final class PermissionDeniedRestrictedMemberMailSender extends PermissionDeniedMailSender
 {
     /**

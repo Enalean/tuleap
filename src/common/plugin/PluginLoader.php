@@ -25,7 +25,6 @@ use Backend;
 use EventManager;
 use ForgeConfig;
 use Logger;
-use RuntimeException;
 use Symfony\Component\VarExporter\VarExporter;
 use Webimpress\SafeWriter\Exception\ExceptionInterface;
 use Webimpress\SafeWriter\FileWriter;

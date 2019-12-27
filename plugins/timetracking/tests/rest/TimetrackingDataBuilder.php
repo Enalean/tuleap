@@ -83,7 +83,7 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
 
     private function installPlugin()
     {
-        $dbtables = new DBTablesDAO();
+        $dbtables = new DBTablesDao();
         $dbtables->updateFromFile(dirname(__FILE__) . '/../../db/install.sql');
     }
 

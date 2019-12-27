@@ -22,8 +22,6 @@
 use Tuleap\Event\Events\ArchiveDeletedItemEvent;
 use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
 use Tuleap\FRS\FRSPermissionManager;
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\FRS\FRSPermissionFactory;
 
 class FRSFileFactory
 {

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Widget;
 
-use EventManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
 use Tuleap\Dashboard\Project\ProjectDashboardController;

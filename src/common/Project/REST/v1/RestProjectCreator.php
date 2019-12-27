@@ -28,7 +28,6 @@ use PFUser;
 use Project;
 use ProjectCreationData;
 use Tuleap\Project\Admin\Categories\CategoryCollection;
-use Tuleap\Project\Admin\Categories\MissingMandatoryCategoriesException;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesException;
 use Tuleap\Project\Admin\Categories\ProjectCategoriesUpdater;
 use Tuleap\Project\Admin\DescriptionFields\FieldDoesNotExistException;

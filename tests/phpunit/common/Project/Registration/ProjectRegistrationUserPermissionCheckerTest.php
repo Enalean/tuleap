@@ -37,7 +37,6 @@ use Tuleap\Project\Registration\MaxNumberOfProjectReachedException;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Project\Registration\LimitedToSiteAdministratorsException;
 use Tuleap\Project\Registration\RestrictedUsersNotAllowedException;
-use Tuleap\Request\ForbiddenException;
 
 class ProjectRegistrationUserPermissionCheckerTest extends TestCase
 {

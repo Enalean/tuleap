@@ -22,8 +22,6 @@ namespace Tuleap\Git;
 
 use EventManager;
 use Git_RemoteServer_GerritServerFactory;
-use GitRepository;
-use Git_RemoteServer_GerritServer;
 use Project;
 
 class GerritCanMigrateChecker

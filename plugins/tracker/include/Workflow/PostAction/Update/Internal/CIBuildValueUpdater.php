@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use DataAccessQueryException;
 use Transition;
-use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
 class CIBuildValueUpdater implements PostActionUpdater

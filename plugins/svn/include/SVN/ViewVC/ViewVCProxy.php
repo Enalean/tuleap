@@ -23,7 +23,6 @@ namespace Tuleap\SVN\ViewVC;
 use Codendi_HTMLPurifier;
 use CrossReferenceFactory;
 use EventManager;
-use ForgeConfig;
 use HTTPRequest;
 use Project;
 use ProjectManager;

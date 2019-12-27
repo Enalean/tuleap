@@ -85,7 +85,7 @@ class TransitionReplicatorBuilder
                 new SetDateValueValidator($field_ids_validator, $form_element_factory)
             ),
             new SetIntValueUpdater(
-                new SetintValueRepository(
+                new SetIntValueRepository(
                     new Transition_PostAction_Field_IntDao(),
                     $transaction_executor
                 ),

@@ -26,7 +26,6 @@ use TrackerManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\CssAsset;

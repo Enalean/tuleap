@@ -41,7 +41,6 @@ use Tracker_Workflow_Trigger_RulesManager;
 use Tracker_Workflow_Trigger_RulesProcessor;
 use TrackerFactory;
 use TrackerXmlExport;
-use Tuleap\DB\DBConnection;
 use Tuleap\DB\DBFactory;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;

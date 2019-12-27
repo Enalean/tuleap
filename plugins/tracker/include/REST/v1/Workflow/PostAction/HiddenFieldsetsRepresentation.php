@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
 use Tuleap\REST\JsonCast;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
 
 class HiddenFieldsetsRepresentation

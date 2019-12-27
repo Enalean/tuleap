@@ -28,7 +28,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use TemplateRenderer;
 use TemplateRendererFactory;
 use Tracker;
 use Tracker_Artifact;

@@ -23,43 +23,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tests\Integration;
 
-use EventManager;
 use ForgeConfig;
 use PHPUnit\Framework\TestCase;
 use ProjectCreator;
-use ProjectHistoryDao;
 use ProjectManager;
-use ReferenceManager;
-use ServiceDao;
-use Tuleap\Dashboard\Project\ProjectDashboardDao;
-use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
-use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
 use Tuleap\DB\DBFactory;
-use Tuleap\FRS\FRSPermissionCreator;
-use Tuleap\FRS\FRSPermissionDao;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalSVNPollution;
-use Tuleap\Project\DefaultProjectVisibilityRetriever;
-use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Registration\Template\TemplateFromProjectForCreation;
-use Tuleap\Project\UgroupDuplicator;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
-use Tuleap\Project\UGroups\Membership\MemberAdder;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
-use Tuleap\Service\ServiceCreator;
-use Tuleap\Widget\WidgetFactory;
-use UGroupBinding;
-use UGroupDao;
-use UGroupManager;
-use UGroupUserDao;
-use User_ForgeUserGroupPermissionsDao;
-use User_ForgeUserGroupPermissionsManager;
-use UserManager;
 
 class ProjectCreationTest extends TestCase
 {

@@ -20,7 +20,6 @@
  */
 
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
-use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueOpenListRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentationData;
 

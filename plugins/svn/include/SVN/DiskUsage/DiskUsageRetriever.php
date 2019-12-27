@@ -27,7 +27,6 @@ use Statistics_DiskUsageManager;
 use SvnPlugin;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Repository\RepositoryManager;
-use Tuleap\SVN\SvnLogger;
 
 class DiskUsageRetriever
 {

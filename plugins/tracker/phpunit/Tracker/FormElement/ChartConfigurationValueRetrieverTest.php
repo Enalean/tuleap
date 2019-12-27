@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\FormElement;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_FormElement_Chart_Field_Exception;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\FormElement\Container\Fieldset;
 
-use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;

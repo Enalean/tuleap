@@ -23,7 +23,6 @@ namespace Tuleap\Git\Gitolite\SSHKey\Provider;
 use Git_RemoteServer_Dao;
 use Git_RemoteServer_Gerrit_ReplicationSSHKey;
 use Tuleap\Git\Gitolite\SSHKey\Key;
-use TuleapTestCase;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 

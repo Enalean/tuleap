@@ -23,7 +23,6 @@ use Tuleap\AgileDashboard\AdminController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
-use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
