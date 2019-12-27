@@ -25,6 +25,14 @@ exports[`ChartBadgeGenerator - When the badge is created, Then value of remainin
         x="10"
         y="10"
       />
+      <text
+        class="release-chart-end-icon fa"
+        style="font-family:FontAwesome;"
+        x="13"
+        y="9"
+      >
+        
+      </text>
       <use
         href="#release-chart-badge-value-103"
       />

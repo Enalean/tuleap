@@ -45,6 +45,7 @@
 }
 
 .release-chart-badge-container {
+    animation: shadow-pulse 2s infinite cubic-bezier(.65, .47, .76, 1);
     fill: $remaining-effort-color;
 }
 
@@ -52,4 +53,22 @@
     fill: $tlp-ui-white;
     font-size: 13px;
     font-weight: 600;
+}
+
+.release-chart-end-icon {
+    align-self: center;
+    margin: 0 7px 0 0;
+    opacity: .9;
+    fill: $remaining-effort-color;
+    font-size: 15px;
+}
+
+@keyframes shadow-pulse {
+    from {
+        filter: drop-shadow(0 0 0 $remaining-effort-color);
+    }
+
+    to {
+        filter: drop-shadow(0 0 12px transparent);
+    }
 }

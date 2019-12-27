@@ -19,7 +19,10 @@
 
 import { Selection } from "d3-selection";
 import { getContainerProperties } from "./chart-badge-services";
-const Y_AXIS_TO_CENTER = 5;
+
+const Y_AXIS_TO_CENTER = 5,
+    Y_AXIS_TO_CENTER_FLAG = 1,
+    X_AXIS_TO_CENTER_FLAG = 2;
 
 export function addBadgeCaption(
     badge_y_position: number,
@@ -40,8 +43,21 @@ export function addBadgeCaption(
     const badge_props = getContainerProperties(badge_content, badge_value);
 
     buildBadgeBackground();
+    addIconFlag();
 
     badge.append("use").attr("xlink:href", `#release-chart-badge-value-${id_milestone}`);
+
+    function addIconFlag(): void {
+        badge
+            .append("text")
+            .attr("style", "font-family:FontAwesome;")
+            .attr("class", "release-chart-end-icon fa")
+            .attr("x", badge_props.x + badge_props.width / 2 - X_AXIS_TO_CENTER_FLAG)
+            .attr("y", badge_props.y - Y_AXIS_TO_CENTER_FLAG)
+            .text(function() {
+                return "\uf11e";
+            }); // fa-flag-checkered
+    }
 
     function buildBadgeContent(): Selection<SVGTextElement, unknown, null, undefined> {
         return badge
