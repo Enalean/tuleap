@@ -127,11 +127,11 @@ export default class ProjectInformationInputPrivacyList extends Vue {
                 );
             case ACCESS_PRIVATE:
                 return this.$gettext(
-                    "Project privacy set to private. Only project members can access its content. Restricted users are not allowed in this project."
+                    "Project privacy set to private including restricted. Only project members can access its content. Restricted users are allowed in this project."
                 );
             case ACCESS_PRIVATE_WO_RESTRICTED:
                 return this.$gettext(
-                    "Project privacy set to private including restricted. Only project members can access its content. Restricted users are allowed in this project."
+                    "Project privacy set to private. Only project members can access its content. Restricted users are not allowed in this project."
                 );
             default:
                 throw new Error("Unable to retrieve the selected visibility type");

@@ -63,6 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const is_creating_project = false;
     const is_project_approval_required = Boolean(vue_mount_point.dataset.projectsMustBeApproved);
     const is_description_required = Boolean(vue_mount_point.dataset.isDescriptionMandatory);
+    const are_anonymous_allowed = Boolean(vue_mount_point.dataset.areAnonymousAllowed);
 
     const company_templates_json = vue_mount_point.dataset.companyTemplates;
     if (!company_templates_json) {
@@ -77,6 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         selected_tuleap_template,
         selected_company_template,
         are_restricted_users_allowed,
+        are_anonymous_allowed,
         project_default_visibility,
         error,
         is_creating_project,

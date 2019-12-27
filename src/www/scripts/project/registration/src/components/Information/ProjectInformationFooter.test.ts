@@ -39,6 +39,7 @@ describe("ProjectInformationFooter", () => {
             },
             tuleap_templates: [],
             are_restricted_users_allowed: false,
+            are_anonymous_allowed: false,
             project_default_visibility: "public",
             error: null,
             is_creating_project: false,

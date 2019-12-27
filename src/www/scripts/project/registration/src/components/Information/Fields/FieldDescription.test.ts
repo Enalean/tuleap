@@ -37,6 +37,7 @@ describe("FieldDescription -", () => {
             },
             tuleap_templates: [],
             are_restricted_users_allowed: false,
+            are_anonymous_allowed: false,
             project_default_visibility: "",
             error: null,
             is_creating_project: false,

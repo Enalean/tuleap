@@ -25,6 +25,7 @@ const state: State = {
     selected_tuleap_template: null,
     selected_company_template: null,
     are_restricted_users_allowed: false,
+    are_anonymous_allowed: false,
     project_default_visibility: ACCESS_PRIVATE,
     error: null,
     is_creating_project: false,

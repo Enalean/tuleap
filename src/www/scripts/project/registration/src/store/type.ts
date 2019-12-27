@@ -25,6 +25,7 @@ export interface State {
     selected_tuleap_template: TemplateData | null;
     selected_company_template: TemplateData | null;
     are_restricted_users_allowed: boolean;
+    are_anonymous_allowed: boolean;
     project_default_visibility: string;
     error: string | null;
     is_creating_project: boolean;
@@ -49,5 +50,6 @@ export interface StoreOptions {
         is_creating_project: boolean;
         project_default_visibility: string;
         is_project_approval_required: boolean;
+        are_anonymous_allowed: boolean;
     };
 }
