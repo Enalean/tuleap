@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,9 +40,9 @@ class ReferenceValidator
         $this->reserved_keyword_retriever = $reserved_keyword_retriever;
     }
 
-    public function isValidKeyword($keyword)
+    public function isValidKeyword($keyword): bool
     {
-        return preg_match('/' . self::REFERENCE_PATTERN . '/', $keyword);
+        return preg_match('/' . self::REFERENCE_PATTERN . '/', $keyword) === 1;
     }
 
     public function isReservedKeyword($keyword)

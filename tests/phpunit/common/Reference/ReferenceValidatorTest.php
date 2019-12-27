@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,26 +20,27 @@
 
 namespace Tuleap\reference;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-class ReferenceValidatorTest extends TuleapTestCase
+final class ReferenceValidatorTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var ReferenceValidator
      */
     private $reference_validator;
 
-    public function setUp()
+    protected function setUp() : void
     {
-        parent::setUp();
-
         $this->reference_validator = new ReferenceValidator(
-            mock('ReferenceDao'),
+            \Mockery::spy(\ReferenceDao::class),
             new ReservedKeywordsRetriever(\Mockery::spy(\EventManager::class))
         );
     }
 
-    public function itTestKeywordCharacterValidation()
+    public function testItTestKeywordCharacterValidation() : void
     {
         $this->assertFalse($this->reference_validator->isValidKeyword("UPPER"));
         $this->assertFalse($this->reference_validator->isValidKeyword("with space"));
@@ -56,7 +57,7 @@ class ReferenceValidatorTest extends TuleapTestCase
         $this->assertTrue($this->reference_validator->isValidKeyword("with_underscore"));
     }
 
-    public function itTestIfKeywordIsReserved()
+    public function testItTestIfKeywordIsReserved() : void
     {
         $this->assertTrue($this->reference_validator->isReservedKeyword("art"));
         $this->assertTrue($this->reference_validator->isReservedKeyword("cvs"));
