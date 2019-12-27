@@ -26,15 +26,28 @@
 class XML_SimpleXMLCDATAFactory
 {
 
-    /**
-     *
-     * @param SimpleXMLElement $parent_node
-     * @param string $node_name
-     * @param string $node_value
-     */
-    public function insert(SimpleXMLElement $parent_node, $node_name, $node_value)
+    public function insert(SimpleXMLElement $parent_node, string $node_name, $node_value): void
     {
-        $node     = $parent_node->addChild($node_name);
+        $node = $parent_node->addChild($node_name);
+        $this->addCDATAContentToXMLNode($node, $node_value);
+    }
+
+    public function insertWithAttributes(
+        SimpleXMLElement $parent_node,
+        string $node_name,
+        string $node_value,
+        array $attributes
+    ): void {
+        $node = $parent_node->addChild($node_name);
+        foreach ($attributes as $name => $value) {
+            $node->addAttribute((string) $name, (string) $value);
+        }
+
+        $this->addCDATAContentToXMLNode($node, $node_value);
+    }
+
+    private function addCDATAContentToXMLNode(SimpleXMLElement $node, $node_value): void
+    {
         $dom_node = dom_import_simplexml($node);
         $document = $dom_node->ownerDocument;
         $value    = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($node_value);

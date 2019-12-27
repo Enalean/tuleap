@@ -112,11 +112,18 @@ class Tracker_Report_Criteria
             $root->addAttribute('id', $this->id);
             $root->addAttribute('report', $this->report->id);
         }
+
         $root->addChild('field')->addAttribute('REF', array_search($this->field->id, $xmlMapping));
+        $this->field->exportCriteriaValueToXML($this, $root);
     }
 
     public function getField()
     {
         return $this->field;
+    }
+
+    public function getReport(): Tracker_Report
+    {
+        return $this->report;
     }
 }

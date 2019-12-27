@@ -48,7 +48,7 @@ class Tracker_Report_CriteriaFactory
 
     /**
      * @param array the row allowing the construction of a criteria
-     * @return Criteria Object
+     * @return Tracker_Report_Criteria Object
      */
     public function getInstanceFromRow($row)
     {
@@ -64,12 +64,9 @@ class Tracker_Report_CriteriaFactory
     /**
      * Creates a Tracker_Report_Criteria Object
      *
-     * @param SimpleXMLElement $xml         containing the structure of the imported criteria
-     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     *
      * @return null | Tracker_Report_Criteria Object
      */
-    public function getInstanceFromXML($xml, &$xmlMapping)
+    public function getInstanceFromXML(SimpleXMLElement $xml, Tracker_Report $report, array &$xmlMapping)
     {
         $att  = $xml->attributes();
         $fatt = $xml->field->attributes();
@@ -88,7 +85,7 @@ class Tracker_Report_CriteriaFactory
             }
         } else {
             $row['id']     = 0;
-            $row['report'] = null;
+            $row['report'] = $report;
         }
 
         return $this->getInstanceFromRow($row);

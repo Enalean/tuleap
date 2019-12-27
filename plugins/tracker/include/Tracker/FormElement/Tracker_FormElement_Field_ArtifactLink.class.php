@@ -436,7 +436,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
     /**
      * Return the dao of the criteria value used with this field.
-     * @return DataAccessObject
+     * @return Tracker_Report_Criteria_ValueDao
      */
     protected function getCriteriaDao()
     {

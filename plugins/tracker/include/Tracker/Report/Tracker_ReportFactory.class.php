@@ -273,7 +273,7 @@ class Tracker_ReportFactory
                 $row[$key] = (int)$value;
             }
         } else {
-            $row['id'] = 0;
+            $row['id'] = 'XML_IMPORT_REPORT_'.rand();
             $row['current_renderer_id'] = 0;
             $row['parent_report_id'] = 0;
             $row['tracker_id'] = 0;
@@ -286,9 +286,12 @@ class Tracker_ReportFactory
         // create criteria
         $report->criterias = array();
         foreach ($xml->criterias->criteria as $criteria) {
-            $report_criteria = $this->getCriteriaFactory()->getInstanceFromXML($criteria, $xmlMapping);
+            $report_criteria = $this->getCriteriaFactory()->getInstanceFromXML($criteria, $report, $xmlMapping);
             if (! $report_criteria) {
                 continue;
+            }
+            if (isset($criteria->criteria_value)) {
+                $report_criteria->getField()->setCriteriaValueFromXML($report_criteria, $criteria->criteria_value);
             }
 
             $report->criterias[] = $report_criteria;
@@ -313,7 +316,7 @@ class Tracker_ReportFactory
      * @param int trackerId of the created tracker
      * @param Object report
      *
-     * @return id of the newly created Report
+     * @return int id of the newly created Report
      */
     public function saveObject($trackerId, $report)
     {
@@ -333,7 +336,11 @@ class Tracker_ReportFactory
         $reportDB = Tracker_ReportFactory::instance()->getReportById($reportId, null);
         if ($report->criterias) {
             foreach ($report->criterias as $criteria) {
-                $reportDB->addCriteria($criteria);
+                assert($criteria instanceof Tracker_Report_Criteria);
+                $criteria_id = $reportDB->addCriteria($criteria);
+                $criteria->setId($criteria_id);
+                // Add criteria value
+                $criteria->getField()->saveCriteriaValueFromXML($criteria);
             }
         }
         //create renderers
@@ -347,7 +354,7 @@ class Tracker_ReportFactory
                 }
             }
         }
-        return $reportDB->id;
+        return (int) $reportDB->id;
     }
 
     /**

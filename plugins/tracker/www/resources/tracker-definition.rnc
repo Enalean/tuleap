@@ -426,7 +426,16 @@ tracker =
 
         element field {
             attribute REF { xsd:IDREF }
-        }
+        },
+        element criteria_value {
+            reportValueContent
+        }?
+
+    reportValueContent =
+        (
+            attribute type { "text" },
+            xsd:string
+        )
 
     rendererContent =
         attribute ID { xsd:ID }?,

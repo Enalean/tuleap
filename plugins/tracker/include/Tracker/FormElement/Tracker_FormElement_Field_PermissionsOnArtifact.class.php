@@ -525,6 +525,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $this->criteria_value[$criteria->report->id];
     }
 
+    public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria)
+    {
+        return;
+    }
+
     public function getCriteriaWhere($criteria)
     {
         return '';
@@ -585,7 +590,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     }
 
     /**
-     * @return ProjectUGroup []
+     * @return ProjectUGroup[]
      */
     private function getAllUserGroups()
     {

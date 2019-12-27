@@ -960,6 +960,17 @@
         <data type="IDREF"/>
       </attribute>
     </element>
+    <optional>
+      <element name="criteria_value">
+        <ref name="reportValueContent"/>
+      </element>
+    </optional>
+  </define>
+  <define name="reportValueContent">
+    <attribute name="type">
+      <value>text</value>
+    </attribute>
+    <data type="string"/>
   </define>
   <define name="rendererContent">
     <optional>

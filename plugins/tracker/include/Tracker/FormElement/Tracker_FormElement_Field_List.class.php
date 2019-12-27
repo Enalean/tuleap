@@ -380,6 +380,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return count($criterias) > 0;
     }
 
+    public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria)
+    {
+        return;
+    }
+
     protected function formatCriteriaValue($value_to_match)
     {
         return $value_to_match;
