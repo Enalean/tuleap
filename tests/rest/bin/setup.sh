@@ -2,12 +2,12 @@
 
 set -euxo pipefail
 
-if [ -z "$FPM_DAEMON" ]; then
-    echo 'FPM_DAEMON environment variable must be specified' 1>&2
+if [ -z "${PHP_FPM:-}" ]; then
+    echo 'PHP_FPM environment variable must be specified' 1>&2
     exit 1
 fi
 
-if [ -z "$PHP_CLI" ]; then
+if [ -z "${PHP_CLI:-}" ]; then
     echo 'PHP_CLI environment variable must be specified' 1>&2
     exit 1
 fi
@@ -36,8 +36,6 @@ setup_tuleap() {
 	-e 's#/home/users##' \
 	-e 's#/home/groups##' \
 	> /etc/tuleap/conf/local.inc
-
-	install -m 00440 -o root -g root /usr/share/tuleap/src/utils/sudoers.d/tuleap_fileforge /etc/sudoers.d/tuleap_fileforge
 
 	install -m 00755 -o codendiadm -g codendiadm /usr/share/tuleap/src/utils/tuleap /usr/bin/tuleap
 	ln -s /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php /usr/bin/tuleap-cfg
@@ -155,14 +153,12 @@ seed_plugin_data() {
 }
 
 setup_tuleap
-if [ "$FPM_DAEMON" == 'php73-php-fpm' ]; then
+if [ "$PHP_FPM" == '/opt/remi/php73/root/usr/sbin/php-fpm' ]; then
     echo "Deploy PHP FPM 7.3"
     "$PHP_CLI" /usr/share/tuleap/tools/utils/php73/run.php --modules=nginx,fpm
 fi
-service "$FPM_DAEMON" start
-service nginx start
 setup_database
 tuleap_db_config
 seed_data
-service "$FPM_DAEMON" restart
-service nginx reload
+$PHP_FPM --daemonize
+nginx

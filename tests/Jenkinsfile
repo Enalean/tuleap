@@ -77,7 +77,7 @@ pipeline {
                 }
                 stage('REST') {
                     stages {
-                        stage('REST CentOS 6 PHP 7.3 MySQL 5.7') {
+                        stage('REST PHP 7.3 MySQL 5.7') {
                             steps { script { actions.runRESTTests('mysql57', '73') } }
                         }
                     }
