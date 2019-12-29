@@ -27,7 +27,11 @@ class PluginFactory // phpcs:ignore
     /** @var PluginDao */
     private $plugin_dao;
 
-    /** @var array */
+    /**
+     * @var array
+     *
+     * @psalm-var array{by_name: array, by_id: array, available: array, unavailable: array}
+     */
     private $retrieved_plugins;
 
     /** @var array */

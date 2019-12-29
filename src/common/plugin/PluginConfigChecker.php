@@ -25,6 +25,7 @@ class PluginConfigChecker
      * @var Logger
      */
     private $logger;
+    private $app_user;
 
     public function __construct(Logger $logger)
     {

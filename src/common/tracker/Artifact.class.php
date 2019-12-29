@@ -203,12 +203,12 @@ class Artifact
         if (!$aid) {
             return;
         }
-        $sql="SELECT afv.valueInt 
-              FROM artifact_field_value afv, artifact a, artifact_field af 
-              WHERE a.artifact_id=". db_ei($aid) ." 
-                AND afv.artifact_id=". db_ei($aid) ." 
-                AND a.group_artifact_id=af.group_artifact_id 
-                AND afv.field_id=af.field_id 
+        $sql="SELECT afv.valueInt
+              FROM artifact_field_value afv, artifact a, artifact_field af
+              WHERE a.artifact_id=". db_ei($aid) ."
+                AND afv.artifact_id=". db_ei($aid) ."
+                AND a.group_artifact_id=af.group_artifact_id
+                AND afv.field_id=af.field_id
                 AND af.field_name='multi_assigned_to'";
         $res=db_query($sql);
         $i=0;
@@ -476,10 +476,10 @@ class Artifact
         // first make sure this wasn't double-submitted
         $field = $art_field_fact->getFieldFromName('summary');
         if ($field && $field->isUsed()) {
-            $res=db_query("SELECT * 
-                FROM artifact 
-                WHERE group_artifact_id = ". db_ei($ath->getID()) ." 
-                AND submitted_by=".  db_ei($user) ." 
+            $res=db_query("SELECT *
+                FROM artifact
+                WHERE group_artifact_id = ". db_ei($ath->getID()) ."
+                AND submitted_by=".  db_ei($user) ."
                 AND summary='". db_es(htmlspecialchars($vfl['summary'])) ."'");
             if ($res && db_numrows($res) > 0) {
                 $this->setError($Language->getText('tracker_common_artifact', 'double_subm', db_result($res, 0, 'artifact_id')));
@@ -1112,7 +1112,7 @@ class Artifact
                     $use_artifact_permissions = 0;
                 }
             }
-            $sql = "UPDATE artifact 
+            $sql = "UPDATE artifact
                     SET use_artifact_permissions = ". ($use_artifact_permissions ? 1 : 0) ."
                     WHERE artifact_id=". db_ei($this->getID());
             db_query($sql);
@@ -2011,7 +2011,7 @@ class Artifact
             $u = UserManager::instance()->getUserById($my_user_id);
         }
         // Super-user and Tracker admin have all rights to see even artfact that are restricted to all users
-        if ($u->isSuperUser() || $u->isTrackerAdmin($this->ArtifactType->getGroupID(), $this->ArtifactType->getID())) {
+        if ($u !== null && ($u->isSuperUser() || $u->isTrackerAdmin($this->ArtifactType->getGroupID(), $this->ArtifactType->getID()))) {
             return true;
         }
 
@@ -2150,7 +2150,7 @@ class Artifact
         // check submitter notification preferences
         $user_id = $this->getSubmittedBy();
         $submitter = UserManager::instance()->getUserById($user_id);
-        if ($user_id != 100 && ($submitter->isActive() || $submitter->isRestricted())) {
+        if ($user_id != 100 && ($submitter !== null && ($submitter->isActive() || $submitter->isRestricted()))) {
             if ($this->ArtifactType->checkNotification($user_id, 'SUBMITTER', $changes) && $this->userCanView($user_id)) {
                   //echo "DBG - SUBMITTER - user=$user_id<br>";
                 $concerned_ids[$user_id] = true;
@@ -2327,8 +2327,8 @@ class Artifact
     function isFollowupCommentDeleted($comment_id)
     {
 
-        $sql = 'SELECT artifact_id, new_value 
-                FROM artifact_history 
+        $sql = 'SELECT artifact_id, new_value
+                FROM artifact_history
                 WHERE artifact_history_id = '. db_ei($comment_id) ;
         $res = db_query($sql);
         if (db_result($res, 0, 'new_value') == "") {
@@ -2358,7 +2358,7 @@ class Artifact
     function getOriginalCommentSubmitter($comment_id)
     {
 
-        $sql = 'SELECT field_name, mod_by, email 
+        $sql = 'SELECT field_name, mod_by, email
                 FROM artifact_history
                 WHERE artifact_history_id = '. db_ei($comment_id) ;
         $res = db_query($sql);
@@ -2368,7 +2368,7 @@ class Artifact
         } elseif (preg_match("/^(lbl_)/", $field_name) && preg_match("/(_comment)$/", $field_name)) {
          // extract id of the original comment
             $id = (int) substr($field_name, 4, -8);
-            $qry = 'SELECT mod_by, email 
+            $qry = 'SELECT mod_by, email
                     FROM artifact_history
                     WHERE artifact_history_id = '. db_ei($id) .'
                     AND field_name = "comment"';
@@ -2436,7 +2436,7 @@ class Artifact
                             $u_id = db_result($res_username, 0, 'user_id');
                             if (!$address['check_permissions']) {
                                 $curr_user = UserManager::instance()->getUserById($u_id);
-                                if ($curr_user->isActive() || $curr_user->isRestricted()) {
+                                if ($curr_user !== null && ($curr_user->isActive() || $curr_user->isRestricted())) {
                                     $withoutpermissions_concerned_addresses[user_getemail($u_id)] = true;
                                 }
                                 unset($concerned_ids[$u_id]);
@@ -3237,7 +3237,7 @@ class Artifact
                                 (value)(null, true, true);
                         });
                     }
-                    
+
                     function tracker_collapse_all_comments() {
                         $H(tracker_comment_togglers).values().each(function (value) {
                                 (value)(null, true, false);
@@ -3310,7 +3310,7 @@ class Artifact
                         if (element) {
                             if (!force || (expand && !element.visible()) || (!expand && element.visible())) {
                                 Element.toggle(element);
-                                
+
                                 //replace image
                                 var src_search = 'toggle_minus';
                                 var src_replace = 'toggle_plus';

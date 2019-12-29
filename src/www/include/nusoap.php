@@ -2047,6 +2047,7 @@ class soap_transport_http extends nusoap_base
                                 // passphrase: SSL key password/passphrase
                                 // verifypeer: default is 1
                                 // verifyhost: default is 1
+    private $fp;
 
     /**
     * constructor
@@ -5431,7 +5432,7 @@ class wsdl extends nusoap_base
                 } elseif (isset($attrs['default'])) {
                     $xname = '!' . $aName;
                     $xvalue[$xname] = $attrs['default'];
-                    $this->debug('use default value of ' . $xvalue[$aName] . ' for attribute ' . $aName);
+                    $this->debug('use default value of ' . $xvalue[$xname] . ' for attribute ' . $aName);
                 } else {
                     $xname = '';
                     $this->debug("no value provided for attribute $aName");

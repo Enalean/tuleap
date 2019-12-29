@@ -60,7 +60,7 @@ class ArtifactMultiListCurrentValueExporter
 
         $this->addCurrentValueLabel($field_value_row);
 
-        return $this->current_field_values[$field_name];
+        return $this->current_field_values[$field_name] ?? null;
     }
 
     private function initCurrentFieldValues(array $field_value_row)

@@ -49,7 +49,7 @@ class CrossTrackerArtifactReportRepresentation
     public $last_update_date;
 
     /**
-     * @var MinimalUserRepresentation
+     * @var MinimalUserRepresentation|null
      */
     public $submitted_by;
 

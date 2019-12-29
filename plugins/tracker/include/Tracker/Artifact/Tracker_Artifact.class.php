@@ -1549,6 +1549,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if (! isset($this->submitted_by_user)) {
             $this->submitted_by_user = $this->getUserManager()->getUserById($this->submitted_by);
         }
+        if ($this->submitted_by_user === null) {
+            $this->setSubmittedByUser($this->getUserManager()->getUserAnonymous());
+        }
         return $this->submitted_by_user;
     }
 
