@@ -9,8 +9,8 @@
     Template used to create a project based on Scrum methodology
   </long-description>
   <services>
-    <service shortname="plugin_agiledashboard" enabled="true" />
-    <service shortname="plugin_tracker" enabled="true" />
-    <service shortname="plugin_git" enabled="true" />
+    <service shortname="plugin_agiledashboard" enabled="1" />
+    <service shortname="plugin_tracker" enabled="1" />
+    <service shortname="plugin_git" enabled="1" />
   </services>
 </project>

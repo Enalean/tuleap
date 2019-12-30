@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Project\XML;
 
 use ServiceManager;
+use Tuleap\XML\PHPCast;
 
 class ConsistencyChecker
 {
@@ -55,7 +56,7 @@ class ConsistencyChecker
         }
 
         foreach ($xml->services->service as $service) {
-            if ((string) $service['enabled'] === 'true') {
+            if (PHPCast::toBoolean($service['enabled']) === true) {
                 $service_name = (string) $service['shortname'];
                 if (! isset($available_services[$service_name])) {
                     return false;
