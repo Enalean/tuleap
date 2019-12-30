@@ -31,7 +31,7 @@ use Tuleap\Baseline\Domain\CurrentUserProvider;
  */
 class CurrentUserProviderStub implements CurrentUserProvider
 {
-    /** @var PFUSer */
+    /** @var PFUser */
     private $user;
 
     public function __construct()

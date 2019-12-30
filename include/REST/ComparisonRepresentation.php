@@ -70,12 +70,12 @@ class ComparisonRepresentation
     public static function fromComparison(Comparison $comparison): ComparisonRepresentation
     {
         return new self(
-            Jsoncast::toInt($comparison->getId()),
+            JsonCast::toInt($comparison->getId()),
             $comparison->getName(),
             $comparison->getComment(),
-            Jsoncast::toInt($comparison->getBaseBaseline()->getId()),
-            Jsoncast::toInt($comparison->getComparedToBaseline()->getId()),
-            Jsoncast::toInt($comparison->getAuthor()->getId()),
+            JsonCast::toInt($comparison->getBaseBaseline()->getId()),
+            JsonCast::toInt($comparison->getComparedToBaseline()->getId()),
+            JsonCast::toInt($comparison->getAuthor()->getId()),
             JsonCast::fromDateTimeToDate($comparison->getCreationDate())
         );
     }

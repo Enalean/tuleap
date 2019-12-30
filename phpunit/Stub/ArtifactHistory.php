@@ -39,7 +39,6 @@ class ArtifactHistory
 
     public function add(BaselineArtifact $artifact, DateTimeInterface $date): void
     {
-        /** @var BaselineChangeSet $previous_changeset */
         foreach ($this->change_sets as $index => $change_set) {
             if ($change_set->isLaterThan($date)) {
                 array_splice(
