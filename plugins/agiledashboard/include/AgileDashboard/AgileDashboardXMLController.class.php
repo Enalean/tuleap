@@ -91,6 +91,9 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         $this->explicit_backlog_xml_import = $explicit_backlog_xml_import;
     }
 
+    /**
+     * @throws AgileDashboard_XMLExporterUnableToGetValueException
+     */
     public function export()
     {
         $root_node = $this->request->get('into_xml');
@@ -115,14 +118,18 @@ class AgileDashboard_XMLController extends MVC2_PluginController
 
         $this->xml_rng_validator->validate($xml, $rng_path);
 
-        $this->import($xml);
+        $this->importPlannings($xml);
+
+        $this->explicit_backlog_xml_import->importConfiguration($xml, $this->request->getProject());
     }
 
     /**
      * @throws Exception
      */
-    public function importProject()
-    {
+    public function importProject(
+        Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
+        Logger $logger
+    ) {
         $this->checkUserIsAdmin();
 
         $xml       = $this->request->get('xml_content');
@@ -131,23 +138,30 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         $this->xml_rng_validator->validate($xml, $rng_path);
         $xml = $this->request->get('xml_content')->agiledashboard;
 
-        $this->import($xml);
+        $this->importPlannings($xml);
+
+        $this->explicit_backlog_xml_import->importConfiguration($xml, $this->request->getProject());
+        $this->explicit_backlog_xml_import->importContent(
+            $xml,
+            $this->request->getProject(),
+            $this->request->getCurrentUser(),
+            $artifact_id_mapping,
+            $logger
+        );
     }
 
     /**
      * @throws Exception
      */
-    private function import(SimpleXMLElement $xml)
+    private function importPlannings(SimpleXMLElement $xml): void
     {
-        $this->explicit_backlog_xml_import->importConfiguration($xml, $this->group_id);
-
         $data = $this->agiledashboard_xml_importer->toArray($xml, $this->request->get('mapping'));
 
         foreach ($data['plannings'] as $planning) {
             $request_params = array(
-                'planning'      => $planning,
-                'group_id'      => $this->group_id,
-                'planning_id'   => ''
+                'planning'    => $planning,
+                'group_id'    => $this->group_id,
+                'planning_id' => ''
             );
 
             $request = new Codendi_Request($request_params);
@@ -158,7 +172,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
                     PlanningParameters::fromArray($planning)
                 );
             } else {
-                throw new Exception('Planning is not valid: '.  print_r($planning, true));
+                throw new Exception('Planning is not valid: ' . print_r($planning, true));
             }
         }
     }

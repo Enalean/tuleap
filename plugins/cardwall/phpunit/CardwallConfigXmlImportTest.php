@@ -168,16 +168,21 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
         $this->group_id                   = 145;
         $this->event_manager              = \Mockery::mock(\EventManager::class);
         $this->xml_validator              = \Mockery::spy(\XML_RNGValidator::class);
+        $this->logger                     = \Mockery::mock(\Logger::class);
+        $this->artifact_id_mapping        = new Tracker_XML_Importer_ArtifactImportedMapping();
+
         $this->cardwall_config_xml_import = new CardwallConfigXmlImport(
             $this->group_id,
             $this->mapping,
             $this->field_mapping,
+            $this->artifact_id_mapping,
             $this->cardwall_ontop_dao,
             $this->column_dao,
             $this->mapping_field_dao,
             $this->mapping_field_value_dao,
             $this->event_manager,
-            $this->xml_validator
+            $this->xml_validator,
+            $this->logger
         );
     }
 
@@ -265,9 +270,11 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
         $this->event_manager->shouldReceive('processEvent')->with(
             Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
             array(
-                'project_id'  => $this->group_id,
-                'xml_content' => $this->default_xml_input,
-                'mapping'     => $this->mapping
+                'project_id'          => $this->group_id,
+                'xml_content'         => $this->default_xml_input,
+                'mapping'             => $this->mapping,
+                'logger'              => $this->logger,
+                'artifact_id_mapping' => $this->artifact_id_mapping
             )
         );
 
@@ -284,12 +291,14 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
             $this->group_id,
             $this->mapping,
             $this->field_mapping,
+            $this->artifact_id_mapping,
             $cardwall_ontop_dao,
             $this->column_dao,
             $this->mapping_field_dao,
             $this->mapping_field_value_dao,
             $this->event_manager,
-            $this->xml_validator
+            $this->xml_validator,
+            $this->logger
         );
 
         $this->event_manager->shouldNotReceive('processEvent')->with(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, \Mockery::any());
@@ -307,12 +316,14 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
             $this->group_id,
             $this->mapping,
             $this->field_mapping,
+            $this->artifact_id_mapping,
             $this->cardwall_ontop_dao,
             $this->column_dao,
             $this->mapping_field_dao,
             $this->mapping_field_value_dao,
             $this->event_manager,
-            $xml_validator
+            $xml_validator,
+            $this->logger
         );
 
         $this->expectException(\XML_ParseException::class);
