@@ -18,7 +18,7 @@
  */
 
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
-import ReleaseBadgesOpenSprints from "./ReleaseBadgesOpenSprints.vue";
+import ReleaseBadgesAllSprints from "./ReleaseBadgesAllSprints.vue";
 import { createStoreMock } from "../../../../../../../../src/www/scripts/vue-components/store-wrapper-jest";
 import { MilestoneData, StoreOptions } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
@@ -26,23 +26,23 @@ import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test
 let release_data: MilestoneData & Required<Pick<MilestoneData, "planning">>;
 const total_sprint = 10;
 const initial_effort = 10;
-const component_options: ShallowMountOptions<ReleaseBadgesOpenSprints> = {};
+const component_options: ShallowMountOptions<ReleaseBadgesAllSprints> = {};
 
 const project_id = 102;
 
-describe("ReleaseBadgesOpenSprints", () => {
+describe("ReleaseBadgesAllSprints", () => {
     let store_options: StoreOptions;
     let store;
 
     async function getPersonalWidgetInstance(
         store_options: StoreOptions
-    ): Promise<Wrapper<ReleaseBadgesOpenSprints>> {
+    ): Promise<Wrapper<ReleaseBadgesAllSprints>> {
         store = createStoreMock(store_options);
 
         component_options.mocks = { $store: store };
         component_options.localVue = await createReleaseWidgetLocalVue();
 
-        return shallowMount(ReleaseBadgesOpenSprints, component_options);
+        return shallowMount(ReleaseBadgesAllSprints, component_options);
     }
 
     beforeEach(() => {

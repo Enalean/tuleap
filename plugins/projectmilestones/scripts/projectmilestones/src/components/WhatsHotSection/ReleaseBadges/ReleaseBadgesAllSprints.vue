@@ -38,7 +38,7 @@ import { MilestoneData } from "../../../type";
 import { State } from "vuex-class";
 
 @Component
-export default class ReleaseBadgesOpenSprints extends Vue {
+export default class ReleaseBadgesAllSprints extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
     @State
