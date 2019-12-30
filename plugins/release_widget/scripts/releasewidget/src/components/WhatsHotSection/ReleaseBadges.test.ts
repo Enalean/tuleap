@@ -77,7 +77,8 @@ describe("ReleaseBadges", () => {
                         trackers: []
                     }
                 },
-                additional_panes: []
+                additional_panes: [],
+                burndown: null
             }
         };
 
@@ -241,7 +242,8 @@ describe("ReleaseBadges", () => {
                             trackers: []
                         }
                     },
-                    additional_panes: []
+                    additional_panes: [],
+                    burndown: null
                 }
             };
 
@@ -279,7 +281,8 @@ describe("ReleaseBadges", () => {
                             trackers: []
                         }
                     },
-                    additional_panes: []
+                    additional_panes: [],
+                    burndown: null
                 }
             };
 
