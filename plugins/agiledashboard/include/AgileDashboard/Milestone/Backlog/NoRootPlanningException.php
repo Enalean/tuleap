@@ -21,7 +21,7 @@
 
 declare(strict_types = 1);
 
-namespace Tuleap\AgileDashboard\REST\v1\Milestone;
+namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
 use Exception;
 

@@ -43,6 +43,9 @@ use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;
+use Tuleap\AgileDashboard\Milestone\Backlog\ProvidedAddedIdIsNotInPartOfTopBacklogException;
+use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -51,8 +54,6 @@ use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementAdder;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneElementRemover;
-use Tuleap\AgileDashboard\REST\v1\Milestone\NoRootPlanningException;
-use Tuleap\AgileDashboard\REST\v1\Milestone\ProvidedAddedIdIsNotInPartOfTopBacklogException;
 use Tuleap\AgileDashboard\REST\v1\Milestone\ProvidedRemoveIdIsNotInExplicitBacklogException;
 use Tuleap\AgileDashboard\REST\v1\Milestone\RemoveNotAvailableInClassicBacklogModeException;
 use Tuleap\AgileDashboard\REST\v1\Rank\ArtifactsRankOrderer;
@@ -281,8 +282,10 @@ class ProjectBacklogResource
                     new ExplicitBacklogDao(),
                     new ArtifactsInExplicitBacklogDao(),
                     $this->resources_patcher,
-                    $this->planning_factory,
-                    Tracker_ArtifactFactory::instance(),
+                    new TopBacklogElementsToAddChecker(
+                        $this->planning_factory,
+                        Tracker_ArtifactFactory::instance()
+                    ),
                     new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
                 );
                 $adder->addElementToBacklog($project, $add, $user);
@@ -319,7 +322,7 @@ class ProjectBacklogResource
     }
 
     /**
-     * @throws RestException 403
+     * @throws RestException
      */
     private function checkIfUserCanChangePrioritiesInMilestone(PFUser $user, Project $project)
     {
@@ -341,6 +344,9 @@ class ProjectBacklogResource
         }
     }
 
+    /**
+     * @throws RestException
+     */
     private function validateArtifactIdsAreInUnassignedTopBacklog(array $ids, PFUser $user, Project $project)
     {
         try {
