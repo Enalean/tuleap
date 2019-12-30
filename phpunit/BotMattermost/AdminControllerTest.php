@@ -30,7 +30,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 
 class AdminControllerTest extends TestCase
 {

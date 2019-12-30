@@ -22,7 +22,6 @@ namespace Tuleap\BotMattermost\SenderServices;
 
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\BotMattermost\SenderServicesException\Exception\HasNoMessageContentException;
-use Tuleap\BotMattermostGit\SenderServices\Attachment;
 
 class EncoderMessage
 {

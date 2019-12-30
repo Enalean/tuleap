@@ -24,7 +24,6 @@ use Exception;
 use Tuleap\BotMattermost\Bot\Bot;
 use Tuleap\BotMattermost\BotMattermostLogger;
 use Tuleap\BotMattermost\SenderServicesException\Exception\HasNoMessageContentException;
-use Tuleap\BotMattermostGit\SenderServices\Attachment;
 
 class Sender
 {

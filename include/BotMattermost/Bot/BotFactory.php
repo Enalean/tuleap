@@ -24,7 +24,6 @@ use Tuleap\BotMattermost\Exception\BotNotFoundException;
 use Tuleap\BotMattermost\Exception\CannotCreateBotException;
 use Tuleap\BotMattermost\Exception\CannotDeleteBotException;
 use Tuleap\BotMattermost\Exception\CannotUpdateBotException;
-use Tuleap\BotMattermost\Exception\ChannelsNotFoundException;
 
 class BotFactory
 {
