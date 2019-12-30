@@ -85,7 +85,7 @@ class mytuleap_contact_supportPlugin extends Plugin // phpcs:ignore PSR1.Classes
         return TemplateRendererFactory::build()->getRenderer($template_path);
     }
 
-    public function collectRoutesEvent(collectRoutesEvent $event) : void
+    public function collectRoutesEvent(CollectRoutesEvent $event) : void
     {
         $event->getRouteCollector()->addGroup('/plugins/mytuleap_contact_support', function (RouteCollector $r) {
                 $r->post(
