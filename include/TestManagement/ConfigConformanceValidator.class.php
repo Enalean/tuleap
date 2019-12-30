@@ -21,7 +21,6 @@
 namespace Tuleap\TestManagement;
 
 use Tracker_Artifact;
-use PFUser;
 
 class ConfigConformanceValidator
 {

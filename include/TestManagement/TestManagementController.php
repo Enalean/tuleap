@@ -23,7 +23,6 @@ namespace Tuleap\TestManagement;
 use MVC2_PluginController;
 use Codendi_Request;
 use Planning_Milestone;
-use TrackerFactory;
 use EventManager;
 use Tuleap\TestManagement\Breadcrumbs\NoCrumb;
 

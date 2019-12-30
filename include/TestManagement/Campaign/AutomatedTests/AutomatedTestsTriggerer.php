@@ -22,7 +22,6 @@ namespace Tuleap\TestManagement\Campaign\AutomatedTests;
 
 use Jenkins_Client;
 use Tuleap\TestManagement\Campaign\Campaign;
-use Tuleap\TestManagement\Campaign\CampaignDao;
 
 class AutomatedTestsTriggerer
 {

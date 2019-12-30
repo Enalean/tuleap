@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuleap\TestManagement\Config;
-use Tuleap\TestManagement\Dao;
 
 class TestManagementDataBuilder extends REST_TestDataBuilder
 {

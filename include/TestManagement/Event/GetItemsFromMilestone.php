@@ -21,7 +21,6 @@
 namespace Tuleap\TestManagement\Event;
 
 use PFUser;
-use Planning_Milestone;
 use Tuleap\Event\Dispatchable;
 
 class GetItemsFromMilestone implements Dispatchable
@@ -30,7 +29,7 @@ class GetItemsFromMilestone implements Dispatchable
     public const NAME = 'testmanagement_get_items_from_milestone';
 
     /**
-     * @var PFuser
+     * @var PFUser
      */
     private $user;
 

@@ -20,8 +20,6 @@
 
 use FastRoute\RouteCollector;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
-use Tuleap\Glyph\GlyphLocation;
-use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;

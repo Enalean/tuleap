@@ -105,7 +105,7 @@ class IndexPresenter
         if (isset($current_milestone)) {
             $milestone_representation = new MilestoneRepresentation($current_milestone);
         } else {
-            $milestone_representation = new stdclass();
+            $milestone_representation = new stdClass();
         }
         $this->current_milestone          = json_encode($milestone_representation);
     }

@@ -27,7 +27,6 @@ use ProjectManager;
 use TrackerFactory;
 use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
-use Tracker_REST_Artifact_ArtifactValidator;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 require_once __DIR__ .'/../bootstrap.php';

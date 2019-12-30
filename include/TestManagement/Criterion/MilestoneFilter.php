@@ -20,8 +20,6 @@
 
 namespace Tuleap\TestManagement\Criterion;
 
-use PFUser;
-
 class MilestoneFilter implements ISearchOnMilestone
 {
 

@@ -19,4 +19,3 @@
  */
 
 require_once __DIR__ . '/../include/testmanagementPlugin.php';
-

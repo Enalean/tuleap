@@ -30,7 +30,7 @@ class GetMilestone implements Dispatchable
     public const NAME = 'testmanagement_get_milestone';
 
     /**
-     * @var PFuser
+     * @var PFUser
      */
     private $user;
 

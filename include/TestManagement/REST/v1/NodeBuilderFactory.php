@@ -30,7 +30,6 @@ use PFUser;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\Config;
-use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\Dao as TestManagementDao;
 
 class NodeBuilderFactory

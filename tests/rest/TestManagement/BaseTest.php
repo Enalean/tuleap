@@ -20,7 +20,6 @@
 
 namespace Tuleap\TestManagement;
 
-use TestManagementCampaignBuilder;
 use TestManagementDataBuilder;
 use RestBase;
 use Tuleap\TestManagement\Tests\Rest\Cache;

@@ -518,9 +518,6 @@ class ExecutionsResource
             $changes[] = $status_value;
         }
 
-        if (get_magic_quotes_gpc()) {
-            $results = stripslashes($results);
-        }
         $result_value = $this->getFormattedChangesetValueForFieldText(
             self::FIELD_RESULTS,
             $results,
