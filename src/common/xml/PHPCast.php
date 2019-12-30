@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,8 +27,7 @@ use SimpleXMLElement;
  */
 class PHPCast
 {
-
-    public static function toBoolean(SimpleXMLElement $element)
+    public static function toBoolean(SimpleXMLElement $element): bool
     {
         return ((string)$element === 'true' || (string)$element === '1');
     }

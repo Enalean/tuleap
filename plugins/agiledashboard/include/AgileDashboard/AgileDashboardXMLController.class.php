@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
+
 /**
  * Handles the HTTP actions related to  the agile dashborad as a whole.
  *
@@ -60,6 +62,10 @@ class AgileDashboard_XMLController extends MVC2_PluginController
      * @var Planning_RequestValidator
      */
     private $planning_request_validator;
+    /**
+     * @var XMLImporter
+     */
+    private $explicit_backlog_xml_import;
 
     public function __construct(
         Codendi_Request $request,
@@ -69,6 +75,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         AgileDashboard_XMLExporter $agiledashboard_xml_exporter,
         AgileDashboard_XMLImporter $agiledashboard_xml_importer,
         Planning_RequestValidator $planning_request_validator,
+        XMLImporter $explicit_backlog_xml_import,
         $plugin_theme_path
     ) {
         parent::__construct('agiledashboard', $request);
@@ -81,6 +88,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
         $this->agiledashboard_xml_exporter = $agiledashboard_xml_exporter;
         $this->agiledashboard_xml_importer = $agiledashboard_xml_importer;
         $this->planning_request_validator  = $planning_request_validator;
+        $this->explicit_backlog_xml_import = $explicit_backlog_xml_import;
     }
 
     public function export()
@@ -131,6 +139,8 @@ class AgileDashboard_XMLController extends MVC2_PluginController
      */
     private function import(SimpleXMLElement $xml)
     {
+        $this->explicit_backlog_xml_import->importConfiguration($xml, $this->group_id);
+
         $data = $this->agiledashboard_xml_importer->toArray($xml, $this->request->get('mapping'));
 
         foreach ($data['plannings'] as $planning) {
