@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,7 +41,10 @@ abstract class MVC2_PluginController extends MVC2_Controller
         $GLOBALS['Response']->redirect('/plugins/'.$this->base_name.'/?'.$redirect);
     }
 
-    protected function checkUserIsAdmin()
+    /**
+     * @throws Exception
+     */
+    protected function checkUserIsAdmin(): void
     {
         $project = $this->request->getProject();
         $user    = $this->request->getCurrentUser();

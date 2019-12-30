@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,24 +36,51 @@ class AgileDashboard_XMLController extends MVC2_PluginController
      */
     private $plugin_theme_path;
 
-
     /**
      * @var PlanningFactory
      */
     private $planning_factory;
 
+    /**
+     * @var XML_RNGValidator
+     */
+    private $xml_rng_validator;
+
+    /**
+     * @var AgileDashboard_XMLExporter
+     */
+    private $agiledashboard_xml_exporter;
+
+    /**
+     * @var AgileDashboard_XMLImporter
+     */
+    private $agiledashboard_xml_importer;
+
+    /**
+     * @var Planning_RequestValidator
+     */
+    private $planning_request_validator;
+
     public function __construct(
         Codendi_Request $request,
         PlanningFactory $planning_factory,
         Planning_MilestoneFactory $milestone_factory,
+        XML_RNGValidator $xml_rng_validator,
+        AgileDashboard_XMLExporter $agiledashboard_xml_exporter,
+        AgileDashboard_XMLImporter $agiledashboard_xml_importer,
+        Planning_RequestValidator $planning_request_validator,
         $plugin_theme_path
     ) {
         parent::__construct('agiledashboard', $request);
 
-        $this->group_id          = $request->getValidated('project_id', 'uint');
-        $this->planning_factory  = $planning_factory;
-        $this->milestone_factory = $milestone_factory;
-        $this->plugin_theme_path = $plugin_theme_path;
+        $this->group_id                    = $request->getValidated('project_id', 'uint');
+        $this->planning_factory            = $planning_factory;
+        $this->milestone_factory           = $milestone_factory;
+        $this->plugin_theme_path           = $plugin_theme_path;
+        $this->xml_rng_validator           = $xml_rng_validator;
+        $this->agiledashboard_xml_exporter = $agiledashboard_xml_exporter;
+        $this->agiledashboard_xml_importer = $agiledashboard_xml_importer;
+        $this->planning_request_validator  = $planning_request_validator;
     }
 
     public function export()
@@ -65,43 +92,46 @@ class AgileDashboard_XMLController extends MVC2_PluginController
             $this->group_id
         );
 
-        $xml_exporter = new AgileDashboard_XMLExporter(new XML_RNGValidator(), new PlanningPermissionsManager());
-        $xml_exporter->export($root_node, $plannings);
+        $this->agiledashboard_xml_exporter->export($root_node, $plannings);
     }
 
+    /**
+     * @throws Exception
+     */
     public function importOnlyAgileDashboard()
     {
         $this->checkUserIsAdmin();
 
         $xml           = $this->request->get('xml_content')->agiledashboard;
-        $xml_validator = new XML_RNGValidator();
         $rng_path      = realpath(AGILEDASHBOARD_BASE_DIR . '/../www/resources/xml_project_agiledashboard.rng');
 
-        $xml_validator->validate($xml, $rng_path);
+        $this->xml_rng_validator->validate($xml, $rng_path);
 
         $this->import($xml);
     }
 
+    /**
+     * @throws Exception
+     */
     public function importProject()
     {
         $this->checkUserIsAdmin();
 
-        $xml           = $this->request->get('xml_content');
-        $xml_validator = new XML_RNGValidator();
-        $rng_path      = realpath(ForgeConfig::get('tuleap_dir') . '/src/common/xml/resources/project/project.rng');
+        $xml       = $this->request->get('xml_content');
+        $rng_path  = realpath(ForgeConfig::get('tuleap_dir') . '/src/common/xml/resources/project/project.rng');
 
-        $xml_validator->validate($xml, $rng_path);
+        $this->xml_rng_validator->validate($xml, $rng_path);
         $xml = $this->request->get('xml_content')->agiledashboard;
 
         $this->import($xml);
     }
 
+    /**
+     * @throws Exception
+     */
     private function import(SimpleXMLElement $xml)
     {
-        $xml_importer = new AgileDashboard_XMLImporter();
-        $data         = $xml_importer->toArray($xml, $this->request->get('mapping'));
-
-        $validator = new Planning_RequestValidator($this->planning_factory);
+        $data = $this->agiledashboard_xml_importer->toArray($xml, $this->request->get('mapping'));
 
         foreach ($data['plannings'] as $planning) {
             $request_params = array(
@@ -112,7 +142,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
 
             $request = new Codendi_Request($request_params);
 
-            if ($validator->isValid($request)) {
+            if ($this->planning_request_validator->isValid($request)) {
                 $this->planning_factory->createPlanning(
                     $this->group_id,
                     PlanningParameters::fromArray($planning)

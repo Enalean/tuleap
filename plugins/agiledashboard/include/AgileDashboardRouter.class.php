@@ -217,11 +217,20 @@ class AgileDashboardRouter
      */
     public function route(Codendi_Request $request)
     {
-        $planning_controller            = $this->buildPlanningController($request);
+        $planning_controller = $this->buildPlanningController($request);
+        $xml_rng_validator   = new XML_RNGValidator();
+
         $agile_dashboard_xml_controller = new AgileDashboard_XMLController(
             $request,
             $this->planning_factory,
             $this->milestone_factory,
+            $xml_rng_validator,
+            new AgileDashboard_XMLExporter(
+                $xml_rng_validator,
+                new PlanningPermissionsManager()
+            ),
+            new AgileDashboard_XMLImporter(),
+            $this->planning_request_validator,
             $this->plugin->getThemePath()
         );
 
