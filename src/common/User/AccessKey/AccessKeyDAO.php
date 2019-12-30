@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey;
 
 use DateTimeImmutable;
@@ -26,10 +28,7 @@ use Tuleap\DB\DataAccessObject;
 
 class AccessKeyDAO extends DataAccessObject
 {
-    /**
-     * @return int
-     */
-    public function create($user_id, $hashed_verification_string, $current_time, $description, $expiration_date_timestamp)
+    public function create(int $user_id, string $hashed_verification_string, int $current_time, string $description, ?int $expiration_date_timestamp): int
     {
         return (int) $this->getDB()->insertReturnId(
             'user_access_key',
@@ -43,15 +42,12 @@ class AccessKeyDAO extends DataAccessObject
         );
     }
 
-    /**
-     * @return null|array
-     */
-    public function searchAccessKeyVerificationAndTraceabilityDataByID($key_id)
+    public function searchAccessKeyVerificationAndTraceabilityDataByID(int $key_id): ?array
     {
         return $this->getDB()->row('SELECT verifier, user_id, last_usage, last_ip, expiration_date FROM user_access_key WHERE id = ?', $key_id);
     }
 
-    public function searchMetadataByUserIDAtCurrentTime(int $user_id, int $current_timestamp)
+    public function searchMetadataByUserIDAtCurrentTime(int $user_id, int $current_timestamp): array
     {
         return $this->getDB()->run(
             'SELECT id, creation_date, expiration_date, description, last_usage, last_ip
@@ -63,7 +59,7 @@ class AccessKeyDAO extends DataAccessObject
         );
     }
 
-    public function deleteByUserIDAndKeyIDs($user_id, array $key_ids)
+    public function deleteByUserIDAndKeyIDs(int $user_id, array $key_ids): void
     {
         if (empty($key_ids)) {
             return;
@@ -83,7 +79,7 @@ class AccessKeyDAO extends DataAccessObject
         );
     }
 
-    public function updateAccessKeyUsageByID($id, $current_time, $ip_address)
+    public function updateAccessKeyUsageByID(int $id, $current_time, $ip_address): void
     {
         $sql = 'UPDATE user_access_key
                 JOIN user_access ON (user_access_key.user_id = user_access.user_id)

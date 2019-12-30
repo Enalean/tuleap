@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -31,7 +33,7 @@ final class AccessKeySerializerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testIdentifierPrefixIsPresent()
+    public function testIdentifierPrefixIsPresent(): void
     {
         $access_key_verification_string = \Mockery::mock(SplitTokenVerificationString::class);
         $access_key_verification_string->shouldReceive('getString')->andReturns('random_string');
@@ -44,7 +46,7 @@ final class AccessKeySerializerTest extends TestCase
         $this->assertStringStartsWith('tlp-k1-', $identifier->getString());
     }
 
-    public function testCanBeBuiltFromAnIdentifier()
+    public function testCanBeBuiltFromAnIdentifier(): void
     {
         $expected_id                  = 15;
         $hex_verification_string      = '7f2c5f68b1c802c21486cf88a7d4209d9685b43b5f1661fb1528759c5387fd13';
@@ -55,7 +57,7 @@ final class AccessKeySerializerTest extends TestCase
         $access_key = $access_key_serializer->getSplitToken(new ConcealedString($identifier));
 
         $this->assertSame($expected_id, $access_key->getID());
-        $this->assertSame($hex_verification_string, bin2hex($access_key->getVerificationString()->getString()));
+        $this->assertSame($hex_verification_string, bin2hex((string) $access_key->getVerificationString()->getString()));
     }
 
     /**

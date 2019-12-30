@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey;
 
 class AccessKeyMetadata
@@ -35,7 +37,7 @@ class AccessKeyMetadata
      */
     private $description;
     /**
-     * @var \DateTimeImmutable
+     * @var \DateTimeImmutable|null
      */
     private $last_used_date;
     /**
@@ -49,11 +51,11 @@ class AccessKeyMetadata
     private $expiration_date;
 
     public function __construct(
-        $id,
+        int $id,
         \DateTimeImmutable $creation_date,
-        $description,
+        string $description,
         ?\DateTimeImmutable $last_used_date = null,
-        $last_used_ip = null,
+        ?string $last_used_ip = null,
         ?\DateTimeImmutable $expiration_date = null
     ) {
 
@@ -65,46 +67,31 @@ class AccessKeyMetadata
         $this->last_used_ip     = $last_used_ip;
     }
 
-    public function getID()
+    public function getID(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return \DateTimeImmutable
-     */
-    public function getCreationDate()
+    public function getCreationDate(): \DateTimeImmutable
     {
         return $this->creation_date;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @return null|\DateTimeImmutable
-     */
-    public function getLastUsedDate()
+    public function getLastUsedDate(): ?\DateTimeImmutable
     {
         return $this->last_used_date;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getLastUsedIP()
+    public function getLastUsedIP(): ?string
     {
         return $this->last_used_ip;
     }
 
-    /**
-     * @return \DateTimeImmutable|null
-     */
     public function getExpirationDate(): ?\DateTimeImmutable
     {
         return $this->expiration_date;

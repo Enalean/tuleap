@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -70,7 +72,7 @@ class AccessKeyCreatorTest extends TestCase
         );
     }
 
-    public function testNewlyCreatedKeyIsCreatedAndAddedToTheLastAccessKeyIdentifierStore()
+    public function testNewlyCreatedKeyIsCreatedAndAddedToTheLastAccessKeyIdentifierStore(): void
     {
         $this->hasher->shouldReceive('computeHash')->andReturns('hashed_identifier');
         $this->dao->shouldReceive('create')->once()->andReturns(1);
@@ -83,7 +85,7 @@ class AccessKeyCreatorTest extends TestCase
         $this->access_key_creator->create($user, 'description', null);
     }
 
-    public function testNewlyCreatedKeyIsCreatedWithAnExpirationDateAndAddedToTheLastAccessKeyIdentifierStore()
+    public function testNewlyCreatedKeyIsCreatedWithAnExpirationDateAndAddedToTheLastAccessKeyIdentifierStore(): void
     {
         $this->hasher->shouldReceive('computeHash')->andReturns('hashed_identifier');
         $this->dao->shouldReceive('create')->once()->andReturns(1);
@@ -98,7 +100,7 @@ class AccessKeyCreatorTest extends TestCase
         $this->access_key_creator->create($user, 'description', $expiration_date);
     }
 
-    public function testNewlyCreatedKeyAlreadyExpiredThrowsAnException()
+    public function testNewlyCreatedKeyAlreadyExpiredThrowsAnException(): void
     {
         $this->hasher->shouldReceive('computeHash')->never();
         $this->dao->shouldReceive('create')->never();

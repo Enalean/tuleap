@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey\REST;
 
 use Tuleap\Cryptography\ConcealedString;
@@ -29,7 +31,7 @@ class UserAccessKeyCreationRepresentation
      */
     public $identifier;
 
-    public function build(ConcealedString $identifier)
+    public function build(ConcealedString $identifier): void
     {
         $this->identifier = (string) $identifier;
     }

@@ -18,10 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey;
 
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
@@ -48,7 +51,7 @@ class LastAccessKeyIdentifierStore
         $this->storage               =& $storage;
     }
 
-    public function storeLastGeneratedAccessKeyIdentifier(SplitToken $key)
+    public function storeLastGeneratedAccessKeyIdentifier(SplitToken $key): void
     {
         $this->storage[self::STORAGE_NAME] = SymmetricCrypto::encrypt(
             $this->split_token_formatter->getIdentifier($key),
@@ -57,10 +60,9 @@ class LastAccessKeyIdentifierStore
     }
 
     /**
-     * @return null|\Tuleap\Cryptography\ConcealedString
      * @throws \Tuleap\Cryptography\Exception\InvalidCiphertextException
      */
-    public function getLastGeneratedAccessKeyIdentifier()
+    public function getLastGeneratedAccessKeyIdentifier(): ?ConcealedString
     {
         if (! isset($this->storage[self::STORAGE_NAME])) {
             return null;

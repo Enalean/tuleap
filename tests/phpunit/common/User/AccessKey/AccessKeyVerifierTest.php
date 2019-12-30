@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey;
 
 use DateTimeImmutable;
@@ -48,7 +50,7 @@ class AccessKeyVerifierTest extends TestCase
      */
     private $user_manager;
     /**
-     * @var \Mockery\MockInterface
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SplitToken
      */
     private $access_key;
     /**
@@ -74,7 +76,7 @@ class AccessKeyVerifierTest extends TestCase
     /**
      * @dataProvider lastAccessValuesProvider
      */
-    public function testAUserCanBeRetrievedFromItsAccessKey($expect_to_log_access, $last_usage, $last_ip)
+    public function testAUserCanBeRetrievedFromItsAccessKey($expect_to_log_access, $last_usage, $last_ip): void
     {
         \ForgeConfig::set('last_access_resolution', self::LAST_ACCESS_RESOLUTION);
         $this->access_key->shouldReceive('getID')->andReturns(1);
@@ -95,7 +97,7 @@ class AccessKeyVerifierTest extends TestCase
         $this->verifier->getUser($this->access_key, '2001:db8::1777');
     }
 
-    public function lastAccessValuesProvider()
+    public function lastAccessValuesProvider(): array
     {
         return [
             [ // Different IP and last seen outside of the last access resolution
@@ -126,7 +128,7 @@ class AccessKeyVerifierTest extends TestCase
         ];
     }
 
-    public function testVerificationFailsWhenKeyCanNotBeFound()
+    public function testVerificationFailsWhenKeyCanNotBeFound(): void
     {
         $this->access_key->shouldReceive('getID')->andReturns(1);
         $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(null);
@@ -136,7 +138,7 @@ class AccessKeyVerifierTest extends TestCase
         $this->verifier->getUser($this->access_key, '2001:db8::1777');
     }
 
-    public function testVerificationFailsWhenVerificationStringDoesNotMatch()
+    public function testVerificationFailsWhenVerificationStringDoesNotMatch(): void
     {
         $this->access_key->shouldReceive('getID')->andReturns(1);
         $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
@@ -151,7 +153,7 @@ class AccessKeyVerifierTest extends TestCase
         $this->verifier->getUser($this->access_key, self::IP_ADDRESS_REQUESTING_VERIFICATION);
     }
 
-    public function testVerificationFailsWhenTheCorrespondingTuleapCanNotBeFound()
+    public function testVerificationFailsWhenTheCorrespondingTuleapCanNotBeFound(): void
     {
         $this->access_key->shouldReceive('getID')->andReturns(1);
         $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
@@ -167,7 +169,7 @@ class AccessKeyVerifierTest extends TestCase
         $this->verifier->getUser($this->access_key, self::IP_ADDRESS_REQUESTING_VERIFICATION);
     }
 
-    public function testVerificationFailsWhenTheAccessKeyIsExpired()
+    public function testVerificationFailsWhenTheAccessKeyIsExpired(): void
     {
         $this->access_key->shouldReceive('getID')->andReturns(1);
         $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(

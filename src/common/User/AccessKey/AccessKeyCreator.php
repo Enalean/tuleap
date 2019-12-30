@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey;
 
 use DateTimeImmutable;
@@ -59,7 +61,7 @@ class AccessKeyCreator
     /**
      * @throws AccessKeyAlreadyExpiredException
      */
-    public function create(\PFUser $user, $description, ?DateTimeImmutable $expiration_date)
+    public function create(\PFUser $user, string $description, ?DateTimeImmutable $expiration_date): void
     {
         $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $current_time        = new DateTimeImmutable();
@@ -74,7 +76,7 @@ class AccessKeyCreator
         }
 
         $key_id = $this->dao->create(
-            $user->getId(),
+            (int) $user->getId(),
             $this->hasher->computeHash($verification_string),
             $current_time->getTimestamp(),
             $description,

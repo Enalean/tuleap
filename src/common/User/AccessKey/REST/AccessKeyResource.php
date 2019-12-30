@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey\REST;
 
 use DateTime;
@@ -43,7 +45,7 @@ class AccessKeyResource extends AuthenticatedResource
      * @url OPTIONS
      * @access protected
      */
-    public function options()
+    public function options(): void
     {
         Header::allowOptionsPost();
     }
@@ -120,7 +122,7 @@ class AccessKeyResource extends AuthenticatedResource
      * @url OPTIONS {id}
      * @access protected
      */
-    public function optionsId($id)
+    public function optionsId(int $id): void
     {
         Header::allowOptionsDelete();
     }
@@ -136,7 +138,7 @@ class AccessKeyResource extends AuthenticatedResource
      *
      * @status 200
      */
-    public function delete($id)
+    public function delete(int $id): void
     {
         $this->optionsId($id);
         $current_user = \UserManager::instance()->getCurrentUser();

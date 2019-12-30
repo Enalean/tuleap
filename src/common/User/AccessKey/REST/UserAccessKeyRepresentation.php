@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey\REST;
 
 use Tuleap\REST\JsonCast;
@@ -55,7 +57,7 @@ class UserAccessKeyRepresentation
      */
     public $last_used_by;
 
-    public function build(AccessKeyMetadata $access_key_metadata)
+    public function build(AccessKeyMetadata $access_key_metadata): void
     {
         $this->id              = $access_key_metadata->getID();
         $this->creation_date   = JsonCast::toDate($access_key_metadata->getCreationDate()->getTimestamp());
