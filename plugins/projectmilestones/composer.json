@@ -1,0 +1,11 @@
+{
+  "name": "tuleap/plugin-projectmilestones",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\ProjectMilestones\\": "include/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}

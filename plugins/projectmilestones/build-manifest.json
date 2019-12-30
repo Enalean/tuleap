@@ -1,0 +1,14 @@
+{
+    "name": "projectmilestones",
+    "gettext-vue": {
+        "projectmilestones": {
+            "src": "scripts/projectmilestones",
+
+            "po": "scripts/projectmilestones/po"
+        }
+    },
+    "components": [
+        "themes/",
+        "scripts/"
+    ]
+}
