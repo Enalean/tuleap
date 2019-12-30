@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey;
 
 class AccessKeyCreationNotifier
@@ -37,7 +39,7 @@ class AccessKeyCreationNotifier
         $this->html_purifier = $html_purifier;
     }
 
-    public function notifyCreation(\PFUser $user, $description)
+    public function notifyCreation(\PFUser $user, $description): void
     {
         $mail = new \Codendi_Mail();
         $mail->setFrom(\ForgeConfig::get('sys_noreply'));
@@ -58,7 +60,7 @@ class AccessKeyCreationNotifier
         $mail->send();
     }
 
-    private function buildURLToAccountAccessTokenSection()
+    private function buildURLToAccountAccessTokenSection(): string
     {
         return $this->server_url . '/account/#account-access-keys';
     }

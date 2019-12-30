@@ -18,11 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey;
 
 class AccessKeyMatchingUnknownUserException extends AccessKeyException
 {
-    public function __construct($user_id)
+    public function __construct(int $user_id)
     {
         parent::__construct("An access key has been verified for an unknown user #$user_id");
     }

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey;
 
 use DateTimeImmutable;
@@ -30,7 +32,7 @@ use Tuleap\Request\ForbiddenException;
 
 class AccessKeyCreationController implements DispatchableWithRequest
 {
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $request->getCurrentUser();
         if ($current_user->isAnonymous()) {

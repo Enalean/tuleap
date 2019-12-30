@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey;
 
 use DateTimeImmutable;
@@ -47,13 +49,12 @@ class AccessKeyVerifier
     }
 
     /**
-     * @return \PFUser
      * @throws AccessKeyNotFoundException
      * @throws ExpiredAccessKeyException
      * @throws InvalidAccessKeyException
      * @throws AccessKeyMatchingUnknownUserException
      */
-    public function getUser(SplitToken $access_key, $ip_address_requesting_verification)
+    public function getUser(SplitToken $access_key, string $ip_address_requesting_verification): \PFUser
     {
         $row = $this->dao->searchAccessKeyVerificationAndTraceabilityDataByID($access_key->getID());
         if ($row === null) {
@@ -95,7 +96,7 @@ class AccessKeyVerifier
         return $expiration_timestamp <= $current_time->getTimestamp();
     }
 
-    private function updateLastAccessInformationIfNeeded(SplitToken $access_key, $last_usage, $last_ip, $ip_address_requesting_verification)
+    private function updateLastAccessInformationIfNeeded(SplitToken $access_key, $last_usage, $last_ip, $ip_address_requesting_verification): void
     {
         $current_time = new DateTimeImmutable();
         if ($last_usage !== null && $last_ip !== null &&

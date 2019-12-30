@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -31,7 +33,13 @@ class LastAccessKeyIdentifierStoreTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|EncryptionKey
+     */
     private $encryption_key;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|SplitTokenFormatter
+     */
     private $access_key_formatter;
 
     protected function setUp() : void
@@ -43,7 +51,7 @@ class LastAccessKeyIdentifierStoreTest extends TestCase
         $this->access_key_formatter = \Mockery::mock(SplitTokenFormatter::class);
     }
 
-    public function testAnAccessKeyIdentifierAndCanBeStoredAndRetrieved()
+    public function testAnAccessKeyIdentifierAndCanBeStoredAndRetrieved(): void
     {
         $storage               = [];
         $last_access_key_store = new LastAccessKeyIdentifierStore($this->access_key_formatter, $this->encryption_key, $storage);
@@ -57,7 +65,7 @@ class LastAccessKeyIdentifierStoreTest extends TestCase
         $this->assertCount(0, $storage);
     }
 
-    public function testOnlyTheLastAccessKeyIsStored()
+    public function testOnlyTheLastAccessKeyIsStored(): void
     {
         $storage               = [];
         $last_access_key_store = new LastAccessKeyIdentifierStore($this->access_key_formatter, $this->encryption_key, $storage);
@@ -76,7 +84,7 @@ class LastAccessKeyIdentifierStoreTest extends TestCase
         $this->assertSame('identifier_value2', $identifier->getString());
     }
 
-    public function testNullIsGivenWhenNoAccessKeyIdentifierIsStored()
+    public function testNullIsGivenWhenNoAccessKeyIdentifierIsStored(): void
     {
         $storage               = [];
         $last_access_key_store = new LastAccessKeyIdentifierStore($this->access_key_formatter, $this->encryption_key, $storage);

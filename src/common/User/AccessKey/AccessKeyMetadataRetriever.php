@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey;
 
 use DateTimeImmutable;
@@ -37,7 +39,7 @@ class AccessKeyMetadataRetriever
     /**
      * @return AccessKeyMetadata[]
      */
-    public function getMetadataByUser(\PFUser $user)
+    public function getMetadataByUser(\PFUser $user): array
     {
         $user_id      = (int) $user->getId();
         $current_time = (new DateTimeImmutable())->getTimestamp();

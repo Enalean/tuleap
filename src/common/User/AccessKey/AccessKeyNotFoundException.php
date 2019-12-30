@@ -18,11 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey;
 
 class AccessKeyNotFoundException extends AccessKeyException
 {
-    public function __construct($key_id)
+    public function __construct(int $key_id)
     {
         parent::__construct("Access key #$key_id does not exist");
     }

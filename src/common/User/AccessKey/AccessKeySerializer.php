@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\AccessKey;
 
 use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
@@ -32,16 +34,16 @@ final class AccessKeySerializer implements SplitTokenFormatter, SplitTokenIdenti
     public const PREFIX  = 'tlp-k1-';
     public const PATTERN = '/^' . self::PREFIX . '(?<key_id>\d+)\.(?<verifier>(?:[[:xdigit:]]{2})+)$/';
 
-    public function getIdentifier(SplitToken $token)
+    public function getIdentifier(SplitToken $token): ConcealedString
     {
         return new ConcealedString(
             self::PREFIX . $token->getID() . '.' . \sodium_bin2hex((string) $token->getVerificationString()->getString())
         );
     }
 
-    public function getSplitToken(ConcealedString $identifier)
+    public function getSplitToken(ConcealedString $identifier): SplitToken
     {
-        if (preg_match(self::PATTERN, $identifier, $matches) !== 1) {
+        if (preg_match(self::PATTERN, $identifier->getString(), $matches) !== 1) {
             throw new InvalidIdentifierFormatException();
         }
         $verification_string = new SplitTokenVerificationString(new ConcealedString(\sodium_hex2bin($matches['verifier'])));
