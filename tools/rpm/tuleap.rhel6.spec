@@ -57,7 +57,7 @@ Requires: highlight
 # Python
 Requires: python, MySQL-python
 # Perl
-Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip, perl-Text-Iconv, perl-LDAP
+Requires: perl, perl-DBI, perl-DBD-MySQL, sudo, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip, perl-Text-Iconv, perl-LDAP
 # Automatic perl dependencies
 #perl(APR::Pool)  perl(APR::Table)  perl(Apache2::Access)  perl(Apache2::Const)  perl(Apache2::Module)  perl(Apache2::RequestRec)  perl(Apache2::RequestUtil)  perl(Apache2::ServerRec)  perl(Carp)  perl(Cwd)  perl(DBI)  perl(Digest::MD5)  perl(Encode)  perl(File::Basename)  perl(File::Copy)  perl(HTTP::Request::Common)  perl(LWP::UserAgent)  perl(Net::LDAP)  perl(POSIX)  perl(Time::Local)  perl(strict)  perl(subs)  perl(vars)  perl(warnings)
 # Apache
@@ -600,7 +600,6 @@ done
 %{__install} src/utils/svn/codendi_svn_pre_commit.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/svn/pre-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/svn/post-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} src/utils/fileforge.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/fileforge
 
 # Special custom include script
 %{__install} src/etc/env.inc.php.dist $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
@@ -645,6 +644,7 @@ done
 
 # Sudoers directory
 %{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
+%{__install} src/utils/sudoers.d/tuleap_fileforge $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_fileforge
 
 # plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
@@ -1113,7 +1113,6 @@ fi
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/env.inc.php
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/pre-revprop-change.php
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/post-revprop-change.php
-%attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
 %attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_syslog
@@ -1125,6 +1124,9 @@ fi
 %attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/02-themes.conf
 %attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/03-plugins.conf
 %attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/04-cgi.conf
+
+# Sudoers
+%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_fileforge
 
 # Log dir
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}

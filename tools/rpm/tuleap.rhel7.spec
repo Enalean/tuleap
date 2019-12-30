@@ -37,7 +37,7 @@ AutoReqProv: no
 # Php and web related stuff
 Requires: php73-php, php73-php-mysql, php73-php-xml, php73-php-json, php73-php-mbstring, php73-php-gd, php73-php-soap, php73-php-intl, php73-php-process, php73-php-opcache, php73-php-fpm, php73-php-pecl-redis, php73-php-sodium, rh-mysql57-mysql
 
-Requires: perl-DBI, perl-DBD-MySQL
+Requires: perl-DBI, perl-DBD-MySQL, sudo
 Requires: highlight, forgeupgrade >= 1.6, nginx, logrotate
 
 # Unit file
@@ -576,6 +576,7 @@ done
 
 # Sudoers directory
 %{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
+%{__install} src/utils/sudoers.d/tuleap_fileforge $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_fileforge
 
 
 ## plugin webdav
@@ -927,6 +928,9 @@ fi
 # Log dir
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}
 %attr(775,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}/cvslog
+
+# Sudoers
+%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_fileforge
 
 # Run dir
 %attr(00755,%{APP_USER},%{APP_USER}) %dir %{_localstatedir}/run/tuleap

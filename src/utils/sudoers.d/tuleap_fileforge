@@ -1,0 +1,3 @@
+Defaults:nobody !requiretty
+Defaults:nobody !env_reset
+codendiadm ALL= (root) SETENV: NOPASSWD: /usr/share/tuleap/src/utils/fileforge.pl *
