@@ -24,8 +24,6 @@
 
 namespace Tuleap\LDAP;
 
-use ForgeConfig;
-
 /**
  * This class will silently discard any notifications sent through it
  * */

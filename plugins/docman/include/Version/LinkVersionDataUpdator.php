@@ -25,7 +25,6 @@ namespace Tuleap\Docman\Version;
 
 use Docman_Empty;
 use Docman_Link;
-use Tuleap\Docman\REST\v1\Links\DocmanLinksValidityChecker;
 
 class LinkVersionDataUpdator
 {

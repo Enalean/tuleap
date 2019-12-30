@@ -19,11 +19,7 @@
  *
  */
 
-use GuzzleHttp\Psr7\ServerRequest;
 use Tuleap\FRS\FRSPermissionManager;
-use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Http\Response\BinaryFileResponseBuilder;
-use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 class FRSFile
 {

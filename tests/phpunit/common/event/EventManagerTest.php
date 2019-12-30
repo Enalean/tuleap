@@ -20,7 +20,6 @@
 
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\StoppableEventInterface;
-use Tuleap\Event\EventManagerCannotDispatchException;
 
 class EventManagerTest extends TestCase // phpcs:ignore
 {

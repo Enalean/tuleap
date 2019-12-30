@@ -25,7 +25,6 @@ use Tracker_Artifact;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\ChangesetRepresentation;
-use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\TrackerRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 

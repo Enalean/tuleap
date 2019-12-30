@@ -25,7 +25,6 @@ use Codendi_HTMLPurifier;
 use Embed\Embed;
 use Exception;
 use Reference;
-use ForgeConfig;
 
 class ReferenceOpenGraph
 {

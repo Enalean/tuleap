@@ -25,7 +25,6 @@ use PFUser;
 use TimePeriodWithoutWeekEnd;
 use Tracker_Artifact;
 use Tracker_Chart_Data_Burndown;
-use Tracker_UserWithReadAllPermission;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 

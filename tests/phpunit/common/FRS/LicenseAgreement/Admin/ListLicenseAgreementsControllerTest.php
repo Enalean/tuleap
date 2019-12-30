@@ -27,12 +27,9 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use TemplateRendererFactory;
-use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\NoLicenseToApprove;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\ForbiddenException;
-use Tuleap\Request\NotFoundException;
 use Tuleap\Templating\Mustache\MustacheEngine;
 
 class ListLicenseAgreementsControllerTest extends TestCase

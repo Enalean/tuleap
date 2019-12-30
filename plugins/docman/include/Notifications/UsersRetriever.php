@@ -20,11 +20,8 @@
 
 namespace Tuleap\Docman\Notifications;
 
-use ArrayIterator;
 use Docman_Item;
 use Docman_ItemFactory;
-use Project;
-use UGroupManager;
 
 class UsersRetriever
 {

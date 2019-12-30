@@ -21,7 +21,6 @@
 namespace Tuleap\Layout;
 
 use Codendi_HTMLPurifier;
-use Event;
 use EventManager;
 use ForgeConfig;
 use HTTPRequest;
@@ -38,7 +37,6 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbSubItems;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 use Tuleap\Project\Admin\MembershipDelegationDao;
-use Tuleap\Project\Banner\Banner;
 use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerDisplay;
 use Tuleap\Project\Banner\BannerRetriever;

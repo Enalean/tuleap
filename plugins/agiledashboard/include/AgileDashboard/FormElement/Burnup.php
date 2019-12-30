@@ -27,7 +27,6 @@ use SystemEventManager;
 use TemplateRendererFactory;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
-use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_ArtifactFactory;

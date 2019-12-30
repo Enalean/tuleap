@@ -22,7 +22,6 @@ namespace Tuleap\SVN;
 
 use Feedback;
 use HTTPRequest;
-use PluginManager;
 use ProjectManager;
 use SvnPlugin;
 use Tuleap\Layout\BaseLayout;

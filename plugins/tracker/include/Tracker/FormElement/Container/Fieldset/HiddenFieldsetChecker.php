@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Container\Fieldset;
 
-use ForgeConfig;
 use Tracker_Artifact;
 use Tracker_FormElement_Container_Fieldset;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;

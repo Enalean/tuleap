@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Notification\Strategy;
 
-use Codendi_HTMLPurifier;
 use GitRepository;
 use GitRepositoryFactory;
 use MailBuilder;

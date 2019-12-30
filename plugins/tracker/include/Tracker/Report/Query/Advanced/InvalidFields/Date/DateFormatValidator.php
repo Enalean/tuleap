@@ -20,11 +20,8 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date;
 
 use DateTime;
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\EmptyStringChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
 class DateFormatValidator
 {

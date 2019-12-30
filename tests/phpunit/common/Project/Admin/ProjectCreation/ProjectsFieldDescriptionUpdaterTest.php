@@ -30,7 +30,6 @@ use Project_CustomDescription_CustomDescriptionDao;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldAdminPresenterBuilder;
-use Zend\Feed\Writer\Feed;
 
 class ProjectsFieldDescriptionUpdaterTest extends TestCase
 {

@@ -21,22 +21,7 @@
 
 require_once __DIR__ . '/../../include/pre.php';
 
-use Tuleap\Dashboard\Project\ProjectDashboardDao;
-use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
-use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\Dashboard\Widget\DashboardWidgetRetriever;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
-use Tuleap\Project\DefaultProjectVisibilityRetriever;
-use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
-use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithoutStatusCheckAndNotifications;
-use Tuleap\Project\UGroups\Membership\MemberAdder;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
-use Tuleap\Project\UGroups\SynchronizedProjectMembershipDuplicator;
-use Tuleap\Service\ServiceCreator;
-use Tuleap\Widget\WidgetFactory;
 
 // Check if we the server is in secure mode or not.
 $request  = HTTPRequest::instance();

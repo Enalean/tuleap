@@ -20,7 +20,6 @@
 
 namespace Tuleap\REST;
 
-use REST_TestDataBuilder;
 use RestBase;
 
 class TrackerBase extends RestBase

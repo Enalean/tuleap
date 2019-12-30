@@ -30,7 +30,6 @@ use GitRepository;
 use Tuleap\PullRequest\StateStatus\PullRequestAbandonedEvent;
 use Tuleap\PullRequest\StateStatus\PullRequestMergedEvent;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
-use User;
 
 class PullRequestCloser
 {

@@ -25,7 +25,6 @@
 namespace Tuleap\Tracker\FormElement;
 
 use PFUser;
-use Tracker_Artifact;
 use Tuleap\Tracker\REST\Artifact\BurndownRepresentation;
 
 class BurndownFieldPresenter

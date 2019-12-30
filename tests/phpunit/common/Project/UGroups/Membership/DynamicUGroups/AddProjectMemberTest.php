@@ -26,7 +26,6 @@ namespace Tuleap\Project\UGroups\Membership\DynamicUGroups;
 use ForgeAccess;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\Mock;
 use PHPUnit\Framework\TestCase;
 use ProjectHistoryDao;
 use Tuleap\ForgeConfigSandbox;

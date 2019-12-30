@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 
 use Tuleap\REST\I18NRestException;
-use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\IncompatibleWorkflowModeException;
 use Tuleap\Tracker\Workflow\Update\PostAction;

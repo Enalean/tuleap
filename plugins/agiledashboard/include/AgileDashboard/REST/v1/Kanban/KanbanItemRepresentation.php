@@ -22,8 +22,6 @@ namespace Tuleap\AgileDashboard\REST\v1\Kanban;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\REST\JsonCast;
 use Tracker_Artifact;
-use UserManager;
-use EventManager;
 
 class KanbanItemRepresentation
 {

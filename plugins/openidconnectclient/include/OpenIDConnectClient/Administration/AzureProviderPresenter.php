@@ -21,7 +21,6 @@
 namespace Tuleap\OpenIDConnectClient\Administration;
 
 use Tuleap\OpenIDConnectClient\Provider\AzureADProvider\AzureADProvider;
-use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class AzureProviderPresenter
 {

@@ -21,7 +21,6 @@
 namespace Tuleap\AgileDashboard\FormElement\SystemEvent;
 
 use BackendLogger;
-use DateTimeImmutable;
 use SystemEvent;
 use TimePeriodWithoutWeekEnd;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;

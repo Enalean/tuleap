@@ -20,9 +20,6 @@
 
 namespace Tuleap\SVN\Admin;
 
-use Tuleap\SVN\Repository\Repository;
-use CSRFSynchronizerToken;
-
 class BaseAdminPresenter
 {
     public $notification_active;

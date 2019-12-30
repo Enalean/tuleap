@@ -23,7 +23,6 @@ namespace Tuleap\Theme\BurningParrot\Navbar;
 use EventManager;
 use HTTPRequest;
 use PFUser;
-use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinkPresentersBuilder;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\Links\LinksPresenter;

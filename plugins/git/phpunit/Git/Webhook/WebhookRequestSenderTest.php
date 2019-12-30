@@ -23,7 +23,6 @@ namespace Tuleap\Git\Webhook;
 require_once __DIR__ . '/../../bootstrap.php';
 
 use Tuleap\Webhook\Emitter;
-use TuleapTestCase;
 use UserHelper;
 
 class WebhookRequestSenderTest extends \PHPUnit\Framework\TestCase

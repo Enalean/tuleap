@@ -23,7 +23,6 @@ namespace Tuleap\Theme\BurningParrot\Navbar;
 use HTTPRequest;
 use PFUser;
 use CSRFSynchronizerToken;
-use Tuleap\Glyph\GlyphFinder;
 use URLRedirect;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Presenter as DropdownMenuItemPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\DropdownMenuItem\Content\History\UserHistoryPresenter;

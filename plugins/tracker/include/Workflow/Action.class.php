@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
-use Tuleap\Tracker\Workflow\FeatureFlag;
 
 /**
  * Base class to manage action that can be done on a workflow

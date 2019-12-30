@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Report;
 
 use CSRFSynchronizerToken;
 use Tuleap\Tracker\Config\ReportPresenter;
-use Tuleap\Tracker\Config\SectionsPresenter;
 
 class TrackerReportConfigPresenter
 {

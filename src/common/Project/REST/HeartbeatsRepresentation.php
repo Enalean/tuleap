@@ -20,7 +20,6 @@
 
 namespace Tuleap\Project\REST;
 
-use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
 
 class HeartbeatsRepresentation

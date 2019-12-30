@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\Gitolite\SSHKey;
 
-use TuleapTestCase;
 use Tuleap\Git\GlobalParameterDao;
 
 require_once __DIR__ .'/../../../bootstrap.php';

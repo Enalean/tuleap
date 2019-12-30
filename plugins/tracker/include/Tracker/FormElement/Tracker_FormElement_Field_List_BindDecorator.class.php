@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 
 class Tracker_FormElement_Field_List_BindDecorator

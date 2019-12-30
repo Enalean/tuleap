@@ -92,8 +92,6 @@ use Tuleap\PullRequest\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
-use Tuleap\PullRequest\Notification\EventDispatcherWithFallback;
-use Tuleap\PullRequest\Notification\EventSubjectToNotificationAsynchronousRedisDispatcher;
 use Tuleap\PullRequest\Notification\PullRequestNotificationSupport;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestCloser;
@@ -113,7 +111,6 @@ use Tuleap\PullRequest\Reviewer\UserCannotBeAddedAsReviewerException;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
 use Tuleap\PullRequest\Timeline\Factory as TimelineFactory;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
-use Tuleap\Queue\QueueFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
@@ -190,7 +187,7 @@ class PullRequestsResource extends AuthenticatedResource
      */
     private $git_pull_request_reference_updater;
     /**
-     * @var gitPlugin
+     * @var GitPlugin
      */
     private $git_plugin;
     /**
@@ -1410,28 +1407,28 @@ class PullRequestsResource extends AuthenticatedResource
 
     private function sendAllowHeadersForTimeline()
     {
-        HEADER::allowOptionsGet();
+        Header::allowOptionsGet();
     }
 
     private function sendAllowHeadersForCommits()
     {
-        HEADER::allowOptionsGet();
+        Header::allowOptionsGet();
     }
 
 
     private function sendAllowHeadersForLabels()
     {
-        HEADER::allowOptionsGetPatch();
+        Header::allowOptionsGetPatch();
     }
 
     private function sendAllowHeadersForComments()
     {
-        HEADER::allowOptionsGetPost();
+        Header::allowOptionsGetPost();
     }
 
     private function sendAllowHeadersForInlineComments()
     {
-        HEADER::allowOptionsGetPost();
+        Header::allowOptionsGetPost();
     }
 
     /**

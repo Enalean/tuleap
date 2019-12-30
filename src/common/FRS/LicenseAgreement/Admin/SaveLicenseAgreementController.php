@@ -25,7 +25,6 @@ namespace Tuleap\FRS\LicenseAgreement\Admin;
 
 use HTTPRequest;
 use Project;
-use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementInterface;

@@ -24,7 +24,6 @@ namespace Tuleap\Docman\ApprovalTable;
 
 use Docman_ApprovalTableFactoriesFactory;
 use Docman_ApprovalTableItemFactory;
-use Docman_ApprovalTableVersionnedFactory;
 use Docman_VersionFactory;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;

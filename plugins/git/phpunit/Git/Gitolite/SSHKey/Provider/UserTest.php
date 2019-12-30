@@ -22,7 +22,6 @@ namespace Tuleap\Git\Gitolite\SSHKey\Provider;
 
 use ArrayIterator;
 use Tuleap\Git\Gitolite\SSHKey\Key;
-use TuleapTestCase;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 

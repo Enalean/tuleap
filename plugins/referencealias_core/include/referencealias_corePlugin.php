@@ -24,7 +24,6 @@ require_once 'constants.php';
 use Tuleap\ReferenceAliasCore\Dao;
 use Tuleap\ReferenceAliasCore\ReferencesImporter;
 use Tuleap\ReferenceAliasCore\ReferencesBuilder;
-use Tuleap\Project\XML\Import\ImportConfig;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class referencealias_corePlugin extends Plugin

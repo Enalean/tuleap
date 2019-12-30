@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Admin;
 
 use CSRFSynchronizerToken;
-use EventManager;
 use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Dashboard\Project\DisabledProjectWidgetsChecker;
@@ -34,9 +33,6 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Widget\WidgetFactory;
-use User_ForgeUserGroupPermissionsDao;
-use User_ForgeUserGroupPermissionsManager;
-use UserManager;
 
 class ProjectWidgetsConfigurationDisplayController implements DispatchableWithRequest
 {

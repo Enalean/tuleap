@@ -36,7 +36,6 @@ use AgileDashboard_UserNotAdminException;
 use AgileDashboardStatisticsAggregator;
 use BackendLogger;
 use DateTime;
-use EventManager;
 use Exception;
 use Kanban_SemanticStatusAllColumnIdsNotProvidedException;
 use Kanban_SemanticStatusBasedOnASharedFieldException;

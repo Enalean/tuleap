@@ -22,7 +22,6 @@
 namespace Tuleap\Queue;
 
 use Logger;
-use ForgeConfig;
 use Tuleap\Redis\ClientFactory as RedisClientFactory;
 
 class QueueFactory

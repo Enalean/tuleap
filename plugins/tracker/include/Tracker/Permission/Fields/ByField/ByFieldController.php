@@ -23,20 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Permission\Fields\ByField;
 
-use Codendi_HTMLPurifier;
 use HTTPRequest;
 use Tracker_FormElementFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupFieldsPermissions;
-use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupOneFieldPresenter;
-use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupOneFieldWithUGroupListPresenter;
-use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupPresenter;
-use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupUGroupListPresenter;
-use Tuleap\Tracker\Permission\Fields\PermissionsOnFieldsUpdateController;
-use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
 
 class ByFieldController implements DispatchableWithRequest
 {

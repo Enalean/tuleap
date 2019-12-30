@@ -26,7 +26,6 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
-use Tuleap\Docman\Test\rest\Helper\DocmanDataBuildCommon;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 
 final class DocmanEmbeddedTest extends DocmanTestExecutionHelper

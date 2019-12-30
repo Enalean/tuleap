@@ -23,7 +23,6 @@
  */
 
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
-use Tuleap\REST\JsonCast;
 
 class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
 {

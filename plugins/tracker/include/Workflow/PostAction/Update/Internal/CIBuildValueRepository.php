@@ -22,7 +22,6 @@
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use DataAccessQueryException;
-use LogicException;
 use Transition;
 use Transition_PostAction_CIBuildDao;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;

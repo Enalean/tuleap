@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Notification;
 
-use Throwable;
-
 final class InvalidWorkerEventPayloadException extends \RuntimeException
 {
     public function __construct(string $event_name, string $message)

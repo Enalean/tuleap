@@ -29,10 +29,8 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Tracker\Webhook\Webhook;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
-use Tuleap\Tracker\Webhook\WebhookLogsRetriever;
 
 class WebhookDeleteController implements DispatchableWithRequest
 {

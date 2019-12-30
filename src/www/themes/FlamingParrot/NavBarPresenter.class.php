@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Glyph\GlyphFinder;
 
 class FlamingParrot_NavBarPresenter
 {

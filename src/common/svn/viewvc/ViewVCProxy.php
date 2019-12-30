@@ -23,7 +23,6 @@ namespace Tuleap\SvnCore\ViewVC;
 require_once __DIR__ . '/../../../www/include/viewvc_utils.php';
 require_once __DIR__ . '/../../../www/svn/svn_utils.php';
 
-use ForgeConfig;
 use HTTPRequest;
 use Project;
 use Codendi_HTMLPurifier;

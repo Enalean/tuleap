@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest\Reviewer\Autocompleter;
 
-use Throwable;
-
 /**
  * @psalm-immutable
  */

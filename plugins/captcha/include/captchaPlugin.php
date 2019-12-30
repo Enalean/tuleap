@@ -21,9 +21,7 @@
 use FastRoute\RouteCollector;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\Captcha\Administration\Controller;
 use Tuleap\Captcha\Administration\DisplayController;
-use Tuleap\Captcha\Administration\Router;
 use Tuleap\Captcha\Administration\UpdateController;
 use Tuleap\Captcha\Configuration;
 use Tuleap\Captcha\ConfigurationNotFoundException;

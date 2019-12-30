@@ -20,7 +20,6 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication\Authorization;
 
-use ForgeConfig;
 use Tuleap\OpenIDConnectClient\Authentication\StateManager;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 

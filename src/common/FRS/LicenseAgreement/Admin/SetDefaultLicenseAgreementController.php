@@ -27,15 +27,11 @@ use HTTPRequest;
 use Project;
 use Tuleap\FRS\FRSPermissionManager;
 use Tuleap\FRS\LicenseAgreement\InvalidLicenseAgreementException;
-use Tuleap\FRS\LicenseAgreement\LicenseAgreement;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
-use Tuleap\FRS\LicenseAgreement\NewLicenseAgreement;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
-use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\GetProjectTrait;
-use Tuleap\Request\NotFoundException;
 
 class SetDefaultLicenseAgreementController implements DispatchableWithRequest, DispatchableWithProject
 {

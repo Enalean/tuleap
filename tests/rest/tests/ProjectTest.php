@@ -23,7 +23,6 @@ namespace Tuleap\REST;
 use Guzzle\Http\Exception\BadResponseException;
 use REST_TestDataBuilder;
 use Tuleap\Project\Registration\Template\ScrumTemplate;
-use Tuleap\Project\REST\v1\RestProjectCreator;
 
 /**
  * @group ProjectTests

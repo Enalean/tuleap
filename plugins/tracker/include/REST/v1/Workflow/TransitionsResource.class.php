@@ -512,7 +512,7 @@ class TransitionsResource extends AuthenticatedResource
                 new SetDateValueValidator($field_ids_validator, $form_element_factory)
             ),
             new SetIntValueUpdater(
-                new SetintValueRepository(
+                new SetIntValueRepository(
                     $this->getFieldIntDao(),
                     $transaction_executor
                 ),

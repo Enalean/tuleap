@@ -23,7 +23,6 @@ namespace Tuleap\SVN;
 use Backend;
 use Event;
 use EventManager;
-use ForgeConfig;
 use Logger;
 use Project;
 use SimpleXMLElement;

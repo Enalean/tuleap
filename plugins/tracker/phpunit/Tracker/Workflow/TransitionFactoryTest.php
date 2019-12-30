@@ -27,7 +27,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use TransitionFactory;
 use Workflow_Transition_ConditionFactory;
 use Workflow_Transition_ConditionsCollection;

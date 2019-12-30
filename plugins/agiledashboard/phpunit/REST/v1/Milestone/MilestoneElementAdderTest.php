@@ -24,7 +24,6 @@ declare(strict_types = 1);
 namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
 use Mockery;
-use ParagonIE\EasyDB\EasyDB;
 use PHPUnit\Framework\TestCase;
 use Planning;
 use PlanningFactory;

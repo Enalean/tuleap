@@ -107,7 +107,7 @@ class MetadataUpdator
     }
 
     /**
-     * @throws I18nRestException
+     * @throws I18NRestException
      * @throws RestException
      * @throws MetadataDoesNotExistException
      */
@@ -133,7 +133,7 @@ class MetadataUpdator
         $new_owner_id = $representation->owner_id;
         $new_owner    = $this->owner_retriever->getUserFromRepresentationId($new_owner_id);
         if ($new_owner === null) {
-            throw new I18nRestException(
+            throw new I18NRestException(
                 400,
                 sprintf(
                     dgettext('tuleap-docman', 'The specified owner ID #%d does not match a valid user.'),
@@ -147,7 +147,7 @@ class MetadataUpdator
                 $representation->metadata
             );
         } catch (CustomMetadataException $e) {
-            throw new I18nRestException(
+            throw new I18NRestException(
                 400,
                 $e->getI18NExceptionMessage()
             );
@@ -239,7 +239,7 @@ class MetadataUpdator
                 $representation->metadata
             );
         } catch (CustomMetadataException $e) {
-            throw new I18nRestException(
+            throw new I18NRestException(
                 400,
                 $e->getI18NExceptionMessage()
             );

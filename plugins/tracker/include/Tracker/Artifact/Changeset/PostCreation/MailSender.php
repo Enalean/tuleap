@@ -33,7 +33,6 @@ use MailBuilder;
 use TemplateRendererFactory;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
-use URLVerification;
 use Tracker_Artifact;
 use UserManager;
 use Tuleap\Mail\MailFilter;

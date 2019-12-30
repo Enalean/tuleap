@@ -31,7 +31,6 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\ArtifactMappedFieldValueRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\User\REST\MinimalUserRepresentation;
-use Tuleap\User\REST\UserRepresentation;
 
 class CardRepresentationBuilder
 {

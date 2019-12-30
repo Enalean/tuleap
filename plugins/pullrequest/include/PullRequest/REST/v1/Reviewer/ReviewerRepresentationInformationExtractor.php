@@ -24,7 +24,6 @@ namespace Tuleap\PullRequest\REST\v1\Reviewer;
 
 use Luracast\Restler\RestException;
 use Tuleap\Project\REST\UserRESTReferenceRetriever;
-use Tuleap\PullRequest\PullRequest;
 
 final class ReviewerRepresentationInformationExtractor
 {

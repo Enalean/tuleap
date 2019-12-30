@@ -24,12 +24,7 @@ use Docman_Item;
 use Docman_PermissionsManager;
 use Luracast\Restler\RestException;
 use PFUser;
-use ProjectManager;
-use ProjectUGroup;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
-use Tuleap\Project\REST\UserGroupRepresentation;
-use Tuleap\Project\REST\UserGroupRetriever;
-use UGroupManager;
 
 final class PermissionItemUpdaterFromRESTContext
 {

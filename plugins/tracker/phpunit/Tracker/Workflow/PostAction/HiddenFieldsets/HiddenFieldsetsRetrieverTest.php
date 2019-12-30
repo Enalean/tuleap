@@ -27,7 +27,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\NoFrozenFieldsPostActionException;
 
 class HiddenFieldsetsRetrieverTest extends TestCase
 {

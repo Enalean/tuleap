@@ -26,7 +26,6 @@ namespace Tuleap\Project\Registration;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Registration\Template\CompanyTemplate;
-use Tuleap\Project\Registration\Template\CompanyTemplatePresenter;
 use Tuleap\Project\Registration\Template\ProjectTemplate;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\Registration\Template\TemplatePresenter;

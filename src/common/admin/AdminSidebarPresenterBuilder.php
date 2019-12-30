@@ -27,7 +27,6 @@ use PFUser;
 use ProjectManager;
 use Project;
 use EventManager;
-use Event;
 
 class AdminSidebarPresenterBuilder
 {

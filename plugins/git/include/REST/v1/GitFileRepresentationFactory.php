@@ -24,7 +24,6 @@ namespace Tuleap\Git\REST\v1;
 use Tuleap\Git\Exceptions\GitRepoRefNotFoundException;
 use Tuleap\Git\GitPHP\Pack;
 use Tuleap\Git\GitPHP\Project;
-use Tuleap\Git\GitPHP\ProjectProvider;
 
 class GitFileRepresentationFactory
 {

@@ -25,7 +25,6 @@
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
 use CSRFSynchronizerToken;
-use PFUser;
 use ProjectUGroup;
 use Tuleap\Project\Admin\ProjectUGroup\Details\MembersPresenter;
 

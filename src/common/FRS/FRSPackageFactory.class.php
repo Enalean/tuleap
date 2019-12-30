@@ -22,8 +22,6 @@
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\FRS\FRSPackagePaginatedCollection;
 use Tuleap\FRS\FRSPermissionManager;
-use Tuleap\FRS\FRSPermissionFactory;
-use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementDao;
 use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 

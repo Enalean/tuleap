@@ -24,14 +24,12 @@ use Codendi_HTMLPurifier;
 use Docman_ListMetadata;
 use Docman_Metadata;
 use Docman_MetadataFactory;
-use Docman_MetadataListOfValuesElement;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\REST\v1\Metadata\MetadataListValueRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
-use Tuleap\GlobalLanguageMock;
 use UserHelper;
 
 class MetadataRepresentationBuilderTest extends TestCase

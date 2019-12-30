@@ -23,7 +23,6 @@ declare(strict_types = 1);
 
 namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
-use Luracast\Restler\RestException;
 use Project;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;

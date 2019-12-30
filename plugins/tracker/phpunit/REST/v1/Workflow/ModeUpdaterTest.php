@@ -27,14 +27,12 @@ use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Transition;
-use TransitionFactory;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\State;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\TransitionReplicator;
-use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Workflow;
 use Workflow_Dao;
 

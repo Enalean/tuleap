@@ -23,7 +23,6 @@ namespace Tuleap\Velocity;
 use PFUser;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
-use Tracker_Artifact;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Velocity\Semantic\SemanticVelocityFactory;

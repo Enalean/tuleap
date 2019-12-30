@@ -38,13 +38,13 @@ final class FileBeingUploadedInformationProvider implements TusFileInformationPr
      */
     private $path_allocator;
     /**
-     * @var FileOngoingUploadDAO
+     * @var FileOngoingUploadDao
      */
     private $dao;
 
     public function __construct(
         UploadPathAllocator $path_allocator,
-        FileOngoingUploadDAO $dao
+        FileOngoingUploadDao $dao
     ) {
         $this->path_allocator = $path_allocator;
         $this->dao            = $dao;

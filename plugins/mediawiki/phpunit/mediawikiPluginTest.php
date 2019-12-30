@@ -43,7 +43,7 @@ class mediawikiPluginTest extends TestCase //phpcs:ignore
             'link'     => &$link
         );
 
-        $mediawiki_plugin = new mediaWikiPlugin();
+        $mediawiki_plugin = new MediaWikiPlugin();
         $mediawiki_plugin->service_replace_template_name_in_link($params);
 
         $this->assertSame('example.com/plugins/mediawiki/wiki/yaya', $link);

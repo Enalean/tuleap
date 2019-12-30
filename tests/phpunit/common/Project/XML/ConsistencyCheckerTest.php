@@ -25,8 +25,6 @@ use Mockery as M;
 use PHPUnit\Framework\TestCase;
 use Service;
 use ServiceManager;
-use Tuleap\AgileDashboard\AgileDashboardService;
-use Tuleap\Git\GitService;
 
 class ConsistencyCheckerTest extends TestCase
 {

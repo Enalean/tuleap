@@ -28,8 +28,6 @@ use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tuleap\Taskboard\Column\ColumnPresenter;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenter;
-use Tuleap\Taskboard\Tracker\AddInPlace;
-use Tuleap\Taskboard\Tracker\AddInPlacePresenter;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Taskboard\Tracker\TitleFieldPresenter;
 use Tuleap\Taskboard\Tracker\TrackerPresenter;

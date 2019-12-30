@@ -33,7 +33,6 @@ use User_ForgeUserGroupFactory;
 use ProjectUGroup;
 use ServiceFile;
 use TemplateRenderer;
-use UserManager;
 
 class PermissionController extends BaseFrsPresenter
 {

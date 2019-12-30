@@ -20,7 +20,6 @@
 
 namespace Tuleap\Project\Admin\PermissionsPerGroup;
 
-use HTTPRequest;
 use Project;
 use Tuleap\Event\Dispatchable;
 

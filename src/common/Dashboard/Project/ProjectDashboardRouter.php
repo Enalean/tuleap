@@ -20,7 +20,6 @@
 
 namespace Tuleap\Dashboard\Project;
 
-use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Dashboard\Widget\WidgetDashboardController;
 

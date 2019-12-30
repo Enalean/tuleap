@@ -23,18 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Download;
 
 use Docman_File;
-use Docman_Item;
 use Docman_ItemFactory;
 use Logger;
-use LogicException;
 use PFUser;
-use Project;
-use ProjectManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Request\DispatchablePSR15Compatible;
-use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
 use Tuleap\REST\RESTCurrentUserMiddleware;

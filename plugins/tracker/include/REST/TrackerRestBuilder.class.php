@@ -20,7 +20,6 @@
 
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
-use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\StructureElementRepresentation;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\WorkflowRepresentation;

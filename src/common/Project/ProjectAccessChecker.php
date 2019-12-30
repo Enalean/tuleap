@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-use Event;
 use EventManager;
 use ForgeConfig;
 use PermissionsOverrider_PermissionsOverriderManager;

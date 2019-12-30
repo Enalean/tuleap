@@ -58,7 +58,7 @@ class BoardPresenterBuilder
         $this->trackers_builder  = $trackers_builder;
     }
 
-    public function getPresenter(\Planning_Milestone $milestone, PFuser $user, bool $is_ie_11): BoardPresenter
+    public function getPresenter(\Planning_Milestone $milestone, PFUser $user, bool $is_ie_11): BoardPresenter
     {
         $presenter_data = $this->pane_factory->getPanePresenterData($milestone);
 

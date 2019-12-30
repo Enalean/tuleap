@@ -28,7 +28,6 @@ use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Float;
 use Tracker_FormElement_Field_Float;
-use Tuleap\GlobalLanguageMock;
 
 final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:ignore
 {

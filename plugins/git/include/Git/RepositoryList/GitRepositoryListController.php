@@ -101,7 +101,7 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        if (! $this->project->usesService(gitPlugin::SERVICE_SHORTNAME)) {
+        if (! $this->project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
             throw new Request\NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
         }
 

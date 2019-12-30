@@ -100,7 +100,7 @@ try {
                 new MailLogger()
             )
         ),
-        new CommitInfoEnhancer(new SVNLook(new System_Command()), new CommitInfo()),
+        new CommitInfoEnhancer(new Svnlook(new System_Command()), new CommitInfo()),
         new LastAccessUpdater(new LastAccessDao()),
         UserManager::instance(),
         EventManager::instance()

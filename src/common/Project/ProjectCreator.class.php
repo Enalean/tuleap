@@ -39,7 +39,6 @@ use Tuleap\Project\Admin\Service\ProjectServiceActivator;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
-use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\ProjectDescriptionMandatoryException;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
