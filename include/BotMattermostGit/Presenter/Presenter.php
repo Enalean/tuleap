@@ -23,7 +23,6 @@ namespace Tuleap\BotMattermostGit;
 use Codendi_HTMLPurifier;
 use CSRFSynchronizerToken;
 use GitRepository;
-use GitViews_RepoManagement_Pane_Notification;
 
 class Presenter
 {

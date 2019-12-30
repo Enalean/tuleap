@@ -23,7 +23,6 @@ namespace Tuleap\BotMattermostGit\BotMattermostGitNotification;
 use CSRFSynchronizerToken;
 use Exception;
 use Feedback;
-use GitRepository;
 use GitRepositoryFactory;
 use HTTPRequest;
 use Tuleap\Git\GitViews\RepoManagement\Pane\Notification;

@@ -20,7 +20,6 @@
 
 namespace Tuleap\BotMattermostGit\SenderServices;
 
-use Git_GitRepositoryUrlManager;
 use GitRepository;
 use HTTPRequest;
 use PFUser;
