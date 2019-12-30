@@ -203,9 +203,6 @@ class WikiPlugin_FileInfo extends WikiPlugin
         if (!isWindows()) {
             return "?";
         }
-        if (class_exists('ffi') or loadPhpExtension('ffi')) {
-            return $this->exeversion_ffi($file);
-        }
         if (function_exists('res_list_type') or loadPhpExtension('win32std')) {
             return $this->exeversion_resopen($file);
         }
@@ -219,63 +216,6 @@ class WikiPlugin_FileInfo extends WikiPlugin
         $path = realpath($file);
         $result = `showver $path`;
         return "?";
-    }
-
-    function exeversion_ffi($file)
-    {
-        if (!DEBUG) {
-            return "?"; // not yet stable
-        }
-
-        if (function_exists('ffi') or loadPhpExtension('ffi')) {
-            $win32_idl = "
-struct VS_FIXEDFILEINFO {
-        DWORD dwSignature;
-        DWORD dwStrucVersion;
-        DWORD dwFileVersionMS;
-        DWORD dwFileVersionLS;
-        DWORD dwProductVersionMS;
-        DWORD dwProductVersionLS;
-        DWORD dwFileFlagsMask;
-        DWORD dwFileFlags;
-        DWORD dwFileOS;
-        DWORD dwFileType;
-        DWORD dwFileSubtype;
-        DWORD dwFileDateMS;
-        DWORD dwFileDateLS;
-};
-struct VS_VERSIONINFO { struct VS_VERSIONINFO
-  WORD  wLength; 
-  WORD  wValueLength; 
-  WORD  wType; 
-  WCHAR szKey[1]; 
-  WORD  Padding1[1]; 
-  VS_FIXEDFILEINFO Value; 
-  WORD  Padding2[1]; 
-  WORD  Children[1]; 
-};
-[lib='kernel32.dll'] DWORD GetFileVersionInfoSizeA(char *szFileName, DWORD *dwVerHnd);
-[lib='kernel32.dll'] int GetFileVersionInfoA(char *sfnFile, DWORD dummy, DWORD size, struct VS_VERSIONINFO *pVer);
-";
-            $ffi = new ffi($win32_idl);
-            $dummy = 0; // &DWORD
-             $size = $ffi->GetFileVersionInfoSizeA($file, $dummy);
-            //$pVer = str_repeat($size+1);
-            $pVer = new ffi_struct($ffi, "VS_VERSIONINFO");
-            if ($ffi->GetFileVersionInfoA($file, 0, $size, $pVer)
-                and $pVer->wValueLength) {
-         // analyze the VS_FIXEDFILEINFO(Value);
-         // $pValue = new ffi_struct($ffi, "VS_FIXEDFILEINFO");
-                $pValue = $pVer->Value;
-                return sprintf(
-                    "%d.%d.%d.%d",
-                    $pValue->dwFileVersionMS >> 16,
-                    $pValue->dwFileVersionMS & 0xFFFF,
-                    $pValue->dwFileVersionLS >> 16,
-                    $pValue->dwFileVersionLS & 0xFFFF
-                );
-            }
-        }
     }
 
     // Read "RT_VERSION/VERSIONINFO" exe/dll resource info for MSWin32 binaries
