@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <define name="agiledashboard">
+    <optional>
+      <element name="admin">
+        <element name="scrum">
+          <element name="explicit_backlog">
+            <attribute name="is_used">
+              <data type="boolean"/>
+            </attribute>
+          </element>
+        </element>
+      </element>
+    </optional>
     <element name="plannings">
       <zeroOrMore>
         <element name="planning">

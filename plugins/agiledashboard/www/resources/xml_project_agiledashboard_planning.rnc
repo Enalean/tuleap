@@ -1,4 +1,11 @@
-agiledashboard = element plannings  {
+agiledashboard = element admin {
+    element scrum {
+        element explicit_backlog {
+            attribute is_used { xsd:boolean }
+        }
+    }
+}?,
+element plannings  {
     element planning {
         attribute name { xsd:string },
         attribute plan_title { xsd:string },
