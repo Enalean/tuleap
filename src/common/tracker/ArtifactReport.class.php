@@ -150,8 +150,8 @@ class ArtifactReport
      // first delete any report field entries for this report
         $res = db_query("DELETE FROM artifact_report_field WHERE report_id=". db_ei($this->report_id));
 
-        $res = db_query("UPDATE artifact_report 
-                         SET user_id='" . db_ei($user_id) . "',name='". db_es($name) ."', description='". db_es($description) ."',scope='". db_es($scope) ."',is_default='".db_es($is_default)."' 
+        $res = db_query("UPDATE artifact_report
+                         SET user_id='" . db_ei($user_id) . "',name='". db_es($name) ."', description='". db_es($description) ."',scope='". db_es($scope) ."',is_default='".db_es($is_default)."'
                          WHERE report_id=". db_ei($this->report_id));
 
         // set other reports as not default report
@@ -482,12 +482,12 @@ class ArtifactReport
 
         if (!$u->isSuperUser() && !$u->isTrackerAdmin($group_id, $this->group_artifact_id)) {
             //artifact permissions
-            $from  .= " LEFT JOIN permissions 
-                             ON (permissions.object_id = CONVERT(a.artifact_id USING utf8) 
-                                 AND 
+            $from  .= " LEFT JOIN permissions
+                             ON (permissions.object_id = CONVERT(a.artifact_id USING utf8)
+                                 AND
                                  permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS') ";
             $where .= " AND (a.use_artifact_permissions = 0
-                             OR 
+                             OR
                              (
                                  permissions.ugroup_id IN (". implode(',', $ugroups) .")
                              )
@@ -935,7 +935,7 @@ class ArtifactReport
      *
      * @return void
      */
-    function getResultQueryElements($prefs, $morder, $advsrch, $aids = false, &$select, &$from, &$where, &$order_by)
+    function getResultQueryElements($prefs, $morder, $advsrch, $aids, &$select, &$from, &$where, &$order_by)
     {
 
       // NOTICE

@@ -346,7 +346,7 @@ class ArtifactReportHtml extends ArtifactReport
          *      @return string
          *
          */
-    function showResult($group_id, $prefs, $offset, $total_rows, $url, $nolink, $chunksz, $morder, $advsrch, $aids, $masschange = false, $pv)
+    function showResult($group_id, $prefs, $offset, $total_rows, $url, $nolink, $chunksz, $morder, $advsrch, $aids, $masschange, $pv)
     {
         global $Language,$ath;
         $hp = Codendi_HTMLPurifier::instance();
@@ -951,7 +951,7 @@ class ArtifactReportHtml extends ArtifactReport
         $title_arr[]=$Language->getText('tracker_include_report', 'rank_repo');
         $title_arr[]=$Language->getText('tracker_include_report', 'col_width');
 
-        echo'       
+        echo'
                 <FORM ACTION="/tracker/admin/" METHOD="POST">
                    <INPUT TYPE="HIDDEN" NAME="func" VALUE="report">
                    <INPUT TYPE="HIDDEN" NAME="create_report" VALUE="y">

@@ -433,7 +433,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $this->fetchTitleContent($prefix, true);
     }
 
-    private function fetchTitleContent($prefix = '', $unsubscribe_button)
+    private function fetchTitleContent($prefix, $unsubscribe_button)
     {
         $html = '';
         $html .= $this->fetchHiddenTrackerId();

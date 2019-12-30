@@ -664,7 +664,7 @@ class WindrosePlot
         }
     }
 
-    function _ThickCircle($aImg, $aXC, $aYC, $aRad, $aWeight = 2, $aColor)
+    function _ThickCircle($aImg, $aXC, $aYC, $aRad, $aWeight, $aColor)
     {
 
         $aImg->SetColor($aColor);
