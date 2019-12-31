@@ -52,16 +52,28 @@ class CardwallConfigXmlImport
     /** @var Cardwall_OnTop_ColumnDao */
     private $column_dao;
 
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
+     * @var Tracker_XML_Importer_ArtifactImportedMapping
+     */
+    private $artifact_id_mapping;
+
     public function __construct(
         $group_id,
         array $mapping,
         array $field_mapping,
+        Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
         Cardwall_OnTop_Dao $cardwall_ontop_dao,
         Cardwall_OnTop_ColumnDao $column_dao,
         Cardwall_OnTop_ColumnMappingFieldDao $mapping_field_dao,
         Cardwall_OnTop_ColumnMappingFieldValueDao $mapping_field_value_dao,
         EventManager $event_manager,
-        XML_RNGValidator $xml_validator
+        XML_RNGValidator $xml_validator,
+        Logger $logger
     ) {
         $this->mapping                 = $mapping;
         $this->field_mapping           = $field_mapping;
@@ -72,6 +84,8 @@ class CardwallConfigXmlImport
         $this->group_id                = $group_id;
         $this->event_manager           = $event_manager;
         $this->xml_validator           = $xml_validator;
+        $this->logger                  = $logger;
+        $this->artifact_id_mapping     = $artifact_id_mapping;
     }
 
     /**
@@ -95,11 +109,14 @@ class CardwallConfigXmlImport
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
             array(
-                'project_id'  => $this->group_id,
-                'xml_content' => $xml_input,
-                'mapping'     => $this->mapping
+                'project_id'          => $this->group_id,
+                'xml_content'         => $xml_input,
+                'mapping'             => $this->mapping,
+                'logger'              => $this->logger,
+                'artifact_id_mapping' => $this->artifact_id_mapping
             )
         );
+
         $this->cardwall_ontop_dao->commit();
     }
 

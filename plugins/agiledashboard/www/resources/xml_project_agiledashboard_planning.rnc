@@ -5,6 +5,11 @@ agiledashboard = element admin {
         }
     }
 }?,
+element top_backlog {
+    element artifact {
+        attribute artifact_id { xsd:long }
+    }+
+}?,
 element plannings  {
     element planning {
         attribute name { xsd:string },

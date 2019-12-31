@@ -23,7 +23,14 @@ declare(strict_types = 1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
+use Logger;
+use PFUser;
+use Project;
 use SimpleXMLElement;
+use Tracker_XML_Importer_ArtifactImportedMapping;
+use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;
+use Tuleap\AgileDashboard\Milestone\Backlog\ProvidedAddedIdIsNotInPartOfTopBacklogException;
+use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
 use Tuleap\XML\PHPCast;
 
 class XMLImporter
@@ -33,19 +40,78 @@ class XMLImporter
      */
     private $explicit_backlog_dao;
 
-    public function __construct(ExplicitBacklogDao $explicit_backlog_dao)
-    {
-        $this->explicit_backlog_dao = $explicit_backlog_dao;
+    /**
+     * @var TopBacklogElementsToAddChecker
+     */
+    private $top_backlog_elements_to_add_checker;
+
+    /**
+     * @var ArtifactsInExplicitBacklogDao
+     */
+    private $artifacts_in_explicit_backlog_dao;
+
+    public function __construct(
+        ExplicitBacklogDao $explicit_backlog_dao,
+        TopBacklogElementsToAddChecker $top_backlog_elements_to_add_checker,
+        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao
+    ) {
+        $this->explicit_backlog_dao                = $explicit_backlog_dao;
+        $this->top_backlog_elements_to_add_checker = $top_backlog_elements_to_add_checker;
+        $this->artifacts_in_explicit_backlog_dao   = $artifacts_in_explicit_backlog_dao;
     }
 
-    public function importConfiguration(SimpleXMLElement $xml, int $project_id): void
+    public function importConfiguration(SimpleXMLElement $xml, Project $project): void
     {
         if (! isset($xml->admin)) {
             return;
         }
 
         if (PHPCast::toBoolean($xml->admin->scrum->explicit_backlog['is_used']) === true) {
-            $this->explicit_backlog_dao->setProjectIsUsingExplicitBacklog($project_id);
+            $this->explicit_backlog_dao->setProjectIsUsingExplicitBacklog((int) $project->getID());
+        }
+    }
+
+    public function importContent(
+        SimpleXMLElement $xml,
+        Project $project,
+        PFUser $user,
+        Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping,
+        Logger $logger
+    ): void {
+        if (! isset($xml->top_backlog)) {
+            return;
+        }
+
+        $project_id = (int) $project->getID();
+
+        if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog($project_id) === false) {
+            $logger->warn('The imported project does not use explicit backlog management. Skipping.');
+            return;
+        }
+
+        foreach ($xml->top_backlog->artifact as $xml_backlog_item) {
+            $base_artifact_id = (string) $xml_backlog_item['artifact_id'];
+            if (! $artifact_id_mapping->containsSource($base_artifact_id)) {
+                $logger->warn("Artifact #$base_artifact_id not found in XML. Skipping.");
+                continue;
+            }
+
+            $new_artifact_id = (int) $artifact_id_mapping->get($base_artifact_id);
+            try {
+                $this->top_backlog_elements_to_add_checker->checkAddedIdsBelongToTheProjectTopBacklogTrackers(
+                    $project,
+                    $user,
+                    [$new_artifact_id]
+                );
+
+                $this->artifacts_in_explicit_backlog_dao->addArtifactToProjectBacklog($project_id, $new_artifact_id);
+            } catch (NoRootPlanningException $no_root_planning_exception) {
+                $logger->error($no_root_planning_exception->getMessage());
+                return;
+            } catch (ProvidedAddedIdIsNotInPartOfTopBacklogException $exception) {
+                $logger->warn("Artifact #$new_artifact_id not part of top backlog trackers. Skipping.");
+                continue;
+            }
         }
     }
 }

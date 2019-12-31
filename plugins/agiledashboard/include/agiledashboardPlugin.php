@@ -966,6 +966,8 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $request->set('action', 'import');
         $request->set('xml_content', $params['xml_content']);
         $request->set('mapping', $params['mapping']);
+        $request->set('artifact_id_mapping', $params['artifact_id_mapping']);
+        $request->set('logger', $params['logger']);
         $request->set('project_id', $params['project_id']);
         $request->set('group_id', $params['project_id']);
 

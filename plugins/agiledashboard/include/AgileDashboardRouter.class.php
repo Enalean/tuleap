@@ -31,6 +31,7 @@ use Tuleap\AgileDashboard\FormElement\FormElementController;
 use Tuleap\AgileDashboard\Kanban\BreadCrumbBuilder;
 use Tuleap\AgileDashboard\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao;
 use Tuleap\AgileDashboard\Kanban\ShowKanbanController;
+use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
@@ -234,7 +235,12 @@ class AgileDashboardRouter
             new AgileDashboard_XMLImporter(),
             $this->planning_request_validator,
             new XMLImporter(
-                new ExplicitBacklogDao()
+                new ExplicitBacklogDao(),
+                new TopBacklogElementsToAddChecker(
+                    PlanningFactory::build(),
+                    Tracker_ArtifactFactory::instance()
+                ),
+                new ArtifactsInExplicitBacklogDao()
             ),
             $this->plugin->getThemePath()
         );
@@ -288,7 +294,14 @@ class AgileDashboardRouter
                 if (! IS_SCRIPT) {
                     $this->executeAction($agile_dashboard_xml_controller, 'importOnlyAgileDashboard');
                 } else {
-                    $this->executeAction($agile_dashboard_xml_controller, 'importProject');
+                    $this->executeAction(
+                        $agile_dashboard_xml_controller,
+                        'importProject',
+                        [
+                            $request->get('artifact_id_mapping'),
+                            $request->get('logger')
+                        ]
+                    );
                 }
                 break;
             case 'solve-inconsistencies':

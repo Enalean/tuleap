@@ -539,12 +539,14 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             $params['project']->getId(),
             $params['mapping'],
             $params['field_mapping'],
+            $params['artifact_id_mapping'],
             new Cardwall_OnTop_Dao,
             new Cardwall_OnTop_ColumnDao,
             new Cardwall_OnTop_ColumnMappingFieldDao(),
             new Cardwall_OnTop_ColumnMappingFieldValueDao(),
             EventManager::instance(),
-            new XML_RNGValidator()
+            new XML_RNGValidator(),
+            $params['logger']
         );
         $cardwall_ontop_import->import($params['xml_content']);
     }

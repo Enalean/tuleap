@@ -12,6 +12,17 @@
         </element>
       </element>
     </optional>
+    <optional>
+      <element name="top_backlog">
+        <oneOrMore>
+          <element name="artifact">
+            <attribute name="artifact_id">
+              <data type="long"/>
+            </attribute>
+          </element>
+        </oneOrMore>
+      </element>
+    </optional>
     <element name="plannings">
       <zeroOrMore>
         <element name="planning">
