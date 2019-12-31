@@ -18,4 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-gettext('foo in .php');
+namespace Tuleap\Templating\Mustache;
+
+final class MustacheEngineTest extends \PHPUnit\Framework\TestCase
+{
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    public function testItContainsGettextHelpersToDoI18nDirectlyInTemplates() : void
+    {
+        $engine = new MustacheEngine(
+            \Mockery::mock(\Mustache_Loader::class),
+            \Mockery::spy(\Tuleap\Templating\TemplateCache::class)
+        );
+
+        $engine->getHelper('gettext');
+        $engine->getHelper('ngettext');
+        $engine->getHelper('dgettext');
+        $engine->getHelper('dngettext');
+        $engine->getHelper('glyph');
+
+        $this->expectNotToPerformAssertions();
+    }
+}
