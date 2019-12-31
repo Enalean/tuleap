@@ -24,6 +24,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
@@ -230,7 +231,8 @@ class AgileDashboardRouter
             $xml_rng_validator,
             new AgileDashboard_XMLExporter(
                 $xml_rng_validator,
-                new PlanningPermissionsManager()
+                new PlanningPermissionsManager(),
+                new XMLExporter(new ExplicitBacklogDao())
             ),
             new AgileDashboard_XMLImporter(),
             $this->planning_request_validator,

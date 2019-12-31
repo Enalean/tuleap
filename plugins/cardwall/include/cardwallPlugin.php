@@ -22,6 +22,8 @@ require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\AllowedFieldRetriever;
@@ -111,14 +113,18 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     public function tracker_event_export_full_xml($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $plannings = PlanningFactory::build()->getOrderedPlanningsWithBacklogTracker($params['user'], $params['group_id']);
-        $this->getAgileDashboardExplorer()->export($params['xml_content'], $plannings);
+        $this->getAgileDashboardExplorer()->export($params['project'], $params['xml_content'], $plannings);
 
         $this->getCardwallXmlExporter($params['group_id'])->export($params['xml_content']);
     }
 
-    private function getAgileDashboardExplorer()
+    private function getAgileDashboardExplorer(): AgileDashboard_XMLExporter
     {
-        return new AgileDashboard_XMLExporter(new XML_RNGValidator(), new PlanningPermissionsManager());
+        return new AgileDashboard_XMLExporter(
+            new XML_RNGValidator(),
+            new PlanningPermissionsManager(),
+            new XMLExporter(new ExplicitBacklogDao())
+        );
     }
 
     private function getCardwallXmlExporter($group_id)

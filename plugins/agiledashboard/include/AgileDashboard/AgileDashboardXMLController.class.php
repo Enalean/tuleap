@@ -103,7 +103,7 @@ class AgileDashboard_XMLController extends MVC2_PluginController
             $this->group_id
         );
 
-        $this->agiledashboard_xml_exporter->export($root_node, $plannings);
+        $this->agiledashboard_xml_exporter->export($this->request->getProject(), $root_node, $plannings);
     }
 
     /**

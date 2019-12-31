@@ -97,6 +97,7 @@ class TrackerXmlExport
             'user'        => $user,
             'xml_content' => &$xml_content,
             'group_id'    => $project->getID(),
+            'project'     => $project,
             'archive'     => &$archive
         );
 
