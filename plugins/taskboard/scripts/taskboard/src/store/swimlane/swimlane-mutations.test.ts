@@ -213,6 +213,41 @@ describe(`Swimlane state mutations`, () => {
         });
 
         it(`Given a swimlane and a card,
+            when it is a child card without remaining effort,
+            it will find it in the state and leave it as is`, () => {
+            const swimlane = {
+                card: { id: 78, label: "Parent card", has_children: true } as Card,
+                children_cards: [
+                    { id: 61, label: "Unrelated card" } as Card,
+                    {
+                        id: 59,
+                        label: "Child card without remaining effort in state",
+                        mapped_list_value: { id: 1234, label: "Todo" },
+                        initial_effort: 8,
+                        remaining_effort: null
+                    } as Card
+                ],
+                is_loading_children_cards: false
+            };
+            const state = {
+                swimlanes: [
+                    { card: { id: 21, label: "Unrelated swimlane" }, children_cards: [] },
+                    swimlane
+                ]
+            } as SwimlaneState;
+            const card = {
+                id: 59,
+                label: "Refreshed child card",
+                mapped_list_value: { id: 2345, label: "On going" },
+                initial_effort: 2,
+                remaining_effort: null
+            } as Card;
+            mutations.refreshCard(state, { swimlane, refreshed_card: card });
+
+            expect(state.swimlanes[1].children_cards[1]).toStrictEqual(card);
+        });
+
+        it(`Given a swimlane and a card,
             when it is a parent card,
             it will find it in the state and replace it`, () => {
             const swimlane = {
