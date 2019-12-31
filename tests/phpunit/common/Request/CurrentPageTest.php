@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,67 +18,65 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Request;
 
-use TuleapTestCase;
-
-class CurrentPageTest extends TuleapTestCase
+final class CurrentPageTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var CurrentPage
      */
     private $current_page;
 
-    public function setUp()
+    protected function setUp() : void
     {
-        parent::setUp();
-        $this->preserveServer('REQUEST_URI');
-
         $this->current_page = new CurrentPage();
     }
 
-    public function tearDown()
+    protected function tearDown() : void
     {
-        $this->restoreOriginalServer();
-        parent::tearDown();
+        unset($_SERVER['REQUEST_URI']);
     }
 
-    public function itIsInProjectDashboard()
+    public function testItIsInProjectDashboard() : void
     {
         $_SERVER['REQUEST_URI'] = '/projects/gpig/';
 
         $this->assertTrue($this->current_page->isDashboard());
     }
 
-    public function itIsInASpecifiedProjectDashboard()
+    public function testItIsInASpecifiedProjectDashboard() : void
     {
         $_SERVER['REQUEST_URI'] = '/projects/gpig/?dashboard=666';
 
         $this->assertTrue($this->current_page->isDashboard());
     }
 
-    public function itIsInUserDashboard()
+    public function testItIsInUserDashboard() : void
     {
         $_SERVER['REQUEST_URI'] = '/my/';
 
         $this->assertTrue($this->current_page->isDashboard());
     }
 
-    public function itIsInASpecifiedUserDashboard()
+    public function testItIsInASpecifiedUserDashboard() : void
     {
         $_SERVER['REQUEST_URI'] = '/my/?dashboard=666';
 
         $this->assertTrue($this->current_page->isDashboard());
     }
 
-    public function itIsNotInDashboardIfUserIsManagingBookmarks()
+    public function testItIsNotInDashboardIfUserIsManagingBookmarks() : void
     {
         $_SERVER['REQUEST_URI'] = '/my/bookmark';
 
         $this->assertFalse($this->current_page->isDashboard());
     }
 
-    public function itIsNotInDashboardIfUserIsOnAnotherPage()
+    public function testItIsNotInDashboardIfUserIsOnAnotherPage() : void
     {
         $_SERVER['REQUEST_URI'] = '/whatever';
 
