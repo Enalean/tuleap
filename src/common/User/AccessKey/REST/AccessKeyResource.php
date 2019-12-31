@@ -27,6 +27,8 @@ use DateTimeImmutable;
 use Luracast\Restler\RestException;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\KeyFactory;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\User\AccessKey\AccessKeyAlreadyExpiredException;
@@ -36,6 +38,8 @@ use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyRevoker;
 use Tuleap\User\AccessKey\AccessKeySerializer;
 use Tuleap\User\AccessKey\LastAccessKeyIdentifierStore;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
 
 class AccessKeyResource extends AuthenticatedResource
 {
@@ -91,6 +95,8 @@ class AccessKeyResource extends AuthenticatedResource
             $last_access_key_identifier_store,
             new AccessKeyDAO(),
             new SplitTokenVerificationStringHasher(),
+            new AccessKeyScopeSaver(new AccessKeyScopeDAO()),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new AccessKeyCreationNotifier(\HTTPRequest::instance()->getServerUrl(), \Codendi_HTMLPurifier::instance())
         );
 

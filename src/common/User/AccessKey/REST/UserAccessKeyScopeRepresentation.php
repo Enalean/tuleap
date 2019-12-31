@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\DB;
+namespace Tuleap\User\AccessKey\REST;
 
-use Throwable;
+use Tuleap\User\AccessKey\Scope\AccessKeyScope;
 
-interface DBTransactionExecutor
+/**
+ * @psalm-immutable
+ */
+final class UserAccessKeyScopeRepresentation
 {
     /**
-     * Execute given callable within a transaction.
-     *
-     * @template T
-     *
-     * @psalm-param callable():T $atomic_operations
-     *
-     * @throws Throwable
-     * @return mixed
-     *
-     * @psalm-return T
+     * @var string
      */
-    public function execute(callable $atomic_operations);
+    public $identifier;
+
+    public function __construct(AccessKeyScope $scope)
+    {
+        $this->identifier = $scope->getIdentifier()->toString();
+    }
 }

@@ -30,6 +30,9 @@ use Tuleap\REST\v1\TimetrackingRepresentationBase;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
 use Tuleap\User\AccessKey\REST\UserAccessKeyRepresentation;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
+use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilder;
 use Tuleap\User\History\HistoryCleaner;
 use Tuleap\User\History\HistoryEntry;
 use Tuleap\User\History\HistoryRetriever;
@@ -676,7 +679,10 @@ class UserResource extends AuthenticatedResource
             throw new RestException(403, 'You can only access to your own access keys');
         }
 
-        $access_key_metadata_retriever = new AccessKeyMetadataRetriever(new AccessKeyDAO());
+        $access_key_metadata_retriever = new AccessKeyMetadataRetriever(
+            new AccessKeyDAO(),
+            new AccessKeyScopeRetriever(new AccessKeyScopeDAO(), new CoreAccessKeyScopeBuilder())
+        );
         $all_access_key_medatada       = $access_key_metadata_retriever->getMetadataByUser($current_user);
 
         Header::sendPaginationHeaders($limit, $offset, count($all_access_key_medatada), self::MAX_LIMIT);

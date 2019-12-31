@@ -26,7 +26,7 @@ use RestBase;
 
 class AccessKeyTest extends RestBase
 {
-    public const DESCRIPTION_ACCESS_KEY = 'test_key';
+    private const DESCRIPTION_ACCESS_KEY = 'test_key';
 
     public function testOptions(): void
     {
@@ -47,6 +47,7 @@ class AccessKeyTest extends RestBase
         $this->assertGreaterThanOrEqual(1, count($access_keys_user_1));
         $has_generated_access_key_been_found = false;
         foreach ($access_keys_user_1 as $access_key) {
+            $this->assertNotEmpty($access_key['scopes']);
             if ($access_key['description'] === self::DESCRIPTION_ACCESS_KEY) {
                 $this->assertNull($access_key['expiration_date']);
                 $has_generated_access_key_been_found = true;
@@ -72,6 +73,7 @@ class AccessKeyTest extends RestBase
         $this->assertGreaterThanOrEqual(1, count($access_keys_user_1));
         $has_generated_access_key_been_found = false;
         foreach ($access_keys_user_1 as $access_key) {
+            $this->assertNotEmpty($access_key['scopes']);
             if ($access_key['description'] === self::DESCRIPTION_ACCESS_KEY) {
                 $this->assertEquals($expiration_date, $access_key['expiration_date']);
                 $has_generated_access_key_been_found = true;

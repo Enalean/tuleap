@@ -26,9 +26,13 @@ use DateTimeImmutable;
 use HTTPRequest;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\KeyFactory;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
 
 class AccessKeyCreationController implements DispatchableWithRequest
 {
@@ -49,6 +53,8 @@ class AccessKeyCreationController implements DispatchableWithRequest
             ),
             new AccessKeyDAO(),
             new SplitTokenVerificationStringHasher(),
+            new AccessKeyScopeSaver(new AccessKeyScopeDAO()),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new AccessKeyCreationNotifier($request->getServerUrl(), \Codendi_HTMLPurifier::instance())
         );
 

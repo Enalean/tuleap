@@ -57,6 +57,11 @@ class UserAccessKeyRepresentation
      */
     public $last_used_by;
 
+    /**
+     * @var UserAccessKeyScopeRepresentation[]
+     */
+    public $scopes = [];
+
     public function build(AccessKeyMetadata $access_key_metadata): void
     {
         $this->id              = $access_key_metadata->getID();
@@ -76,6 +81,10 @@ class UserAccessKeyRepresentation
         $last_used_ip = $access_key_metadata->getLastUsedIP();
         if ($last_used_ip !== null) {
             $this->last_used_by = $last_used_ip;
+        }
+
+        foreach ($access_key_metadata->getScopes() as $scope) {
+            $this->scopes[] = new UserAccessKeyScopeRepresentation($scope);
         }
     }
 }

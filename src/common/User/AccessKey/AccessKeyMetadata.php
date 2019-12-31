@@ -22,6 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey;
 
+use Tuleap\User\AccessKey\Scope\AccessKeyScope;
+
+/**
+ * @psalm-immutable
+ */
 class AccessKeyMetadata
 {
     /**
@@ -50,13 +55,26 @@ class AccessKeyMetadata
      */
     private $expiration_date;
 
+    /**
+     * @var AccessKeyScope[]
+     *
+     * @psalm-var non-empty-array<AccessKeyScope>
+     */
+    private $scopes;
+
+    /**
+     * @param AccessKeyScope[] $scopes
+     *
+     * @psalm-param non-empty-array<AccessKeyScope> $scopes
+     */
     public function __construct(
         int $id,
         \DateTimeImmutable $creation_date,
         string $description,
-        ?\DateTimeImmutable $last_used_date = null,
-        ?string $last_used_ip = null,
-        ?\DateTimeImmutable $expiration_date = null
+        ?\DateTimeImmutable $last_used_date,
+        ?string $last_used_ip,
+        ?\DateTimeImmutable $expiration_date,
+        array $scopes
     ) {
 
         $this->id               = $id;
@@ -65,6 +83,7 @@ class AccessKeyMetadata
         $this->description      = $description;
         $this->last_used_date   = $last_used_date;
         $this->last_used_ip     = $last_used_ip;
+        $this->scopes           = $scopes;
     }
 
     public function getID(): int
@@ -95,5 +114,15 @@ class AccessKeyMetadata
     public function getExpirationDate(): ?\DateTimeImmutable
     {
         return $this->expiration_date;
+    }
+
+    /**
+     * @return AccessKeyScope[]
+     *
+     * @psalm-return non-empty-array<AccessKeyScope>
+     */
+    public function getScopes(): array
+    {
+        return $this->scopes;
     }
 }

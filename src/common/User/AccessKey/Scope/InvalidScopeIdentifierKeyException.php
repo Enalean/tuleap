@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\DB;
+namespace Tuleap\User\AccessKey\Scope;
 
-use Throwable;
+use Tuleap\User\AccessKey\AccessKeyException;
 
-interface DBTransactionExecutor
+/**
+ * @psalm-immutable
+ */
+final class InvalidScopeIdentifierKeyException extends AccessKeyException
 {
-    /**
-     * Execute given callable within a transaction.
-     *
-     * @template T
-     *
-     * @psalm-param callable():T $atomic_operations
-     *
-     * @throws Throwable
-     * @return mixed
-     *
-     * @psalm-return T
-     */
-    public function execute(callable $atomic_operations);
+    public function __construct(string $invalid_identifier_key)
+    {
+        parent::__construct("$invalid_identifier_key is not a valid identifier key, expected something formatted <action_type>:<domain>");
+    }
 }

@@ -64,17 +64,26 @@ class AccessKeyDAO extends DataAccessObject
             return;
         }
 
-        $this->getDB()->delete(
-            'user_access_key',
-            EasyStatement::open()->with('user_id = ?', $user_id)->andIn('id IN (?*)', $key_ids)
+        $this->deleteByCondition(
+            EasyStatement::open()->with('user_access_key.user_id = ?', $user_id)->andIn('user_access_key.id IN (?*)', $key_ids)
         );
     }
 
     public function deleteByExpirationDate(int $timestamp): void
     {
-        $this->getDB()->delete(
-            'user_access_key',
+        $this->deleteByCondition(
             EasyStatement::open()->with('expiration_date <= ?', $timestamp)->andWith('expiration_date IS NOT NULL')
+        );
+    }
+
+    private function deleteByCondition(EasyStatement $condition): void
+    {
+        $this->getDB()->run(
+            "DELETE user_access_key, user_access_key_scope
+            FROM user_access_key
+            LEFT JOIN user_access_key_scope ON (user_access_key_scope.access_key_id = user_access_key.id)
+            WHERE $condition",
+            ...$condition->values()
         );
     }
 
