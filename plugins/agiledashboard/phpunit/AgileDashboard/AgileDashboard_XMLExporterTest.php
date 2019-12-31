@@ -18,9 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_XMLExporterTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter;
+
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class AgileDashboard_XMLExporterTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PlanningPermissionsManager
@@ -48,6 +53,16 @@ class AgileDashboard_XMLExporterTest extends \PHPUnit\Framework\TestCase //phpcs
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Planning
      */
     private $planning2;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|XMLExporter
+     */
+    private $explicit_backlog_xml_exporter;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Project
+     */
+    private $project;
 
     protected function setUp(): void
     {
@@ -93,17 +108,26 @@ class AgileDashboard_XMLExporterTest extends \PHPUnit\Framework\TestCase //phpcs
 
         $this->xml_validator = Mockery::mock(XML_RNGValidator::class);
         $this->planning_permissions_manager = Mockery::mock(PlanningPermissionsManager::class);
+
+        $this->explicit_backlog_xml_exporter = Mockery::mock(XMLExporter::class);
+        $this->explicit_backlog_xml_exporter->shouldReceive('exportExplicitBacklogConfiguration')->once();
+
+        $this->project = Mockery::mock(Project::class);
     }
 
     public function testItUpdatesASimpleXMlElement(): void
     {
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
+        $exporter = new AgileDashboard_XMLExporter(
+            $this->xml_validator,
+            $this->planning_permissions_manager,
+            $this->explicit_backlog_xml_exporter
+        );
 
         $this->planning_permissions_manager->shouldReceive('getGroupIdsWhoHasPermissionOnPlanning')->twice();
         $this->xml_validator->shouldReceive('validate')->once();
 
         $xml = $this->xml_tree;
-        $exporter->export($this->xml_tree, $this->plannings);
+        $exporter->export($this->project, $this->xml_tree, $this->plannings);
 
         $this->assertEquals($xml, $this->xml_tree);
     }
@@ -113,8 +137,12 @@ class AgileDashboard_XMLExporterTest extends \PHPUnit\Framework\TestCase //phpcs
         $this->planning_permissions_manager->shouldReceive('getGroupIdsWhoHasPermissionOnPlanning')->twice();
         $this->xml_validator->shouldReceive('validate')->once();
 
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
-        $exporter->export($this->xml_tree, $this->plannings);
+        $exporter = new AgileDashboard_XMLExporter(
+            $this->xml_validator,
+            $this->planning_permissions_manager,
+            $this->explicit_backlog_xml_exporter
+        );
+        $exporter->export($this->project, $this->xml_tree, $this->plannings);
 
         $this->assertEquals(1, count($this->xml_tree->children()));
 
@@ -137,8 +165,12 @@ class AgileDashboard_XMLExporterTest extends \PHPUnit\Framework\TestCase //phpcs
         $this->planning_permissions_manager->shouldReceive('getGroupIdsWhoHasPermissionOnPlanning')->twice();
         $this->xml_validator->shouldReceive('validate')->once();
 
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
-        $exporter->export($this->xml_tree, $this->plannings);
+        $exporter = new AgileDashboard_XMLExporter(
+            $this->xml_validator,
+            $this->planning_permissions_manager,
+            $this->explicit_backlog_xml_exporter
+        );
+        $exporter->export($this->project, $this->xml_tree, $this->plannings);
 
         $agiledashborad = AgileDashboard_XMLExporter::NODE_AGILEDASHBOARD;
         $plannings      = AgileDashboard_XMLExporter::NODE_PLANNINGS;
@@ -182,8 +214,12 @@ class AgileDashboard_XMLExporterTest extends \PHPUnit\Framework\TestCase //phpcs
 
         $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
 
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
-        $exporter->export($this->xml_tree, $plannings);
+        $exporter = new AgileDashboard_XMLExporter(
+            $this->xml_validator,
+            $this->planning_permissions_manager,
+            $this->explicit_backlog_xml_exporter
+        );
+        $exporter->export($this->project, $this->xml_tree, $plannings);
     }
 
     public function testItThrowsAnExceptionIfPlanningTitleIsEmpty(): void
@@ -205,8 +241,12 @@ class AgileDashboard_XMLExporterTest extends \PHPUnit\Framework\TestCase //phpcs
 
         $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
 
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
-        $exporter->export($this->xml_tree, $plannings);
+        $exporter = new AgileDashboard_XMLExporter(
+            $this->xml_validator,
+            $this->planning_permissions_manager,
+            $this->explicit_backlog_xml_exporter
+        );
+        $exporter->export($this->project, $this->xml_tree, $plannings);
     }
 
     public function testItThrowsAnExceptionIfBacklogTitleIsEmpty(): void
@@ -228,8 +268,12 @@ class AgileDashboard_XMLExporterTest extends \PHPUnit\Framework\TestCase //phpcs
 
         $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
 
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
-        $exporter->export($this->xml_tree, $plannings);
+        $exporter = new AgileDashboard_XMLExporter(
+            $this->xml_validator,
+            $this->planning_permissions_manager,
+            $this->explicit_backlog_xml_exporter
+        );
+        $exporter->export($this->project, $this->xml_tree, $plannings);
     }
 
     public function testItThrowsAnExceptionIfPlanningTrackerIdIsEmpty(): void
@@ -251,8 +295,12 @@ class AgileDashboard_XMLExporterTest extends \PHPUnit\Framework\TestCase //phpcs
 
         $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
 
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
-        $exporter->export($this->xml_tree, $plannings);
+        $exporter = new AgileDashboard_XMLExporter(
+            $this->xml_validator,
+            $this->planning_permissions_manager,
+            $this->explicit_backlog_xml_exporter
+        );
+        $exporter->export($this->project, $this->xml_tree, $plannings);
     }
 
     public function testItThrowsAnExceptionIfBacklogTrackerIdIsEmpty(): void
@@ -274,8 +322,12 @@ class AgileDashboard_XMLExporterTest extends \PHPUnit\Framework\TestCase //phpcs
 
         $this->expectException('AgileDashboard_XMLExporterUnableToGetValueException');
 
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
-        $exporter->export($this->xml_tree, $plannings);
+        $exporter = new AgileDashboard_XMLExporter(
+            $this->xml_validator,
+            $this->planning_permissions_manager,
+            $this->explicit_backlog_xml_exporter
+        );
+        $exporter->export($this->project, $this->xml_tree, $plannings);
     }
 
     public function testItThrowsAnExceptionIfXmlGeneratedIsNotValid(): void
@@ -283,8 +335,13 @@ class AgileDashboard_XMLExporterTest extends \PHPUnit\Framework\TestCase //phpcs
         $this->planning_permissions_manager->shouldReceive('getGroupIdsWhoHasPermissionOnPlanning')->twice();
         $this->xml_validator->shouldReceive('validate')->once()->andThrows(new XML_ParseException('', [], []));
 
-        $exporter = new AgileDashboard_XMLExporter($this->xml_validator, $this->planning_permissions_manager);
+        $exporter = new AgileDashboard_XMLExporter(
+            $this->xml_validator,
+            $this->planning_permissions_manager,
+            $this->explicit_backlog_xml_exporter
+        );
+
         $this->expectException(XML_ParseException::class);
-        $exporter->export($this->xml_tree, $this->plannings);
+        $exporter->export($this->project, $this->xml_tree, $this->plannings);
     }
 }

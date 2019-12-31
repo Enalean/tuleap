@@ -61,6 +61,7 @@ class AgileDashboard_XMLFullStructureExporter
     {
         $params['action']     = 'export';
         $params['project_id'] = $project->getID();
+        $params['group_id']   = $project->getID();
         $params['into_xml']   = $xml_element;
 
         return new Codendi_Request($params);

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter;
+
 class AgileDashboard_XMLExporter
 {
 
@@ -40,10 +42,19 @@ class AgileDashboard_XMLExporter
      */
     public const TRACKER_ID_PREFIX = 'T';
 
-    public function __construct(XML_RNGValidator $xml_validator, PlanningPermissionsManager $planning_permissions_manager)
-    {
-        $this->xml_validator                = $xml_validator;
-        $this->planning_permissions_manager = $planning_permissions_manager;
+    /**
+     * @var XMLExporter
+     */
+    private $explicit_backlog_xml_exporter;
+
+    public function __construct(
+        XML_RNGValidator $xml_validator,
+        PlanningPermissionsManager $planning_permissions_manager,
+        XMLExporter $explicit_backlog_xml_exporter
+    ) {
+        $this->xml_validator                 = $xml_validator;
+        $this->planning_permissions_manager  = $planning_permissions_manager;
+        $this->explicit_backlog_xml_exporter = $explicit_backlog_xml_exporter;
     }
 
     /**
@@ -53,11 +64,12 @@ class AgileDashboard_XMLExporter
      *
      * @throws AgileDashboard_XMLExporterUnableToGetValueException
      */
-    public function export(SimpleXMLElement $xml_element, array $plannings)
+    public function export(Project $project, SimpleXMLElement $xml_element, array $plannings)
     {
         $agiledashboard_node = $xml_element->addChild(self::NODE_AGILEDASHBOARD);
-        $plannings_node      = $agiledashboard_node->addChild(self::NODE_PLANNINGS);
+        $this->explicit_backlog_xml_exporter->exportExplicitBacklogConfiguration($project, $agiledashboard_node);
 
+        $plannings_node = $agiledashboard_node->addChild(self::NODE_PLANNINGS);
         foreach ($plannings as $planning) {
             /** @var Planning $planning */
             $planning_name                  = $planning->getName();
