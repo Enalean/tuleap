@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Project\Webhook;
 
-class WebhookTest extends \TuleapTestCase
+final class WebhookTest extends \PHPUnit\Framework\TestCase
 {
-    public function itUsesGivenInformation()
+    public function testItUsesGivenInformation() : void
     {
         $webhook = new Webhook(1, 'Name', 'https://example.com');
 
-        $this->assertEqual($webhook->getId(), 1);
-        $this->assertEqual($webhook->getName(), 'Name');
-        $this->assertEqual($webhook->getUrl(), 'https://example.com');
+        $this->assertEquals(1, $webhook->getId());
+        $this->assertEquals('Name', $webhook->getName());
+        $this->assertEquals('https://example.com', $webhook->getUrl());
     }
 }
