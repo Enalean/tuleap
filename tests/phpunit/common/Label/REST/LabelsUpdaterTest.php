@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Label\REST;
 
+use ProjectHistoryDao;
 use Tuleap\Label\Labelable;
 use Tuleap\Label\LabelableDao;
 use Tuleap\Label\UnknownLabelException;
 use Tuleap\Project\Label\LabelDao;
-use TuleapTestCase;
 
-class LabelsUpdaterTest extends TuleapTestCase
+final class LabelsUpdaterTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /** @var int */
     private $project_id;
 
@@ -46,19 +50,17 @@ class LabelsUpdaterTest extends TuleapTestCase
     /** @var Labelable */
     private $item;
 
-    public function setUp()
+    protected function setUp() : void
     {
-        parent::setUp();
-
-        $this->item              = stub('Tuleap\Label\Labelable')->getId()->returns(101);
-        $this->item_label_dao    = mock('Tuleap\Label\LabelableDao');
-        $this->project_label_dao = mock('Tuleap\Project\Label\LabelDao');
-        $this->history_dao       = mock('ProjectHistoryDao');
+        $this->item              = \Mockery::mock(\Tuleap\Label\Labelable::class)->shouldReceive('getId')->andReturns(101)->getMock();
+        $this->item_label_dao    = \Mockery::spy(\Tuleap\Label\LabelableDao::class);
+        $this->project_label_dao = \Mockery::spy(\Tuleap\Project\Label\LabelDao::class);
+        $this->history_dao       = \Mockery::mock(ProjectHistoryDao::class);
         $this->updater           = new LabelsUpdater($this->project_label_dao, $this->item_label_dao, $this->history_dao);
         $this->project_id        = 66;
     }
 
-    public function itAddsAndRemoveLabels()
+    public function testItAddsAndRemoveLabels() : void
     {
         $body = new LabelsPATCHRepresentation();
         $body->add = array(
@@ -72,26 +74,26 @@ class LabelsUpdaterTest extends TuleapTestCase
             $this->buildLabelRepresentation(6)
         );
 
-        expect($this->item_label_dao)->addLabelsInTransaction(101, array(1, 2, 3))->once();
-        expect($this->item_label_dao)->removeLabelsInTransaction(101, array(4, 5, 6))->once();
+        $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, array(1, 2, 3))->once();
+        $this->item_label_dao->shouldReceive('removeLabelsInTransaction')->with(101, array(4, 5, 6))->once();
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function itUsesTransaction()
+    public function testItUsesTransaction() : void
     {
         $body = new LabelsPATCHRepresentation();
         $body->add = array(
             $this->buildLabelRepresentation(1)
         );
 
-        expect($this->project_label_dao)->startTransaction()->once();
-        expect($this->project_label_dao)->commit()->once();
+        $this->project_label_dao->shouldReceive('startTransaction')->once();
+        $this->project_label_dao->shouldReceive('commit')->once();
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function itOnlyAddsLabels()
+    public function testItOnlyAddsLabels() : void
     {
         $body = new LabelsPATCHRepresentation();
         $body->add = array(
@@ -100,13 +102,13 @@ class LabelsUpdaterTest extends TuleapTestCase
             $this->buildLabelRepresentation(3)
         );
 
-        expect($this->item_label_dao)->addLabelsInTransaction(101, array(1, 2, 3))->once();
-        expect($this->item_label_dao)->removeLabelsInTransaction(101, array())->once();
+        $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, array(1, 2, 3))->once();
+        $this->item_label_dao->shouldReceive('removeLabelsInTransaction')->with(101, array())->once();
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function itOnlyRemovesLabels()
+    public function testItOnlyRemovesLabels() : void
     {
         $body = new LabelsPATCHRepresentation();
         $body->remove = array(
@@ -115,13 +117,13 @@ class LabelsUpdaterTest extends TuleapTestCase
             $this->buildLabelRepresentation(6)
         );
 
-        expect($this->item_label_dao)->addLabelsInTransaction(101, array())->once();
-        expect($this->item_label_dao)->removeLabelsInTransaction(101, array(4, 5, 6))->once();
+        $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, array())->once();
+        $this->item_label_dao->shouldReceive('removeLabelsInTransaction')->with(101, array(4, 5, 6))->once();
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function itDoesNotKnowHowToAddAndRemoveTheSameLabel()
+    public function testItDoesNotKnowHowToAddAndRemoveTheSameLabel() : void
     {
         $body = new LabelsPATCHRepresentation();
         $body->add = array(
@@ -133,36 +135,34 @@ class LabelsUpdaterTest extends TuleapTestCase
             $this->buildLabelRepresentation(1),
         );
 
-        $this->expectException('Tuleap\Label\REST\UnableToAddAndRemoveSameLabelException');
-        expect($this->item_label_dao)->addLabelsInTransaction()->never();
-        expect($this->item_label_dao)->removeLabelsInTransaction()->never();
-        expect($this->project_label_dao)->rollback()->once();
+        $this->expectException(\Tuleap\Label\REST\UnableToAddAndRemoveSameLabelException::class);
+        $this->item_label_dao->shouldReceive('addLabelsInTransaction')->never();
+        $this->item_label_dao->shouldReceive('removeLabelsInTransaction')->never();
+        $this->project_label_dao->shouldReceive('rollback')->once();
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function itDoesNotAddLabelThatIsNotInProject()
+    public function testItDoesNotAddLabelThatIsNotInProject() : void
     {
-        stub($this->project_label_dao)
-            ->checkThatAllLabelIdsExistInProjectInTransaction(66, array(1))
-            ->throws(new UnknownLabelException());
+        $this->project_label_dao->shouldReceive('checkThatAllLabelIdsExistInProjectInTransaction')->with(66, array(1))->andThrows(new UnknownLabelException());
 
         $body = new LabelsPATCHRepresentation();
         $body->add = array(
             $this->buildLabelRepresentation(1),
         );
 
-        $this->expectException('Tuleap\Label\UnknownLabelException');
-        expect($this->item_label_dao)->addLabelsInTransaction()->never();
-        expect($this->item_label_dao)->removeLabelsInTransaction()->never();
-        expect($this->project_label_dao)->rollback()->once();
+        $this->expectException(\Tuleap\Label\UnknownLabelException::class);
+        $this->item_label_dao->shouldReceive('addLabelsInTransaction')->never();
+        $this->item_label_dao->shouldReceive('removeLabelsInTransaction')->never();
+        $this->project_label_dao->shouldReceive('rollback')->once();
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function itCreatesLabelToAdd()
+    public function testItCreatesLabelToAdd() : void
     {
-        stub($this->project_label_dao)->createIfNeededInTransaction(66, 'Emergency Fix', '*')->returns(10);
+        $this->project_label_dao->shouldReceive('createIfNeededInTransaction')->with(66, 'Emergency Fix', \Mockery::any())->andReturns(10);
 
         $body = new LabelsPATCHRepresentation();
         $body->add = array(
@@ -171,24 +171,24 @@ class LabelsUpdaterTest extends TuleapTestCase
             $this->buildLabelToCreateRepresentation('Emergency Fix')
         );
 
-        expect($this->item_label_dao)->addLabelsInTransaction(101, array(1, 2, 10))->once();
+        $this->item_label_dao->shouldReceive('addLabelsInTransaction')->with(101, array(1, 2, 10))->once();
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function itTrimsLabelToAdd()
+    public function testItTrimsLabelToAdd() : void
     {
         $body = new LabelsPATCHRepresentation();
         $body->add = array(
             $this->buildLabelToCreateRepresentation('  Emergency Fix  ')
         );
 
-        expect($this->project_label_dao)->createIfNeededInTransaction(66, 'Emergency Fix', '*')->once();
+        $this->project_label_dao->shouldReceive('createIfNeededInTransaction')->with(66, 'Emergency Fix', \Mockery::any())->once();
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    public function itDoesNotAddEmptyLabels()
+    public function testItDoesNotAddEmptyLabels() : void
     {
 
         $body = new LabelsPATCHRepresentation();
@@ -197,14 +197,14 @@ class LabelsUpdaterTest extends TuleapTestCase
             $this->buildLabelToCreateRepresentation(' ')
         );
 
-        $this->expectException('Tuleap\Label\REST\UnableToAddEmptyLabelException');
-        expect($this->project_label_dao)->createIfNeededInTransaction()->never();
-        expect($this->item_label_dao)->addLabelsInTransaction()->never();
+        $this->expectException(\Tuleap\Label\REST\UnableToAddEmptyLabelException::class);
+        $this->project_label_dao->shouldReceive('createIfNeededInTransaction')->never();
+        $this->item_label_dao->shouldReceive('addLabelsInTransaction')->never();
 
         $this->updater->update($this->project_id, $this->item, $body);
     }
 
-    private function buildLabelRepresentation($id)
+    private function buildLabelRepresentation(int $id): LabelRepresentation
     {
         $label = new LabelRepresentation();
         $label->id = $id;
@@ -212,7 +212,7 @@ class LabelsUpdaterTest extends TuleapTestCase
         return $label;
     }
 
-    private function buildLabelToCreateRepresentation($name)
+    private function buildLabelToCreateRepresentation(string $name): LabelRepresentation
     {
         $label = new LabelRepresentation();
         $label->label = $name;
