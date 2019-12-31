@@ -24,7 +24,7 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
-use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter;
+use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter as ExplicitBacklogXMLExporter;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
@@ -37,6 +37,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
+use Tuleap\AgileDashboard\Planning\XML\XMLExporter as PlanningXMLExporter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
@@ -231,8 +232,8 @@ class AgileDashboardRouter
             $xml_rng_validator,
             new AgileDashboard_XMLExporter(
                 $xml_rng_validator,
-                new PlanningPermissionsManager(),
-                new XMLExporter(new ExplicitBacklogDao())
+                new ExplicitBacklogXMLExporter(new ExplicitBacklogDao()),
+                new PlanningXMLExporter(new PlanningPermissionsManager())
             ),
             new AgileDashboard_XMLImporter(),
             $this->planning_request_validator,

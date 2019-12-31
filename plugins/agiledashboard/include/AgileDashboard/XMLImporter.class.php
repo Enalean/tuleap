@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+use Tuleap\AgileDashboard\Planning\XML\XMLExporter;
 
 /**
  * Transforms imported xml into php values
@@ -41,7 +43,7 @@ class AgileDashboard_XMLImporter
     public function toArray(SimpleXMLElement $xml_object, array $tracker_mappings)
     {
 
-        $plannings_node_name = AgileDashboard_XMLExporter::NODE_PLANNINGS;
+        $plannings_node_name = XMLExporter::NODE_PLANNINGS;
         $plannings = array();
         $plannings[$plannings_node_name] = array();
 
@@ -78,7 +80,7 @@ class AgileDashboard_XMLImporter
     private function toArrayBacklogIds(SimpleXMLElement $planning_node, array $tracker_mappings)
     {
         $backlog_tracker_ids = array();
-        foreach ($planning_node->{AgileDashboard_XMLExporter::NODE_BACKLOGS}->children() as $backlog) {
+        foreach ($planning_node->{XMLExporter::NODE_BACKLOGS}->children() as $backlog) {
             $backlog_tracker_ids[] = $this->getTrackerIdFromMappings(
                 (string) $backlog,
                 $tracker_mappings
