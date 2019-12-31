@@ -272,14 +272,7 @@ final class XMLImporterTest extends TestCase
             ->with(
                 $this->project,
                 $this->user,
-                [225]
-            );
-
-        $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
-            ->with(
-                $this->project,
-                $this->user,
-                [226]
+                [225, 226]
             )
             ->andThrow(new ProvidedAddedIdIsNotInPartOfTopBacklogException([226]));
 

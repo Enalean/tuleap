@@ -27,8 +27,23 @@ use Exception;
 
 class ProvidedAddedIdIsNotInPartOfTopBacklogException extends Exception
 {
-    public function __construct(array $ids)
+    /**
+     * @var array
+     */
+    private $artifact_ids;
+
+    public function __construct(array $artifact_ids)
     {
-        parent::__construct("The following artifact ids do not belong to the project top backlog: " . implode(', ', $ids));
+        parent::__construct("The following artifact ids do not belong to the project top backlog: " . implode(', ', $artifact_ids));
+
+        $this->artifact_ids = $artifact_ids;
+    }
+
+    /**
+     * @return array
+     */
+    public function getArtifactIds(): array
+    {
+        return $this->artifact_ids;
     }
 }

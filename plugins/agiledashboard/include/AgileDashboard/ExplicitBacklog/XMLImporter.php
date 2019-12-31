@@ -89,29 +89,35 @@ class XMLImporter
             return;
         }
 
+        $added_artifact_ids = [];
         foreach ($xml->top_backlog->artifact as $xml_backlog_item) {
-            $base_artifact_id = (string) $xml_backlog_item['artifact_id'];
+            $base_artifact_id = (string)$xml_backlog_item['artifact_id'];
             if (! $artifact_id_mapping->containsSource($base_artifact_id)) {
                 $logger->warn("Artifact #$base_artifact_id not found in XML. Skipping.");
                 continue;
             }
 
-            $new_artifact_id = (int) $artifact_id_mapping->get($base_artifact_id);
-            try {
-                $this->top_backlog_elements_to_add_checker->checkAddedIdsBelongToTheProjectTopBacklogTrackers(
-                    $project,
-                    $user,
-                    [$new_artifact_id]
-                );
+            $new_artifact_id      = (int)$artifact_id_mapping->get($base_artifact_id);
+            $added_artifact_ids[] = $new_artifact_id;
+        }
 
-                $this->artifacts_in_explicit_backlog_dao->addArtifactToProjectBacklog($project_id, $new_artifact_id);
-            } catch (NoRootPlanningException $no_root_planning_exception) {
-                $logger->error($no_root_planning_exception->getMessage());
-                return;
-            } catch (ProvidedAddedIdIsNotInPartOfTopBacklogException $exception) {
-                $logger->warn("Artifact #$new_artifact_id not part of top backlog trackers. Skipping.");
-                continue;
-            }
+        try {
+            $this->top_backlog_elements_to_add_checker->checkAddedIdsBelongToTheProjectTopBacklogTrackers(
+                $project,
+                $user,
+                $added_artifact_ids
+            );
+        } catch (NoRootPlanningException $no_root_planning_exception) {
+            $logger->error($no_root_planning_exception->getMessage());
+            return;
+        } catch (ProvidedAddedIdIsNotInPartOfTopBacklogException $exception) {
+            $logger->warn($exception->getMessage(). "They are not added in the top backlog.");
+
+            $added_artifact_ids = array_diff($added_artifact_ids, $exception->getArtifactIds());
+        }
+
+        foreach ($added_artifact_ids as $added_artifact_id) {
+            $this->artifacts_in_explicit_backlog_dao->addArtifactToProjectBacklog($project_id, $added_artifact_id);
         }
     }
 }
