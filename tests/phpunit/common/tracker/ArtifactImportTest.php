@@ -19,175 +19,118 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../../../src/www/include/utils.php';
+declare(strict_types=1);
 
-Mock::generate('BaseLanguage');
-
-//substitute ArtifactField
-class ArtifactImportTest_ArtifactField
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
 {
-    function getLabel()
-    {
-    }
-    function getName()
-    {
-    }
-    function isEmptyOk()
-    {
-    }
-    function getDisplayType()
-    {
-    }
-    function isDateField()
-    {
-    }
-    function isSelectBox()
-    {
-    }
-    function isMultiSelectBox()
-    {
-    }
-}
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, \Tuleap\GlobalLanguageMock;
 
-
-Mock::generate('ArtifactImportTest_ArtifactField', 'ArtifactFieldImportVersion');
-
-Mock::generatePartial('ArtifactImport', 'ArtifactImportFollowUpCommentsTestVersion', array());
-Mock::generatePartial('ArtifactImport', 'ArtifactImportTestVersion', array('getUserManager', 'getUserByUserName'));
-
-Mock::generate('PFUser');
-
-Mock::generate('ArtifactFieldFactory');
-/*class ArtifactImportTest_ArtifactFieldFactory {
-  function getFieldFromName() {}
-  function getAllUsedFields() {}
-}
-Mock::generate('ArtifactImportTest_ArtifactFieldFactory','ArtifactFieldFactory');
-*/
-
-Mock::generate('UserManager');
-
-
-
-Mock::generatePartial('ArtifactType', 'ArtifactTypeTestVersion', array('getName','allowsAnon','getID','userIsAdmin'));
-/*class ArtifactType {
-  function getName() {}
-  function allowsAnon() {}
-  function getID() {}
-  function userIsAdmin() {}
-}
-Mock::generate('ArtifactType');
-*/
-
-
-class ArtifactImportTest extends TuleapTestCase
-{
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
-        $this->da  = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
-        ;
-        $this->dar = mock('DataAccessResult');
-        stub($this->da)->query()->returns($this->dar);
+        $this->da  = \Mockery::spy(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
+        $this->dar = \Mockery::spy(\DataAccessResult::class);
+        $this->da->shouldReceive('query')->andReturns($this->dar);
         CodendiDataAccess::setInstance($this->da);
     }
 
-    public function tearDown()
+    protected function tearDown() : void
     {
         parent::tearDown();
         CodendiDataAccess::clearInstance();
+        unset($GLOBALS['sys_lf'], $GLOBALS['user_id'], $GLOBALS['db_qhandle']);
     }
 
-    function testALL()
+    public function testALL() : void
     {
-
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'on', array('global','on'));
-        $GLOBALS['Language']->setReturnValue('getText', 'by', array('global','by'));
-        $GLOBALS['Language']->setReturnValue('getText', 'none', array('global','none'));
-        $GLOBALS['Language']->setReturnValue('getText', 'date', array('tracker_import_utils','date'));
+        $GLOBALS['Language'] = \Mockery::spy(\BaseLanguage::class);
+        $GLOBALS['Language']->shouldReceive('getText')->with('global', 'on')->andReturns('on');
+        $GLOBALS['Language']->shouldReceive('getText')->with('global', 'by')->andReturns('by');
+        $GLOBALS['Language']->shouldReceive('getText')->with('global', 'none')->andReturns('none');
+        $GLOBALS['Language']->shouldReceive('getText')->with('tracker_import_utils', 'date')->andReturns('date');
 
       /***************** var setup ***********************
        */
 
-        $at = new ArtifactTypeTestVersion($this);
-        $at->setReturnValue('getName', 'TestTracker');
-        $at->setReturnValue('allowsAnon', false);
-        $at->setReturnValue('getID', '123');
-        $at->setReturnValue('userIsAdmin', true);
+        $at = \Mockery::mock(\ArtifactType::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $at->shouldReceive('getName')->andReturns('TestTracker');
+        $at->shouldReceive('allowsAnon')->andReturns(false);
+        $at->shouldReceive('getID')->andReturns('123');
+        $at->shouldReceive('userIsAdmin')->andReturns(true);
 
-        $submitted_by = new ArtifactFieldImportVersion($this);
-        $submitted_by->setReturnValue('getLabel', 'Submitted By');
-        $submitted_by->setReturnValue('getName', 'submitted_by');
-        $submitted_by->setReturnValue('isEmptyOk', false);
-        $submitted_by->setReturnValue('getDisplayType', 'SB');
-        $submitted_by->setReturnValue('isDateField', false);
-        $submitted_by->setReturnValue('isSelectBox', false);
-        $submitted_by->setReturnValue('isMultiSelectBox', false);
+        $submitted_by = \Mockery::spy(ArtifactField::class);
+        $submitted_by->shouldReceive('getLabel')->andReturns('Submitted By');
+        $submitted_by->shouldReceive('getName')->andReturns('submitted_by');
+        $submitted_by->shouldReceive('isEmptyOk')->andReturns(false);
+        $submitted_by->shouldReceive('getDisplayType')->andReturns('SB');
+        $submitted_by->shouldReceive('isDateField')->andReturns(false);
+        $submitted_by->shouldReceive('isSelectBox')->andReturns(false);
+        $submitted_by->shouldReceive('isMultiSelectBox')->andReturns(false);
 
-        $submitted_on = new ArtifactFieldImportVersion($this);
-        $submitted_on->setReturnValue('getLabel', 'Submitted On');
-        $submitted_on->setReturnValue('getName', 'open_date');
-        $submitted_on->setReturnValue('isEmptyOk', false);
-        $submitted_on->setReturnValue('getDisplayType', 'DF');
-        $submitted_on->setReturnValue('isDateField', false);
-        $submitted_on->setReturnValue('isSelectBox', false);
-        $submitted_on->setReturnValue('isMultiSelectBox', false);
+        $submitted_on = \Mockery::spy(ArtifactField::class);
+        $submitted_on->shouldReceive('getLabel')->andReturns('Submitted On');
+        $submitted_on->shouldReceive('getName')->andReturns('open_date');
+        $submitted_on->shouldReceive('isEmptyOk')->andReturns(false);
+        $submitted_on->shouldReceive('getDisplayType')->andReturns('DF');
+        $submitted_on->shouldReceive('isDateField')->andReturns(false);
+        $submitted_on->shouldReceive('isSelectBox')->andReturns(false);
+        $submitted_on->shouldReceive('isMultiSelectBox')->andReturns(false);
 
-        $last_update_date = new ArtifactFieldImportVersion($this);
-        $last_update_date->setReturnValue('getLabel', 'Last Modified On');
-        $last_update_date->setReturnValue('getName', 'last_update_date');
-        $last_update_date->setReturnValue('isEmptyOk', false);
-        $last_update_date->setReturnValue('getDisplayType', 'DF');
-        $last_update_date->setReturnValue('isDateField', true);
-        $last_update_date->setReturnValue('isSelectBox', false);
-        $last_update_date->setReturnValue('isMultiSelectBox', false);
+        $last_update_date = \Mockery::spy(ArtifactField::class);
+        $last_update_date->shouldReceive('getLabel')->andReturns('Last Modified On');
+        $last_update_date->shouldReceive('getName')->andReturns('last_update_date');
+        $last_update_date->shouldReceive('isEmptyOk')->andReturns(false);
+        $last_update_date->shouldReceive('getDisplayType')->andReturns('DF');
+        $last_update_date->shouldReceive('isDateField')->andReturns(true);
+        $last_update_date->shouldReceive('isSelectBox')->andReturns(false);
+        $last_update_date->shouldReceive('isMultiSelectBox')->andReturns(false);
 
-        $artifact_id = new ArtifactFieldImportVersion($this);
-        $artifact_id->setReturnValue('getLabel', 'Artifact Id');
-        $artifact_id->setReturnValue('getName', 'artifact_id');
-        $artifact_id->setReturnValue('isEmptyOk', false);
-        $artifact_id->setReturnValue('getDisplayType', 'TF');
-        $artifact_id->setReturnValue('isDateField', false);
-        $artifact_id->setReturnValue('isSelectBox', false);
-        $artifact_id->setReturnValue('isMultiSelectBox', false);
+        $artifact_id = \Mockery::spy(ArtifactField::class);
+        $artifact_id->shouldReceive('getLabel')->andReturns('Artifact Id');
+        $artifact_id->shouldReceive('getName')->andReturns('artifact_id');
+        $artifact_id->shouldReceive('isEmptyOk')->andReturns(false);
+        $artifact_id->shouldReceive('getDisplayType')->andReturns('TF');
+        $artifact_id->shouldReceive('isDateField')->andReturns(false);
+        $artifact_id->shouldReceive('isSelectBox')->andReturns(false);
+        $artifact_id->shouldReceive('isMultiSelectBox')->andReturns(false);
 
-        $comment_type_id = new ArtifactFieldImportVersion($this);
-        $comment_type_id->setReturnValue('getLabel', 'Comment Type');
-        $comment_type_id->setReturnValue('getName', 'comment_type_id');
-        $comment_type_id->setReturnValue('isEmptyOk', true);
-        $comment_type_id->setReturnValue('getDisplayType', 'TF');
-        $comment_type_id->setReturnValue('isDateField', false);
-        $comment_type_id->setReturnValue('isSelectBox', false);
-        $comment_type_id->setReturnValue('isMultiSelectBox', false);
+        $comment_type_id = \Mockery::spy(ArtifactField::class);
+        $comment_type_id->shouldReceive('getLabel')->andReturns('Comment Type');
+        $comment_type_id->shouldReceive('getName')->andReturns('comment_type_id');
+        $comment_type_id->shouldReceive('isEmptyOk')->andReturns(true);
+        $comment_type_id->shouldReceive('getDisplayType')->andReturns('TF');
+        $comment_type_id->shouldReceive('isDateField')->andReturns(false);
+        $comment_type_id->shouldReceive('isSelectBox')->andReturns(false);
+        $comment_type_id->shouldReceive('isMultiSelectBox')->andReturns(false);
 
-        $assigned_to = new ArtifactFieldImportVersion($this);
-        $assigned_to->setReturnValue('getLabel', 'Assigned To');
-        $assigned_to->setReturnValue('getName', 'assigned_to');
-        $assigned_to->setReturnValue('isEmptyOk', false);
-        $assigned_to->setReturnValue('getDisplayType', 'SB');
-        $assigned_to->setReturnValue('isDateField', false);
-        $assigned_to->setReturnValue('isSelectBox', true);
-        $assigned_to->setReturnValue('isMultiSelectBox', false);
+        $assigned_to = \Mockery::spy(ArtifactField::class);
+        $assigned_to->shouldReceive('getLabel')->andReturns('Assigned To');
+        $assigned_to->shouldReceive('getName')->andReturns('assigned_to');
+        $assigned_to->shouldReceive('isEmptyOk')->andReturns(false);
+        $assigned_to->shouldReceive('getDisplayType')->andReturns('SB');
+        $assigned_to->shouldReceive('isDateField')->andReturns(false);
+        $assigned_to->shouldReceive('isSelectBox')->andReturns(true);
+        $assigned_to->shouldReceive('isMultiSelectBox')->andReturns(false);
 
-        $orig_subm = new ArtifactFieldImportVersion($this);
-        $orig_subm->setReturnValue('getLabel', 'Original Submission');
-        $orig_subm->setReturnValue('getName', 'details');
-        $orig_subm->setReturnValue('isEmptyOk', false);
-        $orig_subm->setReturnValue('getDisplayType', 'TA');
-        $orig_subm->setReturnValue('isDateField', false);
-        $orig_subm->setReturnValue('isSelectBox', false);
-        $orig_subm->setReturnValue('isMultiSelectBox', false);
+        $orig_subm = \Mockery::spy(ArtifactField::class);
+        $orig_subm->shouldReceive('getLabel')->andReturns('Original Submission');
+        $orig_subm->shouldReceive('getName')->andReturns('details');
+        $orig_subm->shouldReceive('isEmptyOk')->andReturns(false);
+        $orig_subm->shouldReceive('getDisplayType')->andReturns('TA');
+        $orig_subm->shouldReceive('isDateField')->andReturns(false);
+        $orig_subm->shouldReceive('isSelectBox')->andReturns(false);
+        $orig_subm->shouldReceive('isMultiSelectBox')->andReturns(false);
 
-        $atf = new MockArtifactFieldFactory($at);
-        $atf->setReturnValue('getAllUsedFields', array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm));
-        $atf->setReturnValue('getFieldFromName', $submitted_by, array('submitted_by'));
-        $atf->setReturnValue('getFieldFromName', $submitted_on, array('open_date'));
-        $atf->setReturnValue('getFieldFromName', $last_update_date, array('last_update_date'));
-        $atf->setReturnValue('getFieldFromName', $artifact_id, array('artifact_id'));
-        $atf->setReturnValue('getFieldFromName', $assigned_to, array('assigned_to'));
-        $atf->setReturnValue('getFieldFromName', $comment_type_id, array('comment_type_id'));
-        $atf->setReturnValue('getFieldFromName', $orig_subm, array('details'));
+        $atf = \Mockery::spy(\ArtifactFieldFactory::class);
+        $atf->shouldReceive('getAllUsedFields')->andReturns(array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm));
+        $atf->shouldReceive('getFieldFromName')->with('submitted_by')->andReturns($submitted_by);
+        $atf->shouldReceive('getFieldFromName')->with('open_date')->andReturns($submitted_on);
+        $atf->shouldReceive('getFieldFromName')->with('last_update_date')->andReturns($last_update_date);
+        $atf->shouldReceive('getFieldFromName')->with('artifact_id')->andReturns($artifact_id);
+        $atf->shouldReceive('getFieldFromName')->with('assigned_to')->andReturns($assigned_to);
+        $atf->shouldReceive('getFieldFromName')->with('comment_type_id')->andReturns($comment_type_id);
+        $atf->shouldReceive('getFieldFromName')->with('details')->andReturns($orig_subm);
 
       /**************** test parseFieldNames ************
        */
@@ -237,35 +180,35 @@ class ArtifactImportTest extends TuleapTestCase
         $test->clearError();
 
       //test mb fields
-        $mbox_field = new ArtifactFieldImportVersion();
-        $mbox_field->setReturnValue('getLabel', 'MB Field');
-        $mbox_field->setReturnValue('getName', 'mbox_field');
-        $mbox_field->setReturnValue('isEmptyOk', true);
-        $mbox_field->setReturnValue('getDisplayType', 'MB');
-        $mbox_field->setReturnValue('isDateField', false);
-        $mbox_field->setReturnValue('isSelectBox', false);
-        $mbox_field->setReturnValue('isMultiSelectBox', true);
+        $mbox_field = \Mockery::spy(ArtifactField::class);
+        $mbox_field->shouldReceive('getLabel')->andReturns('MB Field');
+        $mbox_field->shouldReceive('getName')->andReturns('mbox_field');
+        $mbox_field->shouldReceive('isEmptyOk')->andReturns(true);
+        $mbox_field->shouldReceive('getDisplayType')->andReturns('MB');
+        $mbox_field->shouldReceive('isDateField')->andReturns(false);
+        $mbox_field->shouldReceive('isSelectBox')->andReturns(false);
+        $mbox_field->shouldReceive('isMultiSelectBox')->andReturns(true);
 
-        $sbox_field = new ArtifactFieldImportVersion();
-        $sbox_field->setReturnValue('getLabel', 'SB Field');
-        $sbox_field->setReturnValue('getName', 'sbox_field');
-        $sbox_field->setReturnValue('isEmptyOk', false);
-        $sbox_field->setReturnValue('getDisplayType', 'SB');
-        $sbox_field->setReturnValue('isDateField', false);
-        $sbox_field->setReturnValue('isSelectBox', true);
-        $sbox_field->setReturnValue('isMultiSelectBox', false);
+        $sbox_field = \Mockery::spy(ArtifactField::class);
+        $sbox_field->shouldReceive('getLabel')->andReturns('SB Field');
+        $sbox_field->shouldReceive('getName')->andReturns('sbox_field');
+        $sbox_field->shouldReceive('isEmptyOk')->andReturns(false);
+        $sbox_field->shouldReceive('getDisplayType')->andReturns('SB');
+        $sbox_field->shouldReceive('isDateField')->andReturns(false);
+        $sbox_field->shouldReceive('isSelectBox')->andReturns(true);
+        $sbox_field->shouldReceive('isMultiSelectBox')->andReturns(false);
 
-        $atf = new MockArtifactFieldFactory($this);
-        $atf->setReturnValue('getAllUsedFields', array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm,$mbox_field,$sbox_field));
-        $atf->setReturnValue('getFieldFromName', $submitted_by, array('submitted_by'));
-        $atf->setReturnValue('getFieldFromName', $submitted_on, array('open_date'));
-        $atf->setReturnValue('getFieldFromName', $last_update_date, array('last_update_date'));
-        $atf->setReturnValue('getFieldFromName', $artifact_id, array('artifact_id'));
-        $atf->setReturnValue('getFieldFromName', $assigned_to, array('assigned_to'));
-        $atf->setReturnValue('getFieldFromName', $comment_type_id, array('comment_type_id'));
-        $atf->setReturnValue('getFieldFromName', $orig_subm, array('details'));
-        $atf->setReturnValue('getFieldFromName', $mbox_field, array('mbox_field'));
-        $atf->setReturnValue('getFieldFromName', $sbox_field, array('sbox_field'));
+        $atf = \Mockery::spy(\ArtifactFieldFactory::class);
+        $atf->shouldReceive('getAllUsedFields')->andReturns(array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm,$mbox_field,$sbox_field));
+        $atf->shouldReceive('getFieldFromName')->with('submitted_by')->andReturns($submitted_by);
+        $atf->shouldReceive('getFieldFromName')->with('open_date')->andReturns($submitted_on);
+        $atf->shouldReceive('getFieldFromName')->with('last_update_date')->andReturns($last_update_date);
+        $atf->shouldReceive('getFieldFromName')->with('artifact_id')->andReturns($artifact_id);
+        $atf->shouldReceive('getFieldFromName')->with('assigned_to')->andReturns($assigned_to);
+        $atf->shouldReceive('getFieldFromName')->with('comment_type_id')->andReturns($comment_type_id);
+        $atf->shouldReceive('getFieldFromName')->with('details')->andReturns($orig_subm);
+        $atf->shouldReceive('getFieldFromName')->with('mbox_field')->andReturns($mbox_field);
+        $atf->shouldReceive('getFieldFromName')->with('sbox_field')->andReturns($sbox_field);
 
         $test = new ArtifactImport($at, $atf, 'group');
         $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
@@ -333,11 +276,11 @@ class ArtifactImportTest extends TuleapTestCase
       /***************** test parseFollowUpComments *****************
        */
 
-        $aff = new MockArtifactFieldFactory($this);
-        $aff->setReturnValue('getAllUsedFields', array());
-        $aff->setReturnValue('getFieldFromName', $submitted_by, array('submitted_by'));
-        $aff->setReturnValue('getFieldFromName', $submitted_on, array('open_date'));
-        $aff->setReturnValue('getFieldFromName', $last_update_date, array('last_update_date'));
+        $aff = \Mockery::spy(\ArtifactFieldFactory::class);
+        $aff->shouldReceive('getAllUsedFields')->andReturns(array());
+        $aff->shouldReceive('getFieldFromName')->with('submitted_by')->andReturns($submitted_by);
+        $aff->shouldReceive('getFieldFromName')->with('open_date')->andReturns($submitted_on);
+        $aff->shouldReceive('getFieldFromName')->with('last_update_date')->andReturns($last_update_date);
 
         $test = new ArtifactImport($at, $aff, 'group');
         $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments')));
@@ -354,21 +297,21 @@ class ArtifactImportTest extends TuleapTestCase
 9/14/2004 2:13:03 PM DCO: Waiting on new database from Craig DeHond.
 ";
 
-        $um = new MockUserManager($this);
-        $ai = new ArtifactImportTestVersion($this);
-        $user = mock('PFUser');
+        $um = \Mockery::spy(\UserManager::class);
+        $ai = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $user = \Mockery::spy(\PFUser::class);
 
-        $ai->setReturnReference('getUserManager', $um);
-        $um->setReturnReference('getUserByUserName', $user);
+        $ai->shouldReceive('getUserManager')->andReturns($um);
+        $um->shouldReceive('getUserByUserName')->andReturns($user);
 
         $ai->__construct($at, $aff, 'group');
 
         $ai->parseFollowUpComments($followup_comments, $parsed_comments, $art_id, true);
 
         $this->assertFalse($ai->isError());
-        $this->assertEqual($parsed_comments[0]['date'], '2005-09-02 18:18');
-        $this->assertEqual($parsed_comments[0]['type'], $GLOBALS['Language']->getText('global', 'none'));
-        $this->assertEqual($parsed_comments[0]['by'], 'doswald');
+        $this->assertEquals('2005-09-02 18:18', $parsed_comments[0]['date']);
+        $this->assertEquals($GLOBALS['Language']->getText('global', 'none'), $parsed_comments[0]['type']);
+        $this->assertEquals('doswald', $parsed_comments[0]['by']);
 
         $parsed_comments = array();
         $followup_comments= "Follow-ups
@@ -386,12 +329,12 @@ Excel issue, reassigned to Gene, reduced to Ordinary
 
         $ai->parseFollowUpComments($followup_comments, $parsed_comments, $art_id, true);
         $this->assertFalse($ai->isError());
-        $this->assertEqual($parsed_comments[0]['date'], '2005-10-19 18:28');
-        $this->assertEqual($parsed_comments[0]['type'], $GLOBALS['Language']->getText('global', 'none'));
-        $this->assertEqual($parsed_comments[0]['by'], 'doswald');
-        $this->assertEqual($parsed_comments[1]['date'], '2005-09-02 16:51');
-        $this->assertEqual($parsed_comments[1]['type'], $GLOBALS['Language']->getText('global', 'none'));
-        $this->assertEqual($parsed_comments[1]['by'], 'doswald');
+        $this->assertEquals('2005-10-19 18:28', $parsed_comments[0]['date']);
+        $this->assertEquals($GLOBALS['Language']->getText('global', 'none'), $parsed_comments[0]['type'], $GLOBALS['Language']->getText('global', 'none'));
+        $this->assertEquals('doswald', $parsed_comments[0]['by']);
+        $this->assertEquals('2005-09-02 16:51', $parsed_comments[1]['date']);
+        $this->assertEquals($GLOBALS['Language']->getText('global', 'none'), $parsed_comments[1]['type']);
+        $this->assertEquals('doswald', $parsed_comments[1]['by']);
 
         $parsed_comments = array();
 
@@ -417,30 +360,30 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
 
         $test->parseLegacyDetails($followup_comments, $parsed_comments, $art_id, true);
         $this->assertFalse($test->isError());
-        $this->assertEqual($parsed_comments[0]['date'], '2000-12-09 00:08');
-        $this->assertEqual($parsed_comments[0]['type'], $GLOBALS['Language']->getText('global', 'none'));
-        $this->assertEqual($parsed_comments[0]['by'], 'jstidd');
-        $this->assertEqual($parsed_comments[1]['date'], '2000-12-08 23:06');
-        $this->assertEqual($parsed_comments[1]['type'], $GLOBALS['Language']->getText('global', 'none'));
-        $this->assertEqual($parsed_comments[1]['by'], 'jstidd');
-        $this->assertEqual($parsed_comments[2]['type'], $GLOBALS['Language']->getText('global', 'none'));
-        $this->assertEqual($parsed_comments[2]['date'], '2000-12-08 22:30');
-        $this->assertEqual($parsed_comments[3]['type'], $GLOBALS['Language']->getText('global', 'none'));
-        $this->assertEqual($parsed_comments[3]['date'], '2000-12-08 22:27');
+        $this->assertEquals('2000-12-09 00:08', $parsed_comments[0]['date']);
+        $this->assertEquals($GLOBALS['Language']->getText('global', 'none'), $parsed_comments[0]['type']);
+        $this->assertEquals('jstidd', $parsed_comments[0]['by']);
+        $this->assertEquals('2000-12-08 23:06', $parsed_comments[1]['date']);
+        $this->assertEquals($GLOBALS['Language']->getText('global', 'none'), $parsed_comments[1]['type']);
+        $this->assertEquals('jstidd', $parsed_comments[1]['by']);
+        $this->assertEquals($GLOBALS['Language']->getText('global', 'none'), $parsed_comments[2]['type']);
+        $this->assertEquals('2000-12-08 22:30', $parsed_comments[2]['date']);
+        $this->assertEquals($GLOBALS['Language']->getText('global', 'none'), $parsed_comments[3]['type']);
+        $this->assertEquals('2000-12-08 22:27', $parsed_comments[3]['date']);
 
         $parsed_comments = array();
         $test->parseFollowUpComments($followup_comments, $parsed_comments, $art_id, true);
         $this->assertFalse($test->isError());
-        $this->assertEqual($parsed_comments[0]['date'], '2000-12-09 00:08');
-        $this->assertEqual($parsed_comments[0]['type'], $GLOBALS['Language']->getText('global', 'none'));
-        $this->assertEqual($parsed_comments[0]['by'], 'jstidd');
-        $this->assertEqual($parsed_comments[1]['date'], '2000-12-08 23:06');
-        $this->assertEqual($parsed_comments[1]['type'], $GLOBALS['Language']->getText('global', 'none'));
-        $this->assertEqual($parsed_comments[1]['by'], 'jstidd');
-        $this->assertEqual($parsed_comments[2]['type'], $GLOBALS['Language']->getText('global', 'none'));
-        $this->assertEqual($parsed_comments[2]['date'], '2000-12-08 22:30');
-        $this->assertEqual($parsed_comments[3]['type'], $GLOBALS['Language']->getText('global', 'none'));
-        $this->assertEqual($parsed_comments[3]['date'], '2000-12-08 22:27');
+        $this->assertEquals('2000-12-09 00:08', $parsed_comments[0]['date']);
+        $this->assertEquals($GLOBALS['Language']->getText('global', 'none'), $parsed_comments[0]['type']);
+        $this->assertEquals('jstidd', $parsed_comments[0]['by']);
+        $this->assertEquals('2000-12-08 23:06', $parsed_comments[1]['date']);
+        $this->assertEquals($GLOBALS['Language']->getText('global', 'none'), $parsed_comments[1]['type']);
+        $this->assertEquals('jstidd', $parsed_comments[1]['by']);
+        $this->assertEquals($GLOBALS['Language']->getText('global', 'none'), $parsed_comments[2]['type']);
+        $this->assertEquals('2000-12-08 22:30', $parsed_comments[2]['date']);
+        $this->assertEquals($GLOBALS['Language']->getText('global', 'none'), $parsed_comments[3]['type']);
+        $this->assertEquals('2000-12-08 22:27', $parsed_comments[3]['date']);
 
       /**
       check by hand:
@@ -451,17 +394,17 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
       */
     }
 
-    function testSplitFollowUpComments()
+    public function testSplitFollowUpComments() : void
     {
-        $aitv = new ArtifactImportFollowUpCommentsTestVersion($this);
-        $followup_comments = file_get_contents(dirname(__FILE__) . '/_fixtures/followup_comments1.txt');
+        $aitv = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $followup_comments = file_get_contents(__DIR__ . '/_fixtures/followup_comments1.txt');
         $comments = $aitv->splitFollowUpComments($followup_comments);
-        $this->assertEqual(count($comments), 4 + 1); // + 1 because the follow-up comments header is returned
+        $this->assertCount(4 +1, $comments); // + 1 because the follow-up comments header is returned
     }
 
-    function testCanApplyHtmlSpecialCharsWithBaseTranslation()
+    public function testCanApplyHtmlSpecialCharsWithBaseTranslation() : void
     {
-        $ai = new ArtifactImportTestVersion($this);
+        $ai = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertTrue($ai->canApplyHtmlSpecialChars('"'));
         $this->assertTrue($ai->canApplyHtmlSpecialChars('<'));
         $this->assertTrue($ai->canApplyHtmlSpecialChars('>'));
@@ -469,9 +412,9 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertFalse($ai->canApplyHtmlSpecialChars("'"));
     }
 
-    function testCanApplyHtmlSpecialCharsWithTranslatedChars()
+    public function testCanApplyHtmlSpecialCharsWithTranslatedChars() : void
     {
-        $ai = new ArtifactImportTestVersion($this);
+        $ai = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertFalse($ai->canApplyHtmlSpecialChars('&quot;'));
         $this->assertFalse($ai->canApplyHtmlSpecialChars('&lt;'));
         $this->assertFalse($ai->canApplyHtmlSpecialChars('&gt;'));
@@ -479,20 +422,20 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertTrue($ai->canApplyHtmlSpecialChars('&#039;'));
     }
 
-    function testCanApplyHtmlSpecialCharsWithAdvancedHTMLTricks()
+    public function testCanApplyHtmlSpecialCharsWithAdvancedHTMLTricks() : void
     {
-        $ai = new ArtifactImportTestVersion($this);
+        $ai = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertFalse($ai->canApplyHtmlSpecialChars("&lt;p&gt;this is 'my test'&lt;/p&gt;"));
         $this->assertTrue($ai->canApplyHtmlSpecialChars("<p>this is 'my test'</p>"));
-        $this->assertEqual("&lt;p&gt;this is 'my test'&lt;/p&gt;", htmlspecialchars("<p>this is 'my test'</p>"));
+        $this->assertEquals("&lt;p&gt;this is 'my test'&lt;/p&gt;", htmlspecialchars("<p>this is 'my test'</p>"));
 
         $this->assertFalse($ai->canApplyHtmlSpecialChars("&lt;p&gt;&amp;lt;toto&amp;gt;&lt;/p&gt;"));
         $this->assertTrue($ai->canApplyHtmlSpecialChars("<p>&lt;toto&gt;</p>"));
-        $this->assertEqual("&lt;p&gt;&amp;lt;toto&amp;gt;&lt;/p&gt;", htmlspecialchars("<p>&lt;toto&gt;</p>"));
+        $this->assertEquals("&lt;p&gt;&amp;lt;toto&amp;gt;&lt;/p&gt;", htmlspecialchars("<p>&lt;toto&gt;</p>"));
 
         $this->assertFalse($ai->canApplyHtmlSpecialChars("test&lt;br/&gt;"));
         $this->assertTrue($ai->canApplyHtmlSpecialChars("test<br/>"));
-        $this->assertEqual("test&lt;br/&gt;", htmlspecialchars("test<br/>"));
+        $this->assertEquals("test&lt;br/&gt;", htmlspecialchars("test<br/>"));
     }
 
     /**
@@ -502,19 +445,19 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
      * (for instance &lt;), then exported it in CSV and finaly imported it with
      * CSV as well.
      */
-    function testUnCatchableStrings()
+    public function testUnCatchableStrings() : void
     {
-        $ai = new ArtifactImportTestVersion($this);
+        $ai = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->assertFalse($ai->canApplyHtmlSpecialChars("Test&amp;lt;"));
-        $this->assertEqual("Test&amp;lt;", htmlspecialchars("Test&lt;"));
+        $this->assertEquals("Test&amp;lt;", htmlspecialchars("Test&lt;"));
         // Should be assertTrue here
         $this->assertFalse($ai->canApplyHtmlSpecialChars("Test&lt;"));
     }
 
-    function testCanApplyHtmlSpecialCharsWithRealTextTricks()
+    public function testCanApplyHtmlSpecialCharsWithRealTextTricks() : void
     {
-        $ai = new ArtifactImportTestVersion($this);
+        $ai = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertTrue($ai->canApplyHtmlSpecialChars('"Description"'));
         $this->assertFalse($ai->canApplyHtmlSpecialChars("Following today's Codex framework update, it looks better in the sense I now have access to all charts."));
         $this->assertTrue($ai->canApplyHtmlSpecialChars('&&lt;'));
@@ -523,28 +466,14 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertTrue($ai->canApplyHtmlSpecialChars('&&quot;'));
     }
 
-    function testCheckCommentExistInLegacyFormat()
+    public function testCheckCommentExistInLegacyFormat() : void
     {
-        stub($this->da)->numRows()->returns(1);
-        stub($this->da)->fetchArray()->returns(array ('new_value' => '<pre> testing issue </pre>'));
-        stub($this->dar)->getResult()->returns(true);
-        $artImp = new ArtifactImportTestVersion($this);
+        $this->da->shouldReceive('numRows')->andReturns(1);
+        $this->da->shouldReceive('fetchArray')->andReturns(array ('new_value' => '<pre> testing issue </pre>'));
+        $this->dar->shouldReceive('getResult')->andReturns(true);
+        $artImp = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $artId = 12237;
         $parsedFollow = array('comment' => '<pre> testing issue </pre>');
         $this->assertTrue($artImp->checkCommentExistInLegacyFormat($parsedFollow, $artId));
     }
 }
-
-
-//function user_isloggedin() {return false;}
-
-//function user_ismember() {return true;}
-
-//function user_getname() {return 'schneide2';}
-/*
-function db_query($string) {return true;}
-function db_numrows($string) {return 1;}
-function db_fetch_array($string) {return array ('new_value' => '<pre> testing issue </pre>');}
-function db_ei($string) {return false;}
-function db_es($string) {return false;}
-*/

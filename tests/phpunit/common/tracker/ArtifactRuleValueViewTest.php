@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -18,14 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-Mock::generate('ArtifactRuleValue');
 
-class ArtifactRuleValueViewTest extends TuleapTestCase
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class ArtifactRuleValueViewTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    function testFetch()
+    public function testFetch() : void
     {
-        $rule = new MockArtifactRuleValue($this);
+        $rule = \Mockery::spy(\ArtifactRuleValue::class);
         $rule->id                = 'id';
         $rule->group_artifact_id = 'group_artifact_id';
         $rule->source_field      = 'source_field';
@@ -34,6 +37,6 @@ class ArtifactRuleValueViewTest extends TuleapTestCase
         $rule->target_value      = 'target_value_2';
 
         $view = new ArtifactRuleValueView($rule);
-        $this->assertEqual($view->fetch(), '#id@group_artifact_id source_field(source_value_1) => target_field(target_value_2)');
+        $this->assertEquals('#id@group_artifact_id source_field(source_value_1) => target_field(target_value_2)', $view->fetch());
     }
 }

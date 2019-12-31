@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -18,10 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class ArtifactRuleValueTest extends TuleapTestCase
-{
 
-    function testApplyTo()
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class ArtifactRuleValueTest extends \PHPUnit\Framework\TestCase
+{
+    public function testApplyTo() : void
     {
         $arv = new ArtifactRuleValue('id', 'group_artifact_id', 'source_field', 'source_value', 'target_field', 'target_value');
 
@@ -36,7 +39,8 @@ class ArtifactRuleValueTest extends TuleapTestCase
         $this->assertFalse($arv->applyTo('group_artifact_id', 'source_field', 'source_value', 'false_target_field', 'false_value'));
         $this->assertFalse($arv->applyTo('group_artifact_id', 'source_field', 'source_value', 'false_target_field', 'false_target_value'));
     }
-    function testCanApplyTo()
+
+    public function testCanApplyTo() : void
     {
         $arv = new ArtifactRuleValue('id', 'group_artifact_id', 'source_field', 'source_value', 'target_field', 'target_value');
 
