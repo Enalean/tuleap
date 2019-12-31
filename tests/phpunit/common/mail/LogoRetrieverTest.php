@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,32 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class LogoRetrieverTest extends TuleapTestCase
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class LogoRetrieverTest extends \PHPUnit\Framework\TestCase
 {
+    use \Tuleap\ForgeConfigSandbox;
 
-    public function setUp()
+    public function testItFindsExistingLogo() : void
     {
-        parent::setUp();
-        ForgeConfig::store();
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        ForgeConfig::restore();
-    }
-
-    public function itFindsExistingLogo()
-    {
-        ForgeConfig::set('sys_urlroot', '/tuleap/src/www/');
+        ForgeConfig::set('sys_urlroot', __DIR__ . '/../../../../src/www');
         $logo_retriever = new LogoRetriever();
-        $this->assertTrue($logo_retriever->getPath());
+        $this->assertNotNull($logo_retriever->getPath());
     }
 
-    public function itDoesNotFoundUnavailableLogo()
+    public function testItDoesNotFoundUnavailableLogo() : void
     {
         ForgeConfig::set('sys_urlroot', '/wrongpath/');
         $logo_retriever = new LogoRetriever();
-        $this->assertFalse($logo_retriever->getPath());
+        $this->assertNull($logo_retriever->getPath());
     }
 }

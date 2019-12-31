@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Mail_RecipientListBuilderTest extends TuleapTestCase
+declare(strict_types=1);
+
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     private $external_address           = 'toto@example.com';
     private $external_address2          = 'toto2@example.com';
@@ -46,61 +50,27 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase
     /** @var Mail_RecipientListBuilder */
     private $builder;
 
-    public function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
 
-        $this->active_user = aUser()
-            ->withStatus(PFUser::STATUS_ACTIVE)
-            ->withEmail($this->active_user_address)
-            ->withRealName($this->active_user_name)
-            ->build();
+        $this->active_user        = $this->buildUser(PFUser::STATUS_ACTIVE, $this->active_user_address, $this->active_user_name);
+        $suspended_user           = $this->buildUser(PFUser::STATUS_SUSPENDED, $this->suspended_user_address, $this->suspended_user_name);
+        $this->deleted_user       = $this->buildUser(PFUser::STATUS_DELETED, $this->deleted_user_address, $this->deleted_user_name);
+        $this->bob_suspended_user = $this->buildUser(PFUser::STATUS_SUSPENDED, $this->bob_suspended_user_address, $this->bob_suspended_user_name);
+        $this->bob_active_user    = $this->buildUser(PFUser::STATUS_ACTIVE, $this->bob_active_user_address, $this->bob_active_user_name);
 
-        $suspended_user = aUser()
-            ->withStatus(PFUser::STATUS_SUSPENDED)
-            ->withEmail($this->suspended_user_address)
-            ->withRealName($this->suspended_user_name)
-            ->build();
-
-        $this->deleted_user = aUser()
-            ->withStatus(PFUser::STATUS_DELETED)
-            ->withEmail($this->deleted_user_address)
-            ->withRealName($this->deleted_user_name)
-            ->build();
-
-        $this->bob_suspended_user = aUser()
-            ->withStatus(PFUser::STATUS_SUSPENDED)
-            ->withEmail($this->bob_suspended_user_address)
-            ->withRealName($this->bob_suspended_user_name)
-            ->build();
-
-        $this->bob_active_user = aUser()
-            ->withStatus(PFUser::STATUS_ACTIVE)
-            ->withEmail($this->bob_active_user_address)
-            ->withRealName($this->bob_active_user_name)
-            ->build();
-
-        $user_manager = mock('UserManager');
-        stub($user_manager)
-            ->getAllUsersByEmail($this->active_user_address)
-            ->returns(array($this->active_user));
-        stub($user_manager)
-            ->getAllUsersByEmail($this->suspended_user_address)
-            ->returns(array($suspended_user));
-        stub($user_manager)
-            ->getAllUsersByEmail($this->deleted_user_address)
-            ->returns(array($this->deleted_user));
-        stub($user_manager)
-            ->getAllUsersByEmail($this->bob_active_user_address)
-            ->returns(array($this->bob_suspended_user, $this->bob_active_user));
-        stub($user_manager)
-            ->findUser($this->bob_identifier)
-            ->returns($this->bob_active_user);
+        $user_manager = \Mockery::spy(\UserManager::class);
+        $user_manager->shouldReceive('getAllUsersByEmail')->with($this->active_user_address)->andReturns(array($this->active_user));
+        $user_manager->shouldReceive('getAllUsersByEmail')->with($this->suspended_user_address)->andReturns(array($suspended_user));
+        $user_manager->shouldReceive('getAllUsersByEmail')->with($this->deleted_user_address)->andReturns(array($this->deleted_user));
+        $user_manager->shouldReceive('getAllUsersByEmail')->with($this->bob_active_user_address)->andReturns(array($this->bob_suspended_user, $this->bob_active_user));
+        $user_manager->shouldReceive('findUser')->with($this->bob_identifier)->andReturns($this->bob_active_user);
 
         $this->builder = new Mail_RecipientListBuilder($user_manager);
     }
 
-    public function itReturnsAnExternalAddress()
+    public function testItReturnsAnExternalAddress() : void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(array($this->external_address));
 
@@ -108,10 +78,10 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase
             array('email' => $this->external_address, 'real_name' => '')
         );
 
-        $this->assertEqual($expected, $list);
+        $this->assertEquals($expected, $list);
     }
 
-    public function itReturnsAListOfExternalAddresses()
+    public function testItReturnsAListOfExternalAddresses() : void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(
             array($this->external_address, $this->external_address2)
@@ -122,10 +92,10 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase
             array('email' => $this->external_address2, 'real_name' => '')
         );
 
-        $this->assertEqual($expected, $list);
+        $this->assertEquals($expected, $list);
     }
 
-    public function itLooksForAUser()
+    public function testItLooksForAUser() : void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(
             array($this->active_user_address)
@@ -135,10 +105,10 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase
             array('email' => $this->active_user_address, 'real_name' => $this->active_user_name),
         );
 
-        $this->assertEqual($expected, $list);
+        $this->assertEquals($expected, $list);
     }
 
-    public function itDoesNotOutputSuspendedNorDeletedUsers()
+    public function testItDoesNotOutputSuspendedNorDeletedUsers() : void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(
             array($this->suspended_user_address, $this->deleted_user_address)
@@ -147,10 +117,10 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase
         $expected = array(
         );
 
-        $this->assertEqual($expected, $list);
+        $this->assertEquals($expected, $list);
     }
 
-    public function itTakesTheFirstUserAccountWithAllowedStatus()
+    public function testItTakesTheFirstUserAccountWithAllowedStatus() : void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(
             array($this->bob_active_user_address)
@@ -160,10 +130,10 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase
             array('email' => $this->bob_active_user_address, 'real_name' => $this->bob_active_user_name),
         );
 
-        $this->assertEqual($expected, $list);
+        $this->assertEquals($expected, $list);
     }
 
-    public function itFallbacksOnFindUserIfEmailNotFound()
+    public function testItFallbacksOnFindUserIfEmailNotFound() : void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(
             array($this->bob_identifier)
@@ -173,10 +143,10 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase
             array('email' => $this->bob_active_user_address, 'real_name' => $this->bob_active_user_name),
         );
 
-        $this->assertEqual($expected, $list);
+        $this->assertEquals($expected, $list);
     }
 
-    public function itValidatesAListOfUsers()
+    public function testItValidatesAListOfUsers() : void
     {
         $list = $this->builder->getValidRecipientsFromUsers(
             array(
@@ -192,6 +162,11 @@ class Mail_RecipientListBuilderTest extends TuleapTestCase
             array('email' => $this->bob_active_user_address, 'real_name' => $this->bob_active_user_name),
         );
 
-        $this->assertEqual($expected, $list);
+        $this->assertEquals($expected, $list);
+    }
+
+    private function buildUser(string $status, string $email, string $realname): PFUser
+    {
+        return new PFUser(['status' => $status, 'email' => $email, 'realname' => $realname, 'language_id' => 'en']);
     }
 }
