@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,13 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\AgileDashboard\Planning\XML\XMLExporter;
+
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
 class AgileDashboard_XMLimporterTest extends TuleapTestCase
 {
-
     /**
-     *
      * @var SimpleXMLElement
      */
     private $xml_object;
@@ -96,15 +97,15 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase
         $data = $this->importer->toArray($this->xml_object, $this->tracker_mappings);
 
         $this->assertTrue(is_array($data));
-        $this->assertTrue(is_array($data[AgileDashboard_XMLExporter::NODE_PLANNINGS]));
+        $this->assertTrue(is_array($data[XMLExporter::NODE_PLANNINGS]));
 
-        $this->assertCount($data[AgileDashboard_XMLExporter::NODE_PLANNINGS], 2);
+        $this->assertCount($data[XMLExporter::NODE_PLANNINGS], 2);
     }
 
     public function itReturnsAnArrayOfPlanningParameterValuesForAPlanning()
     {
         $data = $this->importer->toArray($this->xml_object, $this->tracker_mappings);
-        $plannings = $data[AgileDashboard_XMLExporter::NODE_PLANNINGS];
+        $plannings = $data[XMLExporter::NODE_PLANNINGS];
 
         $a_planning = $plannings[0];
 
@@ -118,7 +119,7 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase
     public function itReturnsCorrectTrackerIdsForAPlanning()
     {
         $data = $this->importer->toArray($this->xml_object, $this->tracker_mappings);
-        $plannings = $data[AgileDashboard_XMLExporter::NODE_PLANNINGS];
+        $plannings = $data[XMLExporter::NODE_PLANNINGS];
         $a_planning = $plannings[0];
 
         $this->assertTrue(array_key_exists(PlanningParameters::BACKLOG_TRACKER_IDS, $a_planning));
@@ -131,7 +132,7 @@ class AgileDashboard_XMLimporterTest extends TuleapTestCase
     public function itReturnsSeveralBacklogTrackers()
     {
         $data = $this->importer->toArray($this->xml_object, $this->tracker_mappings);
-        $plannings = $data[AgileDashboard_XMLExporter::NODE_PLANNINGS];
+        $plannings = $data[XMLExporter::NODE_PLANNINGS];
         $a_planning = $plannings[1];
 
         $this->assertEqual($a_planning[PlanningParameters::BACKLOG_TRACKER_IDS], array(8, 96));

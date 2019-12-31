@@ -23,8 +23,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
-use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter;
+use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter as ExplicitBacklogXMLExporter;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
+use Tuleap\AgileDashboard\Planning\XML\XMLExporter as PlanningXMLExporter;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\AllowedFieldRetriever;
 use Tuleap\Cardwall\Semantic\BackgroundColorDao;
@@ -122,8 +123,8 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     {
         return new AgileDashboard_XMLExporter(
             new XML_RNGValidator(),
-            new PlanningPermissionsManager(),
-            new XMLExporter(new ExplicitBacklogDao())
+            new ExplicitBacklogXMLExporter(new ExplicitBacklogDao()),
+            new PlanningXMLExporter(new PlanningPermissionsManager())
         );
     }
 
