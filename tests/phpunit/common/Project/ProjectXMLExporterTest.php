@@ -116,9 +116,8 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
             $project_ugroup_members3,
         ));
 
-        $this->project->shouldReceive('getServices')->andReturns(array());
-
-        $this->event_manager->shouldReceive('processEvent')->with(Event::EXPORT_XML_PROJECT, M::any())->once();
+        $this->project->shouldReceive('getServices')->andReturns([]);
+        $this->event_manager->shouldReceive('processEvent')->once();
 
         $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);
@@ -182,7 +181,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->project->shouldReceive('getServices')->andReturns(array());
 
-        $this->event_manager->shouldReceive('processEvent')->with(Event::EXPORT_XML_PROJECT, M::any())->once();
+        $this->event_manager->shouldReceive('processEvent')->once();
 
         $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);

@@ -28,6 +28,7 @@ use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 use Tuleap\CVS\DiskUsage\FullHistoryDao;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
 use Tuleap\Error\ProjectAccessSuspendedController;
+use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Httpd\PostRotateEvent;
 use Tuleap\layout\HomePage\LastMonthStatisticsCollectorSVN;
 use Tuleap\layout\HomePage\StatisticsCollectorSVN;
@@ -177,7 +178,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook(Event::SVN_REPOSITORY_CREATED);
         $this->addHook(ProjectCreator::PROJECT_CREATION_REMOVE_LEGACY_SERVICES);
-        $this->addHook(Event::EXPORT_XML_PROJECT);
+        $this->addHook(ExportXmlProject::NAME);
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
         $this->addHook(Event::SITE_ACCESS_CHANGE);
         $this->addHook(CLICommandsCollector::NAME);
@@ -206,16 +207,16 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return parent::getHooksAndCallbacks();
     }
 
-    public function export_xml_project($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName
+    public function exportXmlProject(ExportXmlProject $event): void
     {
-        if (! isset($params['options']['all']) || $params['options']['all'] === false) {
+        if (! isset($event->getOptions()['all']) || $event->getOptions()['all'] === false) {
             return;
         }
 
-        $this->getSvnExporter($params['project'])->exportToXml(
-            $params['into_xml'],
-            $params['archive'],
-            $params['temporary_dump_path_on_filesystem']
+        $this->getSvnExporter($event->getProject())->exportToXml(
+            $event->getIntoXml(),
+            $event->getArchive(),
+            $event->getTemporaryDumpPathOnFilesystem()
         );
     }
 

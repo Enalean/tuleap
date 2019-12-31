@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-use Event;
 use EventManager;
 use Mockery as M;
 use PFUser;
@@ -33,12 +32,12 @@ use ProjectUGroup;
 use ProjectXMLExporter;
 use ProjectXMLExporterLogger;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
+use Tuleap\Test\Builders as B;
 use UGroupManager;
 use UserManager;
 use UserXMLExportedCollection;
 use UserXMLExporter;
 use XML_RNGValidator;
-use Tuleap\Test\Builders as B;
 
 class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
 {
@@ -116,7 +115,7 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
 
         $this->project->shouldReceive('getServices')->andReturns(array());
 
-        $this->event_manager->shouldReceive('processEvent')->with(Event::EXPORT_XML_PROJECT, M::any())->once();
+        $this->event_manager->shouldReceive('processEvent')->once();
 
         $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);
