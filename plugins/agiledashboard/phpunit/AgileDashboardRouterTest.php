@@ -84,7 +84,8 @@ final class AgileDashboardRouterTest extends \PHPUnit\Framework\TestCase //phpcs
                 Mockery::mock(ScrumPresenterBuilder::class),
                 Mockery::mock(EventManager::class),
                 Mockery::mock(PlanningUpdater::class),
-                Mockery::mock(Planning_RequestValidator::class)
+                Mockery::mock(Planning_RequestValidator::class),
+                Mockery::mock(AgileDashboard_XMLExporter::class)
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
