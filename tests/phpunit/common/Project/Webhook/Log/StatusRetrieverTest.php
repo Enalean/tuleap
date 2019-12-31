@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,35 +18,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Project\Webhook\Log;
 
-class StatusRetrieverTest extends \TuleapTestCase
+final class StatusRetrieverTest extends \PHPUnit\Framework\TestCase
 {
-    public function itRetrievesStatus()
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    public function testItRetrievesStatus() : void
     {
         $row_1              = array('webhook_id' => 1, 'created_on' => 1489595500, 'status' => 'Operation timed out after 5000 milliseconds with 0 bytes received');
         $row_2              = array('webhook_id' => 1, 'created_on' => 1489595525, 'status' => '200 OK');
         $data_access_result = \TestHelper::arrayToDar($row_1, $row_2);
-        $dao                = mock('Tuleap\\Project\\Webhook\\Log\\WebhookLoggerDao');
-        stub($dao)->searchLogsByWebhookId()->returns($data_access_result);
-        $webhook = mock('Tuleap\\Project\\Webhook\\Webhook');
+        $dao                = \Mockery::mock(\Tuleap\Project\Webhook\Log\WebhookLoggerDao::class);
+        $dao->shouldReceive('searchLogsByWebhookId')->andReturns($data_access_result);
+        $webhook = \Mockery::spy(\Tuleap\Project\Webhook\Webhook::class);
 
         $retriever = new StatusRetriever($dao);
 
         $status = $retriever->getMostRecentStatus($webhook);
 
-        $this->assertCount($status, 2);
+        $this->assertCount(2, $status);
     }
 
-    public function itFailsWhenStatusCanNotBeRetrieved()
+    public function testItFailsWhenStatusCanNotBeRetrieved() : void
     {
-        $dao = mock('Tuleap\\Project\\Webhook\\Log\\WebhookLoggerDao');
-        stub($dao)->searchLogsByWebhookId()->returns(false);
-        $webhook = mock('Tuleap\\Project\\Webhook\\Webhook');
+        $dao = \Mockery::mock(\Tuleap\Project\Webhook\Log\WebhookLoggerDao::class);
+        $dao->shouldReceive('searchLogsByWebhookId')->andReturns(false);
+        $webhook = \Mockery::spy(\Tuleap\Project\Webhook\Webhook::class);
 
         $retriever = new StatusRetriever($dao);
 
-        $this->expectException('Tuleap\\Project\\Webhook\\Log\\StatusDataAccessException');
+        $this->expectException(\Tuleap\Project\Webhook\Log\StatusDataAccessException::class);
         $retriever->getMostRecentStatus($webhook);
     }
 }

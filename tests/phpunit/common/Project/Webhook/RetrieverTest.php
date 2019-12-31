@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,33 +18,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Project\Webhook;
 
-class RetrieverTest extends \TuleapTestCase
+final class RetrieverTest extends \PHPUnit\Framework\TestCase
 {
-    public function itRetrievesWebhooks()
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    public function testItRetrievesWebhooks() : void
     {
         $row_1              = array('id' => 1, 'name' => 'W1', 'url' => 'https://example.com');
         $row_2              = array('id' => 2, 'name' => 'W2', 'url' => 'https://webhook2.example.com');
         $data_access_result = \TestHelper::arrayToDar($row_1, $row_2);
-        $dao                = mock('Tuleap\\Project\\Webhook\\WebhookDao');
-        stub($dao)->searchWebhooks()->returns($data_access_result);
+        $dao                = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
+        $dao->shouldReceive('searchWebhooks')->andReturns($data_access_result);
 
         $retriever = new Retriever($dao);
 
         $webhooks = $retriever->getWebhooks();
 
-        $this->assertCount($webhooks, 2);
+        $this->assertCount(2, $webhooks);
     }
 
-    public function itFailsWhenWebhooksCanNotBeRetrieved()
+    public function testItFailsWhenWebhooksCanNotBeRetrieved() : void
     {
-        $dao = mock('Tuleap\\Project\\Webhook\\WebhookDao');
-        stub($dao)->searchWebhooks()->returns(false);
+        $dao = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
+        $dao->shouldReceive('searchWebhooks')->andReturns(false);
 
         $retriever = new Retriever($dao);
 
-        $this->expectException('Tuleap\\Project\\Webhook\\WebhookDataAccessException');
+        $this->expectException(\Tuleap\Project\Webhook\WebhookDataAccessException::class);
         $retriever->getWebhooks();
     }
 }

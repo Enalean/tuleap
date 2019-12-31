@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,39 +18,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Project\Webhook\Log;
 
-class StatusTest extends \TuleapTestCase
+final class StatusTest extends \PHPUnit\Framework\TestCase
 {
-    public function itUsesGivenInformation()
+    public function testItUsesGivenInformation() : void
     {
         $status = new Status('200 OK', 1489595500);
 
-        $this->assertEqual('200 OK', $status->getStatus());
+        $this->assertEquals('200 OK', $status->getStatus());
     }
 
-    public function itDeterminesTheStatusIsSuccessful()
+    public function testItDeterminesTheStatusIsSuccessful() : void
     {
         $status = new Status('200 OK', 1489595500);
 
         $this->assertFalse($status->isInError());
     }
 
-    public function itIsInErrorIfTheStatusIsEmpty()
+    public function testItIsInErrorIfTheStatusIsEmpty() : void
     {
         $status = new Status('', 1489595500);
 
         $this->assertTrue($status->isInError());
     }
 
-    public function itIsInErrorIfWeGotAnHTTPErrorCode()
+    public function testItIsInErrorIfWeGotAnHTTPErrorCode() : void
     {
         $status = new Status('500 Internal Server Error', 1489595500);
 
         $this->assertTrue($status->isInError());
     }
 
-    public function itIsInErrorWhenCurlGivesAnError()
+    public function testItIsInErrorWhenCurlGivesAnError() : void
     {
         $status = new Status('Operation timed out after 5000 milliseconds with 0 bytes received', 1489595500);
 
