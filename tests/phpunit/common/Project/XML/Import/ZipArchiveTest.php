@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,83 +18,74 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Project\XML\Import;
 
-class ZipArchiveTest extends \TuleapTestCase
+use Tuleap\TemporaryTestDirectory;
+
+final class ZipArchiveTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, TemporaryTestDirectory;
 
-    /** @var Project */
-    private $project;
-
-    /** @var int */
-    private $project_id;
-
-    /** @var \ZipArchive */
-    private $zip;
-
-    /** @var string */
-    private $fixtures_dir;
+    private const FIXTURES_DIR = __DIR__ .'/_fixtures';
 
     /** @var string */
     private $tmp_dir;
 
-    /** @var ProjectXMLImporter_XMLImportZipArchive */
+    /** @var ZipArchive */
     private $archive;
 
-    public function setUp()
+    protected function setUp() : void
     {
-        parent::setUp();
-        $this->tmp_dir      = '/var/tmp';
-        $this->fixtures_dir = dirname(__FILE__) .'/_fixtures';
-
-        $this->project_id   = getmypid();
+        $this->tmp_dir = $this->getTmpDir();
 
         $this->archive = new ZipArchive(
-            $this->fixtures_dir .'/archive.zip',
+            self::FIXTURES_DIR .'/archive.zip',
             $this->tmp_dir
         );
     }
 
-    public function tearDown()
+    protected function tearDown() : void
     {
         $this->archive->cleanUp();
         parent::tearDown();
     }
 
-    public function itGivesTheXMLFile()
+    public function testItGivesTheXMLFile() : void
     {
-        $expected = file_get_contents($this->fixtures_dir .'/project.xml');
-        $this->assertEqual($expected, $this->archive->getProjectXML());
+        $expected = file_get_contents(self::FIXTURES_DIR .'/project.xml');
+        $this->assertEquals($expected, $this->archive->getProjectXML());
     }
 
-    public function itExtractAttachmentsIntoARandomTemporaryDirectory()
+    public function testItExtractAttachmentsIntoARandomTemporaryDirectory() : void
     {
         $extraction_path = $this->archive->getExtractionPath();
-        $this->assertTrue(is_dir($extraction_path));
+        $this->assertDirectoryExists($extraction_path);
 
         $expected_prefix = $this->tmp_dir .'/import_project_';
-        $this->assertPattern('%'. $expected_prefix .'\w+%', $extraction_path);
+        $this->assertRegExp('%'. $expected_prefix .'\w+%', $extraction_path);
 
         $this->archive->extractFiles();
 
-        $expected  = file_get_contents($this->fixtures_dir .'/data/Artifact69');
+        $expected  = file_get_contents(self::FIXTURES_DIR .'/data/Artifact69');
         $extracted = file_get_contents($extraction_path .'/data/Artifact69');
 
-        $this->assertEqual($extracted, $expected);
+        $this->assertEquals($expected, $extracted);
     }
 
-    public function itEnsuresThatTemporaryDirectoryIsNotReadableByEveryone()
+    public function testItEnsuresThatTemporaryDirectoryIsNotReadableByEveryone() : void
     {
         $extraction_path = $this->archive->getExtractionPath();
         $perms = fileperms($extraction_path) & 0777;
-        $this->assertEqual(0700, $perms);
+        $this->assertEquals(0700, $perms);
     }
 
-    public function itCleansUp()
+    public function testItCleansUp() : void
     {
         $extraction_path = $this->archive->getExtractionPath();
         $this->archive->extractFiles();
         $this->archive->cleanUp();
-        $this->assertFalse(file_exists($extraction_path));
+        $this->assertFileNotExists($extraction_path);
     }
 }
