@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -38,16 +38,8 @@
             } else {
                 body.removeClass("fullscreen");
                 info.addClass("mini");
-                main.css("margin-left", getSidebarSize());
+                main.removeAttr("style");
             }
-        }
-
-        function getSidebarSize() {
-            if ($("body").hasClass("sidebar-collapsed")) {
-                return "45px";
-            }
-
-            return "200px";
         }
 
         /**
