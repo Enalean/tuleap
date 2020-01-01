@@ -36,7 +36,7 @@ use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\Request\NotFoundException;
 use UserManager;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
 final class ReviewerAutocompleterControllerTest extends TestCase
 {

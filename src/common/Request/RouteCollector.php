@@ -143,8 +143,8 @@ use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
 use UserHelper;
 use UserImport;
-use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
-use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 class RouteCollector
 {

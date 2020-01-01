@@ -32,7 +32,7 @@ use Tuleap\ProFTPd\Xferlog\Dao;
 use HTTPRequest;
 use PFUser;
 use Project;
-use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
+use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 
 class ExplorerController
 {

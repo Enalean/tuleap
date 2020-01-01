@@ -24,9 +24,9 @@ namespace Tuleap\RSS;
 
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
-use Zend\Feed\Reader\Http\HeaderAwareClientInterface;
-use Zend\Feed\Reader\Http\Psr7ResponseDecorator;
-use Zend\Feed\Reader\Http\ResponseInterface;
+use Laminas\Feed\Reader\Http\HeaderAwareClientInterface;
+use Laminas\Feed\Reader\Http\Psr7ResponseDecorator;
+use Laminas\Feed\Reader\Http\ResponseInterface;
 
 final class FeedHTTPClient implements HeaderAwareClientInterface
 {

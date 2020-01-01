@@ -40,7 +40,7 @@ use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\File\Upload\Tus\FileBeingUploadedInformationProvider;
 use URLVerification;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
 class AttachmentController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {

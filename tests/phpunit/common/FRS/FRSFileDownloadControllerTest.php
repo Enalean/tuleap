@@ -36,7 +36,7 @@ use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Request\NotFoundException;
 use Tuleap\REST\RESTCurrentUserMiddleware;
 use URLVerification;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
 final class FRSFileDownloadControllerTest extends TestCase
 {

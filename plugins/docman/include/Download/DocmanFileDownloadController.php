@@ -33,7 +33,7 @@ use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
 use Tuleap\REST\RESTCurrentUserMiddleware;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
 final class DocmanFileDownloadController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {

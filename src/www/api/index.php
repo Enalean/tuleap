@@ -28,7 +28,7 @@ use Luracast\Restler\Restler;
 use Luracast\Restler\Explorer\v2\Explorer;
 use Luracast\Restler\Defaults;
 use Luracast\Restler\Format\JsonFormat;
-use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
 $message_factory = \Tuleap\Http\HTTPFactoryBuilder::responseFactory();
 $request_handler = new \Tuleap\Http\Server\AlwaysSuccessfulRequestHandler($message_factory);

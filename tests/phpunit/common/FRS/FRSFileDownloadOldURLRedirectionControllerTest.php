@@ -26,7 +26,7 @@ use Mockery;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
 final class FRSFileDownloadOldURLRedirectionControllerTest extends TestCase
 {

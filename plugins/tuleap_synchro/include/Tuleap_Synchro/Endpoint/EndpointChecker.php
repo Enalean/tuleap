@@ -23,7 +23,7 @@ namespace Tuleap\TuleapSynchro\Endpoint;
 
 use Tuleap\TuleapSynchro\Exception\TrackerIdIsNotValidException;
 use Valid_HTTPURI;
-use Zend\Uri\Exception\InvalidUriException;
+use Laminas\Uri\Exception\InvalidUriException;
 
 class EndpointChecker
 {

@@ -32,7 +32,7 @@ use Tuleap\Admin\Homepage\NbUsersByStatus;
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Queue\Worker;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
 final class MetricsControllerTest extends TestCase
 {
