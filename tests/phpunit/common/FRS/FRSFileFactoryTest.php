@@ -749,7 +749,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $f->setRelease($r);
 
         $ff = new FRSFileFactory();
-        $ff->setFileForge(__DIR__ . '/../../../../src/utils/fileforge.pl');
+        $ff->setFileForge([__DIR__ . '/../../../../src/utils/fileforge.pl']);
 
         $res = $ff->moveFileForge($f, $r);
         $this->assertTrue($res);
@@ -777,6 +777,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $f->setRelease($r);
 
         $ff = new FRSFileFactory();
+        $ff->setFileForge([__DIR__ . '/../../../../src/utils/fileforge.pl']);
         $this->assertFalse($ff->moveFileForge($f));
     }
 
@@ -800,6 +801,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $f->setRelease($r);
 
         $ff = new FRSFileFactory();
+        $ff->setFileForge([__DIR__ . '/../../../../src/utils/fileforge.pl']);
         $this->assertFalse($ff->moveFileForge($f));
     }
 

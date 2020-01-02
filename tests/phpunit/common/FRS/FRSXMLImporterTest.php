@@ -41,7 +41,7 @@ class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory
     public function __construct()
     {
         parent::__construct();
-        $this->fileforge = '/bin/true';
+        $this->setFileForge(['/bin/true']);
     }
 }
 

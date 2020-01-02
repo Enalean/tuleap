@@ -19,6 +19,7 @@
  *
  */
 
+use Symfony\Component\Process\Process;
 use Tuleap\Event\Events\ArchiveDeletedItemEvent;
 use Tuleap\Event\Events\ArchiveDeletedItemFileProvider;
 use Tuleap\FRS\FRSPermissionManager;
@@ -33,13 +34,12 @@ class FRSFileFactory
     private $logger;
 
     /**
-     * @var string
+     * @var string[]
      */
-    protected $fileforge;
+    private $fileforge = ['sudo', __DIR__ . '/../../utils/fileforge.pl'];
 
     function __construct(?Logger $logger = null)
     {
-        $this->fileforge = ForgeConfig::get('codendi_bin_prefix') . "/fileforge";
         if ($logger === null) {
             $this->logger = new Log_NoopLogger();
         } else {
@@ -52,7 +52,7 @@ class FRSFileFactory
         $this->logger = new WrapperLogger($logger, 'FRSFileFactory');
     }
 
-    public function setFileForge($fileforge)
+    public function setFileForge(array $fileforge): void
     {
         $this->fileforge = $fileforge;
     }
@@ -413,27 +413,22 @@ class FRSFileFactory
     {
         $unixName = $project->getUnixName(false);
 
-        $upload_sub_dir = $this->getUploadSubDirectory($release);
-        $fileName = $file->getFileName();
-        $filePath = $this->getResolvedFileName($file->getFileName());
-        if (!file_exists($GLOBALS['ftp_frs_dir_prefix'].'/'.$unixName . '/' . $upload_sub_dir.'/'.$filePath)) {
-            $fileName    = escapeshellarg($fileName);
-            $cmdFilePath = escapeshellarg($unixName . '/' . $upload_sub_dir . '/' . $filePath);
-            $ret_val     = null;
-            $exec_res    = array();
-            $src_dir     = escapeshellarg($src_dir);
-            $dst_dir     = escapeshellarg(ForgeConfig::get('ftp_frs_dir_prefix'));
-            $cmd         = $this->fileforge . " $fileName $cmdFilePath $src_dir $dst_dir 2>&1";
+        $upload_sub_dir     = $this->getUploadSubDirectory($release);
+        $fileName           = $file->getFileName();
+        $filePath           = $this->getResolvedFileName($file->getFileName());
+        $ftp_frs_dir_prefix = (string) ForgeConfig::get('ftp_frs_dir_prefix');
+        if (! file_exists($ftp_frs_dir_prefix.'/'.$unixName . '/' . $upload_sub_dir.'/'.$filePath)) {
+            $cmdFilePath = $unixName . '/' . $upload_sub_dir . '/' . $filePath;
 
-            $this->logger->debug('execute fileforge '.$cmd);
-            exec($cmd, $exec_res, $ret_val);
+            $process = new Process(array_merge($this->fileforge, [$fileName, $cmdFilePath, $src_dir, $ftp_frs_dir_prefix]));
+
+            $this->logger->debug('execute fileforge '.$process->getCommandLine());
+            $ret_val = $process->run();
             $this->logger->debug('fileforge done with status '.$ret_val);
-            foreach ($exec_res as $line) {
+            foreach ($process->getIterator() as $line) {
                 $this->logger->debug("\t $line");
             }
-            // Warning. Posix common value for success is 0 (zero), but in php 0 == false.
-            // So "convert" the unix "success" value to the php one (basically 0 => true).
-            if ($ret_val == 0) {
+            if ($process->isSuccessful()) {
                 $file->setFileName($upload_sub_dir.'/'.$file->getFileName());
                 $file->setFilePath($upload_sub_dir.'/'.$filePath);
                 return true;

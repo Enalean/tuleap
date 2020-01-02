@@ -56,7 +56,8 @@ setup_tuleap() {
     chown -R codendiadm:codendiadm /var/lib/tuleap/ftp
     chown -R codendiadm:codendiadm /var/lib/tuleap/docman
 
-    install -m 04755 /usr/share/tuleap/src/utils/fileforge.pl /usr/lib/tuleap/bin/fileforge
+    mkdir -p /etc/sudoers.d/
+    install -m 00440 -o root -g root /usr/share/tuleap/src/utils/sudoers.d/tuleap_fileforge /etc/sudoers.d/tuleap_fileforge
 }
 
 setup_database() {
