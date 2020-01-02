@@ -91,12 +91,25 @@ class AgileDashboard_XMLExporterTest extends TestCase
     public function testItUpdatesASimpleXMlElement(): void
     {
         $this->explicit_backlog_xml_exporter->shouldReceive('exportExplicitBacklogConfiguration')->once();
+        $this->explicit_backlog_xml_exporter->shouldNotReceive('exportExplicitBacklogContent');
         $this->planning_xml_exporter->shouldReceive('exportPlannings')->once();
         $this->kanban_XML_exporter->shouldReceive('export')->withArgs([Mockery::any(), $this->project])->once();
 
         $this->xml_validator->shouldReceive('validate')->once();
 
         $this->exporter->export($this->project, $this->xml_tree, []);
+    }
+
+    public function testItUpdatesASimpleXMlElementWithExplicitBacklogContentInFullExport(): void
+    {
+        $this->explicit_backlog_xml_exporter->shouldReceive('exportExplicitBacklogConfiguration')->once();
+        $this->explicit_backlog_xml_exporter->shouldReceive('exportExplicitBacklogContent')->once();
+        $this->planning_xml_exporter->shouldReceive('exportPlannings')->once();
+        $this->kanban_XML_exporter->shouldReceive('export')->withArgs([Mockery::any(), $this->project])->once();
+
+        $this->xml_validator->shouldReceive('validate')->once();
+
+        $this->exporter->exportFull($this->project, $this->xml_tree, []);
     }
 
     public function testItThrowsAnExceptionIfXmlGeneratedIsNotValid(): void

@@ -47,13 +47,22 @@ final class XMLExporterTest extends TestCase
      */
     private $project;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
+     */
+    private $artifacts_in_explicit_backlog_dao;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->explicit_backlog_dao = Mockery::mock(ExplicitBacklogDao::class);
+        $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
 
-        $this->exporter = new XMLExporter($this->explicit_backlog_dao);
+        $this->exporter = new XMLExporter(
+            $this->explicit_backlog_dao,
+            $this->artifacts_in_explicit_backlog_dao
+        );
 
         $this->project = Mockery::mock(Project::class)->shouldReceive('getID')->andReturn('101')->getMock();
     }
@@ -64,9 +73,7 @@ final class XMLExporterTest extends TestCase
             <agiledashboard />
         ');
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->with(101)
-            ->andReturnTrue();
+        $this->assertExplicitBacklogIsUsed();
 
         $this->exporter->exportExplicitBacklogConfiguration($this->project, $xml);
 
@@ -85,12 +92,82 @@ final class XMLExporterTest extends TestCase
             <agiledashboard />
         ');
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->with(101)
-            ->andReturnFalse();
+        $this->assertExplicitBacklogIsNotUsed();
 
         $this->exporter->exportExplicitBacklogConfiguration($this->project, $xml);
 
         $this->assertEquals(0, $xml->count());
+    }
+
+    public function testItDoesNotExportExplicitBacklogContentIfNotUsed(): void
+    {
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+            <agiledashboard />
+        ');
+
+        $this->assertExplicitBacklogIsNotUsed();
+
+        $this->exporter->exportExplicitBacklogContent($this->project, $xml);
+
+        $this->assertEquals(0, $xml->count());
+    }
+
+    public function testItDoesNotExportExplicitBacklogContentIfNotContent(): void
+    {
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+            <agiledashboard />
+        ');
+
+        $this->assertExplicitBacklogIsUsed();
+
+        $this->artifacts_in_explicit_backlog_dao->shouldReceive('getAllTopBacklogItemsForProjectSortedByRank')
+            ->with(101)
+            ->once()
+            ->andReturn([]);
+
+        $this->exporter->exportExplicitBacklogContent($this->project, $xml);
+
+        $this->assertEquals(0, $xml->count());
+    }
+
+    public function testItExportsExplicitBacklogContent(): void
+    {
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+            <agiledashboard />
+        ');
+
+        $this->assertExplicitBacklogIsUsed();
+
+        $this->artifacts_in_explicit_backlog_dao->shouldReceive('getAllTopBacklogItemsForProjectSortedByRank')
+            ->with(101)
+            ->once()
+            ->andReturn([
+                ['artifact_id' => 148],
+                ['artifact_id' => 158],
+                ['artifact_id' => 152],
+            ]);
+
+        $this->exporter->exportExplicitBacklogContent($this->project, $xml);
+
+        $top_backlog_node = $xml->top_backlog;
+        $this->assertNotNull($top_backlog_node);
+
+        $this->assertEquals('148', $top_backlog_node->artifact[0]['artifact_id']);
+        $this->assertEquals('158', $top_backlog_node->artifact[1]['artifact_id']);
+        $this->assertEquals('152', $top_backlog_node->artifact[2]['artifact_id']);
+    }
+
+    private function assertExplicitBacklogIsNotUsed(): void
+    {
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+            ->with(101)
+            ->andReturnFalse();
+    }
+
+    private function assertExplicitBacklogIsUsed(): void
+    {
+        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
+            ->with(101)
+            ->andReturnTrue();
     }
 }
