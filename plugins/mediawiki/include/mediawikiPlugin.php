@@ -22,6 +22,7 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Mediawiki\Events\SystemEvent_MEDIAWIKI_TO_CENTRAL_DB;
 use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
@@ -54,7 +55,7 @@ use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-class MediaWikiPlugin extends Plugin
+class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
 
     public const SERVICE_SHORTNAME = 'plugin_mediawiki';
@@ -126,7 +127,7 @@ class MediaWikiPlugin extends Plugin
         $this->addHook(UserIsNoLongerNewsWriter::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
         $this->addHook(UserBecomesNewsAdministrator::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
         $this->addHook(UserIsNoLongerNewsAdministrator::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
-        $this->addHook(Event::EXPORT_XML_PROJECT);
+        $this->addHook(ExportXmlProject::NAME);
 
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
 
@@ -143,7 +144,7 @@ class MediaWikiPlugin extends Plugin
         return self::SERVICE_SHORTNAME;
     }
 
-    public function burning_parrot_get_javascript_files($params)
+    public function burning_parrot_get_javascript_files($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/mediawiki') === 0) {
             $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
@@ -155,18 +156,17 @@ class MediaWikiPlugin extends Plugin
         return forge_get_config('mwdata_path', 'mediawiki');
     }
 
-    public function export_xml_project($params)
+    public function exportXmlProject(ExportXmlProject $event): void
     {
-        if (! isset($params['options']['all']) || $params['options']['all'] === false) {
+        if (! isset($event->getOptions()['all']) || $event->getOptions()['all'] === false) {
             return;
         }
 
-        $this->getMediaWikiExporter($params['project']->getID())->exportToXml(
-            $params['into_xml'],
-            $params['archive'],
-            'export_mw_' . $params['project']->getID() . time() . '.xml',
-            $params['temporary_dump_path_on_filesystem'],
-            $this->getMediaWikiDataDir()
+        $this->getMediaWikiExporter($event->getProject()->getID())->exportToXml(
+            $event->getIntoXml(),
+            $event->getArchive(),
+            'export_mw_' . $event->getProject()->getID() . time() . '.xml',
+            $event->getTemporaryDumpPathOnFilesystem()
         );
     }
 
@@ -184,7 +184,7 @@ class MediaWikiPlugin extends Plugin
         );
     }
 
-    public function layout_search_entry($params)
+    public function layout_search_entry($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $project = $this->getProjectFromRequest();
         if ($this->isSearchEntryAvailable($project)) {
@@ -203,7 +203,7 @@ class MediaWikiPlugin extends Plugin
         /**
          * @see Event::SEARCH_TYPE
          */
-    public function search_type($params)
+    public function search_type($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $query   = $params['query'];
         $project = $query->getProject();
@@ -218,7 +218,7 @@ class MediaWikiPlugin extends Plugin
         /**
          * @see Event::SEARCH_TYPES_PRESENTERS
          */
-    public function search_types_presenters($params)
+    public function search_types_presenters($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->isSearchEntryAvailable($params['project'])) {
             $params['project_presenters'][] = new Search_SearchTypePresenter(
@@ -233,7 +233,7 @@ class MediaWikiPlugin extends Plugin
     /**
      * @see Event::PROCCESS_SYSTEM_CHECK
      */
-    public function proccess_system_check($params)
+    public function proccess_system_check($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getMediawikiMLEBExtensionManager()->activateMLEBForCompatibleProjects($params['logger']);
     }
@@ -344,13 +344,13 @@ class MediaWikiPlugin extends Plugin
         }
     }
 
-    function process()
+    public function process()
     {
         echo '<h1>Mediawiki</h1>';
         echo $this->getPluginInfo()->getpropVal('answer');
     }
 
-    function &getPluginInfo()
+    public function &getPluginInfo()
     {
         if (!is_a($this->pluginInfo, 'MediaWikiPluginInfo')) {
             $this->pluginInfo = new MediaWikiPluginInfo($this);
@@ -358,7 +358,7 @@ class MediaWikiPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function service_replace_template_name_in_link($params)
+    public function service_replace_template_name_in_link($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['link'] = preg_replace(
             '#/plugins/mediawiki/wiki/'.preg_quote($params['template']['name'], '#').'(/|$)#',
@@ -368,7 +368,7 @@ class MediaWikiPlugin extends Plugin
     }
 
 
-    public function register_project_creation($params)
+    public function register_project_creation($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->serviceIsUsedInTemplate($params['template_id'])) {
             $mediawiki_instantiater = $this->getInstantiater($params['group_id']);
@@ -383,7 +383,7 @@ class MediaWikiPlugin extends Plugin
         }
     }
 
-    public function has_user_been_delegated_access(DelegatedUserAccessForProject $event) : void
+    public function has_user_been_delegated_access(DelegatedUserAccessForProject $event) : void//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 &&
                 $this->doesUserHavePermission($event->getUser())) {
@@ -421,7 +421,7 @@ class MediaWikiPlugin extends Plugin
     /**
      * @see Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED
      */
-    public function get_services_allowed_for_restricted($params)
+    public function get_services_allowed_for_restricted($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['allowed_services'][] = $this->getServiceShortname();
     }
@@ -434,7 +434,7 @@ class MediaWikiPlugin extends Plugin
         return $project->usesService(self::SERVICE_SHORTNAME);
     }
 
-    public function service_is_used($params)
+    public function service_is_used($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['shortname'] == 'plugin_mediawiki' && $params['is_used']) {
             $mediawiki_instantiater = $this->getInstantiater($params['group_id']);
@@ -467,7 +467,7 @@ class MediaWikiPlugin extends Plugin
         return new MediawikiLanguageManager(new MediawikiLanguageDao());
     }
 
-    public function plugin_statistics_service_usage($params)
+    public function plugin_statistics_service_usage($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $dao             = $this->getDao();
         $project_manager = ProjectManager::instance();
@@ -490,7 +490,7 @@ class MediaWikiPlugin extends Plugin
         $params['csv_exporter']->buildDatas($number_of_page_since_a_date, "Number of created Mediawiki pages since start date");
     }
 
-    public function project_admin_ugroup_deletion($params)
+    public function project_admin_ugroup_deletion($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $project = $this->getProjectFromParams($params);
         $dao     = $this->getDao();
@@ -501,12 +501,12 @@ class MediaWikiPlugin extends Plugin
         }
     }
 
-    public function project_admin_remove_user($params)
+    public function project_admin_remove_user($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->updateUserGroupMapping($params);
     }
 
-    public function project_admin_ugroup_remove_user($params)
+    public function project_admin_ugroup_remove_user($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->updateUserGroupMapping($params);
     }
@@ -521,12 +521,12 @@ class MediaWikiPlugin extends Plugin
         );
     }
 
-    public function project_admin_change_user_permissions($params)
+    public function project_admin_change_user_permissions($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->updateUserGroupMapping($params);
     }
 
-    public function project_admin_remove_user_from_project_ugroups($params)
+    public function project_admin_remove_user_from_project_ugroups($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->updateUserGroupMapping($params);
     }
@@ -542,7 +542,7 @@ class MediaWikiPlugin extends Plugin
         }
     }
 
-    public function systemevent_user_rename($params)
+    public function systemevent_user_rename($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $user            = $params['user'];
         $projects        = ProjectManager::instance()->getAllProjectsButDeleted();
@@ -585,12 +585,12 @@ class MediaWikiPlugin extends Plugin
         return new MediawikiManager($this->getDao());
     }
 
-    public function service_classnames(array &$params)
+    public function service_classnames(array &$params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['classnames'][$this->getServiceShortname()] = ServiceMediawiki::class;
     }
 
-    public function rename_project($params)
+    public function rename_project($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $project         = $params['project'];
         $project_manager = ProjectManager::instance();
@@ -634,7 +634,7 @@ class MediaWikiPlugin extends Plugin
         }
     }
 
-    public function get_projectid_from_url($params)
+    public function get_projectid_from_url($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $url = $params['url'];
 
@@ -654,7 +654,7 @@ class MediaWikiPlugin extends Plugin
         }
     }
 
-    public function plugin_statistics_disk_usage_collect_project($params)
+    public function plugin_statistics_disk_usage_collect_project($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $start   = microtime(true);
         $row     = $params['project_row'];
@@ -684,19 +684,19 @@ class MediaWikiPlugin extends Plugin
         $params['time_to_collect'][self::SERVICE_SHORTNAME] += $time;
     }
 
-    public function plugin_statistics_disk_usage_service_label($params)
+    public function plugin_statistics_disk_usage_service_label($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['services'][self::SERVICE_SHORTNAME] = 'Mediawiki';
     }
 
-    public function plugin_statistics_color($params)
+    public function plugin_statistics_color($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($params['service'] == self::SERVICE_SHORTNAME) {
             $params['color'] = 'lightsalmon';
         }
     }
 
-    public function site_admin_option_hook($params)
+    public function site_admin_option_hook($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['plugins'][] = array(
             'label' => 'Mediawiki',
@@ -711,7 +711,7 @@ class MediaWikiPlugin extends Plugin
         }
     }
 
-    public function system_event_get_types_for_default_queue(array &$params)
+    public function system_event_get_types_for_default_queue(array &$params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['types'] = array_merge($params['types'], array(
             SystemEvent_MEDIAWIKI_SWITCH_TO_123::NAME,
@@ -757,7 +757,7 @@ class MediaWikiPlugin extends Plugin
         return ProjectManager::instance();
     }
 
-    public function permission_get_name($params)
+    public function permission_get_name($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (!$params['name']) {
             switch ($params['permission_type']) {
@@ -790,7 +790,7 @@ class MediaWikiPlugin extends Plugin
     /**
      * @see Event::SITE_ACCESS_CHANGE
      */
-    public function site_access_change($params)
+    public function site_access_change($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getMediawikiManager()->updateSiteAccess($params['old_value']);
     }
@@ -831,7 +831,7 @@ class MediaWikiPlugin extends Plugin
         $importer->import($params['configuration'], $params['project'], UserManager::instance()->getCurrentUser(), $params['xml_content'], $params['extraction_path']);
     }
 
-    public function get_permission_delegation($params)
+    public function get_permission_delegation($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $permission = new MediawikiAdminAllProjects();
 
@@ -853,7 +853,7 @@ class MediaWikiPlugin extends Plugin
         );
     }
 
-    public function project_is_deleted(array $params)
+    public function project_is_deleted(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! empty($params['group_id'])) {
             $clean_unused = $this->getCleanUnused($this->getBackendLogger());

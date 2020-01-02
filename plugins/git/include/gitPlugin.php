@@ -23,6 +23,7 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CLI\CLICommandsCollector;
+use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
@@ -272,7 +273,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $this->addHook(Event::REST_PROJECT_GET_GIT);
         $this->addHook(Event::REST_PROJECT_OPTIONS_GIT);
 
-        $this->addHook(Event::EXPORT_XML_PROJECT);
+        $this->addHook(ExportXmlProject::NAME);
         $this->addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
 
         // Gerrit user suspension
@@ -316,12 +317,12 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         $params['classnames'][$this->getServiceShortname()] = \Tuleap\Git\GitService::class;
     }
 
-    public function export_xml_project($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function exportXmlProject(ExportXmlProject $event): void
     {
-        $this->getGitExporter($params['project'])->exportToXml(
-            $params['into_xml'],
-            $params['archive'],
-            $params['temporary_dump_path_on_filesystem']
+        $this->getGitExporter($event->getProject())->exportToXml(
+            $event->getIntoXml(),
+            $event->getArchive(),
+            $event->getTemporaryDumpPathOnFilesystem()
         );
     }
 

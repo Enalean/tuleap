@@ -20,6 +20,7 @@
  * phpcs:disable PSR1.Classes.ClassDeclaration
  */
 
+use Tuleap\Event\Events\ExportXmlProject;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 
@@ -133,20 +134,18 @@ class ProjectXMLExporter
     ) {
         $this->logger->info("Export plugins");
 
-        $params = array(
-            'project'                           => $project,
-            'options'                           => $options,
-            'into_xml'                          => $into_xml,
-            'user'                              => $user,
-            'user_xml_exporter'                 => $this->user_xml_exporter,
-            'archive'                           => $archive,
-            'temporary_dump_path_on_filesystem' => $temporary_dump_path_on_filesystem
+
+        $event = new ExportXmlProject(
+            $project,
+            $options,
+            $into_xml,
+            $user,
+            $this->user_xml_exporter,
+            $archive,
+            $temporary_dump_path_on_filesystem
         );
 
-        $this->event_manager->processEvent(
-            Event::EXPORT_XML_PROJECT,
-            $params
-        );
+        $this->event_manager->processEvent($event);
     }
 
     public function export(Project $project, array $options, PFUser $user, ArchiveInterface $archive, $temporary_dump_path_on_filesystem)
