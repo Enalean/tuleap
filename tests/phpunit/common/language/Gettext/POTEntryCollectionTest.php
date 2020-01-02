@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,18 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Language\Gettext;
 
-class POTEntryCollectionTest extends \TuleapTestCase
+final class POTEntryCollectionTest extends \PHPUnit\Framework\TestCase
 {
-    public function itHasNoEntriesByDefault()
+    public function testItHasNoEntriesByDefault() : void
     {
         $collection = new POTEntryCollection('mydomain');
 
-        $this->assertEqual($collection->getEntries(), array());
+        $this->assertEquals([], $collection->getEntries());
     }
 
-    public function itAddsEntries()
+    public function testItAddsEntries() : void
     {
         $collection = new POTEntryCollection('mydomain');
 
@@ -38,20 +40,20 @@ class POTEntryCollectionTest extends \TuleapTestCase
         $collection->add('mydomain', $entry1);
         $collection->add('mydomain', $entry2);
 
-        $this->assertEqual($collection->getEntries(), array($entry1, $entry2));
+        $this->assertEquals(array($entry1, $entry2), $collection->getEntries());
     }
 
-    public function itDoesNotAddEntryIfNotSameDomain()
+    public function testItDoesNotAddEntryIfNotSameDomain() : void
     {
         $collection = new POTEntryCollection('mydomain');
 
         $entry = new POTEntry('a', 'b');
         $collection->add('another-domain', $entry);
 
-        $this->assertEqual($collection->getEntries(), array());
+        $this->assertEquals([], $collection->getEntries());
     }
 
-    public function itDoesNotAddTwiceTheSameEntryInSameDomain()
+    public function testItDoesNotAddTwiceTheSameEntryInSameDomain() : void
     {
         $collection = new POTEntryCollection('mydomain');
 
@@ -60,6 +62,6 @@ class POTEntryCollectionTest extends \TuleapTestCase
         $collection->add('mydomain', $entry1);
         $collection->add('mydomain', $entry2);
 
-        $this->assertEqual($collection->getEntries(), array($entry1));
+        $this->assertEquals(array($entry1), $collection->getEntries());
     }
 }
