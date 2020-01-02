@@ -51,7 +51,7 @@ class Docman_Folder extends Docman_Item
         return $this->parent_id == 0;
     }
 
-    var $_items;
+    public $_items;
     function addItem(&$item)
     {
         $this->_items->add($item, -($item->getRank()));

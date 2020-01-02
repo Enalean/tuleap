@@ -26,8 +26,8 @@ require_once('Docman_View_GetFieldsVisitor.class.php');
 
 class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSection
 {
-    var $inheritableMetadataArray;
-    var $_controller;
+    public $inheritableMetadataArray;
+    public $_controller;
 
     function __construct($item, $url, $controller)
     {

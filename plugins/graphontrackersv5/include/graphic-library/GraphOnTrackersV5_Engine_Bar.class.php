@@ -24,14 +24,14 @@
 class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
 {
 
-    var $title;
-    var $description;
-    var $field_base;
-    var $field_group;
-    var $height;
-    var $width;
-    var $legend;
-    var $xaxis;
+    public $title;
+    public $description;
+    public $field_base;
+    public $field_group;
+    public $height;
+    public $width;
+    public $legend;
+    public $xaxis;
 
     /**
      * Builds bar chart object

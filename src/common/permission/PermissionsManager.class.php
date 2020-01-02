@@ -24,9 +24,9 @@ class PermissionsManager implements IPermissionsManagerNG
     /**
      * @var PermissionsDao
      */
-    var $_permission_dao;
-    var $_permissions;
-    var $_ugroups_for_user;
+    public $_permission_dao;
+    public $_permissions;
+    public $_ugroups_for_user;
 
     private static $_permissionmanager_instance;
 

@@ -13,23 +13,23 @@ require_once __DIR__ . '/../../www/include/utils.php';
 
 class CrossReference
 {
-    var $id;
-    var $userId;
-    var $createdAt;
+    public $id;
+    public $userId;
+    public $createdAt;
 
-    var $refSourceId;
-    var $refSourceGid;
-    var $refSourceType;
-    var $sourceUrl;
-    var $sourceKey;
+    public $refSourceId;
+    public $refSourceGid;
+    public $refSourceType;
+    public $sourceUrl;
+    public $sourceKey;
 
-    var $refTargetId;
-    var $refTargetGid;
-    var $refTargetType;
-    var $targetUrl;
-    var $targetKey;
-    var $insertTargetType;
-    var $insertSourceType;
+    public $refTargetId;
+    public $refTargetGid;
+    public $refTargetType;
+    public $targetUrl;
+    public $targetKey;
+    public $insertTargetType;
+    public $insertSourceType;
 
     /**
      * Constructor

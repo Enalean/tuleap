@@ -29,9 +29,9 @@
 // You may copy this code freely under the conditions of the GPL.
 class Codendi_DiffOp
 {
-    var $type;
-    var $orig;
-    var $fin;
+    public $type;
+    public $orig;
+    public $fin;
 
     function reverse()
     {
@@ -51,7 +51,7 @@ class Codendi_DiffOp
 
 class Codendi_DiffOp_Copy extends Codendi_DiffOp
 {
-    var $type = 'copy';
+    public $type = 'copy';
 
     function __construct($orig, $fin = false)
     {
@@ -70,7 +70,7 @@ class Codendi_DiffOp_Copy extends Codendi_DiffOp
 
 class Codendi_DiffOp_Delete extends Codendi_DiffOp
 {
-    var $type = 'delete';
+    public $type = 'delete';
 
     function __construct($lines)
     {
@@ -86,7 +86,7 @@ class Codendi_DiffOp_Delete extends Codendi_DiffOp
 
 class Codendi_DiffOp_Add extends Codendi_DiffOp
 {
-    var $type = 'add';
+    public $type = 'add';
 
     function __construct($lines)
     {
@@ -102,7 +102,7 @@ class Codendi_DiffOp_Add extends Codendi_DiffOp
 
 class Codendi_DiffOp_Change extends Codendi_DiffOp
 {
-    var $type = 'change';
+    public $type = 'change';
 
     function __construct($orig, $fin)
     {
@@ -538,7 +538,7 @@ class Codendi_DiffEngine
  */
 class Codendi_Diff
 {
-    var $edits;
+    public $edits;
 
     /**
      *
@@ -761,7 +761,7 @@ class Codendi_DiffFormatter
      * This should be left at zero for this class, but subclasses
      * may want to set this to other values.
      */
-    var $leading_context_lines = 0;
+    public $leading_context_lines = 0;
 
     /**
      * Number of trailing context "lines" to preserve.
@@ -769,7 +769,7 @@ class Codendi_DiffFormatter
      * This should be left at zero for this class, but subclasses
      * may want to set this to other values.
      */
-    var $trailing_context_lines = 0;
+    public $trailing_context_lines = 0;
 
     /**
      * Format a diff.

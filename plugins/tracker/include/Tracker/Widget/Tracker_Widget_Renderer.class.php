@@ -26,8 +26,8 @@
  */
 abstract class Tracker_Widget_Renderer extends Widget
 {
-    var $renderer_title;
-    var $renderer_id;
+    public $renderer_title;
+    public $renderer_id;
 
     function __construct($id, $owner_id, $owner_type)
     {
@@ -146,7 +146,7 @@ abstract class Tracker_Widget_Renderer extends Widget
         $owner_id,
         $owner_type
     ) {
-        $sql = "INSERT INTO tracker_widget_renderer (owner_id, owner_type, title, renderer_id) 
+        $sql = "INSERT INTO tracker_widget_renderer (owner_id, owner_type, title, renderer_id)
         SELECT  ". $owner_id .", '". $owner_type ."', title, renderer_id
         FROM tracker_widget_renderer
         WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' ";

@@ -249,7 +249,7 @@ class PluginsAdministrationViews extends Views
         );
     }
 
-    var $_plugins;
+    public $_plugins;
 
     function _emphasis($name, $enable)
     {

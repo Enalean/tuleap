@@ -26,7 +26,7 @@ abstract class Rule
     /**
      * @access private
      */
-    var $error;
+    public $error;
 
     /**
      * Constructor
@@ -106,7 +106,7 @@ abstract class Rule_Comparator extends Rule
     /**
      * @access private
      */
-    var $ref;
+    public $ref;
     function __construct($ref)
     {
         $this->ref = $ref;
@@ -278,7 +278,7 @@ class Rule_Regexp extends Rule
  */
 class Rule_Email extends Rule
 {
-    var $separator;
+    public $separator;
 
     public function __construct($separator = null)
     {
@@ -813,8 +813,8 @@ class Rule_ProjectFullName extends Rule_UserName
 require_once __DIR__ . '/../../www/file/file_utils.php'; // Needed for 2 GB workaround
 class Rule_File extends Rule
 {
-    var $maxSize;
-    var $i18nPageName;
+    public $maxSize;
+    public $i18nPageName;
 
     function __construct()
     {

@@ -26,7 +26,7 @@ require_once __DIR__ . '/../../../src/common/wiki/phpwiki/lib/HtmlElement.php';
 class Docman_WikiController extends Docman_Controller
 {
 
-    var $params;
+    public $params;
 
     function __construct(&$plugin, $pluginPath, $themePath, $request)
     {
@@ -440,7 +440,7 @@ class Docman_WikiController extends Docman_Controller
         return $html;
     }
 
-    var $item_factory;
+    public $item_factory;
     public function getItemFactory()
     {
         if (!$this->item_factory) {
@@ -449,7 +449,7 @@ class Docman_WikiController extends Docman_Controller
         return $this->item_factory;
     }
 
-    var $dao;
+    public $dao;
     private function _getItemDao()
     {
         if (!$this->dao) {

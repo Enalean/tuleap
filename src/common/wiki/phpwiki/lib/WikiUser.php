@@ -69,8 +69,8 @@ function UpgradeUser($olduser, $user)
 
 class WikiUser
 {
-    var $_userid = false;
-    var $_level  = false;
+    public $_userid = false;
+    public $_level  = false;
     public $_request;
     public $_dbi;
     public $_authdbi;

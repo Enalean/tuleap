@@ -27,12 +27,12 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
  */
 class Docman_ItemAction
 {
-    var $item;
-    var $action;
-    var $class;
-    var $title;
-    var $other_icons;
-    var $extraUrlParams;
+    public $item;
+    public $action;
+    public $class;
+    public $title;
+    public $other_icons;
+    public $extraUrlParams;
 
     function __construct(&$item)
     {

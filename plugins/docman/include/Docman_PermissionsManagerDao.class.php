@@ -24,7 +24,7 @@
 class Docman_PermissionsManagerDao extends DataAccessObject
 {
 
-    var $groupId;
+    public $groupId;
     function __construct($da, $groupId)
     {
         parent::__construct($da);

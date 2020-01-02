@@ -262,7 +262,7 @@ class Valid_RealNameFormat extends Valid_String
  */
 class Valid_Email extends Valid_String
 {
-    var $separator;
+    public $separator;
 
     function __construct($key = null, $separator = null)
     {

@@ -9,7 +9,7 @@ require_once('lib/difflib.php');
 
 class _Diff3_Block
 {
-    var $type = 'diff3';
+    public $type = 'diff3';
 
     function __construct($orig = false, $final1 = false, $final2 = false)
     {
@@ -43,7 +43,7 @@ class _Diff3_Block
 
 class _Diff3_CopyBlock extends _Diff3_Block
 {
-    var $type = 'copy';
+    public $type = 'copy';
 
     function __construct($lines = false)
     {

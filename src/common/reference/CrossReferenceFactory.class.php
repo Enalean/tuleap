@@ -11,9 +11,9 @@
 class CrossReferenceFactory
 {
 
-    var $entity_id;
-    var $entity_gid;
-    var $entity_type;
+    public $entity_id;
+    public $entity_gid;
+    public $entity_type;
 
     /**
      * array of references {Object CrossReference}
@@ -21,14 +21,14 @@ class CrossReferenceFactory
      * In other words, Items in this array have made references to the current Item
      * @var array
      */
-    var $source_refs_datas = [];
+    public $source_refs_datas = [];
 
     /**
      * array of references {Object CrossReference} made by the current CrossReferenceFactory
      * In other words, Items in this array are referenced by the current Item
      * @var array
      */
-    var $target_refs_datas = [];
+    public $target_refs_datas = [];
 
     /**
      * Constructor
@@ -47,8 +47,8 @@ class CrossReferenceFactory
      */
     function fetchDatas()
     {
-        $sql = "SELECT * 
-                FROM cross_references 
+        $sql = "SELECT *
+                FROM cross_references
                 WHERE  (target_gid=" . db_ei($this->entity_gid) . " AND target_id='" . db_es($this->entity_id) . "' AND target_type='" . db_es($this->entity_type) . "' )
                      OR (source_gid=" . db_ei($this->entity_gid) ." AND source_id='" . db_es($this->entity_id) . "' AND source_type='" . db_es($this->entity_type) . "' )";
 
@@ -259,8 +259,8 @@ class CrossReferenceFactory
                         }
                         $span .= '<span id="' .$id .'" class="link_to_ref">';
                         if ($with_links) {
-                            $span .= '<a class="cross-reference" 
-                                            title="'. $available_natures[$nature]['label'] .'" 
+                            $span .= '<a class="cross-reference"
+                                            title="'. $available_natures[$nature]['label'] .'"
                                             href="'. $url .'">';
                             $span .= $ref .'</a>';
                         } else {
@@ -268,7 +268,7 @@ class CrossReferenceFactory
                         }
                         if ($with_links && $can_delete && !$condensed) {
                             $params = $this->getParams($currRef);
-                            $span .= '<a class="delete_ref" 
+                            $span .= '<a class="delete_ref"
                                            href="/reference/rmreference.php'. $params .'"
                                            onClick="return delete_ref(\''. $id .'\', \''. $message .'\');">';
                             $span .= $GLOBALS['HTML']->getImage(

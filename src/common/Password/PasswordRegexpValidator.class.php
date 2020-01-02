@@ -28,7 +28,7 @@
 /* abstract */ class PasswordRegexpValidator extends PasswordValidator
 {
 
-    var $regexp;
+    public $regexp;
 
     /**
     * Constructor

@@ -25,7 +25,7 @@ require_once 'Docman_View_Extra.class.php';
 
 class Docman_View_Admin_LockInfos extends Docman_View_Extra
 {
-    var $defaultUrl;
+    public $defaultUrl;
 
     function _title($params)
     {

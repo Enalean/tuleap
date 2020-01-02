@@ -205,7 +205,7 @@ class FRSFileFactory
         return $dao->isMarkedToBeRestored($filename);
     }
 
-    var $dao;
+    public $dao;
 
     function &_getFRSFileDao()
     {

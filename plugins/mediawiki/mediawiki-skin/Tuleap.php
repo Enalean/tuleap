@@ -84,7 +84,7 @@ class SkinTuleap extends SkinTemplate
 class TuleapTemplate extends BaseTemplate
 {
 
-        var $project = false;
+        public $project = false;
 
     /**
      * Template filter callback for FusionForge skin.

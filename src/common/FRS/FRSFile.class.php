@@ -414,7 +414,7 @@ class FRSFile
         return $array;
     }
 
-    var $dao;
+    public $dao;
 
     function &_getFRSFileDao()
     {

@@ -25,7 +25,7 @@
 class Docman_FileStorage
 {
 
-    var $root;
+    public $root;
     function __construct($root)
     {
         $this->root       = $root;

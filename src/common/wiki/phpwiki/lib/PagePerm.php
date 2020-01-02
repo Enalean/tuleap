@@ -354,7 +354,7 @@ function array_diff_assoc_recursive($array1, $array2)
  */
 class PagePermission
 {
-    var $perm;
+    public $perm;
 
     function __construct($hash = array())
     {

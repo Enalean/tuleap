@@ -35,21 +35,21 @@ class ReferenceManager
      * Example: $activeReferencesByProject[101]['art'][1] return the reference object for project 101, keyword 'art' and one argument.
      * @var array
      */
-    var $activeReferencesByProject = array();
+    public $activeReferencesByProject = array();
 
     /**
      * array of Reference objects arrays indexed by group_id
      * Example: $activeReferencesByProject[101][1] return the first reference object for project 101
      * @var array
      */
-    var $referencesByProject = array();
+    public $referencesByProject = array();
 
-    var $referenceDao;
+    public $referenceDao;
 
     /**
      * @var CrossReferenceDao
      */
-    var $cross_reference_dao;
+    public $cross_reference_dao;
 
     private $groupIdByName = array();
 
@@ -102,7 +102,7 @@ class ReferenceManager
      * Not possible to give extra params to the call back function (_insertRefCallback in this case)
      * so we use an class attribute to pass the value of the group_id
      */
-    var $tmpGroupIdForCallbackFunction = null;
+    public $tmpGroupIdForCallbackFunction = null;
 
 
     public function __construct()

@@ -45,7 +45,7 @@ require_once('lib/PageList.php');
 
 class WikiPlugin_SiteMap extends WikiPlugin
 {
-    var $_pagename;
+    public $_pagename;
 
     function getName()
     {

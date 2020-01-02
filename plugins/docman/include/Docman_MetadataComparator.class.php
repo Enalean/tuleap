@@ -24,9 +24,9 @@ require_once('Docman_MetadataFactory.class.php');
 
 class Docman_MetadataComparator
 {
-    var $docmanIcons;
-    var $srcGo;
-    var $dstGo;
+    public $docmanIcons;
+    public $srcGo;
+    public $dstGo;
 
     function __construct($srcGroupId, $dstGroupId, $themePath)
     {

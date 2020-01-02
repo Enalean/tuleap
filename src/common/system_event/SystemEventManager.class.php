@@ -38,8 +38,8 @@ use TuleapCfg\Command\ProcessFactory;
 class SystemEventManager
 {
 
-    var $dao;
-    var $followers_dao;
+    public $dao;
+    public $followers_dao;
 
     // Constructor
     private function __construct(?SystemEventDao $dao = null, ?SystemEventsFollowersDao $followers_dao = null)

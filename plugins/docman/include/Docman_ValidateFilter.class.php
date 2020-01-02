@@ -38,9 +38,9 @@ class Docman_ValidateFilterFactory
 
 class Docman_ValidateFilter
 {
-    var $filter;
-    var $message;
-    var $isValid;
+    public $filter;
+    public $message;
+    public $isValid;
 
     function __construct($filter)
     {

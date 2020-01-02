@@ -33,8 +33,8 @@ require_once PHPWIKI_DIR.'/lib/IniConfig.php';
  */
 class WikiPageWrapper
 {
-  /* private string */ var $wikiname;
-  /* private int    */ var $gid;
+  /* private string */ public $wikiname;
+  /* private int    */ public $gid;
 
 
     function __construct($id = 0)

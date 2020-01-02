@@ -25,8 +25,8 @@ use Tuleap\Hudson\HudsonJobBuilder;
 class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
 {
 
-    var $plugin;
-    var $group_id;
+    public $plugin;
+    public $group_id;
     /**
      * @var HudsonJobBuilder
      */

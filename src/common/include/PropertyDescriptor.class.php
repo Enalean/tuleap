@@ -26,8 +26,8 @@ require_once('PropertyDescriptor.class.php');
 class PropertyDescriptor
 {
 
-    var $name;
-    var $value;
+    public $name;
+    public $value;
 
     function __construct($name, $value)
     {

@@ -22,12 +22,12 @@
 
 class Docman_ApprovalReviewer
 {
-    var $reviewerId;
-    var $rank;
-    var $reviewDate;
-    var $state;
-    var $comment;
-    var $version;
+    public $reviewerId;
+    public $rank;
+    public $reviewDate;
+    public $state;
+    public $comment;
+    public $version;
 
     function __construct()
     {

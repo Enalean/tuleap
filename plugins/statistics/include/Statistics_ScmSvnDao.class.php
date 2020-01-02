@@ -23,7 +23,7 @@
 class Statistics_ScmSvnDao extends DataAccessObject
 {
 
-    var $groupFilter = '';
+    public $groupFilter = '';
 
     /**
      * Constructor of the class

@@ -27,10 +27,10 @@
 class ReferenceInstance
 {
 
-    var $match;
-    var $gotoLink;
-    var $reference;
-    var $value;
+    public $match;
+    public $gotoLink;
+    public $reference;
+    public $value;
 
     /**
      * Constructor

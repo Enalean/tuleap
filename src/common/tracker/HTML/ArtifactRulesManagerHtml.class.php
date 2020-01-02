@@ -29,8 +29,8 @@
 class ArtifactRulesManagerHtml extends ArtifactRulesManager
 {
 
-    var $artifact_type;
-    var $href;
+    public $artifact_type;
+    public $href;
 
     /**
      *  ArtifactRulesManagerHtml() - constructor
@@ -177,9 +177,9 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
                 while ($row = db_fetch_array($values)) {
                     echo '<tr id="source_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'">';
                     echo '<td style="width: 1%;">';
-                    echo '<input type="checkbox" 
-                                 id="source_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_chk" 
-                                 name="source_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_chk" 
+                    echo '<input type="checkbox"
+                                 id="source_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_chk"
+                                 name="source_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_chk"
                                  style="visibility: hidden;"
                                  onclick="admin_checked(this.id)" />';
                     echo '</td><td style="cursor: pointer;" onclick="return admin_selectSourceEvent(this)"><span> </span><label style="cursor: pointer;">';
@@ -204,9 +204,9 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
                     echo '<tr id="target_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'">';
                     echo '<td style="text-align: right; width: 1%"><div id="target_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_arrow" style="visibility: hidden;">&rarr;</div></td>';
                     echo '<td style="width: 1%;">';
-                    echo '<input type="checkbox" 
-                                 id="target_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_chk" 
-                                 name="target_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_chk" 
+                    echo '<input type="checkbox"
+                                 id="target_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_chk"
+                                 name="target_'. $source_field .'_'. $target_field .'_'. (int)$row[0] .'_chk"
                                  style="visibility: hidden;"
                                  onclick="admin_checked(this.id)" />';
                     echo '</td><td style="cursor: pointer;" onclick="return admin_selectTargetEvent(this)"><span> </span><label style="cursor: pointer;">';

@@ -63,9 +63,9 @@ class Docman_SqlFilter extends Docman_MetadataSqlQueryChunk
      */
     public const BOOLEAN_SEARCH_TYPE = 'IN BOOLEAN MODE';
 
-    var $filter;
-    var $isRealMetadata;
-    var $db;
+    public $filter;
+    public $isRealMetadata;
+    public $db;
 
     function __construct($filter)
     {

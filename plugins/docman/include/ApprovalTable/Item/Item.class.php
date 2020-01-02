@@ -22,7 +22,7 @@
 
 class Docman_ApprovalTableItem extends Docman_ApprovalTable
 {
-    var $itemId = null;
+    public $itemId = null;
 
     function initFromRow($row)
     {

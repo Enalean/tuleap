@@ -32,8 +32,8 @@ use Tuleap\Password\PasswordCompromiseValidator;
 class PasswordStrategy
 {
 
-    var $validators;
-    var $errors;
+    public $validators;
+    public $errors;
 
     /**
     * Constructor

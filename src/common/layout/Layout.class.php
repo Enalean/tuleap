@@ -46,7 +46,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
     private $version;
 
     //Define all the icons for this theme
-    var $icons = array('Summary' => 'ic/anvil24.png',
+    public $icons = array('Summary' => 'ic/anvil24.png',
         'Homepage' => 'ic/home.png',
         'Forums' => 'ic/notes.png',
         'Bugs' => 'ic/bug.png',

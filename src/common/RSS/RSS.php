@@ -21,8 +21,8 @@
 
 class RSS
 {
-    var $channel;
-    var $items;
+    public $channel;
+    public $items;
     function __construct($channel)
     {
         $this->channel = $channel;

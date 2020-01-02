@@ -25,7 +25,7 @@
 class ArtifactReportHtml extends ArtifactReport
 {
 
-    var $fields_per_line;
+    public $fields_per_line;
 
         /**
          *
@@ -951,7 +951,7 @@ class ArtifactReportHtml extends ArtifactReport
         $title_arr[]=$Language->getText('tracker_include_report', 'rank_repo');
         $title_arr[]=$Language->getText('tracker_include_report', 'col_width');
 
-        echo'       
+        echo'
                 <FORM ACTION="/tracker/admin/" METHOD="POST">
                    <INPUT TYPE="HIDDEN" NAME="func" VALUE="report">
                    <INPUT TYPE="HIDDEN" NAME="create_report" VALUE="y">

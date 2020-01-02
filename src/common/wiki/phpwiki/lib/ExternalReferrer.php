@@ -25,7 +25,7 @@ if (!function_exists('isExternalReferrer')) { // better define that in stdlib.ph
 class SearchEngines
 {
 
-    var $searchEngines =
+    public $searchEngines =
     array(
           "search.sli.sympatico.ca/" => array("engine" => "Sympatico", "query1" => "query=", "query2" => "", "url" => "http://www1.sympatico.ca/"),
           "www.search123.com/cgi-bin/" => array("engine" => "Search123", "query1" => "query=", "query2" => "", "url" => "http://www.search123.com/"),

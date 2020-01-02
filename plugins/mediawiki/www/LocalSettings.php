@@ -381,7 +381,7 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     if (isset($_SERVER['SERVER_SOFTWARE'])) {
         class SpecialForgeRedir extends SpecialPage
         {
-            var $dstappendself = false;
+            public $dstappendself = false;
 
             function getTitle($subpage = "")
             {
@@ -410,18 +410,18 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 
         class SpecialForgeRedirLogin extends SpecialForgeRedir
         {
-            var $dstappendself = true;
-            var $dst = '/account/login.php?return_to=';
+            public $dstappendself = true;
+            public $dst = '/account/login.php?return_to=';
         }
 
         class SpecialForgeRedirCreateAccount extends SpecialForgeRedir
         {
-            var $dst = '/account/register.php';
+            public $dst = '/account/register.php';
         }
 
         class SpecialForgeRedirResetPass extends SpecialForgeRedir
         {
-            var $dst = '/account/lostpw.php';
+            public $dst = '/account/lostpw.php';
         }
 
         function DisableLogInOut(&$mList)

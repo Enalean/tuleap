@@ -29,11 +29,11 @@
  */
 class Controler
 {
-  /* protected */ var $gid;
-  /* protected */ var $view;
-  /* protected */ var $action;
-  /* protected */ var $_viewParams   = array();
-  /* protected */ var $_actionParams = array();
+  /* protected */ public $gid;
+  /* protected */ public $view;
+  /* protected */ public $action;
+  /* protected */ public $_viewParams   = array();
+  /* protected */ public $_actionParams = array();
 
     function request()
     {

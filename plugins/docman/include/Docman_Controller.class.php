@@ -36,16 +36,16 @@ class Docman_Controller extends Controler
     /**
      * @var HTTPRequest
      */
-    var $request;
-    var $user;
-    var $groupId;
-    var $themePath;
-    var $plugin;
-    var $logger;
-    var $feedback;
-    var $user_can_admin;
-    var $reportId;
-    var $hierarchy;
+    public $request;
+    public $user;
+    public $groupId;
+    public $themePath;
+    public $plugin;
+    public $logger;
+    public $feedback;
+    public $user_can_admin;
+    public $reportId;
+    public $hierarchy;
 
     /**
      * @var Docman_NotificationsManager
@@ -1560,7 +1560,7 @@ class Docman_Controller extends Controler
         $info = $this->plugin->getPluginInfo();
         return $info->getPropertyValueForName($name);
     }
-    var $item_factory;
+    public $item_factory;
     public function getItemFactory()
     {
         if (!$this->item_factory) {
@@ -1569,7 +1569,7 @@ class Docman_Controller extends Controler
         return $this->item_factory;
     }
 
-    var $metadataFactory;
+    public $metadataFactory;
     private function _getMetadataFactory($groupId)
     {
         if (!isset($metadataFactory[$groupId])) {

@@ -46,21 +46,21 @@ class Group
 {
 
     //associative array of data from db
-    var $data_array;
+    public $data_array;
 
-    var $group_id;
+    public $group_id;
 
     //database result set handle
-    var $db_result;
+    public $db_result;
 
     //permissions data row from db
-    var $perm_data_array;
+    public $perm_data_array;
 
     //membership data row from db
-    var $members_data_array;
+    public $members_data_array;
 
     //whether the user is an admin/super user of this project
-    var $is_admin;
+    public $is_admin;
     /**
      * @var string
      */

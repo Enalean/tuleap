@@ -33,7 +33,7 @@ class Docman_Wiki extends Docman_Document
         parent::__construct($data);
     }
 
-    var $pagename;
+    public $pagename;
     function getPagename()
     {
         return $this->pagename;

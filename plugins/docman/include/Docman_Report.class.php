@@ -24,20 +24,20 @@ require_once('Docman_FilterFactory.class.php');
 
 class Docman_Report
 {
-    var $id;
-    var $name;
-    var $title;
-    var $groupId;
-    var $userId;
-    var $itemId;
-    var $scope;
-    var $isDefault;
-    var $advancedSearch;
-    var $description;
-    var $image;
+    public $id;
+    public $name;
+    public $title;
+    public $groupId;
+    public $userId;
+    public $itemId;
+    public $scope;
+    public $isDefault;
+    public $advancedSearch;
+    public $description;
+    public $image;
 
-    var $filters;
-    var $columns;
+    public $filters;
+    public $columns;
 
     function __construct()
     {

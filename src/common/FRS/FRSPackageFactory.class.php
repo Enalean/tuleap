@@ -28,9 +28,9 @@ use Tuleap\FRS\LicenseAgreement\LicenseAgreementFactory;
 class FRSPackageFactory
 {
     // Kept for legacy
-    var $STATUS_ACTIVE  = FRSPackage::STATUS_ACTIVE;
-    var $STATUS_DELETED = FRSPackage::STATUS_DELETED;
-    var $STATUS_HIDDEN  = FRSPackage::STATUS_HIDDEN;
+    public $STATUS_ACTIVE  = FRSPackage::STATUS_ACTIVE;
+    public $STATUS_DELETED = FRSPackage::STATUS_DELETED;
+    public $STATUS_HIDDEN  = FRSPackage::STATUS_HIDDEN;
     private static $instance;
 
     public static function instance()
@@ -482,7 +482,7 @@ class FRSPackageFactory
         return UserManager::instance();
     }
 
-    var $dao;
+    public $dao;
     function _getFRSPackageDao()
     {
         if (!$this->dao) {

@@ -21,23 +21,23 @@
 
 /* abstract */ class Docman_View_View
 {
-    var $dfltSortParams = array();
-    var $dfltSearchParams = array();
+    public $dfltSortParams = array();
+    public $dfltSearchParams = array();
 
     /**
      * @var Docman_Controller
      */
-    var $_controller;
+    public $_controller;
 
     /**
      * @var string
      */
-    var $javascript;
+    public $javascript;
 
     /**
      * @var Codendi_HTMLPurifier
      */
-    var $hp;
+    public $hp;
 
     function __construct(&$controller)
     {

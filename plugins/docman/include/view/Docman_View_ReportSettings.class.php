@@ -26,9 +26,9 @@ require_once('Docman_View_Extra.class.php');
 
 class Docman_View_ReportSettings extends Docman_View_Extra
 {
-    var $groupId;
-    var $defaultUrl;
-    var $controller;
+    public $groupId;
+    public $defaultUrl;
+    public $controller;
 
     function _title($params)
     {

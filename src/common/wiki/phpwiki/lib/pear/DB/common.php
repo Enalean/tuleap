@@ -38,54 +38,54 @@ class DB_common extends PEAR
      *                        false     => skip rows
      * @var array
      */
-    var $features = array();
+    public $features = array();
 
     /**
      * assoc mapping native error codes to DB ones
      * @var array
      */
-    var $errorcode_map = array();
+    public $errorcode_map = array();
 
     /**
      * DB type (mysql, oci8, odbc etc.)
      * @var string
      */
-    var $phptype;
+    public $phptype;
 
     /**
      * @var string
      */
-    var $prepare_tokens;
+    public $prepare_tokens;
 
     /**
      * @var string
      */
-    var $prepare_types;
+    public $prepare_types;
 
     /**
      * @var string
      */
-    var $prepared_queries;
+    public $prepared_queries;
 
     /**
      * @var int
      */
-    var $prepare_maxstmt = 0;
+    public $prepare_maxstmt = 0;
 
     /**
      * @var string
      */
-    var $last_query = '';
+    public $last_query = '';
 
     /**
      * @var int
      */
-    var $fetchmode = DB_FETCHMODE_ORDERED;
+    public $fetchmode = DB_FETCHMODE_ORDERED;
 
     /**
      * @var string
      */
-    var $fetchmode_object_class = 'stdClass';
+    public $fetchmode_object_class = 'stdClass';
 
     /**
      * Run-time configuration options.
@@ -96,7 +96,7 @@ class DB_common extends PEAR
      * @see DB_common::setOption()
      * @var array
      */
-    var $options = array(
+    public $options = array(
         'persistent' => false,
         'ssl' => false,
         'debug' => 0,
@@ -110,7 +110,7 @@ class DB_common extends PEAR
      * DB handle
      * @var resource
      */
-    var $dbh;
+    public $dbh;
 
     // }}}
     // {{{ toString()

@@ -469,21 +469,21 @@ class DB_result
 {
     // {{{ properties
 
-    var $dbh;
-    var $result;
-    var $row_counter = null;
+    public $dbh;
+    public $result;
+    public $row_counter = null;
 
     /**
      * for limit queries, the row to start fetching
      * @var int
      */
-    var $limit_from  = null;
+    public $limit_from  = null;
 
     /**
      * for limit queries, the number of rows to fetch
      * @var int
      */
-    var $limit_count = null;
+    public $limit_count = null;
 
     // }}}
     // {{{ constructor

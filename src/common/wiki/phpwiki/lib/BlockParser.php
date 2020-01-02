@@ -53,17 +53,17 @@ class AnchoredRegexpSet_match
     /**
      * The matched text.
      */
-    var $match;
+    public $match;
 
     /**
      * The text following the matched text.
      */
-    var $postmatch;
+    public $postmatch;
 
     /**
      * Index of the regular expression which matched.
      */
-    var $regexp_ind;
+    public $regexp_ind;
 }
 
 /**
@@ -516,7 +516,7 @@ class TightSubBlock extends SubBlock
 
 class BlockMarkup
 {
-    var $_re;
+    public $_re;
 
     function _match(&$input, $match)
     {
@@ -541,8 +541,8 @@ class BlockMarkup
 
 class Block_blockquote extends BlockMarkup
 {
-    var $_depth;
-    var $_re = '\ +(?=\S)';
+    public $_depth;
+    public $_re = '\ +(?=\S)';
 
     function _match(&$input, $m)
     {
@@ -567,14 +567,14 @@ class Block_blockquote extends BlockMarkup
 class Block_list extends BlockMarkup
 {
     //var $_tag = 'ol' or 'ul';
-    var $_re = '\ {0,4}
+    public $_re = '\ {0,4}
                 (?: \+
                   | \\# (?!\[.*\])
                   | -(?!-)
                   | [o](?=\ )
                   | [*] (?!(?=\S)[^*]*(?<=\S)[*](?:\\s|[-)}>"\'\\/:.,;!?_*=]) )
                 )\ *(?=\S)';
-    var $_content = array();
+    public $_content = array();
 
     function _match(&$input, $m)
     {
@@ -623,7 +623,7 @@ class Block_list extends BlockMarkup
 
 class Block_dl extends Block_list
 {
-    var $_tag = 'dl';
+    public $_tag = 'dl';
 
     function __construct()
     {
@@ -679,8 +679,8 @@ class Block_dl extends Block_list
 
 class Block_table_dl_defn extends XmlContent
 {
-    var $nrows;
-    var $ncols;
+    public $nrows;
+    public $ncols;
 
     function __construct($term, $defn)
     {
@@ -850,7 +850,7 @@ class Block_table_dl_defn extends XmlContent
 
 class Block_table_dl extends Block_dl
 {
-    var $_tag = 'dl-table';     // phony.
+    public $_tag = 'dl-table';     // phony.
 
     function __construct()
     {
@@ -896,7 +896,7 @@ class Block_table_dl extends Block_dl
 class Block_oldlists extends Block_list
 {
     //var $_tag = 'ol', 'ul', or 'dl';
-    var $_re = '(?: [*] (?!(?=\S)[^*]*(?<=\S)[*](?:\\s|[-)}>"\'\\/:.,;!?_*=]))
+    public $_re = '(?: [*] (?!(?=\S)[^*]*(?<=\S)[*](?:\\s|[-)}>"\'\\/:.,;!?_*=]))
                   | [#] (?! \[ .*? \] )
                   | ; .*? :
                 ) .*? (?=\S)';
@@ -998,7 +998,7 @@ class Block_oldlists extends Block_list
 
 class Block_pre extends BlockMarkup
 {
-    var $_re = '<(?:pre|verbatim)>';
+    public $_re = '<(?:pre|verbatim)>';
 
     function _match(&$input, $m)
     {
@@ -1031,7 +1031,7 @@ class Block_pre extends BlockMarkup
 
 class Block_plugin extends Block_pre
 {
-    var $_re = '<\?plugin(?:-form)?(?!\S)';
+    public $_re = '<\?plugin(?:-form)?(?!\S)';
 
     // FIXME:
     /* <?plugin Backlinks
@@ -1061,8 +1061,8 @@ class Block_plugin extends Block_pre
 
 class Block_email_blockquote extends BlockMarkup
 {
-    var $_attr = array('class' => 'mail-style-quote');
-    var $_re = '>\ ?';
+    public $_attr = array('class' => 'mail-style-quote');
+    public $_re = '>\ ?';
 
     function _match(&$input, $m)
     {
@@ -1075,7 +1075,7 @@ class Block_email_blockquote extends BlockMarkup
 
 class Block_hr extends BlockMarkup
 {
-    var $_re = '-{4,}\s*$';
+    public $_re = '-{4,}\s*$';
 
     function _match(&$input, $m)
     {
@@ -1092,7 +1092,7 @@ class Block_hr extends BlockMarkup
 
 class Block_heading extends BlockMarkup
 {
-    var $_re = '!{1,3}';
+    public $_re = '!{1,3}';
 
     function _match(&$input, $m)
     {
@@ -1113,9 +1113,9 @@ class Block_heading extends BlockMarkup
 
 class Block_p extends BlockMarkup
 {
-    var $_tag = 'p';
-    var $_re = '\S.*';
-    var $_text = '';
+    public $_tag = 'p';
+    public $_re = '\S.*';
+    public $_text = '';
 
     function _match(&$input, $m)
     {

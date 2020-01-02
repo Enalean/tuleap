@@ -309,10 +309,10 @@ class MIME
  */
 class MIME_MagicRule
 {
-    var $start_offset;
-    var $value;
-    var $mask;
-    var $word_size;
-    var $range_length;
-    var $children;
+    public $start_offset;
+    public $value;
+    public $mask;
+    public $word_size;
+    public $range_length;
+    public $children;
 }

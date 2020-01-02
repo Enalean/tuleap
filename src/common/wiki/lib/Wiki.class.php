@@ -35,9 +35,9 @@ require_once __DIR__ . '/WikiPage.class.php';
  */
 class Wiki
 {
-  /* private int */ var $gid;
-  /* private string */ var $language_id;
-    /* private int */ var $exist;
+  /* private int */ public $gid;
+  /* private string */ public $language_id;
+    /* private int */ public $exist;
 
   /**
    * WikiSericeModel - Constructor

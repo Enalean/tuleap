@@ -23,19 +23,19 @@ class ArtifactReportField extends ArtifactField
 {
 
     // Show this field for the query
-    var $show_on_query;
+    public $show_on_query;
 
     // Show this for the result
-    var $show_on_result;
+    public $show_on_result;
 
     // The place order for the query
-    var $place_query;
+    public $place_query;
 
     // The place order for the result
-    var $place_result;
+    public $place_result;
 
     // The column width
-    var $col_width;
+    public $col_width;
 
     /**
      *

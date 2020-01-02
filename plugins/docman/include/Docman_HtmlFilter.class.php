@@ -52,8 +52,8 @@ class Docman_HtmlFilterFactory
 
 class Docman_HtmlFilter
 {
-    var $filter;
-    var $hp;
+    public $filter;
+    public $hp;
 
     function __construct($filter)
     {

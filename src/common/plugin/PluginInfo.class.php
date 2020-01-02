@@ -25,9 +25,9 @@
 class PluginInfo
 {
 
-    var $plugin;
-    var $pluginDescriptor;
-    var $propertyDescriptors;
+    public $plugin;
+    public $pluginDescriptor;
+    public $propertyDescriptors;
 
     public function __construct($plugin)
     {

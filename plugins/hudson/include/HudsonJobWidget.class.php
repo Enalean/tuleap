@@ -24,10 +24,10 @@ use Tuleap\Dashboard\Project\ProjectDashboardController;
 abstract class HudsonJobWidget extends HudsonWidget
 {
 
-    var $widget_id;
-    var $group_id;
+    public $widget_id;
+    public $group_id;
 
-    var $job_id;
+    public $job_id;
 
     function isUnique()
     {

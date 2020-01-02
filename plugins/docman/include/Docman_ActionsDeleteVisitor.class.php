@@ -214,7 +214,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         return EventManager::instance();
     }
 
-    var $version_factory;
+    public $version_factory;
     function _getVersionFactory()
     {
         if (!$this->version_factory) {
@@ -223,7 +223,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         return $this->version_factory;
     }
 
-    var $item_factory;
+    public $item_factory;
     function _getItemFactory()
     {
         if (!$this->item_factory) {
@@ -232,7 +232,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
         return $this->item_factory;
     }
 
-    var $lock_factory;
+    public $lock_factory;
     function _getLockFactory()
     {
         if (!$this->lock_factory) {

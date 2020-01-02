@@ -29,54 +29,54 @@ class Reference
     /**
      * @var int the ID as stored in the 'Reference' DB table.
      */
-    var $id;
+    public $id;
     /**
      * @var string the keyword to extract.
      */
-    var $keyword;
+    public $keyword;
     /**
      * @var string description of this reference
      */
-    var $description;
+    public $description;
 
     /**
      * Originally, the 'link' contains parameters (like $1, $2) that are later converted with replaceLink()
      * @var string link pointed by this reference
      */
-    var $link;
+    public $link;
 
     /**
      * @var string is either 'S' for system references, or 'P' for project-defined references.
      */
-    var $scope;
+    public $scope;
 
     /**
      * Service short name is useful to automate reference (de-)activation when (de-)activating a service.
      * @var string
      */
-    var $service_short_name;
+    public $service_short_name;
 
     /**
      * Nature of the referenced item.
      * List of available natures is ReferenceManager : getAvailableNatures()
      * @var string
      */
-    var $nature;
+    public $nature;
 
     /**
      * @var bool
      */
-    var $is_active;
+    public $is_active;
     /**
      * @var int
      */
-    var $group_id;
+    public $group_id;
 
     /**
      * This parameter is computed from the 'link' param.
      * @var int when set
      */
-    var $num_param=null;
+    public $num_param=null;
 
     /**
      *

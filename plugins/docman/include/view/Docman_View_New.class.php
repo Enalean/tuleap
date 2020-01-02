@@ -20,7 +20,7 @@
 
 abstract class Docman_View_New extends Docman_View_Display /* implements Visitor */
 {
-    var $newItem;
+    public $newItem;
 
     /* protected abstract */ function _getEnctype()
     {

@@ -26,14 +26,14 @@ require_once(dirname(__FILE__).'/../Docman_PermissionsManager.class.php');
 
 class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetailsSectionProperties
 {
-    var $token;
-    var $subItemsWritable;
-    var $updateConfirmed;
-    var $recurse;
-    var $recurseOnDocs;
+    public $token;
+    public $subItemsWritable;
+    public $updateConfirmed;
+    public $recurse;
+    public $recurseOnDocs;
 
-    var $nbDocsImpacted;
-    var $nbFoldersImpacted;
+    public $nbDocsImpacted;
+    public $nbFoldersImpacted;
 
     function __construct($item, $url, $theme_path, $force, $token, $updateConfirmed, $recurse, $recurseOnDocs)
     {

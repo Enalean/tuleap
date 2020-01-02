@@ -35,7 +35,7 @@ require_once __DIR__ . '/views/WikiViews.class.php';
  */
 class WikiService extends Controler
 {
-  /* private Wiki*/ var $wiki;
+    public $wiki;
 
   /**
    * Constructor

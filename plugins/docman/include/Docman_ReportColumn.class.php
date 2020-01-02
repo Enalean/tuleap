@@ -25,8 +25,8 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_ReportColumn
 {
-    var $md;
-    var $sort;
+    public $md;
+    public $sort;
 
     function __construct($md)
     {

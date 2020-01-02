@@ -25,7 +25,7 @@
  */
 class Docman_Token
 {
-    var $tok;
+    public $tok;
     /**
      * Generate a random token for the current user.
      * This token is stored with the referer.

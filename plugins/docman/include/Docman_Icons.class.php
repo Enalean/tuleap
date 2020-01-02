@@ -27,7 +27,7 @@
  */
 class Docman_Icons
 {
-    var $images_path;
+    public $images_path;
     function __construct($images_path)
     {
         $this->images_path = $images_path;

@@ -35,7 +35,7 @@ class Docman_File extends Docman_Document
     /**
      * @var Docman_Version
      */
-    var $currentVersion;
+    public $currentVersion;
     public function setCurrentVersion($currentVersion)
     {
         $this->currentVersion = $currentVersion;

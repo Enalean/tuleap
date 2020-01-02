@@ -13,39 +13,39 @@ rcs_id('$Id: HttpClient.php,v 1.6 2004/11/01 10:43:55 rurban Exp $');
 class HttpClient
 {
     // Request vars
-    var $host;
-    var $port;
-    var $path;
-    var $method;
-    var $postdata = '';
-    var $cookies = array();
-    var $referer;
-    var $accept = 'text/xml,application/xml,application/xhtml+xml,text/html,text/plain,image/png,image/jpeg,image/gif,*/*';
-    var $accept_encoding = 'gzip';
-    var $accept_language = 'en-us';
-    var $user_agent = 'Incutio HttpClient v0.9';
+    public $host;
+    public $port;
+    public $path;
+    public $method;
+    public $postdata = '';
+    public $cookies = array();
+    public $referer;
+    public $accept = 'text/xml,application/xml,application/xhtml+xml,text/html,text/plain,image/png,image/jpeg,image/gif,*/*';
+    public $accept_encoding = 'gzip';
+    public $accept_language = 'en-us';
+    public $user_agent = 'Incutio HttpClient v0.9';
     // Options
-    var $timeout = 10;
-    var $use_gzip = true;
-    var $persist_cookies = true;  // If true, received cookies are placed in the $this->cookies array ready for the next request
+    public $timeout = 10;
+    public $use_gzip = true;
+    public $persist_cookies = true;  // If true, received cookies are placed in the $this->cookies array ready for the next request
                                   // Note: This currently ignores the cookie path (and time) completely. Time is not important,
                                   //       but path could possibly lead to security problems.
-    var $persist_referers = true; // For each request, sends path of last request as referer
-    var $debug = false;
-    var $handle_redirects = true; // Auaomtically redirect if Location or URI header is found
-    var $max_redirects = 5;
-    var $headers_only = false;    // If true, stops receiving once headers have been read.
+    public $persist_referers = true; // For each request, sends path of last request as referer
+    public $debug = false;
+    public $handle_redirects = true; // Auaomtically redirect if Location or URI header is found
+    public $max_redirects = 5;
+    public $headers_only = false;    // If true, stops receiving once headers have been read.
     // Basic authorization variables
-    var $username;
-    var $password;
+    public $username;
+    public $password;
     // Response vars
-    var $status;
-    var $headers = array();
-    var $content = '';
-    var $errormsg;
+    public $status;
+    public $headers = array();
+    public $content = '';
+    public $errormsg;
     // Tracker variables
-    var $redirect_count = 0;
-    var $cookie_host = '';
+    public $redirect_count = 0;
+    public $cookie_host = '';
 
     function __construct($host, $port = 80)
     {

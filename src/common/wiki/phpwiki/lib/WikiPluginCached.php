@@ -54,7 +54,7 @@ define('PLUGIN_CACHED_STATIC', 128);      // make it available via /uploads/, no
  */
 class WikiPluginCached extends WikiPlugin
 {
-    var $_static;
+    public $_static;
     /**
      * Produces URL and id number from plugin arguments which later on,
      * will allow to find a cached image or to reconstruct the complete

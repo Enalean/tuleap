@@ -28,8 +28,8 @@
 class Tracker_Rule_List extends Tracker_Rule
 {
 
-    var $target_value;
-    var $source_value;
+    public $target_value;
+    public $source_value;
 
     public function __construct($id = null, $tracker_id = null, $source_field = null, $source_value = null, $target_field = null, $target_value = null)
     {

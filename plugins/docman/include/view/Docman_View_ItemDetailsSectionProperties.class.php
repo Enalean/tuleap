@@ -24,11 +24,11 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSection
 {
-    var $user_can_write;
-    var $force;
-    var $theme_path;
-    var $formName;
-    var $inheritableMetadataArray;
+    public $user_can_write;
+    public $force;
+    public $theme_path;
+    public $formName;
+    public $inheritableMetadataArray;
 
     function __construct($item, $url, $theme_path, $user_can_write = false, $force = null)
     {

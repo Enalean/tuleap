@@ -32,7 +32,7 @@ rcs_id('$Id: UserPreferences.php,v 1.35 2004/10/13 14:13:55 rurban Exp $');
  */
 class WikiPlugin_UserPreferences extends WikiPlugin
 {
-    var $bool_args;
+    public $bool_args;
 
     function getName()
     {

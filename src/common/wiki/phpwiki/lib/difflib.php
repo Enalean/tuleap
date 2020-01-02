@@ -12,9 +12,9 @@ define('USE_ASSERTS', function_exists('assert'));
 
 class _DiffOp
 {
-    var $type;
-    var $orig;
-    var $final;
+    public $type;
+    public $orig;
+    public $final;
 
     function reverse()
     {
@@ -34,7 +34,7 @@ class _DiffOp
 
 class _DiffOp_Copy extends _DiffOp
 {
-    var $type = 'copy';
+    public $type = 'copy';
 
     function __construct($orig, $final = false)
     {
@@ -53,7 +53,7 @@ class _DiffOp_Copy extends _DiffOp
 
 class _DiffOp_Delete extends _DiffOp
 {
-    var $type = 'delete';
+    public $type = 'delete';
 
     function __construct($lines)
     {
@@ -69,7 +69,7 @@ class _DiffOp_Delete extends _DiffOp
 
 class _DiffOp_Add extends _DiffOp
 {
-    var $type = 'add';
+    public $type = 'add';
 
     function __construct($lines)
     {
@@ -85,7 +85,7 @@ class _DiffOp_Add extends _DiffOp
 
 class _DiffOp_Change extends _DiffOp
 {
-    var $type = 'change';
+    public $type = 'change';
 
     function __construct($orig, $final)
     {
@@ -537,7 +537,7 @@ class _DiffEngine
  */
 class Diff
 {
-    var $edits;
+    public $edits;
 
     /**
      *
@@ -752,7 +752,7 @@ class DiffFormatter
      * This should be left at zero for this class, but subclasses
      * may want to set this to other values.
      */
-    var $leading_context_lines = 0;
+    public $leading_context_lines = 0;
 
     /**
      * Number of trailing context "lines" to preserve.
@@ -760,7 +760,7 @@ class DiffFormatter
      * This should be left at zero for this class, but subclasses
      * may want to set this to other values.
      */
-    var $trailing_context_lines = 0;
+    public $trailing_context_lines = 0;
 
     /**
      * Format a diff.

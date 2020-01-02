@@ -35,7 +35,7 @@ class ArtifactTypeFactory
      *
      * @var     array    ArtifactTypes.
      */
-    var $ArtifactTypes;
+    public $ArtifactTypes;
     /**
      * @var string
      */
@@ -268,27 +268,27 @@ class ArtifactTypeFactory
     {
 
      // Delete artifact_canned_responses
-        $sql = "DELETE FROM artifact_canned_responses 
+        $sql = "DELETE FROM artifact_canned_responses
 			    WHERE group_artifact_id=". db_ei($atid);
         db_query($sql);
 
      // Delete artifact_notification
-        $sql = "DELETE FROM artifact_notification  
+        $sql = "DELETE FROM artifact_notification
 			    WHERE group_artifact_id=". db_ei($atid);
         db_query($sql);
 
      // Delete artifact_notification_event
-        $sql = "DELETE FROM artifact_notification_event   
+        $sql = "DELETE FROM artifact_notification_event
 			    WHERE group_artifact_id=". db_ei($atid);
         db_query($sql);
 
      // Delete artifact_notification_role
-        $sql = "DELETE FROM artifact_notification_role   
+        $sql = "DELETE FROM artifact_notification_role
 			    WHERE group_artifact_id=". db_ei($atid);
         db_query($sql);
 
      // Delete artifact_perm
-        $sql = "DELETE FROM artifact_perm   
+        $sql = "DELETE FROM artifact_perm
 			    WHERE group_artifact_id=". db_ei($atid);
         db_query($sql);
 
@@ -316,7 +316,7 @@ class ArtifactTypeFactory
         $art_rule_fact->deleteRulesByArtifactType($atid);
 
         // Delete artifact_watcher (be carefull, the column is named artifact_group_id)
-        $sql = "DELETE FROM artifact_watcher   
+        $sql = "DELETE FROM artifact_watcher
 			    WHERE artifact_group_id=". db_ei($atid);
         db_query($sql);
 
@@ -465,10 +465,10 @@ class ArtifactTypeFactory
     {
         global $Language;
 
-        $sql = "SELECT group_artifact_id 
-                FROM artifact_group_list 
-                WHERE group_id='". db_ei($group_id) ."' AND 
-                      item_name='". db_es($tracker_name) ."' AND 
+        $sql = "SELECT group_artifact_id
+                FROM artifact_group_list
+                WHERE group_id='". db_ei($group_id) ."' AND
+                      item_name='". db_es($tracker_name) ."' AND
                       status!='D'";
 
         $result = db_query($sql);
@@ -592,12 +592,12 @@ class ArtifactTypeFactory
             // First, we create a new ArtifactType into artifact_group_list
             // By default, set 'instantiate_for_new_projects' to '1', so that a project that is not yet a
             // template will be able to have its trackers cloned by default when it becomes a template.
-            $sql="INSERT INTO 
-                artifact_group_list 
+            $sql="INSERT INTO
+                artifact_group_list
                 (group_artifact_id, group_id, name, description, item_name, allow_copy,
                              submit_instructions,browse_instructions,instantiate_for_new_projects,stop_notification
-                             ) 
-                VALUES 
+                             )
+                VALUES
                 ($id,
                 '". db_ei($group_id) ."',
                 '". db_es($name) ."',

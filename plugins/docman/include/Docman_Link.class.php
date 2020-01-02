@@ -35,7 +35,7 @@ class Docman_Link extends Docman_Document
         parent::__construct($data);
     }
 
-    var $url;
+    public $url;
     function getUrl()
     {
         return $this->url;

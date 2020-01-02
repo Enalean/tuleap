@@ -34,13 +34,13 @@ class ArtifactFieldFactory
 {
 
     // The artifact type object
-    var $ArtifactType;
+    public $ArtifactType;
 
     // The fields array indexed by name
-    var $USAGE_BY_NAME;
+    public $USAGE_BY_NAME;
 
     // The fields array indexed by id
-    var $USAGE_BY_ID;
+    public $USAGE_BY_ID;
     /**
      * @var string
      */
@@ -353,9 +353,9 @@ class ArtifactFieldFactory
     function getFieldsContainedInFieldSet($fieldset_id)
     {
         $fields_contained_in_fieldset = array();
-        $sql = "SELECT af.field_id 
-                FROM artifact_field af, artifact_field_usage afu 
-                WHERE af.field_set_id=". db_ei($fieldset_id) ." AND 
+        $sql = "SELECT af.field_id
+                FROM artifact_field af, artifact_field_usage afu
+                WHERE af.field_set_id=". db_ei($fieldset_id) ." AND
                       af.group_artifact_id=". db_ei($this->ArtifactType->getID()) ." AND
                       afu.group_artifact_id=". db_ei($this->ArtifactType->getID()) ." AND
                       afu.field_id=af.field_id
@@ -445,7 +445,7 @@ class ArtifactFieldFactory
                 }
             }
 
-            $sql_insert = 'INSERT INTO artifact_field VALUES 
+            $sql_insert = 'INSERT INTO artifact_field VALUES
                  ('. db_ei($field->getID()) .','. db_ei($atid_dest) .', '. db_ei($mapping_fieldset_array[$field->getFieldSetID()]) .
             ',"'. db_es($field->getName()) .'",'. db_ei($field->getDataType()) .
             ',"'. db_es($field->getDisplayType()) .'","'. db_es($field->getDisplaySize()) .'","'. db_es($field->getLabel()) .

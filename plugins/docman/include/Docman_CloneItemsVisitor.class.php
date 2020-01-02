@@ -29,9 +29,9 @@ use Tuleap\Docman\Metadata\DocmanMetadataTypeValueFactory;
  */
 class Docman_CloneItemsVisitor implements ItemVisitor
 {
-    var $dstGroupId;
-    var $_cacheMetadataUsage;
-    var $itemMapping;
+    public $dstGroupId;
+    public $_cacheMetadataUsage;
+    public $itemMapping;
     /**
      * @var ProjectManager
      */

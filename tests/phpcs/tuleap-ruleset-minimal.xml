@@ -16,9 +16,7 @@
         <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
         <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps"/>
         <exclude name="Squiz.Scope.MethodScope.Missing"/>
-        <exclude name="PSR2.Classes.PropertyDeclaration.ScopeMissing"/>
         <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
-        <exclude name="PSR2.Classes.PropertyDeclaration.VarUsed"/>
         <exclude name="PSR1.Classes.ClassDeclaration.MultipleClasses"/>
         <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace"/>
         <exclude name="PEAR.Functions.ValidDefaultValue.NotAtEnd"/>

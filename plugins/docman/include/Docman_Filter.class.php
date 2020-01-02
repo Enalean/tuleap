@@ -22,8 +22,8 @@
 
 class Docman_Filter
 {
-    var $value;
-    var $md;
+    public $value;
+    public $md;
 
     function __construct($md)
     {
@@ -109,9 +109,9 @@ class Docman_Filter
  */
 class Docman_FilterDate extends Docman_Filter
 {
-    var $operator;
-    var $field_operator_name;
-    var $field_value_name;
+    public $operator;
+    public $field_operator_name;
+    public $field_value_name;
 
     function __construct($md)
     {
@@ -227,10 +227,10 @@ class Docman_FilterDate extends Docman_Filter
 
 class Docman_FilterDateAdvanced extends Docman_FilterDate
 {
-    var $fieldNameStart;
-    var $fieldNameEnd;
-    var $valueStart;
-    var $valueEnd;
+    public $fieldNameStart;
+    public $fieldNameEnd;
+    public $valueStart;
+    public $valueEnd;
 
     function __construct($md)
     {
@@ -510,7 +510,7 @@ class Docman_FilterText extends Docman_Filter
  */
 class Docman_FilterGlobalText extends Docman_FilterText
 {
-    var $dynTextFields;
+    public $dynTextFields;
 
     function __construct($md, $dynTextFields)
     {

@@ -25,37 +25,37 @@ class Valid
     /**
      * @access private
      */
-    var $errors;
+    public $errors;
 
     /**
      * @access private
      */
-    var $key;
+    public $key;
 
     /**
      * @access private
      */
-    var $rules;
+    public $rules;
 
     /**
      * @access private
      */
-    var $isRequired;
+    public $isRequired;
 
     /**
      * @access private
      */
-    var $useFeedback;
+    public $useFeedback;
 
     /**
      * @access private
      */
-    var $globalErrorMessage;
+    public $globalErrorMessage;
 
     /**
      * @access private
      */
-    var $isValid;
+    public $isValid;
 
     /**
      * Constructor

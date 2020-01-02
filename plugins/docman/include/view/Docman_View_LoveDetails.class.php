@@ -25,8 +25,8 @@
 
 class Docman_View_LoveDetails
 {
-    var $md;
-    var $hp;
+    public $md;
+    public $hp;
 
     function __construct($md)
     {

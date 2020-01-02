@@ -33,7 +33,7 @@ class DataAccessObject
      * @var LegacyDataAccessInterface
      * @deprecated
      */
-    var $da;
+    public $da;
 
     /**
      * @var bool

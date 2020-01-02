@@ -23,8 +23,8 @@
 
 class Docman_FilterFactory
 {
-    var $dynTextFields;
-    var $groupId;
+    public $dynTextFields;
+    public $groupId;
 
     function __construct($groupId)
     {

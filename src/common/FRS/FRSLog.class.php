@@ -21,7 +21,7 @@
 class FRSLog
 {
 
-    var $dao;
+    public $dao;
 
     /**
      * Constructor of the class.

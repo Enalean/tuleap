@@ -32,8 +32,8 @@ require_once('data-access/GraphOnTrackersV5_ChartFactory.class.php');
 */
 abstract class GraphOnTrackersV5_Widget_Chart extends Widget
 {
-    var $chart_title;
-    var $chart_id;
+    public $chart_title;
+    public $chart_id;
 
     public function __construct($id, $owner_id, $owner_type)
     {
@@ -139,7 +139,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         $owner_id,
         $owner_type
     ) {
-        $sql = "INSERT INTO plugin_graphontrackersv5_widget_chart (owner_id, owner_type, title, chart_id) 
+        $sql = "INSERT INTO plugin_graphontrackersv5_widget_chart (owner_id, owner_type, title, chart_id)
         SELECT  ". $owner_id .", '". $owner_type ."', title, chart_id
         FROM plugin_graphontrackersv5_widget_chart
         WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' ";

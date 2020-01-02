@@ -23,8 +23,8 @@
 
 class Docman_View_ItemRanking
 {
-    var $dropDownName;
-    var $selectedValue;
+    public $dropDownName;
+    public $selectedValue;
 
     function __construct()
     {

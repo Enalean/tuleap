@@ -27,14 +27,14 @@ require_once('WikiPage.class.php');
 
 class WikiEntry
 {
-  /* private int(11) */     var $id;
-  /* private int(11) */     var $gid;
-  /* private int(11) */     var $rank;
-  /* private string */      var $language_id;
-  /* private string(255) */ var $name;
-  /* private string(255) */ var $page;
-  /* private string(255) */ var $desc;
-  /* private WikiPage */    var $wikiPage;
+  /* private int(11) */     public $id;
+  /* private int(11) */     public $gid;
+  /* private int(11) */     public $rank;
+  /* private string */      public $language_id;
+  /* private string(255) */ public $name;
+  /* private string(255) */ public $page;
+  /* private string(255) */ public $desc;
+  /* private WikiPage */    public $wikiPage;
 
   /**
    * Constructor

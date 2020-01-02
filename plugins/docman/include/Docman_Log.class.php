@@ -80,7 +80,7 @@ class Docman_Log
         );
     }
 
-    var $dao;
+    public $dao;
     function _getDao()
     {
         if (!$this->dao) {
@@ -89,7 +89,7 @@ class Docman_Log
         return  $this->dao;
     }
 
-    var $dif;
+    public $dif;
     function _getItemFactory($group_id)
     {
         $this->dif = new Docman_ItemFactory($group_id);

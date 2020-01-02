@@ -198,7 +198,7 @@ class FRSPackage
      * @var  array   $data_array.
      */
     public $data_array;
-    var $package_releases;
+    public $package_releases;
 
 
     /**

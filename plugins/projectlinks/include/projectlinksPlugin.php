@@ -29,7 +29,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 //=============================================================================
 class ProjectLinksPlugin extends Plugin
 {
-    var $pluginInfo;
+    public $pluginInfo;
 
     //========================================================================
     public function __construct($id)

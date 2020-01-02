@@ -25,11 +25,11 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSection
 {
-    var $table;
-    var $atf;
-    var $themePath;
-    var $version;
-    var $notificationManager;
+    public $table;
+    public $atf;
+    public $themePath;
+    public $version;
+    public $notificationManager;
 
     function __construct($item, $url, $themePath, $notificationManager)
     {

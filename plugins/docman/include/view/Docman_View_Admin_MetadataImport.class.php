@@ -27,8 +27,8 @@ require_once(dirname(__FILE__).'/../Docman_MetadataComparator.class.php');
 
 class Docman_View_Admin_MetadataImport extends Docman_View_Extra
 {
-    var $srcGo;
-    var $dstGo;
+    public $srcGo;
+    public $dstGo;
 
     function _title($params)
     {

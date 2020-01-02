@@ -23,7 +23,7 @@
 class Collection
 {
 
-    /* protected */ var $elements;
+    public $elements;
 
     function __construct($initial_array = '')
     {
