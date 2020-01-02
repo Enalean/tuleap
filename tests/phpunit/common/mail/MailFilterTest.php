@@ -18,18 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Mail;
 
 use ForgeAccess;
 use ForgeConfig;
 use Mockery;
 use Project_AccessPrivateException;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Project\ProjectAccessChecker;
-use TuleapTestCase;
 use UserManager;
 
-class MailFilterTest extends TuleapTestCase
+final class MailFilterTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration, ForgeConfigSandbox;
+
     /**
      * @var UserManager
      */
@@ -62,61 +66,46 @@ class MailFilterTest extends TuleapTestCase
     private $user_registered_bis;
 
 
-    public function setUp()
+    protected function setUp() : void
     {
-        $this->user_registered     = mock('PFUser');
-        $this->user_registered_bis = mock('PFUser');
-        $this->user_suspended      = mock('PFUser');
-        $this->user_active         = mock('PFUser');
+        parent::setUp();
+        $this->user_registered     = \Mockery::spy(\PFUser::class);
+        $this->user_registered_bis = \Mockery::spy(\PFUser::class);
+        $this->user_suspended      = \Mockery::spy(\PFUser::class);
+        $this->user_active         = \Mockery::spy(\PFUser::class);
 
-        stub($this->user_registered_bis)->isAlive()->returns(true);
-        stub($this->user_registered)->isAlive()->returns(true);
-        stub($this->user_active)->isAlive()->returns(true);
-        stub($this->user_suspended)->isAlive()->returns(false);
+        $this->user_registered_bis->shouldReceive('isAlive')->andReturns(true);
+        $this->user_registered->shouldReceive('isAlive')->andReturns(true);
+        $this->user_active->shouldReceive('isAlive')->andReturns(true);
+        $this->user_suspended->shouldReceive('isAlive')->andReturns(false);
 
-        stub($this->user_registered_bis)->getEmail()->returns('user-registered@example.com');
-        stub($this->user_registered)->getEmail()->returns('user-registered@example.com');
-        stub($this->user_active)->getEmail()->returns('user-active@example.com');
-        stub($this->user_suspended)->getEmail()->returns('user-suspended@example.com');
+        $this->user_registered_bis->shouldReceive('getEmail')->andReturns('user-registered@example.com');
+        $this->user_registered->shouldReceive('getEmail')->andReturns('user-registered@example.com');
+        $this->user_active->shouldReceive('getEmail')->andReturns('user-active@example.com');
+        $this->user_suspended->shouldReceive('getEmail')->andReturns('user-suspended@example.com');
 
         $this->unknown_user = array();
 
-        $this->user_manager           = mock('UserManager');
+        $this->user_manager           = \Mockery::spy(\UserManager::class);
         $this->project_access_checker = Mockery::mock(ProjectAccessChecker::class);
-        $this->mail_logger            = mock('Tuleap\Mail\MailLogger');
+        $this->mail_logger            = \Mockery::spy(\Tuleap\Mail\MailLogger::class);
 
         $this->mail_filter = new MailFilter($this->user_manager, $this->project_access_checker, $this->mail_logger);
 
-        $this->project = mock('Project');
+        $this->project = \Mockery::spy(\Project::class);
 
-        ForgeConfig::store();
         ForgeConfig::set('sys_mail_secure_mode', true);
     }
 
-    public function tearDown()
+    private function initializeMails(): void
     {
-        ForgeConfig::restore();
-
-        parent::tearDown();
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('user-registered@example.com')->andReturns(array($this->user_registered));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('user-suspended@example.com')->andReturns(array($this->user_suspended));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('user-active@example.com')->andReturns(array($this->user_active));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('unknown-user@example.com')->andReturns(array($this->unknown_user));
     }
 
-    private function initializeMails()
-    {
-        stub($this->user_manager)->getAllUsersByEmail('user-registered@example.com')->returns(
-            array($this->user_registered)
-        );
-        stub($this->user_manager)->getAllUsersByEmail('user-suspended@example.com')->returns(
-            array($this->user_suspended)
-        );
-        stub($this->user_manager)->getAllUsersByEmail('user-active@example.com')->returns(
-            array($this->user_active)
-        );
-        stub($this->user_manager)->getAllUsersByEmail('unknown-user@example.com')->returns(
-            array($this->unknown_user)
-        );
-    }
-
-    public function itFilterPeopleWhoCanNotReadProject()
+    public function testItFilterPeopleWhoCanNotReadProject() : void
     {
         $this->initializeMails();
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
@@ -124,93 +113,96 @@ class MailFilterTest extends TuleapTestCase
             ->andThrow(Project_AccessPrivateException::class);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+
+        $this->mail_logger->shouldReceive('warn')->once();
+        $this->mail_logger->shouldReceive('info')->never();
+
         $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_active->getEmail()));
 
         $expected_mails = array();
 
-        expect($this->mail_logger)->warn()->once();
-        expect($this->mail_logger)->info()->never();
-        $this->assertEqual($filtered_mails, $expected_mails);
+        $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function itFilterPeopleWhoCanReadProjectAndAreSuspendedOrDeleted()
+    public function testItFilterPeopleWhoCanReadProjectAndAreSuspendedOrDeleted() : void
     {
         $this->initializeMails();
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
             ->with($this->user_suspended, $this->project);
 
+        $this->mail_logger->shouldReceive('warn')->once();
+        $this->mail_logger->shouldReceive('info')->never();
+
         $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_suspended->getEmail()));
         $expected_mails = array();
 
-        expect($this->mail_logger)->warn()->once();
-        expect($this->mail_logger)->info()->never();
-        $this->assertEqual($filtered_mails, $expected_mails);
+        $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function itDoesNotFilterPeopleWhoCanReadProjectAndAreActive()
+    public function testItDoesNotFilterPeopleWhoCanReadProjectAndAreActive() : void
     {
         $this->initializeMails();
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
             ->with($this->user_registered, $this->project);
 
+        $this->mail_logger->shouldReceive('warn')->never();
+        $this->mail_logger->shouldReceive('info')->once();
+
         $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_registered->getEmail()));
         $expected_mails = array($this->user_registered->getEmail());
 
-        expect($this->mail_logger)->warn()->never();
-        expect($this->mail_logger)->info()->once();
-        $this->assertEqual($filtered_mails, $expected_mails);
+        $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function itKeepsOneMailWhenSeveralAccountsAreLinkedToTheSameMail()
+    public function testItKeepsOneMailWhenSeveralAccountsAreLinkedToTheSameMail() : void
     {
-        stub($this->user_manager)->getAllUsersByEmail($this->user_registered->getEmail())->returns(
-            array($this->user_registered, $this->user_registered_bis)
-        );
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with($this->user_registered->getEmail())->andReturns(array($this->user_registered, $this->user_registered_bis));
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
             ->with($this->user_registered, $this->project);
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
             ->with($this->user_registered_bis, $this->project);
 
+        $this->mail_logger->shouldReceive('warn')->never();
+        $this->mail_logger->shouldReceive('info')->once();
+
         $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_registered->getEmail()));
         $expected_mails = array($this->user_registered->getEmail());
 
-        expect($this->mail_logger)->warn()->never();
-        expect($this->mail_logger)->info()->once();
-        $this->assertEqual($filtered_mails, $expected_mails);
+        $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function itKeepsOneMailWhenSeveralAccountsAreLinkedToTheSameMailEvenOneAccountCanNotAccessToProject()
+    public function testItKeepsOneMailWhenSeveralAccountsAreLinkedToTheSameMailEvenOneAccountCanNotAccessToProject() : void
     {
-        stub($this->user_manager)->getAllUsersByEmail($this->user_registered->getEmail())->returns(
-            array($this->user_registered, $this->user_registered_bis)
-        );
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with($this->user_registered->getEmail())->andReturns(array($this->user_registered, $this->user_registered_bis));
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
             ->with($this->user_registered, $this->project);
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
             ->with($this->user_registered_bis, $this->project)
             ->andThrow(Project_AccessPrivateException::class);
 
+        $this->mail_logger->shouldReceive('warn')->never();
+        $this->mail_logger->shouldReceive('info')->once();
+
         $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_registered->getEmail()));
         $expected_mails = array($this->user_registered->getEmail());
 
-        expect($this->mail_logger)->warn()->never();
-        expect($this->mail_logger)->info()->once();
-        $this->assertEqual($filtered_mails, $expected_mails);
+        $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function itFilterPeopleWhoAreNotMemberOfProject()
+    public function testItFilterPeopleWhoAreNotMemberOfProject() : void
     {
-        stub($this->user_manager)->getAllUsersByEmail($this->user_registered->getEmail())->returns(array());
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with($this->user_registered->getEmail())->andReturns(array());
+
+        $this->mail_logger->shouldReceive('warn')->once();
+        $this->mail_logger->shouldReceive('info')->never();
 
         $filtered_mails = $this->mail_filter->filter($this->project, array($this->user_registered->getEmail()));
         $expected_mails = array();
 
-        expect($this->mail_logger)->warn()->once();
-        expect($this->mail_logger)->info()->never();
-        $this->assertEqual($filtered_mails, $expected_mails);
+        $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function itKeepsAllMailIfUserCanReadProject()
+    public function testItKeepsAllMailIfUserCanReadProject() : void
     {
         $this->initializeMails();
 
@@ -219,6 +211,9 @@ class MailFilterTest extends TuleapTestCase
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')
             ->with($this->user_active, $this->project);
 
+        $this->mail_logger->shouldReceive('warn')->never();
+        $this->mail_logger->shouldReceive('info')->times(2);
+
         $filtered_mails = $this->mail_filter->filter(
             $this->project,
             array(
@@ -228,16 +223,17 @@ class MailFilterTest extends TuleapTestCase
         );
         $expected_mails = array($this->user_registered->getEmail(), $this->user_active->getEmail());
 
-        expect($this->mail_logger)->warn()->never();
-        expect($this->mail_logger)->info()->count(2);
-        $this->assertEqual($filtered_mails, $expected_mails);
+        $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function itDoesNotFilterMailsWhenConfigurationAllowsIt()
+    public function testItDoesNotFilterMailsWhenConfigurationAllowsIt() : void
     {
         ForgeConfig::set('sys_mail_secure_mode', false);
         $this->initializeMails();
 
+        $this->mail_logger->shouldReceive('warn')->never();
+        $this->mail_logger->shouldReceive('info')->once();
+
         $filtered_mails = $this->mail_filter->filter(
             $this->project,
             array(
@@ -247,12 +243,10 @@ class MailFilterTest extends TuleapTestCase
         );
         $expected_mails = array($this->user_registered->getEmail(), $this->user_active->getEmail());
 
-        expect($this->mail_logger)->warn()->never();
-        expect($this->mail_logger)->info()->once();
-        $this->assertEqual($filtered_mails, $expected_mails);
+        $this->assertEquals($expected_mails, $filtered_mails);
     }
 
-    public function itFiltersDuplicateMails()
+    public function testItFiltersDuplicateMails() : void
     {
         ForgeConfig::set('sys_mail_secure_mode', false);
 
@@ -264,10 +258,10 @@ class MailFilterTest extends TuleapTestCase
             )
         );
 
-        $this->assertEqual(array_values($filtered_emails), array('user1@example.com'));
+        $this->assertEquals(array('user1@example.com'), array_values($filtered_emails));
     }
 
-    public function itManageWhenEmailsAreNull()
+    public function testItManageWhenEmailsAreNull() : void
     {
         ForgeConfig::set('sys_mail_secure_mode', false);
 
@@ -280,10 +274,10 @@ class MailFilterTest extends TuleapTestCase
             )
         );
 
-        $this->assertEqual(array_values($filtered_emails), array('user-active@example.com', 'user1@example.com'));
+        $this->assertEquals(array('user-active@example.com', 'user1@example.com'), array_values($filtered_emails));
     }
 
-    public function itManageWhenEmailsAreFalse()
+    public function testItManageWhenEmailsAreFalse() : void
     {
         ForgeConfig::set('sys_mail_secure_mode', false);
 
@@ -296,6 +290,6 @@ class MailFilterTest extends TuleapTestCase
             )
         );
 
-        $this->assertEqual(array_values($filtered_emails), array('user-active@example.com', 'user1@example.com'));
+        $this->assertEquals(array('user-active@example.com', 'user1@example.com'), array_values($filtered_emails));
     }
 }
