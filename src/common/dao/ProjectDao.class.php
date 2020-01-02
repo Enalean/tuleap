@@ -424,6 +424,24 @@ class ProjectDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function getProjectICanAdminForREST(PFUser $user, int $offset, int $limit)
+    {
+        $user_id              = $this->da->escapeInt($user->getId());
+        $offset               = $this->da->escapeInt($offset);
+        $limit                = $this->da->escapeInt($limit);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT groups.*
+                    FROM groups
+                      JOIN user_group USING (group_id)
+                    WHERE status = 'A'
+                      AND user_group.admin_flags = 'A'
+                      AND user_group.user_id = $user_id
+                    ORDER BY group_id ASC
+                    LIMIT $offset, $limit";
+
+        return $this->retrieve($sql);
+    }
+
     public function searchMyAndPublicProjectsForRESTByShortname($shortname, PFUser $user, $offset, $limit)
     {
         $user_id   = $this->da->escapeInt($user->getId());

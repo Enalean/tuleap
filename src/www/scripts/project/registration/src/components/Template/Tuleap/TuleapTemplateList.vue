@@ -45,9 +45,5 @@ import { TemplateData } from "../../../type";
 export default class TuleapTemplateList extends Vue {
     @State
     tuleap_templates!: TemplateData[];
-
-    storeSelectedTemplate(template: TemplateData): void {
-        this.$store.dispatch("setSelectedTuleapTemplate", template);
-    }
 }
 </script>

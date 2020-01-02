@@ -289,6 +289,19 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+    public function testGETByAdministratorship(): void
+    {
+        $response      = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get('projects?query='. urlencode('{"is_admin_of":true}'))
+        );
+        $json_projects = $response->json();
+
+        $this->assertGreaterThan(5, count($json_projects));
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
     public function testGETByNonMembershipShouldFail()
     {
         $response = $this->getResponse($this->client->get('projects?query='. urlencode('{"is_member_of":false}')));

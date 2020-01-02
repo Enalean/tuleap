@@ -895,6 +895,17 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         return $this->getPaginatedProjects($matching_projects, $user, $total_size);
     }
 
+    /**
+     * @return Tuleap\Project\PaginatedProjects
+     */
+    public function getProjectICanAdminForREST(PFUser $user, $offset, $limit)
+    {
+        $matching_projects = $this->_getDao()->getProjectICanAdminForREST($user, $offset, $limit);
+        $total_size        = $this->_getDao()->foundRows();
+
+        return $this->getPaginatedProjects($matching_projects, $user, $total_size);
+    }
+
     public function getMyAndPublicProjectsForRESTByShortname($shortname, PFUser $user, $offset, $limit)
     {
         $dao = $this->_getDao();
