@@ -124,6 +124,7 @@ describe("DropContainerCell", () => {
             const wrapper = getWrapper(column, true);
 
             expect(wrapper.contains(AddCard)).toBe(true);
+            expect(wrapper.classes("taskboard-cell-with-add-form")).toBe(true);
         });
 
         it(`does not render the AddCard component
@@ -132,6 +133,7 @@ describe("DropContainerCell", () => {
             const wrapper = getWrapper(column, false);
 
             expect(wrapper.contains(AddCard)).toBe(false);
+            expect(wrapper.classes("taskboard-cell-with-add-form")).toBe(false);
         });
 
         it(`does not render the AddCard component when the column is collapsed`, () => {
@@ -139,6 +141,7 @@ describe("DropContainerCell", () => {
             const wrapper = getWrapper(column, true);
 
             expect(wrapper.contains(AddCard)).toBe(false);
+            expect(wrapper.classes("taskboard-cell-with-add-form")).toBe(false);
         });
     });
 });

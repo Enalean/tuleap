@@ -18,14 +18,27 @@
  */
 
 $button-size: 38px;
+$button-margin: $tlp-half-spacing;
 
 .taskboard-add-card-form {
-    display: flex;
+    display: none;
     justify-content: center;
 
     &:first-child > {
         .taskboard-add-in-place-button {
             margin: 0;
+        }
+    }
+}
+
+.taskboard-cell-with-add-form {
+    padding: $tlp-half-spacing $tlp-half-spacing ($button-size + 2 * $button-margin + $tlp-half-spacing);
+
+    &:hover {
+        padding: $tlp-half-spacing;
+
+        > .taskboard-add-card-form {
+            display: flex;
         }
     }
 }
@@ -43,17 +56,12 @@ $button-size: 38px;
 }
 
 .taskboard-add-in-place-button {
-    margin: $tlp-half-spacing 0;
-    transition: opacity ease-in-out 100ms;
-    opacity: 0;
+    margin: $tlp-spacing 0 $tlp-half-spacing;
 
     &:not(.taskboard-add-in-place-button-with-label) {
         width: $button-size;
+        margin: $tlp-half-spacing 0;
         padding: 0;
         border-radius: 50%;
     }
-}
-
-.taskboard-cell:hover > .taskboard-add-card-form > .taskboard-add-in-place-button {
-    opacity: 1;
 }
