@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter as ExplicitBacklogXMLExporter;
+use Tuleap\AgileDashboard\Kanban\KanbanXMLExporter;
 use Tuleap\AgileDashboard\Planning\XML\XMLExporter as PlanningXMLExporter;
 
 class AgileDashboard_XMLExporter
@@ -37,28 +39,55 @@ class AgileDashboard_XMLExporter
      * @var PlanningXMLExporter
      */
     private $planning_xml_exporter;
+    /**
+     * @var KanbanXMLExporter
+     */
+    private $kanban_XML_exporter;
 
     public function __construct(
         XML_RNGValidator $xml_validator,
-        ExplicitBacklogXMLExporter $explicit_backlog_xml_exporter,
-        PlanningXMLExporter $planning_xml_exporter
+        PlanningXMLExporter $planning_xml_exporter,
+        KanbanXMLExporter $kanban_XML_exporter,
+        ExplicitBacklogXMLExporter $explicit_backlog_xml_exporter
     ) {
         $this->xml_validator                 = $xml_validator;
+        $this->kanban_XML_exporter           = $kanban_XML_exporter;
         $this->explicit_backlog_xml_exporter = $explicit_backlog_xml_exporter;
-        $this->planning_xml_exporter = $planning_xml_exporter;
+        $this->planning_xml_exporter         = $planning_xml_exporter;
+    }
+
+    public static function build(): AgileDashboard_XMLExporter
+    {
+        $tracker_factory = TrackerFactory::instance();
+
+        return new AgileDashboard_XMLExporter(
+            new XML_RNGValidator(),
+            new PlanningXMLExporter(new PlanningPermissionsManager()),
+            new \Tuleap\AgileDashboard\Kanban\KanbanXMLExporter(
+                new AgileDashboard_ConfigurationDao(),
+                new AgileDashboard_KanbanFactory(
+                    $tracker_factory,
+                    new AgileDashboard_KanbanDao()
+                )
+            ),
+            new ExplicitBacklogXMLExporter(new ExplicitBacklogDao())
+        );
     }
 
     /**
      * @throws AgileDashboard_XMLExporterUnableToGetValueException
+     * @throws AgileDashboard_SemanticStatusNotFoundException
      */
-    public function export(Project $project, SimpleXMLElement $xml_element, array $plannings)
+    public function export(Project $project, SimpleXMLElement $xml_element, array $plannings): void
     {
         $agiledashboard_node = $xml_element->addChild(self::NODE_AGILEDASHBOARD);
 
         $this->explicit_backlog_xml_exporter->exportExplicitBacklogConfiguration($project, $agiledashboard_node);
         $this->planning_xml_exporter->exportPlannings($agiledashboard_node, $plannings);
 
-        $rng_path = realpath(AGILEDASHBOARD_BASE_DIR.'/../www/resources/xml_project_agiledashboard.rng');
+        $this->kanban_XML_exporter->export($agiledashboard_node, $project);
+
+        $rng_path = realpath(AGILEDASHBOARD_BASE_DIR . '/../www/resources/xml_project_agiledashboard.rng');
         $this->xml_validator->validate($agiledashboard_node, $rng_path);
     }
 }

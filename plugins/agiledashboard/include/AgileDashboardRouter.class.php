@@ -24,7 +24,6 @@ use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
-use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter as ExplicitBacklogXMLExporter;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
 use Tuleap\AgileDashboard\FormElement\BurnupCacheGenerator;
@@ -37,7 +36,6 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\PermissionsPerGroup\AgileDashboardJSONPermissionsRetriever;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
-use Tuleap\AgileDashboard\Planning\XML\XMLExporter as PlanningXMLExporter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
@@ -160,6 +158,10 @@ class AgileDashboardRouter
      * @var PlanningUpdater
      */
     private $planning_updater;
+    /**
+     * @var AgileDashboard_XMLExporter
+     */
+    private $agile_dashboard_exporter;
 
     public function __construct(
         Plugin $plugin,
@@ -184,7 +186,8 @@ class AgileDashboardRouter
         ScrumPresenterBuilder $scrum_presenter_builder,
         EventManager $event_manager,
         PlanningUpdater $planning_updater,
-        Planning_RequestValidator $planning_request_validator
+        Planning_RequestValidator $planning_request_validator,
+        AgileDashboard_XMLExporter $agile_dashboard_exporter
     ) {
         $this->plugin                       = $plugin;
         $this->milestone_factory            = $milestone_factory;
@@ -209,6 +212,7 @@ class AgileDashboardRouter
         $this->event_manager                = $event_manager;
         $this->planning_updater             = $planning_updater;
         $this->planning_request_validator   = $planning_request_validator;
+        $this->agile_dashboard_exporter     = $agile_dashboard_exporter;
     }
 
     /**
@@ -230,11 +234,7 @@ class AgileDashboardRouter
             $this->planning_factory,
             $this->milestone_factory,
             $xml_rng_validator,
-            new AgileDashboard_XMLExporter(
-                $xml_rng_validator,
-                new ExplicitBacklogXMLExporter(new ExplicitBacklogDao()),
-                new PlanningXMLExporter(new PlanningPermissionsManager())
-            ),
+            $this->agile_dashboard_exporter,
             new AgileDashboard_XMLImporter(),
             $this->planning_request_validator,
             new XMLImporter(

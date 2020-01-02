@@ -162,7 +162,8 @@ class AgileDashboardRouterBuilder
             ),
             $event_manager,
             new PlanningUpdater($planning_factory, new ArtifactsInExplicitBacklogDao()),
-            new Planning_RequestValidator($planning_factory)
+            new Planning_RequestValidator($planning_factory),
+            AgileDashboard_XMLExporter::build()
         );
     }
 
