@@ -27,10 +27,9 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
+use Tuleap\User\AccessKey\Scope\AccessKeyScope;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
 use Tuleap\User\AccessKey\Scope\NoValidAccessKeyScopeException;
-use Tuleap\User\AccessKey\Scope\RESTAccessKeyScope;
 
 class AccessKeyCreator
 {
@@ -79,8 +78,12 @@ class AccessKeyCreator
      * @throws AccessKeyAlreadyExpiredException
      * @throws NoValidAccessKeyScopeException
      */
-    public function create(\PFUser $user, string $description, ?DateTimeImmutable $expiration_date): void
-    {
+    public function create(
+        \PFUser $user,
+        string $description,
+        ?DateTimeImmutable $expiration_date,
+        AccessKeyScope ...$access_key_scopes
+    ): void {
         $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $current_time        = new DateTimeImmutable();
 
@@ -94,7 +97,7 @@ class AccessKeyCreator
         }
 
         $key_id = $this->transaction_executor->execute(
-            function () use ($expiration_date_timestamp, $description, $current_time, $verification_string, $user): int {
+            function () use ($expiration_date_timestamp, $description, $current_time, $verification_string, $user, $access_key_scopes): int {
                 $key_id = $this->dao->create(
                     (int) $user->getId(),
                     $this->hasher->computeHash($verification_string),
@@ -104,9 +107,7 @@ class AccessKeyCreator
                 );
                 $this->access_key_scope_saver->saveKeyScopes(
                     $key_id,
-                    RESTAccessKeyScope::fromIdentifier(
-                        AccessKeyScopeIdentifier::fromIdentifierKey(RESTAccessKeyScope::IDENTIFIER_KEY)
-                    )
+                    ...$access_key_scopes
                 );
 
                 return $key_id;

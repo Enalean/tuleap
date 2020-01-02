@@ -22,6 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\REST;
 
+use Tuleap\User\AccessKey\Scope\RESTAccessKeyScope;
+
+/**
+ * @psalm-immutable
+ */
 class AccessKeyPOSTRepresentation
 {
     /**
@@ -34,4 +39,11 @@ class AccessKeyPOSTRepresentation
      * @psalm-var string|null
      */
     public $expiration_date = null;
+
+    /**
+     * @var string[] {@required false} {@min 1}
+     *
+     * @psalm-var non-empty-array<string>
+     */
+    public $scopes = [RESTAccessKeyScope::IDENTIFIER_KEY];
 }

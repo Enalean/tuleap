@@ -85,7 +85,7 @@ final class AccessKeyCreatorTest extends TestCase
     {
         $this->hasher->shouldReceive('computeHash')->andReturns('hashed_identifier');
         $this->dao->shouldReceive('create')->once()->andReturns(1);
-        $this->scope_saver->shouldReceive('saveKeyScopes')->with(1, \Mockery::any())->once();
+        $this->scope_saver->shouldReceive('saveKeyScopes')->with(1)->once();
         $this->store->shouldReceive('storeLastGeneratedAccessKeyIdentifier')->once();
         $this->notifier->shouldReceive('notifyCreation')->once();
 
@@ -100,7 +100,7 @@ final class AccessKeyCreatorTest extends TestCase
         $this->hasher->shouldReceive('computeHash')->andReturns('hashed_identifier');
         $this->dao->shouldReceive('create')->once()->andReturns(1);
         $this->store->shouldReceive('storeLastGeneratedAccessKeyIdentifier')->once();
-        $this->scope_saver->shouldReceive('saveKeyScopes')->with(1, \Mockery::any())->once();
+        $this->scope_saver->shouldReceive('saveKeyScopes')->with(1)->once();
         $this->notifier->shouldReceive('notifyCreation')->once();
 
         $user = \Mockery::mock(\PFUser::class);
