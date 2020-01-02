@@ -33,9 +33,17 @@ class XMLExporter
      */
     private $explicit_backlog_dao;
 
-    public function __construct(ExplicitBacklogDao $explicit_backlog_dao)
-    {
-        $this->explicit_backlog_dao = $explicit_backlog_dao;
+    /**
+     * @var ArtifactsInExplicitBacklogDao
+     */
+    private $artifacts_in_explicit_backlog_dao;
+
+    public function __construct(
+        ExplicitBacklogDao $explicit_backlog_dao,
+        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao
+    ) {
+        $this->explicit_backlog_dao              = $explicit_backlog_dao;
+        $this->artifacts_in_explicit_backlog_dao = $artifacts_in_explicit_backlog_dao;
     }
 
     public function exportExplicitBacklogConfiguration(Project $project, SimpleXMLElement $agiledashboard_node): void
@@ -45,5 +53,23 @@ class XMLExporter
         }
 
         $agiledashboard_node->addChild('admin')->addChild('scrum')->addChild('explicit_backlog')->addAttribute('is_used', '1');
+    }
+
+    public function exportExplicitBacklogContent(Project $project, SimpleXMLElement $agiledashboard_node): void
+    {
+        if ($this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getID()) === false) {
+            return;
+        }
+
+        $artifact_ids = $this->artifacts_in_explicit_backlog_dao->getAllTopBacklogItemsForProjectSortedByRank((int) $project->getID());
+        if (count($artifact_ids) === 0) {
+            return;
+        }
+
+        $top_backlog_node = $agiledashboard_node->addChild('top_backlog');
+        foreach ($artifact_ids as $artifact_id) {
+            $artifact_node = $top_backlog_node->addChild('artifact');
+            $artifact_node->addAttribute('artifact_id', (string) $artifact_id['artifact_id']);
+        }
     }
 }

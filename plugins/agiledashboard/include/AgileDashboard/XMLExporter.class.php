@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter as ExplicitBacklogXMLExporter;
 use Tuleap\AgileDashboard\Kanban\KanbanXMLExporter;
@@ -63,20 +64,24 @@ class AgileDashboard_XMLExporter
         return new AgileDashboard_XMLExporter(
             new XML_RNGValidator(),
             new PlanningXMLExporter(new PlanningPermissionsManager()),
-            new \Tuleap\AgileDashboard\Kanban\KanbanXMLExporter(
+            new KanbanXMLExporter(
                 new AgileDashboard_ConfigurationDao(),
                 new AgileDashboard_KanbanFactory(
                     $tracker_factory,
                     new AgileDashboard_KanbanDao()
                 )
             ),
-            new ExplicitBacklogXMLExporter(new ExplicitBacklogDao())
+            new ExplicitBacklogXMLExporter(
+                new ExplicitBacklogDao(),
+                new ArtifactsInExplicitBacklogDao()
+            )
         );
     }
 
     /**
      * @throws AgileDashboard_XMLExporterUnableToGetValueException
      * @throws AgileDashboard_SemanticStatusNotFoundException
+     * @throws XML_ParseException
      */
     public function export(Project $project, SimpleXMLElement $xml_element, array $plannings): void
     {
@@ -87,6 +92,32 @@ class AgileDashboard_XMLExporter
 
         $this->kanban_XML_exporter->export($agiledashboard_node, $project);
 
+        $this->validateXML($agiledashboard_node);
+    }
+
+    /**
+     * @throws AgileDashboard_XMLExporterUnableToGetValueException
+     * @throws AgileDashboard_SemanticStatusNotFoundException
+     * @throws XML_ParseException
+     */
+    public function exportFull(Project $project, SimpleXMLElement $xml_element, array $plannings)
+    {
+        $agiledashboard_node = $xml_element->addChild(self::NODE_AGILEDASHBOARD);
+
+        $this->explicit_backlog_xml_exporter->exportExplicitBacklogConfiguration($project, $agiledashboard_node);
+        $this->explicit_backlog_xml_exporter->exportExplicitBacklogContent($project, $agiledashboard_node);
+        $this->planning_xml_exporter->exportPlannings($agiledashboard_node, $plannings);
+
+        $this->kanban_XML_exporter->export($agiledashboard_node, $project);
+
+        $this->validateXML($agiledashboard_node);
+    }
+
+    /**
+     * @throws XML_ParseException
+     */
+    private function validateXML(SimpleXMLElement $agiledashboard_node): void
+    {
         $rng_path = realpath(AGILEDASHBOARD_BASE_DIR . '/../www/resources/xml_project_agiledashboard.rng');
         $this->xml_validator->validate($agiledashboard_node, $rng_path);
     }

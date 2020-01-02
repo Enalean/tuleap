@@ -111,7 +111,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     public function tracker_event_export_full_xml($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $plannings = PlanningFactory::build()->getOrderedPlanningsWithBacklogTracker($params['user'], $params['group_id']);
-        $this->getAgileDashboardExporter()->export($params['project'], $params['xml_content'], $plannings);
+        $this->getAgileDashboardExporter()->exportFull($params['project'], $params['xml_content'], $plannings);
 
         $this->getCardwallXmlExporter($params['group_id'])->export($params['xml_content']);
     }

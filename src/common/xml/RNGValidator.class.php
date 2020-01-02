@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,9 @@
 
 class XML_RNGValidator
 {
-
+    /**
+     * @throws XML_ParseException
+     */
     public function validate(SimpleXMLElement $xml_element, $rng_path)
     {
         $dom          = $this->simpleXmlElementToDomDocument($xml_element);
