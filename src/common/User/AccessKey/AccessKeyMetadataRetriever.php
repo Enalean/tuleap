@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\User\AccessKey;
 
 use DateTimeImmutable;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 
 class AccessKeyMetadataRetriever
 {
@@ -30,10 +31,15 @@ class AccessKeyMetadataRetriever
      * @var AccessKeyDAO
      */
     private $dao;
+    /**
+     * @var AccessKeyScopeRetriever
+     */
+    private $key_scope_retriever;
 
-    public function __construct(AccessKeyDAO $dao)
+    public function __construct(AccessKeyDAO $dao, AccessKeyScopeRetriever $key_scope_retriever)
     {
-        $this->dao = $dao;
+        $this->dao                 = $dao;
+        $this->key_scope_retriever = $key_scope_retriever;
     }
 
     /**
@@ -46,13 +52,20 @@ class AccessKeyMetadataRetriever
 
         $all_metadata = [];
         foreach ($this->dao->searchMetadataByUserIDAtCurrentTime($user_id, $current_time) as $metadata) {
+            $scopes = $this->key_scope_retriever->getScopesByAccessKeyID($metadata['id']);
+
+            if (empty($scopes)) {
+                continue;
+            }
+
             $all_metadata[] = new AccessKeyMetadata(
                 $metadata['id'],
                 (new DateTimeImmutable())->setTimestamp($metadata['creation_date']),
                 $metadata['description'],
                 $metadata['last_usage'] === null ? null : (new DateTimeImmutable())->setTimestamp($metadata['last_usage']),
                 $metadata['last_ip'],
-                $metadata['expiration_date'] === null ? null : (new DateTimeImmutable())->setTimestamp($metadata['expiration_date'])
+                $metadata['expiration_date'] === null ? null : (new DateTimeImmutable())->setTimestamp($metadata['expiration_date']),
+                $scopes
             );
         }
         return $all_metadata;

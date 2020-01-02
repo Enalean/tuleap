@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,8 +25,10 @@ namespace Tuleap\User\AccessKey;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
 
-class AccessKeyCreatorTest extends TestCase
+final class AccessKeyCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -46,10 +48,14 @@ class AccessKeyCreatorTest extends TestCase
     private $dao;
 
     /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|AccessKeyScopeSaver
+     */
+    private $scope_saver;
+
+    /**
      * @var \Mockery\MockInterface|AccessKeyCreationNotifier
      */
     private $notifier;
-
     /**
      * @var AccessKeyCreator
      */
@@ -59,15 +65,18 @@ class AccessKeyCreatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->store    = \Mockery::mock(LastAccessKeyIdentifierStore::class);
-        $this->dao      = \Mockery::mock(AccessKeyDAO::class);
-        $this->hasher   = \Mockery::mock(SplitTokenVerificationStringHasher::class);
-        $this->notifier = \Mockery::mock(AccessKeyCreationNotifier::class);
+        $this->store       = \Mockery::mock(LastAccessKeyIdentifierStore::class);
+        $this->dao         = \Mockery::mock(AccessKeyDAO::class);
+        $this->scope_saver = \Mockery::mock(AccessKeyScopeSaver::class);
+        $this->hasher      = \Mockery::mock(SplitTokenVerificationStringHasher::class);
+        $this->notifier    = \Mockery::mock(AccessKeyCreationNotifier::class);
 
         $this->access_key_creator = new AccessKeyCreator(
             $this->store,
             $this->dao,
             $this->hasher,
+            $this->scope_saver,
+            new DBTransactionExecutorPassthrough(),
             $this->notifier
         );
     }
@@ -76,6 +85,7 @@ class AccessKeyCreatorTest extends TestCase
     {
         $this->hasher->shouldReceive('computeHash')->andReturns('hashed_identifier');
         $this->dao->shouldReceive('create')->once()->andReturns(1);
+        $this->scope_saver->shouldReceive('saveKeyScopes')->with(1, \Mockery::any())->once();
         $this->store->shouldReceive('storeLastGeneratedAccessKeyIdentifier')->once();
         $this->notifier->shouldReceive('notifyCreation')->once();
 
@@ -90,6 +100,7 @@ class AccessKeyCreatorTest extends TestCase
         $this->hasher->shouldReceive('computeHash')->andReturns('hashed_identifier');
         $this->dao->shouldReceive('create')->once()->andReturns(1);
         $this->store->shouldReceive('storeLastGeneratedAccessKeyIdentifier')->once();
+        $this->scope_saver->shouldReceive('saveKeyScopes')->with(1, \Mockery::any())->once();
         $this->notifier->shouldReceive('notifyCreation')->once();
 
         $user = \Mockery::mock(\PFUser::class);

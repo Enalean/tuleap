@@ -26,6 +26,11 @@ use DateTimeImmutable;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeSaver;
+use Tuleap\User\AccessKey\Scope\NoValidAccessKeyScopeException;
+use Tuleap\User\AccessKey\Scope\RESTAccessKeyScope;
 
 class AccessKeyCreator
 {
@@ -42,6 +47,14 @@ class AccessKeyCreator
      */
     private $hasher;
     /**
+     * @var AccessKeyScopeSaver
+     */
+    private $access_key_scope_saver;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $transaction_executor;
+    /**
      * @var AccessKeyCreationNotifier
      */
     private $notifier;
@@ -50,16 +63,21 @@ class AccessKeyCreator
         LastAccessKeyIdentifierStore $last_access_key_identifier_store,
         AccessKeyDAO $dao,
         SplitTokenVerificationStringHasher $hasher,
+        AccessKeyScopeSaver $access_key_scope_saver,
+        DBTransactionExecutor $transaction_executor,
         AccessKeyCreationNotifier $notifier
     ) {
         $this->last_access_key_identifier_store = $last_access_key_identifier_store;
         $this->dao                              = $dao;
         $this->hasher                           = $hasher;
+        $this->access_key_scope_saver           = $access_key_scope_saver;
+        $this->transaction_executor             = $transaction_executor;
         $this->notifier                         = $notifier;
     }
 
     /**
      * @throws AccessKeyAlreadyExpiredException
+     * @throws NoValidAccessKeyScopeException
      */
     public function create(\PFUser $user, string $description, ?DateTimeImmutable $expiration_date): void
     {
@@ -75,13 +93,26 @@ class AccessKeyCreator
             throw new AccessKeyAlreadyExpiredException();
         }
 
-        $key_id = $this->dao->create(
-            (int) $user->getId(),
-            $this->hasher->computeHash($verification_string),
-            $current_time->getTimestamp(),
-            $description,
-            $expiration_date_timestamp
+        $key_id = $this->transaction_executor->execute(
+            function () use ($expiration_date_timestamp, $description, $current_time, $verification_string, $user): int {
+                $key_id = $this->dao->create(
+                    (int) $user->getId(),
+                    $this->hasher->computeHash($verification_string),
+                    $current_time->getTimestamp(),
+                    $description,
+                    $expiration_date_timestamp
+                );
+                $this->access_key_scope_saver->saveKeyScopes(
+                    $key_id,
+                    RESTAccessKeyScope::fromIdentifier(
+                        AccessKeyScopeIdentifier::fromIdentifierKey(RESTAccessKeyScope::IDENTIFIER_KEY)
+                    )
+                );
+
+                return $key_id;
+            }
         );
+
         $access_key = new SplitToken($key_id, $verification_string);
 
         $this->notifier->notifyCreation($user, $description);

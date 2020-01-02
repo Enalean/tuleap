@@ -939,6 +939,12 @@ CREATE TABLE user_access_key (
   INDEX idx_expiration_date (expiration_date)
 );
 
+CREATE TABLE user_access_key_scope (
+  access_key_id INT(11) NOT NULL,
+  scope_key VARCHAR(255) NOT NULL,
+  PRIMARY KEY (access_key_id, scope_key)
+);
+
 #
 # Table structure for table 'user_bookmarks'
 #

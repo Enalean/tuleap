@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\DB;
+namespace Tuleap\User\AccessKey\Scope;
 
-use Throwable;
+use PHPUnit\Framework\TestCase;
 
-interface DBTransactionExecutor
+final class AccessKeyScopeIdentifierTest extends TestCase
 {
-    /**
-     * Execute given callable within a transaction.
-     *
-     * @template T
-     *
-     * @psalm-param callable():T $atomic_operations
-     *
-     * @throws Throwable
-     * @return mixed
-     *
-     * @psalm-return T
-     */
-    public function execute(callable $atomic_operations);
+    public function testIdentifierKeyIsHoldAsIs(): void
+    {
+        $identifier_key = 'foo:bar';
+        $identifier     = AccessKeyScopeIdentifier::fromIdentifierKey($identifier_key);
+
+        $this->assertEquals($identifier_key, $identifier->toString());
+    }
+
+    public function testIdentifierKeyNotCorrectlyFormattedIsRejected(): void
+    {
+        $this->expectException(InvalidScopeIdentifierKeyException::class);
+        AccessKeyScopeIdentifier::fromIdentifierKey('foo_bar');
+    }
 }
