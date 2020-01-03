@@ -21,7 +21,7 @@
 <template>
     <div
         class="taskboard-cell"
-        v-bind:class="classes"
+        v-bind:class="drop_classes"
         v-on:mouseenter="mouseEntersCollapsedColumn"
         v-on:mouseout="mouseLeavesCollapsedColumn"
         v-on:click="expandCollapsedColumn"
@@ -80,6 +80,15 @@ export default class DropContainerCell extends Mixins(
 
     get add_button_label(): string {
         return isSoloCard(this.swimlane) ? this.$gettext("Add child") : "";
+    }
+
+    get drop_classes(): string[] {
+        const classes = this.classes;
+        if (this.is_add_card_rendered) {
+            classes.push("taskboard-cell-with-add-form");
+        }
+
+        return classes;
     }
 }
 </script>

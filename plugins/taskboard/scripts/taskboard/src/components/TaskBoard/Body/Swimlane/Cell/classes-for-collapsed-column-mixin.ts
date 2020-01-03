@@ -26,9 +26,9 @@ export default class ClassesForCollapsedColumnMixin extends Vue {
     @Prop({ required: true })
     readonly column!: ColumnDefinition;
 
-    get classes(): string {
+    get classes(): string[] {
         if (!this.column.is_collapsed) {
-            return "";
+            return [];
         }
 
         const classes = ["taskboard-cell-collapsed"];
@@ -37,6 +37,6 @@ export default class ClassesForCollapsedColumnMixin extends Vue {
             classes.push("taskboard-cell-collapsed-hover");
         }
 
-        return classes.join(" ");
+        return classes;
     }
 }

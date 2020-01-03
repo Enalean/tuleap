@@ -33,12 +33,11 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { Getter, namespace } from "vuex-class";
+import { namespace } from "vuex-class";
 import { ColumnDefinition, Swimlane } from "../../../../type";
 import CardWithRemainingEffort from "./Card/CardWithRemainingEffort.vue";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
 import DropContainerCell from "./Cell/DropContainerCell.vue";
-import AddCard from "./Card/Add/AddCard.vue";
 import { getColumnOfCard } from "../../../../helpers/list-value-to-column-mapper";
 import SoloSwimlaneCell from "./Cell/SoloSwimlaneCell.vue";
 
@@ -47,7 +46,6 @@ const column_store = namespace("column");
 @Component({
     components: {
         SoloSwimlaneCell,
-        AddCard,
         CardWithRemainingEffort,
         DropContainerCell,
         SwimlaneHeader
@@ -59,9 +57,6 @@ export default class SoloSwimlane extends Vue {
 
     @column_store.State
     readonly columns!: Array<ColumnDefinition>;
-
-    @Getter
-    readonly can_add_in_place!: (swimlane: Swimlane) => boolean;
 
     get should_solo_card_be_displayed(): boolean {
         return !this.column.is_collapsed;
