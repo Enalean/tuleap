@@ -91,6 +91,7 @@ class ServiceRepresentationCollectionBuilderTest extends TestCase
         $service->shouldReceive('isUsed')->andReturn('true');
         $service->shouldReceive('getShortName')->andReturn('plugin_git');
         $service->shouldReceive('getInternationalizedName')->andReturn('Git');
+        $service->shouldReceive('getIconName')->andReturn('fa-tlp-versioning-git');
 
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->andReturn([$service]);
 
@@ -109,6 +110,7 @@ class ServiceRepresentationCollectionBuilderTest extends TestCase
         $service->shouldReceive('isUsed')->andReturn('true');
         $service->shouldReceive('getShortName')->andReturn('plugin_git');
         $service->shouldReceive('getInternationalizedName')->andReturn('Git');
+        $service->shouldReceive('getIconName')->andReturn('fa-tlp-versioning-git');
 
         $this->service_manager->shouldReceive('getListOfAllowedServicesForProject')->andReturn([$service]);
 

@@ -49,6 +49,10 @@ class ServiceRepresentation
      * @var bool {@required true}
      */
     public $is_enabled;
+    /**
+     * @var string {@required false}
+     */
+    public $icon = '';
 
     public function build(Service $service): void
     {
@@ -57,5 +61,6 @@ class ServiceRepresentation
         $this->name       = $service->getShortName();
         $this->label      = $service->getInternationalizedName();
         $this->is_enabled = JsonCast::toBoolean($service->isUsed());
+        $this->icon       = $service->getIconName();
     }
 }
