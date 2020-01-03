@@ -32,17 +32,17 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
 {
     public const RENDERER_TYPE = 'plugin_graphontrackersv5';
 
-    var $report_id; //phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
-    var $chunksz;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
-    var $offset;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
-    var $advsrch;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
-    var $morder;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
-    var $prefs;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
-    var $group_id;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
-    var $atid;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
-    var $set;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
-    var $report_graphic_id;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
-    var $allowedForProject;//phpcs:ignore PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
+    public $report_id;
+    public $chunksz;
+    public $offset;
+    public $advsrch;
+    public $morder;
+    public $prefs;
+    public $group_id;
+    public $atid;
+    public $set;
+    public $report_graphic_id;
+    public $allowedForProject;
 
     /**
      *

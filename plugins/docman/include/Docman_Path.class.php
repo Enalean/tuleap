@@ -21,7 +21,7 @@
 
 class Docman_Path
 {
-    var $path;
+    public $path;
     function __construct()
     {
         $this->path = array();
@@ -41,7 +41,7 @@ class Docman_Path
         }
         return $this->path[$item->getId()];
     }
-    var $item_factory;
+    public $item_factory;
     private function _getItemFactory()
     {
         if (!$this->item_factory) {

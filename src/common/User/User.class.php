@@ -158,17 +158,17 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     /**
      * The preferences
      */
-    var $_preferences;
+    public $_preferences;
 
     /**
      * The dao used to retrieve preferences
      */
-    var $_preferencesdao;
+    public $_preferencesdao;
 
     /**
      * The dao used to retrieve user-group info
      */
-    var $_usergroupdao;
+    public $_usergroupdao;
 
     /**
      * @var int|false
@@ -487,7 +487,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return $this->getUGroupDao()->searchByUserIdTakingAccountUserProjectMembership($this->user_id);
     }
 
-    var $_ugroups;
+    public $_ugroups;
 
     /**
      * @return ProjectUGroup[]
@@ -504,7 +504,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return $this->_ugroups[$hash];
     }
 
-    var $_static_ugroups;
+    public $_static_ugroups;
 
     public function getStaticUgroups($group_id)
     {
@@ -525,7 +525,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return $this->_static_ugroups[$group_id];
     }
 
-    var $_dynamics_ugroups;
+    public $_dynamics_ugroups;
     function getDynamicUgroups($group_id, $instances)
     {
         $hash = md5(serialize($instances));

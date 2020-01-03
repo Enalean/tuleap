@@ -44,7 +44,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager
         }
     }
 
-    var $do_not_send_notifications_to;
+    public $do_not_send_notifications_to;
 
     function _buildMessagesForUsers(&$users, $type, $params)
     {

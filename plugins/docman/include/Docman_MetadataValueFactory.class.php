@@ -34,7 +34,7 @@ use Tuleap\Docman\Metadata\MetadataValueUpdator;
  */
 class Docman_MetadataValueFactory
 {
-    var $groupId;
+    public $groupId;
     /**
      * @var string
      */

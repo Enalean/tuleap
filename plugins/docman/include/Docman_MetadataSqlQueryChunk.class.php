@@ -24,13 +24,13 @@ require_once('Docman_MetadataFactory.class.php');
 
 class Docman_MetadataSqlQueryChunk
 {
-    var $isRealMetadata;
+    public $isRealMetadata;
 
     // SQL aliase for field name in metadata_value or item tables
-    var $field;
+    public $field;
     // SQL aliase for metadata_value table
-    var $mdv;
-    var $mdId;
+    public $mdv;
+    public $mdId;
 
     function __construct($md)
     {

@@ -21,7 +21,7 @@
 
 class Docman_View_ParentsTree /* implements Visitor*/
 {
-    var $docman;
+    public $docman;
     function __construct(&$docman)
     {
         $this->docman = $docman;

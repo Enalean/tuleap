@@ -23,7 +23,7 @@ use Tuleap\Docman\Item\ItemVisitor;
 
 class Docman_MetadataHtmlWiki extends Docman_MetadataHtml
 {
-    var $pagename;
+    public $pagename;
 
     function __construct($pagename)
     {
@@ -51,7 +51,7 @@ class Docman_MetadataHtmlWiki extends Docman_MetadataHtml
 
 class Docman_MetadataHtmlLink extends Docman_MetadataHtml
 {
-    var $link_url;
+    public $link_url;
 
     function __construct($link_url)
     {
@@ -113,7 +113,7 @@ class Docman_MetadataHtmlFile extends Docman_MetadataHtml
 
 class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml
 {
-    var $content;
+    public $content;
     function __construct($content)
     {
         $this->content = $content;

@@ -26,7 +26,7 @@ use Tuleap\Docman\Item\ItemVisitor;
  */
 class Docman_View_GetFieldsVisitor implements ItemVisitor
 {
-    var $mdLabelToSkip;
+    public $mdLabelToSkip;
 
     function __construct($mdLabelToSkip = array())
     {

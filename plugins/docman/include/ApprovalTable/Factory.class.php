@@ -36,9 +36,9 @@
  */
 abstract class Docman_ApprovalTableFactory
 {
-    var $item;
-    var $table;
-    var $customizable;
+    public $item;
+    public $table;
+    public $customizable;
 
     function __construct(Docman_Item $item)
     {

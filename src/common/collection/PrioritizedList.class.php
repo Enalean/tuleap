@@ -25,7 +25,7 @@ require_once('LinkedList.class.php');
  */
 class PrioritizedList extends LinkedList
 {
-    var $priorities;
+    public $priorities;
     function __construct($initial_array = '')
     {
         parent::__construct($initial_array);

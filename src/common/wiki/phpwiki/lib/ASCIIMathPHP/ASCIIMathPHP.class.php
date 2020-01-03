@@ -34,16 +34,16 @@
 class XMLNode
 {
     // Private variables
-    var $_id;
-    var $_name;
-    var $_content;
-    var $_mt_elem_flg;
-    var $_attr_arr;
-    var $_child_arr;
-    var $_nmspc;
-    var $_nmspc_alias;
-    var $_parent_id;
-    var $_parent_node;
+    public $_id;
+    public $_name;
+    public $_content;
+    public $_mt_elem_flg;
+    public $_attr_arr;
+    public $_child_arr;
+    public $_nmspc;
+    public $_nmspc_alias;
+    public $_parent_id;
+    public $_parent_node;
 
     function __construct($id = null)
     {
@@ -407,12 +407,12 @@ class MathMLNode extends XMLNode
 
 class ASCIIMathPHP
 {
-    var $_expr;
-    var $_curr_expr;
-    var $_prev_expr;
-    var $_symbol_arr;
-    var $_node_arr;
-    var $_node_cntr;
+    public $_expr;
+    public $_curr_expr;
+    public $_prev_expr;
+    public $_symbol_arr;
+    public $_node_arr;
+    public $_node_cntr;
 
     function __construct($symbol_arr, $expr = null)
     {

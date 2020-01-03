@@ -57,28 +57,28 @@ class ArtifactType
      *
      * @var        array
      */
-    var $num_events = 0;
+    public $num_events = 0;
 
     /**
      * Array of events
      *
      * @var        array
      */
-    var $arr_events = array();
+    public $arr_events = array();
 
     /**
      * number of roles
      *
      * @var        array
      */
-    var $num_roles = 0;
+    public $num_roles = 0;
 
     /**
      * Array of roles
      *
      * @var        array
      */
-    var $arr_roles = array();
+    public $arr_roles = array();
 
     /**
      * Technicians db resource ID.
@@ -231,7 +231,7 @@ class ArtifactType
         global $Language;
 
         $sql = "SELECT * FROM artifact_group_list
-			WHERE group_artifact_id='". db_ei($artifact_type_id) ."' 
+			WHERE group_artifact_id='". db_ei($artifact_type_id) ."'
 			AND group_id='".  db_ei($this->Group->getID())  ."'";
         $res=db_query($sql);
         if (!$res || db_numrows($res) < 1) {
@@ -415,7 +415,7 @@ class ArtifactType
     {
         if (!isset($this->cannedresponses_res)) {
             $sql="SELECT artifact_canned_id,title,body
-				FROM artifact_canned_responses 
+				FROM artifact_canned_responses
 				WHERE group_artifact_id='".  db_ei($this->getID())  ."'";
          //echo $sql;
             $this->cannedresponses_res = db_query($sql);
@@ -466,7 +466,7 @@ class ArtifactType
             $this->setError($Language->getText('tracker_common_canned', 'missing_param'));
             return false;
         }
-        $sql="INSERT INTO artifact_perm (group_artifact_id,user_id,perm_level) 
+        $sql="INSERT INTO artifact_perm (group_artifact_id,user_id,perm_level)
 			VALUES ('". db_ei($this->getID()) ."','". db_ei($id) ."',". db_ei($value) .")";
         $result=db_query($sql);
         if ($result && db_affected_rows($result) > 0) {
@@ -709,10 +709,10 @@ class ArtifactType
         if ($this->userIsAdmin($my_user_id)) {
             return true;
         } else {
-            $sql="SELECT ugroup_id 
-                      FROM permissions 
+            $sql="SELECT ugroup_id
+                      FROM permissions
                       WHERE permission_type LIKE 'TRACKER_ACCESS%'
-                        AND object_id='". db_ei($this->getID()) ."' 
+                        AND object_id='". db_ei($this->getID()) ."'
                       ORDER BY ugroup_id";
             $res=db_query($sql);
 
@@ -751,10 +751,10 @@ class ArtifactType
             }
         }
 
-            $sql="SELECT ugroup_id 
-                  FROM permissions 
+            $sql="SELECT ugroup_id
+                  FROM permissions
                   WHERE permission_type='TRACKER_ACCESS_FULL'
-                    AND object_id='". db_ei($this->getID()) ."' 
+                    AND object_id='". db_ei($this->getID()) ."'
                   ORDER BY ugroup_id";
             $res=db_query($sql);
 
@@ -817,10 +817,10 @@ class ArtifactType
         }
 
         // Select submit permissions for all fields
-        $sql="SELECT ugroup_id 
-                  FROM permissions 
-                  WHERE permission_type='TRACKER_FIELD_SUBMIT' 
-                    AND object_id LIKE '". db_ei($this->getID()) ."#%' 
+        $sql="SELECT ugroup_id
+                  FROM permissions
+                  WHERE permission_type='TRACKER_FIELD_SUBMIT'
+                    AND object_id LIKE '". db_ei($this->getID()) ."#%'
                   GROUP BY ugroup_id";
         $res=db_query($sql);
 
@@ -1179,10 +1179,10 @@ class ArtifactType
             $start=($time_now-($counter*604800));
             $end=($time_now-(($counter-1)*604800));
 
-            $sql="SELECT count(*) 
-                  FROM artifact 
-                  WHERE open_date >= $start AND open_date <= $end 
-                  AND status_id = '1' 
+            $sql="SELECT count(*)
+                  FROM artifact
+                  WHERE open_date >= $start AND open_date <= $end
+                  AND status_id = '1'
                   AND group_artifact_id='". db_ei($this->getID()) ."'";
 
             $result = db_query($sql);
@@ -1215,10 +1215,10 @@ class ArtifactType
             $start=($time_now-($counter*604800));
             $end=($time_now-(($counter-1)*604800));
 
-            $sql="SELECT avg((close_date-open_date)/86400) 
-                  FROM artifact 
-                  WHERE close_date > 0 AND (open_date >= $start AND open_date <= $end) 
-                  AND status_id <> '1' 
+            $sql="SELECT avg((close_date-open_date)/86400)
+                  FROM artifact
+                  WHERE close_date > 0 AND (open_date >= $start AND open_date <= $end)
+                  AND status_id <> '1'
                   AND group_artifact_id='". db_ei($this->getID()) ."'";
 
             $result = db_query($sql);

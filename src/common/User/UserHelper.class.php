@@ -30,10 +30,10 @@ class UserHelper
     public const PREFERENCES_LOGIN = 2;
     public const PREFERENCES_REAL_NAME = 3;
 
-    var $_username_display;
-    var $_cache_by_id;
-    var $_cache_by_username;
-    var $_userdao;
+    public $_username_display;
+    public $_cache_by_id;
+    public $_cache_by_username;
+    public $_userdao;
     /**
      * @var \Tuleap\InstanceBaseURLBuilder
      */

@@ -33,18 +33,18 @@ class Docman_NotificationsManager
     public const MESSAGE_NEWVERSION      = 'new_version';
     public const MESSAGE_WIKI_NEWVERSION = 'new_wiki_version';
 
-    var $_listeners;
-    var $_feedback;
-    var $_item_factory;
+    public $_listeners;
+    public $_feedback;
+    public $_item_factory;
     /** @var array */
     private $notifications;
 
     /**
      * @var Project
      */
-    var $project;
+    public $project;
 
-    var $_group_name;
+    public $_group_name;
 
     /**
      * @var MailBuilder

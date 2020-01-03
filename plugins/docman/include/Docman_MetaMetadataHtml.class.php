@@ -23,10 +23,10 @@
 
 class Docman_MetaMetadataHtml
 {
-    var $md;
-    var $str_yes;
-    var $str_no;
-    var $hp;
+    public $md;
+    public $str_yes;
+    public $str_no;
+    public $hp;
 
     public function __construct(&$md)
     {

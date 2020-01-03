@@ -43,7 +43,7 @@ class PluginManager
     /** @var ForgeUpgradeConfig */
     private $forgeupgrade_config;
 
-    var $pluginHookPriorityManager;
+    public $pluginHookPriorityManager;
 
     public function __construct(
         PluginFactory $plugin_factory,
@@ -327,7 +327,7 @@ class PluginManager
         return $this->plugin_factory->pluginIsCustom($plugin);
     }
 
-    var $plugins_name;
+    public $plugins_name;
     function getNameForPlugin($plugin)
     {
         if (!$this->plugins_name) {

@@ -24,9 +24,9 @@
 
 class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSectionActions
 {
-    var $itemToPaste;
-    var $srcGo;
-    var $dstGo;
+    public $itemToPaste;
+    public $srcGo;
+    public $dstGo;
     private $mode;
 
     public function __construct(

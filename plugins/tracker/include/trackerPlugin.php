@@ -656,8 +656,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->permission_get_object_name($params);
     }
 
-    //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore, PSR2.Classes.PropertyDeclaration.VarUsed, PSR2.Classes.PropertyDeclaration.ScopeMissing
-    var $_cached_permission_user_allowed_to_change;
+    //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    public $_cached_permission_user_allowed_to_change;
     public function permission_user_allowed_to_change($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (!$params['allowed']) {

@@ -32,9 +32,9 @@
 class LDAPResultIterator implements SeekableIterator, Countable
 {
 
-    var $list;
-    var $key;
-    var $valid;
+    public $list;
+    public $key;
+    public $valid;
     protected $ldapParams;
 
     /**

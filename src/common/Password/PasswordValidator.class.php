@@ -23,7 +23,7 @@
 */
 /* abstract */ class PasswordValidator
 {
-    var $description;
+    public $description;
     /**
     * PasswordValidator
     *

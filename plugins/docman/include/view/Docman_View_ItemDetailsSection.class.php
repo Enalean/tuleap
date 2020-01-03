@@ -24,14 +24,14 @@
 /* abstract */class Docman_View_ItemDetailsSection
 {
 
-    var $id;
-    var $title;
-    var $item;
+    public $id;
+    public $title;
+    public $item;
     /**
      * @var string
      */
     protected $url;
-    var $hp;
+    public $hp;
 
     function __construct($item, string $url, $id, $title)
     {

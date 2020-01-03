@@ -31,12 +31,12 @@ class BaseLanguage
     public const DEFAULT_LANG = 'en_US';
 
     //array to hold the string values
-    var $text_array ;
+    public $text_array ;
     public $lang;
     public $name;
     public $id;
     public $code;
-    var $file_array = array();
+    public $file_array = array();
 
     /**
      * Supported languages
@@ -374,7 +374,7 @@ class BaseLanguage
     }
 
     //result set handle for supported langauges
-    var $language_res;
+    public $language_res;
 
     /**
      * @return array pairs of language_code => Language

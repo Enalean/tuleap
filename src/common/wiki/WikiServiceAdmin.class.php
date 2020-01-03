@@ -23,7 +23,7 @@
 
 class WikiServiceAdmin extends Controler
 {
-  /* private Wiki*/ var $wiki;
+  /* private Wiki*/ public $wiki;
 
     function __construct($id)
     {

@@ -22,8 +22,8 @@
 
 class Docman_MetadataDao extends DataAccessObject
 {
-    var $deletedStmt;
-    var $notDeletedStmt;
+    public $deletedStmt;
+    public $notDeletedStmt;
 
     function __construct($da)
     {

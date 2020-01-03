@@ -23,7 +23,7 @@ rcs_id('$Id: RecentChanges.php,v 1.108 2005/04/01 16:09:35 rurban Exp $');
 
 class _RecentChanges_Formatter
 {
-    var $_absurls = false;
+    public $_absurls = false;
 
     function __construct($rc_args)
     {
@@ -640,7 +640,7 @@ class _RecentChanges_BoxFormatter extends _RecentChanges_HtmlFormatter
 
 class _RecentChanges_RssFormatter extends _RecentChanges_Formatter
 {
-    var $_absurls = true;
+    public $_absurls = true;
 
     function time($rev)
     {

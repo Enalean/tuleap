@@ -28,16 +28,16 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
 {
-    var $html;
-    var $js;
-    var $stripFirstNode;
-    var $firstNodeStripped;
-    var $docmanIcons;
-    var $showOptions;
-    var $defaultUrl;
-    var $get_action_on_title;
-    var $get_class_for_link;
-    var $hp;
+    public $html;
+    public $js;
+    public $stripFirstNode;
+    public $firstNodeStripped;
+    public $docmanIcons;
+    public $showOptions;
+    public $defaultUrl;
+    public $get_action_on_title;
+    public $get_class_for_link;
+    public $hp;
     /**
      * @var Docman_View_GetActionOnIconVisitor
      */

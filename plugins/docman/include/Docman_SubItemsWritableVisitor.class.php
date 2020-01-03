@@ -29,12 +29,12 @@ use Tuleap\Docman\Item\ItemVisitor;
  */
 class Docman_SubItemsWritableVisitor implements ItemVisitor
 {
-    var $dpm;
-    var $user;
-    var $docIdList;
-    var $fldIdList;
-    var $docCounter;
-    var $fldCounter;
+    public $dpm;
+    public $user;
+    public $docIdList;
+    public $fldIdList;
+    public $docCounter;
+    public $fldCounter;
 
     function __construct($groupId, $user)
     {

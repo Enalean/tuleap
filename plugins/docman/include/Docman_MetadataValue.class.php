@@ -26,10 +26,10 @@
  */
 class Docman_MetadataValue
 {
-    var $fieldId;
-    var $itemId;
+    public $fieldId;
+    public $itemId;
 
-    var $type;
+    public $type;
 
     function __construct()
     {
@@ -101,7 +101,7 @@ class Docman_MetadataValue
  */
 class Docman_MetadataValueList extends Docman_MetadataValue
 {
-    var $listOfValues;
+    public $listOfValues;
 
     function __construct()
     {
@@ -136,9 +136,9 @@ class Docman_MetadataValueList extends Docman_MetadataValue
  */
 class Docman_MetadataValueScalar extends Docman_MetadataValue
 {
-    var $valueText;
-    var $valueDate;
-    var $valueString;
+    public $valueText;
+    public $valueDate;
+    public $valueString;
 
     function __construct()
     {

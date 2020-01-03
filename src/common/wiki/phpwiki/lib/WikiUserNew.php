@@ -364,10 +364,10 @@ function UserExists($UserName)
  */
 class _WikiUser
 {
-     var $_userid = '';
-     var $_level = WIKIAUTH_ANON;
-     var $_prefs = false;
-     var $_HomePagehandle = false;
+     public $_userid = '';
+     public $_level = WIKIAUTH_ANON;
+     public $_prefs = false;
+     public $_HomePagehandle = false;
 
     // constructor
     function __construct($UserName = '', $prefs = false)
@@ -682,7 +682,7 @@ class _WikiUser
  */
 class _AnonUser extends _WikiUser
 {
-    var $_level = WIKIAUTH_ANON;     // var in php-5.0.0RC1 deprecated
+    public $_level = WIKIAUTH_ANON;     // var in php-5.0.0RC1 deprecated
 
     /** Anon only gets to load and save prefs in a cookie, that's it.
      */
@@ -762,7 +762,7 @@ class _AnonUser extends _WikiUser
  */
 class _ForbiddenUser extends _AnonUser
 {
-    var $_level = WIKIAUTH_FORBIDDEN;
+    public $_level = WIKIAUTH_FORBIDDEN;
 
     function checkPass($submitted_password)
     {
@@ -1333,7 +1333,7 @@ class _AdminUser extends _PassUser
 
 class _UserPreference
 {
-    var $default_value;
+    public $default_value;
 
     function __construct($default_value)
     {

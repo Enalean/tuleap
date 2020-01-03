@@ -22,7 +22,7 @@
 
 class Docman_ApprovalTableFile extends Docman_ApprovalTableVersionned
 {
-    var $versionId = null;
+    public $versionId = null;
 
     function setVersionId($v)
     {

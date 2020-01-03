@@ -31,7 +31,7 @@
  */
 class Docman_ApprovalTableFileFactory extends Docman_ApprovalTableVersionnedFactory
 {
-    var $itemVersion;
+    public $itemVersion;
 
     function __construct($item, $versionNumber = null)
     {

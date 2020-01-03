@@ -27,7 +27,7 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 class FileModuleMonitorFactory
 {
 
-    var $dao;
+    public $dao;
 
     function whoIsMonitoringPackageById($group_id, $package_id)
     {

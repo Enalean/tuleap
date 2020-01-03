@@ -25,9 +25,9 @@
 */
 abstract class Widget_ProjectLatestCommits extends Widget
 {
-    var $latest_revisions = null;
-    var $group_id;
-    var $commits_callback;
+    public $latest_revisions = null;
+    public $group_id;
+    public $commits_callback;
 
     public function __construct($id, $get_commits_callback)
     {

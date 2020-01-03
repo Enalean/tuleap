@@ -30,7 +30,7 @@ require_once __DIR__ . '/../../../src/www/my/my_utils.php';
  */
 class Docman_Widget_MyDocman extends Widget
 {
-    var $pluginPath;
+    public $pluginPath;
 
     public function __construct($pluginPath)
     {
@@ -168,7 +168,7 @@ class Docman_Widget_MyDocman extends Widget
         $html .= '</div>';
         if (user_get_preference('hide_plugin_docman_approval_'. ($reviewer ? 'reviewer' : 'requester'))) {
             $html .= '<script type="text/javascript">';
-            $html .= "document.observe('dom:loaded', function() 
+            $html .= "document.observe('dom:loaded', function()
                 {
                     plugin_docman_approval_toggle('$content_html_id', false);
                 }

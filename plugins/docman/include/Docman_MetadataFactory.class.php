@@ -48,8 +48,8 @@ class Docman_MetadataFactory
     ];
 
 
-    var $modifiableMetadata;
-    var $groupId;
+    public $modifiableMetadata;
+    public $groupId;
 
     function __construct($groupId)
     {

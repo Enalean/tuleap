@@ -26,11 +26,11 @@
  */
 class Docman_MetadataListOfValuesElement
 {
-    var $id;
-    var $name;
-    var $description;
-    var $rank;
-    var $status;
+    public $id;
+    public $name;
+    public $description;
+    public $rank;
+    public $status;
 
     function __construct()
     {

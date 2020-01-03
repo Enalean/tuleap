@@ -48,7 +48,7 @@ class Docman_Version implements Version
         }
     }
 
-    var $id;
+    public $id;
     function getId()
     {
         return $this->id;
@@ -58,7 +58,7 @@ class Docman_Version implements Version
         $this->id = $id;
     }
 
-    var $authorId;
+    public $authorId;
     function getAuthorId()
     {
         return $this->authorId;
@@ -68,7 +68,7 @@ class Docman_Version implements Version
         $this->authorId = $authorId;
     }
 
-    var $itemId;
+    public $itemId;
     function getItemId()
     {
         return $this->itemId;
@@ -78,7 +78,7 @@ class Docman_Version implements Version
         $this->itemId = $itemId;
     }
 
-    var $number;
+    public $number;
     function getNumber()
     {
         return $this->number;
@@ -88,7 +88,7 @@ class Docman_Version implements Version
         $this->number = $number;
     }
 
-    var $label;
+    public $label;
     function getLabel()
     {
         return $this->label;
@@ -98,7 +98,7 @@ class Docman_Version implements Version
         $this->label = $label;
     }
 
-    var $changelog;
+    public $changelog;
     function getChangelog()
     {
         return $this->changelog;
@@ -108,7 +108,7 @@ class Docman_Version implements Version
         $this->changelog = $changelog;
     }
 
-    var $date;
+    public $date;
     function getDate()
     {
         return $this->date;
@@ -121,7 +121,7 @@ class Docman_Version implements Version
     /**
      * @var null|string
      */
-    var $filename;
+    public $filename;
     /**
      * @return string
      */
@@ -135,7 +135,7 @@ class Docman_Version implements Version
         $this->filename = $filename;
     }
 
-    var $filesize;
+    public $filesize;
     function getFilesize()
     {
         return $this->filesize;
@@ -148,7 +148,7 @@ class Docman_Version implements Version
     /**
      * @var null|string
      */
-    var $filetype;
+    public $filetype;
 
     /**
      * @return string
@@ -166,7 +166,7 @@ class Docman_Version implements Version
     /**
      * @var string|null
      */
-    var $path;
+    public $path;
 
     /**
      * @return string

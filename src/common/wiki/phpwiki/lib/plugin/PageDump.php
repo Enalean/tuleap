@@ -30,7 +30,7 @@ rcs_id('$Id: PageDump.php,v 1.18 2004/10/14 19:19:34 rurban Exp $');
 
 class WikiPlugin_PageDump extends WikiPlugin
 {
-    var $MessageId;
+    public $MessageId;
 
     function getName()
     {

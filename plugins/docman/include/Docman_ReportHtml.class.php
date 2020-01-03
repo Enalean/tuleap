@@ -23,13 +23,13 @@
 
 class Docman_ReportHtml
 {
-    var $report;
-    var $view;
-    var $defaultUrl;
+    public $report;
+    public $view;
+    public $defaultUrl;
     /**
      * @var Codendi_HTMLPurifier
      */
-    var $hp;
+    public $hp;
 
     public function __construct($report, $view, $defaultUrl)
     {

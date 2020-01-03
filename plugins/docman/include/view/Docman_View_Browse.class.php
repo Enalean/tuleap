@@ -82,9 +82,9 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         $actual = Docman_View_Browse::getViewForCurrentUser($params['group_id']);
         $views  = Docman_View_Browse::getDefaultViews();
         foreach ($views as $val => $view) {
-            $html .= '<input type="image" 
-            				 name="selected_view['. $val .']" 
-            				 src="'. $this->_controller->plugin->getThemePath() .'/images/ic/view-'. $view .'.png" 
+            $html .= '<input type="image"
+            				 name="selected_view['. $val .']"
+            				 src="'. $this->_controller->plugin->getThemePath() .'/images/ic/view-'. $view .'.png"
             				 title="'. $GLOBALS['Language']->getText('plugin_docman', 'browse_viewas') .' '. $GLOBALS['Language']->getText('plugin_docman', 'view_'. $view) .'"
             				 alt="'. $GLOBALS['Language']->getText('plugin_docman', 'view_'. $view) .'"
             				 /> ';
@@ -103,7 +103,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         echo $html;
     }
 
-    var $dfltParams = null;
+    public $dfltParams = null;
     function _getDefaultUrlParams($params)
     {
         if ($this->dfltParams === null) {

@@ -22,7 +22,7 @@
 
 abstract class Docman_ApprovalTableVersionned extends Docman_ApprovalTable
 {
-    var $versionNumber = null;
+    public $versionNumber = null;
 
     function setVersionNumber($v)
     {

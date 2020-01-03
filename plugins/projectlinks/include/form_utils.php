@@ -397,9 +397,9 @@ function form_End(
 // Validation
 class tValidation
 {
-    var $ParamName;
-    var $Test;
-    var $Param;
+    public $ParamName;
+    public $Test;
+    public $Param;
 }
 
 function form_Validation($ParamName, $Tests, $OptionalParam = null)

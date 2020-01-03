@@ -29,8 +29,8 @@ require_once('Widget.class.php');
 */
 class Widget_ImageViewer extends Widget
 {
-    var $image_title;
-    var $image_url;
+    public $image_title;
+    public $image_url;
     function __construct($id, $owner_id, $owner_type)
     {
         parent::__construct($id);
@@ -134,7 +134,7 @@ class Widget_ImageViewer extends Widget
         $owner_id          = $da->escapeInt($owner_id);
         $owner_type        = $da->quoteSmart($owner_type);
 
-        $sql = "INSERT INTO widget_image (owner_id, owner_type, title, url) 
+        $sql = "INSERT INTO widget_image (owner_id, owner_type, title, url)
                 SELECT  $owner_id, $owner_type, title, url
                 FROM widget_image
                 WHERE id = $id AND owner_id = $template_owner_id AND owner_type = $template_type

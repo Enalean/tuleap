@@ -37,21 +37,21 @@
  */
 class Docman_Metadata
 {
-    var $id;
-    var $groupId;
-    var $name;
-    var $type;
-    var $label;
-    var $description;
-    var $isRequired;
-    var $isEmptyAllowed;
-    var $isMultipleValuesAllowed;
-    var $keepHistory;
-    var $special;
-    var $useIt;
+    public $id;
+    public $groupId;
+    public $name;
+    public $type;
+    public $label;
+    public $description;
+    public $isRequired;
+    public $isEmptyAllowed;
+    public $isMultipleValuesAllowed;
+    public $keepHistory;
+    public $special;
+    public $useIt;
 
-    var $value;
-    var $defaultValue;
+    public $value;
+    public $defaultValue;
 
     function __construct()
     {
@@ -238,7 +238,7 @@ class Docman_Metadata
     //}}} Convenient accessors
 
     //{{{ Changable parameters
-    var $canChangeName;
+    public $canChangeName;
     function setCanChangeName($v)
     {
         $this->canChangeName = $v;
@@ -248,7 +248,7 @@ class Docman_Metadata
         return $this->canChangeName;
     }
 
-    var $canChangeType;
+    public $canChangeType;
     function setCanChangeType($v)
     {
         $this->canChangeType = $v;
@@ -258,7 +258,7 @@ class Docman_Metadata
         return $this->canChangeType;
     }
 
-    var $canChangeDescription;
+    public $canChangeDescription;
     function setCanChangeDescription($v)
     {
         $this->canChangeDescription = $v;
@@ -268,7 +268,7 @@ class Docman_Metadata
         return $this->canChangeDescription;
     }
 
-    var $canChangeIsEmptyAllowed;
+    public $canChangeIsEmptyAllowed;
     function setCanChangeIsEmptyAllowed($v)
     {
         $this->canChangeIsEmptyAllowed = $v;
@@ -278,7 +278,7 @@ class Docman_Metadata
         return $this->canChangeIsEmptyAllowed;
     }
 
-    var $canChangeIsMultipleValuesAllowed;
+    public $canChangeIsMultipleValuesAllowed;
     function setCanChangeIsMultipleValuesAllowed($v)
     {
         $this->canChangeIsMultipleValuesAllowed = $v;
@@ -288,7 +288,7 @@ class Docman_Metadata
         return $this->canChangeIsMultipleValuesAllowed;
     }
 
-    var $canChangeValue;
+    public $canChangeValue;
     function setCanChangeValue($v)
     {
         $this->canChangeValue = $v;
@@ -420,7 +420,7 @@ class Docman_Metadata
  */
 class Docman_ListMetadata extends Docman_Metadata
 {
-    var $listOfValue;
+    public $listOfValue;
 
     function __construct()
     {

@@ -325,7 +325,7 @@ class FRSRelease
      * @var  array   $data_array.
      */
     public $data_array;
-    var $release_files;
+    public $release_files;
 
     /**
      *    getFiles - gets all the file objects for files in this release.

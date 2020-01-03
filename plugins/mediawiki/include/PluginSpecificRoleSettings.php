@@ -20,12 +20,12 @@
 
 class PluginSpecificRoleSetting
 {
-    var $role;
-    var $name           = '';
-    var $section        = '';
-    var $values         = array();
-    var $default_values = array();
-    var $global         = false;
+    public $role;
+    public $name           = '';
+    public $section        = '';
+    public $values         = array();
+    public $default_values = array();
+    public $global         = false;
 
     public function __construct(&$role, $name, $global = false)
     {

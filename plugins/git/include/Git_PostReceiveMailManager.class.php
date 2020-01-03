@@ -23,7 +23,7 @@
 class Git_PostReceiveMailManager
 {
 
-    var $dao;
+    public $dao;
 
     /**
      * Constructor of the class

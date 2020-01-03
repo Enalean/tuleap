@@ -59,7 +59,7 @@ class SkinFusionForge extends SkinTemplate
  */
 class FusionForgeTemplate extends QuickTemplate
 {
-    var $skin;
+    public $skin;
     /**
      * Template filter callback for FusionForge skin.
      * Takes an associative array of data set from a SkinTemplate-based

@@ -100,10 +100,10 @@ function wiki_display_footer()
  */
 class WikiViews extends Views
 {
-  /* protected int    */ var $gid;
-  /* protected string */ var $wikiname;
-  /* protected string */ var $wikiLink;
-  /* protected string */ var $wikiAdminLink;
+  /* protected int    */ public $gid;
+  /* protected string */ public $wikiname;
+  /* protected string */ public $wikiLink;
+  /* protected string */ public $wikiAdminLink;
 
   /**
    * WikiView - Constructor

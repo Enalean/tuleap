@@ -26,20 +26,20 @@ use Tuleap\chart\GanttVerticalLine;
 class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
 {
 
-    var $title;
-    var $description;
-    var $scale;
-    var $start;
-    var $due;
-    var $finish;
-    var $progress;
-    var $right;
-    var $asOfDate;
-    var $hint;
-    var $links;
-    var $summary;
-    var $jp_graph_path;
-    var $summary_label;
+    public $title;
+    public $description;
+    public $scale;
+    public $start;
+    public $due;
+    public $finish;
+    public $progress;
+    public $right;
+    public $asOfDate;
+    public $hint;
+    public $links;
+    public $summary;
+    public $jp_graph_path;
+    public $summary_label;
 
     function setTitle($title)
     {

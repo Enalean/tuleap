@@ -23,17 +23,17 @@
 
 abstract class Docman_ApprovalTable
 {
-    var $id;
-    var $date;
-    var $owner;
-    var $description;
-    var $status;
-    var $notification;
-    var $notificationOccurence;
+    public $id;
+    public $date;
+    public $owner;
+    public $description;
+    public $status;
+    public $notification;
+    public $notificationOccurence;
 
-    var $approvalState;
-    var $customizable;
-    var $reviewers;
+    public $approvalState;
+    public $customizable;
+    public $reviewers;
 
     function __construct()
     {

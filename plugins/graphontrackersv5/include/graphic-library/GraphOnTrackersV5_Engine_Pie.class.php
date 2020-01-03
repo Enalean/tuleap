@@ -24,12 +24,12 @@
 class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine
 {
 
-    var $title;
-    var $field_base;
-    var $height;
-    var $width;
-    var $size_pie;
-    var $legend;
+    public $title;
+    public $field_base;
+    public $height;
+    public $width;
+    public $size_pie;
+    public $legend;
 
 
     public function validData()

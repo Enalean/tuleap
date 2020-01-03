@@ -22,7 +22,7 @@
 
 class Docman_Validator
 {
-    var $_errors = [];
+    public $_errors = [];
     function addError($error)
     {
         $this->_errors[] = $error;

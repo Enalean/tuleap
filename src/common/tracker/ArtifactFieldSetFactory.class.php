@@ -38,14 +38,14 @@ class ArtifactFieldSetFactory
      *
      * @var Object{ArtifactType} $ArtifactType.
      */
-    var $ArtifactType;
+    public $ArtifactType;
 
     /**
      * The ArtifactFieldSet array.
      *
      * @var array of ArtifactFieldSet.
      */
-    var $ArtifactFieldSets;
+    public $ArtifactFieldSets;
     /**
      * @var string
      */
@@ -95,9 +95,9 @@ class ArtifactFieldSetFactory
     function fetchData($group_artifact_id)
     {
 
-        $sql = "SELECT * 
-                FROM artifact_field_set 
-                WHERE group_artifact_id=". db_ei($group_artifact_id) ." 
+        $sql = "SELECT *
+                FROM artifact_field_set
+                WHERE group_artifact_id=". db_ei($group_artifact_id) ."
                 ORDER BY rank";
 
         //echo $sql;
@@ -129,8 +129,8 @@ class ArtifactFieldSetFactory
     {
         global $Language;
 
-        $sql = "SELECT * 
-                FROM artifact_field_set 
+        $sql = "SELECT *
+                FROM artifact_field_set
                 WHERE group_artifact_id='". db_ei($group_artifact_id) ."'
                 ORDER BY rank ASC";
 
@@ -301,8 +301,8 @@ class ArtifactFieldSetFactory
         global $Language;
 
         // Check if the field set contains no field
-        $sql = "SELECT field_id, label 
-                FROM artifact_field 
+        $sql = "SELECT field_id, label
+                FROM artifact_field
                 WHERE group_artifact_id='".  db_ei($this->ArtifactType->getID())  ."' AND
                       field_set_id='". db_ei($field_set_id) ."'";
 
@@ -313,7 +313,7 @@ class ArtifactFieldSetFactory
             return false;
         } else {
             // Delete the FieldSet
-            $sql = "DELETE FROM artifact_field_set 
+            $sql = "DELETE FROM artifact_field_set
                     WHERE field_set_id=".  db_ei($field_set_id) ;
             $result = db_query($sql);
             if (!$result || db_affected_rows($result) <= 0) {

@@ -44,19 +44,19 @@ use Zend\HttpHandlerRunner\Emitter\SapiStreamEmitter;
  */
 class WikiAttachmentRevision
 {
-    var $id;
-    var $attachmentId;
-    var $owner_id;
+    public $id;
+    public $attachmentId;
+    public $owner_id;
 
-    var $date;
-    var $revision;
-    var $mimeType;
-    var $size;
+    public $date;
+    public $revision;
+    public $mimeType;
+    public $size;
 
 
-    var $file;
-    var $gid;
-    var $basedir;
+    public $file;
+    public $gid;
+    public $basedir;
     /**
      * @var string
      */

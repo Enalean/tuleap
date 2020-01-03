@@ -25,7 +25,7 @@
 class Widget_ProjectLatestNews extends Widget
 {
 
-    var $content;
+    public $content;
 
     /**
      * Constructor of the class

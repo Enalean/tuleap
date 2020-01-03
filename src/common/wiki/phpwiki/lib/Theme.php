@@ -275,10 +275,10 @@ class Theme
     // http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vclib/html/_crt_strftime.2c_.wcsftime.asp
     // As a result, we have to use %d, and strip out leading zeros ourselves.
 
-    var $_dateFormat = "%B %d, %Y";
-    var $_timeFormat = "%I:%M %p";
+    public $_dateFormat = "%B %d, %Y";
+    public $_timeFormat = "%I:%M %p";
 
-    var $_showModTime = true;
+    public $_showModTime = true;
 
     /**
      * Set format string used for dates.
@@ -559,7 +559,7 @@ class Theme
     //
     ////////////////////////////////////////////////////////////////
 
-    var $_autosplitWikiWords = false;
+    public $_autosplitWikiWords = false;
     function setAutosplitWikiWords($autosplit = true)
     {
         $this->_autosplitWikiWords = $autosplit ? true : false;
@@ -574,7 +574,7 @@ class Theme
         }
     }
 
-    var $_anonEditUnknownLinks = true;
+    public $_anonEditUnknownLinks = true;
     function setAnonEditUnknownLinks($anonedit = true)
     {
         $this->_anonEditUnknownLinks = $anonedit ? true : false;
@@ -701,8 +701,8 @@ class Theme
     // Images and Icons
     //
     ////////////////////////////////////////////////////////////////
-    var $_imageAliases = array();
-    var $_imageAlt = array();
+    public $_imageAliases = array();
+    public $_imageAlt = array();
 
     /**
      *
@@ -782,7 +782,7 @@ class Theme
         return false;
     }
 
-    var $_linkIcon = 'front'; // or 'after' or 'no'.
+    public $_linkIcon = 'front'; // or 'after' or 'no'.
     // maybe also 'spanall': there is a scheme currently in effect with front, which
     // spans the icon only to the first, to let the next words wrap on line breaks
     // see stdlib.php:PossiblyGlueIconToText()
@@ -1087,7 +1087,7 @@ class Theme
     }
 
     //----------------------------------------------------------------
-    var $_buttonSeparator = "\n | ";
+    public $_buttonSeparator = "\n | ";
 
     function setButtonSeparator($separator)
     {
@@ -1252,7 +1252,7 @@ class Theme
         }
     }
 
-    var $_MoreHeaders = array();
+    public $_MoreHeaders = array();
     function addMoreHeaders($element)
     {
         array_push($this->_MoreHeaders, $element);
@@ -1274,7 +1274,7 @@ class Theme
         return $out;
     }
 
-    var $_MoreAttr = array();
+    public $_MoreAttr = array();
     // new arg: named elements to be able to remove them. such as DoubleClickEdit for htmldumps
     function addMoreAttr($tag, $name, $element)
     {

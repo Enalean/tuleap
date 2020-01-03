@@ -63,7 +63,7 @@
  */
 class Docman_BuildItemMappingVisitor
 {
-    var $groupId;
+    public $groupId;
 
     function __construct($groupId)
     {

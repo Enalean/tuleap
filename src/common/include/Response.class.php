@@ -29,13 +29,13 @@ class Response
      *
      * @var Feedback
      */
-    var $_feedback;
+    public $_feedback;
 
     /**
      *
      * @var Tour[]
      */
-    var $tours = array();
+    public $tours = array();
 
     /**
     * Constructor

@@ -30,10 +30,10 @@ use Tuleap\PHPWiki\WikiPage;
 
 class Docman_ItemFactory
 {
-    var $rootItems;
-    var $onlyOneChildForRoot;
-    var $copiedItem;
-    var $groupId;
+    public $rootItems;
+    public $onlyOneChildForRoot;
+    public $copiedItem;
+    public $groupId;
     private $cutItem;
 
     private static $instance;
@@ -761,7 +761,7 @@ class Docman_ItemFactory
         return $ii;
     }
 
-    var $dao;
+    public $dao;
     /**
      * @return Docman_ItemDao
      */

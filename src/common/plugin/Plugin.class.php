@@ -29,8 +29,8 @@ class Plugin implements PFO_Plugin
     /** @var BackendLogger */
     private $backend_logger;
 
-    var $id;
-    var $pluginInfo;
+    public $id;
+    public $pluginInfo;
     /** @var Map */
     public $hooks;
     protected $_scope;

@@ -37,9 +37,9 @@ rcs_id('$Id: UpLoad.php,v 1.19 2005/04/11 19:40:15 rurban Exp $');
 
 class WikiPlugin_UpLoad extends WikiPlugin
 {
-    var $disallowed_extensions;
+    public $disallowed_extensions;
     // TODO: use PagePerms instead
-    var $only_authenticated = false; // allow only authenticated users may upload.
+    public $only_authenticated = false; // allow only authenticated users may upload.
 
     function getName()
     {

@@ -36,22 +36,22 @@ class TreeNode /*implements Visitable*/
     /**
      * @type mixed
      */
-    var $data;
+    public $data;
 
     /**
      * @var mixed
      */
-    var $object;
+    public $object;
 
     /**
      * @type array
      */
-    var $children;
+    public $children;
 
     /**
      * @type TreeNode Reference
      */
-    var $parentNode;
+    public $parentNode;
 
     private $id;
 

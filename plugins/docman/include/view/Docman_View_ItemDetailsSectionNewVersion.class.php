@@ -28,8 +28,8 @@ use Tuleap\Docman\Upload\Version\VersionOngoingUploadRetriever;
 class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSectionActions
 {
 
-    var $force;
-    var $token;
+    public $force;
+    public $token;
     function __construct($item, $url, $controller, $force, $token)
     {
         parent::__construct($item, $url, false, true, $controller);

@@ -148,9 +148,9 @@ class Docman_ValidateMetadataListIsNotEmpty extends Docman_Validator
  */
 class Docman_MetadataHtml
 {
-    var $md;
-    var $formParams;
-    var $hp;
+    public $md;
+    public $formParams;
+    public $hp;
 
     function __construct(&$md, $formParams)
     {

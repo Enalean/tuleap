@@ -10,7 +10,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
 {
     public const DATABASE_TABLE_PREFIX = 'wiki_';
 
-    var $_dbh;
+    public $_dbh;
 
     function __construct()
     {

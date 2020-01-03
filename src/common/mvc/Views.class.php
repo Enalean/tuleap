@@ -28,9 +28,9 @@
  */
 class Views
 {
-  /* protected array */  var $html_params;
-  /* protected string */ var $view;
-  /* protected Controler */ var $_controler;
+  /* protected array */  public $html_params;
+  /* protected string */ public $view;
+  /* protected Controler */ public $_controler;
 
     function View(&$controler, $view = null, $params = array())
     {

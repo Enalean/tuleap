@@ -28,11 +28,11 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
 class Docman_ApprovalTableReviewerFactory
 {
-    var $table;
-    var $item;
-    var $reviewerCache;
-    var $err;
-    var $warn;
+    public $table;
+    public $item;
+    public $reviewerCache;
+    public $err;
+    public $warn;
     private $notificationManager = null;
 
     function __construct($table, $item, $notificationManager = null)

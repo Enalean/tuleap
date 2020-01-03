@@ -40,7 +40,7 @@ class Docman_VersionFactory
         $dao = $this->_getVersionDao();
         return $dao->createFromRow($row);
     }
-    var $dao;
+    public $dao;
     function _getVersionDao()
     {
         if (!$this->dao) {

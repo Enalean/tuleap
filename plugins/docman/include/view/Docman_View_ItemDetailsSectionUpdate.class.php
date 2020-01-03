@@ -23,9 +23,9 @@
 
 class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectionActions
 {
-    var $validate;
-    var $force;
-    var $token;
+    public $validate;
+    public $force;
+    public $token;
     function __construct($item, $url, $controller, $force, $token)
     {
         parent::__construct($item, $url, false, true, $controller);

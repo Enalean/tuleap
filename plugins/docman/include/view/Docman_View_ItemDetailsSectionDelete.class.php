@@ -24,7 +24,7 @@
 class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectionActions
 {
 
-    var $token;
+    public $token;
     function __construct($item, $url, $controller, $token)
     {
         parent::__construct($item, $url, false, true, $controller);

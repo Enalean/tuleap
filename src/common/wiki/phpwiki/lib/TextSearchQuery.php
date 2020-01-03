@@ -315,7 +315,7 @@ class NullTextSearchQuery extends TextSearchQuery
  */
 class TextSearchQuery_node
 {
-    var $op = 'VOID';
+    public $op = 'VOID';
 
     /**
      * Optimize this node.
@@ -354,7 +354,7 @@ class TextSearchQuery_node
  */
 class TextSearchQuery_node_word extends TextSearchQuery_node
 {
-    var $op = "WORD";
+    public $op = "WORD";
 
     function __construct($word)
     {
@@ -381,7 +381,7 @@ class TextSearchQuery_node_word extends TextSearchQuery_node
 
 class TextSearchQuery_node_all extends TextSearchQuery_node
 {
-    var $op = "ALL";
+    public $op = "ALL";
     function regexp()
     {
         return '(?=.*)';
@@ -393,7 +393,7 @@ class TextSearchQuery_node_all extends TextSearchQuery_node
 }
 class TextSearchQuery_node_starts_with extends TextSearchQuery_node_word
 {
-    var $op = "STARTS_WITH";
+    public $op = "STARTS_WITH";
     function regexp()
     {
         return '(?=.*\b' . preg_quote($this->word, '/') . ')';
@@ -406,7 +406,7 @@ class TextSearchQuery_node_starts_with extends TextSearchQuery_node_word
 
 class TextSearchQuery_node_ends_with extends TextSearchQuery_node_word
 {
-    var $op = "ENDS_WITH";
+    public $op = "ENDS_WITH";
     function regexp()
     {
         return '(?=.*' . preg_quote($this->word, '/') . '\b)';
@@ -419,7 +419,7 @@ class TextSearchQuery_node_ends_with extends TextSearchQuery_node_word
 
 class TextSearchQuery_node_exact extends TextSearchQuery_node_word
 {
-    var $op = "EXACT";
+    public $op = "EXACT";
     function regexp()
     {
         return '(?=\b' . preg_quote($this->word, '/') . '\b)';
@@ -433,7 +433,7 @@ class TextSearchQuery_node_exact extends TextSearchQuery_node_word
 class TextSearchQuery_node_regex extends TextSearchQuery_node_word
 {
  // posix regex. FIXME!
-    var $op = "REGEX"; // using REGEXP or ~ extension
+    public $op = "REGEX"; // using REGEXP or ~ extension
     function regexp()
     {
         return '(?=.*\b' . $this->word . '\b)';
@@ -446,7 +446,7 @@ class TextSearchQuery_node_regex extends TextSearchQuery_node_word
 
 class TextSearchQuery_node_regex_glob extends TextSearchQuery_node_regex
 {
-    var $op = "REGEX_GLOB";
+    public $op = "REGEX_GLOB";
     function regexp()
     {
         return '(?=.*\b' . glob_to_pcre($this->word) . '\b)';
@@ -456,7 +456,7 @@ class TextSearchQuery_node_regex_glob extends TextSearchQuery_node_regex
 class TextSearchQuery_node_regex_pcre extends TextSearchQuery_node_regex
 {
  // how to handle pcre modifiers? /i
-    var $op = "REGEX_PCRE";
+    public $op = "REGEX_PCRE";
     function regexp()
     {
         return $this->word;
@@ -465,7 +465,7 @@ class TextSearchQuery_node_regex_pcre extends TextSearchQuery_node_regex
 
 class TextSearchQuery_node_regex_sql extends TextSearchQuery_node_regex
 {
-    var $op = "REGEX_SQL"; // using LIKE
+    public $op = "REGEX_SQL"; // using LIKE
     function regexp()
     {
         return str_replace(array("/%/","/_/"), array(".*","."), $this->word);
@@ -481,7 +481,7 @@ class TextSearchQuery_node_regex_sql extends TextSearchQuery_node_regex
  */
 class TextSearchQuery_node_not extends TextSearchQuery_node
 {
-    var $op = "NOT";
+    public $op = "NOT";
 
     function __construct($leaf)
     {
@@ -566,7 +566,7 @@ class TextSearchQuery_node_binop extends TextSearchQuery_node
  */
 class TextSearchQuery_node_and extends TextSearchQuery_node_binop
 {
-    var $op = "AND";
+    public $op = "AND";
 
     function optimize()
     {
@@ -618,7 +618,7 @@ class TextSearchQuery_node_and extends TextSearchQuery_node_binop
  */
 class TextSearchQuery_node_or extends TextSearchQuery_node_binop
 {
-    var $op = "OR";
+    public $op = "OR";
 
     function regexp()
     {

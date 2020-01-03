@@ -28,7 +28,7 @@ use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBu
  */
 class Docman_MetadataListOfValuesElementFactory
 {
-    var $metadataId;
+    public $metadataId;
 
     function __construct($metadataId = null)
     {

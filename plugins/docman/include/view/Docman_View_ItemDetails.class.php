@@ -24,10 +24,10 @@
 class Docman_View_ItemDetails
 {
 
-    var $sections;
-    var $item;
-    var $current_section;
-    var $url;
+    public $sections;
+    public $item;
+    public $current_section;
+    public $url;
 
     function __construct($item, $url)
     {

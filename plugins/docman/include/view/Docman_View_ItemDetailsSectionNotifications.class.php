@@ -32,8 +32,8 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
     /**
      * @var Docman_NotificationsManager
      */
-    var $notificationsManager;
-    var $token;
+    public $notificationsManager;
+    public $token;
 
     /**
      * @var Tuleap\Docman\Notifications\CollectionOfUgroupMonitoredItemsBuilder

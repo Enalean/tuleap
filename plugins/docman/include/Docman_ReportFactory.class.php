@@ -29,7 +29,7 @@ require_once('Docman_PermissionsManager.class.php');
 
 class Docman_ReportFactory
 {
-    var $groupId;
+    public $groupId;
 
     function __construct($groupId)
     {

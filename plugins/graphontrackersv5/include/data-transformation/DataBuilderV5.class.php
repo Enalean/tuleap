@@ -23,13 +23,13 @@
 class DataBuilderV5
 {
 
-    var $field_X;
-    var $field_Y;
-    var $artifacts;
-    var $atid;
-    var $data;
-    var $x_values;
-    var $y_values;
+    public $field_X;
+    public $field_Y;
+    public $artifacts;
+    public $atid;
+    public $data;
+    public $x_values;
+    public $y_values;
 
     /**
     *
@@ -175,7 +175,7 @@ class DataBuilderV5
 
             $from  .= " LEFT JOIN permissions
                          ON (permissions.object_id = CONVERT(a.artifact_id USING utf8)
-                             AND 
+                             AND
                              permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS') ";
             $where .= " AND (a.use_artifact_permissions = 0
                              OR

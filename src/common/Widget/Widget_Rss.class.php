@@ -31,8 +31,8 @@ use Zend\Feed\Reader\Reader as FeedReader;
 */
 abstract class Widget_Rss extends Widget
 {
-    var $rss_title;
-    var $rss_url;
+    public $rss_title;
+    public $rss_url;
 
     public function __construct($id, $owner_id, $owner_type)
     {
@@ -148,7 +148,7 @@ abstract class Widget_Rss extends Widget
         $owner_id,
         $owner_type
     ) {
-        $sql = "INSERT INTO widget_rss (owner_id, owner_type, title, url) 
+        $sql = "INSERT INTO widget_rss (owner_id, owner_type, title, url)
         SELECT  ". $owner_id .", '". $owner_type ."', title, url
         FROM widget_rss
         WHERE owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' ";

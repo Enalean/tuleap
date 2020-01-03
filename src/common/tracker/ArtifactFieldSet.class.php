@@ -27,7 +27,7 @@ class ArtifactFieldSet
      *
      * @var    object{ArtifactType} $ArtifactType
      */
-    var $ArtifactType;
+    public $ArtifactType;
 
     /**
      * The ID of this ArtifactfieldSet
@@ -62,7 +62,7 @@ class ArtifactFieldSet
      *
      * @var    array of object{ArtifactField} $ArtifactFields
      */
-    var $ArtifactFields;
+    public $ArtifactFields;
 
     /**
      *    ArtifactFieldSet - constructor.
@@ -79,7 +79,7 @@ class ArtifactFieldSet
     function fetchData()
     {
         $sql = "SELECT *
-                FROM artifact_field_set 
+                FROM artifact_field_set
                 WHERE artifact_field_set_id=". db_ei($this->getID()) ."";
         $res = db_query($sql);
         if (!$res || db_numrows($res) < 1) {
@@ -323,8 +323,8 @@ class ArtifactFieldSet
             return false;
         }
 
-        $sql = "UPDATE artifact_field_set 
-                SET name='". db_es($name) ."', 
+        $sql = "UPDATE artifact_field_set
+                SET name='". db_es($name) ."',
                     description='". db_es($description) ."',
                     rank='". db_ei($rank) ."'
                 WHERE field_set_id='".  db_ei($this->getID())  ."'";

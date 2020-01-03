@@ -25,7 +25,7 @@
 */
 class Widget_ProjectLatestFileReleases extends Widget
 {
-    var $content;
+    public $content;
 
     public function __construct()
     {

@@ -25,7 +25,7 @@
 class Docman_Widget_MyDocmanSearch extends Widget
 {
 
-    var $pluginPath;
+    public $pluginPath;
 
     function __construct($pluginPath)
     {

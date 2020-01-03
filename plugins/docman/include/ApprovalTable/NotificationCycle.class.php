@@ -23,9 +23,9 @@
 
 class Docman_ApprovalTableNotificationCycle
 {
-    var $table;
-    var $owner;
-    var $item;
+    public $table;
+    public $owner;
+    public $item;
 
     /** @var MailNotificationBuilder */
     private $mail_notification_builder;

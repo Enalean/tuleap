@@ -31,9 +31,9 @@ use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 class FRSReleaseFactory
 {
     // Kept for legacy
-    var $STATUS_ACTIVE  = FRSRelease::STATUS_ACTIVE;
-    var $STATUS_DELETED = FRSRelease::STATUS_DELETED;
-    var $STATUS_HIDDEN  = FRSRelease::STATUS_HIDDEN;
+    public $STATUS_ACTIVE  = FRSRelease::STATUS_ACTIVE;
+    public $STATUS_DELETED = FRSRelease::STATUS_DELETED;
+    public $STATUS_HIDDEN  = FRSRelease::STATUS_HIDDEN;
     private static $instance;
 
     function __construct()
@@ -238,7 +238,7 @@ class FRSReleaseFactory
     }
 
 
-    var $dao;
+    public $dao;
 
     function _getFRSReleaseDao()
     {

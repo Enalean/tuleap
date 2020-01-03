@@ -23,13 +23,13 @@ class ArtifactImport
 {
 
   /** the tracker we are working on */
-    var $ath;
+    public $ath;
 
   /** the tracker field factory for our tracker */
-    var $art_field_fact;
+    public $art_field_fact;
 
   /** the group our tracker is part of */
-    var $group;
+    public $group;
 
 
   /** information about the tracker
@@ -37,54 +37,54 @@ class ArtifactImport
    * the fields used in tracker $atid
    * array of the form (label => field)
    */
-    var $used_fields;
+    public $used_fields;
 
    /** information about the tracker
     * used all along
     * array of the form (column_number => array of field predefined values)
     */
-    var $predefined_values;
+    public $predefined_values;
 
 
 
    /** information parsed from the import file
     *  the number of columns in the parsed csv file
     */
-    var $num_columns;
+    public $num_columns;
 
    /** information parsed from the import file
     * the column in the csv file that contains the arifact id (-1 if not given)
     */
-    var $aid_column;
+    public $aid_column;
 
    /** information parsed from the import file
     * the column in the csv file that contains the artifact submitter
     */
-    var $submitted_by_column;
+    public $submitted_by_column;
 
    /** information parsed from the import file
     * the column in the csv file that contains the artifact submission date
     */
-    var $submitted_on_column;
+    public $submitted_on_column;
 
    /** information parsed from the import file
     * the column in the csv file that contains the artifact last modified date
     */
-    var $last_update_date_column;
+    public $last_update_date_column;
 
    /** information parsed from the import file
     * array of the form (column_number => field_label) containing
     * all the fields in the parsed csv file
     */
-    var $parsed_labels;
+    public $parsed_labels;
 
 
   /** information parsed from the import file
 
 
   /** some localization hack */
-    var $lbl_list;
-    var $dsc_list;
+    public $lbl_list;
+    public $dsc_list;
     /**
      * @var string
      */

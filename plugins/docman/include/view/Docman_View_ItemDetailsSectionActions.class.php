@@ -25,9 +25,9 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
 class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSection
 {
-    var $is_moveable;
-    var $is_deleteable;
-    var $_controller;
+    public $is_moveable;
+    public $is_deleteable;
+    public $_controller;
     function __construct($item, $url, $is_moveable, $is_deleteable, $controller)
     {
         $this->is_moveable   = $is_moveable;

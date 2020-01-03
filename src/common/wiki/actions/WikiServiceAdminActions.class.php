@@ -36,7 +36,7 @@ class WikiServiceAdminActions extends WikiActions
    * @access private
    * @var int
    */
-    var $gid;
+    public $gid;
 
     public function __construct($controler)
     {

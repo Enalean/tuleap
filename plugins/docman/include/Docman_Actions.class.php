@@ -35,7 +35,7 @@ require_once __DIR__ . '/../../../src/www/news/news_utils.php';
  */
 class Docman_Actions extends Actions
 {
-    var $event_manager;
+    public $event_manager;
 
     public function __construct($controler)
     {

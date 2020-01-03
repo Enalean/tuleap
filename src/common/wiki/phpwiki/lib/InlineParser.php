@@ -55,19 +55,19 @@ class RegexpSet_match
     /**
      * The text leading up the the next match.
      */
-    var $prematch;
+    public $prematch;
     /**
      * The matched text.
      */
-    var $match;
+    public $match;
     /**
      * The text following the matched text.
      */
-    var $postmatch;
+    public $postmatch;
     /**
      * Index of the regular expression which matched.
      */
-    var $regexp_ind;
+    public $regexp_ind;
 }
 
 /**
@@ -241,7 +241,7 @@ class RegexpSet
  */
 class SimpleMarkup
 {
-    var $_match_regexp;
+    public $_match_regexp;
 
     /** Get regexp.
      *
@@ -272,7 +272,7 @@ class SimpleMarkup
  */
 class BalancedMarkup
 {
-    var $_start_regexp;
+    public $_start_regexp;
 
     /** Get the starting regexp for this rule.
      *
@@ -457,7 +457,7 @@ function LinkBracketLink($bracketlink)
 
 class Markup_bracketlink extends SimpleMarkup
 {
-    var $_match_regexp = "\\#? \\[ .*? [^]\\s] .*? \\]";
+    public $_match_regexp = "\\#? \\[ .*? [^]\\s] .*? \\]";
 
     function markup($match)
     {
@@ -545,7 +545,7 @@ class Markup_wikiword extends SimpleMarkup
 class Markup_linebreak extends SimpleMarkup
 {
     //var $_match_regexp = "(?: (?<! %) %%% (?! %) | <(?:br|BR)> | <(?:br|BR) \/> )";
-    var $_match_regexp = "(?: (?<! %) %%% (?! %) | <(?:br|BR)> )";
+    public $_match_regexp = "(?: (?<! %) %%% (?! %) | <(?:br|BR)> )";
 
     function markup($match)
     {
@@ -555,7 +555,7 @@ class Markup_linebreak extends SimpleMarkup
 
 class Markup_old_emphasis extends BalancedMarkup
 {
-    var $_start_regexp = "''|__";
+    public $_start_regexp = "''|__";
 
     function getEndRegexp($match)
     {
@@ -630,7 +630,7 @@ class Markup_nestled_emphasis extends BalancedMarkup
 
 class Markup_html_emphasis extends BalancedMarkup
 {
-    var $_start_regexp =
+    public $_start_regexp =
         "<(?: b|big|i|small|tt|em|strong|cite|code|dfn|kbd|samp|var|sup|sub )>";
 
     function getEndRegexp($match)
@@ -649,7 +649,7 @@ class Markup_html_abbr extends BalancedMarkup
 {
     //rurban: abbr|acronym need an optional title tag.
     //sf.net bug #728595
-    var $_start_regexp = "<(?: abbr|acronym )(?: \stitle=[^>]*)?>";
+    public $_start_regexp = "<(?: abbr|acronym )(?: \stitle=[^>]*)?>";
 
     function getEndRegexp($match)
     {
@@ -686,8 +686,8 @@ class Markup_html_abbr extends BalancedMarkup
 class Markup_color extends BalancedMarkup
 {
     // %color=blue% blue text %% and back to normal
-    var $_start_regexp = "%color=(?: [^%]*)%";
-    var $_end_regexp = "%%";
+    public $_start_regexp = "%color=(?: [^%]*)%";
+    public $_end_regexp = "%%";
 
     function markup($match, $body)
     {
@@ -709,7 +709,7 @@ class Markup_color extends BalancedMarkup
 //  like: '<small>< ?plugin PopularNearby ? ></small>'
 class Markup_plugin extends SimpleMarkup
 {
-    var $_match_regexp = '<\?plugin(?:-form)?\s[^\n]+?\?>';
+    public $_match_regexp = '<\?plugin(?:-form)?\s[^\n]+?\?>';
 
     function markup($match)
     {
@@ -728,7 +728,7 @@ class Markup_plugin extends SimpleMarkup
  */
 class Markup_template_plugin extends SimpleMarkup
 {
-    var $_match_regexp = '\{\{\w[^\n]+\}\}';
+    public $_match_regexp = '\{\{\w[^\n]+\}\}';
 
     function markup($match)
     {
@@ -753,7 +753,7 @@ class Markup_template_plugin extends SimpleMarkup
 
 class Markup_html_entities extends SimpleMarkup
 {
-    var $_match_regexp = '(: \.\.\.|\-\-|\-\-\-|\(C\) )';
+    public $_match_regexp = '(: \.\.\.|\-\-|\-\-\-|\(C\) )';
 
     function markup($match)
     {
@@ -768,7 +768,7 @@ class Markup_html_entities extends SimpleMarkup
 
 class Markup_isonumchars extends SimpleMarkup
 {
-    var $_match_regexp = '\&\#\d{2,5};';
+    public $_match_regexp = '\&\#\d{2,5};';
 
     function markup($match)
     {
@@ -779,7 +779,7 @@ class Markup_isonumchars extends SimpleMarkup
 class Markup_isohexchars extends SimpleMarkup
 {
     // hexnums, like &#x00A4; <=> &curren;
-    var $_match_regexp = '\&\#x[0-9a-fA-F]{2,4};';
+    public $_match_regexp = '\&\#x[0-9a-fA-F]{2,4};';
 
     function markup($match)
     {
@@ -793,8 +793,8 @@ class Markup_isohexchars extends SimpleMarkup
 
 class InlineTransformer
 {
-    var $_regexps = array();
-    var $_markup = array();
+    public $_regexps = array();
+    public $_markup = array();
 
     function __construct($markup_types = false)
     {

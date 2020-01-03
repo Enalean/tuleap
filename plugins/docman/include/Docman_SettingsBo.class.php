@@ -24,9 +24,9 @@ require_once('Docman_SettingsDao.class.php');
 
 class Docman_SettingsBo
 {
-    var $row;
-    var $groupId;
-    var $dao;
+    public $row;
+    public $groupId;
+    public $dao;
 
     function __construct($groupId)
     {

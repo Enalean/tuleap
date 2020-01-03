@@ -28,10 +28,10 @@ use Tuleap\Layout\CssAssetCollection;
 /* abstract */ class Widget
 {
 
-    var $content_id;
-    var $id;
-    var $owner_id;
-    var $owner_type;
+    public $content_id;
+    public $id;
+    public $owner_id;
+    public $owner_type;
 
     /** @var  int */
     protected $dashboard_widget_id;

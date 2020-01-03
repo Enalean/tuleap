@@ -28,7 +28,7 @@ class Git_Driver_Gerrit_ProjectCreator
     public const NO_PERMISSIONS_MIGRATION      = 'none';
     public const DEFAULT_PERMISSIONS_MIGRATION = 'default';
 
-    static $MIGRATION_MINIMAL_PERMISSIONS = array(
+    public static $MIGRATION_MINIMAL_PERMISSIONS = array(
         array(
             'reference'  => 'refs/tags',
             'permission' => 'pushTag',

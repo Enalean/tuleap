@@ -34,7 +34,7 @@
  */
 class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFactory
 {
-    var $wikiVersionId;
+    public $wikiVersionId;
 
     /**
      * Initialize the factory for the given item.

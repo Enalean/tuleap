@@ -23,7 +23,7 @@ class FRSPackageDao extends DataAccessObject
 {
     public const INCLUDE_DELETED = 0x0001;
 
-    var $STATUS_DELETED;
+    public $STATUS_DELETED;
 
     function __construct($da, $status_deleted)
     {

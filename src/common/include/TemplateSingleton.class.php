@@ -25,7 +25,7 @@
 class TemplateSingleton
 {
   // simply containing the
-    var $data_array = array();
+    public $data_array = array();
 
     public const PROJECT      = 1;
     public const TEMPLATE     = 2;

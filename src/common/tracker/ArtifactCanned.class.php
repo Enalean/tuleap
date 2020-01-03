@@ -20,7 +20,7 @@ class ArtifactCanned
      * @var        object    $ArtifactType.
      */
     public $ArtifactType;
-    var $atid;
+    public $atid;
 
     /**
      * Array of artifact data.
@@ -100,7 +100,7 @@ class ArtifactCanned
             return false;
         }
 
-        $sql="INSERT INTO artifact_canned_responses (group_artifact_id,title,body) 
+        $sql="INSERT INTO artifact_canned_responses (group_artifact_id,title,body)
 			VALUES ('". db_ei($this->ArtifactType->getID()) ."',
 			'". db_es(htmlspecialchars($title)) ."','". db_es(htmlspecialchars($body))  ."')";
 
@@ -200,8 +200,8 @@ class ArtifactCanned
             return false;
         }
 
-        $sql="delete from artifact_canned_responses 
-			
+        $sql="delete from artifact_canned_responses
+
 			WHERE group_artifact_id='".  db_ei($this->ArtifactType->getID())  ."' AND artifact_canned_id='".  db_ei($artifact_canned_id)  ."'";
 
         $result=db_query($sql);
@@ -234,7 +234,7 @@ class ArtifactCanned
             return false;
         }
 
-        $sql="UPDATE artifact_canned_responses 
+        $sql="UPDATE artifact_canned_responses
 			SET title='". db_es(htmlspecialchars($title))  ."',body='". db_es(htmlspecialchars($body))  ."'
 			WHERE group_artifact_id='".  db_ei($this->ArtifactType->getID())  ."' AND artifact_canned_id='".  db_ei($this->getID())  ."'";
 

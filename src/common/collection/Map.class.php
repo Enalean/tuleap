@@ -27,7 +27,7 @@ require_once('Collection.class.php');
 class Map
 {
 
-    var $elements;
+    public $elements;
 
     function __construct()
     {

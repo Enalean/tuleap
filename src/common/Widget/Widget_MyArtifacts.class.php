@@ -28,7 +28,7 @@ require_once __DIR__ . '/../../www/my/my_utils.php';
 */
 class Widget_MyArtifacts extends Widget
 {
-    var $_artifact_show;
+    public $_artifact_show;
 
     public function __construct()
     {

@@ -59,7 +59,7 @@
  */
 class _PageList_Column_base
 {
-    var $_tdattr = array();
+    public $_tdattr = array();
 
     function __construct($default_heading, $align = false)
     {
@@ -537,7 +537,7 @@ class _PageList_Column_creator extends _PageList_Column_author
 
 class _PageList_Column_pagename extends _PageList_Column_base
 {
-    var $_field = 'pagename';
+    public $_field = 'pagename';
 
     function __construct()
     {
@@ -571,18 +571,18 @@ class _PageList_Column_pagename extends _PageList_Column_base
 
 class PageList
 {
-    var $_group_rows = 3;
-    var $_columns = array();
-    var $_columnsMap = array();      // Maps column name to column number.
-    var $_excluded_pages = array();
-    var $_pages = array();
-    var $_caption = "";
-    var $_pagename_seen = false;
-    var $_types = array();
-    var $_options = array();
-    var $_selected = array();
-    var $_sortby = array();
-    var $_maxlen = 0;
+    public $_group_rows = 3;
+    public $_columns = array();
+    public $_columnsMap = array();      // Maps column name to column number.
+    public $_excluded_pages = array();
+    public $_pages = array();
+    public $_caption = "";
+    public $_pagename_seen = false;
+    public $_types = array();
+    public $_options = array();
+    public $_selected = array();
+    public $_sortby = array();
+    public $_maxlen = 0;
 
     function __construct($columns = false, $exclude = false, $options = false)
     {
@@ -1493,7 +1493,7 @@ function flipAll(formObj) {
   var isFirstSet = -1;
   for (var i=0; i < formObj.length; i++) {
       fldObj = formObj.elements[i];
-      if ((fldObj.type == 'checkbox') && (fldObj.name.substring(0,2) == 'p[')) { 
+      if ((fldObj.type == 'checkbox') && (fldObj.name.substring(0,2) == 'p[')) {
          if (isFirstSet == -1)
            isFirstSet = (fldObj.checked) ? true : false;
          fldObj.checked = (isFirstSet) ? false : true;

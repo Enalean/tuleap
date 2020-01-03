@@ -26,7 +26,7 @@
 class ArtifactRuleValueView
 {
 
-    var $rule;
+    public $rule;
 
     /**
      *  ArtifactRuleValueView() - constructor

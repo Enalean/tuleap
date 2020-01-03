@@ -24,28 +24,28 @@ class ArtifactField
 {
 
     // The field id
-    var $field_id;
+    public $field_id;
 
     // The field name
-    var $field_name;
+    public $field_name;
 
     // The data_type: 1: text, 2: int, 3: float, 4: date, 5: user - See constants $DATATYPE_xx
-    var $data_type;
+    public $data_type;
 
     // Display type: SB: selectbox, TF: text field, DF: date field, TA: text area
-    var $display_type;
+    public $display_type;
 
     // The size associated with display_type
-    var $display_size;
+    public $display_size;
 
     // The label
-    var $label;
+    public $label;
 
     // The description
-    var $description;
+    public $description;
 
     // The scope of the field: S: system or P:project
-    var $scope;
+    public $scope;
 
     // @deprecated
     // Is the field is required?
@@ -53,39 +53,39 @@ class ArtifactField
     // This field shouldn't be used (always 0)
     // Use empty_ok (required <=> ! empty_ok)
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    var $required;
+    public $required;
 
     // Is the field allowed to be empty?
-    var $empty_ok;
+    public $empty_ok;
 
     // Keep the history changes
-    var $keep_history;
+    public $keep_history;
 
     // Is the field special?
-    var $special;
+    public $special;
 
     // Special value to specify the field values: artifact_submitters
-    var $value_function;
+    public $value_function;
 
     // Is the field used?
-    var $use_it;
+    public $use_it;
 
     // Place on the form
-    var $place;
+    public $place;
 
     // Default value
-    var $default_value;
+    public $default_value;
 
     // Id of the fieldset that this field belong to
-    var $field_set_id;
+    public $field_set_id;
 
 
     // Constants for data_type
-    var $DATATYPE_TEXT = 1;
-    var $DATATYPE_INT = 2;
-    var $DATATYPE_FLOAT = 3;
-    var $DATATYPE_DATE = 4;
-    var $DATATYPE_USER = 5;
+    public $DATATYPE_TEXT = 1;
+    public $DATATYPE_INT = 2;
+    public $DATATYPE_FLOAT = 3;
+    public $DATATYPE_DATE = 4;
+    public $DATATYPE_USER = 5;
     /**
      * @var string
      */
