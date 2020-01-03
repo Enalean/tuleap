@@ -12,6 +12,7 @@ upstream tuleap-php-fpm-long-running-request {
 
 server {
         listen       443 ssl http2;
+        listen       [::]:443 ssl http2;
         server_name  %sys_default_domain%;
 
         ssl_certificate %ssl_certificate_path%;
@@ -33,6 +34,7 @@ server {
 
 server {
     listen       80;
+    listen       [::]:80;
     server_name  %sys_default_domain%;
 
     location /.well-known/ {
