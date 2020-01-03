@@ -26,6 +26,9 @@ msgstr "Précédent"
 msgid "Between %{ min } and %{ max } characters length"
 msgstr "Entre %{ min } et %{ max } caractères"
 
+msgid "Close"
+msgstr "Fermer"
+
 msgid "Custom templates"
 msgstr "Patrons de projet personnalisés"
 
@@ -42,7 +45,9 @@ msgid "Go to my home page"
 msgstr "Aller à ma page personnelle"
 
 msgid "I agree to the <a href=\"/tos/tos.php\">policy agreement</a>"
-msgstr "J'accepte les <a href=\"/tos/tos.php\">conditions d'utilisation</a>"
+msgstr ""
+"J'accepte les <a href=\"/tos/tos.php\">conditions "
+"d'utilisation</a>"
 
 msgid "Must start with a letter, avoid spaces and punctuation."
 msgstr "Doit commencer par une lettre, éviter les espaces et la ponctuation."
@@ -64,6 +69,9 @@ msgstr "Oups! Erreur lors du chargement des projets dont vous êtes membres."
 
 msgid "Please choose a project..."
 msgstr "Merci de choisir un projet ..."
+
+msgid "Policy agreement"
+msgstr "Conditions d'utilisation"
 
 msgid "Privacy"
 msgstr "Visibilité"

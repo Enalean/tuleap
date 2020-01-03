@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { post, recursiveGet } from "tlp";
+import { post, recursiveGet, get } from "tlp";
 import { ProjectProperties, MinimalProjectRepresentation, TemplateData } from "../type";
 
-export { postProject, getProjectUserIsAdminOf };
+export { postProject, getProjectUserIsAdminOf, getTermOfService };
 
 async function postProject(project_properties: ProjectProperties): Promise<string> {
     const headers = {
@@ -61,4 +61,10 @@ async function getProjectUserIsAdminOf(): Promise<TemplateData[]> {
             };
         })
         .sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true }));
+}
+
+async function getTermOfService(): Promise<string> {
+    const response = await get("/tos/tos_text.php");
+
+    return response.text();
 }

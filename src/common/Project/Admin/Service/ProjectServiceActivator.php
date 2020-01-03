@@ -70,14 +70,15 @@ class ProjectServiceActivator
 
         foreach ($template_service_list as $template_service) {
             $service_info = $data->getServiceInfo($template_service['service_id']);
+            $short_name = $template_service['short_name'];
             if (isset($service_info['is_used'])) {
                 $is_used = $service_info['is_used'];
             } else {
                 $is_used = $template_service['is_used'];
-                if ($template_service['short_name'] === 'admin' || $template_service['short_name'] === 'summary') {
+                if ($short_name === 'admin' || $short_name === 'summary') {
                     $is_used = '1';
                 }
-                if ($template_service['short_name'] === 'tracker' || $template_service['short_name'] === 'svn') {
+                if ($short_name === 'tracker' || $short_name === 'svn') {
                     $is_used = '0';
                 }
             }
