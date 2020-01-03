@@ -33,10 +33,26 @@ final class RESTAccessKeyScope implements AccessKeyScope
      * @var AccessKeyScopeIdentifier
      */
     private $identifier;
+    /**
+     * @var AccessKeyScopeDefinition
+     */
+    private $definition;
 
     private function __construct(AccessKeyScopeIdentifier $identifier)
     {
         $this->identifier = $identifier;
+        $this->definition = new /** @psalm-immutable */ class implements AccessKeyScopeDefinition
+        {
+            public function getName(): string
+            {
+                return _('REST');
+            }
+
+            public function getDescription(): string
+            {
+                return _('Access to the REST API');
+            }
+        };
     }
 
     /**
@@ -55,5 +71,10 @@ final class RESTAccessKeyScope implements AccessKeyScope
     public function getIdentifier(): AccessKeyScopeIdentifier
     {
         return $this->identifier;
+    }
+
+    public function getDefinition(): AccessKeyScopeDefinition
+    {
+        return $this->definition;
     }
 }

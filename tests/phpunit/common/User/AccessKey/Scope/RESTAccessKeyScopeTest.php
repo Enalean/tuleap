@@ -33,6 +33,9 @@ final class RESTAccessKeyScopeTest extends TestCase
         $scope = RESTAccessKeyScope::fromIdentifier($identifier);
 
         $this->assertEquals($identifier, $scope->getIdentifier());
+        $definition = $scope->getDefinition();
+        $this->assertNotEmpty($definition->getName());
+        $this->assertNotEmpty($definition->getDescription());
     }
 
     public function testPreventMistakesByNotBuildingFromAnUnexpectedIdentifier(): void
