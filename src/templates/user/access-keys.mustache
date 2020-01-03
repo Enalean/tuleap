@@ -36,6 +36,7 @@
                 <th>{{# gettext }}Last used by{{/ gettext }}</th>
                 <th>{{# gettext }}Description{{/ gettext }}</th>
                 <th>{{# gettext }}Expire on{{/ gettext }}</th>
+                <th>{{# gettext }}Scopes{{/ gettext }}</th>
             </tr>
             </thead>
             {{# has_access_keys }}
@@ -57,6 +58,9 @@
                             {{# expiration_date }}{{ expiration_date }}{{/ expiration_date }}
                             {{^ expiration_date }}-{{/ expiration_date }}
                         </td>
+                        <td>
+                            {{# scopes }}<span title="{{ description }}">{{ name }}</span> {{/scopes}}
+                        </td>
                     </tr>
                 {{/ access_keys }}
                 </tbody>
@@ -64,7 +68,7 @@
             {{^ has_access_keys }}
                 <tbody>
                 <tr>
-                    <td class="table-cell-empty" colspan="5">{{# gettext }}No API access keys{{/ gettext }}</td>
+                    <td class="table-cell-empty" colspan="6">{{# gettext }}No API access keys{{/ gettext }}</td>
                 </tr>
                 </tbody>
             {{/ has_access_keys }}

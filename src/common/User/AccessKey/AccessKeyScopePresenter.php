@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,19 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\AccessKey\Scope;
+namespace Tuleap\User\AccessKey;
+
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeDefinition;
 
 /**
  * @psalm-immutable
  */
-interface AccessKeyScope
+final class AccessKeyScopePresenter
 {
     /**
-     * @psalm-pure
+     * @var string
      */
-    public static function fromIdentifier(AccessKeyScopeIdentifier $identifier): self;
+    public $name;
+    /**
+     * @var string
+     */
+    public $description;
 
-    public function getIdentifier(): AccessKeyScopeIdentifier;
-
-    public function getDefinition(): AccessKeyScopeDefinition;
+    public function __construct(AccessKeyScopeDefinition $definition)
+    {
+        $this->name        = $definition->getName();
+        $this->description = $definition->getDescription();
+    }
 }

@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey;
 
+/**
+ * @psalm-immutable
+ */
 class AccessKeyMetadataPresenter
 {
     public $id;
@@ -30,6 +33,10 @@ class AccessKeyMetadataPresenter
     public $last_used_on;
     public $last_used_by;
     public $expiration_date;
+    /**
+     * @var AccessKeyScopePresenter[]
+     */
+    public $scopes = [];
 
     public function __construct(AccessKeyMetadata $access_key_information)
     {
@@ -54,5 +61,9 @@ class AccessKeyMetadataPresenter
         }
 
         $this->last_used_by = $access_key_information->getLastUsedIP();
+
+        foreach ($access_key_information->getScopes() as $scope) {
+            $this->scopes[] = new AccessKeyScopePresenter($scope->getDefinition());
+        }
     }
 }

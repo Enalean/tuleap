@@ -116,6 +116,9 @@ msgstr "Date d'expiration de la clé d'accès"
 msgid "Access keys have been successfully deleted."
 msgstr "Les clés d'accès ont été supprimées avec succès."
 
+msgid "Access to the REST API"
+msgstr "Accès à l'API REST"
+
 msgid "Accesses from less than %s might not be visible"
 msgstr "Les accès d'il y a moins de %s peuvent ne pas apparaître"
 
@@ -842,7 +845,8 @@ msgstr ""
 
 msgid "Manage your project with Agile ALM tools through Scrum methodology"
 msgstr ""
-"Gérez votre projet avec les outils ALM Agile au travers de la méthodologie Scrum"
+"Gérez votre projet avec les outils ALM Agile au travers de la méthodologie "
+"Scrum"
 
 msgid ""
 "Manage your project with Kanban and track task time and work-in-progress"
@@ -1288,6 +1292,9 @@ msgstr "Publique, incluant les utilisateurs restreints"
 msgid "Public information"
 msgstr "Informations publiques"
 
+msgid "REST"
+msgstr "REST"
+
 msgid "REST Read only administrator"
 msgstr "Administrateur lecture seule via REST"
 
@@ -1371,6 +1378,9 @@ msgstr "Enregister"
 
 msgid "Scope"
 msgstr "Portée"
+
+msgid "Scopes"
+msgstr "Portées"
 
 msgid "Scrum"
 msgstr "Scrum"
@@ -1485,8 +1495,8 @@ msgid ""
 "Template used to create a project providing an issue tracking, the best way "
 "to start your project with Tuleap."
 msgstr ""
-"Patron utilisé pour créer un projet fournissant un outil de suivi des tickets, "
-"la meilleure façon pour démarrer votre projet avec Tuleap."
+"Patron utilisé pour créer un projet fournissant un outil de suivi des "
+"tickets, la meilleure façon pour démarrer votre projet avec Tuleap."
 
 msgid "Templates"
 msgstr "Patrons de projet"
