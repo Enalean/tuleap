@@ -29,7 +29,7 @@ use Tuleap\News\NewsDao;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
-use Zend\Feed\Writer\Feed;
+use Laminas\Feed\Writer\Feed;
 
 class LatestNewsController implements DispatchableWithRequest
 {

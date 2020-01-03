@@ -36,8 +36,8 @@ use Tuleap\Tus\TusDataStore;
 use Tuleap\Tus\TusRequestMethodOverride;
 use Tuleap\Tus\TusServer;
 use UserManager;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
-use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
 final class FileUploadController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {

@@ -36,7 +36,7 @@ use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
 final class ReviewerAutocompleterController extends DispatchablePSR15Compatible implements DispatchableWithRequestNoAuthz
 {

@@ -30,7 +30,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\Server\MiddlewareDispatcher;
 use Tuleap\Http\Server\RequestHandlerAsMiddleware;
 use Tuleap\Layout\BaseLayout;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
 abstract class DispatchablePSR15Compatible implements DispatchableWithRequest, RequestHandlerInterface
 {

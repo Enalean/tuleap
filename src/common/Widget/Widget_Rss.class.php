@@ -22,7 +22,7 @@
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\RSS\FeedHTTPClient;
-use Zend\Feed\Reader\Reader as FeedReader;
+use Laminas\Feed\Reader\Reader as FeedReader;
 
 /**
 * Widget_Rss
@@ -53,7 +53,7 @@ abstract class Widget_Rss extends Widget
         $content = '<table class="tlp-table">';
         try {
             $feed = $this->retrieveFeed($this->rss_url);
-        } catch (Zend\Feed\Exception\RuntimeException $ex) {
+        } catch (Laminas\Feed\Exception\RuntimeException $ex) {
             return '<div class="tlp-alert-warning">' . _('An issue occurred while retrieving the RSS feed') . '</div>' .  $content . '</table>';
         }
 
@@ -181,7 +181,7 @@ abstract class Widget_Rss extends Widget
                 try {
                     $feed         = $this->retrieveFeed($rss['url']);
                     $rss['title'] = $feed->getTitle();
-                } catch (\Zend\Feed\Exception\RuntimeException $ex) {
+                } catch (\Laminas\Feed\Exception\RuntimeException $ex) {
                     $rss['title'] = $request->get('title');
                 }
             }
@@ -230,9 +230,9 @@ abstract class Widget_Rss extends Widget
     }
 
     /**
-     * @@throws \Zend\Feed\Exception\RuntimeException
+     * @@throws \Laminas\Feed\Exception\RuntimeException
      */
-    private function retrieveFeed(string $url) : \Zend\Feed\Reader\Feed\FeedInterface
+    private function retrieveFeed(string $url) : \Laminas\Feed\Reader\Feed\FeedInterface
     {
         $http_client = new FeedHTTPClient(HttpClientFactory::createClient(), HTTPFactoryBuilder::requestFactory());
         FeedReader::setHttpClient($http_client);
@@ -240,7 +240,7 @@ abstract class Widget_Rss extends Widget
         if (! is_dir($cache_dir) && ! mkdir($cache_dir) && ! is_dir($cache_dir)) {
             throw new \RuntimeException(sprintf('RSS cache directory "%s" was not created', $cache_dir));
         }
-        $cache     = Zend\Cache\StorageFactory::factory(array(
+        $cache     = Laminas\Cache\StorageFactory::factory(array(
             'adapter' => [
                 'name'    => 'filesystem',
                 'options' => ['cache_dir' => $cache_dir],

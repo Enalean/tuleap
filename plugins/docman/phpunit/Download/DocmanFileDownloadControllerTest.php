@@ -33,7 +33,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Request\NotFoundException;
 use Tuleap\REST\RESTCurrentUserMiddleware;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
 final class DocmanFileDownloadControllerTest extends TestCase
 {

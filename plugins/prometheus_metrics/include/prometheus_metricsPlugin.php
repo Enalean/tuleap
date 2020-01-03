@@ -28,7 +28,7 @@ use Tuleap\PrometheusMetrics\MetricsController;
 use Tuleap\Redis\ClientFactory;
 use Tuleap\Redis\RedisConnectionException;
 use Tuleap\Request\CollectRoutesEvent;
-use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
