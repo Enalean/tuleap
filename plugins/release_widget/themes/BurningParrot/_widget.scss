@@ -24,6 +24,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 @import 'release-toggle';
 @import 'release-toggle-tracker-artifacts-badges';
 @import 'release-chart';
+@import 'release-toggle-badges-sprints';
 
 .project-release-label {
     display: inline-block;

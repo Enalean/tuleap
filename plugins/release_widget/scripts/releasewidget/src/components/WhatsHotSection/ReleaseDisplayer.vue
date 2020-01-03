@@ -37,7 +37,7 @@
                 {{ error_message }}
             </div>
             <div v-else data-test="display-release-data">
-                <release-badges v-bind:release_data="displayed_release" />
+                <release-badges-displayer v-bind:release_data="displayed_release" />
                 <release-description v-bind:release_data="displayed_release" />
             </div>
         </div>
@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import ReleaseBadges from "./ReleaseBadges.vue";
+import ReleaseBadgesDisplayer from "./ReleaseBadges/ReleaseBadgesDisplayer.vue";
 import ReleaseDescription from "./ReleaseDescription/ReleaseDescription.vue";
 import ReleaseHeader from "./ReleaseHeader/ReleaseHeader.vue";
 import Vue from "vue";
@@ -58,7 +58,7 @@ import { FetchWrapperError } from "tlp";
     components: {
         ReleaseHeader,
         ReleaseDescription,
-        ReleaseBadges
+        ReleaseBadgesDisplayer
     }
 })
 export default class ReleaseDisplayer extends Vue {
