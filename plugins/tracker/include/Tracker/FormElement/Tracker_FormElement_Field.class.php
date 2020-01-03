@@ -102,7 +102,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     protected $criteria_value;
     /**
      * Search in the db the criteria value used to search against this field.
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      * @return mixed
      */
     public function getCriteriaValue($criteria)
@@ -113,10 +113,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
         if (!isset($this->criteria_value[$criteria->getReport()->getId()])) {
             $this->criteria_value[$criteria->getReport()->getId()] = null;
-            if ($v = $this->getCriteriaDao()
-                          ->searchByCriteriaId($criteria->id)
-                          ->getRow()
-            ) {
+            $dao = $this->getCriteriaDao();
+            if ($dao && $v = $dao->searchByCriteriaId($criteria->id)->getRow()) {
                 $this->criteria_value[$criteria->getReport()->getId()] = $v['value'];
             }
         }
@@ -174,8 +172,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
     }
 
-    public function setCriteriaValueFromXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria_value)
-    {
+    public function setCriteriaValueFromXML(
+        Tracker_Report_Criteria $criteria,
+        SimpleXMLElement $xml_criteria_value,
+        array $xml_field_mapping
+    ) {
         if ((string) $xml_criteria_value['type'] !== 'text') {
             return;
         }

@@ -592,7 +592,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     /**
      * Return the dao of the criteria value used with this field.
-     * @return DataAccessObject
+     * @return Tracker_Report_Criteria_ValueDao
      */
     protected function getCriteriaDao()
     {
@@ -695,7 +695,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     /**
      * Search in the db the criteria value used to search against this field.
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      * @return mixed
      */
     public function getCriteriaValue($criteria)
@@ -706,7 +706,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
         if (! isset($this->criteria_value[$criteria->report->id])) {
             $this->criteria_value[$criteria->report->id] = '';
-            if ($row = $this->getCriteriaDao()->searchByCriteriaId($criteria->id)->getRow()) {
+            $dao = $this->getCriteriaDao();
+            if ($dao && $row = $dao->searchByCriteriaId($criteria->id)->getRow()) {
                 $this->criteria_value[$criteria->report->id] = $row['value'];
             }
         }

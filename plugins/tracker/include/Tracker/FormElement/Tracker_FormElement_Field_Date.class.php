@@ -290,7 +290,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 
      /**
      * Search in the db the criteria value used to search against this field.
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      * @return mixed
      */
     public function getCriteriaValue($criteria)
@@ -301,7 +301,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 
         if (! isset($this->criteria_value[$criteria->report->id])) {
             $this->criteria_value[$criteria->report->id] = array();
-            if ($row = $this->getCriteriaDao()->searchByCriteriaId($criteria->id)->getRow()) {
+            $dao = $this->getCriteriaDao();
+            if ($dao && $row = $dao->searchByCriteriaId($criteria->id)->getRow()) {
                 $this->criteria_value[$criteria->report->id]['op'] = $row['op'];
                 $this->criteria_value[$criteria->report->id]['from_date'] = $row['from_date'];
                 $this->criteria_value[$criteria->report->id]['to_date'] = $row['to_date'];
