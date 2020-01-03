@@ -153,10 +153,16 @@ seed_plugin_data() {
 }
 
 setup_tuleap
-if [ "$PHP_FPM" == '/opt/remi/php73/root/usr/sbin/php-fpm' ]; then
+case "$PHP_FPM" in
+    '/opt/remi/php73/root/usr/sbin/php-fpm')
     echo "Deploy PHP FPM 7.3"
     "$PHP_CLI" /usr/share/tuleap/tools/utils/php73/run.php --modules=nginx,fpm
-fi
+    ;;
+    '/opt/remi/php74/root/usr/sbin/php-fpm')
+    echo "Deploy PHP FPM 7.4"
+    "$PHP_CLI" /usr/share/tuleap/tools/utils/php74/run.php --modules=nginx,fpm
+    ;;
+esac
 setup_database
 tuleap_db_config
 seed_data

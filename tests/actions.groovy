@@ -37,7 +37,7 @@ def runJestTests(String name, String path) {
 def runRESTTests(String db, String php) {
     sh """
     mkdir -p \$WORKSPACE/results/api-rest/php${php}-${db}
-    TESTS_RESULT=\$WORKSPACE/results/api-rest/php${php}-${db} sources/tests/rest/bin/run-compose.sh "${db}"
+    TESTS_RESULT=\$WORKSPACE/results/api-rest/php${php}-${db} sources/tests/rest/bin/run-compose.sh "${php}" "${db}"
     """
 }
 

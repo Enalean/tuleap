@@ -234,7 +234,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
             $this->client->post('docman_folders/' . $root_id . '/files', null, $query)
         );
         $this->assertEquals(201, $response1->getStatusCode());
-        $this->assertEmpty($response1->json()['file_properties']['upload_href']);
+        $this->assertNull($response1->json()['file_properties']);
 
         $file_item_response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,

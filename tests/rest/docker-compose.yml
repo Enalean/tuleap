@@ -2,7 +2,7 @@ version: "2.1"
 
 services:
   tests:
-    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-test-rest:c7-php73
+    image: ${DOCKER_REGISTRY:-docker.io}/enalean/tuleap-test-rest:c7-${PHP_VERSION}
     environment:
       - DB_HOST=${DB_HOST}
     volumes:

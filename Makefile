@@ -108,10 +108,11 @@ tests_rest_php73:
 tests_rest_setup_73:
 	$(MAKE) tests-rest DB=mysql57 SETUP_ONLY=1
 
-tests-rest: ## Run all REST tests with PHP 7.3. SETUP_ONLY=1 to disable auto run. DB to select the database to use (mysql57, mariadb103)
+tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (73, 74). DB to select the database to use (mysql57, mariadb103)
+	$(eval PHP_VERSION ?= 73)
 	$(eval DB ?= mysql57)
 	$(eval SETUP_ONLY ?= 0)
-	SETUP_ONLY="$(SETUP_ONLY)" tests/rest/bin/run-compose.sh "$(DB)"
+	SETUP_ONLY="$(SETUP_ONLY)" tests/rest/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
 tests_soap_73: ## Run all SOAP tests in PHP 7.3
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp --network none enalean/tuleap-test-soap:5
