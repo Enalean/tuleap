@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\AccessKey\Scope;
+namespace Tuleap\Git\User\AccessKey\Scope;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\User\AccessKey\Scope\AccessKeyScope;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeTestCase;
 
-final class RESTAccessKeyScopeTest extends AccessKeyScopeTestCase
+final class GitRepositoryAccessKeyScopeTest extends AccessKeyScopeTestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
      * @inheritDoc
      */
-    public function getAccessKeyScopeClassname() : string
+    public function getAccessKeyScopeClassname(): string
     {
-        return RESTAccessKeyScope::class;
+        return GitRepositoryAccessKeyScope::class;
     }
 
     public function testDoesNotCoversAllTheScopes(): void
@@ -41,6 +44,6 @@ final class RESTAccessKeyScopeTest extends AccessKeyScopeTestCase
         $scope = \Mockery::mock(AccessKeyScope::class);
         $scope->shouldReceive('getIdentifier')->andReturn(AccessKeyScopeIdentifier::fromIdentifierKey('foo:bar'));
 
-        $this->assertFalse(RESTAccessKeyScope::fromItself()->covers($scope));
+        $this->assertFalse(GitRepositoryAccessKeyScope::fromItself()->covers($scope));
     }
 }

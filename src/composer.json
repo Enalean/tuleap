@@ -24,7 +24,8 @@
     "psr-4": {
       "Tuleap\\Test\\": ["../tests/lib/"],
       "TuleapCodingStandard\\": ["../tests/phpcs/TuleapCodingStandard", "../tests/phpcs/tests/"],
-      "Tuleap\\": ["../tests/simpletest", "../tests/phpunit"]
+      "Tuleap\\": ["../tests/simpletest", "../tests/phpunit/common"],
+      "TuleapCfg\\": ["../tests/phpunit/tuleap-cfg"]
     },
     "classmap": ["../tests/lib/", "../tests/simpletest", "../tests/phpunit"]
   },

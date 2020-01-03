@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,14 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\AccessKey\Scope;
+namespace Tuleap\Git\User\AccessKey\Scope;
+
+use Tuleap\User\AccessKey\Scope\AccessKeyScope;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeDefinition;
+use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
 
 /**
  * @psalm-immutable
  */
-final class RESTAccessKeyScope implements AccessKeyScope
+final class GitRepositoryAccessKeyScope implements AccessKeyScope
 {
-    public const IDENTIFIER_KEY = 'write:rest';
+    private const IDENTIFIER_KEY = 'write:git_repository';
 
     /**
      * @var AccessKeyScopeIdentifier
@@ -45,12 +49,12 @@ final class RESTAccessKeyScope implements AccessKeyScope
         {
             public function getName(): string
             {
-                return _('REST');
+                return dgettext('tuleap-git', 'Git repository');
             }
 
             public function getDescription(): string
             {
-                return _('Access to the REST API');
+                return dgettext('tuleap-git', 'Access to Git repositories');
             }
         };
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,24 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\User\AccessKey\Scope;
 
-/**
- * @psalm-immutable
- */
-interface AccessKeyScope
+trait AccessKeyScopeThrowOnActualMethodCall
 {
-    /**
-     * @psalm-pure
-     */
-    public static function fromItself(): self;
+    final public function getIdentifier(): AccessKeyScopeIdentifier
+    {
+        $this->throwUnexpectedCall();
+    }
+
+    final public function getDefinition(): AccessKeyScopeDefinition
+    {
+        $this->throwUnexpectedCall();
+    }
+
+    final public function covers(AccessKeyScope $scope): bool
+    {
+        $this->throwUnexpectedCall();
+    }
 
     /**
-     * @psalm-pure
+     * @psalm-return never-return
+     *
+     * @throws \LogicException
      */
-    public static function fromIdentifier(AccessKeyScopeIdentifier $identifier): ?self;
-
-    public function getIdentifier(): AccessKeyScopeIdentifier;
-
-    public function getDefinition(): AccessKeyScopeDefinition;
-
-    public function covers(AccessKeyScope $scope): bool;
+    private function throwUnexpectedCall(): void
+    {
+        throw new \LogicException('This method is not supposed to be called in the test');
+    }
 }

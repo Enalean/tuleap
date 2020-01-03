@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,19 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\User\AccessKey\Scope;
+namespace Tuleap\User\AccessKey;
 
-/**
- * @psalm-immutable
- */
-final class CoreAccessKeyScopeBuilder implements AccessKeyScopeBuilder
+use Tuleap\User\AccessKey\Scope\AccessKeyScope;
+
+final class AccessKeyDoesNotHaveRequiredScopeException extends AccessKeyException
 {
-    public function buildAccessKeyScopeFromScopeIdentifier(AccessKeyScopeIdentifier $scope_identifier): ?AccessKeyScope
+    public function __construct(AccessKeyScope $needed_scope)
     {
-        if ($scope_identifier->toString() === RESTAccessKeyScope::IDENTIFIER_KEY) {
-            return RESTAccessKeyScope::fromIdentifier($scope_identifier);
-        }
-
-        return null;
+        parent::__construct(
+            sprintf(
+                'The access key does not have the required scope %s (%s)',
+                $needed_scope->getDefinition()->getName(),
+                $needed_scope->getIdentifier()->toString()
+            )
+        );
     }
 }

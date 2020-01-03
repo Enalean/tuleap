@@ -32,7 +32,8 @@ use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
 use Tuleap\User\AccessKey\REST\UserAccessKeyRepresentation;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
-use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilder;
+use Tuleap\User\AccessKey\Scope\AggregateAccessKeyScopeBuilder;
+use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
 use Tuleap\User\History\HistoryCleaner;
 use Tuleap\User\History\HistoryEntry;
 use Tuleap\User\History\HistoryRetriever;
@@ -681,7 +682,13 @@ class UserResource extends AuthenticatedResource
 
         $access_key_metadata_retriever = new AccessKeyMetadataRetriever(
             new AccessKeyDAO(),
-            new AccessKeyScopeRetriever(new AccessKeyScopeDAO(), new CoreAccessKeyScopeBuilder())
+            new AccessKeyScopeRetriever(
+                new AccessKeyScopeDAO(),
+                AggregateAccessKeyScopeBuilder::fromBuildersList(
+                    CoreAccessKeyScopeBuilderFactory::buildCoreAccessKeyScopeBuilder(),
+                    AggregateAccessKeyScopeBuilder::fromEventDispatcher(\EventManager::instance())
+                )
+            )
         );
         $all_access_key_medatada       = $access_key_metadata_retriever->getMetadataByUser($current_user);
 
