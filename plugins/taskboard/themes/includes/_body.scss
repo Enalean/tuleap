@@ -92,6 +92,10 @@
         background: darken($tlp-ui-white, 2%);
     }
 
+    &.taskboard-cell-collapsed-hover[data-drake-over] {
+        background: mix($tlp-theme-color, $tlp-ui-white, 7%);
+    }
+
     > .gu-transit,
     > .gu-mirror,
     > .taskboard-draggable-item {

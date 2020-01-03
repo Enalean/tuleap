@@ -131,17 +131,17 @@ export default class TaskBoard extends Vue {
 
         EventBus.$on(TaskboardEvent.ESC_KEY_PRESSED, this.cancelDragOnEscape);
 
-        this.drake.on("over", (element?: Element, target?: Element): void => {
-            if (
-                !target ||
-                !target.classList.contains("taskboard-cell-collapsed") ||
-                !(target instanceof HTMLElement)
-            ) {
+        this.drake.on("over", (element: Element, target: Element): void => {
+            if (!(target instanceof HTMLElement)) {
+                return;
+            }
+            target.dataset.drakeOver = "1";
+
+            if (!target.classList.contains("taskboard-cell-collapsed")) {
                 return;
             }
 
             const column = this.column_of_cell(target);
-
             if (!column) {
                 return;
             }
@@ -149,17 +149,17 @@ export default class TaskBoard extends Vue {
             this.mouseEntersColumn(column);
         });
 
-        this.drake.on("out", (element?: Element, target?: Element): void => {
-            if (
-                !target ||
-                !target.classList.contains("taskboard-cell-collapsed") ||
-                !(target instanceof HTMLElement)
-            ) {
+        this.drake.on("out", (element: Element, target: Element): void => {
+            if (!(target instanceof HTMLElement)) {
+                return;
+            }
+            delete target.dataset.drakeOver;
+
+            if (!target.classList.contains("taskboard-cell-collapsed")) {
                 return;
             }
 
             const column = this.column_of_cell(target);
-
             if (!column) {
                 return;
             }
