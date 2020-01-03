@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,19 +19,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-Mock::generate('DataAccessResult');
+declare(strict_types=1);
 
-class DaoTest extends TuleapTestCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class DaoTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    function testDao()
+    public function testDao(): void
     {
-        $da = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
-        $dar = new MockDataAccessResult($this);
-        $da->setReturnReference('query', $dar);
+        $da  = \Mockery::spy(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
+        $dar = Mockery::spy(DataAccessResult::class);
+        $da->shouldReceive('query')->andReturns($dar);
         $dao = new DataAccessObject($da);
 
         $result = $dao->retrieve("SELECT *");
-        $this->assertIsA($result, 'MockDataAccessResult');
+        $this->assertInstanceOf(DataAccessResult::class, $result);
     }
 }

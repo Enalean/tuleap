@@ -18,10 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
-class SystemEventDao_SearchWithParamTest extends TuleapTestCase
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class SystemEventDaoTest extends \PHPUnit\Framework\TestCase
 {
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     private $da;
 
@@ -29,17 +33,15 @@ class SystemEventDao_SearchWithParamTest extends TuleapTestCase
     private $event_type  = array('MY_IMAGINARY_EVENT');
     private $status      = array('ONGOING');
 
-    public function setUp()
+    protected function setUp() : void
     {
-        parent::setUp();
-
         $this->da = \Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
 
         $this->da->shouldReceive('quoteSmartImplode')->with(', ', $this->event_type)->andReturns('MY_IMAGINARY_EVENT');
         $this->da->shouldReceive('quoteSmartImplode')->with(', ', $this->status)->andReturns('ONGOING');
     }
 
-    public function itCreatesCorrectQueryWithSearchTermInFirstPosition()
+    public function testItCreatesCorrectQueryWithSearchTermInFirstPosition() : void
     {
         $dao = new SystemEventDao($this->da);
 
@@ -55,7 +57,7 @@ class SystemEventDao_SearchWithParamTest extends TuleapTestCase
         $dao->searchWithParam('head', $this->search_term, $this->event_type, $this->status);
     }
 
-    public function itCreatesCorrectQueryWithSearchTermInLastPosition()
+    public function testItCreatesCorrectQueryWithSearchTermInLastPosition() : void
     {
         $dao = new SystemEventDao($this->da);
 
@@ -71,7 +73,7 @@ class SystemEventDao_SearchWithParamTest extends TuleapTestCase
         $dao->searchWithParam('tail', $this->search_term, $this->event_type, $this->status);
     }
 
-    public function itCreatesCorrectQueryWithExactSearchTerm()
+    public function testItCreatesCorrectQueryWithExactSearchTerm() : void
     {
         $dao = new SystemEventDao($this->da);
 
